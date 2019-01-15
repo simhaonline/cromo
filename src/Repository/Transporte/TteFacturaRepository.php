@@ -225,6 +225,9 @@ class TteFacturaRepository extends ServiceEntityRepository
         $arrImpuestoRetenciones = array();
         $arFactura = $em->getRepository(TteFactura::class)->find($id);
         $subTotalGeneral = 0;
+        $ivaGeneral = 0;
+        $totalGeneral = 0;
+        $ivaGeneral = 0;
         $fleteGeneral = 0;
         $manejoGeneral = 0;
         $cantidadGeneral = 0;
@@ -237,7 +240,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             $fleteGeneral += $arFacturaDetalle->getVrFlete();
             $manejoGeneral += $arFacturaDetalle->getVrManejo();
             $cantidadGeneral++;
-
+            $totalGeneral += $subTotal;
             if($arFacturaDetalle->getCodigoImpuestoRetencionFk()) {
                 if (!array_key_exists($arFacturaDetalle->getCodigoImpuestoRetencionFk(), $arrImpuestoRetenciones)) {
                     $arrImpuestoRetenciones[$arFacturaDetalle->getCodigoImpuestoRetencionFk()] =  array('codigo' => $arFacturaDetalle->getCodigoImpuestoRetencionFk(),
@@ -251,7 +254,11 @@ class TteFacturaRepository extends ServiceEntityRepository
 
         $arFacturaDetalleConceptos = $this->getEntityManager()->getRepository(TteFacturaDetalleConcepto::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()]);
         foreach ($arFacturaDetalleConceptos as $arFacturaDetalleConcepto) {
-            //$subtotal = $arFacturaDetalleConcepto->getVrSub
+            $subTotal = $arFacturaDetalleConcepto->getVrSubtotal();
+            $subTotalGeneral += $subTotal;
+            $ivaGeneral += $arFacturaDetalleConcepto->getVrIva();
+            $total = $arFacturaDetalleConcepto->getVrTotal();
+            $totalGeneral += $total;
             //$subTotalGeneral += $subTotal;
         }
         //Retencion en la fuente
@@ -271,11 +278,11 @@ class TteFacturaRepository extends ServiceEntityRepository
         $arFactura->setVrFlete($fleteGeneral);
         $arFactura->setVrManejo($manejoGeneral);
         $arFactura->setVrSubtotal($subTotalGeneral);
-        $total = $subTotalGeneral;
-        $arFactura->setVrTotal($total);
-        $arFactura->setVrTotalOperado($total * $arFactura->getOperacionComercial());
+        $arFactura->setVrIva($ivaGeneral);
+        $arFactura->setVrTotal($totalGeneral);
+        $arFactura->setVrTotalOperado($totalGeneral * $arFactura->getOperacionComercial());
         $arFactura->setVrRetencionFuente($retencionFuenteGlobal);
-        $totalNeto = $total - $retencionFuenteGlobal;
+        $totalNeto = $totalGeneral - $retencionFuenteGlobal;
         $arFactura->setVrTotalNeto($totalNeto);
         $em->persist($arFactura);
 
@@ -351,6 +358,28 @@ class TteFacturaRepository extends ServiceEntityRepository
                         }
                         $em->remove($arFacturaDetalle);
                     }
+                }
+                $em->flush();
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param $arrDetalles
+     * @param $arFactura TteFactura
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function retirarConcepto($arrDetalles, $arFactura): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arrDetalles) {
+            if (count($arrDetalles) > 0) {
+                foreach ($arrDetalles AS $codigo) {
+                    $arFacturaDetalleConcepto = $em->getRepository(TteFacturaDetalleConcepto::class)->find($codigo);
+                    $em->remove($arFacturaDetalleConcepto);
                 }
                 $em->flush();
             }

@@ -185,7 +185,12 @@
                             <th>ID</th>
                             <th>CONCEPTO</th>
                             <th>CANTIDAD</th>
-                            <th>VALOR</th>
+                            <th>PRECIO</th>
+                            <th>%IVA</th>
+                            <th>IVA</th>
+                            <th>RET</th>
+                            <th>TOTAL</th>
+                            <th><input type="checkbox" name="ChkSeleccionarConcepto" OnClick="ChequearTodosTabla(this, 'ChkSeleccionarConcepto[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -195,6 +200,11 @@
                                 <td>{{ arFacturaDetalleConcepto.concepto }}</td>
                                 <td>{{ arFacturaDetalleConcepto.cantidad }}</td>
                                 <td class="numero">{{ arFacturaDetalleConcepto.vrPrecio | number_format }}</td>
+                                <td>{{ arFacturaDetalleConcepto.porcentajeIva }}</td>
+                                <td class="numero">{{ arFacturaDetalleConcepto.vrIva | number_format }}</td>
+                                <td>{{ arFacturaDetalleConcepto.codigoImpuestoRetencionFk }}</td>
+                                <td class="numero">{{ arFacturaDetalleConcepto.vrTotal | number_format }}</td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionarConcepto[]" value="{{ arFacturaDetalleConcepto.codigoFacturaDetalleConceptoPk }}" /></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -209,7 +219,7 @@
                     </div>
 
                     <div class="btn-group">
-                        {{ form_widget(form.btnRetirarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                        {{ form_widget(form.btnRetirarConcepto, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
 
                 </div>

@@ -5,6 +5,7 @@ namespace App\Formato\Transporte;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteFacturaDetalle;
+use App\Entity\Transporte\TteFacturaDetalleConcepto;
 use App\Entity\Transporte\TteRelacionCaja;
 use App\Entity\Transporte\TteRecibo;
 use App\Utilidades\Estandares;
@@ -96,14 +97,14 @@ class NotaCredito extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('ID', 'GUIA', 'NUMERO', 'DESTINO',  'UND', 'PESO','VOLUMEN', 'DECLARADO', 'FLETE', 'MANEJO');
+        $header = array('ID', 'GUIA', 'NUMERO', 'DESTINO',  'UND', 'PESO','FLETE', 'MANEJO', 'SUBTOTAL', 'IVA', 'TOTAL');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(10, 20, 20, 40, 10, 15, 15, 20, 20 , 20);
+        $w = array(10, 20, 20, 30, 10, 10, 19, 19, 19, 14, 19);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -118,25 +119,39 @@ class NotaCredito extends \FPDF {
 
     public function Body($pdf) {
         $arNotaCreditoDetalle = self::$em->getRepository(TteFacturaDetalle::class)->factura(self::$codigoNotaCredito);
+        $arFacturaDetalleConceptos = self::$em->getRepository(TteFacturaDetalleConcepto::class)->listaFacturaDetalle(self::$codigoNotaCredito)->getQuery()->getResult();
         self::$numeroRegistros = count($arNotaCreditoDetalle);
+        self::$numeroRegistros += count($arFacturaDetalleConceptos);
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
-        if($arNotaCreditoDetalle) {
+        if($arNotaCreditoDetalle || $arFacturaDetalleConceptos) {
             $fleteTotal = 0;
             $manejoTotal = 0;
             foreach ($arNotaCreditoDetalle as $arNotasCreditoDetalle) {
                 $pdf->Cell(10, 4, $arNotasCreditoDetalle['codigoFacturaDetallePk'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arNotasCreditoDetalle['codigoGuiaFk'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arNotasCreditoDetalle['numero'], 1, 0, 'L');
-                $pdf->Cell(40, 4, $arNotasCreditoDetalle['ciudadDestino'], 1, 0, 'L');
+                $pdf->Cell(30, 4, substr($arNotasCreditoDetalle['ciudadDestino'], 0, 20), 1, 0, 'L');
                 $pdf->Cell(10, 4, $arNotasCreditoDetalle['unidades'], 1, 0, 'R');
-                $pdf->Cell(15, 4, $arNotasCreditoDetalle['pesoReal'], 1, 0, 'R');
-                $pdf->Cell(15, 4, $arNotasCreditoDetalle['pesoVolumen'], 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arNotasCreditoDetalle['vrDeclara'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arNotasCreditoDetalle['vrFlete'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arNotasCreditoDetalle['vrManejo'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(10, 4, $arNotasCreditoDetalle['pesoReal'], 1, 0, 'R');
+                $pdf->Cell(19, 4, number_format($arNotasCreditoDetalle['vrFlete'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(19, 4, number_format($arNotasCreditoDetalle['vrManejo'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(19, 4, number_format(0, 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(14, 4, number_format(0, 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(19, 4, number_format($arNotasCreditoDetalle['vrFlete']+$arNotasCreditoDetalle['vrManejo'], 0, '.', ','), 1, 0, 'R');
                 $fleteTotal += $arNotasCreditoDetalle['vrFlete'];
                 $manejoTotal += $arNotasCreditoDetalle['vrManejo'];
+                $pdf->Ln();
+                $pdf->SetAutoPageBreak(true, 50);
+            }
+            foreach ($arFacturaDetalleConceptos as $arFacturaDetalleConcepto) {
+                $pdf->Cell(10, 4, $arFacturaDetalleConcepto['codigoFacturaDetalleConceptoPk'], 1, 0, 'L');
+                $pdf->Cell(90, 4, $arFacturaDetalleConcepto['concepto'], 1, 0, 'L');
+                $pdf->Cell(19, 4, number_format(0, 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(19, 4, number_format(0, 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(19, 4, number_format($arFacturaDetalleConcepto['vrSubtotal'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(14, 4, number_format($arFacturaDetalleConcepto['vrIva'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(19, 4, number_format($arFacturaDetalleConcepto['vrTotal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 50);
             }

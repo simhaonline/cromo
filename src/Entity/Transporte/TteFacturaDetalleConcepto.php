@@ -58,9 +58,19 @@ class TteFacturaDetalleConcepto
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="porcentaje_iva", type="float", options={"default" : 0})
+     */
+    private $porcentajeIva = 0;
+
+    /**
      * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=3, nullable=true)
      */
     private $codigoImpuestoRetencionFk;
+
+    /**
+     * @ORM\Column(name="codigo_impuesto_iva_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoImpuestoIvaFk;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFactura", inversedBy="facturasDetallesConcetosFacturaRel")
@@ -248,6 +258,38 @@ class TteFacturaDetalleConcepto
     public function setFacturaConceptoDetalleRel( $facturaConceptoDetalleRel ): void
     {
         $this->facturaConceptoDetalleRel = $facturaConceptoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeIva()
+    {
+        return $this->porcentajeIva;
+    }
+
+    /**
+     * @param mixed $porcentajeIva
+     */
+    public function setPorcentajeIva( $porcentajeIva ): void
+    {
+        $this->porcentajeIva = $porcentajeIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImpuestoIvaFk()
+    {
+        return $this->codigoImpuestoIvaFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoIvaFk
+     */
+    public function setCodigoImpuestoIvaFk( $codigoImpuestoIvaFk ): void
+    {
+        $this->codigoImpuestoIvaFk = $codigoImpuestoIvaFk;
     }
 
 

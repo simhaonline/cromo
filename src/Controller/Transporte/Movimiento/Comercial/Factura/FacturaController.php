@@ -120,11 +120,13 @@ class FacturaController extends ControllerListenerGeneral
         $form = Estandares::botonera($arFactura->getEstadoAutorizado(), $arFactura->getEstadoAprobado(), $arFactura->getEstadoAnulado());
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnRetirarPlanilla = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnRetirarConcepto = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
         $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
         if ($arFactura->getEstadoAutorizado()) {
             $arrBtnRetirar['disabled'] = true;
             $arrBtnRetirarPlanilla['disabled'] = true;
+            $arrBtnRetirarConcepto['disabled'] = true;
             $arrBotonActualizar['disabled'] = true;
         }
         if ($arFactura->getCodigoFacturaClaseFk() == 'NC') {
@@ -132,7 +134,8 @@ class FacturaController extends ControllerListenerGeneral
         }
         $form->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar)
             ->add('btnRetirarPlanilla', SubmitType::class, $arrBtnRetirarPlanilla)
-            ->add('btnActualizar', SubmitType::class, $arrBotonActualizar);
+            ->add('btnActualizar', SubmitType::class, $arrBotonActualizar)
+            ->add('btnRetirarConcepto', SubmitType::class, $arrBtnRetirarConcepto);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -185,6 +188,16 @@ class FacturaController extends ControllerListenerGeneral
                 }
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
+            if ($form->get('btnRetirarConcepto')->isClicked()) {
+                $arrConceptos = $request->request->get('ChkSeleccionarConcepto');
+                $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarConcepto($arrConceptos, $arFactura);
+                if ($respuesta) {
+                    $em->getRepository(TteFactura::class)->liquidar($id);
+                    $em->flush();
+                }
+                return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
+            }
+
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteFacturaDetalle::class)->factura($id), "Facturas $id");
             }
@@ -614,7 +627,15 @@ class FacturaController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             $arFacturaDetalleConcepto->setFacturaRel($arFactura);
             $subtotal = $arFacturaDetalleConcepto->getCantidad() * $arFacturaDetalleConcepto->getVrPrecio();
-
+            $porcentajeIva = $arFacturaDetalleConcepto->getFacturaConceptoDetalleRel()->getImpuestoIvaVentaRel()->getPorcentaje();
+            $iva = $subtotal * $porcentajeIva / 100;
+            $total = $subtotal + $iva;
+            $arFacturaDetalleConcepto->setPorcentajeIva($porcentajeIva);
+            $arFacturaDetalleConcepto->setVrSubtotal($subtotal);
+            $arFacturaDetalleConcepto->setVrIva($iva);
+            $arFacturaDetalleConcepto->setVrTotal($total);
+            $arFacturaDetalleConcepto->setCodigoImpuestoRetencionFk($arFacturaDetalleConcepto->getCodigoImpuestoRetencionFk());
+            $arFacturaDetalleConcepto->setCodigoImpuestoIvaFk($arFacturaDetalleConcepto->getCodigoImpuestoIvaFk());
             $em->persist($arFacturaDetalleConcepto);
             $em->flush();
             $em->getRepository(TteFactura::class)->liquidar($codigoFactura);

@@ -6,6 +6,7 @@
         "ext-curl": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "codeitnowin/barcode": "^3.0",
         "doctrine/doctrine-fixtures-bundle": "^3.0",
         "friendsofsymfony/rest-bundle": "^2.3",
         "knplabs/knp-paginator-bundle": "^2.7",

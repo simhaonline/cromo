@@ -238,7 +238,7 @@ final class FuncionesController
      * @param
      * @return string
      */
-    public static function codigoQr(){
+    public static function codigoQr($contenido){
         $em=BaseDatos::getEm();
 
         //Declaramos una carpeta temporal para guardar la imagenes generadas
@@ -259,7 +259,6 @@ final class FuncionesController
         $tamano = 10; //Tamaño de Pixel
         $level = 'L'; //Precisión Baja
         $framSize = 3; //Tamaño en blanco
-        $contenido = "Hola mundo"; //Texto
 
         //Enviamos los parametros a la Función para generar código QR
         \QRcode::png($contenido, $filename, $level, $tamano, $framSize);

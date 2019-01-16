@@ -171,7 +171,7 @@ class GuiaController extends ControllerListenerGeneral
             'arRedespachos' => $arRedespachos,
             'arDesembarcos' => $arDesembarcos,
             'arRecibos'     => $arRecibos,
-            'clase' => array('clase' => 'tte_guia', 'codigo' => $id),
+            'clase' => array('clase' => 'TteGuia', 'codigo' => $id),
             'form' => $form->createView()]);
     }
 

@@ -78,7 +78,7 @@ class GenAsesor
     protected $anticipoAsesorRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCliente", mappedBy="asesorRel", cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteCliente", mappedBy="asesorRel")
      */
     protected $asesorAsesorRel;
 

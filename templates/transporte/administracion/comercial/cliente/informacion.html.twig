@@ -42,10 +42,10 @@
         <td class="td-in-well" style="text-transform: uppercase;">{{ arCliente.correo }}</td>
     </tr>
     <tr>
+        <td class="titulo"><b>CIUDAD:</b></td>
+        <td class="td-in-well">{{ arCliente.ciudadRel.nombre | default('') }}</td>
         <td class="titulo"><b>PLAZO PAGO:</b></td>
         <td class="td-in-well">{{ arCliente.plazoPago }}</td>
-        <td class="titulo"><b></b></td>
-        <td class="td-in-well" style="text-transform: uppercase;"></td>
     </tr>
     <tr>
         <td class="titulo"><b>COMENTARIOS:</b></td>

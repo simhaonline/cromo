@@ -179,6 +179,7 @@ class ReciboController extends ControllerListenerGeneral
         return $this->render('cartera/movimiento/recibo/recibo/detalle.html.twig', array(
             'arRecibo'=> $arRecibo,
             'arReciboDetalle'=> $arReciboDetalle,
+            'clase' => array('clase' => 'CarRecibo', 'codigo' => $id),
             'form' => $form->createView()
         ));
     }

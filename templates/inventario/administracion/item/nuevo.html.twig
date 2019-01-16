@@ -76,6 +76,13 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_marca" class="col-sm-2 control-label">Registro invima:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.registroInvima,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.registroInvima) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_afectaInventario" class="col-sm-2 control-label">Afecta inventario</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.afectaInventario) }}

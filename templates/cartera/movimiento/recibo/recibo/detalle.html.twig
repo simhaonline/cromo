@@ -1,21 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-    </script>
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a  class="btn btn-default btn-sm" href="{{ path('cartera_movimiento_recibo_recibo_lista') }}">Volver</a>
-        </div>
-        <div class="btn-group">
-            {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}
+            <div class="btn-group">
+                {% include 'estructura/botonera.html.twig' %}
+            </div>
         </div>
     </div>
     <div style="float:right">

@@ -286,7 +286,7 @@ class DespachoController extends ControllerListenerGeneral
             'arDespacho' => $arDespacho,
             'arNovedades' => $arNovedades,
             'arDespachoDetalles' => $arDespachoDetalles,
-            'clase' => array('clase'=>'tte_despacho', 'codigo' => $id),
+            'clase' => array('clase'=>'TteDespacho', 'codigo' => $id),
             'form' => $form->createView()]);
     }
 

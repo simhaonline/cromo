@@ -107,7 +107,7 @@ class VehiculoController extends ControllerListenerGeneral
         $arVehiculo = $em->getRepository(TteVehiculo::class)->find($id);
 
         return $this->render('transporte/administracion/vehiculo/detalle.html.twig', array(
-            'clase' => array('clase'=>'tte_vehiculo', 'codigo' => $id),
+            'clase' => array('clase'=>'TteVehiculo', 'codigo' => $id),
             'arVehiculo' => $arVehiculo,
         ));
     }

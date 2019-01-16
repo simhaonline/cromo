@@ -212,6 +212,11 @@ class InvItem
     private $servicio = false;
 
     /**
+     * @ORM\Column(name="registro_invima", type="string",length=80, nullable=true)
+     */
+    private $registroInvima;
+
+    /**
      * @ORM\ManyToOne(targetEntity="InvMarca", inversedBy="itemsMarcaRel")
      * @ORM\JoinColumn(name="codigo_marca_fk",referencedColumnName="codigo_marca_pk")
      * @Assert\NotBlank(
@@ -1162,6 +1167,22 @@ class InvItem
     public function setServicio($servicio): void
     {
         $this->servicio = $servicio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistroInvima()
+    {
+        return $this->registroInvima;
+    }
+
+    /**
+     * @param mixed $registroInvima
+     */
+    public function setRegistroInvima($registroInvima): void
+    {
+        $this->registroInvima = $registroInvima;
     }
 
 

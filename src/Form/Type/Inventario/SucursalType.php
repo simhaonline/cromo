@@ -22,6 +22,7 @@ class SucursalType extends AbstractType
             ->add('nombre', TextType::class, ['label' => 'Nombre: ', 'required' => true])
             ->add('direccion', TextType::class, ['label' => 'Dirección: ', 'required' => true])
             ->add('contacto', TextType::class, ['label' => 'Contacto: ', 'required' => false])
+            ->add('telefono', TextType::class, ['label' => 'Telefono: ', 'required' => false])
             ->add('terceroRel', EntityType::class, ['class' => InvTercero::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('it')
@@ -41,7 +42,6 @@ class SucursalType extends AbstractType
                 'attr' => ['class' => 'to-select-2']
             ])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ;
     }
 
@@ -58,7 +58,8 @@ class SucursalType extends AbstractType
             {"campo":"codigoSucursalPk",        "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
             {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre de la sucursal",      "titulo":"NOMBRE"},
             {"campo":"direccion",               "tipo":"texto"  ,"ayuda":"Direccion de la sucursal",   "titulo":"DIRECCION"},
-            {"campo":"contacto",                "tipo":"texto"  ,"ayuda":"Contacto en la sucursal",    "titulo":"CONTACTO"}                                                                     
+            {"campo":"contacto",                "tipo":"texto"  ,"ayuda":"Contacto en la sucursal",    "titulo":"CONTACTO"},
+            {"campo":"telefono",                "tipo":"texto"  ,"ayuda":"Telefono",                   "titulo":"TELEFONO"}                                                                     
         ]';
         return $campos;
     }
@@ -71,7 +72,8 @@ class SucursalType extends AbstractType
             {"campo":"direccion",               "tipo":"texto"  ,"ayuda":"Direccion de la sucursal",   "titulo":"DIRECCION"}
             {"campo":"contacto",                "tipo":"texto"  ,"ayuda":"Contacto en la sucursal",    "titulo":"CONTACTO"}
             {"campo":"terceroRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre del tercero",         "titulo":"TERCERO", "relacion":""},
-            {"campo":"ciudadRel.nombre",        "tipo":"texto"  ,"ayuda":"Ciudad de la sucursal",      "titulo":"CIUDAD", "relacion":""}                                    
+            {"campo":"ciudadRel.nombre",        "tipo":"texto"  ,"ayuda":"Ciudad de la sucursal",      "titulo":"CIUDAD", "relacion":""},  
+            {"campo":"telefono",                "tipo":"texto"  ,"ayuda":"Telefono",                   "titulo":"TELEFONO"}                                   
         ]';
         return $campos;
     }

@@ -20,7 +20,8 @@ class ApiMasivoController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/documental/api/masivo/masivo/{tipo}/{identificador}")
      */
-    public function consulta($tipo = "tte_guia", $identificador = 0) {
+    public function consulta($tipo = "TteGuia", $identificador = 0) {
+        $tipo = "TteGuia";
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $arMasivo = $this->getDoctrine()->getManager()->getRepository(DocMasivo::class)->findOneBy(array('codigoMasivoTipoFk'=>$tipo, 'identificador' => $identificador));
@@ -59,7 +60,8 @@ class ApiMasivoController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/documental/api/masivo/crear/{tipo}/{identificador}")
      */
-    public function crear($tipo = "tte_guia", $identificador = 0) {
+    public function crear($tipo = "TteGuia", $identificador = 0) {
+        $tipo = "TteGuia";
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();

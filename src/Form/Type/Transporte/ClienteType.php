@@ -49,6 +49,16 @@ class ClienteType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad:'
             ])
+            ->add('asesorRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\General\GenAsesor',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Asesor:'
+            ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('digitoVerificacion',NumberType::class,['required' => true,'label' => 'Digito:'])
             ->add('nombreCorto',TextType::class,['required' => true,'label' => 'Nombre corto:'])

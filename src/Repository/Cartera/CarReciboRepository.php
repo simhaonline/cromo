@@ -300,334 +300,342 @@ class CarReciboRepository extends ServiceEntityRepository
                 $arRecibo = $em->getRepository(CarRecibo::class)->registroContabilizar($codigo);
                 if($arRecibo) {
                     if($arRecibo['estadoAprobado'] == 1 && $arRecibo['estadoContabilizado'] == 0) {
-                        $arComprobante = $em->getRepository(FinComprobante::class)->find($arRecibo['codigoComprobanteFk']);
-                        $arTercero = $em->getRepository(CarCliente::class)->terceroFinanciero($arRecibo['codigoClienteFk']);
-                        $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->listaContabilizar($codigo);
-                        foreach ($arReciboDetalles as $arReciboDetalle) {
-                            //Cuenta cliente
-                            if($arReciboDetalle['vrPago'] > 0) {
-                                $descripcion = "CLIENTES";
-                                $cuenta = $arReciboDetalle['codigoCuentaClienteFk'];
-                                if($cuenta) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                    if(!$arCuenta) {
-                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                        if($arRecibo['codigoComprobanteFk']) {
+                            $arComprobante = $em->getRepository(FinComprobante::class)->find($arRecibo['codigoComprobanteFk']);
+                            if($arComprobante) {
+                                $arTercero = $em->getRepository(CarCliente::class)->terceroFinanciero($arRecibo['codigoClienteFk']);
+                                $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->listaContabilizar($codigo);
+                                foreach ($arReciboDetalles as $arReciboDetalle) {
+                                    //Cuenta cliente
+                                    if($arReciboDetalle['vrPago'] > 0) {
+                                        $descripcion = "CLIENTES";
+                                        $cuenta = $arReciboDetalle['codigoCuentaClienteFk'];
+                                        if($cuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                            if(!$arCuenta) {
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                break;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            /*if($arCuenta->getExigeCentroCosto()) {
+                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                            }*/
+                                            $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                            $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
+                                            $arRegistro->setFecha($arRecibo['fecha']);
+                                            $naturaleza = "C";
+                                            if($naturaleza == 'D') {
+                                                $arRegistro->setVrDebito($arReciboDetalle['vrPagoAfectar']);
+                                                $arRegistro->setNaturaleza('D');
+                                            } else {
+                                                $arRegistro->setVrCredito($arReciboDetalle['vrPagoAfectar']);
+                                                $arRegistro->setNaturaleza('C');
+                                            }
+                                            $arRegistro->setDescripcion($descripcion);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            break;
+                                        }
+                                    }
+
+                                    //Cuenta retencion fuente
+                                    if($arReciboDetalle['vrRetencionFuente'] > 0) {
+                                        $descripcion = "RETENCION FUENTE";
+                                        $cuenta = $arReciboDetalle['codigoCuentaRetencionFuenteFk'];
+                                        if($cuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                            if(!$arCuenta) {
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                break;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            /*if($arCuenta->getExigeCentroCosto()) {
+                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                            }*/
+                                            $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                            $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
+                                            $arRegistro->setFecha($arRecibo['fecha']);
+                                            $naturaleza = "D";
+                                            if($naturaleza == 'D') {
+                                                $arRegistro->setVrDebito($arReciboDetalle['vrRetencionFuente']);
+                                                $arRegistro->setNaturaleza('D');
+                                            } else {
+                                                $arRegistro->setVrCredito($arReciboDetalle['vrRetencionFuente']);
+                                                $arRegistro->setNaturaleza('C');
+                                            }
+                                            if($arCuenta->getExigeBase()) {
+                                                $arRegistro->setVrBase($arReciboDetalle['vrPagoAfectar']);
+                                            }
+                                            $arRegistro->setDescripcion($descripcion);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            break;
+                                        }
+                                    }
+
+                                    //Industria comercio
+                                    if($arReciboDetalle['vrRetencionIca'] > 0) {
+                                        $descripcion = "INDUSTRIA COMERCIO";
+                                        $cuenta = $arReciboDetalle['codigoCuentaIndustriaComercioFk'];
+                                        if($cuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                            if(!$arCuenta) {
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                break;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            /*if($arCuenta->getExigeCentroCosto()) {
+                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                            }*/
+                                            $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                            $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
+                                            $arRegistro->setFecha($arRecibo['fecha']);
+                                            $naturaleza = "D";
+                                            if($naturaleza == 'D') {
+                                                $arRegistro->setVrDebito($arReciboDetalle['vrRetencionIca']);
+                                                $arRegistro->setNaturaleza('D');
+                                            } else {
+                                                $arRegistro->setVrCredito($arReciboDetalle['vrRetencionIca']);
+                                                $arRegistro->setNaturaleza('C');
+                                            }
+                                            if($arCuenta->getExigeBase()) {
+                                                $arRegistro->setVrBase($arReciboDetalle['vrPagoAfectar']);
+                                            }
+                                            $arRegistro->setDescripcion($descripcion);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            break;
+                                        }
+                                    }
+
+                                    //Retencion iva
+                                    if($arReciboDetalle['vrRetencionIva'] > 0) {
+                                        $descripcion = "RETENCION IVA";
+                                        $cuenta = $arReciboDetalle['codigoCuentaRetencionIvaFk'];
+                                        if($cuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                            if(!$arCuenta) {
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                break;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            /*if($arCuenta->getExigeCentroCosto()) {
+                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                            }*/
+                                            $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                            $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
+                                            $arRegistro->setFecha($arRecibo['fecha']);
+                                            $naturaleza = "D";
+                                            if($naturaleza == 'D') {
+                                                $arRegistro->setVrDebito($arReciboDetalle['vrRetencionIva']);
+                                                $arRegistro->setNaturaleza('D');
+                                            } else {
+                                                $arRegistro->setVrCredito($arReciboDetalle['vrRetencionIva']);
+                                                $arRegistro->setNaturaleza('C');
+                                            }
+                                            $arRegistro->setDescripcion($descripcion);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            break;
+                                        }
+                                    }
+
+                                    //Ajuste peso
+                                    if($arReciboDetalle['vrAjustePeso']) {
+                                        $descripcion = "AJUSTE PESO";
+                                        $cuenta = $arReciboDetalle['codigoCuentaAjustePesoFk'];
+                                        if($cuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                            if(!$arCuenta) {
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                break;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            /*if($arCuenta->getExigeCentroCosto()) {
+                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                            }*/
+                                            $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                            $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
+                                            $arRegistro->setFecha($arRecibo['fecha']);
+                                            $naturaleza = "D";
+                                            if($naturaleza == 'D') {
+                                                $arRegistro->setVrDebito($arReciboDetalle['vrAjustePeso']);
+                                                $arRegistro->setNaturaleza('D');
+                                            } else {
+                                                $arRegistro->setVrCredito($arReciboDetalle['vrAjustePeso']);
+                                                $arRegistro->setNaturaleza('C');
+                                            }
+                                            $arRegistro->setDescripcion($descripcion);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            break;
+                                        }
+                                    }
+
+                                    //Descuento
+                                    if($arReciboDetalle['vrDescuento'] > 0) {
+                                        $descripcion = "DESCUENTO";
+                                        $cuenta = $arReciboDetalle['codigoCuentaDescuentoFk'];
+                                        if($cuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                            if(!$arCuenta) {
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                break;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            /*if($arCuenta->getExigeCentroCosto()) {
+                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                            }*/
+                                            $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                            $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
+                                            $arRegistro->setFecha($arRecibo['fecha']);
+                                            $naturaleza = "D";
+                                            if($naturaleza == 'D') {
+                                                $arRegistro->setVrDebito($arReciboDetalle['vrDescuento']);
+                                                $arRegistro->setNaturaleza('D');
+                                            } else {
+                                                $arRegistro->setVrCredito($arReciboDetalle['vrDescuento']);
+                                                $arRegistro->setNaturaleza('C');
+                                            }
+                                            $arRegistro->setDescripcion($descripcion);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                //Cuenta banco
+                                if($arRecibo['cruceCuentas']) {
+                                    $descripcion = "CRUCE DE CUENTAS";
+                                    $cuenta = $arRecibo['codigoCuentaContableFk'];
+                                    if($cuenta) {
+                                        $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                        if(!$arCuenta) {
+                                            $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                            break;
+                                        }
+                                        $arRegistro = new FinRegistro();
+                                        if($arRecibo['codigoTerceroFk']) {
+                                            $arTerceroCruce = $em->getRepository(FinTercero::class)->find($arRecibo['codigoTerceroFk']);
+                                            $arRegistro->setTerceroRel($arTerceroCruce);
+                                        } else {
+                                            $error = "El tipo de recibo es cruce de cuentas y no esta espeficicado el tercero  ";
+                                            break;
+                                        }
+
+
+                                        $arRegistro->setCuentaRel($arCuenta);
+                                        $arRegistro->setComprobanteRel($arComprobante);
+                                        /*if($arCuenta->getExigeCentroCosto()) {
+                                            $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                            $arRegistro->setCentroCostoRel($arCentroCosto);
+                                        }*/
+                                        $arRegistro->setNumero($arRecibo['numero']);
+                                        $arRegistro->setNumeroReferenciaPrefijo($arRecibo['numeroReferenciaPrefijo']);
+                                        $arRegistro->setNumeroReferencia($arRecibo['numeroReferencia']);
+
+                                        $arRegistro->setFecha($arRecibo['fecha']);
+                                        $naturaleza = "D";
+                                        if($naturaleza == 'D') {
+                                            $arRegistro->setVrDebito($arRecibo['vrPago']);
+                                            $arRegistro->setNaturaleza('D');
+                                        } else {
+                                            $arRegistro->setVrCredito($arRecibo['vrPago']);
+                                            $arRegistro->setNaturaleza('C');
+                                        }
+                                        $arRegistro->setDescripcion($descripcion);
+                                        $em->persist($arRegistro);
+                                    } else {
+                                        $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arRecibo['numero'];
                                         break;
                                     }
-                                    $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arTercero);
-                                    $arRegistro->setCuentaRel($arCuenta);
-                                    $arRegistro->setComprobanteRel($arComprobante);
-                                    /*if($arCuenta->getExigeCentroCosto()) {
-                                        $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                        $arRegistro->setCentroCostoRel($arCentroCosto);
-                                    }*/
-                                    $arRegistro->setNumero($arRecibo['numero']);
-                                    $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
-                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                    $arRegistro->setFecha($arRecibo['fecha']);
-                                    $naturaleza = "C";
-                                    if($naturaleza == 'D') {
-                                        $arRegistro->setVrDebito($arReciboDetalle['vrPagoAfectar']);
-                                        $arRegistro->setNaturaleza('D');
-                                    } else {
-                                        $arRegistro->setVrCredito($arReciboDetalle['vrPagoAfectar']);
-                                        $arRegistro->setNaturaleza('C');
-                                    }
-                                    $arRegistro->setDescripcion($descripcion);
-                                    $em->persist($arRegistro);
                                 } else {
-                                    $error = "El tipo no tiene configurada la cuenta " . $descripcion;
-                                    break;
-                                }
-                            }
-
-                            //Cuenta retencion fuente
-                            if($arReciboDetalle['vrRetencionFuente'] > 0) {
-                                $descripcion = "RETENCION FUENTE";
-                                $cuenta = $arReciboDetalle['codigoCuentaRetencionFuenteFk'];
-                                if($cuenta) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                    if(!$arCuenta) {
-                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                    $descripcion = "BANCO/CAJA";
+                                    $cuenta = $arRecibo['codigoCuentaContableFk'];
+                                    if($cuenta) {
+                                        $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                        if(!$arCuenta) {
+                                            $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                            break;
+                                        }
+                                        $arRegistro = new FinRegistro();
+                                        $arRegistro->setTerceroRel($arTercero);
+                                        $arRegistro->setCuentaRel($arCuenta);
+                                        $arRegistro->setComprobanteRel($arComprobante);
+                                        /*if($arCuenta->getExigeCentroCosto()) {
+                                            $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                            $arRegistro->setCentroCostoRel($arCentroCosto);
+                                        }*/
+                                        $arRegistro->setNumero($arRecibo['numero']);
+                                        $arRegistro->setFecha($arRecibo['fecha']);
+                                        $naturaleza = "D";
+                                        if($naturaleza == 'D') {
+                                            $arRegistro->setVrDebito($arRecibo['vrPago']);
+                                            $arRegistro->setNaturaleza('D');
+                                        } else {
+                                            $arRegistro->setVrCredito($arRecibo['vrPago']);
+                                            $arRegistro->setNaturaleza('C');
+                                        }
+                                        $arRegistro->setDescripcion($descripcion);
+                                        $em->persist($arRegistro);
+                                    } else {
+                                        $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arRecibo['numero'];
                                         break;
                                     }
-                                    $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arTercero);
-                                    $arRegistro->setCuentaRel($arCuenta);
-                                    $arRegistro->setComprobanteRel($arComprobante);
-                                    /*if($arCuenta->getExigeCentroCosto()) {
-                                        $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                        $arRegistro->setCentroCostoRel($arCentroCosto);
-                                    }*/
-                                    $arRegistro->setNumero($arRecibo['numero']);
-                                    $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
-                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                    $arRegistro->setFecha($arRecibo['fecha']);
-                                    $naturaleza = "D";
-                                    if($naturaleza == 'D') {
-                                        $arRegistro->setVrDebito($arReciboDetalle['vrRetencionFuente']);
-                                        $arRegistro->setNaturaleza('D');
-                                    } else {
-                                        $arRegistro->setVrCredito($arReciboDetalle['vrRetencionFuente']);
-                                        $arRegistro->setNaturaleza('C');
-                                    }
-                                    if($arCuenta->getExigeBase()) {
-                                        $arRegistro->setVrBase($arReciboDetalle['vrPagoAfectar']);
-                                    }
-                                    $arRegistro->setDescripcion($descripcion);
-                                    $em->persist($arRegistro);
-                                } else {
-                                    $error = "El tipo no tiene configurada la cuenta " . $descripcion;
-                                    break;
-                                }
-                            }
-
-                            //Industria comercio
-                            if($arReciboDetalle['vrRetencionIca'] > 0) {
-                                $descripcion = "INDUSTRIA COMERCIO";
-                                $cuenta = $arReciboDetalle['codigoCuentaIndustriaComercioFk'];
-                                if($cuenta) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                    if(!$arCuenta) {
-                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                        break;
-                                    }
-                                    $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arTercero);
-                                    $arRegistro->setCuentaRel($arCuenta);
-                                    $arRegistro->setComprobanteRel($arComprobante);
-                                    /*if($arCuenta->getExigeCentroCosto()) {
-                                        $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                        $arRegistro->setCentroCostoRel($arCentroCosto);
-                                    }*/
-                                    $arRegistro->setNumero($arRecibo['numero']);
-                                    $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
-                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                    $arRegistro->setFecha($arRecibo['fecha']);
-                                    $naturaleza = "D";
-                                    if($naturaleza == 'D') {
-                                        $arRegistro->setVrDebito($arReciboDetalle['vrRetencionIca']);
-                                        $arRegistro->setNaturaleza('D');
-                                    } else {
-                                        $arRegistro->setVrCredito($arReciboDetalle['vrRetencionIca']);
-                                        $arRegistro->setNaturaleza('C');
-                                    }
-                                    if($arCuenta->getExigeBase()) {
-                                        $arRegistro->setVrBase($arReciboDetalle['vrPagoAfectar']);
-                                    }
-                                    $arRegistro->setDescripcion($descripcion);
-                                    $em->persist($arRegistro);
-                                } else {
-                                    $error = "El tipo no tiene configurada la cuenta " . $descripcion;
-                                    break;
-                                }
-                            }
-
-                            //Retencion iva
-                            if($arReciboDetalle['vrRetencionIva'] > 0) {
-                                $descripcion = "RETENCION IVA";
-                                $cuenta = $arReciboDetalle['codigoCuentaRetencionIvaFk'];
-                                if($cuenta) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                    if(!$arCuenta) {
-                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                        break;
-                                    }
-                                    $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arTercero);
-                                    $arRegistro->setCuentaRel($arCuenta);
-                                    $arRegistro->setComprobanteRel($arComprobante);
-                                    /*if($arCuenta->getExigeCentroCosto()) {
-                                        $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                        $arRegistro->setCentroCostoRel($arCentroCosto);
-                                    }*/
-                                    $arRegistro->setNumero($arRecibo['numero']);
-                                    $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
-                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                    $arRegistro->setFecha($arRecibo['fecha']);
-                                    $naturaleza = "D";
-                                    if($naturaleza == 'D') {
-                                        $arRegistro->setVrDebito($arReciboDetalle['vrRetencionIva']);
-                                        $arRegistro->setNaturaleza('D');
-                                    } else {
-                                        $arRegistro->setVrCredito($arReciboDetalle['vrRetencionIva']);
-                                        $arRegistro->setNaturaleza('C');
-                                    }
-                                    $arRegistro->setDescripcion($descripcion);
-                                    $em->persist($arRegistro);
-                                } else {
-                                    $error = "El tipo no tiene configurada la cuenta " . $descripcion;
-                                    break;
-                                }
-                            }
-
-                            //Ajuste peso
-                            if($arReciboDetalle['vrAjustePeso']) {
-                                $descripcion = "AJUSTE PESO";
-                                $cuenta = $arReciboDetalle['codigoCuentaAjustePesoFk'];
-                                if($cuenta) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                    if(!$arCuenta) {
-                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                        break;
-                                    }
-                                    $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arTercero);
-                                    $arRegistro->setCuentaRel($arCuenta);
-                                    $arRegistro->setComprobanteRel($arComprobante);
-                                    /*if($arCuenta->getExigeCentroCosto()) {
-                                        $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                        $arRegistro->setCentroCostoRel($arCentroCosto);
-                                    }*/
-                                    $arRegistro->setNumero($arRecibo['numero']);
-                                    $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
-                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                    $arRegistro->setFecha($arRecibo['fecha']);
-                                    $naturaleza = "D";
-                                    if($naturaleza == 'D') {
-                                        $arRegistro->setVrDebito($arReciboDetalle['vrAjustePeso']);
-                                        $arRegistro->setNaturaleza('D');
-                                    } else {
-                                        $arRegistro->setVrCredito($arReciboDetalle['vrAjustePeso']);
-                                        $arRegistro->setNaturaleza('C');
-                                    }
-                                    $arRegistro->setDescripcion($descripcion);
-                                    $em->persist($arRegistro);
-                                } else {
-                                    $error = "El tipo no tiene configurada la cuenta " . $descripcion;
-                                    break;
-                                }
-                            }
-
-                            //Descuento
-                            if($arReciboDetalle['vrDescuento'] > 0) {
-                                $descripcion = "DESCUENTO";
-                                $cuenta = $arReciboDetalle['codigoCuentaDescuentoFk'];
-                                if($cuenta) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                    if(!$arCuenta) {
-                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                        break;
-                                    }
-                                    $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arTercero);
-                                    $arRegistro->setCuentaRel($arCuenta);
-                                    $arRegistro->setComprobanteRel($arComprobante);
-                                    /*if($arCuenta->getExigeCentroCosto()) {
-                                        $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                        $arRegistro->setCentroCostoRel($arCentroCosto);
-                                    }*/
-                                    $arRegistro->setNumero($arRecibo['numero']);
-                                    $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
-                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                    $arRegistro->setFecha($arRecibo['fecha']);
-                                    $naturaleza = "D";
-                                    if($naturaleza == 'D') {
-                                        $arRegistro->setVrDebito($arReciboDetalle['vrDescuento']);
-                                        $arRegistro->setNaturaleza('D');
-                                    } else {
-                                        $arRegistro->setVrCredito($arReciboDetalle['vrDescuento']);
-                                        $arRegistro->setNaturaleza('C');
-                                    }
-                                    $arRegistro->setDescripcion($descripcion);
-                                    $em->persist($arRegistro);
-                                } else {
-                                    $error = "El tipo no tiene configurada la cuenta " . $descripcion;
-                                    break;
-                                }
-                            }
-                        }
-
-                        //Cuenta banco
-
-                        if($arRecibo['cruceCuentas']) {
-                            $descripcion = "CRUCE DE CUENTAS";
-                            $cuenta = $arRecibo['codigoCuentaContableFk'];
-                            if($cuenta) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                if(!$arCuenta) {
-                                    $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                    break;
-                                }
-                                $arRegistro = new FinRegistro();
-                                if($arRecibo['codigoTerceroFk']) {
-                                    $arTerceroCruce = $em->getRepository(FinTercero::class)->find($arRecibo['codigoTerceroFk']);
-                                    $arRegistro->setTerceroRel($arTerceroCruce);
-                                } else {
-                                    $error = "El tipo de recibo es cruce de cuentas y no esta espeficicado el tercero  ";
-                                    break;
                                 }
 
-
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                /*if($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }*/
-                                $arRegistro->setNumero($arRecibo['numero']);
-                                $arRegistro->setNumeroReferenciaPrefijo($arRecibo['numeroReferenciaPrefijo']);
-                                $arRegistro->setNumeroReferencia($arRecibo['numeroReferencia']);
-
-                                $arRegistro->setFecha($arRecibo['fecha']);
-                                $naturaleza = "D";
-                                if($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arRecibo['vrPago']);
-                                    $arRegistro->setNaturaleza('D');
-                                } else {
-                                    $arRegistro->setVrCredito($arRecibo['vrPago']);
-                                    $arRegistro->setNaturaleza('C');
-                                }
-                                $arRegistro->setDescripcion($descripcion);
-                                $em->persist($arRegistro);
+                                $arReciboAct = $em->getRepository(CarRecibo::class)->find($arRecibo['codigoReciboPk']);
+                                $arReciboAct->setEstadoContabilizado(1);
+                                $em->persist($arReciboAct);
                             } else {
-                                $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                $error = "No existe el comprobante en el [tipo recibo] del recibo " . $arRecibo['numero'];
                                 break;
                             }
-                        } else {
-                            $descripcion = "BANCO/CAJA";
-                            $cuenta = $arRecibo['codigoCuentaContableFk'];
-                            if($cuenta) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                if(!$arCuenta) {
-                                    $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                    break;
-                                }
-                                $arRegistro = new FinRegistro();
-                                $arRegistro->setTerceroRel($arTercero);
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                /*if($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }*/
-                                $arRegistro->setNumero($arRecibo['numero']);
-                                $arRegistro->setFecha($arRecibo['fecha']);
-                                $naturaleza = "D";
-                                if($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arRecibo['vrPago']);
-                                    $arRegistro->setNaturaleza('D');
-                                } else {
-                                    $arRegistro->setVrCredito($arRecibo['vrPago']);
-                                    $arRegistro->setNaturaleza('C');
-                                }
-                                $arRegistro->setDescripcion($descripcion);
-                                $em->persist($arRegistro);
-                            } else {
-                                $error = "El tipo no tiene configurada la cuenta " . $descripcion;
-                                break;
-                            }
+                        }  else {
+                            $error = "No esta configurado el comprobante en el [tipo recibo] del recibo " . $arRecibo['numero'];
+                            break;
                         }
 
-
-
-                        $arReciboAct = $em->getRepository(CarRecibo::class)->find($arRecibo['codigoReciboPk']);
-                        $arReciboAct->setEstadoContabilizado(1);
-                        $em->persist($arReciboAct);
                     }
                 } else {
-                    $error = "La despacho codigo " . $codigo . " no existe";
+                    $error = "La recibo codigo " . $codigo . " no existe";
                     break;
                 }
             }

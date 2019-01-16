@@ -490,7 +490,6 @@ class Manifiesto extends \FPDF {
      * @return string
      */
     private function contenidoQr($arDespacho, $nombreEmpresa){
-        $observaciones = substr($arDespacho->getComentario(),0, 20);
         $contenido =  "MEC:{$arDespacho->getNumeroRndc()}\n";
         $contenido .= "Fecha:{$arDespacho->getFechaRegistro()->format('Y-m-d')}\n";
         $contenido .= "Placa:{$arDespacho->getVehiculoRel()->getPlaca()}\n";
@@ -500,7 +499,7 @@ class Manifiesto extends \FPDF {
         $contenido .= "Mercancia:'VARIOS'\n";
         $contenido .= "Conductor:{$arDespacho->getConductorRel()->getNombreCorto()}\n";
         $contenido .= "Empresa:{$nombreEmpresa}\n";
-        $contenido .= "Obs:{$observaciones}\n";
+        $contenido .= "Obs:".substr($arDespacho->getComentario(),0, 20)."\n";
         $contenido .= "Seguro:\n";
 
         return $contenido;

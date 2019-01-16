@@ -3,6 +3,9 @@
 namespace App\Controller\Transporte\Proceso\Transporte\Guia;
 
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteRedespachoMotivo;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,6 +29,16 @@ class RedespachoController extends Controller
         $paginator = $this->get('knp_paginator');
         //$arGuia = $em->getRepository(TteGuia::class)->findAll();
         $form = $this->createFormBuilder()
+            ->add('redespachoMotivoRel',EntityType::class,[
+                'required' => true,
+                'class' => TteRedespachoMotivo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('rm')
+                        ->orderBy('rm.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Motivo:'
+            ])
             ->add('txtCodigo', TextType::class)
             ->add('btnRedespacho', SubmitType::class, ['label' => 'Redespacho', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -33,8 +46,9 @@ class RedespachoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnRedespacho')->isClicked()) {
                 $codigoGuia = $form->get('txtCodigo')->getData();
+                $arrRedespachoMotivo = $form->get('redespachoMotivoRel')->getData();
                 if($codigoGuia != "") {
-                    $em->getRepository(TteGuia::class)->redespacho($codigoGuia);
+                    $em->getRepository(TteGuia::class)->redespacho($codigoGuia, $arrRedespachoMotivo);
                 }
             }
         }

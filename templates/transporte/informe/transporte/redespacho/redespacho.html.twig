@@ -29,10 +29,13 @@
         <tr>
             <th>ID</th>
             <th>FECHA</th>
-            <th>ID GUIA</th>
+            <th>GUIA</th>
             <th>NUMERO</th>
-            <th>ID DESPACHO</th>
+            <th>DESPACHO</th>
             <th>NUMERO</th>
+            <th>DESTINATARIO</th>
+            <th>DESTINO</th>
+            <th>MOTIVO</th>
         </tr>
         </thead>
         <tbody>
@@ -44,6 +47,9 @@
                 <td>{{ arRedespacho.numeroGuia }}</td>
                 <td>{{ arRedespacho.codigoDespachoFk }}</td>
                 <td>{{ arRedespacho.numeroDespacho }}</td>
+                <td>{{ arRedespacho.nombreDestinatario }}</td>
+                <td>{{ arRedespacho.destinoNombre }}</td>
+                <td>{{ arRedespacho.motivoNombre }}</td>
             </tr>
         {% endfor %}
         </tbody>

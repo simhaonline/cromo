@@ -390,18 +390,22 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         $session=new Session();
 
         $arCrearReciboMasivo=$em->createQueryBuilder()
-            ->from('App:Cartera\CarCuentaCobrar','ccc')
-            ->leftJoin('ccc.clienteRel','c')
-            ->leftJoin('ccc.cuentaCobrarTipoRel','cct')
-            ->addSelect("ccc.codigoCuentaCobrarPk")
+            ->from('App:Cartera\CarCuentaCobrar','cc')
+            ->addSelect("cc.codigoCuentaCobrarPk")
+            ->addSelect('cc.numeroDocumento')
+            ->addSelect('cc.numeroReferencia')
             ->addSelect("cct.nombre as tipo")
             ->addSelect("c.nombreCorto")
-            ->addSelect("ccc.fecha")
-            ->addSelect("ccc.fechaVence")
-            ->addSelect("ccc.vrTotal")
-            ->andWhere("ccc.vrSaldo > 0");
+            ->addSelect("cc.fecha")
+            ->addSelect("cc.fechaVence")
+            ->addSelect("cc.vrTotal")
+            ->addSelect("cc.vrSaldo")
+            ->leftJoin('cc.clienteRel','c')
+            ->leftJoin('cc.cuentaCobrarTipoRel','cct')
+            ->andWhere("cc.vrSaldo > 0")
+            ->andWhere("cct.permiteReciboMasivo = 1");
         if($session->get('filtroCarReciboCodigoReciboTipo')){
-            $arCrearReciboMasivo->andWhere("ccc.codigoCuentaCobrarTipoFk='{$session->get("filtroCarReciboCodigoReciboTipo")}'");
+            $arCrearReciboMasivo->andWhere("cc.codigoCuentaCobrarTipoFk='{$session->get("filtroCarReciboCodigoReciboTipo")}'");
         }
 
         return $arCrearReciboMasivo->getQuery()->execute();

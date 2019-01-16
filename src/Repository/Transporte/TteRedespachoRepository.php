@@ -26,10 +26,15 @@ class TteRedespachoRepository extends ServiceEntityRepository
             ->addSelect('rd.fecha')
             ->addSelect('rd.codigoGuiaFk')
             ->addSelect('g.numero AS numeroGuia')
+            ->addSelect('g.nombreDestinatario')
             ->addSelect('rd.codigoDespachoFk')
             ->addSelect('d.numero AS numeroDespacho')
+            ->addSelect('m.nombre as motivoNombre')
+            ->addSelect('cd.nombre as destinoNombre')
             ->leftJoin('rd.redespachoGuiaRel', 'g')
             ->leftJoin('rd.redespachoDespachoRel', 'd')
+            ->leftJoin('rd.redespachoMotivoRel', 'm')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->orderBy('rd.codigoRedespachoPk', 'DESC');
         $fecha =  new \DateTime('now');
         if ($session->get('filtroTteFechaDesde') != null) {

@@ -71,6 +71,11 @@ class CarCuentaCobrarTipo
     private $codigoCuentaDescuentoFk;
 
     /**
+     * @ORM\Column(name="permite_recibo_masivo", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $permiteReciboMasivo = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarCuentaCobrar", mappedBy="cuentaCobrarTipoRel")
      */
     protected $cuentasCobrarCuentaCobrarTipoRel;
@@ -323,6 +328,22 @@ class CarCuentaCobrarTipo
     public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
     {
         $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPermiteReciboMasivo()
+    {
+        return $this->permiteReciboMasivo;
+    }
+
+    /**
+     * @param mixed $permiteReciboMasivo
+     */
+    public function setPermiteReciboMasivo( $permiteReciboMasivo ): void
+    {
+        $this->permiteReciboMasivo = $permiteReciboMasivo;
     }
 
 

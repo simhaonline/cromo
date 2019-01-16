@@ -63,11 +63,10 @@ class CiudadType extends AbstractType
     public function getEstructuraPropiedadesLista(){
         return '[
             {"campo":"codigoCiudadPk",        "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
-            {"campo":"codigoDivision",        "tipo":"texto",     "ayuda":"Codigo division",         "titulo":"COD DIVISION"},
-            {"campo":"codigoDepartamentoFk",  "tipo":"texto",     "ayuda":"Codigo departamento",     "titulo":"COD DEPARTAMENTO"},
+            {"campo":"nombre",                "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},            
+            {"campo":"codigoDepartamentoFk",  "tipo":"texto",     "ayuda":"Codigo departamento",     "titulo":"COD"},
             {"campo":"departamentoRel.nombre","tipo":"texto",     "ayuda":"Codigo departamento",     "titulo":"DEPARTAMENTO","relacion":""},
-            {"campo":"codigoRutaFk",          "tipo":"texto",     "ayuda":"Codigo ruta",             "titulo":"COD RUTA"},
+            {"campo":"codigoRutaFk",          "tipo":"texto",     "ayuda":"Codigo ruta",             "titulo":"COD"},
             {"campo":"rutaRel.nombre",          "tipo":"texto",     "ayuda":"Codigo ruta",             "titulo":"RUTA","relacion":""},
             {"campo":"ordenRuta",             "tipo":"numero",    "ayuda":"Orden ruta",              "titulo":"ORD"},
             {"campo":"codigoInterface",       "tipo":"texto",     "ayuda":"Codigo interface",        "titulo":"INTERFACE"},

@@ -39,6 +39,11 @@ class TteRedespacho
     private $codigoDespachoFk;
 
     /**
+     * @ORM\Column(name="codigo_redespacho_motivo_fk", type="string", length=20,  nullable=true)
+     */
+    private $codigoRedespachoMotivoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteGuia", inversedBy="redespachosGuiaRel")
      * @ORM\JoinColumn(name="codigo_guia_fk", referencedColumnName="codigo_guia_pk")
      */
@@ -49,6 +54,12 @@ class TteRedespacho
      * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
      */
     private $redespachoDespachoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteRedespachoMotivo", inversedBy="redespachoMotivoRel")
+     * @ORM\JoinColumn(name="codigo_redespacho_motivo_fk", referencedColumnName="codigo_redespacho_motivo_pk")
+     */
+    private $redespachoMotivoRel;
 
     /**
      * @return array
@@ -161,6 +172,39 @@ class TteRedespacho
     {
         $this->redespachoDespachoRel = $redespachoDespachoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRedespachoMotivoFk()
+    {
+        return $this->codigoRedespachoMotivoFk;
+    }
+
+    /**
+     * @param mixed $codigoRedespachoMotivoFk
+     */
+    public function setCodigoRedespachoMotivoFk($codigoRedespachoMotivoFk): void
+    {
+        $this->codigoRedespachoMotivoFk = $codigoRedespachoMotivoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRedespachoMotivoRel()
+    {
+        return $this->redespachoMotivoRel;
+    }
+
+    /**
+     * @param mixed $redespachoMotivoRel
+     */
+    public function setRedespachoMotivoRel($redespachoMotivoRel): void
+    {
+        $this->redespachoMotivoRel = $redespachoMotivoRel;
+    }
+
 
 }
 

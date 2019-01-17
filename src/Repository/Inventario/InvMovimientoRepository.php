@@ -59,6 +59,12 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.estadoAutorizado')
             ->leftJoin('m.terceroRel', 't')
             ->where("m.codigoDocumentoFk = '" . $codigoDocumento . "'");
+        if ($session->get('filtroInvMovimientoFechaDesde') != null) {
+            $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroInvMovimientoFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroInvMovimeintoFechaHasta') != null) {
+            $queryBuilder->andWhere("m.fecha <= '{$session->get('filtroInvMovimeintoFechaHasta')} 23:59:59'");
+        }
         if ($session->get('filtroInvMovimientoNumero') != "") {
             $queryBuilder->andWhere("m.numero = " . $session->get('filtroInvMovimientoNumero'));
         }

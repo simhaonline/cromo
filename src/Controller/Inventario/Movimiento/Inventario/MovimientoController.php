@@ -33,6 +33,7 @@ use App\Formato\Inventario\Factura2;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -85,6 +86,8 @@ class MovimientoController extends ControllerListenerGeneral
         $session = new Session();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => $session->get('filtroInvMovimientoFechaDesde') ? date_create($session->get('filtroInvMovimientoFechaDesde')): null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $session->get('filtroInvMovimeintoFechaHasta') ? date_create($session->get('filtroInvMovimeintoFechaHasta')): null])
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoCodigo')))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvMovimientoNumero')))
@@ -99,6 +102,8 @@ class MovimientoController extends ControllerListenerGeneral
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                    $session->set('filtroInvMovimientoFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
+                    $session->set('filtroInvMovimeintoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
                     $session->set('filtroInvMovimientoNumero', $form->get('txtNumero')->getData());
                     $session->set('filtroInvMovimientoCodigo', $form->get('txtCodigo')->getData());
                     $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());

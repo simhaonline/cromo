@@ -86,7 +86,7 @@ class ItemType extends AbstractType
             ->add('descripcion', TextareaType::class, ['required' => false])
             ->add('stockMinimo', IntegerType::class, ['required' => false])
             ->add('stockMaximo', IntegerType::class, ['required' => false])
-            ->add('registroInvima', TextType::class, ['required' => true])
+            ->add('registroInvima', TextType::class, ['required' => false])
             ->add('codigoCuentaVentaFk', TextType::class, ['required' => false])
             ->add('codigoCuentaVentaDevolucionFk', TextType::class, ['required' => false])
             ->add('codigoCuentaCompraFk', TextType::class, ['required' => false])

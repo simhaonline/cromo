@@ -42,6 +42,7 @@ class SucursalType extends AbstractType
                 'attr' => ['class' => 'to-select-2']
             ])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
             ;
     }
 

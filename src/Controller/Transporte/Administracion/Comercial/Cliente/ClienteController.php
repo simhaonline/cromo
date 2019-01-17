@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ClienteController extends ControllerListenerGeneral
 {
-    protected $class= TteCliente::class;
+    protected $class = TteCliente::class;
     protected $claseNombre = "TteCliente";
     protected $modulo = "Transporte";
     protected $funcion = "Administracion";
@@ -37,26 +37,23 @@ class ClienteController extends ControllerListenerGeneral
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
-            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('txtCodigoCliente', TextType::class, ['label' => 'Codigo cliente: ', 'required' => false, 'data' => $session->get('filtroTteCodigoCliente')])
+            ->add('txtNombreCorto', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNombreCliente')])
+            ->add('txtNumeroIdentificacion', NumberType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNumeroIdentificacionCliente')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-            if ($form->get('txtCodigoCliente')->getData() != '') {
-                $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-            } else {
-                $session->set('filtroTteCodigoCliente', null);
-                $session->set('filtroTteNombreCliente', null);
-            }
+            $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+            $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+            $session->set('filtroTteNumeroIdentificacionCliente', $form->get('txtNumeroIdentificacion')->getData());
         }
-        $arClientes = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1),50);
+        $arClientes = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('transporte/administracion/comercial/cliente/lista.html.twig',
             ['arClientes' => $arClientes,
-            'form' => $form->createView()]);
+                'form' => $form->createView()]);
     }
 
     /**
@@ -100,8 +97,8 @@ class ClienteController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->get('btnEliminarDetalle')->isClicked()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteClienteCondicion::class)->eliminar($arrSeleccionados);
-            }
+            $em->getRepository(TteClienteCondicion::class)->eliminar($arrSeleccionados);
+        }
 
         $arCondicion = $em->getRepository(TteClienteCondicion::class)->clienteCondicion($id);
 
@@ -121,7 +118,7 @@ class ClienteController extends ControllerListenerGeneral
      */
     public function detalleNuevo(Request $request, $id)
     {
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $respuesta = [];
         $form = $this->createFormBuilder()
@@ -132,26 +129,26 @@ class ClienteController extends ControllerListenerGeneral
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if (count($arrSeleccionados) > 0) {
                 foreach ($arrSeleccionados AS $codigo) {
-                   if(!$em->getRepository(TteClienteCondicion::class)->findOneBy(['codigoClienteFk' => $id, 'codigoCondicionFk' => $codigo])){
-                       $arClienteCondicion = new TteClienteCondicion();
-                       $arClienteCondicion->setClienteRel($em->getRepository(TteCliente::class)->find($id));
-                       $arClienteCondicion->setCondicionRel($em->getRepository(TteCondicion::class)->find($codigo));
-                       $em->persist($arClienteCondicion);
-                   } else {
-                       $respuesta [] = "La condición con código {$codigo} ya se encuentra agregada para el cliente seleccionado";
-                   }
+                    if (!$em->getRepository(TteClienteCondicion::class)->findOneBy(['codigoClienteFk' => $id, 'codigoCondicionFk' => $codigo])) {
+                        $arClienteCondicion = new TteClienteCondicion();
+                        $arClienteCondicion->setClienteRel($em->getRepository(TteCliente::class)->find($id));
+                        $arClienteCondicion->setCondicionRel($em->getRepository(TteCondicion::class)->find($codigo));
+                        $em->persist($arClienteCondicion);
+                    } else {
+                        $respuesta [] = "La condición con código {$codigo} ya se encuentra agregada para el cliente seleccionado";
+                    }
                 }
                 $em->flush();
             }
-            if(count($respuesta) > 0){
-                foreach ($respuesta AS $error){
+            if (count($respuesta) > 0) {
+                foreach ($respuesta AS $error) {
                     Mensajes::error($error);
                 }
             } else {
-            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        $arCondiciones = $paginator->paginate ($em->getRepository(TteCondicion::class)->lista(), $request->query->getInt('page', 1),30);
+        $arCondiciones = $paginator->paginate($em->getRepository(TteCondicion::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/administracion/comercial/cliente/detalleNuevo.html.twig', ['arCondiciones' => $arCondiciones, 'form' => $form->createView()]);
     }
 }

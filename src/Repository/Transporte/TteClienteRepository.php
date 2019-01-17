@@ -43,8 +43,8 @@ class TteClienteRepository extends ServiceEntityRepository
         if ($session->get('filtroTteNombreCliente') != '') {
             $queryBuilder->andWhere("tc.nombreCorto LIKE '%{$session->get('filtroTteNombreCliente')}%' ");
         }
-        if ($session->get('filtroTteNitCliente') != '') {
-            $queryBuilder->andWhere("tc.numeroIdentificacion = {$session->get('filtroTteNitCliente')} ");
+        if ($session->get('filtroTteNumeroIdentificacionCliente') != '') {
+            $queryBuilder->andWhere("tc.numeroIdentificacion = {$session->get('filtroTteNumeroIdentificacionCliente')} ");
         }
         if ($session->get('filtroTteCodigoCliente') != '') {
             $queryBuilder->andWhere("tc.codigoClientePk = {$session->get('filtroTteCodigoCliente')} ");

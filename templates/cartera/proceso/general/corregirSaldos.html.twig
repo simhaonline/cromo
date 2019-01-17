@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label  class="col-sm-1 control-label"></label>
+                        <div class="col-sm-4">
+
+                        </div>
+                    </div>
+                    {{ form_widget(form.btnGenerar) }}
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    {{ form_end(form) }}
+    <br /> <br />
+{% endblock %}
+

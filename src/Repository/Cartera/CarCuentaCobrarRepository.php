@@ -98,6 +98,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.plazo')
             ->addSelect('cc.vrTotal')
             ->addSelect('cc.vrAbono')
+            ->addSelect('cc.vrSaldoOriginal')
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.vrSaldoOperado')
             ->addSelect('cc.comentario')
@@ -409,6 +410,38 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         }
 
         return $arCrearReciboMasivo->getQuery()->execute();
+    }
+
+    public function corregirSaldos()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
+            ->select('cc.codigoCuentaCobrarPk')
+            ->addSelect('cc.vrSaldoOriginal')
+            ->addSelect('cc.operacion');
+        $arCuentasCobrar = $queryBuilder->getQuery()->getResult();
+        foreach ($arCuentasCobrar as $arCuentaCobrar) {
+            $abonos = 0;
+            $queryBuilder = $em->createQueryBuilder()->from(CarReciboDetalle::class, 'rd')
+                ->Select("SUM(rd.vrPagoAfectar) AS totalAfectar")
+                ->where("rd.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk']);
+            $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+            if ($arrResultado) {
+                $abonos = $arrResultado['totalAfectar'];
+                if($abonos== null) {
+                    $abonos = 0;
+                }
+            }
+            $saldo = $arCuentaCobrar['vrSaldoOriginal'] - $abonos;
+            $saldoOperado = $saldo * $arCuentaCobrar['operacion'];
+            $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar['codigoCuentaCobrarPk']);
+            $arCuentaCobrarAct->getVrSaldo($saldo);
+            $arCuentaCobrarAct->setVrSaldoOperado($saldoOperado);
+            $arCuentaCobrarAct->setVrAbono($abonos);
+            $em->persist($arCuentaCobrarAct);
+        }
+        $em->flush();
+        return true;
     }
 
 }

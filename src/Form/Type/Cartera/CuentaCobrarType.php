@@ -34,10 +34,10 @@ class CuentaCobrarType extends AbstractType
             {"campo":"clienteRel.numeroIdentificacion","tipo":"texto",    "ayuda":"Numero de identificacion del cliente",     "titulo":"IDENTIFICACION","relacion":""},            
             {"campo":"clienteRel.nombreCorto",         "tipo":"texto",    "ayuda":"Nombre del cliente",     "titulo":"CLIENTE","relacion":""},                        
             {"campo":"plazo",                          "tipo":"texto",    "ayuda":"Plazo de pago del cliente",     "titulo":"PLAZO"},            
+            {"campo":"vrSaldoOriginal",                        "tipo":"moneda",   "ayuda":"Valor del saldo original",    "titulo":"ORIGINAL"},
             {"campo":"vrAbono",                        "tipo":"moneda",   "ayuda":"Valor del abono",    "titulo":"ABONO"},            
             {"campo":"vrSaldo",                        "tipo":"moneda",   "ayuda":"Valor del saldo",    "titulo":"SALDO"},            
-            {"campo":"vrSaldoOperado",                 "tipo":"moneda",   "ayuda":"Valor del saldo operado",    "titulo":"S_O"},            
-            {"campo":"vrTotal",                        "tipo":"moneda",   "ayuda":"Valor total",    "titulo":"TOTAL"}            
+            {"campo":"vrSaldoOperado",                 "tipo":"moneda",   "ayuda":"Valor del saldo operado",    "titulo":"S_O"}                                    
         ]';
         return $campos;
     }

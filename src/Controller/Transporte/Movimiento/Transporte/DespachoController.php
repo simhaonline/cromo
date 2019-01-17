@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Transporte;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
@@ -263,8 +264,12 @@ class DespachoController extends ControllerListenerGeneral
                     $formato = new RelacionEntrega();
                     $formato->Generar($em, $id);
                 } else {
-                    $formato = new Manifiesto();
-                    $formato->Generar($em, $id);
+                    if(!$em->find(GenConfiguracion::class,1)->getCiudadRel()){
+                        Mensajes::error('Debe ingresar una ciudad en la configuracion general del sistema');
+                    } else {
+                        $formato = new Manifiesto();
+                        $formato->Generar($em, $id);
+                    }
                 }
             }
             if ($form->get('btnCobroEntrega')->isClicked()) {

@@ -51,7 +51,7 @@ class Manifiesto extends \FPDF {
         $this->SetFont('Arial', 'b', 9);
         $this->Text(138, 38, substr($arConfiguracion->getDireccion(),0, 55));
         $this->Text(138, 43, $arConfiguracion->getTelefono());
-        $this->Text(138, 48, utf8_decode($arConfiguracion->getCiudadRel()->getNombre() . " - " . $arConfiguracion->getCiudadRel()->getDepartamentoRel()->getNOmbre()));
+        $this->Text(138, 48, utf8_decode($arConfiguracion->getCiudadRel()->getNombre() . " - " . $arConfiguracion->getCiudadRel()->getDepartamentoRel()->getNombre()));
 
         $this->SetFont('Arial', 'b', 5);
         $this->SetXY(190, 10);

@@ -271,7 +271,8 @@ abstract class BaseController extends Controller
                 $queryBuilder->addSelect('e.' . $campo->campo);
             } elseif (isset($campo->relacion)) {
                 $arrRel = explode('.', $campo->campo);
-                $alias = $arrRel[0] . 'Rel' . $arrRel[1];
+                $alias = substr($arrRel[0], 0, 3) . 'Rel' . $arrRel[1];
+//                $alias = $arrRel[0] . 'Rel' . $arrRel[1];
                 if (!$this->validarRelacion($arrRelaciones, $arrRel[0])) {
                     $arrRelaciones[] = $arrRel[0];
                     $queryBuilder->leftJoin('e.' . $arrRel[0], $arrRel[0]);

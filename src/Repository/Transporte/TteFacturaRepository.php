@@ -486,6 +486,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
                 $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());
                 $arCuentaCobrar->setVrTotal($arFactura->getVrTotal());
+                $arCuentaCobrar->setVrSaldoOriginal($arFactura->getVrTotal());
                 $arCuentaCobrar->setVrRetencionFuente($arFactura->getVrRetencionFuente());
                 $arCuentaCobrar->setVrSaldo($arFactura->getVrTotal());
                 $arCuentaCobrar->setVrSaldoOperado($arFactura->getVrTotal() * $arCuentaCobrarTipo->getOperacion());

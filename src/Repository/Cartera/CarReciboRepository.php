@@ -339,7 +339,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setDescripcion($descripcion);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            $error = "El [tipo cuenta cobrar] no tiene configurada la cuenta " . $descripcion;
                                             break;
                                         }
                                     }

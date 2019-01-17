@@ -97,6 +97,11 @@ class CarCuentaCobrar
     private $vrAbono = 0;
 
     /**
+     * @ORM\Column(name="vr_saldo_original", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrSaldoOriginal = 0;
+
+    /**
      * @ORM\Column(name="vr_saldo", type="float", nullable=true, options={"default" : 0})
      */
     private $vrSaldo = 0;
@@ -664,6 +669,22 @@ class CarCuentaCobrar
     public function setAsesorRel($asesorRel): void
     {
         $this->asesorRel = $asesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSaldoOriginal()
+    {
+        return $this->vrSaldoOriginal;
+    }
+
+    /**
+     * @param mixed $vrSaldoOriginal
+     */
+    public function setVrSaldoOriginal( $vrSaldoOriginal ): void
+    {
+        $this->vrSaldoOriginal = $vrSaldoOriginal;
     }
 
 

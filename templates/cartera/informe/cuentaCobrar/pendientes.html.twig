@@ -91,7 +91,6 @@
             <th>VENCE</th>
             <th>ASESOR</th>
             <th>SOPORTE</th>
-            <th>COMENTARIO</th>
             <th>NIT</th>
             <th>CLIENTE</th>
             <th>PLAZO
@@ -103,8 +102,7 @@
         <tbody>
         {% for arCuentaCobrar in arCuentasCobrar %}
             <tr>
-                <td>{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
-                {#<td><a href="javascript:abrirVentana3('{{ path('cartera_movimiento_cartera_cuentacobrar_referencia',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</a></td>#}
+                <td><a href="javascript:abrirVentana3('{{ path('cartera_informe_cuentaCobrar_cuentaCobrar_referencia',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</a></td>
                 <td>{{ arCuentaCobrar.numeroDocumento }}</td>
                 <td>{{ arCuentaCobrar.numeroReferencia }}</td>
                 <td>{{ arCuentaCobrar.tipo }}</td>
@@ -112,7 +110,6 @@
                 <td>{{ arCuentaCobrar.fechaVence | date('Y-m-d') }}</td>
                 <td>{{ arCuentaCobrar.asesor }}</td>
                 <td>{{ arCuentaCobrar.soporte }}</td>
-                <td>{{ arCuentaCobrar.comentario }}</td>
                 <td>{{ arCuentaCobrar.numeroIdentificacion }}</td>
                 <td>{{ arCuentaCobrar.nombreCorto }}</td>
                 <td>{{ arCuentaCobrar.plazo }}</td>

@@ -4,6 +4,7 @@ namespace App\Controller\Cartera\Informe\CuentaCobrar\CuentaCobrar;
 
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\General\GenAsesor;
 use App\Formato\Cartera\CarteraEdad;
 use App\Formato\Cartera\CarteraEdadCliente;
@@ -28,7 +29,7 @@ class CuentaCobrarController extends Controller
      * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/Cartera/informe/cuentaCobrar/CuentaCobrar/lista", name="cartera_informe_cuentaCobrar_cuentaCobrar_lista")
+     * @Route("/cartera/informe/cuentaCobrar/cuentaCobrar/pendiente", name="cartera_informe_cuentaCobrar_cuentaCobrar_pendiente")
      */
     public function lista(Request $request)
     {
@@ -91,11 +92,25 @@ class CuentaCobrarController extends Controller
         }
         $query = $this->getDoctrine()->getRepository(CarCuentaCobrar::class)->pendientes();
         $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1),50);
-        return $this->render('cartera/informe/cuentaCobrar.html.twig', [
+        return $this->render('cartera/informe/cuentaCobrar/pendientes.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,
             'form' => $form->createView()]);
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/cartera/informe/cuentaCobrar/cuentaCobrar/referencia/{id}", name="cartera_informe_cuentaCobrar_cuentaCobrar_referencia")
+     */
+    public function referencia($id){
+        $em = $this->getDoctrine()->getManager();
+        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
+        $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(['codigoCuentaCobrarFk' => $id]);
+        return $this->render('cartera/informe/cuentaCobrar/referencia.html.twig',[
+            'arCuentaCobrar' => $arCuentaCobrar,
+            'arReciboDetalles' => $arReciboDetalles
+        ]);
+    }
 
 }
 

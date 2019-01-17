@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Tests\Matcher\DumpedUrlMatcherTest;
 
 class DocumentacionController extends Controller
 {
@@ -20,11 +21,57 @@ class DocumentacionController extends Controller
     public function buscar(Request $request)
     {
         $arrDatos = '';
+        $arrModulos = [
+            'TTE' => 'Transporte',
+            'RHU' => 'Recursos humano',
+            'TUR' => 'Turnos',
+            'CAR' => 'Cartera',
+            'COM' => 'Compra',
+            'INV' => 'Inventario',
+            'FIN' => 'Financiero',
+            'DOC' => 'Documental',
+            'GEN' => 'General'
+        ];
+        $arrFunciones = [
+            'MOV' => 'Movimiento',
+            'ADM' => 'Administración',
+            'PRO' => 'Proceso',
+            'UTI' => 'Utilidad',
+            'INF' => 'Informe',
+            'TBL' => 'Tablero',
+        ];
         $em = $this->getDoctrine()->getManager();
         $arConfiguracion = $em->find(GenConfiguracion::class, 1);
         $form = $this->createFormBuilder()
             ->add('choBusquedaTipo', ChoiceType::class, [
                 'choices' => ['TODOS' => 'TOD', 'TITULO' => 'TIT', 'DESCRIPCION' => 'DES'],
+                'attr' => ['class' => 'btn btn-default dropdown-toggle']
+            ])
+            ->add('choModulo', ChoiceType::class, [
+                'choices' => [
+                    'TODOS' => 'TOD',
+                    'TRANSPORTE' => 'TTE',
+                    'RECURSO HUMANO' => 'RHU',
+                    'TURNO' => 'TUR',
+                    'CARTERA' => 'CAR',
+                    'COMPRA' => 'COM',
+                    'INVENTARIO' => 'INV',
+                    'FINANCIERO' => 'FIN',
+                    'DOCUMENTAL' => 'DOC',
+                    'GENERAL' => 'GEN'
+                ],
+                'attr' => ['class' => 'btn btn-default dropdown-toggle']
+            ])
+            ->add('choFuncion', ChoiceType::class, [
+                'choices' => [
+                    'TODOS' => 'TOD',
+                    'MOVIMIENTO' => 'MOV',
+                    'ADMINISTRACIÓN' => 'ADM',
+                    'PROCESO' => 'PRO',
+                    'UTILIDAD' => 'UTI',
+                    'INFORME' => 'INF',
+                    'TABLERO' => 'TBL'
+                ],
                 'attr' => ['class' => 'btn btn-default dropdown-toggle']
             ])
             ->add('txtBusqueda', TextType::class, ['required' => false, 'attr' => ['class' => 'input-lg']])
@@ -33,7 +80,9 @@ class DocumentacionController extends Controller
         if ($form->isSubmitted()) {
             $arrDatos = json_encode([
                 'busqueda' => $form->get('txtBusqueda')->getData(),
-                'tipoBusqueda' => $form->get('choBusquedaTipo')->getData()
+                'tipoBusqueda' => $form->get('choBusquedaTipo')->getData(),
+                'modulo' => $form->get('choModulo')->getData(),
+                'funcion' => $form->get('choFuncion')->getData()
             ]);
         }
         $ch = curl_init($arConfiguracion->getWebServiceCesioUrl() . '/api/documentacion/buscar');
@@ -45,9 +94,10 @@ class DocumentacionController extends Controller
                 'Content-Length: ' . strlen($arrDatos))
         );
         $arTemas = json_decode(curl_exec($ch));
-
         return $this->render('general/utilidad/general/documentacion/buscar.html.twig', [
             'arTemas' => $arTemas,
+            'modulos' => $arrModulos,
+            'funciones' => $arrFunciones,
             'form' => $form->createView()
         ]);
     }
@@ -90,7 +140,7 @@ class DocumentacionController extends Controller
         $arrDatos = json_encode($arrDatos);
 
         $ch = curl_init($arConfiguracion->getWebServiceCesioUrl() . '/api/documentacion/consultarHtml');
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $arrDatos);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -101,4 +151,3 @@ class DocumentacionController extends Controller
         return new JsonResponse($respuesta);
     }
 }
-

@@ -38,6 +38,7 @@
                             <th>OI</th>
                             <th>OC</th>
                             <th>NUMERO</th>
+                            <th>ORIGEN</th>
                             <th>DESTINO</th>
                             <th>DOCUMENTO</th>
                             <th>UND</th>
@@ -58,6 +59,7 @@
                                 <td>{{ arFacturaDetalle.codigoOperacionIngresoFk }}</td>
                                 <td>{{ arFacturaDetalle.codigoOperacionCargoFk }}</td>
                                 <td>{{ arFacturaDetalle.numero }}</td>
+                                <td>{{ arFacturaDetalle.ciduadOrigen }}</td>
                                 <td>{{ arFacturaDetalle.ciudadDestino }}</td>
                                 {% if arFactura.estadoAutorizado == 0 %}
                                     <td style="text-align: left;"><input type="text" style="text-align: left;width:100px;" name="arrDocumentoCliente[{{ arFacturaDetalle.codigoFacturaDetallePk }}]" value="{{ arFacturaDetalle.documentoCliente }}"></td>

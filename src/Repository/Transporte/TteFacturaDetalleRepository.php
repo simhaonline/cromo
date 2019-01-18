@@ -29,6 +29,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         g.documentoCliente, 
         g.codigoGuiaTipoFk,
         g.nombreDestinatario,
+        co.nombre AS ciduadOrigen,
         cd.nombre AS ciudadDestino,
         g.fechaIngreso,        
         fd.unidades,
@@ -43,6 +44,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         FROM App\Entity\Transporte\TteFacturaDetalle fd 
         LEFT JOIN fd.guiaRel g        
         LEFT JOIN g.ciudadDestinoRel cd
+        LEFT JOIN g.ciudadOrigenRel co
         WHERE fd.codigoFacturaFk = :codigoFactura'
         )->setParameter('codigoFactura', $codigoFactura);
 

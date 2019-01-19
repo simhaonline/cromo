@@ -52,29 +52,34 @@ class CarReciboDetalle
     private $numeroDocumentoAplicacion;
 
     /**
-     * @ORM\Column(name="vr_descuento", type="float", nullable=true)
+     * @ORM\Column(name="vr_descuento", type="float", nullable=true, options={"default":0})
      */
     private $vrDescuento = 0;
 
     /**
-     * @ORM\Column(name="vr_ajuste_peso", type="float", nullable=true)
+     * @ORM\Column(name="vr_ajuste_peso", type="float", nullable=true, options={"default":0})
      */
     private $vrAjustePeso = 0;
 
     /**
-     * @ORM\Column(name="vr_retencion_ica", type="float", nullable=true)
+     * @ORM\Column(name="vr_retencion_ica", type="float", nullable=true, options={"default":0})
      */
     private $vrRetencionIca = 0;
 
     /**
-     * @ORM\Column(name="vr_retencion_iva", type="float", nullable=true)
+     * @ORM\Column(name="vr_retencion_iva", type="float", nullable=true, options={"default":0})
      */
     private $vrRetencionIva = 0;
 
     /**
-     * @ORM\Column(name="vr_retencion_fuente", type="float", nullable=true)
+     * @ORM\Column(name="vr_retencion_fuente", type="float", nullable=true, options={"default":0})
      */
     private $vrRetencionFuente = 0;
+
+    /**
+     * @ORM\Column(name="vr_otro_descuento", type="float", options={"default":0})
+     */
+    private $vrOtroDescuento = 0;
 
     /**
      * @ORM\Column(name="vr_pago", type="float", nullable=true)
@@ -95,6 +100,11 @@ class CarReciboDetalle
      * @ORM\Column(name="operacion", type="integer")
      */
     private $operacion = 0;
+
+    /**
+     * @ORM\Column(name="codigo_descuento_concepto_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoDescuentoConceptoFk;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarRecibo", inversedBy="recibosDetallesRecibosRel")
@@ -121,6 +131,12 @@ class CarReciboDetalle
     protected $cuentaCobrarAplicacionRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarDescuentoConcepto", inversedBy="recibosDetallesDescuentoConceptoRel")
+     * @ORM\JoinColumn(name="codigo_descuento_concepto_fk", referencedColumnName="codigo_descuento_concepto_pk")
+     */
+    protected $descuentoConceptoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoReciboDetallePk()
@@ -131,7 +147,7 @@ class CarReciboDetalle
     /**
      * @param mixed $codigoReciboDetallePk
      */
-    public function setCodigoReciboDetallePk($codigoReciboDetallePk): void
+    public function setCodigoReciboDetallePk( $codigoReciboDetallePk ): void
     {
         $this->codigoReciboDetallePk = $codigoReciboDetallePk;
     }
@@ -147,7 +163,7 @@ class CarReciboDetalle
     /**
      * @param mixed $codigoReciboFk
      */
-    public function setCodigoReciboFk($codigoReciboFk): void
+    public function setCodigoReciboFk( $codigoReciboFk ): void
     {
         $this->codigoReciboFk = $codigoReciboFk;
     }
@@ -163,7 +179,7 @@ class CarReciboDetalle
     /**
      * @param mixed $codigoCuentaCobrarFk
      */
-    public function setCodigoCuentaCobrarFk($codigoCuentaCobrarFk): void
+    public function setCodigoCuentaCobrarFk( $codigoCuentaCobrarFk ): void
     {
         $this->codigoCuentaCobrarFk = $codigoCuentaCobrarFk;
     }
@@ -179,7 +195,7 @@ class CarReciboDetalle
     /**
      * @param mixed $codigoCuentaCobrarTipoFk
      */
-    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    public function setCodigoCuentaCobrarTipoFk( $codigoCuentaCobrarTipoFk ): void
     {
         $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
     }
@@ -195,7 +211,7 @@ class CarReciboDetalle
     /**
      * @param mixed $codigoCuentaCobrarAplicacionFk
      */
-    public function setCodigoCuentaCobrarAplicacionFk($codigoCuentaCobrarAplicacionFk): void
+    public function setCodigoCuentaCobrarAplicacionFk( $codigoCuentaCobrarAplicacionFk ): void
     {
         $this->codigoCuentaCobrarAplicacionFk = $codigoCuentaCobrarAplicacionFk;
     }
@@ -211,10 +227,9 @@ class CarReciboDetalle
     /**
      * @param mixed $numeroFactura
      */
-    public function setNumeroFactura($numeroFactura)
+    public function setNumeroFactura( $numeroFactura ): void
     {
         $this->numeroFactura = $numeroFactura;
-        return $this;
     }
 
     /**
@@ -228,7 +243,7 @@ class CarReciboDetalle
     /**
      * @param mixed $numeroDocumentoAplicacion
      */
-    public function setNumeroDocumentoAplicacion($numeroDocumentoAplicacion): void
+    public function setNumeroDocumentoAplicacion( $numeroDocumentoAplicacion ): void
     {
         $this->numeroDocumentoAplicacion = $numeroDocumentoAplicacion;
     }
@@ -244,7 +259,7 @@ class CarReciboDetalle
     /**
      * @param mixed $vrDescuento
      */
-    public function setVrDescuento($vrDescuento): void
+    public function setVrDescuento( $vrDescuento ): void
     {
         $this->vrDescuento = $vrDescuento;
     }
@@ -260,7 +275,7 @@ class CarReciboDetalle
     /**
      * @param mixed $vrAjustePeso
      */
-    public function setVrAjustePeso($vrAjustePeso): void
+    public function setVrAjustePeso( $vrAjustePeso ): void
     {
         $this->vrAjustePeso = $vrAjustePeso;
     }
@@ -276,7 +291,7 @@ class CarReciboDetalle
     /**
      * @param mixed $vrRetencionIca
      */
-    public function setVrRetencionIca($vrRetencionIca): void
+    public function setVrRetencionIca( $vrRetencionIca ): void
     {
         $this->vrRetencionIca = $vrRetencionIca;
     }
@@ -292,7 +307,7 @@ class CarReciboDetalle
     /**
      * @param mixed $vrRetencionIva
      */
-    public function setVrRetencionIva($vrRetencionIva): void
+    public function setVrRetencionIva( $vrRetencionIva ): void
     {
         $this->vrRetencionIva = $vrRetencionIva;
     }
@@ -308,10 +323,25 @@ class CarReciboDetalle
     /**
      * @param mixed $vrRetencionFuente
      */
-    public function setVrRetencionFuente($vrRetencionFuente)
+    public function setVrRetencionFuente( $vrRetencionFuente ): void
     {
         $this->vrRetencionFuente = $vrRetencionFuente;
-        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrOtroDescuento()
+    {
+        return $this->vrOtroDescuento;
+    }
+
+    /**
+     * @param mixed $vrOtroDescuento
+     */
+    public function setVrOtroDescuento( $vrOtroDescuento ): void
+    {
+        $this->vrOtroDescuento = $vrOtroDescuento;
     }
 
     /**
@@ -325,10 +355,9 @@ class CarReciboDetalle
     /**
      * @param mixed $vrPago
      */
-    public function setVrPago($vrPago)
+    public function setVrPago( $vrPago ): void
     {
         $this->vrPago = $vrPago;
-        return $this;
     }
 
     /**
@@ -342,10 +371,9 @@ class CarReciboDetalle
     /**
      * @param mixed $vrPagoAfectar
      */
-    public function setVrPagoAfectar($vrPagoAfectar)
+    public function setVrPagoAfectar( $vrPagoAfectar ): void
     {
         $this->vrPagoAfectar = $vrPagoAfectar;
-        return $this;
     }
 
     /**
@@ -359,7 +387,7 @@ class CarReciboDetalle
     /**
      * @param mixed $usuario
      */
-    public function setUsuario($usuario): void
+    public function setUsuario( $usuario ): void
     {
         $this->usuario = $usuario;
     }
@@ -375,10 +403,9 @@ class CarReciboDetalle
     /**
      * @param mixed $operacion
      */
-    public function setOperacion($operacion)
+    public function setOperacion( $operacion ): void
     {
         $this->operacion = $operacion;
-        return $this;
     }
 
     /**
@@ -392,10 +419,9 @@ class CarReciboDetalle
     /**
      * @param mixed $reciboRel
      */
-    public function setReciboRel($reciboRel)
+    public function setReciboRel( $reciboRel ): void
     {
         $this->reciboRel = $reciboRel;
-        return $this;
     }
 
     /**
@@ -409,10 +435,9 @@ class CarReciboDetalle
     /**
      * @param mixed $cuentaCobrarRel
      */
-    public function setCuentaCobrarRel($cuentaCobrarRel)
+    public function setCuentaCobrarRel( $cuentaCobrarRel ): void
     {
         $this->cuentaCobrarRel = $cuentaCobrarRel;
-        return $this;
     }
 
     /**
@@ -426,10 +451,9 @@ class CarReciboDetalle
     /**
      * @param mixed $cuentaCobrarTipoRel
      */
-    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel)
+    public function setCuentaCobrarTipoRel( $cuentaCobrarTipoRel ): void
     {
         $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
-        return $this;
     }
 
     /**
@@ -443,9 +467,41 @@ class CarReciboDetalle
     /**
      * @param mixed $cuentaCobrarAplicacionRel
      */
-    public function setCuentaCobrarAplicacionRel($cuentaCobrarAplicacionRel): void
+    public function setCuentaCobrarAplicacionRel( $cuentaCobrarAplicacionRel ): void
     {
         $this->cuentaCobrarAplicacionRel = $cuentaCobrarAplicacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDescuentoConceptoFk()
+    {
+        return $this->codigoDescuentoConceptoFk;
+    }
+
+    /**
+     * @param mixed $codigoDescuentoConceptoFk
+     */
+    public function setCodigoDescuentoConceptoFk( $codigoDescuentoConceptoFk ): void
+    {
+        $this->codigoDescuentoConceptoFk = $codigoDescuentoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescuentoConceptoRel()
+    {
+        return $this->descuentoConceptoRel;
+    }
+
+    /**
+     * @param mixed $descuentoConceptoRel
+     */
+    public function setDescuentoConceptoRel( $descuentoConceptoRel ): void
+    {
+        $this->descuentoConceptoRel = $descuentoConceptoRel;
     }
 
 

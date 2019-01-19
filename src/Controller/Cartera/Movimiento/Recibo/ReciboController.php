@@ -7,6 +7,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarDescuentoConcepto;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Financiero\FinTercero;
@@ -175,10 +176,12 @@ class ReciboController extends ControllerListenerGeneral
             }
         }
 
+        $arDescuentosConceptos = $em->getRepository(CarDescuentoConcepto::class)->findAll();
         $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
         return $this->render('cartera/movimiento/recibo/recibo/detalle.html.twig', array(
             'arRecibo'=> $arRecibo,
             'arReciboDetalle'=> $arReciboDetalle,
+            'arDescuentoConceptos' => $arDescuentosConceptos,
             'clase' => array('clase' => 'CarRecibo', 'codigo' => $id),
             'form' => $form->createView()
         ));

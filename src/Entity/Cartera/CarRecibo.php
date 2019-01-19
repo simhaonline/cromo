@@ -67,29 +67,34 @@ class CarRecibo
     private $fechaPago;
 
     /**
-     * @ORM\Column(name="vr_total_descueto", type="float")
+     * @ORM\Column(name="vr_total_descueto", type="float", options={"default":0})
      */
     private $vrTotalDescuento = 0;
 
     /**
-     * @ORM\Column(name="vr_total_ajuste_peso", type="float")
+     * @ORM\Column(name="vr_total_ajuste_peso", type="float", options={"default":0})
      */
     private $vrTotalAjustePeso = 0;
 
     /**
-     * @ORM\Column(name="vr_total_rete_ica", type="float")
+     * @ORM\Column(name="vr_total_rete_ica", type="float", options={"default":0})
      */
     private $vrTotalRetencionIca = 0;
 
     /**
-     * @ORM\Column(name="vr_total_rete_iva", type="float")
+     * @ORM\Column(name="vr_total_rete_iva", type="float", options={"default":0})
      */
     private $vrTotalRetencionIva = 0;
 
     /**
-     * @ORM\Column(name="vr_total_rete_fuente", type="float")
+     * @ORM\Column(name="vr_total_rete_fuente", type="float", options={"default":0})
      */
     private $vrTotalRetencionFuente = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_otro_descuento", type="float", options={"default":0})
+     */
+    private $vrTotalOtroDescuento = 0;
 
     /**
      * @ORM\Column(name="vr_pago", type="float")
@@ -219,10 +224,9 @@ class CarRecibo
     /**
      * @param mixed $fecha
      */
-    public function setFecha( $fecha )
+    public function setFecha( $fecha ): void
     {
         $this->fecha = $fecha;
-        return $this;
     }
 
     /**
@@ -332,10 +336,9 @@ class CarRecibo
     /**
      * @param mixed $fechaPago
      */
-    public function setFechaPago( $fechaPago )
+    public function setFechaPago( $fechaPago ): void
     {
         $this->fechaPago = $fechaPago;
-        return $this;
     }
 
     /**
@@ -421,6 +424,22 @@ class CarRecibo
     /**
      * @return mixed
      */
+    public function getVrTotalOtroDescuento()
+    {
+        return $this->vrTotalOtroDescuento;
+    }
+
+    /**
+     * @param mixed $vrTotalOtroDescuento
+     */
+    public function setVrTotalOtroDescuento( $vrTotalOtroDescuento ): void
+    {
+        $this->vrTotalOtroDescuento = $vrTotalOtroDescuento;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrPago()
     {
         return $this->vrPago;
@@ -429,10 +448,9 @@ class CarRecibo
     /**
      * @param mixed $vrPago
      */
-    public function setVrPago( $vrPago )
+    public function setVrPago( $vrPago ): void
     {
         $this->vrPago = $vrPago;
-        return $this;
     }
 
     /**
@@ -446,10 +464,9 @@ class CarRecibo
     /**
      * @param mixed $vrPagoTotal
      */
-    public function setVrPagoTotal( $vrPagoTotal )
+    public function setVrPagoTotal( $vrPagoTotal ): void
     {
         $this->vrPagoTotal = $vrPagoTotal;
-        return $this;
     }
 
     /**
@@ -623,10 +640,9 @@ class CarRecibo
     /**
      * @param mixed $usuario
      */
-    public function setUsuario( $usuario )
+    public function setUsuario( $usuario ): void
     {
         $this->usuario = $usuario;
-        return $this;
     }
 
     /**
@@ -640,10 +656,9 @@ class CarRecibo
     /**
      * @param mixed $clienteRel
      */
-    public function setClienteRel( $clienteRel )
+    public function setClienteRel( $clienteRel ): void
     {
         $this->clienteRel = $clienteRel;
-        return $this;
     }
 
     /**
@@ -657,10 +672,9 @@ class CarRecibo
     /**
      * @param mixed $reciboTipoRel
      */
-    public function setReciboTipoRel( $reciboTipoRel )
+    public function setReciboTipoRel( $reciboTipoRel ): void
     {
         $this->reciboTipoRel = $reciboTipoRel;
-        return $this;
     }
 
     /**
@@ -674,10 +688,9 @@ class CarRecibo
     /**
      * @param mixed $cuentaRel
      */
-    public function setCuentaRel( $cuentaRel )
+    public function setCuentaRel( $cuentaRel ): void
     {
         $this->cuentaRel = $cuentaRel;
-        return $this;
     }
 
     /**
@@ -727,6 +740,7 @@ class CarRecibo
     {
         $this->recibosDetallesRecibosRel = $recibosDetallesRecibosRel;
     }
+
 
 
 

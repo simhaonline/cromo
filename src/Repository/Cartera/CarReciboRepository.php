@@ -90,6 +90,11 @@ class CarReciboRepository extends ServiceEntityRepository
             $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $arRecibo->getCodigoReciboPk()));
             if (count($em->getRepository(CarReciboDetalle::class)->findBy(['codigoReciboFk' => $arRecibo->getCodigoReciboPk()])) > 0){
                 foreach ($arReciboDetalles AS $arReciboDetalle) {
+                    if($arReciboDetalle->getVrOtroDescuento() > 0 && $arReciboDetalle->getCodigoDescuentoConceptoFk() == null) {
+                        Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . " ingreso un valor para otros descuento pero no selecciono un concepto");
+                        $error = true;
+                        break;
+                    }
                     if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
                         $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
                         if ($arCuentaCobrarAplicacion->getVrSaldo() >= $arReciboDetalle->getVrPagoAfectar()) {
@@ -108,11 +113,10 @@ class CarReciboRepository extends ServiceEntityRepository
                             $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
                             $em->persist($arCuentaCobrar);
                         } else {
-                            Mensajes::error('El valor a afectar del documento aplicacion ' . $arCuentaCobrarAplicacion->getNumeroDocumento() . " supera el saldo desponible: " . $arCuentaCobrarAplicacion->getVrSaldo());
+                            Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . ' el valor a afectar del documento aplicacion ' . $arCuentaCobrarAplicacion->getNumeroDocumento() . " supera el saldo desponible: " . $arCuentaCobrarAplicacion->getVrSaldo());
                             $error = true;
                             break;
                         }
-
                     } else {
                         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
                         if($arCuentaCobrar->getVrSaldo() >= $arReciboDetalle->getVrPagoAfectar()) {
@@ -123,7 +127,7 @@ class CarReciboRepository extends ServiceEntityRepository
                             $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
                             $em->persist($arCuentaCobrar);
                         } else {
-                            Mensajes::error("El saldo " . $arCuentaCobrar->getVrSaldo() . " de la cuenta por cobrar numero: " . $arCuentaCobrar->getNumeroDocumento() . " es menor al recibo detalle " . $arReciboDetalle->getVrPagoAfectar());
+                            Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . "el saldo " . $arCuentaCobrar->getVrSaldo() . " de la cuenta por cobrar numero: " . $arCuentaCobrar->getNumeroDocumento() . " es menor al ingresado " . $arReciboDetalle->getVrPagoAfectar());
                             $error = true;
                             break;
                         }

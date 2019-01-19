@@ -19,15 +19,23 @@
     <table class="table table-striped table-bordered table-condensed tabla-datos">
         <thead>
         <tr>
+            <th colspan="5"></th>
+            <th colspan="4">DESCUENTOS RAPIDOS</th>
+            <th colspan="2">OTROS DESCUENTOS</th>
+            <th colspan="4"></th>
+        </tr>
+        <tr>
             <th>ID</th>
             <th>NUMERO</th>
             <th>NUMERO_A</th>
             <th>TIPO</th>
-            <th>DESCUENTO</th>
             <th>AJUSTE PESO</th>
+            <th>DESCUENTO</th>
             <th>RTE ICA</th>
             <th>RTE IVA</th>
             <th>RTE FUENTE</th>
+            <th>OTRO</th>
+            <th>CONCEPTO OTRO</th>
             <th>PAGO</th>
             <th>TOTAL</th>
             <th></th>
@@ -42,11 +50,20 @@
                 <td>{{ arReciboDetalle.numeroDocumentoAplicacion  }}</td>
                 <td>{{ arReciboDetalle.cuentaCobrarTipoRel.nombre |default('')  }}</td>
                 {% if arRecibo.estadoAutorizado == 0 %}
-                    <td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrDescuento{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrDescuento  }}" size="6" style="width:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
                     <td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrAjustePeso{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrAjustePeso  }}" size="6" style="width:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
+                    <td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrDescuento{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrDescuento  }}" size="6" style="width:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
                     <td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrRetencionIca{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrRetencionIca  }}" size="6" style="width:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
                     <td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrRetencionIva{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrRetencionIva  }}" size="6" style="width:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
                     <td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrRetencionFuente{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrRetencionFuente  }}" size="6" style="height:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
+                    <td style="text-align: right"><input style="text-align: right" type="text" name="TxtVrOtroDescuento{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrOtroDescuento  }}" size="6" style="height:65px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
+                    <td style="text-align: left">
+                        <select name="cboDescuentoConcepto{{ arReciboDetalle.codigoReciboDetallePk }}">
+                            <option value="SS">SIN SELECCIONAR</option>
+                            {% for arDescuentoConcepto in arDescuentoConceptos %}
+                                <option value="{{ arDescuentoConcepto.codigoDescuentoConceptoPk }}" {% if arReciboDetalle.codigoDescuentoConceptoFk == arDescuentoConcepto.codigoDescuentoConceptoPk %} selected {% endif %}>{{ arDescuentoConcepto.nombre }}({{ arDescuentoConcepto.codigoCuentaFk }})</option>
+                            {% endfor %}
+                        </select></td>
+
                     <td style="text-align: right"><input style="text-align: right" type="text" name="TxtValorPago{{ arReciboDetalle.codigoReciboDetallePk }}" value="{{ arReciboDetalle.vrPago  }}" size="10" style="height:100px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
                     <td style="text-align: right">{{ arReciboDetalle.vrPagoAfectar | number_format(0, '.', ',') }}</td>
                     <td style="text-align: center"><a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('cartera_movimiento_recibo_recibo_detalle_aplicar', {'id': arReciboDetalle.codigoReciboDetallePk }) }}', 'AgregarNuevoDetalle', 600, 900)">Aplicar</a></td>
@@ -56,6 +73,8 @@
                     <td style="text-align: right">{{ arReciboDetalle.vrRetencionIca | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrRetencionIva | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrRetencionFuente | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arReciboDetalle.vrOtroDescuento | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: left">{{ arReciboDetalle.descuentoConceptoRel.nombre | default("") }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrPago | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrPagoAfectar | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right"></td>
@@ -82,5 +101,22 @@
 
         </div>
     </div>
+<br/><br/><br/>
+<div class="well well-sm">
+    <div class="bs-example">
+        <blockquote>
+            <p>
+                Recuerde: los descuentos rapidos quedan imputados a una cuenta fija, use otros descuentos cuando desee otros tipo de descuento.
+            </p>
+            <small>Consulte la cuenta de cada descuento rapido en <cite title="Source Title">configuracion</cite></small>
+        </blockquote>
+    </div>
+</div>
+
+
+
+
+
+
     {{ form_end(form) }}
 {% endblock %}

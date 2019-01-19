@@ -17,67 +17,68 @@
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.codigoOperacionCargoFk, { 'attr': {'class': 'form-control'} }) }}
                     </div>
-                    <label for="form_cboServicioRel" class="col-sm-1 control-label">Servicio:</label>
-                    <div class="col-sm-5">
-                        {{ form_widget(formFiltro.codigoServicioFk, { 'attr': {'class': 'form-control'} }) }}
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <label for="form_TxtCodigo" class="col-sm-1 control-label">Guia:</label>
-                    <div class="col-sm-2">
-                        {{ form_widget(formFiltro.codigoGuiaPk, { 'attr': {'class': 'form-control'} }) }}
-                    </div>
-                    <label for="form_codigoDespachoFk" class="col-sm-1 control-label">Despacho:</label>
+                    <label for="form_txtNumero" class="col-sm-1 control-label">Despacho:</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.codigoDespachoFk, { 'attr': {'class': 'form-control'} }) }}
                     </div>
-                    <label for="form_txtNumero" class="col-sm-1 control-label">Numero:</label>
+                    <label class="col-sm-1 control-label">Despachado</label>
                     <div class="col-sm-2">
-                        {{ form_widget(formFiltro.numero, { 'attr': {'class': 'form-control'} }) }}
-                    </div>
-                    <label for="form_txtDocumento" class="col-sm-1 control-label">Documento:</label>
-                    <div class="col-sm-2">
-                        {{ form_widget(formFiltro.documentoCliente, { 'attr': {'class': 'form-control'} }) }}
+                        {{ form_widget(formFiltro.estadoDespachado) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-1 control-label">Desde:</label>
-                    <div class="col-sm-5">
-                        {{ form_widget(formFiltro.fechaIngresoDesde) }}
+                    <label for="form_cboServicioRel" class="col-sm-1 control-label">Servicio:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.codigoServicioFk, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                    <label for="form_TxtCodigo" class="col-sm-1 control-label">Guia:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.codigoGuiaPk, { 'attr': {'class': 'form-control'} }) }}
                     </div>
 
                     <label for="form_txtCodigoFactura" class="col-sm-1 control-label">Factura:</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.codigoFacturaFk, { 'attr': {'class': 'form-control'} }) }}
                     </div>
-                    <label for="form_txtRemitente" class="col-sm-1 control-label">Remitente:</label>
-                    <div class="col-sm-2">
-                        {{ form_widget(formFiltro.remitente, { 'attr': {'class': 'form-control'} }) }}
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <label class="col-sm-1 control-label">Hasta:</label>
-                    <div class="col-sm-5">
-                        {{ form_widget(formFiltro.fechaIngresoHasta) }}
-                    </div>
-                    <label class="col-sm-1 control-label">Novedad</label>
-                    <div class="col-sm-2">
-                        {{ form_widget(formFiltro.estadoNovedad) }}
-                    </div>
-                    <label class="col-sm-1 control-label">Novedad solucionado</label>
-                    <div class="col-sm-2">
-                        {{ form_widget(formFiltro.estadoNovedadSolucion) }}
-                    </div>
-
-                </div>
-                <div class="form-group form-group-sm">
                     <label class="col-sm-1 control-label">Facturado:</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.estadoFacturado) }}
                     </div>
-                    <label class="col-sm-1 control-label">Despachado</label>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Desde:</label>
                     <div class="col-sm-2">
-                        {{ form_widget(formFiltro.estadoDespachado) }}
+                        {{ form_widget(formFiltro.fechaIngresoDesde) }}
+                    </div>
+                    <label for="form_codigoDespachoFk" class="col-sm-1 control-label">Numero:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.numero, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                    <label for="form_txtRemitente" class="col-sm-1 control-label">Remitente:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.remitente, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                    <label class="col-sm-1 control-label">Novedad(ACT)</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.estadoNovedad) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Hasta:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.fechaIngresoHasta) }}
+                    </div>
+                    <label for="form_txtDocumento" class="col-sm-1 control-label">Documento:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.documentoCliente, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                    <label for="form_txtDocumento" class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2">
+
+                    </div>
+                    <label class="col-sm-1 control-label">Novedad(SOL)</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.estadoNovedadSolucion) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">

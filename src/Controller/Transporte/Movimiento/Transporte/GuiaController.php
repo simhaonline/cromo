@@ -156,6 +156,10 @@ class GuiaController extends ControllerListenerGeneral
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteNovedad::class)->eliminar($arrSeleccionados);
             }
+            if ($form->get('btnAnular')->isClicked()) {
+                $em->getRepository(TteGuia::class)->Anular($arGuia);
+                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_detalle', ['id' => $id]));
+            }
         }
         $arNovedades = $this->getDoctrine()->getRepository(TteNovedad::class)->guia($id);
         $arDespachoDetalles = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->guia($id);

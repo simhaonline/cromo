@@ -169,6 +169,37 @@ class TteGuiaRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $arGuia TteGuia
+     * @return bool
+     */
+    public function Anular($arGuia)
+    {
+        $em = $this->getEntityManager();
+        if($arGuia->getEstadoAnulado() == 0) {
+            if($arGuia->getEstadoFacturaGenerada() == 0 && $arGuia->getEstadoFacturaExportado() == 0) {
+                $arGuia->setEstadoAnulado(1);
+                $arGuia->setUnidades(0);
+                $arGuia->setPesoFacturado(0);
+                $arGuia->setPesoReal(0);
+                $arGuia->setPesoVolumen(0);
+                $arGuia->setVrAbono(0);
+                $arGuia->setVrFlete(0);
+                $arGuia->setVrDeclara(0);
+                $arGuia->setVrManejo(0);
+                $arGuia->setVrRecaudo(0);
+                $arGuia->setVrCostoReexpedicion(0);
+                $arGuia->setVrCobroEntrega(0);
+                $em->persist($arGuia);
+                $em->flush();
+                Mensajes::success("La guia fue anulada con existo");
+            } else {
+                Mensajes::error("La guia genero un ingreso por factura o esta facturada al cliente");
+            }
+        }
+        return true;
+    }
+
+    /**
      * @param $codigoDespacho
      * @return \Doctrine\ORM\QueryBuilder
      */
@@ -986,6 +1017,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFactura->setClienteRel($arGuia->getClienteRel());
                         $arFactura->setEstadoAutorizado(1);
                         $arFactura->setEstadoAprobado(1);
+                        $arFactura->setEstadoAnulado($arGuia->getEstadoAnulado());
                         $arFactura->setUsuario($usuario);
                         $em->persist($arFactura);
 
@@ -1018,6 +1050,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arCuentaCobrar->setVrSaldoOperado($arFactura->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
                         $arCuentaCobrar->setPlazo($arFactura->getPlazoPago());
                         $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
+                        $arCuentaCobrar->setEstadoAnulado($arGuia->getEstadoAnulado());
                         $em->persist($arCuentaCobrar);
                     }
                 }

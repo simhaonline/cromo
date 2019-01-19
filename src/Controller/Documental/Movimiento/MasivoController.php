@@ -101,7 +101,7 @@ class MasivoController extends Controller
                 return $this->redirect($this->generateUrl('documental_movimiento_masivo_masivo_carga'));
             }
             if ($form->get('btnCargar')->isClicked()) {
-                $tipo = "tte_guia";
+                $tipo = "TteGuia";
                 $arMasivoTipo = $em->getRepository(DocMasivoTipo::class)->find($tipo);
                 $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
                 $directorioBandeja = $arrConfiguracion['rutaBandeja'];

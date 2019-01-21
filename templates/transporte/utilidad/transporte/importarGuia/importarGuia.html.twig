@@ -8,21 +8,22 @@
             </header>
             <div>
                 <div class="widget-body">
-                    {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
+                    {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
+                    {% include ('estructura/buscarClienteTransporte.html.twig') %}
                     <div class="form-group form-group-sm">
                         <label for="form_cboGuiaTipoRel" class="col-sm-1 control-label">Desde:</label>
                         <div class="col-sm-4">
-                            {{ form_widget(form.fechaIngresoDesde) }}
+                            {{ form_widget(formFiltro.fechaIngresoDesde) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
                         <label for="form_cboOperacionRel" class="col-sm-1 control-label">Hasta:</label>
                         <div class="col-sm-4">
-                            {{ form_widget(form.fechaIngresoHasta) }}
+                            {{ form_widget(formFiltro.fechaIngresoHasta) }}
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {{ form_widget(form.btnFiltrar) }}
+                        {{ form_widget(formFiltro.btnFiltrar) }}
                     </div>
                 </div>
             </div>
@@ -68,8 +69,13 @@
         {% endfor %}
         </tbody>
     </table>
-    <div class="btn-group" style="float: right;">
-        {{ form_widget(form.btnImportar) }}
+    <div class="btn-toolbar">
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(formFiltro.btnImportar) }}
+        </div>
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(formFiltro.btnMarcar) }}
+        </div>
     </div>
-    {{ form_end(form) }}
+    {{ form_end(formFiltro) }}
 {% endblock %}

@@ -21,7 +21,9 @@
                             {{ form_widget(form.fechaIngresoHasta) }}
                         </div>
                     </div>
-                    {{ form_widget(form.btnFiltrar) }}
+                    <div class="modal-footer">
+                        {{ form_widget(form.btnFiltrar) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -32,6 +34,7 @@
             <th scope="col" class="th">ID</th>
             <th scope="col" class="th">GUÍA</th>
             <th scope="col" class="th">FECHA</th>
+            <th scope="col" class="th">CLIENTE</th>
             <th scope="col" class="th">DOCUMENTO</th>
             <th scope="col" class="th">DESTINATARIO</th>
             <th scope="col" class="th">ORIGEN</th>
@@ -50,10 +53,11 @@
                 <th scope="row">{{ arGuia.codigoGuiaPk }}</th>
                 <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arGuia.clienteRel ? arGuia.clienteRel.nombreCorto : '' }}</td>
                 <td>{{ arGuia.clienteDocumento }}</td>
                 <td>{{ arGuia.destinatarioNombre }}</td>
-                <td>{{ arGuia.codigoCiudadOrigenFk }}</td>
-                <td>{{ arGuia.codigoCiudadDestinoFk }}</td>
+                <td>{{ arGuia.ciudadOrigenRel.nombre }}</td>
+                <td>{{ arGuia.ciudadDestinoRel.nombre }}</td>
                 <td class="numero">{{ arGuia.unidades | number_format(0,'.',',') }}</td>
                 <td class="numero">{{ arGuia.pesoFacturado | number_format(0,'.',',') }}</td>
                 <td class="numero">{{ arGuia.vrDeclara | number_format(0,'.',',') }}</td>

@@ -28,6 +28,11 @@ class TteConfiguracion
     private $usuarioRndc;
 
     /**
+     * @ORM\Column(name="codigo_operador_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoOperadorFk;
+
+    /**
      * @ORM\Column(name="clave_rndc", type="string", length=50, nullable=true)
      */
     private $claveRndc;
@@ -93,6 +98,22 @@ class TteConfiguracion
     private $numeroUnicoGuia = false;
 
     /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -122,6 +143,22 @@ class TteConfiguracion
     public function setUsuarioRndc($usuarioRndc): void
     {
         $this->usuarioRndc = $usuarioRndc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperadorFk()
+    {
+        return $this->codigoOperadorFk;
+    }
+
+    /**
+     * @param mixed $codigoOperadorFk
+     */
+    public function setCodigoOperadorFk($codigoOperadorFk): void
+    {
+        $this->codigoOperadorFk = $codigoOperadorFk;
     }
 
     /**
@@ -279,7 +316,7 @@ class TteConfiguracion
     /**
      * @param mixed $codigoImpuestoRetencionTransporteFk
      */
-    public function setCodigoImpuestoRetencionTransporteFk( $codigoImpuestoRetencionTransporteFk ): void
+    public function setCodigoImpuestoRetencionTransporteFk($codigoImpuestoRetencionTransporteFk): void
     {
         $this->codigoImpuestoRetencionTransporteFk = $codigoImpuestoRetencionTransporteFk;
     }
@@ -295,25 +332,9 @@ class TteConfiguracion
     /**
      * @param mixed $codigoComprobanteIntermediacionFk
      */
-    public function setCodigoComprobanteIntermediacionFk( $codigoComprobanteIntermediacionFk ): void
+    public function setCodigoComprobanteIntermediacionFk($codigoComprobanteIntermediacionFk): void
     {
         $this->codigoComprobanteIntermediacionFk = $codigoComprobanteIntermediacionFk;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
     }
 
     /**
@@ -343,12 +364,9 @@ class TteConfiguracion
     /**
      * @param mixed $numeroUnicoGuia
      */
-    public function setNumeroUnicoGuia( $numeroUnicoGuia ): void
+    public function setNumeroUnicoGuia($numeroUnicoGuia): void
     {
         $this->numeroUnicoGuia = $numeroUnicoGuia;
     }
-
-
-
 }
 

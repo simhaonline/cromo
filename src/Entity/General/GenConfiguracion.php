@@ -72,6 +72,11 @@ class GenConfiguracion
     private $webServiceCesioUrl;
 
     /**
+     * @ORM\Column(name="web_service_galio_url", type="string", nullable=true)
+     */
+    private $webServiceGalioUrl;
+
+    /**
      * @ORM\Column(name="dominio", type="string", nullable=true)
      */
     private $dominio;
@@ -101,14 +106,27 @@ class GenConfiguracion
      */
     private $porcentajeAutoretencion = 0;
 
-
-
-
     /**
      * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -273,6 +291,54 @@ class GenConfiguracion
     /**
      * @return mixed
      */
+    public function getWebServiceCesioUrl()
+    {
+        return $this->webServiceCesioUrl;
+    }
+
+    /**
+     * @param mixed $webServiceCesioUrl
+     */
+    public function setWebServiceCesioUrl($webServiceCesioUrl): void
+    {
+        $this->webServiceCesioUrl = $webServiceCesioUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWebServiceGalioUrl()
+    {
+        return $this->webServiceGalioUrl;
+    }
+
+    /**
+     * @param mixed $webServiceGalioUrl
+     */
+    public function setWebServiceGalioUrl($webServiceGalioUrl): void
+    {
+        $this->webServiceGalioUrl = $webServiceGalioUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDominio()
+    {
+        return $this->dominio;
+    }
+
+    /**
+     * @param mixed $dominio
+     */
+    public function setDominio($dominio): void
+    {
+        $this->dominio = $dominio;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoClienteOro()
     {
         return $this->codigoClienteOro;
@@ -284,6 +350,70 @@ class GenConfiguracion
     public function setCodigoClienteOro($codigoClienteOro): void
     {
         $this->codigoClienteOro = $codigoClienteOro;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAutoretencionVenta()
+    {
+        return $this->autoretencionVenta;
+    }
+
+    /**
+     * @param mixed $autoretencionVenta
+     */
+    public function setAutoretencionVenta($autoretencionVenta): void
+    {
+        $this->autoretencionVenta = $autoretencionVenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaAutoretencionVentaValorFk()
+    {
+        return $this->codigoCuentaAutoretencionVentaValorFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaAutoretencionVentaValorFk
+     */
+    public function setCodigoCuentaAutoretencionVentaValorFk($codigoCuentaAutoretencionVentaValorFk): void
+    {
+        $this->codigoCuentaAutoretencionVentaValorFk = $codigoCuentaAutoretencionVentaValorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaAutoretencionVentaFk()
+    {
+        return $this->codigoCuentaAutoretencionVentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaAutoretencionVentaFk
+     */
+    public function setCodigoCuentaAutoretencionVentaFk($codigoCuentaAutoretencionVentaFk): void
+    {
+        $this->codigoCuentaAutoretencionVentaFk = $codigoCuentaAutoretencionVentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeAutoretencion()
+    {
+        return $this->porcentajeAutoretencion;
+    }
+
+    /**
+     * @param mixed $porcentajeAutoretencion
+     */
+    public function setPorcentajeAutoretencion($porcentajeAutoretencion): void
+    {
+        $this->porcentajeAutoretencion = $porcentajeAutoretencion;
     }
 
     /**
@@ -301,106 +431,5 @@ class GenConfiguracion
     {
         $this->ciudadRel = $ciudadRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getWebServiceCesioUrl()
-    {
-        return $this->webServiceCesioUrl;
-    }
-
-    /**
-     * @param mixed $webServiceCesioUrl
-     */
-    public function setWebServiceCesioUrl($webServiceCesioUrl): void
-    {
-        $this->webServiceCesioUrl = $webServiceCesioUrl;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAutoretencionVenta()
-    {
-        return $this->autoretencionVenta;
-    }
-
-    /**
-     * @param mixed $autoretencionVenta
-     */
-    public function setAutoretencionVenta( $autoretencionVenta ): void
-    {
-        $this->autoretencionVenta = $autoretencionVenta;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaAutoretencionVentaValorFk()
-    {
-        return $this->codigoCuentaAutoretencionVentaValorFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaAutoretencionVentaValorFk
-     */
-    public function setCodigoCuentaAutoretencionVentaValorFk( $codigoCuentaAutoretencionVentaValorFk ): void
-    {
-        $this->codigoCuentaAutoretencionVentaValorFk = $codigoCuentaAutoretencionVentaValorFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaAutoretencionVentaFk()
-    {
-        return $this->codigoCuentaAutoretencionVentaFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaAutoretencionVentaFk
-     */
-    public function setCodigoCuentaAutoretencionVentaFk( $codigoCuentaAutoretencionVentaFk ): void
-    {
-        $this->codigoCuentaAutoretencionVentaFk = $codigoCuentaAutoretencionVentaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPorcentajeAutoretencion()
-    {
-        return $this->porcentajeAutoretencion;
-    }
-
-    /**
-     * @param mixed $porcentajeAutoretencion
-     */
-    public function setPorcentajeAutoretencion( $porcentajeAutoretencion ): void
-    {
-        $this->porcentajeAutoretencion = $porcentajeAutoretencion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDominio()
-    {
-        return $this->dominio;
-    }
-
-    /**
-     * @param mixed $dominio
-     */
-    public function setDominio($dominio)
-    {
-        $this->dominio = $dominio;
-        return $this;
-    }
-
-
-
-
 }
 

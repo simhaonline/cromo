@@ -38,6 +38,4 @@ class ConfiguracionController extends Controller
             'form' => $form->createView()
         ]);
     }
-
 }
-

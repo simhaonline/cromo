@@ -28,9 +28,9 @@ class TteGuiaTemporal
     private $codigoGuiaTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_empresa_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
      */
-    private $codigoEmpresaFk;
+    private $codigoClienteFk;
 
     /**
      * @ORM\Column(name="codigo_operador_fk", type="string",length=20, nullable=true)
@@ -61,6 +61,11 @@ class TteGuiaTemporal
      * @ORM\Column(name="remitente_nombre", type="string", length=80, nullable=true)
      */
     private $remitente;
+
+    /**
+     * @ORM\Column(name="operacion", type="string", length=20, nullable=true)
+     */
+    private $operacion;
 
     /**
      * @ORM\Column(name="destinatario_nombre", type="string", length=150, nullable=true)
@@ -173,6 +178,24 @@ class TteGuiaTemporal
     private $comentario;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="guiasTemporalesCiudadOrigenRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_origen_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadOrigenRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="guiasTemporalesCiudadDestinoRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_destino_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadDestinoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCliente", inversedBy="guiasTemporalesClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    protected $clienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGuiaPk()
@@ -223,17 +246,17 @@ class TteGuiaTemporal
     /**
      * @return mixed
      */
-    public function getCodigoEmpresaFk()
+    public function getCodigoClienteFk()
     {
-        return $this->codigoEmpresaFk;
+        return $this->codigoClienteFk;
     }
 
     /**
-     * @param mixed $codigoEmpresaFk
+     * @param mixed $codigoClienteFk
      */
-    public function setCodigoEmpresaFk($codigoEmpresaFk): void
+    public function setCodigoClienteFk($codigoClienteFk): void
     {
-        $this->codigoEmpresaFk = $codigoEmpresaFk;
+        $this->codigoClienteFk = $codigoClienteFk;
     }
 
     /**
@@ -330,6 +353,22 @@ class TteGuiaTemporal
     public function setRemitente($remitente): void
     {
         $this->remitente = $remitente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacion()
+    {
+        return $this->operacion;
+    }
+
+    /**
+     * @param mixed $operacion
+     */
+    public function setOperacion($operacion): void
+    {
+        $this->operacion = $operacion;
     }
 
     /**
@@ -682,5 +721,53 @@ class TteGuiaTemporal
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadOrigenRel()
+    {
+        return $this->ciudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $ciudadOrigenRel
+     */
+    public function setCiudadOrigenRel($ciudadOrigenRel): void
+    {
+        $this->ciudadOrigenRel = $ciudadOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadDestinoRel()
+    {
+        return $this->ciudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $ciudadDestinoRel
+     */
+    public function setCiudadDestinoRel($ciudadDestinoRel): void
+    {
+        $this->ciudadDestinoRel = $ciudadDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
     }
 }

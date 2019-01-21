@@ -36,8 +36,9 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>IDENTIFICACION</th>
             <th>NOMBRE</th>
-            <th>NUMERO IDENTIFICACION</th>
+            <th>ASESOR</th>
             <th>TELEFONO</th>
             <th>CELULAR</th>
             <th>DIRECCION</th>
@@ -49,8 +50,9 @@
         {% for arCliente in arClientes %}
             <tr>
                 <td>{{ arCliente.codigoClientePk }}</td>
-                <td>{{ arCliente.nombreCorto }}</td>
                 <td>{{ arCliente.numeroIdentificacion }}</td>
+                <td>{{ arCliente.nombreCorto }}</td>
+                <td>{{ arCliente.asesorNombre | default('') }}</td>
                 <td>{{ arCliente.telefono }}</td>
                 <td>{{ arCliente.movil }}</td>
                 <td>{{ arCliente.direccion }}</td>

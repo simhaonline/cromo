@@ -6,6 +6,7 @@ namespace App\Repository\Cartera;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarConfiguracion;
 use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarDescuentoConcepto;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Cartera\CarReciboTipo;
@@ -288,6 +289,7 @@ class CarReciboRepository extends ServiceEntityRepository
             ->addSelect('r.numeroReferenciaPrefijo')
             ->addSelect('rt.codigoComprobanteFk')
             ->addSelect('rt.cruceCuentas')
+            ->addSelect('rt.prefijo')
             ->addSelect('c.codigoCuentaContableFk')
             ->leftJoin('r.reciboTipoRel', 'rt')
             ->leftJoin('r.cuentaRel', 'c')
@@ -331,6 +333,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                             $arRegistro->setFecha($arRecibo['fecha']);
@@ -371,6 +374,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                             $arRegistro->setFecha($arRecibo['fecha']);
@@ -411,6 +415,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                             $arRegistro->setFecha($arRecibo['fecha']);
@@ -454,6 +459,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                             $arRegistro->setFecha($arRecibo['fecha']);
@@ -497,6 +503,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                             $arRegistro->setFecha($arRecibo['fecha']);
@@ -537,6 +544,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                             $arRegistro->setFecha($arRecibo['fecha']);
@@ -554,6 +562,55 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $em->persist($arRegistro);
                                         } else {
                                             $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)";
+                                            break;
+                                        }
+                                    }
+
+                                    //Otro descuento y/o retencion
+                                    if($arReciboDetalle['vrOtroDescuento'] > 0) {
+                                        if($arReciboDetalle['codigoDescuentoConceptoFk']) {
+                                            $arDescuentoConcepto = $em->getRepository(CarDescuentoConcepto::class)->find($arReciboDetalle['codigoDescuentoConceptoFk']);
+                                            $descripcion = $arDescuentoConcepto->getNombre();
+                                            $cuenta = $arDescuentoConcepto->getCodigoCuentaFk();
+                                            if($cuenta) {
+                                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                                if($arCuenta) {
+                                                    $arRegistro = new FinRegistro();
+                                                    $arRegistro->setTerceroRel($arTercero);
+                                                    $arRegistro->setCuentaRel($arCuenta);
+                                                    $arRegistro->setComprobanteRel($arComprobante);
+                                                    /*if($arCuenta->getExigeCentroCosto()) {
+                                                        $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                    }*/
+                                                    $arRegistro->setNumero($arRecibo['numero']);
+                                                    $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
+                                                    $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
+                                                    $arRegistro->setFecha($arRecibo['fecha']);
+                                                    $naturaleza = "D";
+                                                    if($naturaleza == 'D') {
+                                                        $arRegistro->setVrDebito($arReciboDetalle['vrOtroDescuento']);
+                                                        $arRegistro->setNaturaleza('D');
+                                                    } else {
+                                                        $arRegistro->setVrCredito($arReciboDetalle['vrOtroDescuento']);
+                                                        $arRegistro->setNaturaleza('C');
+                                                    }
+                                                    $arRegistro->setDescripcion($descripcion);
+                                                    $arRegistro->setCodigoModeloFk('CarRecibo');
+                                                    $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
+                                                    $em->persist($arRegistro);
+                                                } else {
+                                                    $error = "La cuenta configurada para concepto de descuento " . $arDescuentoConcepto->getNombre() . " no existe";
+                                                    break;
+                                                }
+
+                                            } else {
+                                                $error = "No tiene configurada la cuenta configurada para concepto de descuento " . $arDescuentoConcepto->getNombre();
+                                                break;
+                                            }
+                                        } else {
+                                            $error = "El recibo tiene un valor para otro descuento y no tiene concepto";
                                             break;
                                         }
                                     }
@@ -586,6 +643,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setCentroCostoRel($arCentroCosto);
                                         }*/
                                         $arRegistro->setNumero($arRecibo['numero']);
+                                        $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                         $arRegistro->setNumeroReferenciaPrefijo($arRecibo['numeroReferenciaPrefijo']);
                                         $arRegistro->setNumeroReferencia($arRecibo['numeroReferencia']);
 
@@ -624,6 +682,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setCentroCostoRel($arCentroCosto);
                                         }*/
                                         $arRegistro->setNumero($arRecibo['numero']);
+                                        $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                         $arRegistro->setFecha($arRecibo['fecha']);
                                         $naturaleza = "D";
                                         if($naturaleza == 'D') {

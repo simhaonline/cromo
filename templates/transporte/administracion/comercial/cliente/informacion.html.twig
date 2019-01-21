@@ -2,48 +2,64 @@
     <tr>
         <td class="titulo"><b>CODIGO CLIENTE:</b></td>
         <td class="td-in-well">{{ arCliente.codigoClientePk }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
         <td class="titulo"><b>TIPO IDENTIFICACION</b></td>
         <td class="td-in-well" style="text-transform: uppercase;">{{ arCliente.identificacionRel.nombre }}</td>
     </tr>
     <tr>
         <td class="titulo"><b>IDENTIFICACION:</b></td>
         <td class="td-in-well">{{ arCliente.numeroIdentificacion }}</td>
+        <td class="titulo">ASESOR:</td>
+        <td class="td-in-well">{{ arCliente.asesorRel.nombre |default("") }}</td>
         <td class="titulo"><b>DIGITO</b></td>
         <td class="td-in-well" style="text-transform: uppercase;">{{ arCliente.digitoVerificacion }}</td>
     </tr>
     <tr>
         <td class="titulo"><b>PRIMER NOMBRE:</b></td>
         <td class="td-in-well">{{ arCliente.nombre1 }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
         <td class="titulo"><b>SEGUNDO NOMBRE:</b></td>
         <td class="td-in-well" style="text-transform: uppercase;">{{ arCliente.nombre2 }}</td>
     </tr>
     <tr>
         <td class="titulo"><b>PRIMER APELLIDO:</b></td>
         <td class="td-in-well">{{ arCliente.apellido1 }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
         <td class="titulo"><b>SEGUNDO APELLIDO:</b></td>
         <td class="td-in-well" style="text-transform: uppercase;">{{ arCliente.apellido2 }}</td>
     </tr>
     <tr>
         <td class="titulo"><b>NOMBRE CORTO:</b></td>
         <td class="td-in-well">{{ arCliente.nombreCorto }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
         <td class="titulo"><b>DIRECCION:</b></td>
         <td class="td-in-well" style="text-transform: uppercase;">{{ arCliente.direccion }}</td>
     </tr>
     <tr>
         <td class="titulo"><b>NOMBRE EXTENDIDO:</b></td>
         <td class="td-in-well">{{ arCliente.nombreExtendido }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
         <td class="titulo"><b>CELULAR:</b></td>
         <td class="td-in-well" style="text-transform: uppercase;">{{ arCliente.movil }}</td>
     </tr>
     <tr>
         <td class="titulo"><b>TELEFONO:</b></td>
         <td class="td-in-well">{{ arCliente.telefono }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
         <td class="titulo"><b>CORREO:</b></td>
         <td class="td-in-well" style="text-transform: uppercase;">{{ arCliente.correo }}</td>
     </tr>
     <tr>
         <td class="titulo"><b>CIUDAD:</b></td>
         <td class="td-in-well">{{ arCliente.ciudadRel.nombre | default('') }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
         <td class="titulo"><b>PLAZO PAGO:</b></td>
         <td class="td-in-well">{{ arCliente.plazoPago }}</td>
     </tr>

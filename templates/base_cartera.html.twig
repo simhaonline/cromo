@@ -42,11 +42,19 @@
                     <a href="#">General <span class="fa arrow"></span></a>
                     <ul>
                         <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'cartera','entidad':'cliente'}) }}">Cliente</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+                <li>
+                    <a href="#">Ingreso <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
                             <a href="{{ path('administracion_lista',{'modulo':'cartera','entidad':'reciboTipo'}) }}">Tipo
                                 recibo</a></li>
                         <li>
-                            <a href="{{ path('administracion_lista',{'modulo':'cartera','entidad':'cliente'}) }}">Cliente</a>
-                        </li>
+                            <a href="{{ path('administracion_lista',{'modulo':'cartera','entidad':'descuentoConcepto'}) }}">Concepto descuento</a></li>
                     </ul>
                     <!-- /.nav-third-level -->
                 </li>

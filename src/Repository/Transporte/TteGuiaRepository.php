@@ -1658,8 +1658,10 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.nombreDestinatario')
             ->addSelect('g.telefonoDestinatario')
             ->addSelect('g.direccionDestinatario')
+            ->addSelect('gt.nombre as tipoGuia')
             ->leftJoin('g.ciudadOrigenRel', 'co')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.guiaTipoRel', 'gt')
             ->where("g.codigoGuiaPk = " . $codigoGuia);
         return $queryBuilder->getQuery()->getResult();
     }

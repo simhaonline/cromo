@@ -36,7 +36,9 @@ class CrearReciboMasivoController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
-        $formRecibo = $this->createForm(ReciboType::class);
+        $arRecibo = new CarRecibo();
+        $arRecibo->setFechaPago(new \DateTime('now'));
+        $formRecibo = $this->createForm(ReciboType::class, $arRecibo);
         $formRecibo->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
@@ -58,11 +60,13 @@ class CrearReciboMasivoController extends Controller
                         if ($arCuentaCobrar) {
                             /** @var  $arrDatos CarRecibo */
                             $arrDatos = $formRecibo->getData();
-                            $arRecibo = new CarRecibo();
                             $arRecibo->setCodigoReciboTipoFk($arrDatos->getReciboTipoRel()->getCodigoReciboTipoPk());
+                            $arRecibo->setComentarios($arrDatos->getComentarios());
+                            $arRecibo->setCodigoCuentaFk($arrDatos->getCuentaRel()->getCodigoCuentaPk());
+                            $arRecibo->setCuentaRel($arrDatos->getCuentaRel());
                             $arRecibo->setReciboTipoRel($arrDatos->getReciboTipoRel());
                             $arRecibo->setFecha(new \DateTime('now'));
-                            $arRecibo->setFechaPago($arCuentaCobrar->getFechaVence());
+                            $arRecibo->setFechaPago($arrDatos->getFechaPago());
                             $arRecibo->setCodigoClienteFk($arCuentaCobrar->getCodigoClienteFk());
                             $arRecibo->setClienteRel($arCuentaCobrar->getClienteRel());
                             $arRecibo->setVrPago($arCuentaCobrar->getVrSaldo());
@@ -82,7 +86,6 @@ class CrearReciboMasivoController extends Controller
                             $arReciboDetalle->setCodigoCuentaCobrarTipoFk($arCuentaCobrar->getCodigoCuentaCobrarTipoFk());
                             $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
                             $arReciboDetalle->setOperacion(1);
-                            $arrReciboDetalle[] = $arReciboDetalle;
                             $em->persist($arReciboDetalle);
                         }
                     }
@@ -105,11 +108,12 @@ class CrearReciboMasivoController extends Controller
     /**
      * @param $arrRecibos array
      */
-    private function cerrarRecibo($arrRecibos){
+    private function cerrarRecibo($arrRecibos)
+    {
         $em = $this->getDoctrine()->getManager();
-        if($arrRecibos){
+        if ($arrRecibos) {
             /** @var  $arRecibo CarRecibo */
-            foreach ($arrRecibos as $arRecibo){
+            foreach ($arrRecibos as $arRecibo) {
                 $em->getRepository(CarRecibo::class)->autorizar($arRecibo);
                 $em->getRepository(CarRecibo::class)->aprobar($arRecibo);
             }

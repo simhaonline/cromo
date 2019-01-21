@@ -882,6 +882,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('d.codigoCuentaProveedorFk')
             ->addSelect('d.codigoCuentaClienteFk')
             ->addSelect('d.notaCredito')
+            ->addSelect('d.prefijo')
             ->leftJoin('m.documentoRel', 'd')
             ->where('m.codigoMovimientoPk = ' . $codigo);
         $arMovimiento = $queryBuilder->getQuery()->getSingleResult();
@@ -980,6 +981,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
+                                $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
                                 $arRegistro->setFecha($arMovimiento['fecha']);
                                 if($arMovimiento['notaCredito']) {
                                     $arRegistro->setVrCredito($arMovimiento['vrNeto']);
@@ -1018,6 +1020,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arMovimiento['numero']);
+                                            $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
                                             $arRegistro->setFecha($arMovimiento['fecha']);
                                             if($arMovimiento['notaCredito']) {
                                                 $arRegistro->setVrCredito($arrRetencion['vrRetencionFuente']);
@@ -1052,6 +1055,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
+                                $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
                                 $arRegistro->setFecha($arMovimiento['fecha']);
                                 if($arMovimiento['notaCredito']) {
                                     $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
@@ -1076,6 +1080,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
+                                $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
                                 $arRegistro->setFecha($arMovimiento['fecha']);
                                 if($arMovimiento['notaCredito']) {
                                     $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
@@ -1112,6 +1117,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arMovimiento['numero']);
+                                            $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
                                             $arRegistro->setFecha($arMovimiento['fecha']);
                                             if($arMovimiento['notaCredito']) {
                                                 $arRegistro->setVrDebito($arrIva['vrIva']);
@@ -1151,6 +1157,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arMovimiento['numero']);
+                                    $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
                                     $arRegistro->setFecha($arMovimiento['fecha']);
                                     if($arMovimiento['notaCredito']) {
                                         $arRegistro->setVrDebito($arrVenta['vrSubtotal']);

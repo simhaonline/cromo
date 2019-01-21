@@ -199,7 +199,7 @@ class RegistroController extends Controller
                 $sheet->setCellValue('Q'.$j,$arRegistro['vrDebito']);
                 $sheet->setCellValue('R'.$j,$arRegistro['vrCredito']);
                 $sheet->setCellValue('S'.$j, '');
-                $sheet->setCellValue('T'.$j, '0');
+                $sheet->setCellValue('T'.$j, '');
                 $sheet->setCellValue('U'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
                 $sheet->setCellValue('V'.$j, '');
 

@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtros</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
+                    <div class="form-group form-group-sm">
+                        <label for="form_cboGuiaTipoRel" class="col-sm-1 control-label">Desde:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaIngresoDesde) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="form_cboOperacionRel" class="col-sm-1 control-label">Hasta:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaIngresoHasta) }}
+                        </div>
+                    </div>
+                    {{ form_widget(form.btnFiltrar) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col" class="th">ID</th>
+            <th scope="col" class="th">GUÍA</th>
+            <th scope="col" class="th">FECHA</th>
+            <th scope="col" class="th">DOCUMENTO</th>
+            <th scope="col" class="th">DESTINATARIO</th>
+            <th scope="col" class="th">ORIGEN</th>
+            <th scope="col" class="th">DESTINO</th>
+            <th scope="col" class="th">CANT</th>
+            <th scope="col" class="th">PESO</th>
+            <th scope="col" class="th">DECLARADO</th>
+            <th scope="col" class="th">FLETE</th>
+            <th scope="col" class="th">MANEJO</th>
+            <th scope="col" class="th"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arGuia in arGuias %}
+            <tr>
+                <th scope="row">{{ arGuia.codigoGuiaPk }}</th>
+                <td>{{ arGuia.numero }}</td>
+                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arGuia.clienteDocumento }}</td>
+                <td>{{ arGuia.destinatarioNombre }}</td>
+                <td>{{ arGuia.codigoCiudadOrigenFk }}</td>
+                <td>{{ arGuia.codigoCiudadDestinoFk }}</td>
+                <td class="numero">{{ arGuia.unidades | number_format(0,'.',',') }}</td>
+                <td class="numero">{{ arGuia.pesoFacturado | number_format(0,'.',',') }}</td>
+                <td class="numero">{{ arGuia.vrDeclara | number_format(0,'.',',') }}</td>
+                <td class="numero">{{ arGuia.vrFlete | number_format(0,'.',',') }}</td>
+                <td class="numero">{{ arGuia.vrManejo | number_format(0,'.',',') }}</td>
+                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: right;">
+        {{ form_widget(form.btnImportar) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

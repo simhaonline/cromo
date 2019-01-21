@@ -68,8 +68,8 @@
                     <td style="text-align: right">{{ arReciboDetalle.vrPagoAfectar | number_format(0, '.', ',') }}</td>
                     <td style="text-align: center"><a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('cartera_movimiento_recibo_recibo_detalle_aplicar', {'id': arReciboDetalle.codigoReciboDetallePk }) }}', 'AgregarNuevoDetalle', 600, 900)">Aplicar</a></td>
                 {% else %}
-                    <td style="text-align: right">{{ arReciboDetalle.vrDescuento | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrAjustePeso | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arReciboDetalle.vrDescuento | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrRetencionIca | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrRetencionIva | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arReciboDetalle.vrRetencionFuente | number_format(0, '.', ',') }}</td>
@@ -106,7 +106,7 @@
     <div class="bs-example">
         <blockquote>
             <p>
-                Recuerde: los descuentos rapidos quedan imputados a una cuenta fija, use otros descuentos cuando desee otros tipo de descuento.
+                Recuerde: los descuentos rapidos quedan imputados a una cuenta fija, use otros descuentos cuando desee otros tipo de descuento y/o retencion.
             </p>
             <small>Consulte la cuenta de cada descuento rapido en <cite title="Source Title">configuracion</cite></small>
         </blockquote>

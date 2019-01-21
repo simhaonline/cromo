@@ -4,6 +4,7 @@ namespace App\Repository\Cartera;
 
 
 use App\Entity\Cartera\CarCliente;
+use App\Entity\Cartera\CarConfiguracion;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
@@ -300,6 +301,7 @@ class CarReciboRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arr) {
             $error = "";
+            $arConfiguracion = $em->getRepository(CarConfiguracion::class)->contabilizarRecibo();
             foreach ($arr AS $codigo) {
                 $arRecibo = $em->getRepository(CarRecibo::class)->registroContabilizar($codigo);
                 if($arRecibo) {
@@ -341,6 +343,8 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setNaturaleza('C');
                                             }
                                             $arRegistro->setDescripcion($descripcion);
+                                            $arRegistro->setCodigoModeloFk('CarRecibo');
+                                            $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
                                             $error = "El [tipo cuenta cobrar] no tiene configurada la cuenta " . $descripcion;
@@ -348,10 +352,50 @@ class CarReciboRepository extends ServiceEntityRepository
                                         }
                                     }
 
-                                    //Cuenta retencion fuente
+                                    //Ajuste peso
+                                    if($arReciboDetalle['vrAjustePeso']) {
+                                        $descripcion = "AJUSTE PESO";
+                                        $cuenta = $arConfiguracion['codigoCuentaAjustePesoFk'];
+                                        if($cuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                            if(!$arCuenta) {
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                break;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            /*if($arCuenta->getExigeCentroCosto()) {
+                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                            }*/
+                                            $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                            $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
+                                            $arRegistro->setFecha($arRecibo['fecha']);
+                                            $naturaleza = "D";
+                                            if($naturaleza == 'D') {
+                                                $arRegistro->setVrDebito($arReciboDetalle['vrAjustePeso']);
+                                                $arRegistro->setNaturaleza('D');
+                                            } else {
+                                                $arRegistro->setVrCredito($arReciboDetalle['vrAjustePeso']);
+                                                $arRegistro->setNaturaleza('C');
+                                            }
+                                            $arRegistro->setDescripcion($descripcion);
+                                            $arRegistro->setCodigoModeloFk('CarRecibo');
+                                            $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            break;
+                                        }
+                                    }
+
+                                    //Cuenta retencion fuente (Descuento rapido)
                                     if($arReciboDetalle['vrRetencionFuente'] > 0) {
                                         $descripcion = "RETENCION FUENTE";
-                                        $cuenta = $arReciboDetalle['codigoCuentaRetencionFuenteFk'];
+                                        $cuenta = $arConfiguracion['codigoCuentaRetencionFuenteFk'];
                                         if($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                             if(!$arCuenta) {
@@ -382,17 +426,19 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setVrBase($arReciboDetalle['vrPagoAfectar']);
                                             }
                                             $arRegistro->setDescripcion($descripcion);
+                                            $arRegistro->setCodigoModeloFk('CarRecibo');
+                                            $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)";
                                             break;
                                         }
                                     }
 
-                                    //Industria comercio
+                                    //Industria comercio (Descuento rapido)
                                     if($arReciboDetalle['vrRetencionIca'] > 0) {
                                         $descripcion = "INDUSTRIA COMERCIO";
-                                        $cuenta = $arReciboDetalle['codigoCuentaIndustriaComercioFk'];
+                                        $cuenta = $arConfiguracion['codigoCuentaIndustriaComercioFk'];
                                         if($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                             if(!$arCuenta) {
@@ -423,17 +469,19 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setVrBase($arReciboDetalle['vrPagoAfectar']);
                                             }
                                             $arRegistro->setDescripcion($descripcion);
+                                            $arRegistro->setCodigoModeloFk('CarRecibo');
+                                            $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)";
                                             break;
                                         }
                                     }
 
-                                    //Retencion iva
+                                    //Retencion iva (Descuento rapido)
                                     if($arReciboDetalle['vrRetencionIva'] > 0) {
                                         $descripcion = "RETENCION IVA";
-                                        $cuenta = $arReciboDetalle['codigoCuentaRetencionIvaFk'];
+                                        $cuenta = $arConfiguracion['codigoCuentaRetencionIvaFk'];
                                         if($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                             if(!$arCuenta) {
@@ -461,55 +509,19 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setNaturaleza('C');
                                             }
                                             $arRegistro->setDescripcion($descripcion);
+                                            $arRegistro->setCodigoModeloFk('CarRecibo');
+                                            $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)";
                                             break;
                                         }
                                     }
 
-                                    //Ajuste peso
-                                    if($arReciboDetalle['vrAjustePeso']) {
-                                        $descripcion = "AJUSTE PESO";
-                                        $cuenta = $arReciboDetalle['codigoCuentaAjustePesoFk'];
-                                        if($cuenta) {
-                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                            if(!$arCuenta) {
-                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                                break;
-                                            }
-                                            $arRegistro = new FinRegistro();
-                                            $arRegistro->setTerceroRel($arTercero);
-                                            $arRegistro->setCuentaRel($arCuenta);
-                                            $arRegistro->setComprobanteRel($arComprobante);
-                                            /*if($arCuenta->getExigeCentroCosto()) {
-                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }*/
-                                            $arRegistro->setNumero($arRecibo['numero']);
-                                            $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
-                                            $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                            $arRegistro->setFecha($arRecibo['fecha']);
-                                            $naturaleza = "D";
-                                            if($naturaleza == 'D') {
-                                                $arRegistro->setVrDebito($arReciboDetalle['vrAjustePeso']);
-                                                $arRegistro->setNaturaleza('D');
-                                            } else {
-                                                $arRegistro->setVrCredito($arReciboDetalle['vrAjustePeso']);
-                                                $arRegistro->setNaturaleza('C');
-                                            }
-                                            $arRegistro->setDescripcion($descripcion);
-                                            $em->persist($arRegistro);
-                                        } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
-                                            break;
-                                        }
-                                    }
-
-                                    //Descuento
+                                    //Descuento (Descuento rapido)
                                     if($arReciboDetalle['vrDescuento'] > 0) {
                                         $descripcion = "DESCUENTO";
-                                        $cuenta = $arReciboDetalle['codigoCuentaDescuentoFk'];
+                                        $cuenta = $arConfiguracion['codigoCuentaDescuentoFk'];
                                         if($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                             if(!$arCuenta) {
@@ -537,9 +549,11 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setNaturaleza('C');
                                             }
                                             $arRegistro->setDescripcion($descripcion);
+                                            $arRegistro->setCodigoModeloFk('CarRecibo');
+                                            $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)";
                                             break;
                                         }
                                     }
@@ -585,6 +599,8 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setNaturaleza('C');
                                         }
                                         $arRegistro->setDescripcion($descripcion);
+                                        $arRegistro->setCodigoModeloFk('CarRecibo');
+                                        $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                         $em->persist($arRegistro);
                                     } else {
                                         $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arRecibo['numero'];
@@ -618,6 +634,8 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setNaturaleza('C');
                                         }
                                         $arRegistro->setDescripcion($descripcion);
+                                        $arRegistro->setCodigoModeloFk('CarRecibo');
+                                        $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                         $em->persist($arRegistro);
                                     } else {
                                         $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arRecibo['numero'];

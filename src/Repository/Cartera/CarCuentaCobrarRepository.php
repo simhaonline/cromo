@@ -419,6 +419,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->select('cc.codigoCuentaCobrarPk')
             ->addSelect('cc.vrSaldoOriginal')
             ->addSelect('cc.operacion');
+//        ->where('cc.codigoCuentaCobrarPk=5');
         $arCuentasCobrar = $queryBuilder->getQuery()->getResult();
         foreach ($arCuentasCobrar as $arCuentaCobrar) {
             $abonos = 0;
@@ -435,7 +436,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             $saldo = $arCuentaCobrar['vrSaldoOriginal'] - $abonos;
             $saldoOperado = $saldo * $arCuentaCobrar['operacion'];
             $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar['codigoCuentaCobrarPk']);
-            $arCuentaCobrarAct->getVrSaldo($saldo);
+            $arCuentaCobrarAct->setVrSaldo($saldo);
             $arCuentaCobrarAct->setVrSaldoOperado($saldoOperado);
             $arCuentaCobrarAct->setVrAbono($abonos);
             $em->persist($arCuentaCobrarAct);

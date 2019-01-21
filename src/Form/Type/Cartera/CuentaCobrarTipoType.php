@@ -22,12 +22,7 @@ class CuentaCobrarTipoType extends AbstractType {
         $builder
             ->add('codigoCuentaCobrarTipoPk', TextType::class, ['label'=> 'Codigo cuenta cobrar tipo pk:', 'required' => true])
             ->add('nombre', TextType::class, ['label' => 'Nombre:', 'required' => true])
-            ->add('codigoCuentaRetencionFuenteFk', TextType::class, ['label' => 'Codigo cuenta retencion fuente:', 'required' => false])
-            ->add('codigoCuentaRetencionIvaFk', TextType::class, ['label' => 'Codigo cuenta retencion iva','required' => false])
-            ->add('codigoCuentaAjustePesoFk', TextType::class, ['label' => 'Codigo cuenta ajuste peso:','required' => false])
             ->add('codigoCuentaClienteFk', TextType::class, ['label' => 'Codigo cuenta cliente:', 'required' => false])
-            ->add('codigoCuentaDescuentoFk', TextType::class, ['label' => 'Codigo cuenta descuento:', 'required' => false])
-            ->add('codigoCuentaIndustriaComercioFk', TextType::class, ['label' => 'Codigo cuenta industria y comercio:', 'required' => false])
             ->add('operacion', IntegerType::class, ['label' => 'Operacion:', 'required' => false])
             ->add('saldoInicial', CheckboxType::class, ['required' => false])
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
@@ -54,10 +49,7 @@ class CuentaCobrarTipoType extends AbstractType {
         $campos = '[
             {"campo":"codigoCuentaCobrarTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
             {"campo":"nombre",                           "tipo":"texto"  ,"ayuda":"Nombre del tipo de anticipo",   "titulo":"NOMBRE"},
-            {"campo":"codigoCuentaClienteFk",            "tipo":"texto"  ,"ayuda":"cuenta cliente",     "titulo":"CUENTA CLIENTE"},
-            {"campo":"codigoCuentaRetencionFuenteFk",            "tipo":"texto"  ,"ayuda":"cuenta retencion fuente",     "titulo":"CUENTA RETENCION FUENTE"},
-            {"campo":"codigoCuentaRetencionIvaFk",            "tipo":"texto"  ,"ayuda":"cuenta retencion fuente",     "titulo":"CUENTA RETENCION IVA"},
-            {"campo":"codigoCuentaAjustePesoFk",            "tipo":"texto"  ,"ayuda":"cuenta retencion fuente",     "titulo":"CUENTA RETENCION ICA"}          
+            {"campo":"codigoCuentaClienteFk",            "tipo":"texto"  ,"ayuda":"cuenta cliente",     "titulo":"CUENTA CLIENTE"}      
                                                                           
         ]';
         return $campos;

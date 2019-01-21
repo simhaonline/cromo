@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Entity\Transporte;
+namespace App\Entity\Cartera;
 
 use Doctrine\ORM\Mapping as ORM;
 

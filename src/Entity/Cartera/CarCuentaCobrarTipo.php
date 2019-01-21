@@ -33,7 +33,7 @@ class CarCuentaCobrarTipo
     /**
      * @ORM\Column(name="saldo_inicial", type="boolean", options={"default":false})
      */
-    private $saldoInicial = 0;
+    private $saldoInicial;
 
     /**
      * @ORM\Column(name="prefijo", type="string", length=5, nullable=true)
@@ -44,31 +44,6 @@ class CarCuentaCobrarTipo
      * @ORM\Column(name="codigo_cuenta_cliente_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaClienteFk;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_retencion_iva_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaRetencionIvaFk;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_retencion_fuente_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaRetencionFuenteFk;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_industria_comercio_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaIndustriaComercioFk;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_ajuste_peso_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaAjustePesoFk;
-
-    /**
-     * @ORM\Column(name="codigo_cuenta_descuento_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaDescuentoFk;
 
     /**
      * @ORM\Column(name="permite_recibo_masivo", type="boolean", nullable=true, options={"default" : false})
@@ -101,7 +76,7 @@ class CarCuentaCobrarTipo
     /**
      * @param mixed $codigoCuentaCobrarTipoPk
      */
-    public function setCodigoCuentaCobrarTipoPk($codigoCuentaCobrarTipoPk): void
+    public function setCodigoCuentaCobrarTipoPk( $codigoCuentaCobrarTipoPk ): void
     {
         $this->codigoCuentaCobrarTipoPk = $codigoCuentaCobrarTipoPk;
     }
@@ -117,7 +92,7 @@ class CarCuentaCobrarTipo
     /**
      * @param mixed $nombre
      */
-    public function setNombre($nombre): void
+    public function setNombre( $nombre ): void
     {
         $this->nombre = $nombre;
     }
@@ -133,7 +108,7 @@ class CarCuentaCobrarTipo
     /**
      * @param mixed $operacion
      */
-    public function setOperacion($operacion): void
+    public function setOperacion( $operacion ): void
     {
         $this->operacion = $operacion;
     }
@@ -149,137 +124,9 @@ class CarCuentaCobrarTipo
     /**
      * @param mixed $saldoInicial
      */
-    public function setSaldoInicial($saldoInicial): void
+    public function setSaldoInicial( $saldoInicial ): void
     {
         $this->saldoInicial = $saldoInicial;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaClienteFk()
-    {
-        return $this->codigoCuentaClienteFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaClienteFk
-     */
-    public function setCodigoCuentaClienteFk($codigoCuentaClienteFk): void
-    {
-        $this->codigoCuentaClienteFk = $codigoCuentaClienteFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaRetencionIvaFk()
-    {
-        return $this->codigoCuentaRetencionIvaFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaRetencionIvaFk
-     */
-    public function setCodigoCuentaRetencionIvaFk($codigoCuentaRetencionIvaFk): void
-    {
-        $this->codigoCuentaRetencionIvaFk = $codigoCuentaRetencionIvaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaRetencionFuenteFk()
-    {
-        return $this->codigoCuentaRetencionFuenteFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaRetencionFuenteFk
-     */
-    public function setCodigoCuentaRetencionFuenteFk($codigoCuentaRetencionFuenteFk): void
-    {
-        $this->codigoCuentaRetencionFuenteFk = $codigoCuentaRetencionFuenteFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuentasCobrarCuentaCobrarTipoRel()
-    {
-        return $this->cuentasCobrarCuentaCobrarTipoRel;
-    }
-
-    /**
-     * @param mixed $cuentasCobrarCuentaCobrarTipoRel
-     */
-    public function setCuentasCobrarCuentaCobrarTipoRel($cuentasCobrarCuentaCobrarTipoRel): void
-    {
-        $this->cuentasCobrarCuentaCobrarTipoRel = $cuentasCobrarCuentaCobrarTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRecibosDetallesCuentaCobrarTipoRel()
-    {
-        return $this->recibosDetallesCuentaCobrarTipoRel;
-    }
-
-    /**
-     * @param mixed $recibosDetallesCuentaCobrarTipoRel
-     */
-    public function setRecibosDetallesCuentaCobrarTipoRel($recibosDetallesCuentaCobrarTipoRel): void
-    {
-        $this->recibosDetallesCuentaCobrarTipoRel = $recibosDetallesCuentaCobrarTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaIndustriaComercioFk()
-    {
-        return $this->codigoCuentaIndustriaComercioFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaIndustriaComercioFk
-     */
-    public function setCodigoCuentaIndustriaComercioFk($codigoCuentaIndustriaComercioFk): void
-    {
-        $this->codigoCuentaIndustriaComercioFk = $codigoCuentaIndustriaComercioFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaAjustePesoFk()
-    {
-        return $this->codigoCuentaAjustePesoFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaAjustePesoFk
-     */
-    public function setCodigoCuentaAjustePesoFk($codigoCuentaAjustePesoFk): void
-    {
-        $this->codigoCuentaAjustePesoFk = $codigoCuentaAjustePesoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaDescuentoFk()
-    {
-        return $this->codigoCuentaDescuentoFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaDescuentoFk
-     */
-    public function setCodigoCuentaDescuentoFk($codigoCuentaDescuentoFk): void
-    {
-        $this->codigoCuentaDescuentoFk = $codigoCuentaDescuentoFk;
     }
 
     /**
@@ -293,41 +140,25 @@ class CarCuentaCobrarTipo
     /**
      * @param mixed $prefijo
      */
-    public function setPrefijo($prefijo): void
+    public function setPrefijo( $prefijo ): void
     {
         $this->prefijo = $prefijo;
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
-    public function getCuentaCobrarTipoRel()
+    public function getCodigoCuentaClienteFk()
     {
-        return $this->cuentaCobrarTipoRel;
+        return $this->codigoCuentaClienteFk;
     }
 
     /**
-     * @param mixed $cuentaCobrarTipoRel
+     * @param mixed $codigoCuentaClienteFk
      */
-    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
+    public function setCodigoCuentaClienteFk( $codigoCuentaClienteFk ): void
     {
-        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
+        $this->codigoCuentaClienteFk = $codigoCuentaClienteFk;
     }
 
     /**
@@ -344,6 +175,54 @@ class CarCuentaCobrarTipo
     public function setPermiteReciboMasivo( $permiteReciboMasivo ): void
     {
         $this->permiteReciboMasivo = $permiteReciboMasivo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentasCobrarCuentaCobrarTipoRel()
+    {
+        return $this->cuentasCobrarCuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentasCobrarCuentaCobrarTipoRel
+     */
+    public function setCuentasCobrarCuentaCobrarTipoRel( $cuentasCobrarCuentaCobrarTipoRel ): void
+    {
+        $this->cuentasCobrarCuentaCobrarTipoRel = $cuentasCobrarCuentaCobrarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosDetallesCuentaCobrarTipoRel()
+    {
+        return $this->recibosDetallesCuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $recibosDetallesCuentaCobrarTipoRel
+     */
+    public function setRecibosDetallesCuentaCobrarTipoRel( $recibosDetallesCuentaCobrarTipoRel ): void
+    {
+        $this->recibosDetallesCuentaCobrarTipoRel = $recibosDetallesCuentaCobrarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaCobrarTipoRel()
+    {
+        return $this->cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarTipoRel
+     */
+    public function setCuentaCobrarTipoRel( $cuentaCobrarTipoRel ): void
+    {
+        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
     }
 
 

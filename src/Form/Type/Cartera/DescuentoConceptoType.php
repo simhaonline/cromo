@@ -11,18 +11,16 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
-class ReciboTipoType extends AbstractType {
+class DescuentoConceptoType extends AbstractType {
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('codigoReciboTipoPk', TextType::class, array('label' => 'Codigo recibo tipo pk:', 'required' => true))
+            ->add('codigoDescuentoConceptoPk', TextType::class, array('label' => 'Codigo:', 'required' => true))
             ->add('nombre', TextType::class, array('label' => 'Nombre:','required' => true))
-            ->add('codigoComprobanteFk', TextType::class, array('label' => 'Comprobante contabilidad:','required' => true))
-            ->add('prefijo', TextType::class, array('label' => 'Prefijo:','required' => true))
-            ->add('orden', IntegerType::class, array('label' => 'Orden:','required' => true))
+            ->add('codigoCuentaFk', TextType::class, array('label' => 'Cuenta:','required' => true))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']));
     }
 
@@ -31,7 +29,7 @@ class ReciboTipoType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'App\Entity\Cartera\CarReciboTipo'
+            'data_class' => 'App\Entity\Cartera\CarDescuentoConcepto'
         ));
     }
 
@@ -45,7 +43,7 @@ class ReciboTipoType extends AbstractType {
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoReciboTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
+            {"campo":"codigoDescuentoConceptoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
             {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}
         ]';
         return $campos;

@@ -39,6 +39,11 @@ class CarReciboTipo
     private $codigoComprobanteFk;
 
     /**
+     * @ORM\Column(name="prefijo", type="string", length=20, nullable=true)
+     */
+    private $prefijo;
+
+    /**
      * @ORM\Column(name="orden", type="integer", nullable=true)
      */
     private $orden = 0;
@@ -163,6 +168,22 @@ class CarReciboTipo
     public function setCruceCuentas( $cruceCuentas ): void
     {
         $this->cruceCuentas = $cruceCuentas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrefijo()
+    {
+        return $this->prefijo;
+    }
+
+    /**
+     * @param mixed $prefijo
+     */
+    public function setPrefijo( $prefijo ): void
+    {
+        $this->prefijo = $prefijo;
     }
 
 

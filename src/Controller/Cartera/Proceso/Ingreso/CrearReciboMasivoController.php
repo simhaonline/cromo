@@ -2,9 +2,11 @@
 
 namespace App\Controller\Cartera\Proceso\Ingreso;
 
+use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Form\Type\Cartera\ReciboType;
 use App\Utilidades\Mensajes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,19 +20,25 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class CrearReciboMasivoController extends Controller
 {
     /**
+     * @param Request $request
+     * @param TokenStorageInterface $user
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
      * @Route("/cartera/proceso/ingreso/recibomasivo/lista", name="cartera_proceso_ingreso_recibomasivo_lista")
      */
     public function lista(Request $request, TokenStorageInterface $user)
     {
-        $em=$this->getDoctrine()->getManager();
-        $session=new Session();
-        $paginator  = $this->get('knp_paginator');
+        $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('cboCuentaCobrarTipoRel',EntityType::class,$em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
-            ->add('btnFiltrar',SubmitType::class,['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
-            ->add('btnReciboCaja',SubmitType::class,['label' => "Recibo caja", 'attr' => ['class' => 'btn btn-default btn-sm', 'style' => 'float:right']])
+            ->add('cboCuentaCobrarTipoRel', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
+            ->add('btnFiltrar', SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
+        $formRecibo = null;
+        $formRecibo = $this->createForm(ReciboType::class);
+        $formRecibo->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $arCuentaCobrarTipo = $form->get('cboCuentaCobrarTipoRel')->getData();
@@ -40,24 +48,27 @@ class CrearReciboMasivoController extends Controller
                     $session->set('filtroCarReciboCodigoReciboTipo', null);
                 }
             }
-
-            if ($form->get('btnReciboCaja')->isClicked()) {
+        }
+        if($formRecibo->isSubmitted() && $formRecibo->isValid()){
+            if($formRecibo->get('guardar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                if($arrSeleccionados){
-                    foreach ($arrSeleccionados as $arrSeleccionado){
-                        $arCuentaCobrar=$em->getRepository('App:Cartera\CarCuentaCobrar')->find($arrSeleccionado);
-                        if($arCuentaCobrar){
-                            $arReciboTipo=$em->getRepository('App:Cartera\CarReciboTipo')->find("RC");
-//                            $arCuenta=$em->getRepository('App:General\GenCuenta')->find($arCuentaCobrar->getCuentaCobrarTipoRel())
-                            $arRecibo=(new CarRecibo())
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados as $codigoCuentaCobrar) {
+                        /** @var  $arRecibo CarRecibo */
+                        $arRecibo = $formRecibo->getData();
+                        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
+                        if ($arCuentaCobrar) {
+                            $arReciboTipo = $em->getRepository('App:Cartera\CarReciboTipo')->find("RC");
+                            $arRecibo
                                 ->setReciboTipoRel($arReciboTipo)
                                 ->setFecha(new \DateTime('now'))
                                 ->setFechaPago($arCuentaCobrar->getFechaVence())
                                 ->setClienteRel($arCuentaCobrar->getClienteRel())
-//                                ->setCuentaRel()
                                 ->setVrPago($arCuentaCobrar->getVrSaldo())
                                 ->setVrPagoTotal($arCuentaCobrar->getVrTotal())
                                 ->setUsuario($user->getToken()->getUsername());
+                            $em->persist($arRecibo);
+                            $em->flush();
 
                             $arReciboDetalle = (new CarReciboDetalle())
                                 ->setReciboRel($arRecibo)
@@ -70,21 +81,21 @@ class CrearReciboMasivoController extends Controller
                                 ->setOperacion(1);
 
                             $em->persist($arReciboDetalle);
-                            $em->persist($arRecibo);
+                            $em->flush();
                         }
+                        $em->detach($arRecibo);
                     }
-                    $em->flush();
-                }
-                else{
+                } else {
                     Mensajes::error("No ha seleccionado cuenta por cobrar");
                 }
                 return $this->redirect($this->generateUrl('cartera_proceso_ingreso_recibomasivo_lista'));
             }
         }
-        $arCuentasCobrar=$paginator->paginate($em->getRepository('App:Cartera\CarCuentaCobrar')->crearReciboMasivoLista(), $request->query->getInt('page', 1),100);
+        $arCuentasCobrar = $paginator->paginate($em->getRepository('App:Cartera\CarCuentaCobrar')->crearReciboMasivoLista(), $request->query->getInt('page', 1), 100);
         return $this->render('cartera/proceso/contabilidad/crearrecibomasivo/lista.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,
-            'form'                 => $form->createView()
+            'form' => $form->createView(),
+            'formRecibo' => $formRecibo->createView()
         ]);
     }
 }

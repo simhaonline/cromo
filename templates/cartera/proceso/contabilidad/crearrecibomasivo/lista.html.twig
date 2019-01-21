@@ -2,56 +2,8 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {% include('cartera/proceso/contabilidad/crearrecibomasivo/filtro.html.twig') %}
-    {#<div class="panel panel-default">#}
-        {#<div class="panel-heading">Filtros</div>#}
-        {#<div class="panel-body">#}
-            {#<div class="form-group form-group-sm">#}
-                {#<label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>#}
-                {#<div class="col-sm-11">#}
-                    {#<div class="row">#}
-                        {#<div class="col-lg-2">#}
-                            {#<div class="input-group">#}
-                                {#{{ form_widget(form.txtCodigoCliente) }}#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-lg-10">#}
-                            {#<div class="input-group">#}
-                                {#{{ form_widget(form.txtNombreCorto) }}#}
-                                {#<span class="input-group-btn">#}
-                                        {#<a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>#}
-                                    {#</span>#}
-                            {#</div>#}
-                        {#</div>#}
-                    {#</div>#}
-                {#</div>#}
-            {#</div>#}
-            {#<div class="form-group form-group-sm">#}
-                {#<label class="col-sm-1 control-label">Desde:</label>#}
-                {#<div class="col-sm-5">#}
-                    {#{{ form_widget(form.fechaDesde) }}#}
-                {#</div>#}
-                {#<label class="col-sm-1 control-label">Tipo:</label>#}
-                {#<div class="col-sm-5">#}
-                    {#{{ form_widget(form.cboReciboTipoRel, { 'attr': {'class': 'form-control'} }) }}#}
-                {#</div>#}
-            {#</div>#}
-            {#<div class="form-group form-group-sm">#}
-                {#<label class="col-sm-1 control-label">Hasta:</label>#}
-                {#<div class="col-sm-5">#}
-                    {#{{ form_widget(form.fechaHasta) }}#}
-                {#</div>#}
-            {#</div>#}
-            {#<div class="form-group form-group-sm">#}
-                {#<label class="col-sm-1 control-label"></label>#}
-                {#<div class="col-sm-5">#}
-                    {#{{ form_widget(form.filtrarFecha) }}#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-        {#<div class="modal-footer">#}
-            {#{{ form_widget(form.btnFiltrar) }}#}
-        {#</div>#}
-    {#</div>#}
+    {{ form_end(form) }}
+    {{ form_start(formRecibo) }}
     <table class="table table-striped table-bordered table-hover tabla-datos">
         <thead>
         <tr>
@@ -63,7 +15,8 @@
             <th>VENCE</th>
             <th>CLIENTE</th>
             <th>SALDO</th>
-            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
+                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
@@ -77,7 +30,8 @@
                 <td>{{ arCuentaCobrar.fechaVence | date('Y-m-d') }}</td>
                 <td>{{ arCuentaCobrar.nombreCorto }}</td>
                 <td class="numero">{{ arCuentaCobrar.vrSaldo | number_format(0, '.', ',') }}</td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arCuentaCobrar.codigoCuentaCobrarPk }}" /></td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                       value="{{ arCuentaCobrar.codigoCuentaCobrarPk }}"/></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -85,7 +39,8 @@
     <div>
         <div class="btn-group" style="float: left">
             <div class="btn-group" style="float: left">
-                <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCuentasCobrar.getTotalItemCount }}</span></div>
+                <div class="btn btn-default btn-sm">Registros <span
+                            class="badge">{{ arCuentasCobrar.getTotalItemCount }}</span></div>
             </div>
         </div>
         <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
@@ -93,11 +48,69 @@
         </div>
         <div class="btn-toolbar" style="float: right">
             <div class="btn-group">
-                {{ form_widget(form.btnReciboCaja, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                <a class="btn btn-sm btn-default" data-toggle="modal"
+                   data-target="#myModal">Recibo caja
+                </a>
             </div>
         </div>
     </div>
-    {{ form_end(form) }}
-    <br /> <br />
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 1250px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel"> Parámetros recibo</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Información general</div>
+                        <div class="panel-body">
+                            <div class="form-group form-group-sm">
+                                <label for="form_nombre2" class="col-sm-2 control-label">Cuenta:</label>
+                                <div class="col-sm-4">
+                                    {{ form_widget(formRecibo.cuentaRel, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                                </div>
+                                <label for="form_nombre1" class="col-sm-2 control-label">Asesor:</label>
+                                <div class="col-sm-4">
+                                    {{ form_widget(formRecibo.asesorRel) }}
+                                    {{ form_errors(formRecibo.asesorRel) }}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group form-group-sm">
+                                <label for="form_nombre1" class="col-sm-2 control-label">Fecha pago:</label>
+                                <div class="col-sm-4">
+                                    {{ form_widget(formRecibo.fechaPago) }}
+                                </div>
+                                <label for="form_soporte" class="col-sm-2 control-label">Soporte:</label>
+                                <div class="col-sm-4">
+                                    {{ form_widget(formRecibo.soporte) }}
+                                    {{ form_errors(formRecibo.soporte) }}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group form-group-sm">
+                                <label class="col-sm-2 control-label">Comentario:</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(formRecibo.comentarios, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cancelar
+                    </button>
+                    {{ form_widget(formRecibo.guardar) }}
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    {{ form_widget(formRecibo._token) }}
+    {{ form_end(formRecibo, {'render_rest': false}) }}
+    <br/> <br/>
 {% endblock %}
 

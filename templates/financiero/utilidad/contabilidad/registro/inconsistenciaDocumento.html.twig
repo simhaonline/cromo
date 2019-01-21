@@ -27,6 +27,7 @@
         <thead>
         <tr>
             <th>COD</th>
+            <th title="Prefijo">P</th>
             <th>NUMERO</th>
             <th>COMPROBANTE</th>
             <th>DESCRIPCION</th>
@@ -36,6 +37,7 @@
         {% for arRegistrosInconsistencia in arRegistrosInconsistencias %}
             <tr>
                 <td>{{ arRegistrosInconsistencia.codigoRegistroInconsistenciaPk }}</td>
+                <td>{{ arRegistrosInconsistencia.numeroPrefijo }}</td>
                 <td>{{ arRegistrosInconsistencia.numero }}</td>
                 <td>{{ arRegistrosInconsistencia.codigoComprobanteFk }}</td>
                 <td>{{ arRegistrosInconsistencia.descripcion }}</td>

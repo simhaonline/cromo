@@ -45,35 +45,18 @@ class InconsistenciaDocumentoController extends Controller
                 $em->getRepository(FinRegistroInconsistencia::class)->limpiar();
                 $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
                 $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
-                $queryBuilder = $this->getDoctrine()->getRepository(FinRegistro::class)->analizarInconsistencias($fechaDesde, $fechaHasta);
-
-                $arrRegistros = [];
-                $arRegistros = $queryBuilder->getQuery()->getResult();
-                if($arRegistros){
-                    foreach ($arRegistros as $arRegistro){
-                        $arrRegistros[$arRegistro['codigoComprobanteFk']][$arRegistro['numero']][] = $arRegistro;
+                $arRegistros = $this->getDoctrine()->getRepository(FinRegistro::class)->analizarInconsistencias($fechaDesde, $fechaHasta);
+                foreach ($arRegistros as $arRegistro){
+                    if($arRegistro['vrDebito'] != $arRegistro['vrCredito']) {
+                        $arRegistroInconsistencia = new FinRegistroInconsistencia();
+                        $arRegistroInconsistencia->setNumero($arRegistro['numero']);
+                        $arRegistroInconsistencia->setNumeroPrefijo($arRegistro['numeroPrefijo']);
+                        $arRegistroInconsistencia->setCodigoComprobanteFk($arRegistro['codigoComprobanteFk']);
+                        $arRegistroInconsistencia->setDescripcion('Diferencia en debito y credito');
+                        $em->persist($arRegistroInconsistencia);
                     }
-                    foreach ($arrRegistros as $codigoComprobante => $arComprobante){
-                        $vrDebito = 0;
-                        $vrCredito = 0;
-                        foreach ($arComprobante as $arNumero) {
-                            $numeroActivo = 0;
-                            foreach ($arNumero as $arRegistro){
-                                $numeroActivo = $arRegistro['numero'];
-                                $vrCredito += $arRegistro['vrCredito'];
-                                $vrDebito+= $arRegistro['vrDebito'];
-                            }
-                            if($vrCredito != $vrDebito){
-                                $arRegistroInconsistencia = new FinRegistroInconsistencia();
-                                $arRegistroInconsistencia->setNumero($numeroActivo);
-                                $arRegistroInconsistencia->setCodigoComprobanteFk($codigoComprobante);
-                                $arRegistroInconsistencia->setDescripcion('El registro presenta inconsistencias');
-                                $em->persist($arRegistroInconsistencia);
-                            }
-                        }
-                    }
-                    $em->flush();
                 }
+                $em->flush();
                 $arRegistrosInconsistencias = $paginator->paginate($em->getRepository(FinRegistroInconsistencia::class)->lista(), $request->query->getInt('page', 1), 1000);
             }
 

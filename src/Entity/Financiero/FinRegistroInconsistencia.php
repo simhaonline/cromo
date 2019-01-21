@@ -30,6 +30,11 @@ class FinRegistroInconsistencia
     private $numero = 0;
 
     /**
+     * @ORM\Column(name="numero_prefijo", type="string", length=20, nullable=true)
+     */
+    private $numeroPrefijo;
+
+    /**
      * @ORM\Column(name="descripcion", type="string", length=100, nullable=true)
      */
     private $descripcion;
@@ -117,6 +122,22 @@ class FinRegistroInconsistencia
     public function setCodigoComprobanteFk($codigoComprobanteFk): void
     {
         $this->codigoComprobanteFk = $codigoComprobanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroPrefijo()
+    {
+        return $this->numeroPrefijo;
+    }
+
+    /**
+     * @param mixed $numeroPrefijo
+     */
+    public function setNumeroPrefijo( $numeroPrefijo ): void
+    {
+        $this->numeroPrefijo = $numeroPrefijo;
     }
 
 

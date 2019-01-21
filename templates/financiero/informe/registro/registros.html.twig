@@ -93,7 +93,11 @@
         </tr>
         </thead>
         <tbody>
+        {% set debito = 0  %}
+        {% set credito = 0  %}
         {% for arRegistro in arRegistros %}
+            {% set debito = debito + arRegistro.vrDebito %}
+            {% set credito = credito + arRegistro.vrCredito %}
             <tr>
                 <td>{{ arRegistro.id }}</td>
                 <td>{{ arRegistro.numeroPrefijo }}</td>
@@ -112,6 +116,10 @@
                 <td>{{ arRegistro.descripcion }}</td>
             </tr>
         {% endfor %}
+        <td colspan="11"></td>
+        <td style="text-align: right">{{ debito | number_format(0, '.', ',') }}</td>
+        <td style="text-align: right">{{ credito | number_format(0, '.', ',') }}</td>
+        <td colspan="2"></td>
     </table>
     <div class="btn-group" style="float: left">
         <div class="btn-group" style="float: left">

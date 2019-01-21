@@ -36,7 +36,6 @@ class CrearReciboMasivoController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
-        $formRecibo = null;
         $formRecibo = $this->createForm(ReciboType::class);
         $formRecibo->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -49,42 +48,46 @@ class CrearReciboMasivoController extends Controller
                 }
             }
         }
-        if($formRecibo->isSubmitted() && $formRecibo->isValid()){
-            if($formRecibo->get('guardar')->isClicked()){
+        if ($formRecibo->isSubmitted() && $formRecibo->isValid()) {
+            if ($formRecibo->get('guardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 if ($arrSeleccionados) {
+                    $arrRecibos = [];
                     foreach ($arrSeleccionados as $codigoCuentaCobrar) {
-                        /** @var  $arRecibo CarRecibo */
-                        $arRecibo = $formRecibo->getData();
                         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
                         if ($arCuentaCobrar) {
-                            $arReciboTipo = $em->getRepository('App:Cartera\CarReciboTipo')->find("RC");
-                            $arRecibo
-                                ->setReciboTipoRel($arReciboTipo)
-                                ->setFecha(new \DateTime('now'))
-                                ->setFechaPago($arCuentaCobrar->getFechaVence())
-                                ->setClienteRel($arCuentaCobrar->getClienteRel())
-                                ->setVrPago($arCuentaCobrar->getVrSaldo())
-                                ->setVrPagoTotal($arCuentaCobrar->getVrTotal())
-                                ->setUsuario($user->getToken()->getUsername());
+                            /** @var  $arrDatos CarRecibo */
+                            $arrDatos = $formRecibo->getData();
+                            $arRecibo = new CarRecibo();
+                            $arRecibo->setCodigoReciboTipoFk($arrDatos->getReciboTipoRel()->getCodigoReciboTipoPk());
+                            $arRecibo->setReciboTipoRel($arrDatos->getReciboTipoRel());
+                            $arRecibo->setFecha(new \DateTime('now'));
+                            $arRecibo->setFechaPago($arCuentaCobrar->getFechaVence());
+                            $arRecibo->setCodigoClienteFk($arCuentaCobrar->getCodigoClienteFk());
+                            $arRecibo->setClienteRel($arCuentaCobrar->getClienteRel());
+                            $arRecibo->setVrPago($arCuentaCobrar->getVrSaldo());
+                            $arRecibo->setVrPagoTotal($arCuentaCobrar->getVrTotal());
+                            $arRecibo->setUsuario($user->getToken()->getUsername());
                             $em->persist($arRecibo);
-                            $em->flush();
-
-                            $arReciboDetalle = (new CarReciboDetalle())
-                                ->setReciboRel($arRecibo)
-                                ->setCuentaCobrarRel($arCuentaCobrar)
-                                ->setVrRetencionFuente($arCuentaCobrar->getVrRetencionFuente())
-                                ->setVrPago($arCuentaCobrar->getVrSaldo())
-                                ->setVrPagoAfectar($arCuentaCobrar->getVrSaldo())
-                                ->setNumeroFactura($arCuentaCobrar->getNumeroDocumento())
-                                ->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel())
-                                ->setOperacion(1);
-
+                            $arrRecibos[] = $arRecibo;
+                            $arReciboDetalle = new CarReciboDetalle();
+                            $arReciboDetalle->setCodigoReciboFk($arRecibo->getCodigoReciboPk());
+                            $arReciboDetalle->setReciboRel($arRecibo);
+                            $arReciboDetalle->setCodigoCuentaCobrarFk($arCuentaCobrar->getCodigoCuentaCobrarPk());
+                            $arReciboDetalle->setCuentaCobrarRel($arCuentaCobrar);
+                            $arReciboDetalle->setVrRetencionFuente($arCuentaCobrar->getVrRetencionFuente());
+                            $arReciboDetalle->setVrPago($arCuentaCobrar->getVrSaldo());
+                            $arReciboDetalle->setVrPagoAfectar($arCuentaCobrar->getVrSaldo());
+                            $arReciboDetalle->setNumeroFactura($arCuentaCobrar->getNumeroDocumento());
+                            $arReciboDetalle->setCodigoCuentaCobrarTipoFk($arCuentaCobrar->getCodigoCuentaCobrarTipoFk());
+                            $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
+                            $arReciboDetalle->setOperacion(1);
+                            $arrReciboDetalle[] = $arReciboDetalle;
                             $em->persist($arReciboDetalle);
-                            $em->flush();
                         }
-                        $em->detach($arRecibo);
                     }
+                    $em->flush();
+                    $this->cerrarRecibo($arrRecibos);
                 } else {
                     Mensajes::error("No ha seleccionado cuenta por cobrar");
                 }
@@ -97,5 +100,19 @@ class CrearReciboMasivoController extends Controller
             'form' => $form->createView(),
             'formRecibo' => $formRecibo->createView()
         ]);
+    }
+
+    /**
+     * @param $arrRecibos array
+     */
+    private function cerrarRecibo($arrRecibos){
+        $em = $this->getDoctrine()->getManager();
+        if($arrRecibos){
+            /** @var  $arRecibo CarRecibo */
+            foreach ($arrRecibos as $arRecibo){
+                $em->getRepository(CarRecibo::class)->autorizar($arRecibo);
+                $em->getRepository(CarRecibo::class)->aprobar($arRecibo);
+            }
+        }
     }
 }

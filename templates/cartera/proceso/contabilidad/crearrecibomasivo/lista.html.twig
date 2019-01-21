@@ -54,61 +54,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="width: 1250px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel"> Parámetros recibo</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Información general</div>
-                        <div class="panel-body">
-                            <div class="form-group form-group-sm">
-                                <label for="form_nombre2" class="col-sm-2 control-label">Cuenta:</label>
-                                <div class="col-sm-4">
-                                    {{ form_widget(formRecibo.cuentaRel, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                                </div>
-                                <label for="form_nombre1" class="col-sm-2 control-label">Asesor:</label>
-                                <div class="col-sm-4">
-                                    {{ form_widget(formRecibo.asesorRel) }}
-                                    {{ form_errors(formRecibo.asesorRel) }}
-                                </div>
-                            </div>
-                            <br>
-                            <div class="form-group form-group-sm">
-                                <label for="form_nombre1" class="col-sm-2 control-label">Fecha pago:</label>
-                                <div class="col-sm-4">
-                                    {{ form_widget(formRecibo.fechaPago) }}
-                                </div>
-                                <label for="form_soporte" class="col-sm-2 control-label">Soporte:</label>
-                                <div class="col-sm-4">
-                                    {{ form_widget(formRecibo.soporte) }}
-                                    {{ form_errors(formRecibo.soporte) }}
-                                </div>
-                            </div>
-                            <br>
-                            <div class="form-group form-group-sm">
-                                <label class="col-sm-2 control-label">Comentario:</label>
-                                <div class="col-sm-10">
-                                    {{ form_widget(formRecibo.comentarios, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        Cancelar
-                    </button>
-                    {{ form_widget(formRecibo.guardar) }}
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div>
+    {% include 'cartera/proceso/contabilidad/crearrecibomasivo/modal.html.twig' %}
     {{ form_widget(formRecibo._token) }}
     {{ form_end(formRecibo, {'render_rest': false}) }}
     <br/> <br/>

@@ -145,27 +145,32 @@ class RegistroController extends Controller
         if (count($arRegistros) > 0) {
             $spreadsheet = new Spreadsheet();
             $campos = [
-                'TipoDocumento',
-                'Prefijo',
-                'NumeroDocumento',
-                'Cuenta',
+                'EMPRESA',
+                'DOC',
+                'PREFIJO',
+                'Nro Doc',
+                'FECHA',
+                'Benefic.',
+                'Concepto',
+                'Bloq/act',
+                'Forma de pago',
+                'Verificado',
+                'Anulado',
+                'Cuenta Contable',
+                'Nota',
+                'Tercero Externo',
+                'Cheque Numero',
+                'BancoCheque',
                 'Debito',
                 'Credito',
-                'Tercero_Externo',
-                'Vencimiento',
-                'Nota',
-                'FormaPago',
-                'Verificado',
-                'BancoCheque',
-                'AbonaCheque',
-                'PorcentajeRetencion',
                 'CentroCosto',
-                'Cheque',
-                'Empresa',
+                'PorcentajeRetencion',
+                'Vencimiento',
+                'Vendedor',
             ];
             $sheet = $spreadsheet->getActiveSheet();
             $i = 0;
-            for ($j = 'A'; $j != 'R'; $j++) {
+            for ($j = 'A'; $j != 'W'; $j++) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($j)->setAutoSize(true);
                 $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
                 $sheet->setCellValue($j . '1', strtoupper($campos[$i]));
@@ -174,23 +179,30 @@ class RegistroController extends Controller
             $j = 2;
             /** @var  $arRegistro FinRegistro */
             foreach ($arRegistros as $arRegistro) {
-                $sheet->setCellValue('A'.$j, $arRegistro['codigoComprobanteFk']);
-                $sheet->setCellValue('B'.$j,'');
-                $sheet->setCellValue('C'.$j,$arRegistro['numero']);
-                $sheet->setCellValue('D'.$j,$arRegistro['codigoCuentaFk']);
-                $sheet->setCellValue('E'.$j,$arRegistro['vrDebito']);
-                $sheet->setCellValue('F'.$j,$arRegistro['vrCredito']);
-                $sheet->setCellValue('G'.$j,$arRegistro['numeroIdentificacion']);
-                $sheet->setCellValue('H'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('Y-m-d') : '');
-                $sheet->setCellValue('I'.$j, $arRegistro['descripcion']);
-                $sheet->setCellValue('J'.$j,'');
-                $sheet->setCellValue('K'.$j,'');
-                $sheet->setCellValue('L'.$j,'');
-                $sheet->setCellValue('M'.$j,'');
-                $sheet->setCellValue('N'.$j,'');
-                $sheet->setCellValue('O'.$j, $arRegistro['codigoCentroCostoFk']);
-                $sheet->setCellValue('P'.$j,'');
-                $sheet->setCellValue('Q'.$j,$arrConfiguracion['codigoEmpresaIntercambio']);
+                $sheet->setCellValue('A'.$j, $arrConfiguracion['codigoEmpresaIntercambio']);
+                $sheet->setCellValue('B'.$j, $arRegistro['codigoComprobanteFk']);
+                $sheet->setCellValue('C'.$j,$arRegistro['numeroPrefijo']);
+                $sheet->setCellValue('D'.$j,$arRegistro['numero']);
+                $sheet->setCellValue('E'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+                $sheet->setCellValue('F'.$j,$arRegistro['numeroIdentificacion']);
+                $sheet->setCellValue('G'.$j, $arRegistro['nombre']);
+                $sheet->setCellValue('H'.$j, '0');
+                $sheet->setCellValue('I'.$j, '');
+                $sheet->setCellValue('J'.$j, '0');
+                $sheet->setCellValue('K'.$j, '0');
+
+                $sheet->setCellValue('L'.$j,$arRegistro['codigoCuentaFk']);
+                $sheet->setCellValue('M'.$j, $arRegistro['descripcion']);
+                $sheet->setCellValue('N'.$j,$arRegistro['numeroIdentificacion']);
+                $sheet->setCellValue('O'.$j, '');
+                $sheet->setCellValue('P'.$j, '');
+                $sheet->setCellValue('Q'.$j,$arRegistro['vrDebito']);
+                $sheet->setCellValue('R'.$j,$arRegistro['vrCredito']);
+                $sheet->setCellValue('S'.$j, '');
+                $sheet->setCellValue('T'.$j, '0');
+                $sheet->setCellValue('U'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+                $sheet->setCellValue('V'.$j, '');
+
                 $j++;
             }
             header('Content-Type: application/vnd.ms-excel');

@@ -264,14 +264,17 @@ class FinRegistroRepository extends ServiceEntityRepository
     public function analizarInconsistencias($fechaDesde, $fechaHasta){
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
-            ->select('r.codigoRegistroPk')
+            ->select('r.codigoComprobanteFk')
             ->addSelect('r.numero')
-            ->addSelect('r.codigoComprobanteFk')
-            ->addSelect('r.vrCredito')
-            ->addSelect('r.vrDebito')
+            ->addSelect('r.numeroPrefijo')
+            ->addSelect('SUM(r.vrCredito) AS vrCredito')
+            ->addSelect('SUM(r.vrDebito) AS vrDebito')
             ->where("r.fecha >= '" . $fechaDesde . " 00:00:00'")
             ->andWhere("r.fecha <= '" . $fechaHasta . " 23:59:59'")
-            ->orderBy('r.numero');
-        return $queryBuilder;
+            ->orderBy('r.numero')
+            ->groupBy('r.codigoComprobanteFk')
+        ->addGroupBy('r.numero')
+        ->addGroupBy('r.numeroPrefijo');
+        return $queryBuilder->getQuery()->getResult();
     }
 }

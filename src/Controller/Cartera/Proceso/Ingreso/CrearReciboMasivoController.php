@@ -36,9 +36,9 @@ class CrearReciboMasivoController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
-        $arRecibo = new CarRecibo();
-        $arRecibo->setFechaPago(new \DateTime('now'));
-        $formRecibo = $this->createForm(ReciboType::class, $arRecibo);
+        $arReciboInicial = new CarRecibo();
+        $arReciboInicial->setFechaPago(new \DateTime('now'));
+        $formRecibo = $this->createForm(ReciboType::class, $arReciboInicial);
         $formRecibo->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
@@ -60,6 +60,9 @@ class CrearReciboMasivoController extends Controller
                         if ($arCuentaCobrar) {
                             /** @var  $arrDatos CarRecibo */
                             $arrDatos = $formRecibo->getData();
+                            $arRecibo = new CarRecibo();
+                            $arRecibo->setCodigoAsesorFk($arrDatos->getAsesorRel() ? $arrDatos->getAsesorRel()->getCodigoAsesorPk() : null);
+                            $arRecibo->setAsesorRel($arrDatos->getAsesorRel());
                             $arRecibo->setCodigoReciboTipoFk($arrDatos->getReciboTipoRel()->getCodigoReciboTipoPk());
                             $arRecibo->setComentarios($arrDatos->getComentarios());
                             $arRecibo->setCodigoCuentaFk($arrDatos->getCuentaRel()->getCodigoCuentaPk());
@@ -70,9 +73,11 @@ class CrearReciboMasivoController extends Controller
                             $arRecibo->setCodigoClienteFk($arCuentaCobrar->getCodigoClienteFk());
                             $arRecibo->setClienteRel($arCuentaCobrar->getClienteRel());
                             $arRecibo->setVrPago($arCuentaCobrar->getVrSaldo());
-                            $arRecibo->setVrPagoTotal($arCuentaCobrar->getVrTotal());
+                            $arRecibo->setVrPagoTotal($arCuentaCobrar->getVrSaldo());
                             $arRecibo->setUsuario($user->getToken()->getUsername());
+                            $arRecibo->setSoporte($arrDatos->getSoporte());
                             $em->persist($arRecibo);
+
                             $arrRecibos[] = $arRecibo;
                             $arReciboDetalle = new CarReciboDetalle();
                             $arReciboDetalle->setCodigoReciboFk($arRecibo->getCodigoReciboPk());

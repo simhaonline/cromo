@@ -3,6 +3,7 @@
 namespace App\Repository\Cartera;
 
 use App\Entity\Cartera\CarDescuentoConcepto;
+use App\Entity\Cartera\CarIngresoConcepto;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -27,6 +28,7 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
         $floRetencionIva = 0;
         $floRetencionFuente = 0;
         $otrosDecuentos = 0;
+        $otrosIngresos = 0;
         $arRecibo = $em->getRepository(CarRecibo::class)->find($id);
         $arRecibosDetalle = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
         foreach ($arRecibosDetalle as $arReciboDetalle) {
@@ -36,6 +38,7 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
             $floRetencionIva += $arReciboDetalle->getVrRetencionIva();
             $floRetencionFuente += $arReciboDetalle->getVrRetencionFuente();
             $otrosDecuentos += $arReciboDetalle->getVrOtroDescuento();
+            $otrosIngresos += $arReciboDetalle->getVrOtroIngreso();
             $pago += $arReciboDetalle->getVrPago() * $arReciboDetalle->getOperacion();
             $pagoTotal += $arReciboDetalle->getVrPagoAfectar();
         }
@@ -47,6 +50,7 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
         $arRecibo->setVrTotalRetencionIva($floRetencionIva);
         $arRecibo->setVrTotalRetencionFuente($floRetencionFuente);
         $arRecibo->setVrTotalOtroDescuento($otrosDecuentos);
+        $arRecibo->setVrTotalOtroIngreso($otrosIngresos);
         $em->persist($arRecibo);
         $em->flush();
         return true;
@@ -84,7 +88,9 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
             foreach ($arrControles['LblCodigo'] as $intCodigo) {
                 $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->find($intCodigo);
                 $arDescuentoConcepto = null;
+                $arIngresoConcepto = null;
                 $codigoDescuentoConcepto = isset($arrControles['cboDescuentoConcepto' . $intCodigo]) && $arrControles['cboDescuentoConcepto' . $intCodigo] != '' ? $arrControles['cboDescuentoConcepto' . $intCodigo] : null;
+                $codigoIngresoConcepto = isset($arrControles['cboIngresoConcepto' . $intCodigo]) && $arrControles['cboIngresoConcepto' . $intCodigo] != '' ? $arrControles['cboIngresoConcepto' . $intCodigo] : null;
                 $valorPago = isset($arrControles['TxtValorPago' . $intCodigo]) && $arrControles['TxtValorPago' . $intCodigo] != '' ? $arrControles['TxtValorPago' . $intCodigo] : 0;
                 $valorAjustePeso = isset($arrControles['TxtVrAjustePeso' . $intCodigo]) && $arrControles['TxtVrAjustePeso' . $intCodigo] != '' ? $arrControles['TxtVrAjustePeso' . $intCodigo] : 0;
                 $valorDescuento = isset($arrControles['TxtVrDescuento' . $intCodigo]) && $arrControles['TxtVrDescuento' . $intCodigo] != '' ? $arrControles['TxtVrDescuento' . $intCodigo] : 0;
@@ -92,14 +98,21 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
                 $valorRetencionIca = isset($arrControles['TxtVrRetencionIca' . $intCodigo]) && $arrControles['TxtVrRetencionIca' . $intCodigo] != '' ? $arrControles['TxtVrRetencionIca' . $intCodigo] : 0;
                 $valorRetencionFte = isset($arrControles['TxtVrRetencionFuente' . $intCodigo]) && $arrControles['TxtVrRetencionFuente' . $intCodigo] != '' ? $arrControles['TxtVrRetencionFuente' . $intCodigo] : 0;
                 $valorOtroDescuento = isset($arrControles['TxtVrOtroDescuento' . $intCodigo]) && $arrControles['TxtVrOtroDescuento' . $intCodigo] != '' ? $arrControles['TxtVrOtroDescuento' . $intCodigo] : 0;
+                $valorOtroIngreso = isset($arrControles['TxtVrOtroIngreso' . $intCodigo]) && $arrControles['TxtVrOtroIngreso' . $intCodigo] != '' ? $arrControles['TxtVrOtroIngreso' . $intCodigo] : 0;
                 if($valorOtroDescuento > 0) {
                     if($codigoDescuentoConcepto != "SS") {
                         $arDescuentoConcepto = $em->getRepository(CarDescuentoConcepto::class)->find($codigoDescuentoConcepto);
                     }
                 }
+                if($valorOtroIngreso > 0) {
+                    if($codigoIngresoConcepto != "SS") {
+                        $arIngresoConcepto = $em->getRepository(CarIngresoConcepto::class)->find($codigoIngresoConcepto);
+                    }
+                }
                 $valorPagoAfectar =
                     $valorPago
                     - $valorAjustePeso
+                    - $valorOtroIngreso
                     + $valorDescuento
                     + $valorRetencionIva
                     + $valorRetencionIca
@@ -111,9 +124,11 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
                 $arReciboDetalle->setVrRetencionIva($valorRetencionIva);
                 $arReciboDetalle->setVrRetencionFuente($valorRetencionFte);
                 $arReciboDetalle->setVrOtroDescuento($valorOtroDescuento);
+                $arReciboDetalle->setVrOtroIngreso($valorOtroIngreso);
                 $arReciboDetalle->setVrPago($valorPago);
                 $arReciboDetalle->setVrPagoAfectar($valorPagoAfectar);
                 $arReciboDetalle->setDescuentoConceptoRel($arDescuentoConcepto);
+                $arReciboDetalle->setIngresoConceptoRel($arIngresoConcepto);
                 $em->persist($arReciboDetalle);
             }
             $em->flush();
@@ -158,9 +173,11 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.vrRetencionIca')
             ->addSelect('rd.vrRetencionIva')
             ->addSelect('rd.vrOtroDescuento')
+            ->addSelect('rd.vrOtroIngreso')
             ->addSelect('rd.vrPago')
             ->addSelect('rd.vrPagoAfectar')
             ->addSelect('rd.codigoDescuentoConceptoFk')
+            ->addSelect('rd.codigoIngresoConceptoFk')
             ->addSelect('cc.numeroDocumento')
             ->addSelect('cct.prefijo')
             ->addSelect('cct.codigoCuentaClienteFk')

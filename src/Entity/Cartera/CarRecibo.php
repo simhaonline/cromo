@@ -97,6 +97,11 @@ class CarRecibo
     private $vrTotalOtroDescuento = 0;
 
     /**
+     * @ORM\Column(name="vr_total_otro_ingreso", type="float", options={"default":0})
+     */
+    private $vrTotalOtroIngreso = 0;
+
+    /**
      * @ORM\Column(name="vr_pago", type="float")
      */
     private $vrPago = 0;
@@ -739,6 +744,22 @@ class CarRecibo
     public function setRecibosDetallesRecibosRel( $recibosDetallesRecibosRel ): void
     {
         $this->recibosDetallesRecibosRel = $recibosDetallesRecibosRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalOtroIngreso()
+    {
+        return $this->vrTotalOtroIngreso;
+    }
+
+    /**
+     * @param mixed $vrTotalOtroIngreso
+     */
+    public function setVrTotalOtroIngreso( $vrTotalOtroIngreso ): void
+    {
+        $this->vrTotalOtroIngreso = $vrTotalOtroIngreso;
     }
 
 

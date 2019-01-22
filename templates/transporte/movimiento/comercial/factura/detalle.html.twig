@@ -38,6 +38,7 @@
                             <th>OI</th>
                             <th>OC</th>
                             <th>NUMERO</th>
+                            <th>FECHA</th>
                             <th>ORIGEN</th>
                             <th>DESTINO</th>
                             <th>DOCUMENTO</th>
@@ -59,6 +60,7 @@
                                 <td>{{ arFacturaDetalle.codigoOperacionIngresoFk }}</td>
                                 <td>{{ arFacturaDetalle.codigoOperacionCargoFk }}</td>
                                 <td>{{ arFacturaDetalle.numero }}</td>
+                                <td>{{ arFacturaDetalle.fechaIngreso | date('Y-m-d') }}</td>
                                 <td>{{ arFacturaDetalle.ciduadOrigen }}</td>
                                 <td>{{ arFacturaDetalle.ciudadDestino }}</td>
                                 {% if arFactura.estadoAutorizado == 0 %}

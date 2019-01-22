@@ -82,6 +82,11 @@ class CarReciboDetalle
     private $vrOtroDescuento = 0;
 
     /**
+     * @ORM\Column(name="vr_otro_ingreso", type="float", options={"default":0})
+     */
+    private $vrOtroIngreso = 0;
+
+    /**
      * @ORM\Column(name="vr_pago", type="float", nullable=true)
      */
     private $vrPago = 0;
@@ -105,6 +110,11 @@ class CarReciboDetalle
      * @ORM\Column(name="codigo_descuento_concepto_fk", type="string", length=10, nullable=true)
      */
     private $codigoDescuentoConceptoFk;
+
+    /**
+     * @ORM\Column(name="codigo_ingreso_concepto_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoIngresoConceptoFk;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarRecibo", inversedBy="recibosDetallesRecibosRel")
@@ -135,6 +145,12 @@ class CarReciboDetalle
      * @ORM\JoinColumn(name="codigo_descuento_concepto_fk", referencedColumnName="codigo_descuento_concepto_pk")
      */
     protected $descuentoConceptoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarIngresoConcepto", inversedBy="recibosDetallesIngresoConceptoRel")
+     * @ORM\JoinColumn(name="codigo_ingreso_concepto_fk", referencedColumnName="codigo_ingreso_concepto_pk")
+     */
+    protected $ingresoConceptoRel;
 
     /**
      * @return mixed
@@ -502,6 +518,54 @@ class CarReciboDetalle
     public function setDescuentoConceptoRel( $descuentoConceptoRel ): void
     {
         $this->descuentoConceptoRel = $descuentoConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrOtroIngreso()
+    {
+        return $this->vrOtroIngreso;
+    }
+
+    /**
+     * @param mixed $vrOtroIngreso
+     */
+    public function setVrOtroIngreso( $vrOtroIngreso ): void
+    {
+        $this->vrOtroIngreso = $vrOtroIngreso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIngresoConceptoFk()
+    {
+        return $this->codigoIngresoConceptoFk;
+    }
+
+    /**
+     * @param mixed $codigoIngresoConceptoFk
+     */
+    public function setCodigoIngresoConceptoFk( $codigoIngresoConceptoFk ): void
+    {
+        $this->codigoIngresoConceptoFk = $codigoIngresoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIngresoConceptoRel()
+    {
+        return $this->ingresoConceptoRel;
+    }
+
+    /**
+     * @param mixed $ingresoConceptoRel
+     */
+    public function setIngresoConceptoRel( $ingresoConceptoRel ): void
+    {
+        $this->ingresoConceptoRel = $ingresoConceptoRel;
     }
 
 

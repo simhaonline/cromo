@@ -7,6 +7,7 @@ use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarConfiguracion;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarDescuentoConcepto;
+use App\Entity\Cartera\CarIngresoConcepto;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Cartera\CarReciboTipo;
@@ -94,6 +95,16 @@ class CarReciboRepository extends ServiceEntityRepository
                 foreach ($arReciboDetalles AS $arReciboDetalle) {
                     if($arReciboDetalle->getVrOtroDescuento() > 0 && $arReciboDetalle->getCodigoDescuentoConceptoFk() == null) {
                         Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . " ingreso un valor para otros descuento pero no selecciono un concepto");
+                        $error = true;
+                        break;
+                    }
+                    if($arReciboDetalle->getVrOtroIngreso() > 0 && $arReciboDetalle->getCodigoIngresoConceptoFk() == null) {
+                        Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . " ingreso un valor para otros ingresos pero no selecciono un concepto");
+                        $error = true;
+                        break;
+                    }
+                    if($arReciboDetalle->getVrPagoAfectar() <0 ) {
+                        Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . " el pago a afectar es menor que cero");
                         $error = true;
                         break;
                     }
@@ -611,6 +622,55 @@ class CarReciboRepository extends ServiceEntityRepository
                                             }
                                         } else {
                                             $error = "El recibo tiene un valor para otro descuento y no tiene concepto";
+                                            break;
+                                        }
+                                    }
+
+                                    //Otro ingreso
+                                    if($arReciboDetalle['vrOtroIngreso'] > 0) {
+                                        if($arReciboDetalle['codigoIngresoConceptoFk']) {
+                                            $arIngresoConcepto = $em->getRepository(CarIngresoConcepto::class)->find($arReciboDetalle['codigoIngresoConceptoFk']);
+                                            $descripcion = $arIngresoConcepto->getNombre();
+                                            $cuenta = $arIngresoConcepto->getCodigoCuentaFk();
+                                            if($cuenta) {
+                                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                                if($arCuenta) {
+                                                    $arRegistro = new FinRegistro();
+                                                    $arRegistro->setTerceroRel($arTercero);
+                                                    $arRegistro->setCuentaRel($arCuenta);
+                                                    $arRegistro->setComprobanteRel($arComprobante);
+                                                    /*if($arCuenta->getExigeCentroCosto()) {
+                                                        $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                    }*/
+                                                    $arRegistro->setNumero($arRecibo['numero']);
+                                                    $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
+                                                    $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
+                                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
+                                                    $arRegistro->setFecha($arRecibo['fecha']);
+                                                    $naturaleza = "C";
+                                                    if($naturaleza == 'D') {
+                                                        $arRegistro->setVrDebito($arReciboDetalle['vrOtroIngreso']);
+                                                        $arRegistro->setNaturaleza('D');
+                                                    } else {
+                                                        $arRegistro->setVrCredito($arReciboDetalle['vrOtroIngreso']);
+                                                        $arRegistro->setNaturaleza('C');
+                                                    }
+                                                    $arRegistro->setDescripcion($descripcion);
+                                                    $arRegistro->setCodigoModeloFk('CarRecibo');
+                                                    $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
+                                                    $em->persist($arRegistro);
+                                                } else {
+                                                    $error = "La cuenta configurada para concepto de ingreso " . $arIngresoConcepto->getNombre() . " no existe";
+                                                    break;
+                                                }
+
+                                            } else {
+                                                $error = "No tiene configurada la cuenta configurada para concepto de ingreso " . $arIngresoConcepto->getNombre();
+                                                break;
+                                            }
+                                        } else {
+                                            $error = "El recibo tiene un valor para otro ingreso y no tiene concepto";
                                             break;
                                         }
                                     }

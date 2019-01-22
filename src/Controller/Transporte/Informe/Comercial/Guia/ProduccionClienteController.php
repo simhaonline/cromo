@@ -6,6 +6,8 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Formato\Transporte\PendienteDespachoRuta;
 use App\Formato\Transporte\ProduccionCliente;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,6 +37,8 @@ class ProduccionClienteController extends Controller
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
+            ->add('txtNombreCorto', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNombreCliente')])
+            ->add('txtIdentificacion', NumberType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteIdentificacionCliente')])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
             ->add('chkMercanciaPeligrosa', CheckboxType::class, array('label' => ' ','required' => false, 'data' => $session->get('filtroMercanciaPeligrosa')))
@@ -47,6 +51,8 @@ class ProduccionClienteController extends Controller
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked()) {
+                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+                    $session->set('filtroTteIdentificacionCliente', $form->get('txtIdentificacion')->getData());
                     $arGuiaTipo = $form->get('cboGuiaTipoRel')->getData();
                     if ($arGuiaTipo) {
                         $session->set('filtroTteGuiaCodigoGuiaTipo', $arGuiaTipo->getCodigoGuiaTipoPk());

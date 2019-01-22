@@ -15,15 +15,16 @@ class ApiGuiaController extends FOSRestController
     /**
      * @param Request $request
      * @param int $codigoGuia
+     * @param int $documentoCliente
      * @return array
-     * @throws \Doctrine\ORM\ORMException
-     * @Rest\Get("/transporte/api/app/guia/consulta/{codigoGuia}")
+     * @Rest\Get("/transporte/api/app/guia/consulta/{codigoGuia}/{documentoCliente}")
      */
-    public function consulta(Request $request, $codigoGuia = 0) {
+    public function consulta(Request $request, $codigoGuia = 0, $documentoCliente = 0)
+    {
         set_time_limit(0);
         ini_set("memory_limit", -1);
-        $arGuia = $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiConsulta($codigoGuia);
-        if($arGuia) {
+        $arGuia = $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiConsulta($codigoGuia, $documentoCliente);
+        if ($arGuia) {
             return [
                 'error' => false,
                 'mensaje' => "Guia encontrada",
@@ -36,7 +37,6 @@ class ApiGuiaController extends FOSRestController
                 'guias' => null,
             ];
         }
-        //return ;
     }
 
     /**
@@ -46,11 +46,12 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Get("/transporte/api/app/guia/despacho/{codigoDespacho}")
      */
-    public function listaDespacho(Request $request, $codigoDespacho = 0) {
+    public function listaDespacho(Request $request, $codigoDespacho = 0)
+    {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $arGuia = $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDespacho($codigoDespacho);
-        if($arGuia) {
+        if ($arGuia) {
             return [
                 'error' => false,
                 'mensaje' => "Guia encontrada",
@@ -73,16 +74,17 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Get("/transporte/api/app/guia/entrega/{codigoGuia}/{fecha}/{hora}/{usuario}")
      */
-    public function entregaApp(Request $request, $codigoGuia = 0, $fecha, $hora, $usuario="") {
+    public function entregaApp(Request $request, $codigoGuia = 0, $fecha, $hora, $usuario = "")
+    {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
         $error = false;
         $mensaje = "";
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-        if($arGuia) {
-            if($arGuia->getEstadoDespachado() == 1) {
-                if($arGuia->getEstadoEntregado() == 0) {
+        if ($arGuia) {
+            if ($arGuia->getEstadoDespachado() == 1) {
+                if ($arGuia->getEstadoEntregado() == 0) {
                     $fechaHora = date_create($fecha . " " . $hora);
                     $arGuia->setFechaEntrega($fechaHora);
                     $arGuia->setEstadoEntregado(1);
@@ -113,16 +115,17 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Get("/transporte/api/app/guia/novedad/{codigoGuia}/{fecha}/{hora}/{usuario}/{codigoNovedad}")
      */
-    public function novedadApp(Request $request, $codigoGuia = 0, $fecha, $hora, $usuario="", $codigoNovedad = "") {
+    public function novedadApp(Request $request, $codigoGuia = 0, $fecha, $hora, $usuario = "", $codigoNovedad = "")
+    {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
         $error = false;
         $mensaje = "";
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
-        if($arGuia) {
+        if ($arGuia) {
             $arNovedadTipo = $em->getRepository(TteNovedadTipo::class)->find($codigoNovedad);
-            if($arNovedadTipo) {
+            if ($arNovedadTipo) {
                 $arNovedad = new TteNovedad();
                 $arNovedad->setGuiaRel($arGuia);
                 $arNovedad->setNovedadTipoRel($arNovedadTipo);
@@ -156,7 +159,8 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/transporte/api/guia/entrega/{codigoGuia}/{soporte}")
      */
-    public function entrega(Request $request, $codigoGuia = 0, $soporte = "") {
+    public function entrega(Request $request, $codigoGuia = 0, $soporte = "")
+    {
 
         $arrPost = json_decode($request->request->get("arrParametros"), true);
         $fecha = $arrPost['fecha'];
@@ -172,7 +176,8 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/transporte/api/guia/soporte/{codigoGuia}")
      */
-    public function soporte(Request $request, $codigoGuia=0) {
+    public function soporte(Request $request, $codigoGuia = 0)
+    {
         $arrPost = json_decode($request->request->get("arrParametros"), true);
         return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiSoporte($codigoGuia);
     }
@@ -184,7 +189,8 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/transporte/api/guia/desembarco/{codigoGuia}")
      */
-    public function desembarco(Request $request, $codigoGuia = 0) {
+    public function desembarco(Request $request, $codigoGuia = 0)
+    {
         $arOperacion = $this->getUser()->getOperacionRel();
         return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDesembarco($codigoGuia, $arOperacion);
     }
@@ -196,9 +202,10 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/transporte/api/guia/despacho/adicionar/{codigoDespacho}/{codigoGuia}")
      */
-    public function adicionarDespacho(Request $request, $codigoDespacho =0, $codigoGuia=0) {
+    public function adicionarDespacho(Request $request, $codigoDespacho = 0, $codigoGuia = 0)
+    {
         $arrPost = json_decode($request->request->get("arrParametros"), true);
-        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDespachoAdicionar($codigoDespacho,$codigoGuia);
+        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDespachoAdicionar($codigoDespacho, $codigoGuia);
     }
 
     /**
@@ -208,9 +215,10 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/transporte/api/guia/despacho/adicionar/documento/{codigoDespacho}/{documento}")
      */
-    public function adicionarDespachoDocumento(Request $request, $codigoDespacho = 0, $documento = "") {
+    public function adicionarDespachoDocumento(Request $request, $codigoDespacho = 0, $documento = "")
+    {
         $arrPost = json_decode($request->request->get("arrParametros"), true);
-        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDespachoAdicionarDocumento($codigoDespacho,$documento);
+        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDespachoAdicionarDocumento($codigoDespacho, $documento);
     }
 
     /**
@@ -220,7 +228,8 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/transporte/api/guia/factura/adicionar/{codigoFactura}/{codigoGuia}/{documento}/{tipo}")
      */
-    public function adicionarFactura(Request $request, $codigoFactura =0, $codigoGuia=0, $documento="", $tipo=0) {
+    public function adicionarFactura(Request $request, $codigoFactura = 0, $codigoGuia = 0, $documento = "", $tipo = 0)
+    {
         $arrPost = json_decode($request->request->get("arrParametros"), true);
         return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiFacturaAdicionar($codigoFactura, $codigoGuia, $documento, $tipo);
     }
@@ -232,7 +241,8 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/transporte/api/guia/factura/planilla/adicionar/{codigoFacturaPlanilla}/{codigoGuia}/{documento}/{tipo}")
      */
-    public function adicionarFacturaPlanilla(Request $request, $codigoFacturaPlanilla =0, $codigoGuia=0, $documento="", $tipo=0) {
+    public function adicionarFacturaPlanilla(Request $request, $codigoFacturaPlanilla = 0, $codigoGuia = 0, $documento = "", $tipo = 0)
+    {
         $arrPost = json_decode($request->request->get("arrParametros"), true);
         return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiFacturaPlanillaAdicionar($codigoFacturaPlanilla, $codigoGuia, $documento, $tipo);
     }
@@ -244,7 +254,8 @@ class ApiGuiaController extends FOSRestController
      * @throws \Doctrine\ORM\ORMException
      * @Rest\Post("/transporte/api/guia/cumplido/adicionar/{codigoCumplido}/{codigoGuia}/{documento}/{tipo}")
      */
-    public function adicionarCumplido(Request $request, $codigoCumplido =0, $codigoGuia=0, $documento="", $tipo=0) {
+    public function adicionarCumplido(Request $request, $codigoCumplido = 0, $codigoGuia = 0, $documento = "", $tipo = 0)
+    {
         $arrPost = json_decode($request->request->get("arrParametros"), true);
         return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiCumplidoAdicionar($codigoCumplido, $codigoGuia, $documento, $tipo);
     }

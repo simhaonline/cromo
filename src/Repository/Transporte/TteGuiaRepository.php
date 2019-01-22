@@ -1635,10 +1635,10 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     /**
      * @param $codigoGuia
+     * @param $documentoCliente
      * @return array
-     * @throws \Doctrine\ORM\ORMException
      */
-    public function apiConsulta($codigoGuia)
+    public function apiConsulta($codigoGuia, $documentoCliente)
     {
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g');
@@ -1667,8 +1667,12 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('gt.nombre as tipoGuia')
             ->leftJoin('g.ciudadOrigenRel', 'co')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
-            ->leftJoin('g.guiaTipoRel', 'gt')
-            ->where("g.codigoGuiaPk = " . $codigoGuia);
+            ->leftJoin('g.guiaTipoRel', 'gt');
+        if ($codigoGuia != 0) {
+            $queryBuilder->where("g.codigoGuiaPk = " . $codigoGuia);
+        } else {
+            $queryBuilder->where("g.documentoCliente = " . $documentoCliente);
+        }
         return $queryBuilder->getQuery()->getResult();
     }
 

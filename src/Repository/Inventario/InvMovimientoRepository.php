@@ -677,9 +677,16 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $arCuentaCobrar->setVrIva($arMovimiento->getVrIva());
                     $arCuentaCobrar->setVrTotal($arMovimiento->getVrTotal());
                     $arCuentaCobrar->setVrRetencionIva($arMovimiento->getVrRetencionIva());
-                    $arCuentaCobrar->setVrSaldoOriginal($arMovimiento->getVrNeto());
-                    $arCuentaCobrar->setVrSaldo($arMovimiento->getVrNeto());
-                    $arCuentaCobrar->setVrSaldoOperado($arMovimiento->getVrNeto() * $arCuentaCobrarTipo->getOperacion());
+                    $arrConfiguracion = $em->getRepository(InvConfiguracion::class)->aprobarMovimiento();
+                    $saldo = $arMovimiento->getVrNeto();
+                    if($arrConfiguracion['impuestoRecaudo']) {
+                        $saldo = $arMovimiento->getVrTotal();
+                        $arCuentaCobrar->setVrRetencionFuente($arMovimiento->getVrRetencionFuente());
+                    }
+                    $arCuentaCobrar->setVrSaldoOriginal($saldo);
+                    $arCuentaCobrar->setVrSaldo($saldo);
+                    $arCuentaCobrar->setVrSaldoOperado($saldo * $arCuentaCobrarTipo->getOperacion());
+
                     $arCuentaCobrar->setPlazo($arMovimiento->getPlazoPago());
                     $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
                     $arCuentaCobrar->setComentario($arMovimiento->getComentarios());

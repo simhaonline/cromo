@@ -77,6 +77,12 @@ class InvConfiguracion
     private $validarBodegaUsuario = false;
 
     /**
+     * Se usa para mandar el impuesto al recaudo
+     * @ORM\Column(name="impuesto_recaudo", type="boolean", options={"default" : false})
+     */
+    private $impuestoRecaudo = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -266,6 +272,22 @@ class InvConfiguracion
     public function setValidarBodegaUsuario( $validarBodegaUsuario ): void
     {
         $this->validarBodegaUsuario = $validarBodegaUsuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImpuestoRecaudo()
+    {
+        return $this->impuestoRecaudo;
+    }
+
+    /**
+     * @param mixed $impuestoRecaudo
+     */
+    public function setImpuestoRecaudo( $impuestoRecaudo ): void
+    {
+        $this->impuestoRecaudo = $impuestoRecaudo;
     }
 
 

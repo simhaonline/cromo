@@ -44,6 +44,16 @@ class InvConfiguracionRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
     }
 
+    public function aprobarMovimiento()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvConfiguracion::class, 'c')
+            ->select('c.impuestoRecaudo')
+            ->where('c.codigoConfiguracionPk = 1');
+
+        return $queryBuilder->getQuery()->getSingleResult();
+    }
+
     public function validarDetalles()
     {
         $session = new Session();

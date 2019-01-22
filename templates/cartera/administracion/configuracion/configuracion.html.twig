@@ -1,5 +1,55 @@
 {% extends ('base.html.twig') %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_nombre1" class="col-sm-2 control-label">Cuenta ajuste peso:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoCuentaAjustePesoFk) }}
+                    {{ form_errors(form.codigoCuentaAjustePesoFk) }}
+                </div>
+                <label for="form_nombre1" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Descuentos rapidos</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_soporte" class="col-sm-2 control-label">Descuento1 (Descuento):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoCuentaDescuentoFk) }}
+                    {{ form_errors(form.codigoCuentaDescuentoFk) }}
+                </div>
+                <label for="form_soporte" class="col-sm-2 control-label">Descuento2 (Retencion Fuente):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoCuentaRetencionFuenteFk) }}
+                    {{ form_errors(form.codigoCuentaRetencionFuenteFk) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_soporte" class="col-sm-2 control-label">Descuento3 (Retencion ICA):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoCuentaIndustriaComercioFk) }}
+                    {{ form_errors(form.codigoCuentaIndustriaComercioFk) }}
+                </div>
+                <label for="form_soporte" class="col-sm-2 control-label">Descuento4 (Retencion Iva):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoCuentaRetencionIvaFk) }}
+                    {{ form_errors(form.codigoCuentaRetencionIvaFk) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
     {{ form_end(form) }}
 {% endblock %}

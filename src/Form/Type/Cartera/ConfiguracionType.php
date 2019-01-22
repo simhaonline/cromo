@@ -20,10 +20,11 @@ class ConfiguracionType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('codigoCuentaRetencionIvaFk', TextType::class, ['label' => 'codigoCuentaRetencionIvaFk:', 'required' => false])
-            ->add('codigoCuentaRetencionFuenteFk', TextType::class, ['label' => 'codigoCuentaRetencionFuenteFk:', 'required' => false])
-            ->add('codigoCuentaIndustriaComercioFk', TextType::class, ['label' => 'codigoCuentaIndustriaComercioFk:', 'required' => false])
-            ->add('codigoCuentaAjustePesoFk', TextType::class, ['label' => 'codigoCuentaAjustePesoFk:', 'required' => false])
+            ->add('codigoCuentaRetencionIvaFk', TextType::class, ['label' => 'Retencion iva:', 'required' => false])
+            ->add('codigoCuentaRetencionFuenteFk', TextType::class, ['label' => 'Retencion fuente:', 'required' => false])
+            ->add('codigoCuentaIndustriaComercioFk', TextType::class, ['label' => 'Industria comercio:', 'required' => false])
+            ->add('codigoCuentaDescuentoFk', TextType::class, ['label' => 'Descuento:', 'required' => false])
+            ->add('codigoCuentaAjustePesoFk', TextType::class, ['label' => 'Ajuste peso:', 'required' => false])
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
     }
 

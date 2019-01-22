@@ -2,50 +2,61 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
     {{ form_errors(form) }}
-    <div class="panel panel-default">
-        <div class="panel-heading">Filtros</div>
-        <div class="panel-body">
+<div id="content sortable-grid ui-sortable">
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+            <h2>Filtro</h2>
+        </header>
+        <div>
+            <div class="widget-body">
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Cliente:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.txtNombreCorto, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-1 control-label">Identificacion:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.txtIdentificacion) }}
+                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoCliente) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                {{ form_widget(form.txtNombreCorto) }}
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_TxtCodigo" class="col-sm-2 control-label">Tipo:</label>
-                <div class="col-sm-4">
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Tipo:</label>
+                <div class="col-sm-2">
                     {{ form_widget(form.cboGuiaTipoRel) }}
                 </div>
-                <label for="form_estadoAutorizado" class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-
-                </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_TxtCodigo" class="col-sm-2 control-label">Desde:</label>
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Desde:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
-                <label for="form_estadoAutorizado" class="col-sm-2 control-label"></label>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>
                 <div class="col-sm-4">
 
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_TxtCodigo" class="col-sm-2 control-label">Hasta:</label>
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Hasta:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaHasta) }}
                 </div>
-                <label for="form_estadoAutorizado" class="col-sm-2 control-label"></label>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>
                 <div class="col-sm-4">
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Mercancia peligrosa:</label>
+                <label class="col-sm-1 control-label">Mercancia peligrosa:</label>
                 <div class="col-sm-8">
                     {{ form_widget(form.chkMercanciaPeligrosa) }}
                 </div>
@@ -57,7 +68,9 @@
             </div>
         </div>
     </div>
-    <table class="table table-striped table-bordered table-hover">
+    </div>
+</div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
         <thead>
         <tr>
             <th>COD</th>
@@ -104,6 +117,7 @@
     <div class="btn-group" style="float: right">
         {{ form_widget(form.btnPdf, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
     </div>
+    <br /><br /><br />
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

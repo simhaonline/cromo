@@ -1243,11 +1243,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
             $queryBuilder->andWhere("g.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
         }
-        if ($session->get('filtroTteNombreCliente') != '') {
-            $queryBuilder->andWhere("c.nombreCorto LIKE '%{$session->get('filtroTteNombreCliente')}%' ");
-        }
-        if ($session->get('filtroTteIdentificacionCliente') != '') {
-            $queryBuilder->andWhere("c.numeroIdentificacion = {$session->get('filtroTteIdentificacionCliente')} ");
+        if ($session->get('filtroTteCodigoCliente')) {
+            $queryBuilder->andWhere("g.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
         return $queryBuilder;
     }

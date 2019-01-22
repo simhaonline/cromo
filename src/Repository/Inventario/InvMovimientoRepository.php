@@ -234,6 +234,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $respuesta = '';
+        $retencionFuente = $arMovimiento->getTerceroRel()->getRetencionFuente();
+        $retencionFuenteSinBase = $arMovimiento->getTerceroRel()->getRetencionFuenteSinBase();
         $vrTotalBrutoGlobal = 0;
         $vrTotalGlobal = 0;
         $vrTotalNetoGlobal = 0;
@@ -244,7 +246,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $vrRetencionIvaGlobal = 0;
         $vrAutoretencion = 0;
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
-        $arrImpuestoRetenciones = $this->retencion($arMovimientoDetalles);
+        $arrImpuestoRetenciones = $this->retencion($arMovimientoDetalles, $retencionFuenteSinBase);
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             if ($arMovimiento->getCodigoDocumentoTipoFk() == "SAL") {
                 $arMovimientoDetalle->setVrPrecio($arMovimientoDetalle->getVrCosto());
@@ -266,8 +268,10 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $vrSubtotalGlobal += $vrSubtotal;
             if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC' || $arMovimiento->getCodigoDocumentoTipoFk() == 'COM') {
                 if ($arMovimientoDetalle->getCodigoImpuestoRetencionFk()) {
-                    if ($arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['base'] == true) {
-                        $vrRetencionFuente = $vrSubtotal * $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['porcentaje'] / 100;
+                    if($retencionFuente) {
+                        if ($arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['base'] == true || $retencionFuenteSinBase) {
+                            $vrRetencionFuente = $vrSubtotal * $arrImpuestoRetenciones[$arMovimientoDetalle->getCodigoImpuestoRetencionFk()]['porcentaje'] / 100;
+                        }
                     }
                 }
             }
@@ -315,7 +319,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         }
     }
 
-    private function retencion($arMovimientoDetalles)
+    private function retencion($arMovimientoDetalles, $retencionFuenteSinBase)
     {
         $em = $this->getEntityManager();
         $arrImpuestoRetenciones = array();
@@ -336,7 +340,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             foreach ($arrImpuestoRetenciones as $arrImpuestoRetencion) {
                 $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrImpuestoRetencion['codigo']);
                 if ($arImpuesto) {
-                    if ($arrImpuestoRetencion['valor'] >= $arImpuesto->getBase()) {
+                    if ($arrImpuestoRetencion['valor'] >= $arImpuesto->getBase() || $retencionFuenteSinBase) {
                         $arrImpuestoRetenciones[$arrImpuestoRetencion['codigo']]['base'] = true;
                         $arrImpuestoRetenciones[$arrImpuestoRetencion['codigo']]['porcentaje'] = $arImpuesto->getPorcentaje();
                     }

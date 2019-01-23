@@ -84,6 +84,9 @@ class InvItemRepository extends ServiceEntityRepository
         if($session->get('itemConExistencia') == true){
             $queryBuilder->andWhere("i.cantidadExistencia > 0");
         }
+        if($session->get('filtroItemConDisponibilidad') == true){
+            $queryBuilder->andWhere("i.cantidadDisponible > 0");
+        }
         if ($session->get('filtroInvBucarItemCodigo') != '') {
             $queryBuilder->andWhere("i.codigoItemPk = {$session->get('filtroInvBucarItemCodigo')}");
         }

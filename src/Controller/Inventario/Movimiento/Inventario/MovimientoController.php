@@ -363,6 +363,7 @@ class MovimientoController extends ControllerListenerGeneral
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
             ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemReferencia')])
             ->add('itemConExistencia', CheckboxType::class, array('label' => ' ', 'required' => false, 'data' => $session->get('itemConExistencia')))
+            ->add('itemConDisponibilidad', CheckboxType::class, array('label' => ' ', 'required' => false, 'data' => $session->get('filtroItemConDisponibilidad')))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
@@ -373,6 +374,7 @@ class MovimientoController extends ControllerListenerGeneral
                 $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
                 $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
                 $session->set('itemConExistencia', $form->get('itemConExistencia')->getData());
+                $session->set('filtroItemConDisponibilidad', $form->get('itemConDisponibilidad')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');

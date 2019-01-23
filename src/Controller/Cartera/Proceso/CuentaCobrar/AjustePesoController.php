@@ -34,7 +34,7 @@ class AjustePesoController extends Controller
                 return $this->redirect($this->generateUrl('cartera_proceso_cuentacobrar_ajustepeso_lista'));
             }
         }
-        return $this->render('cartera/proceso/cuentacobrar/corregirSaldos.html.twig', [
+        return $this->render('cartera/proceso/cuentacobrar/ajustePeso.html.twig', [
             'form' => $form->createView()
         ]);
     }

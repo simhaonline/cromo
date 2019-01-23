@@ -121,6 +121,11 @@ class TteGuia
     private $fechaFactura;
 
     /**
+     * @ORM\Column(name="fecha_desembarco", type="datetime", nullable=true, options={"default" : null})
+     */
+    private $fechaDesembarco;
+
+    /**
      * @ORM\Column(name="unidades", type="float", options={"default" : 0})
      */
     private $unidades = 0;
@@ -1998,6 +2003,22 @@ class TteGuia
     public function setDesembarcosGuiaRel( $desembarcosGuiaRel ): void
     {
         $this->desembarcosGuiaRel = $desembarcosGuiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDesembarco()
+    {
+        return $this->fechaDesembarco;
+    }
+
+    /**
+     * @param mixed $fechaDesembarco
+     */
+    public function setFechaDesembarco( $fechaDesembarco ): void
+    {
+        $this->fechaDesembarco = $fechaDesembarco;
     }
 
 

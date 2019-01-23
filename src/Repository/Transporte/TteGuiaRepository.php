@@ -1648,6 +1648,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.fechaDespacho as fechaDespachado')
             ->addSelect('g.estadoEntregado as entregado')
             ->addSelect('g.fechaEntrega as fechaEntregado')
+            ->addSelect('g.fechaDesembarco as fechaDesembarco')
             ->addSelect('g.estadoSoporte as soporte')
             ->addSelect('g.fechaSoporte as fechaSoporte')
             ->addSelect('g.estadoCumplido as cumplido')
@@ -2492,6 +2493,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arGuia->setFechaCumplido(null);
                         $arGuia->setFechaEntrega(null);
                         $arGuia->setFechaSoporte(null);
+                        $arGuia->setFechaDesembarco(new \DateTime('now'));
                         $arGuia->setEstadoDespachado(0);
                         $arGuia->setEstadoEmbarcado(0);
                         $arGuia->setEstadoEntregado(0);

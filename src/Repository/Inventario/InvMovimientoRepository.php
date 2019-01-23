@@ -1067,61 +1067,63 @@ class InvMovimientoRepository extends ServiceEntityRepository
                             }
 
                             //Autoretencion
-                            $arrConfiguracionGeneral = $em->getRepository(GenConfiguracion::class)->invLiquidarMovimiento();
-                            if ($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'] && $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk']);
-                                if (!$arCuenta) {
-                                    $error = "No se encuentra la cuenta " . $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'];
+                            if($arMovimiento['vrAutoretencion'] > 0) {
+                                $arrConfiguracionGeneral = $em->getRepository(GenConfiguracion::class)->invLiquidarMovimiento();
+                                if ($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'] && $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk']);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta " . $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'];
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setNumero($arMovimiento['numero']);
+                                    $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
+                                    $arRegistro->setFecha($arMovimiento['fecha']);
+                                    if ($arMovimiento['notaCredito']) {
+                                        $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
+                                        $arRegistro->setNaturaleza('C');
+                                    } else {
+                                        $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
+                                        $arRegistro->setNaturaleza('D');
+                                    }
+
+                                    $arRegistro->setDescripcion('AUTORETENCION');
+                                    $arRegistro->setCodigoModeloFk('InvMovimiento');
+                                    $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                    $em->persist($arRegistro);
+
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta " . $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk'];
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setNumero($arMovimiento['numero']);
+                                    $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
+                                    $arRegistro->setFecha($arMovimiento['fecha']);
+                                    if ($arMovimiento['notaCredito']) {
+                                        $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+
+                                    $arRegistro->setDescripcion('AUTORETENCION');
+                                    $arRegistro->setCodigoModeloFk('InvMovimiento');
+                                    $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                    $em->persist($arRegistro);
+
+                                } else {
+                                    $error = "No tiene cuentas para autoretencion en configuracion general";
                                     break;
                                 }
-                                $arRegistro = new FinRegistro();
-                                $arRegistro->setTerceroRel($arTercero);
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                $arRegistro->setNumero($arMovimiento['numero']);
-                                $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
-                                $arRegistro->setFecha($arMovimiento['fecha']);
-                                if ($arMovimiento['notaCredito']) {
-                                    $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
-                                    $arRegistro->setNaturaleza('C');
-                                } else {
-                                    $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
-                                    $arRegistro->setNaturaleza('D');
-                                }
-
-                                $arRegistro->setDescripcion('AUTORETENCION');
-                                $arRegistro->setCodigoModeloFk('InvMovimiento');
-                                $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
-                                $em->persist($arRegistro);
-
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']);
-                                if (!$arCuenta) {
-                                    $error = "No se encuentra la cuenta " . $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk'];
-                                    break;
-                                }
-                                $arRegistro = new FinRegistro();
-                                $arRegistro->setTerceroRel($arTercero);
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                $arRegistro->setNumero($arMovimiento['numero']);
-                                $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
-                                $arRegistro->setFecha($arMovimiento['fecha']);
-                                if ($arMovimiento['notaCredito']) {
-                                    $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
-                                    $arRegistro->setNaturaleza('D');
-                                } else {
-                                    $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
-                                    $arRegistro->setNaturaleza('C');
-                                }
-
-                                $arRegistro->setDescripcion('AUTORETENCION');
-                                $arRegistro->setCodigoModeloFk('InvMovimiento');
-                                $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
-                                $em->persist($arRegistro);
-
-                            } else {
-                                $error = "No tiene cuentas para autoretencion en configuracion general";
-                                break;
                             }
 
                             //Iva

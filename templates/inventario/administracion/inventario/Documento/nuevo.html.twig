@@ -105,13 +105,23 @@
                     {{ form_widget(form.codigoComprobanteFk,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.codigoComprobanteFk) }}
                 </div>
+                <label for="form_codigoCuentaProveedorFk" class="col-sm-2 control-label">Cuenta cliente:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.codigoCuentaClienteFk,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoCuentaClienteFk) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_codigoComprobanteFk" class="col-sm-2 control-label"></label>
+                <div class="col-sm-3">
+
+                </div>
                 <label for="form_codigoCuentaProveedorFk" class="col-sm-2 control-label">Cuenta proveedor:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.codigoCuentaProveedorFk,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.codigoCuentaProveedorFk) }}
                 </div>
             </div>
-
         </div>
     </div>
     <div class="modal-footer">

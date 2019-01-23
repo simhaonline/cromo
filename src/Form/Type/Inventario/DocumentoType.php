@@ -31,11 +31,12 @@ class DocumentoType extends AbstractType
                 'label' => 'Documento tipo:'
             ])
             ->add('abreviatura',TextType::class,['label' => 'Abreviatura: '])
-            ->add('prefijo',TextType::class,['label' => 'Prefijo: '])
+            ->add('prefijo',TextType::class,['label' => 'Prefijo: ', 'required' => false])
             ->add('consecutivo',TextType::class,['label' => 'Consecutivo: '])
             ->add('operacionInventario',ChoiceType::class,['choices' => ['SUMA' => '1','RESTA' => '-1', 'NEUTRO' => '0']])
             ->add('codigoComprobanteFk',TextType::class,['required' => false])
             ->add('codigoCuentaProveedorFk',TextType::class,['required' => false])
+            ->add('codigoCuentaClienteFk',TextType::class,['required' => false])
             ->add('generaCostoPromedio')
             ->add('adicionar')
             ->add('adicionarOrden')

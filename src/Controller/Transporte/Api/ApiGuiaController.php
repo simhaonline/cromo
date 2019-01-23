@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteNovedadTipo;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class ApiGuiaController extends FOSRestController
@@ -37,6 +38,19 @@ class ApiGuiaController extends FOSRestController
                 'guias' => null,
             ];
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param $codigoGuia
+     * @return JsonResponse
+     * @Rest\Get("/transporte/api/app/guia/novedad/{codigoGuia}")
+     */
+    public function consultaNovedad(Request $request, $codigoGuia){
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $arNovedades = $this->getDoctrine()->getManager()->getRepository(TteNovedad::class)->apiConsulta($codigoGuia);
+        return new JsonResponse($arNovedades);
     }
 
     /**

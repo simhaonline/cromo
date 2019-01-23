@@ -310,4 +310,20 @@ class TteNovedadRepository extends ServiceEntityRepository
         $results = $statement->fetchAll();
         return $results;
     }
+
+
+    /**
+     * @param $codigoGuia
+     * @return mixed
+     */
+    public function apiConsulta($codigoGuia){
+        $qb = $this->_em->createQueryBuilder()->from(TteNovedad::class,'n')
+            ->select('n.estadoSolucion')
+            ->addSelect('n.solucion')
+            ->addSelect('n.fechaSolucion')
+            ->addSelect('n.codigoNovedadTipoFk')
+            ->addSelect('n.descripcion')
+            ->where('n.codigoGuiaFk = '.$codigoGuia);
+        return $qb->getQuery()->getResult();
+    }
 }

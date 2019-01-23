@@ -86,10 +86,33 @@ class OrdenCompra extends \FPDF
         $this->SetXY(10, $intY + 4);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(40, 4, "TIPO ORDEN COMPRA:", 1, 0, 'L', 1);
+        $this->Cell(40, 4, "TIPO ORDEN:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(55, 4, utf8_decode($arOrdenCompra->getOrdenTipoRel()->getNombre()), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(40, 4, 'FECHA ENTREGA:', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(55, 4, $arOrdenCompra->getFechaEntrega()->format('Y/m/d'), 1, 0, 'L', 1);
+
+        $this->SetXY(10, $intY + 8);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(40, 4, "PROVEEDOR:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(150, 4,utf8_decode($arOrdenCompra->getTerceroRel()->getNumeroIdentificacion()) . "-" . utf8_decode($arOrdenCompra->getTerceroRel()->getNombreCorto()), 1, 0, 'L', 1);
+
+
+        $this->SetXY(10, $intY + 12);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(40, 4, "MONEDA:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(55, 4, $arOrdenCompra->getMonedaRel()->getNombre(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(40, 4, 'SOPORTE:', 1, 0, 'L', 1);
@@ -97,27 +120,6 @@ class OrdenCompra extends \FPDF
         $this->SetFillColor(272, 272, 272);
         $this->Cell(55, 4, $arOrdenCompra->getSoporte(), 1, 0, 'L', 1);
 
-        $this->SetXY(10, $intY + 8);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(40, 4, "TERCERO:", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 8);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(55, 4, utf8_decode($arOrdenCompra->getTerceroRel()->getNombreCorto()), 1, 0, 'L', 1);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(40, 4, 'NIT:', 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 7);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(55, 4, $arOrdenCompra->getTerceroRel()->getNumeroIdentificacion(), 1, 0, 'L', 1);
-
-        $this->SetXY(10, $intY + 12);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(40, 4, "FECHA ENTREGA", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 7);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(150, 4, $arOrdenCompra->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
 
         $this->SetXY(10, $intY + 16);
         $this->SetFont('Arial', 'B', 8);

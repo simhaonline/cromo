@@ -32,6 +32,11 @@ class GenMoneda
     protected $invImportacionesMonedaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvOrden", mappedBy="monedaRel")
+     */
+    protected $invOrdenesMonedaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoMonedaPk()
@@ -77,6 +82,22 @@ class GenMoneda
     public function setInvImportacionesMonedaRel( $invImportacionesMonedaRel ): void
     {
         $this->invImportacionesMonedaRel = $invImportacionesMonedaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInvOrdenesMonedaRel()
+    {
+        return $this->invOrdenesMonedaRel;
+    }
+
+    /**
+     * @param mixed $invOrdenesMonedaRel
+     */
+    public function setInvOrdenesMonedaRel( $invOrdenesMonedaRel ): void
+    {
+        $this->invOrdenesMonedaRel = $invOrdenesMonedaRel;
     }
 
 

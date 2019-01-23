@@ -1,4 +1,4 @@
-<table width="100%" class="table table-condensed table-bordered">
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
     <tr>
         <td class="titulo">ORDEN COMPRA:</td>
         <td class="td-in-well">{{ arOrden.codigoOrdenPk }}</td>
@@ -22,6 +22,14 @@
         <td class="td-in-well">{{ arOrden.soporte }}</td>
         <td class="titulo">DESCUENTO:</td>
         <td class="td-in-well" style="text-align: right;">{{ arOrden.vrDescuento |number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">MONEDA:</td>
+        <td class="td-in-well">{{ arOrden.monedaRel.nombre | default('') }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td class="td-in-well" style="text-align: right;"></td>
     </tr>
     <tr>
         <td class="titulo">COMENTARIO:</td>

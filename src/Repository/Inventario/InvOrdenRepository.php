@@ -220,7 +220,7 @@ class InvOrdenRepository extends ServiceEntityRepository
          * @var $arOrden InvOrden
          */
         $respuesta = '';
-        if (count($arrSeleccionados) > 0) {
+        if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigo) {
                 $arRegistro = $this->getEntityManager()->getRepository(InvOrden::class)->find($codigo);
                 if ($arRegistro) {

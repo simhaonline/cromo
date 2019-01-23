@@ -50,6 +50,11 @@ class InvOrden
     private $soporte;
 
     /**
+     * @ORM\Column(name="codigo_moneda_fk", type="string",length=10, nullable=true, options={"default" : null})
+     */
+    private $codigoMonedaFk;
+
+    /**
      * @ORM\Column(name="vr_subtotal", type="float")
      */
     private $vrSubtotal = 0;
@@ -122,6 +127,12 @@ class InvOrden
      * )
      */
     protected $ordenTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenMoneda", inversedBy="invOrdenesMonedaRel")
+     * @ORM\JoinColumn(name="codigo_moneda_fk", referencedColumnName="codigo_moneda_pk")
+     */
+    protected $monedaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvOrdenDetalle", mappedBy="ordenRel")
@@ -446,6 +457,38 @@ class InvOrden
     public function setOrdenesDetallesOrdenRel($ordenesDetallesOrdenRel): void
     {
         $this->ordenesDetallesOrdenRel = $ordenesDetallesOrdenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoMonedaFk()
+    {
+        return $this->codigoMonedaFk;
+    }
+
+    /**
+     * @param mixed $codigoMonedaFk
+     */
+    public function setCodigoMonedaFk( $codigoMonedaFk ): void
+    {
+        $this->codigoMonedaFk = $codigoMonedaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMonedaRel()
+    {
+        return $this->monedaRel;
+    }
+
+    /**
+     * @param mixed $monedaRel
+     */
+    public function setMonedaRel( $monedaRel ): void
+    {
+        $this->monedaRel = $monedaRel;
     }
 
 

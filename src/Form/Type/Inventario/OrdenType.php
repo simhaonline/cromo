@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\Inventario;
 
+use App\Entity\General\GenMoneda;
 use App\Entity\Inventario\InvOrden;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -28,6 +29,17 @@ class OrdenType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Tipo: '
             ])
+            ->add('monedaRel',EntityType::class,[
+                'required' => true,
+                'class' => GenMoneda::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('m')
+                        ->orderBy('m.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Moneda:'
+            ])
+            ->add('fechaEntrega',DateType::class,['required' => false])
             ->add('soporte',TextType::class,['required' => false])
             ->add('comentarios',TextareaType::class,['required' => false,'attr' => ['rows' => '5']])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])

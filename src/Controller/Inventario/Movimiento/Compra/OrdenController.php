@@ -89,6 +89,8 @@ class OrdenController extends ControllerListenerGeneral
         $arOrden = new InvOrden();
         if ($id != 0) {
             $arOrden = $em->getRepository(InvOrden::class)->find($id);
+        } else {
+            $arOrden->setFechaEntrega(new \DateTime('now'));
         }
         $form = $this->createForm(OrdenType::class, $arOrden);
         $form->handleRequest($request);
@@ -100,6 +102,7 @@ class OrdenController extends ControllerListenerGeneral
                     if ($arTercero) {
                         $arOrden->setTerceroRel($arTercero);
                         $arOrden->setFecha(new \DateTime('now'));
+                        $arOrden->setUsuario($this->getUser()->getUserName());
                         $em->persist($arOrden);
                         $em->flush();
                         return $this->redirect($this->generateUrl('inventario_movimiento_compra_orden_detalle', ['id' => $arOrden->getCodigoOrdenPk()]));
@@ -238,7 +241,7 @@ class OrdenController extends ControllerListenerGeneral
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 10);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 100);
         return $this->render('inventario/movimiento/compra/orden/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems

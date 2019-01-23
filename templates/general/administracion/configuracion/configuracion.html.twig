@@ -34,6 +34,14 @@
                     {{ form_widget(form.rutaTemporal) }}
                 </div>
             </div>
+            <div class="form-group form-group-sm">
+                <label for="form_telefono" class="col-sm-2 control-label">Contabilidad automatica:</label>
+                <div class="col-sm-1" style="padding-top: 0.3%;width: 0px;">
+                    {{ form_widget(form.contabilidadAutomatica) }}
+                </div>
+                &nbsp;
+                <span class="fa fa-info-circle" style="color: grey;font-size: small;padding-top: 0.6%;" title="Con esta opción, los modulos realizaran de manera automatica el proceso de contabilizar los registros"></span>
+            </div>
         </div>
     </div>
     <div class="panel panel-default">

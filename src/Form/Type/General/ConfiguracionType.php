@@ -4,6 +4,7 @@ namespace App\Form\Type\General;
 
 use App\Entity\General\GenConfiguracion;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,6 +19,7 @@ class ConfiguracionType extends AbstractType
         $builder
             ->add('nit', TextType::class, ['required' => true])
             ->add('digitoVerificacion', NumberType::class, ['required' => true])
+            ->add('contabilidadAutomatica', CheckboxType::class, ['required' => false,'label' => ' '])
             ->add('nombre', TextType::class, ['required' => true])
             ->add('rutaTemporal', TextType::class, ['required' => true])
             ->add('telefono', TextType::class, ['required' => true])

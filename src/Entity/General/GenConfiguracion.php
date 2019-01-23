@@ -46,6 +46,7 @@ class GenConfiguracion
      * @ORM\Column(name="ruta_temporal", type="string", length=100, nullable=true)
      */
     private $rutaTemporal;
+
     /**
      * @ORM\Column(name="telefono", type="string", length=25, nullable=true)
      */
@@ -92,6 +93,11 @@ class GenConfiguracion
     private $autoretencionVenta = false;
 
     /**
+     * @ORM\Column(name="contabilidad_automatica", type="boolean", options={"default" : false})
+     */
+    private $contabilidadAutomatica = false;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_autoretencion_venta_valor_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaAutoretencionVentaValorFk;
@@ -111,22 +117,6 @@ class GenConfiguracion
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -366,6 +356,22 @@ class GenConfiguracion
     public function setAutoretencionVenta($autoretencionVenta): void
     {
         $this->autoretencionVenta = $autoretencionVenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContabilidadAutomatica()
+    {
+        return $this->contabilidadAutomatica;
+    }
+
+    /**
+     * @param mixed $contabilidadAutomatica
+     */
+    public function setContabilidadAutomatica($contabilidadAutomatica): void
+    {
+        $this->contabilidadAutomatica = $contabilidadAutomatica;
     }
 
     /**

@@ -72,6 +72,8 @@ class ItemController extends ControllerListenerGeneral
             if (!$arItem) {
                 return $this->redirect($this->generateUrl('inventario_administracion_inventario_item_lista'));
             }
+        } else {
+            $arItem->setProducto(true);
         }
         $form = $this->createForm(ItemType::class, $arItem);
         $form->handleRequest($request);

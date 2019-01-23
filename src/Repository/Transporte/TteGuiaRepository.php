@@ -1654,6 +1654,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.estadoCumplido as cumplido')
             ->addSelect('g.fechaCumplido as fechaCumplido')
             ->addSelect('g.estadoNovedad as novedad')
+            ->addSelect('g.estadoNovedadSolucion')
             ->addSelect('g.unidades')
             ->addSelect('g.documentoCliente')
             ->addSelect('g.remitente')

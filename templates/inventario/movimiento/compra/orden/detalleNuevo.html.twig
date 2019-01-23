@@ -3,25 +3,29 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <br/>
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4> Filtros de búsqueda</h4>
-        </div>
+        <div class="panel-heading">Filtros</div>
         <div class="panel-body">
-            {{ form_label(form.txtCodigoItem) }}
-            <div class="col-sm-4">
-                {{ form_widget(form.txtCodigoItem) }}
-
+            <div class="form-group form-group-sm">
+                <label for="form_txtCodigoItem" class="col-sm-2 control-label">Codigo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtCodigoItem) }}
+                </div>
+                <label for="form_txtNombreItem" class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNombreItem) }}
+                </div>
             </div>
-            {{ form_label(form.txtNombreItem) }}
-            <div class="col-sm-4">
-
-                {{ form_widget(form.txtNombreItem) }}
+            <div class="form-group form-group-sm">
+                <label for="form_txtMarcaItem" class="col-sm-2 control-label">Marca:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtMarcaItem) }}
+                </div>
             </div>
-        </div>
-        <div class="panel-footer">
-            {{ form_widget(form.btnFiltrar,{'attr':{'style':'float: right;'}}) }}
-            <br/>
-            <br/>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.btnFiltrar,{'attr':{'style':'float: right;'}}) }}
+                </div>
+            </div>
         </div>
     </div>
     <div>
@@ -61,4 +65,5 @@
     </div>
     {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
     {{ form_end(form) }}
+    <br /><br />
 {% endblock %}

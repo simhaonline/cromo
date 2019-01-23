@@ -71,7 +71,7 @@ class TerceroController extends ControllerListenerGeneral
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvTercero::class)->lista(null))->execute(), "Movimientos");
+                General::get()->setExportar($em->createQuery($em->getRepository(InvTercero::class)->lista(null))->execute(), "Terceros");
             }
         }
         $arTerceros = $paginator->paginate($em->getRepository(InvTercero::class)->lista(null), $request->query->getInt('page', 1), 30);

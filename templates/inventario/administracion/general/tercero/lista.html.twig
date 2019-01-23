@@ -46,6 +46,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>TIPO</th>
             <th>IDENTIFICACION</th>
             <th>NOMBRE</th>
             <th>DIRECCION</th>
@@ -61,12 +62,13 @@
         {% for arTercero in arTerceros %}
             <tr>
                 <td>{{ arTercero.codigoTerceroPk }}</td>
+                <td>{{ arTercero.codigoIdentificacionFk }}</td>
                 <td>{{ arTercero.numeroIdentificacion }}</td>
                 <td>{{ arTercero.nombreCorto }}</td>
                 <td>{{ arTercero.direccion }}</td>
                 <td>{{ arTercero.ciudadNombre }}</td>
-                <td>{{ arTercero.cliente }}</td>
-                <td>{{ arTercero.proveedor }}</td>
+                <td>{{ arTercero.cliente ? 'SI':'NO' }}</td>
+                <td>{{ arTercero.proveedor ? 'SI':'NO' }}</td>
                 <td style="text-align: center;"><a
                             href="{{ path('inventario_administracion_general_tercero_nuevo',{'id' : arTercero.codigoTerceroPk }) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">

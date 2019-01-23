@@ -40,13 +40,15 @@ class InvTerceroRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvTercero::class, 't')
             ->select('t.codigoTerceroPk')
-            ->addSelect('t.nombres')
-            ->addSelect('t.nombreCorto')
+            ->addSelect('t.codigoIdentificacionFk')
             ->addSelect('t.numeroIdentificacion')
+            ->addSelect('t.nombreCorto')
             ->addSelect('t.direccion')
+            ->addSelect('c.nombre AS ciudadNombre')
             ->addSelect('t.cliente')
             ->addSelect('t.proveedor')
-            ->addSelect('c.nombre AS ciudadNombre')
+            ->addSelect('t.retencionFuente')
+            ->addSelect('t.retencionFuenteSinBase')
             ->leftJoin('t.ciudadRel', 'c')
             ->where('t.codigoTerceroPk <> 0');
             if ($session->get('filtroInvTerceroCodigo') != '') {

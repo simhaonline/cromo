@@ -22,7 +22,7 @@ class GenNotificacionTipo
     private $codigoNotificacionTipoPk;
 
     /**
-     * @ORM\Column(name="nombre", type="string", length=10)
+     * @ORM\Column(name="nombre", type="string", length=200)
      */
     private $nombre;
 
@@ -32,20 +32,9 @@ class GenNotificacionTipo
     private $usuarios;
 
     /**
-     * @ORM\Column(name="estado_activo", type="boolean", nullable=true, options={"default":true})
+     * @ORM\Column(name="estado_activo", type="boolean", nullable=true, options={"default":false})
      */
     private $estadoActivo;
-
-    /**
-     * @ORM\Column(name="codigo_modelo_fk",  type="string",length=80, nullable=false)
-     */
-    private $codigoModeloFk;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenModelo", inversedBy="notificacionTipoModeloRel")
-     * @ORM\JoinColumn(name="codigo_modelo_fk", referencedColumnName="codigo_modelo_pk")
-     */
-    protected $modeloRel;
 
     /**
      * @return mixed
@@ -58,7 +47,7 @@ class GenNotificacionTipo
     /**
      * @param mixed $codigoNotificacionTipoPk
      */
-    public function setCodigoNotificacionTipoPk($codigoNotificacionTipoPk): void
+    public function setCodigoNotificacionTipoPk( $codigoNotificacionTipoPk ): void
     {
         $this->codigoNotificacionTipoPk = $codigoNotificacionTipoPk;
     }
@@ -74,7 +63,7 @@ class GenNotificacionTipo
     /**
      * @param mixed $nombre
      */
-    public function setNombre($nombre): void
+    public function setNombre( $nombre ): void
     {
         $this->nombre = $nombre;
     }
@@ -90,7 +79,7 @@ class GenNotificacionTipo
     /**
      * @param mixed $usuarios
      */
-    public function setUsuarios($usuarios): void
+    public function setUsuarios( $usuarios ): void
     {
         $this->usuarios = $usuarios;
     }
@@ -106,40 +95,11 @@ class GenNotificacionTipo
     /**
      * @param mixed $estadoActivo
      */
-    public function setEstadoActivo($estadoActivo): void
+    public function setEstadoActivo( $estadoActivo ): void
     {
         $this->estadoActivo = $estadoActivo;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCodigoModeloFk()
-    {
-        return $this->codigoModeloFk;
-    }
 
-    /**
-     * @param mixed $codigoModeloFk
-     */
-    public function setCodigoModeloFk($codigoModeloFk): void
-    {
-        $this->codigoModeloFk = $codigoModeloFk;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getModeloRel()
-    {
-        return $this->modeloRel;
-    }
-
-    /**
-     * @param mixed $modeloRel
-     */
-    public function setModeloRel($modeloRel): void
-    {
-        $this->modeloRel = $modeloRel;
-    }
 }

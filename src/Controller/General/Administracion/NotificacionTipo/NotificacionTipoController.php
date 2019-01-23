@@ -9,6 +9,7 @@ use App\Entity\General\GenNotificacionTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -84,8 +85,10 @@ class NotificacionTipoController extends BaseController
         $session = new Session();
         $session->set('arGenNotificacionTipoNombreUsuario', null);
         $usuario=$user->getToken()->getUser();
+        $arNotificacionTipo = $em->getRepository(GenNotificacionTipo::class)->find($codigoNotificacion);
         $form = $this->createFormBuilder()
             ->add('txtNombreUsuario', TextType::class, array('required'=>false))
+            ->add('estadoActivo', CheckboxType::class,  ['required' => false, 'data' => $arNotificacionTipo->getEstadoActivo()])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
@@ -111,17 +114,18 @@ class NotificacionTipoController extends BaseController
                     if ($usuariosExistentes) {
 
                         $arNotificacionTipo = $em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacion);
-                        $arNotificacionTipo
-                            ->setUsuarios($usuarios?json_encode($usuarios):null);
+                        $arNotificacionTipo->setEstadoActivo($form->get('estadoActivo')->getData());
+                        $arNotificacionTipo->setUsuarios($usuarios?json_encode($usuarios):null);
                         $em->persist($arNotificacionTipo);
                     }
                 }
                 else{
                     $arNotificacionTipo = $em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacion);
-                    $arNotificacionTipo
-                        ->setUsuarios($usuarios?json_encode($usuarios):null);
+                    $arNotificacionTipo->setEstadoActivo($form->get('estadoActivo')->getData());
+                    $arNotificacionTipo->setUsuarios($usuarios?json_encode($usuarios):null);
                     $em->persist($arNotificacionTipo);
                 }
+
                 $em->flush();
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 $session->set('arGenNotificacionTipoNombreUsuario', null);
@@ -129,7 +133,6 @@ class NotificacionTipoController extends BaseController
         }
         $arUsuarioNotificacion=$em->getRepository('App:General\GenNotificacionTipo')->find($codigoNotificacion)->getUsuarios();
         $arUsuarioNotificacion=json_decode($arUsuarioNotificacion);
-
         $arUsuario=$em->getRepository('App:General\GenNotificacionTipo')->listaUsuarios($usuario->getUsername());
         return $this->render('general/administracion/notificacion_tipo/notificacion_tipo/nuevo.html.twig',[
             'form'=>$form->createView(),

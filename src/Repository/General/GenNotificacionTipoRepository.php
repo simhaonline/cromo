@@ -26,12 +26,9 @@ class GenNotificacionTipoRepository extends ServiceEntityRepository
 
         $arNotificacionTipo= $em->createQueryBuilder()
             ->from('App:General\GenNotificacionTipo','nt')
-            ->join('nt.modeloRel','m')
             ->select('nt.codigoNotificacionTipoPk')
             ->addSelect('nt.estadoActivo')
             ->addSelect('nt.nombre')
-            ->addSelect('m.codigoModeloPk')
-            ->addSelect('m.codigoModuloFk')
             ->addSelect('nt.usuarios');
 
         if($session->get('arGenNotificacionTipoFiltroModulo')!="" && $session->get('arGenNotificacionTipoFiltroModulo')!=null){

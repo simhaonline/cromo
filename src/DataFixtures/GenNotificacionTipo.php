@@ -9,19 +9,24 @@ class GenNotificacionTipo extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $genModelo=$manager->getRepository('App:General\GenModelo')->find("GenNotificacionTipo");
-        if($genModelo) {
-            $genNotificacionTipo=$manager->getRepository('App:General\GenNotificacionTipo')->find(1);
-            if(!$genNotificacionTipo){
 
+
+        $genNotificacionTipo=$manager->getRepository('App:General\GenNotificacionTipo')->find(1);
+        if(!$genNotificacionTipo){
             $genNotificacionTipo = new \App\Entity\General\GenNotificacionTipo();
             $genNotificacionTipo->setCodigoNotificacionTipoPk(1);
-            $genNotificacionTipo->setNombre("prueba");
-            $genNotificacionTipo->setEstadoActivo(1);
-            $genNotificacionTipo->setModeloRel($genModelo);
+            $genNotificacionTipo->setNombre("Prueba");
             $manager->persist($genNotificacionTipo);
             $manager->flush();
-            }
         }
+        $genNotificacionTipo=$manager->getRepository('App:General\GenNotificacionTipo')->find(2);
+        if(!$genNotificacionTipo){
+            $genNotificacionTipo = new \App\Entity\General\GenNotificacionTipo();
+            $genNotificacionTipo->setCodigoNotificacionTipoPk(2);
+            $genNotificacionTipo->setNombre("Mercancia vencida en bodega");
+            $manager->persist($genNotificacionTipo);
+            $manager->flush();
+        }
+
     }
 }

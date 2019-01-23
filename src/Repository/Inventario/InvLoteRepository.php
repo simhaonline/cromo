@@ -85,7 +85,7 @@ class InvLoteRepository extends ServiceEntityRepository
         if ($session->get('filtroInvBuscarBodegaLote') != '') {
             $queryBuilder->andWhere("l.codigoBodegaFk LIKE '%{$session->get('filtroInvBuscarBodegaLote')}%'");
         }
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function existencia()
@@ -126,5 +126,20 @@ class InvLoteRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function notificacionDiariaMercanciaVencidaBodega()
+    {
+        $fechaActual = new \DateTime('now');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvLote::class, 'l')
+            ->select('l.codigoLotePk')
+            ->where("l.cantidadDisponible > 0 ")
+            ->andWhere("l.fechaVencimiento <= '" . $fechaActual->format("Y-m-d") . "'")
+        ->setMaxResults(1);
+        $resultados = $queryBuilder->getQuery()->getResult();
+        if($resultados) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

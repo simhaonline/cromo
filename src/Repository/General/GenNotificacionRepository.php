@@ -40,12 +40,12 @@ class GenNotificacionRepository extends ServiceEntityRepository
         $em=$this->getEntityManager();
         $arNotificacion=$em->createQueryBuilder()
             ->from('App:General\GenNotificacion','n')
-            ->join('n.notificacionTipoRel','nt')
             ->select('n.codigoNotificacionPk as id')
             ->addSelect('nt.nombre')
             ->addSelect('n.fecha')
-            ->addSelect('nt.codigoModeloFk as modelo')
-            ->andWhere("n.codigoUsuarioReceptorFk='{$id}'");
+            ->leftJoin('n.notificacionTipoRel','nt')
+            ->andWhere("n.codigoUsuarioReceptorFk='{$id}'")
+            ->orderBy("n.fecha", "DESC");
 
         return $arNotificacion;
     }

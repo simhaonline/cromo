@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Cartera\Proceso\General;
+namespace App\Controller\Cartera\Proceso\CuentaCobrar;
 
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class CorregirSaldosController extends Controller
 {
     /**
-     * @Route("/cartera/proceso/general/corregirsaldos/lista", name="cartera_proceso_general_corregirsaldos_lista")
+     * @Route("/cartera/proceso/cuentacobrar/corregirsaldos/lista", name="cartera_proceso_cuentacobrar_corregirsaldos_lista")
      */
     public function lista(Request $request, TokenStorageInterface $user)
     {
@@ -32,10 +32,10 @@ class CorregirSaldosController extends Controller
             if ($form->get('btnGenerar')->isClicked()) {
                 $em->getRepository(CarCuentaCobrar::class)->corregirSaldos();
                 Mensajes::success("Proceso terminado");
-                return $this->redirect($this->generateUrl('cartera_proceso_general_corregirsaldos_lista'));
+                return $this->redirect($this->generateUrl('cartera_proceso_cuentacobrar_corregirsaldos_lista'));
             }
         }
-        return $this->render('cartera/proceso/general/corregirSaldos.html.twig', [
+        return $this->render('cartera/proceso/cuentacobrar/corregirSaldos.html.twig', [
             'form' => $form->createView()
         ]);
     }

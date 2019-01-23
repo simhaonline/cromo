@@ -147,6 +147,11 @@ class CarCuentaCobrar
     private $comentario;
 
     /**
+     * @ORM\Column(name="vr_ajuste_peso_sistema", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrAjustePesoSistema = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrarTipo", inversedBy="cuentasCobrarCuentaCobrarTipoRel")
      * @ORM\JoinColumn(name="codigo_cuenta_cobrar_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
      */
@@ -685,6 +690,22 @@ class CarCuentaCobrar
     public function setVrSaldoOriginal( $vrSaldoOriginal ): void
     {
         $this->vrSaldoOriginal = $vrSaldoOriginal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAjustePesoSistema()
+    {
+        return $this->vrAjustePesoSistema;
+    }
+
+    /**
+     * @param mixed $vrAjustePesoSistema
+     */
+    public function setVrAjustePesoSistema( $vrAjustePesoSistema ): void
+    {
+        $this->vrAjustePesoSistema = $vrAjustePesoSistema;
     }
 
 

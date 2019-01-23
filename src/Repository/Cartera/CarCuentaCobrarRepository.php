@@ -445,4 +445,41 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         return true;
     }
 
+    public function ajustePesoCorreccion()
+    {
+        $em = $this->getEntityManager();
+        $contador = 0;
+        $queryBuilder = $em->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
+            ->select('cc.codigoCuentaCobrarPk')
+            ->addSelect('cc.vrSaldoOriginal')
+            ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.vrAbono')
+            ->addSelect('cc.operacion')
+            ->where('cc.vrSaldo >= -1 AND cc.vrSaldo <= 1 AND cc.vrSaldo <>0');
+        $arCuentasCobrar = $queryBuilder->getQuery()->getResult();
+        foreach ($arCuentasCobrar as $arCuentaCobrar) {
+            $abonos = $arCuentaCobrar['vrAbono'];
+            $saldoOriginal = $arCuentaCobrar['vrSaldoOriginal'];
+            $diferencia = $saldoOriginal - $abonos;
+            if($diferencia != 0) {
+                if($diferencia >= -1 ){
+                    if($diferencia <= 1) {
+                        $saldo = $arCuentaCobrar['vrSaldoOriginal'] - ($abonos + $diferencia);
+                        if($saldo == 0) {
+                            $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar['codigoCuentaCobrarPk']);
+                            $arCuentaCobrarAct->setVrSaldo(0);
+                            $arCuentaCobrarAct->setVrSaldoOperado(0);
+                            $arCuentaCobrarAct->setVrAjustePesoSistema($diferencia);
+                            $em->persist($arCuentaCobrarAct);
+                            $contador++;
+                        }
+                    }
+                }
+            }
+        }
+        $em->flush();
+        Mensajes::success("El proceso se ejecuto con exito corrigiendo automaticamente " . $contador . " registros");
+        return true;
+    }
+
 }

@@ -160,7 +160,7 @@
                                                name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                id="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                value="{{ arMovimientoDetalle.loteFk }}">
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk }) }}','BuscarLote',600,900)"
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk, 'tipoFactura': true }) }}','BuscarLote',600,900)"
                                            class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     <td style="text-align: center;">

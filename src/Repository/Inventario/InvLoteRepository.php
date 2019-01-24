@@ -67,7 +67,7 @@ class InvLoteRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
-    public function lista()
+    public function lista($tipoFactura = false)
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvLote::class, 'l')
@@ -79,6 +79,9 @@ class InvLoteRepository extends ServiceEntityRepository
             ->addSelect('l.cantidadDisponible')
             ->addSelect('l.cantidadRemisionada')
             ->where("l.codigoItemFk = {$session->get('filtroInvBuscarLoteItem')}");
+        if($tipoFactura = true  && !$session->get('filtroInvBuscarLoteTodos')){
+            $queryBuilder->andWhere("l.cantidadExistencia > 0");
+        }
         if ($session->get('filtroInvBuscarLoteCodigo') != '') {
             $queryBuilder->andWhere("l.loteFk LIKE '%{$session->get('filtroInvBuscarLoteCodigo')}%'");
         }

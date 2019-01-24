@@ -56,9 +56,9 @@ class FinRegistro
     private $numero = 0;
 
     /**
-     * @ORM\Column(name="numero_referencia", type="integer", nullable=true)
+     * @ORM\Column(name="numero_referencia", type="integer", nullable=true, options={"default" : null})
      */
-    private $numeroReferencia = 0;
+    private $numeroReferencia;
 
     /**
      * @ORM\Column(name="numero_prefijo", type="string", length=20, nullable=true)
@@ -548,6 +548,7 @@ class FinRegistro
     {
         $this->centroCostoRel = $centroCostoRel;
     }
+
 
 
 }

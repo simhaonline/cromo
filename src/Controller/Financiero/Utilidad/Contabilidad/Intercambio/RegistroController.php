@@ -36,9 +36,11 @@ class RegistroController extends Controller
             ->add('txtComprobante', TextType::class, ['required' => false, 'data' => $session->get('filtroFinComprobante'), 'attr' => ['class' => 'form-control']])
             ->add('txtNumeroDesde', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroDesde'), 'attr' => ['class' => 'form-control']])
             ->add('txtNumeroHasta', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroHasta'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNumeroPrefijo', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroPrefijo'), 'attr' => ['class' => 'form-control']])
             ->add('txtCuenta', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCuenta'), 'attr' => ['class' => 'form-control']])
             ->add('txtCentroCosto', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCentroCosto'), 'attr' => ['class' => 'form-control']])
             ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroReferencia'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNumeroReferenciaPrefijo', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroReferenciaPrefijo'), 'attr' => ['class' => 'form-control']])
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFinRegistroFiltroFecha')))
             ->add('chkTodos', CheckboxType::class, array('label' => 'Todos', 'required' => false, 'data' => $session->get('filtroFinRegistrosTodos')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaDesde'))])
@@ -55,9 +57,11 @@ class RegistroController extends Controller
                 $session->set('filtroFinComprobante', $form->get('txtComprobante')->getData());
                 $session->set('filtroFinNumeroDesde', $form->get('txtNumeroDesde')->getData());
                 $session->set('filtroFinNumeroHasta', $form->get('txtNumeroHasta')->getData());
+                $session->set('filtroFinNumeroPrefijo', $form->get('txtNumeroPrefijo')->getData());
                 $session->set('filtroFinCuenta', $form->get('txtCuenta')->getData());
                 $session->set('filtroFinCentroCosto', $form->get('txtCentroCosto')->getData());
                 $session->set('filtroFinNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
+                $session->set('filtroFinNumeroReferenciaPrefijo', $form->get('txtNumeroReferenciaPrefijo')->getData());
                 $session->set('filtroFinRegistroFechaDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroFinRegistroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroFinRegistroFiltroFecha', $form->get('filtrarFecha')->getData());
@@ -167,10 +171,11 @@ class RegistroController extends Controller
                 'PorcentajeRetencion',
                 'Vencimiento',
                 'Vendedor',
+                'AbonarA',
             ];
             $sheet = $spreadsheet->getActiveSheet();
             $i = 0;
-            for ($j = 'A'; $j != 'W'; $j++) {
+            for ($j = 'A'; $j != 'X'; $j++) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($j)->setAutoSize(true);
                 $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
                 $sheet->setCellValue($j . '1', strtoupper($campos[$i]));
@@ -202,6 +207,10 @@ class RegistroController extends Controller
                 $sheet->setCellValue('T'.$j, '');
                 $sheet->setCellValue('U'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
                 $sheet->setCellValue('V'.$j, '');
+                if($arRegistro['numeroReferencia'] && $arRegistro['numeroPrefijo'] == 'RC') {
+                    $sheet->setCellValue('W'.$j, 'NC ' . $arRegistro['numeroReferencia'] . "( ".$arRegistro['numeroReferenciaPrefijo']." ) " . $arRegistro['nombreCorto']);
+                }
+
 
                 $j++;
             }

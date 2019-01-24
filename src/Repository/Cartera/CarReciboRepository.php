@@ -645,8 +645,6 @@ class CarReciboRepository extends ServiceEntityRepository
                                                     }*/
                                                     $arRegistro->setNumero($arRecibo['numero']);
                                                     $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
-                                                    $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
-                                                    $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                                     $arRegistro->setFecha($arRecibo['fecha']);
                                                     $naturaleza = "C";
                                                     if($naturaleza == 'D') {

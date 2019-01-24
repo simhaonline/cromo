@@ -35,9 +35,11 @@ class RegistroController extends Controller
             ->add('txtComprobante', TextType::class, ['required' => false, 'data' => $session->get('filtroFinComprobante'), 'attr' => ['class' => 'form-control']])
             ->add('txtNumeroDesde', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroDesde'), 'attr' => ['class' => 'form-control']])
             ->add('txtNumeroHasta', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroHasta'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNumeroPrefijo', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroPrefijo'), 'attr' => ['class' => 'form-control']])
             ->add('txtCuenta', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCuenta'), 'attr' => ['class' => 'form-control']])
             ->add('txtCentroCosto', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCentroCosto'), 'attr' => ['class' => 'form-control']])
             ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroReferencia'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNumeroReferenciaPrefijo', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNumeroReferenciaPrefijo'), 'attr' => ['class' => 'form-control']])
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFinRegistroFiltroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFinRegistroFechaHasta'))])
@@ -51,9 +53,11 @@ class RegistroController extends Controller
                 $session->set('filtroFinComprobante', $form->get('txtComprobante')->getData());
                 $session->set('filtroFinNumeroDesde', $form->get('txtNumeroDesde')->getData());
                 $session->set('filtroFinNumeroHasta', $form->get('txtNumeroHasta')->getData());
+                $session->set('filtroFinNumeroPrefijo', $form->get('txtNumeroPrefijo')->getData());
                 $session->set('filtroFinCuenta', $form->get('txtCuenta')->getData());
                 $session->set('filtroFinCentroCosto', $form->get('txtCentroCosto')->getData());
                 $session->set('filtroFinNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
+                $session->set('filtroFinNumeroReferenciaPrefijo', $form->get('txtNumeroReferenciaPrefijo')->getData());
                 $session->set('filtroFinRegistroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroFinRegistroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroFinRegistroFiltroFecha', $form->get('filtrarFecha')->getData());

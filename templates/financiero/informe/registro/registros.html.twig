@@ -30,13 +30,17 @@
                 <div class="col-sm-5">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
+
                 <label class="col-sm-1 control-label">Comprobante:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.txtComprobante) }}
                 </div>
                 <label class="col-sm-1 control-label">Numero desde:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     {{ form_widget(form.txtNumeroDesde) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.txtNumeroPrefijo) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -49,7 +53,7 @@
                     {{ form_widget(form.txtCuenta) }}
                 </div>
                 <label class="col-sm-1 control-label">Numero Hasta:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     {{ form_widget(form.txtNumeroHasta) }}
                 </div>
             </div>
@@ -63,8 +67,11 @@
                     {{ form_widget(form.txtCentroCosto) }}
                 </div>
                 <label class="col-sm-1 control-label">Numero referencia:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     {{ form_widget(form.txtNumeroReferencia) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.txtNumeroReferenciaPrefijo) }}
                 </div>
             </div>
         <div class="modal-footer">

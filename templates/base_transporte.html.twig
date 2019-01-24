@@ -1,12 +1,12 @@
 {% include('base_menu_inicio.html.twig') %}
 <nav>
     <ul>
-        <li>
+        <li {% if arrRuta.1 == 'movimiento' %}class="open" {% endif %}>
             <a href="#"><i class="fa fa-book"></i>
                 <span class="menu-item-parent">Movimiento</span>
                 <span class="fa arrow"></span>
             </a>
-            <ul>
+            <ul {% if arrRuta.1 == 'movimiento' %}style="display: block;" {% endif %}>
                 <li>
                     <a href="#">Recogida <span class="fa arrow"></span></a>
                     <ul>
@@ -72,12 +72,12 @@
             </ul>
             <!-- /.nav-second-level -->
         </li>
-        <li>
+        <li {% if arrRuta.1 == 'administracion' %}class="open" {% endif %}>
             <a href="#"><i class="fa fa-bars fa-fw"></i>
                 <span class="menu-item-parent">Administración</span>
                 <span class="fa arrow"></span>
             </a>
-            <ul>
+            <ul {% if arrRuta.1 == 'administracion' %}style="display: block;" {% endif %} >
                 <li>
                     <a href="#">Transporte <span class="fa arrow"></span></a>
                     <ul>
@@ -198,13 +198,13 @@
                 </li>
             </ul>
             <!-- /.nav-second-level -->
-        </li>
+        <li {% if arrRuta.1 == 'proceso' %}class="open" {% endif %}>
         <li>
             <a href="#"><i class="fa fa-retweet fa-fw"></i>
                 <span class="menu-item-parent">Proceso</span>
                 <span class="fa arrow"></span>
             </a>
-            <ul>
+            <ul {% if arrRuta.1 == 'proceso' %}style="display: block;"{% endif %} >
                 <li>
                     <a href="#">Recogida <span class="fa arrow"></span></a>
                     <ul>
@@ -280,12 +280,12 @@
             </ul>
             <!-- /.nav-second-level -->
         </li>
-        <li>
+        <li {% if arrRuta.1 == 'utilidad' %}class="open" {% endif %}>
             <a href="#"><i class="fa fa-wrench"></i>
                 <span class="menu-item-parent">Utilidad</span>
                 <span class="fa arrow"></span>
             </a>
-            <ul>
+            <ul {% if arrRuta.1 == 'utilidad' %}style="display: block;"{% endif %}>
                 <li>
                     <a href="#">Servicio <span class="fa arrow"></span></a>
                     <ul>
@@ -312,12 +312,12 @@
             </ul>
             <!-- /.nav-second-level -->
         </li>
-        <li>
+        <li {% if arrRuta.1 == 'informe' %}class="open" {% endif %}>
             <a href="#"><i class="fa fa-clipboard"></i>
                 <span class="menu-item-parent">Informe</span>
                 <span class="fa arrow"></span>
             </a>
-            <ul>
+            <ul {% if arrRuta.1 == 'informe' %}style="display: block;"{% endif %}>
                 <li>
                     <a href="#">Servicio <span class="fa arrow"></span></a>
                     <ul>
@@ -417,12 +417,12 @@
                 </li>
             </ul>
         </li>
-        <li>
+        <li {% if arrRuta.1 == 'tablero' %}class="open" {% endif %}>
             <a href="#"><i class="fa fa-bar-chart"></i>
                 <span class="menu-item-parent">Tablero</span>
                 <span class="fa arrow"></span>
             </a>
-            <ul>
+            <ul {% if arrRuta.1 == 'tablero' %}style="display: block;"{% endif %}>
                 <li>
                     <a href="#">Recogida <span class="fa arrow"></span></a>
                     <ul>

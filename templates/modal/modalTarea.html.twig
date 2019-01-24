@@ -1,0 +1,40 @@
+<div class="modal fade" id="myModalTarea" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width: 60%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                Nueva tarea
+            </div>
+            <div class="modal-body" id="cuerpo">
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-1">Titulo:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.titulo) }}
+                    </div>
+                    <label for="" class="control-label col-sm-1">Prioridad:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.tareaPrioridadRel) }}
+                    </div>
+
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-1">Asignar a:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.usuarioRecibeRel) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-1">Descripcion:</label>
+                    <div class="col-sm-10">
+                        {{ form_widget(form.descripcion) }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Cancelar
+                </button>
+                {{ form_widget(form.guardar) }}
+            </div>
+        </div>
+    </div>
+</div>

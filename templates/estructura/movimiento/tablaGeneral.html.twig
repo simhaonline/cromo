@@ -16,7 +16,7 @@
             {% for campo in arrDatosLista.arrCampos %}
                 {% if campo.relacion is defined %}
                     {% set campoNombre = (campo.campo|split('.')) %}
-                    {% set alias = campoNombre[0]  ~ 'Rel' ~ campoNombre[1] %}
+                    {% set alias = campoNombre[0] | slice(0,3) ~ 'Rel' ~ campoNombre[1] %}
                     {% set dato = arDato[alias] %}
                 {% else %}
                     {% set dato = arDato[campo.campo] %}

@@ -29,7 +29,8 @@
         </ul>
     </div>
     <article class="col-sm-12">
-        <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
+        <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false"
+             data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
             <header>
                 <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
                 <h2>Live Feeds </h2>
@@ -365,7 +366,9 @@
                                 </span>
                                 <p>
                                     <strong>Tarea #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }} [
-                                    <a href="javascript:void(0);"  class="font-xs" onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')" data-toggle="modal" data-target="#myModal">Ver más</a>]
+                                    <a href="javascript:void(0);" class="font-xs"
+                                       onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')"
+                                       data-toggle="modal" data-target="#myModal">Ver más</a>]
                                     <span class="text-muted">{{ arTarea.descripcion | slice(0,40) }}... </span>
                                     <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
                                 </p>
@@ -381,7 +384,9 @@
                                 </span>
                                 <p>
                                     <strong>Tarea #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }}
-                                    <a href="javascript:void(0);" class="font-xs" onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')" data-toggle="modal" data-target="#myModal">Ver más</a>]
+                                    <a href="javascript:void(0);" class="font-xs"
+                                       onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')"
+                                       data-toggle="modal" data-target="#myModal">Ver más</a>]
                                     <span class="text-muted">{{ arTarea.descripcion| slice(0,40) }}... </span>
                                     <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
                                 </p>
@@ -403,7 +408,9 @@
                                     </span>
                                     <p>
                                         <strong>Tarea #{{ arTarea.codigoTareaPk }}</strong> - {{ arTarea.titulo }}
-                                        <a href="javascript:void(0);" class="font-xs" onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')" data-toggle="modal" data-target="#myModal">Ver más</a>]
+                                        <a href="javascript:void(0);" class="font-xs"
+                                           onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')"
+                                           data-toggle="modal" data-target="#myModal">Ver más</a>]
                                         <span class="text-muted">{{ arTarea.descripcion| slice(0,40) }}... </span>
                                         <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
                                     </p>
@@ -433,7 +440,9 @@
                                                 <p>
                                                     <strong>Tarea #{{ arTarea.codigoTareaPk }}</strong>
                                                     - {{ arTarea.titulo }} [
-                                                    [<a href="javascript:void(0);" class="font-xs" onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')" data-toggle="modal" data-target="#myModal">Ver más</a>]
+                                                    [<a href="javascript:void(0);" class="font-xs"
+                                                        onclick="actualizarModal('{{ arTarea.descripcion }}','{{ arTarea.titulo }}')"
+                                                        data-toggle="modal" data-target="#myModal">Ver más</a>]
                                                     <span class="text-muted">{{ arTarea.descripcion | slice(0,40) }}
                                                         ... </span>
                                                     <span class="date">{{ arTarea.fecha | date('Y-m-d') }}</span>
@@ -455,6 +464,11 @@
                         <h3 style="margin-top: -1px;"><span class="fa fa-check" style="color: green;"></span> No tienes
                             tareas pendientes</h3>
                     {% endif %}
+                    <hr>
+                    <div style="float: right;padding-bottom: 5px;">
+                        <a class="btn btn-md btn-default redondear" data-toggle="modal" data-target="#myModalTarea" title="Agregar tarea"><strong
+                                    style="font-size: 18px;">+</strong></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -463,8 +477,15 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     </div>
-
+    <style type="text/css">
+        .redondear {
+            border-radius: 50%;
+        }
+    </style>
     {% include 'modal/baseModal.html.twig' %}
+    {{ form_start(form,{'attr':{'class' : 'form-horizontal'}}) }}
+    {% include 'modal/modalTarea.html.twig' %}
+    {{ form_end(form) }}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -500,8 +521,8 @@
         }
 
         function actualizarModal(descripcion, titulo) {
-            $(".modal-body").html("<p>"+descripcion+"</p>");
-            $(".modal-header").html("<h4>"+titulo+"</h4>");
+            $(".modal-body").html("<p>" + descripcion + "</p>");
+            $(".modal-header").html("<h4>" + titulo + "</h4>");
         }
 
         function countTasks() {
@@ -519,7 +540,7 @@
             }
             if ($(this).prop('checked')) {
                 $.ajax({
-                    url: "{{ path('tarea_tarminar') }}",
+                    url: "{{ path('tarea_terminar') }}",
                     type: "GET",
                     dataType: "JSON",
                     data: {
@@ -529,7 +550,7 @@
                         $this.addClass("complete");
                         $(this).parent().hide();
                         $this.slideUp(500, function () {
-                            $this.children('.handle').css('display','none');
+                            $this.children('.handle').css('display', 'none');
                             $this.clone().prependTo("#terminadas").effect("highlight", {}, 800);
                             $this.remove();
                         });
@@ -537,8 +558,6 @@
                 });
             }
         });
-
-
 
         var data = [], totalPoints = 200, $UpdatingChartColors = $("#updating-chart").css('color');
 

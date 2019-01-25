@@ -182,7 +182,7 @@ class FinRegistroRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroFinCodigoTercero')}");
         }
         if ($session->get('filtroFinComprobante') != '') {
-            $queryBuilder->andWhere("r.codigoComprobanteFk = {$session->get('filtroFinComprobante')}");
+            $queryBuilder->andWhere("r.codigoComprobanteFk = '{$session->get('filtroFinComprobante')}'");
         }
         if ($session->get('filtroFinNumeroDesde') != '') {
             $queryBuilder->andWhere("r.numero >= {$session->get('filtroFinNumeroDesde')}");

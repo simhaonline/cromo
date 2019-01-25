@@ -639,6 +639,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                         'stream_context' => $contexto,
                         'cache_wsdl' => WSDL_CACHE_NONE
                     ];
+                    libxml_disable_entity_loader(false);
                     $cliente = new SoapClient($wsdlUrl, $soapOpciones);
 //                    $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
                     $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);

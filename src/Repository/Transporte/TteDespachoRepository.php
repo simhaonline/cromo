@@ -631,7 +631,16 @@ class TteDespachoRepository extends ServiceEntityRepository
         if ($arDespacho->getNumeroRndc() == "") {
             if ($arDespacho->getEstadoAprobado() == 1 && $arDespacho->getEstadoAnulado() == 0) {
                 try {
-                    $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
+                    $opciones = ['http' => ['user_agent' => 'PHPSoapClient']];
+                    $contexto = stream_context_create($opciones);
+
+                    $wsdlUrl = 'http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices';
+                    $soapOpciones = [
+                        'stream_context' => $contexto,
+                        'cache_wsdl' => WSDL_CACHE_NONE
+                    ];
+                    $cliente = new SoapClient($wsdlUrl, $soapOpciones);
+//                    $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
                     $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
                     $arrDespacho = $em->getRepository(TteDespacho::class)->dqlRndc($arDespacho->getCodigoDespachoPk());
                     $retorno = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);

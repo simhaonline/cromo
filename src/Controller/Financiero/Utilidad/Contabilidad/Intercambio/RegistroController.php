@@ -208,7 +208,7 @@ class RegistroController extends Controller
                 $sheet->setCellValue('U'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
                 $sheet->setCellValue('V'.$j, '');
                 if($arRegistro['numeroReferencia'] && $arRegistro['numeroPrefijo'] == 'RC') {
-                    $sheet->setCellValue('W'.$j, 'NC ' . $arRegistro['numeroReferencia'] . "( ".$arRegistro['numeroReferenciaPrefijo']." ) " . $arRegistro['nombreCorto']);
+                    $sheet->setCellValue('W'.$j, 'NC ' . $arRegistro['numeroReferencia'] . " ( ".$arRegistro['numeroReferenciaPrefijo']." ) " . $arRegistro['nombreCorto']);
                 }
 
 

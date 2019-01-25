@@ -753,7 +753,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setNumero($arRecibo['numero']);
                                                 $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                                 $arRegistro->setFecha($arRecibo['fecha']);
-                                                $arRegistro->setVrDebito($arRecibo['vrPago']);
+                                                $arRegistro->setVrDebito($arReciboDetalle['vrPago']);
                                                 $arRegistro->setNaturaleza('D');
                                                 $arRegistro->setDescripcion($descripcion);
                                                 $arRegistro->setCodigoModeloFk('CarRecibo');

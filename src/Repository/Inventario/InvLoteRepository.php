@@ -145,4 +145,38 @@ class InvLoteRepository extends ServiceEntityRepository
         }
     }
 
+    public function corregirFechaVencimiento()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(InvLote::class, 'l')
+            ->select('l.loteFk')
+            ->addSelect('l.codigoItemFk')
+            ->groupBy('l.codigoItemFk')
+            ->addGroupBy('l.loteFk');
+//        ->setMaxResults(10);
+        $arrLotes = $queryBuilder->getQuery()->getResult();
+
+        foreach ($arrLotes as $arrLote) {
+            $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+                ->select('md.codigoMovimientoDetallePk')
+                ->addSelect('m.fecha')
+                ->addSelect('md.fechaVencimiento')
+                ->leftJoin('md.movimientoRel', 'm')
+                ->where('md.codigoItemFk = ' . $arrLote['codigoItemFk'])
+                ->andWhere("md.loteFk = '" . $arrLote['loteFk'] . "'")
+                ->orderBy('md.fecha', 'ASC')
+            ->setMaxResults(1);
+            $arrMovimientoDetalle = $queryBuilder->getQuery()->getResult();
+            if($arrMovimientoDetalle) {
+                $fecha = $arrMovimientoDetalle[0]['fechaVencimiento']->format('Y-m-d');
+                $query = $em->createQuery("UPDATE App\Entity\Inventario\InvLote l set l.fechaVencimiento= '". $fecha ."' WHERE l.codigoItemFk = " . $arrLote['codigoItemFk'] . " AND l.loteFk = '" . $arrLote['loteFk'] . "'");
+                $query->execute();
+                $query = $em->createQuery("UPDATE App\Entity\Inventario\InvMovimientoDetalle md set md.fechaVencimiento= '". $fecha ."' WHERE md.codigoItemFk = " . $arrLote['codigoItemFk'] . " AND md.loteFk = '" . $arrLote['loteFk'] . "'");
+                $query->execute();
+            }
+
+
+        }
+    }
+
 }

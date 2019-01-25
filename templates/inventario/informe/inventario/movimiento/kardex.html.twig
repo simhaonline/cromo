@@ -59,6 +59,7 @@
                 <th title="Remision detalle">RD</th>
                 <th>BOD</th>
                 <th>LOTE</th>
+                <th>VENCE</th>
                 <th>CAN</th>
                 <th>C_O</th>
                 <th>SALDO</th>
@@ -79,6 +80,7 @@
                     <td>{{ arMovimientoDetalle.codigoRemisionDetalleFk }}</td>
                     <td>{{ arMovimientoDetalle.codigoBodegaFk }}</td>
                     <td>{{ arMovimientoDetalle.loteFk }}</td>
+                    <td>{{ arMovimientoDetalle.fechaVencimiento | date('Y-m-d') }}</td>
                     <td class="numero">{{ arMovimientoDetalle.cantidad | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimientoDetalle.cantidadOperada | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimientoDetalle.cantidadSaldo | number_format(0, '.', ',')}}</td>

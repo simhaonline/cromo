@@ -55,7 +55,7 @@ class RegenerarController extends Controller
                 $em->getRepository(InvOrdenDetalle::class)->regenerarCantidadAfectada();
             }
         }
-        return $this->render('inventario/proceso/regenerar.html.twig', [
+        return $this->render('inventario/proceso/inventario/regenerar.html.twig', [
             'form' => $form->createView()
         ]);
     }

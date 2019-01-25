@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Corregir fecha vencimiento lotes
+        </div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <div class="col-sm-1">
+                    {{ form_widget(form.btnCorregir) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

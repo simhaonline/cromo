@@ -348,6 +348,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.vrPrecio')
             ->addSelect('md.loteFk')
             ->addSelect('md.codigoBodegaFk')
+            ->addSelect('md.fechaVencimiento')
             ->addSelect('m.fecha')
             ->addSelect('m.numero AS numeroMovimiento')
             ->addSelect('d.nombre AS nombreDocumento')

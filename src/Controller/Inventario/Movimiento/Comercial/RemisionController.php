@@ -190,6 +190,7 @@ class RemisionController extends ControllerListenerGeneral
         $arRemisionDetalles = $paginator->paginate($em->getRepository(InvRemisionDetalle::class)->remision($id), $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/comercial/remision/detalle.html.twig', [
             'form' => $form->createView(),
+            'clase' => array('clase'=>'InvRemision', 'codigo' => $id),
             'arRemisionDetalles' => $arRemisionDetalles,
             'arRemision' => $arRemision
         ]);

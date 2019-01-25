@@ -48,6 +48,11 @@ class InvRemisionDetalle
     private $loteFk;
 
     /**
+     * @ORM\Column(name="fecha_vencimiento", type="date", nullable=true)
+     */
+    private $fechaVencimiento;
+
+    /**
      * @ORM\Column(name="vr_precio",options={"default" : 0}, type="float")
      */
     private $vrPrecio = 0;
@@ -523,6 +528,22 @@ class InvRemisionDetalle
     public function setRemisionesDetallesRemisionDetalleRel($remisionesDetallesRemisionDetalleRel): void
     {
         $this->remisionesDetallesRemisionDetalleRel = $remisionesDetallesRemisionDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVencimiento()
+    {
+        return $this->fechaVencimiento;
+    }
+
+    /**
+     * @param mixed $fechaVencimiento
+     */
+    public function setFechaVencimiento( $fechaVencimiento ): void
+    {
+        $this->fechaVencimiento = $fechaVencimiento;
     }
 
 

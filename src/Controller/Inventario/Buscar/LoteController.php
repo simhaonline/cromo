@@ -14,9 +14,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class LoteController extends Controller
 {
     /**
-     * @Route("/inventario/buscar/lote/lista/{campoCodigo}/{campoBodega}/{codigoItem}", name="inventario_buscar_lote_lista")
+     * @Route("/inventario/buscar/lote/lista/{campoCodigo}/{campoBodega}/{campoFechaVence}/{codigoItem}", name="inventario_buscar_lote_lista")
      */
-    public function lista(Request $request, $campoCodigo, $campoBodega, $codigoItem, $tipoFactura = false)
+    public function lista(Request $request, $campoCodigo, $campoBodega, $campoFechaVence, $codigoItem, $tipoFactura = false)
     {
         $session = new Session();
         $session->set('filtroInvBuscarLoteItem', $codigoItem);
@@ -41,6 +41,7 @@ class LoteController extends Controller
             'arLotes' => $arLotes,
             'campoCodigo' => $campoCodigo,
             'campoBodega' => $campoBodega,
+            'campoFechaVence' => $campoFechaVence,
             'form' => $form->createView()
         ));
     }

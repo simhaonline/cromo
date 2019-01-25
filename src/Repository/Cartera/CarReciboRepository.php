@@ -213,6 +213,71 @@ class CarReciboRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $arRecibo CarRecibo
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function anular($arRecibo)
+    {
+        $em = $this->getEntityManager();
+        if ($arRecibo->getEstadoAprobado() && !$arRecibo->getEstadoAnulado() && !$arRecibo->getEstadoContabilizado()) {
+            $arRecibo->setVrPago(0);
+            $arRecibo->setVrPagoTotal(0);
+            $arRecibo->setVrTotalAjustePeso(0);
+            $arRecibo->setVrTotalDescuento(0);
+            $arRecibo->setVrTotalOtroDescuento(0);
+            $arRecibo->setVrTotalOtroIngreso(0);
+            $arRecibo->setVrTotalRetencionFuente(0);
+            $arRecibo->setVrTotalRetencionIca(0);
+            $arRecibo->setVrTotalRetencionIva(0);
+            $arRecibo->setEstadoAnulado(1);
+            $em->persist($arRecibo);
+            $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $arRecibo->getCodigoReciboPk()));
+            foreach ($arReciboDetalles as $arReciboDetalle) {
+
+                if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
+                    $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
+                        $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+                        $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
+                        $arCuentaCobrarAplicacion->setVrSaldo($saldo);
+                        $arCuentaCobrarAplicacion->setVrSaldoOperado($saldoOperado);
+                        $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
+                        $em->persist($arCuentaCobrarAplicacion);
+
+                        //Cuenta por cobrar
+                        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
+                        $saldo = $arCuentaCobrar->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+                        $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+                        $arCuentaCobrar->setVrSaldo($saldo);
+                        $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                        $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
+                        $em->persist($arCuentaCobrar);
+                } else {
+                    $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
+                    $saldo = $arCuentaCobrar->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+                    $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+                    $arCuentaCobrar->setVrSaldo($saldo);
+                    $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                    $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
+                    $em->persist($arCuentaCobrar);
+                }
+                $arReciboDetalle->setVrPago(0);
+                $arReciboDetalle->setVrAjustePeso(0);
+                $arReciboDetalle->setVrDescuento(0);
+                $arReciboDetalle->setVrOtroDescuento(0);
+                $arReciboDetalle->setVrOtroIngreso(0);
+                $arReciboDetalle->setVrPagoAfectar(0);
+                $arReciboDetalle->setVrRetencionFuente(0);
+                $arReciboDetalle->setVrRetencionIva(0);
+                $arReciboDetalle->setVrRetencionIca(0);
+                $em->persist($arReciboDetalle);
+            }
+            $em->flush();
+        } else {
+            Mensajes::error('El registro debe estar aprobado, sin anular previamente y sin contabilizar');
+        }
+    }
+
+    /**
      * @param $arrSeleccionados
      * @throws \Doctrine\ORM\ORMException
      */
@@ -338,7 +403,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->listaContabilizar($codigo);
                                 foreach ($arReciboDetalles as $arReciboDetalle) {
                                     //Cuenta cliente
-                                    if ($arReciboDetalle['vrPago'] > 0) {
+                                    if ($arReciboDetalle['vrPagoAfectar'] > 0) {
                                         $descripcion = "CLIENTES";
                                         $cuenta = $arReciboDetalle['codigoCuentaClienteFk'];
                                         if ($cuenta) {
@@ -351,10 +416,6 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setTerceroRel($arTercero);
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
-                                            /*if($arCuenta->getExigeCentroCosto()) {
-                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
                                             $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
@@ -753,7 +814,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setNumero($arRecibo['numero']);
                                                 $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                                 $arRegistro->setFecha($arRecibo['fecha']);
-                                                $arRegistro->setVrDebito($arRecibo['vrPago']);
+                                                $arRegistro->setVrDebito($arReciboDetalle['vrPago']);
                                                 $arRegistro->setNaturaleza('D');
                                                 $arRegistro->setDescripcion($descripcion);
                                                 $arRegistro->setCodigoModeloFk('CarRecibo');

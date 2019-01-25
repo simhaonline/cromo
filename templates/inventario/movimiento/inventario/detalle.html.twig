@@ -160,7 +160,7 @@
                                                name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                id="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                value="{{ arMovimientoDetalle.loteFk }}">
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk, 'tipoFactura': true }) }}','BuscarLote',600,900)"
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoFechaVence' : 'arrFechaVencimiento['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk, 'tipoFactura': true }) }}','BuscarLote',600,900)"
                                            class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     <td style="text-align: center;">
@@ -185,9 +185,10 @@
                                     {% endif %}
                                     <td style="text-align: center;"><input type="date"
                                                                            name="arrFechaVencimiento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                                           id="arrFechaVencimiento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.fechaVencimiento | date('Y-m-d') }}"
                                                                            style="text-align: right; width:100px"
-                                                                           size="10"></td>
+                                                                           size="10" {% if arMovimiento.codigoDocumentoTipoFk == 'TRA' %} readonly {% endif %}></td>
                                     <td style="text-align: center;"><input type="number"
                                                                            name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.cantidad }}"
@@ -201,7 +202,7 @@
                                                                            name="arrValor[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.vrPrecio }}"
                                                                            style="text-align: right; width:90px"
-                                                                           size="10"></td>
+                                                                           size="10" {% if arMovimiento.codigoDocumentoTipoFk == 'TRA' %} readonly {% endif %}></td>
                                 {% endif %}
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
                                 {% if arMovimiento.estadoAutorizado %}

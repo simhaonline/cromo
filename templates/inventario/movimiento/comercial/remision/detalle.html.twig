@@ -35,6 +35,7 @@
                             <th>MARCA</th>
                             <th>LOTE</th>
                             <th>BODEGA</th>
+                            <th>VENCE</th>
                             <th>CAN</th>
                             <th>PRECIO</th>
                             <th>%IVA</th>
@@ -60,16 +61,23 @@
                                 {% if arRemision.estadoAutorizado %}
                                     <td>{{ arRemisionDetalle.loteFk }}</td>
                                     <td>{{ arRemisionDetalle.codigoBodegaFk }}</td>
+                                    <td>{{ arRemisionDetalle.fechaVencimiento | date('Y-m-d') }}</td>
                                     <td class="numero">{{ arRemisionDetalle.cantidad | number_format(0, '.', ',') }}</td>
                                 {% else %}
                                     <td style="text-align: center;">
                                         <input type="text" style="text-align: left;width: 50%;" name="arrLote[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" id="arrLote[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" value="{{ arRemisionDetalle.loteFk }}">
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arRemisionDetalle.codigoRemisionDetallePk ~']','campoBodega' : 'arrBodega['~ arRemisionDetalle.codigoRemisionDetallePk ~']','codigoItem' : arRemisionDetalle.codigoItemFk }) }}','BuscarLote',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arRemisionDetalle.codigoRemisionDetallePk ~']','campoBodega' : 'arrBodega['~ arRemisionDetalle.codigoRemisionDetallePk ~']','campoFechaVence' : 'arrFechaVencimiento['~ arRemisionDetalle.codigoRemisionDetallePk ~']','codigoItem' : arRemisionDetalle.codigoItemFk }) }}','BuscarLote',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     <td style="text-align: center;">
                                         <input type="text" name="arrBodega[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" id="arrBodega[{{ arRemisionDetalle.codigoRemisionDetallePk }}]" value="{{ arRemisionDetalle.codigoBodegaFk }}" style="text-align: left; width:40px" size="10">
                                         <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arRemisionDetalle.codigoRemisionDetallePk ~']' }) }}','BuscarBodega',600,900)" class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
+                                    <td style="text-align: center;"><input type="date"
+                                                                           name="arrFechaVencimiento[{{ arRemisionDetalle.codigoRemisionDetallePk }}]"
+                                                                           id="arrFechaVencimiento[{{ arRemisionDetalle.codigoRemisionDetallePk }}]"
+                                                                           value="{{ arRemisionDetalle.fechaVencimiento | date('Y-m-d') }}"
+                                                                           style="text-align: right; width:100px"
+                                                                           size="10" readonly></td>
                                     <td style="text-align: center;"><input style="text-align: right;" type="text" name="TxtCantidad[{{ arRemisionDetalle.codigoRemisionDetallePk  }}]" value="{{ arRemisionDetalle.cantidad }}" size="10" style="width:70px"></td>
                                 {% endif %}
 

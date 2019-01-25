@@ -166,6 +166,10 @@ class ReciboController extends ControllerListenerGeneral
                 $formato = new Recibo();
                 $formato->Generar($em, $id);
             }
+            if ($form->get('btnAnular')->isClicked()) {
+                $em->getRepository(CarRecibo::class)->anular($arRecibo);
+                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
+            }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
                 if ($arRecibo->getEstadoAutorizado() == 0) {
                     $arrControles = $request->request->All();

@@ -1,10 +1,11 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
     <script language="javascript">
-        function selRegistro(codigo, bodega,campoCodigo, campoBodega)
+        function selRegistro(codigo, bodega, fechaVence, campoCodigo, campoBodega, campoFechaVence)
         {
             opener.document.getElementById(campoCodigo).value = codigo;
             opener.document.getElementById(campoBodega).value = bodega;
+            opener.document.getElementById(campoFechaVence).value = fechaVence;
             opener.document.getElementById(campoCodigo).focus();
             self.close();
         }
@@ -55,7 +56,7 @@
                 <td style="text-align: right;">{{ arLote.cantidadExistencia }}</td>
                 <td style="text-align: right;">{{ arLote.cantidadRemisionada }}</td>
                 <td style="text-align: right;">{{ arLote.cantidadDisponible }}</td>
-                <td style="text-align: center"><a href="javascript:selRegistro('{{ arLote.loteFk }}','{{ arLote.codigoBodegaFk }}','{{ campoCodigo }}','{{ campoBodega }}')" >
+                <td style="text-align: center"><a href="javascript:selRegistro('{{ arLote.loteFk }}','{{ arLote.codigoBodegaFk }}','{{ arLote.fechaVencimiento | date('Y-m-d') }}','{{ campoCodigo }}','{{ campoBodega }}','{{ campoFechaVence }}')" >
                         <i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i>
                     </a>
                 </td>

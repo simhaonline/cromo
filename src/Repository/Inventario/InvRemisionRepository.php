@@ -321,10 +321,13 @@ class InvRemisionRepository extends ServiceEntityRepository
             $arrCantidad = $arrControles['TxtCantidad'];
             $arrPrecio = $arrControles['TxtPrecio'];
             $arrCodigo = $arrControles['TxtCodigo'];
+            $arrFechaVencimiento = $arrControles['arrFechaVencimiento'];
             foreach ($arrCodigo as $codigo) {
                 $arRemisionDetalle = $em->getRepository(InvRemisionDetalle::class)->find($codigo);
                 $arRemisionDetalle->setCodigoBodegaFk($arrBodega[$codigo]);
                 $arRemisionDetalle->setLoteFk($arrLote[$codigo]);
+                $fecha = $arrFechaVencimiento[$codigo];
+                $arRemisionDetalle->setFechaVencimiento(date_create($fecha));
                 $arRemisionDetalle->setCantidad( $arrCantidad[$codigo] != '' ? $arrCantidad[$codigo] :0 );
                 $arRemisionDetalle->setCantidadOperada($arRemisionDetalle->getCantidad() * $arRemisionDetalle->getOperacionInventario());
                 $arRemisionDetalle->setCantidadPendiente($arRemisionDetalle->getCantidad());

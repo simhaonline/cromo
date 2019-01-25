@@ -654,8 +654,8 @@ class TteDespachoRepository extends ServiceEntityRepository
                             }
                         }
                     }
-                } catch (Exception $e) {
-                    return "Error al conectar el control: " . $e;
+                } catch (\Exception $e) {
+                    Mensajes::error("Error al conectar el control: " . $e);
                 }
             } else {
                 Mensajes::error("El despacho debe estar aprobado y sin anular");

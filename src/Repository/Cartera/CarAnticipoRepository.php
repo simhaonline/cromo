@@ -7,12 +7,14 @@ use App\Entity\Cartera\CarAnticipo;
 use App\Entity\Cartera\CarAnticipoDetalle;
 use App\Entity\Cartera\CarAnticipoTipo;
 use App\Entity\Cartera\CarCliente;
+use App\Entity\Cartera\CarConfiguracion;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
+use App\Entity\General\GenConfiguracion;
 use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -217,10 +219,135 @@ class CarAnticipoRepository extends ServiceEntityRepository
             $arCuentaCobrar->setComentario($arAnticipo->getComentarios());
             $arCuentaCobrar->setAsesorRel($arAnticipo->getAsesorRel());
             $em->persist($arCuentaCobrar);
-
             $this->getEntityManager()->flush();
+            $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+            if ($arConfiguracion['contabilidadAutomatica']) {
+                $this->contabilizar(array($arAnticipo->getCodigoAnticipoPk()));
+            }
         } else {
             Mensajes::error("El anticipo ya fue aprobado aprobado");
         }
     }
+
+    public function registroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarAnticipo::class, 'a')
+            ->select('a.codigoAnticipoPk')
+            ->addSelect('a.numero')
+            ->addSelect('a.fecha')
+            ->addSelect('a.vrPago')
+            ->addSelect('a.codigoClienteFk')
+            ->addSelect('a.estadoAprobado')
+            ->addSelect('a.estadoContabilizado')
+            ->addSelect('at.codigoComprobanteFk')
+            ->addSelect('at.prefijo')
+            ->addSelect('c.codigoCuentaContableFk')
+            ->leftJoin('a.anticipoTipoRel', 'at')
+            ->leftJoin('a.cuentaRel', 'c')
+            ->where('a.codigoAnticipoPk = ' . $codigo);
+        $arAnticipo = $queryBuilder->getQuery()->getSingleResult();
+        return $arAnticipo;
+    }
+
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            //$arConfiguracion = $em->getRepository(CarConfiguracion::class)->contabilizarRecibo();
+            foreach ($arr AS $codigo) {
+                $arAnticipo = $em->getRepository(CarAnticipo::class)->registroContabilizar($codigo);
+                if ($arAnticipo) {
+                    if ($arAnticipo['estadoAprobado'] == 1 && $arAnticipo['estadoContabilizado'] == 0) {
+                        if ($arAnticipo['codigoComprobanteFk']) {
+                            $arComprobante = $em->getRepository(FinComprobante::class)->find($arAnticipo['codigoComprobanteFk']);
+                            if ($arComprobante) {
+                                $arTercero = $em->getRepository(CarCliente::class)->terceroFinanciero($arAnticipo['codigoClienteFk']);
+                                $arAnticipoDetalles = $em->getRepository(CarAnticipoDetalle::class)->listaContabilizar($codigo);
+                                foreach ($arAnticipoDetalles as $arAnticipoDetalle) {
+                                    //Cuenta concepto
+                                    if ($arAnticipoDetalle['vrPago'] > 0) {
+                                        $descripcion = "ANTICIPO";
+                                        $cuenta = $arAnticipoDetalle['codigoCuentaFk'];
+                                        if ($cuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                            if (!$arCuenta) {
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                break;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            $arRegistro->setNumero($arAnticipo['numero']);
+                                            $arRegistro->setNumeroPrefijo($arAnticipo['prefijo']);
+                                            $arRegistro->setFecha($arAnticipo['fecha']);
+                                            $arRegistro->setVrCredito($arAnticipoDetalle['vrPago']);
+                                            $arRegistro->setNaturaleza('C');
+                                            $arRegistro->setDescripcion($descripcion);
+                                            $arRegistro->setCodigoModeloFk('CarAnticipo');
+                                            $arRegistro->setCodigoDocumento($arAnticipo['codigoAnticipoPk']);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "El concepto no tiene configurada la cuenta " . $descripcion;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                //Cuenta banco
+                                $descripcion = "BANCO/CAJA";
+                                $cuenta = $arAnticipo['codigoCuentaContableFk'];
+                                if ($cuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setNumero($arAnticipo['numero']);
+                                    $arRegistro->setNumeroPrefijo($arAnticipo['prefijo']);
+                                    $arRegistro->setFecha($arAnticipo['fecha']);
+                                    $arRegistro->setVrDebito($arAnticipo['vrPago']);
+                                    $arRegistro->setNaturaleza('D');
+                                    $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('CarAnticipo');
+                                    $arRegistro->setCodigoDocumento($arAnticipo['codigoAnticipoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el anticipo " . $arAnticipo['numero'];
+                                    break;
+                                }
+                                $arAnticipoAct = $em->getRepository(CarAnticipo::class)->find($arAnticipo['codigoAnticipoPk']);
+                                $arAnticipoAct->setEstadoContabilizado(1);
+                                $em->persist($arAnticipoAct);
+                            } else {
+                                $error = "No existe el comprobante en el [tipo anticipo] del anticipo " . $arAnticipo['numero'];
+                                break;
+                            }
+                        } else {
+                            $error = "No esta configurado el comprobante en el [tipo anticipo] del anticipo " . $arAnticipo['numero'];
+                            break;
+                        }
+
+                    }
+                } else {
+                    $error = "La anticipo codigo " . $codigo . " no existe";
+                    break;
+                }
+            }
+            if ($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
+    }
+
 }

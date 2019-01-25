@@ -58,4 +58,13 @@ class GenConfiguracionRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
     }
 
+    public function contabilidadAutomatica()
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenConfiguracion::class, 'c')
+            ->select('c.contabilidadAutomatica')
+            ->where('c.codigoConfiguracionPk = 1');
+
+        return $queryBuilder->getQuery()->getSingleResult();
+    }
+
 }

@@ -20,7 +20,7 @@ class AnticipoType extends AbstractType
     {
         $builder
             ->add('cuentaRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenCuenta',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
@@ -30,7 +30,7 @@ class AnticipoType extends AbstractType
                 'label' => 'Cuenta:'
             ])
             ->add('anticipoTipoRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\Cartera\CarAnticipoTipo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('at')

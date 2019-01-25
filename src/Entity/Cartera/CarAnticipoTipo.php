@@ -44,6 +44,16 @@ class CarAnticipoTipo
     private $orden = 0;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true, options={"default" : null})
+     */
+    private $codigoComprobanteFk;
+
+    /**
+     * @ORM\Column(name="prefijo", type="string", length=20, nullable=true, options={"default" : null})
+     */
+    private $prefijo;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo", mappedBy="anticipoTipoRel")
      */
     protected $anticiposAnticipoTipoRel;
@@ -181,5 +191,39 @@ class CarAnticipoTipo
     {
         $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteFk()
+    {
+        return $this->codigoComprobanteFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteFk
+     */
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    {
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrefijo()
+    {
+        return $this->prefijo;
+    }
+
+    /**
+     * @param mixed $prefijo
+     */
+    public function setPrefijo($prefijo): void
+    {
+        $this->prefijo = $prefijo;
+    }
+
+
 
 }

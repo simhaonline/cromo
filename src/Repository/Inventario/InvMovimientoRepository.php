@@ -619,7 +619,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arDocumento = $em->getRepository(InvDocumento::class)->find($arMovimiento->getCodigoDocumentoFk());
-        $arConfiguracion = $em->find(GenConfiguracion::class, 1);
         if ($arMovimiento->getFacturaTipoRel() != '') {
             $arFacturaTipo = $em->getRepository(InvFacturaTipo::class)->find($arMovimiento->getCodigoFacturaTipoFk());
         }
@@ -696,11 +695,13 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
 
                 $this->getEntityManager()->flush();
+
+                /*$arConfiguracion = $em->find(GenConfiguracion::class, 1);
                 if ($arConfiguracion->getContabilidadAutomatica()) {
                     if($arMovimiento->getDocumentoRel()->getContabilizar()){
                         $this->contabilizar($arMovimiento);
                     }
-                }
+                }*/
             }
         } else {
             Mensajes::error("El movimiento ya fue aprobado aprobado");

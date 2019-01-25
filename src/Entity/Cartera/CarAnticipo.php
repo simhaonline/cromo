@@ -72,11 +72,6 @@ class CarAnticipo
     private $vrPago = 0;
 
     /**
-     * @ORM\Column(name="codigo_tercero_fk", type="integer", nullable=true)
-     */
-    private $codigoTerceroFk;
-
-    /**
      * @ORM\Column(name="estado_impreso", type="boolean")
      */
     private $estadoImpreso = 0;
@@ -144,22 +139,6 @@ class CarAnticipo
      * @ORM\OneToMany(targetEntity="CarAnticipoDetalle", mappedBy="anticipoRel")
      */
     protected $anticiposDetallesRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -319,22 +298,6 @@ class CarAnticipo
     public function setVrPago($vrPago): void
     {
         $this->vrPago = $vrPago;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoTerceroFk()
-    {
-        return $this->codigoTerceroFk;
-    }
-
-    /**
-     * @param mixed $codigoTerceroFk
-     */
-    public function setCodigoTerceroFk($codigoTerceroFk): void
-    {
-        $this->codigoTerceroFk = $codigoTerceroFk;
     }
 
     /**

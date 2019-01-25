@@ -32,6 +32,8 @@ class AnticipoTipoType extends AbstractType
             ])
             ->add('consecutivo', NumberType::class, ['label' => 'Consecutivo','required' => true])
             ->add('orden', IntegerType::class, ['label' => 'Orden', 'required' => true])
+            ->add('codigoComprobanteFk', TextType::class, ['label' => 'Comprobante:','required' => false])
+            ->add('prefijo', TextType::class, ['label' => 'Prefijo:','required' => false])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
@@ -47,7 +49,9 @@ class AnticipoTipoType extends AbstractType
         $campos = '[
             {"campo":"codigoAnticipoTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
             {"campo":"nombre",                       "tipo":"texto"  ,"ayuda":"Nombre del tipo de anticipo",   "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                     "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"CONSECUTIVO"}          
+            {"campo":"consecutivo",                     "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"CONSECUTIVO"},
+            {"campo":"codigoComprobanteFk",                     "tipo":"texto"  ,"ayuda":"Comprobante contable",     "titulo":"COMPROBANTE"},
+            {"campo":"prefijo",                     "tipo":"texto"  ,"ayuda":"Prefijo para contabilidad",     "titulo":"PREFIJO"}          
                                                                           
         ]';
         return $campos;

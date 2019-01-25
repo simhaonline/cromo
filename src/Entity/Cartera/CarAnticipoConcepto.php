@@ -27,6 +27,11 @@ class CarAnticipoConcepto
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="CarAnticipoDetalle", mappedBy="anticipoConceptoRel")
      */
     protected $anticiposDetallesConceptosRel;
@@ -93,6 +98,22 @@ class CarAnticipoConcepto
     public function setAnticiposDetallesConceptosRel($anticiposDetallesConceptosRel): void
     {
         $this->anticiposDetallesConceptosRel = $anticiposDetallesConceptosRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaFk()
+    {
+        return $this->codigoCuentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaFk
+     */
+    public function setCodigoCuentaFk($codigoCuentaFk): void
+    {
+        $this->codigoCuentaFk = $codigoCuentaFk;
     }
 
 

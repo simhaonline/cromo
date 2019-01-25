@@ -165,6 +165,7 @@ class AnticipoController extends ControllerListenerGeneral
         return $this->render('cartera/movimiento/anticipo/anticipo/detalle.html.twig', array(
             'arAnticipo' => $arAnticipo,
             'arAnticipoDetalles' => $arAnticipoDetalles,
+            'clase' => array('clase' => 'CarAnticipo', 'codigo' => $id),
             'form' => $form->createView()
         ));
     }

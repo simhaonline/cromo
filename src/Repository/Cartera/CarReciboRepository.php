@@ -193,7 +193,6 @@ class CarReciboRepository extends ServiceEntityRepository
     public function aprobar($arRecibo)
     {
         $em = $this->getEntityManager();
-        $arConfiguracion = $em->find(GenConfiguracion::class, 1);
         if ($arRecibo->getEstadoAutorizado()) {
             $arReciboTipo = $em->getRepository(CarReciboTipo::class)->find($arRecibo->getCodigoReciboTipoFk());
             if ($arRecibo->getNumero() == 0 || $arRecibo->getNumero() == NULL) {
@@ -205,10 +204,9 @@ class CarReciboRepository extends ServiceEntityRepository
             $arRecibo->setEstadoAprobado(1);
             $em->persist($arRecibo);
             $em->flush();
-            if ($arConfiguracion) {
-                if($arConfiguracion->getContabilidadAutomatica()){
-                    $this->contabilizar($arRecibo);
-                }
+            $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+            if ($arConfiguracion['contabilidadAutomatica']) {
+                $this->contabilizar(array($arRecibo->getCodigoReciboPk()));
             }
         }
     }

@@ -338,7 +338,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->listaContabilizar($codigo);
                                 foreach ($arReciboDetalles as $arReciboDetalle) {
                                     //Cuenta cliente
-                                    if ($arReciboDetalle['vrPago'] > 0) {
+                                    if ($arReciboDetalle['vrPagoAfectar'] > 0) {
                                         $descripcion = "CLIENTES";
                                         $cuenta = $arReciboDetalle['codigoCuentaClienteFk'];
                                         if ($cuenta) {

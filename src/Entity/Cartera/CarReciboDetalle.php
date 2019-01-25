@@ -42,6 +42,11 @@ class CarReciboDetalle
     private $codigoCuentaCobrarAplicacionFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_cobrar_aplicacion_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaCobrarAplicacionTipoFk;
+
+    /**
      * @ORM\Column(name="numero_factura", type="string", length=30, nullable=true)
      */
     private $numeroFactura;
@@ -139,6 +144,12 @@ class CarReciboDetalle
      * @ORM\JoinColumn(name="codigo_cuenta_cobrar_aplicacion_fk", referencedColumnName="codigo_cuenta_cobrar_pk")
      */
     protected $cuentaCobrarAplicacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrarTipo", inversedBy="recibosDetallesCuentaCobrarAplicacionTipoRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_cobrar_aplicacion_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
+     */
+    protected $cuentaCobrarAplicacionTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarDescuentoConcepto", inversedBy="recibosDetallesDescuentoConceptoRel")
@@ -566,6 +577,38 @@ class CarReciboDetalle
     public function setIngresoConceptoRel( $ingresoConceptoRel ): void
     {
         $this->ingresoConceptoRel = $ingresoConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCobrarAplicacionTipoFk()
+    {
+        return $this->codigoCuentaCobrarAplicacionTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCobrarAplicacionTipoFk
+     */
+    public function setCodigoCuentaCobrarAplicacionTipoFk($codigoCuentaCobrarAplicacionTipoFk): void
+    {
+        $this->codigoCuentaCobrarAplicacionTipoFk = $codigoCuentaCobrarAplicacionTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaCobrarAplicacionTipoRel()
+    {
+        return $this->cuentaCobrarAplicacionTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarAplicacionTipoRel
+     */
+    public function setCuentaCobrarAplicacionTipoRel($cuentaCobrarAplicacionTipoRel): void
+    {
+        $this->cuentaCobrarAplicacionTipoRel = $cuentaCobrarAplicacionTipoRel;
     }
 
 

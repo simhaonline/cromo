@@ -269,10 +269,10 @@ class ReciboController extends ControllerListenerGeneral
                         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
                         $arReciboDetalle->setCuentaCobrarAplicacionRel($arCuentaCobrar);
                         $arReciboDetalle->setNumeroDocumentoAplicacion($arCuentaCobrar->getNumeroDocumento());
-                        $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
-                        $arReciboDetalle->setOperacion(0);
-                        $arReciboDetalle->setVrPago(round($arCuentaCobrar->getVrSaldo()));
-                        $arReciboDetalle->setVrPagoAfectar(round($arCuentaCobrar->getVrSaldo()));
+                        $arReciboDetalle->setCuentaCobrarAplicacionTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
+                        $arReciboDetalle->setOperacion(1);
+                        $arReciboDetalle->setVrPago($arCuentaCobrar->getVrSaldo());
+                        $arReciboDetalle->setVrPagoAfectar($arCuentaCobrar->getVrSaldo());
                         $em->persist($arReciboDetalle);
                         $em->flush();
                         $em->getRepository(CarReciboDetalle::class)->liquidar($arReciboDetalle->getCodigoReciboFk());

@@ -243,8 +243,10 @@ class CarAnticipoRepository extends ServiceEntityRepository
             ->addSelect('at.codigoComprobanteFk')
             ->addSelect('at.prefijo')
             ->addSelect('c.codigoCuentaContableFk')
+            ->addSelect('acct.codigoCuentaAplicacionFk')
             ->leftJoin('a.anticipoTipoRel', 'at')
             ->leftJoin('a.cuentaRel', 'c')
+            ->leftJoin('at.cuentaCobrarTipoRel', 'acct')
             ->where('a.codigoAnticipoPk = ' . $codigo);
         $arAnticipo = $queryBuilder->getQuery()->getSingleResult();
         return $arAnticipo;
@@ -264,7 +266,7 @@ class CarAnticipoRepository extends ServiceEntityRepository
                             $arComprobante = $em->getRepository(FinComprobante::class)->find($arAnticipo['codigoComprobanteFk']);
                             if ($arComprobante) {
                                 $arTercero = $em->getRepository(CarCliente::class)->terceroFinanciero($arAnticipo['codigoClienteFk']);
-                                $arAnticipoDetalles = $em->getRepository(CarAnticipoDetalle::class)->listaContabilizar($codigo);
+                                /*$arAnticipoDetalles = $em->getRepository(CarAnticipoDetalle::class)->listaContabilizar($codigo);
                                 foreach ($arAnticipoDetalles as $arAnticipoDetalle) {
                                     //Cuenta concepto
                                     if ($arAnticipoDetalle['vrPago'] > 0) {
@@ -294,6 +296,33 @@ class CarAnticipoRepository extends ServiceEntityRepository
                                             break;
                                         }
                                     }
+                                }*/
+
+                                //Cuenta anticipo
+                                $descripcion = "APLICACION ANTICIPO";
+                                $cuenta = $arAnticipo['codigoCuentaAplicacionFk'];
+                                if ($cuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setNumero($arAnticipo['numero']);
+                                    $arRegistro->setNumeroPrefijo($arAnticipo['prefijo']);
+                                    $arRegistro->setFecha($arAnticipo['fecha']);
+                                    $arRegistro->setVrCredito($arAnticipo['vrPago']);
+                                    $arRegistro->setNaturaleza('C');
+                                    $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('CarAnticipo');
+                                    $arRegistro->setCodigoDocumento($arAnticipo['codigoAnticipoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo de cuenta por cobrar del tipo de anticipo no tiene configurada la cuenta de aplicacion ";
+                                    break;
                                 }
 
                                 //Cuenta banco

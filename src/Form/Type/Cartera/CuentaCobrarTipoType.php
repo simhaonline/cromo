@@ -23,6 +23,7 @@ class CuentaCobrarTipoType extends AbstractType {
             ->add('codigoCuentaCobrarTipoPk', TextType::class, ['label'=> 'Codigo cuenta cobrar tipo pk:', 'required' => true])
             ->add('nombre', TextType::class, ['label' => 'Nombre:', 'required' => true])
             ->add('codigoCuentaClienteFk', TextType::class, ['label' => 'Codigo cuenta cliente:', 'required' => false])
+            ->add('codigoCuentaAplicacionFk', TextType::class, ['label' => 'Codigo cuenta aplicacion:', 'required' => false])
             ->add('operacion', IntegerType::class, ['label' => 'Operacion:', 'required' => false])
             ->add('saldoInicial', CheckboxType::class, ['required' => false])
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
@@ -49,7 +50,9 @@ class CuentaCobrarTipoType extends AbstractType {
         $campos = '[
             {"campo":"codigoCuentaCobrarTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
             {"campo":"nombre",                           "tipo":"texto"  ,"ayuda":"Nombre del tipo de anticipo",   "titulo":"NOMBRE"},
-            {"campo":"codigoCuentaClienteFk",            "tipo":"texto"  ,"ayuda":"cuenta cliente",     "titulo":"CUENTA CLIENTE"}      
+            {"campo":"codigoCuentaClienteFk",            "tipo":"texto"  ,"ayuda":"cuenta cliente",     "titulo":"CUENTA CLIENTE"},
+            {"campo":"codigoCuentaAplicacionFk",            "tipo":"texto"  ,"ayuda":"cuenta aplicacion",     "titulo":"CUENTA APLICACION"},
+            {"campo":"saldoInicial",            "tipo":"bool"  ,"ayuda":"Saldo inicial",     "titulo":"SI"}      
                                                                           
         ]';
         return $campos;

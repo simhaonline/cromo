@@ -112,12 +112,13 @@ class CarReciboRepository extends ServiceEntityRepository
                     if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
                         $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
                         if ($arCuentaCobrarAplicacion->getVrSaldo() >= $arReciboDetalle->getVrPagoAfectar()) {
-                            $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+                            $saldo = $arCuentaCobrarAplicacion->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
                             $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
                             $arCuentaCobrarAplicacion->setVrSaldo($saldo);
                             $arCuentaCobrarAplicacion->setVrSaldoOperado($saldoOperado);
-                            $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
+                            $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
                             $em->persist($arCuentaCobrarAplicacion);
+
                             //Cuenta por cobrar
                             $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
                             $saldo = $arCuentaCobrar->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
@@ -734,40 +735,64 @@ class CarReciboRepository extends ServiceEntityRepository
                                         break;
                                     }
                                 } else {
-                                    $descripcion = "BANCO/CAJA";
-                                    $cuenta = $arRecibo['codigoCuentaContableFk'];
-                                    if ($cuenta) {
-                                        $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                        if (!$arCuenta) {
-                                            $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                            break;
+                                    $banco = 0;
+                                    foreach ($arReciboDetalles as $arReciboDetalle) {
+                                        if($arReciboDetalle['codigoCuentaCobrarAplicacionFk']) {
+                                            $descripcion = "APLICACION";
+                                            $cuenta = $arReciboDetalle['codigoCuentaAplicacionFk'];
+                                            if ($cuenta) {
+                                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                                if (!$arCuenta) {
+                                                    $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                    break;
+                                                }
+                                                $arRegistro = new FinRegistro();
+                                                $arRegistro->setTerceroRel($arTercero);
+                                                $arRegistro->setCuentaRel($arCuenta);
+                                                $arRegistro->setComprobanteRel($arComprobante);
+                                                $arRegistro->setNumero($arRecibo['numero']);
+                                                $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
+                                                $arRegistro->setFecha($arRecibo['fecha']);
+                                                $arRegistro->setVrDebito($arRecibo['vrPago']);
+                                                $arRegistro->setNaturaleza('D');
+                                                $arRegistro->setDescripcion($descripcion);
+                                                $arRegistro->setCodigoModeloFk('CarRecibo');
+                                                $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
+                                                $em->persist($arRegistro);
+                                            } else {
+                                                $error = "Error en el detalle ID: " . $arReciboDetalle['codigoReciboDetallePk'] . " el documento de aplicacion no tiene cuenta aplicacion";
+                                                break;
+                                            }
+                                        } else {
+                                            $banco += $arReciboDetalle['vrPago'];
                                         }
-                                        $arRegistro = new FinRegistro();
-                                        $arRegistro->setTerceroRel($arTercero);
-                                        $arRegistro->setCuentaRel($arCuenta);
-                                        $arRegistro->setComprobanteRel($arComprobante);
-                                        /*if($arCuenta->getExigeCentroCosto()) {
-                                            $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                            $arRegistro->setCentroCostoRel($arCentroCosto);
-                                        }*/
-                                        $arRegistro->setNumero($arRecibo['numero']);
-                                        $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
-                                        $arRegistro->setFecha($arRecibo['fecha']);
-                                        $naturaleza = "D";
-                                        if ($naturaleza == 'D') {
+                                    }
+                                    if($banco > 0) {
+                                        $descripcion = "BANCO/CAJA";
+                                        $cuenta = $arRecibo['codigoCuentaContableFk'];
+                                        if ($cuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                            if (!$arCuenta) {
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                break;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            $arRegistro->setNumero($arRecibo['numero']);
+                                            $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
+                                            $arRegistro->setFecha($arRecibo['fecha']);
                                             $arRegistro->setVrDebito($arRecibo['vrPago']);
                                             $arRegistro->setNaturaleza('D');
+                                            $arRegistro->setDescripcion($descripcion);
+                                            $arRegistro->setCodigoModeloFk('CarRecibo');
+                                            $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
+                                            $em->persist($arRegistro);
                                         } else {
-                                            $arRegistro->setVrCredito($arRecibo['vrPago']);
-                                            $arRegistro->setNaturaleza('C');
+                                            $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arRecibo['numero'];
+                                            break;
                                         }
-                                        $arRegistro->setDescripcion($descripcion);
-                                        $arRegistro->setCodigoModeloFk('CarRecibo');
-                                        $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
-                                        $em->persist($arRegistro);
-                                    } else {
-                                        $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arRecibo['numero'];
-                                        break;
                                     }
                                 }
 

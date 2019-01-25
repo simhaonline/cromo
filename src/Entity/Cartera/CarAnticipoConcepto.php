@@ -27,30 +27,9 @@ class CarAnticipoConcepto
     private $nombre;
 
     /**
-     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCuentaFk;
-
-    /**
      * @ORM\OneToMany(targetEntity="CarAnticipoDetalle", mappedBy="anticipoConceptoRel")
      */
     protected $anticiposDetallesConceptosRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -99,23 +78,6 @@ class CarAnticipoConcepto
     {
         $this->anticiposDetallesConceptosRel = $anticiposDetallesConceptosRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaFk()
-    {
-        return $this->codigoCuentaFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaFk
-     */
-    public function setCodigoCuentaFk($codigoCuentaFk): void
-    {
-        $this->codigoCuentaFk = $codigoCuentaFk;
-    }
-
 
 
 }

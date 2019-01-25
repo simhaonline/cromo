@@ -696,12 +696,12 @@ class InvMovimientoRepository extends ServiceEntityRepository
 
                 $this->getEntityManager()->flush();
 
-                /*$arConfiguracion = $em->find(GenConfiguracion::class, 1);
-                if ($arConfiguracion->getContabilidadAutomatica()) {
+                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+                if ($arConfiguracion['contabilidadAutomatica']) {
                     if($arMovimiento->getDocumentoRel()->getContabilizar()){
-                        $this->contabilizar($arMovimiento);
+                        $this->contabilizar([$arMovimiento->getCodigoMovimientoPk()]);
                     }
-                }*/
+                }
             }
         } else {
             Mensajes::error("El movimiento ya fue aprobado aprobado");

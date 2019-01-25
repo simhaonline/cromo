@@ -13,6 +13,7 @@
         {% if arRecibo.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arRecibo.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arRecibo.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arRecibo.estadoContabilizado == true %}<span class="label label-danger">Contabilizado</span>{% endif %}
     </div>
     <br /><br />
     {% include 'cartera/movimiento/recibo/recibo/informacion.html.twig' %}

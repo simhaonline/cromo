@@ -97,9 +97,11 @@ class CuentaCobrarController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
         $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(['codigoCuentaCobrarFk' => $id]);
+        $arReciboDetallesAplicacion = $em->getRepository(CarReciboDetalle::class)->findBy(['codigoCuentaCobrarAplicacionFk' => $id]);
         return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/referencia.html.twig',[
             'arCuentaCobrar' => $arCuentaCobrar,
-            'arReciboDetalles' => $arReciboDetalles
+            'arReciboDetalles' => $arReciboDetalles,
+            'arReciboDetallesAplicacion' => $arReciboDetallesAplicacion
         ]);
     }
 }

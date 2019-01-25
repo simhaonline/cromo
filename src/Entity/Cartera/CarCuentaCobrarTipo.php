@@ -46,6 +46,11 @@ class CarCuentaCobrarTipo
     private $codigoCuentaClienteFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_aplicacion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaAplicacionFk;
+
+    /**
      * @ORM\Column(name="permite_recibo_masivo", type="boolean", nullable=true, options={"default" : false})
      */
     private $permiteReciboMasivo = false;
@@ -59,6 +64,11 @@ class CarCuentaCobrarTipo
      * @ORM\OneToMany(targetEntity="CarReciboDetalle", mappedBy="cuentaCobrarTipoRel")
      */
     protected $recibosDetallesCuentaCobrarTipoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="CarReciboDetalle", mappedBy="cuentaCobrarAplicacionTipoRel")
+     */
+    protected $recibosDetallesCuentaCobrarAplicacionTipoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="CarAnticipoTipo", mappedBy="cuentaCobrarTipoRel")
@@ -223,6 +233,38 @@ class CarCuentaCobrarTipo
     public function setCuentaCobrarTipoRel( $cuentaCobrarTipoRel ): void
     {
         $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosDetallesCuentaCobrarAplicacionTipoRel()
+    {
+        return $this->recibosDetallesCuentaCobrarAplicacionTipoRel;
+    }
+
+    /**
+     * @param mixed $recibosDetallesCuentaCobrarAplicacionTipoRel
+     */
+    public function setRecibosDetallesCuentaCobrarAplicacionTipoRel($recibosDetallesCuentaCobrarAplicacionTipoRel): void
+    {
+        $this->recibosDetallesCuentaCobrarAplicacionTipoRel = $recibosDetallesCuentaCobrarAplicacionTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaAplicacionFk()
+    {
+        return $this->codigoCuentaAplicacionFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaAplicacionFk
+     */
+    public function setCodigoCuentaAplicacionFk($codigoCuentaAplicacionFk): void
+    {
+        $this->codigoCuentaAplicacionFk = $codigoCuentaAplicacionFk;
     }
 
 

@@ -16,7 +16,6 @@ class AnticipoConceptoType extends AbstractType
         $builder
             ->add('codigoAnticipoConceptoPk', TextType::class, ['label'=> 'Codigo concepto pk', 'required' => true])
             ->add('nombre', TextType::class, ['label' => 'Nombre', 'required' => true])
-            ->add('codigoCuentaFk', TextType::class, ['label' => 'Cuenta:', 'required' => false])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
@@ -32,8 +31,7 @@ class AnticipoConceptoType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoAnticipoConceptoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"nombre",                          "tipo":"texto"  ,"ayuda":"Nombre del concepto de anticipo",     "titulo":"NOMBRE"},
-            {"campo":"codigoCuentaFk",                          "tipo":"texto"  ,"ayuda":"Codigo de la cuenta",     "titulo":"CUENTA"}             
+            {"campo":"nombre",                          "tipo":"texto"  ,"ayuda":"Nombre del concepto de anticipo",     "titulo":"NOMBRE"}                      
                                                                           
         ]';
         return $campos;

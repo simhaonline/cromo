@@ -1224,5 +1224,53 @@ class InvMovimientoRepository extends ServiceEntityRepository
         return true;
     }
 
+    public function ventaPorAsesor()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm')
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('a.nombre AS asesor')
+            ->addSelect('t.nombreCorto AS tercero')
+            ->addSelect('m.fecha')
+            ->addSelect('m.numero')
+            ->addSelect('m.vrNeto')
+            ->addSelect('m.vrIva')
+            ->addSelect('m.vrTotal')
+            ->addSelect('m.codigoAsesorFk')
+            ->leftJoin('m.asesorRel', 'a')
+            ->leftJoin('m.terceroRel', 't')
+            ->where('m.codigoMovimientoPk <> 0')
+            ->andWhere("m.codigoDocumentoFk = 'FAC'")
+            ->andWhere('m.estadoAnulado = 0')
+            ->andWhere('m.estadoAprobado = 1')
+            ->groupBy('m.codigoAsesorFk')
+            ->addGroupBy('m.codigoMovimientoPk');
+        $fecha = new \DateTime('now');
+//        if ($session->get('filtroGenAsesor')) {
+//            $queryBuilder->andWhere("r.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
+//        }
+//        if ($session->get('filtroCarInformeReciboTipo') != "") {
+//            $queryBuilder->andWhere("r.codigoReciboTipoFk = '" . $session->get('filtroCarInformeReciboTipo') . "'");
+//        }
+//        if ($session->get('filtroCarReciboNumero')) {
+//            $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
+//        }
+//        if ($session->get('filtroCarCodigoCliente')) {
+//            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+//        }
+        if ($session->get('filtroFecha') == true) {
+            if ($session->get('filtroInformeVentasPorAsesorFechaDesde') != null) {
+                $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroInformeVentasPorAsesorFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("m.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroInformeVentasPorAsesorFechaHasta') != null) {
+                $queryBuilder->andWhere("m.fecha <= '{$session->get('filtroInformeVentasPorAsesorFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("m.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        return $queryBuilder;
+    }
 
 }

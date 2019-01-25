@@ -28,6 +28,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.codigoItemFk')
             ->addSelect('rd.loteFk')
             ->addSelect('rd.codigoBodegaFk')
+            ->addSelect('rd.fechaVencimiento')
             ->addSelect('rd.cantidad')
             ->addSelect('rd.cantidadPendiente')
             ->addSelect('i.nombre as itemNombre')

@@ -21,7 +21,7 @@ class ReciboTipoType extends AbstractType {
             ->add('codigoReciboTipoPk', TextType::class, array('label' => 'Codigo recibo tipo pk:', 'required' => true))
             ->add('nombre', TextType::class, array('label' => 'Nombre:','required' => true))
             ->add('codigoComprobanteFk', TextType::class, array('label' => 'Comprobante contabilidad:','required' => true))
-            ->add('prefijo', TextType::class, array('label' => 'Prefijo:','required' => true))
+            ->add('prefijo', TextType::class, array('label' => 'Prefijo:','required' => false))
             ->add('orden', IntegerType::class, array('label' => 'Orden:','required' => true))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']));
     }

@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Inventario\InvItem;
+use App\Entity\Inventario\InvMarca;
 use App\Entity\Inventario\InvOrden;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvOrdenTipo;
@@ -210,7 +211,7 @@ class OrdenController extends ControllerListenerGeneral
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
-            ->add('txtMarcaItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemMarca')])
+            ->add('cboMarcaItem', EntityType::class, $em->getRepository(InvMarca::class)->llenarCombo())
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
@@ -218,7 +219,12 @@ class OrdenController extends ControllerListenerGeneral
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
-                $session->set('filtroInvBuscarItemMarca', $form->get('txtMarcaItem')->getData());
+                $arMarca = $form->get('cboMarcaItem')->getData();
+                if ($arMarca != '') {
+                    $session->set('filtroInvMarcaItem', $form->get('cboMarcaItem')->getData()->getCodigoMarcaPk());
+                } else {
+                    $session->set('filtroInvMarcaItem', null);
+                }
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');

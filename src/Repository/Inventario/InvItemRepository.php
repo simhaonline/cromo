@@ -96,8 +96,8 @@ class InvItemRepository extends ServiceEntityRepository
         if ($session->get('filtroInvBuscarItemReferencia') != '') {
             $queryBuilder->andWhere("i.referencia LIKE '%{$session->get('filtroInvBuscarItemReferencia')}%'");
         }
-        if ($session->get('filtroInvBuscarItemMarca') != '') {
-            $queryBuilder->andWhere("m.nombre LIKE '%{$session->get('filtroInvBuscarItemMarca')}%'");
+        if ($session->get('filtroInvMarcaItem') != '') {
+            $queryBuilder->andWhere("m.nombre LIKE '%{$session->get('filtroInvMarcaItem')}%'");
         }
 
         return $queryBuilder;

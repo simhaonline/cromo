@@ -91,7 +91,7 @@ final class AdministracionController extends BaseController
         $prefijo = $this->obtenerPrefijo($modulo);
         $clase = "\\App\\Entity\\" . ucfirst($modulo) . "\\" . ucfirst($prefijo) . ucfirst($entidad);
         $arRegistro = new $clase();
-        if ($id != '0') {
+        if ($id !== '0') {
             $arRegistro = $em->find($clase, $id);
             if (!$arRegistro) {
                 return $this->redirect($this->generateUrl('administracion_lista', ['modulo' => $modulo, 'entidad' => $entidad]));

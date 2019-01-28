@@ -23,6 +23,7 @@ class CarConfiguracionRepository extends ServiceEntityRepository
             ->addSelect('c.codigoCuentaDescuentoFk')
             ->addSelect('c.codigoCuentaIndustriaComercioFk')
             ->addSelect('c.codigoCuentaRetencionFuenteFk')
+            ->addSelect('c.contabilizarReciboFechaPago')
             ->where('c.codigoConfiguracionPk = 1');
         return $queryBuilder->getQuery()->getSingleResult();
 

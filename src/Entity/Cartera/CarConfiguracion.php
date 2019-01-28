@@ -48,6 +48,11 @@ class CarConfiguracion
     private $codigoCuentaDescuentoFk;
 
     /**
+     * @ORM\Column(name="contabilizar_recibo_fecha_pago", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $contabilizarReciboFechaPago = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -141,6 +146,22 @@ class CarConfiguracion
     public function setCodigoCuentaDescuentoFk( $codigoCuentaDescuentoFk ): void
     {
         $this->codigoCuentaDescuentoFk = $codigoCuentaDescuentoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContabilizarReciboFechaPago()
+    {
+        return $this->contabilizarReciboFechaPago;
+    }
+
+    /**
+     * @param mixed $contabilizarReciboFechaPago
+     */
+    public function setContabilizarReciboFechaPago($contabilizarReciboFechaPago): void
+    {
+        $this->contabilizarReciboFechaPago = $contabilizarReciboFechaPago;
     }
 
 

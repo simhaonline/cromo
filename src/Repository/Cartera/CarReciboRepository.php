@@ -368,6 +368,7 @@ class CarReciboRepository extends ServiceEntityRepository
             ->select('r.codigoReciboPk')
             ->addSelect('r.numero')
             ->addSelect('r.fecha')
+            ->addSelect('r.fechaPago')
             ->addSelect('r.vrPago')
             ->addSelect('r.codigoClienteFk')
             ->addSelect('r.codigoTerceroFk')
@@ -396,6 +397,10 @@ class CarReciboRepository extends ServiceEntityRepository
                 $arRecibo = $em->getRepository(CarRecibo::class)->registroContabilizar($codigo);
                 if ($arRecibo) {
                     if ($arRecibo['estadoAprobado'] == 1 && $arRecibo['estadoContabilizado'] == 0) {
+                        $fecha = $arRecibo['fecha'];
+                        if($arConfiguracion['contabilizarReciboFechaPago']) {
+                            $fecha = $arRecibo['fechaPago'];
+                        }
                         if ($arRecibo['codigoComprobanteFk']) {
                             $arComprobante = $em->getRepository(FinComprobante::class)->find($arRecibo['codigoComprobanteFk']);
                             if ($arComprobante) {
@@ -420,15 +425,9 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                            $arRegistro->setFecha($arRecibo['fecha']);
-                                            $naturaleza = "C";
-                                            if ($naturaleza == 'D') {
-                                                $arRegistro->setVrDebito($arReciboDetalle['vrPagoAfectar']);
-                                                $arRegistro->setNaturaleza('D');
-                                            } else {
-                                                $arRegistro->setVrCredito($arReciboDetalle['vrPagoAfectar']);
-                                                $arRegistro->setNaturaleza('C');
-                                            }
+                                            $arRegistro->setFecha($fecha);
+                                            $arRegistro->setVrCredito($arReciboDetalle['vrPagoAfectar']);
+                                            $arRegistro->setNaturaleza('C');
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('CarRecibo');
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
@@ -453,23 +452,13 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setTerceroRel($arTercero);
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
-                                            /*if($arCuenta->getExigeCentroCosto()) {
-                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
                                             $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                            $arRegistro->setFecha($arRecibo['fecha']);
-                                            $naturaleza = "D";
-                                            if ($naturaleza == 'D') {
-                                                $arRegistro->setVrDebito($arReciboDetalle['vrAjustePeso']);
-                                                $arRegistro->setNaturaleza('D');
-                                            } else {
-                                                $arRegistro->setVrCredito($arReciboDetalle['vrAjustePeso']);
-                                                $arRegistro->setNaturaleza('C');
-                                            }
+                                            $arRegistro->setFecha($fecha);
+                                            $arRegistro->setVrDebito($arReciboDetalle['vrAjustePeso']);
+                                            $arRegistro->setNaturaleza('D');
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('CarRecibo');
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
@@ -494,23 +483,13 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setTerceroRel($arTercero);
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
-                                            /*if($arCuenta->getExigeCentroCosto()) {
-                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
                                             $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                            $arRegistro->setFecha($arRecibo['fecha']);
-                                            $naturaleza = "D";
-                                            if ($naturaleza == 'D') {
-                                                $arRegistro->setVrDebito($arReciboDetalle['vrRetencionFuente']);
-                                                $arRegistro->setNaturaleza('D');
-                                            } else {
-                                                $arRegistro->setVrCredito($arReciboDetalle['vrRetencionFuente']);
-                                                $arRegistro->setNaturaleza('C');
-                                            }
+                                            $arRegistro->setFecha($fecha);
+                                            $arRegistro->setVrDebito($arReciboDetalle['vrRetencionFuente']);
+                                            $arRegistro->setNaturaleza('D');
                                             if ($arCuenta->getExigeBase()) {
                                                 $arRegistro->setVrBase($arReciboDetalle['vrPagoAfectar']);
                                             }
@@ -538,23 +517,14 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setTerceroRel($arTercero);
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
-                                            /*if($arCuenta->getExigeCentroCosto()) {
-                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }*/
+
                                             $arRegistro->setNumero($arRecibo['numero']);
                                             $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                            $arRegistro->setFecha($arRecibo['fecha']);
-                                            $naturaleza = "D";
-                                            if ($naturaleza == 'D') {
-                                                $arRegistro->setVrDebito($arReciboDetalle['vrRetencionIca']);
-                                                $arRegistro->setNaturaleza('D');
-                                            } else {
-                                                $arRegistro->setVrCredito($arReciboDetalle['vrRetencionIca']);
-                                                $arRegistro->setNaturaleza('C');
-                                            }
+                                            $arRegistro->setFecha($fecha);
+                                            $arRegistro->setVrDebito($arReciboDetalle['vrRetencionIca']);
+                                            $arRegistro->setNaturaleza('D');
                                             if ($arCuenta->getExigeBase()) {
                                                 $arRegistro->setVrBase($arReciboDetalle['vrPagoAfectar']);
                                             }
@@ -582,23 +552,13 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setTerceroRel($arTercero);
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
-                                            /*if($arCuenta->getExigeCentroCosto()) {
-                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
                                             $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                            $arRegistro->setFecha($arRecibo['fecha']);
-                                            $naturaleza = "D";
-                                            if ($naturaleza == 'D') {
-                                                $arRegistro->setVrDebito($arReciboDetalle['vrRetencionIva']);
-                                                $arRegistro->setNaturaleza('D');
-                                            } else {
-                                                $arRegistro->setVrCredito($arReciboDetalle['vrRetencionIva']);
-                                                $arRegistro->setNaturaleza('C');
-                                            }
+                                            $arRegistro->setFecha($fecha);
+                                            $arRegistro->setVrDebito($arReciboDetalle['vrRetencionIva']);
+                                            $arRegistro->setNaturaleza('D');
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('CarRecibo');
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
@@ -623,23 +583,13 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setTerceroRel($arTercero);
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
-                                            /*if($arCuenta->getExigeCentroCosto()) {
-                                                $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }*/
                                             $arRegistro->setNumero($arRecibo['numero']);
                                             $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                            $arRegistro->setFecha($arRecibo['fecha']);
-                                            $naturaleza = "D";
-                                            if ($naturaleza == 'D') {
-                                                $arRegistro->setVrDebito($arReciboDetalle['vrDescuento']);
-                                                $arRegistro->setNaturaleza('D');
-                                            } else {
-                                                $arRegistro->setVrCredito($arReciboDetalle['vrDescuento']);
-                                                $arRegistro->setNaturaleza('C');
-                                            }
+                                            $arRegistro->setFecha($fecha);
+                                            $arRegistro->setVrDebito($arReciboDetalle['vrDescuento']);
+                                            $arRegistro->setNaturaleza('D');
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('CarRecibo');
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
@@ -663,23 +613,13 @@ class CarReciboRepository extends ServiceEntityRepository
                                                     $arRegistro->setTerceroRel($arTercero);
                                                     $arRegistro->setCuentaRel($arCuenta);
                                                     $arRegistro->setComprobanteRel($arComprobante);
-                                                    /*if($arCuenta->getExigeCentroCosto()) {
-                                                        $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                                        $arRegistro->setCentroCostoRel($arCentroCosto);
-                                                    }*/
                                                     $arRegistro->setNumero($arRecibo['numero']);
                                                     $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                                     $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                                     $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
-                                                    $arRegistro->setFecha($arRecibo['fecha']);
-                                                    $naturaleza = "D";
-                                                    if ($naturaleza == 'D') {
-                                                        $arRegistro->setVrDebito($arReciboDetalle['vrOtroDescuento']);
-                                                        $arRegistro->setNaturaleza('D');
-                                                    } else {
-                                                        $arRegistro->setVrCredito($arReciboDetalle['vrOtroDescuento']);
-                                                        $arRegistro->setNaturaleza('C');
-                                                    }
+                                                    $arRegistro->setFecha($fecha);
+                                                    $arRegistro->setVrDebito($arReciboDetalle['vrOtroDescuento']);
+                                                    $arRegistro->setNaturaleza('D');
                                                     $arRegistro->setDescripcion($descripcion);
                                                     $arRegistro->setCodigoModeloFk('CarRecibo');
                                                     $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
@@ -712,21 +652,11 @@ class CarReciboRepository extends ServiceEntityRepository
                                                     $arRegistro->setTerceroRel($arTercero);
                                                     $arRegistro->setCuentaRel($arCuenta);
                                                     $arRegistro->setComprobanteRel($arComprobante);
-                                                    /*if($arCuenta->getExigeCentroCosto()) {
-                                                        $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                                        $arRegistro->setCentroCostoRel($arCentroCosto);
-                                                    }*/
                                                     $arRegistro->setNumero($arRecibo['numero']);
                                                     $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
-                                                    $arRegistro->setFecha($arRecibo['fecha']);
-                                                    $naturaleza = "C";
-                                                    if ($naturaleza == 'D') {
-                                                        $arRegistro->setVrDebito($arReciboDetalle['vrOtroIngreso']);
-                                                        $arRegistro->setNaturaleza('D');
-                                                    } else {
-                                                        $arRegistro->setVrCredito($arReciboDetalle['vrOtroIngreso']);
-                                                        $arRegistro->setNaturaleza('C');
-                                                    }
+                                                    $arRegistro->setFecha($fecha);
+                                                    $arRegistro->setVrCredito($arReciboDetalle['vrOtroIngreso']);
+                                                    $arRegistro->setNaturaleza('C');
                                                     $arRegistro->setDescripcion($descripcion);
                                                     $arRegistro->setCodigoModeloFk('CarRecibo');
                                                     $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
@@ -769,24 +699,13 @@ class CarReciboRepository extends ServiceEntityRepository
 
                                         $arRegistro->setCuentaRel($arCuenta);
                                         $arRegistro->setComprobanteRel($arComprobante);
-                                        /*if($arCuenta->getExigeCentroCosto()) {
-                                            $arCentroCosto = $em->getRepository(CtbCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                            $arRegistro->setCentroCostoRel($arCentroCosto);
-                                        }*/
                                         $arRegistro->setNumero($arRecibo['numero']);
                                         $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
                                         $arRegistro->setNumeroReferenciaPrefijo($arRecibo['numeroReferenciaPrefijo']);
                                         $arRegistro->setNumeroReferencia($arRecibo['numeroReferencia']);
-
-                                        $arRegistro->setFecha($arRecibo['fecha']);
-                                        $naturaleza = "D";
-                                        if ($naturaleza == 'D') {
-                                            $arRegistro->setVrDebito($arRecibo['vrPago']);
-                                            $arRegistro->setNaturaleza('D');
-                                        } else {
-                                            $arRegistro->setVrCredito($arRecibo['vrPago']);
-                                            $arRegistro->setNaturaleza('C');
-                                        }
+                                        $arRegistro->setFecha($fecha);
+                                        $arRegistro->setVrDebito($arRecibo['vrPago']);
+                                        $arRegistro->setNaturaleza('D');
                                         $arRegistro->setDescripcion($descripcion);
                                         $arRegistro->setCodigoModeloFk('CarRecibo');
                                         $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
@@ -813,7 +732,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setComprobanteRel($arComprobante);
                                                 $arRegistro->setNumero($arRecibo['numero']);
                                                 $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
-                                                $arRegistro->setFecha($arRecibo['fecha']);
+                                                $arRegistro->setFecha($fecha);
                                                 $arRegistro->setVrDebito($arReciboDetalle['vrPago']);
                                                 $arRegistro->setNaturaleza('D');
                                                 $arRegistro->setDescripcion($descripcion);
@@ -843,7 +762,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arRecibo['numero']);
                                             $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
-                                            $arRegistro->setFecha($arRecibo['fecha']);
+                                            $arRegistro->setFecha($fecha);
                                             $arRegistro->setVrDebito($arRecibo['vrPago']);
                                             $arRegistro->setNaturaleza('D');
                                             $arRegistro->setDescripcion($descripcion);

@@ -82,6 +82,7 @@ class InvImportacionDetalle
     private $vrPrecioLocalTotal = 0;
 
     /**
+     * Precio bruto
      * @ORM\Column(name="vr_precio_local" ,type="float")
      */
     private $vrPrecioLocal = 0;
@@ -90,6 +91,11 @@ class InvImportacionDetalle
      * @ORM\Column(name="vr_subtotal_local", type="float", options={"default" : 0}, nullable=true)
      */
     private $vrSubtotalLocal = 0;
+
+    /**
+     * @ORM\Column(name="vr_subtotal_local_bruto", type="float", options={"default" : 0}, nullable=true)
+     */
+    private $vrSubtotalLocalBruto = 0;
 
     /**
      * @ORM\Column(name="porcentaje_iva_local", type="float", options={"default" : 0}, nullable=true)
@@ -520,6 +526,22 @@ class InvImportacionDetalle
     public function setVrPrecioLocalTotal( $vrPrecioLocalTotal ): void
     {
         $this->vrPrecioLocalTotal = $vrPrecioLocalTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSubtotalLocalBruto()
+    {
+        return $this->vrSubtotalLocalBruto;
+    }
+
+    /**
+     * @param mixed $vrSubtotalLocalBruto
+     */
+    public function setVrSubtotalLocalBruto($vrSubtotalLocalBruto): void
+    {
+        $this->vrSubtotalLocalBruto = $vrSubtotalLocalBruto;
     }
 
 

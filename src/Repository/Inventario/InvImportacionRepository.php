@@ -70,6 +70,7 @@ class InvImportacionRepository extends ServiceEntityRepository
         $ivaGeneralExtranjero = 0;
         $totalGeneralExtranjero = 0;
         $subtotalGeneralLocal = 0;
+        $subtotalGeneralLocalBruto = 0;
         $ivaGeneralLocal = 0;
         $totalGeneralLocal = 0;
         $arImportacionDetalles = $em->getRepository(InvImportacionDetalle::class)->findBy(['codigoImportacionFk' => $codigoImportacion]);
@@ -99,16 +100,19 @@ class InvImportacionRepository extends ServiceEntityRepository
 
             }
             $precioLocalTotal = $arImportacionDetalle->getVrPrecioLocal() + $costoParticipa;
+            $subtotalLocalBruto = $arImportacionDetalle->getCantidad() * $precioLocal;
             $subtotalLocal = $arImportacionDetalle->getCantidad() * $precioLocalTotal;
             $porcentajeIvaLocal = $arImportacionDetalle->getPorcentajeIvaLocal();
             $ivaLocal = $subtotalExtranjero * $porcentajeIvaLocal / 100;
             $subtotalGeneralLocal += $subtotalLocal;
+            $subtotalGeneralLocalBruto += $subtotalLocalBruto;
             $ivaGeneralLocal += $ivaLocal;
             $totalLocal = $subtotalLocal + $ivaLocal;
             $totalGeneralLocal += $totalLocal;
             $arImportacionDetalle->setVrPrecioLocal($precioLocal);
             $arImportacionDetalle->setVrPrecioLocalTotal($precioLocalTotal);
             $arImportacionDetalle->setVrSubtotalLocal($subtotalLocal);
+            $arImportacionDetalle->setVrSubtotalLocalBruto($subtotalLocalBruto);
             $arImportacionDetalle->setVrIvaLocal($ivaLocal);
             $arImportacionDetalle->setVrTotalLocal($totalLocal);
             $arImportacionDetalle->setPorcentajeParticipaCosto($porcentajeParticipaCosto);
@@ -122,6 +126,7 @@ class InvImportacionRepository extends ServiceEntityRepository
         $arImportacion->setVrTotalExtranjero($totalGeneralExtranjero);
 
         $arImportacion->setVrSubtotalLocal($subtotalGeneralLocal);
+        $arImportacion->setVrSubtotalLocalBruto($subtotalGeneralLocalBruto);
         $arImportacion->setVrIvaLocal($ivaGeneralLocal);
         $arImportacion->setVrTotalLocal($totalGeneralLocal);
 

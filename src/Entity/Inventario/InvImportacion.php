@@ -87,6 +87,11 @@ class InvImportacion
     private $vrTotalExtranjero = 0;
 
     /**
+     * @ORM\Column(name="vr_subtotal_local_bruto", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrSubtotalLocalBruto = 0;
+
+    /**
      * @ORM\Column(name="vr_subtotal_local", type="float", nullable=true)
      */
     private $vrSubtotalLocal = 0;
@@ -635,6 +640,22 @@ class InvImportacion
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSubtotalLocalBruto()
+    {
+        return $this->vrSubtotalLocalBruto;
+    }
+
+    /**
+     * @param mixed $vrSubtotalLocalBruto
+     */
+    public function setVrSubtotalLocalBruto($vrSubtotalLocalBruto): void
+    {
+        $this->vrSubtotalLocalBruto = $vrSubtotalLocalBruto;
     }
 
 

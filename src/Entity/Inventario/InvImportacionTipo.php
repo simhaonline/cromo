@@ -39,6 +39,11 @@ class InvImportacionTipo
     private $codigoComprobanteFk;
 
     /**
+     * @ORM\Column(name="prefijo", type="string", length=5, nullable=true)
+     */
+    private $prefijo;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvImportacion", mappedBy="importacionTipoRel")
      */
     protected $importacionesImportacionTipoRel;
@@ -121,6 +126,22 @@ class InvImportacionTipo
     public function setImportacionesImportacionTipoRel($importacionesImportacionTipoRel): void
     {
         $this->importacionesImportacionTipoRel = $importacionesImportacionTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrefijo()
+    {
+        return $this->prefijo;
+    }
+
+    /**
+     * @param mixed $prefijo
+     */
+    public function setPrefijo($prefijo): void
+    {
+        $this->prefijo = $prefijo;
     }
 
 

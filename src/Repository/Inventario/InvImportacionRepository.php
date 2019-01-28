@@ -343,6 +343,7 @@ class InvImportacionRepository extends ServiceEntityRepository
             ->addSelect('i.estadoContabilizado')
             ->addSelect('i.vrSubtotalLocal')
             ->addSelect('it.codigoComprobanteFk')
+            ->addSelect('it.prefijo')
 //            ->addSelect('ft.codigoCuentaIngresoTerceroFk')
             ->leftJoin('i.importacionTipoRel', 'it')
             ->where('i.codigoImportacionPk = ' . $codigo);
@@ -374,14 +375,8 @@ class InvImportacionRepository extends ServiceEntityRepository
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
-                                /*if($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arImportacion['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }*/
-                                //$arRegistro->setNumeroPrefijo($arImportacion['prefijo']);
+                                $arRegistro->setNumeroPrefijo($arImportacion['prefijo']);
                                 $arRegistro->setNumero($arImportacion['numero']);
-                                //$arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
-                                //$arRegistro->setNumeroReferencia($numeroReferencia);
                                 $arRegistro->setFecha($arImportacion['fecha']);
                                 $arRegistro->setVrDebito($arrCompra['vrSubtotalLocal']);
                                 $arRegistro->setNaturaleza('D');
@@ -408,14 +403,8 @@ class InvImportacionRepository extends ServiceEntityRepository
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
-                                /*if($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arImportacion['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }*/
-                                //$arRegistro->setNumeroPrefijo($arImportacion['prefijo']);
+                                $arRegistro->setNumeroPrefijo($arImportacion['prefijo']);
                                 $arRegistro->setNumero($arImportacion['numero']);
-                                //$arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
-                                //$arRegistro->setNumeroReferencia($numeroReferencia);
                                 $arRegistro->setFecha($arImportacion['fecha']);
                                 $arRegistro->setVrCredito($arrInventarioTransito['vrSubtotalLocal']);
                                 $arRegistro->setNaturaleza('C');

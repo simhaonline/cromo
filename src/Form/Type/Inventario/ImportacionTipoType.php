@@ -17,6 +17,7 @@ class ImportacionTipoType extends AbstractType
         $builder
             ->add('codigoImportacionTipoPk', TextType::class, ['label'=> 'Codigo importacion tipo pk', 'required' => true])
             ->add('codigoComprobanteFk', TextType::class, ['label' => 'comprobante','required' => false])
+            ->add('prefijo', TextType::class, ['label' => 'prefijo','required' => false])
             ->add('nombre', TextType::class, ['label' => 'Nombre', 'required' => true])
             ->add('consecutivo', NumberType::class, ['label' => 'Consecutivo','required' => true])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
@@ -36,7 +37,9 @@ class ImportacionTipoType extends AbstractType
         $campos = '[
             {"campo":"codigoImportacionTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
             {"campo":"nombre",                          "tipo":"texto"  ,"ayuda":"Nombre de la importacion tipo",     "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                     "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"}                
+            {"campo":"consecutivo",                     "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"},
+            {"campo":"codigoComprobanteFk",                     "tipo":"texto"  ,"ayuda":"Comprobante contabilidad",     "titulo":"COMPROBANTE"},
+            {"campo":"prefijo",                     "tipo":"texto"  ,"ayuda":"Prefijo contabilidad",     "titulo":"PREFIJO"}                
                                                                           
         ]';
         return $campos;

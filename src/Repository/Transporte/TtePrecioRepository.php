@@ -23,7 +23,10 @@ class TtePrecioRepository extends ServiceEntityRepository
             ->addSelect('pr.fechaVence')
             ->addSelect('pr.comentario')
             ->where('pr.codigoPrecioPk IS NOT NULL')
-            ->orderBy('pr.codigoPrecioPk', 'ASC');
+            ->orderBy('pr.codigoPrecioPk', 'DESC');
+        if ($session->get('filtroTteNombrePrecio') != '') {
+            $queryBuilder->andWhere("pr.nombre LIKE '%{$session->get('filtroTteNombrePrecio')}%' ");
+        }
 
         return $queryBuilder;
     }

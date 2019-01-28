@@ -2,6 +2,9 @@
 
 namespace App\Controller\Transporte\Administracion\Comercial\Precio;
 
+use App\General\General;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Session\Session;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Transporte\TtePrecio;
 use App\Entity\Transporte\TtePrecioDetalle;
@@ -16,7 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class PrecioController extends ControllerListenerGeneral
 {
-    protected $class= TtePrecio::class;
+    protected $class = TtePrecio::class;
     protected $claseNombre = "TtePrecio";
     protected $modulo = "Transporte";
     protected $funcion = "Administracion";
@@ -28,9 +31,21 @@ class PrecioController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arPrecios = $paginator->paginate($this->getDoctrine()->getRepository(TtePrecio::class)->lista(), $request->query->getInt('page', 1), 50);
-        return $this->render('transporte/administracion/comercial/precio/lista.html.twig', ['arPrecios' => $arPrecios]);
+        $form = $this->createFormBuilder()
+            ->add('txtNombre', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNombrePrecio')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroTteNombrePrecio', $form->get('txtNombre')->getData());
+        }
+        $arPrecios = $paginator->paginate($em->getRepository(TtePrecio::class)->lista(), $request->query->getInt('page', 1), 50);
+        return $this->render('transporte/administracion/comercial/precio/lista.html.twig',
+            ['arPrecios' => $arPrecios,
+                'form' => $form->createView()]);
     }
 
     /**
@@ -64,6 +79,11 @@ class PrecioController extends ControllerListenerGeneral
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/administracion/comercial/precio/detalle/{id}", name="transporte_administracion_comercial_precio_detalle")
      */
     public function detalle(Request $request, $id)
@@ -73,13 +93,16 @@ class PrecioController extends ControllerListenerGeneral
         $arPrecio = $em->getRepository(TtePrecio::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnEliminarDetalle')->isClicked()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             $em->getRepository(TtePrecioDetalle::class)->eliminar($arrSeleccionados);
         }
-
+        if ($form->get('btnExcel')->isClicked()) {
+            General::get()->setExportar($em->getRepository(TtePrecioDetalle::class)->lista($id), "Precio detalle $id");
+        }
         $arPrecioDetalles = $paginator->paginate($em->getRepository(TtePrecioDetalle::class)->lista($id), $request->query->getInt('page', 1), 70);
         return $this->render('transporte/administracion/comercial/precio/detalle.html.twig', array(
             'arPrecio' => $arPrecio,
@@ -100,15 +123,15 @@ class PrecioController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arPrecioDetalle = new TtePrecioDetalle();
         $arPrecio = $em->getRepository(TtePrecio::class)->find($codigoPrecio);
-        if($id != '0'){
+        if ($id != '0') {
             $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->find($id);
         }
         $form = $this->createForm(PrecioDetalleType::class, $arPrecioDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arPrecioDetalleExistente = $em->getRepository(TtePrecioDetalle::class)
-                ->findBy(['ciudadOrigenRel' => $arPrecioDetalle->getCiudadOrigenRel(), 'ciudadDestinoRel'=> $arPrecioDetalle->getCiudadDestinoRel(), 'productoRel' => $arPrecioDetalle->getProductoRel()]);
-            if(!$arPrecioDetalleExistente){
+                ->findBy(['ciudadOrigenRel' => $arPrecioDetalle->getCiudadOrigenRel(), 'ciudadDestinoRel' => $arPrecioDetalle->getCiudadDestinoRel(), 'productoRel' => $arPrecioDetalle->getProductoRel()]);
+            if (!$arPrecioDetalleExistente) {
                 if ($form->get('guardar')->isClicked()) {
                     $arPrecioDetalle->setPrecioRel($arPrecio);
                     $em->persist($arPrecioDetalle);

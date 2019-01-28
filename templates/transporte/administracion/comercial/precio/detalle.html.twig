@@ -26,9 +26,9 @@
                         <thead>
                         <tr>
                             <th><p data-toggle="tooltip" data-placement="top" title="PORCENTAJE MANEJO">ID</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD ORIGEN">CIUDAD ORIGEN</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">CIDUAD DESTINO</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="PRODUCTO">PRODUCTO</p></th>
-                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD ORIGEN">ORIGEN</p></th>
-                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">DESTINO</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO">PESO</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="VALOR UNIDAD">UND</p>
                             <th><p data-toggle="tooltip" data-placement="top" title="PESO TOPE">PESO TOPE</p>
@@ -45,15 +45,15 @@
                         {% for arPrecioDetalle in arPrecioDetalles %}
                             <tr>
                                 <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
-                                <td>{{ arPrecioDetalle.nombre }}</td>
                                 <td>{{ arPrecioDetalle.ciudadOrigen }}</td>
                                 <td>{{ arPrecioDetalle.ciudadDestino }}</td>
-                                <td style="text-align: right;">{{ arPrecioDetalle.vrPeso | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: right;">{{ arPrecioDetalle.vrUnidad | number_format(0, '.', ',') }}</td>
-                                <td>{{ arPrecioDetalle.pesoTope }}</td>
-                                <td style="text-align: right;">{{ arPrecioDetalle.vrPesoTope | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: right;">{{ arPrecioDetalle.vrPesoTopeAdicional | number_format(0, '.', ',') }}</td>
-                                <td>{{ arPrecioDetalle.minimo }}</td>
+                                <td>{{ arPrecioDetalle.nombre }}</td>
+                                <td class="numero">{{ arPrecioDetalle.vrPeso | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPrecioDetalle.vrUnidad | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPrecioDetalle.pesoTope }}</td>
+                                <td class="numero">{{ arPrecioDetalle.vrPesoTope | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPrecioDetalle.vrPesoTopeAdicional | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPrecioDetalle.minimo }}</td>
                                 <td style="text-align: center;">
                                     <a href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': arPrecioDetalle.codigoPrecioDetallePk }) }}', 'precioDetalles', 600, 900)">
                                         <i title="Editar el registro" class="fa fa-edit"
@@ -81,6 +81,9 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
+                        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                    <div class="btn-group">
                         <a class="btn btn-default btn-sm"
                            href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_precio_detalle_nuevo', {'codigoPrecio': arPrecio.codigoPrecioPk,'id': 0 }) }}', 'precioDetalles', 600, 900)">Nuevo</a>
                     </div>
@@ -91,6 +94,6 @@
             </div>
         </div>
     </div>
-    <br /><br />
+    <br /><br /><br />
     {{ form_end(form) }}
 {% endblock %}

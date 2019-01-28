@@ -171,11 +171,10 @@ class RegistroController extends Controller
                 'PorcentajeRetencion',
                 'Vencimiento',
                 'Vendedor',
-                'AbonarA',
             ];
             $sheet = $spreadsheet->getActiveSheet();
             $i = 0;
-            for ($j = 'A'; $j != 'X'; $j++) {
+            for ($j = 'A'; $j != 'W'; $j++) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($j)->setAutoSize(true);
                 $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
                 $sheet->setCellValue($j . '1', strtoupper($campos[$i]));
@@ -207,10 +206,6 @@ class RegistroController extends Controller
                 $sheet->setCellValue('T'.$j, '');
                 $sheet->setCellValue('U'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
                 $sheet->setCellValue('V'.$j, '');
-                if($arRegistro['numeroReferencia'] && $arRegistro['numeroPrefijo'] == 'RC') {
-                    $sheet->setCellValue('W'.$j, 'NC ' . $arRegistro['numeroReferencia'] . " ( ".$arRegistro['numeroReferenciaPrefijo']." ) " . $arRegistro['nombreCorto']);
-                }
-
 
                 $j++;
             }

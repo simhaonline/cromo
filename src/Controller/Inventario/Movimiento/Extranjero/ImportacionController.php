@@ -134,13 +134,17 @@ class ImportacionController extends ControllerListenerGeneral
         $form = Estandares::botonera($arImportacion->getEstadoAutorizado(), $arImportacion->getEstadoAprobado(), $arImportacion->getEstadoAnulado());
         $arrBtnActualizarDetalle = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        $arrBtnEliminarCosto = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         if ($arImportacion->getEstadoAutorizado()) {
             $arrBtnActualizarDetalle['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
         }
+        if($arImportacion->getEstadoContabilizado()) {
+            $arrBtnEliminarCosto['disabled'] = true;
+        }
         $form->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
-        $form->add('btnEliminarCosto', SubmitType::class, $arrBtnEliminar);
+        $form->add('btnEliminarCosto', SubmitType::class, $arrBtnEliminarCosto);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();

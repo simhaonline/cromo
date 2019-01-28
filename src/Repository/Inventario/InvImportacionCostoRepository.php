@@ -3,6 +3,7 @@
 namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvImportacionCosto;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -41,7 +42,7 @@ class InvImportacionCostoRepository extends ServiceEntityRepository
     public function eliminar($arImportacion, $arrDetallesSeleccionados)
     {
         $em = $this->getEntityManager();
-        if (!$arImportacion->getEstadoAutorizado()) {
+        if (!$arImportacion->getEstadoContabilizado()) {
             if ($arrDetallesSeleccionados) {
                 foreach ($arrDetallesSeleccionados as $codigo) {
                     $ar = $em->getRepository(InvImportacionCosto::class)->find($codigo);
@@ -56,7 +57,7 @@ class InvImportacionCostoRepository extends ServiceEntityRepository
                 }
             }
         } else {
-            Mensajes::error('No se puede eliminar, el registro se encuentra autorizado');
+            Mensajes::error('No se puede eliminar, el registro se encuentra contabilizado');
         }
     }
 

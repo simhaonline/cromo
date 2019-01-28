@@ -159,18 +159,23 @@
                                         <input type="text" style="text-align: left;width: 50%;"
                                                name="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                id="arrLote[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                               value="{{ arMovimientoDetalle.loteFk }}">
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoFechaVence' : 'arrFechaVencimiento['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk, 'tipoFactura': true }) }}','BuscarLote',600,900)"
-                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                               value="{{ arMovimientoDetalle.loteFk }}" {% if arMovimientoDetalle.codigoRemisionDetalleFk is not null %} readonly {% endif %}>
+                                        {% if arMovimientoDetalle.codigoRemisionDetalleFk is null %}
+                                            <a href="javascript:abrirVentana3('{{ path('inventario_buscar_lote_lista',{'campoCodigo' : 'arrLote['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoBodega' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','campoFechaVence' : 'arrFechaVencimiento['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']','codigoItem' : arMovimientoDetalle.codigoItemFk, 'tipoFactura': true }) }}','BuscarLote',600,900)"
+                                               class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                        {% endif %}
+
                                     </td>
                                     <td style="text-align: center;">
                                         <input type="text"
                                                name="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                id="arrBodega[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                value="{{ arMovimientoDetalle.codigoBodegaFk }}"
-                                               style="text-align: left; width:40px" size="10">
-                                        <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)"
-                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                               style="text-align: left; width:40px" size="10" {% if arMovimientoDetalle.codigoRemisionDetalleFk is not null %} readonly {% endif %}>
+                                        {% if arMovimientoDetalle.codigoRemisionDetalleFk is null %}
+                                            <a href="javascript:abrirVentana3('{{ path('inventario_buscar_bodega_lista',{'campoCodigo' : 'arrBodega['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBodega',600,900)"
+                                               class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                        {% endif %}
                                     </td>
                                     {% if arMovimiento.codigoDocumentoTipoFk == 'TRA' %}
                                         <td style="text-align: center;">
@@ -188,7 +193,7 @@
                                                                            id="arrFechaVencimiento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.fechaVencimiento | date('Y-m-d') }}"
                                                                            style="text-align: right; width:100px"
-                                                                           size="10" {% if arMovimiento.codigoDocumentoTipoFk == 'TRA' %} readonly {% endif %}></td>
+                                                                           size="10" {% if arMovimiento.codigoDocumentoTipoFk == 'TRA' or arMovimiento.codigoDocumentoTipoFk == 'FAC' %} readonly {% endif %}></td>
                                     <td style="text-align: center;"><input type="number"
                                                                            name="arrCantidad[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.cantidad }}"

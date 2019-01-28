@@ -265,6 +265,9 @@ class MovimientoController extends ControllerListenerGeneral
             $arrBtnActualizar['disabled'] = true;
             $arrBtnDuplicar['disabled'] = true;
         }
+        if($arMovimiento->getEstadoContabilizado()) {
+            $arrBtnActualizarImportacion['disabled'] = true;
+        }
         $form
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)

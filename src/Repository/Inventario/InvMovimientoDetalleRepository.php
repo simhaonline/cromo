@@ -607,7 +607,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
             foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
                 if ($arMovimientoDetalle->getCodigoImportacionDetalleFk()) {
-                    $arMovimientoDetalle->setVrPrecio($arMovimientoDetalle->getImportacionDetalleRel()->getVrPrecioLocalTotal());
+                    $arMovimientoDetalle->setVrPrecio($arMovimientoDetalle->getImportacionDetalleRel()->getVrPrecioLocal());
                     $em->persist($arMovimientoDetalle);
                 }
             }

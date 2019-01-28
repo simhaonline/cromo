@@ -1986,7 +1986,11 @@ class TteGuiaRepository extends ServiceEntityRepository
             $arGuiaDocumento = $em->getRepository(TteGuia::class)->findOneBy(array(
                 'documentoCliente' => $documento,
                 'codigoClienteFk' => $arFactura->getCodigoClienteFk(),
-                'estadoFacturaGenerada' => 0));
+                'estadoFacturaGenerada' => 0,
+                'codigoFacturaFk' => null,
+                'estadoFacturado' => 0,
+                'estadoFacturaExportado' => 0,
+                'estadoFacturado' => 0));
             if ($arGuiaDocumento) {
                 $arGuia = $em->getRepository(TteGuia::class)->find($arGuiaDocumento->getCodigoGuiaPk());
             } else {
@@ -1995,7 +1999,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
 
         if ($arGuia && $arFactura) {
-            if ($arGuia->getEstadoFacturaGenerada() == 0) {
+            if ($arGuia->getEstadoFacturaGenerada() == 0 && $arGuia->getEstadoFacturado() == 0 && !$arGuia->getCodigoFacturaFk()) {
                 if ($arGuia->getFactura() == 0 && $arGuia->getEstadoAnulado() == 0) {
                     if ($arGuia->getCodigoClienteFk() == $arFactura->getCodigoClienteFk()) {
                         $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();

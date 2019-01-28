@@ -27,6 +27,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         fd.codigoGuiaFk,
         g.numero,
         g.fechaIngreso,
+        g.fechaEntrega,
         g.documentoCliente, 
         g.codigoGuiaTipoFk,
         g.nombreDestinatario,

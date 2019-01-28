@@ -954,6 +954,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arMovimiento['numero']);
+                                    $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
                                     $arRegistro->setFecha($arMovimiento['fecha']);
                                     $arRegistro->setVrDebito($arrInventarioTransito['vrSubtotal']);
                                     $arRegistro->setNaturaleza('D');
@@ -979,6 +980,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
+                                $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
                                 $arRegistro->setFecha($arMovimiento['fecha']);
                                 $arRegistro->setVrCredito($arMovimiento['vrSubtotal']);
                                 $arRegistro->setNaturaleza('C');

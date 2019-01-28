@@ -38,7 +38,7 @@ class PendienteDespachoRuta extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(1);
-        $header = array('ID', 'DOC_CLI', 'NUMERO', 'FECHA', 'CLIENTE', 'DESTINO', 'DESTINATARIO', 'DECLARA', 'FLETE', 'UND', 'PES','VOL');
+        $header = array('ID', 'DOC_CLI', 'NOV', 'NUMERO', 'FECHA', 'CLIENTE', 'DESTINO', 'DESTINATARIO', 'DECLARA', 'FLETE', 'UND', 'PES');
         $this->SetFillColor(170, 170, 170);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -46,7 +46,7 @@ class PendienteDespachoRuta extends \FPDF {
         $this->SetFont('arial', 'B', 7);
         $this->SetX(3);
         //creamos la cabecera de la tabla.
-        $w = array(15, 16, 15, 13, 35, 25, 30, 15, 15, 8,8,8);
+        $w = array(15, 16, 8, 15, 13, 35, 25, 30, 15, 15, 8,8);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -66,7 +66,7 @@ class PendienteDespachoRuta extends \FPDF {
         $vrTotalFlete = 0;
         $vrTotalUnidad = 0;
         $vrTotalPeso = 0;
-        $vrTotalVolumen = 0;
+//        $vrTotalVolumen = 0;
         $primeraRuta = true;
         $pdf->SetX(3);
         $pdf->SetFont('Arial', '', 6);
@@ -80,21 +80,26 @@ class PendienteDespachoRuta extends \FPDF {
                     $pdf->Ln(4);
                 }
                 if($arGuia['codigoRutaFk'] != $ruta){
-                    $pdf->SetX(152);
+                    $pdf->SetX(160);
                     $pdf->Cell(15,4,number_format($vrTotalDeclara, 0, '.', ',') ,1,0,'R');
                     $pdf->Cell(15,4,number_format($vrTotalFlete, 0, '.', ','),1,0,'R');
                     $pdf->Cell(8,4,number_format($vrTotalUnidad, 0, '.', ','),1,0,'R');
                     $pdf->Cell(8,4,number_format($vrTotalPeso, 0, '.', ','),1,0,'R');
-                    $pdf->Cell(8,4,number_format($vrTotalVolumen, 0, '.', ','),1,0,'R');
+//                    $pdf->Cell(8,4,number_format($vrTotalVolumen, 0, '.', ','),1,0,'R');
                     $pdf->Ln(4);
                     $pdf->SetX(3);
                     $pdf->Cell(203,4,$arGuia['nombreRuta'],1,0,'L');
                     $ruta = $arGuia['codigoRutaFk'];
                     $pdf->Ln(4);
                 }
+                $novedad = '';
+                if($arGuia['estadoNovedad'] == 1){
+                    $novedad = 'NOV';
+                }
                 $pdf->SetX(3);
                 $pdf->Cell(15, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
                 $pdf->Cell(16, 4, $arGuia['documentoCliente'], 1, 0, 'L');
+                $pdf->Cell(8, 4,  $novedad, 1, 0, 'L');
                 $pdf->Cell(15, 4, $arGuia['numero'], 1, 0, 'L');
                 $pdf->Cell(13, 4, $arGuia['fechaIngreso']->format('Y-m-d'), 1, 0, 'L');
                 $pdf->Cell(35, 4, utf8_decode(substr($arGuia['clienteNombreCorto'],0,22)), 1, 0, 'L');
@@ -104,12 +109,11 @@ class PendienteDespachoRuta extends \FPDF {
                 $pdf->Cell(15, 4, number_format($arGuia['vrFlete'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(8, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(8, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(8, 4, number_format($arGuia['pesoVolumen'], 0, '.', ','), 1, 0, 'R');
                 $vrTotalDeclara += $arGuia['vrDeclara'];
                 $vrTotalFlete += $arGuia['vrFlete'];
                 $vrTotalUnidad += $arGuia['unidades'];
                 $vrTotalPeso += $arGuia['pesoReal'];
-                $vrTotalVolumen += $arGuia['pesoVolumen'];
+//                $vrTotalVolumen += $arGuia['pesoVolumen'];
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 25);
             }

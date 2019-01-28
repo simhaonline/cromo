@@ -6,6 +6,8 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
+use App\Entity\General\GenProceso;
+use App\Entity\Seguridad\SegUsuarioProceso;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
@@ -45,7 +47,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class DespachoController extends ControllerListenerGeneral
 {
-    protected $clase= TteDespacho::class;
+    protected $clase = TteDespacho::class;
+    protected $proceso = "0006";
+    protected $procestoTipo = "P";
+    protected $nombreProceso = "Generar RNDC";
     protected $claseNombre = "TteDespacho";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
@@ -71,7 +76,7 @@ class DespachoController extends ControllerListenerGeneral
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
 //                $datos = $this->getDatosLista();
             }
         }
@@ -126,10 +131,10 @@ class DespachoController extends ControllerListenerGeneral
                                 $arDespacho->setConductorRel($arConductor);
                                 $descuentos = $arDespacho->getVrDescuentoPapeleria() + $arDespacho->getVrDescuentoSeguridad() + $arDespacho->getVrDescuentoCargue() + $arDespacho->getVrDescuentoEstampilla();
                                 $retencionFuente = 0;
-                                if($arDespacho->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
+                                if ($arDespacho->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
                                     $retencionFuente = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
                                 }
-                                $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] /100;
+                                $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
 
                                 $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
                                 $saldo = $total - $descuentos;
@@ -234,7 +239,11 @@ class DespachoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnRndc')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($arDespacho);
+                if($em->getRepository(SegUsuarioProceso::class)->findBy(['codigoUsuarioFk' => $this->getUser()->getUsername(),'codigoProcesoFk' => '0006'])){
+                    $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($arDespacho);
+                } else {
+                    Mensajes::error('Usted no tiene permisos para utilizar este botón');
+                }
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnAnular')->isClicked()) {
@@ -260,11 +269,11 @@ class DespachoController extends ControllerListenerGeneral
 
             }
             if ($form->get('btnImprimirManifiesto')->isClicked()) {
-                if($arDespacho->getDespachoTipoRel()->getViaje () != 1){
+                if ($arDespacho->getDespachoTipoRel()->getViaje() != 1) {
                     $formato = new RelacionEntrega();
                     $formato->Generar($em, $id);
                 } else {
-                    if(!$em->find(GenConfiguracion::class,1)->getCiudadRel()){
+                    if (!$em->find(GenConfiguracion::class, 1)->getCiudadRel()) {
                         Mensajes::error('Debe ingresar una ciudad en la configuracion general del sistema');
                     } else {
                         $formato = new Manifiesto();
@@ -291,7 +300,7 @@ class DespachoController extends ControllerListenerGeneral
             'arDespacho' => $arDespacho,
             'arNovedades' => $arNovedades,
             'arDespachoDetalles' => $arDespachoDetalles,
-            'clase' => array('clase'=>'TteDespacho', 'codigo' => $id),
+            'clase' => array('clase' => 'TteDespacho', 'codigo' => $id),
             'form' => $form->createView()]);
     }
 
@@ -311,7 +320,7 @@ class DespachoController extends ControllerListenerGeneral
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar'])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
-            ->add('txtNumero', TextType::class, ['required' => false,'data' => $session->get('filtroTteDespachoGuiaNumero')])
+            ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoGuiaNumero')])
             ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->add('cboRutaRel', EntityType::class, $em->getRepository(TteRuta::class)->llenarCombo())
             ->getForm();
@@ -322,8 +331,8 @@ class DespachoController extends ControllerListenerGeneral
                 if ($arrSeleccionados) {
                     foreach ($arrSeleccionados AS $codigo) {
                         $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
-                        if($arGuia) {
-                            if($arGuia->getCodigoDespachoFk() == NULL) {
+                        if ($arGuia) {
+                            if ($arGuia->getCodigoDespachoFk() == NULL) {
                                 $arGuia->setDespachoRel($arDespacho);
                                 $arGuia->setEstadoEmbarcado(1);
                                 $em->persist($arGuia);
@@ -338,7 +347,7 @@ class DespachoController extends ControllerListenerGeneral
                                 $arDespachoDetalle->setUnidades($arGuia->getUnidades());
                                 $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
                                 $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                                if($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                                if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
                                     $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
                                 } else {
                                     $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
@@ -404,7 +413,7 @@ class DespachoController extends ControllerListenerGeneral
             }
             $em->persist($arNovedad);
 
-            if($arNovedad->getAplicaGuia()) {
+            if ($arNovedad->getAplicaGuia()) {
                 $arGuias = $em->getRepository(TteGuia::class)->findBy(array('codigoDespachoFk' => $codigoDespacho));
                 foreach ($arGuias as $arGuia) {
                     $arNovedadGuia = new TteNovedad();
@@ -483,7 +492,7 @@ class DespachoController extends ControllerListenerGeneral
             $arDespacho->setEstadoNovedadSolucion(1);
             $em->persist($arDespacho);
 
-            if($form->get('aplicaSolucionGuias')->getData()) {
+            if ($form->get('aplicaSolucionGuias')->getData()) {
                 $arNovedades = $em->getRepository(TteNovedad::class)->findBy(array('codigoDespachoReferenciaFk' => $arNovedad->getCodigoDespachoFk(), 'estadoSolucion' => 0));
                 foreach ($arNovedades as $arNovedadGuia) {
                     $arNovedadGuia->setEstadoSolucion(1);
@@ -501,7 +510,7 @@ class DespachoController extends ControllerListenerGeneral
             $em->flush();
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
-        return $this->render('transporte/movimiento/transporte/despacho/novedadSolucion.html.twig', array (
+        return $this->render('transporte/movimiento/transporte/despacho/novedadSolucion.html.twig', array(
             'form' => $form->createView()));
     }
 

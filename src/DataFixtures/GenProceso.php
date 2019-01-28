@@ -32,13 +32,21 @@ class GenProceso extends Fixture
             $arGenProcesoTipo->setNombre('UTILIDAD');
             $manager->persist($arGenProcesoTipo);
         }
+        $arGenProcesoTipo = $manager->getRepository('App:General\GenProcesoTipo')->find('O');
+        if(!$arGenProcesoTipo){
+            $arGenProcesoTipo = new \App\Entity\General\GenProcesoTipo();
+            $arGenProcesoTipo->setCodigoProcesoTipoPk('O');
+            $arGenProcesoTipo->setNombre('OTROS');
+            $manager->persist($arGenProcesoTipo);
+        }
 
         $arrProcesos = array(
             ['codigo' => '0001', 'modulo' => 'Inventario', 'tipo' => 'I', 'nombre' => 'Informe de kardex'],
             ['codigo' => '0002', 'modulo' => 'Inventario', 'tipo' => 'I', 'nombre' => 'Existencia lote'],
             ['codigo' => '0003', 'modulo' => 'Transporte', 'tipo' => 'U', 'nombre' => 'Notificar novedad'],
             ['codigo' => '0004', 'modulo' => 'Inventario', 'tipo' => 'I', 'nombre' => 'Informe de kardex remisión'],
-            ['codigo' => '0005', 'modulo' => 'Transporte', 'tipo' => 'U', 'nombre' => 'Corrección de guías']);
+            ['codigo' => '0005', 'modulo' => 'Transporte', 'tipo' => 'U', 'nombre' => 'Corrección de guías'],
+            ['codigo' => '0006', 'modulo' => 'Transporte', 'tipo' => 'O', 'nombre' => 'Generar RNDC']);
         foreach ($arrProcesos as $arrProceso) {
             $arProceso = $manager->getRepository('App:General\GenProceso')->find($arrProceso['codigo']);
             if(!$arProceso){

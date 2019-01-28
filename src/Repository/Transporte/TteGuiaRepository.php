@@ -1185,6 +1185,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.vrManejo')
             ->addSelect('g.nombreDestinatario')
             ->addSelect('r.nombre AS nombreRuta')
+            ->addSelect('g.estadoNovedad')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->leftJoin('g.rutaRel', 'r')
@@ -1204,6 +1205,14 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("g.codigoClienteFk = '{$session->get('filtroTteCodigoCliente')}'");
+        }
+        switch ($session->get('filtroTteNovedadGuia')) {
+            case '0':
+                $queryBuilder->andWhere("g.estadoNovedad = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("g.estadoNovedad = 1");
+                break;
         }
 
         $queryBuilder->orderBy('g.codigoRutaFk')

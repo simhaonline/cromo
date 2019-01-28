@@ -39,13 +39,22 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label">Mostar devoluciones</label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.ChkMostrarDevoluciones) }} Mostrar devoluciones
+                    {{ form_widget(form.ChkMostrarDevoluciones) }}
                 </div>
                 <label for="form_TxtCodigo" class="col-sm-1 control-label">Servicio:</label>
                 <div class="col-sm-5">
                     {{ form_widget(form.servicioRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>
+                <div class="col-sm-5">
+                </div>
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Novedad:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.chkEstadoGuiaNovedad, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -62,6 +71,7 @@
             <th>SERV</th>
             <th>GUIA</th>
             <th>DOC_CLIENTE</th>
+            <th>NOV</th>
             <th>OI</th>
             <th>OC</th>
             <th>FECHA</th>
@@ -87,7 +97,7 @@
             {% if codigoRuta != arGuia.codigoRutaFk %}
                 {% if contador > 0 %}
                     <tr>
-                        <td id="suptipo" colspan="10"></td>
+                        <td id="suptipo" colspan="11"></td>
                         <td class="numero">{{ totalDeclara | number_format(0, '.', ',') }}</td>
                         <td class="numero">{{ totalFlete | number_format(0, '.', ',') }}</td>
                         <td class="numero">{{ totalUnidades | number_format(0, '.', ',') }}</td>
@@ -102,7 +112,7 @@
 
                 {% endif %}
                 <tr>
-                    <td id="suptipo" colspan="10">{{ arGuia.codigoRutaFk }} {{ arGuia.nombreRuta }}</td>
+                    <td id="suptipo" colspan="16">{{ arGuia.codigoRutaFk }} {{ arGuia.nombreRuta }}</td>
                 </tr>
                 {% set codigoRuta = arGuia.codigoRutaFk %}
             {% endif %}
@@ -112,6 +122,7 @@
                 <td>{{ arGuia.codigoServicioFk }}</td>
                 <td>{{ arGuia.codigoGuiaPk }}</td>
                 <td>{{ arGuia.documentoCliente }}</td>
+                <td>{% if arGuia.estadoNovedad == 1 %} NOV {% else %}  {% endif %}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
@@ -132,7 +143,7 @@
             {% set contador = contador + 1 %}
         {% endfor %}
         <tr>
-            <td id="suptipo" colspan="10"></td>
+            <td id="suptipo" colspan="11"></td>
             <td class="numero">{{ totalDeclara | number_format(0, '.', ',') }}</td>
             <td class="numero">{{ totalFlete | number_format(0, '.', ',') }}</td>
             <td class="numero">{{ totalUnidades | number_format(0, '.', ',') }}</td>
@@ -152,7 +163,7 @@
             {{ form_widget(form.btnPdf, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
     </div>
-    <br /> <br />
+    <br /> <br /><br />
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

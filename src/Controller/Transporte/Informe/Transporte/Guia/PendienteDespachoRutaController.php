@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Informe\Transporte\Guia;
 use App\Entity\Transporte\TteGuia;
 use App\Formato\Transporte\PendienteDespachoRuta;
 use App\General\General;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -72,7 +73,8 @@ class PendienteDespachoRutaController extends Controller
         } else {
             $session->set('filtroTteCodigoOperacionCargo', null);
         }
-        $session->set('filtroTteMostrarDevoluciones', $form->get('ChkMostrarDevoluciones')->getData());
+        $session->set('filtroTteMostrarGuiaConNovedad', $form->get('ChkMostrarDevoluciones')->getData());
+        $session->set('filtroTteNovedadGuia', $form->get('chkEstadoGuiaNovedad')->getData());
         if ($form->get('txtCodigoCliente')->getData() != '') {
             $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
             $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
@@ -137,6 +139,7 @@ class PendienteDespachoRutaController extends Controller
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('ChkMostrarDevoluciones', CheckboxType::class, array('label' => false, 'required' => false, 'data' => $session->get('filtroTteMostrarDevoluciones')))
+            ->add('chkEstadoGuiaNovedad', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteNovedadGuia'), 'required' => false])
             ->add('rutaRel', EntityType::class, $arrayPropiedadesRuta)
             ->add('servicioRel', EntityType::class, $arrayPropiedadesServicio)
             ->add('operacionCargoRel', EntityType::class, $arrayPropiedadesOperacionCargo)

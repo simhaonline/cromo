@@ -16,10 +16,10 @@
                     {{ form_widget(form.vrPago) }}
                 </div>
             </div>
+            <div class="modal-footer">
+                {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+            </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        {{ form_widget(form.guardar) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

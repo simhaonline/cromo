@@ -60,7 +60,7 @@ class AnticipoController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Recibos");
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Anticipos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -197,12 +197,12 @@ class AnticipoController extends ControllerListenerGeneral
                 'data' => $arAnticipoDetalle->getAnticipoConceptoRel()
             ])
             ->add('vrPago', IntegerType::class, array('required' => true, 'data' => $arAnticipoDetalle->getVrPago()))
-            ->add('guardar', SubmitType::class, array('label' => 'Guardar'))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $anticipoConceptoRel = $form->get('anticipoConceptoRel')->getData();
-            if ($form->get('guardar')->isClicked()) {
+            if ($form->get('btnGuardar')->isClicked()) {
                 $arAnticipoDetalle->setAnticipoConceptoRel($anticipoConceptoRel);
                 $arAnticipoDetalle->setVrPago($form->get('vrPago')->getData());
                 $arAnticipoDetalle->setAnticipoRel($arAnticipo);

@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Informe\Transporte\Guia;
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,6 +33,7 @@ class PendienteSoporteController extends Controller
         $form = $this->createFormBuilder()
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTtePendienteSoporteFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTtePendienteSoporteFechaHasta'))])
+            ->add('txtDespacho', NumberType::class, ['label' => 'Despacho: ', 'required' => false, 'data' => $session->get('filtroNumeroDespacho')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
@@ -39,6 +41,7 @@ class PendienteSoporteController extends Controller
         if ($form->get('btnFiltrar')->isClicked()) {
             $session->set('filtroTtePendienteSoporteFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
             $session->set('filtroTtePendienteSoporteFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+            $session->set('filtroNumeroDespacho', $form->get('txtDespacho')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
             General::get()->setExportar($em->getRepository(TteGuia::class)->pendienteSoporte()->getQuery()->execute(), "Pendiente soporte");

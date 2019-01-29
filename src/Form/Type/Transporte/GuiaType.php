@@ -162,7 +162,8 @@ class GuiaType extends AbstractType {
             {"child":"estadoDespachado",                "tipo":"ChoiceType", "propiedades":{"label":"Despachado",   "choices":{"SI":true,"NO":false}}},
             {"child":"estadoNovedad",                   "tipo":"ChoiceType", "propiedades":{"label":"Novedad",   "choices":{"SI":true,"NO":false}}},
             {"child":"estadoNovedadSolucion",           "tipo":"ChoiceType", "propiedades":{"label":"Novedad solucionada",   "choices":{"SI":true,"NO":false}}},
-            {"child":"remitente",                       "tipo":"TextType",   "propiedades":{"label":"Remitente"}}
+            {"child":"remitente",                       "tipo":"TextType",   "propiedades":{"label":"Remitente"}},
+            {"child":"nombreDestinatario",                       "tipo":"TextType",   "propiedades":{"label":"Destinatario"}}
         ]';
 
         return $campos;

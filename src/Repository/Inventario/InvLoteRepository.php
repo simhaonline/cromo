@@ -129,6 +129,44 @@ class InvLoteRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function listaCorregirFechaVencimiento()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvLote::class, 'l')
+            ->select('l.codigoLotePk')
+            ->addSelect('l.codigoItemFk')
+            ->addSelect('i.nombre AS itemNombre')
+            ->addSelect('i.referencia AS itemReferencia')
+            ->addSelect('m.nombre AS marca')
+            ->addSelect('l.codigoBodegaFk')
+            ->addSelect('l.loteFk')
+            ->addSelect('l.cantidadExistencia')
+            ->addSelect('l.cantidadRemisionada')
+            ->addSelect('l.cantidadDisponible')
+            ->addSelect('l.fechaVencimiento')
+            ->leftJoin('l.itemRel', 'i')
+            ->leftJoin('i.marcaRel', 'm')
+            ->orderBy('l.codigoItemFk', "ASC")
+            ->addOrderBy('l.codigoBodegaFk', "ASC")
+            ->addOrderBy('l.codigoItemFk', "ASC");
+        if ($session->get('filtroInvInformeItemCodigo') != '') {
+            $queryBuilder->andWhere("l.codigoItemFk = {$session->get('filtroInvInformeItemCodigo')}");
+        }
+        if ($session->get('filtroInvInformeItemReferencia') != '') {
+            $queryBuilder->andWhere("i.referencia = {$session->get('filtroInvInformeItemReferencia')}");
+        }
+        if ($session->get('filtroInvInformeLote') != '') {
+            $queryBuilder->andWhere("l.loteFk = '{$session->get('filtroInvInformeLote')}' ");
+        }
+        if ($session->get('filtroInvInformeLoteBodega') != '') {
+            $queryBuilder->andWhere("l.codigoBodegaFk = '{$session->get('filtroInvInformeLoteBodega')}' ");
+        }
+        if ($session->get('filtroInvInformeFechaVence') != null) {
+            $queryBuilder->andWhere("l.fechaVencimiento <= '{$session->get('filtroInvInformeFechaVence')}'");
+        }
+        return $queryBuilder;
+    }
+
     public function notificacionDiariaMercanciaVencidaBodega()
     {
         $fechaActual = new \DateTime('now');

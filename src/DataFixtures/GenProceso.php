@@ -47,7 +47,10 @@ class GenProceso extends Fixture
             ['codigo' => '0004', 'modulo' => 'Inventario', 'tipo' => 'I', 'nombre' => 'Informe de kardex remisión'],
             ['codigo' => '0005', 'modulo' => 'Transporte', 'tipo' => 'U', 'nombre' => 'Corrección de guías'],
             ['codigo' => '0006', 'modulo' => 'Transporte', 'tipo' => 'O', 'nombre' => 'Generar RNDC'],
-            ['codigo' => '0007', 'modulo' => 'Inventario', 'tipo' => 'I', 'nombre' => 'Existencia item']);
+            ['codigo' => '0007', 'modulo' => 'Inventario', 'tipo' => 'I', 'nombre' => 'Existencia item'],
+            ['codigo' => '0008', 'modulo' => 'Inventario', 'tipo' => 'U', 'nombre' => 'Corregir fecha vencimiento lote']
+
+        );
         foreach ($arrProcesos as $arrProceso) {
             $arProceso = $manager->getRepository('App:General\GenProceso')->find($arrProceso['codigo']);
             if(!$arProceso){

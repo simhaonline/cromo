@@ -1,0 +1,21 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Cambiar fecha vencimiento</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_txtDatos" class="control-label col-sm-2">Fecha vencimiento:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.fechaVencimiento) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group btn-group-sm">
+            {{ form_widget( form.btnGuardar ) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

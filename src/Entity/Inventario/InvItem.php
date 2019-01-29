@@ -28,6 +28,15 @@ class InvItem
     private $nombre;
 
     /**
+     * @ORM\Column(name="nombre_tenico", type="string", length=400, nullable=true)
+     * @Assert\Length(
+     *     max = 400,
+     *     maxMessage = "El campo no puede contener mas de 400 caracteres"
+     * )
+     */
+    private $nombreTecnico;
+
+    /**
      * @ORM\Column(name="vr_costo_predeterminado", type="float", nullable=true)
      */
     private $vrCostoPredeterminado = 0;
@@ -148,10 +157,10 @@ class InvItem
     private $afectaInventario = true;
 
     /**
-     * @ORM\Column(name="descripcion", type="string", length=200, nullable=true)
+     * @ORM\Column(name="descripcion", type="string", length=600, nullable=true)
      * @Assert\Length(
-     *     max="200",
-     *     maxMessage="El campo no puede tener mas de 200 caracteres"
+     *     max="600",
+     *     maxMessage="El campo no puede tener mas de 600 caracteres"
      * )
      */
     private $descripcion;
@@ -316,7 +325,7 @@ class InvItem
     /**
      * @param mixed $codigoItemPk
      */
-    public function setCodigoItemPk($codigoItemPk): void
+    public function setCodigoItemPk( $codigoItemPk ): void
     {
         $this->codigoItemPk = $codigoItemPk;
     }
@@ -332,9 +341,25 @@ class InvItem
     /**
      * @param mixed $nombre
      */
-    public function setNombre($nombre): void
+    public function setNombre( $nombre ): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreTecnico()
+    {
+        return $this->nombreTecnico;
+    }
+
+    /**
+     * @param mixed $nombreTecnico
+     */
+    public function setNombreTecnico( $nombreTecnico ): void
+    {
+        $this->nombreTecnico = $nombreTecnico;
     }
 
     /**
@@ -348,7 +373,7 @@ class InvItem
     /**
      * @param mixed $vrCostoPredeterminado
      */
-    public function setVrCostoPredeterminado($vrCostoPredeterminado): void
+    public function setVrCostoPredeterminado( $vrCostoPredeterminado ): void
     {
         $this->vrCostoPredeterminado = $vrCostoPredeterminado;
     }
@@ -364,7 +389,7 @@ class InvItem
     /**
      * @param mixed $vrCostoPromedio
      */
-    public function setVrCostoPromedio($vrCostoPromedio): void
+    public function setVrCostoPromedio( $vrCostoPromedio ): void
     {
         $this->vrCostoPromedio = $vrCostoPromedio;
     }
@@ -380,7 +405,7 @@ class InvItem
     /**
      * @param mixed $vrPrecioPredeterminado
      */
-    public function setVrPrecioPredeterminado($vrPrecioPredeterminado): void
+    public function setVrPrecioPredeterminado( $vrPrecioPredeterminado ): void
     {
         $this->vrPrecioPredeterminado = $vrPrecioPredeterminado;
     }
@@ -396,7 +421,7 @@ class InvItem
     /**
      * @param mixed $vrPrecioPromedio
      */
-    public function setVrPrecioPromedio($vrPrecioPromedio): void
+    public function setVrPrecioPromedio( $vrPrecioPromedio ): void
     {
         $this->vrPrecioPromedio = $vrPrecioPromedio;
     }
@@ -412,7 +437,7 @@ class InvItem
     /**
      * @param mixed $codigoEAN
      */
-    public function setCodigoEAN($codigoEAN): void
+    public function setCodigoEAN( $codigoEAN ): void
     {
         $this->codigoEAN = $codigoEAN;
     }
@@ -428,7 +453,7 @@ class InvItem
     /**
      * @param mixed $codigoBarras
      */
-    public function setCodigoBarras($codigoBarras): void
+    public function setCodigoBarras( $codigoBarras ): void
     {
         $this->codigoBarras = $codigoBarras;
     }
@@ -444,7 +469,7 @@ class InvItem
     /**
      * @param mixed $porcentajeIva
      */
-    public function setPorcentajeIva($porcentajeIva): void
+    public function setPorcentajeIva( $porcentajeIva ): void
     {
         $this->porcentajeIva = $porcentajeIva;
     }
@@ -460,7 +485,7 @@ class InvItem
     /**
      * @param mixed $codigoLineaFk
      */
-    public function setCodigoLineaFk($codigoLineaFk): void
+    public function setCodigoLineaFk( $codigoLineaFk ): void
     {
         $this->codigoLineaFk = $codigoLineaFk;
     }
@@ -476,7 +501,7 @@ class InvItem
     /**
      * @param mixed $codigoGrupoFk
      */
-    public function setCodigoGrupoFk($codigoGrupoFk): void
+    public function setCodigoGrupoFk( $codigoGrupoFk ): void
     {
         $this->codigoGrupoFk = $codigoGrupoFk;
     }
@@ -492,7 +517,7 @@ class InvItem
     /**
      * @param mixed $codigoSubgrupoFk
      */
-    public function setCodigoSubgrupoFk($codigoSubgrupoFk): void
+    public function setCodigoSubgrupoFk( $codigoSubgrupoFk ): void
     {
         $this->codigoSubgrupoFk = $codigoSubgrupoFk;
     }
@@ -508,7 +533,7 @@ class InvItem
     /**
      * @param mixed $codigoUnidadMedidaFk
      */
-    public function setCodigoUnidadMedidaFk($codigoUnidadMedidaFk): void
+    public function setCodigoUnidadMedidaFk( $codigoUnidadMedidaFk ): void
     {
         $this->codigoUnidadMedidaFk = $codigoUnidadMedidaFk;
     }
@@ -524,7 +549,7 @@ class InvItem
     /**
      * @param mixed $codigoMarcaFk
      */
-    public function setCodigoMarcaFk($codigoMarcaFk): void
+    public function setCodigoMarcaFk( $codigoMarcaFk ): void
     {
         $this->codigoMarcaFk = $codigoMarcaFk;
     }
@@ -540,569 +565,9 @@ class InvItem
     /**
      * @param mixed $codigoImpuestoRetencionFk
      */
-    public function setCodigoImpuestoRetencionFk($codigoImpuestoRetencionFk): void
+    public function setCodigoImpuestoRetencionFk( $codigoImpuestoRetencionFk ): void
     {
         $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getModelo()
-    {
-        return $this->modelo;
-    }
-
-    /**
-     * @param mixed $modelo
-     */
-    public function setModelo($modelo): void
-    {
-        $this->modelo = $modelo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReferencia()
-    {
-        return $this->referencia;
-    }
-
-    /**
-     * @param mixed $referencia
-     */
-    public function setReferencia($referencia): void
-    {
-        $this->referencia = $referencia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidadExistencia()
-    {
-        return $this->cantidadExistencia;
-    }
-
-    /**
-     * @param mixed $cantidadExistencia
-     */
-    public function setCantidadExistencia($cantidadExistencia): void
-    {
-        $this->cantidadExistencia = $cantidadExistencia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidadRemisionada()
-    {
-        return $this->cantidadRemisionada;
-    }
-
-    /**
-     * @param mixed $cantidadRemisionada
-     */
-    public function setCantidadRemisionada($cantidadRemisionada): void
-    {
-        $this->cantidadRemisionada = $cantidadRemisionada;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidadReservada()
-    {
-        return $this->cantidadReservada;
-    }
-
-    /**
-     * @param mixed $cantidadReservada
-     */
-    public function setCantidadReservada($cantidadReservada): void
-    {
-        $this->cantidadReservada = $cantidadReservada;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidadDisponible()
-    {
-        return $this->cantidadDisponible;
-    }
-
-    /**
-     * @param mixed $cantidadDisponible
-     */
-    public function setCantidadDisponible($cantidadDisponible): void
-    {
-        $this->cantidadDisponible = $cantidadDisponible;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidadOrden()
-    {
-        return $this->cantidadOrden;
-    }
-
-    /**
-     * @param mixed $cantidadOrden
-     */
-    public function setCantidadOrden($cantidadOrden): void
-    {
-        $this->cantidadOrden = $cantidadOrden;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidadSolicitud()
-    {
-        return $this->cantidadSolicitud;
-    }
-
-    /**
-     * @param mixed $cantidadSolicitud
-     */
-    public function setCantidadSolicitud($cantidadSolicitud): void
-    {
-        $this->cantidadSolicitud = $cantidadSolicitud;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidadPedido()
-    {
-        return $this->cantidadPedido;
-    }
-
-    /**
-     * @param mixed $cantidadPedido
-     */
-    public function setCantidadPedido($cantidadPedido): void
-    {
-        $this->cantidadPedido = $cantidadPedido;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAfectaInventario()
-    {
-        return $this->afectaInventario;
-    }
-
-    /**
-     * @param mixed $afectaInventario
-     */
-    public function setAfectaInventario($afectaInventario): void
-    {
-        $this->afectaInventario = $afectaInventario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescripcion()
-    {
-        return $this->descripcion;
-    }
-
-    /**
-     * @param mixed $descripcion
-     */
-    public function setDescripcion($descripcion): void
-    {
-        $this->descripcion = $descripcion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStockMinimo()
-    {
-        return $this->stockMinimo;
-    }
-
-    /**
-     * @param mixed $stockMinimo
-     */
-    public function setStockMinimo($stockMinimo): void
-    {
-        $this->stockMinimo = $stockMinimo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStockMaximo()
-    {
-        return $this->stockMaximo;
-    }
-
-    /**
-     * @param mixed $stockMaximo
-     */
-    public function setStockMaximo($stockMaximo): void
-    {
-        $this->stockMaximo = $stockMaximo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaVentaFk()
-    {
-        return $this->codigoCuentaVentaFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaVentaFk
-     */
-    public function setCodigoCuentaVentaFk($codigoCuentaVentaFk): void
-    {
-        $this->codigoCuentaVentaFk = $codigoCuentaVentaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaVentaDevolucionFk()
-    {
-        return $this->codigoCuentaVentaDevolucionFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaVentaDevolucionFk
-     */
-    public function setCodigoCuentaVentaDevolucionFk($codigoCuentaVentaDevolucionFk): void
-    {
-        $this->codigoCuentaVentaDevolucionFk = $codigoCuentaVentaDevolucionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaCompraFk()
-    {
-        return $this->codigoCuentaCompraFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaCompraFk
-     */
-    public function setCodigoCuentaCompraFk($codigoCuentaCompraFk): void
-    {
-        $this->codigoCuentaCompraFk = $codigoCuentaCompraFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaCompraDevolucionFk()
-    {
-        return $this->codigoCuentaCompraDevolucionFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaCompraDevolucionFk
-     */
-    public function setCodigoCuentaCompraDevolucionFk($codigoCuentaCompraDevolucionFk): void
-    {
-        $this->codigoCuentaCompraDevolucionFk = $codigoCuentaCompraDevolucionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaCostoFk()
-    {
-        return $this->codigoCuentaCostoFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaCostoFk
-     */
-    public function setCodigoCuentaCostoFk($codigoCuentaCostoFk): void
-    {
-        $this->codigoCuentaCostoFk = $codigoCuentaCostoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaInventarioFk()
-    {
-        return $this->codigoCuentaInventarioFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaInventarioFk
-     */
-    public function setCodigoCuentaInventarioFk($codigoCuentaInventarioFk): void
-    {
-        $this->codigoCuentaInventarioFk = $codigoCuentaInventarioFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMarcaRel()
-    {
-        return $this->marcaRel;
-    }
-
-    /**
-     * @param mixed $marcaRel
-     */
-    public function setMarcaRel($marcaRel): void
-    {
-        $this->marcaRel = $marcaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGrupoRel()
-    {
-        return $this->grupoRel;
-    }
-
-    /**
-     * @param mixed $grupoRel
-     */
-    public function setGrupoRel($grupoRel): void
-    {
-        $this->grupoRel = $grupoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSubgrupoRel()
-    {
-        return $this->subgrupoRel;
-    }
-
-    /**
-     * @param mixed $subgrupoRel
-     */
-    public function setSubgrupoRel($subgrupoRel): void
-    {
-        $this->subgrupoRel = $subgrupoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLineaRel()
-    {
-        return $this->lineaRel;
-    }
-
-    /**
-     * @param mixed $lineaRel
-     */
-    public function setLineaRel($lineaRel): void
-    {
-        $this->lineaRel = $lineaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getImpuestoRetencionRel()
-    {
-        return $this->impuestoRetencionRel;
-    }
-
-    /**
-     * @param mixed $impuestoRetencionRel
-     */
-    public function setImpuestoRetencionRel($impuestoRetencionRel): void
-    {
-        $this->impuestoRetencionRel = $impuestoRetencionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSolicitudesDetallesItemRel()
-    {
-        return $this->solicitudesDetallesItemRel;
-    }
-
-    /**
-     * @param mixed $solicitudesDetallesItemRel
-     */
-    public function setSolicitudesDetallesItemRel($solicitudesDetallesItemRel): void
-    {
-        $this->solicitudesDetallesItemRel = $solicitudesDetallesItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrdenesDetallesItemRel()
-    {
-        return $this->ordenesDetallesItemRel;
-    }
-
-    /**
-     * @param mixed $ordenesDetallesItemRel
-     */
-    public function setOrdenesDetallesItemRel($ordenesDetallesItemRel): void
-    {
-        $this->ordenesDetallesItemRel = $ordenesDetallesItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMovimientosDetallesItemRel()
-    {
-        return $this->movimientosDetallesItemRel;
-    }
-
-    /**
-     * @param mixed $movimientosDetallesItemRel
-     */
-    public function setMovimientosDetallesItemRel($movimientosDetallesItemRel): void
-    {
-        $this->movimientosDetallesItemRel = $movimientosDetallesItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLotesItemRel()
-    {
-        return $this->lotesItemRel;
-    }
-
-    /**
-     * @param mixed $lotesItemRel
-     */
-    public function setLotesItemRel($lotesItemRel): void
-    {
-        $this->lotesItemRel = $lotesItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPedidosDetallesItemRel()
-    {
-        return $this->pedidosDetallesItemRel;
-    }
-
-    /**
-     * @param mixed $pedidosDetallesItemRel
-     */
-    public function setPedidosDetallesItemRel($pedidosDetallesItemRel): void
-    {
-        $this->pedidosDetallesItemRel = $pedidosDetallesItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRemisionesDetallesItemRel()
-    {
-        return $this->remisionesDetallesItemRel;
-    }
-
-    /**
-     * @param mixed $remisionesDetallesItemRel
-     */
-    public function setRemisionesDetallesItemRel($remisionesDetallesItemRel): void
-    {
-        $this->remisionesDetallesItemRel = $remisionesDetallesItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPreciosDetallesItemRel()
-    {
-        return $this->preciosDetallesItemRel;
-    }
-
-    /**
-     * @param mixed $preciosDetallesItemRel
-     */
-    public function setPreciosDetallesItemRel($preciosDetallesItemRel): void
-    {
-        $this->preciosDetallesItemRel = $preciosDetallesItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInventariosValorizadosItemRel()
-    {
-        return $this->inventariosValorizadosItemRel;
-    }
-
-    /**
-     * @param mixed $inventariosValorizadosItemRel
-     */
-    public function setInventariosValorizadosItemRel($inventariosValorizadosItemRel): void
-    {
-        $this->inventariosValorizadosItemRel = $inventariosValorizadosItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCotizacionesDetallesItemRel()
-    {
-        return $this->cotizacionesDetallesItemRel;
-    }
-
-    /**
-     * @param mixed $cotizacionesDetallesItemRel
-     */
-    public function setCotizacionesDetallesItemRel($cotizacionesDetallesItemRel): void
-    {
-        $this->cotizacionesDetallesItemRel = $cotizacionesDetallesItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getImportacionesDetallesItemRel()
-    {
-        return $this->importacionesDetallesItemRel;
-    }
-
-    /**
-     * @param mixed $importacionesDetallesItemRel
-     */
-    public function setImportacionesDetallesItemRel($importacionesDetallesItemRel): void
-    {
-        $this->importacionesDetallesItemRel = $importacionesDetallesItemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaInventarioTransitoFk()
-    {
-        return $this->codigoCuentaInventarioTransitoFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaInventarioTransitoFk
-     */
-    public function setCodigoCuentaInventarioTransitoFk($codigoCuentaInventarioTransitoFk): void
-    {
-        $this->codigoCuentaInventarioTransitoFk = $codigoCuentaInventarioTransitoFk;
     }
 
     /**
@@ -1124,6 +589,454 @@ class InvItem
     /**
      * @return mixed
      */
+    public function getModelo()
+    {
+        return $this->modelo;
+    }
+
+    /**
+     * @param mixed $modelo
+     */
+    public function setModelo( $modelo ): void
+    {
+        $this->modelo = $modelo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferencia()
+    {
+        return $this->referencia;
+    }
+
+    /**
+     * @param mixed $referencia
+     */
+    public function setReferencia( $referencia ): void
+    {
+        $this->referencia = $referencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadExistencia()
+    {
+        return $this->cantidadExistencia;
+    }
+
+    /**
+     * @param mixed $cantidadExistencia
+     */
+    public function setCantidadExistencia( $cantidadExistencia ): void
+    {
+        $this->cantidadExistencia = $cantidadExistencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadRemisionada()
+    {
+        return $this->cantidadRemisionada;
+    }
+
+    /**
+     * @param mixed $cantidadRemisionada
+     */
+    public function setCantidadRemisionada( $cantidadRemisionada ): void
+    {
+        $this->cantidadRemisionada = $cantidadRemisionada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadReservada()
+    {
+        return $this->cantidadReservada;
+    }
+
+    /**
+     * @param mixed $cantidadReservada
+     */
+    public function setCantidadReservada( $cantidadReservada ): void
+    {
+        $this->cantidadReservada = $cantidadReservada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadDisponible()
+    {
+        return $this->cantidadDisponible;
+    }
+
+    /**
+     * @param mixed $cantidadDisponible
+     */
+    public function setCantidadDisponible( $cantidadDisponible ): void
+    {
+        $this->cantidadDisponible = $cantidadDisponible;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadOrden()
+    {
+        return $this->cantidadOrden;
+    }
+
+    /**
+     * @param mixed $cantidadOrden
+     */
+    public function setCantidadOrden( $cantidadOrden ): void
+    {
+        $this->cantidadOrden = $cantidadOrden;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadSolicitud()
+    {
+        return $this->cantidadSolicitud;
+    }
+
+    /**
+     * @param mixed $cantidadSolicitud
+     */
+    public function setCantidadSolicitud( $cantidadSolicitud ): void
+    {
+        $this->cantidadSolicitud = $cantidadSolicitud;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidadPedido()
+    {
+        return $this->cantidadPedido;
+    }
+
+    /**
+     * @param mixed $cantidadPedido
+     */
+    public function setCantidadPedido( $cantidadPedido ): void
+    {
+        $this->cantidadPedido = $cantidadPedido;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAfectaInventario()
+    {
+        return $this->afectaInventario;
+    }
+
+    /**
+     * @param mixed $afectaInventario
+     */
+    public function setAfectaInventario( $afectaInventario ): void
+    {
+        $this->afectaInventario = $afectaInventario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * @param mixed $descripcion
+     */
+    public function setDescripcion( $descripcion ): void
+    {
+        $this->descripcion = $descripcion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStockMinimo()
+    {
+        return $this->stockMinimo;
+    }
+
+    /**
+     * @param mixed $stockMinimo
+     */
+    public function setStockMinimo( $stockMinimo ): void
+    {
+        $this->stockMinimo = $stockMinimo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStockMaximo()
+    {
+        return $this->stockMaximo;
+    }
+
+    /**
+     * @param mixed $stockMaximo
+     */
+    public function setStockMaximo( $stockMaximo ): void
+    {
+        $this->stockMaximo = $stockMaximo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaVentaFk()
+    {
+        return $this->codigoCuentaVentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaVentaFk
+     */
+    public function setCodigoCuentaVentaFk( $codigoCuentaVentaFk ): void
+    {
+        $this->codigoCuentaVentaFk = $codigoCuentaVentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaVentaDevolucionFk()
+    {
+        return $this->codigoCuentaVentaDevolucionFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaVentaDevolucionFk
+     */
+    public function setCodigoCuentaVentaDevolucionFk( $codigoCuentaVentaDevolucionFk ): void
+    {
+        $this->codigoCuentaVentaDevolucionFk = $codigoCuentaVentaDevolucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCompraFk()
+    {
+        return $this->codigoCuentaCompraFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCompraFk
+     */
+    public function setCodigoCuentaCompraFk( $codigoCuentaCompraFk ): void
+    {
+        $this->codigoCuentaCompraFk = $codigoCuentaCompraFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCompraDevolucionFk()
+    {
+        return $this->codigoCuentaCompraDevolucionFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCompraDevolucionFk
+     */
+    public function setCodigoCuentaCompraDevolucionFk( $codigoCuentaCompraDevolucionFk ): void
+    {
+        $this->codigoCuentaCompraDevolucionFk = $codigoCuentaCompraDevolucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCostoFk()
+    {
+        return $this->codigoCuentaCostoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCostoFk
+     */
+    public function setCodigoCuentaCostoFk( $codigoCuentaCostoFk ): void
+    {
+        $this->codigoCuentaCostoFk = $codigoCuentaCostoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaInventarioFk()
+    {
+        return $this->codigoCuentaInventarioFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaInventarioFk
+     */
+    public function setCodigoCuentaInventarioFk( $codigoCuentaInventarioFk ): void
+    {
+        $this->codigoCuentaInventarioFk = $codigoCuentaInventarioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaInventarioTransitoFk()
+    {
+        return $this->codigoCuentaInventarioTransitoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaInventarioTransitoFk
+     */
+    public function setCodigoCuentaInventarioTransitoFk( $codigoCuentaInventarioTransitoFk ): void
+    {
+        $this->codigoCuentaInventarioTransitoFk = $codigoCuentaInventarioTransitoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProducto()
+    {
+        return $this->producto;
+    }
+
+    /**
+     * @param mixed $producto
+     */
+    public function setProducto( $producto ): void
+    {
+        $this->producto = $producto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServicio()
+    {
+        return $this->servicio;
+    }
+
+    /**
+     * @param mixed $servicio
+     */
+    public function setServicio( $servicio ): void
+    {
+        $this->servicio = $servicio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistroInvima()
+    {
+        return $this->registroInvima;
+    }
+
+    /**
+     * @param mixed $registroInvima
+     */
+    public function setRegistroInvima( $registroInvima ): void
+    {
+        $this->registroInvima = $registroInvima;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMarcaRel()
+    {
+        return $this->marcaRel;
+    }
+
+    /**
+     * @param mixed $marcaRel
+     */
+    public function setMarcaRel( $marcaRel ): void
+    {
+        $this->marcaRel = $marcaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel( $grupoRel ): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubgrupoRel()
+    {
+        return $this->subgrupoRel;
+    }
+
+    /**
+     * @param mixed $subgrupoRel
+     */
+    public function setSubgrupoRel( $subgrupoRel ): void
+    {
+        $this->subgrupoRel = $subgrupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLineaRel()
+    {
+        return $this->lineaRel;
+    }
+
+    /**
+     * @param mixed $lineaRel
+     */
+    public function setLineaRel( $lineaRel ): void
+    {
+        $this->lineaRel = $lineaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImpuestoRetencionRel()
+    {
+        return $this->impuestoRetencionRel;
+    }
+
+    /**
+     * @param mixed $impuestoRetencionRel
+     */
+    public function setImpuestoRetencionRel( $impuestoRetencionRel ): void
+    {
+        $this->impuestoRetencionRel = $impuestoRetencionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getImpuestoIvaVentaRel()
     {
         return $this->impuestoIvaVentaRel;
@@ -1140,49 +1053,161 @@ class InvItem
     /**
      * @return mixed
      */
-    public function getProducto()
+    public function getSolicitudesDetallesItemRel()
     {
-        return $this->producto;
+        return $this->solicitudesDetallesItemRel;
     }
 
     /**
-     * @param mixed $producto
+     * @param mixed $solicitudesDetallesItemRel
      */
-    public function setProducto($producto): void
+    public function setSolicitudesDetallesItemRel( $solicitudesDetallesItemRel ): void
     {
-        $this->producto = $producto;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getServicio()
-    {
-        return $this->servicio;
-    }
-
-    /**
-     * @param mixed $servicio
-     */
-    public function setServicio($servicio): void
-    {
-        $this->servicio = $servicio;
+        $this->solicitudesDetallesItemRel = $solicitudesDetallesItemRel;
     }
 
     /**
      * @return mixed
      */
-    public function getRegistroInvima()
+    public function getOrdenesDetallesItemRel()
     {
-        return $this->registroInvima;
+        return $this->ordenesDetallesItemRel;
     }
 
     /**
-     * @param mixed $registroInvima
+     * @param mixed $ordenesDetallesItemRel
      */
-    public function setRegistroInvima($registroInvima): void
+    public function setOrdenesDetallesItemRel( $ordenesDetallesItemRel ): void
     {
-        $this->registroInvima = $registroInvima;
+        $this->ordenesDetallesItemRel = $ordenesDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDetallesItemRel()
+    {
+        return $this->movimientosDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $movimientosDetallesItemRel
+     */
+    public function setMovimientosDetallesItemRel( $movimientosDetallesItemRel ): void
+    {
+        $this->movimientosDetallesItemRel = $movimientosDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLotesItemRel()
+    {
+        return $this->lotesItemRel;
+    }
+
+    /**
+     * @param mixed $lotesItemRel
+     */
+    public function setLotesItemRel( $lotesItemRel ): void
+    {
+        $this->lotesItemRel = $lotesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesItemRel()
+    {
+        return $this->pedidosDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $pedidosDetallesItemRel
+     */
+    public function setPedidosDetallesItemRel( $pedidosDetallesItemRel ): void
+    {
+        $this->pedidosDetallesItemRel = $pedidosDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemisionesDetallesItemRel()
+    {
+        return $this->remisionesDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $remisionesDetallesItemRel
+     */
+    public function setRemisionesDetallesItemRel( $remisionesDetallesItemRel ): void
+    {
+        $this->remisionesDetallesItemRel = $remisionesDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPreciosDetallesItemRel()
+    {
+        return $this->preciosDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $preciosDetallesItemRel
+     */
+    public function setPreciosDetallesItemRel( $preciosDetallesItemRel ): void
+    {
+        $this->preciosDetallesItemRel = $preciosDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInventariosValorizadosItemRel()
+    {
+        return $this->inventariosValorizadosItemRel;
+    }
+
+    /**
+     * @param mixed $inventariosValorizadosItemRel
+     */
+    public function setInventariosValorizadosItemRel( $inventariosValorizadosItemRel ): void
+    {
+        $this->inventariosValorizadosItemRel = $inventariosValorizadosItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCotizacionesDetallesItemRel()
+    {
+        return $this->cotizacionesDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $cotizacionesDetallesItemRel
+     */
+    public function setCotizacionesDetallesItemRel( $cotizacionesDetallesItemRel ): void
+    {
+        $this->cotizacionesDetallesItemRel = $cotizacionesDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImportacionesDetallesItemRel()
+    {
+        return $this->importacionesDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $importacionesDetallesItemRel
+     */
+    public function setImportacionesDetallesItemRel( $importacionesDetallesItemRel ): void
+    {
+        $this->importacionesDetallesItemRel = $importacionesDetallesItemRel;
     }
 
 

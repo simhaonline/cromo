@@ -2,8 +2,9 @@
 {% block content %}
     {{ notificar()|raw }}
     <div class="btn-toolbar" style="float:left">
+        <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_inventario_item_lista') }}">Volver</a>
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_inventario_item_lista') }}">Volver</a>
+            {% include 'estructura/botoneraAdministracion.html.twig' %}
         </div>
     </div>
     <br/><br/>

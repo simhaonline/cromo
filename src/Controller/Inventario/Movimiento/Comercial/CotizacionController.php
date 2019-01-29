@@ -5,10 +5,12 @@ namespace App\Controller\Inventario\Movimiento\Comercial;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvCotizacionDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\CotizacionType;
 use App\Formato\Inventario\Cotizacion;
+use App\Formato\Inventario\Cotizacion2;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use App\Utilidades\Estandares;
@@ -155,8 +157,16 @@ class CotizacionController extends ControllerListenerGeneral
                 $em->getRepository(InvCotizacion::class)->aprobar($arCotizacion);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                $objFormatoCotizacion = new Cotizacion();
-                $objFormatoCotizacion->Generar($em, $id);
+                $codigoFormatoCotizacion = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoCotizacion();
+                if ($codigoFormatoCotizacion == 1 || $codigoFormatoCotizacion == 0 || $codigoFormatoCotizacion == "") {
+                    $objFormatoCotizacion = new Cotizacion();
+                    $objFormatoCotizacion->Generar($em, $id);
+                }
+                if ($codigoFormatoCotizacion == 2) {
+                    $objFormatoCotizacion = new Cotizacion2();
+                    $objFormatoCotizacion->Generar($em, $id);
+                }
+
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository(InvCotizacion::class)->anular($arCotizacion);
@@ -228,7 +238,7 @@ class CotizacionController extends ControllerListenerGeneral
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 10);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/comercial/cotizacion/detalleNuevo.html.twig', [
             'arItems' => $arItems,
             'form' => $form->createView()

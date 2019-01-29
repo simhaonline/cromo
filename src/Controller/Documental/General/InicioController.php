@@ -5,6 +5,7 @@ namespace App\Controller\Documental\General;
 use App\Entity\Documental\DocArchivo;
 use App\Entity\Documental\DocConfiguracion;
 use App\Entity\Documental\DocDirectorio;
+use App\Entity\Documental\DocImagen;
 use App\Entity\Documental\DocMasivo;
 use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,11 +37,23 @@ class InicioController extends Controller
         $arMasivos = $paginator->paginate($query, $request->query->get('page', 1), 50);
         $query = $em->createQuery($em->getRepository(DocArchivo::class)->listaArchivo($tipo, $codigo));
         $arArchivos = $paginator->paginate($query, $request->query->get('page', 1), 50);
+        $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+        $arImagen = $em->getRepository(DocImagen::class)->findOneBy(array('codigoModeloFk' => $tipo, 'identificador' => $codigo));
+        $srcImagen = "";
+        if($arImagen) {
+            $strFichero = $arrConfiguracion['rutaAlmacenamiento'] . "/imagen/" . $arImagen->getCodigoModeloFk() . "/" . $arImagen->getDirectorio() . "/" . $arImagen->getCodigoImagenPk() . "_" . $arImagen->getNombre();
+            if (file_exists($strFichero)) {
+                $base64 = base64_encode(file_get_contents($strFichero));
+                $tipoArchivo = $arImagen->getTipo();
+                $srcImagen = "data: {$tipoArchivo}; base64, {$base64}";
+            }
+        }
         return $this->render('documental/general/lista.html.twig', array(
             'arMasivos' => $arMasivos,
             'arArchivos' => $arArchivos,
             'tipo' => $tipo,
             'codigo' => $codigo,
+            'srcImagen' => $srcImagen
         ));
     }
 
@@ -108,8 +121,6 @@ class InicioController extends Controller
         $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
         $arArchivo = $em->getRepository(DocArchivo::class)->find($codigoArchivo);
         $strRuta = $arrConfiguracion['rutaAlmacenamiento'] . "/archivo/" . $arArchivo->getCodigoArchivoTipoFk() . "/" . $arArchivo->getDirectorio() . "/" . $arArchivo->getCodigoArchivoPk() . "_" . $arArchivo->getNombre();
-        //$strRuta = $arArchivo->getDirectorioRel()->getRutaPrincipal() . $arArchivo->getDirectorioRel()->getNumero() . "/" . $arArchivo->getCodigoArchivoPk() . "_" . $arArchivo->getNombre();
-        // Generate response
         $response = new Response();
 
         // Set headers
@@ -118,7 +129,6 @@ class InicioController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $arArchivo->getNombre() . '";');
         $response->headers->set('Content-length', $arArchivo->getTamano());
         $response->sendHeaders();
-//        $response->setContent(readfile($strRuta));
         if(file_exists ($strRuta)){
             $response->setContent(readfile($strRuta));
         }else{
@@ -126,11 +136,66 @@ class InicioController extends Controller
         }
         return $response;
 
+    }
 
-//        $response2 = new Response();
-//        $response2->setContent(true);
-//        return $response2;
+    /**
+     * @Route("/documental/general/cargar/imagen/{modelo}/{codigo}", name="documental_general_general_cargar_imagen")
+     */
+    public function cargarImagenAction(Request $request, $modelo, $codigo) {
+        $em = $this->getDoctrine()->getManager();
+        $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+        $arImagen = $em->getRepository(DocImagen::class)->findOneBy(array('codigoModeloFk' => $modelo, 'identificador' => $codigo));
+        $form = $this->createFormBuilder()
+            ->add('attachment', fileType::class)
+            ->add('BtnCargar', SubmitType::class, array('label'  => 'Cargar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('BtnCargar')->isClicked()) {
+                $objArchivo = $form['attachment']->getData();
+                if ($objArchivo->getClientSize()){
+                    if($arImagen) {
+                        $strFichero = $arrConfiguracion['rutaAlmacenamiento'] . "/imagen/" . $arImagen->getCodigoModeloFk() . "/" . $arImagen->getDirectorio() . "/" . $arImagen->getCodigoImagenPk() . "_" . $arImagen->getNombre();
+                        unlink($strFichero);
+                        $arImagen = $em->getRepository(DocImagen::class)->find($arImagen->getCodigoImagenPk());
+                    } else {
+                        $arImagen = new DocImagen();
+                    }
+                    $arImagen->setNombre($objArchivo->getClientOriginalName());
+                    $arImagen->setExtensionOriginal($objArchivo->getClientOriginalExtension());
+                    $arImagen->setTamano($objArchivo->getClientSize());
+                    $arImagen->setTipo($objArchivo->getClientMimeType());
+                    $arImagen->setCodigoModeloFk($modelo);
+                    $arImagen->setIdentificador($codigo);
+                    $dateFecha = new \DateTime('now');
+                    $arImagen->setFecha($dateFecha);
+                    $directorio = $em->getRepository(DocDirectorio::class)->devolverDirectorio("I", $modelo);
+                    $arImagen->setDirectorio($directorio);
 
+                    $error = false;
+
+                    $directorioDestino = $arrConfiguracion['rutaAlmacenamiento'] . "/imagen/" . $modelo . "/" . $directorio . "/";
+                    if(!file_exists($directorioDestino)) {
+                        if(!mkdir($directorioDestino, 0777, true)) {
+                            Mensajes::error('Fallo al crear directorio...' . $directorioDestino);
+                            $error = true;
+                        }
+                    }
+                    if($error == false) {
+                        $em->persist($arImagen);
+                        $em->flush();
+                        $strArchivo = $arImagen->getCodigoImagenPk() . "_" . $objArchivo->getClientOriginalName();
+                        $form['attachment']->getData()->move($directorioDestino, $strArchivo);
+                    }
+                    return $this->redirect($this->generateUrl('documental_general_general_lista', array('tipo' => $modelo, 'codigo' => $codigo)));
+                } else {
+                    Mensajes::error("El archivo tiene un tamaño mayor al permitido");
+                }
+            }
+        }
+        return $this->render('documental/general/cargarImagen.html.twig', array(
+            'form' => $form->createView()
+        ));
     }
 
 }

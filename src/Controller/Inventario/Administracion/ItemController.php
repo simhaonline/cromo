@@ -119,7 +119,8 @@ class ItemController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arItem = $em->getRepository(InvItem::class)->find($id);
         return $this->render('inventario/administracion/item/detalle.html.twig', [
-            'arItem' => $arItem
+            'arItem' => $arItem,
+            'clase' => array('clase' => 'InvItem', 'codigo' => $id),
         ]);
     }
 }

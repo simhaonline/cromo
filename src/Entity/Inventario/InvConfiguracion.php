@@ -52,6 +52,11 @@ class InvConfiguracion
     private $codigoFormatoRemision = 0;
 
     /**
+     * @ORM\Column(name="codigo_formato_cotizacion", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $codigoFormatoCotizacion = 0;
+
+    /**
      * @ORM\Column(name="codigo_documento_movimientos_salida_bodega", type="integer", nullable=true, options={"default" : 0})
      */
     private $codigoDocumentoMovimientosSalidaBodega = 0;
@@ -288,6 +293,22 @@ class InvConfiguracion
     public function setImpuestoRecaudo( $impuestoRecaudo ): void
     {
         $this->impuestoRecaudo = $impuestoRecaudo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFormatoCotizacion()
+    {
+        return $this->codigoFormatoCotizacion;
+    }
+
+    /**
+     * @param mixed $codigoFormatoCotizacion
+     */
+    public function setCodigoFormatoCotizacion( $codigoFormatoCotizacion ): void
+    {
+        $this->codigoFormatoCotizacion = $codigoFormatoCotizacion;
     }
 
 

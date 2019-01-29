@@ -6,25 +6,27 @@
         <div class="panel-body">
             <div class="form-group form-group-sm">
                 <label for="form_nombre" class="col-sm-2 control-label">Nombre:</label>
-                <div class="col-sm-3">
+                <div class="col-sm-8">
                     {{ form_widget(form.nombre,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.nombre) }}
+                </div>
+
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="col-sm-2 control-label">Nombre tecnico:</label>
+                <div class="col-sm-8">
+                    {{ form_widget(form.nombreTecnico,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.nombreTecnico) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_vrPrecioPredeterminado" class="col-sm-2 control-label"></label>
+                <div class="col-sm-3">
                 </div>
                 <label for="form_codigoBarras" class="col-sm-2 control-label">Código de barras:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.codigoBarras,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.codigoBarras) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_vrPrecioPredeterminado" class="col-sm-2 control-label">Precio predeterminado:</label>
-                <div class="col-sm-3">
-                    {{ form_widget(form.vrPrecioPredeterminado,{'attr':{'class':'form-control'}}) }}
-                    {{ form_errors(form.vrPrecioPredeterminado) }}
-                </div>
-                <label for="form_porcentajeIva" class="col-sm-2 control-label"></label>
-                <div class="col-sm-3">
-
                 </div>
             </div>
             <div class="form-group form-group-sm">

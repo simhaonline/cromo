@@ -1,10 +1,8 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
 <div class="container">
-
-    <h3>Lista archivos</h3>
     <div class="panel panel-default">
-        <div class="panel-heading">Lista archivos</div>
+        <div class="panel-heading">Archivos</div>
         <div class="panel-body">
             <div>
                 <table  class="table table-striped table-bordered table-condensed table-hover tabla-datos">
@@ -33,14 +31,14 @@
                 {{ knp_pagination_render(arArchivos) }}
             </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        <a  class="btn btn-default btn-sm" href="{{ path('documental_general_general_cargar', { 'tipo': tipo,  'codigo': codigo }) }}">Cargar</a>
+        <div class="modal-footer">
+            <a  class="btn btn-default btn-sm" href="{{ path('documental_general_general_cargar', { 'tipo': tipo,  'codigo': codigo }) }}">Cargar</a>
+        </div>
     </div>
 
-    <h3>Lista archivos</h3>
+
     <div class="panel panel-default">
-        <div class="panel-heading">Masivo</div>
+        <div class="panel-heading">Archivos masivos</div>
         <div class="panel-body">
             <div>                      
                 <table  class="table table-striped table-bordered table-condensed table-hover tabla-datos">
@@ -59,6 +57,21 @@
                 </table>
                 {{ knp_pagination_render(arMasivos) }}
             </div>                                            
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Imagen</div>
+        <div class="panel-body">
+            <div align="center">
+                {% if srcImagen %}
+                    <img src="{{ srcImagen }}" height="500" width="500" />
+                {% endif %}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a  class="btn btn-default btn-sm" href="{{ path('documental_general_general_cargar_imagen', { 'modelo': tipo,  'codigo': codigo }) }}">Cargar imagen</a>
         </div>
     </div>
 </div>

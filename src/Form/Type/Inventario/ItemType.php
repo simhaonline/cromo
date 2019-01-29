@@ -79,6 +79,7 @@ class ItemType extends AbstractType
                 'label' => 'Iva:'
                 , 'required' => true])
             ->add('nombre', TextType::class, ['required' => true])
+            ->add('nombreTecnico', TextType::class, ['required' => false])
             ->add('codigoBarras', TextType::class, ['required' => false])
             ->add('modelo', TextType::class, ['required' => false])
             ->add('referencia', TextType::class, ['required' => false])
@@ -94,7 +95,6 @@ class ItemType extends AbstractType
             ->add('codigoCuentaCostoFk', TextType::class, ['required' => false])
             ->add('codigoCuentaInventarioFk', TextType::class, ['required' => false])
             ->add('codigoCuentaInventarioTransitoFk', TextType::class, ['required' => false])
-            ->add('vrPrecioPredeterminado', IntegerType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

@@ -2,12 +2,14 @@
 
 namespace App\Formato\Inventario;
 
+use App\Entity\Documental\DocConfiguracion;
+use App\Entity\Documental\DocImagen;
 use App\Entity\Inventario\InvCotizacion;
 use App\Entity\Inventario\InvCotizacionDetalle;
 use App\Utilidades\Estandares;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class Cotizacion extends \FPDF
+class Cotizacion2 extends \FPDF
 {
 
     public static $em;
@@ -22,7 +24,7 @@ class Cotizacion extends \FPDF
         self::$em = $em;
         self::$codigoCotizacion = $codigoCotizacion;
         ob_clean();
-        $pdf = new Cotizacion('P', 'mm', 'letter');
+        $pdf = new Cotizacion2('P', 'mm', 'letter');
         $arCotizacion = $em->getRepository(InvCotizacion::class)->find($codigoCotizacion);
         $pdf->AliasNbPages();
         $pdf->AddPage();
@@ -103,7 +105,7 @@ class Cotizacion extends \FPDF
     public function EncabezadoDetalles()
     {
         $this->Ln(14);
-        $header = array('COD', 'ITEM', 'CANT', 'MARCA', 'PRECIO', 'IVA', 'SUBTOTAL', 'TOTAL');
+        $header = array('', 'DESCRIPCION');
         $this->SetFillColor(200, 200, 200);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -111,7 +113,7 @@ class Cotizacion extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(15, 35, 15, 30, 30, 15, 25, 25);
+        $w = array(30, 30);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -136,17 +138,20 @@ class Cotizacion extends \FPDF
         $arCotizacionDetalles = self::$em->getRepository(InvCotizacionDetalle::class)->findBy(array('codigoCotizacionFk' => self::$codigoCotizacion));
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
-        //$w = array(15, 35, 15, 30, 30, 15, 25, 25);
-        //$header = array('COD', 'ITEM', 'CANT', 'MARCA', 'PRECIO', 'IVA', 'SUBTOTAL', 'TOTAL');
+
+        $arrConfiguracionDocumental = self::$em->getRepository(DocConfiguracion::class)->archivoMasivo();
         foreach ($arCotizacionDetalles as $arCotizacionDetalle) {
-            $pdf->Cell(15, 4, $arCotizacionDetalle->getCodigoCotizacionDetallePk(), 1, 0, 'L');
-            $pdf->Cell(35, 4, utf8_decode($arCotizacionDetalle->getItemRel()->getNombre()), 1, 0, 'L');
-            $pdf->Cell(15, 4, $arCotizacionDetalle->getCantidad(), 1, 0, 'C');
-            $pdf->Cell(30, 4, $arCotizacionDetalle->getItemRel()->getMarcaRel()->getNombre(), 1, 0, 'C');
-            $pdf->Cell(30, 4, number_format($arCotizacionDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(15, 4, number_format($arCotizacionDetalle->getVrIva(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(25, 4, number_format($arCotizacionDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(25, 4, number_format($arCotizacionDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
+            $arImagen = self::$em->getRepository(DocImagen::class)->findOneBy(array('codigoModeloFk' => 'InvItem', 'identificador' => $arCotizacionDetalle->getCodigoItemFk()));
+            if($arImagen) {
+                $strFichero = $arrConfiguracionDocumental['rutaAlmacenamiento'] . "/imagen/" . $arImagen->getCodigoModeloFk() . "/" . $arImagen->getDirectorio() . "/" . $arImagen->getCodigoImagenPk() . "_" . $arImagen->getNombre();
+                if (file_exists($strFichero)) {
+                    $pdf->Image($strFichero,$pdf->getX(),$pdf->getY(),30,30);
+                }
+            }
+
+            $pdf->Cell(30, 30, "", 1, 0, 'L');
+            //$pdf->Cell(60, 30, $arCotizacionDetalle->getItemRel()->getDescripcion(), 1, 0, 'L');
+            $pdf->MultiCell(60,5,$arCotizacionDetalle->getItemRel()->getDescripcion());
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

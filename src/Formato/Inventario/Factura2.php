@@ -180,7 +180,7 @@ class Factura2 extends \FPDF
     {
         $this->Ln(6);
         $this->SetX(10);
-        $header = array('DESCRIPCION', 'REF', 'LOTE', 'CANT', 'VR UNIT', 'IVA', 'TOTAL', 'OBSERVACIONES');
+        $header = array('DESCRIPCION', 'REF', 'LOTE', 'CANT', 'VR UNIT', 'IVA', 'TOTAL', 'OBSERVACIONES // INVIMA');
         $this->SetFillColor(225, 225, 225);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
@@ -221,7 +221,7 @@ class Factura2 extends \FPDF
             $pdf->Cell(15, 4, number_format($arMovimientoDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(10, 4, $arMovimientoDetalle->getPorcentajeIva() . '%', 1, 0, 'C');
             $pdf->Cell(15, 4, number_format($arMovimientoDetalle->getVrTotal()), 1, 0, 'R');
-            $pdf->Cell(50, 4, '', 1, 0, 'C');
+            $pdf->Cell(50, 4, $arMovimientoDetalle->getItemRel()->getRegistroInvima(), 1, 0, 'L');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 95);
         }

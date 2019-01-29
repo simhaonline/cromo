@@ -110,5 +110,25 @@ class InvItemRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->execute();
     }
 
+    public function existencia()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvItem::class, 'i')
+            ->select('i.codigoItemPk')
+            ->addSelect('i.nombre')
+            ->addSelect('i.referencia')
+            ->addSelect('m.nombre AS marca')
+            ->addSelect('i.cantidadExistencia')
+            ->addSelect('i.cantidadRemisionada')
+            ->addSelect('i.cantidadDisponible')
+            ->leftJoin('i.marcaRel', 'm')
+            ->where('i.cantidadExistencia > 0')
+            ->orderBy('i.nombre', "ASC");
+        if ($session->get('filtroInvInformeItemCodigo') != '') {
+            $queryBuilder->andWhere("i.codigoItemPk = {$session->get('filtroInvInformeItemCodigo')}");
+        }
+        return $queryBuilder;
+    }
+
 }
 

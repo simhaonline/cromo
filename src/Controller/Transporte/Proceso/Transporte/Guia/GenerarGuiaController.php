@@ -40,7 +40,9 @@ class GenerarGuiaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGenerar')->isClicked()) {
-                $this->generarGuias($form->get('flArchivo')->getData());
+                if($form->get('flArchivo')->getData()){
+                    $this->generarGuias($form->get('flArchivo')->getData());
+                }
             }
         }
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaGenerarFactura(), $request->query->getInt('page', 1), 500);

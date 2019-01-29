@@ -43,10 +43,6 @@ class DocumentacionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arConfiguracion = $em->find(GenConfiguracion::class, 1);
         $form = $this->createFormBuilder()
-            ->add('choBusquedaTipo', ChoiceType::class, [
-                'choices' => ['TODOS' => 'TOD', 'TITULO' => 'TIT', 'DESCRIPCION' => 'DES'],
-                'attr' => ['class' => 'btn btn-default dropdown-toggle']
-            ])
             ->add('choModulo', ChoiceType::class, [
                 'choices' => [
                     'TODOS' => 'TOD',
@@ -80,7 +76,6 @@ class DocumentacionController extends Controller
         if ($form->isSubmitted()) {
             $arrDatos = json_encode([
                 'busqueda' => $form->get('txtBusqueda')->getData(),
-                'tipoBusqueda' => $form->get('choBusquedaTipo')->getData(),
                 'modulo' => $form->get('choModulo')->getData(),
                 'funcion' => $form->get('choFuncion')->getData()
             ]);

@@ -73,7 +73,7 @@ class PendienteDespachoRutaController extends Controller
         } else {
             $session->set('filtroTteCodigoOperacionCargo', null);
         }
-        $session->set('filtroTteMostrarGuiaConNovedad', $form->get('ChkMostrarDevoluciones')->getData());
+        $session->set('filtroTteMostrarDevoluciones', $form->get('ChkMostrarDevoluciones')->getData());
         $session->set('filtroTteNovedadGuia', $form->get('chkEstadoGuiaNovedad')->getData());
         if ($form->get('txtCodigoCliente')->getData() != '') {
             $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());

@@ -1418,6 +1418,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.pesoVolumen')
             ->addSelect('g.vrDeclara')
             ->addSelect('g.vrFlete')
+            ->addSelect('g.estadoNovedad')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->leftJoin('g.despachoRel', 'd')
@@ -1441,6 +1442,14 @@ class TteGuiaRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("g.fechaIngreso <= '{$session->get('filtroTtePendienteSoporteFechaHasta')} 23:59:59'");
         } else {
             $queryBuilder->andWhere("g.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+        }
+        switch ($session->get('filtroTteNovedadGuia')) {
+            case '0':
+                $queryBuilder->andWhere("g.estadoNovedad = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("g.estadoNovedad = 1");
+                break;
         }
 
         return $queryBuilder;

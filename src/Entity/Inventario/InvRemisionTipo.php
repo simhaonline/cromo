@@ -59,6 +59,11 @@ class InvRemisionTipo
     private $adicionarRemision = false;
 
     /**
+     * @ORM\Column(name="devolucion", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $devolucion = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvRemision", mappedBy="remisionTipoRel")
      */
     protected $remisionesRemisionTipoRel;
@@ -221,6 +226,22 @@ class InvRemisionTipo
     public function setOrden($orden): void
     {
         $this->orden = $orden;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDevolucion()
+    {
+        return $this->devolucion;
+    }
+
+    /**
+     * @param mixed $devolucion
+     */
+    public function setDevolucion( $devolucion ): void
+    {
+        $this->devolucion = $devolucion;
     }
 
 

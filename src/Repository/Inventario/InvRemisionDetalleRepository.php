@@ -176,7 +176,8 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->leftJoin('r.terceroRel', 't')
             ->where('r.estadoAprobado = 1')
             ->andWhere('r.estadoAnulado = 0')
-            ->andWhere('rd.cantidadPendiente > 0');
+            ->andWhere('rd.cantidadPendiente > 0')
+        ->andWhere('rt.devolucion = 0');
         if($session->get('filtroInvInformeRemisionPendienteCodigoTercero')){
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroInvInformeRemisionPendienteCodigoTercero')}");
         }

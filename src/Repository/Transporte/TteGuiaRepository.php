@@ -2771,4 +2771,21 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         return $queryBuilder->getQuery()->getResult();
     }
+
+    /**
+     * @param $arrGuias
+     */
+    public function actualizarNumeros($arrGuias){
+        if($arrGuias){
+            /** @var  $arGuia TteGuia */
+            foreach ($arrGuias as $arGuia) {
+                if($arGuia->getNumero() == 0){
+                    $arGuia->setNumero($arGuia->getCodigoGuiaPk());
+                    $this->_em->persist($arGuia);
+                }
+            }
+            $this->_em->flush($arGuia);
+        }
+    }
+
 }

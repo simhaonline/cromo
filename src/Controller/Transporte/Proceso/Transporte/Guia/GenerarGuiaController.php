@@ -27,8 +27,7 @@ class GenerarGuiaController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/transporte/proceso/transporte/guia/generarguia", name="transporte_proceso_transporte_guia_generarguia")
+     * @Route("/transporte/utilidad/transporte/guia/generar/excel", name="transporte_utilidad_transporte_guia_generar_excel")
      */
     public function lista(Request $request)
     {
@@ -37,81 +36,18 @@ class GenerarGuiaController extends Controller
         $form = $this->createFormBuilder()
             ->add('btnGenerar', SubmitType::class, ['label' => 'Generar'])
             ->add('flArchivo', FileType::class, ['required' => false])
-            ->add('btnEjemplo', SubmitType::class, ['label' => 'Descargar ejemplo'])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnEjemplo')->isClicked()) {
-                $this->generarEjemplo();
-            }
             if ($form->get('btnGenerar')->isClicked()) {
                 $this->generarGuias($form->get('flArchivo')->getData());
             }
         }
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaGenerarFactura(), $request->query->getInt('page', 1), 500);
-        return $this->render('transporte/proceso/transporte/guia/generarGuia.html.twig', [
+        return $this->render('transporte/utilidad/transporte/importarGuiaExcel/generarGuia.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()
         ]);
-    }
-
-    /**
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     */
-    private function generarEjemplo()
-    {
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('EjemploEstructura');
-        $j = 0;
-        $arrCampos = [
-            'codigo_guia_tipo_fk'
-            , 'codigo_operacion_ingreso_fk'
-            , 'codigo_operacion_cargo_fk'
-            , 'codigo_cliente_fk'
-            , 'codigo_ciudad_origen_fk'
-            , 'codigo_ciudad_destino_fk'
-            , 'codigo_servicio_fk'
-            , 'codigo_producto_fk'
-            , 'codigo_empaque_fk'
-            , 'codigo_condicion_fk'
-            , 'numero'
-            , 'documento_cliente'
-            , 'relacion_cliente'
-            , 'remitente'
-            , 'nombre_destinatario'
-            , 'direccion_destinatario'
-            , 'telefono_destinatario'
-            , 'fecha_ingreso'
-            , 'unidades'
-            , 'peso_real'
-            , 'peso_volumen'
-            , 'peso_facturado'
-            , 'vr_declara'
-            , 'vr_flete'
-            , 'vr_manejo'
-            , 'vr_recaudo'
-            , 'mercancia_peligrosa'
-            , 'usuario'
-            , 'comentario'
-        ];
-        for ($i = 'A'; $j <= sizeof($arrCampos) - 1; $i++) {
-            $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
-            $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
-            $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setSize(8);
-            $sheet->setCellValue($i . '1', strtoupper($arrCampos[$j]));
-            $j++;
-        }
-        $j = 1;
-        header('Content-Type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=ejemploEstructura.xls");
-        header('Cache-Control: max-age=0');
-
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
-        $writer->save('php://output');
-
-
     }
 
     /**

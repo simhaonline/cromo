@@ -29,7 +29,10 @@ class PrecioDetalleType extends AbstractType
                     return $er->createQueryBuilder('st')
                         ->orderBy('st.nombre', 'ASC');
                 },
-                'choice_label' => 'nombre',
+                'choice_label' => function($er){
+                    $ciudad = $er->getNombre();
+                    return $ciudad.' - '.$er->getDepartamentoRel()->getNombre();
+                },
                 'label' => 'Ciudad origen:'
             ])
             ->add('ciudadDestinoRel',EntityType::class,[
@@ -39,7 +42,10 @@ class PrecioDetalleType extends AbstractType
                     return $er->createQueryBuilder('st')
                         ->orderBy('st.nombre', 'ASC');
                 },
-                'choice_label' => 'nombre',
+                'choice_label' => function($er){
+                    $ciudad = $er->getNombre();
+                    return $ciudad. '-' . $er->getDepartamentoRel()->getNombre();
+                },
                 'label' => 'Ciudad destino:'
             ])
             ->add('productoRel',EntityType::class,[

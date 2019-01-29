@@ -14,7 +14,7 @@
         <td class="td-in-well">{{ arGuia.numero }}</td>
         <td class="titulo">DESPACHO:</td>
         <td class="td-in-well">{{ arGuia.fechaDespacho ?  arGuia.fechaDespacho|date("Y-m-d H:i:s") : '' }}</td>
-        <td class="titulo">NUMERO:</td>
+        <td class="titulo">ID-CODIGO:</td>
         <td class="td-in-well">{{ arGuia.codigoDespachoFk }}</td>
         <td class="titulo">PESO:</td>
         <td align="right">{{ arGuia.pesoReal | number_format(0, '.', ',') }}</td>
@@ -34,7 +34,7 @@
         <td class="td-in-well">{{ arGuia.operacionIngresoRel.nombre | default('') }}</td>
         <td class="titulo">CUMPLIDO:</td>
         <td class="td-in-well">{{ arGuia.fechaCumplido ? arGuia.fechaCumplido |date("Y-m-d H:i:s") : '' }}</td>
-        <td class="titulo">NUMERO:</td>
+        <td class="titulo">ID-CODIGO:</td>
         <td class="td-in-well">{{ arGuia.codigoCumplidoFk }}</td>
         </td>
         <td class="titulo">PESO(FAC):</td>
@@ -55,7 +55,7 @@
         <td class="td-in-well">{{ arGuia.clienteRel.nombreCorto }}</td>
         <td class="titulo">FACTURA:</td>
         <td class="td-in-well">{{ arGuia.fechaFactura ? arGuia.fechaFactura |date("Y-m-d H:i:s") : '' }}</td>
-        <td class="titulo">NUMERO:</td>
+        <td class="titulo">ID-CODIGO:</td>
         <td class="td-in-well">{{ arGuia.codigoFacturaFk }}</td>
         <td class="titulo">DECLARADO:</td>
         <td align="right">{{ arGuia.vrDeclara | number_format(0, '.', ',') }}</td>

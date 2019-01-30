@@ -6,6 +6,7 @@
             <th>ID</th>
             <th>FECHA</th>
             <th>NOTIFICACION</th>
+            <th>DESCRIPCION</th>
         </tr>
         </thead>
         <tbody>
@@ -13,7 +14,8 @@
             <tr>
                 <td>{{ arGenNotificacion.id }}</td>
                 <td>{{ arGenNotificacion.fecha|date("Y/m/d H:i:s") }}</td>
-                <td>{{ arGenNotificacion.nombre }}</td>
+                <td>{{ arGenNotificacion.notificacion }}</td>
+                <td>{{ arGenNotificacion.descripcion }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -27,6 +27,11 @@ class GenNotificacionTipo
     private $nombre;
 
     /**
+     * @ORM\Column(name="notificacion", type="string", length=200)
+     */
+    private $notificacion;
+
+    /**
      * @ORM\Column(name="usuarios", type="string", nullable=true, length=2048)
      */
     private $usuarios;
@@ -34,7 +39,17 @@ class GenNotificacionTipo
     /**
      * @ORM\Column(name="estado_activo", type="boolean", nullable=true, options={"default":false})
      */
-    private $estadoActivo;
+    private $estadoActivo=false;
+
+    /**
+     * @ORM\Column(type="string", name="codigo_modulo_pk",length=80, nullable=true)
+     */
+    private $codigoModuloFk;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\General\GenNotificacion", mappedBy="notificacionTipoRel")
+     */
+    protected $notificacionesNotificacionTipoRel;
 
     /**
      * @return mixed
@@ -71,6 +86,22 @@ class GenNotificacionTipo
     /**
      * @return mixed
      */
+    public function getNotificacion()
+    {
+        return $this->notificacion;
+    }
+
+    /**
+     * @param mixed $notificacion
+     */
+    public function setNotificacion( $notificacion ): void
+    {
+        $this->notificacion = $notificacion;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getUsuarios()
     {
         return $this->usuarios;
@@ -99,6 +130,39 @@ class GenNotificacionTipo
     {
         $this->estadoActivo = $estadoActivo;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoModuloFk()
+    {
+        return $this->codigoModuloFk;
+    }
+
+    /**
+     * @param mixed $codigoModuloFk
+     */
+    public function setCodigoModuloFk( $codigoModuloFk ): void
+    {
+        $this->codigoModuloFk = $codigoModuloFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotificacionesNotificacionTipoRel()
+    {
+        return $this->notificacionesNotificacionTipoRel;
+    }
+
+    /**
+     * @param mixed $notificacionesNotificacionTipoRel
+     */
+    public function setNotificacionesNotificacionTipoRel( $notificacionesNotificacionTipoRel ): void
+    {
+        $this->notificacionesNotificacionTipoRel = $notificacionesNotificacionTipoRel;
+    }
+
 
 
 

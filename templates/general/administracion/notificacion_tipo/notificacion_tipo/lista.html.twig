@@ -27,6 +27,8 @@
             <thead>
             <tr>
                 <th>ID</th>
+                <th>MODULO</th>
+                <th>NOMBRE</th>
                 <th>NOTIFICACION</th>
                 <th>USUARIOS</th>
                 <th>ACTIVO</th>
@@ -36,15 +38,11 @@
             <tbody>
             {% for arNotificaionTipo in arNotificaionTipo %}
                 <tr>
-                    <td>
-                        {{ arNotificaionTipo.codigoNotificacionTipoPk }}
-                    </td>
-                    <td>
-                        {{ arNotificaionTipo.nombre }}
-                    </td>
-                    <td>
-                        {{ arNotificaionTipo.usuarios }}
-                    </td>
+                    <td>{{ arNotificaionTipo.codigoNotificacionTipoPk }}</td>
+                    <td>{{ arNotificaionTipo.codigoModuloFk }}</td>
+                    <td>{{ arNotificaionTipo.nombre }}</td>
+                    <td>{{ arNotificaionTipo.notificacion }}</td>
+                    <td>{{ arNotificaionTipo.usuarios }}</td>
                     <td class="text-center">
                         <input class="estadoActivo" data-on="Activo" data-off="Desactivo" value={{  arNotificaionTipo.codigoNotificacionTipoPk }} type="checkbox" {{ arNotificaionTipo.estadoActivo?'checked':"" }} data-toggle="toggle" data-size="mini">
                     </td>

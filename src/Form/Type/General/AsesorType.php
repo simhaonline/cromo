@@ -21,6 +21,7 @@ class AsesorType extends AbstractType
             ->add('telefono',TextType::class,['label' => 'Telefono:', 'required' => true])
             ->add('celular',TextType::class,['label' => 'Celular:', 'required' => true])
             ->add('email',TextType::class,['label' => 'Email:', 'required' => true])
+            ->add('usuario',TextType::class,['label' => 'Usuario:', 'required' => false])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
@@ -41,7 +42,8 @@ class AsesorType extends AbstractType
             {"campo":"direccion",                      "tipo":"texto", "ayuda":"Direccion",                          "titulo":"DIRECCION"},
             {"campo":"telefono",                       "tipo":"texto", "ayuda":"Telefono",                           "titulo":"TELEFONO"},
             {"campo":"celular",                        "tipo":"texto", "ayuda":"Celular",                            "titulo":"CELULAR"},
-            {"campo":"email",                          "tipo":"texto", "ayuda":"Email",                              "titulo":"EMAIL"}
+            {"campo":"email",                          "tipo":"texto", "ayuda":"Email",                              "titulo":"EMAIL"},
+            {"campo":"usuario",                          "tipo":"texto", "ayuda":"Usuario",                              "titulo":"USUARIO"}
         ]';
         return $campos;
     }

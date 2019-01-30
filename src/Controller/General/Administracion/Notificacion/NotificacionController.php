@@ -48,7 +48,7 @@ class NotificacionController extends Controller
         $usuario=$user->getToken()->getUser();
         $arNotificacion=$em->getRepository('App:General\GenNotificacion')->lista($usuario->getUsername());
         $paginator  = $this->get('knp_paginator');
-        $arGenNotificacion= $paginator->paginate($arNotificacion,$request->query->getInt('page',1),20);
+        $arGenNotificacion= $paginator->paginate($arNotificacion,$request->query->getInt('page',1),50);
         return $this->render('general/administracion/notificacion/notificacion/lista.html.twig',
             ['arGenNotificacion' => $arGenNotificacion]);
     }

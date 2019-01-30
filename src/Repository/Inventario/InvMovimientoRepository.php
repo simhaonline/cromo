@@ -2,6 +2,7 @@
 
 namespace App\Repository\Inventario;
 
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
@@ -622,7 +623,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         if ($arMovimiento->getFacturaTipoRel() != '') {
             $arFacturaTipo = $em->getRepository(InvFacturaTipo::class)->find($arMovimiento->getCodigoFacturaTipoFk());
         }
-        if ($arMovimiento->getEstadoAprobado() == 0) {
+        if ($arMovimiento->getEstadoAprobado() == 0 && $arMovimiento->getEstadoAutorizado() == 1 && $arMovimiento->getEstadoAnulado() == 0) {
             if ($this->afectar($arMovimiento, 1)) {
                 $stringFecha = $arMovimiento->getFecha()->format('Y-m-d');
                 $plazo = $arMovimiento->getTerceroRel()->getPlazoPago();
@@ -645,8 +646,10 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     } else {
                         $arDocumento->setConsecutivo($arDocumento->getConsecutivo() + 1);
                     }
-                    $this->getEntityManager()->persist($arDocumento);
+                    $em->persist($arDocumento);
                 }
+
+                //Si el documento genera cartera
                 if ($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
                     $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arMovimiento->getTerceroRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arMovimiento->getTerceroRel()->getNumeroIdentificacion()]);
                     if (!$arClienteCartera) {
@@ -693,18 +696,21 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $arCuentaCobrar->setAsesorRel($arMovimiento->getAsesorRel());
                     $em->persist($arCuentaCobrar);
                 }
+                $em->flush();
 
-                $this->getEntityManager()->flush();
-
+                //Proceso de contabilizacion automatica
                 $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
                 if ($arConfiguracion['contabilidadAutomatica']) {
                     if($arMovimiento->getDocumentoRel()->getContabilizar()){
                         $this->contabilizar([$arMovimiento->getCodigoMovimientoPk()]);
                     }
                 }
+
+                //Proceso notificacion
+                FuncionesController::crearNotificacion(3, "numero " . $arMovimiento->getNumero(), array($arMovimiento->getAsesorRel()->getusuario()));
             }
         } else {
-            Mensajes::error("El movimiento ya fue aprobado aprobado");
+            Mensajes::error("El movimiento ya fue aprobado aprobado o no esta autorizado");
         }
     }
 

@@ -64,7 +64,7 @@ class NotificacionTipoController extends BaseController
             $session->set('arGenNotificacionTipoFiltroModelo', $arModeloSelect);
         }
         if($form->get('btnPrueba')->isClicked()){
-            FuncionesController::crearNotificacion(1);
+            FuncionesController::crearNotificacion(1, "descripcion de la prueba", null);
             return $this->redirectToRoute('general_administracion_notificacion_tipo_lista');
         }
         $arNotificacionTipo=$em->getRepository('App:General\GenNotificacionTipo')->lista();

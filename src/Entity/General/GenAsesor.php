@@ -53,6 +53,11 @@ class GenAsesor
     private $email;
 
     /**
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
+     */
+    private $usuario;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimiento",mappedBy="asesorRel")
      */
     protected $movimientosAsesorRel;
@@ -288,6 +293,38 @@ class GenAsesor
     public function setAnticipoAsesorRel($anticipoAsesorRel): void
     {
         $this->anticipoAsesorRel = $anticipoAsesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsesorAsesorRel()
+    {
+        return $this->asesorAsesorRel;
+    }
+
+    /**
+     * @param mixed $asesorAsesorRel
+     */
+    public function setAsesorAsesorRel( $asesorAsesorRel ): void
+    {
+        $this->asesorAsesorRel = $asesorAsesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario( $usuario ): void
+    {
+        $this->usuario = $usuario;
     }
 
 

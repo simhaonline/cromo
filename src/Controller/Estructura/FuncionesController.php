@@ -4,6 +4,7 @@ namespace App\Controller\Estructura;
 
 
 use App\Entity\General\GenNotificacion;
+use App\Entity\General\GenNotificacionTipo;
 use App\Utilidades\BaseDatos;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityManager;
@@ -133,33 +134,41 @@ final class FuncionesController
         return $fechaHasta;
     }
 
-    public static function crearNotificacion($id)
+    public static function crearNotificacion($id, $descripcion = '', $arrUsuarios = array())
     {
         try {
             $em = BaseDatos::getEm();
-            $arNotificacionTipoPrueba = $em->getRepository('App:General\GenNotificacionTipo')->find($id);
-            if ($arNotificacionTipoPrueba->getEstadoActivo()) {
-                $usuarios = json_decode($arNotificacionTipoPrueba->getUsuarios(), true);
-
-                if ($usuarios) {
-                    foreach ($usuarios as $user) {
-                        $arUsuario = $em->getRepository('App:Seguridad\Usuario')->findOneBy(['username' => $user]);
-                        if ($arUsuario) {
-                            $arNotificacion = (new GenNotificacion())
-                                ->setFecha(new \DateTime('now'))
-                                ->setNotificacionTipoRel($arNotificacionTipoPrueba)
-                                ->setCodigoUsuarioReceptorFk($arUsuario->getUsername())
-                                ->setCodigoUsuarioEmisorFk(null);
-                            $arUsuario->setNotificacionesPendientes($arUsuario->getNotificacionesPendientes() + 1);
-                            $em->persist($arUsuario);
-                            $em->persist($arNotificacion);
+            $arNotificacionTipo = $em->getRepository(GenNotificacionTipo::class)->find($id);
+            if($arNotificacionTipo) {
+                if ($arNotificacionTipo->getEstadoActivo()) {
+                    $usuarios = json_decode($arNotificacionTipo->getUsuarios(), true);
+                    if($arrUsuarios) {
+                        if($usuarios) {
+                            $usuarios = array_merge($usuarios, $arrUsuarios);
+                        } else {
+                            $usuarios = $arrUsuarios;
                         }
+                        $usuarios = array_unique($usuarios);
                     }
-                    $em->flush();
+                    if ($usuarios) {
+                        foreach ($usuarios as $user) {
+                            $arUsuario = $em->getRepository('App:Seguridad\Usuario')->findOneBy(['username' => $user]);
+                            if ($arUsuario) {
+                                $arNotificacion = new GenNotificacion();
+                                $arNotificacion->setFecha(new \DateTime('now'));
+                                $arNotificacion->setNotificacionTipoRel($arNotificacionTipo);
+                                $arNotificacion->setCodigoUsuarioReceptorFk($arUsuario->getUsername());
+                                $arNotificacion->setDescripcion($descripcion);
+                                $arUsuario->setNotificacionesPendientes($arUsuario->getNotificacionesPendientes() + 1);
+                                $em->persist($arUsuario);
+                                $em->persist($arNotificacion);
+                            }
+                        }
+                        $em->flush();
+                    }
                 }
-            } else {
-                Mensajes::error("No se puede crear la notificacion, se encuentra desactivada");
             }
+
         } catch (\Exception $exception) {
             //Error
         }

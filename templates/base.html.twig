@@ -338,13 +338,16 @@
                 type: "GET",
                 dataType: "JSON",
                 success: function (respuestas) {
+                    // console.log("response: ", respuestas);
                     if (respuestas['notificacionesPendientes'] && respuestas['notificacionesPendientes'] > 0) {
                         numeroNotificaciones.html(`(${respuestas['notificacionesPendientes']})`);
                         notificaciones.html("<ul class='notificaciones notification-body' id='notificaciones'></ul>");
+
                         $.each(respuestas['notificaciones'], (key, notificacion) => {
+                            //console.log("hola");
                             if (key < 7) {
-                                notificaciones.append('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >' + notificacion['nombre'] + '<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>');
-                                guardarNotificacion += '<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >' + notificacion['nombre'] + '<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>';
+                                notificaciones.append('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >' + notificacion['notificacion'] + ' ' + notificacion['descripcion'] + '<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>');
+                                guardarNotificacion += '<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >' + notificacion['notificacion'] + ' ' + notificacion['descripcion'] + '<span class="pull-right font-xs text-muted"><i>' + moment(notificacion['fecha'], "YYYYMMDDhms").fromNow() + '</i></span></span></span></li>';
                             }
                         });
                         if (guardarNotificacion !== "") {
@@ -358,7 +361,8 @@
                             notificaciones.append('<li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>');
                         }
                         else {
-                            notificaciones.html('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >Sin notificaciones</span></span></li>');
+                            notificaciones.html('<li><span class="padding-10 unread"><em class="badge padding-5 no-border-radius bg-color-blueLight pull-left margin-right-5"><i class="fa fa-bell fa-fw fa-2x"></i></em><span >Sin notificaciones nuevas</span></span></li>');
+                            notificaciones.append('<li><a class="text-center" href="{{ path('general_administracion_notificacion__todasNotificaciones') }}"><strong>Ver todas </strong><i class="fa fa-angle-right"></i></a></li>');
                         }
                     }
 
@@ -389,10 +393,7 @@
                 }
             });
         }
-
-
     </script>
-
 {% endblock %}
 </body>
 </html>

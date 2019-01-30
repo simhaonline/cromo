@@ -27,6 +27,11 @@ class GenNotificacion
     private $fecha;
 
     /**
+     * @ORM\Column(name="descripcion", type="string", name="descripcion",length=1000, nullable=true)
+     */
+    private $descripcion;
+
+    /**
      * @ORM\Column(name="codigo_usuario_receptor_fk", type="string", nullable=false)
      */
     private $codigoUsuarioReceptorFk;
@@ -37,7 +42,7 @@ class GenNotificacion
     private $codigoUsuarioEmisorFk;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenNotificacionTipo", inversedBy="notificacionNotificacionTipoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenNotificacionTipo", inversedBy="notificacionesNotificacionTipoRel")
      * @ORM\JoinColumn(name="codigo_notificacion_tipo_fk", referencedColumnName="codigo_notificacion_tipo_pk")
      */
     protected $notificacionTipoRel;
@@ -51,6 +56,14 @@ class GenNotificacion
     }
 
     /**
+     * @param mixed $codigoNotificacionPk
+     */
+    public function setCodigoNotificacionPk( $codigoNotificacionPk ): void
+    {
+        $this->codigoNotificacionPk = $codigoNotificacionPk;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoNotificacionTipoFk()
@@ -61,10 +74,9 @@ class GenNotificacion
     /**
      * @param mixed $codigoNotificacionTipoFk
      */
-    public function setCodigoNotificacionTipoFk($codigoNotificacionTipoFk)
+    public function setCodigoNotificacionTipoFk( $codigoNotificacionTipoFk ): void
     {
         $this->codigoNotificacionTipoFk = $codigoNotificacionTipoFk;
-        return $this;
     }
 
     /**
@@ -78,10 +90,25 @@ class GenNotificacion
     /**
      * @param mixed $fecha
      */
-    public function setFecha($fecha)
+    public function setFecha( $fecha ): void
     {
         $this->fecha = $fecha;
-        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * @param mixed $descripcion
+     */
+    public function setDescripcion( $descripcion ): void
+    {
+        $this->descripcion = $descripcion;
     }
 
     /**
@@ -95,10 +122,9 @@ class GenNotificacion
     /**
      * @param mixed $codigoUsuarioReceptorFk
      */
-    public function setCodigoUsuarioReceptorFk($codigoUsuarioReceptorFk)
+    public function setCodigoUsuarioReceptorFk( $codigoUsuarioReceptorFk ): void
     {
         $this->codigoUsuarioReceptorFk = $codigoUsuarioReceptorFk;
-        return $this;
     }
 
     /**
@@ -112,10 +138,9 @@ class GenNotificacion
     /**
      * @param mixed $codigoUsuarioEmisorFk
      */
-    public function setCodigoUsuarioEmisorFk($codigoUsuarioEmisorFk)
+    public function setCodigoUsuarioEmisorFk( $codigoUsuarioEmisorFk ): void
     {
         $this->codigoUsuarioEmisorFk = $codigoUsuarioEmisorFk;
-        return $this;
     }
 
     /**
@@ -129,10 +154,9 @@ class GenNotificacion
     /**
      * @param mixed $notificacionTipoRel
      */
-    public function setNotificacionTipoRel($notificacionTipoRel)
+    public function setNotificacionTipoRel( $notificacionTipoRel ): void
     {
         $this->notificacionTipoRel = $notificacionTipoRel;
-        return $this;
     }
 
 

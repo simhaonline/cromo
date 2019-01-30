@@ -18,7 +18,7 @@ class InvBodegaUsuarioRepository extends ServiceEntityRepository
             ->addSelect('b.nombre AS bodega')
             ->where('bu.codigoBodegaUsuarioPk <> 0')
             ->leftJoin('bu.bodegaRel', 'b')
-            ->addOrderBy('bu.codigoBodegaUsuarioPk', 'ASC');
+            ->addOrderBy('bu.usuario', 'ASC');
 
 
         return $queryBuilder;

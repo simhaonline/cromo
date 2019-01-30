@@ -485,4 +485,14 @@ class InvRemisionRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
+    public function sinAprobar() {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(InvRemision::class, 'r')
+            ->select('COUNT(r.codigoRemisionPk) as cantidad')
+            ->andWhere('r.estadoAprobado=0');
+        $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+
+        return $arrResultado['cantidad'];
+    }
+
 }

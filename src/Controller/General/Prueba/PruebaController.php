@@ -6,6 +6,7 @@ use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenFactura;
 use App\Entity\General\GenFacturaDetalle;
 use App\Entity\Inventario\InvLote;
+use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Transporte\TteConfiguracion;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -26,7 +27,7 @@ class PruebaController extends Controller
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $estado = $em->getRepository(InvLote::class)->notificacionDiariaMercanciaVencidaBodega();
+        $trasladosSinAprobar = $em->getRepository(InvMovimiento::class)->trasladoSinAprobar();
         echo "prueba";
         exit;
     }

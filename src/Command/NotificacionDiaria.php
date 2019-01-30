@@ -3,6 +3,8 @@ namespace App\Command;
 
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Inventario\InvLote;
+use App\Entity\Inventario\InvMovimiento;
+use App\Entity\Inventario\InvRemision;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,12 +35,24 @@ class NotificacionDiaria extends Command{
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->entityManager;
-        //---------Inventario
 
+        //---------Inventario---------------------------------------------
         //Mercancia vencida en bodega
         $estado = $em->getRepository(InvLote::class)->notificacionDiariaMercanciaVencidaBodega();
         if($estado) {
             FuncionesController::crearNotificacion(2);
+        }
+
+        //Traslados sin aprobar
+        $cantidad = $em->getRepository(InvMovimiento::class)->trasladoSinAprobar();
+        if($cantidad > 0) {
+            FuncionesController::crearNotificacion(5, $cantidad . " registros");
+        }
+
+        //Remisiones sin aprobar
+        $cantidad = $em->getRepository(InvRemision::class)->sinAprobar();
+        if($cantidad > 0) {
+            FuncionesController::crearNotificacion(6, $cantidad . " registros");
         }
         echo "Se generaron las notificaciones";
         /*$users = $this->entityManager->getRepository("App:Usuario\Usuario")->findAll();

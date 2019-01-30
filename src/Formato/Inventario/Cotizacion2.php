@@ -142,6 +142,7 @@ class Cotizacion2 extends \FPDF
 
         $arrConfiguracionDocumental = self::$em->getRepository(DocConfiguracion::class)->archivoMasivo();
         $y = 74;
+        $linea = 74;
         $contador = 0;
         $cantRegistros = count($arCotizacionDetalles);
         foreach ($arCotizacionDetalles as $arCotizacionDetalle) {
@@ -159,14 +160,16 @@ class Cotizacion2 extends \FPDF
             $pdf->Cell(15, 30, $arCotizacionDetalle->getCantidad(), 1, 0, 'C');
             $pdf->Cell(30, 30, number_format($arCotizacionDetalle->getVrSubtotal()), 1, 0, 'R');
             $pdf->Cell(30, 30, number_format($arCotizacionDetalle->getVrTotal()), 1, 0, 'R');
-            $pdf->Multicell(85, 4, utf8_decode($arCotizacionDetalle->getItemRel()->getDescripcion()), 0, 'L');
-            $pdf->setY($pdf->getY() + 26);
+            $pdf->Multicell(85, 3, utf8_decode($arCotizacionDetalle->getItemRel()->getDescripcion()), 0);
+            $linea += 30;
+            $pdf->setY($linea);
             if ($contador == 5 && $cantRegistros > 0) {
                 $y = 74;
+                $linea = 74;
                 $contador = 0;
                 $pdf->AddPage();
             } else {
-                $y+=30;
+                $y += 30;
             }
         }
         $pdf->SetFont('Arial', '', 8);

@@ -29,6 +29,7 @@
         <tr>
             <th>ID</th>
             <th>NOMBRE</th>
+            <th>PERMITE RECAUDO</th>
             <th>% MANEJO</th>
             <th>MANEJO MINIMO UNIDAD</th>
             <th>MANEJO MINIMO DESPACHO</th>
@@ -37,7 +38,6 @@
             <th>PRECIO ADICIONAL</th>
             <th>DESCUENTO PESO</th>
             <th>DESCUENTO UNIDAD</th>
-            <th>PERMITE RECAUDO</th>
             <th></th>
             <th></th>
         </tr>
@@ -47,15 +47,15 @@
             <tr>
                 <td>{{ arCondicion.codigoCondicionPk }}</td>
                 <td>{{ arCondicion.nombre }}</td>
-                <td style="text-align: center;">{{ arCondicion.porcentajeManejo }}</td>
-                <td style="text-align: center;">{{ arCondicion.manejoMinimoUnidad }}</td>
-                <td style="text-align: center;">{{ arCondicion.manejoMinimoDespacho }}</td>
+                <td>{{ arCondicion.permiteRecaudo ? 'SI' : 'NO' }}</td>
+                <td class="numero">{{ arCondicion.porcentajeManejo }}</td>
+                <td class="numero">{{ arCondicion.manejoMinimoUnidad }}</td>
+                <td class="numero">{{ arCondicion.manejoMinimoDespacho }}</td>
                 <td class="numero">{{ arCondicion.precioPeso }}</td>
                 <td class="numero">{{ arCondicion.precioUnidad }}</td>
                 <td class="numero">{{ arCondicion.precioAdicional }}</td>
                 <td style="text-align: right;">{{ arCondicion.descuentoPeso }}</td>
                 <td style="text-align: right;">{{ arCondicion.descuentoUnidad }}</td>
-                <td>{{ arCondicion.permiteRecaudo ? 'SI' : 'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_administracion_comercial_condicion_nuevo',{'id' : arCondicion.codigoCondicionPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">

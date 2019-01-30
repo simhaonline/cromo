@@ -15,6 +15,7 @@ class Cotizacion2 extends \FPDF
     public static $em;
     public static $codigoCotizacion;
     public static $strLetras;
+
     /**
      * @param $em ObjectManager
      * @param $codigoPedido integer
@@ -38,7 +39,7 @@ class Cotizacion2 extends \FPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Cotizacion$codigoCotizacion.pdf", 'D');
+        $pdf->Output("Cotizacion$codigoCotizacion.pdf", 'I');
     }
 
     public function Header()
@@ -113,7 +114,7 @@ class Cotizacion2 extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(30, 15, 30, 30 , 85, 30);
+        $w = array(30, 15, 30, 30, 85, 30);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -140,27 +141,37 @@ class Cotizacion2 extends \FPDF
         $pdf->SetFont('Arial', '', 7);
 
         $arrConfiguracionDocumental = self::$em->getRepository(DocConfiguracion::class)->archivoMasivo();
+        $y = 74;
+        $contador = 0;
+        $cantRegistros = count($arCotizacionDetalles);
         foreach ($arCotizacionDetalles as $arCotizacionDetalle) {
+            $cantRegistros--;
+            $contador++;
             $arImagen = self::$em->getRepository(DocImagen::class)->findOneBy(array('codigoModeloFk' => 'InvItem', 'identificador' => $arCotizacionDetalle->getCodigoItemFk()));
-            if($arImagen) {
+            if ($arImagen) {
                 $strFichero = $arrConfiguracionDocumental['rutaAlmacenamiento'] . "/imagen/" . $arImagen->getCodigoModeloFk() . "/" . $arImagen->getDirectorio() . "/" . $arImagen->getCodigoImagenPk() . "_" . $arImagen->getNombre();
                 if (file_exists($strFichero)) {
-                    $pdf->Image($strFichero,$pdf->getX(),$pdf->getY(),30,30);
+                    $pdf->Image($strFichero, $pdf->getX(), $pdf->getY(), 30, 30);
                 }
             }
-            $pdf->SetX(10);
+            $pdf->Rect(115, $y, 85, 30);
             $pdf->Cell(30, 30, "", 1, 0, 'L');
             $pdf->Cell(15, 30, $arCotizacionDetalle->getCantidad(), 1, 0, 'C');
             $pdf->Cell(30, 30, number_format($arCotizacionDetalle->getVrSubtotal()), 1, 0, 'R');
             $pdf->Cell(30, 30, number_format($arCotizacionDetalle->getVrTotal()), 1, 0, 'R');
-            $pdf->Multicell(85,4,utf8_decode($arCotizacionDetalle->getItemRel()->getDescripcion()),0,'L');
-            $pdf->Ln();
-//            $pdf->SetAutoPageBreak(true, 15);
+            $pdf->Multicell(85, 4, utf8_decode($arCotizacionDetalle->getItemRel()->getDescripcion()), 0, 'L');
+            $pdf->setY($pdf->getY() + 26);
+            if ($contador == 5 && $cantRegistros > 0) {
+                $y = 74;
+                $contador = 0;
+                $pdf->AddPage();
+            } else {
+                $y+=30;
+            }
         }
-
         $pdf->SetFont('Arial', '', 8);
 //        TOTALES
-        $pdf->Ln(2);
+        $pdf->Ln();
         $pdf->Cell(145, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->SetFillColor(236, 236, 236);

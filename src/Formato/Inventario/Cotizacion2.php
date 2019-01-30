@@ -39,7 +39,7 @@ class Cotizacion2 extends \FPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Cotizacion$codigoCotizacion.pdf", 'I');
+        $pdf->Output("Cotizacion$codigoCotizacion.pdf", 'D');
     }
 
     public function Header()

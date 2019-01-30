@@ -105,7 +105,7 @@ class Cotizacion2 extends \FPDF
     public function EncabezadoDetalles()
     {
         $this->Ln(14);
-        $header = array('', 'DESCRIPCION');
+        $header = array('REFERENCIA', 'CANT', 'VALOR UNITARIO', 'VALOR TOTAL', 'DESCRIPCION');
         $this->SetFillColor(200, 200, 200);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -113,7 +113,7 @@ class Cotizacion2 extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(30, 30);
+        $w = array(30, 15, 30, 30 , 85, 30);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -129,7 +129,7 @@ class Cotizacion2 extends \FPDF
     }
 
     /**
-     * @param $pdf
+     * @param $pdf \FPDF
      */
     public function Body($pdf)
     {
@@ -148,16 +148,18 @@ class Cotizacion2 extends \FPDF
                     $pdf->Image($strFichero,$pdf->getX(),$pdf->getY(),30,30);
                 }
             }
-
+            $pdf->SetX(10);
             $pdf->Cell(30, 30, "", 1, 0, 'L');
-            //$pdf->Cell(60, 30, $arCotizacionDetalle->getItemRel()->getDescripcion(), 1, 0, 'L');
-            $pdf->MultiCell(60,5,$arCotizacionDetalle->getItemRel()->getDescripcion());
+            $pdf->Cell(15, 30, $arCotizacionDetalle->getCantidad(), 1, 0, 'C');
+            $pdf->Cell(30, 30, number_format($arCotizacionDetalle->getVrSubtotal()), 1, 0, 'R');
+            $pdf->Cell(30, 30, number_format($arCotizacionDetalle->getVrTotal()), 1, 0, 'R');
+            $pdf->Multicell(85,4,utf8_decode($arCotizacionDetalle->getItemRel()->getDescripcion()),0,'L');
             $pdf->Ln();
-            $pdf->SetAutoPageBreak(true, 15);
+//            $pdf->SetAutoPageBreak(true, 15);
         }
 
-        $pdf->SetFont('Arial', '', 7);
-        //TOTALES
+        $pdf->SetFont('Arial', '', 8);
+//        TOTALES
         $pdf->Ln(2);
         $pdf->Cell(145, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
@@ -177,7 +179,6 @@ class Cotizacion2 extends \FPDF
         $pdf->Cell(20, 4, "NETO PAGAR", 1, 0, 'R', true);
         $pdf->SetFont('Arial', '', 7);
         $pdf->Cell(25, 4, number_format($arCotizacion->getVrTotal(), 0, '.', ','), 1, 0, 'R');
-        $pdf->Ln(-8);
     }
 
     public function Footer()

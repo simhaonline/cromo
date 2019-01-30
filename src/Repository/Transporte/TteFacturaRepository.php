@@ -759,6 +759,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setNaturaleza('C');
                             }
                             $arRegistro->setDescripcion('INGRESO FLETE TERCERO');
+                            $arRegistro->setCodigoModeloFk('TteFactura');
+                            $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
                             $em->persist($arRegistro);
                         } else {
                             $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete";
@@ -793,6 +795,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setNaturaleza('C');
                             }
                             $arRegistro->setDescripcion('INGRESO MANEJO');
+                            $arRegistro->setCodigoModeloFk('TteFactura');
+                            $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
                             $em->persist($arRegistro);
                         } else {
                             $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por manejo";
@@ -827,6 +831,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setNaturaleza('C');
                             }
                             $arRegistro->setDescripcion('CLIENTES');
+                            $arRegistro->setCodigoModeloFk('TteFactura');
+                            $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
                             $em->persist($arRegistro);
                         } else {
                             $error = "El tipo de factura no tiene configurada la cuenta cliente";

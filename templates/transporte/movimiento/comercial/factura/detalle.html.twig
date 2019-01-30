@@ -6,17 +6,14 @@
             <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_comercial_factura_lista') }}">Volver</a>
         </div>
         <div class="btn-group">
-            {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}
+            {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
     <div style="float:right">
         {% if arFactura.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arFactura.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arFactura.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arFactura.estadoContabilizado == true %}<span class="label label-danger">Contabilizado</span>{% endif %}
     </div>
     <br /><br />
     {% include 'transporte/movimiento/comercial/factura/informacion.html.twig' %}

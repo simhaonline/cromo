@@ -217,6 +217,7 @@ class FacturaController extends ControllerListenerGeneral
             'arFacturaDetalles' => $arFacturaDetalles,
             'arFacturaPlanillas' => $arFacturaPlanillas,
             'arFacturaDetallesConceptos' => $arFacturaDetallesConceptos,
+            'clase' => array('clase' => 'TteFactura', 'codigo' => $id),
             'form' => $form->createView()]);
     }
 

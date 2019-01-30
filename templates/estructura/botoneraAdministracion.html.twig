@@ -1,5 +1,5 @@
 
 {% if clase is defined %}
     <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('documental_general_general_lista', { 'tipo': clase.clase,  'codigo': clase.codigo }) }}', 'Archivos', 500, 800)">Archivos</a>
-    <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('general_utilidad_general_comentario_lista', { 'codigoModelo': clase.clase,  'codigoMovimiento': clase.codigo }) }}', 'Comentario', 600, 900)">Comentario</a>
+    <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('general_utilidad_general_comentario_lista', { 'codigoModelo': clase.clase,  'codigo': clase.codigo }) }}', 'Comentario', 600, 900)">Comentario</a>
 {% endif %}

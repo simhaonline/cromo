@@ -21,15 +21,15 @@
                     </div>
                 </div>
                 <br><br><br>
-                {% for arMovimientoComentario in arMovimientoComentarios %}
+                {% for arComentarioModelo in arComentariosModelo %}
                     <cite style="font-size: 11px;color: grey;">
-                        {{ arMovimientoComentario.fecha | date('l')|replace(dia) }} {{ arMovimientoComentario.fecha |date('d') }}
-                        de {{ arMovimientoComentario.fecha |date('M')|replace(mes) }}
-                        del {{ arMovimientoComentario.fecha |date('Y') }} a
-                        las {{ arMovimientoComentario.fecha |date('H:i:s') }}
+                        {{ arComentarioModelo.fecha | date('l')|replace(dia) }} {{ arComentarioModelo.fecha |date('d') }}
+                        de {{ arComentarioModelo.fecha |date('M')|replace(mes) }}
+                        del {{ arComentarioModelo.fecha |date('Y') }} a
+                        las {{ arComentarioModelo.fecha |date('H:i:s') }}
                         - <span class="fa fa-info-circle"
                                 title="La hora de registro del comentario esta en formato de 24h"></span>
-                        <a href="javascript:editarComentario('{{ arMovimientoComentario.codigoMovimientoComentarioPk }}','{{ arMovimientoComentario.comentario|replace({"'" : "&"}) }}');">
+                        <a href="javascript:editarComentario('{{ arComentarioModelo.codigoComentarioModeloPk }}','{{ arComentarioModelo.comentario|replace({"'" : "&"}) }}');">
                         <span class="fa fa-edit" style="float: right;font-size: 14px;color: black;"></span>
                         </a>
                     </cite>
@@ -38,8 +38,8 @@
                     <div style="background-color: #f2f2f2;border-radius:10px;">
                         <p style="padding: 4px 4px 4px 4px;">
                             <a href="javascript:void(0);"
-                               style="font-size: 15px;">{{ arMovimientoComentario.codigoUsuario }}</a>
-                            {{ arMovimientoComentario.comentario }}
+                               style="font-size: 15px;">{{ arComentarioModelo.codigoUsuario }}</a>
+                            {{ arComentarioModelo.comentario }}
                         </p>
                     </div>
                     <hr>

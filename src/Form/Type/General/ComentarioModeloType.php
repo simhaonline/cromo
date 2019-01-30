@@ -2,7 +2,8 @@
 
 namespace App\Form\Type\General;
 
-use App\Entity\General\GenMovimientoComentario;
+
+use App\Entity\General\GenComentarioModelo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -10,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MovimientoComentarioType extends AbstractType
+class ComentarioModeloType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -22,7 +23,7 @@ class MovimientoComentarioType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => GenMovimientoComentario::class,
+            'data_class' => GenComentarioModelo::class,
         ]);
     }
 }

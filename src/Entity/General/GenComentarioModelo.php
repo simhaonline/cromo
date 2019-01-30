@@ -6,27 +6,27 @@ namespace App\Entity\General;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\General\GenMovimientoComentarioRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\General\GenComentarioModeloRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
-class GenMovimientoComentario
+class GenComentarioModelo
 {
     public $infoLog = [
-        "primaryKey" => "codigoMovimientoComentarioPk",
+        "primaryKey" => "codigoComentarioModeloPk",
         "todos"     => true,
     ];
 
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer", name="codigo_movimiento_comentario_pk")
+     * @ORM\Column(type="integer", name="codigo_comentario_modelo_pk")
      */
-    private $codigoMovimientoComentarioPk;
+    private $codigoComentarioModeloPk;
 
     /**
-     * @ORM\Column(name="codigo_movimiento_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo", type="integer", nullable=true)
      */
-    private $codigoMovimientoFk;
+    private $codigo;
 
     /**
      * @ORM\Column(name="codigo_modelo_fk", length=80, type="string", nullable=true)
@@ -51,33 +51,33 @@ class GenMovimientoComentario
     /**
      * @return mixed
      */
-    public function getCodigoMovimientoComentarioPk()
+    public function getCodigoComentarioModeloPk()
     {
-        return $this->codigoMovimientoComentarioPk;
+        return $this->codigoComentarioModeloPk;
     }
 
     /**
-     * @param mixed $codigoMovimientoComentarioPk
+     * @param mixed $codigoComentarioModeloPk
      */
-    public function setCodigoMovimientoComentarioPk($codigoMovimientoComentarioPk): void
+    public function setCodigoComentarioModeloPk( $codigoComentarioModeloPk ): void
     {
-        $this->codigoMovimientoComentarioPk = $codigoMovimientoComentarioPk;
+        $this->codigoComentarioModeloPk = $codigoComentarioModeloPk;
     }
 
     /**
      * @return mixed
      */
-    public function getCodigoMovimientoFk()
+    public function getCodigo()
     {
-        return $this->codigoMovimientoFk;
+        return $this->codigo;
     }
 
     /**
-     * @param mixed $codigoMovimientoFk
+     * @param mixed $codigo
      */
-    public function setCodigoMovimientoFk($codigoMovimientoFk): void
+    public function setCodigo( $codigo ): void
     {
-        $this->codigoMovimientoFk = $codigoMovimientoFk;
+        $this->codigo = $codigo;
     }
 
     /**
@@ -91,7 +91,7 @@ class GenMovimientoComentario
     /**
      * @param mixed $codigoModeloFk
      */
-    public function setCodigoModeloFk($codigoModeloFk): void
+    public function setCodigoModeloFk( $codigoModeloFk ): void
     {
         $this->codigoModeloFk = $codigoModeloFk;
     }
@@ -107,7 +107,7 @@ class GenMovimientoComentario
     /**
      * @param mixed $comentario
      */
-    public function setComentario($comentario): void
+    public function setComentario( $comentario ): void
     {
         $this->comentario = $comentario;
     }
@@ -123,7 +123,7 @@ class GenMovimientoComentario
     /**
      * @param mixed $fecha
      */
-    public function setFecha($fecha): void
+    public function setFecha( $fecha ): void
     {
         $this->fecha = $fecha;
     }
@@ -139,9 +139,12 @@ class GenMovimientoComentario
     /**
      * @param mixed $codigoUsuario
      */
-    public function setCodigoUsuario($codigoUsuario): void
+    public function setCodigoUsuario( $codigoUsuario ): void
     {
         $this->codigoUsuario = $codigoUsuario;
     }
+
+
+
 }
 

@@ -43,5 +43,16 @@ class GenNotificacionTipo extends Fixture
             $manager->flush();
         }
 
+        $genNotificacionTipo=$manager->getRepository('App:General\GenNotificacionTipo')->find(4);
+        if(!$genNotificacionTipo){
+            $genNotificacionTipo = new \App\Entity\General\GenNotificacionTipo();
+            $genNotificacionTipo->setCodigoNotificacionTipoPk(4);
+            $genNotificacionTipo->setNombre("Comentario nuevo en modelo");
+            $genNotificacionTipo->setNotificacion("Se agrego un nuevo comentario");
+            $genNotificacionTipo->setCodigoModuloFk("General");
+            $genNotificacionTipo->setEstadoActivo(0);
+            $manager->persist($genNotificacionTipo);
+            $manager->flush();
+        }
     }
 }

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {% include (modulo~'/'~funcion~'/'~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
+    <div class="table-responsive" style="padding:0px;">
+        {{ form_start(formBotonera) }}
+        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
+        <div class="btn-group" style="float: right; margin-right: 5px !important;">
+            {{ form_widget(formBotonera.btnGenerarEstructura) }}
+        </div>
+        {{ form_end(formBotonera) }}
+    </div>
+
+{% endblock %}
+

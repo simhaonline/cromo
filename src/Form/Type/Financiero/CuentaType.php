@@ -17,7 +17,6 @@ class CuentaType extends AbstractType
         $builder
             ->add('codigoCuentaPk', TextType::class, ['label' => 'Codigo cuenta:'])
             ->add('nombre', TextType::class, ['label' => 'Nombre:'])
-            ->add('codigoCuentaPadreFk', TextType::class, ['label' => 'Codigo cuenta padre:'])
             ->add('exigeTercero', CheckboxType::class, ['label' => 'Exige tercero:', 'required' => false])
             ->add('exigeCentroCosto', CheckboxType::class, ['label' => 'Exige centro de costo', 'required' => false])
             ->add('exigeBase', CheckboxType::class, ['label' => 'Exige base', 'required' => false])
@@ -46,7 +45,16 @@ class CuentaType extends AbstractType
         ]';
         return $campos;
     }
+    public function getEstructuraPropiedadesFiltro()
+    {
 
+        $campos = '[
+            {"child":"nombre",                     "tipo":"TextType",   "propiedades":{"label":"Nombre"},      "operador":"like"},
+            {"child":"codigoCuentaPk",                     "tipo":"TextType",   "propiedades":{"label":"codigo"},      "operador":"like"}            
+        ]';
+
+        return $campos;
+    }
     public function getEstructuraPropiedadesExportar()
     {
         $campos = '[

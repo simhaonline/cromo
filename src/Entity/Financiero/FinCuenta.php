@@ -80,6 +80,26 @@ class FinCuenta
     private $nivel = 1;
 
     /**
+     * @ORM\Column(name="clase", type="string", length=1, nullable=true)
+     */
+    private $clase;
+
+    /**
+     * @ORM\Column(name="grupo", type="string", length=2, nullable=true)
+     */
+    private $grupo;
+
+    /**
+     * @ORM\Column(name="cuenta", type="string", length=4, nullable=true)
+     */
+    private $cuenta;
+
+    /**
+     * @ORM\Column(name="subcuenta", type="string", length=6, nullable=true)
+     */
+    private $subcuenta;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinRegistro", mappedBy="cuentaRel")
      */
     protected $registrosCuentaRel;
@@ -263,6 +283,70 @@ class FinCuenta
     public function setAsientosDetallesCuentaRel($asientosDetallesCuentaRel): void
     {
         $this->asientosDetallesCuentaRel = $asientosDetallesCuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClase()
+    {
+        return $this->clase;
+    }
+
+    /**
+     * @param mixed $clase
+     */
+    public function setClase($clase): void
+    {
+        $this->clase = $clase;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupo()
+    {
+        return $this->grupo;
+    }
+
+    /**
+     * @param mixed $grupo
+     */
+    public function setGrupo($grupo): void
+    {
+        $this->grupo = $grupo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
+    }
+
+    /**
+     * @param mixed $cuenta
+     */
+    public function setCuenta($cuenta): void
+    {
+        $this->cuenta = $cuenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubcuenta()
+    {
+        return $this->subcuenta;
+    }
+
+    /**
+     * @param mixed $subcuenta
+     */
+    public function setSubcuenta($subcuenta): void
+    {
+        $this->subcuenta = $subcuenta;
     }
 
 

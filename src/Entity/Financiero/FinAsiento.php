@@ -19,7 +19,7 @@ class FinAsiento
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_asiento_pk", type="integer")
+     * @ORM\Column(name="codigo_asiento_pk", type="integer", nullable=true)
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoAsientoPk;

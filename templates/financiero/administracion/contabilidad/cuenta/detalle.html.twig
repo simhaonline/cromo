@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('financiero_administracion_contabilidad_cuenta_lista') }}">Volver</a>
+        </div>
+    </div>
+    <br /><br />
+    {% include 'financiero/administracion/contabilidad/cuenta/informacion.html.twig' %}
+    {{ form_end(form) }}
+{% endblock %}

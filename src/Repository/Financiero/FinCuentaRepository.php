@@ -44,4 +44,14 @@ class FinCuentaRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->execute();
     }
 
+    public function generarEstructura()
+    {
+        $em = $this->getEntityManager();
+        $arCuentas = $em->getRepository(FinCuenta::class)->findAll();
+        foreach ($arCuentas as $arCuenta) {
+
+        }
+        return true;
+    }
+
 }

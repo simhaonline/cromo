@@ -45,6 +45,11 @@ class FinComprobante
     private $nombre;
 
     /**
+     * @ORM\Column(name="consecutivo", type="integer", nullable=true, options={"default":false})
+     */
+    private $consecutivo = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinRegistro", mappedBy="comprobanteRel")
      */
     protected $registrosComprobanteRel;
@@ -70,7 +75,7 @@ class FinComprobante
     /**
      * @param mixed $codigoComprobantePk
      */
-    public function setCodigoComprobantePk($codigoComprobantePk): void
+    public function setCodigoComprobantePk( $codigoComprobantePk ): void
     {
         $this->codigoComprobantePk = $codigoComprobantePk;
     }
@@ -86,9 +91,25 @@ class FinComprobante
     /**
      * @param mixed $nombre
      */
-    public function setNombre($nombre): void
+    public function setNombre( $nombre ): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConsecutivo()
+    {
+        return $this->consecutivo;
+    }
+
+    /**
+     * @param mixed $consecutivo
+     */
+    public function setConsecutivo( $consecutivo ): void
+    {
+        $this->consecutivo = $consecutivo;
     }
 
     /**
@@ -102,7 +123,7 @@ class FinComprobante
     /**
      * @param mixed $registrosComprobanteRel
      */
-    public function setRegistrosComprobanteRel($registrosComprobanteRel): void
+    public function setRegistrosComprobanteRel( $registrosComprobanteRel ): void
     {
         $this->registrosComprobanteRel = $registrosComprobanteRel;
     }
@@ -118,7 +139,7 @@ class FinComprobante
     /**
      * @param mixed $asientosComprobanteRel
      */
-    public function setAsientosComprobanteRel($asientosComprobanteRel): void
+    public function setAsientosComprobanteRel( $asientosComprobanteRel ): void
     {
         $this->asientosComprobanteRel = $asientosComprobanteRel;
     }
@@ -134,10 +155,11 @@ class FinComprobante
     /**
      * @param mixed $asientosDetallesComprobanteRel
      */
-    public function setAsientosDetallesComprobanteRel($asientosDetallesComprobanteRel): void
+    public function setAsientosDetallesComprobanteRel( $asientosDetallesComprobanteRel ): void
     {
         $this->asientosDetallesComprobanteRel = $asientosDetallesComprobanteRel;
     }
+
 
 
 

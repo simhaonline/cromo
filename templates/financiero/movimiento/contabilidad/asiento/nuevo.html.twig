@@ -1,6 +1,58 @@
-{% extends 'base_recursoHumano.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    {{ form_widget(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            {#<div class="form-group form-group-sm">#}
+                {#<label for="txtNit" class="col-sm-2 control-label">Tercero:</label>#}
+                {#<div class="col-sm-10">#}
+                    {#<div class="row">#}
+                        {#<div class="col-lg-2">#}
+                            {#<div class="input-group">#}
+                                {#<input id="txtCodigoTercero"  name="txtCodigoTercero"  type="text" class="form-control" value="{{ arOrdenCompra.codigoTerceroFk |default('') }}"/>#}
+                            {#</div>#}
+                        {#</div>#}
+                        {#<div class="col-lg-10">#}
+                            {#<div class="input-group">#}
+                                {#<input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arOrdenCompra.terceroRel.nombreCorto |default('') }}" readOnly="ReadOnly" />#}
+                                {#<span class="input-group-btn">#}
+                                        {#<a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_buscar_tercero', { 'campoCodigo': 'txtCodigoTercero', 'campoNombre': 'txtNombreCorto'}) }}', 'buscarTercero', 600, 900)">Buscar</a>#}
+                                    {#</span>#}
+                            {#</div>#}
+                        {#</div>#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+            <div class="form-group form-group-sm">
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Comprobante:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.comprobanteRel) }}
+                    {{ form_errors(form.comprobanteRel) }}
+                </div>
+                <label for="form_asesorRel" class="col-sm-2 control-label">Fecha:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaContable) }}
+                    {{ form_errors(form.fechaContable) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentario, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.comentario) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="float: right;">
+        <div class="btn-group">
+            {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        </div>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-sm btn-default"
+           href="{{ path('financiero_movimiento_contabilidad_asiento_lista') }}">Cancelar</a>
+    </div>
     {{ form_end(form) }}
 {% endblock %}

@@ -40,11 +40,6 @@ class FinAsiento
     private $fechaContable;
 
     /**
-     * @ORM\Column(name="fecha_documento", type="date", nullable=true)
-     */
-    private $fechaDocumento;
-
-    /**
      * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
      */
     private $codigoComprobanteFk;
@@ -106,7 +101,7 @@ class FinAsiento
     /**
      * @param mixed $codigoAsientoPk
      */
-    public function setCodigoAsientoPk($codigoAsientoPk): void
+    public function setCodigoAsientoPk( $codigoAsientoPk ): void
     {
         $this->codigoAsientoPk = $codigoAsientoPk;
     }
@@ -122,7 +117,7 @@ class FinAsiento
     /**
      * @param mixed $numero
      */
-    public function setNumero($numero): void
+    public function setNumero( $numero ): void
     {
         $this->numero = $numero;
     }
@@ -138,7 +133,7 @@ class FinAsiento
     /**
      * @param mixed $fecha
      */
-    public function setFecha($fecha): void
+    public function setFecha( $fecha ): void
     {
         $this->fecha = $fecha;
     }
@@ -154,105 +149,9 @@ class FinAsiento
     /**
      * @param mixed $fechaContable
      */
-    public function setFechaContable($fechaContable): void
+    public function setFechaContable( $fechaContable ): void
     {
         $this->fechaContable = $fechaContable;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaDocumento()
-    {
-        return $this->fechaDocumento;
-    }
-
-    /**
-     * @param mixed $fechaDocumento
-     */
-    public function setFechaDocumento($fechaDocumento): void
-    {
-        $this->fechaDocumento = $fechaDocumento;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComentario()
-    {
-        return $this->comentario;
-    }
-
-    /**
-     * @param mixed $comentario
-     */
-    public function setComentario($comentario): void
-    {
-        $this->comentario = $comentario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAutorizado()
-    {
-        return $this->estadoAutorizado;
-    }
-
-    /**
-     * @param mixed $estadoAutorizado
-     */
-    public function setEstadoAutorizado($estadoAutorizado): void
-    {
-        $this->estadoAutorizado = $estadoAutorizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAprobado()
-    {
-        return $this->estadoAprobado;
-    }
-
-    /**
-     * @param mixed $estadoAprobado
-     */
-    public function setEstadoAprobado($estadoAprobado): void
-    {
-        $this->estadoAprobado = $estadoAprobado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAnulado()
-    {
-        return $this->estadoAnulado;
-    }
-
-    /**
-     * @param mixed $estadoAnulado
-     */
-    public function setEstadoAnulado($estadoAnulado): void
-    {
-        $this->estadoAnulado = $estadoAnulado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoContabilizado()
-    {
-        return $this->estadoContabilizado;
-    }
-
-    /**
-     * @param mixed $estadoContabilizado
-     */
-    public function setEstadoContabilizado($estadoContabilizado): void
-    {
-        $this->estadoContabilizado = $estadoContabilizado;
     }
 
     /**
@@ -266,25 +165,9 @@ class FinAsiento
     /**
      * @param mixed $codigoComprobanteFk
      */
-    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    public function setCodigoComprobanteFk( $codigoComprobanteFk ): void
     {
         $this->codigoComprobanteFk = $codigoComprobanteFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComprobanteRel()
-    {
-        return $this->comprobanteRel;
-    }
-
-    /**
-     * @param mixed $comprobanteRel
-     */
-    public function setComprobanteRel($comprobanteRel): void
-    {
-        $this->comprobanteRel = $comprobanteRel;
     }
 
     /**
@@ -298,7 +181,7 @@ class FinAsiento
     /**
      * @param mixed $vrDebito
      */
-    public function setVrDebito($vrDebito): void
+    public function setVrDebito( $vrDebito ): void
     {
         $this->vrDebito = $vrDebito;
     }
@@ -314,9 +197,105 @@ class FinAsiento
     /**
      * @param mixed $vrCredito
      */
-    public function setVrCredito($vrCredito): void
+    public function setVrCredito( $vrCredito ): void
     {
         $this->vrCredito = $vrCredito;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado( $estadoAutorizado ): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado( $estadoAprobado ): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado( $estadoAnulado ): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado( $estadoContabilizado ): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param mixed $comentario
+     */
+    public function setComentario( $comentario ): void
+    {
+        $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComprobanteRel()
+    {
+        return $this->comprobanteRel;
+    }
+
+    /**
+     * @param mixed $comprobanteRel
+     */
+    public function setComprobanteRel( $comprobanteRel ): void
+    {
+        $this->comprobanteRel = $comprobanteRel;
     }
 
     /**
@@ -330,11 +309,10 @@ class FinAsiento
     /**
      * @param mixed $asientosDetallesAsientoRel
      */
-    public function setAsientosDetallesAsientoRel($asientosDetallesAsientoRel): void
+    public function setAsientosDetallesAsientoRel( $asientosDetallesAsientoRel ): void
     {
         $this->asientosDetallesAsientoRel = $asientosDetallesAsientoRel;
     }
-
 
 
 }

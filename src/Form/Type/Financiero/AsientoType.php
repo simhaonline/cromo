@@ -29,10 +29,7 @@ class AsientoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Comprobante:'
             ])
-            ->add('fecha', DateType::class, ['label' => 'Fecha:'])
-            ->add('numero', NumberType::class, ['label' => 'Numero:'])
             ->add('fechaContable', DateType::class, ['label' => 'Fecha contable:'])
-            ->add('fechaDocumento', DateType::class, ['label' => 'Fecha documento:'])
             ->add('comentario', TextareaType::class, ['label' => 'Comentario:', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
@@ -51,8 +48,7 @@ class AsientoType extends AbstractType
             {"campo":"numero",                "tipo":"entero",    "ayuda":"Consecutivo de aprobación", "titulo":"NUMERO"},
             {"campo":"comprobanteRel.nombre", "tipo":"texto",     "ayuda":"",                          "titulo":"COMP", "relacion":""},
             {"campo":"fecha",                 "tipo":"fecha",     "ayuda":"Fecha de registro",         "titulo":"FECHA"},
-            {"campo":"fechaContable",         "tipo":"fecha",     "ayuda":"Fecha de contabilidad",     "titulo":"F_CONT"},
-            {"campo":"fechaDocumento",        "tipo":"fecha",     "ayuda":"Fecha de elaboracion",      "titulo":"F_DOC"},
+            {"campo":"fechaContable",         "tipo":"fecha",     "ayuda":"Fecha de contabilidad",     "titulo":"F_CONT"},            
             {"campo":"vrDebito",              "tipo":"moneda",    "ayuda":"",                          "titulo":"DEBITO"},
             {"campo":"vrCredito",             "tipo":"moneda",    "ayuda":"",                          "titulo":"CREDITO"},
             {"campo":"estadoAutorizado",      "tipo":"bool",      "ayuda":"",                          "titulo":"AUT"},

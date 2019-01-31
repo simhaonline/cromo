@@ -4,6 +4,7 @@ namespace App\Form\Type\Cartera;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,6 +23,8 @@ class ReciboTipoType extends AbstractType {
             ->add('nombre', TextType::class, array('label' => 'Nombre:','required' => true))
             ->add('codigoComprobanteFk', TextType::class, array('label' => 'Comprobante contabilidad:','required' => true))
             ->add('prefijo', TextType::class, array('label' => 'Prefijo:','required' => false))
+            ->add('consecutivo', NumberType::class, array('label' => 'Numero:','required' => true))
+
             ->add('orden', IntegerType::class, array('label' => 'Orden:','required' => true))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']));
     }

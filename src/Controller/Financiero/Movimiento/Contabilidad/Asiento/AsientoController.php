@@ -83,7 +83,6 @@ class AsientoController extends ControllerListenerGeneral
         } else {
             $ar->setFecha(new \DateTime('now'));
             $ar->setFechaContable(new \DateTime('now'));
-            $ar->setFechaDocumento(new \DateTime('now'));
         }
         $form = $this->createForm(AsientoType::class, $ar);
         $form->handleRequest($request);
@@ -234,6 +233,7 @@ class AsientoController extends ControllerListenerGeneral
         return $this->render('financiero/movimiento/contabilidad/asiento/detalle.html.twig', [
             'arAsiento' => $arAsiento,
             'arAsientoDetalles' => $arAsientoDetalles,
+            'clase' => array('clase' => 'FinAsiento', 'codigo' => $id),
             'form' => $form->createView()
         ]);
     }
@@ -254,8 +254,8 @@ class AsientoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvBuscarBodegaCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroInvBuscarBodegaNombre', $form->get('txtNombre')->getData());
+                $session->set('filtroFinBuscarCuentaCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroFinBuscarCuentaNombre', $form->get('txtNombre')->getData());
             }
         }
         $arCuentas = $paginator->paginate($em->getRepository(FinCuenta::class)->lista(), $request->query->get('page', 1), 20);

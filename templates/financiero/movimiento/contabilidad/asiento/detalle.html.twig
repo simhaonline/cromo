@@ -106,8 +106,10 @@
                                            class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                 {% else %}
-                                    <td>{{ arAsientoDetalle.codigoTerceroFk }}</td>
-                                    <td>{{ arAsientoDetalle.codigoCuentaFk }}</td>
+                                    <td>
+                                    {{ arAsientoDetalle.codigoCuentaFk }} - {{ arAsientoDetalle.cuentaNombre |default('') }}
+                                    </td>
+                                    <td>{{ arAsientoDetalle.codigoTerceroFk }}- {{ arAsientoDetalle.terceroNombre |default('') }}</td>
                                 {% endif %}
 
 

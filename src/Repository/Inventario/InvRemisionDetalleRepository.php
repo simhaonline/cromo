@@ -178,6 +178,12 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->andWhere('r.estadoAnulado = 0')
             ->andWhere('rd.cantidadPendiente > 0')
         ->andWhere('rt.devolucion = 0');
+        if ($session->get('filtroInvRemisionPendienteFechaDesde') != null) {
+            $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroInvRemisionPendienteFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroInvRemisionPendienteFechaHasta') != null) {
+            $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroInvRemisionPendienteFechaHasta')} 23:59:59'");
+        }
         if($session->get('filtroInvInformeRemisionPendienteCodigoTercero')){
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroInvInformeRemisionPendienteCodigoTercero')}");
         }

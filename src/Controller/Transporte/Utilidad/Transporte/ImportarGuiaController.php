@@ -78,6 +78,7 @@ class ImportarGuiaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arConfiguracion = $em->find(GenConfiguracion::class, 1);
         $arConfiguracionTransporte = $em->find(TteConfiguracion::class, 1);
+//        $url = 'http://159.65.52.53/galio/public/index.php/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
         $url = $arConfiguracion->getWebServiceGalioUrl() . '/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
         $arrDatos['nit'] = $em->find(TteCliente::class,$session->get('filtroGuiaCodigoCliente'))->getNumeroIdentificacion();
         $arrDatos['fechaHasta'] = $session->get('filtroGuiaFechaIngresoHasta');
@@ -95,8 +96,8 @@ class ImportarGuiaController extends Controller
         if ($arrGuias) {
             foreach ($arrGuias as $arrGuia) {
                 $arCliente = $em->getRepository(TteCliente::class)->findOneBy(['numeroIdentificacion' => $arrGuia->nit]);
-                $arCiudadOrigen = $em->find(TteCiudad::class, $arrGuia->codigoCiudadDestinoFk);
-                $arCiudadDestino = $em->find(TteCiudad::class, $arrGuia->codigoCiudadOrigenFk);
+                $arCiudadOrigen = $em->find(TteCiudad::class, $arrGuia->codigoCiudadOrigenFk);
+                $arCiudadDestino = $em->find(TteCiudad::class, $arrGuia->codigoCiudadDestinoFk);
                 $arGuiaTemporal = new TteGuiaTemporal();
                 $arGuiaTemporal->setNumero($arrGuia->numero);
                 $arGuiaTemporal->setOperacion($arrGuia->operacion);
@@ -152,9 +153,9 @@ class ImportarGuiaController extends Controller
                 $em->persist($arGuia);
             }
         }
-        $em->flush();
         $arConfiguracion = $em->find(GenConfiguracion::class, 1);
         $arConfiguracionTransporte = $em->find(TteConfiguracion::class, 1);
+//        $url = 'http://159.65.52.53/galio/public/index.php/api/importar/guia';
         $url = $arConfiguracion->getWebServiceGalioUrl() . '/api/importar/guia';
         $ch = curl_init($url);
         $arrDatos['numeros'] = $arrNumeros;
@@ -169,6 +170,7 @@ class ImportarGuiaController extends Controller
         $respuesta = curl_exec($ch);
         curl_close($ch);
         if ($respuesta) {
+            $em->flush();
             Mensajes::success('Guias exportadas correctamente');
         } else {
             Mensajes::error('Ha ocurrido un error al momento de exportar las guias');

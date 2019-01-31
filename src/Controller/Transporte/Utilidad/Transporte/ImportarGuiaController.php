@@ -78,8 +78,8 @@ class ImportarGuiaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arConfiguracion = $em->find(GenConfiguracion::class, 1);
         $arConfiguracionTransporte = $em->find(TteConfiguracion::class, 1);
-//        $url = 'http://159.65.52.53/galio/public/index.php/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
-        $url = $arConfiguracion->getWebServiceGalioUrl() . '/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
+        $url = 'http://159.65.52.53/galio/public/index.php/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
+//        $url = $arConfiguracion->getWebServiceGalioUrl() . '/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
         $arrDatos['nit'] = $em->find(TteCliente::class,$session->get('filtroGuiaCodigoCliente'))->getNumeroIdentificacion();
         $arrDatos['fechaHasta'] = $session->get('filtroGuiaFechaIngresoHasta');
         $arrDatos['fechaDesde'] = $session->get('filtroGuiaFechaIngresoDesde');
@@ -135,7 +135,7 @@ class ImportarGuiaController extends Controller
             if ($arGuiaTemporal) {
                 if(!$em->find(TteGuia::class,$arGuiaTemporal->getNumero())){
                     $arGuia = new TteGuia();
-                    $arGuia->setCodigoGuiaPk($arGuiaTemporal->getNumero());
+                    $arGuia->setCodigoGuiaPk((int)$arGuiaTemporal->getNumero());
                     $arGuia->setCiudadOrigenRel($arGuiaTemporal->getCiudadOrigenRel());
                     $arGuia->setGuiaTipoRel($arGuiaTipo);
                     $arGuia->setCiudadDestinoRel($arGuiaTemporal->getCiudadDestinoRel());

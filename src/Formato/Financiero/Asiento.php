@@ -112,8 +112,8 @@ class Asiento extends \FPDF
                 $pdf->Cell(30, 4, $arAsientoDetalle['codigoCuentaFk'], 1, 0, 'L');
                 $pdf->Cell(30, 4, $arAsientoDetalle['numeroIdentificacion'], 1, 0, 'L');
                 $pdf->Cell(50, 4, $arAsientoDetalle['nombreCorto'], 1, 0, 'L');
-                $pdf->Cell(25, 4, $arAsientoDetalle['vrDebito'], 1, 0, 'R');
-                $pdf->Cell(25, 4, $arAsientoDetalle['vrCredito'], 1, 0, 'R');
+                $pdf->Cell(25, 4, number_format($arAsientoDetalle['vrDebito']), 1, 0, 'R');
+                $pdf->Cell(25, 4, number_format($arAsientoDetalle['vrCredito']), 1, 0, 'R');
                 $pdf->Cell(20, 4, $arAsientoDetalle['vrBase'], 1, 0, 'L');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 85);

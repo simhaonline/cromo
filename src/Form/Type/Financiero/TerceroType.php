@@ -22,10 +22,10 @@ class TerceroType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre1', TextType::class, ['label' => 'Primer nombre:'])
-            ->add('nombre2', TextType::class, ['label' => 'Segundo nombre:'])
-            ->add('apellido1', TextType::class, ['label' => 'Primer apellido:'])
-            ->add('apellido2', TextType::class, ['label' => 'Segundo apellido:'])
+            ->add('nombre1', TextType::class, ['required' => false, 'label' => 'Primer nombre:'])
+            ->add('nombre2', TextType::class, ['required' => false, 'label' => 'Segundo nombre:'])
+            ->add('apellido1', TextType::class, ['required' => false, 'label' => 'Primer apellido:'])
+            ->add('apellido2', TextType::class, ['required' => false, 'label' => 'Segundo apellido:'])
             ->add('nombreCorto', TextType::class, ['label' => 'Nombre completo:'])
             ->add('identificacionRel', EntityType::class, [
                 'required' => true,
@@ -39,7 +39,7 @@ class TerceroType extends AbstractType
             ])
             ->add('numeroIdentificacion', TextType::class, ['label' => 'Identificación:'])
             ->add('digitoVerificacion', NumberType::class, ['required' => false, 'label' => 'Digito verificación:'])
-            ->add('razonSocial', TextType::class, ['label' => 'Razón comunidad:'])
+            ->add('razonSocial', TextType::class, ['label' => 'Razón social:'])
             ->add('ciudadRel', EntityType::class, [
                 'required' => true,
                 'class' => GenCiudad::class,
@@ -50,11 +50,11 @@ class TerceroType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad:'
             ])
-            ->add('direccion', TextType::class, ['label' => 'Dirección:'])
-            ->add('telefono', TelType::class, ['label' => 'Telefono:'])
-            ->add('celular', TelType::class, ['label' => 'Celular:'])
+            ->add('direccion', TextType::class, ['required' => false, 'label' => 'Dirección:'])
+            ->add('telefono', TelType::class, ['required' => false, 'label' => 'Telefono:'])
+            ->add('celular', TelType::class, ['required' => false, 'label' => 'Celular:'])
             ->add('fax', TextType::class, ['required' => false, 'label' => 'Fax:'])
-            ->add('email', EmailType::class, ['label' => 'Correo:'])
+            ->add('email', EmailType::class, ['required' => false, 'label' => 'Correo:'])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

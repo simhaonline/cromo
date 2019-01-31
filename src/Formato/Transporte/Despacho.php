@@ -121,7 +121,7 @@ class Despacho extends \FPDF {
                 $pdf->Cell(32, 4, substr(utf8_decode($arGuia['clienteNombre']),0,20), 1, 0, 'L');
                 $pdf->Cell(40, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,28), 1, 0, 'L');
                 $pdf->Cell(35, 4, substr(utf8_decode($arGuia['direccionDestinatario']),0,25), 1, 0, 'L');
-                $pdf->Cell(10, 4, $arGuia['empaqueReferencia'], 1, 0, 'L');
+                $pdf->Cell(10, 4, substr($arGuia['empaqueReferencia'],0, 6), 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $unidades += $arGuia['unidades'];

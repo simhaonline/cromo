@@ -68,6 +68,22 @@ class Asiento extends \FPDF
         $this->Cell(100, 5, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
 
+        //linea 3
+        $this->SetXY(10, 50);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 5, utf8_decode("FECHA CONTABLE:"), 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(30, 5, $arAsiento->getFechaContable()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 5, "", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(100, 5, "", 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+
         $this->EncabezadoDetalles();
 
     }
@@ -82,7 +98,7 @@ class Asiento extends \FPDF
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(10, 30, 30, 50, 25, 25, 20);
+        $w = array(10, 65, 20, 35, 20, 20, 20);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -109,18 +125,18 @@ class Asiento extends \FPDF
         if ($arAsientosDetalles) {
             foreach ($arAsientosDetalles as $arAsientoDetalle) {
                 $pdf->Cell(10, 4, $arAsientoDetalle['codigoAsientoDetallePk'], 1, 0, 'L');
-                $pdf->Cell(30, 4, $arAsientoDetalle['codigoCuentaFk'], 1, 0, 'L');
-                $pdf->Cell(30, 4, $arAsientoDetalle['numeroIdentificacion'], 1, 0, 'L');
-                $pdf->Cell(50, 4, $arAsientoDetalle['nombreCorto'], 1, 0, 'L');
-                $pdf->Cell(25, 4, number_format($arAsientoDetalle['vrDebito']), 1, 0, 'R');
-                $pdf->Cell(25, 4, number_format($arAsientoDetalle['vrCredito']), 1, 0, 'R');
-                $pdf->Cell(20, 4, $arAsientoDetalle['vrBase'], 1, 0, 'L');
+                $pdf->Cell(65, 4, $arAsientoDetalle['codigoCuentaFk'] . ' - ' . $arAsientoDetalle['cuenta'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arAsientoDetalle['numeroIdentificacion'], 1, 0, 'L');
+                $pdf->Cell(35, 4, $arAsientoDetalle['nombreCorto'], 1, 0, 'L');
+                $pdf->Cell(20, 4, number_format($arAsientoDetalle['vrDebito']), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arAsientoDetalle['vrCredito']), 1, 0, 'R');
+                $pdf->Cell(20, 4, $arAsientoDetalle['vrBase'], 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 85);
             }
-            $pdf->Cell(120, 4, 'TOTAL', 1, 0, 'L');
-            $pdf->Cell(25, 4, number_format($arAsiento->getVrCredito(),0,'.',','), 1, 0, 'R');
-            $pdf->Cell(25, 4, number_format($arAsiento->getVrDebito(),0,'.',','), 1, 0, 'R');
+            $pdf->Cell(130, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(20, 4, number_format($arAsiento->getVrCredito(),0,'.',','), 1, 0, 'R');
+            $pdf->Cell(20, 4, number_format($arAsiento->getVrDebito(),0,'.',','), 1, 0, 'R');
             $pdf->Cell(20, 4, '', 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);

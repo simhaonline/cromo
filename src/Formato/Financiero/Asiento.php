@@ -22,7 +22,7 @@ class Asiento extends \FPDF
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Asiento$codigoAsiento.pdf", 'I');
+        $pdf->Output("Asiento$codigoAsiento.pdf", 'D');
     }
 
     public function Header()
@@ -102,6 +102,7 @@ class Asiento extends \FPDF
      */
     public function Body($pdf)
     {
+        $arAsiento = self::$em->getRepository(FinAsiento::class)->find(self::$codigoAsiento);
         $arAsientosDetalles = self::$em->getRepository(FinAsientoDetalle::class)->formatoAsiento(self::$codigoAsiento);
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
@@ -111,13 +112,18 @@ class Asiento extends \FPDF
                 $pdf->Cell(30, 4, $arAsientoDetalle['codigoCuentaFk'], 1, 0, 'L');
                 $pdf->Cell(30, 4, $arAsientoDetalle['numeroIdentificacion'], 1, 0, 'L');
                 $pdf->Cell(50, 4, $arAsientoDetalle['nombreCorto'], 1, 0, 'L');
-                $pdf->Cell(25, 4, $arAsientoDetalle['vrDebito'], 1, 0, 'L');
-                $pdf->Cell(25, 4, $arAsientoDetalle['vrCredito'], 1, 0, 'L');
+                $pdf->Cell(25, 4, $arAsientoDetalle['vrDebito'], 1, 0, 'R');
+                $pdf->Cell(25, 4, $arAsientoDetalle['vrCredito'], 1, 0, 'R');
                 $pdf->Cell(20, 4, $arAsientoDetalle['vrBase'], 1, 0, 'L');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 85);
-
             }
+            $pdf->Cell(120, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(25, 4, number_format($arAsiento->getVrCredito(),0,'.',','), 1, 0, 'R');
+            $pdf->Cell(25, 4, number_format($arAsiento->getVrDebito(),0,'.',','), 1, 0, 'R');
+            $pdf->Cell(20, 4, '', 1, 0, 'R');
+            $pdf->Ln();
+            $pdf->SetAutoPageBreak(true, 15);
         }
     }
 

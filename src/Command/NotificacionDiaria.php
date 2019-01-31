@@ -4,6 +4,7 @@ namespace App\Command;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
+use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvRemision;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
@@ -54,6 +55,19 @@ class NotificacionDiaria extends Command{
         if($cantidad > 0) {
             FuncionesController::crearNotificacion(6, $cantidad . " registros");
         }
+
+        //Facturas sin aprobar
+        $cantidad = $em->getRepository(InvMovimiento::class)->facturasSinAprobar();
+        if($cantidad > 0) {
+            FuncionesController::crearNotificacion(7, $cantidad . " registros");
+        }
+
+        //Pedidos sin aprobar
+        $cantidad = $em->getRepository(InvPedido::class)->sinAprobar();
+        if($cantidad > 0) {
+            FuncionesController::crearNotificacion(8, $cantidad . " registros");
+        }
+
         echo "Se generaron las notificaciones";
         /*$users = $this->entityManager->getRepository("App:Usuario\Usuario")->findAll();
         foreach ($users as $user){

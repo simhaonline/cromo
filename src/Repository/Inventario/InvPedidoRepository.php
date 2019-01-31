@@ -269,4 +269,14 @@ class InvPedidoRepository extends ServiceEntityRepository
             }
         }
     }
+
+    public function sinAprobar() {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(InvPedido::class, 'p')
+            ->select('COUNT(p.codigoPedidoPk) as cantidad')
+            ->andWhere('p.estadoAprobado=0');
+        $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+
+        return $arrResultado['cantidad'];
+    }
 }

@@ -1291,4 +1291,15 @@ class InvMovimientoRepository extends ServiceEntityRepository
 
         return $arrResultado['cantidad'];
     }
+
+    public function facturasSinAprobar() {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(InvMovimiento::class, 'm')
+            ->select('COUNT(m.codigoMovimientoPk) as cantidad')
+            ->where("m.codigoDocumentoTipoFk = 'FAC' ")
+            ->andWhere('m.estadoAprobado=0');
+        $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+
+        return $arrResultado['cantidad'];
+    }
 }

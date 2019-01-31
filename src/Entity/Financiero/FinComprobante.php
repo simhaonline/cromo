@@ -45,7 +45,7 @@ class FinComprobante
     private $nombre;
 
     /**
-     * @ORM\Column(name="consecutivo", type="integer", nullable=true, options={"default":false})
+     * @ORM\Column(name="consecutivo", type="integer", nullable=true, options={"default":0})
      */
     private $consecutivo = 0;
 
@@ -65,6 +65,22 @@ class FinComprobante
     protected $asientosDetallesComprobanteRel;
 
     /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoComprobantePk()
@@ -75,7 +91,7 @@ class FinComprobante
     /**
      * @param mixed $codigoComprobantePk
      */
-    public function setCodigoComprobantePk( $codigoComprobantePk ): void
+    public function setCodigoComprobantePk($codigoComprobantePk): void
     {
         $this->codigoComprobantePk = $codigoComprobantePk;
     }
@@ -91,7 +107,7 @@ class FinComprobante
     /**
      * @param mixed $nombre
      */
-    public function setNombre( $nombre ): void
+    public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
     }
@@ -107,7 +123,7 @@ class FinComprobante
     /**
      * @param mixed $consecutivo
      */
-    public function setConsecutivo( $consecutivo ): void
+    public function setConsecutivo($consecutivo): void
     {
         $this->consecutivo = $consecutivo;
     }
@@ -123,7 +139,7 @@ class FinComprobante
     /**
      * @param mixed $registrosComprobanteRel
      */
-    public function setRegistrosComprobanteRel( $registrosComprobanteRel ): void
+    public function setRegistrosComprobanteRel($registrosComprobanteRel): void
     {
         $this->registrosComprobanteRel = $registrosComprobanteRel;
     }
@@ -139,7 +155,7 @@ class FinComprobante
     /**
      * @param mixed $asientosComprobanteRel
      */
-    public function setAsientosComprobanteRel( $asientosComprobanteRel ): void
+    public function setAsientosComprobanteRel($asientosComprobanteRel): void
     {
         $this->asientosComprobanteRel = $asientosComprobanteRel;
     }
@@ -155,11 +171,10 @@ class FinComprobante
     /**
      * @param mixed $asientosDetallesComprobanteRel
      */
-    public function setAsientosDetallesComprobanteRel( $asientosDetallesComprobanteRel ): void
+    public function setAsientosDetallesComprobanteRel($asientosDetallesComprobanteRel): void
     {
         $this->asientosDetallesComprobanteRel = $asientosDetallesComprobanteRel;
     }
-
 
 
 

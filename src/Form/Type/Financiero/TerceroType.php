@@ -4,6 +4,7 @@ namespace App\Form\Type\Financiero;
 
 use App\Entity\Financiero\FinTercero;
 use App\Entity\General\GenCiudad;
+use App\Entity\General\GenIdentificacion;
 use App\Entity\General\GenIdentificacionTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -26,9 +27,9 @@ class TerceroType extends AbstractType
             ->add('apellido1', TextType::class, ['label' => 'Primer apellido:'])
             ->add('apellido2', TextType::class, ['label' => 'Segundo apellido:'])
             ->add('nombreCorto', TextType::class, ['label' => 'Nombre completo:'])
-            ->add('identificacionTipoRel', EntityType::class, [
+            ->add('identificacionRel', EntityType::class, [
                 'required' => true,
-                'class' => GenIdentificacionTipo::class,
+                'class' => GenIdentificacion::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('tbl')
                         ->orderBy('tbl.nombre', 'ASC');
@@ -37,7 +38,7 @@ class TerceroType extends AbstractType
                 'label' => 'Tipo identificación:'
             ])
             ->add('numeroIdentificacion', TextType::class, ['label' => 'Identificación:'])
-            ->add('digitoVerificacion', NumberType::class, ['label' => 'Digito verificación:'])
+            ->add('digitoVerificacion', NumberType::class, ['required' => false, 'label' => 'Digito verificación:'])
             ->add('razonSocial', TextType::class, ['label' => 'Razón comunidad:'])
             ->add('ciudadRel', EntityType::class, [
                 'required' => true,
@@ -52,10 +53,9 @@ class TerceroType extends AbstractType
             ->add('direccion', TextType::class, ['label' => 'Dirección:'])
             ->add('telefono', TelType::class, ['label' => 'Telefono:'])
             ->add('celular', TelType::class, ['label' => 'Celular:'])
-            ->add('fax', TextType::class, ['label' => 'Fax:'])
+            ->add('fax', TextType::class, ['required' => false, 'label' => 'Fax:'])
             ->add('email', EmailType::class, ['label' => 'Correo:'])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -63,5 +63,34 @@ class TerceroType extends AbstractType
         $resolver->setDefaults([
             'data_class' => FinTercero::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoTerceroPk",            "tipo":"pk",       "ayuda":"Codigo del tercero",        "titulo":"ID"},
+            {"campo":"nombreCorto",                "tipo":"texto",    "ayuda":"Consecutivo de aprobación", "titulo":"NOMBRE"},
+            {"campo":"identificacionRel.nombre",   "tipo":"texto",    "ayuda":"",                          "titulo":"TIPO_IDENTIFICACION", "relacion":""},
+            {"campo":"numeroIdentificacion",       "tipo":"texto",    "ayuda":"Numero de identificacion",  "titulo":"IDENTIFICACION"},
+            {"campo":"digitoVerificacion",         "tipo":"texto",    "ayuda":"Digito de verificacion",    "titulo":"DIGITO"},
+            {"campo":"ciudadRel.nombre",           "tipo":"texto",    "ayuda":"",                          "titulo":"CIUDAD", "relacion":""},
+            {"campo":"telefono",                   "tipo":"texto",    "ayuda":"Telegono", "titulo":"TELEFONO"}
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"campo":"codigoTerceroPk",            "tipo":"pk",       "ayuda":"Codigo del tercero",        "titulo":"ID"},
+            {"campo":"nombreCorto",                "tipo":"texto",    "ayuda":"Consecutivo de aprobación", "titulo":"NOMBRE"},
+            {"campo":"identificacionRel.nombre",   "tipo":"texto",    "ayuda":"",                          "titulo":"TIPO_IDENTIFICACION", "relacion":""},
+            {"campo":"numeroIdentificacion",       "tipo":"texto",    "ayuda":"Numero de identificacion",  "titulo":"IDENTIFICACION"},
+            {"campo":"digitoVerificacion",         "tipo":"texto",    "ayuda":"Digito de verificacion",    "titulo":"DIGITO"},
+            {"campo":"ciudadRel.nombre",           "tipo":"texto",    "ayuda":"",                          "titulo":"CIUDAD", "relacion":""},
+            {"campo":"telefono",                   "tipo":"texto",    "ayuda":"Telegono", "titulo":"TELEFONO"}  
+        ]';
+        return $campos;
     }
 }

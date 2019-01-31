@@ -7,6 +7,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteConductor;
 use App\Form\Type\Transporte\ConductorType;
+use App\Formato\Transporte\HojaVidaConductor;
 use App\General\General;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,8 +104,25 @@ class ConductorController extends ControllerListenerGeneral
     /**
      * @Route("/transporte/administracion/conductor/detalle/{id}", name="transporte_administracion_transporte_conductor_detalle")
      */
-    public function detalle(){
-        return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
+    public function detalle(Request $request, $id){
+        $em = $this->getDoctrine()->getManager();
+        $arConductor = $em->getRepository(TteConductor::class)->find($id);
+        $paginator  = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formato = new HojaVidaConductor();
+                $formato->Generar($em, $id);
+            }
+        }
+        return $this->render('transporte/administracion/conductor/detalle.html.twig', [
+            'clase' => array('clase'=>'TteConductor', 'codigo' => $id),
+            'arConductor' => $arConductor,
+            'form' => $form->createView()]);
+
     }
 
 }

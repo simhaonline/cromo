@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_transporte_conductor_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% if clase is defined %}
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('documental_general_general_lista', { 'tipo': clase.clase,  'codigo': clase.codigo }) }}', 'Archivos', 500, 800)">Archivos</a>
+                {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            {% endif %}
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
+        <tr>
+            <td class="titulo"><b>CODIGO CONDUCTOR:</b></td>
+            <td class="td-in-well">{{ arConductor.codigoConductorPk }}</td>
+            <td class="titulo"><b>NOMBRE:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arConductor.nombreCorto }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>TIPO IDENTIFICACION:</b></td>
+            <td class="td-in-well">{{ arConductor.identificacionRel.nombre }}</td>
+            <td class="titulo"><b>IDENTIFICACION</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arConductor.numeroIdentificacion }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>DIRECCION:</b></td>
+            <td class="td-in-well">{{ arConductor.direccion }}</td>
+            <td class="titulo"><b>TELEFONO</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arConductor.telefono }}</td>
+        </tr>
+        {#<tr>#}
+            {#<td class="titulo"><b>MANEJO MINIMO UNIDAD:</b></td>#}
+            {#<td class="td-in-well">{{ arCondicion.manejoMinimoUnidad }}</td>#}
+            {#<td class="titulo"><b>MANEJO MINIMO DESPACHO:</b></td>#}
+            {#<td class="td-in-well" style="text-transform: uppercase;">{{ arCondicion.manejoMinimoDespacho }}</td>#}
+        {#</tr>#}
+        {#<tr>#}
+            {#<td class="titulo"><b>PRECIO PESO:</b></td>#}
+            {#<td class="td-in-well numero">{{ arCondicion.precioPeso }}</td>#}
+            {#<td class="titulo"><b>PRECIO UNIDAD:</b></td>#}
+            {#<td class="td-in-well numero">{{ arCondicion.precioUnidad }}</td>#}
+        {#</tr>#}
+        {#<tr>#}
+            {#<td class="titulo"><b>PRECIO ADICIONAL:</b></td>#}
+            {#<td class="td-in-well numero">{{ arCondicion.precioAdicional }}</td>#}
+            {#<td class="titulo"><b>PRECIO GENERAL:</b></td>#}
+            {#<td class="td-in-well numero">{{ arCondicion.precioGeneral }}</td>#}
+        {#</tr>#}
+        {#<tr>#}
+            {#<td class="titulo"><b>PERMITE RECAUDO:</b></td>#}
+            {#<td class="td-in-well">{{ arCondicion.permiteRecaudo ? 'SI' : 'NO' }}</td>#}
+            {#<td class="titulo"><b>REDONDEAR FLETE:</b></td>#}
+            {#<td class="td-in-well">{{ arCondicion.redondearFlete ? 'SI' : 'NO'}}</td>#}
+        {#</tr>#}
+        {#<tr>#}
+            {#<td class="titulo"><b>DESCUENTO PESO:</b></td>#}
+            {#<td class="td-in-well numero">{{ arCondicion.descuentoPeso }}</td>#}
+            {#<td class="titulo"><b>DESCUENTO UNIDAD:</b></td>#}
+            {#<td class="td-in-well numero">{{ arCondicion.descuentoUnidad }}</td>#}
+        {#</tr>#}
+        {#<tr>#}
+            {#<td class="titulo"><b>PESO MINIMO:</b></td>#}
+            {#<td class="td-in-well">{{ arCondicion.pesoMinimo }}</td>#}
+            {#<td class="titulo"><b>LIMITAR DESCUENTO REEXPEDICION:</b></td>#}
+            {#<td class="td-in-well">{{ arCondicion.limitarDescuentoReexpedicion ? 'SI' : 'NO' }}</td>#}
+        {#</tr>#}
+    </table>
+    </br>
+    {{ form_end(form) }}
+{% endblock %}

@@ -125,9 +125,9 @@ class Asiento extends \FPDF
         if ($arAsientosDetalles) {
             foreach ($arAsientosDetalles as $arAsientoDetalle) {
                 $pdf->Cell(10, 4, $arAsientoDetalle['codigoAsientoDetallePk'], 1, 0, 'L');
-                $pdf->Cell(65, 4, $arAsientoDetalle['codigoCuentaFk'] . ' - ' . $arAsientoDetalle['cuenta'], 1, 0, 'L');
+                $pdf->Cell(65, 4, $arAsientoDetalle['codigoCuentaFk'] . ' - ' . substr($arAsientoDetalle['cuenta'],0, 55), 1, 0, 'L');
                 $pdf->Cell(20, 4, $arAsientoDetalle['numeroIdentificacion'], 1, 0, 'L');
-                $pdf->Cell(35, 4, $arAsientoDetalle['nombreCorto'], 1, 0, 'L');
+                $pdf->Cell(35, 4, substr($arAsientoDetalle['nombreCorto'],0, 25), 1, 0, 'L');
                 $pdf->Cell(20, 4, number_format($arAsientoDetalle['vrDebito']), 1, 0, 'R');
                 $pdf->Cell(20, 4, number_format($arAsientoDetalle['vrCredito']), 1, 0, 'R');
                 $pdf->Cell(20, 4, $arAsientoDetalle['vrBase'], 1, 0, 'R');

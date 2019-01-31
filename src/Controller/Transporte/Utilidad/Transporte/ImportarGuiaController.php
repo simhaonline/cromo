@@ -133,26 +133,32 @@ class ImportarGuiaController extends Controller
             $arOperacion = $em->find(TteOperacion::class,$arGuiaTemporal->getOperacion());
             $arServicio = $em->find(TteServicio::class, 'PAQ');
             if ($arGuiaTemporal) {
-                $arGuia = new TteGuia();
-                $arGuia->setCiudadOrigenRel($arGuiaTemporal->getCiudadOrigenRel());
-                $arGuia->setGuiaTipoRel($arGuiaTipo);
-                $arGuia->setCiudadDestinoRel($arGuiaTemporal->getCiudadDestinoRel());
-                $arGuia->setClienteRel($arGuiaTemporal->getClienteRel());
-                $arGuia->setServicioRel($arServicio);
-                $arGuia->setOperacionCargoRel($arOperacion);
-                $arGuia->setOperacionIngresoRel($arOperacion);
-                $arGuia->setTelefonoDestinatario($arGuiaTemporal->getDestinatarioTelefono());
-                $arGuia->setFechaIngreso($arGuiaTemporal->getFechaIngreso());
-                $arGuia->setDocumentoCliente($arGuiaTemporal->getClienteDocumento());
-                $arGuia->setNumero($arGuiaTemporal->getNumero());
-                $arGuia->setNombreDestinatario($arGuiaTemporal->getDestinatarioNombre());
-                $arGuia->setUnidades($arGuiaTemporal->getUnidades());
-                $arGuia->setPesoFacturado($arGuiaTemporal->getPesoFacturado());
-                $arGuia->setVrDeclara($arGuiaTemporal->getVrDeclara());
-                $arGuia->setVrFlete($arGuiaTemporal->getVrFlete());
-                $arGuia->setVrManejo($arGuiaTemporal->getVrManejo());
-                $arrNumeros[] = $arGuia->getNumero();
-                $em->persist($arGuia);
+                if(!$em->find(TteGuia::class,$arGuiaTemporal->getNumero())){
+                    $arGuia = new TteGuia();
+                    $arGuia->setCodigoGuiaPk($arGuiaTemporal->getNumero());
+                    $arGuia->setCiudadOrigenRel($arGuiaTemporal->getCiudadOrigenRel());
+                    $arGuia->setGuiaTipoRel($arGuiaTipo);
+                    $arGuia->setCiudadDestinoRel($arGuiaTemporal->getCiudadDestinoRel());
+                    $arGuia->setClienteRel($arGuiaTemporal->getClienteRel());
+                    $arGuia->setServicioRel($arServicio);
+                    $arGuia->setOperacionCargoRel($arOperacion);
+                    $arGuia->setOperacionIngresoRel($arOperacion);
+                    $arGuia->setTelefonoDestinatario($arGuiaTemporal->getDestinatarioTelefono());
+                    $arGuia->setFechaIngreso($arGuiaTemporal->getFechaIngreso());
+                    $arGuia->setDocumentoCliente($arGuiaTemporal->getClienteDocumento());
+                    $arGuia->setNumero($arGuiaTemporal->getNumero());
+                    $arGuia->setNombreDestinatario($arGuiaTemporal->getDestinatarioNombre());
+                    $arGuia->setUnidades($arGuiaTemporal->getUnidades());
+                    $arGuia->setPesoFacturado($arGuiaTemporal->getPesoFacturado());
+                    $arGuia->setVrDeclara($arGuiaTemporal->getVrDeclara());
+                    $arGuia->setVrFlete($arGuiaTemporal->getVrFlete());
+                    $arGuia->setVrManejo($arGuiaTemporal->getVrManejo());
+                    $arrNumeros[] = $arGuia->getNumero();
+                    $em->persist($arGuia);
+                } else {
+                    Mensajes::error("El consecutivo '{$arGuiaTemporal->getNumero()}' ya existe en el sistema, no se puede importar");
+                    return $this->redirect($this->generateUrl('transporte_utilidad_transporte_importar_guia'));
+                }
             }
         }
         $arConfiguracion = $em->find(GenConfiguracion::class, 1);

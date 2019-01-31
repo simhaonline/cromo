@@ -11,6 +11,7 @@ use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
+use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenImpuesto;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteFacturaDetalle;
@@ -493,8 +494,11 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arCuentaCobrar->setPlazo($arFactura->getPlazoPago());
                 $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
                 $em->persist($arCuentaCobrar);
-
                 $em->flush();
+                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+                if ($arConfiguracion['contabilidadAutomatica']) {
+                    $this->contabilizar(array($arFactura->getCodigoFacturaPk()));
+                }
             } else {
                 $respuesta = "La factura debe tener guias asignadas";
             }

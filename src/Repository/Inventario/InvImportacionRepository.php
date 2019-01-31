@@ -5,6 +5,7 @@ namespace App\Repository\Inventario;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
+use App\Entity\General\GenConfiguracion;
 use App\Entity\Inventario\InvImportacion;
 use App\Entity\Inventario\InvImportacionCosto;
 use App\Entity\Inventario\InvImportacionDetalle;
@@ -92,8 +93,8 @@ class InvImportacionRepository extends ServiceEntityRepository
             $precioLocal = $arImportacionDetalle->getVrPrecioExtranjero() * $arImportacion->getTasaRepresentativaMercado();
             $porcentajeParticipaCosto = 0;
             $costoParticipa = 0;
-            if($vrTotalCosto > 0) {
-                if($subtotalGeneralExtranjeroTemporal > 0) {
+            if ($vrTotalCosto > 0) {
+                if ($subtotalGeneralExtranjeroTemporal > 0) {
                     $porcentajeParticipaCosto = ($arImportacionDetalle->getVrSubtotalExtranjero() / $subtotalGeneralExtranjeroTemporal) * 100;
                     $costoParticipa = (($vrTotalCosto * $porcentajeParticipaCosto) / 100) / $arImportacionDetalle->getCantidad();
                 }
@@ -162,9 +163,9 @@ class InvImportacionRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arImportacion->getEstadoAutorizado() && !$arImportacion->getEstadoAnulado()) {
-            if($arImportacion->getNumero() == 0 || $arImportacion->getNumero() == "") {
+            if ($arImportacion->getNumero() == 0 || $arImportacion->getNumero() == "") {
                 $arImportacionTipo = $this->getEntityManager()->getRepository(InvImportacionTipo::class)->find($arImportacion->getCodigoImportacionTipoFk());
-                if($arImportacionTipo){
+                if ($arImportacionTipo) {
                     $arImportacionTipo->setConsecutivo($arImportacionTipo->getConsecutivo() + 1);
                     $arImportacion->setNumero($arImportacionTipo->getConsecutivo());
                     $em->persist($arImportacionTipo);
@@ -173,6 +174,10 @@ class InvImportacionRepository extends ServiceEntityRepository
             $arImportacion->setEstadoAprobado(1);
             $em->persist($arImportacion);
             $em->flush();
+            $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+            if ($arConfiguracion['contabilidadAutomatica']) {
+                $this->contabilizar(array($arImportacion->getCodigoImportacionPk()));
+            }
         }
     }
 
@@ -230,7 +235,7 @@ class InvImportacionRepository extends ServiceEntityRepository
                         $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
                     }
                 }
-                if($respuesta != ''){
+                if ($respuesta != '') {
                     Mensajes::error($respuesta);
                 } else {
                     $this->getEntityManager()->flush();
@@ -272,7 +277,8 @@ class InvImportacionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    private function contarDetalles($codigoImportacion){
+    private function contarDetalles($codigoImportacion)
+    {
         return $this->_em->createQueryBuilder()->from(InvImportacionDetalle::class, 'imd')
             ->select('COUNT(imd.codigoImportacionDetallePk)')
             ->where("imd.codigoImportacionFk = {$codigoImportacion}")->getQuery()->getSingleResult()[1];
@@ -302,14 +308,14 @@ class InvImportacionRepository extends ServiceEntityRepository
             ->leftJoin('i.importacionTipoRel', 'it')
             ->leftJoin('i.monedaRel', 'm')
             ->where("i.estadoAprobado = 1 ")
-        ->andWhere('i.estadoContabilizado=0');
+            ->andWhere('i.estadoContabilizado=0');
         if ($session->get('filtroInvImportacionNumero') != "") {
             $queryBuilder->andWhere("i.numero = " . $session->get('filtroInvImportacionNumero'));
         }
         if ($session->get('filtroInvImportacionCodigo') != "") {
             $queryBuilder->andWhere("i.codigoImportacionPk = " . $session->get('filtroInvImportacionCodigo'));
         }
-        if($session->get('filtroInvCodigoTercero')){
+        if ($session->get('filtroInvCodigoTercero')) {
             $queryBuilder->andWhere("i.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
         }
         switch ($session->get('filtroInvImportacionEstadoAutorizado')) {
@@ -328,7 +334,7 @@ class InvImportacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("i.estadoAprobado = 1");
                 break;
         }
-        if($session->get('filtroGenAsesor')) {
+        if ($session->get('filtroGenAsesor')) {
             $queryBuilder->andWhere("i.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
         }
         $queryBuilder->orderBy('i.estadoAprobado', 'ASC');
@@ -363,16 +369,16 @@ class InvImportacionRepository extends ServiceEntityRepository
         if ($arr) {
             foreach ($arr AS $codigo) {
                 $arImportacion = $em->getRepository(InvImportacion::class)->registroContabilizar($codigo);
-                if($arImportacion) {
-                    if($arImportacion['estadoAprobado'] == 1 && $arImportacion['estadoContabilizado'] == 0) {
+                if ($arImportacion) {
+                    if ($arImportacion['estadoAprobado'] == 1 && $arImportacion['estadoContabilizado'] == 0) {
                         $arComprobante = $em->getRepository(FinComprobante::class)->find($arImportacion['codigoComprobanteFk']);
                         $arTercero = $em->getRepository(InvTercero::class)->terceroFinanciero($arImportacion['codigoTerceroFk']);
 
                         $arrCompras = $em->getRepository(InvImportacionDetalle::class)->cuentaCompra($codigo);
                         foreach ($arrCompras as $arrCompra) {
-                            if($arrCompra['codigoCuentaCompraFk']) {
+                            if ($arrCompra['codigoCuentaCompraFk']) {
                                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCompra['codigoCuentaCompraFk']);
-                                if(!$arCuenta) {
+                                if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta " . $arrCompra['codigoCuentaCompraFk'];
                                     break 2;
                                 }
@@ -398,9 +404,9 @@ class InvImportacionRepository extends ServiceEntityRepository
                         //Cuenta inventario transito
                         $arrInventariosTransito = $em->getRepository(InvImportacionDetalle::class)->cuentaInventarioTransito($codigo);
                         foreach ($arrInventariosTransito as $arrInventarioTransito) {
-                            if($arrInventarioTransito['codigoCuentaInventarioTransitoFk']) {
+                            if ($arrInventarioTransito['codigoCuentaInventarioTransitoFk']) {
                                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arrInventarioTransito['codigoCuentaInventarioTransitoFk']);
-                                if(!$arCuenta) {
+                                if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta " . $arrInventarioTransito['codigoCuentaInventarioTransitoFk'];
                                     break 2;
                                 }
@@ -432,7 +438,7 @@ class InvImportacionRepository extends ServiceEntityRepository
                     break;
                 }
             }
-            if($error == "") {
+            if ($error == "") {
                 $em->flush();
             } else {
                 Mensajes::error($error);
@@ -441,6 +447,6 @@ class InvImportacionRepository extends ServiceEntityRepository
             $error = "No se seleccionaron registros para contabilizar";
         }
         return $error;
-    }    
-    
+    }
+
 }

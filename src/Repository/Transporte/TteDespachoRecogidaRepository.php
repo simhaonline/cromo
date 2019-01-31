@@ -6,6 +6,7 @@ use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
+use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteDespachoRecogidaTipo;
@@ -233,6 +234,10 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                 $arDespachoRecogida->setEstadoAprobado(1);
                 $em->persist($arDespachoRecogida);
                 $em->flush();
+                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+                if ($arConfiguracion['contabilidadAutomatica']) {
+                    $this->contabilizar(array($arDespachoRecogida->getCodigoDespachoRecogidaPk()));
+                }
             } else {
                 Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
             }

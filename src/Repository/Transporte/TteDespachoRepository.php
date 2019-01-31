@@ -10,6 +10,7 @@ use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
+use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteCosto;
 use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteConductor;
@@ -382,6 +383,10 @@ class TteDespachoRepository extends ServiceEntityRepository
                 }
 
                 $em->flush();
+                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+                if ($arConfiguracion['contabilidadAutomatica']) {
+                    $this->contabilizar(array($arDespacho->getCodigoDespachoPk()));
+                }
             } else {
                 $respuesta = "El despacho debe tener guias asignadas";
             }

@@ -106,6 +106,7 @@ class ImportarGuiaController extends Controller
                 $arGuiaTemporal->setFechaIngreso(date_create($arrGuia->fechaIngreso->date));
                 $arGuiaTemporal->setClienteDocumento($arrGuia->clienteDocumento);
                 $arGuiaTemporal->setDestinatarioNombre($arrGuia->destinatarioNombre);
+                $arGuiaTemporal->setDestinatarioTelefono($arrGuia->destinatarioTelefono);
                 $arGuiaTemporal->setCiudadOrigenRel($arCiudadOrigen);
                 $arGuiaTemporal->setCiudadDestinoRel($arCiudadDestino);
                 $arGuiaTemporal->setUnidades($arrGuia->unidades);
@@ -140,6 +141,7 @@ class ImportarGuiaController extends Controller
                 $arGuia->setServicioRel($arServicio);
                 $arGuia->setOperacionCargoRel($arOperacion);
                 $arGuia->setOperacionIngresoRel($arOperacion);
+                $arGuia->setTelefonoDestinatario($arGuiaTemporal->getDestinatarioTelefono());
                 $arGuia->setFechaIngreso($arGuiaTemporal->getFechaIngreso());
                 $arGuia->setDocumentoCliente($arGuiaTemporal->getClienteDocumento());
                 $arGuia->setNumero($arGuiaTemporal->getNumero());

@@ -73,6 +73,11 @@ class TteGuiaTemporal
     private $destinatarioNombre;
 
     /**
+     * @ORM\Column(name="destinatario_telefono", type="string", length=80, nullable=true)
+     */
+    private $destinatarioTelefono;
+
+    /**
      * @ORM\Column(name="destinatario_identificacion", type="string", length=150, nullable=true)
      */
     private $destinatarioIdentificacion;
@@ -385,6 +390,22 @@ class TteGuiaTemporal
     public function setDestinatarioNombre($destinatarioNombre): void
     {
         $this->destinatarioNombre = $destinatarioNombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDestinatarioTelefono()
+    {
+        return $this->destinatarioTelefono;
+    }
+
+    /**
+     * @param mixed $destinatarioTelefono
+     */
+    public function setDestinatarioTelefono($destinatarioTelefono): void
+    {
+        $this->destinatarioTelefono = $destinatarioTelefono;
     }
 
     /**

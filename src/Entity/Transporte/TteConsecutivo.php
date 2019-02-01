@@ -27,6 +27,11 @@ class TteConsecutivo
     private $intermediacion = 0;
 
     /**
+     * @ORM\Column(name="guia", type="integer")
+     */
+    private $guia = 0;
+
+    /**
      * @return mixed
      */
     public function getCodigoConsecutivoPk()
@@ -56,6 +61,22 @@ class TteConsecutivo
     public function setIntermediacion( $intermediacion ): void
     {
         $this->intermediacion = $intermediacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuia()
+    {
+        return $this->guia;
+    }
+
+    /**
+     * @param mixed $guia
+     */
+    public function setGuia($guia): void
+    {
+        $this->guia = $guia;
     }
 
 

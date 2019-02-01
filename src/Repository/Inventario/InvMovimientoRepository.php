@@ -707,7 +707,11 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 }
 
                 //Proceso notificacion
-                FuncionesController::crearNotificacion(3, "numero " . $arMovimiento->getNumero(), array($arMovimiento->getAsesorRel()->getusuario()));
+                if($arMovimiento->getCodigoAsesorFk()) {
+                    FuncionesController::crearNotificacion(3, "numero " . $arMovimiento->getNumero(), array($arMovimiento->getAsesorRel()->getusuario()));
+                }
+
+
             }
         } else {
             Mensajes::error("El movimiento ya fue aprobado aprobado o no esta autorizado");

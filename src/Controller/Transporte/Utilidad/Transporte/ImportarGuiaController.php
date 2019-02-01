@@ -180,6 +180,7 @@ class ImportarGuiaController extends Controller
                     $arGuia->setEstadoImpreso(1);
                     $arGuia->setTipoLiquidacion('K');
                     $arGuia->setUsuario($this->getUser()->getUsername());
+                    $arGuia->setImportado('G');
                     $arrNumeros[] = $arGuia->getNumero();
                     $em->persist($arGuia);
                 } else {

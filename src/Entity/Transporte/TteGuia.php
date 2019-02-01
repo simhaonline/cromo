@@ -364,6 +364,11 @@ class TteGuia
     private $numeroFactura;
 
     /**
+     * @ORM\Column(name="importado", type="string", length=1, nullable=true)
+     */
+    private $importado;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -2033,4 +2038,23 @@ class TteGuia
     {
         $this->desembarcosGuiaRel = $desembarcosGuiaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getImportado()
+    {
+        return $this->importado;
+    }
+
+    /**
+     * @param mixed $importado
+     */
+    public function setImportado($importado): void
+    {
+        $this->importado = $importado;
+    }
+
+
+
 }

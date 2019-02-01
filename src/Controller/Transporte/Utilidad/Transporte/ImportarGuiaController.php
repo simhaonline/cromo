@@ -6,10 +6,13 @@ use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteConfiguracion;
+use App\Entity\Transporte\TteEmpaque;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTemporal;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TteProducto;
+use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteServicio;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -98,7 +101,10 @@ class ImportarGuiaController extends Controller
                 $arCliente = $em->getRepository(TteCliente::class)->findOneBy(['numeroIdentificacion' => $arrGuia->nit]);
                 $arCiudadOrigen = $em->find(TteCiudad::class, $arrGuia->codigoCiudadOrigenFk);
                 $arCiudadDestino = $em->find(TteCiudad::class, $arrGuia->codigoCiudadDestinoFk);
+                $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find('COR');
+
                 $arGuiaTemporal = new TteGuiaTemporal();
+                $arGuiaTemporal->setCodigoGuiaTipoFk($arGuiaTipo);
                 $arGuiaTemporal->setNumero($arrGuia->numero);
                 $arGuiaTemporal->setOperacion($arrGuia->operacion);
                 $arGuiaTemporal->setCodigoGuiaTipoFk($arrGuia->codigoGuiaTipoFk);
@@ -107,13 +113,17 @@ class ImportarGuiaController extends Controller
                 $arGuiaTemporal->setClienteDocumento($arrGuia->clienteDocumento);
                 $arGuiaTemporal->setDestinatarioNombre($arrGuia->destinatarioNombre);
                 $arGuiaTemporal->setDestinatarioTelefono($arrGuia->destinatarioTelefono);
+                $arGuiaTemporal->setDestinatarioDireccion($arrGuia->destinatarioDireccion);
                 $arGuiaTemporal->setCiudadOrigenRel($arCiudadOrigen);
                 $arGuiaTemporal->setCiudadDestinoRel($arCiudadDestino);
                 $arGuiaTemporal->setUnidades($arrGuia->unidades);
+                $arGuiaTemporal->setPesoReal($arrGuia->pesoReal);
                 $arGuiaTemporal->setPesoFacturado($arrGuia->pesoFacturado);
+                $arGuiaTemporal->setPesoVolumen($arrGuia->pesoVolumen);
                 $arGuiaTemporal->setVrDeclara($arrGuia->vrDeclara);
                 $arGuiaTemporal->setVrFlete($arrGuia->vrFlete);
                 $arGuiaTemporal->setVrManejo($arrGuia->vrManejo);
+                $arGuiaTemporal->setComentario($arrGuia->comentario);
                 $em->persist($arGuiaTemporal);
             }
             $em->flush();
@@ -129,8 +139,11 @@ class ImportarGuiaController extends Controller
         $arrNumeros = [];
         foreach ($arrSeleccionados as $codigoGuiaTemporal) {
             $arGuiaTemporal = $em->find(TteGuiaTemporal::class, $codigoGuiaTemporal);
-            $arGuiaTipo = $em->find(TteGuiaTipo::class, $arGuiaTemporal->getCodigoGuiaTipoFk());
+            $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find("COR");
             $arOperacion = $em->find(TteOperacion::class,$arGuiaTemporal->getOperacion());
+            $arRuta = $em->getRepository(TteRuta::class)->find('1');
+            $arProducto = $em->getRepository(TteProducto::class)->find('1');
+            $arEmpaque = $em->getRepository(TteEmpaque::class)->find('VAR');
             $arServicio = $em->find(TteServicio::class, 'PAQ');
             if ($arGuiaTemporal) {
                 if(!$em->find(TteGuia::class,$arGuiaTemporal->getNumero())){
@@ -141,18 +154,32 @@ class ImportarGuiaController extends Controller
                     $arGuia->setCiudadDestinoRel($arGuiaTemporal->getCiudadDestinoRel());
                     $arGuia->setClienteRel($arGuiaTemporal->getClienteRel());
                     $arGuia->setServicioRel($arServicio);
+                    $arGuia->setRutaRel($arRuta);
+                    $arGuia->setProductoRel($arProducto);
+                    $arGuia->setEmpaqueRel($arEmpaque);
+                    $arGuia->setCondicionRel($arGuiaTemporal->getClienteRel()->getCondicionRel());
                     $arGuia->setOperacionCargoRel($arOperacion);
                     $arGuia->setOperacionIngresoRel($arOperacion);
                     $arGuia->setTelefonoDestinatario($arGuiaTemporal->getDestinatarioTelefono());
                     $arGuia->setFechaIngreso($arGuiaTemporal->getFechaIngreso());
                     $arGuia->setDocumentoCliente($arGuiaTemporal->getClienteDocumento());
                     $arGuia->setNumero($arGuiaTemporal->getNumero());
+                    $arGuia->setRemitente($arGuiaTemporal->getClienteRel()->getNombreCorto());
                     $arGuia->setNombreDestinatario($arGuiaTemporal->getDestinatarioNombre());
+                    $arGuia->setDireccionDestinatario($arGuiaTemporal->getDestinatarioDireccion());
+                    $arGuia->setTelefonoDestinatario($arGuiaTemporal->getDestinatarioTelefono());
                     $arGuia->setUnidades($arGuiaTemporal->getUnidades());
                     $arGuia->setPesoFacturado($arGuiaTemporal->getPesoFacturado());
+                    $arGuia->setPesoReal($arGuiaTemporal->getPesoReal());
+                    $arGuia->setPesoVolumen($arGuiaTemporal->getPesoVolumen());
                     $arGuia->setVrDeclara($arGuiaTemporal->getVrDeclara());
                     $arGuia->setVrFlete($arGuiaTemporal->getVrFlete());
                     $arGuia->setVrManejo($arGuiaTemporal->getVrManejo());
+                    $arGuia->setEstadoAutorizado(1);
+                    $arGuia->setEstadoAprobado(1);
+                    $arGuia->setEstadoImpreso(1);
+                    $arGuia->setTipoLiquidacion('K');
+                    $arGuia->setUsuario($this->getUser()->getUsername());
                     $arrNumeros[] = $arGuia->getNumero();
                     $em->persist($arGuia);
                 } else {

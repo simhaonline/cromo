@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Financiero\Informe\Contabilidad\Auxiliar;
+namespace App\Controller\Financiero\Informe\Contabilidad;
 
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Financiero\FinRegistro;
@@ -20,14 +20,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class AuxiliarController extends Controller
+class BalancePruebaController extends Controller
 {
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/financiero/informe/contabilidad/auxiliar", name="financiero_informe_contabilidad_auxiliar_lista")
+     * @Route("/financiero/informe/contabilidad/balanceprueba/lista", name="financiero_informe_contabilidad_balanceprueba_lista")
      */
     public function lista(Request $request)
     {
@@ -65,15 +65,17 @@ class AuxiliarController extends Controller
                 $session->set('filtroFinRegistroFiltroFecha', $form->get('filtrarFecha')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(FinRegistro::class)->auxiliar())->execute(), "Registros");
+                General::get()->setExportar($em->createQuery($em->getRepository(FinRegistro::class)->balancePrueba())->execute(), "Registros");
             }
             if ($form->get('btnPdf')->isClicked()) {
                 $objMensaje = new Auxiliar1();
                 $objMensaje->Generar($em);
             }
         }
-        $query = $this->getDoctrine()->getRepository(FinRegistro::class)->auxiliar();
-        $arRegistros = $paginator->paginate($query, $request->query->getInt('page', 1),500);
+        $query = $this->getDoctrine()->getRepository(FinRegistro::class)->balancePrueba();
+        $arRegistros = $query->getQuery()->getResult();
+        var_dump($arRegistros);
+        exit;
         return $this->render('financiero/informe/auxiliar/registros.html.twig', [
             'arRegistros' => $arRegistros,
             'form' => $form->createView() ]);

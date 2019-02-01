@@ -49,8 +49,26 @@ class FinCuentaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arCuentas = $em->getRepository(FinCuenta::class)->findAll();
         foreach ($arCuentas as $arCuenta) {
-
+            $clase = substr($arCuenta->getCodigoCuentaPk(),0,1);
+            $grupo = substr($arCuenta->getCodigoCuentaPk(),0,2);
+            $cuenta = substr($arCuenta->getCodigoCuentaPk(),0,4);
+            $subcuenta = substr($arCuenta->getCodigoCuentaPk(),0,6);
+            if(strlen($grupo) != 2) {
+                $grupo = "";
+            }
+            if(strlen($cuenta) != 4) {
+                $cuenta = "";
+            }
+            if(strlen($subcuenta) != 6) {
+                $subcuenta = "";
+            }
+            $arCuenta->setClase($clase);
+            $arCuenta->setGrupo($grupo);
+            $arCuenta->setCuenta($cuenta);
+            $arCuenta->setSubcuenta($subcuenta);
+            $em->persist($arCuenta);
         }
+        $em->flush();
         return true;
     }
 

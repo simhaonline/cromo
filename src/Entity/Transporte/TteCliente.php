@@ -139,6 +139,16 @@ class TteCliente
     private $guiaPagoCredito = false;
 
     /**
+     * @ORM\Column(name="guia_pago_cortesia", type="boolean", nullable=true,options={"default":false})
+     */
+    private $guiaPagoCortesia = false;
+
+    /**
+     * @ORM\Column(name="guia_pago_recogida", type="boolean", nullable=true,options={"default":false})
+     */
+    private $guiaPagoRecogida = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -877,6 +887,38 @@ class TteCliente
     public function setGuiaPagoCredito($guiaPagoCredito): void
     {
         $this->guiaPagoCredito = $guiaPagoCredito;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaPagoCortesia()
+    {
+        return $this->guiaPagoCortesia;
+    }
+
+    /**
+     * @param mixed $guiaPagoCortesia
+     */
+    public function setGuiaPagoCortesia($guiaPagoCortesia): void
+    {
+        $this->guiaPagoCortesia = $guiaPagoCortesia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaPagoRecogida()
+    {
+        return $this->guiaPagoRecogida;
+    }
+
+    /**
+     * @param mixed $guiaPagoRecogida
+     */
+    public function setGuiaPagoRecogida($guiaPagoRecogida): void
+    {
+        $this->guiaPagoRecogida = $guiaPagoRecogida;
     }
 
 

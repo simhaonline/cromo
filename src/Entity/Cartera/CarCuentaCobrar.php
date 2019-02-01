@@ -127,6 +127,16 @@ class CarCuentaCobrar
     private $vrRetencionIva = 0;
 
     /**
+     * @ORM\Column(name="estado_aprobado", type="boolean", options={"default":true})
+     */
+    private $estadoAprobado = 1;
+
+    /**
+     * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":true})
+     */
+    private $estadoAutorizado = 1;
+
+    /**
      * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAnulado = false;
@@ -706,6 +716,38 @@ class CarCuentaCobrar
     public function setVrAjustePesoSistema( $vrAjustePesoSistema ): void
     {
         $this->vrAjustePesoSistema = $vrAjustePesoSistema;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado( $estadoAprobado ): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado( $estadoAutorizado ): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
     }
 
 

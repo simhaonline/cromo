@@ -1047,6 +1047,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());
                         $arCuentaCobrar->setVrTotal($arFactura->getVrTotal());
                         $arCuentaCobrar->setVrSaldo($arFactura->getVrTotal());
+                        $arCuentaCobrar->setVrSaldoOriginal($arFactura->getVrTotal());
                         $arCuentaCobrar->setVrSaldoOperado($arFactura->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
                         $arCuentaCobrar->setPlazo($arFactura->getPlazoPago());
                         $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());

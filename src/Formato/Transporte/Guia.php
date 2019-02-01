@@ -68,9 +68,16 @@ class Guia extends \FPDF
                         }
                     } catch (\Exception $exception) {
                     }
+                    $codigoBarras->setText($arGuia['numero']);
+                    $codigoBarras->setType(BarcodeGenerator::Code39);
+                    $codigoBarras->setScale(2);
+                    $codigoBarras->setThickness(25);
+                    $codigoBarras->setFontSize(0);
+                    $codigo = $codigoBarras->generate();
+                    $pdf->Image('data:image/png;base64,'.$codigo, 165, $y - 10, 33, 10,'png');
 
-                    $pdf->SetFont('Arial', 'B', 15);
-                    $pdf->SetXY(168, $y - 8);
+                    $pdf->SetFont('Arial', 'B', 12);
+                    $pdf->SetXY(168, $y - 15);
                     $pdf->Cell(30, 4, $arGuia['numero'], 0, 0, 'R');
                     $pdf->SetFont('Arial', '', 8);
                     $pdf->Text(55, $y - 13, utf8_decode($arConfiguracion->getNombre()));

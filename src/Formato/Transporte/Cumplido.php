@@ -78,14 +78,14 @@ class Cumplido extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('GUIA', 'DOC CLIENTE','DESTINATARIO','CIUDAD', 'UND', 'PES', 'VOL', 'DECLARA', 'MANEJO', 'FLETE', 'RECAUDO');
+        $header = array('GUIA', 'DOC CLIENTE','DESTINATARIO','CIUDAD', 'UND', 'PES', 'VOL');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(20, 20, 35, 28, 10, 10, 10, 15, 15, 15, 15);
+        $w = array(20, 20, 65, 58, 10, 10, 10);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -119,15 +119,11 @@ class Cumplido extends \FPDF {
             foreach ($arGuias as $arGuia) {
                 $pdf->Cell(20, 4, $arGuia['numero'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arGuia['documentoCliente'], 1, 0, 'L');
-                $pdf->Cell(35, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,20), 1, 0, 'L');
-                $pdf->Cell(28, 4, $arGuia['ciudadDestino'], 1, 0, 'L');
+                $pdf->Cell(65, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,20), 1, 0, 'L');
+                $pdf->Cell(58, 4, $arGuia['ciudadDestino'], 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['unidades'], 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoVolumen'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(15, 4, number_format($arGuia['vrDeclara'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(15, 4, number_format($arGuia['vrManejo'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(15, 4, number_format($arGuia['vrFlete'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(15, 4, number_format($arGuia['vrRecaudo'], 0, '.', ','), 1, 0, 'R');
                 $unidades += $arGuia['unidades'];
                 $peso += $arGuia['pesoReal'];
                 $volumen += $arGuia['pesoVolumen'];
@@ -155,14 +151,10 @@ class Cumplido extends \FPDF {
                 }
 
             }
-            $pdf->Cell(103, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(163, 4, 'TOTAL', 1, 0, 'L');
             $pdf->Cell(10, 4,  $unidadesTotal, 1, 0,'R');
             $pdf->Cell(10, 4,  $pesoTotal, 1, 0,'R');
             $pdf->Cell(10, 4,  $volumen, 1, 0,'R');
-            $pdf->Cell(15, 4, number_format($declaraTotal,0,'.',','), 1, 0, 'R');
-            $pdf->Cell(15, 4, number_format($manejoTotal,0,'.',','), 1, 0, 'R');
-            $pdf->Cell(15, 4, number_format($fleteTotal,0,'.',','), 1, 0, 'R');
-            $pdf->Cell(15, 4, number_format($recaudoTotal,0,'.',','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

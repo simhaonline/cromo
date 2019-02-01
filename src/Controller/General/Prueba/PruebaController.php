@@ -8,6 +8,7 @@ use App\Entity\General\GenFacturaDetalle;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Transporte\TteConfiguracion;
+use App\Entity\Transporte\TteDespacho;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -27,7 +28,8 @@ class PruebaController extends Controller
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $trasladosSinAprobar = $em->getRepository(InvMovimiento::class)->trasladoSinAprobar();
+        $trasladosSinAprobar = $em->getRepository(TteDespacho::class)->sinAprobar();
+        echo $trasladosSinAprobar;
         echo "prueba";
         exit;
     }

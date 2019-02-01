@@ -6,6 +6,7 @@ use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvRemision;
+use App\Entity\Transporte\TteDespacho;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -66,6 +67,14 @@ class NotificacionDiaria extends Command{
         $cantidad = $em->getRepository(InvPedido::class)->sinAprobar();
         if($cantidad > 0) {
             FuncionesController::crearNotificacion(8, $cantidad . " registros");
+        }
+
+
+        //---------Transporte---------------------------------------------
+        //Despachos sin aprobar
+        $cantidad = $em->getRepository(TteDespacho::class)->sinAprobar();
+        if($cantidad > 0) {
+            FuncionesController::crearNotificacion(9, $cantidad . " registros");
         }
 
         echo "Se generaron las notificaciones";

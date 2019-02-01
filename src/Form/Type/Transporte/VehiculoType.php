@@ -118,6 +118,7 @@ class VehiculoType extends AbstractType
             ->add('registroNacionalCarga',TextType::class,['required' => true,'label' => 'RNDC:'])
             ->add('numeroPoliza',TextType::class,['required' => true,'label' => 'Numero poliza:'])
             ->add('fechaVencePoliza', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
+            ->add('numeroTecnicomecanica',TextType::class,['required' => false,'label' => 'Numero tecnicomecanica:'])
             ->add('fechaVenceTecnicomecanica', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])

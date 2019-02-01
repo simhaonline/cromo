@@ -97,6 +97,11 @@ class TteVehiculo
     private $fechaVencePoliza;
 
     /**
+     * @ORM\Column(name="numero_tecnicomecanica", type="string", length=100, nullable=true)
+     */
+    private $numeroTecnicomecanica;
+
+    /**
      * @ORM\Column(name="fecha_vence_tecnicomecanica", type="date", nullable=true)
      */
     private $fechaVenceTecnicomecanica;
@@ -820,6 +825,22 @@ class TteVehiculo
     public function setLineaRel($lineaRel): void
     {
         $this->lineaRel = $lineaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroTecnicomecanica()
+    {
+        return $this->numeroTecnicomecanica;
+    }
+
+    /**
+     * @param mixed $numeroTecnicomecanica
+     */
+    public function setNumeroTecnicomecanica( $numeroTecnicomecanica ): void
+    {
+        $this->numeroTecnicomecanica = $numeroTecnicomecanica;
     }
 
 

@@ -1762,5 +1762,15 @@ class TteDespachoRepository extends ServiceEntityRepository
         return $arrResultado;
     }
 
+    public function sinAprobar() {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TteDespacho::class, 'd')
+            ->select('COUNT(d.codigoDespachoPk) as cantidad')
+            ->andWhere('d.estadoAprobado=0');
+        $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+
+        return $arrResultado['cantidad'];
+    }
+
 }
 

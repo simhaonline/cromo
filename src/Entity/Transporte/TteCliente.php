@@ -124,6 +124,21 @@ class TteCliente
     private $retencionFuenteSinBase = false;
 
     /**
+     * @ORM\Column(name="guia_pago_contado", type="boolean", nullable=true,options={"default":false})
+     */
+    private $guiaPagoContado = false;
+
+    /**
+     * @ORM\Column(name="guia_pago_destino", type="boolean", nullable=true,options={"default":false})
+     */
+    private $guiaPagoDestino = false;
+
+    /**
+     * @ORM\Column(name="guia_pago_credito", type="boolean", nullable=true,options={"default":false})
+     */
+    private $guiaPagoCredito = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -815,5 +830,55 @@ class TteCliente
     {
         $this->guiasTemporalesClienteRel = $guiasTemporalesClienteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaPagoContado()
+    {
+        return $this->guiaPagoContado;
+    }
+
+    /**
+     * @param mixed $guiaPagoContado
+     */
+    public function setGuiaPagoContado($guiaPagoContado): void
+    {
+        $this->guiaPagoContado = $guiaPagoContado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaPagoDestino()
+    {
+        return $this->guiaPagoDestino;
+    }
+
+    /**
+     * @param mixed $guiaPagoDestino
+     */
+    public function setGuiaPagoDestino($guiaPagoDestino): void
+    {
+        $this->guiaPagoDestino = $guiaPagoDestino;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaPagoCredito()
+    {
+        return $this->guiaPagoCredito;
+    }
+
+    /**
+     * @param mixed $guiaPagoCredito
+     */
+    public function setGuiaPagoCredito($guiaPagoCredito): void
+    {
+        $this->guiaPagoCredito = $guiaPagoCredito;
+    }
+
+
 }
 

@@ -71,6 +71,10 @@ class TteGuiaTipo
      */
     private $cortesia = false;
 
+    /**
+     * @ORM\Column(name="codigo_forma_pago", type="string", length=3, nullable=true)
+     */
+    private $codigoFormaPago;
 
     /**
      * @return mixed
@@ -332,6 +336,23 @@ class TteGuiaTipo
     {
         $this->consecutivoFactura = $consecutivoFactura;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFormaPago()
+    {
+        return $this->codigoFormaPago;
+    }
+
+    /**
+     * @param mixed $codigoFormaPago
+     */
+    public function setCodigoFormaPago($codigoFormaPago): void
+    {
+        $this->codigoFormaPago = $codigoFormaPago;
+    }
+
 
 
 }

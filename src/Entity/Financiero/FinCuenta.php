@@ -105,6 +105,11 @@ class FinCuenta
     protected $registrosCuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinSaldo", mappedBy="cuentaRel")
+     */
+    protected $saldosCuentaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinAsientoDetalle", mappedBy="cuentaRel")
      */
     protected $asientosDetallesCuentaRel;
@@ -347,6 +352,22 @@ class FinCuenta
     public function setSubcuenta($subcuenta): void
     {
         $this->subcuenta = $subcuenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSaldosCuentaRel()
+    {
+        return $this->saldosCuentaRel;
+    }
+
+    /**
+     * @param mixed $saldosCuentaRel
+     */
+    public function setSaldosCuentaRel( $saldosCuentaRel ): void
+    {
+        $this->saldosCuentaRel = $saldosCuentaRel;
     }
 
 

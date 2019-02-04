@@ -606,7 +606,7 @@ class FacturaController extends ControllerListenerGeneral
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->notaCredito($arFactura->getCodigoClienteFk()), $request->query->getInt('page', 1), 30);
+        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->notaCredito($arFactura->getCodigoClienteFk()), $request->query->getInt('page', 1), 50);
         return $this->render('transporte/movimiento/comercial/factura/detalleAdicionarFactura.html.twig', [
             'arFacturas' => $arFacturas,
             'form' => $form->createView()]);

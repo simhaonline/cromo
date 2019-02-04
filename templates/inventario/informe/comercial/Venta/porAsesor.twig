@@ -4,26 +4,6 @@
     <div class="panel panel-default">
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
-            {#<div class="form-group form-group-sm">#}
-                {#<label for="txtCodigoConductor" class="col-sm-1 control-label">Tercero:</label>#}
-                {#<div class="col-sm-11">#}
-                    {#<div class="row">#}
-                        {#<div class="col-lg-2">#}
-                            {#<div class="input-group">#}
-                                {#{{ form_widget(form.txtCodigoTercero) }}#}
-                            {#</div>#}
-                        {#</div>#}
-                        {#<div class="col-lg-10">#}
-                            {#<div class="input-group">#}
-                                {#<input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="" readOnly="ReadOnly" />#}
-                                {#<span class="input-group-btn">#}
-                                        {#<a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_buscar_tercero', { 'campoCodigo': 'form_txtCodigoTercero', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarTercero', 600, 900)">Buscar</a>#}
-                                    {#</span>#}
-                            {#</div>#}
-                        {#</div>#}
-                    {#</div>#}
-                {#</div>#}
-            {#</div>#}
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Desde:</label>
                 <div class="col-sm-5">
@@ -58,14 +38,14 @@
                 <th>TERCERO</th>
                 <th>FECHA</th>
                 <th>NUMERO</th>
-                <th>NETO</th>
+                <th>SUBTOTAL</th>
                 <th>IVA</th>
                 <th>TOTAL</th>
             </tr>
             </thead>
             <tbody>
             {% set codigoAsesor = '' %}
-            {% set vrNetoAcumulado = 0 %}
+            {% set vrSubtotalAcumulado = 0 %}
             {% set vrIvaAcumulado = 0 %}
             {% set vrTotalAcumulado = 0 %}
             {% set cantRegistros = arFacturas | length %}
@@ -78,11 +58,11 @@
                     {% if codigoAsesor != '' %}
                 <tr style="background-color: lightgrey;">
                     <td colspan="5"></td>
-                    <td class="numero"><strong>{{ vrNetoAcumulado  | number_format(0, '.', ',') }}</strong></td>
+                    <td class="numero"><strong>{{ vrSubtotalAcumulado  | number_format(0, '.', ',') }}</strong></td>
                     <td class="numero"><strong>{{ vrIvaAcumulado | number_format(0, '.', ',') }}</strong></td>
                     <td class="numero"><strong>{{ vrTotalAcumulado | number_format(0, '.', ',') }}</strong></td>
                 </tr>
-                {% set vrNetoAcumulado = 0 %}
+                {% set vrSubtotalAcumulado = 0 %}
                 {% set vrIvaAcumulado = 0 %}
                 {% set vrTotalAcumulado = 0 %}
                     {% endif %}
@@ -90,13 +70,13 @@
                 <tr style="background-color: #b7bcbc;">
                     <td colspan="8"><strong>{{ codigoAsesor }}</strong></td>
                 </tr>
-                    {% if vrNetoAcumulado == 0 and vrIvaAcumulado == 0 and vrTotalAcumulado == 0 %}
-                        {% set vrNetoAcumulado = arFactura.vrNeto %}
+                    {% if vrSubtotalAcumulado == 0 and vrIvaAcumulado == 0 and vrTotalAcumulado == 0 %}
+                        {% set vrSubtotalAcumulado = arFactura.vrSubtotal %}
                         {% set vrIvaAcumulado = arFactura.vrIva %}
                         {% set vrTotalAcumulado = arFactura.vrTotal %}
                     {% endif %}
                 {% else %}
-                    {% set vrNetoAcumulado = vrNetoAcumulado + arFactura.vrNeto %}
+                    {% set vrSubtotalAcumulado = vrSubtotalAcumulado + arFactura.vrSubtotal %}
                     {% set vrIvaAcumulado = vrIvaAcumulado + arFactura.vrIva %}
                     {% set vrTotalAcumulado = vrTotalAcumulado + arFactura.vrTotal %}
                 {% endif %}
@@ -106,14 +86,14 @@
                     <td>{{ arFactura.tercero }}</td>
                     <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
                     <td>{{ arFactura.numero }}</td>
-                    <td class="numero">{{ arFactura.vrNeto | number_format }}</td>
+                    <td class="numero">{{ arFactura.vrSubtotal | number_format }}</td>
                     <td class="numero">{{ arFactura.vrIva | number_format }}</td>
                     <td class="numero">{{ arFactura.vrTotal | number_format }}</td>
                 </tr>
                 {% if cantRegistros == registroActual %}
                 <tr style="background-color: lightgrey;">
                     <td colspan="5"></td>
-                    <td class="numero"><strong>{{ vrNetoAcumulado  | number_format(0, '.', ',') }}</strong></td>
+                    <td class="numero"><strong>{{ vrSubtotalAcumulado  | number_format(0, '.', ',') }}</strong></td>
                     <td class="numero"><strong>{{ vrIvaAcumulado | number_format(0, '.', ',') }}</strong></td>
                     <td class="numero"><strong>{{ vrTotalAcumulado | number_format(0, '.', ',') }}</strong></td>
 

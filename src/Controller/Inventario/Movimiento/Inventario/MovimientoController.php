@@ -167,6 +167,7 @@ class MovimientoController extends ControllerListenerGeneral
                         $arMovimiento->setTerceroRel($arTercero);
                         $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
                         $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
+                        $arMovimiento->setOperacionComercial($arDocumento->getOperacionComercial());
                         $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
                         $em->persist($arMovimiento);
                         $em->flush();

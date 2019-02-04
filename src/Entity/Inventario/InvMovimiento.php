@@ -168,6 +168,11 @@ class InvMovimiento
     private $operacionInventario = 0;
 
     /**
+     * @ORM\Column(name="operacion_comercial", type="smallint", nullable=true, options={"default" : 0})
+     */
+    private $operacionComercial = 0;
+
+    /**
      * @internal Para saber si el documento genera costo promedio
      * @ORM\Column(name="genera_costo_promedio", type="boolean", options={"default":false})
      */
@@ -823,6 +828,22 @@ class InvMovimiento
     public function setSucursalRel( $sucursalRel ): void
     {
         $this->sucursalRel = $sucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionComercial()
+    {
+        return $this->operacionComercial;
+    }
+
+    /**
+     * @param mixed $operacionComercial
+     */
+    public function setOperacionComercial( $operacionComercial ): void
+    {
+        $this->operacionComercial = $operacionComercial;
     }
 
 

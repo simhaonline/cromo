@@ -18,8 +18,7 @@ class CentroCostoType extends AbstractType
             ->add('codigoCentroCostoPk', TextType::class, ['label' => 'Codigo centro costo:'])
             ->add('nombre', TextType::class, ['label' => 'Nombre:'])
             ->add('estadoInactivo', CheckboxType::class, ['label' => 'Estado activo', 'required' => false])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -27,5 +26,27 @@ class CentroCostoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => FinCentroCosto::class,
         ]);
+    }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoCentroCostoPk",   "tipo":"pk",        "ayuda":"Codigo del asiento",        "titulo":"ID"},
+            {"campo":"nombre",                "tipo":"texto",    "ayuda":"Nombre", "titulo":"NOMBRE"},
+            {"campo":"estadoInactivo",      "tipo":"bool",      "ayuda":"",                          "titulo":"AUT"}                             
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"campo":"codigoCentroCostoPk",   "tipo":"pk",        "ayuda":"Codigo del asiento",        "titulo":"ID"},
+            {"campo":"nombre",                "tipo":"texto",    "ayuda":"Nombre", "titulo":"NOMBRE"},
+            {"campo":"estadoInactivo",      "tipo":"bool",      "ayuda":"",                          "titulo":"AUT"}    
+   
+        ]';
+        return $campos;
     }
 }

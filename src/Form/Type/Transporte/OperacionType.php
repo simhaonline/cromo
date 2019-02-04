@@ -30,6 +30,8 @@ class OperacionType extends AbstractType
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('codigoCuentaIngresoFleteFk',TextType::class,['required' => false,'label' => 'Cuenta flete (Ing):'])
             ->add('codigoCuentaIngresoManejoFk',TextType::class,['required' => false,'label' => 'Cuenta manejo (Ing):'])
+            ->add('codigoCuentaIngresoManejoFk',TextType::class,['required' => false,'label' => 'Cuenta manejo (Ing):'])
+            ->add('codigoCentroCostoFk',TextType::class,['required' => false,'label' => 'Centro costo:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

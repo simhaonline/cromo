@@ -84,16 +84,14 @@ class CuentaController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arCuenta->setNombreCorto($arCuenta->getNombre1() . " " . $arCuenta->getNombre2() . " " . $arCuenta->getApellido1() . " " . $arCuenta->getApellido2());
                 $em->persist($arCuenta);
                 $em->flush();
-                return $this->redirect($this->generateUrl('financiero_administracion_financiero_cuenta_lista'));
+                return $this->redirect($this->generateUrl('financiero_administracion_contabilidad_cuenta_lista'));
             }
             if($form->get('guardarnuevo')->isClicked()){
-                $arCuenta->setNombreCorto($arCuenta->getNombre1() . " " . $arCuenta->getNombre2() . " " . $arCuenta->getApellido1() . " " . $arCuenta->getApellido2());
                 $em->persist($arCuenta);
                 $em->flush();
-                return $this->redirect($this->generateUrl('financiero_administracion_financiero_cuenta_nuevo',['id'=>0]));
+                return $this->redirect($this->generateUrl('financiero_administracion_contabilidad_cuenta_nuevo',['id'=>0]));
             }
 
         }

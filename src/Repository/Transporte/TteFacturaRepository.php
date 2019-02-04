@@ -126,6 +126,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->select('f.codigoFacturaPk')
             ->addSelect('f.numero')
             ->addSelect('f.fecha')
+            ->addSelect('op.nombre AS operacion')
             ->addSelect('f.guias')
             ->addSelect('f.vrFlete')
             ->addSelect('f.vrManejo')
@@ -139,6 +140,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('ft.nombre AS facturaTipo')
             ->leftJoin('f.clienteRel', 'c')
             ->leftJoin('f.facturaTipoRel', 'ft')
+            ->leftJoin('f.operacionRel', 'op')
             ->where('f.codigoFacturaPk <> 0');
         $fecha =  new \DateTime('now');
         if($session->get('filtroTteFacturaNumero') != ''){
@@ -149,6 +151,9 @@ class TteFacturaRepository extends ServiceEntityRepository
         }
         if($session->get('filtroTteCodigoCliente')){
             $queryBuilder->andWhere("f.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if ($session->get('filtroTteOperacion') != '') {
+            $queryBuilder->andWhere("f.codigoOperacionFk =  '{$session->get('filtroTteOperacion')}'");
         }
         if($session->get('filtroFecha') == true){
             if ($session->get('filtroFechaDesde') != null) {

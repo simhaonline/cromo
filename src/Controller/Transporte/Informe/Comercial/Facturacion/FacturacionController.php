@@ -5,9 +5,11 @@ namespace App\Controller\Transporte\Informe\Comercial\Facturacion;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
+use App\Entity\Transporte\TteOperacion;
 use App\Formato\Transporte\FacturaInforme;
 use App\Formato\Transporte\ListaFactura;
 use App\General\General;
+use App\Repository\Transporte\TteOperacionRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,6 +44,7 @@ class FacturacionController extends Controller
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaCodigo')])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNumero')])
+            ->add('cboOperacionRel', EntityType::class, $em->getRepository(TteOperacion::class)->llenarCombo())
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteFacturaEstadoAprobado'), 'required' => false])
@@ -59,6 +62,11 @@ class FacturacionController extends Controller
                 $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
+                if ($form->get('cboOperacionRel')->getData() != '') {
+                    $session->set('filtroTteOperacion', $form->get('cboOperacionRel')->getData()->getCodigoOperacionPk());
+                } else {
+                    $session->set('filtroTteOperacion', null);
+                }
 
                 if ($form->get('txtCodigoCliente')->getData() != '') {
                     $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
@@ -82,7 +90,7 @@ class FacturacionController extends Controller
                 General::get()->setExportar($em->createQuery($em->getRepository(TteFactura::class)->listaInforme())->execute(), "Facturas");
             }
         }
-        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->listaInforme(), $request->query->getInt('page', 1), 500);
+        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->listaInforme(), $request->query->getInt('page', 1), 100);
         return $this->render('transporte/informe/comercial/facturacion/factura.html.twig', [
             'arFacturas' => $arFacturas,
             'form' => $form->createView() ]);

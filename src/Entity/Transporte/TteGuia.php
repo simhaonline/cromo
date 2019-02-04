@@ -264,6 +264,11 @@ class TteGuia
     private $estadoContabilizadoRecaudo = false;
 
     /**
+     * @ORM\Column(name="estado_contabilizado", type="boolean",options={"default":false})
+     */
+    private $estadoContabilizado = false;
+
+    /**
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
      */
     private $codigoDespachoFk;
@@ -2053,6 +2058,22 @@ class TteGuia
     public function setImportado($importado): void
     {
         $this->importado = $importado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado( $estadoContabilizado ): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
     }
 
 

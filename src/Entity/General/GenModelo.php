@@ -33,11 +33,6 @@ class GenModelo
     protected $seguridadUsuarioModeloModeloRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\General\GenNotificacionTipo", mappedBy="modeloRel", cascade={"persist", "remove"})
-     */
-    protected $notificacionTipoModeloRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoModeloPk()
@@ -48,7 +43,7 @@ class GenModelo
     /**
      * @param mixed $codigoModeloPk
      */
-    public function setCodigoModeloPk($codigoModeloPk): void
+    public function setCodigoModeloPk( $codigoModeloPk ): void
     {
         $this->codigoModeloPk = $codigoModeloPk;
     }
@@ -64,27 +59,9 @@ class GenModelo
     /**
      * @param mixed $codigoModuloFk
      */
-    public function setCodigoModuloFk($codigoModuloFk)
+    public function setCodigoModuloFk( $codigoModuloFk ): void
     {
         $this->codigoModuloFk = $codigoModuloFk;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNotificacionTipoModeloRel()
-    {
-        return $this->notificacionTipoModeloRel;
-    }
-
-    /**
-     * @param mixed $notificacionTipoModeloRel
-     */
-    public function setNotificacionTipoModeloRel($notificacionTipoModeloRel)
-    {
-        $this->notificacionTipoModeloRel = $notificacionTipoModeloRel;
-        return $this;
     }
 
     /**
@@ -98,10 +75,9 @@ class GenModelo
     /**
      * @param mixed $seguridadUsuarioModeloModeloRel
      */
-    public function setSeguridadUsuarioModeloModeloRel($seguridadUsuarioModeloModeloRel)
+    public function setSeguridadUsuarioModeloModeloRel( $seguridadUsuarioModeloModeloRel ): void
     {
         $this->seguridadUsuarioModeloModeloRel = $seguridadUsuarioModeloModeloRel;
-        return $this;
     }
 
 

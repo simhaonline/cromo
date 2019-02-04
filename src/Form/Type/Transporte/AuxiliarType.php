@@ -17,9 +17,7 @@ class AuxiliarType extends AbstractType
         $builder
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('nombreCorto',TextType::class,['required' => true,'label' => 'Nombre completo:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
-        ;
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -28,4 +26,16 @@ class AuxiliarType extends AbstractType
             'data_class' => TteAuxiliar::class,
         ]);
     }
+
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoAuxiliarPk",                       "tipo":"pk",        "ayuda":"Codigo",                      "titulo":"ID"},
+            {"campo":"numeroIdentificacion",                    "tipo":"texto",     "ayuda":"Identificacion",                           "titulo":"IDENTIFICACION"},
+            {"campo":"nombreCorto",                             "tipo":"texto",     "ayuda":"Nombre",                                   "titulo":"NOMBRE"}
+        ]';
+        return $campos;
+
+    }
+
 }

@@ -83,51 +83,58 @@ class ImportarGuiaController extends Controller
         $arConfiguracionTransporte = $em->find(TteConfiguracion::class, 1);
         $url = 'http://159.65.52.53/galio/public/index.php/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
 //        $url = $arConfiguracion->getWebServiceGalioUrl() . '/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
-        $arrDatos['nit'] = $em->find(TteCliente::class,$session->get('filtroGuiaCodigoCliente'))->getNumeroIdentificacion();
-        $arrDatos['fechaHasta'] = $session->get('filtroGuiaFechaIngresoHasta');
-        $arrDatos['fechaDesde'] = $session->get('filtroGuiaFechaIngresoDesde');
-        $arrDatos = json_encode($arrDatos);
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $arrDatos);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($arrDatos)]);
-        $arrGuias = json_decode(curl_exec($ch));
+        $arCliente = $em->getRepository(TteCliente::class)->find($session->get('filtroGuiaCodigoCliente'));
+        if($arCliente) {
+            $arrDatos['nit'] = $arCliente->getNumeroIdentificacion();
+            $arrDatos['fechaHasta'] = $session->get('filtroGuiaFechaIngresoHasta');
+            $arrDatos['fechaDesde'] = $session->get('filtroGuiaFechaIngresoDesde');
+            $arrDatos = json_encode($arrDatos);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $arrDatos);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($arrDatos)]);
+            $arrGuias = json_decode(curl_exec($ch));
 
-        if ($arrGuias) {
-            foreach ($arrGuias as $arrGuia) {
-                $arCliente = $em->getRepository(TteCliente::class)->findOneBy(['numeroIdentificacion' => $arrGuia->nit]);
-                $arCiudadOrigen = $em->find(TteCiudad::class, $arrGuia->codigoCiudadOrigenFk);
-                $arCiudadDestino = $em->find(TteCiudad::class, $arrGuia->codigoCiudadDestinoFk);
-                $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find('COR');
+            if ($arrGuias) {
+                foreach ($arrGuias as $arrGuia) {
+                    $arCliente = $em->getRepository(TteCliente::class)->findOneBy(['numeroIdentificacion' => $arrGuia->nit]);
+                    $arCiudadOrigen = $em->find(TteCiudad::class, $arrGuia->codigoCiudadOrigenFk);
+                    $arCiudadDestino = $em->find(TteCiudad::class, $arrGuia->codigoCiudadDestinoFk);
+                    $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find('COR');
 
-                $arGuiaTemporal = new TteGuiaTemporal();
-                $arGuiaTemporal->setCodigoGuiaTipoFk($arGuiaTipo);
-                $arGuiaTemporal->setNumero($arrGuia->numero);
-                $arGuiaTemporal->setOperacion($arrGuia->operacion);
-                $arGuiaTemporal->setCodigoGuiaTipoFk($arrGuia->codigoGuiaTipoFk);
-                $arGuiaTemporal->setClienteRel($arCliente);
-                $arGuiaTemporal->setFechaIngreso(date_create($arrGuia->fechaIngreso->date));
-                $arGuiaTemporal->setClienteDocumento($arrGuia->clienteDocumento);
-                $arGuiaTemporal->setDestinatarioNombre($arrGuia->destinatarioNombre);
-                $arGuiaTemporal->setDestinatarioTelefono($arrGuia->destinatarioTelefono);
-                $arGuiaTemporal->setDestinatarioDireccion($arrGuia->destinatarioDireccion);
-                $arGuiaTemporal->setCiudadOrigenRel($arCiudadOrigen);
-                $arGuiaTemporal->setCiudadDestinoRel($arCiudadDestino);
-                $arGuiaTemporal->setUnidades($arrGuia->unidades);
-                $arGuiaTemporal->setPesoReal($arrGuia->pesoReal);
-                $arGuiaTemporal->setPesoFacturado($arrGuia->pesoFacturado);
-                $arGuiaTemporal->setPesoVolumen($arrGuia->pesoVolumen);
-                $arGuiaTemporal->setVrDeclara($arrGuia->vrDeclara);
-                $arGuiaTemporal->setVrFlete($arrGuia->vrFlete);
-                $arGuiaTemporal->setVrManejo($arrGuia->vrManejo);
-                $arGuiaTemporal->setComentario($arrGuia->comentario);
-                $em->persist($arGuiaTemporal);
+                    $arGuiaTemporal = new TteGuiaTemporal();
+                    $arGuiaTemporal->setCodigoGuiaTipoFk($arGuiaTipo);
+                    $arGuiaTemporal->setNumero($arrGuia->numero);
+                    $arGuiaTemporal->setOperacion($arrGuia->operacion);
+                    $arGuiaTemporal->setCodigoGuiaTipoFk($arrGuia->codigoGuiaTipoFk);
+                    $arGuiaTemporal->setClienteRel($arCliente);
+                    $arGuiaTemporal->setFechaIngreso(date_create($arrGuia->fechaIngreso->date));
+                    $arGuiaTemporal->setClienteDocumento($arrGuia->clienteDocumento);
+                    $arGuiaTemporal->setDestinatarioNombre($arrGuia->destinatarioNombre);
+                    $arGuiaTemporal->setDestinatarioTelefono($arrGuia->destinatarioTelefono);
+                    $arGuiaTemporal->setDestinatarioDireccion($arrGuia->destinatarioDireccion);
+                    $arGuiaTemporal->setCiudadOrigenRel($arCiudadOrigen);
+                    $arGuiaTemporal->setCiudadDestinoRel($arCiudadDestino);
+                    $arGuiaTemporal->setUnidades($arrGuia->unidades);
+                    $arGuiaTemporal->setPesoReal($arrGuia->pesoReal);
+                    $arGuiaTemporal->setPesoFacturado($arrGuia->pesoFacturado);
+                    $arGuiaTemporal->setPesoVolumen($arrGuia->pesoVolumen);
+                    $arGuiaTemporal->setVrDeclara($arrGuia->vrDeclara);
+                    $arGuiaTemporal->setVrFlete($arrGuia->vrFlete);
+                    $arGuiaTemporal->setVrManejo($arrGuia->vrManejo);
+                    $arGuiaTemporal->setComentario($arrGuia->comentario);
+                    $em->persist($arGuiaTemporal);
+                }
+                $em->flush();
             }
-            $em->flush();
+        } else {
+            Mensajes::error('El cliente no existe');
         }
+
+
     }
 
     /**

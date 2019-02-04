@@ -2789,4 +2789,10 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
     }
 
+    public function contabilizar($arr): bool
+    {
+        Mensajes::error('Este movimiento no se contabiliza');
+        return true;
+    }
+
 }

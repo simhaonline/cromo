@@ -139,6 +139,11 @@ class GuiaController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($id);
+        if(!$arGuia) {
+            Mensajes::error('La guia ingresada por url ' . $id . ' no existe');
+            return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_lista'));
+
+        }
         $form = Estandares::botonera($arGuia->getEstadoAutorizado(), $arGuia->getEstadoAprobado(), $arGuia->getEstadoAnulado());
         $form->add('btnRetirarNovedad', SubmitType::class, array('label' => 'Retirar'));
         $form->handleRequest($request);

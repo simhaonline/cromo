@@ -261,4 +261,18 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->where('fd.codigoFacturaPlanillaFk = ' . $id)->getQuery()->getOneOrNullResult();
 
     }
+
+    public function contabilizarIngreso($codigoFactura)
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TteFacturaDetalle::class, 'fd')
+            ->select('g.codigoOperacionIngresoFk')
+            ->addSelect('SUM(fd.vrFlete) as vrFlete')
+            ->addSelect('SUM(fd.vrManejo) as vrManejo')
+            ->leftJoin('fd.guiaRel', 'g')
+            ->groupBy('g.codigoOperacionIngresoFk')
+            ->where('fd.codigoFacturaFk=' . $codigoFactura);
+        $arFacturaDetalle = $queryBuilder->getQuery()->getResult();
+        return $arFacturaDetalle;
+    }
 }

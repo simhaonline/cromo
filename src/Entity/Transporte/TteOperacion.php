@@ -32,6 +32,16 @@ class TteOperacion
     private $codigoCiudadFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_ingreso_flete_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIngresoFleteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_ingreso_manejo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIngresoManejoFk;
+
+    /**
      * @ORM\Column(name="codigo_centro_costo_fk", type="string", length=20, nullable=true)
      */
     private $codigoCentroCostoFk;
@@ -103,7 +113,7 @@ class TteOperacion
     /**
      * @param mixed $codigoOperacionPk
      */
-    public function setCodigoOperacionPk($codigoOperacionPk): void
+    public function setCodigoOperacionPk( $codigoOperacionPk ): void
     {
         $this->codigoOperacionPk = $codigoOperacionPk;
     }
@@ -119,7 +129,7 @@ class TteOperacion
     /**
      * @param mixed $nombre
      */
-    public function setNombre($nombre): void
+    public function setNombre( $nombre ): void
     {
         $this->nombre = $nombre;
     }
@@ -135,9 +145,41 @@ class TteOperacion
     /**
      * @param mixed $codigoCiudadFk
      */
-    public function setCodigoCiudadFk($codigoCiudadFk): void
+    public function setCodigoCiudadFk( $codigoCiudadFk ): void
     {
         $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIngresoFleteFk()
+    {
+        return $this->codigoCuentaIngresoFleteFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIngresoFleteFk
+     */
+    public function setCodigoCuentaIngresoFleteFk( $codigoCuentaIngresoFleteFk ): void
+    {
+        $this->codigoCuentaIngresoFleteFk = $codigoCuentaIngresoFleteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIngresoManejoFk()
+    {
+        return $this->codigoCuentaIngresoManejoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIngresoManejoFk
+     */
+    public function setCodigoCuentaIngresoManejoFk( $codigoCuentaIngresoManejoFk ): void
+    {
+        $this->codigoCuentaIngresoManejoFk = $codigoCuentaIngresoManejoFk;
     }
 
     /**
@@ -151,7 +193,7 @@ class TteOperacion
     /**
      * @param mixed $codigoCentroCostoFk
      */
-    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
+    public function setCodigoCentroCostoFk( $codigoCentroCostoFk ): void
     {
         $this->codigoCentroCostoFk = $codigoCentroCostoFk;
     }
@@ -167,7 +209,7 @@ class TteOperacion
     /**
      * @param mixed $ciudadRel
      */
-    public function setCiudadRel($ciudadRel): void
+    public function setCiudadRel( $ciudadRel ): void
     {
         $this->ciudadRel = $ciudadRel;
     }
@@ -183,7 +225,7 @@ class TteOperacion
     /**
      * @param mixed $guiasOperacionIngresoRel
      */
-    public function setGuiasOperacionIngresoRel($guiasOperacionIngresoRel): void
+    public function setGuiasOperacionIngresoRel( $guiasOperacionIngresoRel ): void
     {
         $this->guiasOperacionIngresoRel = $guiasOperacionIngresoRel;
     }
@@ -199,7 +241,7 @@ class TteOperacion
     /**
      * @param mixed $guiasOperacionCargoRel
      */
-    public function setGuiasOperacionCargoRel($guiasOperacionCargoRel): void
+    public function setGuiasOperacionCargoRel( $guiasOperacionCargoRel ): void
     {
         $this->guiasOperacionCargoRel = $guiasOperacionCargoRel;
     }
@@ -215,7 +257,7 @@ class TteOperacion
     /**
      * @param mixed $recogidasOperacionRel
      */
-    public function setRecogidasOperacionRel($recogidasOperacionRel): void
+    public function setRecogidasOperacionRel( $recogidasOperacionRel ): void
     {
         $this->recogidasOperacionRel = $recogidasOperacionRel;
     }
@@ -231,7 +273,7 @@ class TteOperacion
     /**
      * @param mixed $recogidasProgramadasOperacionRel
      */
-    public function setRecogidasProgramadasOperacionRel($recogidasProgramadasOperacionRel): void
+    public function setRecogidasProgramadasOperacionRel( $recogidasProgramadasOperacionRel ): void
     {
         $this->recogidasProgramadasOperacionRel = $recogidasProgramadasOperacionRel;
     }
@@ -247,7 +289,7 @@ class TteOperacion
     /**
      * @param mixed $despachosRecogidasOperacionRel
      */
-    public function setDespachosRecogidasOperacionRel($despachosRecogidasOperacionRel): void
+    public function setDespachosRecogidasOperacionRel( $despachosRecogidasOperacionRel ): void
     {
         $this->despachosRecogidasOperacionRel = $despachosRecogidasOperacionRel;
     }
@@ -263,7 +305,7 @@ class TteOperacion
     /**
      * @param mixed $rutasRecogidasOperacionRel
      */
-    public function setRutasRecogidasOperacionRel($rutasRecogidasOperacionRel): void
+    public function setRutasRecogidasOperacionRel( $rutasRecogidasOperacionRel ): void
     {
         $this->rutasRecogidasOperacionRel = $rutasRecogidasOperacionRel;
     }
@@ -279,7 +321,7 @@ class TteOperacion
     /**
      * @param mixed $despachosOperacionRel
      */
-    public function setDespachosOperacionRel($despachosOperacionRel): void
+    public function setDespachosOperacionRel( $despachosOperacionRel ): void
     {
         $this->despachosOperacionRel = $despachosOperacionRel;
     }
@@ -295,7 +337,7 @@ class TteOperacion
     /**
      * @param mixed $usuariosOperacionRel
      */
-    public function setUsuariosOperacionRel($usuariosOperacionRel): void
+    public function setUsuariosOperacionRel( $usuariosOperacionRel ): void
     {
         $this->usuariosOperacionRel = $usuariosOperacionRel;
     }
@@ -311,7 +353,7 @@ class TteOperacion
     /**
      * @param mixed $recibosOperacionRel
      */
-    public function setRecibosOperacionRel($recibosOperacionRel): void
+    public function setRecibosOperacionRel( $recibosOperacionRel ): void
     {
         $this->recibosOperacionRel = $recibosOperacionRel;
     }
@@ -327,10 +369,12 @@ class TteOperacion
     /**
      * @param mixed $facturasOperacionRel
      */
-    public function setFacturasOperacionRel($facturasOperacionRel): void
+    public function setFacturasOperacionRel( $facturasOperacionRel ): void
     {
         $this->facturasOperacionRel = $facturasOperacionRel;
     }
+
+
 
 
 

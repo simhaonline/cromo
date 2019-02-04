@@ -28,9 +28,9 @@ class OperacionType extends AbstractType
             ])
             ->add('codigoOperacionPk',TextType::class,['required' => true,'label' => 'Codigo operacion:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
-        ;
+            ->add('codigoCuentaIngresoFleteFk',TextType::class,['required' => false,'label' => 'Cuenta flete (Ing):'])
+            ->add('codigoCuentaIngresoManejoFk',TextType::class,['required' => false,'label' => 'Cuenta manejo (Ing):'])
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -45,7 +45,9 @@ class OperacionType extends AbstractType
             {"campo":"codigoOperacionPk",           "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
             {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
             {"campo":"codigoCiudadFk",              "tipo":"texto",     "ayuda":"Codigo ciudad",           "titulo":"CODIGO CIUDAD"},
-            {"campo":"codigoCentroCostoFk",         "tipo":"texto",     "ayuda":"Codigo centro costo",     "titulo":"CODIGO CENTRO COSTO"}
+            {"campo":"codigoCentroCostoFk",         "tipo":"texto",     "ayuda":"Codigo centro costo",     "titulo":"CODIGO CENTRO COSTO"},
+            {"campo":"codigoCuentaIngresoFleteFk",              "tipo":"texto",     "ayuda":"Codigo cuenta ingreso flete",           "titulo":"CTA FLETE"},
+            {"campo":"codigoCuentaIngresoManejoFk",              "tipo":"texto",     "ayuda":"Codigo cuenta ingreso manejo",           "titulo":"CTA MANEJO"}
         ]';
     }
 

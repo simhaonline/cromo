@@ -220,5 +220,63 @@ class RegistroController extends Controller
         }
     }
 
+    /**
+     * @Route("/financiero/utilidad/contabilidad/intercambio/registro/siigo", name="financiero_utilidad_contabilidad_intercambio_registro_siigo")
+     */
+    public function siigo()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rutaTemporal = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
+        $strNombreArchivo = "ExpIlimitada" . date('YmdHis') . ".txt";
+        $strArchivo = $rutaTemporal . $strNombreArchivo;
+        $ar = fopen($strArchivo, "a") or
+        die("Problemas en la creacion del archivo plano");
+        $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
+        foreach ($arRegistros as $arRegistro) {
+            if ($arRegistro['naturaleza'] == "D") {
+                $valor = $arRegistro['vrDebito'];
+                $naturaleza = "1";
+            } else {
+                $valor = $arRegistro['vrCredito'];
+                $naturaleza = "2";
+            }
+            $srtCentroCosto = "";
+            if ($arRegistro['codigoCentroCostoFk']) {
+                $srtCentroCosto = $arRegistro['codigoCentroCostoFk'];
+            }
+            $srtNit = "";
+            if ($arRegistro['codigoTerceroFk']) {
+                $srtNit = $arRegistro['numeroIdentificacion'];
+            }
+            $numero = $arRegistro['numeroPrefijo'] . $arRegistro['numero'];
+            $numeroReferencia = $arRegistro['numeroReferenciaPrefijo'] . $arRegistro['numeroReferencia'];
+            fputs($ar, $arRegistro['codigoCuentaFk'] . "\t");
+            fputs($ar, FuncionesController::RellenarNr($arRegistro['codigoComprobanteFk'], "0", 5) . "\t");
+            fputs($ar, $arRegistro['fecha']->format('m/d/Y') . "\t");
+            fputs($ar, FuncionesController::RellenarNr($numero, "0", 9) . "\t");
+            fputs($ar, FuncionesController::RellenarNr($numeroReferencia, "0", 9) . "\t");
+            fputs($ar, $srtNit . "\t");
+            fputs($ar, $arRegistro['descripcion'] . "\t");
+            fputs($ar, $naturaleza . "\t");
+            fputs($ar, $valor . "\t");
+            fputs($ar, $arRegistro['vrBase'] . "\t");
+            fputs($ar, $srtCentroCosto . "\t");
+            fputs($ar, "" . "\t");
+            fputs($ar, "" . "\t");
+            fputs($ar, "\n");
+        }
+        fclose($ar);
+        header('Content-Description: File Transfer');
+        header('Content-Type: text/csv; charset=ISO-8859-15');
+        header('Content-Disposition: attachment; filename=' . basename($strArchivo));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($strArchivo));
+        readfile($strArchivo);
+        exit;
+
+    }
+
 }
 

@@ -776,7 +776,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
                                 $em->persist($arRegistro);
                             } else {
-                                $error = "La operacion no tiene configurada una cuenta de ingreso para flete";
+                                $error = "La operacion no tiene configurada una cuenta de ingreso para flete " . " en el documento numero " . $arFactura['numero'];
                                 break;
                             }
 
@@ -809,7 +809,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
                                 $em->persist($arRegistro);
                             } else {
-                                $error = "La operacion no tiene configurada una cuenta de ingreso para manejo";
+                                $error = "La operacion no tiene configurada una cuenta de ingreso para manejo" . " en el documento numero " . $arFactura['numero'];
                                 break;
                             }
                         }
@@ -855,7 +855,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                         if($arFactura['codigoCuentaClienteFk']) {
                             $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaClienteFk']);
                             if(!$arCuenta) {
-                                $error = "No se encuentra la cuenta cliente " . $arFactura['codigoCuentaClienteFk'];
+                                $error = "No se encuentra la cuenta cliente " . $arFactura['codigoCuentaClienteFk'] . " en el documento numero " . $arFactura['numero'];
                                 break;
                             }
                             $arRegistro = new FinRegistro();

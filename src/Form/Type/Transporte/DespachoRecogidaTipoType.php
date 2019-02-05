@@ -32,17 +32,16 @@ class DespachoRecogidaTipoType extends AbstractType
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('consecutivo',NumberType::class,['required' => true,'label' => 'Consecutivo:'])
             ->add('generaMonitoreo', CheckboxType::class, array('required'  => false))
-            ->add('codigoComprobanteFk',NumberType::class,['required' => true])
-            ->add('codigoCuentaFleteFk',NumberType::class,['required' => true])
-            ->add('codigoCuentaRetencionFuenteFk',NumberType::class,['required' => true])
-            ->add('codigoCuentaIndustriaComercioFk',NumberType::class,['required' => true])
-            ->add('codigoCuentaSeguridadFk',NumberType::class,['required' => true])
-            ->add('codigoCuentaEstampillaFk',NumberType::class,['required' => true])
-            ->add('codigoCuentaPapeleriaFk',NumberType::class,['required' => true])
-            ->add('codigoCuentaAnticipoFk',NumberType::class,['required' => true])
-            ->add('codigoCuentaPagarFk',NumberType::class,['required' => true])
+            ->add('codigoComprobanteFk',TextType::class,['label' => 'Codigo comprobante fk:',  'required' => true])
+            ->add('codigoCuentaFleteFk',TextType::class,['label' => 'Codigo cuenta flete fk:','required' => true])
+            ->add('codigoCuentaRetencionFuenteFk',TextType::class,['label' => 'Codigo cuenta retencion fuente fk:', 'required' => true])
+            ->add('codigoCuentaIndustriaComercioFk',TextType::class,['label' => 'Codigo cuenta industria y comercio fk:', 'required' => true])
+            ->add('codigoCuentaSeguridadFk',TextType::class,['label' => 'Codigo cuenta seguridad fk:', 'required' => true])
+            ->add('codigoCuentaEstampillaFk',TextType::class,['label' => 'Codigo cuenta estampilla fk:', 'required' => true])
+            ->add('codigoCuentaPapeleriaFk',TextType::class,['label' => 'Codigo cuenta papeleria fk:', 'required' => true])
+            ->add('codigoCuentaAnticipoFk',TextType::class,['label' => 'Codigo cuenta anticipo fk:', 'required' => true])
+            ->add('codigoCuentaPagarFk',TextType::class,['label' => 'Codigo cuenta pagar fk:', 'required' => true])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
         ;
     }
 

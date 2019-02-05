@@ -44,6 +44,16 @@ class ConductorType extends AbstractType
             ->add('nombre2',TextType::class,['required' => false,'label' => 'Segundo nombre:'])
             ->add('apellido1',TextType::class,['required' => true,'label' => 'Primer apellido:'])
             ->add('apellido2',TextType::class,['required' => false,'label' => 'Segundo apellido:'])
+            ->add('rhRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\RecursoHumano\RhuRh',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->orderBy('r.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Rh:'
+            ])
             ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
             ->add('fechaNacimiento', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('telefono',NumberType::class,['required' => true,'label' => 'Telefono:'])

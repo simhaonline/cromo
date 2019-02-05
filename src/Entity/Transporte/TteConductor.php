@@ -58,6 +58,11 @@ class TteConductor
     private $apellido2;
 
     /**
+     * @ORM\Column(name="codigo_rh_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoRhFk;
+
+    /**
      * @ORM\Column(name="direccion", type="string", length=200, nullable=true)
      */
     private $direccion;
@@ -148,6 +153,12 @@ class TteConductor
      * @ORM\OneToMany(targetEntity="TteDespachoRecogida", mappedBy="conductorRel")
      */
     protected $despachosRecogidasConductorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuRh", inversedBy="tteConductorRhRel")
+     * @ORM\JoinColumn(name="codigo_rh_fk", referencedColumnName="codigo_rh_pk")
+     */
+    protected $rhRel;
 
     /**
      * @return mixed
@@ -563,6 +574,54 @@ class TteConductor
     public function setDespachosRecogidasConductorRel($despachosRecogidasConductorRel): void
     {
         $this->despachosRecogidasConductorRel = $despachosRecogidasConductorRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRhFk()
+    {
+        return $this->codigoRhFk;
+    }
+
+    /**
+     * @param mixed $codigoRhFk
+     */
+    public function setCodigoRhFk($codigoRhFk): void
+    {
+        $this->codigoRhFk = $codigoRhFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhRel()
+    {
+        return $this->rhRel;
+    }
+
+    /**
+     * @param mixed $rhRel
+     */
+    public function setRhRel($rhRel): void
+    {
+        $this->rhRel = $rhRel;
     }
 
 

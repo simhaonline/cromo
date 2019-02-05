@@ -26,6 +26,11 @@ class RhuRh
     private $nombre;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteConductor", mappedBy="rhRel")
+     */
+    protected $tteConductorRhRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="rhRel")
      */
     protected $rhuAspirantesRhRel;

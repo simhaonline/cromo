@@ -38,6 +38,7 @@ class FacturaConceptoDetalleType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Iva:'
                 , 'required' => true])
+            ->add('codigoCuentaFk',TextType::class,['required' => false,'label' => 'Codigo cuenta:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
@@ -54,7 +55,8 @@ class FacturaConceptoDetalleType extends AbstractType
             {"campo":"codigoFacturaConceptoDetallePk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
             {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
             {"campo":"codigoImpuestoRetencionFk",                      "tipo":"texto",     "ayuda":"RETENCION",     "titulo":"RET"},
-            {"campo":"codigoImpuestoIvaVentaFk",                      "tipo":"texto",     "ayuda":"Iva",     "titulo":"IVA"}
+            {"campo":"codigoImpuestoIvaVentaFk",                      "tipo":"texto",     "ayuda":"Iva",     "titulo":"IVA"},
+            {"campo":"codigoCuentaFk",                      "tipo":"texto",     "ayuda":"Cuenta",     "titulo":"CUENTA"}
         ]';
     }
 

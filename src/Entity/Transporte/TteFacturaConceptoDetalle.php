@@ -37,6 +37,11 @@ class TteFacturaConceptoDetalle
     private $codigoImpuestoIvaVentaFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenImpuesto", inversedBy="facturasConceptosDetallesImpuestoRetencionRel")
      * @ORM\JoinColumn(name="codigo_impuesto_retencion_fk",referencedColumnName="codigo_impuesto_pk")
      */
@@ -164,6 +169,24 @@ class TteFacturaConceptoDetalle
     {
         $this->facturasDetallesConcetosFacturaConceptoDetalleRel = $facturasDetallesConcetosFacturaConceptoDetalleRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaFk()
+    {
+        return $this->codigoCuentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaFk
+     */
+    public function setCodigoCuentaFk( $codigoCuentaFk ): void
+    {
+        $this->codigoCuentaFk = $codigoCuentaFk;
+    }
+
+
 
 
 }

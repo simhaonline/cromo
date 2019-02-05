@@ -278,7 +278,8 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->where('cc.vrSaldo <> 0')
             ->orderBy('c.nombreCorto', 'ASC')
             ->addOrderBy('cc.rango', 'DESC')
-            ->addOrderBy('cc.fecha', 'ASC');
+            ->addOrderBy('cc.fecha', 'ASC')
+        ->addOrderBy('cc.numeroDocumento', 'ASC');
 
         $fecha =  new \DateTime('now');
         if ($session->get('filtroCarCuentaCobrarTipo') != "") {

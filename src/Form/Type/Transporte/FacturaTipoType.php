@@ -45,10 +45,13 @@ class FacturaTipoType extends AbstractType
         return '[
             {"campo":"codigoFacturaTipoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
             {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                 "tipo":"numero",    "ayuda":"Consecutivo",             "titulo":"CON"},
-            {"campo":"guiaFactura",                 "tipo":"bool",      "ayuda":"Guia factura",            "titulo":"GF"},
             {"campo":"prefijo",                     "tipo":"texto",     "ayuda":"Prefijo",                 "titulo":"PRE"},
-            {"campo":"codigoFacturaClaseFk",        "tipo":"texto",     "ayuda":"Codigo factura clase",    "titulo":"CLASE"}
+            {"campo":"consecutivo",                 "tipo":"numero",    "ayuda":"Consecutivo",             "titulo":"CON"},
+            {"campo":"guiaFactura",                 "tipo":"bool",      "ayuda":"Guia factura",            "titulo":"GF"},            
+            {"campo":"codigoFacturaClaseFk",        "tipo":"texto",     "ayuda":"Codigo factura clase",    "titulo":"CLASE"},
+            {"campo":"codigoComprobanteFk",        "tipo":"texto",     "ayuda":"Comprobante contabilidad",    "titulo":"COMPROBANTE"},
+            {"campo":"codigoCuentaClienteFk",        "tipo":"texto",     "ayuda":"Cuenta cliente",    "titulo":"CTA CLIENTE"}
+            
         ]';
     }
 

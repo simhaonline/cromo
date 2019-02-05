@@ -62,19 +62,9 @@ class TteFacturaTipo
     private $codigoCuentaIngresoFleteFk;
 
     /**
-     * @ORM\Column(name="naturaleza_cuenta_ingreso", type="string", length=1, nullable=true)
-     */
-    private $naturalezaCuentaIngreso = 0;
-
-    /**
      * @ORM\Column(name="codigo_cuenta_cliente_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaClienteFk;
-
-    /**
-     * @ORM\Column(name="naturaleza_cuenta_cliente", type="string", length=1, nullable=true)
-     */
-    private $naturalezaCuentaCliente = 0;
 
     /**
      * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
@@ -85,11 +75,6 @@ class TteFacturaTipo
      * @ORM\Column(name="codigo_cuenta_ingreso_flete_intermediacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaIngresoFleteIntermediacionFk;
-
-    /**
-     * @ORM\Column(name="naturaleza_cuenta_ingreso_flete_intermediacion", type="string", length=1, nullable=true)
-     */
-    private $naturalezaCuentaIngresoFleteIntermediacion = 0;
 
     /**
      * @ORM\Column(name="operacion_comercial", type="smallint", nullable=true, options={"default" : 0})
@@ -258,22 +243,6 @@ class TteFacturaTipo
     /**
      * @return mixed
      */
-    public function getNaturalezaCuentaIngreso()
-    {
-        return $this->naturalezaCuentaIngreso;
-    }
-
-    /**
-     * @param mixed $naturalezaCuentaIngreso
-     */
-    public function setNaturalezaCuentaIngreso( $naturalezaCuentaIngreso ): void
-    {
-        $this->naturalezaCuentaIngreso = $naturalezaCuentaIngreso;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoCuentaClienteFk()
     {
         return $this->codigoCuentaClienteFk;
@@ -285,22 +254,6 @@ class TteFacturaTipo
     public function setCodigoCuentaClienteFk( $codigoCuentaClienteFk ): void
     {
         $this->codigoCuentaClienteFk = $codigoCuentaClienteFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNaturalezaCuentaCliente()
-    {
-        return $this->naturalezaCuentaCliente;
-    }
-
-    /**
-     * @param mixed $naturalezaCuentaCliente
-     */
-    public function setNaturalezaCuentaCliente( $naturalezaCuentaCliente ): void
-    {
-        $this->naturalezaCuentaCliente = $naturalezaCuentaCliente;
     }
 
     /**
@@ -333,22 +286,6 @@ class TteFacturaTipo
     public function setCodigoCuentaIngresoFleteIntermediacionFk( $codigoCuentaIngresoFleteIntermediacionFk ): void
     {
         $this->codigoCuentaIngresoFleteIntermediacionFk = $codigoCuentaIngresoFleteIntermediacionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNaturalezaCuentaIngresoFleteIntermediacion()
-    {
-        return $this->naturalezaCuentaIngresoFleteIntermediacion;
-    }
-
-    /**
-     * @param mixed $naturalezaCuentaIngresoFleteIntermediacion
-     */
-    public function setNaturalezaCuentaIngresoFleteIntermediacion( $naturalezaCuentaIngresoFleteIntermediacion ): void
-    {
-        $this->naturalezaCuentaIngresoFleteIntermediacion = $naturalezaCuentaIngresoFleteIntermediacion;
     }
 
     /**

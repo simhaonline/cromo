@@ -16,8 +16,8 @@
         <td align="right">{{ arFactura.vrManejo | number_format(0, '.', ',')}}</td>
     </tr>
     <tr>
-        <td class="titulo"></td>
-        <td class="td-in-well"></td>
+        <td class="titulo">CONCEPTO:</td>
+        <td class="td-in-well">{{ arFactura.facturaConceptoRel.nombre | default("") }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
         <td class="titulo" >SUBTOTAL:</td>

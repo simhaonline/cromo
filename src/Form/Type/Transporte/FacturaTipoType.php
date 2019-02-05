@@ -26,9 +26,6 @@ class FacturaTipoType extends AbstractType
             ->add('codigoFacturaClaseFk',TextType::class,['required' => false,'label' => 'Codigo factura clase fk:'])
             ->add('codigoCuentaClienteFk',TextType::class,['required' => false,'label' => 'Codigo cuenta cliente fk:'])
             ->add('codigoCuentaIngresoFleteIntermediacionFk',TextType::class,['required' => false,'label' => 'Codigo cuenta ingreso flete (Intermediacion) :'])
-            ->add('naturalezaCuentaIngreso',TextType::class,['required' => false,'label' => 'Naturaleza cuenta ingreso:'])
-            ->add('naturalezaCuentaCliente',TextType::class,['required' => false,'label' => 'Naturaleza cuenta cliente:'])
-            ->add('naturalezaCuentaIngresoFleteIntermediacion',TextType::class,['required' => false,'label' => 'Naturaleza cuenta ingreso flete (intermediacion):'])
             ->add('codigoComprobanteFk',TextType::class,['required' => false,'label' => 'Codigo comprobante:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;

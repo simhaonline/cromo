@@ -816,32 +816,39 @@ class TteFacturaRepository extends ServiceEntityRepository
 
 
                         $arFacturaDetalleConceptos = $em->getRepository(TteFacturaDetalleConcepto::class)->findBy(array('codigoFacturaFk' => $arFactura['codigoFacturaPk']));
-                        foreach ($arFacturaDetalleConceptos as $arFacturaDetalleConcepto) {
-                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arFacturaDetalleConcepto->getFacturaConceptoDetalleRel()->getCodigoCuentaFk());
-                            if(!$arCuenta) {
-                                $error = "No se encuentra la cuenta " . $arFacturaDetalleConcepto->getFacturaConceptoDetalleRel()->getCodigoCuentaFk();
-                                break;
+                        if($arFacturaDetalleConceptos) {
+                            $arCentroCosto = null;
+                            if($arFactura['codigoCentroCostoFk']) {
+                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
                             }
-                            $arRegistro = new FinRegistro();
-                            $arRegistro->setTerceroRel($arTercero);
-                            $arRegistro->setCuentaRel($arCuenta);
-                            $arRegistro->setComprobanteRel($arComprobante);
-                            $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
-                            $arRegistro->setNumero($arFactura['numero']);
-                            $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
-                            $arRegistro->setNumeroReferencia($numeroReferencia);
-                            $arRegistro->setFecha($arFactura['fecha']);
-                            if($arFactura['codigoFacturaClaseFk'] == 'FA') {
-                                $arRegistro->setVrCredito($arFacturaDetalleConcepto->getVrSubtotal());
-                                $arRegistro->setNaturaleza('C');
-                            } else {
-                                $arRegistro->setVrDebito($arFacturaDetalleConcepto->getVrSubtotal());
-                                $arRegistro->setNaturaleza('D');
+                            foreach ($arFacturaDetalleConceptos as $arFacturaDetalleConcepto) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arFacturaDetalleConcepto->getFacturaConceptoDetalleRel()->getCodigoCuentaFk());
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta " . $arFacturaDetalleConcepto->getFacturaConceptoDetalleRel()->getCodigoCuentaFk();
+                                    break;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
+                                $arRegistro->setNumero($arFactura['numero']);
+                                $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
+                                $arRegistro->setNumeroReferencia($numeroReferencia);
+                                $arRegistro->setFecha($arFactura['fecha']);
+                                if($arFactura['codigoFacturaClaseFk'] == 'FA') {
+                                    $arRegistro->setVrCredito($arFacturaDetalleConcepto->getVrSubtotal());
+                                    $arRegistro->setNaturaleza('C');
+                                } else {
+                                    $arRegistro->setVrDebito($arFacturaDetalleConcepto->getVrSubtotal());
+                                    $arRegistro->setNaturaleza('D');
+                                }
+                                $arRegistro->setDescripcion($arFacturaDetalleConcepto->getFacturaConceptoDetalleRel()->getNombre());
+                                $arRegistro->setCodigoModeloFk('TteFactura');
+                                $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
+                                $em->persist($arRegistro);
                             }
-                            $arRegistro->setDescripcion($arFacturaDetalleConcepto->getFacturaConceptoDetalleRel()->getNombre());
-                            $arRegistro->setCodigoModeloFk('TteFactura');
-                            $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
-                            $em->persist($arRegistro);
                         }
 
                         //Cuenta cliente

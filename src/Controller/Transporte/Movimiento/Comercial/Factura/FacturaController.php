@@ -529,9 +529,9 @@ class FacturaController extends ControllerListenerGeneral
                 $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
                 if ($arCliente) {
                     $arFactura->setClienteRel($arCliente);
+                    $arFactura->setOperacionRel($arCliente->getOperacionRel());
                     if ($id == 0) {
                         $arFactura->setUsuario($this->getUser()->getUsername());
-                        $arFactura->setOperacionRel($this->getUser()->getOperacionRel());
                     }
                     if ($arFactura->getPlazoPago() <= 0) {
                         $arFactura->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());

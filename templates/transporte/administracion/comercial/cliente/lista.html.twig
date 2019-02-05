@@ -45,6 +45,7 @@
             <th>CELULAR</th>
             <th>DIRECCION</th>
             <th>CIUDAD</th>
+            <th title="Operacion">OP</th>
             <th></th>
             <th></th>
         </tr>
@@ -60,6 +61,7 @@
                 <td>{{ arCliente.movil }}</td>
                 <td>{{ arCliente.direccion }}</td>
                 <td>{{ arCliente.ciudadNombre }}</td>
+                <td>{{ arCliente.codigoOperacionFk }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_administracion_comercial_cliente_nuevo',{'id' : arCliente.codigoClientePk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">

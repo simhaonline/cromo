@@ -59,6 +59,16 @@ class ClienteType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Asesor:'
             ])
+            ->add('operacionRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\Transporte\TteOperacion',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Operacion:'
+            ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('digitoVerificacion',NumberType::class,['required' => true,'label' => 'Digito:'])
             ->add('nombreCorto',TextType::class,['required' => true,'label' => 'Nombre corto:'])

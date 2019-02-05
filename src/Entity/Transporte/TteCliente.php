@@ -149,6 +149,11 @@ class TteCliente
     private $guiaPagoRecogida = false;
 
     /**
+     * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true,options={"default":false})
+     */
+    private $codigoOperacionFk;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -176,6 +181,18 @@ class TteCliente
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteOperacion", inversedBy="clientesOperacionRel")
+     * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
+     */
+    private $operacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="asesorAsesorRel")
+     * @ORM\JoinColumn(name="codigo_asesor_fk",referencedColumnName="codigo_asesor_pk")
+     */
+    protected $asesorRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="clienteRel")
@@ -223,31 +240,9 @@ class TteCliente
     protected $intermediacionesDetallesClienteRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="asesorAsesorRel")
-     * @ORM\JoinColumn(name="codigo_asesor_fk",referencedColumnName="codigo_asesor_pk")
-     */
-    protected $asesorRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="TteGuiaTemporal", mappedBy="clienteRel")
      */
     protected $guiasTemporalesClienteRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -588,6 +583,102 @@ class TteCliente
     /**
      * @return mixed
      */
+    public function getGuiaPagoContado()
+    {
+        return $this->guiaPagoContado;
+    }
+
+    /**
+     * @param mixed $guiaPagoContado
+     */
+    public function setGuiaPagoContado($guiaPagoContado): void
+    {
+        $this->guiaPagoContado = $guiaPagoContado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaPagoDestino()
+    {
+        return $this->guiaPagoDestino;
+    }
+
+    /**
+     * @param mixed $guiaPagoDestino
+     */
+    public function setGuiaPagoDestino($guiaPagoDestino): void
+    {
+        $this->guiaPagoDestino = $guiaPagoDestino;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaPagoCredito()
+    {
+        return $this->guiaPagoCredito;
+    }
+
+    /**
+     * @param mixed $guiaPagoCredito
+     */
+    public function setGuiaPagoCredito($guiaPagoCredito): void
+    {
+        $this->guiaPagoCredito = $guiaPagoCredito;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaPagoCortesia()
+    {
+        return $this->guiaPagoCortesia;
+    }
+
+    /**
+     * @param mixed $guiaPagoCortesia
+     */
+    public function setGuiaPagoCortesia($guiaPagoCortesia): void
+    {
+        $this->guiaPagoCortesia = $guiaPagoCortesia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaPagoRecogida()
+    {
+        return $this->guiaPagoRecogida;
+    }
+
+    /**
+     * @param mixed $guiaPagoRecogida
+     */
+    public function setGuiaPagoRecogida($guiaPagoRecogida): void
+    {
+        $this->guiaPagoRecogida = $guiaPagoRecogida;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionFk()
+    {
+        return $this->codigoOperacionFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionFk
+     */
+    public function setCodigoOperacionFk($codigoOperacionFk): void
+    {
+        $this->codigoOperacionFk = $codigoOperacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -663,6 +754,22 @@ class TteCliente
     public function setCiudadRel($ciudadRel): void
     {
         $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionRel()
+    {
+        return $this->operacionRel;
+    }
+
+    /**
+     * @param mixed $operacionRel
+     */
+    public function setOperacionRel($operacionRel): void
+    {
+        $this->operacionRel = $operacionRel;
     }
 
     /**
@@ -839,86 +946,6 @@ class TteCliente
     public function setGuiasTemporalesClienteRel($guiasTemporalesClienteRel): void
     {
         $this->guiasTemporalesClienteRel = $guiasTemporalesClienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiaPagoContado()
-    {
-        return $this->guiaPagoContado;
-    }
-
-    /**
-     * @param mixed $guiaPagoContado
-     */
-    public function setGuiaPagoContado($guiaPagoContado): void
-    {
-        $this->guiaPagoContado = $guiaPagoContado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiaPagoDestino()
-    {
-        return $this->guiaPagoDestino;
-    }
-
-    /**
-     * @param mixed $guiaPagoDestino
-     */
-    public function setGuiaPagoDestino($guiaPagoDestino): void
-    {
-        $this->guiaPagoDestino = $guiaPagoDestino;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiaPagoCredito()
-    {
-        return $this->guiaPagoCredito;
-    }
-
-    /**
-     * @param mixed $guiaPagoCredito
-     */
-    public function setGuiaPagoCredito($guiaPagoCredito): void
-    {
-        $this->guiaPagoCredito = $guiaPagoCredito;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiaPagoCortesia()
-    {
-        return $this->guiaPagoCortesia;
-    }
-
-    /**
-     * @param mixed $guiaPagoCortesia
-     */
-    public function setGuiaPagoCortesia($guiaPagoCortesia): void
-    {
-        $this->guiaPagoCortesia = $guiaPagoCortesia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiaPagoRecogida()
-    {
-        return $this->guiaPagoRecogida;
-    }
-
-    /**
-     * @param mixed $guiaPagoRecogida
-     */
-    public function setGuiaPagoRecogida($guiaPagoRecogida): void
-    {
-        $this->guiaPagoRecogida = $guiaPagoRecogida;
     }
 
 

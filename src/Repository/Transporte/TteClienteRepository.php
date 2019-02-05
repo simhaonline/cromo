@@ -38,6 +38,7 @@ class TteClienteRepository extends ServiceEntityRepository
             ->addSelect('tc.telefono')
             ->addSelect('tc.movil')
             ->addSelect('tc.direccion')
+            ->addSelect('tc.codigoOperacionFk')
             ->addSelect('a.nombre AS asesorNombre')
             ->addSelect('c.nombre AS ciudadNombre')
             ->leftJoin('tc.asesorRel', 'a')

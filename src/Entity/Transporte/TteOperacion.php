@@ -103,6 +103,11 @@ class TteOperacion
     protected $facturasOperacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteCliente", mappedBy="operacionRel")
+     */
+    protected $clientesOperacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoOperacionPk()
@@ -372,6 +377,22 @@ class TteOperacion
     public function setFacturasOperacionRel( $facturasOperacionRel ): void
     {
         $this->facturasOperacionRel = $facturasOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientesOperacionRel()
+    {
+        return $this->clientesOperacionRel;
+    }
+
+    /**
+     * @param mixed $clientesOperacionRel
+     */
+    public function setClientesOperacionRel($clientesOperacionRel): void
+    {
+        $this->clientesOperacionRel = $clientesOperacionRel;
     }
 
 

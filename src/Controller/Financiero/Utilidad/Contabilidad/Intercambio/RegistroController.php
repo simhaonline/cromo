@@ -227,7 +227,7 @@ class RegistroController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $rutaTemporal = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
-        $strNombreArchivo = "ExpIlimitada" . date('YmdHis') . ".txt";
+        $strNombreArchivo = "ExpSigo" . date('YmdHis') . ".txt";
         $strArchivo = $rutaTemporal . $strNombreArchivo;
         $ar = fopen($strArchivo, "a") or
         die("Problemas en la creacion del archivo plano");
@@ -250,20 +250,26 @@ class RegistroController extends Controller
             }
             $numero = $arRegistro['numeroPrefijo'] . $arRegistro['numero'];
             $numeroReferencia = $arRegistro['numeroReferenciaPrefijo'] . $arRegistro['numeroReferencia'];
-            fputs($ar, $arRegistro['codigoCuentaFk'] . "\t");
-            fputs($ar, FuncionesController::RellenarNr($arRegistro['codigoComprobanteFk'], "0", 5) . "\t");
-            fputs($ar, $arRegistro['fecha']->format('m/d/Y') . "\t");
-            fputs($ar, FuncionesController::RellenarNr($numero, "0", 9) . "\t");
-            fputs($ar, FuncionesController::RellenarNr($numeroReferencia, "0", 9) . "\t");
-            fputs($ar, $srtNit . "\t");
-            fputs($ar, $arRegistro['descripcion'] . "\t");
-            fputs($ar, $naturaleza . "\t");
-            fputs($ar, $valor . "\t");
-            fputs($ar, $arRegistro['vrBase'] . "\t");
-            fputs($ar, $srtCentroCosto . "\t");
-            fputs($ar, "" . "\t");
-            fputs($ar, "" . "\t");
-            fputs($ar, "\n");
+            $array = array($arRegistro['codigoCuentaFk'], chr(9), '00003', chr(9), $arRegistro['fecha']->format('mdY'), chr(9), $arRegistro['numero'], chr(9),
+                $arRegistro['numero'], chr(9), $arRegistro['numeroIdentificacion'], chr(9), $arRegistro['descripcion'], chr(9), $arRegistro['codigoComprobanteFk'], chr(9),
+                $valor, chr(9), '0', chr(9), '404', chr(9), "", chr(9), '0',  "\n");
+            foreach ($array as $fields) {
+                fputs($ar, $fields);
+            }
+//            fputs($ar, $arRegistro['codigoCuentaFk'].'00003'.$arRegistro['fecha']->format('m-d-Y'));
+//            fputs($ar, FuncionesController::RellenarNr($arRegistro['codigoComprobanteFk'], "0", 5) . "\t");
+//            fputs($ar, $arRegistro['fecha']->format('m/d/Y') . "\t");
+//            fputs($ar, FuncionesController::RellenarNr($numero, "0", 9) . "\t");
+//            fputs($ar, FuncionesController::RellenarNr($numeroReferencia, "0", 9) . "\t");
+//            fputs($ar, $srtNit . "\t");
+//            fputs($ar, $arRegistro['descripcion'] . "\t");
+//            fputs($ar, $naturaleza . "\t");
+//            fputs($ar, $valor . "\t");
+//            fputs($ar, $arRegistro['vrBase'] . "\t");
+//            fputs($ar, $srtCentroCosto . "\t");
+//            fputs($ar, "" . "\t");
+//            fputs($ar, "" . "\t");
+//            fputs($ar, "\n");
         }
         fclose($ar);
         header('Content-Description: File Transfer');

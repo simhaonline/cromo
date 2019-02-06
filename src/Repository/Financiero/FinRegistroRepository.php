@@ -172,8 +172,10 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->addSelect('r.codigoTerceroFk')
             ->addSelect('t.numeroIdentificacion')
             ->addSelect('t.nombreCorto')
+            ->addSelect('ct.codigoCuentaPk AS codigoCuenta')
             ->leftJoin('r.terceroRel', 't')
-            ->leftJoin('r.comprobanteRel', 'c');
+            ->leftJoin('r.comprobanteRel', 'c')
+            ->leftJoin('r.cuentaRel', 'ct');
         $fecha = new \DateTime('now');
         if ($session->get('filtroFinRegistrosTodos') == false) {
             $queryBuilder->andWhere("r.estadoIntercambio = 0");

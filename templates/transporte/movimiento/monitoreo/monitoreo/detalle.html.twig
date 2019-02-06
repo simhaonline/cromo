@@ -2,16 +2,19 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
+        <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_guia_lista') }}">Volver</a>
         <div class="btn-group">
-            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_monitoreo_monitoreo_mapa', {'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk }) }}', 'MonitoreoMapa', 600, 900)">Mapa</a>
+            {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
     <div style="float:right">
-        {% if arMonitoreo.estadoCerrado == 1 %}<span class="label label-default">Cerrado</span>{% endif %}
+        {% if arMonitoreo.estadoAutorizado == 1 %}<span
+                class="label label-default">Autorizado</span>{% endif %}
+        {% if arMonitoreo.estadoAprobado == 1 %}<span
+                class="label label-success">Aprobado</span>{% endif %}
     </div>
-    <br /><br>
-    <table width="100%" class="table table-condensed table-bordered">
+    <br /><br />
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo">ID:</td>
             <td class="td-in-well">{{ arMonitoreo.codigoMonitoreoPk }}</td>
@@ -65,10 +68,13 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_monitoreo_monitoreo_detalle_adicionar_reporte', {'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk, 'codigoMonitoreoDetalle': 0 }) }}', 'MonitoreoAdicionarReporte', 600, 900)">Adicionar</a>
-                    </div>
-                    <div class="btn-group">
-                        {{ form_widget(form.btnRetirarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                        {% if arMonitoreo.estadoAutorizado == 0 %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_monitoreo_monitoreo_detalle_adicionar_reporte', {'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk, 'codigoMonitoreoDetalle': 0 }) }} ', 'DespachoAdicionarGuia', 600, 1200)">Adicionar</a>
+                            <div class="btn-group">
+                                {{ form_widget(form.btnRetirarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -103,16 +109,26 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_monitoreo_monitoreo_detalle_adicionar_reporte', {'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk, 'codigoMonitoreoDetalle': 0 }) }}', 'MonitoreoAdicionarReporte', 600, 900)">Adicionar</a>
+                        {% if arMonitoreo.estadoAutorizado == 0 %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_monitoreo_monitoreo_detalle_adicionar_reporte', {'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk, 'codigoMonitoreoDetalle': 0 }) }} ', 'DespachoAdicionarGuia', 600, 1200)">Adicionar</a>
+                        {% endif %}
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnRetirarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
                 </div>
+                {#<div class="btn-toolbar" style="float: right">#}
+                    {#<div class="btn-group">#}
+                        {#<a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_monitoreo_monitoreo_detalle_adicionar_reporte', {'codigoMonitoreo': arMonitoreo.codigoMonitoreoPk, 'codigoMonitoreoDetalle': 0 }) }}', 'MonitoreoAdicionarReporte', 600, 900)">Adicionar</a>#}
+                    {#</div>#}
+                    {#<div class="btn-group">#}
+                        {#{{ form_widget(form.btnRetirarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}#}
+                    {#</div>#}
+                {#</div>#}
             </div>
         </div>
     </div>
 
     {{ form_end(form) }}
-    <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_monitoreo_monitoreo_lista') }}">Volver</a>
 {% endblock %}

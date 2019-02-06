@@ -10,7 +10,9 @@ use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TteMonitoreoDetalle;
 use App\Entity\Transporte\TteMonitoreoRegistro;
 use App\Form\Type\Transporte\MonitoreoDetalleType;
+use App\Formato\Transporte\Monitoreo;
 use App\General\General;
+use App\Utilidades\Estandares;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -78,22 +80,42 @@ class MonitoreoController extends ControllerListenerGeneral
 
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/transporte/movimiento/monitoreo/monitoreo/detalle/{id}", name="transporte_movimiento_monitoreo_monitoreo_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arMonitoreo = $em->getRepository(TteMonitoreo::class)->find($id);
-        $form = $this->createFormBuilder()
-            ->add('btnRetirarDetalle', SubmitType::class, array('label' => 'Retirar'))
-            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
-            ->getForm();
+        $form = Estandares::botonera($arMonitoreo->getEstadoAutorizado(), $arMonitoreo->getEstadoAprobado(), $arMonitoreo->getEstadoAnulado());
+        $form
+            ->add('btnRetirarDetalle', SubmitType::class, array('label' => 'Retirar'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnRetirarDetalle')->isClicked()) {
                 $arrMonitoreoDetalle = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteMonitoreoDetalle::class)->eliminar($arrMonitoreoDetalle);
                 return $this->redirect($this->generateUrl('transporte_movimiento_monitoreo_monitoreo_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(TteMonitoreo::class)->autorizar($arMonitoreo);
+                return $this->redirect($this->generateUrl('transporte_movimiento_monitoreo_monitoreo_detalle', array('id' => $id)));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(TteMonitoreo::class)->desautorizar($arMonitoreo);
+                return $this->redirect($this->generateUrl('transporte_movimiento_monitoreo_monitoreo_detalle', array('id' => $id)));
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(TteMonitoreo::class)->aprobar($arMonitoreo);
+                return $this->redirect($this->generateUrl('transporte_movimiento_monitoreo_monitoreo_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formato = new  Monitoreo();
+                $formato->Generar($em, $id);
             }
         }
         $arMonitoreoDetalles = $this->getDoctrine()->getRepository(TteMonitoreoDetalle::class)->monitoreo($id);

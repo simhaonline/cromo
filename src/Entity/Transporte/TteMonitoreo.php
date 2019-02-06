@@ -100,6 +100,22 @@ class TteMonitoreo
     protected $monitoreosRegistrosMonitoreoRel;
 
     /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoMonitoreoPk()
@@ -214,86 +230,6 @@ class TteMonitoreo
     /**
      * @return mixed
      */
-    public function getVehiculoRel()
-    {
-        return $this->vehiculoRel;
-    }
-
-    /**
-     * @param mixed $vehiculoRel
-     */
-    public function setVehiculoRel($vehiculoRel): void
-    {
-        $this->vehiculoRel = $vehiculoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachoRel()
-    {
-        return $this->despachoRel;
-    }
-
-    /**
-     * @param mixed $despachoRel
-     */
-    public function setDespachoRel($despachoRel): void
-    {
-        $this->despachoRel = $despachoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMonitoreosDetallesMonitoreoRel()
-    {
-        return $this->monitoreosDetallesMonitoreoRel;
-    }
-
-    /**
-     * @param mixed $monitoreosDetallesMonitoreoRel
-     */
-    public function setMonitoreosDetallesMonitoreoRel($monitoreosDetallesMonitoreoRel): void
-    {
-        $this->monitoreosDetallesMonitoreoRel = $monitoreosDetallesMonitoreoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoCerrado()
-    {
-        return $this->estadoCerrado;
-    }
-
-    /**
-     * @param mixed $estadoCerrado
-     */
-    public function setEstadoCerrado($estadoCerrado): void
-    {
-        $this->estadoCerrado = $estadoCerrado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComentario()
-    {
-        return $this->comentario;
-    }
-
-    /**
-     * @param mixed $comentario
-     */
-    public function setComentario($comentario): void
-    {
-        $this->comentario = $comentario;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -337,6 +273,86 @@ class TteMonitoreo
     public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoCerrado()
+    {
+        return $this->estadoCerrado;
+    }
+
+    /**
+     * @param mixed $estadoCerrado
+     */
+    public function setEstadoCerrado($estadoCerrado): void
+    {
+        $this->estadoCerrado = $estadoCerrado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param mixed $comentario
+     */
+    public function setComentario($comentario): void
+    {
+        $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVehiculoRel()
+    {
+        return $this->vehiculoRel;
+    }
+
+    /**
+     * @param mixed $vehiculoRel
+     */
+    public function setVehiculoRel($vehiculoRel): void
+    {
+        $this->vehiculoRel = $vehiculoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoRel()
+    {
+        return $this->despachoRel;
+    }
+
+    /**
+     * @param mixed $despachoRel
+     */
+    public function setDespachoRel($despachoRel): void
+    {
+        $this->despachoRel = $despachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMonitoreosDetallesMonitoreoRel()
+    {
+        return $this->monitoreosDetallesMonitoreoRel;
+    }
+
+    /**
+     * @param mixed $monitoreosDetallesMonitoreoRel
+     */
+    public function setMonitoreosDetallesMonitoreoRel($monitoreosDetallesMonitoreoRel): void
+    {
+        $this->monitoreosDetallesMonitoreoRel = $monitoreosDetallesMonitoreoRel;
     }
 
     /**

@@ -44,4 +44,6 @@ class TteMonitoreoDetalleRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+
+
 }

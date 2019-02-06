@@ -231,45 +231,52 @@ class RegistroController extends Controller
         $strArchivo = $rutaTemporal . $strNombreArchivo;
         $ar = fopen($strArchivo, "a") or
         die("Problemas en la creacion del archivo plano");
+        $consecutivo = 1;
         $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
         foreach ($arRegistros as $arRegistro) {
-            if ($arRegistro['naturaleza'] == "D") {
-                $valor = $arRegistro['vrDebito'];
-                $naturaleza = "1";
-            } else {
-                $valor = $arRegistro['vrCredito'];
-                $naturaleza = "2";
-            }
-            $srtCentroCosto = "";
-            if ($arRegistro['codigoCentroCostoFk']) {
-                $srtCentroCosto = $arRegistro['codigoCentroCostoFk'];
-            }
-            $srtNit = "";
+            $vendedor = '0001';
+            $nit = "";
             if ($arRegistro['codigoTerceroFk']) {
-                $srtNit = $arRegistro['numeroIdentificacion'];
+                $nit = $arRegistro['numeroIdentificacion'];
             }
-            $numero = $arRegistro['numeroPrefijo'] . $arRegistro['numero'];
-            $numeroReferencia = $arRegistro['numeroReferenciaPrefijo'] . $arRegistro['numeroReferencia'];
-            $array = array($arRegistro['codigoCuentaFk'], chr(9), '00003', chr(9), $arRegistro['fecha']->format('mdY'), chr(9), $arRegistro['numero'], chr(9),
-                $arRegistro['numero'], chr(9), $arRegistro['numeroIdentificacion'], chr(9), $arRegistro['descripcion'], chr(9), $arRegistro['codigoComprobanteFk'], chr(9),
-                $valor, chr(9), '0', chr(9), '404', chr(9), "", chr(9), '0',  "\n");
-            foreach ($array as $fields) {
-                fputs($ar, $fields);
+            if($arRegistro['naturaleza'] == 'D') {
+                $valor = round($arRegistro['vrDebito']);
+            } else {
+                $valor = round($arRegistro['vrCredito']);
             }
-//            fputs($ar, $arRegistro['codigoCuentaFk'].'00003'.$arRegistro['fecha']->format('m-d-Y'));
-//            fputs($ar, FuncionesController::RellenarNr($arRegistro['codigoComprobanteFk'], "0", 5) . "\t");
-//            fputs($ar, $arRegistro['fecha']->format('m/d/Y') . "\t");
-//            fputs($ar, FuncionesController::RellenarNr($numero, "0", 9) . "\t");
-//            fputs($ar, FuncionesController::RellenarNr($numeroReferencia, "0", 9) . "\t");
-//            fputs($ar, $srtNit . "\t");
-//            fputs($ar, $arRegistro['descripcion'] . "\t");
-//            fputs($ar, $naturaleza . "\t");
-//            fputs($ar, $valor . "\t");
-//            fputs($ar, $arRegistro['vrBase'] . "\t");
-//            fputs($ar, $srtCentroCosto . "\t");
-//            fputs($ar, "" . "\t");
-//            fputs($ar, "" . "\t");
-//            fputs($ar, "\n");
+            $documentoCruce = ' ' . '000' . '00000000000' . '000' . '00000000' . '0000' . '00';
+            /*If Mid(strCuenta, 1, 4) = "1305" Then
+            strDocumentoCruce = "F" & strComprobante & strNumero & Rellenar(J & "", 3, "0", 1) & Format(rstFacturasExp!FhVence, "yyyymmdd") & "0001" & "00"
+          Else
+            strDocumentoCruce = " " & "000" & "00000000000" & "000" & "00000000" & "0000" & "00"
+
+Print #1, "F" & strComprobante & strNumero & Rellenar(J & "", 5, "0", 1) & Rellenar(strNit, 13, "0", 1) & "000" & strCuenta & "000000000000000" & Format(rstFacturasExp!Fecha, "yyyymmdd") & strCentroCostos & "000" & Rellenar(strDetalle, 50, " ", 0) & strTipo & Rellenar(strValor, 15, "0", 1) & "000000000000000" & strVendedor & "0001" & "001" & "0001" & "000" & "000000000000000" & strDocumentoCruce
+
+            */
+
+            fputs($ar, $arRegistro['codigoComprobanteFk']);
+            fputs($ar, $this->RellenarDato($arRegistro['numero'],'0', 11, 'I'));
+            fputs($ar, $this->RellenarDato($consecutivo,'0', 5, 'I'));
+            fputs($ar, $this->RellenarDato($nit,'0', 13, 'I'));
+            fputs($ar, '000');
+            fputs($ar, $this->RellenarDato($arRegistro['codigoCuentaFk'],'0', 8, 'I'));
+            fputs($ar, '000000000000000');
+            fputs($ar, $arRegistro['fecha']->format('Ymd'));
+            fputs($ar, $this->RellenarDato($arRegistro['codigoCentroCostoFk'],'0', 4, 'I'));
+            fputs($ar, '000');
+            fputs($ar, $this->RellenarDato($arRegistro['descripcion'],' ', 50, 'D'));
+            fputs($ar, $arRegistro['naturaleza']);
+            fputs($ar, $this->RellenarDato($valor,'0', 15, 'I'));
+            fputs($ar, '000000000000000');
+            fputs($ar, $vendedor);
+            fputs($ar, '0001');
+            fputs($ar, '001');
+            fputs($ar, '0001');
+            fputs($ar, '000');
+            fputs($ar, '000000000000000');
+            fputs($ar, $documentoCruce);
+            fputs($ar, "\n");
+            $consecutivo++;
         }
         fclose($ar);
         header('Content-Description: File Transfer');
@@ -282,6 +289,21 @@ class RegistroController extends Controller
         readfile($strArchivo);
         exit;
 
+    }
+
+    public function RellenarDato($dato, $caracterRelleno, $cantidadCaracteres, $ladoDeRelleno = 'I') {
+        $dato = utf8_decode($dato);
+        $Longitud = strlen($dato);
+        $cantidadCaracteres = $cantidadCaracteres - $Longitud;
+        for ($i = 0; $i < $cantidadCaracteres; $i++) {
+            if ($ladoDeRelleno == "I") {
+                $dato = $caracterRelleno . $dato;
+            } else {
+                $dato = $dato . $caracterRelleno;
+            }
+        }
+
+        return (string) $dato;
     }
 
 }

@@ -118,6 +118,11 @@ class TteConductor
     private $alias;
 
     /**
+     * @ORM\Column(name="arl", type="string", length=50, nullable=true)
+     */
+    private $arl;
+
+    /**
      * @ORM\Column(name="codigo_vehiculo", type="string", length=6, nullable=true)
      */
     private $codigoVehiculo;
@@ -622,6 +627,22 @@ class TteConductor
     public function setRhRel($rhRel): void
     {
         $this->rhRel = $rhRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getArl()
+    {
+        return $this->arl;
+    }
+
+    /**
+     * @param mixed $arl
+     */
+    public function setArl($arl): void
+    {
+        $this->arl = $arl;
     }
 
 

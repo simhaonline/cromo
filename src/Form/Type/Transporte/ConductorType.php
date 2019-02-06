@@ -55,6 +55,7 @@ class ConductorType extends AbstractType
                 'label' => 'Rh:'
             ])
             ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
+            ->add('arl',TextType::class,['required' => true,'label' => 'Arl:'])
             ->add('fechaNacimiento', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('telefono',NumberType::class,['required' => true,'label' => 'Telefono:'])
             ->add('movil',NumberType::class,['required' => true,'label' => 'Celular:'])

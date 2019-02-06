@@ -719,27 +719,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arFactura = $em->getRepository(TteFactura::class)->registroContabilizar($codigo);
                 if($arFactura) {
                     if($arFactura['estadoAprobado'] == 1 && $arFactura['estadoContabilizado'] == 0) {
-                        $prefijoReferencia = "";
-                        $numeroReferencia = "";
-                        if($arFactura['codigoFacturaClaseFk'] == "FA") {
-                            $prefijoReferencia = $arFactura['prefijo'];
-                            $numeroReferencia = $arFactura['numero'];
-                        }
-                        if($arFactura['codigoFacturaClaseFk'] == "NC") {
-                            if($arFactura['codigoFacturaReferenciaFk']) {
-                                $arFacturaReferencia = $em->getRepository(TteFactura::class)->find($arFactura['codigoFacturaReferenciaFk']);
-                                if($arFacturaReferencia) {
-                                    $prefijoReferencia = $arFacturaReferencia->getFacturaTipoRel()->getPrefijo();
-                                    $numeroReferencia = $arFacturaReferencia->getNumero();
-                                } else {
-                                    $prefijoReferencia = $arFactura['prefijo'];
-                                    $numeroReferencia = $arFactura['numero'];
-                                }
-                            }
-                        }
                         $arComprobante = $em->getRepository(FinComprobante::class)->find($arFactura['codigoComprobanteFk']);
                         $arTercero = $em->getRepository(TteCliente::class)->terceroFinanciero($arFactura['codigoClienteFk']);
-
                         $arIngresos = $em->getRepository(TteFacturaDetalle::class)->contabilizarIngreso($arFactura['codigoFacturaPk']);
                         foreach ($arIngresos as $arIngreso) {
                             $arOperacion = $em->getRepository(TteOperacion::class)->find($arIngreso['codigoOperacionIngresoFk']);
@@ -762,8 +743,6 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                 $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
                                 $arRegistro->setNumero($arFactura['numero']);
-                                $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
-                                $arRegistro->setNumeroReferencia($numeroReferencia);
                                 $arRegistro->setFecha($arFactura['fecha']);
                                 if($arFactura['codigoFacturaClaseFk'] == 'FA') {
                                     $arRegistro->setVrCredito($arIngreso['vrFlete']);
@@ -795,8 +774,6 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                 $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
                                 $arRegistro->setNumero($arFactura['numero']);
-                                $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
-                                $arRegistro->setNumeroReferencia($numeroReferencia);
                                 $arRegistro->setFecha($arFactura['fecha']);
                                 if($arFactura['codigoFacturaClaseFk'] == 'FA') {
                                     $arRegistro->setVrCredito($arIngreso['vrManejo']);
@@ -835,8 +812,6 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                 $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
                                 $arRegistro->setNumero($arFactura['numero']);
-                                $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
-                                $arRegistro->setNumeroReferencia($numeroReferencia);
                                 $arRegistro->setFecha($arFactura['fecha']);
                                 if($arFactura['codigoFacturaClaseFk'] == 'FA') {
                                     $arRegistro->setVrCredito($arFacturaDetalleConcepto->getVrSubtotal());
@@ -859,6 +834,29 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $error = "No se encuentra la cuenta cliente " . $arFactura['codigoCuentaClienteFk'] . " en el documento numero " . $arFactura['numero'];
                                 break;
                             }
+                            $prefijoReferencia = "";
+                            $numeroReferencia = "";
+                            $arComprobanteReferencia = null;
+                            if($arFactura['codigoFacturaClaseFk'] == "FA") {
+                                $prefijoReferencia = $arFactura['prefijo'];
+                                $numeroReferencia = $arFactura['numero'];
+                                $arComprobanteReferencia = $arComprobante;
+                            }
+                            if($arFactura['codigoFacturaClaseFk'] == "NC") {
+                                if($arFactura['codigoFacturaReferenciaFk']) {
+                                    $arFacturaReferencia = $em->getRepository(TteFactura::class)->find($arFactura['codigoFacturaReferenciaFk']);
+                                    if($arFacturaReferencia) {
+                                        $prefijoReferencia = $arFacturaReferencia->getFacturaTipoRel()->getPrefijo();
+                                        $numeroReferencia = $arFacturaReferencia->getNumero();
+                                        $arComprobanteReferencia = $em->getRepository(FinComprobante::class)->find($arFacturaReferencia->getFacturaTipoRel()->getCodigoComprobanteFk());
+                                    } else {
+                                        $prefijoReferencia = $arFactura['prefijo'];
+                                        $numeroReferencia = $arFactura['numero'];
+                                        $arComprobanteReferencia = $arComprobante;
+                                    }
+                                }
+                            }
+
                             $arRegistro = new FinRegistro();
                             $arRegistro->setTerceroRel($arTercero);
                             $arRegistro->setCuentaRel($arCuenta);
@@ -869,8 +867,9 @@ class TteFacturaRepository extends ServiceEntityRepository
                             }
                             $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
                             $arRegistro->setNumero($arFactura['numero']);
-                            $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
                             $arRegistro->setNumeroReferencia($numeroReferencia);
+                            $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
+                            $arRegistro->setComprobanteReferenciaRel($arComprobanteReferencia);
                             $arRegistro->setFecha($arFactura['fecha']);
                             $arRegistro->setFechaVence($arFactura['fechaVence']);
                             if($arFactura['codigoFacturaClaseFk'] == 'FA') {

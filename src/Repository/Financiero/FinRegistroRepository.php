@@ -168,6 +168,7 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->addSelect('r.codigoCentroCostoFk')
             ->addSelect('r.codigoCuentaFk')
             ->addSelect('r.codigoComprobanteFk')
+            ->addSelect('r.codigoComprobanteReferenciaFk')
             ->addSelect('c.nombre')
             ->addSelect('r.descripcion')
             ->addSelect('r.codigoTerceroFk')

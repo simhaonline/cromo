@@ -76,6 +76,11 @@ class FinRegistro
     private $numeroReferenciaPrefijo;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_referencia_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoComprobanteReferenciaFk;
+
+    /**
      * @ORM\Column(name="vr_debito", type="float", nullable=true, options={"default" : 0})
      */
     private $vrDebito = 0;
@@ -147,6 +152,12 @@ class FinRegistro
      * @ORM\JoinColumn(name="codigo_comprobante_fk", referencedColumnName="codigo_comprobante_pk")
      */
     protected $comprobanteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinComprobante", inversedBy="registrosComprobanteReferenciaRel")
+     * @ORM\JoinColumn(name="codigo_comprobante_referencia_fk", referencedColumnName="codigo_comprobante_pk")
+     */
+    protected $comprobanteReferenciaRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCentroCosto", inversedBy="registrosCentroCostoRel")
@@ -568,6 +579,38 @@ class FinRegistro
     public function setFechaVence( $fechaVence ): void
     {
         $this->fechaVence = $fechaVence;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteReferenciaFk()
+    {
+        return $this->codigoComprobanteReferenciaFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteReferenciaFk
+     */
+    public function setCodigoComprobanteReferenciaFk( $codigoComprobanteReferenciaFk ): void
+    {
+        $this->codigoComprobanteReferenciaFk = $codigoComprobanteReferenciaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComprobanteReferenciaRel()
+    {
+        return $this->comprobanteReferenciaRel;
+    }
+
+    /**
+     * @param mixed $comprobanteReferenciaRel
+     */
+    public function setComprobanteReferenciaRel( $comprobanteReferenciaRel ): void
+    {
+        $this->comprobanteReferenciaRel = $comprobanteReferenciaRel;
     }
 
 

@@ -245,13 +245,13 @@ class RegistroController extends Controller
                 $valor = round($arRegistro['vrCredito']);
             }
 
-            $grupo = substr($arRegistro['codigoCuentaFk'], 0, 2);
-            if($grupo == '13') {
+
+            if($arRegistro['numeroReferencia']) {
                 $fechaVence = '00000000';
                 if($arRegistro['fechaVence']) {
                     $fechaVence = $arRegistro['fechaVence']->format('Ymd');
                 }
-                $documentoCruce = $arRegistro['codigoComprobanteFk'] . $this->RellenarDato($arRegistro['numeroReferencia'],'0', 11, 'I') . $this->RellenarDato($consecutivo,'0', 3, 'I') . $fechaVence . '0001' . '00';
+                $documentoCruce = $arRegistro['codigoComprobanteReferenciaFk'] . $this->RellenarDato($arRegistro['numeroReferencia'],'0', 11, 'I') . $this->RellenarDato($consecutivo,'0', 3, 'I') . $fechaVence . '0001' . '00';
             } else {
                 $documentoCruce = ' ' . '000' . '00000000000' . '000' . '00000000' . '0000' . '00';
             }

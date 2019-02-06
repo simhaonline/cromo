@@ -55,6 +55,11 @@ class FinComprobante
     protected $registrosComprobanteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinRegistro", mappedBy="comprobanteReferenciaRel")
+     */
+    protected $registrosComprobanteReferenciaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Financiero\FinAsiento", mappedBy="comprobanteRel")
      */
     protected $asientosComprobanteRel;
@@ -174,6 +179,22 @@ class FinComprobante
     public function setAsientosDetallesComprobanteRel($asientosDetallesComprobanteRel): void
     {
         $this->asientosDetallesComprobanteRel = $asientosDetallesComprobanteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrosComprobanteReferenciaRel()
+    {
+        return $this->registrosComprobanteReferenciaRel;
+    }
+
+    /**
+     * @param mixed $registrosComprobanteReferenciaRel
+     */
+    public function setRegistrosComprobanteReferenciaRel( $registrosComprobanteReferenciaRel ): void
+    {
+        $this->registrosComprobanteReferenciaRel = $registrosComprobanteReferenciaRel;
     }
 
 

@@ -231,9 +231,17 @@ class RegistroController extends Controller
         $strArchivo = $rutaTemporal . $strNombreArchivo;
         $ar = fopen($strArchivo, "a") or
         die("Problemas en la creacion del archivo plano");
-        $consecutivo = 1;
+        $consecutivo = 0;
+        $numeroAnterior = 0;
         $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
         foreach ($arRegistros as $arRegistro) {
+            if($numeroAnterior != $arRegistro['numero']) {
+                $consecutivo = 0;
+
+            }
+            $numeroAnterior = $arRegistro['numero'];
+            $consecutivo++;
+
             $vendedor = '0001';
             $nit = "";
             if ($arRegistro['codigoTerceroFk']) {
@@ -288,7 +296,6 @@ Print #1, "F" & strComprobante & strNumero & Rellenar(J & "", 5, "0", 1) & Relle
             fputs($ar, '000000000000000');
             fputs($ar, $documentoCruce);
             fputs($ar, "\n");
-            $consecutivo++;
         }
         fclose($ar);
         header('Content-Description: File Transfer');

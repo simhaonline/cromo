@@ -51,6 +51,11 @@ class FinRegistro
     private $fecha;
 
     /**
+     * @ORM\Column(name="fecha_vence", type="date", nullable=true)
+     */
+    private $fechaVence;
+
+    /**
      * @ORM\Column(name="numero", type="integer", nullable=true)
      */
     private $numero = 0;
@@ -547,6 +552,22 @@ class FinRegistro
     public function setCentroCostoRel($centroCostoRel): void
     {
         $this->centroCostoRel = $centroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVence()
+    {
+        return $this->fechaVence;
+    }
+
+    /**
+     * @param mixed $fechaVence
+     */
+    public function setFechaVence( $fechaVence ): void
+    {
+        $this->fechaVence = $fechaVence;
     }
 
 

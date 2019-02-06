@@ -691,6 +691,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.codigoClienteFk')
             ->addSelect('f.numero')
             ->addSelect('f.fecha')
+            ->addSelect('f.fechaVence')
             ->addSelect('f.estadoAprobado')
             ->addSelect('f.estadoContabilizado')
             ->addSelect('f.vrFlete')
@@ -871,6 +872,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                             $arRegistro->setNumeroReferenciaPrefijo($prefijoReferencia);
                             $arRegistro->setNumeroReferencia($numeroReferencia);
                             $arRegistro->setFecha($arFactura['fecha']);
+                            $arRegistro->setFechaVence($arFactura['fechaVence']);
                             if($arFactura['codigoFacturaClaseFk'] == 'FA') {
                                 $arRegistro->setVrDebito($arFactura['vrTotal']);
                                 $arRegistro->setNaturaleza('D');

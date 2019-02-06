@@ -244,11 +244,23 @@ class RegistroController extends Controller
             } else {
                 $valor = round($arRegistro['vrCredito']);
             }
-            $documentoCruce = ' ' . '000' . '00000000000' . '000' . '00000000' . '0000' . '00';
-            /*If Mid(strCuenta, 1, 4) = "1305" Then
+
+            $grupo = substr($arRegistro['codigoCuentaFk'], 0, 2);
+            if($grupo == '13') {
+                $fechaVence = '00000000';
+                if($arRegistro['fechaVence']) {
+                    $fechaVence = $arRegistro['fechaVence']->format('Ymd');
+                }
+                $documentoCruce = $arRegistro['codigoComprobanteFk'] . $this->RellenarDato($arRegistro['numeroReferencia'],'0', 11, 'I') . $this->RellenarDato($consecutivo,'0', 3, 'I') . $fechaVence . '0001' . '00';
+            } else {
+                $documentoCruce = ' ' . '000' . '00000000000' . '000' . '00000000' . '0000' . '00';
+            }
+            /*
+          If Mid(strCuenta, 1, 4) = "1305" Then
             strDocumentoCruce = "F" & strComprobante & strNumero & Rellenar(J & "", 3, "0", 1) & Format(rstFacturasExp!FhVence, "yyyymmdd") & "0001" & "00"
           Else
             strDocumentoCruce = " " & "000" & "00000000000" & "000" & "00000000" & "0000" & "00"
+          End If
 
 Print #1, "F" & strComprobante & strNumero & Rellenar(J & "", 5, "0", 1) & Rellenar(strNit, 13, "0", 1) & "000" & strCuenta & "000000000000000" & Format(rstFacturasExp!Fecha, "yyyymmdd") & strCentroCostos & "000" & Rellenar(strDetalle, 50, " ", 0) & strTipo & Rellenar(strValor, 15, "0", 1) & "000000000000000" & strVendedor & "0001" & "001" & "0001" & "000" & "000000000000000" & strDocumentoCruce
 

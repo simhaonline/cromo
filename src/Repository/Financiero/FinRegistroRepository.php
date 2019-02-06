@@ -156,6 +156,7 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->select('r.codigoRegistroPk')
             ->addSelect('r.numero')
             ->addSelect('r.fecha')
+            ->addSelect('r.fechaVence')
             ->addSelect('r.numeroReferencia')
             ->addSelect('r.numeroPrefijo')
             ->addSelect('r.numeroReferenciaPrefijo')

@@ -297,7 +297,7 @@ class FinRegistroRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function documentoPeriodo($fechaDesde, $fechaHasta){
+    public function documentoPeriodo($fechaDesde, $fechaHasta, $codigoComprobante = null){
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
             ->select('r.codigoComprobanteFk')
@@ -308,6 +308,9 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->andWhere("r.fecha <= '" . $fechaHasta . " 23:59:59'")
             ->groupBy('r.codigoComprobanteFk')
             ->addGroupBy('r.numeroPrefijo');
+        if($codigoComprobante) {
+            $queryBuilder->andWhere("r.codigoComprobanteFk = '" . $codigoComprobante . "'");
+        }
         return $queryBuilder->getQuery()->getResult();
     }
     public function documentoPeriodoEncabezado($comprobante, $prefijo, $desde, $hasta){

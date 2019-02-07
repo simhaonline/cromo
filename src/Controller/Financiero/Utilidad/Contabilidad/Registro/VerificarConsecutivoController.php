@@ -36,6 +36,7 @@ class VerificarConsecutivoController extends Controller
         $form = $this->createFormBuilder()
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
+            ->add('txtComprobante', TextType::class, ['required' => false, 'data' => $session->get('filtroFinComprobante'), 'attr' => ['class' => 'form-control']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnGenerar', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -43,21 +44,23 @@ class VerificarConsecutivoController extends Controller
         $arRegistrosInconsistencias = [];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGenerar')->isClicked()) {
-                $em->getRepository(FinRegistroInconsistencia::class)->limpiar('inconsistencia');
+                $em->getRepository(FinRegistroInconsistencia::class)->limpiar('verificarConsecutivo');
                 $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
                 $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
-                $arComprobantes = $em->getRepository(FinRegistro::class)->documentoPeriodo($fechaDesde, $fechaHasta);
+                $codigoComprobante = $form->get('txtComprobante')->getData();
+                $arComprobantes = $em->getRepository(FinRegistro::class)->documentoPeriodo($fechaDesde, $fechaHasta, $codigoComprobante);
                 foreach ($arComprobantes as $arComprobante) {
                     $desde = $arComprobante['minimo'];
                     $hasta = $arComprobante['maximo'];
-                    $numero = $desde;
+                    $arrDocumentos = array();
                     $arDocumentos = $em->getRepository(FinRegistro::class)->documentoPeriodoEncabezado($arComprobante['codigoComprobanteFk'], $arComprobante['numeroPrefijo'], $desde, $hasta);
                     foreach ($arDocumentos as $arDocumento) {
-                        if($arDocumento['numero'] == $numero) {
-                            $numero++;
-                        } else {
+                        $arrDocumentos[] = $arDocumento['numero'];
+                    }
+                    for ($i = $desde; $i <= $hasta; $i++) {
+                        if(!in_array($i, $arrDocumentos)) {
                             $arRegistroInconsistencia = new FinRegistroInconsistencia();
-                            $arRegistroInconsistencia->setNumero($arDocumento['numero']);
+                            $arRegistroInconsistencia->setNumero($i);
                             $arRegistroInconsistencia->setNumeroPrefijo($arComprobante['numeroPrefijo']);
                             $arRegistroInconsistencia->setCodigoComprobanteFk($arComprobante['codigoComprobanteFk']);
                             $arRegistroInconsistencia->setDescripcion('Falta el documento');

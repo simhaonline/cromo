@@ -46,9 +46,9 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-1 control-label">Desde:</label>
+                    <label class="col-sm-1 control-label">Guia(FAC):</label>
                     <div class="col-sm-2">
-                        {{ form_widget(formFiltro.fechaIngresoDesde) }}
+                        {{ form_widget(formFiltro.numeroFactura) }}
                     </div>
                     <label for="form_codigoDespachoFk" class="col-sm-1 control-label">Numero:</label>
                     <div class="col-sm-2">
@@ -64,9 +64,9 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-1 control-label">Hasta:</label>
+                    <label class="col-sm-1 control-label">Desde:</label>
                     <div class="col-sm-2">
-                        {{ form_widget(formFiltro.fechaIngresoHasta) }}
+                        {{ form_widget(formFiltro.fechaIngresoDesde) }}
                     </div>
                     <label for="form_txtDocumento" class="col-sm-1 control-label">Documento:</label>
                     <div class="col-sm-2">
@@ -79,6 +79,12 @@
                     <label class="col-sm-1 control-label">Novedad(SOL)</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.estadoNovedadSolucion) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Hasta:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.fechaIngresoHasta) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">

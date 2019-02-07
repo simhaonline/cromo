@@ -116,6 +116,10 @@ class TteDespachoTipo
      */
     private $codigoCuentaPagarTipoFk;
 
+    /**
+     * @ORM\Column(name="contabilizar", type="boolean", nullable=true,options={"default":false})
+     */
+    private $contabilizar = false;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespacho", mappedBy="despachoTipoRel")
@@ -290,6 +294,22 @@ class TteDespachoTipo
     /**
      * @return mixed
      */
+    public function getNaturalezaCuentaFletePagoIntermediacion()
+    {
+        return $this->naturalezaCuentaFletePagoIntermediacion;
+    }
+
+    /**
+     * @param mixed $naturalezaCuentaFletePagoIntermediacion
+     */
+    public function setNaturalezaCuentaFletePagoIntermediacion( $naturalezaCuentaFletePagoIntermediacion ): void
+    {
+        $this->naturalezaCuentaFletePagoIntermediacion = $naturalezaCuentaFletePagoIntermediacion;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoCuentaRetencionFuenteFk()
     {
         return $this->codigoCuentaRetencionFuenteFk;
@@ -434,6 +454,22 @@ class TteDespachoTipo
     /**
      * @return mixed
      */
+    public function getContabilizar()
+    {
+        return $this->contabilizar;
+    }
+
+    /**
+     * @param mixed $contabilizar
+     */
+    public function setContabilizar( $contabilizar ): void
+    {
+        $this->contabilizar = $contabilizar;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDespachosDespachoTipoRel()
     {
         return $this->despachosDespachoTipoRel;
@@ -462,24 +498,6 @@ class TteDespachoTipo
     {
         $this->intermediacionesDetallesDespachoTipoRel = $intermediacionesDetallesDespachoTipoRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getNaturalezaCuentaFletePagoIntermediacion()
-    {
-        return $this->naturalezaCuentaFletePagoIntermediacion;
-    }
-
-    /**
-     * @param mixed $naturalezaCuentaFletePagoIntermediacion
-     */
-    public function setNaturalezaCuentaFletePagoIntermediacion( $naturalezaCuentaFletePagoIntermediacion ): void
-    {
-        $this->naturalezaCuentaFletePagoIntermediacion = $naturalezaCuentaFletePagoIntermediacion;
-    }
-
-
 
 
 }

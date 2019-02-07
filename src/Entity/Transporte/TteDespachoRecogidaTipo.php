@@ -92,6 +92,11 @@ class TteDespachoRecogidaTipo
     protected $despachosRecogidasDespachoRecogidaTipoRel;
 
     /**
+     * @ORM\Column(name="contabilizar", type="boolean", nullable=true,options={"default":false})
+     */
+    private $contabilizar = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoDespachoRecogidaTipoPk()
@@ -329,6 +334,22 @@ class TteDespachoRecogidaTipo
     public function setCodigoCuentaPagarFk($codigoCuentaPagarFk): void
     {
         $this->codigoCuentaPagarFk = $codigoCuentaPagarFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContabilizar()
+    {
+        return $this->contabilizar;
+    }
+
+    /**
+     * @param mixed $contabilizar
+     */
+    public function setContabilizar( $contabilizar ): void
+    {
+        $this->contabilizar = $contabilizar;
     }
 
 

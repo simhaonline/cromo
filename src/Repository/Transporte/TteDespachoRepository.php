@@ -1198,7 +1198,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->leftJoin('d.conductorRel', 'c')
             ->where('d.estadoContabilizado =  0')
             ->andWhere('d.estadoAprobado = 1')
-            ->andWhere('dt.viaje = 1');
+            ->andWhere('dt.contabilizar = 1');
         $fecha = new \DateTime('now');
         if ($session->get('filtroTteDespachoFiltroFecha') == true) {
             if ($session->get('filtroTteDespachoFechaDesde') != null) {
@@ -1246,6 +1246,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('dt.codigoCuentaAnticipoFk')
             ->addSelect('dt.codigoCuentaPapeleriaFk')
             ->addSelect('dt.codigoCuentaPagarFk')
+            ->addSelect('dt.contabilizar')
             ->addSelect('o.codigoCentroCostoFk')
             ->leftJoin('d.vehiculoRel', 'v')
             ->leftJoin('d.despachoTipoRel', 'dt')
@@ -1263,51 +1264,330 @@ class TteDespachoRepository extends ServiceEntityRepository
             foreach ($arr AS $codigo) {
                 $arDespacho = $em->getRepository(TteDespacho::class)->registroContabilizar($codigo);
                 if ($arDespacho) {
-                    if ($arDespacho['estadoAprobado'] == 1 && $arDespacho['estadoContabilizado'] == 0) {
-                        $arComprobante = $em->getRepository(FinComprobante::class)->find($arDespacho['codigoComprobanteFk']);
-                        $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arDespacho['codigoPropietarioFk']);
+                    if($arDespacho['contabilizar']) {
+                        if ($arDespacho['estadoAprobado'] == 1 && $arDespacho['estadoContabilizado'] == 0) {
+                            $arComprobante = $em->getRepository(FinComprobante::class)->find($arDespacho['codigoComprobanteFk']);
+                            $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arDespacho['codigoPropietarioFk']);
 
-                        //Cuenta flete pagado
-                        if ($arDespacho['vrFletePago'] > 0) {
-                            if ($arDespacho['codigoCuentaFleteFk']) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arDespacho['codigoCuentaFleteFk']);
-                                if (!$arCuenta) {
-                                    $error = "No se encuentra la cuenta del flete " . $arDespacho['codigoCuentaFleteFk'];
+                            //Cuenta flete pagado
+                            if ($arDespacho['vrFletePago'] > 0) {
+                                if ($arDespacho['codigoCuentaFleteFk']) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arDespacho['codigoCuentaFleteFk']);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta del flete " . $arDespacho['codigoCuentaFleteFk'];
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    if ($arCuenta->getExigeCentroCosto()) {
+                                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    }
+                                    $arRegistro->setNumero($arDespacho['numero']);
+                                    $arRegistro->setNumeroReferencia($arDespacho['numero']);
+                                    $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                    $naturaleza = "D";
+                                    if ($naturaleza == 'D') {
+                                        $arRegistro->setVrDebito($arDespacho['vrFletePago']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arDespacho['vrFletePago']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+                                    $arRegistro->setDescripcion('FLETE PAGADO');
+                                    $arRegistro->setCodigoModeloFk('TteDespacho');
+                                    $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo de despacho no tiene configurada la cuenta para el flete pagado";
                                     break;
                                 }
-                                $arRegistro = new FinRegistro();
-                                $arRegistro->setTerceroRel($arTercero);
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
-                                $naturaleza = "D";
-                                if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrFletePago']);
-                                    $arRegistro->setNaturaleza('D');
-                                } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrFletePago']);
-                                    $arRegistro->setNaturaleza('C');
-                                }
-                                $arRegistro->setDescripcion('FLETE PAGADO');
-                                $arRegistro->setCodigoModeloFk('TteDespacho');
-                                $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
-                                $em->persist($arRegistro);
-                            } else {
-                                $error = "El tipo de despacho no tiene configurada la cuenta para el flete pagado";
-                                break;
                             }
-                        }
 
-                        //Cuenta industria y comercio
-                        if ($arDespacho['vrIndustriaComercio'] > 0) {
-                            $descripcion = "INDUSTRIA COMERCIO";
-                            $cuenta = $arDespacho['codigoCuentaIndustriaComercioFk'];
+                            //Cuenta industria y comercio
+                            if ($arDespacho['vrIndustriaComercio'] > 0) {
+                                $descripcion = "INDUSTRIA COMERCIO";
+                                $cuenta = $arDespacho['codigoCuentaIndustriaComercioFk'];
+                                if ($cuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    if ($arCuenta->getExigeCentroCosto()) {
+                                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    }
+                                    $arRegistro->setNumero($arDespacho['numero']);
+                                    $arRegistro->setNumeroReferencia($arDespacho['numero']);
+                                    $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                    $naturaleza = "C";
+                                    if ($naturaleza == 'D') {
+                                        $arRegistro->setVrDebito($arDespacho['vrIndustriaComercio']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arDespacho['vrIndustriaComercio']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+                                    if ($arCuenta->getExigeBase()) {
+                                        $arRegistro->setVrBase($arDespacho['vrFletePago']);
+                                    }
+                                    $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespacho');
+                                    $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
+                                    break;
+                                }
+                            }
+
+                            //Cuenta retencion fuente
+                            if ($arDespacho['vrRetencionFuente'] > 0) {
+                                $descripcion = "RETENCION FUENTE";
+                                $cuenta = $arDespacho['codigoCuentaRetencionFuenteFk'];
+                                if ($cuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    if ($arCuenta->getExigeCentroCosto()) {
+                                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    }
+                                    $arRegistro->setNumero($arDespacho['numero']);
+                                    $arRegistro->setNumeroReferencia($arDespacho['numero']);
+                                    $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                    $naturaleza = "C";
+                                    if ($naturaleza == 'D') {
+                                        $arRegistro->setVrDebito($arDespacho['vrRetencionFuente']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arDespacho['vrRetencionFuente']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+                                    if ($arCuenta->getExigeBase()) {
+                                        $arRegistro->setVrBase($arDespacho['vrFletePago']);
+                                    }
+                                    $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespacho');
+                                    $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
+                                    break;
+                                }
+                            }
+
+                            //Descuento seguridad
+                            if ($arDespacho['vrDescuentoSeguridad'] > 0) {
+                                $descripcion = "DESCUENTO SEGURIDAD";
+                                $cuenta = $arDespacho['codigoCuentaSeguridadFk'];
+                                if ($cuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    if ($arCuenta->getExigeCentroCosto()) {
+                                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    }
+                                    $arRegistro->setNumero($arDespacho['numero']);
+                                    $arRegistro->setNumeroReferencia($arDespacho['numero']);
+                                    $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                    $naturaleza = "C";
+                                    if ($naturaleza == 'D') {
+                                        $arRegistro->setVrDebito($arDespacho['vrDescuentoSeguridad']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arDespacho['vrDescuentoSeguridad']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+                                    $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespacho');
+                                    $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
+                                    break;
+                                }
+                            }
+
+                            //Descuento cargue
+                            if ($arDespacho['vrDescuentoCargue'] > 0) {
+                                $descripcion = "DESCUENTO CARGUE";
+                                $cuenta = $arDespacho['codigoCuentaCargueFk'];
+                                if ($cuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    if ($arCuenta->getExigeCentroCosto()) {
+                                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    }
+                                    $arRegistro->setNumero($arDespacho['numero']);
+                                    $arRegistro->setNumeroReferencia($arDespacho['numero']);
+                                    $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                    $naturaleza = "C";
+                                    if ($naturaleza == 'D') {
+                                        $arRegistro->setVrDebito($arDespacho['vrDescuentoCargue']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arDespacho['vrDescuentoCargue']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+                                    $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespacho');
+                                    $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
+                                    break;
+                                }
+                            }
+
+                            //Descuento estampilla
+                            if ($arDespacho['vrDescuentoEstampilla'] > 0) {
+                                $descripcion = "DESCUENTO ESTAMPILLA";
+                                $cuenta = $arDespacho['codigoCuentaEstampillaFk'];
+                                if ($cuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    if ($arCuenta->getExigeCentroCosto()) {
+                                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    }
+                                    $arRegistro->setNumero($arDespacho['numero']);
+                                    $arRegistro->setNumeroReferencia($arDespacho['numero']);
+                                    $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                    $naturaleza = "C";
+                                    if ($naturaleza == 'D') {
+                                        $arRegistro->setVrDebito($arDespacho['vrDescuentoEstampilla']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arDespacho['vrDescuentoEstampilla']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+                                    $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespacho');
+                                    $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
+                                    break;
+                                }
+                            }
+
+                            //Descuento papeleria
+                            if ($arDespacho['vrDescuentoPapeleria'] > 0) {
+                                $descripcion = "DESCUENTO PAPELERIA";
+                                $cuenta = $arDespacho['codigoCuentaPapeleriaFk'];
+                                if ($cuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    if ($arCuenta->getExigeCentroCosto()) {
+                                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    }
+                                    $arRegistro->setNumero($arDespacho['numero']);
+                                    $arRegistro->setNumeroReferencia($arDespacho['numero']);
+                                    $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                    $naturaleza = "C";
+                                    if ($naturaleza == 'D') {
+                                        $arRegistro->setVrDebito($arDespacho['vrDescuentoPapeleria']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arDespacho['vrDescuentoPapeleria']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+                                    $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespacho');
+                                    $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
+                                    break;
+                                }
+                            }
+
+                            //Anticipo
+                            if ($arDespacho['vrAnticipo'] > 0) {
+                                $descripcion = "ANTICIPO";
+                                $cuenta = $arDespacho['codigoCuentaAnticipoFk'];
+                                if ($cuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    if ($arCuenta->getExigeCentroCosto()) {
+                                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    }
+                                    $arRegistro->setNumero($arDespacho['numero']);
+                                    $arRegistro->setNumeroReferencia($arDespacho['numero']);
+                                    $arRegistro->setFecha($arDespacho['fechaSalida']);
+                                    $naturaleza = "C";
+                                    if ($naturaleza == 'D') {
+                                        $arRegistro->setVrDebito($arDespacho['vrAnticipo']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arDespacho['vrAnticipo']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+                                    $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespacho');
+                                    $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
+                                    break;
+                                }
+                            }
+
+                            //Saldo
+                            $descripcion = "POR PAGAR";
+                            $cuenta = $arDespacho['codigoCuentaPagarFk'];
                             if ($cuenta) {
                                 $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
@@ -1327,94 +1607,10 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arRegistro->setFecha($arDespacho['fechaSalida']);
                                 $naturaleza = "C";
                                 if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrIndustriaComercio']);
+                                    $arRegistro->setVrDebito($arDespacho['vrTotalNeto']);
                                     $arRegistro->setNaturaleza('D');
                                 } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrIndustriaComercio']);
-                                    $arRegistro->setNaturaleza('C');
-                                }
-                                if ($arCuenta->getExigeBase()) {
-                                    $arRegistro->setVrBase($arDespacho['vrFletePago']);
-                                }
-                                $arRegistro->setDescripcion($descripcion);
-                                $arRegistro->setCodigoModeloFk('TteDespacho');
-                                $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
-                                $em->persist($arRegistro);
-                            } else {
-                                $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
-                                break;
-                            }
-                        }
-
-                        //Cuenta retencion fuente
-                        if ($arDespacho['vrRetencionFuente'] > 0) {
-                            $descripcion = "RETENCION FUENTE";
-                            $cuenta = $arDespacho['codigoCuentaRetencionFuenteFk'];
-                            if ($cuenta) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                if (!$arCuenta) {
-                                    $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                    break;
-                                }
-                                $arRegistro = new FinRegistro();
-                                $arRegistro->setTerceroRel($arTercero);
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
-                                $naturaleza = "C";
-                                if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrRetencionFuente']);
-                                    $arRegistro->setNaturaleza('D');
-                                } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrRetencionFuente']);
-                                    $arRegistro->setNaturaleza('C');
-                                }
-                                if ($arCuenta->getExigeBase()) {
-                                    $arRegistro->setVrBase($arDespacho['vrFletePago']);
-                                }
-                                $arRegistro->setDescripcion($descripcion);
-                                $arRegistro->setCodigoModeloFk('TteDespacho');
-                                $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
-                                $em->persist($arRegistro);
-                            } else {
-                                $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
-                                break;
-                            }
-                        }
-
-                        //Descuento seguridad
-                        if ($arDespacho['vrDescuentoSeguridad'] > 0) {
-                            $descripcion = "DESCUENTO SEGURIDAD";
-                            $cuenta = $arDespacho['codigoCuentaSeguridadFk'];
-                            if ($cuenta) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                if (!$arCuenta) {
-                                    $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                    break;
-                                }
-                                $arRegistro = new FinRegistro();
-                                $arRegistro->setTerceroRel($arTercero);
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
-                                $naturaleza = "C";
-                                if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrDescuentoSeguridad']);
-                                    $arRegistro->setNaturaleza('D');
-                                } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrDescuentoSeguridad']);
+                                    $arRegistro->setVrCredito($arDespacho['vrTotalNeto']);
                                     $arRegistro->setNaturaleza('C');
                                 }
                                 $arRegistro->setDescripcion($descripcion);
@@ -1425,205 +1621,12 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
                                 break;
                             }
+
+
+                            $arDespachoAct = $em->getRepository(TteDespacho::class)->find($arDespacho['codigoDespachoPk']);
+                            $arDespachoAct->setEstadoContabilizado(1);
+                            $em->persist($arDespachoAct);
                         }
-
-                        //Descuento cargue
-                        if ($arDespacho['vrDescuentoCargue'] > 0) {
-                            $descripcion = "DESCUENTO CARGUE";
-                            $cuenta = $arDespacho['codigoCuentaCargueFk'];
-                            if ($cuenta) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                if (!$arCuenta) {
-                                    $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                    break;
-                                }
-                                $arRegistro = new FinRegistro();
-                                $arRegistro->setTerceroRel($arTercero);
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
-                                $naturaleza = "C";
-                                if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrDescuentoCargue']);
-                                    $arRegistro->setNaturaleza('D');
-                                } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrDescuentoCargue']);
-                                    $arRegistro->setNaturaleza('C');
-                                }
-                                $arRegistro->setDescripcion($descripcion);
-                                $arRegistro->setCodigoModeloFk('TteDespacho');
-                                $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
-                                $em->persist($arRegistro);
-                            } else {
-                                $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
-                                break;
-                            }
-                        }
-
-                        //Descuento estampilla
-                        if ($arDespacho['vrDescuentoEstampilla'] > 0) {
-                            $descripcion = "DESCUENTO ESTAMPILLA";
-                            $cuenta = $arDespacho['codigoCuentaEstampillaFk'];
-                            if ($cuenta) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                if (!$arCuenta) {
-                                    $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                    break;
-                                }
-                                $arRegistro = new FinRegistro();
-                                $arRegistro->setTerceroRel($arTercero);
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
-                                $naturaleza = "C";
-                                if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrDescuentoEstampilla']);
-                                    $arRegistro->setNaturaleza('D');
-                                } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrDescuentoEstampilla']);
-                                    $arRegistro->setNaturaleza('C');
-                                }
-                                $arRegistro->setDescripcion($descripcion);
-                                $arRegistro->setCodigoModeloFk('TteDespacho');
-                                $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
-                                $em->persist($arRegistro);
-                            } else {
-                                $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
-                                break;
-                            }
-                        }
-
-                        //Descuento papeleria
-                        if ($arDespacho['vrDescuentoPapeleria'] > 0) {
-                            $descripcion = "DESCUENTO PAPELERIA";
-                            $cuenta = $arDespacho['codigoCuentaPapeleriaFk'];
-                            if ($cuenta) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                if (!$arCuenta) {
-                                    $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                    break;
-                                }
-                                $arRegistro = new FinRegistro();
-                                $arRegistro->setTerceroRel($arTercero);
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
-                                $naturaleza = "C";
-                                if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrDescuentoPapeleria']);
-                                    $arRegistro->setNaturaleza('D');
-                                } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrDescuentoPapeleria']);
-                                    $arRegistro->setNaturaleza('C');
-                                }
-                                $arRegistro->setDescripcion($descripcion);
-                                $arRegistro->setCodigoModeloFk('TteDespacho');
-                                $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
-                                $em->persist($arRegistro);
-                            } else {
-                                $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
-                                break;
-                            }
-                        }
-
-                        //Anticipo
-                        if ($arDespacho['vrAnticipo'] > 0) {
-                            $descripcion = "ANTICIPO";
-                            $cuenta = $arDespacho['codigoCuentaAnticipoFk'];
-                            if ($cuenta) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                if (!$arCuenta) {
-                                    $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                    break;
-                                }
-                                $arRegistro = new FinRegistro();
-                                $arRegistro->setTerceroRel($arTercero);
-                                $arRegistro->setCuentaRel($arCuenta);
-                                $arRegistro->setComprobanteRel($arComprobante);
-                                if ($arCuenta->getExigeCentroCosto()) {
-                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                    $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }
-                                $arRegistro->setNumero($arDespacho['numero']);
-                                $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                                $arRegistro->setFecha($arDespacho['fechaSalida']);
-                                $naturaleza = "C";
-                                if ($naturaleza == 'D') {
-                                    $arRegistro->setVrDebito($arDespacho['vrAnticipo']);
-                                    $arRegistro->setNaturaleza('D');
-                                } else {
-                                    $arRegistro->setVrCredito($arDespacho['vrAnticipo']);
-                                    $arRegistro->setNaturaleza('C');
-                                }
-                                $arRegistro->setDescripcion($descripcion);
-                                $arRegistro->setCodigoModeloFk('TteDespacho');
-                                $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
-                                $em->persist($arRegistro);
-                            } else {
-                                $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
-                                break;
-                            }
-                        }
-
-                        //Saldo
-                        $descripcion = "POR PAGAR";
-                        $cuenta = $arDespacho['codigoCuentaPagarFk'];
-                        if ($cuenta) {
-                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                            if (!$arCuenta) {
-                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                break;
-                            }
-                            $arRegistro = new FinRegistro();
-                            $arRegistro->setTerceroRel($arTercero);
-                            $arRegistro->setCuentaRel($arCuenta);
-                            $arRegistro->setComprobanteRel($arComprobante);
-                            if ($arCuenta->getExigeCentroCosto()) {
-                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespacho['codigoCentroCostoFk']);
-                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                            }
-                            $arRegistro->setNumero($arDespacho['numero']);
-                            $arRegistro->setNumeroReferencia($arDespacho['numero']);
-                            $arRegistro->setFecha($arDespacho['fechaSalida']);
-                            $naturaleza = "C";
-                            if ($naturaleza == 'D') {
-                                $arRegistro->setVrDebito($arDespacho['vrTotalNeto']);
-                                $arRegistro->setNaturaleza('D');
-                            } else {
-                                $arRegistro->setVrCredito($arDespacho['vrTotalNeto']);
-                                $arRegistro->setNaturaleza('C');
-                            }
-                            $arRegistro->setDescripcion($descripcion);
-                            $arRegistro->setCodigoModeloFk('TteDespacho');
-                            $arRegistro->setCodigoDocumento($arDespacho['codigoDespachoPk']);
-                            $em->persist($arRegistro);
-                        } else {
-                            $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
-                            break;
-                        }
-
-
-                        $arDespachoAct = $em->getRepository(TteDespacho::class)->find($arDespacho['codigoDespachoPk']);
-                        $arDespachoAct->setEstadoContabilizado(1);
-                        $em->persist($arDespachoAct);
                     }
                 } else {
                     $error = "La despacho codigo " . $codigo . " no existe";

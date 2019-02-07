@@ -298,12 +298,16 @@ class TteDespachoRepository extends ServiceEntityRepository
                     ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
                 $query->execute();
                 $arDespacho->setFechaSalida($fechaActual);
-                $arDespacho->setEstadoAprobado(1);
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
                 if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
-                    $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
-                    $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
-                    $em->persist($arDespachoTipo);
+                    if($arDespacho->getConductorRel()->getFechaVenceLicencia() > $fechaActual AND $arDespacho->getVehiculoRel()->getFechaVencePoliza() > $fechaActual AND $arDespacho->getVehiculoRel()->getFechaVenceTecnicomecanica()  > $fechaActual){
+                        $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
+                        $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
+                        $arDespacho->setEstadoAprobado(1);
+                        $em->persist($arDespachoTipo);
+                    } else {
+                        Mensajes::error('No se puede aprobar el registro, el vehículo cuenta con sus documentos vencidos o el conductor tiene vencida la licencia de conducción ');
+                    }
                 }
 
                 //Costos

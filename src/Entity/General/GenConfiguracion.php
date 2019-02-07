@@ -113,6 +113,11 @@ class GenConfiguracion
     private $porcentajeAutoretencion = 0;
 
     /**
+     * @ORM\Column(name="version_base_datos", type="integer", options={"default" : 0})
+     */
+    private $versionBaseDatos = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -437,5 +442,23 @@ class GenConfiguracion
     {
         $this->ciudadRel = $ciudadRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVersionBaseDatos()
+    {
+        return $this->versionBaseDatos;
+    }
+
+    /**
+     * @param mixed $versionBaseDatos
+     */
+    public function setVersionBaseDatos($versionBaseDatos): void
+    {
+        $this->versionBaseDatos = $versionBaseDatos;
+    }
+
+
 }
 

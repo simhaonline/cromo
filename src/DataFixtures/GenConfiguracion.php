@@ -22,6 +22,8 @@ class GenConfiguracion extends Fixture
             $arGenConfiguracion->setRutaTemporal('PENDIENTE');
             $arGenConfiguracion->setWebServiceCesioUrl('http://159.65.52.53/cesio/public/index.php');
             $manager->persist($arGenConfiguracion);
+        } else {
+            $arGenConfiguracion->setVersionBaseDatos(1);
         }
         $manager->flush();
     }

@@ -2,6 +2,8 @@
 
 namespace App\Controller\Transporte\Proceso\Transporte\Guia;
 
+use App\Entity\General\GenConfiguracion;
+use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteOperacion;
@@ -55,7 +57,24 @@ class GenerarFacturaController extends Controller
             }
             if ($form->get('btnGenerar')->isClicked()) {
                 $arrGuias = $request->request->get('chkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteGuia::class)->generarFactura($arrGuias, $this->getUser()->getUsername());
+                $arrFacturas = $this->getDoctrine()->getRepository(TteGuia::class)->generarFactura($arrGuias, $this->getUser()->getUsername());
+
+                //Para que despues del proceso se contabilicen automaticamente
+                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+                if ($arConfiguracion['contabilidadAutomatica']) {
+                    if($arrFacturas) {
+                        $arrFacturasCodigo = array();
+                        foreach ($arrFacturas as $arrFactura) {
+                            $arFactura = $em->getRepository(TteFactura::class)->findOneBy(array('codigoFacturaTipoFk' => $arrFactura['tipo'], 'numero' => $arrFactura['numero']));
+                            if($arFactura) {
+                                $arrFacturasCodigo[] = $arFactura->getCodigoFacturaPk();
+                            }
+                        }
+                        if($arrFacturasCodigo) {
+                            $em->getRepository(TteFactura::class)->contabilizar($arrFacturasCodigo);
+                        }
+                    }
+                }
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteGuia::class)->listaGenerarFactura()->getQuery()->getResult(), "PendienteGenrarFactura");

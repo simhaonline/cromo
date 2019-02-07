@@ -955,15 +955,15 @@ class TteGuiaRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function generarFactura($arrGuias, $usuario): bool
+    public function generarFactura($arrGuias, $usuario)
     {
         $em = $this->getEntityManager();
+        $arrFacturas = array();
         if ($arrGuias) {
             if ($arrGuias) {
                 //Verificar tercero, esto para evitar que se dupliquen los tercero ya que cuando no existen
                 //se crean varias veces porque no se hace flush y tiene varias facturas del mismo cliente
                 //Mario Estrada
-
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->guiaCliente($codigoGuia);
                     if ($arGuia) {
@@ -989,9 +989,11 @@ class TteGuiaRepository extends ServiceEntityRepository
                     }
                 }
 
+                //Generar la factura
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
                     if (!$arGuia->getEstadoFacturaExportado()) {
+                        $arrFacturas[] = array('tipo' => $arGuia->getGuiaTipoRel()->getCodigoFacturaTipoFk(), 'numero' => $arGuia->getNumeroFactura());
                         $fechaActual = new \DateTime('now');
                         $arGuia->setEstadoFacturaExportado(1);
                         $arGuia->setEstadoFacturaGenerada(1);
@@ -1032,6 +1034,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFacturaDetalle->setVrDeclara($arGuia->getVrDeclara());
                         $em->persist($arFacturaDetalle);
 
+
                         $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarTipoFk());
                         $arCuentaCobrar = new CarCuentaCobrar();
                         $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arGuia->getClienteRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arGuia->getClienteRel()->getNumeroIdentificacion()]);
@@ -1055,10 +1058,10 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $em->persist($arCuentaCobrar);
                     }
                 }
-                $em->flush();
+               $em->flush();
             }
         }
-        return true;
+        return $arrFacturas;
     }
 
     /**

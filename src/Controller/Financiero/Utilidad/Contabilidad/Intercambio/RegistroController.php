@@ -248,10 +248,11 @@ class RegistroController extends Controller
                 $nit = $arRegistro['numeroIdentificacion'];
             }
             if($arRegistro['naturaleza'] == 'D') {
-                $valor = round($arRegistro['vrDebito']);
+                $valor = $arRegistro['vrDebito'];
             } else {
-                $valor = round($arRegistro['vrCredito']);
+                $valor = $arRegistro['vrCredito'];
             }
+            $valor = number_format($valor, 2, '', '');
 
 
             if($arRegistro['numeroReferencia']) {

@@ -84,7 +84,6 @@ class GuiaType extends AbstractType {
             {"campo":"codigoGuiaTipoFk",                        "tipo":"texto",     "ayuda":"Codigo guia tipo",                         "titulo":"TIPO"},
             {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
             {"campo":"documentoCliente",                        "tipo":"entero",    "ayuda":"Documento cliente",                        "titulo":"DOC"},
-            {"campo":"numeroFactura",                           "tipo":"entero",    "ayuda":"Guia(factura)",                            "titulo":"GUIA(FACTURA)"},
             {"campo":"fechaIngreso",                            "tipo":"fecha",     "ayuda":"Fecha ingreso",                            "titulo":"FECHA"},
             {"campo":"clienteRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Nombre cliente",                           "titulo":"CLIENTE",         "relacion":""},
             {"campo":"ciudadOrigenRel.nombre",                  "tipo":"texto",     "ayuda":"Ciudad Origen",                            "titulo":"ORIGEN",          "relacion":""},

@@ -16,15 +16,20 @@ class FinRegistroInconsistenciaRepository extends ServiceEntityRepository
         parent::__construct($registry, FinRegistroInconsistencia::class);
     }
 
-    public function lista(){
+    public function lista($utilidad){
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistroInconsistencia::class, 'ri')
-            ->select('ri');
+            ->select('ri.codigoRegistroInconsistenciaPk')
+            ->addSelect('ri.numeroPrefijo')
+            ->addSelect('ri.numero')
+            ->addSelect('ri.codigoComprobanteFk')
+            ->addSelect('ri.descripcion')
+        ->where("ri.utilidad = '" . $utilidad . "'");
         return $queryBuilder;
     }
 
-    public function limpiar(){
+    public function limpiar($utilidad){
         $em = $this->_em;
-        $em->createQueryBuilder()->delete(FinRegistroInconsistencia::class,'r')->getQuery()->execute();
+        $em->createQueryBuilder()->delete(FinRegistroInconsistencia::class,'r')->andWhere("r.utilidad = '" . $utilidad . "'")->getQuery()->execute();
     }
 
 }

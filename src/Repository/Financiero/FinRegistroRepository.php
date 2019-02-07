@@ -296,4 +296,34 @@ class FinRegistroRepository extends ServiceEntityRepository
         ->addGroupBy('r.numeroPrefijo');
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function documentoPeriodo($fechaDesde, $fechaHasta){
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
+            ->select('r.codigoComprobanteFk')
+            ->addSelect('r.numeroPrefijo')
+            ->addSelect('MIN(r.numero) as minimo')
+            ->addSelect('MAX(r.numero) as maximo')
+            ->where("r.fecha >= '" . $fechaDesde . " 00:00:00'")
+            ->andWhere("r.fecha <= '" . $fechaHasta . " 23:59:59'")
+            ->groupBy('r.codigoComprobanteFk')
+            ->addGroupBy('r.numeroPrefijo');
+        return $queryBuilder->getQuery()->getResult();
+    }
+    public function documentoPeriodoEncabezado($comprobante, $prefijo, $desde, $hasta){
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
+            ->select('r.numero')
+            ->where("r.numero >= " . $desde)
+            ->andWhere("r.numero <= " . $hasta)
+            ->andWhere("r.codigoComprobanteFk = '" . $comprobante . "'")
+            ->groupBy('r.codigoComprobanteFk')
+            ->addGroupBy('r.numeroPrefijo')
+            ->addGroupBy("r.numero")
+        ->orderBy('r.numero');
+        if($prefijo) {
+            $queryBuilder->andWhere("r.numeroPrefijo = '" . $prefijo . "'");
+        }
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

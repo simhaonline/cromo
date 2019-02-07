@@ -6,6 +6,7 @@ use App\Entity\Financiero\FinConfiguracion;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinRegistroInconsistencia;
 use App\Entity\General\GenConfiguracion;
+use App\General\General;
 use App\Utilidades\Mensajes;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -19,12 +20,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Controller\Estructura\FuncionesController;
 
-class InconsistenciaDocumentoController extends Controller
+class VerificarConsecutivoController extends Controller
 {
     /**
      * @param Request $request
      * @return Response
-     * @Route("/financiero/utilidad/contabilidad/registro/inconsistenciaDocumento", name="financiero_utilidad_contabilidad_registro_inconsistenciaDocumento")
+     * @Route("/financiero/utilidad/contabilidad/registro/verificarConsecutivo", name="financiero_utilidad_contabilidad_registro_verificarconsecutivo")
      */
     public function lista(Request $request)
     {
@@ -45,24 +46,35 @@ class InconsistenciaDocumentoController extends Controller
                 $em->getRepository(FinRegistroInconsistencia::class)->limpiar('inconsistencia');
                 $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
                 $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
-                $arRegistros = $this->getDoctrine()->getRepository(FinRegistro::class)->analizarInconsistencias($fechaDesde, $fechaHasta);
-                foreach ($arRegistros as $arRegistro){
-                    if($arRegistro['vrDebito'] != $arRegistro['vrCredito']) {
-                        $arRegistroInconsistencia = new FinRegistroInconsistencia();
-                        $arRegistroInconsistencia->setNumero($arRegistro['numero']);
-                        $arRegistroInconsistencia->setNumeroPrefijo($arRegistro['numeroPrefijo']);
-                        $arRegistroInconsistencia->setCodigoComprobanteFk($arRegistro['codigoComprobanteFk']);
-                        $arRegistroInconsistencia->setDescripcion('Diferencia en debito y credito');
-                        $arRegistroInconsistencia->setUtilidad('inconsistencia');
-                        $em->persist($arRegistroInconsistencia);
+                $arComprobantes = $em->getRepository(FinRegistro::class)->documentoPeriodo($fechaDesde, $fechaHasta);
+                foreach ($arComprobantes as $arComprobante) {
+                    $desde = $arComprobante['minimo'];
+                    $hasta = $arComprobante['maximo'];
+                    $numero = $desde;
+                    $arDocumentos = $em->getRepository(FinRegistro::class)->documentoPeriodoEncabezado($arComprobante['codigoComprobanteFk'], $arComprobante['numeroPrefijo'], $desde, $hasta);
+                    foreach ($arDocumentos as $arDocumento) {
+                        if($arDocumento['numero'] == $numero) {
+                            $numero++;
+                        } else {
+                            $arRegistroInconsistencia = new FinRegistroInconsistencia();
+                            $arRegistroInconsistencia->setNumero($arDocumento['numero']);
+                            $arRegistroInconsistencia->setNumeroPrefijo($arComprobante['numeroPrefijo']);
+                            $arRegistroInconsistencia->setCodigoComprobanteFk($arComprobante['codigoComprobanteFk']);
+                            $arRegistroInconsistencia->setDescripcion('Falta el documento');
+                            $arRegistroInconsistencia->setUtilidad('verificarConsecutivo');
+                            $em->persist($arRegistroInconsistencia);
+                        }
                     }
                 }
                 $em->flush();
-                $arRegistrosInconsistencias = $paginator->paginate($em->getRepository(FinRegistroInconsistencia::class)->lista('inconsistencia'), $request->query->getInt('page', 1), 1000);
+                $arRegistrosInconsistencias = $paginator->paginate($em->getRepository(FinRegistroInconsistencia::class)->lista('verificarConsecutivo'), $request->query->getInt('page', 1), 1000);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(FinRegistroInconsistencia::class)->lista('verificarConsecutivo')->getQuery()->execute(), "Inconsistencias");
             }
 
         }
-        return $this->render('financiero/utilidad/contabilidad/registro/inconsistenciaDocumento.html.twig', [
+        return $this->render('financiero/utilidad/contabilidad/registro/verificarConsecutivo.html.twig', [
             'arRegistrosInconsistencias' => $arRegistrosInconsistencias,
             'form' => $form->createView()]);
     }

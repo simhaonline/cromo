@@ -315,6 +315,11 @@ class InvItem
     protected $importacionesDetallesItemRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvCostoDetalle", mappedBy="itemRel")
+     */
+    protected $costosDetallesItemRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoItemPk()

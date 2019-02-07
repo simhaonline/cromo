@@ -24,6 +24,11 @@ class InvCosto
     private $codigoCostoPk;
 
     /**
+     * @ORM\Column(name="codigo_costo_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCostoTipoFk;
+
+    /**
      * @ORM\Column(name="anio", type="integer")
      */
     private $anio;
@@ -68,6 +73,12 @@ class InvCosto
      * @Assert\Length(max=500, maxMessage="El campo no puede contener mas de 500 caracteres")
      */
     private $comentario;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvCostoTipo", inversedBy="costosCostoTipoRel")
+     * @ORM\JoinColumn(name="codigo_costo_tipo_fk", referencedColumnName="codigo_costo_tipo_pk")
+     */
+    protected $costoTipoRel;
 
     /**
      * @return mixed
@@ -229,10 +240,38 @@ class InvCosto
         $this->comentario = $comentario;
     }
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="InvCostoDetalle", mappedBy="costoRel")
-//     */
-//    protected $costosDetallesCostoRel;
+    /**
+     * @return mixed
+     */
+    public function getCodigoCostoTipoFk()
+    {
+        return $this->codigoCostoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCostoTipoFk
+     */
+    public function setCodigoCostoTipoFk($codigoCostoTipoFk): void
+    {
+        $this->codigoCostoTipoFk = $codigoCostoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostoTipoRel()
+    {
+        return $this->costoTipoRel;
+    }
+
+    /**
+     * @param mixed $costoTipoRel
+     */
+    public function setCostoTipoRel($costoTipoRel): void
+    {
+        $this->costoTipoRel = $costoTipoRel;
+    }
+
 
 
 

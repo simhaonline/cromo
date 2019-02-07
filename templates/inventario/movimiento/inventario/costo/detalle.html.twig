@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('inventario_movimiento_inventario_costo_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <div style="float:right">
+        {% if arCosto.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arCosto.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arCosto.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arCosto.estadoContabilizado == true %}<span class="label label-success">Contabilizado</span>{% endif %}
+    </div>
+    <br/><br/>
+    {% include 'inventario/movimiento/inventario/costo/informacion.html.twig' %}
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th colspan="5">ITEM</th>
+                            <th colspan="6">EXTRANJERO</th>
+                            <th colspan="8">LOCAL</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>ITEM</th>
+                            <th>NOMBRE</th>
+                            <th>MARCA</th>
+                            <th>REFERENCIA</th>
+                            <th>CAN</th>
+                            <th>PRECIO</th>
+                            <th>%IVA</th>
+                            <th>IVA</th>
+                            <th>SUBOTAL</th>
+                            <th>TOTAL</th>
+                            <th>PRE_TRM</th>
+                            <th>%COS</th>
+                            <th>COSTO</th>
+                            <th>PRECIO</th>
+                            <th>%IVA</th>
+                            <th>IVA</th>
+                            <th>SUBOTAL</th>
+                            <th>TOTAL</th>
+                            <th title="Cantidad pendiente">PEN</th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
+                                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arCostoDetalle in arCostoDetalles %}
+                            <tr>
+                                <td>{{ arCostoDetalle.codigoCostoDetallePk }}<input type="hidden"
+                                                                                                name="TxtCodigo[]"
+                                                                                                value="{{ arCostoDetalle.codigoCostoDetallePk }}">
+                                </td>
+                                <td>{{ arCostoDetalle.codigoItemFk | default('') }}</td>
+                                <td>{{ arCostoDetalle.itemNombre | default('') }}</td>
+                                <td>{{ arCostoDetalle.itemMarcaNombre | default('') }}</td>
+                                <td>{{ arCostoDetalle.itemReferencia | default('') }}</td>
+                                <td style="text-align: center;">
+                                    {% if not arCosto.estadoAutorizado %}
+                                        <input style="text-align: right;" type="text"
+                                               name="TxtCantidad[{{ arCostoDetalle.codigoCostoDetallePk }}]"
+                                               value="{{ arCostoDetalle.cantidad }}" size="10" style="width:70px">
+                                    {% else %}
+                                        {{ arCostoDetalle.cantidad }}
+                                    {% endif %}
+                                </td>
+                                <td class="numero">
+                                    {% if not arCosto.estadoAutorizado %}
+                                        <input style="text-align: right;" type="text"
+                                               name="TxtPrecioExtranjero[{{ arCostoDetalle.codigoCostoDetallePk }}]"
+                                               value="{{ arCostoDetalle.vrPrecioExtranjero }}" size="10"
+                                               style="width:70px">
+                                    {% else %}
+                                        {{ arCostoDetalle.vrPrecioExtranjero | number_format(0, '.', ',') }}
+                                    {% endif %}
+                                </td>
+                                <td class="numero">{{ arCostoDetalle.porcentajeIvaExtranjero }}</td>
+                                <td class="numero">{{ arCostoDetalle.vrIvaExtranjero | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arCostoDetalle.vrSubtotalExtranjero | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arCostoDetalle.vrTotalExtranjero | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arCostoDetalle.vrPrecioLocal | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arCostoDetalle.porcentajeParticipaCosto | number_format(2, '.', ',') }}</td>
+                                <td class="numero">{{ arCostoDetalle.vrCostoParticipa | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arCostoDetalle.vrPrecioLocalTotal | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arCostoDetalle.porcentajeIvaLocal }}</td>
+                                <td class="numero">{{ arCostoDetalle.vrIvaLocal | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arCostoDetalle.vrSubtotalLocal | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arCostoDetalle.vrTotalLocal | number_format(0, '.', ',') }}</td>
+                                <td>{{ arCostoDetalle.cantidadPendiente }}</td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arCostoDetalle.codigoCostoDetallePk }}"/></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

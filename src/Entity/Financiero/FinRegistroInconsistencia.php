@@ -45,20 +45,9 @@ class FinRegistroInconsistencia
     private $codigoComprobanteFk;
 
     /**
-     * @return array
+     * @ORM\Column(name="utilidad", type="string", length=100, nullable=true)
      */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    private $utilidad;
 
     /**
      * @return mixed
@@ -90,6 +79,22 @@ class FinRegistroInconsistencia
     public function setNumero($numero): void
     {
         $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroPrefijo()
+    {
+        return $this->numeroPrefijo;
+    }
+
+    /**
+     * @param mixed $numeroPrefijo
+     */
+    public function setNumeroPrefijo($numeroPrefijo): void
+    {
+        $this->numeroPrefijo = $numeroPrefijo;
     }
 
     /**
@@ -127,17 +132,17 @@ class FinRegistroInconsistencia
     /**
      * @return mixed
      */
-    public function getNumeroPrefijo()
+    public function getUtilidad()
     {
-        return $this->numeroPrefijo;
+        return $this->utilidad;
     }
 
     /**
-     * @param mixed $numeroPrefijo
+     * @param mixed $utilidad
      */
-    public function setNumeroPrefijo( $numeroPrefijo ): void
+    public function setUtilidad($utilidad): void
     {
-        $this->numeroPrefijo = $numeroPrefijo;
+        $this->utilidad = $utilidad;
     }
 
 

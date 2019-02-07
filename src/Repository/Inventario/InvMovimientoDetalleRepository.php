@@ -289,9 +289,12 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.vrPrecio')
             ->addSelect('md.porcentajeDescuento')
             ->addSelect('m.generaCostoPromedio')
+            ->addSelect('m.codigoDocumentoTipoFk')
             ->leftJoin('md.movimientoRel', 'm')
             ->where('m.estadoAprobado = 1')
-            ->andWhere('md.codigoItemFk = ' . $codigoItem);
+            ->andWhere('md.codigoItemFk = ' . $codigoItem)
+        ->orderBy('m.fecha')
+        ->addOrderBy('md.codigoMovimientoDetallePk');
         return $queryBuilder->getQuery()->execute();
     }
 
@@ -308,7 +311,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                 if ($arMovimientoDetalle['generaCostoPromedio']) {
                     if ($existenciaAnterior != 0) {
                         $existenciaTotal = $existenciaAnterior + $arMovimientoDetalle['cantidad'];
-                        $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle['cantidad'] * $arMovimientoDetalle['vrCosto']))) / $existenciaTotal;
+                        $costoPromedio = (($existenciaAnterior * $costoPromedio) + (($arMovimientoDetalle['cantidad'] * $arMovimientoDetalle['vrPrecio']))) / $existenciaTotal;
+                        $arMovimientoDetalleAct->setVrCosto($costoPromedio);
                     } else {
                         $precioBruto = $arMovimientoDetalle['vrPrecio'] - (($arMovimientoDetalle['vrPrecio'] * $arMovimientoDetalle['porcentajeDescuento']) / 100);
                         if ($arMovimientoDetalle['vrCosto'] != $precioBruto) {
@@ -320,6 +324,9 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                     }
                 } else {
                     $arMovimientoDetalleAct->setVrCosto($costoPromedio);
+                    if($arMovimientoDetalle['codigoDocumentoTipoFk'] == 'TRA') {
+                        $arMovimientoDetalleAct->setVrPrecio($costoPromedio);
+                    }
                 }
                 $existenciaAnterior += $arMovimientoDetalle['cantidadOperada'];
                 $arMovimientoDetalleAct->setCantidadSaldo($existenciaAnterior);
@@ -360,7 +367,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->andWhere('m.estadoAprobado = 1')
             ->andWhere('m.estadoAnulado = 0')
             ->andWhere('md.operacionInventario <> 0')
-            ->orderBy('m.fecha', 'ASC');
+            ->orderBy('m.fecha', 'ASC')
+            ->addOrderBy('md.codigoMovimientoDetallePk');
         if ($session->get('filtroInvItemCodigo')) {
             $queryBuilder->andWhere("md.codigoItemFk = '{$session->get('filtroInvItemCodigo')}'");
         }
@@ -618,7 +626,6 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
 
     }
 
-
     public function detallesFormato($codigoNotaCredito){
         // 'ncd' = nota credito detalle
         // 'ncm' = nota credito movimiento
@@ -636,5 +643,21 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('ncd.itemRel','i')
             ->leftJoin('md.movimientoRel','m')
             ->where('ncd.codigoMovimientoFk ='. $codigoNotaCredito)->getQuery()->execute();
+    }
+
+    public function costoVentas($codigo)
+    {
+        $fechaDesde = '2018-11-01 00:00';
+        $fechaHasta = '2018-11-30 23:59';
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoItemFk')
+            ->addSelect('SUM(md.vrCosto) as vrCosto')
+            ->leftJoin('md.movimientoRel' , 'm')
+            ->where("m.fecha >= '" . $fechaDesde . "'")
+            ->andWhere("m.fecha <= '" . $fechaHasta . "'")
+            ->andWhere("m.codigoDocumentoTipoFk = 'FAC'")
+            ->groupBy('md.codigoItemFk');
+        $arMovimientoDetalles = $queryBuilder->getQuery()->getResult();
+        return $arMovimientoDetalles;
     }
 }

@@ -36,6 +36,7 @@ class CostoController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/inventario/costo/lista", name="inventario_movimiento_inventario_costo_lista")
@@ -62,7 +63,7 @@ class CostoController extends ControllerListenerGeneral
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(InvCosto::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_costo_lista'));
             }
         }
         return $this->render('inventario/movimiento/inventario/costo/lista.html.twig', [

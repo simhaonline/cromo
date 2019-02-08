@@ -34,7 +34,9 @@ class RegistroController extends ControllerListenerGeneral
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/financiero/movimiento/contabilidad/registro/lista", name="financiero_movimiento_contabilidad_registro_lista")
@@ -59,7 +61,7 @@ class RegistroController extends ControllerListenerGeneral
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(FinAsiento::class)->eliminar($arrSeleccionados);
+                $em->getRepository(FinRegistro::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_registro_lista'));
             }
         }

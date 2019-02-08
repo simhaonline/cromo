@@ -3,6 +3,7 @@
 namespace App\Repository\Financiero;
 
 use App\Entity\Financiero\FinRegistro;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -313,6 +314,7 @@ class FinRegistroRepository extends ServiceEntityRepository
         }
         return $queryBuilder->getQuery()->getResult();
     }
+
     public function documentoPeriodoEncabezado($comprobante, $prefijo, $desde, $hasta){
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
@@ -328,5 +330,21 @@ class FinRegistroRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("r.numeroPrefijo = '" . $prefijo . "'");
         }
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        foreach ($arrSeleccionados as $arrSeleccionado) {
+            $ar = $this->getEntityManager()->getRepository(FinRegistro::class)->find($arrSeleccionado);
+            if ($ar) {
+                $this->getEntityManager()->remove($ar);
+            }
+        }
+        $this->getEntityManager()->flush();
     }
 }

@@ -82,6 +82,7 @@ class FacturaType extends AbstractType {
             {"child":"numero",                          "tipo":"TextType",   "propiedades":{"label":"Numero"}},
             {"child":"codigoFacturaPk",                 "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
             {"child":"codigoFacturaTipoFk",             "tipo":"EntityType", "propiedades":{"class":"TteFacturaTipo",   "choice_label":"nombre",    "label":"TODOS"}},
+            {"child":"codigoOperacionFk",             "tipo":"EntityType", "propiedades":{"class":"TteOperacion",   "choice_label":"nombre",    "label":"TODOS"}},
             {"child":"fechaDesde",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
             {"child":"fechaHasta",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
             {"child":"estadoAutorizado",                "tipo":"ChoiceType",   "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},

@@ -46,6 +46,7 @@ class Factura3 extends \FPDF
         $em = self::$em;
         /** @var  $arMovimiento InvMovimiento */
         $arMovimiento = $em->getRepository('App:Inventario\InvMovimiento')->find(self::$codigoMovimiento);
+        $arConfiguracion = $em->getRepository('App:General\GenConfiguracion')->find(1);
 
         $this->SetFont('Arial', '', 5);
         $date = new \DateTime('now');
@@ -104,22 +105,22 @@ class Factura3 extends \FPDF
 
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(76, 25);
-        $this->Cell(15, 4, 'SEMANTICA DIGITAL SAS', 0, 0, 'L', 0);
+        $this->Cell(15, 4, utf8_decode($arConfiguracion->getNombre()), 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(82, 29);
-        $this->Cell(15, 4, 'NIT  901192048-4', 0, 0, 'L', 0);
+        $this->Cell(15, 4, $arConfiguracion->getNit(). '-' . $arConfiguracion->getDigitoVerificacion(), 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(61, 33);
-        $this->Cell(15, 4, 'CALLE 84 NUMERO 58 - 50 ITAGUI APTO 1414', 0, 0, 'L', 0);
+        $this->Cell(15, 4, utf8_decode($arConfiguracion->getDireccion()), 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(85, 37);
-        $this->Cell(15, 4, 'TEL 3220770  ', 0, 0, 'L', 0);
+        $this->Cell(15, 4, $arConfiguracion->getTelefono(), 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);

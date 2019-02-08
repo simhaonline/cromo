@@ -99,7 +99,7 @@ class Factura2 extends \FPDF
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 9);
         $this->SetXY(115, $y + 41);
-        $this->Cell(39, 5, $arFactura->getClienteRel()->getFormaPagoRel() ? $arFactura->getClienteRel()->getFormaPagoRel()->getNombre() : '', 1, 0, 'C', 1);
+        $this->Cell(39, 5, $arFactura->getFacturaTipoRel() ? $arFactura->getFacturaTipoRel()->getNombre(): '', 1, 0, 'C', 1);
 
         $this->SetFont('Arial', 'B', 10);
         $this->SetFillColor(170, 170, 170);

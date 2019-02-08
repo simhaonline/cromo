@@ -32,8 +32,8 @@ class CostoType extends AbstractType {
                 'choice_label' => 'nombre',
                 'label' => 'Costo tipo:'
             ])
-            ->add('anio',NumberType::class, ['required' => false,'label' => 'AÑO:'])
-            ->add('mes',NumberType::class, ['required' => false,'label' => 'MES:'])
+            ->add('anio',NumberType::class, ['required' => true,'label' => 'AÑO:'])
+            ->add('mes',NumberType::class, ['required' => true,'label' => 'MES:'])
             ->add('comentario',TextareaType::class, ['required' => false,'label' => 'Comentario:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

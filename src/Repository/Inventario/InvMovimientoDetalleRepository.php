@@ -645,13 +645,14 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->where('ncd.codigoMovimientoFk ='. $codigoNotaCredito)->getQuery()->execute();
     }
 
-    public function costoVentas($codigo)
+    public function costoVentas($anio, $mes)
     {
-        $fechaDesde = '2018-11-01 00:00';
-        $fechaHasta = '2018-11-30 23:59';
+        $fechaDesde = $anio.'-'.$mes.'-01 00:00';
+        $ultimoDia = date("d", (mktime(0, 0, 0, $mes + 1, 1, $anio) - 1));
+        $fechaHasta = $anio.'-'.$mes.'-'.$ultimoDia.' 23:59';
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select('md.codigoItemFk')
-            ->addSelect('SUM(md.vrCosto) as vrCosto')
+            ->addSelect('SUM(md.vrCosto * (md.cantidadOperada * -1)) as vrCosto')
             ->leftJoin('md.movimientoRel' , 'm')
             ->where("m.fecha >= '" . $fechaDesde . "'")
             ->andWhere("m.fecha <= '" . $fechaHasta . "'")

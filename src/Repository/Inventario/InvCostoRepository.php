@@ -3,8 +3,15 @@
 namespace App\Repository\Inventario;
 
 
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
 use App\Entity\Inventario\InvCosto;
+use App\Entity\Inventario\InvCostoDetalle;
+use App\Entity\Inventario\InvCostoTipo;
+use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvMovimientoDetalle;
+use App\Entity\Inventario\InvTercero;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\Utilidades\Mensajes;
@@ -25,72 +32,12 @@ class InvCostoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arCosto = $em->getRepository(InvCosto::class)->find($codigoCosto);
-        $vrTotalCosto = $em->getRepository(InvCostoCosto::class)->totalCostos($arCosto->getCodigoCostoPk());
-        $subtotalGeneralExtranjero = 0;
-        $subtotalGeneralExtranjeroTemporal = 0;
-        $ivaGeneralExtranjero = 0;
-        $totalGeneralExtranjero = 0;
-        $subtotalGeneralLocal = 0;
-        $subtotalGeneralLocalBruto = 0;
-        $ivaGeneralLocal = 0;
-        $totalGeneralLocal = 0;
+        $totalCosto = 0;
         $arCostoDetalles = $em->getRepository(InvCostoDetalle::class)->findBy(['codigoCostoFk' => $codigoCosto]);
         foreach ($arCostoDetalles as $arCostoDetalle) {
-            $subtotalGeneralExtranjeroTemporal += $arCostoDetalle->getCantidad() * $arCostoDetalle->getVrPrecioExtranjero();
+            $totalCosto += $arCostoDetalle->getVrCosto();
         }
-        foreach ($arCostoDetalles as $arCostoDetalle) {
-            $subtotalExtranjero = $arCostoDetalle->getCantidad() * $arCostoDetalle->getVrPrecioExtranjero();
-            $porcentajeIvaExtranjero = $arCostoDetalle->getPorcentajeIvaExtranjero();
-            $ivaExtranjero = $subtotalExtranjero * $porcentajeIvaExtranjero / 100;
-            $subtotalGeneralExtranjero += $subtotalExtranjero;
-            $ivaGeneralExtranjero += $ivaExtranjero;
-            $totalExtranjero = $subtotalExtranjero + $ivaExtranjero;
-            $totalGeneralExtranjero += $totalExtranjero;
-            $arCostoDetalle->setVrSubtotalExtranjero($subtotalExtranjero);
-            $arCostoDetalle->setVrIvaExtranjero($ivaExtranjero);
-            $arCostoDetalle->setVrTotalExtranjero($totalExtranjero);
-
-            $precioLocal = $arCostoDetalle->getVrPrecioExtranjero() * $arCosto->getTasaRepresentativaMercado();
-            $porcentajeParticipaCosto = 0;
-            $costoParticipa = 0;
-            if ($vrTotalCosto > 0) {
-                if ($subtotalGeneralExtranjeroTemporal > 0) {
-                    $porcentajeParticipaCosto = ($arCostoDetalle->getVrSubtotalExtranjero() / $subtotalGeneralExtranjeroTemporal) * 100;
-                    $costoParticipa = (($vrTotalCosto * $porcentajeParticipaCosto) / 100) / $arCostoDetalle->getCantidad();
-                }
-
-            }
-            $precioLocalTotal = $arCostoDetalle->getVrPrecioLocal() + $costoParticipa;
-            $subtotalLocalBruto = $arCostoDetalle->getCantidad() * $precioLocal;
-            $subtotalLocal = $arCostoDetalle->getCantidad() * $precioLocalTotal;
-            $porcentajeIvaLocal = $arCostoDetalle->getPorcentajeIvaLocal();
-            $ivaLocal = $subtotalExtranjero * $porcentajeIvaLocal / 100;
-            $subtotalGeneralLocal += $subtotalLocal;
-            $subtotalGeneralLocalBruto += $subtotalLocalBruto;
-            $ivaGeneralLocal += $ivaLocal;
-            $totalLocal = $subtotalLocal + $ivaLocal;
-            $totalGeneralLocal += $totalLocal;
-            $arCostoDetalle->setVrPrecioLocal($precioLocal);
-            $arCostoDetalle->setVrPrecioLocalTotal($precioLocalTotal);
-            $arCostoDetalle->setVrSubtotalLocal($subtotalLocal);
-            $arCostoDetalle->setVrSubtotalLocalBruto($subtotalLocalBruto);
-            $arCostoDetalle->setVrIvaLocal($ivaLocal);
-            $arCostoDetalle->setVrTotalLocal($totalLocal);
-            $arCostoDetalle->setPorcentajeParticipaCosto($porcentajeParticipaCosto);
-            $arCostoDetalle->setVrCostoParticipa($costoParticipa);
-            $em->persist($arCostoDetalle);
-        }
-
-        $arCosto->setVrTotalCosto($vrTotalCosto);
-        $arCosto->setVrSubtotalExtranjero($subtotalGeneralExtranjero);
-        $arCosto->setVrIvaExtranjero($ivaGeneralExtranjero);
-        $arCosto->setVrTotalExtranjero($totalGeneralExtranjero);
-
-        $arCosto->setVrSubtotalLocal($subtotalGeneralLocal);
-        $arCosto->setVrSubtotalLocalBruto($subtotalGeneralLocalBruto);
-        $arCosto->setVrIvaLocal($ivaGeneralLocal);
-        $arCosto->setVrTotalLocal($totalGeneralLocal);
-
+        $arCosto->setVrCosto($totalCosto);
         $em->persist($arCosto);
         $em->flush();
     }
@@ -105,10 +52,18 @@ class InvCostoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if (!$arCosto->getEstadoAutorizado()) {
             $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->costoVentas($arCosto->getAnio(), $arCosto->getMes());
-
+            foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+                $arItem = $em->getRepository(InvItem::class)->find($arMovimientoDetalle['codigoItemFk']);
+                $arCostoDetalle = new InvCostoDetalle();
+                $arCostoDetalle->setCostoRel($arCosto);
+                $arCostoDetalle->setItemRel($arItem);
+                $arCostoDetalle->setVrCosto($arMovimientoDetalle['vrCosto']);
+                $em->persist($arCostoDetalle);
+            }
             $arCosto->setEstadoAutorizado(1);
             $em->persist($arCosto);
             $em->flush();
+            $this->liquidar($arCosto->getCodigoCostoPk());
         }
     }
 
@@ -121,10 +76,167 @@ class InvCostoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arCosto->getEstadoAutorizado()) {
+            $arCostoDetalles = $em->getRepository(InvCostoDetalle::class)->findBy(['codigoCostoFk' => $arCosto->getCodigoCostoPk()]);
+            foreach ($arCostoDetalles as $arCostoDetalle) {
+                $em->remove($arCostoDetalle);
+            }
             $arCosto->setEstadoAutorizado(0);
             $em->persist($arCosto);
             $em->flush();
+            $this->liquidar($arCosto->getCodigoCostoPk());
         }
-    }    
+    }
+
+    /**
+     * @param $arImportacion InvCosto
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function aprobar($arCosto)
+    {
+        $em = $this->getEntityManager();
+        if ($arCosto->getEstadoAutorizado() && !$arCosto->getEstadoAnulado()) {
+            if ($arCosto->getNumero() == 0 || $arCosto->getNumero() == "") {
+                $arCostoTipo = $this->getEntityManager()->getRepository(InvCostoTipo::class)->find($arCosto->getCodigoCostoTipoFk());
+                if ($arCostoTipo) {
+                    $arCostoTipo->setConsecutivo($arCostoTipo->getConsecutivo() + 1);
+                    $arCosto->setNumero($arCostoTipo->getConsecutivo());
+                    $em->persist($arCostoTipo);
+                }
+            }
+            $arCosto->setEstadoAprobado(1);
+            $em->persist($arCosto);
+            $em->flush();
+            /*$arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+            if ($arConfiguracion['contabilidadAutomatica']) {
+                $this->contabilizar(array($arImportacion->getCodigoImportacionPk()));
+            }*/
+        }
+    }
+
+    public function registroContabilizar($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvCosto::class, 'c')
+            ->select('c.codigoCostoPk')
+            ->addSelect('c.codigoTerceroFk')
+            ->addSelect('c.numero')
+            ->addSelect('c.anio')
+            ->addSelect('c.mes')
+            ->addSelect('c.estadoAprobado')
+            ->addSelect('c.estadoAutorizado')
+            ->addSelect('c.estadoContabilizado')
+            ->addSelect('ct.codigoComprobanteFk')
+            ->addSelect('ct.prefijo')
+            ->leftJoin('c.costoTipoRel', 'ct')
+            ->where('c.codigoCostoPk = ' . $codigo);
+        $arCosto = $queryBuilder->getQuery()->getSingleResult();
+        return $arCosto;
+    }
+
+    /**
+     * @param $arr
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            foreach ($arr AS $codigo) {
+                $arCosto = $em->getRepository(InvCosto::class)->registroContabilizar($codigo);
+                if ($arCosto) {
+                    if ($arCosto['estadoAprobado'] == 1 && $arCosto['estadoContabilizado'] == 0) {
+                        if (!$arCosto['codigoComprobanteFk']) {
+                            $error = "El comprobante en el tipo de costo no esta configurado";
+                            break;
+                        }
+                        $arComprobante = $em->getRepository(FinComprobante::class)->find($arCosto['codigoComprobanteFk']);
+                        if($arComprobante) {
+                            $arTercero = $em->getRepository(InvTercero::class)->terceroFinanciero($arCosto['codigoTerceroFk']);
+                            //Cliente
+                            $arCostoDetalles = $em->getRepository(InvCostoDetalle::class)->findBy(array('codigoCostoFk' => $arCosto['codigoCostoPk']));
+                            foreach ($arCostoDetalles as $arCostoDetalle) {
+                                //Cuenta del costo
+                                $codigoCuenta = $arCostoDetalle->getItemRel()->getCodigoCuentaCostoFk();
+                                if($codigoCuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta " . $codigoCuenta . " del costo del item " . $arCostoDetalle->getCodigoItemFk();
+                                        break;
+                                    }
+                                    $fecha = date_create($arCosto['anio']."-".$arCosto['mes']."-01");
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setNumero($arCosto['numero']);
+                                    $arRegistro->setNumeroPrefijo($arCosto['prefijo']);
+                                    $arRegistro->setFecha($fecha);
+                                    $arRegistro->setVrDebito($arCostoDetalle->getVrCosto());
+                                    $arRegistro->setNaturaleza('D');
+                                    $arRegistro->setDescripcion($arCuenta->getNombre());
+                                    $arRegistro->setCodigoModeloFk('InvCosto');
+                                    $arRegistro->setCodigoDocumento($arCosto['codigoCostoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El item " . $arCostoDetalle->getCodigoItemFk() . " no tiene configurada la cuenta del costo";
+                                    break;
+                                }
+
+                                //Cuenta compra
+                                $codigoCuenta = $arCostoDetalle->getItemRel()->getCodigoCuentaCompraFk();
+                                if($codigoCuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta " . $codigoCuenta . " de compras del item " . $arCostoDetalle->getCodigoItemFk();
+                                        break;
+                                    }
+                                    $fecha = date_create($arCosto['anio']."-".$arCosto['mes']."-01");
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setNumero($arCosto['numero']);
+                                    $arRegistro->setNumeroPrefijo($arCosto['prefijo']);
+                                    $arRegistro->setFecha($fecha);
+                                    $arRegistro->setVrCredito($arCostoDetalle->getVrCosto());
+                                    $arRegistro->setNaturaleza('C');
+                                    $arRegistro->setDescripcion($arCuenta->getNombre());
+                                    $arRegistro->setCodigoModeloFk('InvCosto');
+                                    $arRegistro->setCodigoDocumento($arCosto['codigoCostoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El item " . $arCostoDetalle->getCodigoItemFk() . " no tiene configurada la cuenta de compras";
+                                    break;
+                                }
+
+
+                            }
+
+                            $arCostoAct = $em->getRepository(InvCosto::class)->find($arCosto['codigoCostoPk']);
+                            $arCostoAct->setEstadoContabilizado(1);
+                            $em->persist($arCostoAct);
+                        } else {
+                            $error = "El comprobante " . $arCosto['codigoComprobanteFk'] . " no existe";
+                            break;
+                        }
+                    }
+                } else {
+                    $error = "El costo codigo " . $codigo . " no existe";
+                    break;
+                }
+            }
+            if ($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
+    }
+
     
 }

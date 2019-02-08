@@ -193,7 +193,6 @@ class InvMovimiento
     /**
      * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="movimientosTerceroRel")
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
-
      */
     protected $terceroRel;
 

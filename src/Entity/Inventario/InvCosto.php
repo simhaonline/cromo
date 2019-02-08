@@ -29,6 +29,16 @@ class InvCosto
     private $codigoCostoTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_tercero_fk", type="integer", nullable=true)
+     */
+    private $codigoTerceroFk;
+
+    /**
+     * @ORM\Column(name="numero", type="integer", nullable=true)
+     */
+    private $numero;
+
+    /**
      * @ORM\Column(name="anio", type="integer")
      */
     private $anio;
@@ -81,6 +91,12 @@ class InvCosto
     protected $costoTipoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="InvTercero", inversedBy="costosTerceroRel")
+     * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
+     */
+    protected $terceroRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCostoPk()
@@ -91,9 +107,57 @@ class InvCosto
     /**
      * @param mixed $codigoCostoPk
      */
-    public function setCodigoCostoPk($codigoCostoPk): void
+    public function setCodigoCostoPk( $codigoCostoPk ): void
     {
         $this->codigoCostoPk = $codigoCostoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCostoTipoFk()
+    {
+        return $this->codigoCostoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCostoTipoFk
+     */
+    public function setCodigoCostoTipoFk( $codigoCostoTipoFk ): void
+    {
+        $this->codigoCostoTipoFk = $codigoCostoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTerceroFk()
+    {
+        return $this->codigoTerceroFk;
+    }
+
+    /**
+     * @param mixed $codigoTerceroFk
+     */
+    public function setCodigoTerceroFk( $codigoTerceroFk ): void
+    {
+        $this->codigoTerceroFk = $codigoTerceroFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero( $numero ): void
+    {
+        $this->numero = $numero;
     }
 
     /**
@@ -107,7 +171,7 @@ class InvCosto
     /**
      * @param mixed $anio
      */
-    public function setAnio($anio): void
+    public function setAnio( $anio ): void
     {
         $this->anio = $anio;
     }
@@ -123,7 +187,7 @@ class InvCosto
     /**
      * @param mixed $mes
      */
-    public function setMes($mes): void
+    public function setMes( $mes ): void
     {
         $this->mes = $mes;
     }
@@ -139,7 +203,7 @@ class InvCosto
     /**
      * @param mixed $vrCosto
      */
-    public function setVrCosto($vrCosto): void
+    public function setVrCosto( $vrCosto ): void
     {
         $this->vrCosto = $vrCosto;
     }
@@ -155,7 +219,7 @@ class InvCosto
     /**
      * @param mixed $estadoAutorizado
      */
-    public function setEstadoAutorizado($estadoAutorizado): void
+    public function setEstadoAutorizado( $estadoAutorizado ): void
     {
         $this->estadoAutorizado = $estadoAutorizado;
     }
@@ -171,7 +235,7 @@ class InvCosto
     /**
      * @param mixed $estadoAprobado
      */
-    public function setEstadoAprobado($estadoAprobado): void
+    public function setEstadoAprobado( $estadoAprobado ): void
     {
         $this->estadoAprobado = $estadoAprobado;
     }
@@ -187,7 +251,7 @@ class InvCosto
     /**
      * @param mixed $estadoAnulado
      */
-    public function setEstadoAnulado($estadoAnulado): void
+    public function setEstadoAnulado( $estadoAnulado ): void
     {
         $this->estadoAnulado = $estadoAnulado;
     }
@@ -203,7 +267,7 @@ class InvCosto
     /**
      * @param mixed $estadoContabilizado
      */
-    public function setEstadoContabilizado($estadoContabilizado): void
+    public function setEstadoContabilizado( $estadoContabilizado ): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
     }
@@ -219,7 +283,7 @@ class InvCosto
     /**
      * @param mixed $usuario
      */
-    public function setUsuario($usuario): void
+    public function setUsuario( $usuario ): void
     {
         $this->usuario = $usuario;
     }
@@ -235,25 +299,9 @@ class InvCosto
     /**
      * @param mixed $comentario
      */
-    public function setComentario($comentario): void
+    public function setComentario( $comentario ): void
     {
         $this->comentario = $comentario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCostoTipoFk()
-    {
-        return $this->codigoCostoTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoCostoTipoFk
-     */
-    public function setCodigoCostoTipoFk($codigoCostoTipoFk): void
-    {
-        $this->codigoCostoTipoFk = $codigoCostoTipoFk;
     }
 
     /**
@@ -267,11 +315,26 @@ class InvCosto
     /**
      * @param mixed $costoTipoRel
      */
-    public function setCostoTipoRel($costoTipoRel): void
+    public function setCostoTipoRel( $costoTipoRel ): void
     {
         $this->costoTipoRel = $costoTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTerceroRel()
+    {
+        return $this->terceroRel;
+    }
+
+    /**
+     * @param mixed $terceroRel
+     */
+    public function setTerceroRel( $terceroRel ): void
+    {
+        $this->terceroRel = $terceroRel;
+    }
 
 
 

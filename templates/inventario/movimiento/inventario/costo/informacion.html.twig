@@ -2,16 +2,24 @@
     <tr>
         <td class="titulo">CODIGO:</td>
         <td class="td-in-well">{{ arCosto.codigoCostoPk }}</td>
-        <td class="titulo">USUARIO:</td>
-        <td class="td-in-well" style="text-transform: uppercase;">{{ arCosto.usuario }}</td>
+        <td class="titulo">NUMERO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arCosto.numero }}</td>
         <td class="titulo">TOTAL:</td>
         <td align="right">{{ arCosto.vrCosto | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
         <td class="titulo">TIPO:</td>
         <td class="td-in-well">{{ arCosto.costoTipoRel.nombre | default('') }}</td>
+        <td class="titulo">USUARIO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arCosto.usuario }}</td>
         <td class="titulo"></td>
-        <td class="td-in-well"></td>
+        <td align="right"></td>
+    </tr>
+    <tr>
+        <td class="titulo">TERCERO:</td>
+        <td class="td-in-well">{{ arCosto.terceroRel.nombreCorto | default('') }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well" style="text-transform: uppercase;"></td>
         <td class="titulo"></td>
         <td align="right"></td>
     </tr>

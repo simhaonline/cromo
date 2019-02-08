@@ -167,6 +167,12 @@ class InvTercero
     private $formaPagoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad",inversedBy="invTercerosCiuidadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk",referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvOrden",mappedBy="terceroRel")
      */
     protected $ordenesTerceroRel;
@@ -207,10 +213,9 @@ class InvTercero
     protected $importacionesCostosTerceroRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad",inversedBy="invTercerosCiuidadRel")
-     * @ORM\JoinColumn(name="codigo_ciudad_fk",referencedColumnName="codigo_ciudad_pk")
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvCosto",mappedBy="terceroRel")
      */
-    protected $ciudadRel;
+    protected $costosTerceroRel;
 
     /**
      * @return mixed
@@ -834,6 +839,22 @@ class InvTercero
     public function setImportacionesCostosTerceroRel($importacionesCostosTerceroRel): void
     {
         $this->importacionesCostosTerceroRel = $importacionesCostosTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosTerceroRel()
+    {
+        return $this->costosTerceroRel;
+    }
+
+    /**
+     * @param mixed $costosTerceroRel
+     */
+    public function setCostosTerceroRel( $costosTerceroRel ): void
+    {
+        $this->costosTerceroRel = $costosTerceroRel;
     }
 
 

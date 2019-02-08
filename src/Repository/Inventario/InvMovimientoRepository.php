@@ -524,13 +524,23 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $arMovimiento->setVrDescuento(0);
                     $arMovimiento->setVrNeto(0);
                     $arMovimiento->setEstadoAnulado(1);
-                    $this->getEntityManager()->persist($arMovimiento);
-                    $query = $em->createQuery('UPDATE App\Entity\inventario\InvMovimientoDetalle md set md.vrPrecio = 0, 
-                      md.vrIva = 0, md.vrSubtotal = 0, md.vrTotal = 0, md.vrNeto = 0, md.vrDescuento = 0, md.porcentajeDescuento = 0, md.cantidad = 0, md.cantidadOperada = 0, md.cantidadSaldo = 0  
-                      WHERE md.codigoMovimientoFk = :codigoMovimiento')
-                        ->setParameter('codigoMovimiento', $arMovimiento->getCodigoMovimientoPk());
-                    $query->execute();
-                    $this->getEntityManager()->flush();
+                    $em->persist($arMovimiento);
+                    $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
+                    foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+                        $arMovimientoDetalle->setVrPrecio(0);
+                        $arMovimientoDetalle->setVrIva(0);
+                        $arMovimientoDetalle->setVrSubtotal(0);
+                        $arMovimientoDetalle->setVrTotal(0);
+                        $arMovimientoDetalle->setVrNeto(0);
+                        $arMovimientoDetalle->setVrDescuento(0);
+                        $arMovimientoDetalle->setPorcentajeDescuento(0);
+                        $arMovimientoDetalle->setCantidad(0);
+                        $arMovimientoDetalle->setCantidadOperada(0);
+                        $arMovimientoDetalle->setCantidadSaldo(0);
+                        $arMovimientoDetalle->setVrCosto(0);
+                        $em->persist($arMovimientoDetalle);
+                    }
+                    $em->flush();
                 }
             }
         } else {

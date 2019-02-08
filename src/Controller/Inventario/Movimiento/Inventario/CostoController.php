@@ -89,12 +89,21 @@ class CostoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if ($id == 0) {
-                    $arCosto->setUsuario($this->getUser()->getUserName());
+                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                if ($txtCodigoTercero != '') {
+                    $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
+                    if ($arTercero) {
+                        if ($id == 0) {
+                            $arCosto->setUsuario($this->getUser()->getUserName());
+                        }
+                        $arCosto->setTerceroRel($arTercero);
+                        $em->persist($arCosto);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('inventario_movimiento_inventario_costo_detalle', ['id' => $arCosto->getCodigoCostoPk()]));
+                    }
                 }
-                $em->persist($arCosto);
-                $em->flush();
-                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_costo_detalle', ['id' => $arCosto->getCodigoCostoPk()]));
+
+
             }
         }
         return $this->render('inventario/movimiento/inventario/costo/nuevo.html.twig', [

@@ -65,25 +65,32 @@ class TteNovedadRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function pendienteAtender(): array
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function pendienteAtender()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT n.codigoNovedadPk,
-                  n.fecha,
-                  n.fechaReporte,
-                  n.fechaSolucion,
-                  n.descripcion,
-                  n.codigoGuiaFk,
-                  n.estadoAtendido,
-                  n.estadoReporte,
-                  n.estadoSolucion,
-                  nt.nombre as nombreTipo
-        FROM App\Entity\Transporte\TteNovedad n 
-        LEFT JOIN n.novedadTipoRel nt
-        WHERE n.estadoAtendido = 0'
-        );
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteNovedad::class, 'n')
+            ->select('n.codigoNovedadPk')
+            ->join('n.novedadTipoRel', 'nt')
+            ->join('n.guiaRel', 'g')
+            ->join('g.clienteRel', 'c')
+            ->addSelect('nt.nombre as nombreTipo')
+            ->addSelect('n.codigoGuiaFk')
+            ->addSelect('n.descripcion')
+            ->addSelect('n.solucion')
+            ->addSelect('n.fecha')
+            ->addSelect('c.nombreCorto as cliente')
+            ->addSelect('n.fechaReporte')
+            ->addSelect('n.fechaAtencion')
+            ->addSelect('n.fechaSolucion')
+            ->addSelect('n.estadoAtendido')
+            ->addSelect('n.estadoReporte')
+            ->addSelect('n.estadoSolucion')
+            ->where('n.estadoAtendido = 0');
+
+        return $queryBuilder;
     }
 
     public function pendienteSolucionar(): array

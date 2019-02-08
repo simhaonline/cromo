@@ -11,6 +11,7 @@
             <th>SOLUCION</th>
             <th>TIPO</th>
             <th>GUIA </th>
+            <th>CLIENTE </th>
             <th>DESCRIPCION</th>
             <th>ATE</th>
             <th>REP</th>
@@ -27,6 +28,7 @@
                 <td>{{ arNovedad.fechaSolucion |date('Y-m-d H:i') }}</td>
                 <td>{{ arNovedad.nombreTipo }}</td>
                 <td>{{ arNovedad.codigoGuiaFk }}</td>
+                <td>{{ arNovedad.cliente }}</td>
                 <td>{{ arNovedad.descripcion }}</td>
                 <td>{% if arNovedad.estadoAtendido == 1 %} SI {% else %} NO {% endif %}</td>
                 <td>{% if arNovedad.estadoReporte == 1 %} SI {% else %} NO {% endif %}</td>

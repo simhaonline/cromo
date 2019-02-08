@@ -37,7 +37,7 @@ class Factura3 extends \FPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Factura_{$arMovimiento->getNumero()}_{$arMovimiento->getTerceroRel()->getNombreCorto()}.pdf", 'D');
+        $pdf->Output("Factura{$codigoMovimiento}.pdf", 'D');
     }
 
     public function Header()
@@ -109,18 +109,18 @@ class Factura3 extends \FPDF
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(82, 29);
-        $this->Cell(15, 4, $arConfiguracion->getNit(). '-' . $arConfiguracion->getDigitoVerificacion(), 0, 0, 'L', 0);
+        $this->SetXY(83, 29);
+        $this->Cell(15, 4, 'NIT: ' .$arConfiguracion->getNit(). '-' . $arConfiguracion->getDigitoVerificacion(), 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(61, 33);
+        $this->SetXY(72, 33);
         $this->Cell(15, 4, utf8_decode($arConfiguracion->getDireccion()), 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(85, 37);
-        $this->Cell(15, 4, $arConfiguracion->getTelefono(), 0, 0, 'L', 0);
+        $this->Cell(15, 4, 'TEL: '. $arConfiguracion->getTelefono(), 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
 
         $this->SetFont('Arial', 'B', 9);

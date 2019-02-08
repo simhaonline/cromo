@@ -158,13 +158,13 @@ class TteDespachoRepository extends ServiceEntityRepository
     public function autorizar($arDespacho)
     {
         $em = $this->getEntityManager();
-        if($arDespacho->getEstadoAutorizado() == 0) {
+        if ($arDespacho->getEstadoAutorizado() == 0) {
             if ($this->contarDetalles($arDespacho->getCodigoDespachoPk()) > 0) {
                 $costoBaseTotal = 0;
                 $arDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->findBy(array('codigoDespachoFk' => $arDespacho->getCodigoDespachoPk()));
                 foreach ($arDespachoDetalles as $arDespachoDetalle) {
-                    $arCosto = $em->getRepository(TteCosto::class)->findOneBy(array('codigoCiudadOrigenFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadOrigenFk(), 'codigoCiudadDestinoFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadDestinoFk() ));
-                    if($arCosto) {
+                    $arCosto = $em->getRepository(TteCosto::class)->findOneBy(array('codigoCiudadOrigenFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadOrigenFk(), 'codigoCiudadDestinoFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadDestinoFk()));
+                    if ($arCosto) {
                         $costo = $arDespachoDetalle->getPesoCosto() * $arCosto->getVrPeso();
                         $costoBaseTotal += $costo;
                         $arDespachoDetalle->setVrCostoBase($costo);
@@ -193,8 +193,8 @@ class TteDespachoRepository extends ServiceEntityRepository
         $costoBaseTotal = 0;
         $arDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->findBy(array('codigoDespachoFk' => $arDespacho->getCodigoDespachoPk()));
         foreach ($arDespachoDetalles as $arDespachoDetalle) {
-            $arCosto = $em->getRepository(TteCosto::class)->findOneBy(array('codigoCiudadOrigenFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadOrigenFk(), 'codigoCiudadDestinoFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadDestinoFk() ));
-            if($arCosto) {
+            $arCosto = $em->getRepository(TteCosto::class)->findOneBy(array('codigoCiudadOrigenFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadOrigenFk(), 'codigoCiudadDestinoFk' => $arDespachoDetalle->getGuiaRel()->getCodigoCiudadDestinoFk()));
+            if ($arCosto) {
                 $costo = $arDespachoDetalle->getPesoCosto() * $arCosto->getVrPeso();
                 $costoBaseTotal += $costo;
                 $arDespachoDetalle->setVrCostoBase($costo);
@@ -203,7 +203,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         }
         $costoTotal = $arDespacho->getVrFletePago();
         foreach ($arDespachoDetalles as $arDespachoDetalle) {
-            $participacion =  ($arDespachoDetalle->getVrCostoBase() / $costoBaseTotal) * 100;
+            $participacion = ($arDespachoDetalle->getVrCostoBase() / $costoBaseTotal) * 100;
             $costoParticipacionTotal = ($participacion * $costoTotal) / 100;
             $costoParticipacion = $costoParticipacionTotal - $arDespachoDetalle->getVrCostoBase();
             $costo = $arDespachoDetalle->getVrCostoBase() + $costoParticipacion;
@@ -300,14 +300,22 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $arDespacho->setFechaSalida($fechaActual);
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
                 if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
-                    //if($arDespacho->getConductorRel()->getFechaVenceLicencia() > $fechaActual AND $arDespacho->getVehiculoRel()->getFechaVencePoliza() > $fechaActual AND $arDespacho->getVehiculoRel()->getFechaVenceTecnicomecanica()  > $fechaActual){
-                        $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
-                        $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
-                        $arDespacho->setEstadoAprobado(1);
-                        $em->persist($arDespachoTipo);
-//                    } else {
-//                        Mensajes::error('No se puede aprobar el registro, el vehículo cuenta con sus documentos vencidos o el conductor tiene vencida la licencia de conducción ');
-//                    }
+                    if ($arDespacho->getConductorRel()->getFechaVenceLicencia() > $fechaActual) {
+                        if ($arDespacho->getVehiculoRel()->getFechaVencePoliza() > $fechaActual) {
+                            if ($arDespacho->getVehiculoRel()->getFechaVenceTecnicomecanica() > $fechaActual) {
+                                $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
+                                $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
+                                $arDespacho->setEstadoAprobado(1);
+                                $em->persist($arDespachoTipo);
+                            } else {
+                                Mensajes::error('El vehículo tiene la revisión tecnicomecanica vencida');
+                            }
+                        } else {
+                            Mensajes::error('El vehículo tiene la póliza vencida');
+                        }
+                    } else {
+                        Mensajes::error('El conductor tiene la licencia de conducción vencida');
+                    }
                 }
 
                 //Costos
@@ -447,7 +455,7 @@ class TteDespachoRepository extends ServiceEntityRepository
     {
         $respuesta = "";
         $em = $this->getEntityManager();
-        if ($arDespacho->getEstadoAnulado() == 0 && $arDespacho->getEstadoAprobado() == 1 && $arDespacho->getEstadoContabilizado() == 0 ) {
+        if ($arDespacho->getEstadoAnulado() == 0 && $arDespacho->getEstadoAprobado() == 1 && $arDespacho->getEstadoContabilizado() == 0) {
             $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 0, 
                   g.estadoEmbarcado = 0, g.codigoDespachoFk = NULL
                   WHERE g.codigoDespachoFk = :codigoDespacho')
@@ -1264,7 +1272,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             foreach ($arr AS $codigo) {
                 $arDespacho = $em->getRepository(TteDespacho::class)->registroContabilizar($codigo);
                 if ($arDespacho) {
-                    if($arDespacho['contabilizar']) {
+                    if ($arDespacho['contabilizar']) {
                         if ($arDespacho['estadoAprobado'] == 1 && $arDespacho['estadoContabilizado'] == 0) {
                             $arComprobante = $em->getRepository(FinComprobante::class)->find($arDespacho['codigoComprobanteFk']);
                             $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arDespacho['codigoPropietarioFk']);
@@ -1746,10 +1754,10 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->select("SUM(d.vrFletePago) as fletePago")
             ->leftJoin('d.despachoTipoRel', 'dt')
             ->where("d.fechaSalida >='" . $fechaDesde . "' AND d.fechaSalida <= '" . $fechaHasta . "'")
-        ->andWhere('dt.viaje = 1')
-        ->andWhere('d.estadoAprobado = 1');
+            ->andWhere('dt.viaje = 1')
+            ->andWhere('d.estadoAprobado = 1');
         $arrResultado = $queryBuilder->getQuery()->getSingleResult();
-        if($arrResultado['fletePago']) {
+        if ($arrResultado['fletePago']) {
             $valor = $arrResultado['fletePago'];
         }
         return $valor;
@@ -1769,7 +1777,8 @@ class TteDespachoRepository extends ServiceEntityRepository
         return $arrResultado;
     }
 
-    public function sinAprobar() {
+    public function sinAprobar()
+    {
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(TteDespacho::class, 'd')
             ->select('COUNT(d.codigoDespachoPk) as cantidad')

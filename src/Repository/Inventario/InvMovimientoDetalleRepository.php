@@ -292,6 +292,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('m.codigoDocumentoTipoFk')
             ->leftJoin('md.movimientoRel', 'm')
             ->where('m.estadoAprobado = 1')
+            ->andWhere('m.estadoAnulado = 0')
             ->andWhere('md.codigoItemFk = ' . $codigoItem)
         ->orderBy('m.fecha')
         ->addOrderBy('md.codigoMovimientoDetallePk');

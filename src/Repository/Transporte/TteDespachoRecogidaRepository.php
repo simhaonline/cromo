@@ -329,6 +329,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->addSelect('drt.codigoCuentaAnticipoFk')
             ->addSelect('drt.codigoCuentaPapeleriaFk')
             ->addSelect('drt.codigoCuentaPagarFk')
+            ->addSelect('drt.contabilizar')
             ->addSelect('o.codigoCentroCostoFk')
             ->leftJoin('dr.vehiculoRel', 'v')
             ->leftJoin('dr.despachoRecogidaTipoRel', 'drt')

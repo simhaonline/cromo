@@ -271,8 +271,8 @@ class Factura3 extends \FPDF
         $this->Text(143, 246, utf8_decode('Impreso por computador'));
         $this->Text(130, 250, utf8_decode($arConfiguracion->getNombre() .' Nit: ') . $arConfiguracion->getNit() . '-' . $arConfiguracion->getDigitoVerificacion());
         $this->Text(120, 254, utf8_decode('Régimen Común. No retenedores del impuesto a las ventas.'));
-        $this->Text(124, 258, utf8_decode($arConfiguracion->getDireccion()));
-        $this->Text(135, 258, utf8_decode('ORIGINAL: EMISOR - COPIA: CLIENTE'));
+        $this->Text(139, 258, utf8_decode($arConfiguracion->getDireccion()));
+        $this->Text(134, 262, utf8_decode('ORIGINAL: EMISOR - COPIA: CLIENTE'));
         $this->SetFont('Arial', '', 6.5);
         $this->Text(188, 275, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }

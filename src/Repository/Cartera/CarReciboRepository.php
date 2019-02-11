@@ -445,7 +445,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                             if (!$arCuenta) {
-                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta . " recibo numero: " . $arRecibo['numero'];
                                                 break;
                                             }
                                             $arRegistro = new FinRegistro();
@@ -464,7 +464,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion;
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion. " recibo numero: " . $arRecibo['numero'];
                                             break;
                                         }
                                     }
@@ -476,7 +476,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                             if (!$arCuenta) {
-                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta. " recibo numero: " . $arRecibo['numero'];
                                                 break;
                                             }
                                             $arRegistro = new FinRegistro();
@@ -498,7 +498,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)";
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)" . " recibo numero: " . $arRecibo['numero'];
                                             break;
                                         }
                                     }
@@ -533,7 +533,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)";
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)" . " recibo numero: " . $arRecibo['numero'];
                                             break;
                                         }
                                     }
@@ -564,7 +564,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)";
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)" . " recibo numero: " . $arRecibo['numero'];
                                             break;
                                         }
                                     }
@@ -595,7 +595,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)";
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)" . " recibo numero: " . $arRecibo['numero'];
                                             break;
                                         }
                                     }
@@ -625,16 +625,16 @@ class CarReciboRepository extends ServiceEntityRepository
                                                     $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                                     $em->persist($arRegistro);
                                                 } else {
-                                                    $error = "La cuenta configurada para concepto de descuento " . $arDescuentoConcepto->getNombre() . " no existe";
+                                                    $error = "La cuenta configurada para concepto de descuento " . $arDescuentoConcepto->getNombre() . " no existe" . " recibo numero: " . $arRecibo['numero'];
                                                     break;
                                                 }
 
                                             } else {
-                                                $error = "No tiene configurada la cuenta configurada para concepto de descuento " . $arDescuentoConcepto->getNombre();
+                                                $error = "No tiene configurada la cuenta configurada para concepto de descuento " . $arDescuentoConcepto->getNombre() . " recibo numero: " . $arRecibo['numero'];
                                                 break;
                                             }
                                         } else {
-                                            $error = "El recibo tiene un valor para otro descuento y no tiene concepto";
+                                            $error = "El recibo tiene un valor para otro descuento y no tiene concepto". " recibo numero: " . $arRecibo['numero'];
                                             break;
                                         }
                                     }
@@ -662,16 +662,16 @@ class CarReciboRepository extends ServiceEntityRepository
                                                     $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                                     $em->persist($arRegistro);
                                                 } else {
-                                                    $error = "La cuenta configurada para concepto de ingreso " . $arIngresoConcepto->getNombre() . " no existe";
+                                                    $error = "La cuenta configurada para concepto de ingreso " . $arIngresoConcepto->getNombre() . " no existe" . " recibo numero: " . $arRecibo['numero'];
                                                     break;
                                                 }
 
                                             } else {
-                                                $error = "No tiene configurada la cuenta configurada para concepto de ingreso " . $arIngresoConcepto->getNombre();
+                                                $error = "No tiene configurada la cuenta configurada para concepto de ingreso " . $arIngresoConcepto->getNombre() . " recibo numero: " . $arRecibo['numero'];
                                                 break;
                                             }
                                         } else {
-                                            $error = "El recibo tiene un valor para otro ingreso y no tiene concepto";
+                                            $error = "El recibo tiene un valor para otro ingreso y no tiene concepto" . " recibo numero: " . $arRecibo['numero'];
                                             break;
                                         }
                                     }
@@ -692,7 +692,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arTerceroCruce = $em->getRepository(FinTercero::class)->find($arRecibo['codigoTerceroFk']);
                                             $arRegistro->setTerceroRel($arTerceroCruce);
                                         } else {
-                                            $error = "El tipo de recibo es cruce de cuentas y no esta espeficicado el tercero  ";
+                                            $error = "El tipo de recibo es cruce de cuentas y no esta espeficicado el tercero  " . " recibo numero: " . $arRecibo['numero'];
                                             break;
                                         }
 
@@ -740,39 +740,37 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                                 $em->persist($arRegistro);
                                             } else {
-                                                $error = "Error en el detalle ID: " . $arReciboDetalle['codigoReciboDetallePk'] . " el documento de aplicacion no tiene cuenta aplicacion";
+                                                $error = "Error en el detalle ID: " . $arReciboDetalle['codigoReciboDetallePk'] . " el documento de aplicacion no tiene cuenta aplicacion" . " recibo numero: " . $arRecibo['numero'];
                                                 break;
                                             }
                                         } else {
                                             $banco += $arReciboDetalle['vrPago'];
                                         }
                                     }
-                                    if($banco > 0) {
-                                        $descripcion = "BANCO/CAJA";
-                                        $cuenta = $arRecibo['codigoCuentaContableFk'];
-                                        if ($cuenta) {
-                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                            if (!$arCuenta) {
-                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                                break;
-                                            }
-                                            $arRegistro = new FinRegistro();
-                                            $arRegistro->setTerceroRel($arTercero);
-                                            $arRegistro->setCuentaRel($arCuenta);
-                                            $arRegistro->setComprobanteRel($arComprobante);
-                                            $arRegistro->setNumero($arRecibo['numero']);
-                                            $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
-                                            $arRegistro->setFecha($fecha);
-                                            $arRegistro->setVrDebito($arRecibo['vrPago']);
-                                            $arRegistro->setNaturaleza('D');
-                                            $arRegistro->setDescripcion($descripcion);
-                                            $arRegistro->setCodigoModeloFk('CarRecibo');
-                                            $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
-                                            $em->persist($arRegistro);
-                                        } else {
-                                            $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arRecibo['numero'];
+                                    $descripcion = "BANCO/CAJA";
+                                    $cuenta = $arRecibo['codigoCuentaContableFk'];
+                                    if ($cuenta) {
+                                        $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                        if (!$arCuenta) {
+                                            $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                             break;
                                         }
+                                        $arRegistro = new FinRegistro();
+                                        $arRegistro->setTerceroRel($arTercero);
+                                        $arRegistro->setCuentaRel($arCuenta);
+                                        $arRegistro->setComprobanteRel($arComprobante);
+                                        $arRegistro->setNumero($arRecibo['numero']);
+                                        $arRegistro->setNumeroPrefijo($arRecibo['prefijo']);
+                                        $arRegistro->setFecha($fecha);
+                                        $arRegistro->setVrDebito($arRecibo['vrPago']);
+                                        $arRegistro->setNaturaleza('D');
+                                        $arRegistro->setDescripcion($descripcion);
+                                        $arRegistro->setCodigoModeloFk('CarRecibo');
+                                        $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
+                                        $em->persist($arRegistro);
+                                    } else {
+                                        $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arRecibo['numero'];
+                                        break;
                                     }
                                 }
 

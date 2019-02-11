@@ -4,7 +4,9 @@ namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvDocumentoTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvDocumentoTipoRepository extends ServiceEntityRepository
 {
@@ -21,5 +23,29 @@ class InvDocumentoTipoRepository extends ServiceEntityRepository
             ->orderBy('idt.codigoDocumentoTipoPk','DESC');
         $dql = $this->getEntityManager()->createQuery($qb->getDQL());
         return $dql->execute();
+    }
+
+    /**
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function llenarCombo()
+    {
+        $session = new Session();
+        $array = [
+            'class' => 'App:Inventario\InvDocumentoTipo',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('dt')
+                    ->orderBy('dt.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""];
+        if ($session->get('filtroInvCodigoDocumentoTipo')) {
+            $array['data'] = $this->getEntityManager()->getReference(InvDocumentoTipo::class, $session->get('filtroInvCodigoDocumentoTipo'));
+        }
+        return $array;
     }
 }

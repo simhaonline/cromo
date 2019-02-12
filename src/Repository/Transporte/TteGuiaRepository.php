@@ -1190,6 +1190,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.nombreDestinatario')
             ->addSelect('r.nombre AS nombreRuta')
             ->addSelect('g.estadoNovedad')
+            ->addSelect('g.estadoNovedadSolucion')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->leftJoin('g.rutaRel', 'r')

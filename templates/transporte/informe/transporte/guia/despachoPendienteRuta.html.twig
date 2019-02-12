@@ -122,7 +122,7 @@
                 <td>{{ arGuia.codigoServicioFk }}</td>
                 <td>{{ arGuia.codigoGuiaPk }}</td>
                 <td>{{ arGuia.documentoCliente }}</td>
-                <td>{% if arGuia.estadoNovedad == 1 %} NOV {% else %}  {% endif %}</td>
+                <td>{% if arGuia.estadoNovedad == 1 or arGuia.estadoNovedadSolucion == 1 %} NOV {% else %}  {% endif %}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>

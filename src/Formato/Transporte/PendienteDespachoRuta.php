@@ -93,7 +93,7 @@ class PendienteDespachoRuta extends \FPDF {
                     $pdf->Ln(4);
                 }
                 $novedad = '';
-                if($arGuia['estadoNovedad'] == 1){
+                if($arGuia['estadoNovedad'] == 1 OR $arGuia['estadoNovedadSolucion'] == 1){
                     $novedad = 'NOV';
                 }
                 $pdf->SetX(3);

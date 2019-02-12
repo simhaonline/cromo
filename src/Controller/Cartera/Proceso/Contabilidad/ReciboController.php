@@ -65,7 +65,7 @@ class ReciboController extends Controller
                 $respuesta = $this->getDoctrine()->getRepository(CarRecibo::class)->contabilizar($arr);
             }
         }
-        $arRecibos = $paginator->paginate($em->getRepository(CarRecibo::class)->listaContabilizar(), $request->query->getInt('page', 1),100);
+        $arRecibos = $paginator->paginate($em->getRepository(CarRecibo::class)->listaContabilizar(), $request->query->getInt('page', 1),500);
         return $this->render('cartera/proceso/contabilidad/recibo/lista.html.twig',
             ['arRecibos' => $arRecibos,
             'form' => $form->createView()]);

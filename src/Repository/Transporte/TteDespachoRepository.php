@@ -888,11 +888,11 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 <COMPANIASEGURO>" . $arConfiguracionTransporte->getNumeroIdentificacionAseguradora() . "</COMPANIASEGURO>
                                 <HORASPACTOCARGA>24</HORASPACTOCARGA>
                                 <MINUTOSPACTOCARGA>00</MINUTOSPACTOCARGA>
-                                <FECHACITAPACTADACARGUE>21/08/2013</FECHACITAPACTADACARGUE>
+                                <FECHACITAPACTADACARGUE>". $arrDespacho['fechaSalida']->format('d/m/Y') ."</FECHACITAPACTADACARGUE>
                                 <HORACITAPACTADACARGUE>22:00</HORACITAPACTADACARGUE>
                                 <HORASPACTODESCARGUE>72</HORASPACTODESCARGUE>
                                 <MINUTOSPACTODESCARGUE>00</MINUTOSPACTODESCARGUE>
-                                <FECHACITAPACTADADESCARGUE>25/08/2013</FECHACITAPACTADADESCARGUE>
+                                <FECHACITAPACTADADESCARGUE>". $arrDespacho['fechaSalida']->format('d/m/Y') ."</FECHACITAPACTADADESCARGUE>
                                 <HORACITAPACTADADESCARGUEREMESA>08:00</HORACITAPACTADADESCARGUEREMESA>
                             </variables>
 		  		</root>";

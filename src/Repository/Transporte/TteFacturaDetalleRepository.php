@@ -177,6 +177,8 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('fd.codigoGuiaFk')
             ->addSelect('g.numero')
             ->addSelect('g.documentoCliente')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.vrFlete + g.vrManejo AS total')
             ->addSelect('fd.unidades')
             ->addSelect('fd.pesoReal')
             ->addSelect('fd.pesoVolumen')
@@ -186,7 +188,8 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->leftJoin('fd.facturaRel', 'f')
             ->leftJoin('f.facturaTipoRel', 'ft')
             ->leftJoin('f.clienteRel', 'c')
-            ->leftJoin('fd.guiaRel', 'g');
+            ->leftJoin('fd.guiaRel', 'g')
+            ->leftJoin('g.ciudadDestinoRel', 'cd');
         $fecha = new \DateTime('now');
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");

@@ -18,9 +18,9 @@ class CalidadFormatoType extends AbstractType
         $builder
             ->add('nombre',TextType::class,['label' => 'Nombre:','required' => true])
             ->add('fecha', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
-            ->add('version',IntegerType::class,['label' => 'Version:','required' => true])
+            ->add('version',TextType::class,['label' => 'Version:','required' => true])
             ->add('codigoModeloFk',TextType::class,['label' => 'Modelo:','required' => true])
-            ->add('codigo',IntegerType::class,['label' => 'Version:','required' => true])
+            ->add('codigo',TextType::class,['label' => 'Version:','required' => true])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

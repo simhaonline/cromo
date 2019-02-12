@@ -33,7 +33,7 @@ class GenCalidadFormato
     private $fecha;
 
     /**
-     * @ORM\Column(name="version", type="integer", nullable=true)
+     * @ORM\Column(name="version", type="string", length=20, nullable=true)
      */
     private $version;
 
@@ -43,7 +43,7 @@ class GenCalidadFormato
     private $codigoModeloFk;
 
     /**
-     * @ORM\Column(name="codigo",type="integer", nullable=true)
+     * @ORM\Column(name="codigo",type="string", length=20, nullable=true)
      */
     private $codigo;
 

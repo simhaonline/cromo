@@ -160,35 +160,28 @@ class FinAsientoRepository extends ServiceEntityRepository
                 } else {
                     $arAsientoDetalle->setCuentaRel(null);
                 }
-                //if ($arCuenta->getPermiteMovimiento()) {
-                    // validacion de tercero
-                    //if ($arCuenta->getExigeTercero()) {
-                        if ($arrTercero[$codigo]) {
-                            $arTercero = $em->getRepository(FinTercero::class)->find($arrTercero[$codigo]);
-                            if ($arTercero) {
-                                $arAsientoDetalle->setTerceroRel($arTercero);
-                            } else {
-                                $error = true;
-                                Mensajes::error("El tercero no existe.");
-                            }
-                        } else {
-                            $error = true;
-                            Mensajes::error("La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige tercero.");
-                        }
-                    //} else {
-                    //    $arAsientoDetalle->setTerceroRel(null);
-                    //}
-                    // validaciones de base
-                    if ($arCuenta->getExigeBase()) {
-                        if ($arrBase[$codigo] == 0) {
-                            $error = true;
-                            Mensajes::error("La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige base.");
-                        } else {
-                            $arAsientoDetalle->setVrBase($arrBase[$codigo]);
-                        }
+                $arTercero = null;
+                if($arrTercero[$codigo]) {
+                    $arTercero = $em->getRepository(FinTercero::class)->find($arrTercero[$codigo]);
+                    if ($arTercero) {
+                        $arAsientoDetalle->setTerceroRel($arTercero);
                     } else {
-                        $arAsientoDetalle->setVrBase(0);
+                        $error = true;
+                        Mensajes::error("El tercero no existe.");
                     }
+                }
+
+                // validaciones de base
+                if ($arCuenta->getExigeBase()) {
+                    if ($arrBase[$codigo] == 0) {
+                        $error = true;
+                        Mensajes::error("La cuenta " . $arCuenta->getCodigoCuentaPk() . " " . $arCuenta->getNombre() . " exige base.");
+                    } else {
+                        $arAsientoDetalle->setVrBase($arrBase[$codigo]);
+                    }
+                } else {
+                    $arAsientoDetalle->setVrBase(0);
+                }
 
                     //validacion debitos y creditos
                     $arAsientoDetalle->setVrDebito($arrDebito[$codigo] != '' ? $arrDebito[$codigo] : 0);

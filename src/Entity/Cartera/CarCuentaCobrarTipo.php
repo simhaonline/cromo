@@ -56,6 +56,11 @@ class CarCuentaCobrarTipo
     private $permiteReciboMasivo = false;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoComprobanteFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarCuentaCobrar", mappedBy="cuentaCobrarTipoRel")
      */
     protected $cuentasCobrarCuentaCobrarTipoRel;
@@ -265,6 +270,22 @@ class CarCuentaCobrarTipo
     public function setCodigoCuentaAplicacionFk($codigoCuentaAplicacionFk): void
     {
         $this->codigoCuentaAplicacionFk = $codigoCuentaAplicacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteFk()
+    {
+        return $this->codigoComprobanteFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteFk
+     */
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    {
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
     }
 
 

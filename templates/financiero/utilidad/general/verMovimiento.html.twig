@@ -17,6 +17,7 @@
                         <th title="Prefijo de la referencia">P</th>
                         <th>NUM_REF</th>
                         <th>FECHA</th>
+                        <th>VENCE</th>
                         <th>COMPRABANTE</th>
                         <th>CUENTA</th>
                         <th>C_C</th>
@@ -41,6 +42,7 @@
                             <td>{{ arRegistro.numeroReferenciaPrefijo }}</td>
                             <td>{{ arRegistro.numeroReferencia }}</td>
                             <td>{{ arRegistro.fecha | date('Y-m-d') }}</td>
+                            <td>{% if arRegistro.fechaVence != NULL %}{{ arRegistro.fechaVence | date('Y-m-d') }}{% endif %}</td>
                             <td>{{ arRegistro.idComprobante  }} - {{ arRegistro.comprobante  }}</td>
                             <td>{{ arRegistro.cuenta }}</td>
                             <td>{{ arRegistro.c_c }}</td>
@@ -52,7 +54,7 @@
                             <td>{{ arRegistro.descripcion }}</td>
                         </tr>
                     {% endfor %}
-                    <td colspan="11"></td>
+                    <td colspan="12"></td>
                     <td style="text-align: right">{{ debito | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ credito | number_format(0, '.', ',') }}</td>
                     <td colspan="2"></td>

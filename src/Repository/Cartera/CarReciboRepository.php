@@ -380,6 +380,7 @@ class CarReciboRepository extends ServiceEntityRepository
             ->addSelect('rt.cruceCuentas')
             ->addSelect('rt.prefijo')
             ->addSelect('c.codigoCuentaContableFk')
+            ->addSelect('c.nombre as cuentaNombre')
             ->leftJoin('r.reciboTipoRel', 'rt')
             ->leftJoin('r.cuentaRel', 'c')
             ->where('r.codigoReciboPk = ' . $codigo);
@@ -417,6 +418,10 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                                 break;
                                             }
+                                            $arComprobanteReferencia = null;
+                                            if($arReciboDetalle['codigoComprobanteFk']) {
+                                                $arComprobanteReferencia = $em->getRepository(FinComprobante::class)->find($arReciboDetalle['codigoComprobanteFk']);
+                                            }
                                             $arRegistro = new FinRegistro();
                                             $arRegistro->setTerceroRel($arTercero);
                                             $arRegistro->setCuentaRel($arCuenta);
@@ -426,6 +431,8 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setNumeroReferencia($arReciboDetalle['numeroDocumento']);
                                             $arRegistro->setNumeroReferenciaPrefijo($arReciboDetalle['prefijo']);
                                             $arRegistro->setFecha($fecha);
+                                            $arRegistro->setFechaVence($arReciboDetalle['fechaVence']);
+                                            $arRegistro->setComprobanteReferenciaRel($arComprobanteReferencia);
                                             $arRegistro->setVrCredito($arReciboDetalle['vrPagoAfectar']);
                                             $arRegistro->setNaturaleza('C');
                                             $arRegistro->setDescripcion($descripcion);
@@ -747,7 +754,6 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $banco += $arReciboDetalle['vrPago'];
                                         }
                                     }
-                                    $descripcion = "BANCO/CAJA";
                                     $cuenta = $arRecibo['codigoCuentaContableFk'];
                                     if ($cuenta) {
                                         $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
@@ -764,7 +770,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                         $arRegistro->setFecha($fecha);
                                         $arRegistro->setVrDebito($arRecibo['vrPago']);
                                         $arRegistro->setNaturaleza('D');
-                                        $arRegistro->setDescripcion($descripcion);
+                                        $arRegistro->setDescripcion($arRecibo['cuentaNombre']);
                                         $arRegistro->setCodigoModeloFk('CarRecibo');
                                         $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                         $em->persist($arRegistro);

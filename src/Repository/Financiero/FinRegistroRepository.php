@@ -262,6 +262,7 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->addSelect('r.numeroReferencia')
             ->addSelect('r.numeroReferenciaPrefijo')
             ->addSelect('r.fecha')
+            ->addSelect('r.fechaVence')
             ->addSelect('r.codigoComprobanteFk AS idComprobante')
             ->addSelect('c.nombre AS comprobante')
             ->addSelect('r.codigoCuentaFk AS cuenta')

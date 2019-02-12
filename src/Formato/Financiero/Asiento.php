@@ -32,9 +32,9 @@ class Asiento extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-        Estandares::generarEncabezado($this, 'ASIENTO', self::$em);
-        $arAsiento = new FinAsiento();
         $arAsiento = self::$em->getRepository(FinAsiento::class)->find(self::$codigoAsiento);
+        Estandares::generarEncabezado($this, $arAsiento->getComprobanteRel()->getNombre(), self::$em);
+
         $this->SetFillColor(236, 236, 236);
         $this->SetFont('Arial', 'B', 10);
         //linea 1
@@ -44,7 +44,7 @@ class Asiento extends \FPDF
         $this->Cell(30, 6, utf8_decode("NUMERO:"), 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(30, 6, $arAsiento->getCodigoAsientoPk(), 1, 0, 'L', 1);
+        $this->Cell(30, 6, $arAsiento->getNumero(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 6, "COMPROBANTE:", 1, 0, 'L', 1);
@@ -59,10 +59,10 @@ class Asiento extends \FPDF
         $this->Cell(30, 5, utf8_decode("FECHA:"), 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(30, 5, $arAsiento->getFecha()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->Cell(30, 5, $arAsiento->getFechaContable()->format('Y-m-d'), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 5, "COMPROBANTE:", 1, 0, 'L', 1);
+        $this->Cell(30, 5, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(100, 5, "", 1, 0, 'L', 1);
@@ -72,10 +72,10 @@ class Asiento extends \FPDF
         $this->SetXY(10, 50);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 5, utf8_decode("FECHA CONTABLE:"), 1, 0, 'L', 1);
+        $this->Cell(30, 5, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(30, 5, $arAsiento->getFechaContable()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->Cell(30, 5, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 5, "", 1, 0, 'L', 1);
@@ -83,6 +83,15 @@ class Asiento extends \FPDF
         $this->SetFillColor(272, 272, 272);
         $this->Cell(100, 5, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
+
+        $this->SetXY(10, 55);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "COMENTARIO", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->MultiCell(160, 4, $arAsiento->getComentario(), 1, 'L');
+
 
         $this->EncabezadoDetalles();
 

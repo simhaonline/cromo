@@ -40,7 +40,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
     }
 
 
-    public function lista($codigoDocumento)
+    public function lista($codigoDocumento, $usuario = null)
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm');
@@ -55,6 +55,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.vrDescuento')
             ->addSelect('m.vrNeto')
             ->addSelect('m.vrTotal')
+            ->addSelect('m.usuario')
             ->addSelect('m.estadoAnulado')
             ->addSelect('m.estadoAprobado')
             ->addSelect('m.estadoAutorizado')
@@ -93,6 +94,11 @@ class InvMovimientoRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroGenAsesor')) {
             $queryBuilder->andWhere("m.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
+        }
+        if($usuario) {
+            if($usuario->getRestringirMovimientos()) {
+                $queryBuilder->andWhere("m.usuario='" . $usuario->getUsername() . "'");
+            }
         }
         $queryBuilder->orderBy('m.estadoAprobado', 'ASC');
         $queryBuilder->addOrderBy('m.fecha', 'DESC');

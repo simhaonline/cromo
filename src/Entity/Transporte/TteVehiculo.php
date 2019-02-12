@@ -147,6 +147,11 @@ class TteVehiculo
     private $codigoTipoCarroceriaFk;
 
     /**
+     * @ORM\Column(name="estado_inactivo", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoInactivo = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -841,6 +846,22 @@ class TteVehiculo
     public function setNumeroTecnicomecanica( $numeroTecnicomecanica ): void
     {
         $this->numeroTecnicomecanica = $numeroTecnicomecanica;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoInactivo()
+    {
+        return $this->estadoInactivo;
+    }
+
+    /**
+     * @param mixed $estadoInactivo
+     */
+    public function setEstadoInactivo($estadoInactivo): void
+    {
+        $this->estadoInactivo = $estadoInactivo;
     }
 
 

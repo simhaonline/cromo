@@ -120,6 +120,7 @@ class SeguridadController extends Controller
             ->add('txtConfirmacionClave', PasswordType::class, $arrPropiedadesClaves)
             ->add('boolActivo', CheckboxType::class, ['data' => $arUsuario->getisActive(), 'label' => ' ', 'required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('restringirMovimientos', CheckboxType::class, ['data' => $arUsuario->getRestringirMovimientos(), 'label' => ' ', 'required' => false])
             ->getForm();
         $form->handleRequest($request);
 
@@ -130,6 +131,7 @@ class SeguridadController extends Controller
                 $arUsuario->setEmail($form->get('txtEmail')->getData());
                 $arUsuario->setCargo($form->get('txtCargo')->getData());
                 $arUsuario->setIsActive($form->get('boolActivo')->getData());
+                $arUsuario->setRestringirMovimientos($form->get('restringirMovimientos')->getData());
                 $arUsuario->setNumeroIdentificacion($form->get('txtIdentificacion')->getData());
                 $arUsuario->setNombreCorto($form->get('txtNombreCorto')->getData());
                 $arUsuario->setTelefono($form->get('txtTelefono')->getData());

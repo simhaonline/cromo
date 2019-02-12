@@ -465,8 +465,8 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             $saldoOriginal = $arCuentaCobrar['vrSaldoOriginal'];
             $diferencia = $saldoOriginal - $abonos;
             if($diferencia != 0) {
-                if($diferencia >= -10 ){
-                    if($diferencia <= 10) {
+                if($diferencia >= -1 ){
+                    if($diferencia <= 1) {
                         $saldo = $arCuentaCobrar['vrSaldoOriginal'] - ($abonos + $diferencia);
                         if($saldo == 0) {
                             $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar['codigoCuentaCobrarPk']);

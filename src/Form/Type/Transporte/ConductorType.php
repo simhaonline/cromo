@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteConductor;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -65,6 +66,7 @@ class ConductorType extends AbstractType
             ->add('barrio',TextType::class,['required' => true,'label' => 'Barrio:'])
             ->add('alias',TextType::class,['required' => false,'label' => 'Alias:'])
             ->add('codigoVehiculo',TextType::class,['required' => false,'label' => 'Codigo vehiculo:'])
+            ->add('estadoInactivo', CheckboxType::class, ['required' => false,'label' => 'Inactivo'])
             ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;

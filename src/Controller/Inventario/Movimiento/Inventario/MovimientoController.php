@@ -117,7 +117,7 @@ class MovimientoController extends ControllerListenerGeneral
                     }
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->createQuery($em->getRepository(InvMovimiento::class)->lista($codigoDocumento))->execute(), "Movimientos");
+                    General::get()->setExportar($em->createQuery($em->getRepository(InvMovimiento::class)->lista($codigoDocumento, $this->getUser()))->execute(), "Movimientos");
                 }
                 if ($form->get('btnEliminar')->isClicked()) {
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -125,7 +125,7 @@ class MovimientoController extends ControllerListenerGeneral
                 }
             }
         }
-        $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->lista($codigoDocumento), $request->query->getInt('page', 1), 30);
+        $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->lista($codigoDocumento, $this->getUser()), $request->query->getInt('page', 1), 30);
         return $this->render('inventario/movimiento/inventario/listaMovimientos.html.twig', [
             'arMovimientos' => $arMovimientos,
             'codigoDocumento' => $codigoDocumento,

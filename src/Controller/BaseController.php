@@ -296,6 +296,7 @@ abstract class BaseController extends Controller
         $claseNombre = $this->claseNombre;
         $arrRelaciones = [];
         $session = new Session();
+        $usuario = $this->getUser();
         /** @var  $queryBuilder QueryBuilder */
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e');
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
@@ -391,6 +392,11 @@ abstract class BaseController extends Controller
 
                     }
                 }
+            }
+        }
+        if($usuario) {
+            if($usuario->getRestringirMovimientos()) {
+                $queryBuilder->andWhere("e.usuario='" . $usuario->getUsername() . "'");
             }
         }
         if (isset($camposOrdenamiento)) {

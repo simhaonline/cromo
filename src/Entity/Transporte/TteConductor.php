@@ -128,6 +128,11 @@ class TteConductor
     private $codigoVehiculo;
 
     /**
+     * @ORM\Column(name="estado_inactivo", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoInactivo = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -643,6 +648,22 @@ class TteConductor
     public function setArl($arl): void
     {
         $this->arl = $arl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoInactivo()
+    {
+        return $this->estadoInactivo;
+    }
+
+    /**
+     * @param mixed $estadoInactivo
+     */
+    public function setEstadoInactivo($estadoInactivo): void
+    {
+        $this->estadoInactivo = $estadoInactivo;
     }
 
 

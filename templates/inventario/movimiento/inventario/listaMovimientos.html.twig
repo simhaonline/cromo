@@ -86,6 +86,7 @@
                 <th>DCT</th>
                 <th>NETO</th>
                 <th>TOTAL</th>
+                <th>USUARIO</th>
                 <th>AUT</th>
                 <th>APR</th>
                 <th>ANU</th>
@@ -106,6 +107,7 @@
                     <td class="numero">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimiento.vrNeto | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimiento.vrTotal | number_format(0, '.', ',') }}</td>
+                    <td>{{ arMovimiento.usuario }}</td>
                     <td class="estado">{{ arMovimiento.estadoAutorizado?'SI':'NO' }}</td>
                     <td class="estado">{{ arMovimiento.estadoAprobado?'SI':'NO' }}</td>
                     <td class="estado">{{ arMovimiento.estadoAnulado?'SI':'NO' }}</td>

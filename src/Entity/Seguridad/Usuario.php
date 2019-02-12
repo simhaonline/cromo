@@ -98,6 +98,11 @@ class Usuario implements UserInterface, \Serializable
     private $isActive;
 
     /**
+     * @ORM\Column(name="restringir_movimientos", type="boolean",options={"default":false})
+     */
+    private $restringirMovimientos;
+
+    /**
      * @ORM\Column(name="rol", type="string", length=20, options={"default":"ROLE_USER"})
      */
     private $rol = 'ROLE_USER';
@@ -465,6 +470,22 @@ class Usuario implements UserInterface, \Serializable
     {
         $this->skype = $skype;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRestringirMovimientos()
+    {
+        return $this->restringirMovimientos;
+    }
+
+    /**
+     * @param mixed $restringirMovimientos
+     */
+    public function setRestringirMovimientos($restringirMovimientos): void
+    {
+        $this->restringirMovimientos = $restringirMovimientos;
     }
 
 

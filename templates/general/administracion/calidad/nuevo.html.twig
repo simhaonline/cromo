@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Informacion general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_fechaVence" class="col-sm-2 control-label">Fecha:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fecha) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Codigo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Version:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.version, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVence" class="col-sm-2 control-label">Modelo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoModeloFk) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('general_administracion_calidad_formato_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="panel-body">
+                        <div class="form-group form-group-sm">
+                            <label class="col-sm-1 control-label">Nombre:</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form.txtNombre, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        {{ form_widget(form.btnFiltrar) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>NOMBRE</th>
+            <th>CODIGO</th>
+            <th>VERSION</th>
+            <th>MODELO</th>
+            <th>FECHA</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arFormato in arFormatos %}
+            <tr>
+                <td>{{ arFormato.codigoFormatoPk }}</td>
+                <td>{{ arFormato.nombre }}</td>
+                <td>{{ arFormato.codigo }}</td>
+                <td>{{ arFormato.version }}</td>
+                <td>{{ arFormato.codigoModeloFk }}</td>
+                <td>{{ arFormato.fecha | date('Y-m-d') }}</td>
+                <td style="text-align: center;">
+                    <a href="{{ path('general_administracion_calidad_formato_nuevo',{'id' : arFormato.codigoFormatoPk}) }}">
+                        <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                {#<td style="text-align: center;">#}
+                    {#<a href="{{ path('transporte_administracion_comercial_precio_detalle',{'id' : arPrecio.codigoPrecioPk}) }}">#}
+                        {#<i class="fa fa-share-square-o" style="font-size: large;color: black;">#}
+                        {#</i>#}
+                    {#</a>#}
+                {#</td>#}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arFormatos.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arFormatos) }}
+    </div>
+    {{ form_end(form) }}
+    <br /><br /><br />
+{% endblock %}
+

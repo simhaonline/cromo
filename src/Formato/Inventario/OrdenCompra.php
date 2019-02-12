@@ -42,7 +42,7 @@ class OrdenCompra extends \FPDF
     {
 
         $arOrdenCompra = self::$em->getRepository(InvOrden::class)->find(self::$codigoOrdenCompra);
-        Estandares::generarEncabezado($this, 'ORDEN DE COMPRA', self::$em);
+        Estandares::generarEncabezado($this, 'ORDEN DE COMPRA', self::$em, 1);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
         //Logo
@@ -139,7 +139,7 @@ class OrdenCompra extends \FPDF
     {
 
         $this->Ln(14);
-        $header = ['COD', 'ITEM', 'CANT', '% IVA', 'VALOR', 'IVA', 'TOTAL'];
+        $header = ['COD', 'ITEM', 'REF', 'CANT', '% IVA', 'VALOR', 'IVA', 'TOTAL'];
         $this->SetFillColor(200, 200, 200);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -147,7 +147,7 @@ class OrdenCompra extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(15, 80, 15, 20, 20, 20, 20);
+        $w = array(15, 50, 30, 15, 20, 20, 20, 20);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -172,7 +172,8 @@ class OrdenCompra extends \FPDF
         $pdf->SetTextColor(0);
         foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
             $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCodigoOrdenDetallePk(), 1, 0, 'L');
-            $pdf->Cell(80, 4, utf8_decode($arOrdenCompraDetalle->getItemRel()->getNombre()), 1, 0, 'L');
+            $pdf->Cell(50, 4, utf8_decode($arOrdenCompraDetalle->getItemRel()->getNombre()), 1, 0, 'L');
+            $pdf->Cell(30, 4, utf8_decode($arOrdenCompraDetalle->getItemRel()->getReferencia()), 1, 0, 'L');
             $pdf->Cell(15, 4, $arOrdenCompraDetalle->getCantidad(), 1, 0, 'C');
             $pdf->Cell(20, 4, $arOrdenCompraDetalle->getPorcentajeIva(), 1, 0, 'C');
             $pdf->Cell(20, 4, number_format($arOrdenCompraDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
@@ -185,19 +186,19 @@ class OrdenCompra extends \FPDF
         $pdf->SetFont('Arial', '', 7);
         //TOTALES
         $pdf->Ln(2);
-        $pdf->Cell(145, 4, "", 0, 0, 'R');
+        $pdf->Cell(150, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->SetFillColor(236, 236, 236);
         $pdf->Cell(20, 4, "SUBTOTAL:", 1, 0, 'R', true);
-        $pdf->Cell(25, 4, number_format($arOrdenCompra->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(20, 4, number_format($arOrdenCompra->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln();
-        $pdf->Cell(145, 4, "", 0, 0, 'R');
+        $pdf->Cell(150, 4, "", 0, 0, 'R');
         $pdf->Cell(20, 4, "IVA:", 1, 0, 'R', true);
-        $pdf->Cell(25, 4, number_format($arOrdenCompra->getVrIva(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(20, 4, number_format($arOrdenCompra->getVrIva(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln();
-        $pdf->Cell(145, 4, "", 0, 0, 'R');
+        $pdf->Cell(150, 4, "", 0, 0, 'R');
         $pdf->Cell(20, 4, "NETO PAGAR", 1, 0, 'R', true);
-        $pdf->Cell(25, 4, number_format($arOrdenCompra->getVrTotal(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Cell(20, 4, number_format($arOrdenCompra->getVrTotal(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln(-8);
     }
 

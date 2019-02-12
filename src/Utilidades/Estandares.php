@@ -9,6 +9,7 @@
 namespace App\Utilidades;
 
 
+use App\Entity\General\GenCalidadFormato;
 use App\Entity\General\GenConfiguracion;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -92,10 +93,11 @@ final class Estandares
      * @param null $imagen
      * @param null $extension
      */
-    public static function generarEncabezado($pdf, $titulo = ' ', $em)
+    public static function generarEncabezado($pdf, $titulo = ' ', $em, $codigoCalidadFormato = null)
     {
         /** @var  $arConfiguracion GenConfiguracion */
         $arConfiguracion = BaseDatos::getEm()->getRepository(GenConfiguracion::class)->find(1);
+
         $pdf->SetFont('Arial', '', 5);
         $date = new \DateTime('now');
         $pdf->Text(168, 8, $date->format('Y-m-d H:i:s') . ' [Cromo | ERP]');
@@ -126,6 +128,25 @@ final class Estandares
         $pdf->SetXY(53, 30);
         $pdf->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
         $pdf->Cell(100, 4, $arConfiguracion ? $arConfiguracion->getTelefono() : '', 0, 0, 'L', 0);
+
+        if($codigoCalidadFormato){
+            $arFormatoCalidad = BaseDatos::getEm()->getRepository(GenCalidadFormato::class)->find($codigoCalidadFormato);
+            if($arFormatoCalidad){
+                $pdf->SetXY(160, 18);
+                $pdf->SetFont('Arial', 'B', 9);
+                $pdf->Cell(20, 4, "CODIGO:", 0, 0, 'L', 1);
+                $pdf->Cell(10, 4, utf8_decode($arFormatoCalidad ? $arFormatoCalidad->getCodigo() : ''), 0, 0, 'L', 0);
+                $pdf->SetXY(160, 22);
+                $pdf->SetFont('Arial', 'B', 9);
+                $pdf->Cell(20, 4, "VERSION:", 0, 0, 'L', 1);
+                $pdf->Cell(10, 4, utf8_decode($arFormatoCalidad ? $arFormatoCalidad->getVersion() : ''), 0, 0, 'L', 0);
+                $pdf->SetXY(160, 26);
+                $pdf->SetFont('Arial', 'B', 9);
+                $pdf->Cell(20, 4, "FECHA:", 0, 0, 'L', 1);
+                $pdf->Cell(10, 4, $arFormatoCalidad ? $arFormatoCalidad->getFecha()->format('Y-m-d') : '', 0, 0, 'L', 0);
+            }
+        }
+
     }
 
     public function getLogo($em){

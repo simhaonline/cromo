@@ -77,7 +77,7 @@ class FinAsientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('ad.vrDebito')
             ->addSelect('ad.vrCredito')
             ->addSelect('ad.vrBase')
-            ->join('ad.terceroRel', 't')
+            ->leftJoin('ad.terceroRel', 't')
             ->leftJoin('ad.cuentaRel', 'c')
             ->where('ad.codigoAsientoFk = ' . $codigoAsiento);
 

@@ -409,7 +409,9 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         if($session->get('filtroCarReciboCodigoReciboTipo')){
             $arCrearReciboMasivo->andWhere("cc.codigoCuentaCobrarTipoFk='{$session->get("filtroCarReciboCodigoReciboTipo")}'");
         }
-
+        if($session->get('filtroCarNumeroReferencia') != ''){
+            $arCrearReciboMasivo->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
+        }
         return $arCrearReciboMasivo->getQuery()->execute();
     }
 

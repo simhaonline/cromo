@@ -11,6 +11,7 @@ use App\Utilidades\Mensajes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 //use Symfony\Component\HttpKernel\Tests\Controller;
@@ -33,6 +34,7 @@ class CrearReciboMasivoController extends Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('cboCuentaCobrarTipoRel', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
+            ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNumeroReferencia'), 'attr' => ['class' => 'form-control']])
             ->add('btnFiltrar', SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
@@ -48,6 +50,7 @@ class CrearReciboMasivoController extends Controller
                 } else {
                     $session->set('filtroCarReciboCodigoReciboTipo', null);
                 }
+                $session->set('filtroCarNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
             }
         }
         if ($formRecibo->isSubmitted() && $formRecibo->isValid()) {
@@ -102,7 +105,7 @@ class CrearReciboMasivoController extends Controller
                 return $this->redirect($this->generateUrl('cartera_proceso_ingreso_recibomasivo_lista'));
             }
         }
-        $arCuentasCobrar = $paginator->paginate($em->getRepository('App:Cartera\CarCuentaCobrar')->crearReciboMasivoLista(), $request->query->getInt('page', 1), 100);
+        $arCuentasCobrar = $paginator->paginate($em->getRepository(CarCuentaCobrar::class)->crearReciboMasivoLista(), $request->query->getInt('page', 1), 100);
         return $this->render('cartera/proceso/contabilidad/crearrecibomasivo/lista.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,
             'form' => $form->createView(),

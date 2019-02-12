@@ -350,6 +350,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                     $arMonitoreo = new TteMonitoreo();
                     $arMonitoreo->setVehiculoRel($arDespacho->getVehiculoRel());
                     $arMonitoreo->setDespachoRel($arDespacho);
+                    $arMonitoreo->setCiudadDestinoRel($arDespacho->getCiudadDestinoRel());
                     $arMonitoreo->setFechaRegistro(new \DateTime('now'));
                     $arMonitoreo->setFechaInicio(new \DateTime('now'));
                     $arMonitoreo->setFechaFin(new \DateTime('now'));

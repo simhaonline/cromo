@@ -24,6 +24,7 @@ class MonitoreoType extends AbstractType
             {"campo":"codigoVehiculoFk",                        "tipo":"texto",     "ayuda":"Vehiculo",                                 "titulo":"VEHICULO"},
             {"campo":"soporte",                                 "tipo":"texto",     "ayuda":"Soporte",                                  "titulo":"SOPORTE"},
             {"campo":"codigoDespachoFk",                        "tipo":"texto",     "ayuda":"Despacho",                                 "titulo":"DESPACHO"},
+            {"campo":"ciudadDestinoRel.nombre",                 "tipo":"texto",     "ayuda":"Ciudad destino",                           "titulo":"DESTINO",             "relacion":""},
             {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
             {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
             {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"}

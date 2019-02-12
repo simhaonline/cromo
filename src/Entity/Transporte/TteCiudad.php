@@ -174,6 +174,11 @@ class TteCiudad
     protected $guiasTemporalesCiudadDestinoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteMonitoreo", mappedBy="ciudadDestinoRel")
+     */
+    protected $monitoreosCiudadDestinoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -684,5 +689,23 @@ class TteCiudad
     {
         $this->guiasTemporalesCiudadDestinoRel = $guiasTemporalesCiudadDestinoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMonitoreosCiudadDestinoRel()
+    {
+        return $this->monitoreosCiudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $monitoreosCiudadDestinoRel
+     */
+    public function setMonitoreosCiudadDestinoRel($monitoreosCiudadDestinoRel): void
+    {
+        $this->monitoreosCiudadDestinoRel = $monitoreosCiudadDestinoRel;
+    }
+
+
 }
 

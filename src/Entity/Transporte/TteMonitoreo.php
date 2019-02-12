@@ -73,6 +73,11 @@ class TteMonitoreo
     private $estadoCerrado = false;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_destino_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCiudadDestinoFk;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -88,6 +93,12 @@ class TteMonitoreo
      * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
      */
     private $despachoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="monitoreosCiudadDestinoRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_destino_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    private $ciudadDestinoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteMonitoreoDetalle", mappedBy="monitoreoRel")
@@ -369,6 +380,38 @@ class TteMonitoreo
     public function setMonitoreosRegistrosMonitoreoRel($monitoreosRegistrosMonitoreoRel): void
     {
         $this->monitoreosRegistrosMonitoreoRel = $monitoreosRegistrosMonitoreoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadDestinoFk()
+    {
+        return $this->codigoCiudadDestinoFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadDestinoFk
+     */
+    public function setCodigoCiudadDestinoFk($codigoCiudadDestinoFk): void
+    {
+        $this->codigoCiudadDestinoFk = $codigoCiudadDestinoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadDestinoRel()
+    {
+        return $this->ciudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $ciudadDestinoRel
+     */
+    public function setCiudadDestinoRel($ciudadDestinoRel): void
+    {
+        $this->ciudadDestinoRel = $ciudadDestinoRel;
     }
 
 

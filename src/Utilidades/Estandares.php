@@ -124,7 +124,7 @@ final class Estandares
         $pdf->Cell(100, 4, $arConfiguracion ? $arConfiguracion->getNit() : '', 0, 0, 'L', 0);
         $pdf->SetXY(53, 26);
         $pdf->Cell(20, 4, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
-        $pdf->Cell(100, 4, utf8_decode($arConfiguracion ? $arConfiguracion->getDireccion() : ''), 0, 0, 'L', 0);
+        $pdf->Cell(100, 4, substr(utf8_decode($arConfiguracion ? $arConfiguracion->getDireccion() : ''),0, 45), 0, 0, 'L', 0);
         $pdf->SetXY(53, 30);
         $pdf->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
         $pdf->Cell(100, 4, $arConfiguracion ? $arConfiguracion->getTelefono() : '', 0, 0, 'L', 0);

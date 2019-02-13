@@ -20,6 +20,15 @@ class GenCalidadFormato extends Fixture
             $arGenCalidadFormato->setCodigoModeloFk('InvOrden');
             $manager->persist($arGenCalidadFormato);
         }
+        $arGenCalidadFormato = $manager->getRepository('App:General\GenCalidadFormato')->find(2);
+        if(!$arGenCalidadFormato){
+            $arGenCalidadFormato = new \App\Entity\General\GenCalidadFormato();
+            $arGenCalidadFormato->setNombre('HOJA DE VIDA CONDUCTOR');
+            $arGenCalidadFormato->setFecha($fecha);
+            $arGenCalidadFormato->setVersion(1);
+            $arGenCalidadFormato->setCodigoModeloFk('TteConductor');
+            $manager->persist($arGenCalidadFormato);
+        }
         $manager->flush();
     }
 }

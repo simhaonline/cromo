@@ -116,7 +116,7 @@
                 {% endif %}
                 {% set codigoCuenta = arRegistro.cuenta %}
                 <tr style="background-color: #b7bcbc;">
-                    <td colspan="15"><strong>{{ codigoCuenta }}</strong></td>
+                    <td colspan="15"><strong>{{ codigoCuenta }} - {{ arRegistro.cuentaNombre }}</strong></td>
                 </tr>
                 {% if vrCreditoAcumulado == 0 and vrDebitoAcumulado == 0 %}
                     {% set vrCreditoAcumulado = arRegistro.vrCredito %}

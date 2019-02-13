@@ -27,13 +27,15 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_TxtCodigo" class="col-sm-1 control-label">Lote:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtLote) }}
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaDesde) }}
                 </div>
-                <label for="form_cboBodega" class="col-sm-3 control-label">Bodega:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.cboBodega, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaHasta) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -48,26 +50,38 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th title="Numero pedido">NUMERO</th>
+                <th>NUMERO</th>
                 <th>FECHA</th>
                 <th>TERCERO</th>
                 <th>ITEM</th>
-                <th>NOMBRE</th>
-                <th>REFERECIA</th>
-                <th>LOTE</th>
+                <th>DESCRIPCION</th>
+                <th>CANTIDAD</th>
+                <th>PRECIO</th>
+                <th>SUBTOTAL</th>
+                <th>% DESC</th>
+                <th>DESC</th>
+                <th>% IVA</th>
+                <th>IVA</th>
+                <th>TOTAL</th>
             </tr>
             </thead>
             <tbody>
-            {% for arRemisionDetalle in arRemisionDetalles %}
+            {% for arOrdenDetalle in arOrdenDetalles %}
                 <tr>
-                    <td>{{ arRemisionDetalle.codigoRemisionDetallePk }}</td>
-                    <td>{{ arRemisionDetalle.numero }}</td>
-                    <td>{{ arRemisionDetalle.fecha | date('Y-m-d') }}</td>
-                    <td>{{ arRemisionDetalle.tercero }}</td>
-                    <td>{{ arRemisionDetalle.codigoItemFk }}</td>
-                    <td>{{ arRemisionDetalle.itemNombre }}</td>
-                    <td>{{ arRemisionDetalle.itemReferencia }}</td>
-                    <td>{{ arRemisionDetalle.loteFk }}</td>
+                    <td>{{ arOrdenDetalle.codigoOrdenDetallePk }}</td>
+                    <td>{{ arOrdenDetalle.numero }}</td>
+                    <td>{{ arOrdenDetalle.fecha | date('Y-m-d') }}</td>
+                    <td>{{ arOrdenDetalle.tercero }}</td>
+                    <td>{{ arOrdenDetalle.codigoItemFk }}</td>
+                    <td>{{ arOrdenDetalle.item }}</td>
+                    <td>{{ arOrdenDetalle.cantidad }}</td>
+                    <td class="numero">{{ arOrdenDetalle.vrPrecio | number_format }}</td>
+                    <td class="numero">{{ arOrdenDetalle.vrSubtotal | number_format }}</td>
+                    <td class="numero">{{ arOrdenDetalle.porcentajeDescuento | number_format }}</td>
+                    <td class="numero">{{ arOrdenDetalle.vrDescuento | number_format }}</td>
+                    <td class="numero">{{ arOrdenDetalle.porcentajeIva | number_format }}</td>
+                    <td class="numero">{{ arOrdenDetalle.vrIva | number_format }}</td>
+                    <td class="numero">{{ arOrdenDetalle.vrTotal | number_format }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -75,12 +89,12 @@
     </div>
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">Registros
-            <span class="badge">{{ arRemisionDetalles.getTotalItemCount }}
+            <span class="badge">{{ arOrdenDetalles.getTotalItemCount }}
             </span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-        {{ knp_pagination_render(arRemisionDetalles) }}
+        {{ knp_pagination_render(arOrdenDetalles) }}
     </div>
     <div class="btn-group" style="float: right;">
         {{ form_widget(form.btnExcel) }}

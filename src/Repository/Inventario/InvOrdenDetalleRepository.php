@@ -263,4 +263,39 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
         }
         return $cantidad;
     }
+
+    public function informeDetalles()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvOrdenDetalle::class,'od')
+            ->select('od.codigoOrdenDetallePk')
+            ->addSelect('o.numero')
+            ->addSelect('o.fecha')
+            ->addSelect('t.nombreCorto as tercero')
+            ->addSelect('od.codigoOrdenFk')
+            ->addSelect('od.codigoItemFk')
+            ->addSelect('i.nombre AS item')
+            ->addSelect('od.cantidad')
+            ->addSelect('od.vrPrecio')
+            ->addSelect('od.vrSubtotal')
+            ->addSelect('od.porcentajeDescuento')
+            ->addSelect('od.vrDescuento')
+            ->addSelect('od.porcentajeIva')
+            ->addSelect('od.vrIva')
+            ->addSelect('od.vrTotal')
+            ->leftJoin('od.itemRel', 'i')
+            ->leftJoin('od.ordenRel', 'o')
+        ->leftJoin('o.terceroRel', 't');
+        if($session->get('filtroInvInformeOrdenDetalleCodigoTercero')){
+            $queryBuilder->andWhere("o.codigoTerceroFk = {$session->get('filtroInvInformeOrdenDetalleCodigoTercero')}");
+        }
+        if ($session->get('filtroInvInformeOrdenDetalleFechaDesde') != null) {
+            $queryBuilder->andWhere("o.fecha >= '{$session->get('filtroInvInformeOrdenDetalleFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroInvInformeOrdenDetalleFechaHasta') != null) {
+            $queryBuilder->andWhere("o.fecha <= '{$session->get('filtroInvInformeOrdenDetalleFechaHasta')} 23:59:59'");
+        }
+
+        return $queryBuilder;
+    }
 }

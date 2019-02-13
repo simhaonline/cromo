@@ -221,6 +221,11 @@ class InvItem
     private $servicio = false;
 
     /**
+     * @ORM\Column(name="validar_stock", type="boolean", nullable=true, options={"default":false})
+     */
+    private $validarStock = false;
+
+    /**
      * @ORM\Column(name="registro_invima", type="string",length=80, nullable=true)
      */
     private $registroInvima;
@@ -1215,6 +1220,37 @@ class InvItem
         $this->importacionesDetallesItemRel = $importacionesDetallesItemRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getValidarStock()
+    {
+        return $this->validarStock;
+    }
+
+    /**
+     * @param mixed $validarStock
+     */
+    public function setValidarStock($validarStock): void
+    {
+        $this->validarStock = $validarStock;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosDetallesItemRel()
+    {
+        return $this->costosDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $costosDetallesItemRel
+     */
+    public function setCostosDetallesItemRel($costosDetallesItemRel): void
+    {
+        $this->costosDetallesItemRel = $costosDetallesItemRel;
+    }
 
 
 }

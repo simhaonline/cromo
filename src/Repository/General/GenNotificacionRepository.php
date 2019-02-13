@@ -51,4 +51,16 @@ class GenNotificacionRepository extends ServiceEntityRepository
 
         return $arNotificacion;
     }
+
+    public function eliminar($arrSeleccionados)
+    {
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(GenNotificacion::class)->find($codigo);
+                $this->getEntityManager()->remove($arRegistro);
+            }
+            $this->getEntityManager()->flush();
+        }
+    }
+
 }

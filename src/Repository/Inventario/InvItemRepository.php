@@ -133,5 +133,19 @@ class InvItemRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function stockMinimo()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvItem::class, 'i')
+            ->select('i.codigoItemPk')
+            ->addSelect('i.nombre')
+            ->addSelect('i.cantidadDisponible')
+            ->addSelect('i.stockMinimo')
+            ->where('i.cantidadDisponible < i.stockMinimo')
+        ->andWhere('i.validarStock = 1');
+        $arItemes = $queryBuilder->getQuery()->getResult();
+        return $arItemes;
+    }
+
 }
 

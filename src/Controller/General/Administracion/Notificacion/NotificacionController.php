@@ -2,6 +2,8 @@
 
 namespace App\Controller\General\Administracion\Notificacion;
 
+use App\Entity\General\GenNotificacion;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -48,9 +50,24 @@ class NotificacionController extends Controller
         $usuario=$user->getToken()->getUser();
         $arNotificacion=$em->getRepository('App:General\GenNotificacion')->lista($usuario->getUsername());
         $paginator  = $this->get('knp_paginator');
-        $arGenNotificacion= $paginator->paginate($arNotificacion,$request->query->getInt('page',1),50);
+        $form = $this->createFormBuilder()
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if($arrSeleccionados){
+                    $em->getRepository(GenNotificacion::class)->eliminar($arrSeleccionados);
+                }
+            }
+        }
+
+        $arGenNotificacion= $paginator->paginate($arNotificacion,$request->query->getInt('page',1),500);
         return $this->render('general/administracion/notificacion/notificacion/lista.html.twig',
-            ['arGenNotificacion' => $arGenNotificacion]);
+            ['arGenNotificacion' => $arGenNotificacion,
+                'form' => $form->createView()
+            ]);
     }
 
     /**

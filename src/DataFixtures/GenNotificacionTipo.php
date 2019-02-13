@@ -19,7 +19,8 @@ class GenNotificacionTipo extends Fixture
             array('codigo' => 6, 'nombre' => 'Remisiones sin aprobar', 'notificacion' => 'Remisiones sin aprobar', 'modulo' => 'Inventario'),
             array('codigo' => 7, 'nombre' => 'Facturas sin aprobar', 'notificacion' => 'Facturas sin aprobar', 'modulo' => 'Inventario'),
             array('codigo' => 8, 'nombre' => 'Pedidos sin aprobar', 'notificacion' => 'Pedidos sin aprobar', 'modulo' => 'Inventario'),
-            array('codigo' => 9, 'nombre' => 'Despachos sin aprobar', 'notificacion' => 'Despachos sin aprobar', 'modulo' => 'Transporte')
+            array('codigo' => 9, 'nombre' => 'Despachos sin aprobar', 'notificacion' => 'Despachos sin aprobar', 'modulo' => 'Transporte'),
+            array('codigo' => 10, 'nombre' => 'Stock minimo superado', 'notificacion' => 'Stock minimo superado', 'modulo' => 'Inventario'),
         );
         //array('codigo' => , 'nombre' => '', 'notificacion' => '', 'modulo' => '')
         foreach ($arrTipos as $arrTipo) {

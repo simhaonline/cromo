@@ -294,8 +294,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->where('m.estadoAprobado = 1')
             ->andWhere('m.estadoAnulado = 0')
             ->andWhere('md.codigoItemFk = ' . $codigoItem)
-        ->orderBy('m.fecha')
-        ->addOrderBy('md.codigoMovimientoDetallePk');
+            ->orderBy('m.fecha')
+            ->addOrderBy('md.codigoMovimientoDetallePk');
         return $queryBuilder->getQuery()->execute();
     }
 
@@ -325,7 +325,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                     }
                 } else {
                     $arMovimientoDetalleAct->setVrCosto($costoPromedio);
-                    if($arMovimientoDetalle['codigoDocumentoTipoFk'] == 'TRA') {
+                    if ($arMovimientoDetalle['codigoDocumentoTipoFk'] == 'TRA') {
                         $arMovimientoDetalleAct->setVrPrecio($costoPromedio);
                     }
                 }
@@ -428,7 +428,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         if ($session->get('filtroInvCodigoDocumento')) {
             $queryBuilder->andWhere("m.codigoDocumentoFk = '{$session->get('filtroInvCodigoDocumento')}'");
         }
-        if($session->get('filtroFecha') == true){
+        if ($session->get('filtroFecha') == true) {
             if ($session->get('filtroInvMovimientoFechaDesde') != null) {
                 $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroInvMovimientoFechaDesde')} 00:00:00'");
             } else {
@@ -636,10 +636,11 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
 
     }
 
-    public function detallesFormato($codigoNotaCredito){
+    public function detallesFormato($codigoNotaCredito)
+    {
         // 'ncd' = nota credito detalle
         // 'ncm' = nota credito movimiento
-        return $this->_em->createQueryBuilder()->from(InvMovimientoDetalle::class,'ncd')
+        return $this->_em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'ncd')
             ->select('ncd.codigoMovimientoDetallePk')
             ->addSelect('ncm.numero')
             ->addSelect('m.numero as numeroFactura')
@@ -648,27 +649,54 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('ncd.cantidad')
             ->addSelect('ncd.vrSubtotal')
             ->addSelect('ncd.vrIva')
-            ->leftJoin('ncd.movimientoDetalleRel','md')
-            ->leftJoin('ncd.movimientoRel','ncm')
-            ->leftJoin('ncd.itemRel','i')
-            ->leftJoin('md.movimientoRel','m')
-            ->where('ncd.codigoMovimientoFk ='. $codigoNotaCredito)->getQuery()->execute();
+            ->leftJoin('ncd.movimientoDetalleRel', 'md')
+            ->leftJoin('ncd.movimientoRel', 'ncm')
+            ->leftJoin('ncd.itemRel', 'i')
+            ->leftJoin('md.movimientoRel', 'm')
+            ->where('ncd.codigoMovimientoFk =' . $codigoNotaCredito)->getQuery()->execute();
     }
 
     public function costoVentas($anio, $mes)
     {
-        $fechaDesde = $anio.'-'.$mes.'-01 00:00';
+        $fechaDesde = $anio . '-' . $mes . '-01 00:00';
         $ultimoDia = date("d", (mktime(0, 0, 0, $mes + 1, 1, $anio) - 1));
-        $fechaHasta = $anio.'-'.$mes.'-'.$ultimoDia.' 23:59';
+        $fechaHasta = $anio . '-' . $mes . '-' . $ultimoDia . ' 23:59';
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
             ->select('md.codigoItemFk')
             ->addSelect('SUM(md.vrCosto * (md.cantidadOperada * -1)) as vrCosto')
-            ->leftJoin('md.movimientoRel' , 'm')
+            ->leftJoin('md.movimientoRel', 'm')
             ->where("m.fecha >= '" . $fechaDesde . "'")
             ->andWhere("m.fecha <= '" . $fechaHasta . "'")
             ->andWhere("m.codigoDocumentoTipoFk = 'FAC'")
             ->groupBy('md.codigoItemFk');
         $arMovimientoDetalles = $queryBuilder->getQuery()->getResult();
         return $arMovimientoDetalles;
+    }
+
+    public function rotacion()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoItemFk')
+            ->addSelect('i.nombre AS nombre')
+            ->addSelect('ma.nombre AS marca')
+            ->addSelect('i.referencia')
+            ->addSelect('SUM(md.cantidad * m.operacionComercial) AS cantidad')
+            ->leftJoin('md.movimientoRel', 'm')
+            ->leftJoin('md.itemRel', 'i')
+            ->leftJoin('i.marcaRel', 'ma')
+            ->where("m.codigoDocumentoTipoFk = 'FAC'")
+            ->groupBy('md.codigoItemFk')
+            ->addGroupBy('md.codigoMovimientoDetallePk');
+        if ($session->get('filtroInvInformeRotacionItemCodigo') != '') {
+            $queryBuilder->andWhere("i.codigoItemPk = {$session->get('filtroInvInformeRotacionItemCodigo')}");
+        }
+        if ($session->get('filtroInvInformeItemRotacionFechaDesde') != null) {
+            $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroInvInformeItemRotacionFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroInvInformeItemRotacionFechaHasta') != null) {
+            $queryBuilder->andWhere("m.fecha <= '{$session->get('filtroInvInformeItemRotacionFechaHasta')} 23:59:59'");
+        }
+        return $queryBuilder;
     }
 }

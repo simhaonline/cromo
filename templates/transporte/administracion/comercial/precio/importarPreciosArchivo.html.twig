@@ -1,0 +1,50 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+         data-widget-fullscreenbutton="true">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+            <h2>Lista</h2>
+        </header>
+        <div>
+            <div class="widget-body no-padding">
+                <div class="panel-body">
+                    <br>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1"></label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.flArchivo) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-20">
+                        <img src="{{ asset('img/recursos/transporte/precio_masivo.png') }}" height="60" width="850">
+                    </div>
+                    <br>
+                    <div class="col-sm-12">
+                        <cite style="color: grey;font-size: 11px;"> ~ Los campos <strong>codigoCiudadOrigenFk -
+                                codigoCiudadDestinoFk - codigoProductoFk </strong> son <strong> obligatorios </strong> ~
+                        </cite>
+                        <br>
+                        <cite style="color: grey;font-size: 11px;"> ~ Los campos <strong> de valor </strong> (vrPeso -
+                            vrUnidad - pesoTope - vrPesoTope - vrPesoTopeAdicional - minimo), No pueden contener puntos
+                            o comas ~</cite>
+                        <br>
+                        <cite style="color: grey;font-size: 11px;"> ~ Los registros que no existan en la lista de
+                            precios se <strong> crearán </strong> los que si existan se actualizaran con base a la
+                            informacion suministrada en el archivo ~</cite>
+                        <br>
+                        <cite style="color: grey;font-size: 11px;"> ~ El archivo debera de contener solo
+                            <strong>UNA</strong> página ~ </cite>
+                        <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {{ form_widget(form.btnImportarPrecio) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+

@@ -162,6 +162,11 @@ class CarCuentaCobrar
     private $vrAjustePesoSistema = 0;
 
     /**
+     * @ORM\Column(name="codigo_centro_costo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCentroCostoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrarTipo", inversedBy="cuentasCobrarCuentaCobrarTipoRel")
      * @ORM\JoinColumn(name="codigo_cuenta_cobrar_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
      */
@@ -748,6 +753,22 @@ class CarCuentaCobrar
     public function setEstadoAutorizado( $estadoAutorizado ): void
     {
         $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCentroCostoFk()
+    {
+        return $this->codigoCentroCostoFk;
+    }
+
+    /**
+     * @param mixed $codigoCentroCostoFk
+     */
+    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
+    {
+        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
     }
 
 

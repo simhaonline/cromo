@@ -11,6 +11,7 @@ use App\Entity\Cartera\CarIngresoConcepto;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Cartera\CarReciboTipo;
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
@@ -408,12 +409,17 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $arTercero = $em->getRepository(CarCliente::class)->terceroFinanciero($arRecibo['codigoClienteFk']);
                                 $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->listaContabilizar($codigo);
                                 foreach ($arReciboDetalles as $arReciboDetalle) {
+                                    $arCentroCosto = null;
+                                    if($arReciboDetalle['codigoCentroCostoFk']) {
+                                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arReciboDetalle['codigoCentroCostoFk']);
+                                    }
                                     //Cuenta cliente
                                     if ($arReciboDetalle['vrPagoAfectar'] > 0) {
                                         $descripcion = "CLIENTES";
                                         $cuenta = $arReciboDetalle['codigoCuentaClienteFk'];
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+
                                             if (!$arCuenta) {
                                                 $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                                 break;
@@ -438,6 +444,9 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('CarRecibo');
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
+                                            if($arCuenta->getExigeCentroCosto()) {
+                                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                            }
                                             $em->persist($arRegistro);
                                         } else {
                                             $error = "El [tipo cuenta cobrar] no tiene configurada la cuenta " . $descripcion;
@@ -600,6 +609,9 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('CarRecibo');
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
+                                            if($arCuenta->getExigeCentroCosto()) {
+                                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                            }
                                             $em->persist($arRegistro);
                                         } else {
                                             $error = "El tipo no tiene configurada la cuenta " . $descripcion . " (DESCUENTO RAPIDO)" . " recibo numero: " . $arRecibo['numero'];

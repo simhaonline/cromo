@@ -181,6 +181,7 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.codigoCuentaCobrarAplicacionFk')
             ->addSelect('cc.numeroDocumento')
             ->addSelect('cc.fechaVence')
+            ->addSelect('cc.codigoCentroCostoFk')
             ->addSelect('cct.codigoComprobanteFk')
             ->addSelect('cct.prefijo')
             ->addSelect('cct.codigoCuentaClienteFk')

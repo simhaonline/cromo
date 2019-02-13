@@ -1055,6 +1055,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arCuentaCobrar->setPlazo($arFactura->getPlazoPago());
                         $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
                         $arCuentaCobrar->setEstadoAnulado($arGuia->getEstadoAnulado());
+                        $arCuentaCobrar->setCodigoCentroCostoFk($arGuia->getOperacionIngresoRel()->getCodigoCentroCostoFk());
                         $em->persist($arCuentaCobrar);
                     }
                 }

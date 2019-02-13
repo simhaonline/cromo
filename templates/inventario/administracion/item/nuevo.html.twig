@@ -31,12 +31,12 @@
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_stockMinimo" class="col-sm-2 control-label">Stock mínimo:</label>
-                <div class="col-sm-3">
+                <div class="col-sm-1">
                     {{ form_widget(form.stockMinimo,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.stockMinimo) }}
                 </div>
-                <label for="form_porcentajeIva" class="col-sm-2 control-label">Stock maximo:</label>
-                <div class="col-sm-3">
+                <label for="form_porcentajeIva" class="col-sm-1 control-label">Stock maximo:</label>
+                <div class="col-sm-1">
                     {{ form_widget(form.stockMaximo,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.stockMaximo) }}
                 </div>
@@ -85,10 +85,10 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_afectaInventario" class="col-sm-2 control-label">Afecta inventario</label>
+                <label for="form_afectaInventario" class="col-sm-2 control-label"></label>
                 <div class="col-sm-3">
                     {{ form_widget(form.afectaInventario) }}
-                    {{ form_errors(form.afectaInventario) }}
+                    {{ form_widget(form.validarStock) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

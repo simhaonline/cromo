@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +32,7 @@ class PendienteSoporteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('chkEstadoDespachado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTtePendienteSoporteEstadoDespachado'), 'required' => false])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTtePendienteSoporteFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTtePendienteSoporteFechaHasta'))])
             ->add('txtDespacho', NumberType::class, ['label' => 'Despacho: ', 'required' => false, 'data' => $session->get('filtroNumeroDespacho')])
@@ -41,6 +43,7 @@ class PendienteSoporteController extends Controller
         if ($form->get('btnFiltrar')->isClicked()) {
             $session->set('filtroTtePendienteSoporteFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
             $session->set('filtroTtePendienteSoporteFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+            $session->set('filtroTtePendienteSoporteEstadoDespachado', $form->get('chkEstadoDespachado')->getData());
             $session->set('filtroNumeroDespacho', $form->get('txtDespacho')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {

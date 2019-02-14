@@ -1407,6 +1407,14 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroNumeroDespacho')) {
             $queryBuilder->andWhere("d.numero = '{$session->get('filtroNumeroDespacho')}'");
         }
+        switch ($session->get('filtroTtePendienteSoporteEstadoDespachado')) {
+            case '0':
+                $queryBuilder->andWhere("g.estadoDespachado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("g.estadoDespachado = 1");
+                break;
+        }
 
         return $queryBuilder;
     }

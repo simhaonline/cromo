@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,6 +34,7 @@ class PendienteEntregaController extends Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('chkEstadoNovedad', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteGuiaEstadoNovedad'), 'required' => false])
+            ->add('chkEstadoDespachado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteGuiaEstadoDespachado'), 'required' => false])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTtePendienteEntregaFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTtePendienteEntregaFechaHasta'))])
             ->add('txtGuia', NumberType::class, ['label' => 'Guia: ', 'required' => false, 'data' => $session->get('filtroNumeroGuia')])
@@ -49,6 +51,7 @@ class PendienteEntregaController extends Controller
             $session->set('filtroConductor', $form->get('txtConductor')->getData());
             $session->set('filtroDocumentoCliente', $form->get('txtDocumentoCliente')->getData());
             $session->set('filtroTteGuiaEstadoNovedad', $form->get('chkEstadoNovedad')->getData());
+            $session->set('filtroTteGuiaEstadoDespachado', $form->get('chkEstadoDespachado')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
             General::get()->setExportar($em->getRepository(TteGuia::class)->pendienteEntrega()->getQuery()->execute(), "Pendiente entrega");

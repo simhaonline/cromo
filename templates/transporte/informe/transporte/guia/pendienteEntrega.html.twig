@@ -7,40 +7,36 @@
         <div class="panel-body">
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Guia:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     {{ form_widget(form.txtGuia, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Conductor:</label>
-                <div class="col-sm-4">
+                <label class="col-sm-1 control-label">Conductor:</label>
+                <div class="col-sm-2">
                     {{ form_widget(form.txtConductor, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-            </div>
-            <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Documento cliente:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     {{ form_widget(form.txtDocumentoCliente, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Novedad:</label>
-                <div class="col-sm-4">
+                <label class="col-sm-1 control-label">Novedad:</label>
+                <div class="col-sm-2">
                     {{ form_widget(form.chkEstadoNovedad) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Desde:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
-                <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-4">
+                <label class="col-sm-1 col-sm-offset-6 control-label">Despachado:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.chkEstadoDespachado) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Hasta:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     {{ form_widget(form.fechaHasta) }}
-                </div>
-                <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-4">
                 </div>
             </div>
         </div>
@@ -93,18 +89,18 @@
                 <td class="numero">{{ arGuia.vrFlete }}</td>
                 <td>{{ arGuia.estadoNovedad ? 'SI':'NO' }}</td>
                 <td>{{ arGuia.estadoNovedadSolucion ? 'SI':'NO' }}</td>
-                <td>{{ arGuia.estadoCumplido ? 'SI' :'NO'}}</td>
+                <td>{{ arGuia.estadoCumplido ? 'SI' :'NO' }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     <div class="btn-group" style="float: left">
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arGuias.getTotalItemCount }}</span>
-            </div>
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arGuias.getTotalItemCount }}
+            </span>
         </div>
     </div>
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arGuias) }}
     </div>
     <div class="btn-toolbar" style="float: right">
@@ -114,5 +110,6 @@
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
+    <br/><br/><br/>
 {% endblock %}
 

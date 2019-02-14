@@ -546,7 +546,6 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('tg.despachoRel', 'dg')
             ->leftJoin('dg.conductorRel', 'ct')
             ->where('tg.estadoEntregado = 0')
-            ->andWhere('tg.estadoDespachado = 1')
             ->andWhere('tg.estadoAnulado = 0');
         $fecha = new \DateTime('now');
         if ($session->get('filtroTtePendienteEntregaFechaDesde') != null) {
@@ -565,6 +564,14 @@ class TteGuiaRepository extends ServiceEntityRepository
                 break;
             case '1':
                 $queryBuilder->andWhere("tg.estadoNovedad = 1");
+                break;
+        }
+        switch ($session->get('filtroTteGuiaEstadoDespachado')) {
+            case '0':
+                $queryBuilder->andWhere("tg.estadoDespachado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("tg.estadoDespachado = 1");
                 break;
         }
         if ($session->get('filtroNumeroGuia')) {

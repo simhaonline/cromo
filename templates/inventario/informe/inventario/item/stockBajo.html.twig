@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtNit" class="col-sm-1 control-label">Item:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoItem,{'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                {{ form_widget(form.txtNombreItem,{'attr':{'class':'form-control'}}) }}
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('inventario_buscar_item', { 'campoCodigo': 'form_txtCodigoItem', 'campoNombre': 'form_txtNombreItem'}) }}', 'buscarItem', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                {{ form_widget(form.btnFiltrar) }}
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover tabla-informacion">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>ITEM</th>
+                <th>STOCK MINIMO</th>
+                <th>CANTIDAD DISPONIBLE</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arItem in arItems %}
+                <tr>
+                    <td>{{ arItem.codigoItemPk }}</td>
+                    <td>{{ arItem.nombre }}</td>
+                    <td>{{ arItem.stockMinimo }}</td>
+                    <td>{{ arItem.cantidadDisponible }}</td>
+                    {#<td>{{ arItem.marca }}</td>#}
+                    {#<td>{{ arItem.referencia }}</td>#}
+                    {#<td class="numero">{{ arItem.cantidad }}</td>#}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arItems.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arItems) }}
+    </div>
+    <div class="btn-group" style="float: right">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+    <br/><br/><br/>
+{% endblock %}

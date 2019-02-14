@@ -147,5 +147,22 @@ class InvItemRepository extends ServiceEntityRepository
         return $arItemes;
     }
 
+    public function stockBajo()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvItem::class, 'i')
+            ->select('i.codigoItemPk')
+            ->addSelect('i.nombre')
+            ->addSelect('i.cantidadDisponible')
+            ->addSelect('i.stockMinimo')
+            ->where('i.stockMinimo < i.cantidadDisponible')
+            ->andWhere('i.validarStock = 1');
+        if ($session->get('filtroInvInformeStockBajoItemCodigo') != '') {
+            $queryBuilder->andWhere("i.codigoItemPk = {$session->get('filtroInvInformeStockBajoItemCodigo')}");
+        }
+
+        return $queryBuilder;
+    }
+
 }
 

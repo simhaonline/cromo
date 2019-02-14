@@ -42,6 +42,7 @@
                             <th>DOCUMENTO</th>
                             <th>UND</th>
                             <th>PES</th>
+                            <th>PES FAC</th>
                             <th>VOL</th>
                             <th>DECLARADO</th>
                             <th>FLETE</th>
@@ -71,6 +72,7 @@
                                 <td style="text-align: right">{{ arFacturaDetalle.unidades | number_format(0, '.', ',')}}</td>
                                 <td style="text-align: right">{{ arFacturaDetalle.pesoReal | number_format(0, '.', ',')}}</td>
                                 <td style="text-align: right">{{ arFacturaDetalle.pesoVolumen | number_format(0, '.', ',')}}</td>
+                                <td style="text-align: right">{{ arFacturaDetalle.pesoFacturado | number_format(0, '.', ',')}}</td>
                                 {% if arFactura.estadoAutorizado == 0 %}
                                     <td style="text-align: right;"><input type="text" style="text-align: right;width:80px;" name="arrDeclara[{{ arFacturaDetalle.codigoFacturaDetallePk }}]" value="{{ arFacturaDetalle.vrDeclara }}"></td>
                                     <td style="text-align: right;"><input type="text" style="text-align: right;width:80px;" name="arrFlete[{{ arFacturaDetalle.codigoFacturaDetallePk }}]" value="{{ arFacturaDetalle.vrFlete }}"></td>

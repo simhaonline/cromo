@@ -63,9 +63,27 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             $fleteCobro = $em->getRepository(TteFactura::class)->fleteCobro($fechaDesde, $fechaHasta);
             $arIntermediacion->setVrFletePago($fletePago);
             $arIntermediacion->setVrFleteCobro($fleteCobro);
-
+            $prueba = 0;
             $ingresoTotal = 0;
-            $arrFletePagoDetallados = $em->getRepository(TteDespacho::class)->fletePagoDetallado($fechaDesde, $fechaHasta);
+            $arrFleteCobroDetallados = $em->getRepository(TteFactura::class)->fleteCobroDetallado($fechaDesde, $fechaHasta);
+            foreach ($arrFleteCobroDetallados as $arrFleteCobroDetallado) {
+                $fleteCobroFactura = $arrFleteCobroDetallado['flete'];
+                $prueba += $fleteCobroFactura;
+                $participacion = ($fleteCobroFactura / $fleteCobro) * 100;
+                $fletePagoFactura = $fletePago * $participacion / 100;
+                $arIntermediacionDetalle = new TteIntermediacionDetalle();
+                $arIntermediacionDetalle->setIntermediacionRel($arIntermediacion);
+                $arIntermediacionDetalle->setAnio($arIntermediacion->getAnio());
+                $arIntermediacionDetalle->setMes($arIntermediacion->getMes());
+                $arIntermediacionDetalle->setFecha($arIntermediacion->getFecha());
+                $arIntermediacionDetalle->setPorcentajeParticipacion($participacion);
+                $arIntermediacionDetalle->setVrFlete($fleteCobroFactura);
+                $arIntermediacionDetalle->setVrPago($fletePagoFactura);
+                $em->persist($arIntermediacionDetalle);
+            }
+
+
+            /*$arrFletePagoDetallados = $em->getRepository(TteDespacho::class)->fletePagoDetallado($fechaDesde, $fechaHasta);
             $arrFleteCobroDetallados = $em->getRepository(TteFactura::class)->fleteCobroDetallado($fechaDesde, $fechaHasta);
             foreach ($arrFletePagoDetallados as $arrFletePagoDetallado) {
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arrFletePagoDetallado['codigoDespachoTipoFk']);
@@ -97,6 +115,7 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                     $ingresoTotal += $ingreso * $arFacturaTipo->getOperacionComercial();
                 }
             }
+            */
             $arIntermediacion->setEstadoAutorizado(1);
             $arIntermediacion->setVrIngreso($ingresoTotal);
             $em->flush();

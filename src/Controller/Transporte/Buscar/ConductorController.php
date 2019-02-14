@@ -89,8 +89,8 @@ class ConductorController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('BtnFiltrar')->isClicked()) {
-                $session->set('filtroTteCiudadNombre', $form->get('TxtCodigoCiudadDestino')->getData());
-                $session->set('filtroTteCiudadCodigo', $form->get('TxtNombreCiudadDestino')->getData());
+                $session->set('filtroTteCiudadCodigoDestino', $form->get('TxtCodigoCiudadDestino')->getData());
+                $session->set('filtroTteCiudadNombreDestino', $form->get('TxtNombreCiudadDestino')->getData());
             }
         }
         $arCiudades = $paginator->paginate($em->createQuery($em->getRepository(TteCiudad::class)->listaDqlCiudadDestino()), $request->query->get('page', 1), 20);

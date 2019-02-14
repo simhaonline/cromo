@@ -1435,6 +1435,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('d.codigoConductorFk')
+            ->addSelect('d.numero AS manifiesto')
             ->addSelect('con.nombreCorto AS conductor')
             ->addSelect('g.unidades')
             ->addSelect('g.pesoReal')
@@ -1453,6 +1454,9 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->groupBy('d.codigoConductorFk')
             ->addGroupBy('g.codigoGuiaPk');
         $fecha = new \DateTime('now');
+        if ($session->get('filtroTteCiudadCodigoDestino')) {
+            $queryBuilder->andWhere("g.codigoCiudadDestinoFk = '" . $session->get('filtroTteCiudadCodigoDestino') . "'");
+        }
         if ($session->get('filtroTteCodigoConductor')) {
             $queryBuilder->andWhere("d.codigoConductorFk = '" . $session->get('filtroTteCodigoConductor') . "'");
         }

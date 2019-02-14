@@ -50,7 +50,7 @@
                 <td><input type="hidden" name="LblCodigo[]" value="{{ arConductores.codigoConductorPk }}">{{ arConductores.codigoConductorPk }} </td>
                 <td>{{ arConductores.numeroIdentificacion  }}</td>
                 <td>{{ arConductores.nombreCorto }}</td>
-                <td style="text-align: center"><a href="javascript:selTercero('{{ arConductores.codigoConductorPk }}','{{ arConductores.nombreCorto }}','{{ campoCodigo }}','{{ campoNombre }}')" ><img src="{{ asset('../public/img/bootstrap/glyphicons_198_ok.png') }}" width=20 height=20></a></td>
+                <td style="text-align: center"><a href="javascript:selTercero('{{ arConductores.codigoConductorPk }}','{{ arConductores.nombreCorto }}','{{ campoCodigo }}','{{ campoNombre }}')" ><i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a></td>
             </tr>
         {% endfor %}
     </table>

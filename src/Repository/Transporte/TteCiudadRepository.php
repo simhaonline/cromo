@@ -106,13 +106,10 @@ class TteCiudadRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder()->from(TteCiudad::class, 'c')
             ->select('c.codigoCiudadPk')
             ->addSelect('c.nombre')
-//            ->addSelect('c.nombre')
-//            ->where('c.codigoConductorPk <> 0')
             ->orderBy('c.nombre');
         if ($session->get('filtroTteCiudadNombreDestino') != '') {
             $qb->andWhere("c.nombre LIKE '%{$session->get('filtroTteCiudadNombreDestino')}%'");
         }
-
         if ($session->get('filtroTteCiudadCodigoDestino') != '') {
             $qb->andWhere("c.codigoCiudadPk ='{$session->get('filtroTteCiudadCodigoDestino')}'");
         }

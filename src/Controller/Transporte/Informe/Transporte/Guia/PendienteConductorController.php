@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,6 +22,7 @@ class PendienteConductorController extends Controller
     /**
      * @param Request $request
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/transporte/guia/pendiente/conductor", name="transporte_informe_transporte_guia_pendiente_conductor")
@@ -35,11 +37,13 @@ class PendienteConductorController extends Controller
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTtePendienteSoporteFechaHasta'))])
             ->add('chkEstadoGuiaNovedad', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteNovedadGuia'), 'required' => false])
             ->add('txtCodigoConductor', TextType::class, array('data' => $session->get('filtroTteCodigoConductor')))
+            ->add('TxtCodigoCiudadDestino', TextType::class, array('label'  => 'Codigo', 'data' => $session->get('filtroTteCiudadCodigoDestino')))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroTteCiudadCodigoDestino', $form->get('TxtCodigoCiudadDestino')->getData());
             $session->set('filtroTtePendienteSoporteFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
             $session->set('filtroTtePendienteSoporteFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
             $session->set('filtroTteCodigoConductor', $form->get('txtCodigoConductor')->getData());

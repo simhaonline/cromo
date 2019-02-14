@@ -59,7 +59,8 @@ class DespachoController extends ControllerListenerGeneral
 
     /**
      * @param Request $request
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/transporte/despacho/lista", name="transporte_movimiento_transporte_despacho_lista")

@@ -683,6 +683,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.vrFlete + tg.vrManejo AS vrTotal')
             ->addSelect('tg.vrDeclara')
             ->addSelect('tg.fechaIngreso')
+            ->addSelect('tg.codigoCumplidoFk')
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->where('tg.codigoGuiaPk <> 0');

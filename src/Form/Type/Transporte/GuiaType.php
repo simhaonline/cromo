@@ -103,7 +103,8 @@ class GuiaType extends AbstractType {
             {"campo":"estadoSoporte",                           "tipo":"bool",      "ayuda":"Soporte de entrega",                       "titulo":"S"},
             {"campo":"estadoCumplido",                          "tipo":"bool",      "ayuda":"Cumplido entregado al cliente",            "titulo":"C"},
             {"campo":"estadoFacturado",                         "tipo":"bool",      "ayuda":"Facturado",                                "titulo":"F"},
-            {"campo":"estadoNovedad",                           "tipo":"bool",      "ayuda":"Con novedad",                              "titulo":"N"}
+            {"campo":"estadoNovedad",                           "tipo":"bool",      "ayuda":"Con novedad",                              "titulo":"N"},
+            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"A"}
         ]';
         return $campos;
 
@@ -136,7 +137,8 @@ class GuiaType extends AbstractType {
             {"campo":"estadoSoporte",                           "tipo":"bool",      "ayuda":"Soporte de entrega",                       "titulo":"SOP"},
             {"campo":"estadoCumplido",                          "tipo":"bool",      "ayuda":"Cumplido entregado al cliente",            "titulo":"CUM"},
             {"campo":"estadoFacturado",                         "tipo":"bool",      "ayuda":"Facturado",                                "titulo":"FAC"},
-            {"campo":"estadoNovedad",                           "tipo":"bool",      "ayuda":"Con novedad",                              "titulo":"NOV"}
+            {"campo":"estadoNovedad",                           "tipo":"bool",      "ayuda":"Con novedad",                              "titulo":"NOV"},
+            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"}
         ]';
         return $campos;
 
@@ -164,6 +166,7 @@ class GuiaType extends AbstractType {
             {"child":"estadoDespachado",                "tipo":"ChoiceType", "propiedades":{"label":"Despachado",   "choices":{"SI":true,"NO":false}}},
             {"child":"estadoNovedad",                   "tipo":"ChoiceType", "propiedades":{"label":"Novedad",   "choices":{"SI":true,"NO":false}}},
             {"child":"estadoNovedadSolucion",           "tipo":"ChoiceType", "propiedades":{"label":"Novedad solucionada",   "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",           "tipo":"ChoiceType", "propiedades":{"label":"Anulado",   "choices":{"SI":true,"NO":false}}},
             {"child":"remitente",                       "tipo":"TextType",   "propiedades":{"label":"Remitente"}},
             {"child":"nombreDestinatario",                       "tipo":"TextType",   "propiedades":{"label":"Destinatario"}}
         ]';

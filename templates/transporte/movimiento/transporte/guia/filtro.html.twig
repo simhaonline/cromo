@@ -21,7 +21,7 @@
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.codigoDespachoFk, { 'attr': {'class': 'form-control'} }) }}
                     </div>
-                    <label class="col-sm-1 control-label">Despachado</label>
+                    <label class="col-sm-1 control-label">Despachado:</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.estadoDespachado) }}
                     </div>
@@ -58,7 +58,7 @@
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.remitente, { 'attr': {'class': 'form-control'} }) }}
                     </div>
-                    <label class="col-sm-1 control-label">Novedad(ACT)</label>
+                    <label class="col-sm-1 control-label">Novedad(ACT):</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.estadoNovedad) }}
                     </div>
@@ -76,7 +76,7 @@
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.nombreDestinatario, { 'attr': {'class': 'form-control'} }) }}
                     </div>
-                    <label class="col-sm-1 control-label">Novedad(SOL)</label>
+                    <label class="col-sm-1 control-label">Novedad(SOL):</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.estadoNovedadSolucion) }}
                     </div>
@@ -85,6 +85,10 @@
                     <label class="col-sm-1 control-label">Hasta:</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.fechaIngresoHasta) }}
+                    </div>
+                    <label class="col-sm-1 col-sm-offset-6 control-label">Anulado:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.estadoAnulado) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">

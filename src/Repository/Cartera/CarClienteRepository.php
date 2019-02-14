@@ -33,14 +33,14 @@ class CarClienteRepository extends ServiceEntityRepository
             ->addSelect('cc.numeroIdentificacion')
             ->where('cc.codigoClientePk <> 0')
             ->orderBy('cc.codigoClientePk', 'DESC');
-        if ($session->get('filtroTteNombreCliente') != '') {
-            $queryBuilder->andWhere("cc.nombreCorto LIKE '%{$session->get('filtroTteNombreCliente')}%' ");
+        if ($session->get('filtroCarNombreCliente') != '') {
+            $queryBuilder->andWhere("cc.nombreCorto LIKE '%{$session->get('filtroCarNombreCliente')}%' ");
         }
-        if ($session->get('filtroNitCliente') != '') {
-            $queryBuilder->andWhere("cc.numeroIdentificacion LIKE '%{$session->get('filtroTteNitCliente')}%' ");
+        if ($session->get('filtroCarNitCliente') != '') {
+            $queryBuilder->andWhere("cc.numeroIdentificacion LIKE '%{$session->get('filtroCarNitCliente')}%' ");
         }
-        if ($session->get('filtroTteCodigoCliente') != '') {
-            $queryBuilder->andWhere("cc.codigoClientePk LIKE '%{$session->get('filtroTteCodigoCliente')}%' ");
+        if ($session->get('filtroCarCodigoCliente') != '') {
+            $queryBuilder->andWhere("cc.codigoClientePk LIKE '%{$session->get('filtroCarCodigoCliente')}%' ");
         }
 
         return $queryBuilder;

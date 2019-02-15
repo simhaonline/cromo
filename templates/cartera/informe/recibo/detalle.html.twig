@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoCliente) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="form_txtNombreCorto" class="form-control" readonly>
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Numero:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.txtNumero) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                {{ form_widget(form.btnFiltrar) }}
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>RECIBO</th>
+                <th>NUMERO FACTURA</th>
+                <th>TIPO</th>
+                <th>DESCUENTO</th>
+                <th>RTE ICA</th>
+                <th>RTE IVA</th>
+                <th>RTE FUENTE</th>
+                <th>OTRO DESCUENTO</th>
+                <th>OTRO INGRESO</th>
+                <th>AJUSTE PESO</th>
+                <th>PAGO</th>
+                <th>TOTAL</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arreciboDetalle in arReciboDetalles %}
+                <tr>
+                    <td>{{ arreciboDetalle.codigoReciboDetallePk }}</td>
+                    <td>{{ arreciboDetalle.numero }}</td>
+                    <td>{{ arreciboDetalle.numeroFactura }}</td>
+                    <td>{{ arreciboDetalle.nombre }}</td>
+                    <td class="numero">{{ arreciboDetalle.vrDescuento | number_format }}</td>
+                    <td class="numero">{{ arreciboDetalle.vrRetencionIca | number_format }}</td>
+                    <td class="numero">{{ arreciboDetalle.vrRetencionIva | number_format }}</td>
+                    <td class="numero">{{ arreciboDetalle.vrRetencionFuente | number_format }}</td>
+                    <td class="numero">{{ arreciboDetalle.vrOtroDescuento | number_format }}</td>
+                    <td class="numero">{{ arreciboDetalle.vrOtroIngreso | number_format }}</td>
+                    <td class="numero">{{ arreciboDetalle.vrAjustePeso | number_format }}</td>
+                    <td class="numero">{{ arreciboDetalle.vrPago | number_format }}</td>
+                    <td class="numero">{{ arreciboDetalle.vrPagoAfectar | number_format }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arReciboDetalles.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arReciboDetalles) }}
+    </div>
+    <div class="btn-group" style="float: right">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
+    <br/><br/><br/>
+    {{ form_end(form) }}
+    {{ form_end(form) }}
+{% endblock %}

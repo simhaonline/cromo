@@ -195,4 +195,41 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getResult() ;
     }
+
+    public function detalle()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarReciboDetalle::class, 'rd')
+            ->select('rd.codigoReciboDetallePk')
+            ->addSelect('rd.numeroFactura')
+            ->addSelect('r.numero')
+            ->addSelect('cct.nombre')
+            ->addSelect('rd.vrDescuento')
+            ->addSelect('rd.vrRetencionIca')
+            ->addSelect('rd.vrRetencionIva')
+            ->addSelect('rd.vrRetencionFuente')
+            ->addSelect('rd.vrOtroDescuento')
+            ->addSelect('rd.vrOtroIngreso')
+            ->addSelect('rd.vrAjustePeso')
+            ->addSelect('rd.vrPago')
+            ->addSelect('rd.vrPagoAfectar')
+            ->leftJoin('rd.reciboRel', 'r')
+            ->leftJoin('rd.cuentaCobrarTipoRel', 'cct')
+            ->where('r.codigoReciboPk <> 0')
+            ->orderBy('r.estadoAprobado', 'ASC')
+            ->addOrderBy('r.fecha', 'DESC');
+        if($session->get('filtroCarCodigoCliente')){
+            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        if($session->get('filtroCarReciboNumero') != ''){
+            $queryBuilder->andWhere("r.numero = {$session->get('filtroCarReciboNumero')}");
+        }
+        if ($session->get('filtroInvInformeReciboDetalleFechaDesde') != null) {
+            $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroInvInformeReciboDetalleFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroInvInformeReciboDetalleFechaHasta') != null) {
+            $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroInvInformeReciboDetalleFechaHasta')} 23:59:59'");
+        }
+        return $queryBuilder;
+    }
 }

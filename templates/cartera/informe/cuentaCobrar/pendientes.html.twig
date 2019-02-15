@@ -97,6 +97,7 @@
             <th>VALOR</th>
             <th>ABONO</th>
             <th>SALDO</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -116,7 +117,7 @@
                 <td class="numero">{{ arCuentaCobrar.vrSaldoOriginal | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arCuentaCobrar.vrAbono | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arCuentaCobrar.vrSaldo | number_format(0, '.', ',') }}</td>
-
+                <td><a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('cartera_informe_cuentaCobrar_cuentaCobrar_aplicar',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">Aplicar</a></td>
             </tr>
         {% endfor %}
         </tbody>

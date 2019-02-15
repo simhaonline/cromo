@@ -1,0 +1,74 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+                <tr>
+                    <td class="titulo">CODIGO:</td>
+                    <td class="td-in-well">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
+                    <td class="titulo">NUMERO DOCUMENTO:</td>
+                    <td class="td-in-well" style="text-transform: uppercase;">{{ arCuentaCobrar.numeroDocumento }}</td>
+                    <td class="titulo">ABONO:</td>
+                    <td align="right">{{ arCuentaCobrar.vrAbono | number_format(0, '.', ',') }}</td>
+                </tr>
+                <tr>
+                    <td class="titulo">TIPO:</td>
+                    <td class="td-in-well">{{ arCuentaCobrar.codigoCuentaCobrarTipoFk }}</td>
+                    <td class="titulo">FECHA:</td>
+                    <td class="td-in-well"
+                        style="text-transform: uppercase;">{{ arCuentaCobrar.fecha | date('Y-m-d') }}</td>
+                    <td class="titulo">SALDO:</td>
+                    <td align="right">{{ arCuentaCobrar.vrSaldo | number_format(0, '.', ',') }}</td>
+                </tr>
+                <tr>
+                    <td class="titulo">NUMERO REFERENCIA:</td>
+                    <td class="td-in-well">{{ arCuentaCobrar.numeroReferencia }}</td>
+                    <td class="titulo">VENCE:</td>
+                    <td class="td-in-well"
+                        style="text-transform: uppercase;">{{ arCuentaCobrar.fechaVence | date('Y-m-d') }}</td>
+                    <td class="titulo">TOTAL:</td>
+                    <td align="right">{{ arCuentaCobrar.vrTotal | number_format(0, '.', ',') }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>PLAZO</th>
+            <th>TIPO</th>
+            <th>NUMERO</th>
+            <th>FECHA</th>
+            <th>VENCE</th>
+            <th style="text-align: right">VALOR</th>
+            <th style="text-align: center">SALDO</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {%for arCuentasCobrarAplicar in arCuentasCobrarAplicar %}
+        <tr>
+            <td>{{arCuentasCobrarAplicar.codigoCuentaCobrarPk}}</td>
+            <td>{{arCuentasCobrarAplicar.plazo}}</td>
+            <td>{{arCuentasCobrarAplicar.nombre}}</td>
+            <td>{{arCuentasCobrarAplicar.numeroDocumento}}</td>
+            <td>{{arCuentasCobrarAplicar.fecha | date('Y-m-d')}}</td>
+            <td>{{arCuentasCobrarAplicar.fechaVence | date('Y-m-d')}}</td>
+            <td style="text-align: right">{{ arCuentasCobrarAplicar.vrTotal | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right"><input width="60px" style="text-align: right" type="text" name="TxtSaldo{{ arCuentasCobrarAplicar.codigoCuentaCobrarPk }}" value="{{ arCuentasCobrarAplicar.vrSaldo  }}" size="8" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
+            <td><button class="btn btn-default btn-xs" type="submit" name="OpAplicar" value="{{ arCuentasCobrarAplicar.codigoCuentaCobrarPk }}">Aplicar</button></td>
+            {%endfor%}
+        </tr>
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCuentasCobrarAplicar.getTotalItemCount }}</span></div>
+    </div>
+    <div class="btn-group btn-sm" style="float: left;margin-left: 0px;padding-top: 0px;">
+        {{ knp_pagination_render(arCuentasCobrarAplicar) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

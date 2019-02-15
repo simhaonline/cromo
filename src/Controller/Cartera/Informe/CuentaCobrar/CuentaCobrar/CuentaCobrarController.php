@@ -2,6 +2,7 @@
 
 namespace App\Controller\Cartera\Informe\CuentaCobrar\CuentaCobrar;
 
+use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarReciboDetalle;
@@ -10,6 +11,7 @@ use App\Formato\Cartera\CarteraEdad;
 use App\Formato\Cartera\CarteraEdadCliente;
 use App\Formato\Cartera\CuentaCobrar;
 use App\General\General;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -109,6 +111,66 @@ class CuentaCobrarController extends Controller
         return $this->render('cartera/informe/cuentaCobrar/referencia.html.twig',[
             'arCuentaCobrar' => $arCuentaCobrar,
             'arReciboDetalles' => $arReciboDetalles
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/cartera/informe/cuentaCobrar/cuentaCobrar/aplicar/{id}", name="cartera_informe_cuentaCobrar_cuentaCobrar_aplicar")
+     */
+    public function aplicar(Request $request, $id){
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                if ($request->request->get('OpAplicar')) {
+                    set_time_limit(0);
+                    ini_set("memory_limit", -1);
+                    $arrControles = $request->request->All();
+                    $codigoCuentaCobrarAplicar = $request->request->get('OpAplicar');
+                    $vrAplicar = isset($arrControles['TxtSaldo' . $codigoCuentaCobrarAplicar]) && $arrControles['TxtSaldo' . $codigoCuentaCobrarAplicar] != '' ? $arrControles['TxtSaldo' . $codigoCuentaCobrarAplicar] : 0;
+
+                    if ($arCuentaCobrar->getVrSaldo() >= $vrAplicar) {
+                        $saldo = $arCuentaCobrar->getVrSaldo() - $vrAplicar;
+                        $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+                        $arCuentaCobrar->setVrSaldo($saldo);
+                        $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                        $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $vrAplicar);
+                        $em->persist($arCuentaCobrar);
+
+                        $arCuentaCobrarAplicar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrarAplicar);
+                        $saldo = $arCuentaCobrarAplicar->getVrSaldo() - $vrAplicar;
+                        $saldoOperado = $saldo * $arCuentaCobrarAplicar->getOperacion();
+                        $arCuentaCobrar->setVrSaldo($saldo);
+                        $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                        $arCuentaCobrar->setVrAbono($arCuentaCobrarAplicar->getVrAbono() + $vrAplicar);
+                        $em->persist($arCuentaCobrarAplicar);
+
+                        $arAplicacion = new CarAplicacion();
+                        $arAplicacion->setCuentaCobrarRel($arCuentaCobrar);
+                        $arAplicacion->setCuentaCobrarAplicacionRel($arCuentaCobrarAplicar);
+                        $arAplicacion->setVrAplicacion($vrAplicar);
+                        $em->persist($arAplicacion);
+
+                        $em->flush();
+                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    } else {
+                        Mensajes::error("El valor a aplicar es mayor al saldo");
+                    }
+                }
+            }
+        }
+        $arCuentasCobrarAplicar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrarAplicar($arCuentaCobrar->getCodigoClienteFk());
+        $arCuentasCobrarAplicar = $paginator->paginate($arCuentasCobrarAplicar, $request->query->get('page', 1), 50);
+        return $this->render('cartera/informe/cuentaCobrar/aplicar.html.twig',[
+            'arCuentaCobrar' => $arCuentaCobrar,
+            'arCuentasCobrarAplicar' => $arCuentasCobrarAplicar,
+            'form' => $form->createView()
         ]);
     }
 

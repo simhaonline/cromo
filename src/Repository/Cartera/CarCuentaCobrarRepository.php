@@ -3,6 +3,7 @@
 namespace App\Repository\Cartera;
 
 
+use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Utilidades\Mensajes;
@@ -171,6 +172,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
             ->select('cc.codigoCuentaCobrarPk')
             ->addSelect('cc.numeroDocumento')
+            ->addSelect('cc.numeroReferencia')
             ->addSelect('cc.vrTotal')
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.plazo')
@@ -429,32 +431,32 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             $abonos = 0;
             $queryBuilder = $em->createQueryBuilder()->from(CarReciboDetalle::class, 'rd')
                 ->Select("SUM(rd.vrPagoAfectar) AS totalAfectar")
-                ->where("rd.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk']);
+                ->where("rd.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
+            ->orWhere("rd.codigoCuentaCobrarAplicacionTipoFk = " . $arCuentaCobrar['codigoCuentaCobrarPk']);
             $arrResultado = $queryBuilder->getQuery()->getSingleResult();
             if ($arrResultado) {
-                $abonos = $arrResultado['totalAfectar'];
-                if($abonos== null) {
-                    $abonos = 0;
+                if($arrResultado['totalAfectar']) {
+                    $abonos += $arrResultado['totalAfectar'];
                 }
             }
-            $abonosAplicacion = 0;
-            $queryBuilder = $em->createQueryBuilder()->from(CarReciboDetalle::class, 'rd')
-                ->Select("SUM(rd.vrPagoAfectar) AS totalAfectar")
-                ->where("rd.codigoCuentaCobrarAplicacionFk = " . $arCuentaCobrar['codigoCuentaCobrarPk']);
+
+            $queryBuilder = $em->createQueryBuilder()->from(CarAplicacion::class, 'a')
+                ->Select("SUM(a.vrAplicacion) as vrAplicacion")
+                ->where("a.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
+            ->orWhere("a.codigoCuentaCobrarAplicacionFk = " . $arCuentaCobrar['codigoCuentaCobrarPk']);
             $arrResultado = $queryBuilder->getQuery()->getSingleResult();
             if ($arrResultado) {
-                $abonosAplicacion = $arrResultado['totalAfectar'];
-                if($abonosAplicacion== null) {
-                    $abonosAplicacion = 0;
+                if($arrResultado['vrAplicacion']) {
+                    $abonos += $arrResultado['vrAplicacion'];
                 }
             }
-            $totalAbonos = $abonos + $abonosAplicacion;
-            $saldo = $arCuentaCobrar['vrSaldoOriginal'] - $totalAbonos;
+
+            $saldo = $arCuentaCobrar['vrSaldoOriginal'] - $abonos;
             $saldoOperado = $saldo * $arCuentaCobrar['operacion'];
             $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar['codigoCuentaCobrarPk']);
             $arCuentaCobrarAct->setVrSaldo($saldo);
             $arCuentaCobrarAct->setVrSaldoOperado($saldoOperado);
-            $arCuentaCobrarAct->setVrAbono($totalAbonos);
+            $arCuentaCobrarAct->setVrAbono($abonos);
             $em->persist($arCuentaCobrarAct);
         }
         $em->flush();

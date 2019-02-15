@@ -146,17 +146,18 @@ class CuentaCobrarController extends Controller
                         $arCuentaCobrarAplicar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrarAplicar);
                         $saldo = $arCuentaCobrarAplicar->getVrSaldo() - $vrAplicar;
                         $saldoOperado = $saldo * $arCuentaCobrarAplicar->getOperacion();
-                        $arCuentaCobrar->setVrSaldo($saldo);
-                        $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
-                        $arCuentaCobrar->setVrAbono($arCuentaCobrarAplicar->getVrAbono() + $vrAplicar);
+                        $arCuentaCobrarAplicar->setVrSaldo($saldo);
+                        $arCuentaCobrarAplicar->setVrSaldoOperado($saldoOperado);
+                        $arCuentaCobrarAplicar->setVrAbono($arCuentaCobrarAplicar->getVrAbono() + $vrAplicar);
                         $em->persist($arCuentaCobrarAplicar);
 
                         $arAplicacion = new CarAplicacion();
                         $arAplicacion->setCuentaCobrarRel($arCuentaCobrar);
                         $arAplicacion->setCuentaCobrarAplicacionRel($arCuentaCobrarAplicar);
                         $arAplicacion->setVrAplicacion($vrAplicar);
+                        $arAplicacion->setUsuario($this->getUser()->getUsername());
+                        $arAplicacion->setFecha(new \DateTime('now'));
                         $em->persist($arAplicacion);
-
                         $em->flush();
                         echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                     } else {
@@ -165,7 +166,7 @@ class CuentaCobrarController extends Controller
                 }
             }
         }
-        $arCuentasCobrarAplicar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrarAplicar($arCuentaCobrar->getCodigoClienteFk());
+        $arCuentasCobrarAplicar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrarAplicar($arCuentaCobrar);
         $arCuentasCobrarAplicar = $paginator->paginate($arCuentasCobrarAplicar, $request->query->get('page', 1), 50);
         return $this->render('cartera/informe/cuentaCobrar/aplicar.html.twig',[
             'arCuentaCobrar' => $arCuentaCobrar,

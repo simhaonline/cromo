@@ -22,6 +22,11 @@ class CarAplicacion
     private $codigoAplicacionPk;
 
     /**
+     * @ORM\Column(name="fecha", type="date", nullable=true)
+     */
+    private $fecha;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_cobrar_fk", type="integer", nullable=true)
      */
     private $codigoCuentaCobrarFk;
@@ -35,6 +40,11 @@ class CarAplicacion
      * @ORM\Column(name="vr_aplicacion", type="float", nullable=true)
      */
     private $vrAplicacion = 0;
+
+    /**
+     * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
+     */
+    private $usuario;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrar", inversedBy="aplicacionsCuentaCobrarRel")
@@ -62,6 +72,22 @@ class CarAplicacion
     public function setCodigoAplicacionPk( $codigoAplicacionPk ): void
     {
         $this->codigoAplicacionPk = $codigoAplicacionPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha( $fecha ): void
+    {
+        $this->fecha = $fecha;
     }
 
     /**
@@ -110,6 +136,22 @@ class CarAplicacion
     public function setVrAplicacion( $vrAplicacion ): void
     {
         $this->vrAplicacion = $vrAplicacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario( $usuario ): void
+    {
+        $this->usuario = $usuario;
     }
 
     /**

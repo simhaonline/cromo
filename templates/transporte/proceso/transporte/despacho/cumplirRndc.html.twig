@@ -74,9 +74,7 @@
                 <td {% if arDespacho.estadoSoporte == 0 %} class="danger" {% endif %}>{{ arDespacho.estadoSoporte?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespacho.estadoAnulado?'SI':'NO' }}</td>
                 <td>
-                    {% if arDespacho.estadoSoporte == 1 %}
-                        <button class="btn btn-default btn-xs" type="submit" name="OpCumplir" value="{{ arDespacho.codigoDespachoPk }}">Cumplir</button>
-                    {% endif %}
+                    <button class="btn btn-default btn-xs" type="submit" name="OpCumplir" value="{{ arDespacho.codigoDespachoPk }}">Cumplir</button>
                 </td>
             </tr>
         {% endfor %}

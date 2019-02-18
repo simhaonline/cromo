@@ -1024,11 +1024,12 @@ class TteDespachoRepository extends ServiceEntityRepository
                               </root>";
                 $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strXML));
                 $cadena_xml = simplexml_load_string($respuesta);
-                if ($cadena_xml->ErrorMSG != "") {
+                $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
+                if ($cadena_xml->ErrorMSG != "" && substr($errorRespuesta, 0, 9) != "DUPLICADO") {
                     $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
                     Mensajes::error($errorRespuesta);
                 } else {
-                    if ($cadena_xml->ingresoid) {
+                    if ($cadena_xml->ingresoid || substr($errorRespuesta, 0, 9) == "DUPLICADO") {
                         $strXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
                             <root>
                                 <acceso>
@@ -1043,7 +1044,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                     <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
                                     <NUMMANIFIESTOCARGA>" . $arDespacho->getNumero() . "</NUMMANIFIESTOCARGA>
                                     <TIPOCUMPLIDOMANIFIESTO>C</TIPOCUMPLIDOMANIFIESTO>
-                                    <FECHAENTREGADOCUMENTOS>" . $arDespacho->getFechaSoporte()->format('d/m/Y') . "</FECHAENTREGADOCUMENTOS>
+                                    <FECHAENTREGADOCUMENTOS>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHAENTREGADOCUMENTOS>
                                     <VALORADICIONALHORASCARGUE>0</VALORADICIONALHORASCARGUE>                                    
                                     <VALORSOBREANTICIPO>0</VALORSOBREANTICIPO>";
 

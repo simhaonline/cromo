@@ -132,13 +132,16 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.loteFk')
             ->addSelect('rd.codigoBodegaFk')
             ->addSelect('t.nombreCorto AS tercero')
+            ->addSelect('rt.nombre as tipo')
             ->leftJoin('rd.itemRel', 'i')
             ->leftJoin('rd.remisionRel', 'r')
             ->leftJoin('r.terceroRel', 't')
+            ->leftJoin('r.remisionTipoRel','rt')
             ->where('r.estadoAnulado = 0')
             ->andWhere('r.estadoAprobado = 1')
             ->andWhere('rd.cantidadPendiente > 0')
             ->andWhere('r.codigoTerceroFk = ' . $codigoTercero)
+            ->andWhere('rt.devolucion = 0')
             ->orderBy('r.numero', 'ASC');
         if($session->get('filtroInvRemisionNumero')){
             $queryBuilder->andWhere("r.numero = '{$session->get('filtroInvRemisionNumero')}'");

@@ -4,6 +4,7 @@ namespace App\Controller\General\Informe\Log;
 
 use App\Controller\Estructura\AdministracionController;
 use App\Controller\Estructura\EntityListener;
+use App\Entity\General\GenLog;
 use App\Entity\General\GenModelo;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
@@ -36,7 +37,7 @@ class LogController extends Controller {
         $strFechaHasta = $dateFecha->format('Y/m/') . $intUltimoDia;
         $dateFechaDesde = date_create($strFechaDesde);
         $dateFechaHasta = date_create($strFechaHasta);
-        $qbGenLog=$em->getRepository('App:General\GenLog')->lista();
+
         $form = $this->createFormBuilder()
             ->add('txtCodigoRegistro', TextType::class, ['required' => false, 'data' => $session->get('filtroGenLogCodigoRegistro'), 'attr' => ['class' => 'form-control']])
             ->add('dtmFechaDesde', DateType::class, ['format'=>'yyyyMMdd', 'data' => $dateFechaDesde])
@@ -95,16 +96,17 @@ class LogController extends Controller {
         }
         if ($form->isSubmitted() && $form->isValid()) {
         if($form->get('btnExcel')->isClicked()){
-            $arGenlogExecute=$qbGenLog->getQuery()->getResult();
+            /*$arGenlogExecute=$qbGenLog->getQuery()->getResult();
             foreach ($arGenlogExecute as $arGenlogEx ){
                 $arGenlogEx['camposSeguimiento']=json_decode($arGenlogEx['camposSeguimiento'],true);
             }
-            $this->generarExcel($arGenlogExecute,"Log");
+            $this->generarExcel($arGenlogExecute,"Log");*/
         }
         }
-        $arGenLog= $paginator->paginate($qbGenLog,$request->query->getInt('page',1),20);
+        $arLogs=$em->getRepository(GenLog::class)->lista()->getQuery()->getResult();
+        //$arGenLog= $paginator->paginate($qbGenLog,$request->query->getInt('page',1),20);
         return $this->render('general/log/lista.html.twig',
-            ['arGenLog' => $arGenLog,
+            ['arGenLog' => $arLogs,
                 'form' => $form->createView()]);
     }
 

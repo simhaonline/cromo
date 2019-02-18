@@ -28,7 +28,7 @@ class GenLogRepository extends ServiceEntityRepository
             ->orderBy('gl.fecha','DESC');
 
         if ($session->get('filtroGenLogCodigoRegistro') != '') {
-            $queryBuilder->andWhere("gl.codigoRegistroPk LIKE '%{$session->get('filtroGenLogCodigoRegistro')}%' ");
+            $queryBuilder->andWhere("gl.codigoRegistroPk = '{$session->get('filtroGenLogCodigoRegistro')}' ");
         }
         if($session->get('filtroGenLogFechaDesde')||$session->get('filtroGenLogFechaHasta')){
             $queryBuilder->andWhere("gl.fecha >='{$session->get('filtroGenLogFechaDesde')}'")
@@ -40,7 +40,7 @@ class GenLogRepository extends ServiceEntityRepository
         if($session->get('filtroGenLogModelo')){
             $queryBuilder->andWhere("gl.nombreEntidad='{$session->get('filtroGenLogModelo')}'");
         }
-
+        $queryBuilder->setMaxResults(100);
         return $queryBuilder;
     }
 

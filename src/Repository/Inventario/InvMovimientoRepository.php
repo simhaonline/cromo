@@ -588,7 +588,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $respuesta = 'El detalle con id ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . ' tiene cantidad 0.';
                 break;
             }
-            if ($arMovimiento->getCodigoDocumentoTipoFk() == "FAC") {
+            if ($arMovimiento->getCodigoDocumentoTipoFk() == "FAC" && $arMovimiento->getOperacionInventario() == -1) {
                 $arLote = $this->getEntityManager()->getRepository(InvLote::class)
                     ->findOneBy(['loteFk' => $arMovimientoDetalle['loteFk'], 'codigoItemFk' => $arMovimientoDetalle['codigoItemFk']]);
                 $arItem = $this->getEntityManager()->getRepository(InvItem::class)

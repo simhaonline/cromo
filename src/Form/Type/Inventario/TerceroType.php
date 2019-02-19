@@ -26,6 +26,7 @@ class TerceroType extends AbstractType
                         ->orderBy('i.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
+                'required' => true,
                 'label' => 'Identificacion tipo:'
             ])
             ->add('ciudadRel', EntityType::class, [
@@ -35,7 +36,7 @@ class TerceroType extends AbstractType
                         ->orderBy('c.nombre');
                 },
                 'choice_label' => 'nombre',
-                'required' => false,
+                'required' => true,
                 'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('precioCompraRel', EntityType::class, [

@@ -24,7 +24,7 @@ class InvTercero
     private $codigoTerceroPk;
 
     /**
-     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=3, nullable=true)
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=3, nullable=false)
      */
     private $codigoIdentificacionFk;
 
@@ -34,7 +34,7 @@ class InvTercero
     private $numeroIdentificacion;
 
     /**
-     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=false)
      */
     private $codigoCiudadFk;
 
@@ -263,6 +263,22 @@ class InvTercero
     public function setNumeroIdentificacion($numeroIdentificacion): void
     {
         $this->numeroIdentificacion = $numeroIdentificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
     }
 
     /**
@@ -588,6 +604,22 @@ class InvTercero
     /**
      * @return mixed
      */
+    public function getCupoCompra()
+    {
+        return $this->cupoCompra;
+    }
+
+    /**
+     * @param mixed $cupoCompra
+     */
+    public function setCupoCompra($cupoCompra): void
+    {
+        $this->cupoCompra = $cupoCompra;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getIdentificacionRel()
     {
         return $this->identificacionRel;
@@ -652,6 +684,22 @@ class InvTercero
     /**
      * @return mixed
      */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getOrdenesTerceroRel()
     {
         return $this->ordenesTerceroRel;
@@ -700,6 +748,22 @@ class InvTercero
     /**
      * @return mixed
      */
+    public function getCotizacionesTerceroRel()
+    {
+        return $this->cotizacionesTerceroRel;
+    }
+
+    /**
+     * @param mixed $cotizacionesTerceroRel
+     */
+    public function setCotizacionesTerceroRel($cotizacionesTerceroRel): void
+    {
+        $this->cotizacionesTerceroRel = $cotizacionesTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSucursalesTerceroRel()
     {
         return $this->sucursalesTerceroRel;
@@ -730,86 +794,6 @@ class InvTercero
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCotizacionesTerceroRel()
-    {
-        return $this->cotizacionesTerceroRel;
-    }
-
-    /**
-     * @param mixed $cotizacionesTerceroRel
-     */
-    public function setCotizacionesTerceroRel($cotizacionesTerceroRel): void
-    {
-        $this->cotizacionesTerceroRel = $cotizacionesTerceroRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCiudadFk()
-    {
-        return $this->codigoCiudadFk;
-    }
-
-    /**
-     * @param mixed $codigoCiudadFk
-     */
-    public function setCodigoCiudadFk($codigoCiudadFk): void
-    {
-        $this->codigoCiudadFk = $codigoCiudadFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCiudadRel()
-    {
-        return $this->ciudadRel;
-    }
-
-    /**
-     * @param mixed $ciudadRel
-     */
-    public function setCiudadRel($ciudadRel): void
-    {
-        $this->ciudadRel = $ciudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCupoCompra()
-    {
-        return $this->cupoCompra;
-    }
-
-    /**
-     * @param mixed $cupoCompra
-     */
-    public function setCupoCompra($cupoCompra): void
-    {
-        $this->cupoCompra = $cupoCompra;
-    }
-
-    /**
      * @return mixed
      */
     public function getImportacionesTerceroRel()
@@ -820,7 +804,7 @@ class InvTercero
     /**
      * @param mixed $importacionesTerceroRel
      */
-    public function setImportacionesTerceroRel( $importacionesTerceroRel ): void
+    public function setImportacionesTerceroRel($importacionesTerceroRel): void
     {
         $this->importacionesTerceroRel = $importacionesTerceroRel;
     }
@@ -852,7 +836,7 @@ class InvTercero
     /**
      * @param mixed $costosTerceroRel
      */
-    public function setCostosTerceroRel( $costosTerceroRel ): void
+    public function setCostosTerceroRel($costosTerceroRel): void
     {
         $this->costosTerceroRel = $costosTerceroRel;
     }

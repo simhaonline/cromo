@@ -139,7 +139,7 @@ class RelacionCajaController extends ControllerListenerGeneral
                     $em->flush();
                     $this->getDoctrine()->getRepository(TteRelacionCaja::class)->liquidar($id);
                 }
-                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', array('codigoRelacionCaja' => $id)));
+                return $this->redirect($this->generateUrl('transporte_movimiento_control_relacioncaja_detalle', array('id' => $id)));
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteRecibo::class)->relacionCaja($id), "Relacion caja detalle");

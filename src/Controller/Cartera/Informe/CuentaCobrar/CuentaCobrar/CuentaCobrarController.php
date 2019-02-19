@@ -72,7 +72,13 @@ class CuentaCobrarController extends Controller
             }
             $session->set('filtroCarNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
             $session->set('filtroCarCuentaCobrarNumero', $form->get('txtNumero')->getData());
-            $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
+            if(is_numeric($form->get('txtCodigoCliente')->getData())) {
+                $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
+            } else {
+                $session->set('filtroCarCodigoCliente', null);
+                Mensajes::error("El codigo del cliente debe ser numerico");
+            }
+
             $session->set('filtroCarNombreCliente', $form->get('txtNombreCorto')->getData());
             $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
             $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));

@@ -64,8 +64,8 @@
                 style="text-align: right;">{{ arMovimiento.vrRetencionFuente | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo">ASESOR:</td>
-            <td class="td-in-well">{{ arMovimiento.asesorRel.nombre | default('') }}</td>
+            <td class="titulo">SUCURSAL:</td>
+            <td class="td-in-well">{{ arMovimiento.codigoSucursalFk }}-{{ arMovimiento.sucursalRel.nombre | default('') }}</td>
             <td class="titulo"></td>
             <td class="td-in-well" style="text-align: left;"></td>
             <td class="titulo">(-)RTE IVA:</td>
@@ -73,8 +73,8 @@
                 style="text-align: right;">{{ arMovimiento.vrRetencionIva | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">ASESOR:</td>
+            <td class="td-in-well">{{ arMovimiento.asesorRel.nombre | default('') }}</td>
             <td class="titulo"></td>
             <td class="td-in-well" style="text-align: left;"></td>
             <td class="titulo">AUTORETENCION:</td>

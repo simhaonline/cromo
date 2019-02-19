@@ -1171,6 +1171,11 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->andWhere('d.estadoAprobado = 1')
             ->orderBy('d.codigoDespachoTipoFk', 'ASC')
             ->addOrderBy('d.fechaSalida', 'DESC');
+
+        if ($session->get('filtroTteDespachoCodigoDespachoTipo')) {
+            $queryBuilder->andWhere("d.codigoDespachoTipoFk = '{$session->get('filtroTteDespachoCodigoDespachoTipo')}'");
+        }
+
         return $queryBuilder;
 
     }

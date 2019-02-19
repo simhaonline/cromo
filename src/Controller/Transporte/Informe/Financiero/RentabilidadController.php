@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Informe\Financiero;
 
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteDespacho;
+use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteNovedad;
 use App\Formato\Transporte\Rentabilidad;
@@ -29,6 +30,7 @@ class RentabilidadController extends Controller
      */
     public function lista(Request $request)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $fecha = new \DateTime('now');
@@ -37,6 +39,7 @@ class RentabilidadController extends Controller
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
+            ->add('cboDespachoTipoRel', EntityType::class, $em->getRepository(TteDespachoTipo::class)->llenarCombo())
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
@@ -47,6 +50,12 @@ class RentabilidadController extends Controller
                     if($form->get('fechaDesde')->getData() && $form->get('fechaHasta')->getData()) {
                         $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
                         $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
+                        $arDespachoTipo = $form->get('cboDespachoTipoRel')->getData();
+                        if ($arDespachoTipo) {
+                            $session->set('filtroTteDespachoCodigoDespachoTipo', $arDespachoTipo->getCodigoDespachoTipoPk());
+                        } else {
+                            $session->set('filtroTteDespachoCodigoDespachoTipo', null);
+                        }
                         $queryBuilder = $this->getDoctrine()->getRepository(TteDespacho::class)->rentabilidad($fechaDesde, $fechaHasta);
                         $arDespachos = $queryBuilder->getQuery()->getResult();
                         $arDespachos = $paginator->paginate($arDespachos, $request->query->getInt('page', 1), 1000);

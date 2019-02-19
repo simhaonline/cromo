@@ -2,8 +2,12 @@
 
 namespace App\Repository\Cartera;
 
+use App\Entity\Cartera\CarAnticipo;
 use App\Entity\Cartera\CarCliente;
+use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarRecibo;
 use App\Entity\Financiero\FinTercero;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -88,4 +92,44 @@ class CarClienteRepository extends ServiceEntityRepository
         return $arTercero;
     }
 
+    public function unificar()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCliente::class, 'c')
+            ->select('COUNT(c.codigoClientePk) as cantidad')
+            ->addSelect('c.codigoIdentificacionFk')
+            ->addSelect('c.numeroIdentificacion')
+            ->groupBy('c.codigoIdentificacionFk')
+            ->addGroupBy('c.numeroIdentificacion');
+        $arClientes = $queryBuilder->getQuery()->getResult();
+        foreach ($arClientes as $arCliente) {
+            if($arCliente['cantidad']>1) {
+                $arClienteFijo = $em->getRepository(CarCliente::class)->findOneBy(array('codigoIdentificacionFk' => $arCliente['codigoIdentificacionFk'], 'numeroIdentificacion' => $arCliente['numeroIdentificacion']), array('codigoClientePk' => 'ASC'));
+                $arClientesActualizar = $em->getRepository(CarCliente::class)->findBy(array('codigoIdentificacionFk' => $arCliente['codigoIdentificacionFk'], 'numeroIdentificacion' => $arCliente['numeroIdentificacion']));
+                foreach ($arClientesActualizar as $arClienteActualizar) {
+                    if($arClienteActualizar->getCodigoClientePk() != $arClienteFijo->getCodigoClientePk(9)) {
+                        $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->findBy(array('codigoClienteFk' => $arClienteActualizar->getCodigoClientePk()));
+                        foreach ($arCuentasCobrar as $arCuentaCobrar) {
+                            $arCuentaCobrar->setClienteRel($arClienteFijo);
+                            $em->persist($arCuentaCobrar);
+                        }
+
+                        $arRecibos = $em->getRepository(CarRecibo::class)->findBy(array('codigoClienteFk' => $arClienteActualizar->getCodigoClientePk()));
+                        foreach ($arRecibos as $arRecibo) {
+                            $arRecibo->setClienteRel($arClienteFijo);
+                            $em->persist($arRecibo);
+                        }
+
+                        $arAnticipos = $em->getRepository(CarAnticipo::class)->findBy(array('codigoClienteFk' => $arClienteActualizar->getCodigoClientePk()));
+                        foreach ($arAnticipos as $arAnticipo) {
+                            $arAnticipo->setClienteRel($arClienteFijo);
+                            $em->persist($arAnticipo);
+                        }
+                    }
+                }
+            }
+        }
+        $em->flush();
+        return true;
+    }
 }

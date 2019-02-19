@@ -97,6 +97,24 @@ class CarCliente
     private $contactoTelefono;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="carClientesIdentificacionRel")
+     * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
+     */
+    private $identificacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenFormaPago", inversedBy="carClientesFormaPagoRel")
+     * @ORM\JoinColumn(name="codigo_forma_pago_fk", referencedColumnName="codigo_forma_pago_pk")
+     */
+    protected $formaPagoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="carClientesCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="CarCuentaCobrar", mappedBy="clienteRel")
      */
     protected $cuentaCobrarClientesRel;
@@ -120,24 +138,6 @@ class CarCliente
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo", mappedBy="clienteRel")
      */
     protected $anticiposClienteRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="carClientesIdentificacionRel")
-     * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
-     */
-    private $identificacionRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenFormaPago", inversedBy="carClientesFormaPagoRel")
-     * @ORM\JoinColumn(name="codigo_forma_pago_fk", referencedColumnName="codigo_forma_pago_pk")
-     */
-    protected $formaPagoRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="carClientesCiudadRel")
-     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
-     */
-    protected $ciudadRel;
 
     /**
      * @return array

@@ -69,7 +69,7 @@ class GuiaController extends ControllerListenerGeneral
                 FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
-        $datos = $this->getDatosLista(true);
+        $datos = $this->getDatosLista(true, false);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 $this->exportarExcel($datos['queryBuilder']);

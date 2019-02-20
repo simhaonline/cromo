@@ -20,7 +20,7 @@ abstract class BaseController extends Controller
     /**
      * @return array
      */
-    protected function getDatosLista($filtro = false)
+    protected function getDatosLista($filtro = false, $paginar = true)
     {
 
         $paginator = $this->get('knp_paginator');
@@ -34,11 +34,17 @@ abstract class BaseController extends Controller
             $queryBuilder = $this->getGenerarQueryConFiltro($nombreRepositorio, $camposFiltro);
         }
         /** @var  $queryBuilder QueryBuilder */
+        if($paginar) {
+            $arrDatos = $paginator->paginate($queryBuilder->getQuery(), $this->request->query->getInt('page', 1), 30);
+        } else {
+            $arrDatos =$queryBuilder->getQuery()->getResult();
+        }
         return [
             'queryBuilder' => $queryBuilder,
             'ruta' => strtolower($this->modulo) . "_" . strtolower($this->funcion) . "_" . strtolower($this->grupo) . "_" . strtolower($this->nombre),
             'arrCampos' => $campos,
-            'arDatos' => $paginator->paginate($queryBuilder->getQuery(), $this->request->query->getInt('page', 1), 30)
+            'arDatos' => $arrDatos,
+            'paginar' => $paginar
         ];
     }
 
@@ -282,6 +288,7 @@ abstract class BaseController extends Controller
                 }
             }
         }
+        $queryBuilder->setMaxResults(15000);
         return $queryBuilder;
     }
 
@@ -406,7 +413,7 @@ abstract class BaseController extends Controller
         } else if (isset($camposTabla) && count($camposTabla) > 0) {
             $queryBuilder->orderBy('e.' . $camposTabla[0]->campo, 'DESC');
         }
-
+        $queryBuilder->setMaxResults(30);
         return $queryBuilder;
     }
 

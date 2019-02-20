@@ -71,6 +71,7 @@
     {% endfor %}
     </tbody>
 </table>
+{% if arrDatosLista.paginar %}
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">Registros
             <span class="badge">{{ arrDatosLista.arDatos.getTotalItemCount }}
@@ -80,3 +81,4 @@
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arrDatosLista.arDatos) }}
     </div>
+{% endif %}

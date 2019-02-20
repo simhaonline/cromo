@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Informe\Transporte\Guia;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -68,19 +69,29 @@ class GuiasClienteController extends Controller
                         if($codigoCliente != "") {
                             $arCliente = $em->getRepository(TteCliente::class)->find($codigoCliente);
                             if($arCliente) {
-                                $destinatario = explode(';', strtolower($arCliente->getCorreo()));
-                                $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->guiasCliente($codigoCliente)->getQuery()->getResult();
-                                $cuerpo = $this->render('transporte/informe/transporte/guia/correo.html.twig', [
-                                    'arGuias' => $arGuias,
-                                    'form' => $form->createView()]);
-                                $message = (new \Swift_Message('Guias cliente'))
-                                    ->setFrom('infologicuartas@gmail.com')
-                                    ->setTo($destinatario)
-                                    ->setBody(
-                                        $cuerpo,
-                                        'text/html'
-                                    );
-                                $mailer->send($message);
+                                $correo = strtolower($arCliente->getCorreo());
+                                if($correo) {
+                                    $pos = strpos($correo, ",");
+                                    if ($pos === false) {
+                                        $destinatario = explode(';', $correo);
+                                        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->guiasCliente($codigoCliente)->getQuery()->getResult();
+                                        $cuerpo = $this->render('transporte/informe/transporte/guia/correo.html.twig', [
+                                            'arGuias' => $arGuias,
+                                            'form' => $form->createView()]);
+                                        $message = (new \Swift_Message('Guias cliente'))
+                                            ->setFrom('infologicuartas@gmail.com')
+                                            ->setTo($destinatario)
+                                            ->setBody(
+                                                $cuerpo,
+                                                'text/html'
+                                            );
+                                        $mailer->send($message);
+                                    } else {
+                                        Mensajes::error("El correo del cliente " .$correo. " contiene carcteres invalidos");
+                                    }
+                                } else {
+                                    Mensajes::error("El cliente no tiene correo asignado");
+                                }
                             }
                             $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->guiasCliente($codigoCliente);
                         }

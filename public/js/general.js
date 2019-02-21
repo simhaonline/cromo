@@ -28,7 +28,19 @@ function ChequearTodosTabla(source, nombre) {
     }
 }
 
-
+var validarNumeros = function (event) {
+    var input = event.target;
+    var tecla = event.keyCode;
+    var valorIngresado = String.fromCharCode(tecla);
+    /**
+     * Validamos que no haya más de un punto.
+     */
+    var puntos = (input.value.match(/\./g) || []).length;
+    if ((valorIngresado !== '.' && isNaN(valorIngresado)) || (puntos >= 1 && valorIngresado === '.')) {
+        event.preventDefault();
+        return false;
+    }
+}
 
 /**
  * Función para convertir los combobox en select2.

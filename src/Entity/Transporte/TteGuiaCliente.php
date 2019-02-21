@@ -49,6 +49,21 @@ class TteGuiaCliente
     private $estadoActivo = false;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TteGuiaTipo", inversedBy="guiasClientesGuiaTipoRel")
+     * @ORM\JoinColumn(name="codigo_guia_tipo_fk", referencedColumnName="codigo_guia_tipo_pk")
+     * @Assert\NotBlank(
+     *     message="Debe seleccionar un tipo"
+     * )
+     */
+    private $guiaTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCliente", inversedBy="guiasClientesClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    private $clienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGuiaClientePk()
@@ -143,6 +158,39 @@ class TteGuiaCliente
     {
         $this->estadoActivo = $estadoActivo;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiaTipoRel()
+    {
+        return $this->guiaTipoRel;
+    }
+
+    /**
+     * @param mixed $guiaTipoRel
+     */
+    public function setGuiaTipoRel($guiaTipoRel): void
+    {
+        $this->guiaTipoRel = $guiaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
 
 
 }

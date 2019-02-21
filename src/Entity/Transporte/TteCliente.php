@@ -200,6 +200,11 @@ class TteCliente
     protected $guiasClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteGuiaCliente", mappedBy="clienteRel")
+     */
+    protected $guiasClientesClienteRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteRecogida", mappedBy="clienteRel")
      */
     protected $recogidasClienteRel;
@@ -946,6 +951,22 @@ class TteCliente
     public function setGuiasTemporalesClienteRel($guiasTemporalesClienteRel): void
     {
         $this->guiasTemporalesClienteRel = $guiasTemporalesClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasClientesClienteRel()
+    {
+        return $this->guiasClientesClienteRel;
+    }
+
+    /**
+     * @param mixed $guiasClientesClienteRel
+     */
+    public function setGuiasClientesClienteRel($guiasClientesClienteRel): void
+    {
+        $this->guiasClientesClienteRel = $guiasClientesClienteRel;
     }
 
 

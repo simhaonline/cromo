@@ -114,6 +114,11 @@ class TteGuiaTipo
     protected $guiasGuiaTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteGuiaCliente", mappedBy="guiaTipoRel")
+     */
+    protected $guiasClientesGuiaTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGuiaTipoPk()
@@ -351,6 +356,22 @@ class TteGuiaTipo
     public function setCodigoFormaPago($codigoFormaPago): void
     {
         $this->codigoFormaPago = $codigoFormaPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasClientesGuiaTipoRel()
+    {
+        return $this->guiasClientesGuiaTipoRel;
+    }
+
+    /**
+     * @param mixed $guiasClientesGuiaTipoRel
+     */
+    public function setGuiasClientesGuiaTipoRel($guiasClientesGuiaTipoRel): void
+    {
+        $this->guiasClientesGuiaTipoRel = $guiasClientesGuiaTipoRel;
     }
 
 

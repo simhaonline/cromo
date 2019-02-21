@@ -72,6 +72,8 @@ class GuiaController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true, false);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
                 $this->exportarExcel($datos['queryBuilder']);
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {

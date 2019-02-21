@@ -15,7 +15,7 @@
                         <div class="row">
                             <div class="col-lg-2">
                                 <div class="input-group">
-                                    {{ form_widget(form.txtCodigoTercero) }}
+                                    {{ form_widget(form.txtCodigoTercero, { 'attr': {'class': 'form-control','onkeypress':'return validarNumeros(event);'} }) }}
                                 </div>
                             </div>
                             <div class="col-lg-10">
@@ -57,7 +57,7 @@
                         {{ form_widget(form.fechaHasta) }}
                     </div>
                 </div>
-                <div class="modal-footer">a
+                <div class="modal-footer">
                     <div class="col-sm-offset-2 col-sm-10">
                         {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                     </div>

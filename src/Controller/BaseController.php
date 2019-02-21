@@ -288,7 +288,7 @@ abstract class BaseController extends Controller
                 }
             }
         }
-        $queryBuilder->setMaxResults(15000);
+        $queryBuilder->setMaxResults(20000);
         return $queryBuilder;
     }
 

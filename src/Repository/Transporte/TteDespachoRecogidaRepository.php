@@ -380,6 +380,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     $arRegistro->setDescripcion('FLETE PAGADO');
+                                    $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
+                                    $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
                                     $em->persist($arRegistro);
                                 } else {
                                     $error = "El tipo de despacho no tiene configurada la cuenta para el flete pagado";
@@ -420,6 +422,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                         $arRegistro->setVrBase($arDespachoRecogida['vrFletePago']);
                                     }
                                     $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
+                                    $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
                                     $em->persist($arRegistro);
                                 } else {
                                     $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
@@ -460,6 +464,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                         $arRegistro->setVrBase($arDespachoRecogida['vrFletePago']);
                                     }
                                     $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
+                                    $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
                                     $em->persist($arRegistro);
                                 } else {
                                     $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
@@ -497,6 +503,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
+                                    $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
                                     $em->persist($arRegistro);
                                 } else {
                                     $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
@@ -534,6 +542,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
+                                    $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
                                     $em->persist($arRegistro);
                                 } else {
                                     $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
@@ -571,6 +581,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
+                                    $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
                                     $em->persist($arRegistro);
                                 } else {
                                     $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
@@ -608,6 +620,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
+                                    $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
                                     $em->persist($arRegistro);
                                 } else {
                                     $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
@@ -645,6 +659,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
+                                    $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
                                     $em->persist($arRegistro);
                                 } else {
                                     $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
@@ -653,7 +669,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                             }
 
                             //Saldo
-                            if ($arDespachoRecogida['vrSaldo'] > 0) {
+
                                 $descripcion = "POR PAGAR";
                                 $cuenta = $arDespachoRecogida['codigoCuentaPagarFk'];
                                 if ($cuenta) {
@@ -682,12 +698,14 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                                         $arRegistro->setNaturaleza('C');
                                     }
                                     $arRegistro->setDescripcion($descripcion);
+                                    $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
+                                    $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
                                     $em->persist($arRegistro);
                                 } else {
                                     $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
                                     break;
                                 }
-                            }
+
 
                             $arDespachoAct = $em->getRepository(TteDespachoRecogida::class)->find($arDespachoRecogida['codigoDespachoRecogidaPk']);
                             $arDespachoAct->setEstadoContabilizado(1);

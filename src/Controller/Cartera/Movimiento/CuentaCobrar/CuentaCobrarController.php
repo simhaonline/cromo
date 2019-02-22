@@ -5,6 +5,7 @@ namespace App\Controller\Cartera\Movimiento\CuentaCobrar;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Form\Type\Compra\CuentaPagarType;
@@ -96,12 +97,12 @@ class CuentaCobrarController extends ControllerListenerGeneral
     public function referencia($id){
         $em = $this->getDoctrine()->getManager();
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
-        $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(['codigoCuentaCobrarFk' => $id]);
-        $arReciboDetallesAplicacion = $em->getRepository(CarReciboDetalle::class)->findBy(['codigoCuentaCobrarAplicacionFk' => $id]);
+        $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->detalleReferencia($id);
+        $arAplicaciones = $em->getRepository(CarAplicacion::class)->referencia($id);
         return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/referencia.html.twig',[
             'arCuentaCobrar' => $arCuentaCobrar,
             'arReciboDetalles' => $arReciboDetalles,
-            'arReciboDetallesAplicacion' => $arReciboDetallesAplicacion
+            'arAplicaciones' => $arAplicaciones
         ]);
     }
 }

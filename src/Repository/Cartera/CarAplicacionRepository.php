@@ -46,4 +46,17 @@ class CarAplicacionRepository extends ServiceEntityRepository
         }
     }
 
+    public function referencia($codigoCuentaCobrar)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarAplicacion::class, 'a')
+            ->select('a.codigoAplicacionPk')
+            ->addSelect('a.numeroDocumento')
+            ->addSelect('a.numeroDocumentoAplicacion')
+            ->addSelect('a.estadoAnulado')
+            ->addSelect('a.vrAplicacion')
+            ->where('a.codigoCuentaCobrarFk = ' . $codigoCuentaCobrar)
+            ->orWhere('a.codigoCuentaCobrarAplicacionFk = ' . $codigoCuentaCobrar);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

@@ -232,4 +232,29 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function detalleReferencia($codigoCuentaCobrar)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarReciboDetalle::class, 'rd')
+            ->select('rd.codigoReciboDetallePk')
+            ->addSelect('rd.numeroFactura')
+            ->addSelect('r.numero')
+            ->addSelect('cct.nombre')
+            ->addSelect('rd.vrDescuento')
+            ->addSelect('rd.vrRetencionIca')
+            ->addSelect('rd.vrRetencionIva')
+            ->addSelect('rd.vrRetencionFuente')
+            ->addSelect('rd.vrOtroDescuento')
+            ->addSelect('rd.vrOtroIngreso')
+            ->addSelect('rd.vrAjustePeso')
+            ->addSelect('rd.vrPago')
+            ->addSelect('rd.vrPagoAfectar')
+            ->leftJoin('rd.reciboRel', 'r')
+            ->leftJoin('rd.cuentaCobrarTipoRel', 'cct')
+            ->where('rd.codigoCuentaCobrarFk = ' . $codigoCuentaCobrar)
+            ->orWhere('rd.codigoCuentaCobrarAplicacionFk = ' . $codigoCuentaCobrar)
+            ->orderBy('r.estadoAprobado', 'ASC')
+            ->addOrderBy('r.fecha', 'DESC');
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

@@ -10,31 +10,31 @@
             <div class="panel-body">
                 {% include 'estructura/buscarClienteCartera.html.twig' %}
                 <div class="form-group form-group-sm">
-                    <label for="" class="control-label col-sm-1">No.documento:</label>
+                    <label for="" class="control-label col-sm-1">NUMERO:</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.numeroDocumento) }}
                     </div>
-                    <label for="" class="control-label col-sm-1">No.referencia:</label>
+                    <label for="" class="control-label col-sm-1">REFERENCIA(NUMERO):</label>
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.numeroReferencia) }}
                     </div>
-                    <label for="" class="control-label col-sm-1">Código:</label>
+                    <label for="" class="control-label col-sm-1">CODIGO:</label>
                     <div class="col-sm-5">
                         {{ form_widget(formFiltro.codigoCuentaCobrarPk) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label for="" class="control-label col-sm-1">Desde</label>
+                    <label for="" class="control-label col-sm-1">DESDE</label>
                     <div class="col-sm-5">
                         {{ form_widget(formFiltro.fechaDesde) }}
                     </div>
-                    <label for="" class="control-label col-sm-1">Tipo:</label>
+                    <label for="" class="control-label col-sm-1">TIPO:</label>
                     <div class="col-sm-5">
                         {{ form_widget(formFiltro.codigoCuentaCobrarTipoFk) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label for="" class="control-label col-sm-1">Hasta</label>
+                    <label for="" class="control-label col-sm-1">HASTA</label>
                     <div class="col-sm-5">
                         {{ form_widget(formFiltro.fechaHasta) }}
                     </div>

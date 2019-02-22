@@ -107,21 +107,6 @@ class CuentaCobrarController extends Controller
     /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/cartera/informe/cuentaCobrar/cuentaCobrar/referencia/{id}", name="cartera_informe_cuentaCobrar_cuentaCobrar_referencia")
-     */
-    public function referencia($id){
-        $em = $this->getDoctrine()->getManager();
-        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
-        $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(['codigoCuentaCobrarFk' => $id]);
-        return $this->render('cartera/informe/cuentaCobrar/referencia.html.twig',[
-            'arCuentaCobrar' => $arCuentaCobrar,
-            'arReciboDetalles' => $arReciboDetalles
-        ]);
-    }
-
-    /**
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/cartera/informe/cuentaCobrar/cuentaCobrar/aplicar/{id}", name="cartera_informe_cuentaCobrar_cuentaCobrar_aplicar")
      */
     public function aplicar(Request $request, $id){

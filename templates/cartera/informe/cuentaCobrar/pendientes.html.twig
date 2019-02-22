@@ -97,13 +97,14 @@
             <th>VALOR</th>
             <th>ABONO</th>
             <th>SALDO</th>
+            <th>SALDO(O)</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
         {% for arCuentaCobrar in arCuentasCobrar %}
             <tr>
-                <td><a href="javascript:abrirVentana3('{{ path('cartera_informe_cuentaCobrar_cuentaCobrar_referencia',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</a></td>
+                <td><a href="javascript:abrirVentana3('{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_referencia',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</a></td>
                 <td>{{ arCuentaCobrar.numeroDocumento }}</td>
                 <td>{{ arCuentaCobrar.numeroReferencia }}</td>
                 <td>{{ arCuentaCobrar.tipo }}</td>
@@ -117,7 +118,12 @@
                 <td class="numero">{{ arCuentaCobrar.vrSaldoOriginal | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arCuentaCobrar.vrAbono | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arCuentaCobrar.vrSaldo | number_format(0, '.', ',') }}</td>
-                <td><a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('cartera_informe_cuentaCobrar_cuentaCobrar_aplicar',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">Aplicar</a></td>
+                <td class="numero">{{ arCuentaCobrar.vrSaldoOperado | number_format(0, '.', ',') }}</td>
+                <td>
+                    {% if arCuentaCobrar.vrSaldoOperado > 0 %}
+                        <a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('cartera_informe_cuentaCobrar_cuentaCobrar_aplicar',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">Aplicar</a>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>

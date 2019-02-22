@@ -543,6 +543,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                             $query->execute();
 
                             $arFactura->setVrTotal(0);
+                            $arFactura->setVrTotalOperado(0);
                             $arFactura->setVrSubtotal(0);
                             $arFactura->setVrFlete(0);
                             $arFactura->setVrManejo(0);

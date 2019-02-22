@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ form_errors(form) }}
 <div id="content sortable-grid ui-sortable">
     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
@@ -38,7 +38,7 @@
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_TxtCodigo" class="col-sm-1 control-label">Desde:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
                 <label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>
@@ -48,7 +48,7 @@
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_TxtCodigo" class="col-sm-1 control-label">Hasta:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     {{ form_widget(form.fechaHasta) }}
                 </div>
                 <label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>

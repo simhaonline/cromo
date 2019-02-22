@@ -196,6 +196,17 @@ class NotaCredito extends \FPDF {
     }
 
     public function Footer() {
+        $this->SetXY(10, 200);
+
+        $this->Line(10, 260,60,260);
+        $this->SetFont('Arial', 'B', 10);
+        $this->Text(18, 267, "FIRMA ELABORADO");
+        $this->Line(80, 260,130,260);
+        $this->SetFont('Arial', 'B', 10);
+        $this->Text(90, 267, "FIRMA REVISADO");
+        $this->Line(140, 260,200,260);
+        $this->SetFont('Arial', 'B', 10);
+        $this->Text(155, 267, "FIRMA APROBADO");
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }

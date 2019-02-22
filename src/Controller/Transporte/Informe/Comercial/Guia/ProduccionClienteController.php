@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Formato\Transporte\PendienteDespachoRuta;
 use App\Formato\Transporte\ProduccionCliente;
+use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,8 +40,8 @@ class ProduccionClienteController extends Controller
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $fecha])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $fecha])
             ->add('chkMercanciaPeligrosa', CheckboxType::class, array('label' => ' ','required' => false, 'data' => $session->get('filtroMercanciaPeligrosa')))
             ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
@@ -52,6 +53,12 @@ class ProduccionClienteController extends Controller
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked()) {
                     $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                    if(is_numeric($form->get('txtCodigoCliente')->getData())) {
+                        $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                    } else {
+                        $session->set('filtroTteCodigoCliente', null);
+                    }
+
                     $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
                     $arGuiaTipo = $form->get('cboGuiaTipoRel')->getData();
                     if ($arGuiaTipo) {

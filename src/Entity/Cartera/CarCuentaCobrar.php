@@ -129,12 +129,12 @@ class CarCuentaCobrar
     /**
      * @ORM\Column(name="estado_aprobado", type="boolean", options={"default":true})
      */
-    private $estadoAprobado = 1;
+    private $estadoAprobado = true;
 
     /**
      * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":true})
      */
-    private $estadoAutorizado = 1;
+    private $estadoAutorizado = true;
 
     /**
      * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : false})
@@ -215,7 +215,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $codigoCuentaCobrarPk
      */
-    public function setCodigoCuentaCobrarPk( $codigoCuentaCobrarPk ): void
+    public function setCodigoCuentaCobrarPk($codigoCuentaCobrarPk): void
     {
         $this->codigoCuentaCobrarPk = $codigoCuentaCobrarPk;
     }
@@ -231,7 +231,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $codigoClienteFk
      */
-    public function setCodigoClienteFk( $codigoClienteFk ): void
+    public function setCodigoClienteFk($codigoClienteFk): void
     {
         $this->codigoClienteFk = $codigoClienteFk;
     }
@@ -247,7 +247,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $codigoAsesorFk
      */
-    public function setCodigoAsesorFk( $codigoAsesorFk ): void
+    public function setCodigoAsesorFk($codigoAsesorFk): void
     {
         $this->codigoAsesorFk = $codigoAsesorFk;
     }
@@ -263,7 +263,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $codigoCuentaCobrarTipoFk
      */
-    public function setCodigoCuentaCobrarTipoFk( $codigoCuentaCobrarTipoFk ): void
+    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
     {
         $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
     }
@@ -279,7 +279,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $modulo
      */
-    public function setModulo( $modulo ): void
+    public function setModulo($modulo): void
     {
         $this->modulo = $modulo;
     }
@@ -295,7 +295,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $codigoDocumento
      */
-    public function setCodigoDocumento( $codigoDocumento ): void
+    public function setCodigoDocumento($codigoDocumento): void
     {
         $this->codigoDocumento = $codigoDocumento;
     }
@@ -311,7 +311,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $numeroDocumento
      */
-    public function setNumeroDocumento( $numeroDocumento ): void
+    public function setNumeroDocumento($numeroDocumento): void
     {
         $this->numeroDocumento = $numeroDocumento;
     }
@@ -327,7 +327,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $numeroReferencia
      */
-    public function setNumeroReferencia( $numeroReferencia ): void
+    public function setNumeroReferencia($numeroReferencia): void
     {
         $this->numeroReferencia = $numeroReferencia;
     }
@@ -343,7 +343,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $fecha
      */
-    public function setFecha( $fecha ): void
+    public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
     }
@@ -359,7 +359,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $fechaVence
      */
-    public function setFechaVence( $fechaVence ): void
+    public function setFechaVence($fechaVence): void
     {
         $this->fechaVence = $fechaVence;
     }
@@ -375,7 +375,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $soporte
      */
-    public function setSoporte( $soporte ): void
+    public function setSoporte($soporte): void
     {
         $this->soporte = $soporte;
     }
@@ -391,7 +391,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $plazo
      */
-    public function setPlazo( $plazo ): void
+    public function setPlazo($plazo): void
     {
         $this->plazo = $plazo;
     }
@@ -407,7 +407,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $vrSubtotal
      */
-    public function setVrSubtotal( $vrSubtotal ): void
+    public function setVrSubtotal($vrSubtotal): void
     {
         $this->vrSubtotal = $vrSubtotal;
     }
@@ -423,7 +423,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $vrIva
      */
-    public function setVrIva( $vrIva ): void
+    public function setVrIva($vrIva): void
     {
         $this->vrIva = $vrIva;
     }
@@ -439,7 +439,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $vrTotal
      */
-    public function setVrTotal( $vrTotal ): void
+    public function setVrTotal($vrTotal): void
     {
         $this->vrTotal = $vrTotal;
     }
@@ -455,7 +455,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $vrAbono
      */
-    public function setVrAbono( $vrAbono ): void
+    public function setVrAbono($vrAbono): void
     {
         $this->vrAbono = $vrAbono;
     }
@@ -471,7 +471,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $vrSaldoOriginal
      */
-    public function setVrSaldoOriginal( $vrSaldoOriginal ): void
+    public function setVrSaldoOriginal($vrSaldoOriginal): void
     {
         $this->vrSaldoOriginal = $vrSaldoOriginal;
     }
@@ -487,7 +487,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $vrSaldo
      */
-    public function setVrSaldo( $vrSaldo ): void
+    public function setVrSaldo($vrSaldo): void
     {
         $this->vrSaldo = $vrSaldo;
     }
@@ -503,7 +503,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $vrSaldoOperado
      */
-    public function setVrSaldoOperado( $vrSaldoOperado ): void
+    public function setVrSaldoOperado($vrSaldoOperado): void
     {
         $this->vrSaldoOperado = $vrSaldoOperado;
     }
@@ -519,7 +519,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $operacion
      */
-    public function setOperacion( $operacion ): void
+    public function setOperacion($operacion): void
     {
         $this->operacion = $operacion;
     }
@@ -535,7 +535,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $vrRetencionFuente
      */
-    public function setVrRetencionFuente( $vrRetencionFuente ): void
+    public function setVrRetencionFuente($vrRetencionFuente): void
     {
         $this->vrRetencionFuente = $vrRetencionFuente;
     }
@@ -551,7 +551,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $vrRetencionIva
      */
-    public function setVrRetencionIva( $vrRetencionIva ): void
+    public function setVrRetencionIva($vrRetencionIva): void
     {
         $this->vrRetencionIva = $vrRetencionIva;
     }
@@ -567,7 +567,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $estadoAprobado
      */
-    public function setEstadoAprobado( $estadoAprobado ): void
+    public function setEstadoAprobado($estadoAprobado): void
     {
         $this->estadoAprobado = $estadoAprobado;
     }
@@ -583,7 +583,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $estadoAutorizado
      */
-    public function setEstadoAutorizado( $estadoAutorizado ): void
+    public function setEstadoAutorizado($estadoAutorizado): void
     {
         $this->estadoAutorizado = $estadoAutorizado;
     }
@@ -599,7 +599,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $estadoAnulado
      */
-    public function setEstadoAnulado( $estadoAnulado ): void
+    public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
     }
@@ -615,7 +615,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $diasVencimiento
      */
-    public function setDiasVencimiento( $diasVencimiento ): void
+    public function setDiasVencimiento($diasVencimiento): void
     {
         $this->diasVencimiento = $diasVencimiento;
     }
@@ -631,7 +631,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $rango
      */
-    public function setRango( $rango ): void
+    public function setRango($rango): void
     {
         $this->rango = $rango;
     }
@@ -647,7 +647,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $comentario
      */
-    public function setComentario( $comentario ): void
+    public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
     }
@@ -663,7 +663,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $vrAjustePesoSistema
      */
-    public function setVrAjustePesoSistema( $vrAjustePesoSistema ): void
+    public function setVrAjustePesoSistema($vrAjustePesoSistema): void
     {
         $this->vrAjustePesoSistema = $vrAjustePesoSistema;
     }
@@ -679,7 +679,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $codigoCentroCostoFk
      */
-    public function setCodigoCentroCostoFk( $codigoCentroCostoFk ): void
+    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
     {
         $this->codigoCentroCostoFk = $codigoCentroCostoFk;
     }
@@ -695,7 +695,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $cuentaCobrarTipoRel
      */
-    public function setCuentaCobrarTipoRel( $cuentaCobrarTipoRel ): void
+    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
     {
         $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
     }
@@ -711,7 +711,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $clienteRel
      */
-    public function setClienteRel( $clienteRel ): void
+    public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
     }
@@ -727,7 +727,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $asesorRel
      */
-    public function setAsesorRel( $asesorRel ): void
+    public function setAsesorRel($asesorRel): void
     {
         $this->asesorRel = $asesorRel;
     }
@@ -743,7 +743,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $recibosDetallesCuentaCobrarRel
      */
-    public function setRecibosDetallesCuentaCobrarRel( $recibosDetallesCuentaCobrarRel ): void
+    public function setRecibosDetallesCuentaCobrarRel($recibosDetallesCuentaCobrarRel): void
     {
         $this->recibosDetallesCuentaCobrarRel = $recibosDetallesCuentaCobrarRel;
     }
@@ -759,7 +759,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $recibosDetallesCuentaCobrarAplicacionRel
      */
-    public function setRecibosDetallesCuentaCobrarAplicacionRel( $recibosDetallesCuentaCobrarAplicacionRel ): void
+    public function setRecibosDetallesCuentaCobrarAplicacionRel($recibosDetallesCuentaCobrarAplicacionRel): void
     {
         $this->recibosDetallesCuentaCobrarAplicacionRel = $recibosDetallesCuentaCobrarAplicacionRel;
     }
@@ -775,7 +775,7 @@ class CarCuentaCobrar
     /**
      * @param mixed $aplicacionesCuentaCobrarRel
      */
-    public function setAplicacionesCuentaCobrarRel( $aplicacionesCuentaCobrarRel ): void
+    public function setAplicacionesCuentaCobrarRel($aplicacionesCuentaCobrarRel): void
     {
         $this->aplicacionesCuentaCobrarRel = $aplicacionesCuentaCobrarRel;
     }
@@ -791,11 +791,10 @@ class CarCuentaCobrar
     /**
      * @param mixed $aplicacionesCuentaCobrarAplicacionRel
      */
-    public function setAplicacionesCuentaCobrarAplicacionRel( $aplicacionesCuentaCobrarAplicacionRel ): void
+    public function setAplicacionesCuentaCobrarAplicacionRel($aplicacionesCuentaCobrarAplicacionRel): void
     {
         $this->aplicacionesCuentaCobrarAplicacionRel = $aplicacionesCuentaCobrarAplicacionRel;
     }
-
 
 
 

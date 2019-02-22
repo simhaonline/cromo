@@ -76,7 +76,6 @@ class CuentaCobrarController extends Controller
                 $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
             } else {
                 $session->set('filtroCarCodigoCliente', null);
-                Mensajes::error("El codigo del cliente debe ser numerico");
             }
 
             $session->set('filtroCarNombreCliente', $form->get('txtNombreCorto')->getData());
@@ -163,6 +162,8 @@ class CuentaCobrarController extends Controller
                         $arAplicacion->setVrAplicacion($vrAplicar);
                         $arAplicacion->setUsuario($this->getUser()->getUsername());
                         $arAplicacion->setFecha(new \DateTime('now'));
+                        $arAplicacion->setNumeroDocumento($arCuentaCobrar->getNumeroDocumento());
+                        $arAplicacion->setNumeroDocumentoAplicacion($arCuentaCobrarAplicar->getNumeroDocumento());
                         $em->persist($arAplicacion);
                         $em->flush();
                         echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

@@ -5,7 +5,7 @@ namespace App\Entity\Cartera;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Cartera\CarAplicacioneRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Cartera\CarAplicacionRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class CarAplicacion
@@ -37,6 +37,16 @@ class CarAplicacion
     private $codigoCuentaCobrarAplicacionFk;
 
     /**
+     * @ORM\Column(name="numero_documento", type="string", length=30, nullable=true)
+     */
+    private $numeroDocumento;
+
+    /**
+     * @ORM\Column(name="numero_documento_aplicacion", type="string", length=30, nullable=true)
+     */
+    private $numeroDocumentoAplicacion;
+
+    /**
      * @ORM\Column(name="vr_aplicacion", type="float", nullable=true)
      */
     private $vrAplicacion = 0;
@@ -47,13 +57,28 @@ class CarAplicacion
     private $usuario;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrar", inversedBy="aplicacionsCuentaCobrarRel")
+     * @ORM\Column(name="estado_aprobado", type="boolean", options={"default":true})
+     */
+    private $estadoAprobado = true;
+
+    /**
+     * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":true})
+     */
+    private $estadoAutorizado = true;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoAnulado = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrar", inversedBy="aplicacionesCuentaCobrarRel")
      * @ORM\JoinColumn(name="codigo_cuenta_cobrar_fk", referencedColumnName="codigo_cuenta_cobrar_pk")
      */
     protected $cuentaCobrarRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CarCuentaCobrar", inversedBy="aplicacionsCuentaCobrarAplicacionRel")
+     * @ORM\ManyToOne(targetEntity="CarCuentaCobrar", inversedBy="aplicacionesCuentaCobrarAplicacionRel")
      * @ORM\JoinColumn(name="codigo_cuenta_cobrar_aplicacion_fk", referencedColumnName="codigo_cuenta_cobrar_pk")
      */
     protected $cuentaCobrarAplicacionRel;
@@ -69,7 +94,7 @@ class CarAplicacion
     /**
      * @param mixed $codigoAplicacionPk
      */
-    public function setCodigoAplicacionPk( $codigoAplicacionPk ): void
+    public function setCodigoAplicacionPk($codigoAplicacionPk): void
     {
         $this->codigoAplicacionPk = $codigoAplicacionPk;
     }
@@ -85,7 +110,7 @@ class CarAplicacion
     /**
      * @param mixed $fecha
      */
-    public function setFecha( $fecha ): void
+    public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
     }
@@ -101,7 +126,7 @@ class CarAplicacion
     /**
      * @param mixed $codigoCuentaCobrarFk
      */
-    public function setCodigoCuentaCobrarFk( $codigoCuentaCobrarFk ): void
+    public function setCodigoCuentaCobrarFk($codigoCuentaCobrarFk): void
     {
         $this->codigoCuentaCobrarFk = $codigoCuentaCobrarFk;
     }
@@ -117,7 +142,7 @@ class CarAplicacion
     /**
      * @param mixed $codigoCuentaCobrarAplicacionFk
      */
-    public function setCodigoCuentaCobrarAplicacionFk( $codigoCuentaCobrarAplicacionFk ): void
+    public function setCodigoCuentaCobrarAplicacionFk($codigoCuentaCobrarAplicacionFk): void
     {
         $this->codigoCuentaCobrarAplicacionFk = $codigoCuentaCobrarAplicacionFk;
     }
@@ -133,7 +158,7 @@ class CarAplicacion
     /**
      * @param mixed $vrAplicacion
      */
-    public function setVrAplicacion( $vrAplicacion ): void
+    public function setVrAplicacion($vrAplicacion): void
     {
         $this->vrAplicacion = $vrAplicacion;
     }
@@ -149,9 +174,57 @@ class CarAplicacion
     /**
      * @param mixed $usuario
      */
-    public function setUsuario( $usuario ): void
+    public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
     }
 
     /**
@@ -165,7 +238,7 @@ class CarAplicacion
     /**
      * @param mixed $cuentaCobrarRel
      */
-    public function setCuentaCobrarRel( $cuentaCobrarRel ): void
+    public function setCuentaCobrarRel($cuentaCobrarRel): void
     {
         $this->cuentaCobrarRel = $cuentaCobrarRel;
     }
@@ -181,10 +254,44 @@ class CarAplicacion
     /**
      * @param mixed $cuentaCobrarAplicacionRel
      */
-    public function setCuentaCobrarAplicacionRel( $cuentaCobrarAplicacionRel ): void
+    public function setCuentaCobrarAplicacionRel($cuentaCobrarAplicacionRel): void
     {
         $this->cuentaCobrarAplicacionRel = $cuentaCobrarAplicacionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroDocumento()
+    {
+        return $this->numeroDocumento;
+    }
+
+    /**
+     * @param mixed $numeroDocumento
+     */
+    public function setNumeroDocumento($numeroDocumento): void
+    {
+        $this->numeroDocumento = $numeroDocumento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroDocumentoAplicacion()
+    {
+        return $this->numeroDocumentoAplicacion;
+    }
+
+    /**
+     * @param mixed $numeroDocumentoAplicacion
+     */
+    public function setNumeroDocumentoAplicacion($numeroDocumentoAplicacion): void
+    {
+        $this->numeroDocumentoAplicacion = $numeroDocumentoAplicacion;
+    }
+
+
 
 
 }

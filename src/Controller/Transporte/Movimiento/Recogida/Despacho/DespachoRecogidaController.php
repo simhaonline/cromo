@@ -215,6 +215,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
             'arDespachoRecogida' => $arDespachoRecogida,
             'arRecogidas' => $arRecogidas,
             'arDespachoRecogidaAuxiliares' => $arDespachoRecogidaAuxiliares,
+            'clase' => array('clase' => 'TteDespachoRecogida', 'codigo' => $id),
             'form' => $form->createView()]);
     }
 

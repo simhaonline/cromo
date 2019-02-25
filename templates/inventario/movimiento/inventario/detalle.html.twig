@@ -212,15 +212,25 @@
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
                                 {% if arMovimiento.estadoAutorizado %}
                                     <td style="text-align: right;">{{ arMovimientoDetalle.porcentajeDescuento | number_format(0,'.',',') }}</td>
+                                    <td style="text-align: right;">{{ arMovimientoDetalle.vrDescuento | number_format(0,'.',',') }}</td>
+                                    <td>{{ arMovimientoDetalle.codigoImpuestoIvaFk }}</td>
                                 {% else %}
                                     <td style="text-align: center;"><input type="number"
                                                                            name="arrDescuento[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                                            value="{{ arMovimientoDetalle.porcentajeDescuento }}"
                                                                            style="text-align: right; width:40px"
                                                                            size="10"></td>
+                                    <td style="text-align: right;">{{ arMovimientoDetalle.vrDescuento | number_format(0,'.',',') }}</td>
+                                    <td style="text-align: left">
+                                        <select name="cboImpuestoIva[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]">
+                                            {% for arImpuestoIva in arImpuestosIva %}
+                                                <option value="{{ arImpuestoIva.codigoImpuestoPk }}" {% if arMovimientoDetalle.codigoImpuestoIvaFk == arImpuestoIva.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoIva.nombre }}</option>
+                                            {% endfor %}
+                                        </select></td>
                                 {% endif %}
-                                <td style="text-align: right;">{{ arMovimientoDetalle.vrDescuento | number_format(0,'.',',') }}</td>
-                                <td>{{ arMovimientoDetalle.codigoImpuestoIvaFk }}</td>
+
+
+
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrIva | number_format(0,'.',',') }}</td>
                                 <td>{{ arMovimientoDetalle.codigoImpuestoRetencionFk }}</td>
                                 <td style="text-align: right;">{{ arMovimientoDetalle.vrTotal| number_format(0,'.',',') }}</td>

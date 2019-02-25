@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Inventario;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenAsesor;
+use App\Entity\General\GenImpuesto;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvImportacionDetalle;
@@ -340,11 +341,13 @@ class MovimientoController extends ControllerListenerGeneral
             }
             return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $id]));
         }
+        $arImpuestosIva = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'I'));
         $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->listaDetalle($id, $arMovimiento->getCodigoDocumentoTipoFk());
         return $this->render('inventario/movimiento/inventario/detalle.html.twig', [
             'form' => $form->createView(),
             'arMovimientoDetalles' => $arMovimientoDetalles,
             'arMovimiento' => $arMovimiento,
+            'arImpuestosIva' => $arImpuestosIva,
             'clase' => array('clase'=>'InvMovimiento', 'codigo' => $id),
         ]);
     }

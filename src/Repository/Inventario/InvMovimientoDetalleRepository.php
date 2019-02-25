@@ -2,6 +2,7 @@
 
 namespace App\Repository\Inventario;
 
+use App\Entity\General\GenImpuesto;
 use App\Entity\Inventario\InvImportacionDetalle;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvLote;
@@ -140,6 +141,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $arrPorcentajeDescuento = $arrControles['arrDescuento'];
             $arrCodigo = $arrControles['arrCodigo'];
             $arrFechaVencimiento = $arrControles['arrFechaVencimiento'];
+            $arrImpuestoIva = $arrControles['cboImpuestoIva'];
             $mensajeError = "";
             foreach ($arrCodigo as $codigoMovimientoDetalle) {
                 $arMovimientoDetalle = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->find($codigoMovimientoDetalle);
@@ -156,6 +158,12 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                     $arMovimientoDetalle->setVrCosto($arrPrecio[$codigoMovimientoDetalle]);
                 }
                 $arMovimientoDetalle->setPorcentajeDescuento($arrPorcentajeDescuento[$codigoMovimientoDetalle]);
+                $codigoImpuestoIva = $arrImpuestoIva[$codigoMovimientoDetalle];
+                if($arMovimientoDetalle->getCodigoImpuestoIvaFk() != $codigoImpuestoIva) {
+                    $arImpuestoIva = $em->getRepository(GenImpuesto::class)->find($codigoImpuestoIva);
+                    $arMovimientoDetalle->setPorcentajeIva($arImpuestoIva->getPorcentaje());
+                }
+                $arMovimientoDetalle->setCodigoImpuestoIvaFk($codigoImpuestoIva);
                 $em->persist($arMovimientoDetalle);
             }
             if ($mensajeError == "") {

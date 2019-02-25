@@ -222,7 +222,13 @@ class RemisionController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
+                if(is_numeric($form->get('txtCodigoItem')->getData())) {
+                    $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
+                } else {
+                    $session->set('filtroInvBucarItemCodigo', null);
+                    Mensajes::error("El codigo del item debe ser numerico");
+                }
+
                 $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
                 $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
             }

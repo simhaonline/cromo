@@ -4,6 +4,7 @@
 namespace App\Entity\Transporte;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Transporte\TtePoseedorRepository")
@@ -75,6 +76,10 @@ class TtePoseedor
 
     /**
      * @ORM\Column(name="telefono", type="string", length=30, nullable=true)
+     * @Assert\Length(
+     *     max = 30,
+     *     maxMessage = "El campo no puede contener mas de {{ limit }} caracteres"
+     * )
      */
     private $telefono;
 

@@ -48,6 +48,7 @@
                 <label for="form_telefono" class="col-sm-2 control-label">Telefono:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.telefono, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    <div style="color:red;">{{ form_errors(form.telefono) }}</div>
                 </div>
                 <label for="form_movil" class="col-sm-2 control-label">Celular:</label>
                 <div class="col-sm-4">

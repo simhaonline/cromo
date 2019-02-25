@@ -6,6 +6,7 @@ use App\Entity\Cartera\CarDescuentoConcepto;
 use App\Entity\Cartera\CarIngresoConcepto;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -85,6 +86,7 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if (isset($arrControles['LblCodigo'])) {
+            $error = false;
             foreach ($arrControles['LblCodigo'] as $intCodigo) {
                 $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->find($intCodigo);
                 $arDescuentoConcepto = null;
@@ -99,40 +101,48 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
                 $valorRetencionFte = isset($arrControles['TxtVrRetencionFuente' . $intCodigo]) && $arrControles['TxtVrRetencionFuente' . $intCodigo] != '' ? $arrControles['TxtVrRetencionFuente' . $intCodigo] : 0;
                 $valorOtroDescuento = isset($arrControles['TxtVrOtroDescuento' . $intCodigo]) && $arrControles['TxtVrOtroDescuento' . $intCodigo] != '' ? $arrControles['TxtVrOtroDescuento' . $intCodigo] : 0;
                 $valorOtroIngreso = isset($arrControles['TxtVrOtroIngreso' . $intCodigo]) && $arrControles['TxtVrOtroIngreso' . $intCodigo] != '' ? $arrControles['TxtVrOtroIngreso' . $intCodigo] : 0;
-                if($valorOtroDescuento > 0) {
-                    if($codigoDescuentoConcepto != "SS") {
-                        $arDescuentoConcepto = $em->getRepository(CarDescuentoConcepto::class)->find($codigoDescuentoConcepto);
+                if(is_numeric($valorDescuento) && is_numeric($valorRetencionIca) && is_numeric($valorRetencionIva) && is_numeric($valorRetencionFte) && is_numeric($valorOtroDescuento) && is_numeric($valorOtroIngreso)) {
+                    if($valorOtroDescuento > 0) {
+                        if($codigoDescuentoConcepto != "SS") {
+                            $arDescuentoConcepto = $em->getRepository(CarDescuentoConcepto::class)->find($codigoDescuentoConcepto);
+                        }
                     }
-                }
-                if($valorOtroIngreso > 0) {
-                    if($codigoIngresoConcepto != "SS") {
-                        $arIngresoConcepto = $em->getRepository(CarIngresoConcepto::class)->find($codigoIngresoConcepto);
+                    if($valorOtroIngreso > 0) {
+                        if($codigoIngresoConcepto != "SS") {
+                            $arIngresoConcepto = $em->getRepository(CarIngresoConcepto::class)->find($codigoIngresoConcepto);
+                        }
                     }
+                    $valorPagoAfectar =
+                        $valorPago
+                        - $valorAjustePeso
+                        - $valorOtroIngreso
+                        + $valorDescuento
+                        + $valorRetencionIva
+                        + $valorRetencionIca
+                        + $valorRetencionFte
+                        + $valorOtroDescuento;
+                    $arReciboDetalle->setVrDescuento($valorDescuento);
+                    $arReciboDetalle->setVrAjustePeso($valorAjustePeso);
+                    $arReciboDetalle->setVrRetencionIca($valorRetencionIca);
+                    $arReciboDetalle->setVrRetencionIva($valorRetencionIva);
+                    $arReciboDetalle->setVrRetencionFuente($valorRetencionFte);
+                    $arReciboDetalle->setVrOtroDescuento($valorOtroDescuento);
+                    $arReciboDetalle->setVrOtroIngreso($valorOtroIngreso);
+                    $arReciboDetalle->setVrPago($valorPago);
+                    $arReciboDetalle->setVrPagoAfectar($valorPagoAfectar);
+                    $arReciboDetalle->setDescuentoConceptoRel($arDescuentoConcepto);
+                    $arReciboDetalle->setIngresoConceptoRel($arIngresoConcepto);
+                    $em->persist($arReciboDetalle);
+                } else {
+                    Mensajes::error("El detalle " . $intCodigo . " tiene valores incorrectos, verifique que no tenga comas ni simbolos especiales solo numero y el signo punto son permitidos (separador decimal es punto)");
+                    $error = true;
+                    break;
                 }
-                $valorPagoAfectar =
-                    $valorPago
-                    - $valorAjustePeso
-                    - $valorOtroIngreso
-                    + $valorDescuento
-                    + $valorRetencionIva
-                    + $valorRetencionIca
-                    + $valorRetencionFte
-                    + $valorOtroDescuento;
-                $arReciboDetalle->setVrDescuento($valorDescuento);
-                $arReciboDetalle->setVrAjustePeso($valorAjustePeso);
-                $arReciboDetalle->setVrRetencionIca($valorRetencionIca);
-                $arReciboDetalle->setVrRetencionIva($valorRetencionIva);
-                $arReciboDetalle->setVrRetencionFuente($valorRetencionFte);
-                $arReciboDetalle->setVrOtroDescuento($valorOtroDescuento);
-                $arReciboDetalle->setVrOtroIngreso($valorOtroIngreso);
-                $arReciboDetalle->setVrPago($valorPago);
-                $arReciboDetalle->setVrPagoAfectar($valorPagoAfectar);
-                $arReciboDetalle->setDescuentoConceptoRel($arDescuentoConcepto);
-                $arReciboDetalle->setIngresoConceptoRel($arIngresoConcepto);
-                $em->persist($arReciboDetalle);
             }
-            $em->flush();
-            $em->getRepository(CarReciboDetalle::class)->liquidar($codigoRecibo);
+            if($error == false) {
+                $em->flush();
+                $em->getRepository(CarReciboDetalle::class)->liquidar($codigoRecibo);
+            }
         }
     }
 

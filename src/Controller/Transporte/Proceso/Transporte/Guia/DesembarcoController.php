@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Proceso\Transporte\Guia;
 
 use App\Entity\Transporte\TteGuia;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,7 +32,13 @@ class DesembarcoController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTteDespachoCodigo', $form->get('txtDespachoCodigo')->getData());
+                if(is_numeric($form->get('txtDespachoCodigo')->getData())) {
+                    $session->set('filtroTteDespachoCodigo', $form->get('txtDespachoCodigo')->getData());
+                } else {
+                    $session->set('filtroTteDespachoCodigo', null);
+                    Mensajes::error("El codigo del despacho debe ser numerico");
+                }
+
             }
             if($form->get('btnDesembarco')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

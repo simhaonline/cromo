@@ -284,7 +284,7 @@ class ReciboController extends ControllerListenerGeneral
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
             }
-            $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrarAplicar($arReciboDetalle->getReciboRel()->getCodigoClienteFk());
+            $arCuentasCobrar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrarAplicarRecibo($arReciboDetalle->getReciboRel()->getCodigoClienteFk());
             $arCuentasCobrar = $paginator->paginate($arCuentasCobrar, $request->query->get('page', 1), 50);
             return $this->render('cartera/movimiento/recibo/recibo/detalleaAplicar.html.twig', array(
                 'arCuentasCobrar' => $arCuentasCobrar,

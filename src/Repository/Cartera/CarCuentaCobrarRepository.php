@@ -194,6 +194,33 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    /**
+     * @param $arCuentaCobrar CarCuentaCobrar
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function cuentasCobrarAplicarRecibo($codigoCliente)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
+            ->select('cc.codigoCuentaCobrarPk')
+            ->addSelect('cc.numeroDocumento')
+            ->addSelect('cc.numeroReferencia')
+            ->addSelect('cc.vrTotal')
+            ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.plazo')
+            ->addSelect('cc.fecha')
+            ->addSelect('cc.fechaVence')
+            ->addSelect('cct.nombre')
+            ->join('cc.clienteRel','cl')
+            ->join('cc.cuentaCobrarTipoRel', 'cct')
+            ->where('cc.vrSaldo > 0')
+            ->andWhere('cc.operacion = -1')
+            ->andWhere('cc.codigoClienteFk = ' . $codigoCliente)
+            ->orderBy('cc.codigoCuentaCobrarPk', 'ASC');
+
+        return $queryBuilder;
+    }
+
     public function prueba($codigoCliente)
     {
         $session = new Session();

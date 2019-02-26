@@ -86,7 +86,7 @@ class ControllerListener extends Controller{
                             return;
                         }
                         else{
-                            $this->redireccionar($event, $url, "No tiene permiso para ingresar a la funcion de '{$permisoMayuscula}'");
+                            $this->redireccionar($event, $url, "No tiene permisos para esta funcionalidad '{$permisoMayuscula}'");
                         }
                     }
                 }
@@ -94,7 +94,7 @@ class ControllerListener extends Controller{
             return;
         }
         else{
-            $this->redireccionar($event, $url, "No tiene permiso para ingresar a la funcion de '{$controller[1]}'");
+            $this->redireccionar($event, $url, "No tiene permisos para esta funcionalidad '{$controller[1]}'");
         }
     }
 

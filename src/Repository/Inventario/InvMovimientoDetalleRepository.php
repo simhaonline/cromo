@@ -142,6 +142,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             $arrCodigo = $arrControles['arrCodigo'];
             $arrFechaVencimiento = $arrControles['arrFechaVencimiento'];
             $arrImpuestoIva = $arrControles['cboImpuestoIva'];
+            $arrImpuestoRetencion = $arrControles['cboImpuestoRetencion'];
             $mensajeError = "";
             foreach ($arrCodigo as $codigoMovimientoDetalle) {
                 $arMovimientoDetalle = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->find($codigoMovimientoDetalle);
@@ -164,6 +165,12 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
                     $arMovimientoDetalle->setPorcentajeIva($arImpuestoIva->getPorcentaje());
                 }
                 $arMovimientoDetalle->setCodigoImpuestoIvaFk($codigoImpuestoIva);
+                $codigoImpuestoRetencion = $arrImpuestoRetencion[$codigoMovimientoDetalle];
+                if($arMovimientoDetalle->getCodigoImpuestoRetencionFk() != $codigoImpuestoRetencion) {
+                    $arImpuestoRetencion = $em->getRepository(GenImpuesto::class)->find($codigoImpuestoRetencion);
+                    //$arMovimientoDetalle->setPorcentajeRetencion($arImpuestoRetencion->getPorcentaje());
+                }
+                $arMovimientoDetalle->setCodigoImpuestoRetencionFk($codigoImpuestoRetencion);
                 $em->persist($arMovimientoDetalle);
             }
             if ($mensajeError == "") {

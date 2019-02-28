@@ -342,12 +342,14 @@ class MovimientoController extends ControllerListenerGeneral
             return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $id]));
         }
         $arImpuestosIva = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'I'));
+        $arImpuestosRetencion = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'R'));
         $arMovimientoDetalles = $em->getRepository(InvMovimientoDetalle::class)->listaDetalle($id, $arMovimiento->getCodigoDocumentoTipoFk());
         return $this->render('inventario/movimiento/inventario/detalle.html.twig', [
             'form' => $form->createView(),
             'arMovimientoDetalles' => $arMovimientoDetalles,
             'arMovimiento' => $arMovimiento,
             'arImpuestosIva' => $arImpuestosIva,
+            'arImpuestosRetencion' => $arImpuestosRetencion,
             'clase' => array('clase'=>'InvMovimiento', 'codigo' => $id),
         ]);
     }

@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+
     <div class="panel panel-default">
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
@@ -8,6 +10,7 @@
                 <label for="form_codigoVehiculoPk" class="col-sm-2 control-label">Código vehículo:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.codigoVehiculoPk, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.codigoVehiculoPk) }}
                 </div>
                 <label for="form_pĺaca" class="col-sm-2 control-label">Placa:</label>
                 <div class="col-sm-2">
@@ -156,7 +159,7 @@
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_transporte_vehiculo_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
+    {{ form_errors(form) }}
     {{ form_end(form) }}
 {% endblock %}

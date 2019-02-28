@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\General\General;
+use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\VehiculoType;
@@ -84,14 +85,14 @@ class VehiculoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $em->persist($arVehiculo);
-                $em->flush();
-                return $this->redirect($this->generateUrl('transporte_administracion_transporte_vehiculo_lista'));
-            }
-            if ($form->get('guardarnuevo')->isClicked()) {
-                $em->persist($arVehiculo);
-                $em->flush();
-                return $this->redirect($this->generateUrl('transporte_administracion_transporte_vehiculo_nuevo',['id'=>0]));
+                $arVehiculoValidar = $em->getRepository(TteVehiculo::class)->find($form->getData('codigoVehiculoPk'));
+                if(!$arVehiculoValidar){
+                    $em->persist($arVehiculo);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('transporte_administracion_transporte_vehiculo_lista'));
+                } else {
+                    Mensajes::error("El vehiculo ya existe");
+                }
             }
         }
         return $this->render('transporte/administracion/vehiculo/nuevo.html.twig', [

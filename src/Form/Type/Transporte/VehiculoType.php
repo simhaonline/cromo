@@ -123,9 +123,8 @@ class VehiculoType extends AbstractType
             ->add('fechaVenceTecnicomecanica', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('estadoInactivo', CheckboxType::class, ['required' => false,'label' => 'Inactivo'])
             ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
-        ;
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

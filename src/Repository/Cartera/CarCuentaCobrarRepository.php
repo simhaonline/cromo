@@ -456,7 +456,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->select('cc.codigoCuentaCobrarPk')
             ->addSelect('cc.vrSaldoOriginal')
             ->addSelect('cc.operacion');
-        //->where('cc.codigoCuentaCobrarPk=2205');
+        //->where('cc.codigoCuentaCobrarPk=531');
         $arCuentasCobrar = $queryBuilder->getQuery()->getResult();
         foreach ($arCuentasCobrar as $arCuentaCobrar) {
 
@@ -465,7 +465,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
                 ->Select("SUM(rd.vrPagoAfectar) AS totalAfectar")
                 ->leftJoin('rd.reciboRel', 'r')
                 ->where("rd.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
-            ->orWhere("rd.codigoCuentaCobrarAplicacionTipoFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
+            ->orWhere("rd.codigoCuentaCobrarAplicacionFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
             ->andWhere("r.estadoAutorizado = 1")
             ->andWhere("r.estadoAnulado = 0");
             $arrResultado = $queryBuilder->getQuery()->getSingleResult();

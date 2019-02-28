@@ -117,8 +117,8 @@
                 <td>{{ arCuentaCobrar.plazo }}</td>
                 <td class="numero">{{ arCuentaCobrar.vrSaldoOriginal | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arCuentaCobrar.vrAbono | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arCuentaCobrar.vrSaldo | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arCuentaCobrar.vrSaldoOperado | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arCuentaCobrar.vrSaldo | number_format(2, '.', ',') }}</td>
+                <td class="numero">{{ arCuentaCobrar.vrSaldoOperado | number_format(2, '.', ',') }}</td>
                 <td>
                     {% if arCuentaCobrar.vrSaldoOperado > 0 %}
                         <a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('cartera_informe_cuentaCobrar_cuentaCobrar_aplicar',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">Aplicar</a>

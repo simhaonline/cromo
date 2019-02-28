@@ -101,7 +101,7 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
                 $valorRetencionFte = isset($arrControles['TxtVrRetencionFuente' . $intCodigo]) && $arrControles['TxtVrRetencionFuente' . $intCodigo] != '' ? $arrControles['TxtVrRetencionFuente' . $intCodigo] : 0;
                 $valorOtroDescuento = isset($arrControles['TxtVrOtroDescuento' . $intCodigo]) && $arrControles['TxtVrOtroDescuento' . $intCodigo] != '' ? $arrControles['TxtVrOtroDescuento' . $intCodigo] : 0;
                 $valorOtroIngreso = isset($arrControles['TxtVrOtroIngreso' . $intCodigo]) && $arrControles['TxtVrOtroIngreso' . $intCodigo] != '' ? $arrControles['TxtVrOtroIngreso' . $intCodigo] : 0;
-                if(is_numeric($valorDescuento) && is_numeric($valorRetencionIca) && is_numeric($valorRetencionIva) && is_numeric($valorRetencionFte) && is_numeric($valorOtroDescuento) && is_numeric($valorOtroIngreso)) {
+                if(is_numeric($valorPago) && is_numeric($valorDescuento) && is_numeric($valorRetencionIca) && is_numeric($valorRetencionIva) && is_numeric($valorRetencionFte) && is_numeric($valorOtroDescuento) && is_numeric($valorOtroIngreso)) {
                     if($valorOtroDescuento > 0) {
                         if($codigoDescuentoConcepto != "SS") {
                             $arDescuentoConcepto = $em->getRepository(CarDescuentoConcepto::class)->find($codigoDescuentoConcepto);

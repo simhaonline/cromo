@@ -112,12 +112,12 @@ class CarReciboRepository extends ServiceEntityRepository
                     }
                     if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
                         $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
-                        if ($arCuentaCobrarAplicacion->getVrSaldo() >= $arReciboDetalle->getVrPagoAfectar()) {
-                            $saldo = $arCuentaCobrarAplicacion->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
+                        if ($arCuentaCobrarAplicacion->getVrSaldo() >= $arReciboDetalle->getVrPago()) {
+                            $saldo = $arCuentaCobrarAplicacion->getVrSaldo() - $arReciboDetalle->getVrPago();
                             $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
                             $arCuentaCobrarAplicacion->setVrSaldo($saldo);
                             $arCuentaCobrarAplicacion->setVrSaldoOperado($saldoOperado);
-                            $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
+                            $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() + $arReciboDetalle->getVrPago());
                             $em->persist($arCuentaCobrarAplicacion);
 
                             //Cuenta por cobrar
@@ -174,11 +174,11 @@ class CarReciboRepository extends ServiceEntityRepository
             $em->persist($arCuentaCobrar);
             if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
                 $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
-                $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+                $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPago();
                 $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
                 $arCuentaCobrarAplicacion->setVrSaldo($saldo);
                 $arCuentaCobrarAplicacion->setVrSaldoOperado($saldoOperado);
-                $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
+                $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arReciboDetalle->getVrPago());
                 $em->persist($arCuentaCobrarAplicacion);
             }
         }

@@ -460,14 +460,29 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         $arCuentasCobrar = $queryBuilder->getQuery()->getResult();
         foreach ($arCuentasCobrar as $arCuentaCobrar) {
 
+            //Afectar cuenta cobrar
             $abonos = 0;
             $queryBuilder = $em->createQueryBuilder()->from(CarReciboDetalle::class, 'rd')
                 ->Select("SUM(rd.vrPagoAfectar) AS totalAfectar")
                 ->leftJoin('rd.reciboRel', 'r')
                 ->where("rd.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
-            ->orWhere("rd.codigoCuentaCobrarAplicacionFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
             ->andWhere("r.estadoAutorizado = 1")
             ->andWhere("r.estadoAnulado = 0");
+            $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+            if ($arrResultado) {
+                if($arrResultado['totalAfectar']) {
+                    $abonos += $arrResultado['totalAfectar'];
+                }
+            }
+
+            //Afectar cuenta aplicacion
+            //La diferencia es que la afectacion es del valor del pago no de pago_aplicar
+            $queryBuilder = $em->createQueryBuilder()->from(CarReciboDetalle::class, 'rd')
+                ->Select("SUM(rd.vrPago) AS totalAfectar")
+                ->leftJoin('rd.reciboRel', 'r')
+                ->where("rd.codigoCuentaCobrarAplicacionFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
+                ->andWhere("r.estadoAutorizado = 1")
+                ->andWhere("r.estadoAnulado = 0");
             $arrResultado = $queryBuilder->getQuery()->getSingleResult();
             if ($arrResultado) {
                 if($arrResultado['totalAfectar']) {

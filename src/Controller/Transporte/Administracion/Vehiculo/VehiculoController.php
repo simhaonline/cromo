@@ -85,13 +85,19 @@ class VehiculoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arVehiculoValidar = $em->getRepository(TteVehiculo::class)->find($form->getData('codigoVehiculoPk'));
-                if(!$arVehiculoValidar){
+                if ($id == 0) {
+                    $arVehiculoValidar = $em->getRepository(TteVehiculo::class)->find($form->getData('codigoVehiculoPk'));
+                    if(!$arVehiculoValidar){
+                        $em->persist($arVehiculo);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('transporte_administracion_transporte_vehiculo_lista'));
+                    } else {
+                        Mensajes::error("El vehiculo ya existe");
+                    }
+                } else {
                     $em->persist($arVehiculo);
                     $em->flush();
                     return $this->redirect($this->generateUrl('transporte_administracion_transporte_vehiculo_lista'));
-                } else {
-                    Mensajes::error("El vehiculo ya existe");
                 }
             }
         }

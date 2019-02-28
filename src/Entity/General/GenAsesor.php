@@ -88,6 +88,11 @@ class GenAsesor
     protected $asesorAsesorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Seguridad\Usuario",mappedBy="asesorRel")
+     */
+    protected $usuariosAsesorRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoAsesorPk()

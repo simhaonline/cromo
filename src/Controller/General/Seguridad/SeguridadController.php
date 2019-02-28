@@ -93,11 +93,28 @@ class SeguridadController extends Controller
             'placeholder' => "SIN OPERACION",
             'data' => ""
         ];
+        $arrPropiedadesAsesorRel = [
+            'required' => false,
+            'class' => 'App\Entity\General\GenAsesor',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('a')
+                    ->orderBy('a.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'label' => 'Asesor:',
+            'empty_data' => "",
+            'placeholder' => "",
+            'data' => ""
+        ];
         if($arUsuario->getOperacionRel()){
             $arrPropiedadesOperacionRel["data"] = $em->getReference(TteOperacion::class, $arUsuario->getCodigoOperacionFk());
         }
+        if($arUsuario->getAsesorRel()){
+            $arrPropiedadesAsesorRel["data"] = $em->getReference(Usuario::class, $arUsuario->getCodigoAsesorFk());
+        }
         $form = $this->createFormBuilder()
             ->add('operacionRel',EntityType::class, $arrPropiedadesOperacionRel)
+            ->add('asesorRel',EntityType::class, $arrPropiedadesAsesorRel)
             ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername(), 'required'=>true, 'constraints'=>array(
                 new NotBlank(array("message"=>"El nombre de usuario es obligatorio")),
                 new Regex(array('pattern'=>"/[A-Za-z0-9]/",'message'=>"El nombre de usuario no puedo contener caracteres")),

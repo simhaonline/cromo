@@ -186,33 +186,33 @@ class InvCostoRepository extends ServiceEntityRepository
                                 }
 
                                 //Cuenta compra
-                                $codigoCuenta = $arCostoDetalle->getItemRel()->getCodigoCuentaCompraFk();
-                                if($codigoCuenta) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuenta);
-                                    if (!$arCuenta) {
-                                        $error = "No se encuentra la cuenta " . $codigoCuenta . " de compras del item " . $arCostoDetalle->getCodigoItemFk();
+                                if($arCostoDetalle->getVrCosto() > 0) {
+                                    $codigoCuenta = $arCostoDetalle->getItemRel()->getCodigoCuentaCompraFk();
+                                    if($codigoCuenta) {
+                                        $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuenta);
+                                        if (!$arCuenta) {
+                                            $error = "No se encuentra la cuenta " . $codigoCuenta . " de compras del item " . $arCostoDetalle->getCodigoItemFk();
+                                            break;
+                                        }
+                                        $fecha = date_create($arCosto['anio']."-".$arCosto['mes']."-01");
+                                        $arRegistro = new FinRegistro();
+                                        $arRegistro->setTerceroRel($arTercero);
+                                        $arRegistro->setCuentaRel($arCuenta);
+                                        $arRegistro->setComprobanteRel($arComprobante);
+                                        $arRegistro->setNumero($arCosto['numero']);
+                                        $arRegistro->setNumeroPrefijo($arCosto['prefijo']);
+                                        $arRegistro->setFecha($fecha);
+                                        $arRegistro->setVrCredito($arCostoDetalle->getVrCosto());
+                                        $arRegistro->setNaturaleza('C');
+                                        $arRegistro->setDescripcion($arCuenta->getNombre());
+                                        $arRegistro->setCodigoModeloFk('InvCosto');
+                                        $arRegistro->setCodigoDocumento($arCosto['codigoCostoPk']);
+                                        $em->persist($arRegistro);
+                                    } else {
+                                        $error = "El item " . $arCostoDetalle->getCodigoItemFk() . " no tiene configurada la cuenta de compras";
                                         break;
                                     }
-                                    $fecha = date_create($arCosto['anio']."-".$arCosto['mes']."-01");
-                                    $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arTercero);
-                                    $arRegistro->setCuentaRel($arCuenta);
-                                    $arRegistro->setComprobanteRel($arComprobante);
-                                    $arRegistro->setNumero($arCosto['numero']);
-                                    $arRegistro->setNumeroPrefijo($arCosto['prefijo']);
-                                    $arRegistro->setFecha($fecha);
-                                    $arRegistro->setVrCredito($arCostoDetalle->getVrCosto());
-                                    $arRegistro->setNaturaleza('C');
-                                    $arRegistro->setDescripcion($arCuenta->getNombre());
-                                    $arRegistro->setCodigoModeloFk('InvCosto');
-                                    $arRegistro->setCodigoDocumento($arCosto['codigoCostoPk']);
-                                    $em->persist($arRegistro);
-                                } else {
-                                    $error = "El item " . $arCostoDetalle->getCodigoItemFk() . " no tiene configurada la cuenta de compras";
-                                    break;
                                 }
-
-
                             }
 
                             $arCostoAct = $em->getRepository(InvCosto::class)->find($arCosto['codigoCostoPk']);

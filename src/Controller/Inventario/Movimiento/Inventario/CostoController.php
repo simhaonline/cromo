@@ -148,7 +148,7 @@ class CostoController extends ControllerListenerGeneral
             }
             return $this->redirect($this->generateUrl('inventario_movimiento_inventario_costo_detalle', ['id' => $id]));
         }
-        $arCostoDetalles = $paginator->paginate($em->getRepository(InvCostoDetalle::class)->costo($id), $request->query->getInt('page', 1), 10);
+        $arCostoDetalles = $paginator->paginate($em->getRepository(InvCostoDetalle::class)->costo($id), $request->query->getInt('page', 1), 1000);
         return $this->render('inventario/movimiento/inventario/costo/detalle.html.twig', [
             'form' => $form->createView(),
             'arCostoDetalles' => $arCostoDetalles,

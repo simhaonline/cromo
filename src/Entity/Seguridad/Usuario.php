@@ -118,10 +118,22 @@ class Usuario implements UserInterface, \Serializable
     private $notificacionesPendientes=0;
 
     /**
+     * @ORM\Column(name="codigo_asesor_fk", type="integer", nullable=true, options={"default":null})
+     */
+    private $codigoAsesorFk;
+
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteOperacion", inversedBy="usuariosOperacionRel")
      * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
      */
     protected $operacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="usuariosAsesorRel")
+     * @ORM\JoinColumn(name="codigo_asesor_fk", referencedColumnName="codigo_asesor_pk")
+     */
+    protected $asesorRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\General\GenTarea", mappedBy="usuarioRecibeRel")
@@ -487,6 +499,39 @@ class Usuario implements UserInterface, \Serializable
     {
         $this->restringirMovimientos = $restringirMovimientos;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAsesorFk()
+    {
+        return $this->codigoAsesorFk;
+    }
+
+    /**
+     * @param mixed $codigoAsesorFk
+     */
+    public function setCodigoAsesorFk($codigoAsesorFk): void
+    {
+        $this->codigoAsesorFk = $codigoAsesorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel($asesorRel): void
+    {
+        $this->asesorRel = $asesorRel;
+    }
+
 
 
 }

@@ -85,7 +85,7 @@ class VehiculoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if ($id == 0) {
+                if ($id == '0') {
                     $arVehiculoValidar = $em->getRepository(TteVehiculo::class)->find($form->getData('codigoVehiculoPk'));
                     if(!$arVehiculoValidar){
                         $em->persist($arVehiculo);

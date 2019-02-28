@@ -40,6 +40,11 @@ class TteAuxiliar
     protected $despachosRecogidasAuxiliaresAuxiliarRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoAuxiliar", mappedBy="auxiliarRel")
+     */
+    protected $despachoAuxiliarRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoAuxiliarPk()
@@ -101,6 +106,38 @@ class TteAuxiliar
     public function setDespachosRecogidasAuxiliaresAuxiliarRel($despachosRecogidasAuxiliaresAuxiliarRel): void
     {
         $this->despachosRecogidasAuxiliaresAuxiliarRel = $despachosRecogidasAuxiliaresAuxiliarRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoAuxiliarRel()
+    {
+        return $this->despachoAuxiliarRel;
+    }
+
+    /**
+     * @param mixed $despachoAuxiliarRel
+     */
+    public function setDespachoAuxiliarRel($despachoAuxiliarRel): void
+    {
+        $this->despachoAuxiliarRel = $despachoAuxiliarRel;
     }
 
 

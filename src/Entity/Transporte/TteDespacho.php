@@ -321,6 +321,11 @@ class TteDespacho
     protected $despachosDetallesDespachoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoAuxiliar", mappedBy="despachoRel")
+     */
+    protected $despachoAuxiliarRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoAdicional", mappedBy="despachoRel")
      */
     protected $despachosAdicionalesDespachoRel;

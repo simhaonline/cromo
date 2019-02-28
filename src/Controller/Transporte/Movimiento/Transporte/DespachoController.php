@@ -8,10 +8,12 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenProceso;
 use App\Entity\Seguridad\SegUsuarioProceso;
+use App\Entity\Transporte\TteAuxiliar;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
+use App\Entity\Transporte\TteDespachoAuxiliar;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
@@ -184,14 +186,16 @@ class DespachoController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
         $arrBotonCerrar = array('label' => 'Cerrar', 'disabled' => true);
-        $arrBotonRetirarGuia = array('label' => 'Retirar', 'disabled' => false);
+        $arrBotonEliminarGuia = array('label' => 'Eliminar', 'disabled' => false);
+        $arrBotonEliminarAuxiliar = array('label' => 'Eliminar', 'disabled' => false);
         $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
         $arrBotonRndc = array('label' => 'RNDC', 'disabled' => true);
         $arrBotonImprimirManifiesto = array('label' => 'Manifiesto', 'disabled' => false);
         $arrBotonCobroEntrega = array('label' => 'Cobro entrega', 'disabled' => true);
         $arrBotonLiquidacion = array('label' => 'Liquidacion', 'disabled' => true);
         if ($arDespacho->getEstadoAutorizado()) {
-            $arrBotonRetirarGuia['disabled'] = true;
+            $arrBotonEliminarAuxiliar['disabled'] = true;
+            $arrBotonEliminarGuia['disabled'] = true;
             $arrBotonActualizar['disabled'] = true;
             $arrBotonCobroEntrega['disabled'] = false;
         }
@@ -214,12 +218,13 @@ class DespachoController extends ControllerListenerGeneral
         $form
             ->add('btnCerrar', SubmitType::class, $arrBotonCerrar)
             ->add('btnRndc', SubmitType::class, $arrBotonRndc)
-            ->add('btnRetirarGuia', SubmitType::class, $arrBotonRetirarGuia)
+            ->add('btnEliminarGuia', SubmitType::class, $arrBotonEliminarGuia)
             ->add('btnActualizar', SubmitType::class, $arrBotonActualizar)
             ->add('btnImprimirManifiesto', SubmitType::class, $arrBotonImprimirManifiesto)
             ->add('btnLiquidacion', SubmitType::class, $arrBotonLiquidacion)
             ->add('btnCobroEntrega', SubmitType::class, $arrBotonCobroEntrega)
-            ->add('btnRetirarNovedad', SubmitType::class, array('label' => 'Retirar'));
+            ->add('btnEliminarNovedad', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('btnEliminarAuxiliar', SubmitType::class, $arrBotonEliminarAuxiliar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
@@ -240,7 +245,7 @@ class DespachoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnRndc')->isClicked()) {
-                if($em->getRepository(SegUsuarioProceso::class)->findBy(['codigoUsuarioFk' => $this->getUser()->getUsername(),'codigoProcesoFk' => '0006'])){
+                if ($em->getRepository(SegUsuarioProceso::class)->findBy(['codigoUsuarioFk' => $this->getUser()->getUsername(), 'codigoProcesoFk' => '0006'])) {
                     $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($arDespacho);
                 } else {
                     Mensajes::error('Usted no tiene permisos para utilizar este botón');
@@ -251,7 +256,7 @@ class DespachoController extends ControllerListenerGeneral
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($arDespacho);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
-            if ($form->get('btnRetirarGuia')->isClicked()) {
+            if ($form->get('btnEliminarGuia')->isClicked()) {
                 $arrDespachoDetalles = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->retirarDetalle($arrDespachoDetalles);
                 if ($respuesta) {
@@ -290,16 +295,22 @@ class DespachoController extends ControllerListenerGeneral
                 $formato = new Liquidacion();
                 $formato->Generar($em, $id);
             }
-            if ($form->get('btnRetirarNovedad')->isClicked()) {
+            if ($form->get('btnEliminarNovedad')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteNovedad::class)->eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnEliminarAuxiliar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteDespachoAuxiliar::class)->eliminar($arrSeleccionados);
             }
         }
         $arNovedades = $em->getRepository(TteNovedad::class)->despacho($id);
         $arDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->despacho($id);
+        $arAuxilares = $em->getRepository(TteDespachoAuxiliar::class)->despacho($id);
         return $this->render('transporte/movimiento/transporte/despacho/detalle.html.twig', [
             'arDespacho' => $arDespacho,
             'arNovedades' => $arNovedades,
+            'arAuxiliares' => $arAuxilares,
             'arDespachoDetalles' => $arDespachoDetalles,
             'clase' => array('clase' => 'TteDespacho', 'codigo' => $id),
             'form' => $form->createView()]);
@@ -440,6 +451,50 @@ class DespachoController extends ControllerListenerGeneral
         return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarNovedad.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $codigoDespacho
+     * @param $id
+     * @return Response
+     * @Route("/transporte/movimiento/trasnporte/despacho/detalle/adicionar/auxiliar/{id}", name="transporte_movimiento_transporte_despacho_detalle_adicionar_auxiliar")
+     */
+    public function detalleAdicionarAuxiliar(Request $request, $id)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar'])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
+            ->add('txtAuxiliar', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoAuxiliar')])
+            ->add('txtIdentificacionAuxiliar', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoAuxiliarIdentificacion')])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados AS $codigo) {
+                        $arAuxiliar = $em->getRepository(TteAuxiliar::class)->find($codigo);
+                        $arDespachoAuxiliar = new TteDespachoAuxiliar();
+                        $arDespachoAuxiliar->setDespachoRel($arDespacho);
+                        $arDespachoAuxiliar->setAuxiliarRel($arAuxiliar);
+                        $em->persist($arDespachoAuxiliar);
+                    }
+                    $em->flush();
+                }
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTteDespachoAuxiliar', $form->get('txtAuxiliar')->getData());
+                $session->set('filtroTteDespachoAuxiliarIdentificacion', $form->get('txtIdentificacionAuxiliar')->getData());
+            }
+        }
+        $arAuxiliares = $paginator->paginate($em->getRepository(TteAuxiliar::class)->lista(), $request->query->getInt('page', 1), 300);
+        return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarAuxiliar.html.twig', ['arAuxiliares' => $arAuxiliares, 'form' => $form->createView()]);
     }
 
     /**

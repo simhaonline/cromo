@@ -11,7 +11,7 @@
                     <td class="titulo">NUMERO DOCUMENTO:</td>
                     <td class="td-in-well" style="text-transform: uppercase;">{{ arCuentaCobrar.numeroDocumento }}</td>
                     <td class="titulo">ABONO:</td>
-                    <td align="right">{{ arCuentaCobrar.vrAbono | number_format(0, '.', ',') }}</td>
+                    <td align="right">{{ arCuentaCobrar.vrAbono | number_format(2, '.', ',') }}</td>
                 </tr>
                 <tr>
                     <td class="titulo">TIPO:</td>
@@ -29,7 +29,7 @@
                     <td class="td-in-well"
                         style="text-transform: uppercase;">{{ arCuentaCobrar.fechaVence | date('Y-m-d') }}</td>
                     <td class="titulo">TOTAL:</td>
-                    <td align="right">{{ arCuentaCobrar.vrTotal | number_format(0, '.', ',') }}</td>
+                    <td align="right">{{ arCuentaCobrar.vrTotal | number_format(2, '.', ',') }}</td>
                 </tr>
             </table>
         </div>
@@ -58,7 +58,7 @@
             <td>{{arCuentasCobrarAplicar.fecha | date('Y-m-d')}}</td>
             <td>{{arCuentasCobrarAplicar.fechaVence | date('Y-m-d')}}</td>
             <td style="text-align: right">{{ arCuentasCobrarAplicar.vrTotal | number_format(2, '.', ',') }}</td>
-            <td style="text-align: right"><input width="60px" style="text-align: right" type="text" name="TxtSaldo{{ arCuentasCobrarAplicar.codigoCuentaCobrarPk }}" value="{{ arCuentasCobrarAplicar.vrSaldo | number_format(2, '.', ',')  }}" size="8" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
+            <td style="text-align: right"><input width="60px" style="text-align: right" type="text" name="TxtSaldo{{ arCuentasCobrarAplicar.codigoCuentaCobrarPk }}" value="{{ arCuentasCobrarAplicar.vrSaldo  }}" size="8" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
             <td><button class="btn btn-default btn-xs" type="submit" name="OpAplicar" value="{{ arCuentasCobrarAplicar.codigoCuentaCobrarPk }}">Aplicar</button></td>
             {%endfor%}
         </tr>

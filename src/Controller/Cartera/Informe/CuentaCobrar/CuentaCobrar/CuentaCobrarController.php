@@ -12,6 +12,7 @@ use App\Formato\Cartera\CarteraEdadCliente;
 use App\Formato\Cartera\CuentaCobrar;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -126,34 +127,38 @@ class CuentaCobrarController extends Controller
                     $vrAplicar = isset($arrControles['TxtSaldo' . $codigoCuentaCobrarAplicar]) && $arrControles['TxtSaldo' . $codigoCuentaCobrarAplicar] != '' ? $arrControles['TxtSaldo' . $codigoCuentaCobrarAplicar] : 0;
 
                     if ($arCuentaCobrar->getVrSaldo() >= $vrAplicar) {
-                        $saldo = $arCuentaCobrar->getVrSaldo() - $vrAplicar;
-                        $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
-                        $arCuentaCobrar->setVrSaldo($saldo);
-                        $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
-                        $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $vrAplicar);
-                        $em->persist($arCuentaCobrar);
+                        if(is_numeric($vrAplicar)){
+                            $saldo = $arCuentaCobrar->getVrSaldo() - $vrAplicar;
+                            $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+                            $arCuentaCobrar->setVrSaldo($saldo);
+                            $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                            $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $vrAplicar);
+                            $em->persist($arCuentaCobrar);
 
-                        $arCuentaCobrarAplicar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrarAplicar);
-                        $saldo = $arCuentaCobrarAplicar->getVrSaldo() - $vrAplicar;
-                        $saldoOperado = $saldo * $arCuentaCobrarAplicar->getOperacion();
-                        $arCuentaCobrarAplicar->setVrSaldo($saldo);
-                        $arCuentaCobrarAplicar->setVrSaldoOperado($saldoOperado);
-                        $arCuentaCobrarAplicar->setVrAbono($arCuentaCobrarAplicar->getVrAbono() + $vrAplicar);
-                        $em->persist($arCuentaCobrarAplicar);
+                            $arCuentaCobrarAplicar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrarAplicar);
+                            $saldo = $arCuentaCobrarAplicar->getVrSaldo() - $vrAplicar;
+                            $saldoOperado = $saldo * $arCuentaCobrarAplicar->getOperacion();
+                            $arCuentaCobrarAplicar->setVrSaldo($saldo);
+                            $arCuentaCobrarAplicar->setVrSaldoOperado($saldoOperado);
+                            $arCuentaCobrarAplicar->setVrAbono($arCuentaCobrarAplicar->getVrAbono() + $vrAplicar);
+                            $em->persist($arCuentaCobrarAplicar);
 
-                        $arAplicacion = new CarAplicacion();
-                        $arAplicacion->setCuentaCobrarRel($arCuentaCobrar);
-                        $arAplicacion->setCuentaCobrarAplicacionRel($arCuentaCobrarAplicar);
-                        $arAplicacion->setVrAplicacion($vrAplicar);
-                        $arAplicacion->setUsuario($this->getUser()->getUsername());
-                        $arAplicacion->setFecha(new \DateTime('now'));
-                        $arAplicacion->setNumeroDocumento($arCuentaCobrar->getNumeroDocumento());
-                        $arAplicacion->setNumeroDocumentoAplicacion($arCuentaCobrarAplicar->getNumeroDocumento());
-                        $em->persist($arAplicacion);
-                        $em->flush();
-                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                            $arAplicacion = new CarAplicacion();
+                            $arAplicacion->setCuentaCobrarRel($arCuentaCobrar);
+                            $arAplicacion->setCuentaCobrarAplicacionRel($arCuentaCobrarAplicar);
+                            $arAplicacion->setVrAplicacion($vrAplicar);
+                            $arAplicacion->setUsuario($this->getUser()->getUsername());
+                            $arAplicacion->setFecha(new \DateTime('now'));
+                            $arAplicacion->setNumeroDocumento($arCuentaCobrar->getNumeroDocumento());
+                            $arAplicacion->setNumeroDocumentoAplicacion($arCuentaCobrarAplicar->getNumeroDocumento());
+                            $em->persist($arAplicacion);
+                            $em->flush();
+                            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                        } else {
+                            Mensajes::error("El valor agregado no es numerico o contiene caracteres que no son permitidos");
+                        }
                     } else {
-                        Mensajes::error("El valor a aplicar es mayor al saldo");
+                        Mensajes::error("El valor a aplicar" . $vrAplicar. " es mayor al saldo " .  $arCuentaCobrar->getVrSaldo());
                     }
                 }
             }

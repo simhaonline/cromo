@@ -210,7 +210,7 @@ class RegistroController extends Controller
                 $j++;
             }
             header('Content-Type: application/vnd.ms-excel');
-            header("Content-Disposition: attachment;filename='DetallesContables.xls'");
+            header("Content-Disposition: attachment;filename=DetallesContables.xls");
             header('Cache-Control: max-age=0');
 
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');

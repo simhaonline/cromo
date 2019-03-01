@@ -225,7 +225,7 @@ final class AdministracionController extends BaseController
                 }
             }
             header('Content-Type: application/vnd.ms-excel');
-            header("Content-Disposition: attachment;filename='{$nombre}.xls'");
+            header("Content-Disposition: attachment;filename={$nombre}.xls");
             header('Cache-Control: max-age=0');
 
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');

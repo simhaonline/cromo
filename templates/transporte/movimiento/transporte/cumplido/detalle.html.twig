@@ -146,12 +146,15 @@
         });
 
         var agregarGuia = function(codigoGuia, codigoCumplido) {
-            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/cumplido/adicionar/" + codigoCumplido + "/" + codigoGuia + "/0/1";
+            endpoint = "{{ url('transporte_api_guia_cumplido_adicionar') }}";
             $.ajax(endpoint, {
                 type: 'POST',
                 data: {
                     arrParametros: JSON.stringify({
-                        codigoGuia: codigoGuia
+                        codigoGuia: codigoGuia,
+                        codigoCumplido: codigoCumplido,
+                        documento: 0,
+                        tipo: 1
                     }),
                 }
             }).done(function(respuesta) {
@@ -163,12 +166,15 @@
         };
 
         var agregarDocumento = function(documento, codigoCumplido) {
-            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/cumplido/adicionar/" + codigoCumplido + "/0/" + documento + "/2";
+            endpoint = "{{ url('transporte_api_guia_cumplido_adicionar') }}";
             $.ajax(endpoint, {
                 type: 'POST',
                 data: {
                     arrParametros: JSON.stringify({
-                        documento: documento
+                        codigoGuia: 0,
+                        codigoCumplido: codigoCumplido,
+                        documento: documento,
+                        tipo: 2
                     }),
                 }
             }).done(function(respuesta) {

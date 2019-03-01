@@ -87,12 +87,15 @@
         });
 
         var agregarGuia = function(codigoGuia, codigoFacturaPlanilla) {
-            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/factura/planilla/adicionar/" + codigoFacturaPlanilla + "/" + codigoGuia + "/0/1";
+            endpoint = "{{ url('transporte_api_guia_factura_planilla_adicionar') }}";
             $.ajax(endpoint, {
                 type: 'POST',
                 data: {
                     arrParametros: JSON.stringify({
-                        codigoGuia: codigoGuia
+                        codigoFacturaPlanilla: codigoFacturaPlanilla,
+                        codigoGuia: codigoGuia,
+                        documento: 0,
+                        tipo: 1
                     }),
                 }
             }).done(function(respuesta) {
@@ -104,12 +107,15 @@
         };
 
         var agregarDocumento = function(documento, codigoFacturaPlanilla) {
-            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/factura/planilla/adicionar/" + codigoFacturaPlanilla + "/0/" + documento + "/2";
+            endpoint = "{{ url('transporte_api_guia_factura_planilla_adicionar') }}";
             $.ajax(endpoint, {
                 type: 'POST',
                 data: {
                     arrParametros: JSON.stringify({
-                        documento: documento
+                        codigoFacturaPlanilla: codigoFacturaPlanilla,
+                        codigoGuia: 0,
+                        documento: documento,
+                        tipo: 2
                     }),
                 }
             }).done(function(respuesta) {

@@ -350,9 +350,6 @@
             <br/><br/>
             <input type="text" id="txtGuiaCodigo">
             <button id="btnAdicionar">Adicionar</button>
-            <br/><br/>
-            <input type="text" id="txtGuiaDocumento">
-            <button id="btnAdicionarDocumento">Adicionar documento</button>
         {% endif %}
     </div>
 {% endblock %}
@@ -363,9 +360,7 @@
         var codigoDespacho = '{{ arDespacho.codigoDespachoPk }}';
         $(function () {
             var button = $("#btnAdicionar");
-            var buttonDocumento = $("#btnAdicionarDocumento");
             var txtGuiaCodigo = $("#txtGuiaCodigo");
-            var txtGuiaDocumento = $("#txtGuiaDocumento");
             button.click(function () {
                 agregarGuia(txtGuiaCodigo.val(), codigoDespacho);
             });
@@ -374,19 +369,10 @@
                     agregarGuia(txtGuiaCodigo.val(), codigoDespacho);
                 }
             });
-            buttonDocumento.click(function () {
-                agregarDocumento(txtGuiaDocumento.val(), codigoDespacho);
-            });
-            txtGuiaDocumento.keydown(function (event) {
-                if (event.keyCode === 13) {
-                    agregarDocumento(txtGuiaDocumento.val(), codigoDespacho);
-                }
-            });
         });
 
         var agregarGuia = function (codigoGuia, codigoDespacho) {
             if (codigoGuia != '') {
-                //endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
                 endpoint = "{{ url('transporte_api_guia_despacho_adicionar') }}";
                 $.ajax(endpoint, {
                     type: 'POST',
@@ -402,61 +388,8 @@
                     }
                     $("#txtGuiaCodigo").val("").focus();
                 });
-
-
-                {#/*endpoint = "{{ url('transporte_api_prueba') }}";#}
-                /*$.ajax(endpoint, {
-                    type: 'POST',
-                    data: {
-                        arrParametros: JSON.stringify({
-                            codigoGuia: 1
-                        }),
-                    }
-                }).done(function (respuesta) {
-                    if (respuesta && respuesta.error === true) {
-                        alert(respuesta.mensaje);
-                    }
-                    $("#txtGuiaCodigo").val("").focus();
-                });*/
-
-                {#/*endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;#}
-                /*$.ajax(endpoint, {
-                    type: 'POST',
-                    data: {
-                        arrParametros: JSON.stringify({
-                            codigoGuia: codigoGuia
-                        }),
-                    }
-                }).done(function (respuesta) {
-                    if (respuesta && respuesta.error === true) {
-                        alert(respuesta.mensaje);
-                    }
-                    $("#txtGuiaCodigo").val("").focus();
-                });*/
             } else {
                 alert("Debe digitar un numero de guia");
-            }
-
-        };
-
-        var agregarDocumento = function (documento, codigoDespacho) {
-            if (documento != '') {
-                endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/documento/" + codigoDespacho + "/" + documento;
-                $.ajax(endpoint, {
-                    type: 'POST',
-                    data: {
-                        arrParametros: JSON.stringify({
-                            documento: documento
-                        }),
-                    }
-                }).done(function (respuesta) {
-                    if (respuesta && respuesta.error === true) {
-                        alert(respuesta.mensaje);
-                    }
-                    $("#txtGuiaDocumento").val("").focus();
-                });
-            } else {
-                alert("Debe digitar un documento de guia");
             }
         };
     </script>

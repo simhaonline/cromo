@@ -103,7 +103,7 @@
 
         var agregarGuia = function(codigoGuia) {
             if(codigoGuia != '') {
-                endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/desembarco/" + codigoGuia;
+                endpoint = "{{ url('transporte_api_guia_desembarco') }}";
                 $.ajax(endpoint, {
                     type: 'POST',
                     data: {

@@ -95,7 +95,7 @@
         });
 
         var agregarGuia = function(codigoGuia) {
-            endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/soporte/" + codigoGuia;
+            endpoint = "{{ url('transporte_api_guia_soporte') }}";
             $.ajax(endpoint, {
                 type: 'POST',
                 data: {

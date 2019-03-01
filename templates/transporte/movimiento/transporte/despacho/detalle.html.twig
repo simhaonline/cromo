@@ -386,8 +386,41 @@
 
         var agregarGuia = function (codigoGuia, codigoDespacho) {
             if (codigoGuia != '') {
-                endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
+                //endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;
+                endpoint = "{{ url('transporte_api_guia_despacho_adicionar') }}";
                 $.ajax(endpoint, {
+                    type: 'POST',
+                    data: {
+                        arrParametros: JSON.stringify({
+                            codigoGuia: codigoGuia,
+                            codigoDespacho: codigoDespacho
+                        }),
+                    }
+                }).done(function (respuesta) {
+                    if (respuesta && respuesta.error === true) {
+                        alert(respuesta.mensaje);
+                    }
+                    $("#txtGuiaCodigo").val("").focus();
+                });
+
+
+                {#/*endpoint = "{{ url('transporte_api_prueba') }}";#}
+                /*$.ajax(endpoint, {
+                    type: 'POST',
+                    data: {
+                        arrParametros: JSON.stringify({
+                            codigoGuia: 1
+                        }),
+                    }
+                }).done(function (respuesta) {
+                    if (respuesta && respuesta.error === true) {
+                        alert(respuesta.mensaje);
+                    }
+                    $("#txtGuiaCodigo").val("").focus();
+                });*/
+
+                {#/*endpoint = "{{ env('SERVER_API') }}/transporte/api/guia/despacho/adicionar/" + codigoDespacho + "/" + codigoGuia;#}
+                /*$.ajax(endpoint, {
                     type: 'POST',
                     data: {
                         arrParametros: JSON.stringify({
@@ -399,7 +432,7 @@
                         alert(respuesta.mensaje);
                     }
                     $("#txtGuiaCodigo").val("").focus();
-                });
+                });*/
             } else {
                 alert("Debe digitar un numero de guia");
             }

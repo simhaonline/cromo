@@ -22,8 +22,13 @@ class FacturaType extends AbstractType
                 'required' => true,
                 'class' => 'App\Entity\Inventario\InvFacturaTipo',
                 'query_builder' => function (EntityRepository $er) use ($options) {
-                    return $er->createQueryBuilder('ft')
-                        ->orderBy('ft.nombre', 'ASC');
+                    $notaCredito = 0;
+                    if($options['data']->getDocumentoRel()->getNotaCredito()) {
+                        $notaCredito = 1;
+                    }
+                        return $er->createQueryBuilder('ft')
+                        ->orderBy('ft.nombre', 'ASC')
+                        ->where('ft.notaCredito=' . $notaCredito);
                 },
                 'choice_label' => 'nombre'
             ])
@@ -35,6 +40,15 @@ class FacturaType extends AbstractType
                         ->orderBy('a.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre'
+            ])
+            ->add('contactoRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Inventario\InvContacto',
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombreCorto', 'ASC');
+                },
+                'choice_label' => 'nombreCorto'
             ])
             ->add('codigoTerceroFk',TextType::class,['required' => false ])
             ->add('soporte',TextType::class,['required' => false ])

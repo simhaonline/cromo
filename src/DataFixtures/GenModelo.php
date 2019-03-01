@@ -128,6 +128,7 @@ class GenModelo extends Fixture
                 'InvTercero',
                 'InvImportacion',
                 'InvCosto',
+                'InvContacto',
             )),
             array('modulo'=>'Recurso Humano','modelo'=>array(
                 'RhuAdicional',

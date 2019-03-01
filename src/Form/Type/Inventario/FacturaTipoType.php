@@ -4,6 +4,7 @@ namespace App\Form\Type\Inventario;
 
 use App\Entity\Inventario\InvFacturaTipo;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -27,6 +28,7 @@ class FacturaTipoType extends AbstractType
             ->add('numeracionHasta',TextType::class,['label' => 'Numeracion hasta: '])
             ->add('numeroResolucionDianFactura',TextareaType::class,['label' => 'Resolucion DIAN: '])
             ->add('informacionCuentaPago',TextareaType::class,['label' => 'Informacion cuenta de pago: '])
+            ->add('notaCredito', CheckboxType::class, ['required' => false, 'label' => ''])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

@@ -70,34 +70,32 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label  class="col-sm-2 control-label">Soporte:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.soporte, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.soporte) }}
-                </div>
-                <label class="col-sm-2 control-label">Plazo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.plazoPago, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.plazoPago) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
                 <label  class="col-sm-2 control-label">Factura tipo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.facturaTipoRel, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.facturaTipoRel) }}
                 </div>
-                <label  class="col-sm-2 control-label">Asesor comercial:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.asesorRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.asesorRel) }}
+                <label  class="col-sm-1 control-label">Soporte:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.soporte, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.soporte) }}
+                </div>
+                <label class="col-sm-1 control-label">Plazo:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.plazoPago, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.plazoPago) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label  class="col-sm-2 control-label">Guia:</label>
+                <label  class="col-sm-2 control-label">Contacto:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.guia, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.guia) }}
+                    {{ form_widget(form.contactoRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                    {{ form_errors(form.contactoRel) }}
+                </div>
+                <label  class="col-sm-1 control-label">Asesor:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.asesorRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.asesorRel) }}
                 </div>
             </div>
             <div class="form-group">
@@ -105,6 +103,18 @@
                 <div class="col-sm-10">
                     {{ form_widget(form.comentarios, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                     {{ form_errors(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información envio</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label  class="col-sm-2 control-label">Guia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.guia, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.guia) }}
                 </div>
             </div>
         </div>

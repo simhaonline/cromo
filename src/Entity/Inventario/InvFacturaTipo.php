@@ -69,6 +69,11 @@ class InvFacturaTipo
     private $informacionCuentaPago;
 
     /**
+     * @ORM\Column(name="nota_credito", type="boolean", nullable=true, options={"default":false})
+     */
+    private $notaCredito = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvMovimiento",mappedBy="facturaTipoRel")
      */
     protected $movimientosFacturaTipoRel;
@@ -247,6 +252,22 @@ class InvFacturaTipo
     public function setMovimientosFacturaTipoRel($movimientosFacturaTipoRel): void
     {
         $this->movimientosFacturaTipoRel = $movimientosFacturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotaCredito()
+    {
+        return $this->notaCredito;
+    }
+
+    /**
+     * @param mixed $notaCredito
+     */
+    public function setNotaCredito($notaCredito): void
+    {
+        $this->notaCredito = $notaCredito;
     }
 
 

@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover tabla-informacion">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>TERCERO</th>
+                <th>FECHA</th>
+                <th>NUMERO</th>
+                <th>SUBTOTAL</th>
+                <th>IVA</th>
+                <th>TOTAL</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set codigoAsesor = '' %}
+            {% set vrSubtotalAcumulado = 0 %}
+            {% set vrIvaAcumulado = 0 %}
+            {% set vrTotalAcumulado = 0 %}
+            {% set cantRegistros = arFacturas | length %}
+            {% set registroActual = 0 %}
+            {% for arFactura in arFacturas %}
+
+                {% set registroActual = registroActual + 1 %}
+
+                {% if codigoAsesor != arFactura.asesor %}
+                    {% if codigoAsesor != '' %}
+                <tr style="background-color: lightgrey;">
+                    <td colspan="5"></td>
+                    <td class="numero"><strong>{{ vrSubtotalAcumulado  | number_format(0, '.', ',') }}</strong></td>
+                    <td class="numero"><strong>{{ vrIvaAcumulado | number_format(0, '.', ',') }}</strong></td>
+                    <td class="numero"><strong>{{ vrTotalAcumulado | number_format(0, '.', ',') }}</strong></td>
+                </tr>
+                {% set vrSubtotalAcumulado = 0 %}
+                {% set vrIvaAcumulado = 0 %}
+                {% set vrTotalAcumulado = 0 %}
+                    {% endif %}
+                {% set codigoAsesor = arFactura.asesor %}
+                <tr style="background-color: #b7bcbc;">
+                    <td colspan="7"><strong>{{ codigoAsesor }}</strong></td>
+                </tr>
+                    {% if vrSubtotalAcumulado == 0 and vrIvaAcumulado == 0 and vrTotalAcumulado == 0 %}
+                        {% set vrSubtotalAcumulado = arFactura.vrSubtotal %}
+                        {% set vrIvaAcumulado = arFactura.vrIva %}
+                        {% set vrTotalAcumulado = arFactura.vrTotal %}
+                    {% endif %}
+                {% else %}
+                    {% set vrSubtotalAcumulado = vrSubtotalAcumulado + arFactura.vrSubtotal %}
+                    {% set vrIvaAcumulado = vrIvaAcumulado + arFactura.vrIva %}
+                    {% set vrTotalAcumulado = vrTotalAcumulado + arFactura.vrTotal %}
+                {% endif %}
+                <tr>
+                    <td>{{ arFactura.codigoMovimientoPk }}</td>
+                    <td>{{ arFactura.tercero }}</td>
+                    <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
+                    <td>{{ arFactura.numero }}</td>
+                    <td class="numero">{{ arFactura.vrSubtotal | number_format }}</td>
+                    <td class="numero">{{ arFactura.vrIva | number_format }}</td>
+                    <td class="numero">{{ arFactura.vrTotal | number_format }}</td>
+                </tr>
+                {% if cantRegistros == registroActual %}
+                <tr style="background-color: lightgrey;">
+                    <td colspan="4"></td>
+                    <td class="numero"><strong>{{ vrSubtotalAcumulado  | number_format(0, '.', ',') }}</strong></td>
+                    <td class="numero"><strong>{{ vrIvaAcumulado | number_format(0, '.', ',') }}</strong></td>
+                    <td class="numero"><strong>{{ vrTotalAcumulado | number_format(0, '.', ',') }}</strong></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arFacturas.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arFacturas) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+        </div>
+    </div>
+    <br /><br /><br />
+    {{ form_end(form) }}
+{% endblock %}

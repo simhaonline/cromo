@@ -714,4 +714,42 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function ventasSoloAsesor($codigoAsesor)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('m.codigoAsesorFk')
+            ->addSelect('a.nombre AS asesor')
+            ->addSelect('t.nombreCorto AS tercero')
+            ->addSelect('m.fecha')
+            ->addSelect('md.codigoItemFk')
+            ->addSelect('i.nombre AS item')
+            ->addSelect('i.referencia AS referencia')
+            ->addSelect('m.codigoDocumentoFk as DOC')
+            ->addSelect('m.numero')
+            ->addSelect("md.cantidad")
+            ->addSelect('md.vrPrecio')
+            ->addSelect('md.vrSubtotal')
+            ->addSelect('md.vrIva')
+            ->addSelect('md.vrTotal')
+            ->leftJoin('md.movimientoRel', 'm')
+            ->leftJoin('m.asesorRel', 'a')
+            ->leftJoin('m.terceroRel', 't')
+            ->leftJoin('md.itemRel', 'i')
+            ->where('m.codigoMovimientoPk <> 0')
+            ->andWhere("m.codigoDocumentoTipoFk = 'FAC'")
+            ->andWhere('m.estadoAnulado = 0')
+            ->andWhere('m.estadoAprobado = 1')
+            ->andWhere("m.codigoAsesorFk = '" . $codigoAsesor . "'")
+        ->orderBy('m.numero', 'DESC');
+        if ($session->get('filtroInvInformeAsesorVentasDetalleFechaDesde') != null) {
+            $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroInvInformeAsesorVentasDetalleFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroInvInformeAsesorVentasDetalleFechaHasta') != null) {
+            $queryBuilder->andWhere("m.fecha <= '{$session->get('filtroInvInformeAsesorVentasDetalleFechaHasta')} 23:59:59'");
+        }
+        return $queryBuilder;
+    }
 }

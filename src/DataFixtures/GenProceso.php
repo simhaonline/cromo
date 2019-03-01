@@ -48,7 +48,9 @@ class GenProceso extends Fixture
             ['codigo' => '0005', 'modulo' => 'Transporte', 'tipo' => 'U', 'nombre' => 'Corrección de guías'],
             ['codigo' => '0006', 'modulo' => 'Transporte', 'tipo' => 'O', 'nombre' => 'Generar RNDC'],
             ['codigo' => '0007', 'modulo' => 'Inventario', 'tipo' => 'I', 'nombre' => 'Existencia item'],
-            ['codigo' => '0008', 'modulo' => 'Inventario', 'tipo' => 'U', 'nombre' => 'Corregir fecha vencimiento lote']
+            ['codigo' => '0008', 'modulo' => 'Inventario', 'tipo' => 'U', 'nombre' => 'Corregir fecha vencimiento lote'],
+            ['codigo' => '0009', 'modulo' => 'Inventario', 'tipo' => 'I', 'nombre' => 'Ventas de asesor'],
+            ['codigo' => '0010', 'modulo' => 'Inventario', 'tipo' => 'I', 'nombre' => 'Ventas de asesor detalle']
 
         );
         foreach ($arrProcesos as $arrProceso) {

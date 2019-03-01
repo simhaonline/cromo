@@ -1275,18 +1275,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->groupBy('m.codigoAsesorFk')
             ->addGroupBy('m.codigoMovimientoPk');
         $fecha = new \DateTime('now');
-//        if ($session->get('filtroGenAsesor')) {
-//            $queryBuilder->andWhere("r.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
-//        }
-//        if ($session->get('filtroCarInformeReciboTipo') != "") {
-//            $queryBuilder->andWhere("r.codigoReciboTipoFk = '" . $session->get('filtroCarInformeReciboTipo') . "'");
-//        }
-//        if ($session->get('filtroCarReciboNumero')) {
-//            $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
-//        }
-//        if ($session->get('filtroCarCodigoCliente')) {
-//            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
-//        }
         if ($session->get('filtroFecha') == true) {
             if ($session->get('filtroInformeVentasPorAsesorFechaDesde') != null) {
                 $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroInformeVentasPorAsesorFechaDesde')} 00:00:00'");
@@ -1298,6 +1286,37 @@ class InvMovimientoRepository extends ServiceEntityRepository
             } else {
                 $queryBuilder->andWhere("m.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
+        }
+        return $queryBuilder;
+    }
+
+    public function ventasSoloAsesor($codigoAsesor)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm')
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.codigoAsesorFk')
+            ->addSelect('a.nombre AS asesor')
+            ->addSelect('t.nombreCorto AS tercero')
+            ->addSelect('m.fecha')
+            ->addSelect('m.codigoDocumentoFk as DOC')
+            ->addSelect('m.numero')
+            ->addSelect('m.vrSubtotal * m.operacionComercial as vrSubtotal')
+            ->addSelect('m.vrIva * m.operacionComercial as vrIva')
+            ->addSelect('m.vrTotal * m.operacionComercial as vrTotal')
+            ->leftJoin('m.asesorRel', 'a')
+            ->leftJoin('m.terceroRel', 't')
+            ->where('m.codigoMovimientoPk <> 0')
+            ->andWhere("m.codigoDocumentoTipoFk = 'FAC'")
+            ->andWhere('m.estadoAnulado = 0')
+            ->andWhere('m.estadoAprobado = 1')
+            ->andWhere("m.codigoAsesorFk = '" . $codigoAsesor . "'")
+        ->orderBy('m.numero', 'DESC');
+        if ($session->get('filtroInvInformeAsesorVentasFechaDesde') != null) {
+            $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroInvInformeAsesorVentasFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroInvInformeAsesorVentasFechaHasta') != null) {
+            $queryBuilder->andWhere("m.fecha <= '{$session->get('filtroInvInformeAsesorVentasFechaHasta')} 23:59:59'");
         }
         return $queryBuilder;
     }

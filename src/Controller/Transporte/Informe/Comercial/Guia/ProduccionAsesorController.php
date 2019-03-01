@@ -21,6 +21,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProduccionAsesorController extends Controller
 {
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/comercial/guia/produccion/asesor", name="transporte_informe_comercial_guia_produccion_asesor")
      */
     public function lista(Request $request)
@@ -31,8 +36,8 @@ class ProduccionAsesorController extends Controller
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => true, 'data' => $fecha])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => true, 'data' => $fecha])
             ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->add('cboAsesorRel', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))

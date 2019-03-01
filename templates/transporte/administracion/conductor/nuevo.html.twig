@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
     <div class="panel panel-default">
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
@@ -78,6 +79,7 @@
                 <label for="form_codigoVehiculo" class="col-sm-2 control-label">Codigo vehiculo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoVehiculo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.codigoVehiculo) }}
                 </div>
                 <label for="form_alias" class="col-sm-2 control-label">Alias:</label>
                 <div class="col-sm-4">

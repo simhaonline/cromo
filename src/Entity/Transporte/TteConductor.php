@@ -4,6 +4,7 @@
 namespace App\Entity\Transporte;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteConductorRepository")
@@ -124,6 +125,10 @@ class TteConductor
 
     /**
      * @ORM\Column(name="codigo_vehiculo", type="string", length=6, nullable=true)
+     * @Assert\Length(
+     *     max = 6,
+     *     maxMessage="El campo no puede contener mas de 6 caracteres"
+     * )
      */
     private $codigoVehiculo;
 
@@ -169,6 +174,22 @@ class TteConductor
      * @ORM\JoinColumn(name="codigo_rh_fk", referencedColumnName="codigo_rh_pk")
      */
     protected $rhRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -296,6 +317,22 @@ class TteConductor
     public function setApellido2($apellido2): void
     {
         $this->apellido2 = $apellido2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRhFk()
+    {
+        return $this->codigoRhFk;
+    }
+
+    /**
+     * @param mixed $codigoRhFk
+     */
+    public function setCodigoRhFk($codigoRhFk): void
+    {
+        $this->codigoRhFk = $codigoRhFk;
     }
 
     /**
@@ -477,6 +514,22 @@ class TteConductor
     /**
      * @return mixed
      */
+    public function getArl()
+    {
+        return $this->arl;
+    }
+
+    /**
+     * @param mixed $arl
+     */
+    public function setArl($arl): void
+    {
+        $this->arl = $arl;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoVehiculo()
     {
         return $this->codigoVehiculo;
@@ -488,6 +541,22 @@ class TteConductor
     public function setCodigoVehiculo($codigoVehiculo): void
     {
         $this->codigoVehiculo = $codigoVehiculo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoInactivo()
+    {
+        return $this->estadoInactivo;
+    }
+
+    /**
+     * @param mixed $estadoInactivo
+     */
+    public function setEstadoInactivo($estadoInactivo): void
+    {
+        $this->estadoInactivo = $estadoInactivo;
     }
 
     /**
@@ -587,38 +656,6 @@ class TteConductor
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoRhFk()
-    {
-        return $this->codigoRhFk;
-    }
-
-    /**
-     * @param mixed $codigoRhFk
-     */
-    public function setCodigoRhFk($codigoRhFk): void
-    {
-        $this->codigoRhFk = $codigoRhFk;
-    }
-
-    /**
      * @return mixed
      */
     public function getRhRel()
@@ -632,38 +669,6 @@ class TteConductor
     public function setRhRel($rhRel): void
     {
         $this->rhRel = $rhRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getArl()
-    {
-        return $this->arl;
-    }
-
-    /**
-     * @param mixed $arl
-     */
-    public function setArl($arl): void
-    {
-        $this->arl = $arl;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoInactivo()
-    {
-        return $this->estadoInactivo;
-    }
-
-    /**
-     * @param mixed $estadoInactivo
-     */
-    public function setEstadoInactivo($estadoInactivo): void
-    {
-        $this->estadoInactivo = $estadoInactivo;
     }
 
 

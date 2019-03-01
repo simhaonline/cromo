@@ -118,7 +118,7 @@ class FinRegistroRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroFinCodigoTercero')}");
         }
         if ($session->get('filtroFinComprobante') != '') {
-            $queryBuilder->andWhere("r.codigoComprobanteFk = {$session->get('filtroFinComprobante')}");
+            $queryBuilder->andWhere("r.codigoComprobanteFk = '{$session->get('filtroFinComprobante')}'");
         }
         if ($session->get('filtroFinNumeroDesde') != '') {
             $queryBuilder->andWhere("r.numero >= {$session->get('filtroFinNumeroDesde')}");
@@ -127,7 +127,7 @@ class FinRegistroRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("r.numero <= {$session->get('filtroFinNumeroHasta')}");
         }
         if ($session->get('filtroFinCuenta') != '') {
-            $queryBuilder->andWhere("r.codigoCuentaFk = {$session->get('filtroFinCuenta')}");
+            $queryBuilder->andWhere("r.codigoCuentaFk = '{$session->get('filtroFinCuenta')}'");
         }
         if ($session->get('filtroFinCentroCosto') != '') {
             $queryBuilder->andWhere("r.codigoCentroCostoFk = {$session->get('filtroFinCentroCosto')}");

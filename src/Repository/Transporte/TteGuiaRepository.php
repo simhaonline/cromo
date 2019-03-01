@@ -2591,6 +2591,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroCodigoDespacho') != "") {
             $queryBuilder->andWhere("g.codigoDespachoFk = " . $session->get('filtroCodigoDespacho'));
         }
+        $queryBuilder->setMaxResults(500);
         return $queryBuilder;
     }
 

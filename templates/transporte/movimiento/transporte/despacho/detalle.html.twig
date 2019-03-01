@@ -235,14 +235,6 @@
                                         {{ form_widget(form.btnEliminarGuia, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                                     </div>
                                 </div>
-                                {% if arDespacho.estadoAutorizado == 0 %}
-                                    <br/><br/>
-                                    <input type="text" id="txtGuiaCodigo">
-                                    <button id="btnAdicionar">Adicionar</button>
-                                    <br/><br/>
-                                    <input type="text" id="txtGuiaDocumento">
-                                    <button id="btnAdicionarDocumento">Adicionar documento</button>
-                                {% endif %}
                             </div>
                         </div>
                         <div class="tab-pane" id="novedades">
@@ -350,10 +342,18 @@
                         </div>
                     </div>
                     {{ form_end(form) }}
-
+                </article>
             </div>
             <!-- end widget content -->
         </section>
+        {% if arDespacho.estadoAutorizado == 0 %}
+            <br/><br/>
+            <input type="text" id="txtGuiaCodigo">
+            <button id="btnAdicionar">Adicionar</button>
+            <br/><br/>
+            <input type="text" id="txtGuiaDocumento">
+            <button id="btnAdicionarDocumento">Adicionar documento</button>
+        {% endif %}
     </div>
 {% endblock %}
 

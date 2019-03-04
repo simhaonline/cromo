@@ -41,11 +41,17 @@ class PrecioController extends ControllerListenerGeneral
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNombre', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNombrePrecio')])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar'])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
             $session->set('filtroTteNombrePrecio', $form->get('txtNombre')->getData());
+        }
+        if ($form->get('btnEliminar')->isClicked()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            $em->getRepository(TtePrecio::class)->eliminar($arrSeleccionados);
+            return $this->redirect($this->generateUrl('transporte_administracion_comercial_precio_lista'));
         }
         $arPrecios = $paginator->paginate($em->getRepository(TtePrecio::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('transporte/administracion/comercial/precio/lista.html.twig',

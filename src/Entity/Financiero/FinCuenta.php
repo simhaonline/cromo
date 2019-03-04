@@ -70,6 +70,11 @@ class FinCuenta
     private $exigeBase = false;
 
     /**
+     * @ORM\Column(name="exige_documento_referencia", type="boolean", nullable=true, options={"default":false})
+     */
+    private $exigeDocumentoReferencia = false;
+
+    /**
      * @ORM\Column(name="porcentaje_base_retencion", type="float", nullable=true)
      */
     private $porcentajeBaseRetencion = 0;
@@ -368,6 +373,22 @@ class FinCuenta
     public function setSaldosCuentaRel( $saldosCuentaRel ): void
     {
         $this->saldosCuentaRel = $saldosCuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExigeDocumentoReferencia()
+    {
+        return $this->exigeDocumentoReferencia;
+    }
+
+    /**
+     * @param mixed $exigeDocumentoReferencia
+     */
+    public function setExigeDocumentoReferencia($exigeDocumentoReferencia): void
+    {
+        $this->exigeDocumentoReferencia = $exigeDocumentoReferencia;
     }
 
 

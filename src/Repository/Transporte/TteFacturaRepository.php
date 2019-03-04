@@ -755,6 +755,12 @@ class TteFacturaRepository extends ServiceEntityRepository
                                     $arRegistro->setVrDebito($arIngreso['vrFlete']);
                                     $arRegistro->setNaturaleza('D');
                                 }
+                                if($arCuenta->getExigeDocumentoReferencia()) {
+                                    if($arFactura['codigoFacturaClaseFk'] == "FA") {
+                                        $arRegistro->setNumeroReferencia($arFactura['numero']);
+                                        $arRegistro->setNumeroReferenciaPrefijo($arFactura['prefijo']);
+                                    }
+                                }
                                 $arRegistro->setDescripcion('INGRESO FLETE CLIENTE');
                                 $arRegistro->setCodigoModeloFk('TteFactura');
                                 $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
@@ -785,6 +791,12 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 } else {
                                     $arRegistro->setVrDebito($arIngreso['vrManejo']);
                                     $arRegistro->setNaturaleza('D');
+                                }
+                                if($arCuenta->getExigeDocumentoReferencia()) {
+                                    if($arFactura['codigoFacturaClaseFk'] == "FA") {
+                                        $arRegistro->setNumeroReferencia($arFactura['numero']);
+                                        $arRegistro->setNumeroReferenciaPrefijo($arFactura['prefijo']);
+                                    }
                                 }
                                 $arRegistro->setDescripcion('INGRESO MANEJO CLIENTE');
                                 $arRegistro->setCodigoModeloFk('TteFactura');

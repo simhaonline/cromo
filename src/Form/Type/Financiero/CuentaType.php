@@ -20,6 +20,7 @@ class CuentaType extends AbstractType
             ->add('exigeTercero', CheckboxType::class, ['label' => 'Exige tercero:', 'required' => false])
             ->add('exigeCentroCosto', CheckboxType::class, ['label' => 'Exige centro de costo', 'required' => false])
             ->add('exigeBase', CheckboxType::class, ['label' => 'Exige base', 'required' => false])
+            ->add('exigeDocumentoReferencia', CheckboxType::class, ['label' => 'Exige documento referencia', 'required' => false])
             ->add('permiteMovimiento', CheckboxType::class, ['label' => 'Permite movimientos', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
         ;

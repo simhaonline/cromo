@@ -222,6 +222,7 @@ class MovimientoController extends ControllerListenerGeneral
                 $arMovimiento->setFechaVence($arMovimiento->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha, $arMovimiento->getPlazoPago()));
                 $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
                 $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
+                $arMovimiento->setOperacionComercial($arDocumento->getOperacionComercial());
                 $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
                 if ($arMovimiento->getCodigoSucursalFk()) {
                     $arSucursal = $em->getRepository(InvSucursal::class)->find($arMovimiento->getCodigoSucursalFk());

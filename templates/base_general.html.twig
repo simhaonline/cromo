@@ -82,6 +82,9 @@
                 <li>
                     <a href="{{ path('general_administracion_configuracion_configuracion_lista', {'id': 1}) }}">Configuracion</a>
                 <li>
+                <li>
+                    <a href="{{ path('general_seguridad_usuario_nuevo_clave', {'hash' : encriptar(app.user.username)}) }}">Cambiar contraseña</a>
+                <li>
             </ul>
         </li>
     </ul>

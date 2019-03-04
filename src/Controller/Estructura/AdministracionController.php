@@ -165,6 +165,9 @@ final class AdministracionController extends BaseController
             case 'general':
                 $prefijo = 'gen';
                 break;
+            case 'crm':
+                $prefijo = 'crm';
+                break;
         }
         return $prefijo;
     }

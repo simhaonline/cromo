@@ -2521,6 +2521,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.comentario')
             ->addSelect('g.unidades')
             ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
             ->addSelect('g.vrFlete')
             ->addSelect('g.vrManejo')
             ->addSelect('g.vrCobroEntrega')
@@ -2560,6 +2561,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.comentario')
             ->addSelect('g.unidades')
             ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
             ->addSelect('g.vrFlete')
             ->addSelect('g.vrManejo')
             ->addSelect('g.vrCobroEntrega')
@@ -2757,3 +2759,4 @@ class TteGuiaRepository extends ServiceEntityRepository
     }
 
 }
+

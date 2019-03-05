@@ -6,18 +6,21 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
+use App\Entity\Transporte\TteCondicion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaConcepto;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaDetalleConcepto;
+use App\Entity\Transporte\TteFacturaDetalleReliquidar;
 use App\Entity\Transporte\TteFacturaOtro;
 use App\Entity\Transporte\TteFacturaPlanilla;
 
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 
+use App\Entity\Transporte\TtePrecio;
 use App\Form\Type\Transporte\FacturaDetalleConceptoType;
 use App\Form\Type\Transporte\FacturaNotaCreditoType;
 use App\Form\Type\Transporte\FacturaPlanillaType;
@@ -31,8 +34,14 @@ use App\General\General;
 use App\Utilidades\Estandares;
 
 use Doctrine\ORM\EntityRepository;
+use PhpParser\Node\Stmt\Echo_;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -175,7 +184,7 @@ class FacturaController extends ControllerListenerGeneral
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $arrControles = $request->request->all();
-                if(isset($arrControles['arrCodigo'])){
+                if (isset($arrControles['arrCodigo'])) {
                     $em->getRepository(TteFacturaDetalle::class)->actualizarDetalles($arrControles, $form, $arFactura);
                     $this->getDoctrine()->getRepository(TteFactura::class)->liquidar($id);
                 }
@@ -617,7 +626,7 @@ class FacturaController extends ControllerListenerGeneral
     /**
      * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/concepto/{codigoFactura}/{codigoFacturaDetalleConcepto}", name="transporte_movimiento_comercial_factura_detalle_adicionar_concepto")
      */
-    public function detalleAdicionarConcepto(Request $request, $codigoFactura, $codigoFacturaDetalleConcepto=0)
+    public function detalleAdicionarConcepto(Request $request, $codigoFactura, $codigoFacturaDetalleConcepto = 0)
     {
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
@@ -649,6 +658,59 @@ class FacturaController extends ControllerListenerGeneral
         ]);
     }
 
-
+    /**
+     * @param Request $request
+     * @param $codigoFactura
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @Route("/transporte/movimiento/comercial/factura/detalle/reliquidar/{codigoFactura}", name="transporte_movimiento_comercial_factura_detalle_reliquidar")
+     */
+    public function reliquidar(Request $request, $codigoFactura)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+            ->add('btnReliquidar', SubmitType::class, array('label' => 'Reliquidar'))
+            ->add('tipoLiquidacion', ChoiceType::class, [
+                'choices' => [
+                    'peso' => '1',
+                    'unidad' => '2',
+                    'adicional' => '3',
+                ]])
+            ->add('cboCondicion', EntityType::class, $em->getRepository(TteCondicion::class)->llenarCombo())
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnReliquidar')->isClicked()) {
+                $arFacturaDetalles = $em->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $codigoFactura]);
+                $em->getRepository(TteFacturaDetalleReliquidar::class)->limpiarTabla($codigoFactura);
+                foreach ($arFacturaDetalles as $arFacturaDetalle){
+                    $arFacturaDetalleReliquidar =  new TteFacturaDetalleReliquidar;
+                    $arFacturaDetalleReliquidar->setFacturaDetalle($arFacturaDetalle);
+                    $arFacturaDetalleReliquidar->setCodigoGuiaFk($arFacturaDetalle->getCodigoGuiaFk());
+                    $arFacturaDetalleReliquidar->setCodigoFacturaFk($codigoFactura);
+                    $arFacturaDetalleReliquidar->setVrFlete($arFacturaDetalle->getVrFlete());
+                    $arFacturaDetalleReliquidar->setVrManejo($arFacturaDetalle->getVrManejo());
+                    $em->persist($arFacturaDetalleReliquidar);
+                    $em->flush();
+                }
+//                $arCondicion = $em->getRepository(TteCondicion::class)->find($form->get('cboCondicion')->getData());
+//                $arPrecio = $em->getRepository(TtePrecio::class)->findBy(array('codigoPrecioPk' => $arCondicion->getCodigoPrecioFk()));
+//                $tipoliquidacion = $form->get('tipoLiquidacion')->getData();
+//                $precioActualizar = 0;
+//                if($tipoliquidacion == '1'){
+//                    $arFacturaDetalles = $em->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $codigoFactura]);
+//                    foreach ($arFacturaDetalles as $arFacturaDetalle) {
+//                        $mayorValor = max($arFacturaDetalle->getPesoReal(), $arFacturaDetalle->getPesoVolumen());
+//                    }
+//                }
+            }
+        }
+        $arFacturaDetallesReliqudiar = $this->getDoctrine()->getRepository(TteFacturaDetalleReliquidar::class)->lista($codigoFactura);
+        return $this->render('transporte/movimiento/comercial/factura/reliquidar.html.twig', [
+            'arFacturaDetallesReliquidar' => $arFacturaDetallesReliqudiar,
+            'form' => $form->createView()
+        ]);
+    }
 }
+
 

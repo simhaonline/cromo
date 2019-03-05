@@ -2,6 +2,7 @@
 namespace App\Repository\Transporte;
 use App\Entity\Transporte\TteCondicion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 class TteCondicionRepository extends ServiceEntityRepository
@@ -10,6 +11,7 @@ class TteCondicionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TteCondicion::class);
     }
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:Transporte\TteCondicion','cc')
@@ -18,6 +20,7 @@ class TteCondicionRepository extends ServiceEntityRepository
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }
+
     public function lista()
     {
         $session = new Session();
@@ -39,5 +42,28 @@ class TteCondicionRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("cc.nombre LIKE '%{$session->get('filtroNombreCondicion')}%' ");
         }
         return $queryBuilder;
+    }
+
+    /**
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function llenarCombo(){
+        $session = new Session();
+        $array = [
+            'class' => TteCondicion::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('c')
+                    ->orderBy('c.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""];
+        if ($session->get('filtroTteCondicion')) {
+            $array['data'] = $this->getEntityManager()->getReference(TteCondicion::class, $session->get('filtroTteCondicion'));
+        }
+        return $array;
     }
 }

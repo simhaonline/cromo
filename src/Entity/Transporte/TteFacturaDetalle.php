@@ -107,6 +107,27 @@ class TteFacturaDetalle
     protected $facturasDetallesFacturaDetalleRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaDetalleReliquidar", mappedBy="facturaDetalle")
+     */
+    protected $facturaDetallesReliquidarRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoFacturaDetallePk()
@@ -136,6 +157,38 @@ class TteFacturaDetalle
     public function setCodigoFacturaFk($codigoFacturaFk): void
     {
         $this->codigoFacturaFk = $codigoFacturaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaDetalleFk()
+    {
+        return $this->codigoFacturaDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaDetalleFk
+     */
+    public function setCodigoFacturaDetalleFk($codigoFacturaDetalleFk): void
+    {
+        $this->codigoFacturaDetalleFk = $codigoFacturaDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaPlanillaFk()
+    {
+        return $this->codigoFacturaPlanillaFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaPlanillaFk
+     */
+    public function setCodigoFacturaPlanillaFk($codigoFacturaPlanillaFk): void
+    {
+        $this->codigoFacturaPlanillaFk = $codigoFacturaPlanillaFk;
     }
 
     /**
@@ -253,6 +306,22 @@ class TteFacturaDetalle
     /**
      * @return mixed
      */
+    public function getCodigoImpuestoRetencionFk()
+    {
+        return $this->codigoImpuestoRetencionFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoRetencionFk
+     */
+    public function setCodigoImpuestoRetencionFk($codigoImpuestoRetencionFk): void
+    {
+        $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFacturaRel()
     {
         return $this->facturaRel;
@@ -264,38 +333,6 @@ class TteFacturaDetalle
     public function setFacturaRel($facturaRel): void
     {
         $this->facturaRel = $facturaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiaRel()
-    {
-        return $this->guiaRel;
-    }
-
-    /**
-     * @param mixed $guiaRel
-     */
-    public function setGuiaRel($guiaRel): void
-    {
-        $this->guiaRel = $guiaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoFacturaDetalleFk()
-    {
-        return $this->codigoFacturaDetalleFk;
-    }
-
-    /**
-     * @param mixed $codigoFacturaDetalleFk
-     */
-    public function setCodigoFacturaDetalleFk($codigoFacturaDetalleFk): void
-    {
-        $this->codigoFacturaDetalleFk = $codigoFacturaDetalleFk;
     }
 
     /**
@@ -317,38 +354,6 @@ class TteFacturaDetalle
     /**
      * @return mixed
      */
-    public function getFacturasDetallesFacturaDetalleRel()
-    {
-        return $this->facturasDetallesFacturaDetalleRel;
-    }
-
-    /**
-     * @param mixed $facturasDetallesFacturaDetalleRel
-     */
-    public function setFacturasDetallesFacturaDetalleRel($facturasDetallesFacturaDetalleRel): void
-    {
-        $this->facturasDetallesFacturaDetalleRel = $facturasDetallesFacturaDetalleRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoFacturaPlanillaFk()
-    {
-        return $this->codigoFacturaPlanillaFk;
-    }
-
-    /**
-     * @param mixed $codigoFacturaPlanillaFk
-     */
-    public function setCodigoFacturaPlanillaFk($codigoFacturaPlanillaFk): void
-    {
-        $this->codigoFacturaPlanillaFk = $codigoFacturaPlanillaFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getFacturaPlanillaRel()
     {
         return $this->facturaPlanillaRel;
@@ -365,17 +370,49 @@ class TteFacturaDetalle
     /**
      * @return mixed
      */
-    public function getCodigoImpuestoRetencionFk()
+    public function getGuiaRel()
     {
-        return $this->codigoImpuestoRetencionFk;
+        return $this->guiaRel;
     }
 
     /**
-     * @param mixed $codigoImpuestoRetencionFk
+     * @param mixed $guiaRel
      */
-    public function setCodigoImpuestoRetencionFk( $codigoImpuestoRetencionFk ): void
+    public function setGuiaRel($guiaRel): void
     {
-        $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
+        $this->guiaRel = $guiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesFacturaDetalleRel()
+    {
+        return $this->facturasDetallesFacturaDetalleRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesFacturaDetalleRel
+     */
+    public function setFacturasDetallesFacturaDetalleRel($facturasDetallesFacturaDetalleRel): void
+    {
+        $this->facturasDetallesFacturaDetalleRel = $facturasDetallesFacturaDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaDetallesReliquidarRel()
+    {
+        return $this->facturaDetallesReliquidarRel;
+    }
+
+    /**
+     * @param mixed $facturaDetallesReliquidarRel
+     */
+    public function setFacturaDetallesReliquidarRel($facturaDetallesReliquidarRel): void
+    {
+        $this->facturaDetallesReliquidarRel = $facturaDetallesReliquidarRel;
     }
 
 

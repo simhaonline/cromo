@@ -2,6 +2,7 @@
 
 namespace App\Formato\Inventario;
 
+use App\Entity\Inventario\InvFacturaTipo;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvTercero;
@@ -226,6 +227,7 @@ class Factura1 extends \FPDF
          * @var $arMovimientoDetalles InvMovimientoDetalle
          */
         $arMovimiento = self::$em->getRepository('App:Inventario\InvMovimiento')->find(self::$codigoMovimiento);
+        $arFacturaTipo = self::$em->getRepository(InvFacturaTipo::class)->find(['codigoFacturaTipoPk' => $arMovimiento->getCodigoFacturaTipoFk()]);
         $y = 178;
         $x = 181;
 
@@ -334,7 +336,7 @@ class Factura1 extends \FPDF
         $this->SetFont('Arial', '', 7.5);
         $this->MultiCell(127, 3, utf8_decode(strtoupper($arMovimiento->getComentarios())), 0, 'L');
         $this->SetFont('Arial', 'B', 7.5);
-        $this->Text(37.5, 248.5, 'REALIZAR PAGO EN LA CUENTA DE AHORROS BANCOLOMBIA NUMERO 58098786765 A NOMBRE DE  FILTRAMED S.A.S');
+        $this->Text(37.5, 248.5, 'REALIZAR PAGO EN LA' . $arFacturaTipo->getInformacionCuentaPago() . ' A NOMBRE DE  FILTRAMED S.A.S');
 
         $this->SetFont('Arial', '', 5.5);
         $this->Text(20.5, 220, '* IVA REGIMEN COMUN');
@@ -344,7 +346,7 @@ class Factura1 extends \FPDF
         $this->Text(20.5, 228, '* LA PRENSETE FACTURA PRESENTA MERITO EJECUTIVO COMO TITULO VALOR');
         $this->Text(20.5, 230, ' SEGUN LO ESTABLECIDO EN EL ART.3 DE LA LEY 1231 DE 2008');
         $this->Text(20.5, 232, '* RESOLUCION DIAN DE AUTORIZACION PARA FACTURACION POR COMPUTADOR');
-        $this->Text(20.5, 234, ' No 18762005231251 DESDE 2017/10/13 HASTA 2019/10/13. FACTURAS 0651 AL 1000');
+        $this->Text(20.5, 234, ' No ' . $arFacturaTipo->getNumeroResolucionDianFactura() . ' DESDE ' . $arFacturaTipo->getFechaDesdeVigencia()->format('Y-m-d'). ' HASTA ' . $arFacturaTipo->getFechaHastaVigencia()->format('Y-m-d') . ' . FACTURAS ' . $arFacturaTipo->getNumeracionDesde().  ' AL '. $arFacturaTipo->getNumeracionHasta());
         $this->SetFont('Arial', '', 6.5);
         $this->Text(65, 251.5, 'CRA 90 CL 65C-10 APTO 1917 MEDELLIN - CEL 300 448 02 19 - E-MAIL: comercial@filtramed.com');
         $this->Text(188, 257, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
@@ -680,6 +682,5 @@ class Factura1 extends \FPDF
     }
 
 }
-
 
 ?>

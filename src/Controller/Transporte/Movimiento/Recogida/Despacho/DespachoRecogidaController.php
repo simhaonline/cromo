@@ -197,17 +197,20 @@ class DespachoRecogidaController extends ControllerListenerGeneral
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->autorizar($arDespachoRecogida);
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->desautorizar($arDespachoRecogida);
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->aprobar($arDespachoRecogida);
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->anular($arDespachoRecogida);
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
             }
-            return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
         }
         $arRecogidas = $this->getDoctrine()->getRepository(TteRecogida::class)->despacho($id);
         $arDespachoRecogidaAuxiliares = $this->getDoctrine()->getRepository(TteDespachoRecogidaAuxiliar::class)->despacho($id);

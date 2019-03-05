@@ -1,0 +1,65 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Informacion general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-1">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tipoLiquidacion) }}
+                </div>
+                <label for="" class="control-label col-sm-1">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cboCondicion, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnReliquidar) }}
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>GUIA</th>
+            <th>OI</th>
+            <th>OC</th>
+            <th>ORIGEN</th>
+            <th>DESTINO</th>
+            <th>DOCUMENTO</th>
+            <th>UND</th>
+            <th>PESO</th>
+            <th>PESO FAC</th>
+            <th>VOL</th>
+            <th>DECLARA</th>
+            <th>FLETE</th>
+            <th>MANEJO</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arFacturaDetalleReliquidar in arFacturaDetallesReliquidar %}
+            <tr>
+                <td>{{ arFacturaDetalleReliquidar.codigoFacturaDetalleReliquidarPk }}</td>
+                <td>{{ arFacturaDetalleReliquidar.codigoGuiaFk }}</td>
+                <td>{{ arFacturaDetalleReliquidar.codigoOperacionIngresoFk }}</td>
+                <td>{{ arFacturaDetalleReliquidar.codigoOperacionCargoFk }}</td>
+                <td>{{ arFacturaDetalleReliquidar.ciudadOrigen}}</td>
+                <td>{{ arFacturaDetalleReliquidar.ciudadDestino }}</td>
+                <td>{{ arFacturaDetalleReliquidar.documentoCliente }}</td>
+                <td>{{ arFacturaDetalleReliquidar.unidades }}</td>
+                <td>{{ arFacturaDetalleReliquidar.pesoReal }}</td>
+                <td>{{ arFacturaDetalleReliquidar.pesoFacturado }}</td>
+                <td>{{ arFacturaDetalleReliquidar.pesoVolumen }}</td>
+                <td>{{ arFacturaDetalleReliquidar.vrDeclara | number_format }}</td>
+                <td>{{ arFacturaDetalleReliquidar.vrFlete | number_format }}</td>
+                <td>{{ arFacturaDetalleReliquidar.vrManejo | number_format }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ form_end(form) }}
+{% endblock %}
+
+

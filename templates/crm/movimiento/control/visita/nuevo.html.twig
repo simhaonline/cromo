@@ -5,6 +5,10 @@
         <div class="panel-heading">Informacion general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
+                <label for="form_clienteRel" class="col-sm-2 control-label">Cliente:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.clienteRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                </div>
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.visitaTipoRel, { 'attr': {'class': 'form-control'} }) }}

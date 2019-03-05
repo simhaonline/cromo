@@ -144,6 +144,11 @@ class GenCiudad
     protected $configuracionesCiudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmCliente", mappedBy="ciudadRel")
+     */
+    protected $crmClienteCiuidadRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -558,5 +563,23 @@ class GenCiudad
     {
         $this->configuracionesCiudadRel = $configuracionesCiudadRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCrmClienteCiuidadRel()
+    {
+        return $this->crmClienteCiuidadRel;
+    }
+
+    /**
+     * @param mixed $crmClienteCiuidadRel
+     */
+    public function setCrmClienteCiuidadRel($crmClienteCiuidadRel): void
+    {
+        $this->crmClienteCiuidadRel = $crmClienteCiuidadRel;
+    }
+
+
 }
 

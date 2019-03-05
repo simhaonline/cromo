@@ -17,9 +17,19 @@ class CrmVisita
     private $codigoVisitaPk;
 
     /**
-     * @ORM\Column(name="codigo_visita_tipo_fk", type="string", length=20, nullable=false)
+     * @ORM\Column(name="codigo_visita_tipo_fk", type="string", length=20, nullable=true)
      */
     private $codigoVisitaTipoFk;
+
+    /**
+     * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
+     */
+    private $codigoClienteFk;
+
+    /**
+     * @ORM\Column(name="codigo_contacto_fk", type="integer", nullable=true)
+     */
+    private $codigoContactoFk;
 
     /**
      * @ORM\Column(name="fecha", type="datetime")
@@ -53,6 +63,18 @@ class CrmVisita
     protected $visitaTipoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Crm\CrmCliente", inversedBy="visitaClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    protected $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Crm\CrmContacto", inversedBy="visitaContactoRel")
+     * @ORM\JoinColumn(name="codigo_contacto_fk", referencedColumnName="codigo_contacto_pk")
+     */
+    protected $contactoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoVisitaPk()
@@ -63,10 +85,9 @@ class CrmVisita
     /**
      * @param mixed $codigoVisitaPk
      */
-    public function setCodigoVisitaPk($codigoVisitaPk)
+    public function setCodigoVisitaPk($codigoVisitaPk): void
     {
         $this->codigoVisitaPk = $codigoVisitaPk;
-        return $this;
     }
 
     /**
@@ -80,10 +101,41 @@ class CrmVisita
     /**
      * @param mixed $codigoVisitaTipoFk
      */
-    public function setCodigoVisitaTipoFk($codigoVisitaTipoFk)
+    public function setCodigoVisitaTipoFk($codigoVisitaTipoFk): void
     {
         $this->codigoVisitaTipoFk = $codigoVisitaTipoFk;
-        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoClienteFk()
+    {
+        return $this->codigoClienteFk;
+    }
+
+    /**
+     * @param mixed $codigoClienteFk
+     */
+    public function setCodigoClienteFk($codigoClienteFk): void
+    {
+        $this->codigoClienteFk = $codigoClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContactoFk()
+    {
+        return $this->codigoContactoFk;
+    }
+
+    /**
+     * @param mixed $codigoContactoFk
+     */
+    public function setCodigoContactoFk($codigoContactoFk): void
+    {
+        $this->codigoContactoFk = $codigoContactoFk;
     }
 
     /**
@@ -97,10 +149,9 @@ class CrmVisita
     /**
      * @param mixed $fecha
      */
-    public function setFecha($fecha)
+    public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
-        return $this;
     }
 
     /**
@@ -114,27 +165,9 @@ class CrmVisita
     /**
      * @param mixed $comentarios
      */
-    public function setComentarios($comentarios)
+    public function setComentarios($comentarios): void
     {
         $this->comentarios = $comentarios;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVisitaTipoRel()
-    {
-        return $this->visitaTipoRel;
-    }
-
-    /**
-     * @param mixed $visitaTipoRel
-     */
-    public function setVisitaTipoRel($visitaTipoRel)
-    {
-        $this->visitaTipoRel = $visitaTipoRel;
-        return $this;
     }
 
     /**
@@ -148,10 +181,9 @@ class CrmVisita
     /**
      * @param mixed $estadoAprobado
      */
-    public function setEstadoAprobado($estadoAprobado)
+    public function setEstadoAprobado($estadoAprobado): void
     {
         $this->estadoAprobado = $estadoAprobado;
-        return $this;
     }
 
     /**
@@ -165,10 +197,9 @@ class CrmVisita
     /**
      * @param mixed $estadoAnulado
      */
-    public function setEstadoAnulado($estadoAnulado)
+    public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
-        return $this;
     }
 
     /**
@@ -182,10 +213,57 @@ class CrmVisita
     /**
      * @param mixed $estadoAutorizado
      */
-    public function setEstadoAutorizado($estadoAutorizado)
+    public function setEstadoAutorizado($estadoAutorizado): void
     {
         $this->estadoAutorizado = $estadoAutorizado;
-        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVisitaTipoRel()
+    {
+        return $this->visitaTipoRel;
+    }
+
+    /**
+     * @param mixed $visitaTipoRel
+     */
+    public function setVisitaTipoRel($visitaTipoRel): void
+    {
+        $this->visitaTipoRel = $visitaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContactoRel()
+    {
+        return $this->contactoRel;
+    }
+
+    /**
+     * @param mixed $contactoRel
+     */
+    public function setContactoRel($contactoRel): void
+    {
+        $this->contactoRel = $contactoRel;
     }
 
 

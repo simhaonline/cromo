@@ -88,6 +88,11 @@ class CrmCliente
     protected $ciudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmVisita", mappedBy="clienteRel", cascade={"remove","persist"})
+     */
+    protected $visitaClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()
@@ -325,6 +330,22 @@ class CrmCliente
     public function setCiudadRel($ciudadRel): void
     {
         $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVisitaClienteRel()
+    {
+        return $this->visitaClienteRel;
+    }
+
+    /**
+     * @param mixed $visitaClienteRel
+     */
+    public function setVisitaClienteRel($visitaClienteRel): void
+    {
+        $this->visitaClienteRel = $visitaClienteRel;
     }
 
 

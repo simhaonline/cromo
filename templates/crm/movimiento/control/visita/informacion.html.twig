@@ -7,7 +7,14 @@
         <td class="titulo">FECHA:</td>
         <td class="td-in-well">{{ arVisita.fecha |date("Y/m/d") }}</td>
     </tr>
-
+    <tr>
+        <td class="titulo">CLIENTE:</td>
+        <td class="td-in-well">{{ arVisita.clienteRel.nombreCorto | default('') }}</td>
+        <td class="titulo">CONTACTO:</td>
+        <td align="right">{{ arVisita.contactoRel.nombreCorto | default('')}}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+    </tr>
     <tr>
         <td class="titulo">COMENTARIO:</td>
         <td class="td-in-well" colspan="5">{{ arVisita.comentarios }}</td>

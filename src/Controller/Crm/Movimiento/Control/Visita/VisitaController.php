@@ -65,6 +65,7 @@ class VisitaController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @Route("/crm/movimiento/control/visita/nuevo/{id}", name="crm_movimiento_control_visita_nuevo")
      */
     public function nuevo(Request $request, $id)
@@ -94,6 +95,7 @@ class VisitaController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @Route("/crm/movimiento/control/visita/detalle/{id}", name="crm_movimiento_control_visita_detalle")
      */
     public function detalle(Request $request, $id)

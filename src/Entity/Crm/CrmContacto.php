@@ -43,6 +43,11 @@ class CrmContacto
     private $telefono;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmVisita", mappedBy="contactoRel", cascade={"remove","persist"})
+     */
+    protected $visitaContactoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -137,6 +142,23 @@ class CrmContacto
     {
         $this->telefono = $telefono;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVisitaContactoRel()
+    {
+        return $this->visitaContactoRel;
+    }
+
+    /**
+     * @param mixed $visitaContactoRel
+     */
+    public function setVisitaContactoRel($visitaContactoRel): void
+    {
+        $this->visitaContactoRel = $visitaContactoRel;
+    }
+
 
 
 }

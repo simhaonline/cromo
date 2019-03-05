@@ -2,6 +2,8 @@
 
 namespace App\Form\Type\Crm;
 
+use App\Entity\Crm\CrmCliente;
+use App\Entity\Crm\CrmContacto;
 use App\Entity\Crm\CrmVisitaTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -23,6 +25,24 @@ class VisitaType extends AbstractType
                         ->orderBy('st.codigoVisitaTipoPk', 'ASC');
                 },
                 'choice_label' => 'nombre',
+            ))
+            ->add('clienteRel', EntityType::class, array(
+                'class' => CrmCliente::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.codigoClientePk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombreCorto',
+            ))
+            ->add('contactoRel', EntityType::class, array(
+                'class' => CrmContacto::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('ct')
+                        ->orderBy('ct.codigoContactoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombreCorto',
             ))
             ->add('comentarios',TextareaType::class, array('required' => false))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'));

@@ -92,6 +92,11 @@ class GenIdentificacion
     protected $comProveedoresIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmCliente", mappedBy="identificacionRel")
+     */
+    protected $crmClienteIdentificacionRel;
+
+    /**
      * @return mixed
      */
     public function getComProveedoresIdentificacionRel()
@@ -313,6 +318,54 @@ class GenIdentificacion
     public function setFinTercerosIdentificacionRel($finTercerosIdentificacionRel): void
     {
         $this->finTercerosIdentificacionRel = $finTercerosIdentificacionRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurClientesIdentificacionRel()
+    {
+        return $this->turClientesIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $turClientesIdentificacionRel
+     */
+    public function setTurClientesIdentificacionRel($turClientesIdentificacionRel): void
+    {
+        $this->turClientesIdentificacionRel = $turClientesIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCrmClienteIdentificacionRel()
+    {
+        return $this->crmClienteIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $crmClienteIdentificacionRel
+     */
+    public function setCrmClienteIdentificacionRel($crmClienteIdentificacionRel): void
+    {
+        $this->crmClienteIdentificacionRel = $crmClienteIdentificacionRel;
     }
 
 

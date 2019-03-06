@@ -25,10 +25,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class CorregirFacturaController extends ControllerListenerGeneral
 {
-    protected $proceso = "0008";
+    protected $proceso = "0011";
 
 
-    /**
+    /**X
      * @param Request $request
      * @return Response
      * @throws \Doctrine\ORM\ORMException

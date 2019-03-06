@@ -114,4 +114,7 @@ class GenTareaPrioridad
     {
         $this->tareasTareaPrioridadRel = $tareasTareaPrioridadRel;
     }
+
+
+
 }

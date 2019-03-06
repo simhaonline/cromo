@@ -222,4 +222,7 @@ class GenTarea
     {
         $this->usuarioRecibeRel = $usuarioRecibeRel;
     }
+
+
+
 }

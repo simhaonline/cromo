@@ -345,12 +345,12 @@
                 <div>
                     {% set primero = true %}
                     {% set terminadas = [] %}
-                    {% set soloRerminadas = true %}
+                    {% set soloTerminadas = true %}
                     {% if arTareas %}
                         <ul class="widget-body no-padding smart-form">
                             {% for arTarea in arTareas %}
                             {% if not arTarea.estadoTerminado %}
-                            {% set soloRerminadas = false %}
+                            {% set soloTerminadas = false %}
                             {% if primero %}
                             {% set prioridad = arTarea.nombrePrioridad %}
                             <h5 class="todo-group-title"><i
@@ -421,7 +421,7 @@
                                     {% set terminadas = terminadas|merge([arTarea]) %}
                                 {% endif %}
                                 {% endfor %}
-                                {% if not soloRerminadas %}
+                                {% if not soloTerminadas %}
                             </ul>
                             {% endif %}
                             {% if terminadas %}

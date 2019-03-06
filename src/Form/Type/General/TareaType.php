@@ -54,7 +54,7 @@ class TareaType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoTareaPk",           "tipo":"pk"    ,"ayuda":"Codigo del registro"           ,"titulo":"ID"},
-            {"campo":"tareaPrioridadRel.nombre","tipo":"texto" ,"ayuda":"Nombre de la prioridad"        ,"titulo":"PRIORIDAD" ,"relacion":""},
+            {"campo":"codigoTareaPrioridadFk",       "tipo":"texto" ,"ayuda":"Prioridad"            ,"titulo":"PRIORIDAD"},
             {"campo":"titulo",                  "tipo":"texto" ,"ayuda":"Titulo de la tarea"            ,"titulo":"TITULO"},
             {"campo":"fecha",                   "tipo":"fecha" ,"ayuda":"Fecha de registro de la tarea" ,"titulo":"FECHA"},
             {"campo":"descripcion",             "tipo":"texto" ,"ayuda":"Descripción de la tarea"       ,"titulo":"DESCRIPCION"},

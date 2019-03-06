@@ -15,23 +15,27 @@ class UsuarioRepository extends ServiceEntityRepository
         parent::__construct($registry, Usuario::class);
     }
 
+    /**
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function llenarCombo()
     {
         $session = new Session();
         $array = [
             'class' => Usuario::class,
             'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('r')
-                    ->orderBy('r.nombre', 'ASC');
+                return $er->createQueryBuilder('u')
+                    ->orderBy('u.username', 'ASC');
             },
-            'choice_label' => 'nombre',
+            'choice_label' => 'username',
             'required' => false,
             'empty_data' => "",
             'placeholder' => "TODOS",
             'data' => ""
         ];
-        if ($session->get('filtroTteDespachoTipo')) {
-            $array['data'] = $this->getEntityManager()->getReference(Usuario::class, $session->get('filtroTteDespachoTipo'));
+        if ($session->get('filtroUsuario')) {
+            $array['data'] = $this->getEntityManager()->getReference(Usuario::class, $session->get('filtroUsuario'));
         }
         return $array;
     }

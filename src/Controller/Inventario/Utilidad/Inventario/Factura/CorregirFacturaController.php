@@ -28,12 +28,9 @@ class CorregirFacturaController extends ControllerListenerGeneral
     protected $proceso = "0011";
 
 
-    /**X
+    /**
      * @param Request $request
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/utilidad/inventario/factura/corregirfactura", name="inventario_utilidad_inventario_factura_corregirfactura")
      */
     public function lista(Request $request)

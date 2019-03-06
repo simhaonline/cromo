@@ -1342,4 +1342,29 @@ class InvMovimientoRepository extends ServiceEntityRepository
 
         return $arrResultado['cantidad'];
     }
+
+    public function corregirFactura() {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm');
+        $queryBuilder
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.numero')
+            ->addSelect('ase.nombre AS asesor')
+            ->addSelect('t.nombreCorto AS tercero')
+            ->addSelect('m.fecha')
+            ->addSelect('m.vrSubtotal')
+            ->addSelect('m.vrIva')
+            ->addSelect('m.vrDescuento')
+            ->addSelect('m.vrNeto')
+            ->addSelect('m.vrTotal')
+            ->leftJoin('m.asesorRel', 'ase')
+            ->leftJoin('m.terceroRel', 't')
+            ->where("m.codigoDocumentoTipoFk = 'FAC' ")
+            ->andWhere('m.estadoAnulado = 0');
+        if ($session->get('filtroInvFacturaNumero') != "") {
+            $queryBuilder->andWhere("m.numero = " . $session->get('filtroInvFacturaNumero'));
+        }
+
+        return $queryBuilder;
+    }
 }

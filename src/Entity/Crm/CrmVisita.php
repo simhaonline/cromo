@@ -75,6 +75,11 @@ class CrmVisita
     protected $contactoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmVisitaReporte", mappedBy="visitaRel", cascade={"remove","persist"})
+     */
+    protected $visitasReporteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoVisitaPk()
@@ -264,6 +269,22 @@ class CrmVisita
     public function setContactoRel($contactoRel): void
     {
         $this->contactoRel = $contactoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVisitasReporteRel()
+    {
+        return $this->visitasReporteRel;
+    }
+
+    /**
+     * @param mixed $visitasReporteRel
+     */
+    public function setVisitasReporteRel($visitasReporteRel): void
+    {
+        $this->visitasReporteRel = $visitasReporteRel;
     }
 
 

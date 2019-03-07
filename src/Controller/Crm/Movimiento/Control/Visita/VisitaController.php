@@ -6,6 +6,8 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Crm\CrmVisita;
+use App\Entity\Crm\CrmVisitaReporte;
+use App\Form\Type\Crm\VisitaReporteType;
 use App\Form\Type\Crm\VisitaType;
 use App\Formato\Crm\Visita;
 use App\General\General;
@@ -16,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class VisitaController extends ControllerListenerGeneral
 {
-    protected $clase= CrmVisita::class;
+    protected $clase = CrmVisita::class;
     protected $claseNombre = "CrmVisita";
     protected $modulo = "Crm";
     protected $funcion = "Movimiento";
@@ -35,7 +37,7 @@ class VisitaController extends ControllerListenerGeneral
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
 //                $datos = $this->getDatosLista();
             }
         }
@@ -75,7 +77,7 @@ class VisitaController extends ControllerListenerGeneral
             $arVisita = new CrmVisita();
             $arVisita->setFecha(new \DateTime('now'));
         } else {
-            $arVisita= $em->getRepository(CrmVisita::class)->find($id);
+            $arVisita = $em->getRepository(CrmVisita::class)->find($id);
         }
         $form = $this->createForm(VisitaType::class, $arVisita);
         $form->handleRequest($request);
@@ -84,7 +86,7 @@ class VisitaController extends ControllerListenerGeneral
                 $arVisita->setComentarios($form->get('comentarios')->getData());
                 $em->persist($arVisita);
                 $em->flush();
-                return $this->redirect($this->generateUrl('crm_movimiento_control_visita_detalle',['id'=>$arVisita->getCodigoVisitaPk()]));
+                return $this->redirect($this->generateUrl('crm_movimiento_control_visita_detalle', ['id' => $arVisita->getCodigoVisitaPk()]));
             }
         }
         return $this->render('crm/movimiento/control/visita/nuevo.html.twig', [
@@ -102,7 +104,7 @@ class VisitaController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arVisita = $em->getRepository(CrmVisita::class)->find($id);
-        $form = Estandares::botonera($arVisita->getEstadoAutorizado(),$arVisita->getEstadoAprobado(),$arVisita->getEstadoAnulado());
+        $form = Estandares::botonera($arVisita->getEstadoAutorizado(), $arVisita->getEstadoAprobado(), $arVisita->getEstadoAnulado());
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -116,17 +118,52 @@ class VisitaController extends ControllerListenerGeneral
                 $em->getRepository('App\Entity\Crm\CrmVisita')->desautorizar($arVisita);
             }
             if ($form->get('btnAprobar')->isClicked()) {
-               $em->getRepository('App\Entity\Crm\CrmVisita')->aprobar($arVisita);
+                $em->getRepository('App\Entity\Crm\CrmVisita')->aprobar($arVisita);
             }
             if ($form->get('btnAnular')->isClicked()) {
-               $em->getRepository('App\Entity\Crm\CrmVisita')->anular($arVisita);
+                $em->getRepository('App\Entity\Crm\CrmVisita')->anular($arVisita);
             }
-            return $this->redirect($this->generateUrl('crm_movimiento_control_visita_detalle',['id' => $arVisita->getCodigoVisitaPk()]));
+            return $this->redirect($this->generateUrl('crm_movimiento_control_visita_detalle', ['id' => $arVisita->getCodigoVisitaPk()]));
         }
-
+        $arReportes = $em->getRepository(CrmVisitaReporte::class)->reporte($id);
         return $this->render('crm/movimiento/control/visita/detalle.html.twig', [
+            'clase' => array(
+                'clase' => 'CrmVisita', 'codigo' => $id),
             'arVisita' => $arVisita,
+            'arReportes' => $arReportes,
             'form' => $form->createView()]);
 
+    }
+
+    /**
+     * @param Request $request
+     * @param $codigoVisita
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/crm/movimiento/control/visita/detalle/reporte/{codigoVisita}/{id}", name="crm_movimiento_control_visita_detalle_reporte")
+     */
+    public function reporte(Request $request, $codigoVisita, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arReporte = new CrmVisitaReporte();
+        $arVisita = $em->getRepository(CrmVisita::class)->find($codigoVisita);
+        if ($id != 0) {
+            $arReporte = $em->getRepository(CrmVisitaReporte::class)->find($id);
+        }
+        $form = $this->createForm(VisitaReporteType::class, $arReporte);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arReporte->setVisitaRel($arVisita);
+                $arReporte->setFecha(new \DateTime('now'));
+                $em->persist($arReporte);
+                $em->flush();
+            }
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+
+        }
+        return $this->render('crm/movimiento/control/visita/reporte.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }

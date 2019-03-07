@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('general_administracion_tarea_tarea_recibida') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% if clase is defined %}
+                <a class="btn btn-default btn-sm"
+                   href="javascript:abrirVentana3('{{ path('documental_general_general_lista', { 'tipo': clase.clase,  'codigo': clase.codigo }) }}', 'Archivos', 500, 800)">Archivos</a>
+            {% endif %}
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo"><b>CODIGO TAREA:</b></td>
+            <td class="td-in-well">{{ arTarea.codigoTareaPk }}</td>
+            <td class="titulo"><b>PRIORIDAD:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arTarea.tareaPrioridadRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>FECHA:</b></td>
+            <td class="td-in-well">{{ arTarea.fecha | date('Y-m-d H:i:s') }}</td>
+            <td class="titulo"><b>ASIGNA:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arTarea.usuarioAsigna }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>TITULO:</b></td>
+            <td class="td-in-well">{{ arTarea.titulo }}</td>
+            <td class="titulo"><b>DESCRIPCION:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arTarea.descripcion }}</td>
+        </tr>
+    </table>
+{% endblock %}

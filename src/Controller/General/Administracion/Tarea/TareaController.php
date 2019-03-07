@@ -39,16 +39,16 @@ class TareaController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroGenTareaRecibidaFechaDesde') ? date_create($session->get('filtroGenTareaRecibidaFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroGenTareaRecibidaFechaHasta') ? date_create($session->get('filtroGenTareaRecibidaFechaHasta')): null])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroGenTareaRecibidaFechaDesde') ? date_create($session->get('filtroGenTareaRecibidaFechaDesde')) : null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroGenTareaRecibidaFechaHasta') ? date_create($session->get('filtroGenTareaRecibidaFechaHasta')) : null])
             ->add('cboTareaPrioridadRel', EntityType::class, $em->getRepository(GenTareaPrioridad::class)->llenarCombo())
             ->add('chkEstadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroGenTareaRecibida'), 'required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroGenTareaRecibidaFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-            $session->set('filtroGenTareaRecibidaFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+            $session->set('filtroGenTareaRecibidaFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
+            $session->set('filtroGenTareaRecibidaFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
             $session->set('filtroGenTareaRecibida', $form->get('chkEstadoTerminado')->getData());
             if ($form->get('cboTareaPrioridadRel')->getData() != '') {
                 $session->set('filtroGenTareaPrioridad', $form->get('cboTareaPrioridadRel')->getData()->getCodigoTareaPrioridadPk());
@@ -81,7 +81,6 @@ class TareaController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arTarea->setUsuarioAsigna($this->getUser()->getUsername());
-//            $arTarea->setUsuarioRecibe($arTarea->getUsuarioRecibeRel()->getUsername());
             $em->persist($arTarea);
             $em->flush();
             return $this->redirect($this->generateUrl('general_administracion_tarea_tarea_recibida'));
@@ -92,11 +91,18 @@ class TareaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/general/administracion/tarea/tarea/nuevo/{id}", name="general_administracion_tarea_tarea_detalle")
+     * @Route("/general/administracion/tarea/tarea/detalle/{id}", name="general_administracion_tarea_tarea_detalle")
      */
-    public function detalle($id)
+    public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('general_administracion_tarea_tarea_recibida'));
+        $em = $this->getDoctrine()->getManager();
+        $arTarea = $em->getRepository(GenTarea::class)->find($id);
+
+        return $this->render('general/administracion/tarea/tarea/detalle.html.twig', array(
+            'clase' => array(
+                'clase' => 'GenTarea', 'codigo' => $id),
+                'arTarea' => $arTarea,
+        ));
     }
 
     /**
@@ -111,8 +117,8 @@ class TareaController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroGenTareaAsiganadaFechaDesde') ? date_create($session->get('filtroGenTareaAsiganadaFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroGenTareaAsiganadaFechaHasta') ? date_create($session->get('filtroGenTareaAsiganadaFechaHasta')): null])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroGenTareaAsiganadaFechaDesde') ? date_create($session->get('filtroGenTareaAsiganadaFechaDesde')) : null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroGenTareaAsiganadaFechaHasta') ? date_create($session->get('filtroGenTareaAsiganadaFechaHasta')) : null])
             ->add('cboTareaPrioridadRel', EntityType::class, $em->getRepository(GenTareaPrioridad::class)->llenarCombo())
             ->add('cboUsuario', EntityType::class, $em->getRepository(Usuario::class)->llenarCombo())
             ->add('chkEstadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroGenTareaAsignada'), 'required' => false])
@@ -120,8 +126,8 @@ class TareaController extends ControllerListenerGeneral
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroGenTareaAsiganadaFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-            $session->set('filtroGenTareaAsiganadaFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+            $session->set('filtroGenTareaAsiganadaFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
+            $session->set('filtroGenTareaAsiganadaFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
             $session->set('filtroGenTareaAsignada', $form->get('chkEstadoTerminado')->getData());
             if ($form->get('cboTareaPrioridadRel')->getData() != '') {
                 $session->set('filtroGenTareaPrioridad', $form->get('cboTareaPrioridadRel')->getData()->getCodigoTareaPrioridadPk());

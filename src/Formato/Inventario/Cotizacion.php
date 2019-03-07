@@ -64,7 +64,7 @@ class Cotizacion extends \FPDF
         $this->Cell(30, 4, "TERCERO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arCotizacion->getTerceroRel()->getNombreCorto()));
+        $this->Cell(65, 4, utf8_decode($arCotizacion->getTerceroRel()->getNombreCorto() . '-' . $arCotizacion->getTerceroRel()->getDigitoVerificacion()));
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, 'NIT:', 1, 0, 'L', 1);

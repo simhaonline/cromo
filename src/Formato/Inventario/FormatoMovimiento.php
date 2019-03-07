@@ -70,7 +70,7 @@ class FormatoMovimiento extends \FPDF
         $this->Cell(100, 4, utf8_decode($arMovimiento->getTerceroRel()->getNombreCorto() ?? ''), 0, 0, 'L', 0);
         $this->SetXY(53, 22);
         $this->Cell(20, 4, "NIT:", 0, 0, 'L', 1);
-        $this->Cell(100, 4, $arMovimiento->getTerceroRel()->getNumeroIdentificacion() ?? '', 0, 0, 'L', 0);
+        $this->Cell(100, 4, $arMovimiento->getTerceroRel()->getNumeroIdentificacion() . '-' .$arMovimiento->getTerceroRel()->getDigitoVerificacion() ?? '', 0, 0, 'L', 0);
         $this->SetXY(53, 26);
         $this->Cell(20, 4, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
         $this->Cell(100, 4, utf8_decode($arMovimiento->getTerceroRel()->getDireccion()) ?? '', 0, 0, 'L', 0);

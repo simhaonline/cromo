@@ -128,7 +128,7 @@ class Factura1 extends \FPDF
         $this->Cell(15, 4, 'NIT:', 0, 0, 'L', 0);
         $this->SetX(38);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getNumeroIdentificacion(), 0, 0, 'L', 0);
+        $this->Cell(73, 4, $arMovimiento->getTerceroRel()->getNumeroIdentificacion() . ' - ' . $arMovimiento->getTerceroRel()->getDigitoVerificacion(), 0, 0, 'L', 0);
         $this->SetX(128);
         $this->Cell(73, 4, utf8_decode($arMovimiento->getSucursalRel() ? $arMovimiento->getSucursalRel()->getContacto() : ''), 0, 0, 'L', 0);
 

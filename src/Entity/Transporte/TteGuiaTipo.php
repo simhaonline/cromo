@@ -72,6 +72,11 @@ class TteGuiaTipo
     private $cortesia = false;
 
     /**
+     * @ORM\Column(name="validar_caracteres", type="integer", nullable=true)
+     */
+    private $validarCaracteres;
+
+    /**
      * @ORM\Column(name="codigo_forma_pago", type="string", length=3, nullable=true)
      */
     private $codigoFormaPago;
@@ -372,6 +377,38 @@ class TteGuiaTipo
     public function setGuiasClientesGuiaTipoRel($guiasClientesGuiaTipoRel): void
     {
         $this->guiasClientesGuiaTipoRel = $guiasClientesGuiaTipoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValidarCaracteres()
+    {
+        return $this->validarCaracteres;
+    }
+
+    /**
+     * @param mixed $validarCaracteres
+     */
+    public function setValidarCaracteres($validarCaracteres): void
+    {
+        $this->validarCaracteres = $validarCaracteres;
     }
 
 

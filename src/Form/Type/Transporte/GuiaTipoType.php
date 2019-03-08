@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteGuiaTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -32,6 +33,7 @@ class GuiaTipoType extends AbstractType
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('factura', CheckboxType::class, array('required'  => false))
             ->add('consecutivo',NumberType::class,['required' => true,'label' => 'Consecutivo:'])
+            ->add('validarCaracteres',IntegerType::class,['required' => true,'label' => 'Validar caracteres:'])
             ->add('cortesia', CheckboxType::class, array('required'  => false))
             ->add('exigeNumero', CheckboxType::class, array('required'  => false))
             ->add('validarFlete', CheckboxType::class, array('required'  => false))
@@ -40,7 +42,6 @@ class GuiaTipoType extends AbstractType
             ->add('generaCobroEntrega', CheckboxType::class, array('required'  => false))
             ->add('orden',NumberType::class,['required' => true,'label' => 'Orden:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
         ;
     }
 
@@ -81,3 +82,4 @@ class GuiaTipoType extends AbstractType
         ]';
     }
 }
+

@@ -38,6 +38,7 @@ class FacturacionController extends Controller
         $session = new Session();
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
+            ->add('btnRelacion', SubmitType::class, array('label' => 'Relacion'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
@@ -84,6 +85,10 @@ class FacturacionController extends Controller
             }
             if ($form->get('btnPdf')->isClicked()) {
                 $formato = new FacturaInforme();
+                $formato->Generar($em);
+            }
+            if ($form->get('btnRelacion')->isClicked()) {
+                $formato = new ListaFactura();
                 $formato->Generar($em);
             }
             if ($form->get('btnExcel')->isClicked()) {

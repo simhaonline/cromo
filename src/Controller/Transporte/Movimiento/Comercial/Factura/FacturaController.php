@@ -74,10 +74,6 @@ class FacturaController extends ControllerListenerGeneral
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
         $formBotonera = BaseController::botoneraLista();
-        $formBotonera->add('btnPdf', 'Symfony\Component\Form\Extension\Core\Type\SubmitType', [
-            'attr' => ['class' => 'btn btn-default btn-sm'],
-            'label' => 'Pdf'
-        ]);
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
@@ -95,11 +91,6 @@ class FacturaController extends ControllerListenerGeneral
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_lista'));
-            }
-
-            if ($formBotonera->get('btnPdf')->isClicked()) {
-                $formato = new ListaFactura();
-                $formato->Generar($em);
             }
         }
 

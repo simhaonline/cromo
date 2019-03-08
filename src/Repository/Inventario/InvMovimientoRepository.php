@@ -49,6 +49,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.codigoDocumentoFk')
             ->addSelect('m.numero')
             ->addSelect('t.nombreCorto AS terceroNombreCorto')
+            ->addSelect('c.nombre AS terceroCiudad')
+            ->addSelect('t.direccion AS direccionTercero')
             ->addSelect('m.fecha')
             ->addSelect('m.vrSubtotal')
             ->addSelect('m.vrIva')
@@ -56,10 +58,13 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.vrNeto')
             ->addSelect('m.vrTotal')
             ->addSelect('m.usuario')
+            ->addSelect('m.soporte')
+            ->addSelect('m.comentarios')
             ->addSelect('m.estadoAnulado')
             ->addSelect('m.estadoAprobado')
             ->addSelect('m.estadoAutorizado')
             ->leftJoin('m.terceroRel', 't')
+            ->leftJoin('t.ciudadRel', 'c')
             ->where("m.codigoDocumentoFk = '" . $codigoDocumento . "'");
         if ($session->get('filtroInvMovimientoFechaDesde') != null) {
             $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroInvMovimientoFechaDesde')} 00:00:00'");

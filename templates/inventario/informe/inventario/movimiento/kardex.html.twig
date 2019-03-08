@@ -82,7 +82,9 @@
             </tr>
             </thead>
             <tbody>
+            {% set saldo = 0 %}
             {% for arMovimientoDetalle in arMovimientosDetalles %}
+                {% set saldo = saldo + arMovimientoDetalle.cantidadOperada %}
                 <tr>
                     <td>{{ arMovimientoDetalle.codigoMovimientoDetallePk }}</td>
                     <td>{{ arMovimientoDetalle.numeroMovimiento }}</td>
@@ -97,7 +99,7 @@
                     <td>{{ arMovimientoDetalle.fechaVencimiento | date('Y-m-d') }}</td>
                     <td class="numero">{{ arMovimientoDetalle.cantidad | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimientoDetalle.cantidadOperada | number_format(0, '.', ',') }}</td>
-                    <td class="numero">{{ arMovimientoDetalle.cantidadSaldo | number_format(0, '.', ',')}}</td>
+                    <td class="numero">{{ saldo | number_format(0, '.', ',')}}</td>
                     <td class="numero">{{ arMovimientoDetalle.vrCosto | number_format(0, '.', ',')}}</td>
                     <td class="numero">{{ arMovimientoDetalle.vrPrecio | number_format(0, '.', ',')}}</td>
                 </tr>

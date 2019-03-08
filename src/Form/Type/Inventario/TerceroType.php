@@ -82,6 +82,7 @@ class TerceroType extends AbstractType
             ->add('cupoCompra', NumberType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('cliente', CheckboxType::class, ['required' => false, 'label' => ' '])
             ->add('proveedor', CheckboxType::class, ['required' => false, 'label' => ' '])
+            ->add('bloqueoCartera', CheckboxType::class, ['required' => false, 'label' => ' '])
             ->add('retencionIva', CheckboxType::class, ['required' => false])
             ->add('retencionFuente', CheckboxType::class, ['required' => false])
             ->add('retencionFuenteSinBase', CheckboxType::class, ['required' => false])

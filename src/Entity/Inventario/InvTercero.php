@@ -128,6 +128,11 @@ class InvTercero
     private $proveedor = false;
 
     /**
+     * @ORM\Column(name="bloqueo_cartera", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $bloqueoCartera = false;
+
+    /**
      * @ORM\Column(name="codigo_precio_venta_fk", type="integer", nullable=true)
      */
     private $codigoPrecioVentaFk;
@@ -839,6 +844,38 @@ class InvTercero
     public function setCostosTerceroRel($costosTerceroRel): void
     {
         $this->costosTerceroRel = $costosTerceroRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBloqueoCartera()
+    {
+        return $this->bloqueoCartera;
+    }
+
+    /**
+     * @param mixed $bloqueoCartera
+     */
+    public function setBloqueoCartera($bloqueoCartera): void
+    {
+        $this->bloqueoCartera = $bloqueoCartera;
     }
 
 

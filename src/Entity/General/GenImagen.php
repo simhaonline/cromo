@@ -15,7 +15,7 @@ class GenImagen
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\Column(type="string", name="codigo_imagen_pk", nullable=false)
+     * @ORM\Column(type="string", name="codigo_imagen_pk", length=20, nullable=false)
      */
     private $codigoImagenPk;
 
@@ -29,7 +29,6 @@ class GenImagen
      */
     private $extension;
 
-
     /**
      * @return mixed
      */
@@ -41,10 +40,9 @@ class GenImagen
     /**
      * @param mixed $codigoImagenPk
      */
-    public function setCodigoImagenPk($codigoImagenPk)
+    public function setCodigoImagenPk($codigoImagenPk): void
     {
         $this->codigoImagenPk = $codigoImagenPk;
-        return $this;
     }
 
     /**
@@ -58,10 +56,9 @@ class GenImagen
     /**
      * @param mixed $imagen
      */
-    public function setImagen($imagen)
+    public function setImagen($imagen): void
     {
         $this->imagen = $imagen;
-        return $this;
     }
 
     /**
@@ -75,11 +72,13 @@ class GenImagen
     /**
      * @param mixed $extension
      */
-    public function setExtension($extension)
+    public function setExtension($extension): void
     {
         $this->extension = $extension;
-        return $this;
     }
+
+
+
 
 
 

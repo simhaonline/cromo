@@ -218,6 +218,7 @@ class CarAnticipoRepository extends ServiceEntityRepository
             $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
             $arCuentaCobrar->setComentario($arAnticipo->getComentarios());
             $arCuentaCobrar->setAsesorRel($arAnticipo->getAsesorRel());
+            $arCuentaCobrar->setAnticipo(1);
             $em->persist($arCuentaCobrar);
             $this->getEntityManager()->flush();
             $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();

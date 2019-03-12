@@ -216,6 +216,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->where('cc.vrSaldo > 0')
             ->andWhere('cc.operacion = -1')
             ->andWhere('cc.codigoClienteFk = ' . $codigoCliente)
+            ->andWhere('cc.anticipo = 1')
             ->orderBy('cc.codigoCuentaCobrarPk', 'ASC');
 
         return $queryBuilder;

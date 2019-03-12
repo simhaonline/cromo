@@ -167,6 +167,11 @@ class CarCuentaCobrar
     private $codigoCentroCostoFk;
 
     /**
+     * @ORM\Column(name="anticipo", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $anticipo = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrarTipo", inversedBy="cuentasCobrarCuentaCobrarTipoRel")
      * @ORM\JoinColumn(name="codigo_cuenta_cobrar_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
      */
@@ -794,6 +799,22 @@ class CarCuentaCobrar
     public function setAplicacionesCuentaCobrarAplicacionRel($aplicacionesCuentaCobrarAplicacionRel): void
     {
         $this->aplicacionesCuentaCobrarAplicacionRel = $aplicacionesCuentaCobrarAplicacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnticipo()
+    {
+        return $this->anticipo;
+    }
+
+    /**
+     * @param mixed $anticipo
+     */
+    public function setAnticipo($anticipo): void
+    {
+        $this->anticipo = $anticipo;
     }
 
 

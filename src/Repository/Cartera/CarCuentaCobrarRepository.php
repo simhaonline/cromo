@@ -412,6 +412,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
                 $arCuentaCobrarAct->setVrIva(0);
                 $arCuentaCobrarAct->setVrRetencionFuente(0);
                 $arCuentaCobrarAct->setVrRetencionIva(0);
+                $arCuentaCobrarAct->setVrSaldoOriginal(0);
                 $arCuentaCobrarAct->setVrSaldo(0);
                 $arCuentaCobrarAct->setVrSaldoOperado(0);
                 $arCuentaCobrarAct->setEstadoAnulado(1);

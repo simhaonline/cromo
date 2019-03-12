@@ -386,6 +386,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->select('r.codigoRecogidaPk')
             ->addSelect('r.fecha')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('c.direccion AS clienteDireccion')
             ->addSelect('r.unidades')
             ->addSelect('r.pesoReal')
             ->leftJoin('r.clienteRel', 'c')

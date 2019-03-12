@@ -147,14 +147,14 @@ class DespachoRecogida extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('GUIA', 'FECHA','CLIENTE', 'UND', 'PESO');
+        $header = array('GUIA', 'FECHA','CLIENTE', 'DIRECCION',  'UND', 'PESO');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(16, 25, 100, 10, 10);
+        $w = array(16, 25, 80, 50,  10, 10);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -175,7 +175,8 @@ class DespachoRecogida extends \FPDF {
             foreach ($arRecogidas as $arRecogida) {
                 $pdf->Cell(16, 4, $arRecogida['codigoRecogidaPk'], 1, 0, 'L');
                 $pdf->Cell(25, 4, $arRecogida['fecha']->format('Y-m-d H:i'), 1, 0, 'L');
-                $pdf->Cell(100, 4, substr($arRecogida['clienteNombreCorto'],0,100), 1, 0, 'L');
+                $pdf->Cell(80, 4, substr($arRecogida['clienteNombreCorto'],0,100), 1, 0, 'L');
+                $pdf->Cell(50, 4, substr($arRecogida['clienteDireccion'],0,100), 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arRecogida['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arRecogida['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();

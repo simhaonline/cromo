@@ -93,4 +93,18 @@ class TerceroType extends AbstractType
         ]';
         return $campos;
     }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoTerceroPk",            "tipo":"pk",       "ayuda":"Codigo del tercero",        "titulo":"ID"},
+            {"campo":"nombreCorto",                "tipo":"texto",    "ayuda":"Consecutivo de aprobación", "titulo":"NOMBRE"},
+            {"campo":"identificacionRel.nombre",   "tipo":"texto",    "ayuda":"",                          "titulo":"TIPO_IDENTIFICACION", "relacion":""},
+            {"campo":"numeroIdentificacion",       "tipo":"texto",    "ayuda":"Numero de identificacion",  "titulo":"IDENTIFICACION"},
+            {"campo":"digitoVerificacion",         "tipo":"texto",    "ayuda":"Digito de verificacion",    "titulo":"DIGITO"},
+            {"campo":"ciudadRel.nombre",           "tipo":"texto",    "ayuda":"",                          "titulo":"CIUDAD", "relacion":""},
+            {"campo":"telefono",                   "tipo":"texto",    "ayuda":"Telegono", "titulo":"TELEFONO"}
+        ]';
+        return $campos;
+    }
 }

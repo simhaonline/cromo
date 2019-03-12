@@ -42,6 +42,7 @@ class InvTerceroRepository extends ServiceEntityRepository
             ->select('t.codigoTerceroPk')
             ->addSelect('t.codigoIdentificacionFk')
             ->addSelect('t.numeroIdentificacion')
+            ->addSelect('t.digitoVerificacion')
             ->addSelect('t.nombreCorto')
             ->addSelect('t.direccion')
             ->addSelect('c.nombre AS ciudadNombre')

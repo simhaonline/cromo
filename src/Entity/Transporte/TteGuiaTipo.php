@@ -82,6 +82,11 @@ class TteGuiaTipo
     private $codigoFormaPago;
 
     /**
+     * @ORM\Column(name="mensaje_formato", type="string", length=900, nullable=true)
+     */
+    private $mensajeFormato;
+
+    /**
      * @return mixed
      */
     public function getGeneraCobroEntrega()
@@ -409,6 +414,22 @@ class TteGuiaTipo
     public function setValidarCaracteres($validarCaracteres): void
     {
         $this->validarCaracteres = $validarCaracteres;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMensajeFormato()
+    {
+        return $this->mensajeFormato;
+    }
+
+    /**
+     * @param mixed $mensajeFormato
+     */
+    public function setMensajeFormato($mensajeFormato): void
+    {
+        $this->mensajeFormato = $mensajeFormato;
     }
 
 

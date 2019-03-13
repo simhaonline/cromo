@@ -70,3 +70,30 @@
         <td class="td-in-well"></td>
     </tr>
 </table>
+
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
+    <tr>
+        <td class="titulo">CONDICION:</td>
+        <td class="td-in-well">{{ arCondicion.codigoCondicionPk }}-{{ arCondicion.nombre }}</td>
+        <td class="titulo">PORCENTAJE MANEJO:</td>
+        <td class="td-in-well">{{ arCondicion.porcentajeManejo }}</td>
+        <td class="titulo" >PESO MIN:</td>
+        <td align="right">{{ arCondicion.pesoMinimo }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">PRECIO:</td>
+        <td class="td-in-well"><a href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_ver_detalle', {'id': arCondicion.codigoPrecioFk }) }}', 'VerPrecio', 600, 900)">{{ arCondicion.codigoPrecioFk }}-{{ arCondicion.precioRel.nombre }}</a></td>
+        <td class="titulo">MAN MIN UNIDAD:</td>
+        <td class="td-in-well">{{ arCondicion.manejoMinimoUnidad }}</td>
+        <td class="titulo">DESCUENTO PESO:</td>
+        <td align="right">{{ arCondicion.descuentoPeso }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo">MAN MIN DESPACHO:</td>
+        <td class="td-in-well">{{ arCondicion.manejoMinimoDespacho }}</td>
+        <td class="titulo">DESCUENTO UNIDAD:</td>
+        <td align="right">{{ arCondicion.descuentoUnidad }}</td>
+    </tr>
+</table>

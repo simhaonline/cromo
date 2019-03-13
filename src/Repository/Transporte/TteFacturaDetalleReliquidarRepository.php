@@ -39,10 +39,12 @@ class TteFacturaDetalleReliquidarRepository extends ServiceEntityRepository
             ->addSelect('g.pesoFacturado')
             ->addSelect('fd.pesoVolumen')
             ->addSelect('fd.vrDeclara')
+            ->addSelect('p.nombre as productoNombre')
             ->leftJoin('fdr.facturaDetalle', 'fd')
             ->leftJoin('fd.guiaRel', 'g')
             ->leftJoin('g.ciudadOrigenRel', 'co')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.productoRel', 'p')
             ->where('fdr.codigoFacturaFk =  ' . $codigoFactura);
         return $queryBuilder->getQuery()->getResult();
     }

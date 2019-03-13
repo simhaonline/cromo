@@ -45,6 +45,7 @@
             <th>CELULAR</th>
             <th>CIUDAD</th>
             <th>CONDICION</th>
+            <th title="Precio predeterminado">PRECIO</th>
             <th title="Operacion">OP</th>
             <th></th>
             <th></th>
@@ -60,7 +61,8 @@
                 <td>{{ arCliente.telefono }}</td>
                 <td>{{ arCliente.movil }}</td>
                 <td>{{ arCliente.ciudadNombre }}</td>
-                <td>{{ arCliente.condicion }}</td>
+                <td>{{ arCliente.codigoCondicionFk }}-{{ arCliente.condicion }}</td>
+                <td>{{ arCliente.codigoPrecioFk }}-{{ arCliente.precioNombre }}</td>
                 <td>{{ arCliente.codigoOperacionFk }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_administracion_comercial_cliente_nuevo',{'id' : arCliente.codigoClientePk}) }}">

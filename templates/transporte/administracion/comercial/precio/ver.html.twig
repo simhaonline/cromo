@@ -1,0 +1,64 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+
+    <br><br>
+    {% include 'transporte/administracion/comercial/precio/informacion.html.twig' %}
+    <a name="marcador"></a>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#contrato" data-toggle="tab">Detalle</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th><p data-toggle="tooltip" data-placement="top" title="PORCENTAJE MANEJO">ID</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD ORIGEN">CIUDAD ORIGEN</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">CIDUAD DESTINO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="PRODUCTO">PRODUCTO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO">PESO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR UNIDAD">UND</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="PESO TOPE">PESO TOPE</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE">VR PESO TOPE</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE ADICION">VR PESO
+                                    TOPE ADIC</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="MINIMO">MINIMO</p></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arPrecioDetalle in arPrecioDetalles %}
+                            <tr>
+                                <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
+                                <td>{{ arPrecioDetalle.ciudadOrigen }}</td>
+                                <td>{{ arPrecioDetalle.ciudadDestino }}</td>
+                                <td>{{ arPrecioDetalle.nombre }}</td>
+                                <td class="numero">{{ arPrecioDetalle.vrPeso | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPrecioDetalle.vrUnidad | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPrecioDetalle.pesoTope }}</td>
+                                <td class="numero">{{ arPrecioDetalle.vrPesoTope | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPrecioDetalle.vrPesoTopeAdicional | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arPrecioDetalle.minimo }}</td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="btn-group" style="float: left">
+                    <div class="btn btn-default btn-sm">Registros
+                        <span class="badge">{{ arPrecioDetalles.getTotalItemCount }}
+            </span>
+                    </div>
+                </div>
+                <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+                    {{ knp_pagination_render(arPrecioDetalles) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

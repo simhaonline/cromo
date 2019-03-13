@@ -662,6 +662,7 @@ class FacturaController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        $arCondicion = $arFactura->getClienteRel()->getCondicionRel();
         if($arFactura->getEstadoAutorizado()) {
             Mensajes::error("Las facturas autorizadas no se pueden reliquidar");
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
@@ -713,19 +714,27 @@ class FacturaController extends ControllerListenerGeneral
                     $manejo = 0;
                     $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->precio($precio, $arGuia->getCodigoProductoFk(), $arGuia->getCodigoCiudadOrigenFk(), $arGuia->getCodigoCiudadDestinoFk());
                     if($arPrecioDetalle) {
+                        $peso = $arGuia->getPesoReal();
+                        $unidades = $arGuia->getUnidades();
+                        if($arGuia->getPesoVolumen() > $peso) {
+                            $peso = $arGuia->getPesoVolumen();
+                        }
                         if($tipoliquidacion == "K") {
-                            $peso = $arGuia->getPesoReal();
-                            if($arGuia->getPesoVolumen() > $peso) {
-                                $peso = $arGuia->getPesoVolumen();
-                            }
-
                             $flete = $peso * $arPrecioDetalle->getVrPeso();
                             $descuento = $flete * $descuentoPeso / 100;
                             $flete -= $descuento;
                         }
                         if($tipoliquidacion == "U") {
-                            $unidades = $arGuia->getUnidades();
+
                             $flete = $unidades * $arPrecioDetalle->getVrUnidad();
+                        }
+                        if($tipoliquidacion == "A") {
+                            $flete = $arPrecioDetalle->getVrPesoTope() * $unidades;
+                            if ($peso > ($arPrecioDetalle->getPesoTope() * $unidades))
+                            {
+                                $diferencia = $peso - ($arPrecioDetalle->getPesoTope() * $unidades);
+							    $flete += $diferencia * $arPrecioDetalle->getVrPesoTopeAdicional();
+						    }
                         }
                     }
                     $declara = $arGuia->getVrDeclara();
@@ -775,6 +784,8 @@ class FacturaController extends ControllerListenerGeneral
         $arFacturaDetallesReliqudiar = $this->getDoctrine()->getRepository(TteFacturaDetalleReliquidar::class)->lista($codigoFactura);
         return $this->render('transporte/movimiento/comercial/factura/reliquidar.html.twig', [
             'arFacturaDetallesReliquidar' => $arFacturaDetallesReliqudiar,
+            'arFactura' => $arFactura,
+            'arCondicion' => $arCondicion,
             'form' => $form->createView()
         ]);
     }

@@ -114,7 +114,7 @@ class PrecioController extends ControllerListenerGeneral
         if ($form->get('btnExcel')->isClicked()) {
             General::get()->setExportar($em->getRepository(TtePrecioDetalle::class)->lista($id), "Precio detalle $id");
         }
-        $arPrecioDetalles = $paginator->paginate($em->getRepository(TtePrecioDetalle::class)->lista($id), $request->query->getInt('page', 1), 70);
+        $arPrecioDetalles = $paginator->paginate($em->getRepository(TtePrecioDetalle::class)->lista($id), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/administracion/comercial/precio/detalle.html.twig', array(
             'arPrecio' => $arPrecio,
             'arPrecioDetalles' => $arPrecioDetalles,
@@ -285,6 +285,26 @@ class PrecioController extends ControllerListenerGeneral
         return $this->render('transporte/administracion/comercial/precio/importarPreciosArchivo.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/administracion/comercial/precio/ver/{id}", name="transporte_administracion_comercial_ver_detalle")
+     */
+    public function ver(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $arPrecio = $em->getRepository(TtePrecio::class)->find($id);
+        $arPrecioDetalles = $paginator->paginate($em->getRepository(TtePrecioDetalle::class)->lista($id), $request->query->getInt('page', 1), 500);
+        return $this->render('transporte/administracion/comercial/precio/ver.html.twig', array(
+            'arPrecio' => $arPrecio,
+            'arPrecioDetalles' => $arPrecioDetalles
+        ));
     }
 }
 

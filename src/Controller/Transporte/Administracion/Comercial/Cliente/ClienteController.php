@@ -91,6 +91,7 @@ class ClienteController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arCliente = $em->getRepository(TteCliente::class)->find($id);
+        $arCondicion = $arCliente->getCondicionRel();
         $form = $this->createFormBuilder()
             ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
             ->getForm();
@@ -100,11 +101,11 @@ class ClienteController extends ControllerListenerGeneral
             $em->getRepository(TteClienteCondicion::class)->eliminar($arrSeleccionados);
         }
 
-        $arCondicion = $em->getRepository(TteClienteCondicion::class)->clienteCondicion($id);
-
+        $arCondiciones = $em->getRepository(TteClienteCondicion::class)->clienteCondicion($id);
         return $this->render('transporte/administracion/comercial/cliente/detalle.html.twig', array(
             'arCliente' => $arCliente,
-            'arCondiciones' => $arCondicion,
+            'arCondiciones' => $arCondiciones,
+            'arCondicion' => $arCondicion,
             'form' => $form->createView()
         ));
     }

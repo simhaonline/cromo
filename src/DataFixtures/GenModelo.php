@@ -213,6 +213,7 @@ class GenModelo extends Fixture
                 'TteCumplido',
                 'TteCumplidoTipo',
                 'TteDepartamento',
+                'TteDocumental',
                 'TteDespacho',
                 'TteDespachoAdicional',
                 'TteDespachoAdicionalConcepto',

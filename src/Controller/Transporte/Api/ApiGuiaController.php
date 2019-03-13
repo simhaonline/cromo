@@ -274,5 +274,18 @@ class ApiGuiaController extends FOSRestController
             $arrPost['tipo']);
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     * @Rest\Post("/transporte/api/guia/documental/adicionar", name="transporte_api_guia_documental_adicionar")
+     */
+    public function adicionarDocumental(Request $request)
+    {
+        $arrPost = json_decode($request->request->get("arrParametros"), true);
+        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDocumentalAdicionar(
+            $arrPost['codigoDocumental'],
+            $arrPost['codigoGuia']);
+    }
+
 
 }

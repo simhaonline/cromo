@@ -109,6 +109,11 @@ class TteGuia
     private $fechaCumplido;
 
     /**
+     * @ORM\Column(name="fecha_documental", type="datetime", nullable=true)
+     */
+    private $fechaDocumental;
+
+    /**
      * @ORM\Column(name="fecha_soporte", type="datetime", nullable=true)
      */
     private $fechaSoporte;
@@ -219,6 +224,11 @@ class TteGuia
     private $estadoCumplido = false;
 
     /**
+     * @ORM\Column(name="estado_documental", type="boolean",options={"default":false})
+     */
+    private $estadoDocumental = false;
+
+    /**
      * @ORM\Column(name="estado_recaudo_devolucion", type="boolean",options={"default":false})
      */
     private $estadoRecaudoDevolucion = false;
@@ -277,6 +287,11 @@ class TteGuia
      * @ORM\Column(name="codigo_cumplido_fk", type="integer", nullable=true)
      */
     private $codigoCumplidoFk;
+
+    /**
+     * @ORM\Column(name="codigo_documental_fk", type="integer", nullable=true)
+     */
+    private $codigoDocumentalFk;
 
     /**
      * @ORM\Column(name="codigo_recaudo_devolucion_fk", type="integer", nullable=true)
@@ -428,6 +443,12 @@ class TteGuia
      * @ORM\JoinColumn(name="codigo_cumplido_fk", referencedColumnName="codigo_cumplido_pk")
      */
     private $cumplidoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDocumental", inversedBy="guiasDocumentalRel")
+     * @ORM\JoinColumn(name="codigo_documental_fk", referencedColumnName="codigo_documental_pk")
+     */
+    private $documentalRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteRecaudoDevolucion", inversedBy="guiasRecaudoDevolucionRel")
@@ -2074,6 +2095,70 @@ class TteGuia
     public function setEstadoContabilizado( $estadoContabilizado ): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDocumentalFk()
+    {
+        return $this->codigoDocumentalFk;
+    }
+
+    /**
+     * @param mixed $codigoDocumentalFk
+     */
+    public function setCodigoDocumentalFk($codigoDocumentalFk): void
+    {
+        $this->codigoDocumentalFk = $codigoDocumentalFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentalRel()
+    {
+        return $this->documentalRel;
+    }
+
+    /**
+     * @param mixed $documentalRel
+     */
+    public function setDocumentalRel($documentalRel): void
+    {
+        $this->documentalRel = $documentalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoDocumental()
+    {
+        return $this->estadoDocumental;
+    }
+
+    /**
+     * @param mixed $estadoDocumental
+     */
+    public function setEstadoDocumental($estadoDocumental): void
+    {
+        $this->estadoDocumental = $estadoDocumental;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDocumental()
+    {
+        return $this->fechaDocumental;
+    }
+
+    /**
+     * @param mixed $fechaDocumental
+     */
+    public function setFechaDocumental($fechaDocumental): void
+    {
+        $this->fechaDocumental = $fechaDocumental;
     }
 
 

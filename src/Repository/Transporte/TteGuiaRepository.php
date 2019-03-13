@@ -13,6 +13,7 @@ use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteDesembarco;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
+use App\Entity\Transporte\TteDocumental;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaPlanilla;
@@ -175,8 +176,8 @@ class TteGuiaRepository extends ServiceEntityRepository
     public function Anular($arGuia)
     {
         $em = $this->getEntityManager();
-        if($arGuia->getEstadoAnulado() == 0) {
-            if($arGuia->getEstadoFacturaGenerada() == 0 && $arGuia->getEstadoFacturaExportado() == 0) {
+        if ($arGuia->getEstadoAnulado() == 0) {
+            if ($arGuia->getEstadoFacturaGenerada() == 0 && $arGuia->getEstadoFacturaExportado() == 0) {
                 $arGuia->setEstadoAnulado(1);
                 $arGuia->setUnidades(0);
                 $arGuia->setPesoFacturado(0);
@@ -748,6 +749,36 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function documental($codigoDocumental)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoGuiaTipoFk')
+            ->addSelect('g.codigoServicioFk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.vrRecaudo')
+            ->addSelect('g.empaqueReferencia')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.codigoDocumentalFk =' . $codigoDocumental);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
     /**
      * @param $codigoRecaudo
      * @return mixed
@@ -914,7 +945,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
                     if ($arGuia->getEstadoDespachado() == 1 && $arGuia->getEstadoEntregado() == 0) {
-                        if($fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia])) {
+                        if ($fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia])) {
                             $arGuia->setFechaEntrega($fechaHora);
                             $arGuia->setEstadoEntregado(1);
                             if (isset($arrControles['chkSoporte']) && $arrControles['chkSoporte']) {
@@ -1069,7 +1100,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $em->persist($arCuentaCobrar);
                     }
                 }
-               $em->flush();
+                $em->flush();
             }
         }
         return $arrFacturas;
@@ -1103,6 +1134,37 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('g.codigoClienteFk =' . $codigoCliente)
             ->andWhere("g.fechaIngreso >= '2018-04-01'")
             ->orderBy('g.fechaIngreso', 'DESC');
+
+        return $queryBuilder->getQuery()->getResult();
+
+    }
+
+    /**
+     * @return mixed
+     */
+    public function documentalPendiente()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.numero')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->where('g.estadoDocumental = 0')
+            ->andWhere('g.estadoSoporte = 1')
+            ->orderBy('g.fechaIngreso', 'DESC')
+            ->setMaxResults(500);
 
         return $queryBuilder->getQuery()->getResult();
 
@@ -2197,6 +2259,45 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
     }
 
+    public function apiDocumentalAdicionar($codigoDocumental, $codigoGuia)
+    {
+        $em = $this->getEntityManager();
+        $arDocumental = $em->getRepository(TteDocumental::class)->find($codigoDocumental);
+        $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
+        if ($arGuia && $arDocumental) {
+            if ($arGuia->getEstadoDocumental() == 0) {
+                if ($arGuia->getEstadoAnulado() == 0) {
+                    $arGuia->setDocumentalRel($arDocumental);
+                    $arGuia->setEstadoDocumental(1);
+                    $arGuia->setFechaDocumental(new \DateTime('now'));
+                    $em->persist($arGuia);
+                    $arDocumental->setCantidad($arDocumental->getCantidad() + 1);
+                    $em->persist($arDocumental);
+                    $em->flush();
+                    return [
+                        'error' => false,
+                        'mensaje' => '',
+                    ];
+                } else {
+                    return [
+                        'error' => true,
+                        'mensaje' => 'La guia no puede estar anulada',
+                    ];
+                }
+            } else {
+                return [
+                    'error' => true,
+                    'mensaje' => 'La guia ya esta en una relacion documental ' . $arGuia->getCodigoDocumentalFk(),
+                ];
+            }
+        } else {
+            return [
+                'error' => true,
+                'mensaje' => "La guia " . $codigoGuia . " o el registro documental " . $arDocumental . " no existe pendiente para documental",
+            ];
+        }
+    }
+
     public function tableroProduccionMes($fecha): array
     {
         $em = $this->getEntityManager();
@@ -2597,9 +2698,10 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function entregaFecha(){
+    public function entregaFecha()
+    {
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class,'g')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class, 'g')
             ->select('g.codigoGuiaPk')
             ->addSelect('g.codigoOperacionIngresoFk')
             ->addSelect('g.codigoOperacionCargoFk')
@@ -2626,18 +2728,19 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('dg.conductorRel', 'ct')
             ->where('g.estadoEntregado = 1')
             ->orderBy('g.fechaEntrega');
-        if($session->get('filtroFechaEntregaDesde')){
-            $queryBuilder->andWhere('g.fechaEntrega >= '."'{$session->get('filtroFechaEntregaDesde')}'");
+        if ($session->get('filtroFechaEntregaDesde')) {
+            $queryBuilder->andWhere('g.fechaEntrega >= ' . "'{$session->get('filtroFechaEntregaDesde')}'");
         }
-        if($session->get('filtroFechaEntregaHasta')){
-            $queryBuilder->andWhere('g.fechaEntrega <= '."'{$session->get('filtroFechaEntregaHasta')}'");
+        if ($session->get('filtroFechaEntregaHasta')) {
+            $queryBuilder->andWhere('g.fechaEntrega <= ' . "'{$session->get('filtroFechaEntregaHasta')}'");
         }
         return $queryBuilder;
     }
 
-    public function soporteFecha(){
+    public function soporteFecha()
+    {
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class,'g')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class, 'g')
             ->select('g.codigoGuiaPk')
             ->addSelect('g.codigoOperacionIngresoFk')
             ->addSelect('g.codigoOperacionCargoFk')
@@ -2663,20 +2766,21 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('g.despachoRel', 'dg')
             ->leftJoin('dg.conductorRel', 'ct')
             ->where('g.estadoSoporte = 1')
-            ->orderBy('g.fechaSoporte','DESC');
-        if($session->get('filtroFechaSoporteDesde')){
-            $queryBuilder->andWhere('g.fechaSoporte >= '."'{$session->get('filtroFechaSoporteDesde')}'");
+            ->orderBy('g.fechaSoporte', 'DESC');
+        if ($session->get('filtroFechaSoporteDesde')) {
+            $queryBuilder->andWhere('g.fechaSoporte >= ' . "'{$session->get('filtroFechaSoporteDesde')}'");
         }
-        if($session->get('filtroFechaSoporteHasta')){
-            $queryBuilder->andWhere('g.fechaSoporte <= '."'{$session->get('filtroFechaSoporteHasta')}'");
+        if ($session->get('filtroFechaSoporteHasta')) {
+            $queryBuilder->andWhere('g.fechaSoporte <= ' . "'{$session->get('filtroFechaSoporteHasta')}'");
         }
         return $queryBuilder;
     }
 
-    public function estadoGuiaCliente(){
+    public function estadoGuiaCliente()
+    {
         $em = $this->getEntityManager();
-        $session=new Session();
-        $filtro=$session->get('notificarEstadoCliente')?"WHERE g.codigoClienteFk='{$session->get('notificarEstadoCliente')}'":"";
+        $session = new Session();
+        $filtro = $session->get('notificarEstadoCliente') ? "WHERE g.codigoClienteFk='{$session->get('notificarEstadoCliente')}'" : "";
         $arGuiaEstado = $em->createQuery(
             "SELECT COUNT(g.codigoGuiaPk) as guias,
             g.codigoClienteFk,
@@ -2688,7 +2792,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $arGuiaEstado->execute();
     }
 
-    public function pendienteFacturarCliente(){
+    public function pendienteFacturarCliente()
+    {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $session = new Session();
@@ -2739,11 +2844,12 @@ class TteGuiaRepository extends ServiceEntityRepository
     /**
      * @param $arrGuias
      */
-    public function actualizarNumeros($arrGuias){
-        if($arrGuias){
+    public function actualizarNumeros($arrGuias)
+    {
+        if ($arrGuias) {
             /** @var  $arGuia TteGuia */
             foreach ($arrGuias as $arGuia) {
-                if($arGuia->getNumero() == 0){
+                if ($arGuia->getNumero() == 0) {
                     $arGuia->setNumero($arGuia->getCodigoGuiaPk());
                     $this->_em->persist($arGuia);
                 }

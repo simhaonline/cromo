@@ -38,7 +38,7 @@ class TteFacturaDetalleReliquidar
     private $codigoGuiaFk;
 
     /**
-     * @ORM\Column(name="vrFlete", type="float", options={"default" : 0})
+     * @ORM\Column(name="vr_flete", type="float", options={"default" : 0})
      */
     private $vrFlete = 0;
 
@@ -48,26 +48,20 @@ class TteFacturaDetalleReliquidar
     private $vrManejo = 0;
 
     /**
+     * @ORM\Column(name="vr_flete_nuevo", type="float", options={"default" : 0})
+     */
+    private $vrFleteNuevo = 0;
+
+    /**
+     * @ORM\Column(name="vr_manejo_nuevo", type="float", options={"default" : 0})
+     */
+    private $vrManejoNuevo = 0;
+
+    /**
          * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFacturaDetalle", inversedBy="facturaDetallesReliquidarRel")
      * @ORM\JoinColumn(name="codigo_factura_detalle_fk", referencedColumnName="codigo_factura_detalle_pk")
      */
     private $facturaDetalle;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -168,6 +162,38 @@ class TteFacturaDetalleReliquidar
     /**
      * @return mixed
      */
+    public function getVrFleteNuevo()
+    {
+        return $this->vrFleteNuevo;
+    }
+
+    /**
+     * @param mixed $vrFleteNuevo
+     */
+    public function setVrFleteNuevo($vrFleteNuevo): void
+    {
+        $this->vrFleteNuevo = $vrFleteNuevo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrManejoNuevo()
+    {
+        return $this->vrManejoNuevo;
+    }
+
+    /**
+     * @param mixed $vrManejoNuevo
+     */
+    public function setVrManejoNuevo($vrManejoNuevo): void
+    {
+        $this->vrManejoNuevo = $vrManejoNuevo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFacturaDetalle()
     {
         return $this->facturaDetalle;
@@ -180,7 +206,6 @@ class TteFacturaDetalleReliquidar
     {
         $this->facturaDetalle = $facturaDetalle;
     }
-
 
 
 }

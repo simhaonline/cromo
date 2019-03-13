@@ -52,4 +52,22 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @param $lista
+     * @param $producto
+     * @param $origen
+     * @param $destino
+     * @return |null
+     */
+    public function precio($precio, $producto, $origen, $destino)
+    {
+        $em = $this->getEntityManager();
+        $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->findOneBy(array(
+            'codigoPrecioFk' => $precio,
+            'codigoProductoFk' => $producto,
+            'codigoCiudadOrigenFk' => $origen,
+            'codigoCiudadDestinoFk' => $destino));
+        return $arPrecioDetalle;
+    }
+
 }

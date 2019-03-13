@@ -9,7 +9,7 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.tipoLiquidacion) }}
                 </div>
-                <label for="" class="control-label col-sm-1">Tipo:</label>
+                <label for="" class="control-label col-sm-1">Condicion:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.cboCondicion, { 'attr': {'class': 'form-control to-select-2'} }) }}
                 </div>
@@ -35,7 +35,9 @@
             <th>VOL</th>
             <th>DECLARA</th>
             <th>FLETE</th>
+            <th>FLETE(N)</th>
             <th>MANEJO</th>
+            <th>MANEJO(N)</th>
         </tr>
         </thead>
         <tbody>
@@ -52,9 +54,11 @@
                 <td>{{ arFacturaDetalleReliquidar.pesoReal }}</td>
                 <td>{{ arFacturaDetalleReliquidar.pesoFacturado }}</td>
                 <td>{{ arFacturaDetalleReliquidar.pesoVolumen }}</td>
-                <td>{{ arFacturaDetalleReliquidar.vrDeclara | number_format }}</td>
-                <td>{{ arFacturaDetalleReliquidar.vrFlete | number_format }}</td>
-                <td>{{ arFacturaDetalleReliquidar.vrManejo | number_format }}</td>
+                <td class="numero">{{ arFacturaDetalleReliquidar.vrDeclara | number_format }}</td>
+                <td class="numero">{{ arFacturaDetalleReliquidar.vrFlete | number_format }}</td>
+                <td class="numero">{{ arFacturaDetalleReliquidar.vrFleteNuevo | number_format }}</td>
+                <td class="numero">{{ arFacturaDetalleReliquidar.vrManejo | number_format }}</td>
+                <td class="numero">{{ arFacturaDetalleReliquidar.vrManejoNuevo | number_format }}</td>
             </tr>
         {% endfor %}
         </tbody>

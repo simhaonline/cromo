@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
+use App\Entity\Transporte\TteClienteCondicion;
 use App\Entity\Transporte\TteCondicion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteCumplido;
@@ -21,6 +22,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 
 use App\Entity\Transporte\TtePrecio;
+use App\Entity\Transporte\TtePrecioDetalle;
 use App\Form\Type\Transporte\FacturaDetalleConceptoType;
 use App\Form\Type\Transporte\FacturaNotaCreditoType;
 use App\Form\Type\Transporte\FacturaPlanillaType;
@@ -659,41 +661,90 @@ class FacturaController extends ControllerListenerGeneral
     public function reliquidar(Request $request, $codigoFactura)
     {
         $em = $this->getDoctrine()->getManager();
+        $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $form = $this->createFormBuilder()
             ->add('btnReliquidar', SubmitType::class, array('label' => 'Reliquidar'))
             ->add('tipoLiquidacion', ChoiceType::class, [
                 'choices' => [
-                    'peso' => '1',
-                    'unidad' => '2',
-                    'adicional' => '3',
+                    'peso' => 'K',
+                    'unidad' => 'U',
+                    'adicional' => 'A',
                 ]])
-            ->add('cboCondicion', EntityType::class, $em->getRepository(TteCondicion::class)->llenarCombo())
+            ->add('cboCondicion', EntityType::class,
+                ['class' => TteClienteCondicion::class,
+                    'query_builder' => function (EntityRepository $er) use ($arFactura) {
+                         return $er->createQueryBuilder('cc')
+                             ->leftJoin('cc.condicionRel' , 'c')
+                             ->andWhere('cc.codigoClienteFk = ' . $arFactura->getCodigoClienteFk());
+                        },
+                    'choice_label' => 'codigoCondicionFk',
+                    'required' => false,
+                    'empty_data' => "",
+                    'placeholder' => "TODOS",
+                    'data' => ""])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnReliquidar')->isClicked()) {
-                $arFacturaDetalles = $em->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $codigoFactura]);
                 $em->getRepository(TteFacturaDetalleReliquidar::class)->limpiarTabla($codigoFactura);
+                $arCondicion = $arFactura->getClienteRel()->getCondicionRel();
+                $arCondicionCliente = $form->get('cboCondicion')->getData();
+                if($arCondicionCliente) {
+                    $arCondicion = $arCondicionCliente->getCondicionRel();
+                }
+                $precio = $arCondicion->getCodigoPrecioFk();
+                $descuentoPeso = $arCondicion->getDescuentoPeso();
+                $porcentajeManejo = $arCondicion->getPorcentajeManejo();
+                $manejoMinimoUnidad = $arCondicion->getManejoMinimoUnidad();
+                $manejoMinimoDespacho = $arCondicion->getManejoMinimoDespacho();
+
+                $arFacturaDetalles = $em->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $codigoFactura]);
                 foreach ($arFacturaDetalles as $arFacturaDetalle){
+                    //$arGuia = new TteGuia();
+                    $arGuia = $arFacturaDetalle->getGuiaRel();
+                    $tipoliquidacion = $form->get('tipoLiquidacion')->getData();
+                    $flete = 0;
+                    $manejo = 0;
+                    $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->precio($precio, $arGuia->getCodigoProductoFk(), $arGuia->getCodigoCiudadOrigenFk(), $arGuia->getCodigoCiudadDestinoFk());
+                    if($arPrecioDetalle) {
+                        if($tipoliquidacion == "K") {
+                            $peso = $arGuia->getPesoReal();
+                            if($arGuia->getPesoVolumen() > $peso) {
+                                $peso = $arGuia->getPesoVolumen();
+                            }
+
+                            $flete = $peso * $arPrecioDetalle->getVrPeso();
+                            $descuento = $flete * $descuentoPeso / 100;
+                            $flete -= $descuento;
+                        }
+                        if($tipoliquidacion == "U") {
+                            $unidades = $arGuia->getUnidades();
+                            $flete = $unidades * $arPrecioDetalle->getVrUnidad();
+                        }
+                    }
+                    $declara = $arGuia->getVrDeclara();
+                    if($declara > 0)
+                    {
+                        $manejo = $declara * $porcentajeManejo / 100;
+                        if($manejoMinimoDespacho > $manejo) {
+                            $manejo = $manejoMinimoDespacho;
+                        }
+                        if($manejoMinimoUnidad * $arGuia->getUnidades() > $manejo)
+                        {
+                            $manejo = $manejoMinimoUnidad * $arGuia->getUnidades();
+                        }
+                    }
                     $arFacturaDetalleReliquidar =  new TteFacturaDetalleReliquidar;
                     $arFacturaDetalleReliquidar->setFacturaDetalle($arFacturaDetalle);
                     $arFacturaDetalleReliquidar->setCodigoGuiaFk($arFacturaDetalle->getCodigoGuiaFk());
                     $arFacturaDetalleReliquidar->setCodigoFacturaFk($codigoFactura);
                     $arFacturaDetalleReliquidar->setVrFlete($arFacturaDetalle->getVrFlete());
                     $arFacturaDetalleReliquidar->setVrManejo($arFacturaDetalle->getVrManejo());
+                    $arFacturaDetalleReliquidar->setVrFleteNuevo($flete);
+                    $arFacturaDetalleReliquidar->setVrManejoNuevo($manejo);
                     $em->persist($arFacturaDetalleReliquidar);
                     $em->flush();
                 }
-//                $arCondicion = $em->getRepository(TteCondicion::class)->find($form->get('cboCondicion')->getData());
-//                $arPrecio = $em->getRepository(TtePrecio::class)->findBy(array('codigoPrecioPk' => $arCondicion->getCodigoPrecioFk()));
-//                $tipoliquidacion = $form->get('tipoLiquidacion')->getData();
-//                $precioActualizar = 0;
-//                if($tipoliquidacion == '1'){
-//                    $arFacturaDetalles = $em->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $codigoFactura]);
-//                    foreach ($arFacturaDetalles as $arFacturaDetalle) {
-//                        $mayorValor = max($arFacturaDetalle->getPesoReal(), $arFacturaDetalle->getPesoVolumen());
-//                    }
-//                }
             }
         }
         $arFacturaDetallesReliqudiar = $this->getDoctrine()->getRepository(TteFacturaDetalleReliquidar::class)->lista($codigoFactura);

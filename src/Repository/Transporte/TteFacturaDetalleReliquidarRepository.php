@@ -26,6 +26,8 @@ class TteFacturaDetalleReliquidarRepository extends ServiceEntityRepository
             ->addSelect('fdr.codigoGuiaFk')
             ->addSelect('fdr.vrFlete')
             ->addSelect('fdr.vrManejo')
+            ->addSelect('fdr.vrFleteNuevo')
+            ->addSelect('fdr.vrManejoNuevo')
             ->addSelect('g.codigoOperacionIngresoFk')
             ->addSelect('g.codigoOperacionCargoFk')
             ->addSelect('co.nombre AS ciudadOrigen')

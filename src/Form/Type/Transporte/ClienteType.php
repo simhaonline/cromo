@@ -3,6 +3,7 @@
 namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteOperacion;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -61,7 +62,7 @@ class ClienteType extends AbstractType
             ])
             ->add('operacionRel',EntityType::class,[
                 'required' => true,
-                'class' => 'App\Entity\Transporte\TteOperacion',
+                'class' => TteOperacion::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('o')
                         ->orderBy('o.nombre', 'ASC');

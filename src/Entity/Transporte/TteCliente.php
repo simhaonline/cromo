@@ -149,7 +149,7 @@ class TteCliente
     private $guiaPagoRecogida = false;
 
     /**
-     * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true,options={"default":false})
+     * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
 
@@ -248,6 +248,22 @@ class TteCliente
      * @ORM\OneToMany(targetEntity="TteGuiaTemporal", mappedBy="clienteRel")
      */
     protected $guiasTemporalesClienteRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -780,6 +796,22 @@ class TteCliente
     /**
      * @return mixed
      */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel($asesorRel): void
+    {
+        $this->asesorRel = $asesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getGuiasClienteRel()
     {
         return $this->guiasClienteRel;
@@ -791,6 +823,22 @@ class TteCliente
     public function setGuiasClienteRel($guiasClienteRel): void
     {
         $this->guiasClienteRel = $guiasClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasClientesClienteRel()
+    {
+        return $this->guiasClientesClienteRel;
+    }
+
+    /**
+     * @param mixed $guiasClientesClienteRel
+     */
+    public function setGuiasClientesClienteRel($guiasClientesClienteRel): void
+    {
+        $this->guiasClientesClienteRel = $guiasClientesClienteRel;
     }
 
     /**
@@ -924,22 +972,6 @@ class TteCliente
     /**
      * @return mixed
      */
-    public function getAsesorRel()
-    {
-        return $this->asesorRel;
-    }
-
-    /**
-     * @param mixed $asesorRel
-     */
-    public function setAsesorRel($asesorRel): void
-    {
-        $this->asesorRel = $asesorRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getGuiasTemporalesClienteRel()
     {
         return $this->guiasTemporalesClienteRel;
@@ -953,21 +985,6 @@ class TteCliente
         $this->guiasTemporalesClienteRel = $guiasTemporalesClienteRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getGuiasClientesClienteRel()
-    {
-        return $this->guiasClientesClienteRel;
-    }
-
-    /**
-     * @param mixed $guiasClientesClienteRel
-     */
-    public function setGuiasClientesClienteRel($guiasClientesClienteRel): void
-    {
-        $this->guiasClientesClienteRel = $guiasClientesClienteRel;
-    }
 
 
 }

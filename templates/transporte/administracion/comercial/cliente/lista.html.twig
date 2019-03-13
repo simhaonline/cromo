@@ -43,8 +43,8 @@
             <th>ASESOR</th>
             <th>TELEFONO</th>
             <th>CELULAR</th>
-            <th>DIRECCION</th>
             <th>CIUDAD</th>
+            <th>CONDICION</th>
             <th title="Operacion">OP</th>
             <th></th>
             <th></th>
@@ -59,8 +59,8 @@
                 <td>{{ arCliente.asesorNombre | default('') }}</td>
                 <td>{{ arCliente.telefono }}</td>
                 <td>{{ arCliente.movil }}</td>
-                <td>{{ arCliente.direccion }}</td>
                 <td>{{ arCliente.ciudadNombre }}</td>
+                <td>{{ arCliente.condicion }}</td>
                 <td>{{ arCliente.codigoOperacionFk }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_administracion_comercial_cliente_nuevo',{'id' : arCliente.codigoClientePk}) }}">

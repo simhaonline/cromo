@@ -41,8 +41,10 @@ class TteClienteRepository extends ServiceEntityRepository
             ->addSelect('tc.codigoOperacionFk')
             ->addSelect('a.nombre AS asesorNombre')
             ->addSelect('c.nombre AS ciudadNombre')
+            ->addSelect('con.nombre AS condicion')
             ->leftJoin('tc.asesorRel', 'a')
             ->leftJoin('tc.ciudadRel', 'c')
+            ->leftJoin('tc.condicionRel', 'con')
             ->where('tc.codigoClientePk IS NOT NULL')
             ->orderBy('tc.codigoClientePk', 'ASC');
         if ($session->get('filtroTteNombreCliente') != '') {

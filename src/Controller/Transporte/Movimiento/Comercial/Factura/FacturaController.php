@@ -184,6 +184,7 @@ class FacturaController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_detalle', ['id' => $id]));
             }
             if ($form->get('btnRetirarGuia')->isClicked()) {
+                $em->getRepository(TteFacturaDetalleReliquidar::class)->limpiarTabla($id);
                 $arrGuias = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->retirarDetalle($arrGuias, $arFactura);
                 if ($respuesta) {

@@ -662,8 +662,14 @@ class FacturaController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        if($arFactura->getEstadoAutorizado()) {
+            Mensajes::error("Las facturas autorizadas no se pueden reliquidar");
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            exit;
+        }
         $form = $this->createFormBuilder()
             ->add('btnReliquidar', SubmitType::class, array('label' => 'Reliquidar'))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->add('tipoLiquidacion', ChoiceType::class, [
                 'choices' => [
                     'peso' => 'K',
@@ -745,6 +751,25 @@ class FacturaController extends ControllerListenerGeneral
                     $em->persist($arFacturaDetalleReliquidar);
                     $em->flush();
                 }
+            }
+
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arFacturaDetallesReliqudiarActualizar = $em->getRepository(TteFacturaDetalleReliquidar::class)->findBy(array('codigoFacturaFk' => $codigoFactura));
+                foreach ($arFacturaDetallesReliqudiarActualizar as $arFacturaDetalleReliqudiar) {
+                    $arGuiaActualizar = $em->getRepository(TteGuia::class)->find($arFacturaDetalleReliqudiar->getCodigoGuiaFk());
+                    $arGuiaActualizar->setVrFlete($arFacturaDetalleReliqudiar->getVrFleteNuevo());
+                    $arGuiaActualizar->setVrManejo($arFacturaDetalleReliqudiar->getVrManejoNuevo());
+                    $em->persist($arGuiaActualizar);
+
+                    $arFacturaDetalleActualizar = $em->getRepository(TteFacturaDetalle::class)->find($arFacturaDetalleReliqudiar->getCodigoFacturaDetalleFk());
+                    $arFacturaDetalleActualizar->setVrFlete($arFacturaDetalleReliqudiar->getVrFleteNuevo());
+                    $arFacturaDetalleActualizar->setVrManejo($arFacturaDetalleReliqudiar->getVrManejoNuevo());
+                    $em->persist($arFacturaDetalleActualizar);
+                }
+                $em->flush();
+                $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
+                $em->getRepository(TteFacturaDetalleReliquidar::class)->limpiarTabla($codigoFactura);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
         $arFacturaDetallesReliqudiar = $this->getDoctrine()->getRepository(TteFacturaDetalleReliquidar::class)->lista($codigoFactura);

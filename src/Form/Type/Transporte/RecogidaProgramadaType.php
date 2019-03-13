@@ -2,6 +2,8 @@
 
 namespace App\Form\Type\Transporte;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,7 +21,18 @@ class RecogidaProgramadaType extends AbstractType {
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('anunciante',TextType::class, array('required' => true))
+        $builder
+            ->add('ciudadRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteCiudad',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Ciudad:'
+            ])
+            ->add('anunciante',TextType::class, array('required' => true))
             ->add('direccion', TextType::class)
             ->add('telefono', TextType::class)
             ->add('hora', TimeType::class)

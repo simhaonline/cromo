@@ -10,14 +10,18 @@
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="input-group">
-                                <input id="txtCodigoCliente"  name="txtCodigoCliente"  type="text" class="form-control" value="{{ arRecogida.codigoClienteFk |default('') }}"/>
+                                <input id="txtCodigoCliente" name="txtCodigoCliente" type="text" class="form-control"
+                                       value="{{ arRecogida.codigoClienteFk |default('') }}"/>
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arRecogida.clienteRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
+                                <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
+                                       value="{{ arRecogida.clienteRel.nombreCorto |default('') }}"
+                                       readOnly="ReadOnly"/>
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'txtCodigoCliente', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'txtCodigoCliente', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -44,10 +48,17 @@
                     {{ form_widget(form.telefono, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
+            <div class="form-group form-group-sm">
+                <label for="form_ciudadRel" class="col-sm-2 control-label">Ciudad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('transporte_proceso_recogida_recogida_programada') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm"
+           href="{{ path('transporte_proceso_recogida_recogida_programada') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>

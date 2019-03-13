@@ -43,13 +43,15 @@ class ProgramadaController extends Controller
                     $arRecogida->setDireccion($arRecogidaProgramada->getDireccion());
                     $arRecogida->setTelefono($arRecogidaProgramada->getTelefono());
                     $arRecogida->setComentario($arRecogidaProgramada->getComentario());
+                    $arRecogida->setEstadoAutorizado(1);
+                    $arRecogida->setEstadoAprobado(1);
                     $em->persist($arRecogida);
                 }
                 $em->flush();
             }
         }
         $query = $this->getDoctrine()->getRepository(TteRecogidaProgramada::class)->lista();
-        $arRecogidasProgramadas = $paginator->paginate($query, $request->query->getInt('page', 1),10);
+        $arRecogidasProgramadas = $paginator->paginate($query, $request->query->getInt('page', 1),100);
         return $this->render('transporte/proceso/recogida/recogida/programada.html.twig', ['arRecogidasProgramadas' => $arRecogidasProgramadas, 'form' => $form->createView()]);
     }
 

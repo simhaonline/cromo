@@ -69,4 +69,21 @@ class CarAnticipoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult() ;
     }
 
+    public function listaFormato($codigoAnticipo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarAnticipoDetalle::class, 'ad');
+        $queryBuilder
+            ->select('ad.codigoAnticipoDetallePk')
+            ->addSelect('a.numero')
+            ->addSelect('ad.vrPago')
+            ->addSelect('at.nombre AS concepto')
+            ->leftJoin('ad.anticipoRel', 'a')
+            ->leftJoin('ad.anticipoConceptoRel', 'at')
+            ->where('ad.codigoAnticipoFk = ' . $codigoAnticipo);
+        $queryBuilder->orderBy('ad.codigoAnticipoDetallePk', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult() ;
+    }
+
 }

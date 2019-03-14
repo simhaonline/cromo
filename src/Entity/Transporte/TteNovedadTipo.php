@@ -27,6 +27,11 @@ class TteNovedadTipo
     private $nombre;
 
     /**
+     * @ORM\Column(name="interna", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $interna = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteNovedad", mappedBy="novedadTipoRel")
      */
     protected $novedadesNovedadTipoRel;
@@ -77,6 +82,22 @@ class TteNovedadTipo
     public function setNovedadesNovedadTipoRel($novedadesNovedadTipoRel): void
     {
         $this->novedadesNovedadTipoRel = $novedadesNovedadTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInterna()
+    {
+        return $this->interna;
+    }
+
+    /**
+     * @param mixed $interna
+     */
+    public function setInterna($interna): void
+    {
+        $this->interna = $interna;
     }
 
 

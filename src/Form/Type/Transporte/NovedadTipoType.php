@@ -5,6 +5,7 @@ namespace App\Form\Type\Transporte;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteNovedadTipo;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -23,6 +24,7 @@ class NovedadTipoType extends AbstractType {
         $builder
             ->add('codigoNovedadTipoPk',TextType::class, array('required' => true,'label'=>"Codigo novedad tipo:"))
             ->add('nombre',TextType::class, array('required' => true,'label'=>'Nombre:'))
+            ->add('interna', CheckboxType::class, array('required'  => false, 'label' => 'Interna'))
             ->add('guardar', SubmitType::class,array('label'=>'Guardar','attr'=>['class'=>'btn btn-primary btn-sm']));
     }
 
@@ -39,13 +41,14 @@ class NovedadTipoType extends AbstractType {
      * {@inheritdoc}
      */
     public function getBlockPrefix() {
-        return 'App_novedad';
+        return 'App_novedadTipo';
     }
 
     public function getEstructuraPropiedadesLista(){
         return '[
             {"campo":"codigoNovedadTipoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
+            {"campo":"interna",          "tipo":"bool",      "ayuda":"Interna",            "titulo":"INT"}
         ]';
     }
 

@@ -13,6 +13,7 @@ use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Financiero\FinTercero;
 use App\Form\Type\Cartera\AnticipoDetalleType;
 use App\Form\Type\Cartera\AnticipoType;
+use App\Formato\Cartera\Anticipo;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -158,6 +159,10 @@ class AnticipoController extends ControllerListenerGeneral
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(CarAnticipoDetalle::class)->eliminar($arAnticipo, $arrDetallesSeleccionados);
                 $em->getRepository(CarAnticipo::class)->liquidar($id);
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formato = new Anticipo();
+                $formato->Generar($em, $id);
             }
         }
 

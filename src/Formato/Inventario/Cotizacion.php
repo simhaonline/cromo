@@ -111,7 +111,7 @@ class Cotizacion extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(15, 35, 15, 30, 30, 15, 25, 25);
+        $w = array(10, 85, 15, 20, 15, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -139,14 +139,14 @@ class Cotizacion extends \FPDF
         //$w = array(15, 35, 15, 30, 30, 15, 25, 25);
         //$header = array('COD', 'ITEM', 'CANT', 'MARCA', 'PRECIO', 'IVA', 'SUBTOTAL', 'TOTAL');
         foreach ($arCotizacionDetalles as $arCotizacionDetalle) {
-            $pdf->Cell(15, 4, $arCotizacionDetalle->getCodigoCotizacionDetallePk(), 1, 0, 'L');
-            $pdf->Cell(35, 4, utf8_decode($arCotizacionDetalle->getItemRel()->getNombre()), 1, 0, 'L');
+            $pdf->Cell(10, 4, $arCotizacionDetalle->getCodigoCotizacionDetallePk(), 1, 0, 'L');
+            $pdf->Cell(85, 4, utf8_decode($arCotizacionDetalle->getItemRel()->getNombre()), 1, 0, 'L');
             $pdf->Cell(15, 4, $arCotizacionDetalle->getCantidad(), 1, 0, 'C');
-            $pdf->Cell(30, 4, $arCotizacionDetalle->getItemRel()->getMarcaRel()->getNombre(), 1, 0, 'C');
-            $pdf->Cell(30, 4, number_format($arCotizacionDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(20, 4, $arCotizacionDetalle->getItemRel()->getMarcaRel()->getNombre(), 1, 0, 'C');
+            $pdf->Cell(15, 4, number_format($arCotizacionDetalle->getVrPrecio(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(15, 4, number_format($arCotizacionDetalle->getVrIva(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(25, 4, number_format($arCotizacionDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(25, 4, number_format($arCotizacionDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($arCotizacionDetalle->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($arCotizacionDetalle->getVrTotal(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

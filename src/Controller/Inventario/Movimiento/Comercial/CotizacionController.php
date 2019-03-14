@@ -215,8 +215,8 @@ class CotizacionController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvItemNombre', $form->get('txtNombreItem')->getData());
+                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');

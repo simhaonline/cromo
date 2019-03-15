@@ -166,6 +166,28 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function cuentasCobrarCompromiso($codigoCliente)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
+            ->select('cc.codigoCuentaCobrarPk')
+            ->addSelect('cc.numeroDocumento')
+            ->addSelect('cc.vrTotal')
+            ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.plazo')
+            ->addSelect('cc.fecha')
+            ->addSelect('cc.fechaVence')
+            ->addSelect('cct.nombre')
+            ->join('cc.clienteRel','cl')
+            ->join('cc.cuentaCobrarTipoRel', 'cct')
+            ->where('cc.vrSaldo <> 0')
+            ->andWhere('cc.operacion = 1')
+            ->andWhere('cc.codigoClienteFk = ' . $codigoCliente)
+            ->orderBy('cc.codigoCuentaCobrarPk', 'ASC');
+
+        return $queryBuilder;
+    }
+
     /**
      * @param $arCuentaCobrar CarCuentaCobrar
      * @return \Doctrine\ORM\QueryBuilder
@@ -367,7 +389,6 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->where('cc.vrSaldo <> 0')
             ->orderBy('c.nombreCorto', 'ASC')
             ->addOrderBy('cc.fecha', 'ASC');
-
         $fecha =  new \DateTime('now');
         if ($session->get('filtroCarCuentaCobrarTipo') != "") {
             $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo')."'");
@@ -380,6 +401,12 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         }
         if($session->get('filtroCarCodigoCliente')){
             $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        }
+        if ($session->get('filtroCarCuentaCobrarTipo')) {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo') . "'");
+        }
+        if($session->get('filtroGenAsesor')) {
+            $queryBuilder->andWhere("cc.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
         }
         if($session->get('filtroFecha') == true){
             if ($session->get('filtroFechaDesde') != null) {

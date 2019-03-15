@@ -1,0 +1,22 @@
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
+    <tr>
+        <td class="titulo">CODIGO:</td>
+        <td class="td-in-well">{{ arCompromiso.codigoCompromisoPk }}</td>
+        <td class="titulo">CLIENTE:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arCompromiso.clienteRel.nombreCorto }}</td>
+        <td class="titulo">USUARIO:</td>
+        <td class="td-in-well">{{ arCompromiso.usuario }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">FECHA:</td>
+        <td class="td-in-well">{{ arCompromiso.fecha | date ('Y-m-d') }}</td>
+        <td class="titulo">FECHA COMPROMISO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arCompromiso.fechaCompromiso | date ('Y-m-d') }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+    </tr>
+    <tr>
+        <td class="titulo" >COMENTARIOS:</td>
+        <td class="td-in-well" colspan="5">{{ arCompromiso.comentarios }}</td>
+    </tr>
+</table>

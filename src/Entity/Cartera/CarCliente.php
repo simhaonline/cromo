@@ -135,6 +135,11 @@ class CarCliente
     protected $recibosClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="CarCompromiso", mappedBy="clienteRel")
+     */
+    protected $compromisosClienteRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo", mappedBy="clienteRel")
      */
     protected $anticiposClienteRel;
@@ -538,5 +543,22 @@ class CarCliente
     {
         $this->ciudadRel = $ciudadRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCompromisosClienteRel()
+    {
+        return $this->compromisosClienteRel;
+    }
+
+    /**
+     * @param mixed $compromisosClienteRel
+     */
+    public function setCompromisosClienteRel($compromisosClienteRel): void
+    {
+        $this->compromisosClienteRel = $compromisosClienteRel;
+    }
+
 
 }

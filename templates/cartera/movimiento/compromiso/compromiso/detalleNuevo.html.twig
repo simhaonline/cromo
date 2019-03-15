@@ -1,0 +1,45 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+            <tr>
+                <th>CÓDIGO</th>
+                {#<th>FORMA PAGO</th>#}
+                <th>PLAZO</th>
+                <th>TIPO</th>
+                <th>NUMERO</th>
+                <th>FECHA</th>
+                <th>VENCE</th>
+                <th style="text-align: right">VALOR</th>
+                <th style="text-align: center">SALDO</th>
+                <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+            </tr>
+            </thead>
+        <tbody>
+            {%for arCuentasCobrar in arCuentasCobrar %}
+            <tr>
+                <td>{{arCuentasCobrar.codigoCuentaCobrarPk}}</td>
+                <td>{{arCuentasCobrar.plazo}}</td>
+                <td>{{arCuentasCobrar.nombre}}</td>
+                <td>{{arCuentasCobrar.numeroDocumento}}</td>
+                <td>{{arCuentasCobrar.fecha | date('Y-m-d')}}</td>
+                <td>{{arCuentasCobrar.fechaVence | date('Y-m-d')}}</td>
+                <td style="text-align: right">{{ arCuentasCobrar.vrTotal | number_format(2, '.', ',') }}</td>
+                <td style="text-align: right">{{ arCuentasCobrar.vrSaldo | number_format(2, '.', ',') }}</td>
+                <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arCuentasCobrar.codigoCuentaCobrarPk }}" /></td>
+                {%endfor%}
+            </tr>
+        </tbody>
+        </table>
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCuentasCobrar.getTotalItemCount }}</span></div>
+        </div>
+        <div class="btn-group btn-sm" style="float: left;margin-left: 0px;padding-top: 0px;">
+            {{ knp_pagination_render(arCuentasCobrar) }}
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        </div>
+        {{ form_end(form) }}
+{% endblock %}

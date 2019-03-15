@@ -19,6 +19,7 @@ class GenModelo extends Fixture
                 'CarCliente',
                 'CarConsecutivo',
                 'CarCuentaCobrar',
+                'CarCompromiso',
                 'CarCuentaCobrarTipo',
                 'CarNotaCredito',
                 'CarNotaCreditoConcepto',

@@ -210,6 +210,11 @@ class CarCuentaCobrar
     protected $aplicacionesCuentaCobrarAplicacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="CarCompromisoDetalle", mappedBy="cuentaCobrarRel")
+     */
+    protected $compromisosDetallesCuentaCobrarRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaCobrarPk()
@@ -815,6 +820,38 @@ class CarCuentaCobrar
     public function setAnticipo($anticipo): void
     {
         $this->anticipo = $anticipo;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompromisosDetallesCuentaCobrarRel()
+    {
+        return $this->compromisosDetallesCuentaCobrarRel;
+    }
+
+    /**
+     * @param mixed $compromisosDetallesCuentaCobrarRel
+     */
+    public function setCompromisosDetallesCuentaCobrarRel($compromisosDetallesCuentaCobrarRel): void
+    {
+        $this->compromisosDetallesCuentaCobrarRel = $compromisosDetallesCuentaCobrarRel;
     }
 
 

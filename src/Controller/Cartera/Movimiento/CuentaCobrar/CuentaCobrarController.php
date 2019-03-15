@@ -6,8 +6,10 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarAplicacion;
+use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Form\Type\Cartera\CuentaCobrarType;
 use App\Form\Type\Compra\CuentaPagarType;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -41,7 +43,7 @@ class CuentaCobrarController extends ControllerListenerGeneral
 
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
@@ -66,9 +68,47 @@ class CuentaCobrarController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/cartera/movimiento/cartera/cuentacobrar/nuevo/{id}", name="cartera_movimiento_cuentacobrar_cuentacobrar_nuevo")
      */
-    public function nuevo()
+    public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $objFunciones = new FuncionesController();
+        $arCuentaCobrar = new CarCuentaCobrar();
+        if ($id != 0) {
+            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
+            if (!$arCuentaCobrar) {
+                return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_lista'));
+            }
+        } else {
+            $arCuentaCobrar->setFecha(new \DateTime('now'));
+        }
+        $form = $this->createForm(CuentaCobrarType::class, $arCuentaCobrar);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+                if ($txtCodigoCliente != '') {
+                    $arCliente = $em->getRepository(CarCliente::class)->find($txtCodigoCliente);
+                    if ($arCliente) {
+                        $arCuentaCobrar->setClienteRel($arCliente);
+                        $arCuentaCobrar->setModulo("CAR");
+                        $arCuentaCobrar->setFechaVence($objFunciones->sumarDiasFechaNumero($arCuentaCobrar->getPlazo(), $arCuentaCobrar->getFecha()));
+                        $arCuentaCobrar->setOperacion($arCuentaCobrar->getCuentaCobrarTipoRel()->getOperacion());
+                        $arCuentaCobrar->setVrSaldo($arCuentaCobrar->getVrTotal());
+                        $arCuentaCobrar->setVrSaldoOperado($arCuentaCobrar->getVrTotal() * $arCuentaCobrar->getOperacion());
+                        $arCuentaCobrar->setEstadoAutorizado(1);
+                        $arCuentaCobrar->setEstadoAprobado(1);
+                        $em->persist($arCuentaCobrar);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_detalle', ['id' => $arCuentaCobrar->getCodigoCuentaCobrarPk()]));
+                    }
+                }
+
+            }
+        }
+        return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/nuevo.html.twig', [
+            'arCuentaCobrar' => $arCuentaCobrar,
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -81,7 +121,7 @@ class CuentaCobrarController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
-        $form = Estandares::botonera(false,false,false);
+        $form = Estandares::botonera(false, false, false);
         $form->handleRequest($request);
         return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/detalle.html.twig', [
             'arCuentaCobrar' => $arCuentaCobrar,
@@ -94,12 +134,13 @@ class CuentaCobrarController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/cartera/movimiento/cartera/cuentacobrar/referencia/{id}", name="cartera_movimiento_cuentacobrar_cuentacobrar_referencia")
      */
-    public function referencia($id){
+    public function referencia($id)
+    {
         $em = $this->getDoctrine()->getManager();
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
         $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->detalleReferencia($id);
         $arAplicaciones = $em->getRepository(CarAplicacion::class)->referencia($id);
-        return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/referencia.html.twig',[
+        return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/referencia.html.twig', [
             'arCuentaCobrar' => $arCuentaCobrar,
             'arReciboDetalles' => $arReciboDetalles,
             'arAplicaciones' => $arAplicaciones

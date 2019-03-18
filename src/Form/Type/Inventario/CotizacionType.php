@@ -7,6 +7,7 @@ use App\Entity\Inventario\InvCotizacionTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,6 +31,16 @@ class CotizacionType extends AbstractType {
                 'choice_label' => 'nombre',
                 'label' => 'Solicitud tipo:'
             ])
+            ->add('asesorRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenAsesor',
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre'
+            ])
+            ->add('diasEntrega',TextType::class, ['required' => false,'label' => 'Dias entrega:'])
             ->add('comentarios',TextareaType::class, ['required' => false,'label' => 'Comentarios:'])
             ->add('soporte',TextType::class, ['required' => false,'label' => 'Soporte:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);

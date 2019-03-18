@@ -3,10 +3,12 @@
 namespace App\Controller\Cartera\Informe\CuentaCobrar\CuentaCobrar;
 
 use App\Entity\Cartera\CarAplicacion;
+use App\Entity\Cartera\CarCompromiso;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\General\GenAsesor;
+use App\Form\Type\Cartera\CompromisoType;
 use App\Formato\Cartera\CarteraEdad;
 use App\Formato\Cartera\CarteraEdadCliente;
 use App\Formato\Cartera\CuentaCobrar;
@@ -40,7 +42,7 @@ class CuentaCobrarController extends Controller
         ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Estado cuenta'))
             ->add('btnGenerarVencimientos', SubmitType::class, array('label' => 'Generar rango'))
@@ -49,7 +51,7 @@ class CuentaCobrarController extends Controller
             ->add('cboTipoCuentaRel', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
             ->add('cboAsesor', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroCarCuentaCobrarNumero')])
             ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNumeroReferencia'), 'attr' => ['class' => 'form-control']])
@@ -73,14 +75,14 @@ class CuentaCobrarController extends Controller
             }
             $session->set('filtroCarNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
             $session->set('filtroCarCuentaCobrarNumero', $form->get('txtNumero')->getData());
-            if(is_numeric($form->get('txtCodigoCliente')->getData())) {
+            if (is_numeric($form->get('txtCodigoCliente')->getData())) {
                 $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
             } else {
                 $session->set('filtroCarCodigoCliente', null);
             }
 
             $session->set('filtroCarNombreCliente', $form->get('txtNombreCorto')->getData());
-            $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+            $session->set('filtroFechaDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
             $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
             $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
         }
@@ -88,6 +90,7 @@ class CuentaCobrarController extends Controller
             $formato = new CuentaCobrar();
             $formato->Generar($em);
         }
+            $session->set('arrCuentasCobrar', $request->request->get('ChkSeleccionar'));
         if ($form->get('btnCarteraEdadesCliente')->isClicked()) {
             $formato = new CarteraEdadCliente();
             $formato->Generar($em);
@@ -99,7 +102,7 @@ class CuentaCobrarController extends Controller
             General::get()->setExportar($em->createQuery($em->getRepository(CarCuentaCobrar::class)->pendientes())->execute(), "Cuenta cobrar");
         }
         $query = $this->getDoctrine()->getRepository(CarCuentaCobrar::class)->pendientes();
-        $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1),50);
+        $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         return $this->render('cartera/informe/cuentaCobrar/pendientes.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,
             'form' => $form->createView()]);
@@ -110,7 +113,8 @@ class CuentaCobrarController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/cartera/informe/cuentaCobrar/cuentaCobrar/aplicar/{id}", name="cartera_informe_cuentaCobrar_cuentaCobrar_aplicar")
      */
-    public function aplicar(Request $request, $id){
+    public function aplicar(Request $request, $id)
+    {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
@@ -127,7 +131,7 @@ class CuentaCobrarController extends Controller
                     $vrAplicar = isset($arrControles['TxtSaldo' . $codigoCuentaCobrarAplicar]) && $arrControles['TxtSaldo' . $codigoCuentaCobrarAplicar] != '' ? $arrControles['TxtSaldo' . $codigoCuentaCobrarAplicar] : 0;
 
                     if ($arCuentaCobrar->getVrSaldo() >= $vrAplicar) {
-                        if(is_numeric($vrAplicar)){
+                        if (is_numeric($vrAplicar)) {
                             $saldo = $arCuentaCobrar->getVrSaldo() - $vrAplicar;
                             $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
                             $arCuentaCobrar->setVrSaldo($saldo);
@@ -158,19 +162,55 @@ class CuentaCobrarController extends Controller
                             Mensajes::error("El valor agregado no es numerico o contiene caracteres que no son permitidos");
                         }
                     } else {
-                        Mensajes::error("El valor a aplicar" . $vrAplicar. " es mayor al saldo " .  $arCuentaCobrar->getVrSaldo());
+                        Mensajes::error("El valor a aplicar" . $vrAplicar . " es mayor al saldo " . $arCuentaCobrar->getVrSaldo());
                     }
                 }
             }
         }
         $arCuentasCobrarAplicar = $em->getRepository(CarCuentaCobrar::class)->cuentasCobrarAplicar($arCuentaCobrar);
         $arCuentasCobrarAplicar = $paginator->paginate($arCuentasCobrarAplicar, $request->query->get('page', 1), 50);
-        return $this->render('cartera/informe/cuentaCobrar/aplicar.html.twig',[
+        return $this->render('cartera/informe/cuentaCobrar/aplicar.html.twig', [
             'arCuentaCobrar' => $arCuentaCobrar,
             'arCuentasCobrarAplicar' => $arCuentasCobrarAplicar,
             'form' => $form->createView()
         ]);
     }
+
+//    /**
+//     * @Route("/cartera/informe/cuentaCobrar/cuentaCobrar/compromisoNuevo", name="cartera_informe_cuentaCobrar_cuentaCobrar_compromiso_nuevo")
+//     */
+//    public function compromisoNuevo(Request $request)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//        $arCompromiso = new CarCompromiso();
+//        $arCompromiso->setFecha(new \DateTime('now'));
+//        $arCompromiso->setFechaCompromiso(new \DateTime('now'));
+//        $arCompromiso->setUsuario($this->getUser()->getUserName());
+//
+//        $form = $this->createForm(CompromisoType::class, $arCompromiso);
+//        $form->handleRequest($request);
+//        if ($form->isSubmitted() && $form->isValid()) {
+////            if ($form->get('guardar')->isClicked()) {
+////                $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+////                if ($txtCodigoCliente != '') {
+////                    $arCliente = $em->getRepository(CarCliente::class)->find($txtCodigoCliente);
+////                    if ($arCliente) {
+////                        $arCompromiso->setClienteRel($arCliente);
+////                        if ($id == 0) {
+////                            $arCompromiso->setFecha(new \DateTime('now'));
+////                        }
+////                        $em->persist($arCompromiso);
+////                        $em->flush();
+////                    }
+////                }
+////
+////            }
+//        }
+//        return $this->render('cartera/informe/cuentaCobrar/nuevo.html.twig', [
+//            'arCompromiso' => $arCompromiso,
+//            'form' => $form->createView()
+//        ]);
+//    }
 
 }
 

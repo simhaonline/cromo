@@ -10,12 +10,12 @@
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="input-group">
-                                <input id="txtCodigoTercero"  name="txtCodigoTercero"  type="text" class="form-control" value="{{ arPedido.codigoTerceroFk |default('') }}"/>
+                                <input id="txtCodigoTercero"  name="txtCodigoTercero"  type="text" class="form-control" value="{{ arCotizacion.codigoTerceroFk |default('') }}"/>
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arPedido.terceroRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
+                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arCotizacion.terceroRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
                                 <span class="input-group-btn">
                                         <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_buscar_tercero', { 'campoCodigo': 'txtCodigoTercero', 'campoNombre': 'txtNombreCorto', 'tipo' : 'C' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
                                     </span>
@@ -30,8 +30,18 @@
                     {{ form_widget(form.cotizacionTipoRel, { 'attr': {'class': 'form-control'} }) }}
                     <div style="color:red;">{{ form_errors(form.cotizacionTipoRel) }}</div>
                 </div>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Asesor:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.asesorRel, { 'attr': {'class': 'form-control'} }) }}
+                    <div style="color:red;">{{ form_errors(form.asesorRel) }}</div>
+                </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_fechaEntrega" class="col-sm-2 control-label">Dias entrega:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.diasEntrega, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.diasEntrega) }}
+                </div>
                 <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Soporte:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.soporte, { 'attr': {'class': 'form-control'} }) }}

@@ -50,51 +50,78 @@ class Cotizacion extends \FPDF
         $this->Cell(30, 4, "NUMERO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arCotizacion->getNumero(), 1, 0, 'L', 1);
+        $this->Cell(85, 4, $arCotizacion->getNumero(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, "FECHA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arCotizacion->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+        $this->Cell(45, 4, $arCotizacion->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
 
         $this->SetXY(10, $intY + 4);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, "TERCERO:", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, utf8_decode($arCotizacion->getTerceroRel()->getNombreCorto() . '-' . $arCotizacion->getTerceroRel()->getDigitoVerificacion()));
+        $this->Cell(85, 4, utf8_decode(substr($arCotizacion->getTerceroRel()->getNombreCorto() . '-' . $arCotizacion->getTerceroRel()->getDigitoVerificacion(), 0 , 55)));
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, 'NIT:', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arCotizacion->getTerceroRel()->getNumeroIdentificacion(), 1, 0, 'L', 1);
+        $this->Cell(45, 4, $arCotizacion->getTerceroRel()->getNumeroIdentificacion(), 1, 0, 'L', 1);
 
         $this->SetXY(10, $intY + 8);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "FECHA ENTREGA", 1, 0, 'L', 1);
+        $this->Cell(30, 4, "DIRECCION:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arCotizacion->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+        $this->Cell(85, 4, $arCotizacion->getTerceroRel()->getDireccion(), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, 'TELEFONO:', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(45, 4, $arCotizacion->getTerceroRel()->getTelefono(), 1, 0, 'L', 1);
+
+        $this->SetXY(10, $intY + 12);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "TIEMPO ENTREGA", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(85, 4, $arCotizacion->getDiasEntrega() ? : 'NO ESTABLECIDO', 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, 'SOPORTE:', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arCotizacion->getSoporte(), 1, 0, 'L', 1);
+        $this->Cell(45, 4, $arCotizacion->getSoporte(), 1, 0, 'L', 1);
+
+        $this->SetXY(10, $intY + 16);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "ASESOR", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(85, 4, utf8_decode($arCotizacion->getAsesorRel() ? $arCotizacion->getAsesorRel()->getNombre() : ''), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, '', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(45, 4, "", 1, 0, 'L', 1);
 
 
-        $this->SetXY(10, $intY + 12);
+        $this->SetXY(10, $intY + 20);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, "COMENTARIO", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-//        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
-        $this->MultiCell(160, 4, $arCotizacion->getComentarios(), 1, 'L');
+        $this->MultiCell(160, 4, utf8_decode($arCotizacion->getComentarios()), 1, 'L');
 
         $this->EncabezadoDetalles();
 

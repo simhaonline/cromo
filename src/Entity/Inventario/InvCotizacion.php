@@ -34,9 +34,19 @@ class InvCotizacion
     private $codigoTerceroFk;
 
     /**
+     * @ORM\Column(name="codigo_asesor_fk", type="integer", nullable=true)
+     */
+    private $codigoAsesorFk;
+
+    /**
      * @ORM\Column(name="fecha", type="date")
      */
     private $fecha;
+
+    /**
+     * @ORM\Column(name="dias_entrega", type="string", nullable=true)
+     */
+    private $diasEntrega;
 
     /**
      * @ORM\Column(name="soporte", type="string", length=255, nullable=true)
@@ -127,6 +137,29 @@ class InvCotizacion
     protected $terceroRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="cotizacionesAsesorRel")
+     * @ORM\JoinColumn(name="codigo_asesor_fk", referencedColumnName="codigo_asesor_pk")
+
+     */
+    protected $asesorRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoCotizacionPk()
@@ -161,6 +194,38 @@ class InvCotizacion
     /**
      * @return mixed
      */
+    public function getCodigoTerceroFk()
+    {
+        return $this->codigoTerceroFk;
+    }
+
+    /**
+     * @param mixed $codigoTerceroFk
+     */
+    public function setCodigoTerceroFk($codigoTerceroFk): void
+    {
+        $this->codigoTerceroFk = $codigoTerceroFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAsesorFk()
+    {
+        return $this->codigoAsesorFk;
+    }
+
+    /**
+     * @param mixed $codigoAsesorFk
+     */
+    public function setCodigoAsesorFk($codigoAsesorFk): void
+    {
+        $this->codigoAsesorFk = $codigoAsesorFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFecha()
     {
         return $this->fecha;
@@ -172,6 +237,22 @@ class InvCotizacion
     public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasEntrega()
+    {
+        return $this->diasEntrega;
+    }
+
+    /**
+     * @param mixed $diasEntrega
+     */
+    public function setDiasEntrega($diasEntrega): void
+    {
+        $this->diasEntrega = $diasEntrega;
     }
 
     /**
@@ -401,22 +482,6 @@ class InvCotizacion
     /**
      * @return mixed
      */
-    public function getCodigoTerceroFk()
-    {
-        return $this->codigoTerceroFk;
-    }
-
-    /**
-     * @param mixed $codigoTerceroFk
-     */
-    public function setCodigoTerceroFk($codigoTerceroFk): void
-    {
-        $this->codigoTerceroFk = $codigoTerceroFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getTerceroRel()
     {
         return $this->terceroRel;
@@ -428,6 +493,22 @@ class InvCotizacion
     public function setTerceroRel($terceroRel): void
     {
         $this->terceroRel = $terceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel($asesorRel): void
+    {
+        $this->asesorRel = $asesorRel;
     }
 
 

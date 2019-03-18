@@ -99,6 +99,7 @@
             <th>SALDO</th>
             <th>SALDO(O)</th>
             <th></th>
+            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
@@ -124,6 +125,9 @@
                         <a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('cartera_informe_cuentaCobrar_cuentaCobrar_aplicar',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">Aplicar</a>
                     {% endif %}
                 </td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                       value="{{ arCuentaCobrar.codigoCuentaCobrarPk }}"/>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -138,6 +142,9 @@
         {{ knp_pagination_render(arCuentasCobrar) }}
     </div>
     <div class="btn-toolbar" style="float: right">
+        {#<div class="btn-group" style="float: right">#}
+            {#<a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('cartera_informe_cuentaCobrar_cuentaCobrar_compromiso_nuevo') }}','compromisoNuevo',600,900)">Compromiso</a>#}
+        {#</div>#}
         <div class="btn-group" style="float: right">
             {{ form_widget(form.btnCarteraEdadesCliente, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
@@ -149,7 +156,8 @@
         </div>
     </div>
     <br><br><br>
-
+    <script type="application/javascript">
+    </script>
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

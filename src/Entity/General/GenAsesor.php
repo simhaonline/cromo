@@ -93,6 +93,11 @@ class GenAsesor
     protected $usuariosAsesorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvCotizacion",mappedBy="asesorRel")
+     */
+    protected $cotizacionesAsesorRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoAsesorPk()

@@ -16,6 +16,7 @@ use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Financiero\FinTercero;
 use App\Form\Type\Cartera\CompromisoType;
 use App\Form\Type\Cartera\ReciboType;
+use App\Formato\Cartera\Compromiso;
 use App\Formato\Cartera\Recibo;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -162,10 +163,10 @@ class CompromisoController extends ControllerListenerGeneral
                 $em->getRepository(CarCompromiso::class)->aprobar($arCompromiso);
                 return $this->redirect($this->generateUrl('cartera_movimiento_compromiso_compromiso_detalle', ['id' => $id]));
             }
-//            if ($form->get('btnImprimir')->isClicked()) {
-//                $formato = new Recibo();
-//                $formato->Generar($em, $id);
-//            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formato = new Compromiso();
+                $formato->Generar($em, $id);
+            }
 //            if ($form->get('btnAnular')->isClicked()) {
 //                $em->getRepository(CarCompromiso::class)->anular($arCompromiso);
 //                return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));

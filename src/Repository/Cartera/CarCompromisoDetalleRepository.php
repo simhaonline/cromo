@@ -63,4 +63,28 @@ class CarCompromisoDetalleRepository extends ServiceEntityRepository
         }
         $this->getEntityManager()->flush();
     }
+
+    public function listaFormato($codigoCompromiso)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCompromisoDetalle::class, 'cd');
+        $queryBuilder
+            ->select('cd.codigoCompromisoDetallePk')
+            ->addSelect('cc.numeroDocumento AS cuentaCobrar')
+            ->addSelect('cct.nombre AS cuentaCobrarTipo')
+            ->addSelect('cc.fecha')
+            ->addSelect('cc.fechaVence')
+            ->addSelect('cc.plazo')
+            ->addSelect('cc.vrSaldoOriginal')
+            ->addSelect('cc.vrAbono')
+            ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.vrSaldoOperado')
+            ->leftJoin('cd.compromisoRel', 'com')
+            ->leftJoin('cd.cuentaCobrarRel', 'cc')
+            ->leftJoin('cc.cuentaCobrarTipoRel', 'cct')
+            ->where('cd.codigoCompromisoFk = ' . $codigoCompromiso);
+        $queryBuilder->orderBy('cd.codigoCompromisoDetallePk', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult() ;
+    }
 }

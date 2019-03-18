@@ -29,7 +29,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class CotizacionController extends ControllerListenerGeneral
 {
-    protected $class= InvCotizacion::class;
+    protected $class = InvCotizacion::class;
     protected $claseNombre = "InvCotizacion";
     protected $modulo = "Inventario";
     protected $funcion = "Movimiento";
@@ -91,6 +91,8 @@ class CotizacionController extends ControllerListenerGeneral
             if (!$arCotizacion) {
                 return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_lista'));
             }
+        } else {
+            $arCotizacion->setFechaEntrega(new \DateTime('now'));
         }
         $form = $this->createForm(CotizacionType::class, $arCotizacion);
         $form->handleRequest($request);
@@ -99,10 +101,10 @@ class CotizacionController extends ControllerListenerGeneral
                 $txtCodigoTercero = $request->request->get('txtCodigoTercero');
                 if ($txtCodigoTercero != '') {
                     $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
-                    if($arTercero){
+                    if ($arTercero) {
                         $arCotizacion->setTerceroRel($arTercero);
                         $arCotizacion->setUsuario($this->getUser()->getUserName());
-                        if($id == 0){
+                        if ($id == 0) {
                             $arCotizacion->setFecha(new \DateTime('now'));
                         }
                         $em->persist($arCotizacion);
@@ -132,10 +134,10 @@ class CotizacionController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arCotizacion = $em->getRepository(InvCotizacion::class)->find($id);
         $paginator = $this->get('knp_paginator');
-        $form = Estandares::botonera($arCotizacion->getEstadoAutorizado(),$arCotizacion->getEstadoAprobado(),$arCotizacion->getEstadoAnulado());
+        $form = Estandares::botonera($arCotizacion->getEstadoAutorizado(), $arCotizacion->getEstadoAprobado(), $arCotizacion->getEstadoAnulado());
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        if($arCotizacion->getEstadoAutorizado()){
+        if ($arCotizacion->getEstadoAutorizado()) {
             $arrBtnEliminar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
         }

@@ -500,6 +500,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arCuentaCobrar->setPlazo($arFactura->getPlazoPago());
                 $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
                 $arCuentaCobrar->setCodigoCentroCostoFk($arFactura->getOperacionRel()->getCodigoCentroCostoFk());
+                $arCuentaCobrar->setAsesorRel($arFactura->getClienteRel()->getAsesorRel());
                 $em->persist($arCuentaCobrar);
                 $em->flush();
                 $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();

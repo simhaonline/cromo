@@ -91,8 +91,6 @@ class CotizacionController extends ControllerListenerGeneral
             if (!$arCotizacion) {
                 return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_lista'));
             }
-        } else {
-            $arCotizacion->setFechaEntrega(new \DateTime('now'));
         }
         $form = $this->createForm(CotizacionType::class, $arCotizacion);
         $form->handleRequest($request);

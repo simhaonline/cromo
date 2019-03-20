@@ -2865,5 +2865,52 @@ class TteGuiaRepository extends ServiceEntityRepository
         return true;
     }
 
+
+    public function apiCesioListaCliente($codigoCliente, $fechaDesde, $fechaHasta, $numero, $documento)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 't')
+            ->select('t.codigoGuiaPk')
+            ->addSelect('t.codigoServicioFk')
+            ->addSelect('t.codigoGuiaTipoFk')
+            ->addSelect('t.numero')
+            ->addSelect('t.documentoCliente')
+            ->addSelect('t.nombreDestinatario')
+            ->addSelect('t.fechaIngreso')
+            ->addSelect('t.codigoOperacionIngresoFk')
+            ->addSelect('t.codigoOperacionCargoFk')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('t.remitente')
+            ->addSelect('t.unidades')
+            ->addSelect('t.pesoReal')
+            ->addSelect('t.pesoVolumen')
+            ->addSelect('t.vrFlete')
+            ->addSelect('t.vrManejo')
+            ->addSelect('t.vrRecaudo')
+            ->addSelect('t.vrDeclara')
+            ->addSelect('t.estadoImpreso')
+            ->addSelect('t.estadoAutorizado')
+            ->addSelect('t.estadoAnulado')
+            ->addSelect('t.estadoAprobado')
+            ->addSelect('t.estadoEmbarcado')
+            ->addSelect('t.estadoDespachado')
+            ->addSelect('t.estadoEntregado')
+            ->addSelect('t.estadoSoporte')
+            ->addSelect('t.estadoCumplido')
+            ->addSelect('t.estadoFacturado')
+            ->addSelect('t.estadoNovedad')
+            ->leftJoin('t.ciudadDestinoRel', 'cd')
+            ->where("t.codigoClienteFk={$codigoCliente}")
+            ->andWhere("t.fechaIngreso >='{$fechaDesde} 00:00:00'")
+            ->andWhere("t.fechaIngreso <='{$fechaHasta} 23:59:59'")
+        ->setMaxResults(3000);
+        if($numero) {
+            $queryBuilder->andWhere("t.numero = '{$numero}'");
+        }
+        if($documento) {
+            $queryBuilder->andWhere("t.documentoCliente = '{$documento}'");
+        }
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }
 

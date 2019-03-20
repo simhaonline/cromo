@@ -23,7 +23,7 @@ class ApiCesioController extends FOSRestController
      * @return JsonResponse
      * @Rest\Get("/transporte/api/cesio/precio/calcular/{ciudadOrigen}/{ciudadDestino}/{producto}/{peso}/{listaPrecio}")
      */
-    public function crearGuia(Request $request, $ciudadOrigen = '', $ciudadDestino = '', $producto = '', $peso = 0, $listaPrecio = 0)
+    public function guiaCrear(Request $request, $ciudadOrigen = '', $ciudadDestino = '', $producto = '', $peso = 0, $listaPrecio = 0)
     {
         $em = $this->getDoctrine()->getManager();
         $flete = 0;
@@ -32,5 +32,25 @@ class ApiCesioController extends FOSRestController
             $flete = $arPrecioDetalle->getVrPeso() * $peso;
         }
         return new JsonResponse($flete);
+    }
+
+    /**
+     * @Rest\Post("/transporte/api/cesio/guia/lista/cliente")
+     */
+    public function guiaClienteLista(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $raw = json_decode($request->getContent(), true);
+        $codigoCliente = $raw['codigoCliente']?? '';
+        $fechaDesde = $raw['fechaDesde']?? '';
+        $fechaHasta = $raw['fechaHasta']?? '';
+        $numero = $raw['numero']?? '';
+        $documento = $raw['documento']?? '';
+        if($codigoCliente && $fechaDesde && $fechaHasta)  {
+            return $arGuias = $em->getRepository(TteGuia::class)->apiCesioListaCliente($codigoCliente,$fechaDesde,$fechaHasta, $numero, $documento);
+        } else {
+            return [
+                'error' => "Faltan datos en el post"
+            ];
+        }
     }
 }

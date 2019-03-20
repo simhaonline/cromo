@@ -179,14 +179,14 @@ class Recibo extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('ID', 'TIPO','NUMERO', 'FECHA', 'DESCUENTO', 'AJUSTE PESO', 'RTE FTE', 'RET ICA','VALOR');
+        $header = array('ID', 'TIPO','NUMERO', 'FECHA', 'DESCUENTO', 'AJUS PESO', 'RTE ICA', 'RTE IVA', 'RET FTE','VALOR');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(15, 35, 20, 20, 20, 20, 20, 20, 21, 21);
+        $w = array(15, 25, 20, 20, 20, 15, 15, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -206,14 +206,15 @@ class Recibo extends \FPDF {
         if($arRecibosDetalle) {
             foreach ($arRecibosDetalle as $arReciboDetalle) {
                 $pdf->Cell(15, 4, $arReciboDetalle['codigoReciboDetallePk'], 1, 0, 'L');
-                $pdf->Cell(35, 4, $arReciboDetalle['cuentaCobrarTipo'], 1, 0, 'L');
+                $pdf->Cell(25, 4, $arReciboDetalle['cuentaCobrarTipo'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arReciboDetalle['numeroFactura'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arReciboDetalle['fecha']->format('Y-m-d'), 1, 0, 'L');
                 $pdf->Cell(20, 4, number_format($arReciboDetalle['vrDescuento'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arReciboDetalle['vrAjustePeso'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arReciboDetalle['vrRetencionFuente'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, number_format($arReciboDetalle['vrRetencionIca'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(21, 4, number_format($arReciboDetalle['vrPagoAfectar'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arReciboDetalle['vrAjustePeso'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arReciboDetalle['vrRetencionIca'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arReciboDetalle['vrRetencionIva'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arReciboDetalle['vrRetencionFuente'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arReciboDetalle['vrPagoAfectar'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 85);
             }

@@ -158,6 +158,7 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
             ->addSelect('cc.fecha')
             ->addSelect('rd.vrDescuento')
             ->addSelect('rd.vrAjustePeso')
+            ->addSelect('rd.vrRetencionIva')
             ->addSelect('rd.vrRetencionFuente')
             ->addSelect('rd.vrRetencionIca')
             ->addSelect('rd.vrPagoAfectar')

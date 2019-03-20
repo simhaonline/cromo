@@ -68,14 +68,17 @@
             <th>CODIGO</th>
             <th>FACTURA</th>
             <th>FECHA</th>
+            <th>ENTREGA</th>
             <th>CLIENTE</th>
             <th>GUIA</th>
             <th>NUMERO</th>
             <th>DOCUMENTO CLIENTE</th>
+            <th>DESTINATARIO</th>
             <th>CIUDAD DESTINO</th>
             <th>UNIDADES</th>
             <th>PESO</th>
             <th>VOLUMEN</th>
+            <th>RECAUDO</th>
             <th>DECLARA</th>
             <th>FLETE</th>
             <th>MANEJO</th>
@@ -90,14 +93,17 @@
                 <td>{{ arFacturaDetalle.codigoFacturaFk }}</td>
                 <td>{{ arFacturaDetalle.numeroFactura }}</td>
                 <td>{{ arFacturaDetalle.fechaFactura | date('Y-m-d') }}</td>
+                <td>{{ arFacturaDetalle.fechaEntrega | date('Y-m-d') }}</td>
                 <td>{{ arFacturaDetalle.clienteNombreCorto }}</td>
                 <td>{{ arFacturaDetalle.codigoGuiaFk }}</td>
                 <td>{{ arFacturaDetalle.numero }}</td>
                 <td>{{ arFacturaDetalle.documentoCliente }}</td>
+                <td>{{ arFacturaDetalle.nombreDestinatario }}</td>
                 <td>{{ arFacturaDetalle.ciudadDestino }}</td>
                 <td class="numero">{{ arFacturaDetalle.unidades }}</td>
                 <td class="numero">{{ arFacturaDetalle.pesoReal }}</td>
                 <td class="numero">{{ arFacturaDetalle.pesoVolumen }}</td>
+                <td class="numero">{{ arFacturaDetalle.vrRecaudo | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arFacturaDetalle.vrDeclara | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arFacturaDetalle.vrFlete | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arFacturaDetalle.vrManejo | number_format(0, '.', ',') }}</td>

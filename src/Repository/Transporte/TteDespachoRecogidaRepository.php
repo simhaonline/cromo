@@ -251,10 +251,39 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
      */
     public function anular($arDespachoRecogida)
     {
-        if ($arDespachoRecogida->getEstadoAprobado()) {
-            $arDespachoRecogida->setEstadoAnulado(0);
-            $this->getEntityManager()->persist($arDespachoRecogida);
-            $this->getEntityManager()->flush();
+        $em = $this->getEntityManager();
+        if($arDespachoRecogida->getEstadoAutorizado() == 1 ) {
+            if($arDespachoRecogida->getEstadoAnulado() == 0){
+                $arRecogidas = $em->getRepository(TteRecogida::class)->findBy(['codigoDespachoRecogidaFk' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]);
+                foreach ($arRecogidas AS $arRecogida) {
+                    $arRecogida->setDespachoRecogidaRel(null);
+                    $arRecogida->setEstadoProgramado(0);
+                    $em->persist($arRecogida);
+                }
+                $arDespachoRecogida->setEstadoAnulado(1);
+                $arDespachoRecogida->setCantidad(0);
+                $arDespachoRecogida->setUnidades(0);
+                $arDespachoRecogida->setPesoReal(0);
+                $arDespachoRecogida->setPesoVolumen(0);
+                $arDespachoRecogida->setVrFletePago(0);
+                $arDespachoRecogida->setVrAnticipo(0);
+                $arDespachoRecogida->setVrDeclara(0);
+                $arDespachoRecogida->setVrIndustriaComercio(0);
+                $arDespachoRecogida->setVrRetencionFuente(0);
+                $arDespachoRecogida->setVrDescuentoPapeleria(0);
+                $arDespachoRecogida->setVrDescuentoSeguridad(0);
+                $arDespachoRecogida->setVrDescuentoCargue(0);
+                $arDespachoRecogida->setVrDescuentoEstampilla(0);
+                $arDespachoRecogida->setVrSaldo(0);
+                $arDespachoRecogida->setVrTotal(0);
+                $em->persist($arDespachoRecogida);
+                $em->flush();
+            }else{
+                Mensajes::error('El despacho ya esta anulado');
+            }
+
+        } else {
+            Mensajes::error('El despacho no esta autorizada');
         }
     }
 

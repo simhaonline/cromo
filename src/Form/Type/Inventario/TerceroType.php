@@ -35,9 +35,11 @@ class TerceroType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.nombre');
                 },
-                'choice_label' => 'nombre',
-                'required' => true,
-                'attr' => ['class' => 'form-control to-select-2']
+                'choice_label' => function($er){
+                    $ciudad = $er->getNombre();
+                    return $ciudad.' - '.$er->getDepartamentoRel()->getNombre();
+                },
+                'label' => 'Ciudad:'
             ])
             ->add('precioCompraRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvPrecio',

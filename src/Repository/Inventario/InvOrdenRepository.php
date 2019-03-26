@@ -154,7 +154,7 @@ class InvOrdenRepository extends ServiceEntityRepository
                     $this->_em->persist($arSolicitudDetalle);
                     $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arOrdenDetalle->getCantidad());
                 }
-                $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() - $arOrdenDetalle->getCantidad());
+                $arItem->setCantidadOrden($arItem->getCantidadOrden() - $arOrdenDetalle->getCantidad());
                 $this->_em->persist($arItem);
             }
             if(count($respuesta) == 0){
@@ -197,20 +197,20 @@ class InvOrdenRepository extends ServiceEntityRepository
         }
     }
 
-    private function validarDetalleEnuso($codigoOrdenCompraDetalle)
+    private function validarDetalleEnuso($codigoOrdenDetalle)
     {
         $respuesta = [];
         $qb = $this->_em->createQueryBuilder()->from('App:Inventario\InvMovimientoDetalle', 'imd')
             ->select('imd.codigoMovimientoDetallePk')
             ->addSelect('imd.codigoMovimientoFk')
             ->join('imd.movimientoRel', 'm')
-            ->where("imd.codigoOrdenCompraDetalleFk = {$codigoOrdenCompraDetalle}")
+            ->where("imd.codigoOrdenDetalleFk = {$codigoOrdenDetalle}")
             ->andWhere('m.estadoAnulado = 0');
         $query = $this->_em->createQuery($qb->getDQL());
         $resultado = $query->execute();
         if(count($resultado) > 0){
             foreach ($resultado as $result) {
-                $respuesta[] = 'No se puede anular, el detalle con ID '.$codigoOrdenCompraDetalle. ' esta siendo utilizado en el movimiento con ID '.$result['codigoMovimientoFk'];
+                $respuesta[] = 'No se puede anular, el detalle con ID '.$codigoOrdenDetalle. ' esta siendo utilizado en el movimiento con ID '.$result['codigoMovimientoFk'];
             }
         }
         return $respuesta;

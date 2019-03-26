@@ -132,27 +132,29 @@ class InvOrdenRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arOrdenCompra InvOrdenCompra
+     * @param $arOrden InvOrden
      * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function anular($arOrdenCompra)
+    public function anular($arOrden)
     {
         $respuesta = [];
-        if ($arOrdenCompra->getEstadoAprobado() == 1) {
-            $arOrdenCompra->setEstadoAnulado(1);
-            $this->_em->persist($arOrdenCompra);
+        if ($arOrden->getEstadoAprobado() == 1) {
+            $arOrden->setEstadoAnulado(1);
+            $this->_em->persist($arOrden);
 
-            $arOrdenCompraDetalles = $this->_em->getRepository('App:Inventario\InvOrdenCompraDetalle')->findBy(['codigoOrdenCompraFk' => $arOrdenCompra->getCodigoOrdenCompraPk()]);
-            foreach ($arOrdenCompraDetalles as $arOrdenCompraDetalle) {
-                $respuesta = $this->validarDetalleEnuso($arOrdenCompraDetalle->getCodigoOrdenCompraDetallePk());
-                $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arOrdenCompraDetalle->getCodigoItemFk()]);
-                if ($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk()) {
-                    $arSolicitudDetalle = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->find($arOrdenCompraDetalle->getCodigoSolicitudDetalleFk());
-                    $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidadPendiente() + $arOrdenCompraDetalle->getCantidad());
+            $arOrdenDetalles = $this->_em->getRepository('App:Inventario\InvOrdenDetalle')->findBy(['codigoOrdenFk' => $arOrden->getCodigoOrdenPk()]);
+            foreach ($arOrdenDetalles as $arOrdenDetalle) {
+                $respuesta = $this->validarDetalleEnuso($arOrdenDetalle->getCodigoOrdenDetallePk());
+                $arItem = $this->_em->getRepository('App:Inventario\InvItem')->findOneBy(['codigoItemPk' => $arOrdenDetalle->getCodigoItemFk()]);
+                if ($arOrdenDetalle->getCodigoSolicitudDetalleFk()) {
+                    $arSolicitudDetalle = $this->_em->getRepository('App:Inventario\InvSolicitudDetalle')->find($arOrdenDetalle->getCodigoSolicitudDetalleFk());
+                    $arSolicitudDetalle->setCantidadPendiente($arSolicitudDetalle->getCantidadPendiente() + $arOrdenDetalle->getCantidad());
                     $this->_em->persist($arSolicitudDetalle);
-                    $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arOrdenCompraDetalle->getCantidad());
+                    $arItem->setCantidadSolicitud($arItem->getCantidadSolicitud() + $arOrdenDetalle->getCantidad());
                 }
-                $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() - $arOrdenCompraDetalle->getCantidad());
+                $arItem->setCantidadOrdenCompra($arItem->getCantidadOrdenCompra() - $arOrdenDetalle->getCantidad());
                 $this->_em->persist($arItem);
             }
             if(count($respuesta) == 0){
@@ -163,13 +165,15 @@ class InvOrdenRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arOrdenCompra InvOrdenCompra
+     * @param $arOrden
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function desautorizar($arOrdenCompra)
+    public function desautorizar($arOrden)
     {
-        if ($arOrdenCompra->getEstadoAutorizado() == 1 && $arOrdenCompra->getEstadoAprobado() == 0) {
-            $arOrdenCompra->setEstadoAutorizado(0);
-            $this->_em->persist($arOrdenCompra);
+        if ($arOrden->getEstadoAutorizado() == 1 && $arOrden->getEstadoAprobado() == 0) {
+            $arOrden->setEstadoAutorizado(0);
+            $this->_em->persist($arOrden);
             $this->_em->flush();
         } else {
             Mensajes::error('El registro esta impreso y no se puede desautorizar');
@@ -177,7 +181,9 @@ class InvOrdenRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arOrden InvOrden
+     * @param $arOrden
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function autorizar($arOrden)
     {

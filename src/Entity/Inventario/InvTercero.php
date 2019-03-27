@@ -193,6 +193,11 @@ class InvTercero
     protected $pedidosTerceroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="InvContacto",mappedBy="terceroRel")
+     */
+    protected $contactosTerceroRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvCotizacion",mappedBy="terceroRel")
      */
     protected $cotizacionesTerceroRel;
@@ -876,6 +881,22 @@ class InvTercero
     public function setBloqueoCartera($bloqueoCartera): void
     {
         $this->bloqueoCartera = $bloqueoCartera;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContactosTerceroRel()
+    {
+        return $this->contactosTerceroRel;
+    }
+
+    /**
+     * @param mixed $contactosTerceroRel
+     */
+    public function setContactosTerceroRel($contactosTerceroRel): void
+    {
+        $this->contactosTerceroRel = $contactosTerceroRel;
     }
 
 

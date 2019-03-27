@@ -29,6 +29,15 @@ class GenCalidadFormato extends Fixture
             $arGenCalidadFormato->setCodigoModeloFk('TteConductor');
             $manager->persist($arGenCalidadFormato);
         }
+        $arGenCalidadFormato = $manager->getRepository('App:General\GenCalidadFormato')->find(3);
+        if(!$arGenCalidadFormato){
+            $arGenCalidadFormato = new \App\Entity\General\GenCalidadFormato();
+            $arGenCalidadFormato->setNombre('COTIZACION');
+            $arGenCalidadFormato->setFecha($fecha);
+            $arGenCalidadFormato->setVersion(1);
+            $arGenCalidadFormato->setCodigoModeloFk('InvCotizacion');
+            $manager->persist($arGenCalidadFormato);
+        }
         $manager->flush();
     }
 }

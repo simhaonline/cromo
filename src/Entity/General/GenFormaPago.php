@@ -47,6 +47,11 @@ class GenFormaPago
     protected $invTercerosFormaPagoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvCotizacion", mappedBy="formaPagoRel")
+     */
+    protected $invCotizacionesFormaPagoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoFormaPagoPk()
@@ -124,6 +129,54 @@ class GenFormaPago
     public function setInvTercerosFormaPagoRel($invTercerosFormaPagoRel): void
     {
         $this->invTercerosFormaPagoRel = $invTercerosFormaPagoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurClientesFormaPagoRel()
+    {
+        return $this->turClientesFormaPagoRel;
+    }
+
+    /**
+     * @param mixed $turClientesFormaPagoRel
+     */
+    public function setTurClientesFormaPagoRel($turClientesFormaPagoRel): void
+    {
+        $this->turClientesFormaPagoRel = $turClientesFormaPagoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInvCotizacionesFormaPagoRel()
+    {
+        return $this->invCotizacionesFormaPagoRel;
+    }
+
+    /**
+     * @param mixed $invCotizacionesFormaPagoRel
+     */
+    public function setInvCotizacionesFormaPagoRel($invCotizacionesFormaPagoRel): void
+    {
+        $this->invCotizacionesFormaPagoRel = $invCotizacionesFormaPagoRel;
     }
 
 

@@ -90,8 +90,8 @@ final class Estandares
      * @param $pdf
      * @param string $titulo
      * @param $em
-     * @param null $imagen
-     * @param null $extension
+     * @param null $codigoCalidadFormato
+     * @throws \Exception
      */
     public static function generarEncabezado($pdf, $titulo = ' ', $em, $codigoCalidadFormato = null)
     {

@@ -34,9 +34,19 @@ class InvCotizacion
     private $codigoTerceroFk;
 
     /**
+     * @ORM\Column(name="codigo_contacto_fk", type="integer", nullable=true)
+     */
+    private $codigoContactoFk;
+
+    /**
      * @ORM\Column(name="codigo_asesor_fk", type="integer", nullable=true)
      */
     private $codigoAsesorFk;
+
+    /**
+     * @ORM\Column(name="codigo_forma_pago_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoFormaPagoFk;
 
     /**
      * @ORM\Column(name="fecha", type="date")
@@ -44,9 +54,14 @@ class InvCotizacion
     private $fecha;
 
     /**
-     * @ORM\Column(name="dias_entrega", type="string", nullable=true)
+     * @ORM\Column(name="vencimiento", type="date", nullable=true)
      */
-    private $diasEntrega;
+    private $vencimiento;
+
+    /**
+     * @ORM\Column(name="tiempo_entrega", type="string", nullable=true)
+     */
+    private $tiempoEntrega;
 
     /**
      * @ORM\Column(name="soporte", type="string", length=255, nullable=true)
@@ -81,6 +96,11 @@ class InvCotizacion
      * @ORM\Column(name="vr_total", type="float")
      */
     private $vrTotal = 0;
+
+    /**
+     * @ORM\Column(name="costo_envio", type="float", nullable=true)
+     */
+    private $costoEnvio = 0;
 
     /**
      * @ORM\Column(name="estado_autorizado", type="boolean",options={"default" : false}, nullable=true)
@@ -126,6 +146,12 @@ class InvCotizacion
     protected $cotizacionTipoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenFormaPago", inversedBy="invCotizacionesFormaPagoRel")
+     * @ORM\JoinColumn(name="codigo_forma_pago_fk", referencedColumnName="codigo_forma_pago_pk")
+     */
+    private $formaPagoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvCotizacionDetalle", mappedBy="cotizacionRel")
      */
     protected $cotizacionesCotizacionDetalleRel;
@@ -135,6 +161,12 @@ class InvCotizacion
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      */
     protected $terceroRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="InvContacto", inversedBy="cotizacionesContactoRel")
+     * @ORM\JoinColumn(name="codigo_contacto_fk", referencedColumnName="codigo_contacto_pk")
+     */
+    protected $contactoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="cotizacionesAsesorRel")
@@ -242,17 +274,33 @@ class InvCotizacion
     /**
      * @return mixed
      */
-    public function getDiasEntrega()
+    public function getVencimiento()
     {
-        return $this->diasEntrega;
+        return $this->vencimiento;
     }
 
     /**
-     * @param mixed $diasEntrega
+     * @param mixed $vencimiento
      */
-    public function setDiasEntrega($diasEntrega): void
+    public function setVencimiento($vencimiento): void
     {
-        $this->diasEntrega = $diasEntrega;
+        $this->vencimiento = $vencimiento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTiempoEntrega()
+    {
+        return $this->tiempoEntrega;
+    }
+
+    /**
+     * @param mixed $tiempoEntrega
+     */
+    public function setTiempoEntrega($tiempoEntrega): void
+    {
+        $this->tiempoEntrega = $tiempoEntrega;
     }
 
     /**
@@ -509,6 +557,86 @@ class InvCotizacion
     public function setAsesorRel($asesorRel): void
     {
         $this->asesorRel = $asesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFormaPagoFk()
+    {
+        return $this->codigoFormaPagoFk;
+    }
+
+    /**
+     * @param mixed $codigoFormaPagoFk
+     */
+    public function setCodigoFormaPagoFk($codigoFormaPagoFk): void
+    {
+        $this->codigoFormaPagoFk = $codigoFormaPagoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormaPagoRel()
+    {
+        return $this->formaPagoRel;
+    }
+
+    /**
+     * @param mixed $formaPagoRel
+     */
+    public function setFormaPagoRel($formaPagoRel): void
+    {
+        $this->formaPagoRel = $formaPagoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostoEnvio()
+    {
+        return $this->costoEnvio;
+    }
+
+    /**
+     * @param mixed $costoEnvio
+     */
+    public function setCostoEnvio($costoEnvio): void
+    {
+        $this->costoEnvio = $costoEnvio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContactoFk()
+    {
+        return $this->codigoContactoFk;
+    }
+
+    /**
+     * @param mixed $codigoContactoFk
+     */
+    public function setCodigoContactoFk($codigoContactoFk): void
+    {
+        $this->codigoContactoFk = $codigoContactoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContactoRel()
+    {
+        return $this->contactoRel;
+    }
+
+    /**
+     * @param mixed $contactoRel
+     */
+    public function setContactoRel($contactoRel): void
+    {
+        $this->contactoRel = $contactoRel;
     }
 
 

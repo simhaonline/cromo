@@ -74,6 +74,8 @@ class InvCotizacionRepository extends ServiceEntityRepository
     /**
      * @param $arCotizacion InvCotizacion
      * @return array
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function anular($arCotizacion)
     {
@@ -90,6 +92,8 @@ class InvCotizacionRepository extends ServiceEntityRepository
 
     /**
      * @param $arCotizacion InvCotizacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function desautorizar($arCotizacion)
     {
@@ -104,6 +108,8 @@ class InvCotizacionRepository extends ServiceEntityRepository
 
     /**
      * @param $arCotizacion InvCotizacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function autorizar($arCotizacion)
     {
@@ -159,6 +165,8 @@ class InvCotizacionRepository extends ServiceEntityRepository
      * @param $arrCantidad
      * @param $arrIva
      * @param $arrDescuento
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function actualizar($arCotizacion, $arrValor, $arrCantidad, $arrIva, $arrDescuento)
     {
@@ -199,7 +207,7 @@ class InvCotizacionRepository extends ServiceEntityRepository
             $arCotizacion->setVrDescuento($vrDctoGlobal);
             $arCotizacion->setVrIva($vrIvaGlobal);
             $arCotizacion->setVrSubtotal($vrSubtotalGlobal);
-            $arCotizacion->setVrTotal($vrTotalGlobal);
+            $arCotizacion->setVrTotal($vrTotalGlobal + $arCotizacion->getCostoEnvio());
             $this->_em->persist($arCotizacion);
         } else {
             $arCotizacion->setVrDescuento(0);

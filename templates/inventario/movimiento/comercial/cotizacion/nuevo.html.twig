@@ -1,23 +1,44 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <script type="application/javascript">
+        function habilitarContacto() {
+            var codigoTercero = document.getElementById("cotizacion_codigoTerceroFk").value;
+            if (codigoTercero.length === 0) {
+                var link = document.getElementById("btn_buscarContacto");
+                link.setAttribute('href', "#");
+                alert('Seleccione un tercero para continuar');
+                return false;
+            } else {
+                var link = document.getElementById("btn_buscarContacto");
+                var url = '{{ path('inventario_buscar_contacto_lista', { 'campoCodigo': 'cotizacion_codigoContactoFk', 'campoNombre': 'form_txtNombreCorto'}) }}/' + codigoTercero;
+                link.setAttribute('href', "javascript:abrirVentana3('" + url + "', 'buscarContacto', 600, 900)");
+            }
+        }
+    </script>
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
+    {{ form_errors(form) }}
     <div class="panel panel-default">
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="txtNit" class="col-sm-2 control-label">Cliente:</label>
+                <label for="txtNit" class="col-sm-2 control-label">Tercero:</label>
                 <div class="col-sm-10">
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="input-group">
-                                <input id="txtCodigoTercero"  name="txtCodigoTercero"  type="text" class="form-control" value="{{ arCotizacion.codigoTerceroFk |default('') }}"/>
+                                {{ form_widget(form.codigoTerceroFk) }}
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arCotizacion.terceroRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
+                                <input type="text" class="form-control" id="form_txtNombreTercero"
+                                       name="form_txtNombreTercero" readonly
+                                        {% if arCotizacion.terceroRel %}
+                                    value="{{ arCotizacion.terceroRel.nombreCorto }}"
+                                        {% endif %}>
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_buscar_tercero', { 'campoCodigo': 'txtCodigoTercero', 'campoNombre': 'txtNombreCorto', 'tipo' : 'C' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('inventario_buscar_tercero', { 'campoCodigo': 'cotizacion_codigoTerceroFk', 'campoNombre': 'form_txtNombreTercero', 'tipo': 'C' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -25,27 +46,72 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Tipo de cotización:</label>
+                <label for="txtCodigoContactoFk" class="col-sm-2 control-label">Contacto:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoContactoFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="form_txtNombreCorto" name="form_txtNombreCorto"
+                                       readonly
+                                        {% if arCotizacion.contactoRel %}
+                                    value="{{ arCotizacion.contactoRel.nombreCorto }}"
+                                        {% endif %}>
+                                <span class="input-group-btn">
+                                        <a onclick="return habilitarContacto()" class="btn btn-default btn-sm"
+                                           id="btn_buscarContacto"
+                                           href="#">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_cotizacionTipoRel" class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.cotizacionTipoRel, { 'attr': {'class': 'form-control'} }) }}
                     <div style="color:red;">{{ form_errors(form.cotizacionTipoRel) }}</div>
                 </div>
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Asesor:</label>
+                <label for="form_asesorRel" class="col-sm-2 control-label">Asesor:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.asesorRel, { 'attr': {'class': 'form-control'} }) }}
                     <div style="color:red;">{{ form_errors(form.asesorRel) }}</div>
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_fechaEntrega" class="col-sm-2 control-label">Dias entrega:</label>
+                <label for="form_tiempoEntrega" class="col-sm-2 control-label">Forma pago:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.diasEntrega, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.diasEntrega) }}
+                    {{ form_widget(form.formaPagoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.formaPagoRel) }}
                 </div>
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Soporte:</label>
+                <label for="form_soporte" class="col-sm-2 control-label">Soporte:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.soporte, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.soporte) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_vencimiento" class="col-sm-2 control-label">Vencimiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vencimiento, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.vencimiento) }}
+                </div>
+                <label for="form_vencimiento" class="col-sm-2 control-label">Tiempo entrega:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tiempoEntrega, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.tiempoEntrega) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_costoEnvio" class="col-sm-2 col-sm-offset-6 control-label">Costo de envío:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.costoEnvio, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.costoEnvio) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -58,8 +124,10 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_comercial_cotizacion_lista') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm"
+           href="{{ path('inventario_movimiento_comercial_cotizacion_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
+    {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

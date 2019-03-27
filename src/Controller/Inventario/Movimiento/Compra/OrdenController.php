@@ -82,6 +82,7 @@ class OrdenController extends ControllerListenerGeneral
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      * @Route("/inventario/movimiento/compra/orden/nuevo/{id}",name="inventario_movimiento_compra_orden_nuevo")
      */
     public function nuevo(Request $request, $id)

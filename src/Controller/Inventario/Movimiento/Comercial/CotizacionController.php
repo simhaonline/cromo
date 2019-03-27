@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Inventario\InvConfiguracion;
+use App\Entity\Inventario\InvContacto;
 use App\Entity\Inventario\InvCotizacionDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\CotizacionType;
@@ -17,6 +18,7 @@ use App\Utilidades\Estandares;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvCotizacion;
 use App\Entity\Inventario\InvCotizacionTipo;
+use PhpOffice\PhpSpreadsheet\Calculation\DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -80,6 +82,7 @@ class CotizacionController extends ControllerListenerGeneral
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      * @Route("/inventario/movimiento/comercial/cotizacion/nuevo/{id}", name="inventario_movimiento_comercial_cotizacion_nuevo")
      */
     public function nuevo(Request $request, $id)
@@ -91,27 +94,27 @@ class CotizacionController extends ControllerListenerGeneral
             if (!$arCotizacion) {
                 return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_lista'));
             }
+        } else {
+            $arCotizacion->setVencimiento(New \DateTime('Now'));
         }
         $form = $this->createForm(CotizacionType::class, $arCotizacion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
-                if ($txtCodigoTercero != '') {
-                    $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
-                    if ($arTercero) {
-                        $arCotizacion->setTerceroRel($arTercero);
-                        $arCotizacion->setUsuario($this->getUser()->getUserName());
-                        if ($id == 0) {
-                            $arCotizacion->setFecha(new \DateTime('now'));
-                        }
-                        $em->persist($arCotizacion);
-                        $em->flush();
-                        return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_detalle', ['id' => $arCotizacion->getCodigoCotizacionPk()]));
-                    }
-                } else {
-                    Mensajes::error('Debe seleccionar un tercero');
+                $arCotizacion->setTerceroRel($em->getRepository(InvTercero::class)->find($arCotizacion->getCodigoTerceroFk()));
+                $arCotizacion->setUsuario($this->getUser()->getUserName());
+                if ($id == 0) {
+                    $arCotizacion->setFecha(new \DateTime('now'));
                 }
+                if ($arCotizacion->getCodigoContactoFk()) {
+                    $arContacto = $em->getRepository(InvContacto::class)->find($arCotizacion->getCodigoContactoFk());
+                    if ($arContacto) {
+                        $arCotizacion->setContactoRel($arContacto);
+                    }
+                }
+                $em->persist($arCotizacion);
+                $em->flush();
+                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_detalle', ['id' => $arCotizacion->getCodigoCotizacionPk()]));
             }
         }
         return $this->render('inventario/movimiento/comercial/cotizacion/nuevo.html.twig', [

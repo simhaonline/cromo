@@ -18,18 +18,26 @@
 
     </tr>
     <tr>
-        <td class="titulo">SOPORTE:</td>
-        <td class="td-in-well" >{{ arCotizacion.soporte }}</td>
         <td class="titulo">FECHA:</td>
         <td class="td-in-well">{{ arCotizacion.fecha | date('Y-m-d') }}</td>
+        <td class="titulo">TIEMPO ENTREGA:</td>
+        <td class="td-in-well" >{{ arCotizacion.tiempoEntrega | default ('') }}</td>
         <td class="titulo">DESCUENTO:</td>
         <td class="td-in-well" style="text-align: right;">{{ arCotizacion.vrDescuento |number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo"></td>
-        <td></td>
-        <td class="titulo"></td>
-        <td></td>
+        <td class="titulo">VENCIMIENTO:</td>
+        <td>{{ arCotizacion.vencimiento | date('Y-m-d') }}</td>
+        <td class="titulo">FORMA PAGO:</td>
+        <td>{{ arCotizacion.formaPagoRel.nombre | default('') }}</td>
+        <td class="titulo">COSTO DE ENVIO:</td>
+        <td class="td-in-well" style="text-align: right;">{{ arCotizacion.costoEnvio |number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">CONTACTO:</td>
+        <td>{{ arCotizacion.contactoRel.NombreCorto | default('') }}</td>
+        <td class="titulo">TELEFONO:</td>
+        <td>{{ arCotizacion.contactoRel.telefono | default('') }}</td>
         <td class="titulo">TOTAL:</td>
         <td class="td-in-well" style="text-align: right;">{{ arCotizacion.vrTotal |number_format(0, '.', ',') }}</td>
     </tr>

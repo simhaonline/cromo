@@ -27,14 +27,14 @@ class FacturaInforme extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('TIPO', 'NUMERO', 'FECHA','CLIENTE', 'CANT', 'FLETE', 'MANEJO', 'SUBTOTAL', 'TOTAL');
+        $header = array('#','TIPO', 'NUMERO', 'FECHA','CLIENTE', 'CANT', 'FLETE', 'MANEJO', 'SUBTOTAL', 'TOTAL');
         $this->SetFillColor(170, 170, 170);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('arial', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(22, 15, 15, 60, 10, 15, 15, 15, 15 );
+        $w = array(10 ,22, 15, 15, 60, 10, 15, 15, 15, 15 );
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -57,7 +57,9 @@ class FacturaInforme extends \FPDF {
         $manejo = 0;
         $subTotal = 0;
         $total = 0;
+        $registro = 1;
         foreach ($arFacturas as $arFactura) {
+            $pdf->Cell(10, 4, $registro, 'LRB', 0, 'L');
             $pdf->Cell(22, 4, $arFactura['facturaTipo'], 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arFactura['numero'], 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arFactura['fecha']->format('Y-m-d'), 'LRB', 0, 'L');
@@ -72,12 +74,13 @@ class FacturaInforme extends \FPDF {
             $manejo += $arFactura['vrManejo'];
             $subTotal += $arFactura['vrSubtotal'];
             $total += $arFactura['vrTotal'];
+            $registro = $registro + 1;
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }
         $pdf->SetX(10);
         $pdf->SetFont('Arial', 'B', 7);
-        $pdf->Cell(112, 4, 'TOTALES', 1, 0, 'L');
+        $pdf->Cell(122, 4, 'TOTALES', 1, 0, 'L');
         $pdf->Cell(10, 4,  number_format($unidades), 1, 0, 'R');
         $pdf->Cell(15, 4,  number_format($flete), 1, 0, 'R');
         $pdf->Cell(15, 4,  number_format($manejo), 1, 0, 'R');

@@ -3,8 +3,10 @@
 namespace App\Controller\Inventario\Administracion;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Entity\Inventario\InvContacto;
 use App\Entity\Inventario\InvSucursal;
 use App\Entity\Inventario\InvTercero;
+use App\Form\Type\Inventario\ContactoType;
 use App\Form\Type\Inventario\SucursalType;
 use App\Form\Type\Inventario\TerceroType;
 use App\General\General;
@@ -91,9 +93,11 @@ class TerceroController extends ControllerListenerGeneral
         $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arTercero = $em->getRepository(InvTercero::class)->find($id);
-        $arSucursales = $paginator->paginate($em->getRepository(InvSucursal::class)->listaSucursal($id), $request->query->getInt('page', 1), 30);
+        $arSucursales = $this->getDoctrine()->getRepository(InvSucursal::class)->listaSucursal($id)->getQuery()->getResult();
+        $arContactos = $this->getDoctrine()->getRepository(InvContacto::class)->listaTercero($id)->getQuery()->getResult();
         return $this->render('inventario/administracion/general/tercero/detalle.html.twig', [
             'arSucursales' => $arSucursales,
+            'arContactos' => $arContactos,
             'arTercero' => $arTercero
         ]);
     }
@@ -170,6 +174,36 @@ class TerceroController extends ControllerListenerGeneral
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         return $this->render('inventario/administracion/general/tercero/nuevoSucursal.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $codigoTercero
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/administracion/general/tercero/contacto/{codigoTercero}/{id}",name="inventario_administracion_general_tercero_contacto")
+     */
+    public function nuevoContacto(Request $request, $codigoTercero, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arContacto = new InvContacto();
+        $arTercero = $em->getRepository(InvTercero::class)->find($codigoTercero);
+        if ($id != '0') {
+            $arContacto = $this->getDoctrine()->getManager()->getRepository(InvContacto::class)->find($id);
+        }
+        $form = $this->createForm(ContactoType::class, $arContacto);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arContacto->setTerceroRel($arTercero);
+                $em->persist($arContacto);
+                $em->flush();
+            }
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('inventario/administracion/general/tercero/nuevoContacto.html.twig', [
             'form' => $form->createView()
         ]);
     }

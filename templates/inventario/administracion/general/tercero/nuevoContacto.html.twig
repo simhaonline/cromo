@@ -1,0 +1,50 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="col-sm-2 control-label">Identificacion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroIdentificacion) }}
+                    {{ form_errors(form.numeroIdentificacion) }}
+                </div>
+                <label for="form_nombre" class="col-sm-2 control-label">Nombre corto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombreCorto) }}
+                    {{ form_errors(form.nombreCorto) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="col-sm-2 control-label">Cargo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargo) }}
+                    {{ form_errors(form.cargo) }}
+                </div>
+                <label for="form_fechaVence" class="col-sm-2 control-label">Area:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.area) }}
+                    {{ form_errors(form.area) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="col-sm-2 control-label">Telefono:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.telefono) }}
+                    {{ form_errors(form.telefono) }}
+                </div>
+                <label for="form_fechaVence" class="col-sm-2 control-label">Celular:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.celular) }}
+                    {{ form_errors(form.celular) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

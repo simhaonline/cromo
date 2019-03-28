@@ -102,14 +102,14 @@ class RecaudoDevolucion extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(6);
-        $header = array('GUIA', 'DOC CLIENTE','DESTINATARIO','CIUDAD', 'UND', 'PES', 'VOL', 'DECLARA', 'MANEJO', 'FLETE', 'RECAUDO');
+        $header = array('GUIA', 'NUMERO', 'DOC CLIENTE','DESTINATARIO','CIUDAD', 'UND', 'PES', 'VOL', 'DECLARA', 'MANEJO', 'FLETE', 'RECAUDO');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(20, 20, 35, 28, 10, 10, 10, 15, 15, 15, 15);
+        $w = array(15, 15, 20, 30, 25, 10, 10, 10, 15, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -141,10 +141,11 @@ class RecaudoDevolucion extends \FPDF {
             $recaudoTotal = 0;
             $fleteTotal = 0;
             foreach ($arGuias as $arGuia) {
-                $pdf->Cell(20, 4, $arGuia['numero'], 1, 0, 'L');
+                $pdf->Cell(15, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
+                $pdf->Cell(15, 4, $arGuia['numero'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arGuia['documentoCliente'], 1, 0, 'L');
-                $pdf->Cell(35, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,20), 1, 0, 'L');
-                $pdf->Cell(28, 4, $arGuia['ciudadDestino'], 1, 0, 'L');
+                $pdf->Cell(30, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,18), 1, 0, 'L');
+                $pdf->Cell(25, 4, substr($arGuia['ciudadDestino'], 0 , 15), 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['unidades'], 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoVolumen'], 0, '.', ','), 1, 0, 'R');
@@ -179,7 +180,7 @@ class RecaudoDevolucion extends \FPDF {
                 }
 
             }
-            $pdf->Cell(103, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(105, 4, 'TOTAL', 1, 0, 'L');
             $pdf->Cell(10, 4,  $unidadesTotal, 1, 0,'R');
             $pdf->Cell(10, 4,  $pesoTotal, 1, 0,'R');
             $pdf->Cell(10, 4,  $volumen, 1, 0,'R');

@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TerceroController extends ControllerListenerGeneral
 {
-    protected $class= InvTercero::class;
+    protected $class = InvTercero::class;
     protected $claseNombre = "InvTercero";
     protected $modulo = "Inventario";
     protected $funcion = "Administracion";
@@ -117,10 +117,24 @@ class TerceroController extends ControllerListenerGeneral
         $form = $this->createForm(TerceroType::class, $arTercero);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
+            $strRespuesta = "";
+            $identificacion = $form->get('numeroIdentificacion')->getData();
+            if($id == 0){
+                $identificacionExistente = $em->getRepository(InvTercero::class)
+                    ->findBy(['numeroIdentificacion' => $identificacion]);
+                if (!$identificacionExistente) {
+                        $em->persist($arTercero);
+                } else {
+                    $strRespuesta = "El numero de identificacion ya existe";
+                }
+            }else{
                 $em->persist($arTercero);
+            }
+            if($strRespuesta == ""){
                 $em->flush();
                 return $this->redirect($this->generateUrl('inventario_administracion_general_tercero_detalle', ['id' => $arTercero->getCodigoTerceroPk()]));
+            }else{
+                Mensajes::error($strRespuesta);
             }
         }
         return $this->render('inventario/administracion/general/tercero/nuevo.html.twig', [
@@ -137,24 +151,25 @@ class TerceroController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/inventario/administracion/general/tercero/sucursal/{codigoTercero}/{id}",name="inventario_administracion_general_tercero_sucursal")
      */
-    public function nuevoSucursal(Request $request,$codigoTercero ,$id){
+    public function nuevoSucursal(Request $request, $codigoTercero, $id)
+    {
         $em = $this->getDoctrine()->getManager();
         $arSucursal = new InvSucursal();
         $arTercero = $em->getRepository(InvTercero::class)->find($codigoTercero);
-        if($id != '0'){
+        if ($id != '0') {
             $arSucursal = $this->getDoctrine()->getManager()->getRepository(InvSucursal::class)->find($id);
         }
         $form = $this->createForm(SucursalType::class, $arSucursal);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            if($form->get('guardar')->isClicked()){
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
                 $arSucursal->setTerceroRel($arTercero);
                 $em->persist($arSucursal);
                 $em->flush();
             }
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
-        return $this->render('inventario/administracion/general/tercero/nuevoSucursal.html.twig',[
+        return $this->render('inventario/administracion/general/tercero/nuevoSucursal.html.twig', [
             'form' => $form->createView()
         ]);
     }

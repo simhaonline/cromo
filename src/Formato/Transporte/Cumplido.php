@@ -78,14 +78,14 @@ class Cumplido extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('GUIA', 'DOC CLIENTE','DESTINATARIO','CIUDAD', 'UND', 'PES', 'VOL');
+        $header = array('GUIA', 'NUMERO','DOC CLIENTE','DESTINATARIO','CIUDAD', 'UND', 'PES', 'VOL');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(20, 20, 65, 58, 10, 10, 10);
+        $w = array(20, 20, 20, 53, 50, 10, 10, 10);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -117,10 +117,11 @@ class Cumplido extends \FPDF {
             $recaudoTotal = 0;
             $fleteTotal = 0;
             foreach ($arGuias as $arGuia) {
+                $pdf->Cell(20, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arGuia['numero'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arGuia['documentoCliente'], 1, 0, 'L');
-                $pdf->Cell(65, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,20), 1, 0, 'L');
-                $pdf->Cell(58, 4, $arGuia['ciudadDestino'], 1, 0, 'L');
+                $pdf->Cell(53, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,20), 1, 0, 'L');
+                $pdf->Cell(50, 4, $arGuia['ciudadDestino'], 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['unidades'], 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoVolumen'], 0, '.', ','), 1, 0, 'R');

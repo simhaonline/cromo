@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TteDesembarco
 {
     public $infoLog = [
-        "primaryKey" => "codigoRedespachoPk",
+        "primaryKey" => "codigoDesembarcoPk",
         "todos"     => true,
     ];
 
@@ -49,6 +49,11 @@ class TteDesembarco
      * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
      */
     private $despachoRel;
+
+    /**
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
+     */
+    private $usuario;
 
     /**
      * @return array
@@ -161,5 +166,23 @@ class TteDesembarco
     {
         $this->despachoRel = $despachoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+
 }
 

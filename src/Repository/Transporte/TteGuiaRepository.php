@@ -2579,6 +2579,7 @@ class TteGuiaRepository extends ServiceEntityRepository
     public function desembarco($arrCodigoGuia, $arOperacion)
     {
         $em = $this->_em;
+
         if ($arrCodigoGuia) {
             foreach ($arrCodigoGuia as $codigoGuia) {
                 $arGuia = $em->find(TteGuia::class, $codigoGuia);
@@ -2598,6 +2599,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arDesembarco->setDespachoRel($arGuia->getDespachoRel());
                         $arDesembarco->setGuiaRel($arGuia);
                         $arDesembarco->setFecha(new \DateTime('now'));
+                        $arDesembarco->setUsuario($this->getUser()->getUsername());
                         $arGuia->setCodigoDespachoFk(null);
                         $em->persist($arGuia);
                         $em->persist($arDesembarco);

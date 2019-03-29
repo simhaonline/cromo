@@ -54,7 +54,7 @@ class PendienteFacturaController extends Controller
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->informeFacturaPendiente())->execute(), "Pendiente por facturar");
+                General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->informeFacturaPendiente())->execute(), 'Pendiente por facturar');
             }
         }
         $arGuiasPendientes = $paginator->paginate($this->getDoctrine()->getRepository(TteGuia::class)->informeFacturaPendiente(), $request->query->getInt('page', 1), 500);

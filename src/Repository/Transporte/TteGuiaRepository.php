@@ -2599,7 +2599,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arDesembarco->setDespachoRel($arGuia->getDespachoRel());
                         $arDesembarco->setGuiaRel($arGuia);
                         $arDesembarco->setFecha(new \DateTime('now'));
-                        $arDesembarco->setUsuario($this->getUser()->getUsername());
+//                        $arDesembarco->setUsuario($this->getUser()->getUsername());
                         $arGuia->setCodigoDespachoFk(null);
                         $em->persist($arGuia);
                         $em->persist($arDesembarco);

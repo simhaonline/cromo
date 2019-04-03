@@ -16,10 +16,9 @@ class ConsecutivoType extends AbstractType
     {
         $builder
             ->add('codigoConsecutivoPk',TextType::class,['required' => true,'label' => 'Codigo consecutivo:'])
-            ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
-            ->add('consecutivo',NumberType::class,['required' => true,'label' => 'Consecutivo:'])
+            ->add('intermediacion',TextType::class,['required' => true,'label' => 'Nombre:'])
+            ->add('guia',NumberType::class,['required' => true,'label' => 'Consecutivo:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
         ;
     }
 
@@ -33,14 +32,16 @@ class ConsecutivoType extends AbstractType
     public function getEstructuraPropiedadesLista(){
         return '[
             {"campo":"codigoConsecutivoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+            {"campo":"intermediacion",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"INTERMEDIACION"},
+            {"campo":"guia",                      "tipo":"texto",     "ayuda":"Guia",     "titulo":"GUIA"}
         ]';
     }
 
     public function getEstructuraPropiedadesExportar(){
         return '[
             {"campo":"codigoConsecutivoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+            {"campo":"intermediacion",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"INTERMEDIACION"},
+            {"campo":"guia",                      "tipo":"texto",     "ayuda":"Guia",     "titulo":"GUIA"}
         ]';
     }
 }

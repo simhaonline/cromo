@@ -26,6 +26,9 @@ class GuiaCorreccionType extends AbstractType {
             ->add('vrDeclara', NumberType::class)
             ->add('vrFlete', NumberType::class)
             ->add('vrManejo', NumberType::class)
+            ->add('unidades', NumberType::class)
+            ->add('pesoReal', NumberType::class)
+            ->add('pesoVolumen', NumberType::class)
             ->add('vrCobroEntrega', NumberType::class)
             ->add('fechaIngreso', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('ciudadOrigenRel',EntityType::class,[

@@ -79,10 +79,27 @@
                     {{ form_widget(form.operacionCargoRel, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.operacionCargoRel) }}
                 </div>
+                <label class="col-sm-2 control-label">Unidades:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.unidades, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.unidades) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Fecha ingreso:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaIngreso, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.fechaIngreso) }}
+                </div>
+                <label class="col-sm-2 control-label">Peso:</label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.pesoReal, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.pesoReal) }}
+                </div>
+                <label class="col-sm-2 control-label">Vol:</label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.pesoVolumen, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.pesoVolumen) }}
                 </div>
             </div>
         </div>

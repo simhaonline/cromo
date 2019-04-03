@@ -5,6 +5,7 @@ namespace App\Formato\Cartera;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Utilidades\Estandares;
+use function Complex\subtract;
 
 class Recibo extends \FPDF {
     public static $em;
@@ -186,7 +187,7 @@ class Recibo extends \FPDF {
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(15, 25, 20, 20, 20, 15, 15, 15, 15, 15);
+        $w = array(15, 30, 20, 20, 20, 15, 15, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -206,7 +207,7 @@ class Recibo extends \FPDF {
         if($arRecibosDetalle) {
             foreach ($arRecibosDetalle as $arReciboDetalle) {
                 $pdf->Cell(15, 4, $arReciboDetalle['codigoReciboDetallePk'], 1, 0, 'L');
-                $pdf->Cell(25, 4, $arReciboDetalle['cuentaCobrarTipo'], 1, 0, 'L');
+                $pdf->Cell(30, 4, substr($arReciboDetalle['cuentaCobrarTipo'], 0 , 18), 1, 0, 'L');
                 $pdf->Cell(20, 4, $arReciboDetalle['numeroFactura'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arReciboDetalle['fecha']->format('Y-m-d'), 1, 0, 'L');
                 $pdf->Cell(20, 4, number_format($arReciboDetalle['vrDescuento'], 0, '.', ','), 1, 0, 'R');

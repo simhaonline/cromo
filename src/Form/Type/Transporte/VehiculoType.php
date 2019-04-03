@@ -122,6 +122,7 @@ class VehiculoType extends AbstractType
             ->add('numeroTecnicomecanica',TextType::class,['required' => false,'label' => 'Numero tecnicomecanica:'])
             ->add('fechaVenceTecnicomecanica', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('estadoInactivo', CheckboxType::class, ['required' => false,'label' => 'Inactivo'])
+            ->add('propio', CheckboxType::class, ['required' => false,'label' => 'Propio'])
             ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
 

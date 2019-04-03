@@ -107,6 +107,7 @@ class DespachoController extends ControllerListenerGeneral
      * @param Request $request
      * @param $id
      * @return Response
+     * @throws \Exception
      * @Route("/transporte/movimiento/transporte/despacho/nuevo/{id}", name="transporte_movimiento_transporte_despacho_nuevo")
      */
     public function nuevo(Request $request, $id)

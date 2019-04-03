@@ -157,6 +157,11 @@ class TteVehiculo
     private $comentario;
 
     /**
+     * @ORM\Column(name="propio", type="boolean",options={"default":false})
+     */
+    private $propio = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteMarca", inversedBy="vehiculosMarcaRel")
      * @ORM\JoinColumn(name="codigo_marca_fk", referencedColumnName="codigo_marca_pk")
      */
@@ -223,6 +228,27 @@ class TteVehiculo
      * @ORM\OneToMany(targetEntity="TteMonitoreo", mappedBy="vehiculoRel")
      */
     protected $monitoreosVehiculoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteVehiculoDisponible", mappedBy="vehiculoRel")
+     */
+    protected $vehiculosDisponibleVechiculoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -483,6 +509,22 @@ class TteVehiculo
     /**
      * @return mixed
      */
+    public function getNumeroTecnicomecanica()
+    {
+        return $this->numeroTecnicomecanica;
+    }
+
+    /**
+     * @param mixed $numeroTecnicomecanica
+     */
+    public function setNumeroTecnicomecanica($numeroTecnicomecanica): void
+    {
+        $this->numeroTecnicomecanica = $numeroTecnicomecanica;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFechaVenceTecnicomecanica()
     {
         return $this->fechaVenceTecnicomecanica;
@@ -595,6 +637,54 @@ class TteVehiculo
     /**
      * @return mixed
      */
+    public function getCodigoTipoCombustibleFk()
+    {
+        return $this->codigoTipoCombustibleFk;
+    }
+
+    /**
+     * @param mixed $codigoTipoCombustibleFk
+     */
+    public function setCodigoTipoCombustibleFk($codigoTipoCombustibleFk): void
+    {
+        $this->codigoTipoCombustibleFk = $codigoTipoCombustibleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoCarroceriaFk()
+    {
+        return $this->codigoTipoCarroceriaFk;
+    }
+
+    /**
+     * @param mixed $codigoTipoCarroceriaFk
+     */
+    public function setCodigoTipoCarroceriaFk($codigoTipoCarroceriaFk): void
+    {
+        $this->codigoTipoCarroceriaFk = $codigoTipoCarroceriaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoInactivo()
+    {
+        return $this->estadoInactivo;
+    }
+
+    /**
+     * @param mixed $estadoInactivo
+     */
+    public function setEstadoInactivo($estadoInactivo): void
+    {
+        $this->estadoInactivo = $estadoInactivo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -606,6 +696,22 @@ class TteVehiculo
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPropio()
+    {
+        return $this->propio;
+    }
+
+    /**
+     * @param mixed $propio
+     */
+    public function setPropio($propio): void
+    {
+        $this->propio = $propio;
     }
 
     /**
@@ -675,6 +781,70 @@ class TteVehiculo
     /**
      * @return mixed
      */
+    public function getTipoCombustibleRel()
+    {
+        return $this->tipoCombustibleRel;
+    }
+
+    /**
+     * @param mixed $tipoCombustibleRel
+     */
+    public function setTipoCombustibleRel($tipoCombustibleRel): void
+    {
+        $this->tipoCombustibleRel = $tipoCombustibleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getColorRel()
+    {
+        return $this->colorRel;
+    }
+
+    /**
+     * @param mixed $colorRel
+     */
+    public function setColorRel($colorRel): void
+    {
+        $this->colorRel = $colorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoCarroceriaRel()
+    {
+        return $this->tipoCarroceriaRel;
+    }
+
+    /**
+     * @param mixed $tipoCarroceriaRel
+     */
+    public function setTipoCarroceriaRel($tipoCarroceriaRel): void
+    {
+        $this->tipoCarroceriaRel = $tipoCarroceriaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLineaRel()
+    {
+        return $this->lineaRel;
+    }
+
+    /**
+     * @param mixed $lineaRel
+     */
+    public function setLineaRel($lineaRel): void
+    {
+        $this->lineaRel = $lineaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDespachosVehiculoRel()
     {
         return $this->despachosVehiculoRel;
@@ -686,6 +856,22 @@ class TteVehiculo
     public function setDespachosVehiculoRel($despachosVehiculoRel): void
     {
         $this->despachosVehiculoRel = $despachosVehiculoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasVechiculoRel()
+    {
+        return $this->recogidasVechiculoRel;
+    }
+
+    /**
+     * @param mixed $recogidasVechiculoRel
+     */
+    public function setRecogidasVechiculoRel($recogidasVechiculoRel): void
+    {
+        $this->recogidasVechiculoRel = $recogidasVechiculoRel;
     }
 
     /**
@@ -723,145 +909,17 @@ class TteVehiculo
     /**
      * @return mixed
      */
-    public function getCodigoTipoCombustibleFk()
+    public function getVehiculosDisponibleVechiculoRel()
     {
-        return $this->codigoTipoCombustibleFk;
+        return $this->vehiculosDisponibleVechiculoRel;
     }
 
     /**
-     * @param mixed $codigoTipoCombustibleFk
+     * @param mixed $vehiculosDisponibleVechiculoRel
      */
-    public function setCodigoTipoCombustibleFk($codigoTipoCombustibleFk): void
+    public function setVehiculosDisponibleVechiculoRel($vehiculosDisponibleVechiculoRel): void
     {
-        $this->codigoTipoCombustibleFk = $codigoTipoCombustibleFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoCombustibleRel()
-    {
-        return $this->tipoCombustibleRel;
-    }
-
-    /**
-     * @param mixed $tipoCombustibleRel
-     */
-    public function setTipoCombustibleRel($tipoCombustibleRel): void
-    {
-        $this->tipoCombustibleRel = $tipoCombustibleRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoTipoCarroceriaFk()
-    {
-        return $this->codigoTipoCarroceriaFk;
-    }
-
-    /**
-     * @param mixed $codigoTipoCarroceriaFk
-     */
-    public function setCodigoTipoCarroceriaFk($codigoTipoCarroceriaFk): void
-    {
-        $this->codigoTipoCarroceriaFk = $codigoTipoCarroceriaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoCarroceriaRel()
-    {
-        return $this->tipoCarroceriaRel;
-    }
-
-    /**
-     * @param mixed $tipoCarroceriaRel
-     */
-    public function setTipoCarroceriaRel($tipoCarroceriaRel): void
-    {
-        $this->tipoCarroceriaRel = $tipoCarroceriaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRecogidasVechiculoRel()
-    {
-        return $this->recogidasVechiculoRel;
-    }
-
-    /**
-     * @param mixed $recogidasVechiculoRel
-     */
-    public function setRecogidasVechiculoRel($recogidasVechiculoRel): void
-    {
-        $this->recogidasVechiculoRel = $recogidasVechiculoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getColorRel()
-    {
-        return $this->colorRel;
-    }
-
-    /**
-     * @param mixed $colorRel
-     */
-    public function setColorRel($colorRel): void
-    {
-        $this->colorRel = $colorRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLineaRel()
-    {
-        return $this->lineaRel;
-    }
-
-    /**
-     * @param mixed $lineaRel
-     */
-    public function setLineaRel($lineaRel): void
-    {
-        $this->lineaRel = $lineaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumeroTecnicomecanica()
-    {
-        return $this->numeroTecnicomecanica;
-    }
-
-    /**
-     * @param mixed $numeroTecnicomecanica
-     */
-    public function setNumeroTecnicomecanica( $numeroTecnicomecanica ): void
-    {
-        $this->numeroTecnicomecanica = $numeroTecnicomecanica;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoInactivo()
-    {
-        return $this->estadoInactivo;
-    }
-
-    /**
-     * @param mixed $estadoInactivo
-     */
-    public function setEstadoInactivo($estadoInactivo): void
-    {
-        $this->estadoInactivo = $estadoInactivo;
+        $this->vehiculosDisponibleVechiculoRel = $vehiculosDisponibleVechiculoRel;
     }
 
 

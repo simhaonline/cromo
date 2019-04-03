@@ -60,8 +60,6 @@ class GuiaController extends ControllerListenerGeneral
 
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
-
-
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
@@ -91,8 +89,9 @@ class GuiaController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @param $id
-     * @Route("/transporte/movimiento/transporte/guia/nuevo/{id}", name="transporte_movimiento_transporte_guia_nuevo")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Exception
+     * @Route("/transporte/movimiento/transporte/guia/nuevo/{id}", name="transporte_movimiento_transporte_guia_nuevo")
      */
     public function nuevo(Request $request, $id)
     {

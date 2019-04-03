@@ -66,6 +66,7 @@
             <th>FLETE</th>
             <th>MANEJO</th>
             <th>REC</th>
+            <th>COBRO</th>
             <th></th>
         </tr>
         </thead>
@@ -88,6 +89,7 @@
                 <td class="numero">{{ arGuia.vrFlete | number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arGuia.vrManejo | number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arGuia.vrRecaudo | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arGuia.vrCobroEntrega | number_format(0, '.', ',')}}</td>
                 <td style="text-align: center;">
                         <a href="{{ path('transporte_utilidad_transporte_correccion_guia_nuevo',{'id' : arGuia.codigoGuiaPk}) }}">
                             <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">
@@ -96,19 +98,18 @@
                 </td>
             </tr>
         {% endfor %}
-        <tr></tr>
         </tbody>
     </table>
     <div class="btn-group" style="float: left">
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span
-                        class="badge">{{ arGuias.getTotalItemCount }}</span>
-            </div>
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arGuias.getTotalItemCount }}
+            </span>
         </div>
     </div>
-    <div class="btn-group btn-xs">
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arGuias) }}
     </div>
+    <br /><br /><br />
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

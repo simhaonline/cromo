@@ -12,6 +12,7 @@ use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteCosto;
+use App\Entity\Transporte\TteVehiculoDisponible;
 use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
@@ -307,6 +308,13 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
                                 $arDespacho->setEstadoAprobado(1);
                                 $em->persist($arDespachoTipo);
+
+                                $vehiculoDisponible = $em->getRepository(TteVehiculoDisponible::class)->findOneBy([('codigoVehiculoFk') => $arDespacho->getCodigoVehiculoFk(), 'estadoDespachado' => 0, 'estadoDescartado' => 0]);
+                                if($vehiculoDisponible){
+                                    $vehiculoDisponible->setEstadoDespachado(1);
+                                    $vehiculoDisponible->setFechaDespacho($fechaActual);
+                                    $em->persist($vehiculoDisponible);
+                                }
                             } else {
                                 Mensajes::error('El vehículo tiene la revisión tecnicomecanica vencida');
                             }

@@ -96,6 +96,8 @@ class GuiaType extends AbstractType {
             {"campo":"vrRecaudo",                               "tipo":"moneda",    "ayuda":"Valor recaudo",                            "titulo":"REC"},
             {"campo":"codigoDespachoFk",                        "tipo":"entero",    "ayuda":"Codigo del despacho",                       "titulo":"DES"},
             {"campo":"cortesia",                                "tipo":"bool",      "ayuda":"Tipo de pago cortesia",                     "titulo":"COR"},
+            {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
+            {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
             {"campo":"estadoImpreso",                           "tipo":"bool",      "ayuda":"Impresa",                                  "titulo":"I"},
             {"campo":"estadoEmbarcado",                         "tipo":"bool",      "ayuda":"Embarcada sin despachar",                  "titulo":"B"},
             {"campo":"estadoDespachado",                        "tipo":"bool",      "ayuda":"Despachada",                               "titulo":"D"},

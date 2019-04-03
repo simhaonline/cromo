@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_txtCodigoVehiculo" class="col-sm-1 control-label">Vehículo:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.txtCodigoVehiculo, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_estadoDespachado" class="col-sm-1 col-sm-offset-6 control-label">Despachado:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.chkEstadoDespachado, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+                <label for="form_estadoDescartado" class="col-sm-1 col-sm-offset-6 control-label">Descartado:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.chkEstadoDescartado, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>VEHICULO</th>
+                <th>FECHA</th>
+                <th>RESPONSABLE</th>
+                <th title="DESPACHADO">DESP</th>
+                <th>FECHA</th>
+                <th title="DESCARTADO">DESC</th>
+                <th>MOTIVO</th>
+                <th>FECHA</th>
+                <th>COMENTARIO</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arVehiculoDisponible in arVehiculosDisponible %}
+                <tr>
+                    <td>{{ arVehiculoDisponible.codigoVehiculoDisponiblePk }}</td>
+                    <td>{{ arVehiculoDisponible.placa }}</td>
+                    <td>{{ arVehiculoDisponible.fecha | date ('Y-m-d H:i:s') }}</td>
+                    <td>{{ arVehiculoDisponible.responsable }}</td>
+                    <td>{{ arVehiculoDisponible.estadoDespachado ? 'SI': 'NO' }}</td>
+                    <td>{{ arVehiculoDisponible.fechaDespacho | date ('Y-m-d H:i:s') }}</td>
+                    <td>{{ arVehiculoDisponible.estadoDescartado ? 'SI' : 'NO' }}</td>
+                    <td>{{ arVehiculoDisponible.motivo }}</td>
+                    <td>{{ arVehiculoDisponible.fechaDescartado | date ('Y-m-d H:i:s') }}</td>
+                    <td>{{ arVehiculoDisponible.comentario }}</td>
+                    {% if arVehiculoDisponible.estadoDescartado == 0 %}
+                        <td style="text-align: center"><a class="btn btn-default btn-xs"
+                                                          href="javascript:abrirVentana3('{{ path('transporte_utilidad_transporte_vehiculoDisponible_descartar', {'id': arVehiculoDisponible.codigoVehiculoDisponiblePk }) }}', 'Descartar', 600, 900)">Descartar</a>
+                        </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_utilidad_transporte_vehiculoDisponible_nuevo', {'id': 0}) }}">Nuevo</a>
+        </div>
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arVehiculosDisponible.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arVehiculosDisponible) }}
+    </div>
+
+    <br/><br/><br/>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

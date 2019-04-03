@@ -2369,6 +2369,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.vrManejo')
             ->addSelect('tg.vrRecaudo')
             ->addSelect('tg.vrDeclara')
+            ->addSelect('tg.vrCobroEntrega')
             ->addSelect('tg.estadoImpreso')
             ->addSelect('tg.estadoAutorizado')
             ->addSelect('tg.estadoAnulado')

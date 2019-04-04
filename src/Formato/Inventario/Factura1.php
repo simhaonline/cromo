@@ -37,6 +37,7 @@ class Factura1 extends \FPDF
         }
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
+        $this->Body($pdf);
         $pdf->Output("Factura_{$arMovimiento->getNumero()}_{$arMovimiento->getTerceroRel()->getNombreCorto()}.pdf", 'D');
     }
 

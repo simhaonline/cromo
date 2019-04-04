@@ -28,8 +28,15 @@ class Factura1 extends \FPDF
         $pdf = new Factura1('P', 'mm', 'letter');
         $pdf->AliasNbPages();
         $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 40);
+        $pdf->SetTextColor(255, 220, 220);
+        if ($arMovimiento->getEstadoAnulado()) {
+            $pdf->RotatedText(90, 150, 'ANULADO', 45);
+        } elseif (!$arMovimiento->getEstadoAprobado()) {
+            $pdf->RotatedText(90, 150, 'PROFORMA', 45);
+        }
+        $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
-        $this->Body($pdf);
         $pdf->Output("Factura_{$arMovimiento->getNumero()}_{$arMovimiento->getTerceroRel()->getNombreCorto()}.pdf", 'D');
     }
 
@@ -44,7 +51,7 @@ class Factura1 extends \FPDF
         $this->SetXY(150.2, 25);
         $this->Cell(35, 4, 'FACTURA DE VENTA', 0, 0, 'L', 0);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(17, 4, $arMovimiento->getNumero(), 0, 0, 'R', 0);
+        $this->Cell(17, 4, $arMovimiento->getNumero() ? $arMovimiento->getNumero() : $arMovimiento->getCodigoMovimientoPk(), 0, 0, 'R', 0);
 
         $this->SetFont('Arial', 'B', 8);
         $this->SetXY(150.2, 28);
@@ -679,6 +686,35 @@ class Factura1 extends \FPDF
 
         return ucfirst($tex);
 
+    }
+
+    var $angle = 0;
+
+    function Rotate($angle, $x = -1, $y = -1)
+    {
+        if ($x == -1)
+            $x = $this->x;
+        if ($y == -1)
+            $y = $this->y;
+        if ($this->angle != 0)
+            $this->_out('Q');
+        $this->angle = $angle;
+        if ($angle != 0) {
+            $angle *= M_PI / 180;
+            $c = cos($angle);
+            $s = sin($angle);
+            $cx = $x * $this->k;
+            $cy = ($this->h - $y) * $this->k;
+            $this->_out(sprintf('q %.5F %.5F %.5F %.5F %.2F %.2F cm 1 0 0 1 %.2F %.2F cm', $c, $s, -$s, $c, $cx, $cy, -$cx, -$cy));
+        }
+    }
+
+    function RotatedText($x, $y, $txt, $angle)
+    {
+        //Text rotated around its origin
+        $this->Rotate($angle, $x, $y);
+        $this->Text($x, $y, $txt);
+        $this->Rotate(0);
     }
 
 }

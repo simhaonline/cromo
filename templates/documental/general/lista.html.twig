@@ -13,7 +13,7 @@
                         <th>NOMBRE</th>
                         <th>ARCHIVO</th>
                         <th></th>
-
+                        <th></th>
                     </tr>
                     {% for arArchivos in arArchivos %}
                         <tr>
@@ -23,8 +23,7 @@
                             <td>{{ arArchivos.descripcion  }}</td>
                             <td>{{ arArchivos.nombre  }}</td>
                             <td style="text-align: center"><a href="{{ path('documental_general_general_descargar', { 'codigoArchivo': arArchivos.codigoArchivoPk }) }}"><i class="fa fa-download" style="font-size: large;color: black;"></i></a></td>
-                            {#<td style="text-align: center"><a href="{{ path('brs_ad_archivos_enviar', { 'codigoDocumento': codigoDocumento,'numero': numero,'codigoArchivo': arArchivos.codigoArchivoPk }) }}"><img src="{{ asset('imagenes/bootstrap/glyphicons_399_e-mail.png')}}" width=22 height=22></a></td>#}
-                            {#<td style="text-align: center"><a href="{{ path('brs_ad_archivos_eliminar', { 'codigoArchivo': arArchivos.codigoArchivoPk,'codigoDocumento': codigoDocumento,'numero': numero }) }}"><img src="{{ asset('imagenes/bootstrap/glyphicons_197_remove.png') }}" width=22 height=22></a></td>#}
+                            <td style="text-align: center"><a href="{{ path('documental_general_general_eliminar', { 'tipo': tipo, 'codigo': arArchivos.codigoArchivoPk }) }}"onclick='return confirm("Esta seguro de eliminar el archivo?")'><i class="fa fa-trash" style="font-size: large;color: black;"></i></a></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -51,7 +50,7 @@
                     <tr>
                         <td><input type="hidden" name="LblCodigo[]" value="{{ arMasivos.codigoMasivoPk }}">{{ arMasivos.codigoMasivoPk }} </td>
                         <td>{{ arMasivos.identificador  }}</td>
-                        <td style="text-align: center"><a href="{{ path('documental_movimiento_masivo_masivo_descargar', { 'codigo': arMasivos.codigoMasivoPk }) }}"><i class="fa fa-download" style="font-size: large;color: black;"></i></a></td>
+                        <td style="text-align: center"><a href="{{ path('documental_movimiento_masivo_masivo_descargar', { 'codigoArchivo': arMasivos.codigoMasivoPk }) }}"><i class="fa fa-download" style="font-size: large;color: black;"></i></a></td>
                     </tr>
                     {% endfor %}
                 </table>

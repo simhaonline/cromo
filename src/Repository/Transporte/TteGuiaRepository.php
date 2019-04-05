@@ -2383,6 +2383,62 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.estadoNovedad')
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
+            ->where('tg.estadoAnulado = 0');
+        if ($session->get('filtroTteGuiaDocumento') != "") {
+            $queryBuilder->andWhere("tg.documentoCliente LIKE '%" . $session->get('filtroTteGuiaDocumento') . "%'");
+        }
+        if ($session->get('filtroTteGuiaNumero') != "") {
+            $queryBuilder->andWhere("tg.numero = " . $session->get('filtroTteGuiaNumero'));
+        }
+        if ($session->get('filtroTteGuiaCodigo') != "") {
+            $queryBuilder->andWhere("tg.codigoGuiaPk = " . $session->get('filtroTteGuiaCodigo'));
+        }
+        if ($session->get('filtroTteCodigoCliente')) {
+            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        $queryBuilder->orderBy('tg.fechaIngreso', 'DESC');
+        return $queryBuilder;
+    }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function correccionGuiaValores()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
+            ->select('tg.codigoGuiaPk')
+            ->addSelect('tg.codigoServicioFk')
+            ->addSelect('tg.codigoGuiaTipoFk')
+            ->addSelect('tg.numero')
+            ->addSelect('tg.documentoCliente')
+            ->addSelect('tg.fechaIngreso')
+            ->addSelect('tg.codigoOperacionIngresoFk')
+            ->addSelect('tg.codigoOperacionCargoFk')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('tg.remitente')
+            ->addSelect('tg.unidades')
+            ->addSelect('tg.pesoReal')
+            ->addSelect('tg.pesoVolumen')
+            ->addSelect('tg.vrFlete')
+            ->addSelect('tg.vrManejo')
+            ->addSelect('tg.vrRecaudo')
+            ->addSelect('tg.vrDeclara')
+            ->addSelect('tg.vrCobroEntrega')
+            ->addSelect('tg.estadoImpreso')
+            ->addSelect('tg.estadoAutorizado')
+            ->addSelect('tg.estadoAnulado')
+            ->addSelect('tg.estadoAprobado')
+            ->addSelect('tg.estadoEmbarcado')
+            ->addSelect('tg.estadoDespachado')
+            ->addSelect('tg.estadoEntregado')
+            ->addSelect('tg.estadoSoporte')
+            ->addSelect('tg.estadoCumplido')
+            ->addSelect('tg.estadoFacturado')
+            ->addSelect('tg.estadoNovedad')
+            ->leftJoin('tg.clienteRel', 'c')
+            ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->where('tg.estadoFacturaGenerada = 0')
             ->andWhere('tg.estadoAnulado = 0');
         if ($session->get('filtroTteGuiaDocumento') != "") {

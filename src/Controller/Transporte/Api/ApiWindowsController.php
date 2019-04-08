@@ -15,13 +15,13 @@ class ApiWindowsController extends FOSRestController
 
     /**
      * @return array
-     * @Rest\Post("/api/windows/usuario/validar")
+     * @Rest\Post("/transporte/api/windows/guia/nuevo")
      */
     public function lista(Request $request) {
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            return $em->getRepository(Publicacion::class)->lista($raw);
+            return $em->getRepository(TteGuia::class)->apiWindowsNuevo($raw);
         } catch (\Exception $e) {
             return [
                 'error' => true,

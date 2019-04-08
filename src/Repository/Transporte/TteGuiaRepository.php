@@ -8,18 +8,27 @@ use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\General\GenFormaPago;
 use App\Entity\General\GenIdentificacion;
+use App\Entity\Transporte\TteCiudad;
+use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteCondicion;
 use App\Entity\Transporte\TteConfiguracion;
+use App\Entity\Transporte\TteConsecutivo;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteDesembarco;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDocumental;
+use App\Entity\Transporte\TteEmpaque;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
+use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteRedespacho;
+use App\Entity\Transporte\TteRuta;
+use App\Entity\Transporte\TteServicio;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -2960,6 +2969,229 @@ class TteGuiaRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("t.documentoCliente = '{$documento}'");
         }
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function apiWindowsNuevo($raw) {
+        $em = $this->getEntityManager();
+        $numeroUnicoGuia = $raw['numeroUnicoGuia']?? "S";
+        $flete = $raw['vrFlete']?? 0;
+        $manejo = $raw['vrManejo']?? 0;
+        $numero = $raw['numero']?? null;
+        $cobro = $raw['vrRecaudo']?? 0;
+        $validacion = $this->apiWindowsNuevoValidar($raw);
+        if( $validacion == "") {
+            $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($raw['codigoGuiaTipo']);
+            $validarNumero = $this->apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia);
+            if($validarNumero['mensaje'] == "") {
+                $numero = $validarNumero['numero'];
+                if($arGuiaTipo->getValidarFlete() && $flete <= 0) {
+                    return "Este tipo de guias no pueden tener el flete en cero";
+                } else {
+                    $arOperacion = $em->getRepository(TteOperacion::class)->find($raw['codigoOperacionIngreso']);
+                    $arCliente = $em->getRepository(TteCliente::class)->find($raw['codigoCliente']);
+                    $arCondicion = $em->getRepository(TteCondicion::class)->find($raw['codigoCondicion']);
+                    $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadOrigen']);
+                    $arCiudadDestino = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadDestino']);
+                    $arProducto = $em->getRepository(TteProducto::class)->find($raw['codigoProducto']);
+                    $arEmpaque = $em->getRepository(TteEmpaque::class)->find($raw['codigoEmpaque']);
+                    $arServicio = $em->getRepository(TteServicio::class)->find($raw['codigoServicio']);
+                    $arRuta = $em->getRepository(TteRuta::class)->find($raw['codigoRuta']);
+                    $arGuia = new TteGuia();
+                    $numeroFactura = null;
+                    if($arGuiaTipo->getCortesia()) {
+                        $flete = 0;
+                        $manejo = 0;
+                    }
+                    if($arGuiaTipo->getFactura()) {
+                        $numeroFactura = $arGuiaTipo->getConsecutivoFactura();
+                        $arGuiaTipo->setConsecutivoFactura($arGuiaTipo->getConsecutivoFactura()+1);
+                        $em->persist($arGuiaTipo);
+                    }
+
+                    if($arGuiaTipo->getGeneraCobro()) {
+                        $cobro += $flete + $manejo;
+                    }
+                    if($numeroUnicoGuia == "S") {
+                        $arGuia->setCodigoGuiaPk($numero);
+                    } else {
+                        $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
+                        $arGuia->setCodigoGuiaPk($arConsecutivo->getGuia());
+                        $arConsecutivo->setGuia($arConsecutivo->getGuia() + 1);
+                        $em->persist($arConsecutivo);
+                    }
+                    if(!$arGuiaTipo->getExigeNumero()) {
+                        $arGuiaTipo->setConsecutivo($arGuiaTipo->getConsecutivo() + 1);
+                        $em->persist($arGuiaTipo);
+                    }
+                    $arGuia->setGuiaTipoRel($arGuiaTipo);
+                    $arGuia->setOperacionIngresoRel($arOperacion);
+                    $arGuia->setOperacionCargoRel($arOperacion);
+                    $arGuia->setNumero($numero);
+                    $arGuia->setClienteRel($arCliente);
+                    $arGuia->setCondicionRel($arCondicion);
+                    $arGuia->setCiudadOrigenRel($arCiudadOrigen);
+                    $arGuia->setCiudadDestinoRel($arCiudadDestino);
+                    $arGuia->setProductoRel($arProducto);
+                    $arGuia->setEmpaqueRel($arEmpaque);
+                    $arGuia->setServicioRel($arServicio);
+                    $arGuia->setRutaRel($arRuta);
+                    $arGuia->setDocumentoCliente($raw['documentoCliente']);
+                    $arGuia->setRelacionCliente($raw['relacionCliente']);
+                    $arGuia->setRemitente($raw['remitente']);
+                    $arGuia->setNombreDestinatario($raw['nombreDestinatario']);
+                    $arGuia->setDireccionDestinatario($raw['direccionDestinatario']);
+                    $arGuia->setTelefonoDestinatario($raw['telefonoDestinatario']);
+                    $arGuia->setFechaIngreso(new \DateTime('now'));
+                    $arGuia->setPesoReal($raw['pesoReal']);
+                    $arGuia->setPesoVolumen($raw['pesoVolumen']);
+                    $arGuia->setPesoFacturado($raw['pesoFacturado']);
+                    $arGuia->setUnidades($raw['unidades']);
+                    $arGuia->setVrRecaudo($raw['vrRecaudo']);
+                    $arGuia->setVrDeclara($raw['vrDeclara']);
+                    $arGuia->setVrFlete($flete);
+                    $arGuia->setVrManejo($manejo);
+                    $arGuia->setVrCobroEntrega($cobro);
+                    $arGuia->setVrCostoReexpedicion($raw['vrCostoReexpedicion']);
+                    $arGuia->setEstadoAprobado(1);
+                    $arGuia->setEstadoAutorizado(1);
+                    $arGuia->setUsuario($raw['usuario']);
+                    $arGuia->setEmpaqueReferencia($raw['empaqueReferencia']);
+                    $arGuia->setTipoLiquidacion($raw['tipoLiquidacion']);
+                    $arGuia->setComentario($raw['comentario']);
+                    $arGuia->setNumeroFactura($numeroFactura);
+                    $arGuia->setFactura($raw['factura']);
+                    $arGuia->setReexpedicion($raw['reexpedicion']);
+                    $arGuia->setCortesia($raw['cortesia']);
+                    $arGuia->setMercanciaPeligrosa($raw['mercanciaPeligrosa']);
+                    $arGuia->setOrdenRuta($raw['ordenRuta']);
+                    $em->persist($arGuia);
+                    $em->flush();
+                    return true;
+                }
+            } else {
+                return $validarNumero['mensaje'];
+            }
+        } else {
+            return $validacion;
+        }
+//        {
+//            "numeroUnicoGuia":"S",
+//	"numero":"2000000000",
+//	"codigoOperacionIngreso":"BUC",
+//	"codigoCliente":"2450",
+//	"codigoCondicion":"139",
+//	"codigoCiudadOrigen":"20611",
+//	"codigoCiudadDestino":"21594",
+//	"codigoRuta":"1",
+//	"codigoGuiaTipo":"COR",
+//	"codigoServicio":"PAQ",
+//	"codigoProducto":"1",
+//	"codigoEmpaque":"VAR",
+//	"documentoCliente":"DOC35109",
+//	"relacionCliente":"0000",
+//	"remitente":"AGENCIA CAUCHOSOL",
+//	"nombreDestinatario":"MARGARITA LEAL",
+//	"direccionDestinatario":"CRA 45 N 58-58",
+//	"telefonoDestinatario":"2547874",
+//	"pesoReal":"30",
+//	"pesoVolumen":"35",
+//	"pesoFacturado":"35",
+//	"unidades":"1",
+//	"vrRecaudo":"8000",
+//	"vrDeclara":"500000",
+//	"vrFlete":"35000",
+//	"vrManejo":"1500",
+//	"vrCostoReexpedicion":"1200",
+//	"usuario":"semantica",
+//	"empaqueReferencia":"colchon2",
+//	"tipoLiquidacion":"K",
+//	"comentario":"El comentario",
+//	"factura":"0",
+//	"reexpedicion":"1",
+//	"cortesia":"0",
+//	"mercanciaPeligrosa":"1"
+//
+//}
+    }
+
+    private function apiWindowsNuevoValidar($raw) {
+        $respuesta = "";
+        if($raw['codigoCliente']) {
+            if($raw['codigoCondicion']) {
+                if($raw['codigoCiudadOrigen']) {
+                    if($raw['codigoCiudadDestino']) {
+                        if($raw['codigoGuiaTipo']) {
+                            if($raw['codigoServicio']) {
+                                if($raw['codigoProducto']) {
+                                    if($raw['codigoEmpaque']) {
+                                        if($raw['codigoOperacionIngreso']) {
+                                            if($raw['codigoRuta']) {
+
+                                            } else {
+                                                $respuesta = "No fue seleccionada una ruta";
+                                            }
+                                        } else {
+                                            $respuesta = "No fue seleccionada una operacion ingreso";
+                                        }
+                                    } else {
+                                        $respuesta = "No fue seleccionado un empaque";
+                                    }
+                                } else {
+                                    $respuesta = "No fue seleccionado un producto";
+                                }
+                            } else {
+                                $respuesta = "No fue seleccionado un servicio";
+                            }
+                        } else {
+                            $respuesta = "No fue seleccionado un tipo guia";
+                        }
+                    } else {
+                        $respuesta = "No fue seleccionada una ciudad destino";
+                    }
+                } else {
+                    $respuesta = "No fue seleccionada una ciudad origen";
+                }
+            } else {
+                $respuesta = "No fue seleccionada una condicion comercial";
+            }
+        } else {
+            $respuesta = "No fue seleccionado un cliente";
+        }
+        return $respuesta;
+    }
+
+    private function apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia) {
+        $em = $this->getEntityManager();
+        $mensaje = "";
+        if($arGuiaTipo->getExigeNumero()) {
+            if($numero != 0 && $numero != null) {
+                if($numeroUnicoGuia == "S") {
+                    $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g')
+                        ->select("COUNT(g.codigoGuiaPk)")
+                        ->where("g.numero = {$numero}");
+                    $resultado = $queryBuilder->getQuery()->getSingleResult();
+                    $registros = $resultado[1];
+                    if($registros > 0) {
+                        $mensaje = "El cliente maneja numero unico de guia y el numero ya existe";
+                    }
+                } else {
+                    $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g')
+                        ->select("COUNT(g.codigoGuiaPk)")
+                        ->where("g.codigoGuiaTipoFk = '{$arGuiaTipo->getCodigoGuiaTipoPk()}'")
+                        ->andWhere("g.numero = {$numero}");
+                    $resultado = $queryBuilder->getQuery()->getSingleResult();
+                    $registros = $resultado[1];
+                    if($registros > 0) {
+                        $mensaje = "Ya existe una guia con este tipo y este numero";
+                    }
+                }
+            } else {
+                $mensaje = "Como el tipo de guia exige numero debe digitar un numero de guia";
+            }
+        } else {
+            $numero = $arGuiaTipo->getConsecutivo();
+        }
+        return ['mensaje' => $mensaje, 'numero' => $numero];
     }
 
 }

@@ -71,10 +71,6 @@ class CorreccionGuiaController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($id);
-        if ($arGuia->getEstadoFacturado()) {
-            Mensajes::error('La guia se encuentra facturada, no se puede editar');
-            return $this->redirect($this->generateUrl('transporte_utilidad_transporte_correccion_guia_lista'));
-        }
         $form = $this->createForm(GuiaCorreccionType::class, $arGuia);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {

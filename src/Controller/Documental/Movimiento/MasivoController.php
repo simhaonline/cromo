@@ -171,7 +171,7 @@ class MasivoController extends Controller
     }
 
     /**
-     * @Route("/documental/movimiento/masivo/masivo/descargar/{codigo}", name="documental_movimiento_masivo_masivo_descargar")
+     * @Route("/documental/movimiento/masivo/masivo/descargar/{codigoArchivo}", name="documental_movimiento_masivo_masivo_descargar")
      */
     public function descargarAction($codigo) {
         $em = $this->getDoctrine()->getManager();

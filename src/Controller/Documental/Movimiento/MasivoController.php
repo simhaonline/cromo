@@ -173,10 +173,10 @@ class MasivoController extends Controller
     /**
      * @Route("/documental/movimiento/masivo/masivo/descargar/{codigoArchivo}", name="documental_movimiento_masivo_masivo_descargar")
      */
-    public function descargarAction($codigo) {
+    public function descargarAction($codigoArchivo) {
         $em = $this->getDoctrine()->getManager();
         $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
-        $arArchivo = $em->getRepository(DocMasivo::class)->find($codigo);
+        $arArchivo = $em->getRepository(DocMasivo::class)->find($codigoArchivo);
         $strRuta = $arrConfiguracion['rutaAlmacenamiento'] . "/masivo/" . $arArchivo->getCodigoMasivoTipoFk() . "/" .  $arArchivo->getDirectorio() . "/" . $arArchivo->getArchivoDestino();
         // Generate response
         $response = new Response();

@@ -2,7 +2,10 @@
 
 namespace App\Repository\Seguridad;
 
+use App\Entity\General\GenConfiguracion;
 use App\Entity\Seguridad\Usuario;
+use App\Entity\Transporte\TteCondicion;
+use App\Entity\Transporte\TteConfiguracion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -57,6 +60,29 @@ class UsuarioRepository extends ServiceEntityRepository
             ->orderBy('seg.codigoUsuarioFk','ASC')
             ->getQuery()->getResult();
         return $arUsuarios;
+    }
+
+    public function apiWindowsValidar($raw) {
+        $em = $this->getEntityManager();
+        $usuario = $raw['usuario']?? null;
+        $clave = $raw['clave']?? null;
+        if($usuario && $clave) {
+            $arUsuario = $em->getRepository(Usuario::class)->findOneBy(['username'=> $usuario, 'claveEscritorio'=>$clave]);
+            if($arUsuario) {
+                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
+                $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
+                return [
+                    "nombreCorto" => $arUsuario->getNombreCorto(),
+                    "versionBaseDatos" => $arConfiguracion->getVersionBaseDatos(),
+                    "numeroUnicoGuia" => $arConfiguracionTransporte->getNumeroUnicoGuia(),
+                    "codigoPrecioGeneral" => $arConfiguracionTransporte->getCodigoPrecioGeneralFk()
+                ];
+            } else {
+                return ["error" => "Usuario o clave invalidos"];
+            }
+        } else {
+            return ["error" => "Faltan datos para la api"];
+        }
     }
 
 }

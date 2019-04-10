@@ -50,4 +50,37 @@ class TteGuiaTipoRepository extends ServiceEntityRepository
         }
         return $array;
     }
+
+
+    public function apiWindowsLista($raw) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TteGuiaTipo::class, 'gt')
+            ->select('gt.codigoGuiaTipoPk')
+            ->addSelect('gt.nombre');
+        $arGuiaTipo = $queryBuilder->getQuery()->getResult();
+        return $arGuiaTipo;
+    }
+
+    public function apiWindowsDetalle($raw) {
+        $em = $this->getEntityManager();
+        $guiaTipo = $raw['guiaTipo']?? null;
+        if($guiaTipo) {
+            $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($guiaTipo);
+            if($arGuiaTipo) {
+                return [
+                    "nombre" => $arGuiaTipo->getNombre(),
+                    "exigeNumero" => $arGuiaTipo->getExigeNumero(),
+                    "validarFlete" => $arGuiaTipo->getValidarFlete(),
+                    "factura" => $arGuiaTipo->getFactura(),
+                    "cortesia" => $arGuiaTipo->getCortesia(),
+                    "codigoFormaPago" => $arGuiaTipo->getCodigoFormaPago()
+                ];
+            } else {
+                return ["error" => "Usuario o clave invalidos"];
+            }
+        } else {
+            return ["error" => "Faltan datos para la api"];
+        }
+    }
+
 }

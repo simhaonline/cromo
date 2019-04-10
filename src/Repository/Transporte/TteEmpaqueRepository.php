@@ -13,6 +13,13 @@ class TteEmpaqueRepository extends ServiceEntityRepository
         parent::__construct($registry, TteEmpaque::class);
     }
 
-
+    public function apiWindowsLista($raw) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TteEmpaque::class, 'e')
+            ->select('e.codigoEmpaquePk')
+            ->addSelect('e.nombre');
+        $arEmpaque = $queryBuilder->getQuery()->getResult();
+        return $arEmpaque;
+    }
 
 }

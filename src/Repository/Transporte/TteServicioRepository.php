@@ -38,4 +38,13 @@ class TteServicioRepository extends ServiceEntityRepository
         return $array;
     }
 
+
+    public function apiWindowsLista($raw) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TteServicio::class, 's')
+            ->select('s.codigoServicioPk')
+            ->addSelect('s.nombre');
+        $arServicio = $queryBuilder->getQuery()->getResult();
+        return $arServicio;
+    }
 }

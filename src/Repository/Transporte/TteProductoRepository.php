@@ -24,4 +24,13 @@ class TteProductoRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function apiWindowsLista($raw) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TteProducto::class, 'p')
+            ->select('p.codigoProductoPk')
+            ->addSelect('p.nombre');
+        $arProducto = $queryBuilder->getQuery()->getResult();
+        return $arProducto;
+    }
+
 }

@@ -1,5 +1,6 @@
 <?php
 namespace App\Repository\Transporte;
+use App\Entity\Transporte\TteClienteCondicion;
 use App\Entity\Transporte\TteCondicion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
@@ -65,5 +66,63 @@ class TteCondicionRepository extends ServiceEntityRepository
             $array['data'] = $this->getEntityManager()->getReference(TteCondicion::class, $session->get('filtroTteCondicion'));
         }
         return $array;
+    }
+
+    public function apiWindowsBuscar($raw) {
+        $em = $this->getEntityManager();
+        $nombre = $raw['nombre']?? null;
+        $cliente = $raw['cliente']?? null;
+        if($cliente) {
+            $queryBuilder = $em->createQueryBuilder()->from(TteClienteCondicion::class, 'cc')
+                ->select('cc.codigoClienteCondicionPk')
+                ->addSelect('c.nombre')
+                ->leftJoin('cc.condicionRel', 'c')
+                ->where('cc.codigoClienteFk=' . $cliente)
+                ->setMaxResults(10);
+            if($nombre) {
+                $queryBuilder->andWhere("c.nombre LIKE '%${nombre}%'");
+            }
+            $arCondiciones = $queryBuilder->getQuery()->getResult();
+            return $arCondiciones;
+        } else {
+            return [
+                "error" => "Faltan datos para la api"
+            ];
+        }
+    }
+
+    public function apiWindowsDetalle($raw) {
+        $em = $this->getEntityManager();
+        $codigo = $raw['codigo']?? null;
+        if($codigo) {
+            $queryBuilder = $em->createQueryBuilder()->from(TteCondicion::class, 'c')
+                ->select('c.codigoCondicionPk')
+                ->addSelect('c.nombre')
+                ->addSelect('c.porcentajeManejo')
+                ->addSelect('c.manejoMinimoUnidad')
+                ->addSelect('c.manejoMinimoDespacho')
+                ->addSelect('c.pesoMinimo')
+                ->addSelect('c.descuentoPeso')
+                ->addSelect('c.codigoPrecioFk')
+                ->addSelect('c.precioGeneral')
+                ->addSelect('c.precioPeso')
+                ->addSelect('c.precioUnidad')
+                ->addSelect('c.precioAdicional');
+            if($codigo) {
+                $queryBuilder->where("c.codigoCondicionPk=" . $codigo);
+            }
+            $arCondiciones = $queryBuilder->getQuery()->getResult();
+            if($arCondiciones) {
+                return $arCondiciones[0];
+            } else {
+                return [
+                    "error" => "No se encontraron resultados"
+                ];
+            }
+        } else {
+            return [
+                "error" => "Faltan datos para la api"
+            ];
+        }
     }
 }

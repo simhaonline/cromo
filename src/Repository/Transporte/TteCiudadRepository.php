@@ -134,4 +134,48 @@ class TteCiudadRepository extends ServiceEntityRepository
 
     }
 
+    public function apiWindowsBuscar($raw) {
+        $em = $this->getEntityManager();
+        $nombre = $raw['nombre']?? null;
+        $queryBuilder = $em->createQueryBuilder()->from(TteCiudad::class, 'c')
+            ->select('c.codigoCiudadPk')
+            ->addSelect('c.nombre')
+            ->addSelect('c.ordenRuta')
+            ->addSelect('c.reexpedicion')
+            ->addSelect('c.codigoRutaFk')
+            ->addSelect('d.nombre as departamentoNombre')
+            ->leftJoin('c.departamentoRel', 'd')
+            ->setMaxResults(10);
+        if($nombre) {
+            $queryBuilder->andWhere("c.nombre LIKE '%${nombre}%'");
+        }
+        $arCiudades = $queryBuilder->getQuery()->getResult();
+        return $arCiudades;
+    }
+
+    public function apiWindowsDetalle($raw) {
+        $em = $this->getEntityManager();
+        $codigo = $raw['codigo']?? null;
+        if($codigo) {
+            $queryBuilder = $em->createQueryBuilder()->from(TteCiudad::class, 'c')
+                ->select('c.codigoCiudadPk')
+                ->addSelect('c.nombre');
+            if($codigo) {
+                $queryBuilder->where("c.codigoCiudadPk=" . $codigo);
+            }
+            $arCiudades = $queryBuilder->getQuery()->getResult();
+            if($arCiudades) {
+                return $arCiudades[0];
+            } else {
+                return [
+                    "error" => "No se encontraron resultados"
+                ];
+            }
+        } else {
+            return [
+                "error" => "Faltan datos para la api"
+            ];
+        }
+    }
+
 }

@@ -85,4 +85,50 @@ class TteClienteRepository extends ServiceEntityRepository
 
         return $arTercero;
     }
+
+    public function apiWindowsBuscar($raw) {
+        $em = $this->getEntityManager();
+        $nombre = $raw['nombre']?? null;
+        $queryBuilder = $em->createQueryBuilder()->from(TteCliente::class, 'c')
+            ->select('c.codigoClientePk')
+            ->addSelect('c.nombreCorto')
+            ->setMaxResults(10);
+        if($nombre) {
+            $queryBuilder->andWhere("c.nombreCorto LIKE '%${nombre}%'");
+        }
+        $arClientes = $queryBuilder->getQuery()->getResult();
+        return $arClientes;
+    }
+
+    public function apiWindowsDetalle($raw) {
+        $em = $this->getEntityManager();
+        $codigo = $raw['codigo']?? null;
+        if($codigo) {
+            $queryBuilder = $em->createQueryBuilder()->from(TteCliente::class, 'c')
+                ->select('c.codigoClientePk')
+                ->addSelect('c.nombreCorto')
+                ->addSelect('c.codigoCondicionFk')
+                ->addSelect('c.estadoInactivo')
+                ->addSelect('c.guiaPagoContado')
+                ->addSelect('c.guiaPagoCortesia')
+                ->addSelect('c.guiaPagoCredito')
+                ->addSelect('c.guiaPagoDestino')
+                ->addSelect('c.guiaPagoRecogida');
+            if($codigo) {
+                $queryBuilder->where("c.codigoClientePk=" . $codigo);
+            }
+            $arClientes = $queryBuilder->getQuery()->getResult();
+            if($arClientes) {
+                return $arClientes[0];
+            } else {
+                return [
+                    "error" => "No se encontraron resultados"
+                ];
+            }
+        } else {
+            return [
+                "error" => "Faltan datos para la api"
+            ];
+        }
+    }
 }

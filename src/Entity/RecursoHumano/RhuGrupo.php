@@ -53,6 +53,27 @@ class RhuGrupo
     protected $vacacionesGrupoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuSolicitud", mappedBy="grupoRel")
+     */
+    protected $solicitudesGrupoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoGrupoPk()
@@ -163,4 +184,23 @@ class RhuGrupo
     {
         $this->vacacionesGrupoRel = $vacacionesGrupoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudesGrupoRel()
+    {
+        return $this->solicitudesGrupoRel;
+    }
+
+    /**
+     * @param mixed $solicitudesGrupoRel
+     */
+    public function setSolicitudesGrupoRel($solicitudesGrupoRel): void
+    {
+        $this->solicitudesGrupoRel = $solicitudesGrupoRel;
+    }
+
+
+
 }

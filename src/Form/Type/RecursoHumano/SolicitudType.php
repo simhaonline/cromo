@@ -23,9 +23,9 @@ class SolicitudType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('grupoPagoRel',EntityType::class,[
+            ->add('grupoRel',EntityType::class,[
                 'required' => false,
-                'class' => 'App\Entity\RecursoHumano\RhuGrupoPago',
+                'class' => 'App\Entity\RecursoHumano\RhuGrupo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('gp')
                         ->orderBy('gp.nombre', 'ASC');

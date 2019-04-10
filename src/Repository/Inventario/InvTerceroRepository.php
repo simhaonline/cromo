@@ -44,6 +44,7 @@ class InvTerceroRepository extends ServiceEntityRepository
             ->addSelect('t.numeroIdentificacion')
             ->addSelect('t.digitoVerificacion')
             ->addSelect('t.nombreCorto')
+            ->addSelect('t.telefono')
             ->addSelect('t.direccion')
             ->addSelect('c.nombre AS ciudadNombre')
             ->addSelect('t.cliente')

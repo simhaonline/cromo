@@ -42,7 +42,7 @@ class SolicitudController extends ControllerListenerGeneral
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
@@ -56,7 +56,7 @@ class SolicitudController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/seleccion/solicitud/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/seleccion/solicitud/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -83,15 +83,10 @@ class SolicitudController extends ControllerListenerGeneral
                 $arSolicitud->setFecha(new \DateTime('now'));
                 $em->persist($arSolicitud);
                 $em->flush();
-                return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'recursoHumano','entidad' => 'solicitud']));
-            }
-            if ($form->get('guardarnuevo')->isClicked()) {
-                $em->persist($arSolicitud);
-                $em->flush($arSolicitud);
-                return $this->redirect($this->generateUrl('recursoHumano_movimiento_seleccion_solicitud_nuevo', ['codigoSolicitud' => 0]));
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/solicitud/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/seleccion/solicitud/nuevo.html.twig', [
             'form' => $form->createView(), 'arSolicitud' => $arSolicitud
         ]);
     }

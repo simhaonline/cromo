@@ -183,6 +183,7 @@ class ImportarGuiaController extends Controller
                         $arGuia->setVrDeclara($arGuiaTemporal->getVrDeclara());
                         $arGuia->setVrFlete($arGuiaTemporal->getVrFlete());
                         $arGuia->setVrManejo($arGuiaTemporal->getVrManejo());
+                        $arGuia->setComentario($arGuiaTemporal->getComentario());
                         $arGuia->setEstadoAutorizado(1);
                         $arGuia->setEstadoAprobado(1);
                         $arGuia->setEstadoImpreso(1);

@@ -2996,11 +2996,13 @@ class TteGuiaRepository extends ServiceEntityRepository
             if($arGuiaTipo->getCortesia()) {
                 $flete = 0;
                 $manejo = 0;
+                $arGuia->setCortesia(1);
             }
             if($arGuiaTipo->getFactura()) {
                 $numeroFactura = $arGuiaTipo->getConsecutivoFactura();
                 $arGuiaTipo->setConsecutivoFactura($arGuiaTipo->getConsecutivoFactura()+1);
                 $em->persist($arGuiaTipo);
+                $arGuia->setFactura(1);
             }
 
             if($numeroUnicoGuia == "S") {
@@ -3014,6 +3016,9 @@ class TteGuiaRepository extends ServiceEntityRepository
             if(!$arGuiaTipo->getExigeNumero()) {
                 $arGuiaTipo->setConsecutivo($arGuiaTipo->getConsecutivo() + 1);
                 $em->persist($arGuiaTipo);
+            }
+            if($arCiudadDestino->getReexpedicion()) {
+                $arGuia->setReexpedicion(1);
             }
             $arGuia->setGuiaTipoRel($arGuiaTipo);
             $arGuia->setOperacionIngresoRel($arOperacion);
@@ -3046,19 +3051,21 @@ class TteGuiaRepository extends ServiceEntityRepository
             $arGuia->setVrCostoReexpedicion($raw['vrCostoReexpedicion']);
             $arGuia->setEstadoAprobado(1);
             $arGuia->setEstadoAutorizado(1);
+            $arGuia->setEstadoImpreso(1);
             $arGuia->setUsuario($raw['usuario']);
             $arGuia->setEmpaqueReferencia($raw['empaqueReferencia']);
             $arGuia->setTipoLiquidacion($raw['tipoLiquidacion']);
             $arGuia->setComentario($raw['comentario']);
             $arGuia->setNumeroFactura($numeroFactura);
-            $arGuia->setFactura($raw['factura']);
-            $arGuia->setReexpedicion($raw['reexpedicion']);
-            $arGuia->setCortesia($raw['cortesia']);
             $arGuia->setMercanciaPeligrosa($raw['mercanciaPeligrosa']);
             $arGuia->setOrdenRuta($raw['ordenRuta']);
             $em->persist($arGuia);
             $em->flush();
-            return ["mensaje" => "Guia insertada con exito"];
+            return [
+                "numero" => $arGuia->getNumero(),
+                "codigo" => $arGuia->getCodigoGuiaPk(),
+                "numeroFactura" => $arGuia->getNumeroFactura()
+            ];
 
         } else {
             return ["error" => $validarNumero['mensaje']];

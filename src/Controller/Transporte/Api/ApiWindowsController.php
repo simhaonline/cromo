@@ -6,6 +6,7 @@ use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteCondicion;
+use App\Entity\Transporte\TteDestinatario;
 use App\Entity\Transporte\TteEmpaque;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
@@ -200,6 +201,38 @@ class ApiWindowsController extends FOSRestController
 
     /**
      * @return array
+     * @Rest\Post("/transporte/api/windows/destinatario/buscar")
+     */
+    public function destinatarioBuscar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteDestinatario::class)->apiWindowsBuscar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/windows/destinatario/detalle")
+     */
+    public function destinatarioDetalle(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteDestinatario::class)->apiWindowsDetalle($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
      * @Rest\Post("/transporte/api/windows/condicion/buscar")
      */
     public function condicionBuscar(Request $request) {
@@ -239,6 +272,22 @@ class ApiWindowsController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(TtePrecioDetalle::class)->apiWindowsDetalle($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/windows/preciodetalle/detalleproducto")
+     */
+    public function precioDetalleDetalleProducto(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TtePrecioDetalle::class)->apiWindowsDetalleProducto($raw);
         } catch (\Exception $e) {
             return [
                 'error' => "Ocurrio un error en la api " . $e->getMessage(),

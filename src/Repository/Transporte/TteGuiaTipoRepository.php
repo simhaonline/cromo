@@ -56,7 +56,8 @@ class TteGuiaTipoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(TteGuiaTipo::class, 'gt')
             ->select('gt.codigoGuiaTipoPk')
-            ->addSelect('gt.nombre');
+            ->addSelect('gt.nombre')
+            ->orderBy('gt.orden');
         $arGuiaTipo = $queryBuilder->getQuery()->getResult();
         return $arGuiaTipo;
     }

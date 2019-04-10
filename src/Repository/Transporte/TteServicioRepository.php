@@ -43,7 +43,8 @@ class TteServicioRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(TteServicio::class, 's')
             ->select('s.codigoServicioPk')
-            ->addSelect('s.nombre');
+            ->addSelect('s.nombre')
+            ->orderBy('s.orden');
         $arServicio = $queryBuilder->getQuery()->getResult();
         return $arServicio;
     }

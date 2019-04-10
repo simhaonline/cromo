@@ -28,7 +28,8 @@ class TteProductoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(TteProducto::class, 'p')
             ->select('p.codigoProductoPk')
-            ->addSelect('p.nombre');
+            ->addSelect('p.nombre')
+            ->orderBy('p.orden');
         $arProducto = $queryBuilder->getQuery()->getResult();
         return $arProducto;
     }

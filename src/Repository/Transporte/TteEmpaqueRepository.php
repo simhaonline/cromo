@@ -17,7 +17,8 @@ class TteEmpaqueRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(TteEmpaque::class, 'e')
             ->select('e.codigoEmpaquePk')
-            ->addSelect('e.nombre');
+            ->addSelect('e.nombre')
+            ->orderBy('e.orden');
         $arEmpaque = $queryBuilder->getQuery()->getResult();
         return $arEmpaque;
     }

@@ -89,10 +89,45 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
                 ->where('pd.codigoPrecioFk=' . $precio)
                 ->andWhere('pd.codigoCiudadOrigenFk=' . $origen)
                 ->andWhere('pd.codigoCiudadDestinoFk=' . $destino);
-
             $arPrecios = $queryBuilder->getQuery()->getResult();
             if($arPrecios) {
                 return $arPrecios;
+            } else {
+                return [
+                    "error" => "No se encontraron resultados"
+                ];
+            }
+        } else {
+            return [
+                "error" => "Faltan datos para la api"
+            ];
+        }
+    }
+
+    public function apiWindowsDetalleProducto($raw) {
+        $em = $this->getEntityManager();
+        $precio = $raw['precio']?? null;
+        $origen = $raw['origen']?? null;
+        $destino = $raw['destino']?? null;
+        $producto = $raw['producto']?? null;
+        if($precio && $origen && $destino && $producto) {
+            $queryBuilder = $em->createQueryBuilder()->from(TtePrecioDetalle::class, 'pd')
+                ->select('pd.codigoPrecioDetallePk')
+                ->addSelect('pd.minimo')
+                ->addSelect('pd.vrPeso')
+                ->addSelect('pd.vrUnidad')
+                ->addSelect('pd.vrPesoTope')
+                ->addSelect('pd.vrPesoTopeAdicional')
+                ->addSelect('pd.pesoTope')
+                ->addSelect('p.nombre as productoNombre')
+                ->leftJoin('pd.productoRel', 'p')
+                ->where('pd.codigoPrecioFk=' . $precio)
+                ->andWhere('pd.codigoCiudadOrigenFk=' . $origen)
+                ->andWhere('pd.codigoCiudadDestinoFk=' . $destino)
+            ->andWhere("pd.codigoProductoFk='" . $producto . "'");
+            $arPrecios = $queryBuilder->getQuery()->getResult();
+            if($arPrecios) {
+                return $arPrecios[0];
             } else {
                 return [
                     "error" => "No se encontraron resultados"

@@ -159,7 +159,9 @@ class TteCiudadRepository extends ServiceEntityRepository
         if($codigo) {
             $queryBuilder = $em->createQueryBuilder()->from(TteCiudad::class, 'c')
                 ->select('c.codigoCiudadPk')
-                ->addSelect('c.nombre');
+                ->addSelect('c.nombre')
+                ->addSelect('c.codigoRutaFk')
+                ->addSelect('c.ordenRuta');
             if($codigo) {
                 $queryBuilder->where("c.codigoCiudadPk=" . $codigo);
             }

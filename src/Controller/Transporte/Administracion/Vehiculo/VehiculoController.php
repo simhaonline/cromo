@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Administracion\Vehiculo;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Formato\Transporte\Vehiculo;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -108,17 +109,29 @@ class VehiculoController extends ControllerListenerGeneral
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return Response
      * @Route("/transporte/administracion/vehiculo/detalle/{id}", name="transporte_administracion_transporte_vehiculo_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arVehiculo = $em->getRepository(TteVehiculo::class)->find($id);
-
-        return $this->render('transporte/administracion/vehiculo/detalle.html.twig', array(
-            'clase' => array('clase'=>'TteVehiculo', 'codigo' => $id),
+        $form = $this->createFormBuilder()
+            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formato = new Vehiculo();
+                $formato->Generar($em, $id);
+            }
+        }
+        return $this->render('transporte/administracion/vehiculo/detalle.html.twig',[
+            'clase' => array('clase'=>'TteVehiculo','codigo' => $id),
             'arVehiculo' => $arVehiculo,
-        ));
+            'form' => $form->createView()]);
     }
 
 }

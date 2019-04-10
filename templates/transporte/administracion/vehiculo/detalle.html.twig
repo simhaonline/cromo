@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_transporte_vehiculo_lista') }}">Volver</a>
@@ -7,11 +9,12 @@
         <div class="btn-group">
             {% if clase is defined %}
                 <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('documental_general_general_lista', { 'tipo': clase.clase,  'codigo': clase.codigo }) }}', 'Archivos', 500, 800)">Archivos</a>
+                {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {% endif %}
         </div>
     </div>
     <br /><br />
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo"><b>CODIGO VEHICULO:</b></td>
             <td class="td-in-well">{{ arVehiculo.codigoVehiculoPk }}</td>
@@ -73,12 +76,6 @@
             <td class="td-in-well" style="text-transform: uppercase;">{{ arVehiculo.fechaVenceTecnicomecanica | date('Y-m-d') }}</td>
         </tr>
     </table>
-    <a name="marcador"></a>
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#contrato" data-toggle="tab">#</a></li>
-        <li><a href="#credito" data-toggle="tab">#</a></li>
-        <li><a href="#adicionales" data-toggle="tab">#</a></li>
-    </ul>
     </br>
-
+    {{ form_end(form) }}
 {% endblock %}

@@ -93,24 +93,31 @@ class TteNovedadRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function pendienteSolucionar(): array
+    public function pendienteSolucionar()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT n.codigoNovedadPk,
-                  n.fecha,
-                  n.fechaReporte,
-                  n.fechaSolucion,
-                  n.descripcion,
-                  n.estadoAtendido,
-                  n.estadoReporte,
-                  n.estadoSolucion,
-                  nt.nombre as nombreTipo
-        FROM App\Entity\Transporte\TteNovedad n 
-        LEFT JOIN n.novedadTipoRel nt
-        WHERE n.estadoAtendido = 1 AND n.estadoSolucion = 0'
-        );
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteNovedad::class, 'n')
+            ->select('n.codigoNovedadPk')
+            ->addSelect('n.fecha')
+            ->addSelect('n.fechaReporte')
+            ->addSelect('n.fechaSolucion')
+            ->addSelect('nt.nombre as tipo')
+            ->addSelect('t.nombreCorto AS cliente')
+            ->addSelect('n.codigoGuiaFk')
+            ->addSelect('g.numero as numero')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('n.descripcion')
+            ->addSelect('n.estadoAtendido')
+            ->addSelect('n.estadoReporte')
+            ->addSelect('n.estadoSolucion')
+            ->leftJoin('n.novedadTipoRel', 'nt')
+            ->leftJoin('n.guiaRel', 'g')
+            ->leftJoin('g.clienteRel', 't')
+        ->orderBy('n.codigoNovedadPk' , 'DESC');
+        if ($session->get('filtroTteCodigoCliente')) {
+            $queryBuilder->andWhere("g.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        return $queryBuilder;
     }
 
     public function pendienteSolucionarCliente(): array

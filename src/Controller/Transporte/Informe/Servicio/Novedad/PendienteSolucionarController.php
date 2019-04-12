@@ -3,6 +3,10 @@
 namespace App\Controller\Transporte\Informe\Servicio\Novedad;
 
 use App\Entity\Transporte\TteNovedad;
+use App\General\General;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,34 +27,38 @@ class PendienteSolucionarController extends Controller
         $paginator  = $this->get('knp_paginator');
         $session = new session;
         $form = $this->createFormBuilder()
+            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('btnReportar', SubmitType::class, array('label' => 'Reportar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                if ($form->get('btnFiltrar')->isClicked()) {
+                    if ($form->get('txtCodigoCliente')->getData() != '') {
+                        $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                        $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+                    } else {
+                        $session->set('filtroTteCodigoCliente', null);
+                        $session->set('filtroTteNombreCliente', null);
+                    }
+                }
                 if ($form->get('btnReportar')->isClicked()) {
                     $arrNovedades = $request->request->get('chkSeleccionar');
                     $arrControles = $request->request->All();
                     $respuesta = $this->getDoctrine()->getRepository(TteNovedad::class)->setReportar($arrNovedades, $arrControles);
                 }
+                if ($form->get('btnExcel')->isClicked()) {
+                    General::get()->setExportar($em->createQuery($em->getRepository(TteNovedad::class)->pendienteSolucionar())->execute(), 'Novedades pendientes por solucionar');
+                }
             }
         }
-        $query = $this->getDoctrine()->getRepository(TteNovedad::class)->pendienteSolucionar();
-        $arNovedades = $paginator->paginate($query, $request->query->getInt('page', 1),500);
+        $arNovedades = $paginator->paginate($this->getDoctrine()->getRepository(TteNovedad::class)->pendienteSolucionar(), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/informe/servicio/novedad/pendienteSolucionar.html.twig', [
             'arNovedades' => $arNovedades,
             'form' => $form->createView()]);
-    }
-
-    private function filtrar($form)
-    {
-        $session = new session;
-        $arRuta = $form->get('rutaRel')->getData();
-        if ($arRuta) {
-            $session->set('filtroTteCodigoRuta', $arRuta->getCodigoRutaPk());
-        } else {
-            $session->set('filtroTteCodigoRuta', null);
-        }
     }
 }
 

@@ -44,6 +44,7 @@
             <th>CLIENTE</th>
             <th>TIPO</th>
             <th>DESCRIPCION</th>
+            <th>CUMPLIDO</th>
             <th>ATE</th>
             <th>REP</th>
             <th>SOL</th>
@@ -63,6 +64,7 @@
                 <td>{{ arNovedad.cliente }}</td>
                 <td>{{ arNovedad.tipo }}</td>
                 <td>{{ arNovedad.descripcion }}</td>
+                <td>{{ arNovedad.codigoCumplidoFk | default('') }}</td>
                 <td>{% if arNovedad.estadoAtendido == 1 %} SI {% else %} NO {% endif %}</td>
                 <td>{% if arNovedad.estadoReporte == 1 %} SI {% else %} NO {% endif %}</td>
                 <td>{% if arNovedad.estadoSolucion == 1 %} SI {% else %} NO {% endif %}</td>

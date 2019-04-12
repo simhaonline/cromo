@@ -107,6 +107,7 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->addSelect('g.numero as numero')
             ->addSelect('g.documentoCliente')
             ->addSelect('n.descripcion')
+            ->addSelect('g.codigoCumplidoFk')
             ->addSelect('n.estadoAtendido')
             ->addSelect('n.estadoReporte')
             ->addSelect('n.estadoSolucion')

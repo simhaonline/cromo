@@ -8,7 +8,10 @@ use App\Entity\RecursoHumano\RhuContrato;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,22 +34,25 @@ class ContratoController extends BaseController
      */
     public function lista(Request $request)
     {
-        $this->request = $request;
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista();
-        $formBotonera->handleRequest($request);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-
-            }
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoCliente', TextType::class, ['label' => 'Codigo cliente: ', 'required' => false, 'data' => $session->get('filtroTteCodigoCliente')])
+            ->add('txtNombreCorto', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNombreCliente')])
+            ->add('txtNumeroIdentificacion', NumberType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNumeroIdentificacionCliente')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
+            $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
+            $session->set('filtroTteNitCliente', $form->get('txtNumeroIdentificacion')->getData());
         }
-        return $this->render('recursohumano/administracion/recurso/contrato/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
-            'formBotonera' => $formBotonera->createView()
-        ]);
+        $arContratos = $paginator->paginate($em->getRepository(RhuContrato::class)->lista(), $request->query->getInt('page', 1), 50);
+        return $this->render('recursohumano/administracion/recurso/contrato/lista.html.twig',
+            ['arContratos' => $arContratos,
+                'form' => $form->createView()]);
     }
 
     /**

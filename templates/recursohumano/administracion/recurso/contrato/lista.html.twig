@@ -1,9 +1,102 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <br>
-    <br>
-    {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-    {{ form_start(formBotonera) }}
-    {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}
-    {{ form_end(formBotonera) }}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-1 control-label">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.txtCodigoCliente) }}
+                        </div>
+                        <label class="col-sm-1 control-label">Identificacion:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.txtNumeroIdentificacion) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-1 control-label">Nombre:</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(form.txtNombreCorto, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                    </div>
+                    <div class="modal-footer">
+                        {{ form_widget(form.btnFiltrar) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>TIPO</th>
+            <th>EMPLEADO</th>
+            <th>IDENTIFICAICON</th>
+            <th>GRUPO</th>
+            <th>TIEMPO</th>
+            <th>SALARIO</th>
+            <th>VIGENTE</th>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arContrato in arContratos %}
+            <tr>
+                <td>{{ arContrato.codigoContratoPk }}</td>
+                <td>{{ arContrato.tipo }}</td>
+                <td>{{ arContrato.empleado }}</td>
+                <td>{{ arContrato.numeroIdentificacion }}</td>
+                <td>{{ arContrato.nombreGrupo }}</td>
+                <td>{{ arContrato.tiempo }}</td>
+                <td>{{ arContrato.vrSalario | number_format }}</td>
+                <td>{{ arContrato.estadoTerminado ? 'NO' : 'SI' }}</td>
+                <td>{{ arContrato.fechaDesde | date('Y-m-d') }}</td>
+                <td>{{ arContrato.fechaHasta | date('Y-m-d') }}</td>
+                <td style="text-align: center;">
+                    {% if arContrato.estadoTerminado == 0 %}
+                        <a href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_empleado_nuevo_contrato',{'codigoEmpleado' : arContrato.codigoEmpleadoFk,'id': arContrato.codigoContratoPk }) }}','agregarContrato',600,950)"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i>
+                        </a>
+                    {% endif %}
+                </td>
+                <td style="text-align: center;">
+                    <a href="{{ path('recursohumano_administracion_recurso_contrato_detalle',{'id' : arContrato.codigoContratoPk}) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arContratos.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arContratos) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('recursohumano_administracion_recurso_contrato_nuevo', {'id': 0}) }}">Nuevo</a>
+        </div>
+    </div>
+    <br /><br />
+    {{ form_end(form) }}
 {% endblock %}
+

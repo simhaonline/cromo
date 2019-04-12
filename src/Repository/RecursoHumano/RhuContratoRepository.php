@@ -17,13 +17,30 @@ class RhuContratoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuContrato::class);
     }
 
-    public function camposPredeterminados()
-    {
-        $qb = $this->_em->createQueryBuilder()
-            ->from('App:RecursoHumano\RHuEmpleado', 'e')
-            ->select('e.codigoEmpleadoPk AS ID');
-        $query = $this->_em->createQuery($qb->getDQL());
-        return $query->execute();
+    public function lista(){
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 'c')
+            ->select('c.codigoContratoPk')
+            ->addSelect('c.fechaDesde')
+            ->addSelect('c.numero')
+            ->addSelect('e.nombreCorto as empleado')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('c.fechaDesde')
+            ->addSelect('c.fechaHasta')
+            ->addSelect('ct.nombre AS tipo')
+            ->addSelect('gp.nombre AS nombreGrupo')
+            ->addSelect('t.nombre AS tiempo')
+            ->addSelect('c.vrSalario')
+            ->addSelect('cr.nombre')
+            ->addSelect('c.codigoEmpleadoFk')
+            ->addSelect('c.estadoTerminado')
+            ->leftJoin('c.contratoTipoRel', 'ct')
+            ->leftJoin('c.clasificacionRiesgoRel', 'cr')
+            ->leftJoin('c.tiempoRel', 't')
+            ->leftJoin('c.grupoRel', 'gp')
+            ->leftJoin('c.cargoRel', 'cg')
+            ->leftJoin('c.empleadoRel', 'e')
+            ->andWhere('c.codigoContratoPk <> 0');
+        return $queryBuilder->getQuery()->execute();
     }
 
     public function contratosEmpleado($codigoEmpleado)
@@ -33,8 +50,6 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect('c.fechaDesde')
             ->addSelect('c.numero')
             ->addSelect('c.codigoGrupoFk')
-            ->addSelect('c.codigoGrupoFk')
-            ->addSelect('c.codigoCargoFk')
             ->addSelect('c.codigoCostoTipoFk')
             ->addSelect('c.codigoClasificacionRiesgoFk')
             ->addSelect('c.fechaHasta')

@@ -2977,20 +2977,19 @@ class TteGuiaRepository extends ServiceEntityRepository
         $flete = $raw['vrFlete']?? 0;
         $manejo = $raw['vrManejo']?? 0;
         $numero = $raw['numero']?? null;
-        $cobro = $raw['vrRecaudo']?? 0;
-        $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($raw['codigoGuiaTipo']);
+        $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($raw['codigoGuiaTipoFk']);
         $validarNumero = $this->apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia);
         if($validarNumero['mensaje'] == "") {
             $numero = $validarNumero['numero'];
-            $arOperacion = $em->getRepository(TteOperacion::class)->find($raw['codigoOperacionIngreso']);
-            $arCliente = $em->getRepository(TteCliente::class)->find($raw['codigoCliente']);
-            $arCondicion = $em->getRepository(TteCondicion::class)->find($raw['codigoCondicion']);
-            $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadOrigen']);
-            $arCiudadDestino = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadDestino']);
-            $arProducto = $em->getRepository(TteProducto::class)->find($raw['codigoProducto']);
-            $arEmpaque = $em->getRepository(TteEmpaque::class)->find($raw['codigoEmpaque']);
-            $arServicio = $em->getRepository(TteServicio::class)->find($raw['codigoServicio']);
-            $arRuta = $em->getRepository(TteRuta::class)->find($raw['codigoRuta']);
+            $arOperacion = $em->getRepository(TteOperacion::class)->find($raw['codigoOperacionIngresoFk']);
+            $arCliente = $em->getRepository(TteCliente::class)->find($raw['codigoClienteFk']);
+            $arCondicion = $em->getRepository(TteCondicion::class)->find($raw['codigoCondicionFk']);
+            $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadOrigenFk']);
+            $arCiudadDestino = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadDestinoFk']);
+            $arProducto = $em->getRepository(TteProducto::class)->find($raw['codigoProductoFk']);
+            $arEmpaque = $em->getRepository(TteEmpaque::class)->find($raw['codigoEmpaqueFk']);
+            $arServicio = $em->getRepository(TteServicio::class)->find($raw['codigoServicioFk']);
+            $arRuta = $em->getRepository(TteRuta::class)->find($raw['codigoRutaFk']);
             $arGuia = new TteGuia();
             $numeroFactura = null;
             if($arGuiaTipo->getCortesia()) {
@@ -3063,7 +3062,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             $em->flush();
             return [
                 "numero" => $arGuia->getNumero(),
-                "codigo" => $arGuia->getCodigoGuiaPk(),
+                "codigoGuiaPk" => $arGuia->getCodigoGuiaPk(),
                 "numeroFactura" => $arGuia->getNumeroFactura()
             ];
 
@@ -3074,8 +3073,83 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     public function apiWindowsDetalle($raw) {
         $em = $this->getEntityManager();
-        $codigo = $raw['codigo']?? null;
-        return true;
+        $codigo = $raw['codigoGuiaPk']?? null;
+        $documentoCliente = $raw['documentoCliente']?? null;
+        if($codigo || $documentoCliente) {
+            $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g')
+                ->select('g.codigoGuiaPk')
+                ->addSelect('g.codigoGuiaTipoFk')
+                ->addSelect('g.numero')
+                ->addSelect('g.numeroFactura')
+                ->addSelect('g.codigoClienteFk')
+                ->addSelect('g.codigoCondicionFk')
+                ->addSelect('g.remitente')
+                ->addSelect('g.documentoCliente')
+                ->addSelect('g.relacionCliente')
+                ->addSelect('g.codigoCiudadOrigenFk')
+                ->addSelect('g.codigoCiudadDestinoFk')
+                ->addSelect('g.codigoDespachoFk')
+                ->addSelect('g.codigoOperacionIngresoFk')
+                ->addSelect('g.codigoOperacionCargoFk')
+                ->addSelect('g.fechaIngreso')
+                ->addSelect('g.nombreDestinatario')
+                ->addSelect('g.direccionDestinatario')
+                ->addSelect('g.telefonoDestinatario')
+                ->addSelect('g.fechaDespacho')
+                ->addSelect('g.fechaEntrega')
+                ->addSelect('g.codigoServicioFk')
+                ->addSelect('g.codigoEmpaqueFk')
+                ->addSelect('g.codigoProductoFk')
+                ->addSelect('g.vrAbono')
+                ->addSelect('g.vrCobroEntrega')
+                ->addSelect('g.vrCostoReexpedicion')
+                ->addSelect('g.vrFlete')
+                ->addSelect('g.vrManejo')
+                ->addSelect('g.vrDeclara')
+                ->addSelect('g.vrRecaudo')
+                ->addSelect('g.unidades')
+                ->addSelect('g.pesoReal')
+                ->addSelect('g.pesoVolumen')
+                ->addSelect('g.pesoFacturado')
+                ->addSelect('g.empaqueReferencia')
+                ->addSelect('g.cortesia')
+                ->addSelect('g.factura')
+                ->addSelect('g.reexpedicion')
+                ->addSelect('g.mercanciaPeligrosa')
+            ->addSelect('g.estadoImpreso')
+            ->addSelect('g.estadoEmbarcado')
+            ->addSelect('g.estadoDespachado')
+            ->addSelect('g.estadoEntregado')
+            ->addSelect('g.estadoSoporte')
+            ->addSelect('g.estadoCumplido')
+            ->addSelect('g.estadoFacturado')
+            ->addSelect('g.estadoFacturaGenerada')
+            ->addSelect('g.estadoAnulado')
+                ->addSelect('g.usuario')
+                ->addSelect('c.nombreCorto as clienteNombreCorto')
+                ->addSelect('co.nombre as ciudadOrigenNombre')
+                ->addSelect('cd.nombre as ciudadDestinoNombre')
+                ->addSelect('con.nombre as condicionNombre')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadOrigenRel', 'co')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.condicionRel', 'con');
+            if($codigo) {
+                $queryBuilder->where("g.codigoGuiaPk=" . $codigo);
+            } else {
+                $queryBuilder->where("g.documentoCliente = '" . $documentoCliente . "'");
+            }
+            $arGuias = $queryBuilder->getQuery()->getResult();
+            if($arGuias) {
+                return $arGuias[0];
+            } else {
+                return [
+                    "error" => "No se encontraron resultados"
+                ];
+            }
+        } else {
+            return ["error" => "Faltan datos para la api"];
+        }
     }
 
     private function apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia) {

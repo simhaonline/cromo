@@ -74,7 +74,8 @@ class TteGuiaTipoRepository extends ServiceEntityRepository
                     "validarFlete" => $arGuiaTipo->getValidarFlete(),
                     "factura" => $arGuiaTipo->getFactura(),
                     "cortesia" => $arGuiaTipo->getCortesia(),
-                    "codigoFormaPago" => $arGuiaTipo->getCodigoFormaPago()
+                    "codigoFormaPago" => $arGuiaTipo->getCodigoFormaPago(),
+                    "generaCobro" => $arGuiaTipo->getGeneraCobro()
                 ];
             } else {
                 return ["error" => "Usuario o clave invalidos"];

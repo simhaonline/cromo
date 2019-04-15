@@ -140,6 +140,7 @@ class MovimientoController extends ControllerListenerGeneral
      * @param $codigoDocumento
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      * @Route("/inventario/movimiento/inventario/movimiento/nuevo/{codigoDocumento}/{id}", name="inventario_movimiento_inventario_movimiento_nuevo")
      */
     public function nuevo(Request $request, $codigoDocumento, $id)
@@ -191,6 +192,7 @@ class MovimientoController extends ControllerListenerGeneral
      * @param $codigoDocumento
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      * @Route("/inventario/movimiento/inventario/movimiento/nuevo/factura/{codigoDocumento}/{id}", name="inventario_movimiento_inventario_movimiento_nuevo_factura")
      */
     public function nuevoFactura(Request $request, $codigoDocumento, $id)

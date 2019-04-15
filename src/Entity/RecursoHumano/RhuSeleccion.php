@@ -257,7 +257,7 @@ class RhuSeleccion
     protected $ciudadNacimientoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuRh", inversedBy="rhuEmpleadosRhRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuRh", inversedBy="seleccionesRhRel")
      * @ORM\JoinColumn(name="codigo_rh_fk", referencedColumnName="codigo_rh_pk")
      */
     protected $rhRel;
@@ -285,6 +285,22 @@ class RhuSeleccion
      * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
      */
     protected $sexoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -1005,4 +1021,7 @@ class RhuSeleccion
     {
         $this->sexoRel = $sexoRel;
     }
+
+
+
 }

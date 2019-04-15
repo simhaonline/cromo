@@ -38,12 +38,28 @@ class RhuRh
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="rhRel")
      */
-    protected $rhuSeleccionesRhRel;
+    protected $seleccionesRhRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", mappedBy="rhRel")
      */
     protected $empleadosRhRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -80,6 +96,22 @@ class RhuRh
     /**
      * @return mixed
      */
+    public function getTteConductorRhRel()
+    {
+        return $this->tteConductorRhRel;
+    }
+
+    /**
+     * @param mixed $tteConductorRhRel
+     */
+    public function setTteConductorRhRel($tteConductorRhRel): void
+    {
+        $this->tteConductorRhRel = $tteConductorRhRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRhuAspirantesRhRel()
     {
         return $this->rhuAspirantesRhRel;
@@ -96,17 +128,17 @@ class RhuRh
     /**
      * @return mixed
      */
-    public function getRhuSeleccionesRhRel()
+    public function getSeleccionesRhRel()
     {
-        return $this->rhuSeleccionesRhRel;
+        return $this->seleccionesRhRel;
     }
 
     /**
-     * @param mixed $rhuSeleccionesRhRel
+     * @param mixed $seleccionesRhRel
      */
-    public function setRhuSeleccionesRhRel($rhuSeleccionesRhRel): void
+    public function setSeleccionesRhRel($seleccionesRhRel): void
     {
-        $this->rhuSeleccionesRhRel = $rhuSeleccionesRhRel;
+        $this->seleccionesRhRel = $seleccionesRhRel;
     }
 
     /**
@@ -124,4 +156,7 @@ class RhuRh
     {
         $this->empleadosRhRel = $empleadosRhRel;
     }
+
+
+
 }

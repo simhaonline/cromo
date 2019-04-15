@@ -33,9 +33,9 @@ class RhuCargo
     protected $solicitudesCargoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="cargoRel")
+     * @ORM\OneToMany(targetEntity="RhuSeleccion", mappedBy="cargoRel")
      */
-    protected $seleccionCargoRel;
+    protected $seleccionesCargoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="cargoRel")

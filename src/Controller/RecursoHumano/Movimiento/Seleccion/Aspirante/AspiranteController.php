@@ -54,7 +54,7 @@ class AspiranteController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/seleccion/aspirante/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/seleccion/aspirante/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -65,6 +65,7 @@ class AspiranteController extends ControllerListenerGeneral
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      * @Route("recursohumano/movimiento/seleccion/aspirante/nuevo/{id}", name="recursohumano_movimiento_seleccion_aspirante_nuevo")
      */
     public function nuevo(Request $request, $id)
@@ -89,7 +90,7 @@ class AspiranteController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/seleccion/aspirante/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/seleccion/aspirante/nuevo.html.twig', [
             'form' => $form->createView(), 'arAspirante' => $arAspirante
         ]);
     }

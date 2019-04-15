@@ -69,6 +69,7 @@ class TteGuiaTipoRepository extends ServiceEntityRepository
             $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($guiaTipo);
             if($arGuiaTipo) {
                 return [
+                    "codigoGuiaTipoPk" => $arGuiaTipo->getCodigoGuiaTipoPk(),
                     "nombre" => $arGuiaTipo->getNombre(),
                     "exigeNumero" => $arGuiaTipo->getExigeNumero(),
                     "validarFlete" => $arGuiaTipo->getValidarFlete(),

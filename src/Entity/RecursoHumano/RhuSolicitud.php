@@ -244,7 +244,7 @@ class RhuSolicitud
     /**
      * @ORM\OneToMany(targetEntity="RhuSeleccion", mappedBy="solicitudRel")
      */
-    protected $rhuSeleccionSolicitudRel;
+    protected $seleccionSolicitudRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSexo", inversedBy="rhuSolicitudesSexoRel")

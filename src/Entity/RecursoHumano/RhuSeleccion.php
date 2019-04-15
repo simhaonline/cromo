@@ -263,7 +263,7 @@ class RhuSeleccion
     protected $rhRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", inversedBy="rhuSeleccionesSolicitudRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", inversedBy="seleccionSolicitudRel")
      * @ORM\JoinColumn(name="codigo_solicitud_fk", referencedColumnName="codigo_solicitud_pk")
      */
     protected $solicitudRel;
@@ -275,7 +275,7 @@ class RhuSeleccion
     protected $cargoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCierreSeleccionMotivo", inversedBy="rhuSeleccionesMotivoCierreRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCierreSeleccionMotivo", inversedBy="seleccionesMotivoCierreRel")
      * @ORM\JoinColumn(name="codigo_cierre_seleccion_motivo_fk", referencedColumnName="codigo_cierre_seleccion_motivo_pk")
      */
     protected $cierreSeleccionMotivoRel;

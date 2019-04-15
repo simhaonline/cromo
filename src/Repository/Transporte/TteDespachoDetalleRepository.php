@@ -172,23 +172,24 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    public function validarGuiasSoporte($codigoDespacho){
+    public function validarGuiasSoporte($codigoDespacho)
+    {
         $queryBuilder = $this->_em->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
             ->select('g.estadoSoporte')
             ->addSelect('dd.codigoGuiaFk')
             ->addSelect('g.codigoDespachoFk as codigoDespachoGuiaFk')
             ->leftJoin('dd.guiaRel', 'g')
-            ->where('dd.codigoDespachoFk ='  .$codigoDespacho);
+            ->where('dd.codigoDespachoFk =' . $codigoDespacho);
         return $queryBuilder->getQuery()->execute();
     }
 
     public function siplatf()
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class,'tdd')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'tdd')
             ->select('tdd.codigoDespachoDetallePk')
             ->addSelect('d.fechaRegistro')
-            ->addSelect('g.documentoCliente')
+            ->addSelect("CONCAT('3050026', d.numero) as manifiestoDeCarga")
             ->addSelect('co.codigoDivision AS ciudadOrigen')
             ->addSelect('cd.codigoDivision AS ciudadDestino')
             ->addSelect('d.codigoVehiculoFk')
@@ -208,17 +209,17 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
             ->addSelect('tdd.vrFlete AS fleteSinManejo')
             ->addSelect('d.comentario')
             ->addSelect('cd.codigoDivision AS codigoCiudadDestino')
-            ->leftJoin('tdd.despachoRel','d')
-            ->leftJoin('tdd.guiaRel','g')
-            ->leftJoin('d.ciudadOrigenRel','co')
-            ->leftJoin('d.ciudadDestinoRel','cd')
-            ->leftJoin('d.vehiculoRel','v')
-            ->leftJoin('v.propietarioRel','p')
-            ->leftJoin('v.poseedorRel','ps')
+            ->leftJoin('tdd.despachoRel', 'd')
+            ->leftJoin('tdd.guiaRel', 'g')
+            ->leftJoin('d.ciudadOrigenRel', 'co')
+            ->leftJoin('d.ciudadDestinoRel', 'cd')
+            ->leftJoin('d.vehiculoRel', 'v')
+            ->leftJoin('v.propietarioRel', 'p')
+            ->leftJoin('v.poseedorRel', 'ps')
             ->leftJoin('d.conductorRel', 'c')
             ->leftJoin('g.clienteRel', 'cl')
             ->orderBy('tdd.codigoDespachoDetallePk', 'ASC');
-        if($session->get('filtroInvInformeRemisionDetalleCodigoTercero')){
+        if ($session->get('filtroInvInformeRemisionDetalleCodigoTercero')) {
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroInvInformeRemisionDetalleCodigoTercero')}");
         }
         $fecha = new \DateTime('now');
@@ -232,7 +233,6 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         } else {
             $queryBuilder->andWhere("d.fechaRegistro <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
         }
-
         return $queryBuilder;
     }
 }

@@ -29,7 +29,7 @@ class RhuCierreSeleccionMotivo
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="cierreSeleccionMotivoRel")
      */
-    protected $rhuSeleccionMotivoCierreRel;
+    protected $seleccionesMotivoCierreRel;
 
     /**
      * @return mixed

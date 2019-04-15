@@ -33,7 +33,6 @@
         <tr>
             <th>ID</th>
             <th>FECHA</th>
-            <th>DOC CLIENTE</th>
             <th>CIUDAD ORIGEN</th>
             <th>CIUDAD DESTINO</th>
             <th>PLACA</th>
@@ -50,7 +49,6 @@
             <tr>
                 <td>{{ arDespachoDetalles.codigoDespachoDetallePk }}</td>
                 <td>{{ arDespachoDetalles.fechaRegistro | date('Y-m-d') }}</td>
-                <td>{{ arDespachoDetalles.documentoCliente }}</td>
                 <td>{{ arDespachoDetalles.ciudadOrigen }}</td>
                 <td>{{ arDespachoDetalles.ciudadDestino }}</td>
                 <td>{{ arDespachoDetalles.codigoVehiculoFk }}</td>
@@ -62,14 +60,20 @@
         </tbody>
     </table>
     <div class="btn-group" style="float: left">
-        <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arDespachoDetalles.getTotalItemCount }}</span></div>
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arDespachoDetalles.getTotalItemCount }}
+            </span>
+        </div>
     </div>
-    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arDespachoDetalles) }}
     </div>
-    <div class="btn-group">
-        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+        </div>
     </div>
+    <br /><br /><br />
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

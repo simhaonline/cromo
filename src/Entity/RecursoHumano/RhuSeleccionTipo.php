@@ -29,7 +29,7 @@ class RhuSeleccionTipo
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="seleccionTipoRel")
      */
-    protected $seleccionTipoRel;
+    protected $seleccionesTipoRel;
 
     /**
      * @return mixed

@@ -53,7 +53,7 @@ class SeleccionController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_seleccion_lista'));
             }
         }
-        return $this->render('recursoHumano/movimiento/seleccion/seleccion/lista.html.twig', [
+        return $this->render('recursohumano/movimiento/seleccion/seleccion/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -89,7 +89,7 @@ class SeleccionController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursoHumano_movimiento_seleccion_seleccion_nuevo', ['codigoSeleccion' => 0]));
             }
         }
-        return $this->render('recursoHumano/movimiento/seleccion/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/seleccion/seleccion/nuevo.html.twig', [
             'form' => $form->createView(), 'arSeleccion' => $arSeleccion
         ]);
     }

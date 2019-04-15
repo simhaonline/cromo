@@ -74,8 +74,9 @@ class TteCondicionRepository extends ServiceEntityRepository
         $cliente = $raw['cliente']?? null;
         if($cliente) {
             $queryBuilder = $em->createQueryBuilder()->from(TteClienteCondicion::class, 'cc')
-                ->select('cc.codigoClienteCondicionPk')
+                ->select('cc.codigoCondicionFk')
                 ->addSelect('c.nombre')
+                ->addSelect('cc.codigoClienteCondicionPk')
                 ->leftJoin('cc.condicionRel', 'c')
                 ->where('cc.codigoClienteFk=' . $cliente)
                 ->setMaxResults(10);

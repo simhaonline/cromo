@@ -2977,7 +2977,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $flete = $raw['vrFlete']?? 0;
         $manejo = $raw['vrManejo']?? 0;
         $numero = $raw['numero']?? null;
-        $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($raw['codigoGuiaTipoFk']);
+        $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($raw['guiaTipo']);
         $validarNumero = $this->apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia);
         if($validarNumero['mensaje'] == "") {
             $numero = $validarNumero['numero'];

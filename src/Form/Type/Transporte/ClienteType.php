@@ -21,7 +21,7 @@ class ClienteType extends AbstractType
     {
         $builder
             ->add('identificacionRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenIdentificacion',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')

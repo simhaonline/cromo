@@ -98,7 +98,7 @@ class Usuario implements UserInterface, \Serializable
     private $isActive;
 
     /**
-     * @ORM\Column(name="restringir_movimientos", type="boolean",options={"default":false})
+     * @ORM\Column(name="restringir_movimientos", type="boolean", options={"default":false}, nullable=true)
      */
     private $restringirMovimientos;
 

@@ -48,9 +48,9 @@ class RhuEmpleado
     private $codigoCuentaTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_contrato_ultimo_fk", type="string", length=5, nullable=true)
+     * @ORM\Column(name="codigo_ultimo_contrato_fk", type="integer", nullable=true)
      */
-    private $codigoContratoUltimoFk;
+    private $codigoUltimoContratoFk;
 
     /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20 ,nullable=false)
@@ -367,22 +367,6 @@ class RhuEmpleado
     protected $reclamosEmpleadoRel;
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()
@@ -481,17 +465,17 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getCodigoContratoUltimoFk()
+    public function getCodigoUltimoContratoFk()
     {
-        return $this->codigoContratoUltimoFk;
+        return $this->codigoUltimoContratoFk;
     }
 
     /**
-     * @param mixed $codigoContratoUltimoFk
+     * @param mixed $codigoUltimoContratoFk
      */
-    public function setCodigoContratoUltimoFk($codigoContratoUltimoFk): void
+    public function setCodigoUltimoContratoFk($codigoUltimoContratoFk): void
     {
-        $this->codigoContratoUltimoFk = $codigoContratoUltimoFk;
+        $this->codigoUltimoContratoFk = $codigoUltimoContratoFk;
     }
 
     /**
@@ -1341,4 +1325,8 @@ class RhuEmpleado
     {
         $this->reclamosEmpleadoRel = $reclamosEmpleadoRel;
     }
+
+
+
+
 }

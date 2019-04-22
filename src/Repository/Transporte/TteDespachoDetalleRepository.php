@@ -189,7 +189,7 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'tdd')
             ->select('tdd.codigoDespachoDetallePk')
             ->addSelect('d.fechaRegistro')
-            ->addSelect("CONCAT('3050026', d.numero) as manifiestoDeCarga")
+            ->addSelect("CONCAT('30050026', d.numero) as manifiestoDeCarga")
             ->addSelect('co.codigoDivision AS ciudadOrigen')
             ->addSelect('cd.codigoDivision AS ciudadDestino')
             ->addSelect('d.codigoVehiculoFk')

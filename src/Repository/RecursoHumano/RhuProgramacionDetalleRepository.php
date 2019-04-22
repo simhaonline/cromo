@@ -81,6 +81,7 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->select('pd.codigoProgramacionDetallePk')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('e.nombreCorto')
+            ->addSelect('pd.codigoContratoFk')
             ->addSelect('pd.fechaDesdeContrato')
             ->addSelect('pd.fechaHastaContrato')
             ->addSelect('pd.vrSalario')

@@ -11,7 +11,7 @@
         </div>
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arProgramacion.codigoProgramacionPk }}</td>
@@ -57,6 +57,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>COD</th>
                             <th>DOC</th>
                             <th>NOMBRE</th>
                             <th>DESDE</th>
@@ -82,6 +83,7 @@
                         {% for arProgramacionDetalle in arProgramacionDetalles %}
                             <tr>
                                 <td>{{ arProgramacionDetalle.codigoProgramacionDetallePk }}</td>
+                                <td>{{ arProgramacionDetalle.codigoContratoFk }}</td>
                                 <td>{{ arProgramacionDetalle.numeroIdentificacion }}</td>
                                 <td>{{ arProgramacionDetalle.nombreCorto }}</td>
                                 <td>{{ arProgramacionDetalle.fechaDesdeContrato | date('Y-m-d') }}</td>

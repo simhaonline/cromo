@@ -5,8 +5,11 @@ namespace App\Controller\RecursoHumano\Administracion\Recurso\Contrato;
 
 use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuGrupo;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\General\General;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -28,6 +31,7 @@ class ContratoController extends BaseController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/administracion/recurso/contrato/lista", name="recursohumano_administracion_recurso_contrato_lista")
@@ -38,16 +42,29 @@ class ContratoController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigoCliente', TextType::class, ['label' => 'Codigo cliente: ', 'required' => false, 'data' => $session->get('filtroTteCodigoCliente')])
-            ->add('txtNombreCorto', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNombreCliente')])
-            ->add('txtNumeroIdentificacion', NumberType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNumeroIdentificacionCliente')])
+            ->add('txtCodigoContrato', TextType::class, ['label' => 'Codigo contrato: ', 'required' => false, 'data' => $session->get('filtroRhuCodigoContrato')])
+            ->add('txtNombreEmpleado', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroRhuNombreEmpleado')])
+            ->add('txtNumeroIdentificacion', NumberType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroRhuNumeroIdentificacionEmpleado')])
+            ->add('chkEstadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroRhuContratoEstadoTerminado'), 'required' => false])
+            ->add('cboGrupo', EntityType::class, $em->getRepository(RhuGrupo::class)->llenarCombo())
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-            $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-            $session->set('filtroTteNitCliente', $form->get('txtNumeroIdentificacion')->getData());
+            $session->set('filtroRhuContratoEstadoTerminado', $form->get('chkEstadoTerminado')->getData());
+            $session->set('filtroRhuCodigoContrato', $form->get('txtCodigoContrato')->getData());
+            $session->set('chkEstadoTerminado', $form->get('txtNombreEmpleado')->getData());
+            $session->set('filtroRhuNumeroIdentificacionEmpleado', $form->get('txtNumeroIdentificacion')->getData());
+            $arGrupo = $form->get('cboGrupo')->getData();
+            if ($arGrupo) {
+                $session->set('filtroRhuGrupo', $arGrupo->getCodigoGrupoPk());
+            } else {
+                $session->set('filtroRhuGrupo', null);
+            }
+        }
+        if ($form->get('btnExcel')->isClicked()) {
+            General::get()->setExportar($em->getRepository(RhuContrato::class)->lista(), "Contratos");
         }
         $arContratos = $paginator->paginate($em->getRepository(RhuContrato::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('recursohumano/administracion/recurso/contrato/lista.html.twig',

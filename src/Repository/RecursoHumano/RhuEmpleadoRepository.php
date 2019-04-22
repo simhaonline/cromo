@@ -51,14 +51,31 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
 
     public function parametrosExcel()
     {
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 're')
-            ->select('re.codigoEmpleadoPk')
-            ->addSelect('re.numeroIdentificacion')
-            ->addSelect('re.nombreCorto')
-            ->addSelect('re.telefono')
-            ->addSelect('re.correo')
-            ->addSelect('re.direccion')
-            ->where('re.codigoEmpleadoPk <> 0');
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 'e')
+            ->select('e.codigoEmpleadoPk')
+            ->addSelect('e.codigoIdentificacionFk')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('ce.nombre AS ciudadExpedicion')
+            ->addSelect('e.nombre1')
+            ->addSelect('e.nombre2')
+            ->addSelect('e.apellido1')
+            ->addSelect('e.apellido2')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('e.telefono')
+            ->addSelect('e.correo')
+            ->addSelect('e.direccion')
+            ->addSelect('e.barrio')
+            ->addSelect('e.correo')
+            ->addSelect('b.nombre AS banco')
+            ->addSelect('e.cuenta')
+            ->addSelect('e.codigoRhFk')
+            ->addSelect('e.codigoSexoFk')
+            ->addSelect('e.codigoEstadoCivilFk')
+            ->leftJoin('e.ciudadRel', 'c')
+            ->leftJoin('e.ciudadNacimientoRel', 'cn')
+            ->leftJoin('e.ciudadExpedicionRel', 'ce')
+            ->leftJoin('e.bancoRel','b')
+            ->where('e.codigoEmpleadoPk <> 0');
         return $queryBuilder->getQuery()->execute();
     }
 }

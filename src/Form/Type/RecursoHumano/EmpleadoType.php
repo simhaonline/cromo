@@ -152,4 +152,15 @@ class EmpleadoType extends AbstractType
         ]';
         return $campos;
     }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"child":"nombreCorto",               "tipo":"TextType",   "propiedades":{"label":"Nombre"},   "operador":"like"},
+            {"child":"numeroIdentificacion",      "tipo":"TextType",   "propiedades":{"label":"Identificacion"},   "operador":"="}
+        ]';
+
+        return $campos;
+    }
 }

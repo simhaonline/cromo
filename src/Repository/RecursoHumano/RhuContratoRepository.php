@@ -18,6 +18,7 @@ class RhuContratoRepository extends ServiceEntityRepository
     }
 
     public function lista(){
+        $session = new Session();
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select('c.codigoContratoPk')
             ->addSelect('c.fechaDesde')
@@ -39,7 +40,28 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->leftJoin('c.grupoRel', 'gp')
             ->leftJoin('c.cargoRel', 'cg')
             ->leftJoin('c.empleadoRel', 'e')
-            ->andWhere('c.codigoContratoPk <> 0');
+            ->andWhere('c.codigoContratoPk <> 0')
+        ->orderBy('c.codigoContratoPk', 'ASC');
+        if ($session->get('filtroRhuNombreEmpleado') != '') {
+            $queryBuilder->andWhere("e.nombreCorto LIKE '%{$session->get('filtroRhuNombreEmpleado')}%' ");
+        }
+        if ($session->get('filtroRhuNumeroIdentificacionEmpleado') != '') {
+            $queryBuilder->andWhere("e.numeroIdentificacion = {$session->get('filtroRhuNumeroIdentificacionEmpleado')} ");
+        }
+        if ($session->get('filtroRhuCodigoContrato') != '') {
+            $queryBuilder->andWhere("c.codigoContratoPk = {$session->get('filtroRhuCodigoContrato')} ");
+        }
+        if ($session->get('filtroRhuGrupo')) {
+            $queryBuilder->andWhere("c.codigoGrupoFk = '" . $session->get('filtroRhuGrupo') . "'");
+        }
+        switch ($session->get('filtroRhuContratoEstadoTerminado')) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoTerminado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoTerminado = 1");
+                break;
+        }
         return $queryBuilder->getQuery()->execute();
     }
 

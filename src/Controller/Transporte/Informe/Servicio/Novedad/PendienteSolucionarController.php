@@ -29,6 +29,8 @@ class PendienteSolucionarController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTtePendienteSolucionarFechaDesde') ? date_create($session->get('filtroTtePendienteSolucionarFechaDesde')): null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTtePendienteSolucionarFechaHasta') ? date_create($session->get('filtroTtePendienteSolucionarFechaHasta')): null])
             ->add('btnReportar', SubmitType::class, array('label' => 'Reportar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -37,6 +39,8 @@ class PendienteSolucionarController extends Controller
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked()) {
+                    $session->set('filtroTtePendienteSolucionarFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
+                    $session->set('filtroTtePendienteSolucionarFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
                     if ($form->get('txtCodigoCliente')->getData() != '') {
                         $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
                         $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());

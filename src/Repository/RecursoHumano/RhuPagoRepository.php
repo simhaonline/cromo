@@ -87,7 +87,7 @@ class RhuPagoRepository extends ServiceEntityRepository
 
 
         //Adicionales
-        $arAdicionales = $em->getRepository(RhuAdicional::class)->programacionPago($arProgramacionDetalle->getCodigoEmpleadoFk(), $arProgramacion->getFechaDesde()->format('Y/m/d'), $arProgramacion->getFechaHasta()->format('Y/m/d'), $arProgramacion->getCodigoPagoTipoFk(), true, true, $arContrato->getCodigoContratoPk());
+        $arAdicionales = $em->getRepository(RhuAdicional::class)->programacionPago($arProgramacionDetalle->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getCodigoPagoTipoFk(), $arProgramacion->getFechaDesde()->format('Y/m/d'), $arProgramacion->getFechaHasta()->format('Y/m/d'));
         foreach ($arAdicionales as $arAdicional) {
             $arConcepto = $em->getRepository(RhuConcepto::class)->find($arAdicional['codigoConceptoFk']);
             $arPagoDetalle = new RhuPagoDetalle();
@@ -352,7 +352,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
 
         if ($arConcepto->getGeneraIngresoBasePrestacion()) {
-            $arrDatosGenerales['ingresoBaseCotizacion'] += $pagoDetalleOperado;
+            $arrDatosGenerales['ingresoBasePrestacion'] += $pagoDetalleOperado;
             $arPagoDetalle->setVrIngresoBasePrestacion($pagoDetalleOperado);
         }
     }

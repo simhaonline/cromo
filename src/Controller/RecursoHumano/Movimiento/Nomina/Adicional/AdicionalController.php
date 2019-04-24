@@ -77,6 +77,7 @@ class AdicionalController extends ControllerListenerGeneral
             $arAdicional = $em->getRepository(RhuAdicional::class)->find($id);
         } else {
             $arAdicional->setFecha(new \DateTime('now'));
+            $arAdicional->setPermanente(true);
         }
         $form = $this->createForm(AdicionalType::class, $arAdicional);
         $form->handleRequest($request);

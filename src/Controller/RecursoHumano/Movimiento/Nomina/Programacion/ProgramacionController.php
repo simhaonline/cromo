@@ -120,6 +120,7 @@ class ProgramacionController extends ControllerListenerGeneral
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $paginator  = $this->get('knp_paginator');
         $arProgramacion = $this->clase;
         if ($id != 0) {
             $arProgramacion = $em->getRepository($this->clase)->find($id);
@@ -128,6 +129,7 @@ class ProgramacionController extends ControllerListenerGeneral
             }
         }
         $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Cargar contratos'];
+        $arrBtnExcelDetalle = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Excel'];
         $arrBtnImprimirResumen = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Resumen','disabled' => true];
         $arrBtnEliminarTodos = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar todos'];
         $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
@@ -144,6 +146,7 @@ class ProgramacionController extends ControllerListenerGeneral
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
         $form->add('btnEliminarTodos', SubmitType::class, $arrBtnEliminarTodos);
         $form->add('btnImprimirResumen', SubmitType::class, $arrBtnImprimirResumen);
+        $form->add('btnExcelDetalle', SubmitType::class, $arrBtnExcelDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -181,9 +184,12 @@ class ProgramacionController extends ControllerListenerGeneral
                     $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);
                 }
             }
+            if ($form->get('btnExcelDetalle')->isClicked()) {
+                General::get()->setExportar($em->createQuery($em->getRepository(RhuProgramacionDetalle::class)->exportar($id))->execute(), "ProgramacionDetalle");
+            }
             return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
         }
-        $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk());
+        $arProgramacionDetalles = $paginator->paginate($em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk()), $request->query->get('page', 1), 1000);
         return $this->render('recursohumano/movimiento/nomina/programacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arProgramacion' => $arProgramacion,
@@ -196,20 +202,37 @@ class ProgramacionController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("recursohumano/movimiento/nomina/programacion/detalle/resumen/{id}", name="recursohumano_movimiento_nomina_programacion_detalle_resumen")
      */
-    public function resumenPagoDetalle($id)
+    public function resumenPagoDetalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($id);
+        $arrBtnActualizar = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar'];
+        $form = $this->createFormBuilder()
+            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnActualizar')->isClicked()) {
+                $em->getRepository(RhuProgramacionDetalle::class)->actualizar($arProgramacionDetalle, $this->getUser()->getUsername());
+            }
+        }
+
         if (!$arProgramacionDetalle->getProgramacionRel()->getEstadoAutorizado()) {
             Mensajes::error('El empleado aun no tiene pagos generados');
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoProgramacionDetalleFk' => $id));
-        $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->lista($arPago->getCodigoPagoPk());
+        if($arPago) {
+            $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->lista($arPago->getCodigoPagoPk());
+        } else {
+            $arPagoDetalles = null;
+        }
+
         return $this->render('recursohumano/movimiento/nomina/programacion/resumen.html.twig', [
             'arProgramacionDetalle' => $arProgramacionDetalle,
             'arPago' => $arPago,
-            'arPagoDetalles' => $arPagoDetalles
+            'arPagoDetalles' => $arPagoDetalles,
+            'form' => $form->createView()
         ]);
     }
 }

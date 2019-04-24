@@ -60,6 +60,7 @@
                             <th>COD</th>
                             <th>DOC</th>
                             <th>NOMBRE</th>
+                            <th>CONT</th>
                             <th>DESDE</th>
                             <th>HASTA</th>
                             <th>SALARIO</th>
@@ -76,16 +77,18 @@
                             <th title="Recargo festivo nocturno">RFN</th>
                             <th>VR.NETO</th>
                             <th></th>
-                            <th></th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodos"
+                                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for arProgramacionDetalle in arProgramacionDetalles %}
                             <tr>
                                 <td>{{ arProgramacionDetalle.codigoProgramacionDetallePk }}</td>
-                                <td>{{ arProgramacionDetalle.codigoContratoFk }}</td>
+                                <td>{{ arProgramacionDetalle.codigoEmpleadoFk }}</td>
                                 <td>{{ arProgramacionDetalle.numeroIdentificacion }}</td>
                                 <td>{{ arProgramacionDetalle.nombreCorto }}</td>
+                                <td>{{ arProgramacionDetalle.codigoContratoFk }}</td>
                                 <td>{{ arProgramacionDetalle.fechaDesdeContrato | date('Y-m-d') }}</td>
                                 <td>{{ arProgramacionDetalle.fechaHastaContrato | date('Y-m-d') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
@@ -102,7 +105,7 @@
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoNocturno | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.vrNeto | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;"><a
-                                            href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_detalle_resumen',{ 'id': arProgramacionDetalle.codigoProgramacionDetallePk }) }}','resumen',600,900)"><i
+                                            href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_detalle_resumen',{ 'id': arProgramacionDetalle.codigoProgramacionDetallePk }) }}','resumen',600,1000)"><i
                                                 class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}">
@@ -111,14 +114,24 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                    <div class="btn-group" style="float: left">
+                        <div class="btn-group" style="float: left">
+                            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arProgramacionDetalles.getTotalItemCount }}</span></div>
+                        </div>
+                    </div>
+                    <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
+                        {{ knp_pagination_render(arProgramacionDetalles) }}
+                    </div>
+                    <div class="btn-group" style="float: right">
+                        {{ form_widget(form.btnExcelDetalle) }}
+                        {{ form_widget(form.btnCargarContratos) }}
+                        {{ form_widget(form.btnEliminar) }}
+                        {{ form_widget(form.btnEliminarTodos) }}
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="btn-toolbar" style="float: right;">
-            {{ form_widget(form.btnCargarContratos) }}
-            {{ form_widget(form.btnEliminar) }}
-            {{ form_widget(form.btnEliminarTodos) }}
-        </div>
+
     </div>
     {{ form_end(form) }}
 {% endblock %}

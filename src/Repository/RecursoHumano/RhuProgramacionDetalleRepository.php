@@ -2,8 +2,11 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEgreso;
+use App\Entity\RecursoHumano\RhuPago;
+use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -97,7 +100,68 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.horasRecargoNocturno')
             ->addSelect('pd.horasRecargoFestivoDiurno')
             ->addSelect('pd.horasRecargoFestivoNocturno')
+            ->addSelect('pd.codigoEmpleadoFk')
             ->leftJoin('pd.empleadoRel','e')
             ->where("pd.codigoProgramacionFk = {$id}")->getQuery()->execute();
+    }
+
+    /**
+     * @param $arProgramacionDetalle RhuProgramacionDetalle
+     */
+    public function actualizar($arProgramacionDetalle, $usuario){
+        $em = $this->getEntityManager();
+        /** @var  $arProgramacion RhuProgramacion */
+        $arProgramacion = $em->getRepository(RhuProgramacion::class)->find($arProgramacionDetalle->getCodigoProgramacionFk());
+        $arPagos = $em->getRepository(RhuPago::class)->findBy(array('codigoProgramacionDetalleFk' => $arProgramacionDetalle->getCodigoProgramacionDetallePk()));
+        foreach ($arPagos as $arPago) {
+            $arPagosDetalles = $em->getRepository(RhuPagoDetalle::class)->findBy(array('codigoPagoFk' => $arPago->getCodigoPagoPk()));
+            foreach ($arPagosDetalles as $arPagoDetalle) {
+                $em->remove($arPagoDetalle);
+            }
+            $em->remove($arPago);
+        }
+        $arProgramacion->setVrNeto($arProgramacion->getVrNeto() - $arProgramacionDetalle->getVrNeto());
+        $em->persist($arProgramacion);
+        $arProgramacionDetalle->setVrNeto(0);
+        $em->persist($arProgramacionDetalle);
+        $em->flush();
+
+        $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
+        $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $usuario);
+        $arProgramacionDetalle->setVrNeto($vrNeto);
+        $em->persist($arProgramacionDetalle);
+        $arProgramacion->setVrNeto($arProgramacion->getVrNeto() + $vrNeto);
+        $em->persist($arProgramacion);
+        $em->flush();
+    }
+
+    public function exportar($id)
+    {
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuProgramacionDetalle::class, 'pd')
+            ->select('pd.codigoProgramacionDetallePk')
+            ->addSelect('pd.codigoEmpleadoFk as CODEMP')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('pd.codigoContratoFk')
+            ->addSelect('pd.fechaDesdeContrato as desde')
+            ->addSelect('pd.fechaHastaContrato as hasta')
+            ->addSelect('pd.vrSalario')
+            ->addSelect('pd.vrNeto')
+            ->addSelect('pd.horasDiurnas as HD')
+            ->addSelect('pd.horasNocturnas as HN')
+            ->addSelect('pd.horasFestivasDiurnas as HFD')
+            ->addSelect('pd.horasFestivasNocturnas as HFN')
+            ->addSelect('pd.horasExtrasOrdinariasDiurnas as HEOD')
+            ->addSelect('pd.horasExtrasOrdinariasNocturnas as HEON')
+            ->addSelect('pd.horasExtrasFestivasDiurnas as HEFD')
+            ->addSelect('pd.horasExtrasFestivasNocturnas as HEFN')
+            ->addSelect('pd.horasRecargoNocturno as RN')
+            ->addSelect('pd.horasRecargoFestivoDiurno as RFD')
+            ->addSelect('pd.horasRecargoFestivoNocturno as RFN')
+            ->leftJoin('pd.empleadoRel','e')
+            ->where("pd.codigoProgramacionFk = {$id}");
+
+        return $queryBuilder;
     }
 }

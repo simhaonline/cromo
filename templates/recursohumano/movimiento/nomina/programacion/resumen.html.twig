@@ -1,20 +1,21 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
+    {{ form_start(form) }}
     <br>
     <div class="panel panel-default">
         <div class="panel-body">
-            <table width="100%" class="table table-condensed table-bordered" style="margin-bottom: 0 !important;">
+            <table width="100%" class="table table-condensed table-bordered tabla-informacion" style="margin-bottom: 0 !important;">
                 <tr>
                     <td class="titulo">CODIGO:</td>
-                    <td class="td-in-well">{{ arPago.codigoPagoPk }}</td>
+                    <td class="td-in-well">{{ arPago.codigoPagoPk | default('')}}</td>
                     <td class="titulo"></td>
                     <td class="td-in-well numero" style="text-transform: uppercase;"></td>
                 </tr>
                 <tr>
                     <td class="titulo">EMPLEADO:</td>
-                    <td class="td-in-well">{{ arPago.empleadoRel.nombreCorto }}</td>
+                    <td class="td-in-well">{{ arProgramacionDetalle.empleadoRel.nombreCorto }}</td>
                     <td class="titulo">SALARIO:</td>
-                    <td class="td-in-well numero" style="text-transform: uppercase;">{{ arPago.vrSalarioContrato | number_format(0, '.', ',') }}</td>
+                    <td class="td-in-well numero" style="text-transform: uppercase;">{{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
                 </tr>
                 <tr>
                     <td class="titulo">FECHA INGRESO/RETIRO:</td>
@@ -26,23 +27,24 @@
                             / {{ arProgramacionDetalle.fechaHastaContrato | date('Y-m-d') }}
                         {% endif %}
                     </td>
-                    <td class="titulo">NETO:</td>
-                    <td class="td-in-well numero" style="text-transform: uppercase;">{{ arPago.vrNeto | number_format(0, '.', ',') }}</td>
+                    <td class="titulo">CARGO:</td>
+                    <td class="td-in-well" style="text-transform: uppercase;">{{ arProgramacionDetalle.contratoRel.cargoRel.nombre | default('') }}</td>
                 </tr>
                 <tr>
                     <td class="titulo">PERIODO:</td>
                     <td class="td-in-well">{{ arProgramacionDetalle.fechaDesde | date('Y-m-d') ~ ' / ' ~ arProgramacionDetalle.fechaHasta | date('Y-m-d') }}</td>
-                    <td class="titulo">CARGO:</td>
-                    <td class="td-in-well" style="text-transform: uppercase;">{{ arPago.contratoRel.cargoRel.nombre | default('') }}</td>
+                    <td class="titulo">NETO:</td>
+                    <td class="td-in-well numero" style="text-transform: uppercase;">{{ arProgramacionDetalle.vrNeto | number_format(0, '.', ',') }}</td>
+
                 </tr>
             </table>
         </div>
     </div>
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
         <thead>
         <tr>
             <th>ID</th>
-            <th title="Codigo del concepto">CODIGO</th>
+            <th title="Codigo del concepto">COD</th>
             <th title="Nombre del concepto">CONCEPTO</th>
             <th title="Mensaje opciones del pago">DETALLE</th>
             <th>%</th>
@@ -50,7 +52,8 @@
             <th>D</th>
             <th title="Valor de la hora">VR.HORA</th>
             <th title="Operación">OP</th>
-            <th>PAGO</th>
+            <th>DEVENGADO</th>
+            <th>DEDUCCION</th>
             <th>IBP</th>
             <th>IBC</th>
         </tr>
@@ -70,7 +73,8 @@
                 <td>{{ arPagoDetalle.dias }}</td>
                 <td class="numero">{{ arPagoDetalle.vrHora |number_format(0, '.', ',') }}</td>
                 <td>{{ arPagoDetalle.operacion }}</td>
-                <td class="numero">{{ arPagoDetalle.vrPagoOperado |number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPagoDetalle.vrDevengado |number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPagoDetalle.vrDeduccion |number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arPagoDetalle.vrIngresoBasePrestacion |number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arPagoDetalle.vrIngresoBaseCotizacion |number_format(0, '.', ',') }}</td>
             </tr>
@@ -80,11 +84,15 @@
         {% endfor %}
         <tr>
             <td colspan="9"> </td>
-            <td class="numero">{{ pago |number_format(0, '.', ',') }} </td>
+            <td class="numero">{{ ibp |number_format(0, '.', ',')}} </td>
+            <td class="numero">{{ ibp |number_format(0, '.', ',')}} </td>
             <td class="numero">{{ ibp |number_format(0, '.', ',')}} </td>
             <td class="numero">{{ ibc |number_format(0, '.', ',')}} </td>
         </tr>
         </tbody>
     </table>
-
+    <div class="btn-group" style="float: right">
+        {{ form_widget(form.btnActualizar) }}
+    </div>
+    {{ form_end(form) }}
 {% endblock %}

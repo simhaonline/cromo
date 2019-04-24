@@ -81,9 +81,10 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             ->where("c.codigoGrupoFk = '{$arProgramacion->getCodigoGrupoFk()}'")
             ->andWhere("c.fechaUltimoPago < '{$arProgramacion->getFechaHastaPeriodo()->format('Y-m-d')}'")
             ->andWhere("c.fechaDesde <= '{$arProgramacion->getFechaHastaPeriodo()->format('Y-m-d')}'")
-            ->andWhere("(c.fechaHasta >= '{$arProgramacion->getFechaDesde()->format('Y-m-d')}')")
-            //->andWhere("c.codigoGrupoFk IS NOT NULL")
-            ->orWhere("c.indefinido = 1")->getQuery()->execute();
+            ->andWhere("(c.fechaHasta >= '{$arProgramacion->getFechaDesde()->format('Y-m-d')}' OR c.indefinido=1)")
+            ->getQuery()->execute();
+
+
         /** @var $arContrato RhuContrato */
         foreach ($arContratos as $arContrato) {
             $arProgramacionDetalle = new RhuProgramacionDetalle();

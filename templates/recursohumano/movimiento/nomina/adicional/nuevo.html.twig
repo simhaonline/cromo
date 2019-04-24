@@ -44,12 +44,28 @@
                     {{ form_widget(form.detalle) }}
                 </div>
             </div>
+            <div class="form-group form-group-sm">
+                <label class="control-label col-sm-2"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.permanente) }}
+                    {{ form_widget(form.aplicaDiaLaborado) }}
+                    {{ form_widget(form.aplicaNomina) }}
+                    {{ form_widget(form.aplicaPrima) }}
+                    {{ form_widget(form.aplicaCesantia) }}
+                    {{ form_widget(form.estadoInactivoPeriodo) }}
+                </div>
+                <label class="control-label col-sm-2">Fecha:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fecha) }}
+                    <cite style="font-size: 10px;">* Recuerde: solo aplica si no es permanente</cite>
+                </div>
+            </div>
         </div>
     </div>
     <div></div>
     <div class="modal-footer">
         <div class="btn-group" style="float: left;">
-            <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_credito_lista') }}">Cancelar</a>
+            <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_adicional_lista') }}">Cancelar</a>
         </div>
         <div class="btn-group" style="float: right;">
             {{ form_widget(form.guardar) }}

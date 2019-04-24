@@ -28,7 +28,7 @@ class RhuCredito
     private $codigoCreditoTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_credito_pago_tipo_fk", type="string", length=10, nullable=false)
+     * @ORM\Column(name="codigo_credito_pago_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCreditoPagoTipoFk;
 

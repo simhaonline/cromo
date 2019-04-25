@@ -152,9 +152,11 @@ class ProgramacionController extends ControllerListenerGeneral
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(RhuProgramacion::class)->cargarContratos($arProgramacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados, $arProgramacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $objFormato = new Programacion();
@@ -168,26 +170,29 @@ class ProgramacionController extends ControllerListenerGeneral
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
                 $em->getRepository(RhuProgramacion::class)->autorizar($arProgramacion, $this->getUser()->getUsername());
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
                 $em->getRepository(RhuProgramacion::class)->aprobar($arProgramacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
                 $em->getRepository(RhuProgramacion::class)->desautorizar($arProgramacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminarTodos')->isClicked()) {
                 if (!$arProgramacion->getEstadoAutorizado()) {
                     $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
                 }
             }
             if ($form->get('btnExcelDetalle')->isClicked()) {
                 General::get()->setExportar($em->createQuery($em->getRepository(RhuProgramacionDetalle::class)->exportar($id))->execute(), "ProgramacionDetalle");
             }
-            return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
         }
         $arProgramacionDetalles = $paginator->paginate($em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk()), $request->query->get('page', 1), 1000);
         return $this->render('recursohumano/movimiento/nomina/programacion/detalle.html.twig', [

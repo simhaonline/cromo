@@ -174,58 +174,61 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
 
         //Salud
-        $arSalud = $arContrato->getSaludRel();
-        $porcentajeSalud = $arSalud->getPorcentajeEmpleado();
-        if ($porcentajeSalud > 0) {
-            $ingresoBaseCotizacionSalud = $arrDatosGenerales['ingresoBaseCotizacion'];
-            $arConcepto = $arSalud->getConceptoRel();
-            if ($arConcepto) {
-                /*
-                 * La base de aportes a seguridad comunidad tanto en salud como en pensión,
-                 * no puede ser inferior al salario mínimo ni superior a los 25 salarios mínimos mensuales.
-                 * Esta limitación está dada por el artículo 5 de la ley 797 de 2003, reglamentado por el decreto 510 de 2003 en su artículo 3:
-                 */
-                if ($ingresoBaseCotizacionSalud > ($salarioMinimo * 25)) {
-                    $ingresoBaseCotizacionSalud = $salarioMinimo * 25;
+        if($arProgramacionDetalle->getDescuentoSalud()) {
+            $arSalud = $arContrato->getSaludRel();
+            $porcentajeSalud = $arSalud->getPorcentajeEmpleado();
+            if ($porcentajeSalud > 0) {
+                $ingresoBaseCotizacionSalud = $arrDatosGenerales['ingresoBaseCotizacion'];
+                $arConcepto = $arSalud->getConceptoRel();
+                if ($arConcepto) {
+                    /*
+                     * La base de aportes a seguridad comunidad tanto en salud como en pensión,
+                     * no puede ser inferior al salario mínimo ni superior a los 25 salarios mínimos mensuales.
+                     * Esta limitación está dada por el artículo 5 de la ley 797 de 2003, reglamentado por el decreto 510 de 2003 en su artículo 3:
+                     */
+                    if ($ingresoBaseCotizacionSalud > ($salarioMinimo * 25)) {
+                        $ingresoBaseCotizacionSalud = $salarioMinimo * 25;
+                    }
+
+                    $pagoDetalle = ($ingresoBaseCotizacionSalud * $porcentajeSalud) / 100;
+                    $pagoDetalle = round($pagoDetalle);
+
+                    $arPagoDetalle = new RhuPagoDetalle();
+                    $arPagoDetalle->setPagoRel($arPago);
+                    $arPagoDetalle->setConceptoRel($arConcepto);
+                    $arPagoDetalle->setPorcentaje($porcentajeSalud);
+                    $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+                    $em->persist($arPagoDetalle);
                 }
-
-                $pagoDetalle = ($ingresoBaseCotizacionSalud * $porcentajeSalud) / 100;
-                $pagoDetalle = round($pagoDetalle);
-
-                $arPagoDetalle = new RhuPagoDetalle();
-                $arPagoDetalle->setPagoRel($arPago);
-                $arPagoDetalle->setConceptoRel($arConcepto);
-                $arPagoDetalle->setPorcentaje($porcentajeSalud);
-                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
-                $em->persist($arPagoDetalle);
             }
         }
 
         //Pension
-        $arPension = $arContrato->getPensionRel();
-        $porcentajePension = $arPension->getPorcentajeEmpleado();
-        if ($porcentajePension > 0) {
-            $ingresoBaseCotizacionPension = $arrDatosGenerales['ingresoBaseCotizacion'];
-            $arConcepto = $arPension->getConceptoRel();
-            if ($arConcepto) {
-                /*
-                 * La base de aportes a seguridad comunidad tanto en salud como en pensión,
-                 * no puede ser inferior al salario mínimo ni superior a los 25 salarios mínimos mensuales.
-                 * Esta limitación está dada por el artículo 5 de la ley 797 de 2003, reglamentado por el decreto 510 de 2003 en su artículo 3:
-                 */
-                if ($ingresoBaseCotizacionPension > ($salarioMinimo * 25)) {
-                    $ingresoBaseCotizacionPension = $salarioMinimo * 25;
-                }
+        if($arProgramacionDetalle->getDescuentoPension()) {
+            $arPension = $arContrato->getPensionRel();
+            $porcentajePension = $arPension->getPorcentajeEmpleado();
+            if ($porcentajePension > 0) {
+                $ingresoBaseCotizacionPension = $arrDatosGenerales['ingresoBaseCotizacion'];
+                $arConcepto = $arPension->getConceptoRel();
+                if ($arConcepto) {
+                    /*
+                     * La base de aportes a seguridad comunidad tanto en salud como en pensión,
+                     * no puede ser inferior al salario mínimo ni superior a los 25 salarios mínimos mensuales.
+                     * Esta limitación está dada por el artículo 5 de la ley 797 de 2003, reglamentado por el decreto 510 de 2003 en su artículo 3:
+                     */
+                    if ($ingresoBaseCotizacionPension > ($salarioMinimo * 25)) {
+                        $ingresoBaseCotizacionPension = $salarioMinimo * 25;
+                    }
 
-                $pagoDetalle = ($ingresoBaseCotizacionPension * $porcentajePension) / 100;
-                $pagoDetalle = round($pagoDetalle);
+                    $pagoDetalle = ($ingresoBaseCotizacionPension * $porcentajePension) / 100;
+                    $pagoDetalle = round($pagoDetalle);
 
-                $arPagoDetalle = new RhuPagoDetalle();
-                $arPagoDetalle->setPagoRel($arPago);
-                $arPagoDetalle->setConceptoRel($arConcepto);
-                $arPagoDetalle->setPorcentaje($porcentajePension);
-                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
-                $em->persist($arPagoDetalle);
+                    $arPagoDetalle = new RhuPagoDetalle();
+                    $arPagoDetalle->setPagoRel($arPago);
+                    $arPagoDetalle->setConceptoRel($arConcepto);
+                    $arPagoDetalle->setPorcentaje($porcentajePension);
+                    $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+                    $em->persist($arPagoDetalle);
 //                //Fondo de solidaridad pensional
 //                $vrTopeFondoSolidaridad = $douVrSalarioMinimo * 4;
 //                $fechaInicioMes = $arProgramacionPagoDetalle->getFechaDesdePago()->format("Y-m") . "-1";//fecha de inicio del mes
@@ -259,20 +262,24 @@ class RhuPagoRepository extends ServiceEntityRepository
 //                    }
 //                }
 
+                }
             }
         }
 
         //Auxilio de transporte
-        if ($arContrato->getAuxilioTransporte() == 1) {
-            $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAuxilioTransporteFk']);
-            $pagoDetalle = round($diaAuxilioTransporte * $arProgramacionDetalle->getDiasTransporte());
-            $arPagoDetalle = new RhuPagoDetalle();
-            $arPagoDetalle->setPagoRel($arPago);
-            $arPagoDetalle->setConceptoRel($arConcepto);
-            $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
-            $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
-            $em->persist($arPagoDetalle);
+        if($arProgramacionDetalle->getPagoAuxilioTransporte()) {
+            if ($arContrato->getAuxilioTransporte() == 1) {
+                $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAuxilioTransporteFk']);
+                $pagoDetalle = round($diaAuxilioTransporte * $arProgramacionDetalle->getDiasTransporte());
+                $arPagoDetalle = new RhuPagoDetalle();
+                $arPagoDetalle->setPagoRel($arPago);
+                $arPagoDetalle->setConceptoRel($arConcepto);
+                $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
+                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+                $em->persist($arPagoDetalle);
+            }
         }
+
 
         $arPago->setVrNeto($arrDatosGenerales['neto']);
         $arPago->setVrDeduccion($arrDatosGenerales['deduccion']);

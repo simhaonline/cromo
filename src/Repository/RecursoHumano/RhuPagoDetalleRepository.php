@@ -38,7 +38,8 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
                 ->addSelect('pd.vrPagoOperado')
                 ->addSelect('pd.vrIngresoBasePrestacion')
                 ->addSelect('pd.vrIngresoBaseCotizacion')
-                ->where("pd.codigoPagoFk = {$codigoPago}");
+                ->where("pd.codigoPagoFk = {$codigoPago}")
+                ->orderBy("pd.codigoConceptoFk", "ASC");
         } else {
             $query = null;
         }

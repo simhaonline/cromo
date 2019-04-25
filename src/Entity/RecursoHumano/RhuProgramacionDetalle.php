@@ -133,6 +133,21 @@ class RhuProgramacionDetalle
     private $horasRecargoFestivoNocturno = 0;
 
     /**
+     * @ORM\Column(name="descuento_salud", options={"default": true}, type="boolean", nullable=true)
+     */
+    private $descuentoSalud = true;
+
+    /**
+     * @ORM\Column(name="descuento_pension", options={"default": true}, type="boolean", nullable=true)
+     */
+    private $descuentoPension = true;
+
+    /**
+     * @ORM\Column(name="pago_auxilio_transporte", options={"default": true}, type="boolean", nullable=true)
+     */
+    private $pagoAuxilioTransporte = true;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuProgramacion", inversedBy="programacionesDetallesProgramacionRel")
      * @ORM\JoinColumn(name="codigo_programacion_fk", referencedColumnName="codigo_programacion_pk")
      */
@@ -318,6 +333,38 @@ class RhuProgramacionDetalle
     /**
      * @return mixed
      */
+    public function getFechaDesdeContrato()
+    {
+        return $this->fechaDesdeContrato;
+    }
+
+    /**
+     * @param mixed $fechaDesdeContrato
+     */
+    public function setFechaDesdeContrato($fechaDesdeContrato): void
+    {
+        $this->fechaDesdeContrato = $fechaDesdeContrato;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHastaContrato()
+    {
+        return $this->fechaHastaContrato;
+    }
+
+    /**
+     * @param mixed $fechaHastaContrato
+     */
+    public function setFechaHastaContrato($fechaHastaContrato): void
+    {
+        $this->fechaHastaContrato = $fechaHastaContrato;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getHorasDiurnas()
     {
         return $this->horasDiurnas;
@@ -494,6 +541,54 @@ class RhuProgramacionDetalle
     /**
      * @return mixed
      */
+    public function getDescuentoSalud()
+    {
+        return $this->descuentoSalud;
+    }
+
+    /**
+     * @param mixed $descuentoSalud
+     */
+    public function setDescuentoSalud($descuentoSalud): void
+    {
+        $this->descuentoSalud = $descuentoSalud;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescuentoPension()
+    {
+        return $this->descuentoPension;
+    }
+
+    /**
+     * @param mixed $descuentoPension
+     */
+    public function setDescuentoPension($descuentoPension): void
+    {
+        $this->descuentoPension = $descuentoPension;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagoAuxilioTransporte()
+    {
+        return $this->pagoAuxilioTransporte;
+    }
+
+    /**
+     * @param mixed $pagoAuxilioTransporte
+     */
+    public function setPagoAuxilioTransporte($pagoAuxilioTransporte): void
+    {
+        $this->pagoAuxilioTransporte = $pagoAuxilioTransporte;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getProgramacionRel()
     {
         return $this->programacionRel;
@@ -555,37 +650,8 @@ class RhuProgramacionDetalle
         $this->pagosProgramacionDetalleRel = $pagosProgramacionDetalleRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFechaDesdeContrato()
-    {
-        return $this->fechaDesdeContrato;
-    }
 
-    /**
-     * @param mixed $fechaDesdeContrato
-     */
-    public function setFechaDesdeContrato( $fechaDesdeContrato ): void
-    {
-        $this->fechaDesdeContrato = $fechaDesdeContrato;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getFechaHastaContrato()
-    {
-        return $this->fechaHastaContrato;
-    }
-
-    /**
-     * @param mixed $fechaHastaContrato
-     */
-    public function setFechaHastaContrato( $fechaHastaContrato ): void
-    {
-        $this->fechaHastaContrato = $fechaHastaContrato;
-    }
 
 
 }

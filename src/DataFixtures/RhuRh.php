@@ -66,7 +66,13 @@ class RhuRh extends Fixture
             $arRhu->setNombre('AB+');
             $manager->persist($arRhu);
         }
-
+        $arRhu = $manager->getRepository(\App\Entity\RecursoHumano\RhuRh::class)->find(9);
+        if(!$arRhu){
+            $arRhu = new \App\Entity\RecursoHumano\RhuRh();
+            $arRhu->setCodigoRhPk(9);
+            $arRhu->setNombre('SIN DEFINIR');
+            $manager->persist($arRhu);
+        }
         $manager->flush();
     }
 }

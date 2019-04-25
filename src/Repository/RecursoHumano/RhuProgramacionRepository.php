@@ -92,6 +92,16 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalle->setEmpleadoRel($arContrato->getEmpleadoRel());
             $arProgramacionDetalle->setContratoRel($arContrato);
             $arProgramacionDetalle->setVrSalario($arContrato->getVrSalario());
+
+            if ($arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() == 'APR' || $arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() == 'PRA') {
+                $arProgramacionDetalle->setDescuentoPension(0);
+                $arProgramacionDetalle->setDescuentoSalud(0);
+                $arProgramacionDetalle->setPagoAuxilioTransporte(0);
+            }
+            if ($arContrato->getCodigoPensionFk() == 'PEN') {
+                $arProgramacionDetalle->setDescuentoPension(0);
+            }
+
             $fechaDesde = $this->fechaDesdeContrato($arProgramacion->getFechaDesde(), $arContrato->getFechaDesde());
             $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(), $arContrato->getFechaHasta(), $arContrato->getIndefinido());
             $dias = $fechaDesde->diff($fechaHasta)->days + 1;

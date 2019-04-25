@@ -114,6 +114,7 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->leftJoin('n.novedadTipoRel', 'nt')
             ->leftJoin('n.guiaRel', 'g')
             ->leftJoin('g.clienteRel', 't')
+            ->where('n.estadoSolucion = 0')
         ->orderBy('n.codigoNovedadPk' , 'DESC');
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("g.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");

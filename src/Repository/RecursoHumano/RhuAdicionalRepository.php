@@ -69,7 +69,7 @@ class RhuAdicionalRepository extends ServiceEntityRepository
             ->addSelect('a.detalle')
             ->where('a.estadoInactivo = 0 AND a.estadoInactivoPeriodo = 0')
             ->andWhere("a.codigoEmpleadoFk = {$codigoEmpleado} ")
-        ->andWhere('(a.permanente = 1)');
+        ->andWhere("(a.permanente = 1 or (a.fecha >= '" . $fechaDesde . "' AND a.fecha <= '" . $fechaHasta . "'))");
 
         if($pagoTipo == 'NOM') {
             $queryBuilder->andWhere('a.aplicaNomina = 1');

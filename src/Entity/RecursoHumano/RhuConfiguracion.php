@@ -39,6 +39,11 @@ class RhuConfiguracion
     private $vrAuxilioTransporte;
 
     /**
+     * @ORM\Column(name="codigo_concepto_fondo_pension_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoFondoPensionFk;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -101,4 +106,22 @@ class RhuConfiguracion
     {
         $this->vrAuxilioTransporte = $vrAuxilioTransporte;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoFondoPensionFk()
+    {
+        return $this->codigoConceptoFondoPensionFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoFondoPensionFk
+     */
+    public function setCodigoConceptoFondoPensionFk($codigoConceptoFondoPensionFk): void
+    {
+        $this->codigoConceptoFondoPensionFk = $codigoConceptoFondoPensionFk;
+    }
+
+
 }

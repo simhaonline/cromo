@@ -2,7 +2,9 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoHora;
+use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuConsecutivo;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
@@ -75,6 +77,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
     public function cargarContratos($arProgramacion)
     {
         $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->cargarContratos();
         $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);
         $arContratos = $em->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select("c")
@@ -113,6 +116,9 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalle->setDias($dias);
             $arProgramacionDetalle->setDiasTransporte($dias);
             $arProgramacionDetalle->setHorasDiurnas($horas);
+            $arrIbc = $em->getRepository(RhuPagoDetalle::class)->ibcMes($fechaDesde->format('Y'), $fechaDesde->format('m'), $arContrato->getCodigoContratoPk(), $arConfiguracion['codigoConceptoFondoPensionFk']);
+            $arProgramacionDetalle->setVrIbcAcumulado($arrIbc['ibc']);
+            $arProgramacionDetalle->setVrDeduccionFondoPensionAnterior($arrIbc['deduccionAnterior']);
             $em->persist($arProgramacionDetalle);
         }
         $cantidad = $em->getRepository(RhuProgramacion::class)->getCantidadRegistros($arProgramacion->getCodigoProgramacionPk());
@@ -130,25 +136,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
      */
     public function autorizar($arProgramacion, $usuario)
     {
-        $em = $this->getEntityManager();
-        $douNetoTotal = 0;
-        $numeroPagos = 0;
         if (!$arProgramacion->getEstadoAutorizado()) {
-            $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
-            if ($arProgramacionDetalles) {
-                $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
-                foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
-                    $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $usuario);
-                    $arProgramacionDetalle->setVrNeto($vrNeto);
-                    $em->persist($arProgramacionDetalle);
-                    $douNetoTotal += $vrNeto;
-                    $numeroPagos++;
-                }
-                $arProgramacion->setEstadoAutorizado(1);
-                $arProgramacion->setVrNeto($douNetoTotal);
-                $em->persist($arProgramacion);
-                $em->flush();
-            }
+            $this->generar($arProgramacion, null, $usuario);
         }
     }
 
@@ -284,5 +273,38 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             ->where("pd.codigoProgramacionFk = {$codigoProgramacion}")
             ->setParameter('1',0)
             ->getQuery()->execute();
+    }
+
+    public function generar($arProgramacion, $codigoProgramacionDetalle, $usuario) {
+        $em = $this->getEntityManager();
+        $douNetoTotal = 0;
+        $numeroPagos = 0;
+        $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
+        $arConceptoFondoPension = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoFondoPensionFk']);
+        if($codigoProgramacionDetalle) {
+            $arProgramacionDetalleActualizar = $em->getRepository(RhuProgramacionDetalle::class)->find($codigoProgramacionDetalle);
+            $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalleActualizar, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoPension, $usuario);
+            $arProgramacionDetalleActualizar->setVrNeto($vrNeto);
+            $em->persist($arProgramacionDetalleActualizar);
+            $arProgramacion->setVrNeto($arProgramacion->getVrNeto() + $vrNeto);
+            $em->persist($arProgramacion);
+            $em->flush();
+        } else {
+            $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
+            if ($arProgramacionDetalles) {
+                foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
+                    $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoPension, $usuario);
+                    $arProgramacionDetalle->setVrNeto($vrNeto);
+                    $em->persist($arProgramacionDetalle);
+                    $douNetoTotal += $vrNeto;
+                    $numeroPagos++;
+                }
+                $arProgramacion->setEstadoAutorizado(1);
+                $arProgramacion->setVrNeto($douNetoTotal);
+                $em->persist($arProgramacion);
+                $em->flush();
+            }
+        }
     }
 }

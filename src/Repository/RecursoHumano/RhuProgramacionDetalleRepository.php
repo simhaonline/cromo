@@ -125,14 +125,7 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
         $arProgramacionDetalle->setVrNeto(0);
         $em->persist($arProgramacionDetalle);
         $em->flush();
-
-        $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
-        $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $usuario);
-        $arProgramacionDetalle->setVrNeto($vrNeto);
-        $em->persist($arProgramacionDetalle);
-        $arProgramacion->setVrNeto($arProgramacion->getVrNeto() + $vrNeto);
-        $em->persist($arProgramacion);
-        $em->flush();
+        $em->getRepository(RhuProgramacion::class)->generar($arProgramacion, $arProgramacionDetalle->getCodigoProgramacionDetallePk(), $usuario);
     }
 
     public function exportar($id)

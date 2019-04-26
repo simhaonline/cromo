@@ -52,10 +52,9 @@ class RhuPagoRepository extends ServiceEntityRepository
      * @return int|mixed
      * @throws \Doctrine\ORM\ORMException
      */
-    public function generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $usuario)
+    public function generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoPension, $usuario)
     {
         $em = $this->getEntityManager();
-        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
 
         $arPago = new RhuPago();
         $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
@@ -84,7 +83,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $auxilioTransporte = $arConfiguracion['vrAuxilioTransporte'];
         $diaAuxilioTransporte = $auxilioTransporte / 30;
         $salarioMinimo = $arConfiguracion['vrSalarioMinimo'];
-
+        $ibcVacaciones = 0;
 
         //Adicionales
         $arAdicionales = $em->getRepository(RhuAdicional::class)->programacionPago($arProgramacionDetalle->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getCodigoPagoTipoFk(), $arProgramacion->getFechaDesde()->format('Y/m/d'), $arProgramacion->getFechaHasta()->format('Y/m/d'));
@@ -229,39 +228,27 @@ class RhuPagoRepository extends ServiceEntityRepository
                     $arPagoDetalle->setPorcentaje($porcentajePension);
                     $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
                     $em->persist($arPagoDetalle);
-//                //Fondo de solidaridad pensional
-//                $vrTopeFondoSolidaridad = $douVrSalarioMinimo * 4;
-//                $fechaInicioMes = $arProgramacionPagoDetalle->getFechaDesdePago()->format("Y-m") . "-1";//fecha de inicio del mes
-//                $ultimoDia = cal_days_in_month(CAL_GREGORIAN, $arProgramacionPagoDetalle->getFechaDesdePago()->format('m'), $arProgramacionPagoDetalle->getFechaDesdePago()->format('Y'));//Ultimo dia del mes
-//                $fechaFinMes = $arProgramacionPagoDetalle->getFechaDesdePago()->format("Y-m") . "-{$ultimoDia}";//Fecha fin del mes
-//                $arrIngresoBaseCotizacionMes = $em->getRepository("BrasaRecursoHumanoBundle:RhuPagoDetalle")->ibc($fechaInicioMes, $fechaFinMes, $arContrato->getCodigoContratoPk());//Se consulta el ingreso base cotizacion que ha devengado el empleado en el mes
-//                $douIngresoBaseCotizacionTotal = $douIngresoBaseCotizacion + $arrIngresoBaseCotizacionMes["ibc"] + $ibcVacaciones;//Se suman los IBC que ha devengado el empleado en el mes, mas el IBC de la nomina actual.
-//                //Se validad si el ingreso base cotizacion es mayor que los 4 salarios minimos legales vigentes, se debe calcular valor a aportar al fondo
-//                if ($douIngresoBaseCotizacionTotal > $vrTopeFondoSolidaridad) {
-//                    $douPorcentajeFondo = $em->getRepository("BrasaRecursoHumanoBundle:RhuSsoPeriodoDetalle")->porcentajeFondo($douVrSalarioMinimo, $douIngresoBaseCotizacionTotal);
-//                    if ($douPorcentajeFondo > 0) {
-//                        $arPagoCoceptoFondo = $arContrato->getTipoPensionRel()->getPagoConceptoFondoRel();
-//                        $douPagoDetalle = ($douIngresoBaseCotizacionTotal * $douPorcentajeFondo) / 100;
-//                        $vrDeduccionFondoAnterior = $em->getRepository("BrasaRecursoHumanoBundle:RhuPagoDetalle")->valorDeduccionFondo($fechaInicioMes, $fechaFinMes, $arContrato->getCodigoContratoPk(), $arPagoCoceptoFondo->getCodigoPagoConceptoPk());//Se consultan las deducciones al fondo de solidaridad que el empleado ha aportado en el mes.
-//                        $douPagoDetalle -= $vrDeduccionFondoAnterior;//Se resta la deduccion que ha tenido el empleado de la 15na anterior.
-//                        $douPagoDetalle = round($douPagoDetalle);
-//                        $pension += $douPagoDetalle;
-//                        $deducciones += $douPagoDetalle;
-//                        //Se guarda el concepto deduccion de fondo solidaridad pensional
-//                        $arPagoDetalle = new \Brasa\RecursoHumanoBundle\Entity\RhuPagoDetalle();
-//                        $arPagoDetalle->setPagoRel($arPago);
-//                        $arPagoDetalle->setPagoConceptoRel($arPagoCoceptoFondo);
-//                        $arPagoDetalle->setPorcentajeAplicado($douPorcentajeFondo);
-//                        $arPagoDetalle->setVrDia($douVrDia);
-//                        $arPagoDetalle->setVrPago($douPagoDetalle);
-//                        $arPagoDetalle->setOperacion($intOperacion);
-//                        $arPagoDetalle->setVrPagoOperado($douPagoDetalle * $intOperacion);
-//                        $arPagoDetalle->setProgramacionPagoDetalleRel($arProgramacionPagoDetalle);
-//                        //$arPagoDetalle->setPension(1);
-//                        $em->persist($arPagoDetalle);
-//                    }
-//                }
 
+                    //Fondo de solidaridad pensional
+                    $tope = $salarioMinimo * 4;
+                    $ingresoBaseCotizacionTotal = $arrDatosGenerales['ingresoBaseCotizacion'] + $arProgramacionDetalle->getVrIbcAcumulado() + $ibcVacaciones;//Se suman los IBC que ha devengado el empleado en el mes, mas el IBC de la nomina actual.
+                    //Se validad si el ingreso base cotizacion es mayor que los 4 salarios minimos legales vigentes, se debe calcular valor a aportar al fondo
+                    if ($ingresoBaseCotizacionTotal > $tope) {
+                        $porcentajeFondo = $em->getRepository(RhuConfiguracion::class)->porcentajeFondo($salarioMinimo, $ingresoBaseCotizacionTotal);
+                        if ($porcentajeFondo > 0) {
+                            $pagoDetalle = ($ingresoBaseCotizacionTotal * $porcentajeFondo) / 100;
+                            $pagoDetalle -= $arProgramacionDetalle->getVrDeduccionFondoPensionAnterior();//Se resta la deduccion que ha tenido el empleado de la 15na anterior.
+                            $pagoDetalle = round($pagoDetalle);
+                            //Se guarda el concepto deduccion de fondo solidaridad pensional
+                            $arPagoDetalle = new RhuPagoDetalle();
+                            $arPagoDetalle->setPagoRel($arPago);
+                            $arPagoDetalle->setConceptoRel($arConceptoFondoPension);
+                            $arPagoDetalle->setPorcentaje($porcentajeFondo);
+                            $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConceptoFondoPension, $pagoDetalle);
+                            $em->persist($arPagoDetalle);
+
+                        }
+                    }
                 }
             }
         }
@@ -279,7 +266,6 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $em->persist($arPagoDetalle);
             }
         }
-
 
         $arPago->setVrNeto($arrDatosGenerales['neto']);
         $arPago->setVrDeduccion($arrDatosGenerales['deduccion']);

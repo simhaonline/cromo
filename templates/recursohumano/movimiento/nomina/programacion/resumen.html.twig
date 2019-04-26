@@ -61,7 +61,8 @@
         <tbody>
         {% set ibc = 0 %}
         {% set ibp = 0 %}
-        {% set pago = 0 %}
+        {% set devengado = 0 %}
+        {% set deduccion = 0 %}
         {% for arPagoDetalle in arPagoDetalles %}
             <tr>
                 <td>{{ arPagoDetalle.codigoPagoDetallePk }}</td>
@@ -80,12 +81,13 @@
             </tr>
             {% set ibc = ibc + arPagoDetalle.vrIngresoBaseCotizacion %}
             {% set ibp = ibp + arPagoDetalle.vrIngresoBasePrestacion %}
-            {% set pago = pago + arPagoDetalle.vrPagoOperado %}
+            {% set devengado = devengado + arPagoDetalle.vrDevengado %}
+            {% set deduccion = deduccion + arPagoDetalle.vrDeduccion %}
         {% endfor %}
         <tr>
             <td colspan="9"> </td>
-            <td class="numero">{{ ibp |number_format(0, '.', ',')}} </td>
-            <td class="numero">{{ ibp |number_format(0, '.', ',')}} </td>
+            <td class="numero">{{ devengado |number_format(0, '.', ',')}} </td>
+            <td class="numero">{{ deduccion |number_format(0, '.', ',')}} </td>
             <td class="numero">{{ ibp |number_format(0, '.', ',')}} </td>
             <td class="numero">{{ ibc |number_format(0, '.', ',')}} </td>
         </tr>

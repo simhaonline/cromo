@@ -148,6 +148,16 @@ class RhuProgramacionDetalle
     private $pagoAuxilioTransporte = true;
 
     /**
+     * @ORM\Column(name="vr_ibc_acumulado", type="float", options={"default": 0})
+     */
+    private $vrIbcAcumulado = 0;
+
+    /**
+     * @ORM\Column(name="vr_deduccion_fondo_pension_anterior", type="float", options={"default": 0})
+     */
+    private $vrDeduccionFondoPensionAnterior = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuProgramacion", inversedBy="programacionesDetallesProgramacionRel")
      * @ORM\JoinColumn(name="codigo_programacion_fk", referencedColumnName="codigo_programacion_pk")
      */
@@ -648,6 +658,38 @@ class RhuProgramacionDetalle
     public function setPagosProgramacionDetalleRel($pagosProgramacionDetalleRel): void
     {
         $this->pagosProgramacionDetalleRel = $pagosProgramacionDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIbcAcumulado()
+    {
+        return $this->vrIbcAcumulado;
+    }
+
+    /**
+     * @param mixed $vrIbcAcumulado
+     */
+    public function setVrIbcAcumulado($vrIbcAcumulado): void
+    {
+        $this->vrIbcAcumulado = $vrIbcAcumulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDeduccionFondoPensionAnterior()
+    {
+        return $this->vrDeduccionFondoPensionAnterior;
+    }
+
+    /**
+     * @param mixed $vrDeduccionFondoPensionAnterior
+     */
+    public function setVrDeduccionFondoPensionAnterior($vrDeduccionFondoPensionAnterior): void
+    {
+        $this->vrDeduccionFondoPensionAnterior = $vrDeduccionFondoPensionAnterior;
     }
 
 

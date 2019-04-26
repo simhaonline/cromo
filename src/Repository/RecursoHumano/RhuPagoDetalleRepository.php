@@ -62,4 +62,43 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->andWhere('p.codigoProgramacionFk = ' . $codigoProgramacion);
         return $query->getQuery()->execute();
     }
+
+    public function ibcMes($anio, $mes, $codigoContrato, $codigoConcepto)
+    {
+        $em = $this->getEntityManager();
+        $ultimoDiaMes = date("d", (mktime(0, 0, 0, $mes + 1, 1, $anio) - 1));
+        $fechaDesde = $anio . "/" . $mes . "/" . "01";
+        $fechaHasta = $anio . "/" . $mes . "/" . $ultimoDiaMes;
+        $arrIbc = array('ibc' => 0, 'horas' => 0, 'deduccionAnterior' => 0);
+        $query = $em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('SUM(pd.vrIngresoBaseCotizacion) as ibc')
+            ->addSelect('SUM(pd.horas) as horas')
+            ->leftJoin('pd.pagoRel', 'p')
+            ->where("p.estadoEgreso = 1")
+            ->andWhere('p.codigoContratoFk = ' . $codigoContrato)
+            ->andWhere("p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaHasta <= '" . $fechaHasta . "'");
+        $arrayResultado = $query->getQuery()->getSingleResult();
+        if ($arrayResultado) {
+            if($arrayResultado['ibc']) {
+                $arrIbc['ibc'] = $arrayResultado['ibc'];
+            }
+            if($arrayResultado['horas']) {
+                $arrIbc['horas'] = $arrayResultado['horas'];
+            }
+        }
+        $query = $em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('SUM(pd.vrPago) as deduccionFondo')
+            ->leftJoin('pd.pagoRel', 'p')
+            ->where("p.estadoEgreso = 1")
+            ->andWhere('p.codigoContratoFk = ' . $codigoContrato)
+            ->andWhere("p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaHasta <= '" . $fechaHasta . "'")
+        ->andWhere("pd.codigoConceptoFk = " . $codigoConcepto);
+        $arrayResultado = $query->getQuery()->getSingleResult();
+        if ($arrayResultado) {
+            if($arrayResultado['deduccionFondo']) {
+                $arrIbc['deduccionAnterior'] = $arrayResultado['deduccionFondo'];
+            }
+        }
+        return $arrIbc;
+    }
 }

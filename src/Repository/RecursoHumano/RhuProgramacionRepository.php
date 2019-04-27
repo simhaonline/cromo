@@ -13,6 +13,7 @@ use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
+use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Seguridad\Usuario;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -108,17 +109,22 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $fechaDesde = $this->fechaDesdeContrato($arProgramacion->getFechaDesde(), $arContrato->getFechaDesde());
             $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(), $arContrato->getFechaHasta(), $arContrato->getIndefinido());
             $dias = $fechaDesde->diff($fechaHasta)->days + 1;
-            $horas = $dias * $arContrato->getFactorHorasDia();
             $arProgramacionDetalle->setFechaDesde($arProgramacion->getFechaDesde());
             $arProgramacionDetalle->setFechaHasta($arProgramacion->getFechaHasta());
             $arProgramacionDetalle->setFechaDesdeContrato($fechaDesde);
             $arProgramacionDetalle->setFechaHastaContrato($fechaHasta);
-            $arProgramacionDetalle->setDias($dias);
-            $arProgramacionDetalle->setDiasTransporte($dias);
-            $arProgramacionDetalle->setHorasDiurnas($horas);
             $arrIbc = $em->getRepository(RhuPagoDetalle::class)->ibcMes($fechaDesde->format('Y'), $fechaDesde->format('m'), $arContrato->getCodigoContratoPk(), $arConfiguracion['codigoConceptoFondoPensionFk']);
             $arProgramacionDetalle->setVrIbcAcumulado($arrIbc['ibc']);
             $arProgramacionDetalle->setVrDeduccionFondoPensionAnterior($arrIbc['deduccionAnterior']);
+            $arrVacaciones = $em->getRepository(RhuVacacion::class)->diasProgramacion($arContrato->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getFechaDesde()->format('Y-m-d'), $arProgramacion->getFechaHasta()->format('Y-m-d'));
+            $arProgramacionDetalle->setDiasVacaciones($arrVacaciones['dias']);
+            $dias -= $arrVacaciones['dias'];
+            $horas = $dias * $arContrato->getFactorHorasDia();
+            $arProgramacionDetalle->setDias($dias);
+            $arProgramacionDetalle->setDiasTransporte($dias);
+            $arProgramacionDetalle->setHorasDiurnas($horas);
+
+
             $em->persist($arProgramacionDetalle);
         }
         $cantidad = $em->getRepository(RhuProgramacion::class)->getCantidadRegistros($arProgramacion->getCodigoProgramacionPk());

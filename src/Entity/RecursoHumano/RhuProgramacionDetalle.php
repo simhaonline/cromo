@@ -48,6 +48,11 @@ class RhuProgramacionDetalle
     private $diasTransporte = 0;
 
     /**
+     * @ORM\Column(name="dias_vacaciones", type="integer", nullable=true)
+     */
+    private $diasVacaciones = 0;
+
+    /**
      * @ORM\Column(name="vr_salario", type="float")
      */
     private $vrSalario = 0;
@@ -690,6 +695,22 @@ class RhuProgramacionDetalle
     public function setVrDeduccionFondoPensionAnterior($vrDeduccionFondoPensionAnterior): void
     {
         $this->vrDeduccionFondoPensionAnterior = $vrDeduccionFondoPensionAnterior;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasVacaciones()
+    {
+        return $this->diasVacaciones;
+    }
+
+    /**
+     * @param mixed $diasVacaciones
+     */
+    public function setDiasVacaciones($diasVacaciones): void
+    {
+        $this->diasVacaciones = $diasVacaciones;
     }
 
 

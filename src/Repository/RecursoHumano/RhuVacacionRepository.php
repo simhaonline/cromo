@@ -33,30 +33,50 @@ class RhuVacacionRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    /**
-     * @return array
-     */
-    public function parametrosLista(){
-        $arEmbargo = new RhuEmbargo();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
-        $arrOpciones = ['json' =>'[{"campo":"codigoEmbargoPk","ayuda":"Codigo del embargo","titulo":"ID"},
-        {"campo":"fecha","ayuda":"Fecha de registro","titulo":"FECHA"}]',
-            'query' => $queryBuilder,'ruta' => $this->getRuta()];
-        return $arrOpciones;
-    }
+    public function diasProgramacion($codigoEmpleado, $codigoContrato, $fechaDesde, $fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQueryBuilder()->from(RhuVacacion::class, 'v')
+            ->select('v.codigoVacacionPk')
+            ->addSelect('v.fechaDesdeDisfrute')
+            ->addSelect('v.fechaHastaDisfrute')
+            ->andWhere("(((v.fechaDesdeDisfrute BETWEEN '$fechaDesde' AND '$fechaHasta') OR (v.fechaHastaDisfrute BETWEEN '$fechaDesde' AND '$fechaHasta')) "
+                . "OR (v.fechaDesdeDisfrute >= '$fechaDesde' AND v.fechaDesdeDisfrute <= '$fechaHasta') "
+                . "OR (v.fechaHastaDisfrute >= '$fechaHasta' AND v.fechaDesdeDisfrute <= '$fechaDesde')) "
+                . "AND v.codigoEmpleadoFk = '" . $codigoEmpleado . "' AND v.diasDisfrutados > 0 AND v.estadoAnulado = 0");
+        if($codigoContrato) {
+            $query->andWhere("v.codigoContratoFk = " . $codigoContrato);
+        }
+        $arVacaciones = $query->getQuery()->getResult();
+        $intDiasDevolver = 0;
+        $vrIbc = 0;
+        foreach ($arVacaciones as $arVacacion) {
+            $intDias = 0;
+            $dateFechaDesde = date_create($fechaDesde);
+            $dateFechaHasta = date_create($fechaHasta);
+            if ($arVacacion['fechaDesdeDisfrute'] < $dateFechaDesde) {
+                $dateFechaDesde = $dateFechaDesde;
+            } else {
+                $dateFechaDesde = $arVacacion['fechaDesdeDisfrute'];
+            }
 
-    /**
-     * @return mixed
-     */
-    public function parametrosExcel(){
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargo::class,'re')
-            ->select('re.codigoEmbargoPk')
-            ->addSelect('re.fecha')
-            ->where('re.codigoEmbargoPk <> 0');
-        return $queryBuilder->getQuery()->execute();
+            if ($arVacacion['fechaHastaDisfrute'] > $dateFechaHasta) {
+                $dateFechaHasta = $dateFechaHasta;
+            } else {
+                $dateFechaHasta = $arVacacion['fechaHastaDisfrute'];
+            }
+            if ($dateFechaDesde != "" && $dateFechaHasta != "") {
+                $intDias = $dateFechaDesde->diff($dateFechaHasta);
+                $intDias = $intDias->format('%a');
+                $intDias = $intDias + 1;
+                $intDiasDevolver += $intDias;
+            }
+            $vrIbc += 0;
+            //$vrIbc += $intDias * $arVacacion->getVrIbcPromedio();
+        }
+        $arrDevolver = array('dias' => $intDiasDevolver, 'ibc' => $vrIbc);
+        return $arrDevolver;
+
     }
 
 

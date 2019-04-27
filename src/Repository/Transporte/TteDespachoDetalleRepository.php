@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteDespachoDetalle;
+use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -216,6 +217,7 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
             ->addSelect('tdd.vrFlete AS fleteSinManejo')
             ->addSelect('d.comentario AS observaciones')
             ->addSelect('cd.codigoDivision AS codigoCiudadDestino')
+            ->addSelect('SUM(d.vrFlete) AS fleteTotal')
             ->leftJoin('tdd.despachoRel', 'd')
             ->leftJoin('tdd.guiaRel', 'g')
             ->leftJoin('d.ciudadOrigenRel', 'co')
@@ -229,6 +231,8 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('c.identificacionRel', 'ico')
             ->leftJoin('g.clienteRel', 'cl')
             ->leftJoin('cl.identificacionRel', 'icl')
+            ->having('SUM(fleteTotal) > 30000000')
+            ->groupBy('tdd.codigoDespachoDetallePk')
             ->orderBy('tdd.codigoDespachoDetallePk', 'ASC');
         if ($session->get('filtroInvInformeRemisionDetalleCodigoTercero')) {
             $queryBuilder->andWhere("r.codigoTerceroFk = {$session->get('filtroInvInformeRemisionDetalleCodigoTercero')}");
@@ -244,6 +248,6 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         } else {
             $queryBuilder->andWhere("d.fechaRegistro <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
         }
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 }

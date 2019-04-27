@@ -35,30 +35,31 @@ class SiplatfController extends Controller
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
+        $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
-//            ->add('txtCodigoDespacho', TextType::class, ['required' => false, 'data' => $session->get('filtroCodigoDespacho'), 'attr' => ['class' => 'form-control']])
-//            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTteDespachoSiplatfFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroTteDespachoSiplatfFechaHasta'))])
-//            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
+        $arGuias = null;
         if ($form->get('btnFiltrar')->isClicked()) {
-//            $session->set('filtroCodigoDespacho', $form->get('txtCodigoDespacho')->getData());
-//            $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-//            $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-            $session->set('filtroTteDespachoSiplatfFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
-            $session->set('filtroTteDespachoSiplatfFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+            if($form->get('fechaDesde')->getData() && $form->get('fechaHasta')->getData()) {
+                $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
+                $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
+                $queryBuilder = $this->getDoctrine()->getRepository(TteGuia::class)->siplatf($fechaDesde, $fechaHasta);
+                $arGuias = $queryBuilder->getQuery()->getResult();
+                $arGuias = $paginator->paginate($arGuias, $request->query->getInt('page', 1), 1000);
+            }
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(TteDespachoDetalle::class)->siplatf())->execute(), "Siplatf");
+            $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
+            $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
+            General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->siplatf($fechaDesde, $fechaHasta))->execute(), "Siplatf");
         }
-        $query = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->siplatf();
-        $arDespachoDetalles = $paginator->paginate($query, $request->query->getInt('page', 1),100);
         return $this->render('transporte/informe/transporte/despacho/siplatf.html.twig', [
-            'arDespachoDetalles' => $arDespachoDetalles,
+            'arGuias' => $arGuias,
             'form' => $form->createView()]);
     }
 

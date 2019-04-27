@@ -3186,5 +3186,79 @@ class TteGuiaRepository extends ServiceEntityRepository
         return ['mensaje' => $mensaje, 'numero' => $numero];
     }
 
+    public function siplatf($fechaDesde, $fechaHasta)
+    {
+        $strClientes = "";
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoClienteFk')
+            ->addSelect('SUM(g.vrFlete) AS fleteTotal')
+            ->groupBy('g.codigoClienteFk')
+            ->where("g.fechaIngreso >= '" . $fechaDesde . "' AND g.fechaIngreso <= '" . $fechaHasta . "'");
+        $arrayResultados = $queryBuilder->getQuery()->getResult();
+        $primero = true;
+        foreach ($arrayResultados AS $arrayResultado ){
+            if($arrayResultado['fleteTotal'] >= 30000000){
+                if($primero) {
+                    $strClientes .= $arrayResultado['codigoClienteFk'];
+                    $primero = false;
+                } else {
+                    $strClientes .= "," . $arrayResultado['codigoClienteFk'];
+                }
+            }
+        }
+        $queryBuilder = null;
+        if($strClientes) {
+            $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+                ->select('g.codigoGuiaPk')
+                ->addSelect('g.fechaIngreso')
+                ->addSelect("CONCAT('30050026', d.numero) as manifiestoDeCarga")
+                ->addSelect('co.codigoDivision AS ciudadOrigen')
+                ->addSelect('cd.codigoDivision AS ciudadDestino')
+                ->addSelect('d.codigoVehiculoFk')
+                ->addSelect('i.codigoInterface AS codigoIdentificacionPropietario')
+                ->addSelect('p.numeroIdentificacion AS identificacionPropietario')
+                ->addSelect('p.nombreCorto AS propietario')
+                ->addSelect('ips.codigoInterface AS codigoIdentificacionPoseedor')
+                ->addSelect('ps.numeroIdentificacion AS identificacionPoseedor')
+                ->addSelect('ps.nombreCorto AS poseedor')
+                ->addSelect('ico.codigoInterface AS codigoIdentificacionConductor')
+                ->addSelect('c.numeroIdentificacion AS identificacionConductor')
+                ->addSelect('c.nombreCorto AS conductor')
+                ->addSelect('v.placaRemolque AS vacio')
+                ->addSelect('v.placaRemolque AS vacio2')
+                ->addSelect('v.placaRemolque AS vacio3')
+                ->addSelect('v.placaRemolque AS vacio4')
+                ->addSelect('v.placaRemolque AS vacio5')
+                ->addSelect('icl.codigoInterface AS codigoIdentificacionCliente')
+                ->addSelect('cl.numeroIdentificacion AS identificacionCliente')
+                ->addSelect('cl.nombreCorto AS cliente')
+                ->addSelect('icl.codigoInterface AS codigoIdentificacionRemitente')
+                ->addSelect('g.nombreDestinatario')
+                ->addSelect('g.vrFlete')
+                ->addSelect('g.vrFlete AS fleteSinManejo')
+                ->addSelect('d.comentario AS observaciones')
+                ->addSelect('cd.codigoDivision AS codigoCiudadDestino')
+                ->leftJoin('g.despachoRel', 'd')
+                ->leftJoin('g.clienteRel' , 'cl')
+                ->leftJoin('cl.identificacionRel', 'icl')
+                ->leftJoin('d.ciudadOrigenRel', 'co')
+                ->leftJoin('d.ciudadDestinoRel', 'cd')
+                ->leftJoin('d.vehiculoRel', 'v')
+                ->leftJoin('v.propietarioRel', 'p')
+                ->leftJoin('p.identificacionRel', 'i')
+                ->leftJoin('v.poseedorRel', 'ps')
+                ->leftJoin('ps.identificacionRel', 'ips')
+                ->leftJoin('d.conductorRel', 'c')
+                ->leftJoin('c.identificacionRel', 'ico')
+                ->where("g.fechaIngreso >= '" . $fechaDesde . "' AND g.fechaIngreso <= '" . $fechaHasta . "'")
+                ->andWhere("g.codigoDespachoFk IS NOT NULL")
+                ->andWhere("g.codigoClienteFk IN ({$strClientes})");
+        }
+
+        return $queryBuilder;
+
+    }
+
 }
 

@@ -45,29 +45,20 @@
         </tr>
         </thead>
         <tbody>
-        {% for arDespachoDetalles in arDespachoDetalles %}
+        {% for arGuia in arGuias %}
             <tr>
-                <td>{{ arDespachoDetalles.codigoDespachoDetallePk }}</td>
-                <td>{{ arDespachoDetalles.fechaRegistro | date('Y-m-d') }}</td>
-                <td>{{ arDespachoDetalles.ciudadOrigen }}</td>
-                <td>{{ arDespachoDetalles.ciudadDestino }}</td>
-                <td>{{ arDespachoDetalles.codigoVehiculoFk }}</td>
-                <td>{{ arDespachoDetalles.codigoIdentificacionPropietario }}</td>
-                <td>{{ arDespachoDetalles.identificacionPropietario }}</td>
-                <td>{{ arDespachoDetalles.propietario }}</td>
+                {#<td>{{ arDespachoDetalles.codigoDespachoDetallePk }}</td>#}
+                {#<td>{{ arDespachoDetalles.fechaRegistro | date('Y-m-d') }}</td>#}
+                {#<td>{{ arDespachoDetalles.ciudadOrigen }}</td>#}
+                {#<td>{{ arDespachoDetalles.ciudadDestino }}</td>#}
+                {#<td>{{ arDespachoDetalles.codigoVehiculoFk }}</td>#}
+                {#<td>{{ arDespachoDetalles.codigoIdentificacionPropietario }}</td>#}
+                {#<td>{{ arDespachoDetalles.identificacionPropietario }}</td>#}
+                {#<td>{{ arDespachoDetalles.propietario }}</td>#}
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <div class="btn-group" style="float: left">
-        <div class="btn btn-default btn-sm">Registros
-            <span class="badge">{{ arDespachoDetalles.getTotalItemCount }}
-            </span>
-        </div>
-    </div>
-    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-        {{ knp_pagination_render(arDespachoDetalles) }}
-    </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group" style="float: right">
             {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}

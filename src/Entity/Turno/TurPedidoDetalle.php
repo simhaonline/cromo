@@ -229,6 +229,11 @@ class TurPedidoDetalle
     private $horaFin;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="pedidoDetalleRel")
+     */
+    protected $programacionesPedidoDetalleRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPedidoDetallePk()

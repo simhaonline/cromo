@@ -34,7 +34,7 @@ class TurPedido
     private $fecha;
 
     /**
-     * @ORM\Column(name="codigo_pedido_tipo_fk", type="integer")
+     * @ORM\Column(name="codigo_pedido_tipo_fk", type="string", length=20)
      */
     private $codigoPedidoTipoFk;
 
@@ -44,7 +44,7 @@ class TurPedido
     private $codigoClienteFk;
 
     /**
-     * @ORM\Column(name="codigo_sector_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_sector_fk", type="string", length=10, nullable=true)
      */
     private $codigoSectorFk;
 
@@ -151,6 +151,25 @@ class TurPedido
      * @ORM\Column(name="estrato", type="integer", nullable=true)
      */
     private $estrato = 0;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurPedidoTipo", inversedBy="pedidosPedidoTipoRel")
+     * @ORM\JoinColumn(name="codigo_pedido_tipo_fk", referencedColumnName="codigo_pedido_tipo_pk")
+     */
+    protected $pedidoTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurCliente", inversedBy="pedidosClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    protected $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurSector", inversedBy="pedidosSectorRel")
+     * @ORM\JoinColumn(name="codigo_sector_fk", referencedColumnName="codigo_sector_pk")
+     */
+    protected $sectorRel;
+
 
     /**
      * @return mixed

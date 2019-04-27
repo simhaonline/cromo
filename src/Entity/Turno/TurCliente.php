@@ -131,6 +131,11 @@ class TurCliente
     protected $ciudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurPedido", mappedBy="clienteRel")
+     */
+    protected $pedidosClienteRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="clienteRel")
      */
     protected $contratosClienteRel;

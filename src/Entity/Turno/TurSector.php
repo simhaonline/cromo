@@ -40,6 +40,11 @@ class TurSector
     private $comentarios;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurPedido", mappedBy="sectorRel")
+     */
+    protected $pedidosSectorRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="sectorRel")
      */
     protected $contratosSectorRel;

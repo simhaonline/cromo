@@ -248,6 +248,11 @@ class TurPuesto
     private $codigoCoordinadorFk;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="puestoRel")
+     */
+    protected $programacionesPuestoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPuestoPk()

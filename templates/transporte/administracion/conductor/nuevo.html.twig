@@ -18,7 +18,7 @@
             <div class="form-group form-group-sm">
                 <label for="form_fechaNacimiento" class="col-sm-2 control-label">Fecha nacimiento:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.fechaNacimiento, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_widget(form.fechaNacimiento) }}
                 </div>
                 <label for="form_ciudadRel" class="col-sm-2 control-label">Ciudad:</label>
                 <div class="col-sm-4">
@@ -70,9 +70,9 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.rhRel, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
-                <label for="form_direccion" class="col-sm-2 control-label">Arl:</label>
+                <label for="form_alias" class="col-sm-2 control-label">Alias:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.arl, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_widget(form.alias, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -81,9 +81,16 @@
                     {{ form_widget(form.codigoVehiculo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                     {{ form_errors(form.codigoVehiculo) }}
                 </div>
-                <label for="form_alias" class="col-sm-2 control-label">Alias:</label>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_codigoVehiculo" class="col-sm-2 control-label">Arl:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.alias, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_widget(form.arl, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.arl) }}
+                </div>
+                <label for="form_alias" class="col-sm-2 control-label">Fecha vencimiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaVenceArl) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -97,7 +104,7 @@
                 </div>
                 <label for="form_fechaVenceLicencia" class="col-sm-2 control-label">Fecha vencimiento licencia:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.fechaVenceLicencia, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_widget(form.fechaVenceLicencia) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

@@ -124,6 +124,12 @@ class TteConductor
     private $arl;
 
     /**
+     * @ORM\Column(name="fecha_vence_arl", type="date", nullable=true)
+     */
+    private $fechaVenceArl;
+
+
+    /**
      * @ORM\Column(name="codigo_vehiculo", type="string", length=6, nullable=true)
      * @Assert\Length(
      *     max = 6,
@@ -525,6 +531,22 @@ class TteConductor
     public function setArl($arl): void
     {
         $this->arl = $arl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVenceArl()
+    {
+        return $this->fechaVenceArl;
+    }
+
+    /**
+     * @param mixed $fechaVenceArl
+     */
+    public function setFechaVenceArl($fechaVenceArl): void
+    {
+        $this->fechaVenceArl = $fechaVenceArl;
     }
 
     /**

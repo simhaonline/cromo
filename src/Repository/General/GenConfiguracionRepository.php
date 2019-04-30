@@ -67,4 +67,18 @@ class GenConfiguracionRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
     }
 
+    public function apiWindowsConfiguracion($raw) {
+        $em = $this->getEntityManager();
+        /** @var $arConfiguracion GenConfiguracion*/
+        $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
+        $logo = base64_encode(stream_get_contents($arConfiguracion->getLogo()));
+        if($arConfiguracion) {
+            return [
+                "logo" => $logo,
+            ];
+        } else {
+            return ["error" => "No existe la configuracion"];
+        }
+    }
+
 }

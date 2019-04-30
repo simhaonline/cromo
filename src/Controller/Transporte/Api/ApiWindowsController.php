@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Api;
 
+use App\Entity\General\GenConfiguracion;
 use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
@@ -304,6 +305,22 @@ class ApiWindowsController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(Usuario::class)->apiWindowsValidar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/windows/general/configuracion")
+     */
+    public function configuracion(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(GenConfiguracion::class)->apiWindowsConfiguracion($raw);
         } catch (\Exception $e) {
             return [
                 'error' => "Ocurrio un error en la api " . $e->getMessage(),

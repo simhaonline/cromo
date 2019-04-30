@@ -58,6 +58,22 @@ class ApiWindowsController extends FOSRestController
 
     /**
      * @return array
+     * @Rest\Post("/transporte/api/windows/guia/imprimir")
+     */
+    public function guiaImprimir(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteGuia::class)->apiWindowsImprimir($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
      * @Rest\Get("/transporte/api/windows/guiatipo/lista")
      */
     public function guiaTipoLista(Request $request) {

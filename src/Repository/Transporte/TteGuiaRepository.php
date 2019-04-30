@@ -3152,6 +3152,30 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
     }
 
+    public function apiWindowsImprimir($raw) {
+        $em = $this->getEntityManager();
+        $codigo = $raw['codigoGuiaPk']?? null;
+        if($codigo) {
+            $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g')
+                ->select('g.codigoGuiaPk');
+            $queryBuilder->where("g.codigoGuiaPk=" . $codigo);
+            $arGuias = $queryBuilder->getQuery()->getResult();
+            if($arGuias) {
+                $arGuia = $arGuias[0];
+                $arrGuia = [
+                    "codigoGuiaPk" => $arGuia['codigoGuiaPk']
+                ];
+                return $arrGuia;
+            } else {
+                return [
+                    "error" => "No se encontraron resultados"
+                ];
+            }
+        } else {
+            return ["error" => "Faltan datos para la api"];
+        }
+    }
+
     private function apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia) {
         $em = $this->getEntityManager();
         $mensaje = "";

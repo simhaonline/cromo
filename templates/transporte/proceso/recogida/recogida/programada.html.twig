@@ -7,6 +7,7 @@
             <th>ID</th>
             <th>OP</th>
             <th>HORA</th>
+            <th>RUTA</th>
             <th>CLIENTE</th>
             <th>ANUNCIANTE</th>
             <th>DIRECCION</th>
@@ -20,6 +21,7 @@
                 <td>{{ arRecogidaProgramada.codigoRecogidaProgramadaPk }}</td>
                 <td>{{ arRecogidaProgramada.codigoOperacionFk }}</td>
                 <td>{{ arRecogidaProgramada.hora | date('H:i') }}</td>
+                <td>{{ arRecogidaProgramada.nombre }}</td>
                 <td>{{ arRecogidaProgramada.clienteNombreCorto }}</td>
                 <td>{{ arRecogidaProgramada.anunciante }}</td>
                 <td>{{ arRecogidaProgramada.direccion }}</td>

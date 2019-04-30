@@ -13,7 +13,7 @@ class TteRecogidaProgramada
 {
     public $infoLog = [
         "primaryKey" => "codigoRecogidaProgramadaPk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id
@@ -31,6 +31,11 @@ class TteRecogidaProgramada
      * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
      */
     private $codigoClienteFk;
+
+    /**
+     * @ORM\Column(name="codigo_ruta_recogida_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoRutaRecogidaFk;
 
     /**
      * @ORM\Column(name="hora", type="time", nullable=true)
@@ -80,6 +85,12 @@ class TteRecogidaProgramada
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
     private $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteRutaRecogida", inversedBy="recogidasProgramadasRutaRecogidaRel")
+     * @ORM\JoinColumn(name="codigo_ruta_recogida_fk", referencedColumnName="codigo_ruta_recogida_pk")
+     */
+    private $rutaRecogidaRel;
 
     /**
      * @return mixed
@@ -271,6 +282,54 @@ class TteRecogidaProgramada
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRutaRecogidaFk()
+    {
+        return $this->codigoRutaRecogidaFk;
+    }
+
+    /**
+     * @param mixed $codigoRutaRecogidaFk
+     */
+    public function setCodigoRutaRecogidaFk($codigoRutaRecogidaFk): void
+    {
+        $this->codigoRutaRecogidaFk = $codigoRutaRecogidaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRutaRecogidaRel()
+    {
+        return $this->rutaRecogidaRel;
+    }
+
+    /**
+     * @param mixed $rutaRecogidaRel
+     */
+    public function setRutaRecogidaRel($rutaRecogidaRel): void
+    {
+        $this->rutaRecogidaRel = $rutaRecogidaRel;
     }
 
 

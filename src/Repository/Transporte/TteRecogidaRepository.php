@@ -183,8 +183,9 @@ class TteRecogidaRepository extends ServiceEntityRepository
         $query = $em->createQuery(
             'SELECT r.codigoRecogidaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad,
               r.fecha, r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen,
-              r.codigoOperacionFk, r.anunciante, r.direccion, r.telefono
+              r.codigoOperacionFk, r.anunciante, r.direccion, r.telefono, rr.nombre
         FROM App\Entity\Transporte\TteRecogida r 
+        LEFT JOIN r.rutaRecogidaRel rr
         LEFT JOIN r.clienteRel c
         LEFT JOIN r.ciudadRel co
         WHERE r.estadoProgramado = 0 AND r.estadoAprobado = 1 AND r.fecha BETWEEN :fechaDesde AND :fechaHasta'

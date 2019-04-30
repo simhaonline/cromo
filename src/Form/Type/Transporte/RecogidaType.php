@@ -51,6 +51,16 @@ class RecogidaType extends AbstractType {
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad:'
             ])
+            ->add('rutaRecogidaRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteRutaRecogida',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('rr')
+                        ->orderBy('rr.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Ruta:'
+            ])
             ->add("direccion",TextType::class,['required'=>true])
             ->add("telefono",TextType::class,['required'=>true])
             ->add('fecha', DateTimeType::class)

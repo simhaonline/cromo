@@ -43,6 +43,16 @@ class TteRutaRecogida
     protected $despachosRecogidasRutaRecogidaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteRecogida", mappedBy="rutaRecogidaRel")
+     */
+    protected $recogidasRutaRecogidaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteRecogidaProgramada", mappedBy="rutaRecogidaRel")
+     */
+    protected $recogidasProgramadasRutaRecogidaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoRutaRecogidaPk()
@@ -120,6 +130,54 @@ class TteRutaRecogida
     public function setDespachosRecogidasRutaRecogidaRel($despachosRecogidasRutaRecogidaRel): void
     {
         $this->despachosRecogidasRutaRecogidaRel = $despachosRecogidasRutaRecogidaRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasRutaRecogidaRel()
+    {
+        return $this->recogidasRutaRecogidaRel;
+    }
+
+    /**
+     * @param mixed $recogidasRutaRecogidaRel
+     */
+    public function setRecogidasRutaRecogidaRel($recogidasRutaRecogidaRel): void
+    {
+        $this->recogidasRutaRecogidaRel = $recogidasRutaRecogidaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasProgramadasRutaRecogidaRel()
+    {
+        return $this->recogidasProgramadasRutaRecogidaRel;
+    }
+
+    /**
+     * @param mixed $recogidasProgramadasRutaRecogidaRel
+     */
+    public function setRecogidasProgramadasRutaRecogidaRel($recogidasProgramadasRutaRecogidaRel): void
+    {
+        $this->recogidasProgramadasRutaRecogidaRel = $recogidasProgramadasRutaRecogidaRel;
     }
 
 

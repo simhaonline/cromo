@@ -33,6 +33,11 @@ class TteRecogida
     private $codigoClienteFk;
 
     /**
+     * @ORM\Column(name="codigo_ruta_recogida_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoRutaRecogidaFk;
+
+    /**
      * @ORM\Column(name="codigo_conductor_fk", type="integer", nullable=true)
      */
     private $codigoConductorFk;
@@ -179,6 +184,28 @@ class TteRecogida
     private $vehiculoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TteRutaRecogida", inversedBy="recogidasRutaRecogidaRel")
+     * @ORM\JoinColumn(name="codigo_ruta_recogida_fk", referencedColumnName="codigo_ruta_recogida_pk")
+     */
+    private $rutaRecogidaRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoRecogidaPk()
@@ -224,6 +251,54 @@ class TteRecogida
     public function setCodigoClienteFk($codigoClienteFk): void
     {
         $this->codigoClienteFk = $codigoClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRutaRecogidaFk()
+    {
+        return $this->codigoRutaRecogidaFk;
+    }
+
+    /**
+     * @param mixed $codigoRutaRecogidaFk
+     */
+    public function setCodigoRutaRecogidaFk($codigoRutaRecogidaFk): void
+    {
+        $this->codigoRutaRecogidaFk = $codigoRutaRecogidaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConductorFk()
+    {
+        return $this->codigoConductorFk;
+    }
+
+    /**
+     * @param mixed $codigoConductorFk
+     */
+    public function setCodigoConductorFk($codigoConductorFk): void
+    {
+        $this->codigoConductorFk = $codigoConductorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVehiculoFk()
+    {
+        return $this->codigoVehiculoFk;
+    }
+
+    /**
+     * @param mixed $codigoVehiculoFk
+     */
+    public function setCodigoVehiculoFk($codigoVehiculoFk): void
+    {
+        $this->codigoVehiculoFk = $codigoVehiculoFk;
     }
 
     /**
@@ -469,6 +544,54 @@ class TteRecogida
     /**
      * @return mixed
      */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoDespachoRecogidaFk()
     {
         return $this->codigoDespachoRecogidaFk;
@@ -565,22 +688,6 @@ class TteRecogida
     /**
      * @return mixed
      */
-    public function getCodigoConductorFk()
-    {
-        return $this->codigoConductorFk;
-    }
-
-    /**
-     * @param mixed $codigoConductorFk
-     */
-    public function setCodigoConductorFk($codigoConductorFk): void
-    {
-        $this->codigoConductorFk = $codigoConductorFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getConductorRel()
     {
         return $this->conductorRel;
@@ -592,22 +699,6 @@ class TteRecogida
     public function setConductorRel($conductorRel): void
     {
         $this->conductorRel = $conductorRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoVehiculoFk()
-    {
-        return $this->codigoVehiculoFk;
-    }
-
-    /**
-     * @param mixed $codigoVehiculoFk
-     */
-    public function setCodigoVehiculoFk($codigoVehiculoFk): void
-    {
-        $this->codigoVehiculoFk = $codigoVehiculoFk;
     }
 
     /**
@@ -629,49 +720,17 @@ class TteRecogida
     /**
      * @return mixed
      */
-    public function getEstadoAutorizado()
+    public function getRutaRecogidaRel()
     {
-        return $this->estadoAutorizado;
+        return $this->rutaRecogidaRel;
     }
 
     /**
-     * @param mixed $estadoAutorizado
+     * @param mixed $rutaRecogidaRel
      */
-    public function setEstadoAutorizado($estadoAutorizado): void
+    public function setRutaRecogidaRel($rutaRecogidaRel): void
     {
-        $this->estadoAutorizado = $estadoAutorizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAprobado()
-    {
-        return $this->estadoAprobado;
-    }
-
-    /**
-     * @param mixed $estadoAprobado
-     */
-    public function setEstadoAprobado($estadoAprobado): void
-    {
-        $this->estadoAprobado = $estadoAprobado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAnulado()
-    {
-        return $this->estadoAnulado;
-    }
-
-    /**
-     * @param mixed $estadoAnulado
-     */
-    public function setEstadoAnulado($estadoAnulado): void
-    {
-        $this->estadoAnulado = $estadoAnulado;
+        $this->rutaRecogidaRel = $rutaRecogidaRel;
     }
 
 

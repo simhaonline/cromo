@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteCiudad;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -17,6 +18,16 @@ class CiudadType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('zonaRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteZona',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('z')
+                        ->orderBy('z.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Zona:'
+            ])
             ->add('rutaRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\Transporte\TteRuta',
@@ -47,7 +58,7 @@ class CiudadType extends AbstractType
             ->add('nombreMunicipio',TextType::class,['required' => true,'label' => 'Nombre municipio:'])
             ->add('ordenRuta',TextType::class,['required' => true,'label' => 'Orden ruta:'])
             ->add('codigoInterface',NumberType::class,['required' => true,'label' => 'Codigo interfaz:'])
-            ->add('reexpedicion',TextType::class,['required' => true,'label' => 'Reexpedicion:'])
+            ->add('reexpedicion',CheckboxType::class,['required' => false,'label' => 'Reexpedicion'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
         ;

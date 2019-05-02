@@ -14,7 +14,7 @@ class TteGuia
 {
     public $infoLog = [
         "primaryKey" => "codigoGuiaPk",
-        "todos"     => true,
+        "todos" => true,
     ];
 
     /**
@@ -72,6 +72,11 @@ class TteGuia
      * @ORM\Column(name="remitente", type="string", length=80, nullable=true)
      */
     private $remitente;
+
+    /**
+     * @ORM\Column(name="codigo_destinatario_fk", type="integer", nullable=true)
+     */
+    private $codigoDestinatarioFk;
 
     /**
      * @ORM\Column(name="nombre_destinatario", type="string", length=150, nullable=true)
@@ -319,6 +324,11 @@ class TteGuia
     private $codigoRutaFk;
 
     /**
+     * @ORM\Column(name="codigo_zona_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoZonaFk;
+
+    /**
      * @ORM\Column(name="orden_ruta", type="integer", nullable=true, options={"default" : 0})
      */
     private $ordenRuta = 0;
@@ -473,6 +483,12 @@ class TteGuia
      * @ORM\JoinColumn(name="codigo_ruta_fk", referencedColumnName="codigo_ruta_pk")
      */
     private $rutaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteZona", inversedBy="guiasZonaRel")
+     * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
+     */
+    private $zonaRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteFacturaPlanilla", inversedBy="guiasFacturaPlanillaRel")
@@ -2159,6 +2175,54 @@ class TteGuia
     public function setFechaDocumental($fechaDocumental): void
     {
         $this->fechaDocumental = $fechaDocumental;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDestinatarioFk()
+    {
+        return $this->codigoDestinatarioFk;
+    }
+
+    /**
+     * @param mixed $codigoDestinatarioFk
+     */
+    public function setCodigoDestinatarioFk($codigoDestinatarioFk): void
+    {
+        $this->codigoDestinatarioFk = $codigoDestinatarioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
     }
 
 

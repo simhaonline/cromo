@@ -5,6 +5,16 @@
         <div class="panel-heading">Informacion general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Zona:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.zonaRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Ruta:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.rutaRel, { 'attr': {'class': 'form-control'} }) }}
@@ -19,9 +29,9 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCiudadPk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Nombre:</label>
+                <label class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
+
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -65,9 +75,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">Reexpedicion:</label>
+                <label class="col-sm-2 control-label"></label>
                 <div class="col-sm-10">
-                    {{ form_widget(form.reexpedicion, { 'attr': {'class':'form-control'} }) }}
+                    {{ form_widget(form.reexpedicion) }}
                 </div>
             </div>
         </div>

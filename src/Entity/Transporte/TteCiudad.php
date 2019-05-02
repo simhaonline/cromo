@@ -67,6 +67,11 @@ class TteCiudad
     private $codigoRutaFk;
 
     /**
+     * @ORM\Column(name="codigo_zona_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoZonaFk;
+
+    /**
      * @ORM\Column(name="orden_ruta", type="integer", nullable=true)
      */
     private $ordenRuta = 0;
@@ -86,6 +91,18 @@ class TteCiudad
      * @ORM\JoinColumn(name="codigo_ruta_fk", referencedColumnName="codigo_ruta_pk")
      */
     private $rutaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteZona", inversedBy="ciudadesZonaRel")
+     * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
+     */
+    private $zonaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDepartamento", inversedBy="ciudadesRel")
+     * @ORM\JoinColumn(name="codigo_departamento_fk", referencedColumnName="codigo_departamento_pk")
+     */
+    protected $departamentoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="ciudadOrigenRel")
@@ -141,12 +158,6 @@ class TteCiudad
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TtePoseedor", mappedBy="ciudadRel")
      */
     protected $poseedoresCiudadRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDepartamento", inversedBy="ciudadesRel")
-     * @ORM\JoinColumn(name="codigo_departamento_fk", referencedColumnName="codigo_departamento_pk")
-     */
-    protected $departamentoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteDestinatario", mappedBy="ciudadRel")
@@ -704,6 +715,38 @@ class TteCiudad
     public function setMonitoreosCiudadDestinoRel($monitoreosCiudadDestinoRel): void
     {
         $this->monitoreosCiudadDestinoRel = $monitoreosCiudadDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
     }
 
 

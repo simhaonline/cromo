@@ -532,6 +532,7 @@ class FacturaController extends ControllerListenerGeneral
             $txtCodigoCliente = $request->request->get('txtCodigoCliente');
             if ($txtCodigoCliente != '') {
                 $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
+
                 if ($arCliente) {
                     $arFactura->setClienteRel($arCliente);
                     $arFactura->setOperacionRel($arCliente->getOperacionRel());

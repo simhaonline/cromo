@@ -1,4 +1,4 @@
-{% extends 'base_transporte.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
@@ -101,7 +101,6 @@
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" href="{{ path('turno_administracion_cliente_cliente_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

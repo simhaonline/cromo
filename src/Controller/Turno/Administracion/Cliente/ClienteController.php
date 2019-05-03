@@ -2,9 +2,12 @@
 
 namespace App\Controller\Turno\Administracion\Cliente;
 
+use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Turno\TurCliente;
+use App\Entity\Turno\TurPuesto;
 use App\Form\Type\Turno\ClienteType;
+use App\Form\Type\Turno\PuestoType;
 use App\General\General;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Estandares;
@@ -20,7 +23,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class ClienteController extends ControllerListenerGeneral
 {
     protected $clase= TurCliente::class;
-    protected $claseFormulario = ClienteType::class;
     protected $claseNombre = "TurCliente";
     protected $modulo = "Turno";
     protected $funcion = "Administracion";
@@ -32,44 +34,42 @@ class ClienteController extends ControllerListenerGeneral
      * @return Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/turno/administracion/cliente/lista", name="turno_administracion_cliente_cliente_lista")
+     * @Route("/turno/administracion/cliente/cliente/lista", name="turno_administracion_cliente_cliente_lista")
      */
     public function lista(Request $request)
     {
         $session = new Session();
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista()
-            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTurCodigoCliente'), 'attr' => ['class' => 'form-control']])
-            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTurNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']]);
+        $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
+        $formFiltro = $this->getFiltroLista();
+        $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+            }
+        }
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $arData = $request->request->get('ChkSeleccionar');
+                $this->get("UtilidadesModelo")->eliminar(TurCliente::class, $arData);
+            }
+            if ($formBotonera->get('btnFiltrar')){
+                $session->set('filtroTurCodigoCliente', $formBotonera->get('txtCodigoCliente')->getData());
+                $session->set('filtroTurNombreCliente', $formBotonera->get('txtNombreCorto')->getData());
             }
         }
-//        $form = $this->createFormBuilder()
-//            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTurCodigoCliente'), 'attr' => ['class' => 'form-control']])
-//            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTurNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-//            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-//            ->getForm();
-//        $form->handleRequest($request);
-//        if ($form->get('btnFiltrar')->isClicked()) {
-//            if ($form->get('txtCodigoCliente')->getData() != '') {
-//                $session->set('filtroTurCodigoCliente', $form->get('txtCodigoCliente')->getData());
-//                $session->set('filtroTurNombreCliente', $form->get('txtNombreCorto')->getData());
-//            } else {
-//                $session->set('filtroTurCodigoCliente', null);
-//                $session->set('filtroTurNombreCliente', null);
-//            }
-//        }
+
         return $this->render('turno/administracion/cliente/lista.html.twig', [
             'arrDatosLista' => $this->getDatosLista(),
-            'formBotonera' => $formBotonera->createView()
+            'formBotonera' => $formBotonera->createView(),
+            'formFiltro' => $formFiltro->createView(),
+
         ]);
     }
 
@@ -92,7 +92,7 @@ class ClienteController extends ControllerListenerGeneral
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arCliente);
                 $em->flush();
-                return $this->redirect($this->generateUrl('turno_administracion_cliente_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
+                return $this->redirect($this->generateUrl('turno_administracion_cliente__detalle', ['id' => $arCliente->getCodigoClientePk()]));
             }
         }
         return $this->render('turno/administracion/cliente/nuevo.html.twig', [
@@ -102,15 +102,62 @@ class ClienteController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/turno/administracion/cliente/detalle/{id}", name="turno_administracion_cliente_cliente_detalle")
+     * @Route("/turno/administracion/cliente/detalle/{id}", name="turno_administracion_cliente__detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arCliente = $em->getRepository(TurCliente::class)->find($id);
+        $arPuestos = $em->getRepository(TurPuesto::class)->findBy( ['codigoClienteFk' => $id],['codigoPuestoPk' => 'ASC']);
+        //dd($arPuestos);
+        $form = $this->createFormBuilder()
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $this->get('UtilidadesModelo')->eliminar(TurPuesto::class, $arrSeleccionados);
+                return $this->redirect($this->generateUrl('turno_administracion_cliente__detalle', ['id' => $id]));
+            }
+        }
+
         return $this->render('turno/administracion/cliente/detalle.html.twig', array(
-            'arCliente' => $arCliente
+            'arCliente' => $arCliente,
+            'arPuestos'=>$arPuestos,
+            'form' => $form->createView()
+
         ));
+    }
+
+    /**
+     * @Route("/turno/administracion/puesto/nuevo/{id}/{codigoCliente}", name="turno_administracion_cliente_clientepuesto_nuevo")
+     */
+    public function puestoNuevo(Request $request, $id, $codigoCliente)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arTurno = new TurPuesto();
+        if ($id != '0') {
+            $arTurno = $em->getRepository(TurPuesto::class)->find($id);
+            if (!$arTurno) {
+                return $this->redirect($this->generateUrl('turno_administracion_cliente_puesto_lista'));
+            }
+        }
+        $form = $this->createForm(PuestoType::class, $arTurno);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arCliente = $em->getRepository(TurCliente::class)->find($codigoCliente);
+                $arTurno->setClienteRel($arCliente);
+                $em->persist($arTurno);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('turno/administracion/cliente/nuevoPuesto.html.twig', [
+            'arTurno' => $arTurno,
+            'form' => $form->createView()
+        ]);
     }
 
 }

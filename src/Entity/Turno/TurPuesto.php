@@ -253,6 +253,25 @@ class TurPuesto
     protected $programacionesPuestoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurCliente", inversedBy="PuestosClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    protected $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="turClientePuestoRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurProgramador", inversedBy="turProgramadorPuestosRel")
+     * @ORM\JoinColumn(name="codigo_programador_fk", referencedColumnName="codigo_programador_pk")
+     */
+    protected $programadorRel;
+
+
+    /**
      * @return mixed
      */
     public function getCodigoPuestoPk()
@@ -874,6 +893,86 @@ class TurPuesto
     public function setCodigoCoordinadorFk($codigoCoordinadorFk): void
     {
         $this->codigoCoordinadorFk = $codigoCoordinadorFk;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramacionesPuestoRel()
+    {
+        return $this->programacionesPuestoRel;
+    }
+
+    /**
+     * @param mixed $programacionesPuestoRel
+     */
+    public function setProgramacionesPuestoRel($programacionesPuestoRel): void
+    {
+        $this->programacionesPuestoRel = $programacionesPuestoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramadorRel()
+    {
+        return $this->programadorRel;
+    }
+
+    /**
+     * @param mixed $programadorRel
+     */
+    public function setProgramadorRel($programadorRel): void
+    {
+        $this->programadorRel = $programadorRel;
     }
 
 

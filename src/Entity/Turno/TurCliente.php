@@ -524,6 +524,38 @@ class TurCliente
         $this->contratosClienteRel = $contratosClienteRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPedidosClienteRel()
+    {
+        return $this->pedidosClienteRel;
+    }
+
+    /**
+     * @param mixed $pedidosClienteRel
+     */
+    public function setPedidosClienteRel($pedidosClienteRel): void
+    {
+        $this->pedidosClienteRel = $pedidosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPuestosClienteRel()
+    {
+        return $this->PuestosClienteRel;
+    }
+
+    /**
+     * @param mixed $PuestosClienteRel
+     */
+    public function setPuestosClienteRel($PuestosClienteRel): void
+    {
+        $this->PuestosClienteRel = $PuestosClienteRel;
+    }
+
 
 
 }

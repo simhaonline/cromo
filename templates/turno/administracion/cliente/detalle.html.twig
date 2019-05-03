@@ -1,5 +1,6 @@
-{% extends 'base_turno.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form) }}
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
@@ -64,5 +65,98 @@
             <td class="td-in-well"></td>
         </tr>
     </table>
-    <a class="btn btn-default btn-sm" href="{{ path('turno_administracion_cliente_cliente_lista') }}">Volver</a>
+    <br><br>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#Puestos" data-toggle="tab">Puestos</a></li>
+        <li ><a href="#Proyectos" data-toggle="tab">Proyectos</a></li>
+        <li ><a href="#G_Facturacion" data-toggle="tab">Grupos facturación</a></li>
+        <li ><a href="#Direcciones" data-toggle="tab">Direcciones</a></li>
+        <li ><a href="#Contratos" data-toggle="tab">Contratos</a></li>
+        <li ><a href="#Ica" data-toggle="tab">Ica</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="Puestos">
+            <div id="Puestos" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>CÓD</th>
+                            <th>NOMBRE</th>
+                            <th>PROGRAMADOR</th>
+                            <th>ZONA</th>
+                            <th>DIRRECCIÓN</th>
+                            <th>CIUDAD</th>
+                            <th title="TELÉFONO DE CONTACTO">TEL CONT</th>
+                            <th>TELÉFONO</th>
+                            <th>CONTACTO</th>
+                            <th >CENTRAL</th>
+                            <th>OPERACIÓN</th>
+                            <th title="CONTROL PUESTO">C_P</th>
+                            <th title="CENTRO COSTRO">C.COSTO</th>
+                            <th title="">C.DOTACION</th>
+                            <th title="">SEG</th>
+                            <th title="GRUPO PAGO">G. PAGO</th>
+                            <th title="GRUPO FACTURACIÓN">G.F</th>
+                            <th>ESTADO</th>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center" title="SELECCIONAR TODOS LOS PUESTOS"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for arPuesto  in arPuestos %}
+                                <tr>
+                                    <td>{{ arPuesto.codigoPuestoPk }}</td>
+                                    <td>{{ arPuesto.nombre }}</td>
+                                    <td>{{ arPuesto.programadorRel.nombre }}</td>
+                                    <td>{{ arPuesto.codigoZonaFk }}</td>
+                                    <td>{{ arPuesto.direccion }}</td>
+                                    <td>{{ arPuesto.ciudadRel.nombre }}</td>
+                                    <td>{{ arPuesto.telefonoContacto }}</td>
+                                    <td>{{ arPuesto.telefono }}</td>
+                                    <td>{{ arPuesto.celularContacto }}</td>
+                                    <td>{{ arPuesto.codigoCentroCostoFk }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{ arPuesto.codigoCentroCostoFk }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{ arPuesto.estadoInactivo ? "INACTIVO":"ACTIVO"}}</td>
+                                    <td style="text-align: center;">
+                                        <a  href="javascript:abrirVentana3('{{ path('turno_administracion_cliente_clientepuesto_nuevo', {'id': arPuesto.codigoPuestoPk, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Editar puesto', 600, 1200) "><i class="fa fa-edit" style="color: black;font-size: large;"></i>
+                                        </a>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <a href="{{ path('turno_administracion_cliente_puesto_detalle' , {'id': arPuesto.codigoPuestoPk }) }}" target="_blank">
+                                            <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" name="ChkSeleccionar[]" value="{{arPuesto.codigoPuestoPk }}"/>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn-default btn-sm" href="{{ path('turno_administracion_cliente_cliente_lista') }}">Volver</a>
+        <div class="btn-toolbar" style="float: right;">
+            <div class="btn-group">
+                <div class="btn-group">
+                    <a href="javascript:abrirVentana3('{{ path('turno_administracion_cliente_clientepuesto_nuevo', {'id': 0, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Nuevo puesto', 600, 1200) " class="btn btn-default">nuevo</a>
+                    {{ form_widget(form.btnEliminar) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+
+
 {% endblock %}

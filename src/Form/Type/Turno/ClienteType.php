@@ -30,7 +30,6 @@ class ClienteType extends AbstractType
                 'label' => 'identificacion tipo:'
             ])
             ->add('formaPagoRel', EntityType::class, [
-              'required' => true,
               'class' => 'App\Entity\General\GenFormaPago',
               'query_builder' => function(EntityRepository $er){
                     return $er->createQueryBuilder('f')
@@ -40,7 +39,6 @@ class ClienteType extends AbstractType
               'label' => 'forma pago:'
             ])
             ->add('ciudadRel', EntityType::class, [
-                'required' => true,
                 'class' => 'App\Entity\General\GenCiudad',
                 'query_builder' => function(EntityRepository $er){
                     return $er->createQueryBuilder('c')
@@ -49,23 +47,22 @@ class ClienteType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'ciudad:'
             ])
-            ->add('numeroIdentificacion',NumberType::class,['required' => true])
-            ->add('digitoVerificacion',NumberType::class,['required' => true])
-            ->add('nombreCorto',TextType::class,['required' => true])
-            ->add('nombreExtendido', TextType::class,['required' => true])
-            ->add('nombre1', TextType::class,['required' => true])
-            ->add('nombre2', TextType::class,['required' => true])
-            ->add('apellido1', TextType::class,['required' => true])
-            ->add('apellido2', TextType::class,['required' => true])
-            ->add('direccion', TextType::class,['required' => true])
-            ->add('telefono', TextType::class,['required' => true])
-            ->add('movil', TextType::class,['required' => true])
-            ->add('plazoPago',NumberType::class,['required' => true])
-            ->add('correo', TextType::class,['required' => true])
-            ->add('estadoInactivo', CheckboxType::class, ['required'  => false])
-            ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
+            ->add('numeroIdentificacion',NumberType::class)
+            ->add('digitoVerificacion',NumberType::class)
+            ->add('nombreCorto',TextType::class, ['required' => true])
+            ->add('nombreExtendido', TextType::class)
+            ->add('nombre1', TextType::class, ['required' => true])
+            ->add('nombre2', TextType::class)
+            ->add('apellido1', TextType::class, ['required' => true])
+            ->add('apellido2', TextType::class)
+            ->add('direccion', TextType::class , ['required' => true])
+            ->add('telefono', TextType::class)
+            ->add('movil', TextType::class)
+            ->add('plazoPago',NumberType::class)
+            ->add('correo', TextType::class)
+            ->add('estadoInactivo', CheckboxType::class)
+            ->add('comentario',TextareaType::class,['label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -82,11 +79,19 @@ class ClienteType extends AbstractType
             {"campo":"codigoClientePk",       "tipo":"pk"      ,"ayuda":"Codigo del registro"                      ,"titulo":"ID"},
             {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del cliente"                       ,"titulo":"NOMBRE"},
             {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del cliente"     ,"titulo":"NUMERO_IDENTIFICACION"},
-            {"campo":"ciudadRel.nombre",      "tipo":"texto"   ,"ayuda":"Ciudad del cliente"                       ,"titulo":"CIUDAD", "relacion":""},
             {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del cliente"                     ,"titulo":"TELEFONO"},
-            {"campo":"plazoPago",             "tipo":"texto"   ,"ayuda":"Plazo de pago del cliente"                ,"titulo":"PLAZO_PAGO"},
-            {"campo":"formaPagoRel.nombre",   "tipo":"texto"   ,"ayuda":"Forma de pago del cliente"                ,"titulo":"FORMA_PAGO", "relacion":""}
+            {"campo":"plazoPago",             "tipo":"texto"   ,"ayuda":"Plazo de pago del cliente"                ,"titulo":"PLAZO_PAGO"}
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"codigoClientePk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
+            {"child":"nombreCorto", "tipo":"TextType",    "propiedades":{"label":"Nombre corto"}}
         ]';
         return $campos;
     }
 }
+

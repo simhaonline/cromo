@@ -31,14 +31,15 @@ class ClienteType extends AbstractType
                 'label' => 'Identificacion tipo:'
             ])
             ->add('condicionRel',EntityType::class,[
-                'required' => false,
                 'class' => 'App\Entity\Transporte\TteCondicion',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Condicion comercial:'
+                'label' => 'Condicion comercial:',
+                'placeholder' => "NO SELECCIONADA",
+                'required' => false,
             ])
             ->add('ciudadRel',EntityType::class,[
                 'required' => false,
@@ -71,7 +72,6 @@ class ClienteType extends AbstractType
                 'label' => 'Operacion:'
             ])
             ->add('precioRel',EntityType::class,[
-                'required' => false,
                 'class' => 'App\Entity\Transporte\TtePrecio',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
@@ -79,10 +79,11 @@ class ClienteType extends AbstractType
                 },
                 'choice_label' => function($er){
                     $campo = $er->getCodigoPrecioPk() .  '-'  . $er->getNombre();
-
                     return $campo;
 
-                }
+                },
+                'placeholder' => "NO SELECCIONADA",
+                'required' => false,
             ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('digitoVerificacion',NumberType::class,['required' => true,'label' => 'Digito:'])

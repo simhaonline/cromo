@@ -38,8 +38,7 @@ class ClienteType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Condicion comercial:',
-                'placeholder' => "NO SELECCIONADA",
-                'required' => false,
+                'required' => true,
             ])
             ->add('ciudadRel',EntityType::class,[
                 'required' => false,
@@ -71,20 +70,6 @@ class ClienteType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Operacion:'
             ])
-            ->add('precioRel',EntityType::class,[
-                'class' => 'App\Entity\Transporte\TtePrecio',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('i')
-                        ->orderBy('i.nombre', 'ASC');
-                },
-                'choice_label' => function($er){
-                    $campo = $er->getCodigoPrecioPk() .  '-'  . $er->getNombre();
-                    return $campo;
-
-                },
-                'placeholder' => "NO SELECCIONADA",
-                'required' => false,
-            ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('digitoVerificacion',NumberType::class,['required' => true,'label' => 'Digito:'])
             ->add('nombreCorto',TextType::class,['required' => true,'label' => 'Nombre corto:'])
@@ -105,19 +90,7 @@ class ClienteType extends AbstractType
             ->add('guiaPagoDestino', CheckboxType::class, array('required'  => false, 'label' => 'Pago destino'))
             ->add('guiaPagoCortesia', CheckboxType::class, array('required'  => false, 'label' => 'Pago cortesia'))
             ->add('guiaPagoRecogida', CheckboxType::class, array('required'  => false, 'label' => 'Pago recogida'))
-            ->add('porcentajeManejo',NumberType::class,['required' => true,'label' => 'Porcentaje:'])
-            ->add('manejoMinimoUnidad',NumberType::class,['required' => true,'label' => 'Unidad minima:'])
-            ->add('manejoMinimoDespacho',NumberType::class,['required' => true,'label' => 'Despacho minimo:'])
-            ->add('precioPeso', CheckboxType::class, array('required'  => false))
-            ->add('precioUnidad', CheckboxType::class, array('required'  => false))
-            ->add('precioAdicional', CheckboxType::class, array('required'  => false))
-            ->add('descuentoPeso',NumberType::class,['required' => true,'label' => 'Descuento peso:'])
-            ->add('descuentoUnidad',NumberType::class,['required' => true,'label' => 'Descuento unidad:'])
-            ->add('pesoMinimo',NumberType::class,['required' => true,'label' => 'Peso minimo:'])
-            ->add('permiteRecaudo', CheckboxType::class, ['required' => false,'label' => 'Permite recaudo'])
-            ->add('precioGeneral', CheckboxType::class, ['required' => false,'label' => 'Precio general'])
-            ->add('redondearFlete', CheckboxType::class, ['required' => false,'label' => 'Redondear flete'])
-            ->add('limitarDescuentoReexpedicion', CheckboxType::class, ['required' => false,'label' => 'Limitar descuento reexpedicion'])
+
             ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);

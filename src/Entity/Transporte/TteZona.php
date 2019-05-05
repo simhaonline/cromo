@@ -39,6 +39,11 @@ class TteZona
     protected $guiasZonaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteDescuentoZona", mappedBy="zonaRel")
+     */
+    protected $descuentosZonasZonaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoZonaPk()
@@ -100,6 +105,22 @@ class TteZona
     public function setGuiasZonaRel($guiasZonaRel): void
     {
         $this->guiasZonaRel = $guiasZonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescuentosZonasZonaRel()
+    {
+        return $this->descuentosZonasZonaRel;
+    }
+
+    /**
+     * @param mixed $descuentosZonasZonaRel
+     */
+    public function setDescuentosZonasZonaRel($descuentosZonasZonaRel): void
+    {
+        $this->descuentosZonasZonaRel = $descuentosZonasZonaRel;
     }
 
 

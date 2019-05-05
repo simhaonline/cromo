@@ -112,7 +112,6 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.condicionRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
                     {{ form_errors(form.condicionRel) }}
-                    <cite style="font-size: 10px;">* Si selecciona una condicion comercial prevalece sobre los parametros de liquidacion</cite>
                 </div>
                 <label for="form_condiciionRel" class="col-sm-2 control-label">Operacion:</label>
                 <div class="col-sm-4">
@@ -128,72 +127,6 @@
                     {{ form_widget(form.guiaPagoDestino) }}
                     {{ form_widget(form.guiaPagoCortesia) }}
                     {{ form_widget(form.guiaPagoRecogida) }}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">Liquidacion</div>
-        <div class="panel-body">
-            <div class="form-group form-group-sm">
-                <label for="form_condiciionRel" class="col-sm-2 control-label">Precio:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.precioRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
-                    {{ form_errors(form.precioRel) }}
-                </div>
-                <label for="form_condiciionRel" class="col-sm-2 control-label">Dcto (Peso):</label>
-                <div class="col-sm-1">
-                    {{ form_widget(form.descuentoPeso) }}
-                </div>
-                <label for="form_condiciionRel" class="col-sm-2 control-label">Dcto (Unidad):</label>
-                <div class="col-sm-1">
-                    {{ form_widget(form.descuentoUnidad) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_condiciionRel" class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.precioPeso) }}
-                    {{ form_widget(form.precioUnidad) }}
-                    {{ form_widget(form.precioAdicional) }}
-                </div>
-                <label for="form_condiciionRel" class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.permiteRecaudo) }}
-                    {{ form_widget(form.precioGeneral) }}
-                    {{ form_widget(form.redondearFlete) }}
-                    {{ form_widget(form.limitarDescuentoReexpedicion) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_condiciionRel" class="col-sm-2 control-label">Peso minimo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.pesoMinimo) }}
-                </div>
-                <label for="form_condiciionRel" class="col-sm-2 control-label">% (Man):</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.porcentajeManejo) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_condiciionRel" class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-
-                </div>
-                <label for="form_condiciionRel" class="col-sm-2 control-label">Min unidad (Man):</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.manejoMinimoUnidad) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_condiciionRel" class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-
-                </div>
-                <label for="form_condiciionRel" class="col-sm-2 control-label">Min despacho (Man):</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.manejoMinimoDespacho) }}
                 </div>
             </div>
         </div>

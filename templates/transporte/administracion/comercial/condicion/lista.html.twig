@@ -29,15 +29,15 @@
         <tr>
             <th>ID</th>
             <th>NOMBRE</th>
-            <th>PERMITE RECAUDO</th>
-            <th>% MANEJO</th>
-            <th>MANEJO MINIMO UNIDAD</th>
-            <th>MANEJO MINIMO DESPACHO</th>
-            <th>PRECIO PESO</th>
-            <th>PRECIO UNIDAD</th>
-            <th>PRECIO ADICIONAL</th>
-            <th>DESCUENTO PESO</th>
-            <th>DESCUENTO UNIDAD</th>
+            <th title="Permite recaudo">PR</th>
+            <th>%(MAN)</th>
+            <th title="Manejo minimo por unidad">MIN UNI (MAN)</th>
+            <th title="Manejo minimo por despacho">MIN DES (MAN)</th>
+            <th>DES PESO</th>
+            <th>DES UNIDAD</th>
+            <th>PES</th>
+            <th>UNI</th>
+            <th>ADI</th>
             <th></th>
             <th></th>
         </tr>
@@ -51,11 +51,11 @@
                 <td class="numero">{{ arCondicion.porcentajeManejo }}</td>
                 <td class="numero">{{ arCondicion.manejoMinimoUnidad }}</td>
                 <td class="numero">{{ arCondicion.manejoMinimoDespacho }}</td>
-                <td class="numero">{{ arCondicion.precioPeso }}</td>
-                <td class="numero">{{ arCondicion.precioUnidad }}</td>
-                <td class="numero">{{ arCondicion.precioAdicional }}</td>
-                <td style="text-align: right;">{{ arCondicion.descuentoPeso }}</td>
-                <td style="text-align: right;">{{ arCondicion.descuentoUnidad }}</td>
+                <td class="numero">{{ arCondicion.descuentoPeso }}</td>
+                <td class="numero">{{ arCondicion.descuentoUnidad }}</td>
+                <td>{{ arCondicion.precioPeso ? 'SI':'NO' }}</td>
+                <td>{{ arCondicion.precioUnidad ? 'SI':'NO' }}</td>
+                <td>{{ arCondicion.precioAdicional ? 'SI':'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_administracion_comercial_condicion_nuevo',{'id' : arCondicion.codigoCondicionPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">

@@ -4,8 +4,11 @@ namespace App\Controller\Transporte\Administracion\Comercial\Condicion;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
+use App\Entity\Transporte\TteClienteCondicion;
 use App\Entity\Transporte\TteCondicion;
+use App\Entity\Transporte\TteDescuentoZona;
 use App\Form\Type\Transporte\CondicionType;
+use App\Form\Type\Transporte\DescuentoZonaType;
 use App\Utilidades\Estandares;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,8 +56,21 @@ class CondicionController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arCondicion = $em->getRepository(TteCondicion::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnEliminarDetalle')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteDescuentoZona::class)->eliminar($arrSeleccionados);
+            }
+        }
+        $arDescuentosZona = $em->getRepository(TteDescuentoZona::class)->condicion($id);
         return $this->render('transporte/administracion/comercial/condicion/detalle.html.twig', array(
             'arCondicion' => $arCondicion,
+            'arDescuentosZona' => $arDescuentosZona,
+            'form' => $form->createView()
         ));
     }
     /**
@@ -84,5 +100,34 @@ class CondicionController extends ControllerListenerGeneral
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/transporte/administracion/comercial/condicion/detalle/nuevo/{codigoCondicion}/{id}", name="transporte_administracion_comercial_condicion_detalle_nuevo")
+     */
+    public function detalleNuevo(Request $request, $codigoCondicion, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arCondicion = $em->getRepository(TteCondicion::class)->find($codigoCondicion);
+        $arDescuentoZona = new TteDescuentoZona();
+        if ($id != '0') {
+            $arDescuentoZona = $em->getRepository(TteDescuentoZona::class)->find($id);
+        } else {
+            $arDescuentoZona->setCondicionRel($arCondicion);
+        }
+        $form = $this->createForm(DescuentoZonaType::class, $arDescuentoZona);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $em->persist($arDescuentoZona);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('transporte/administracion/comercial/condicion/detalleNuevo.html.twig', [
+            'arCondicion' => $arDescuentoZona,
+            'form' => $form->createView()
+        ]);
+    }
+
 }
 

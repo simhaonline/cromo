@@ -69,6 +69,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>ORIGEN</th>
                             <th>ZONA</th>
                             <th>DESCUENTO</th>
                             <th></th>
@@ -79,8 +80,9 @@
                         {% for arDescuentoZona in arDescuentosZona %}
                             <tr>
                                 <td>{{ arDescuentoZona.codigoDescuentoZonaPk }}</td>
+                                <td>{{ arDescuentoZona.ciudadOrigenNombre }}</td>
                                 <td>{{ arDescuentoZona.zonaNombre }}</td>
-                                <td>{{ arDescuentoZona.descuento }}</td>
+                                <td>{{ arDescuentoZona.descuentoPeso }}</td>
                                 <td style="text-align: center;">
                                     <a href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_condicion_detalle_nuevo', {'codigoCondicion': arCondicion.codigoCondicionPk, 'id': arDescuentoZona.codigoDescuentoZonaPk }) }}', 'descuentos', 600, 900)"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
                                 </td>

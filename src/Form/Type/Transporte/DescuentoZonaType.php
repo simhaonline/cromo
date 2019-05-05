@@ -21,6 +21,16 @@ class DescuentoZonaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('ciudadOrigenRel',EntityType::class,[
+                'class' => 'App\Entity\Transporte\TteCiudad',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Ciudad:',
+                'required' => true,
+            ])
             ->add('zonaRel',EntityType::class,[
                 'class' => 'App\Entity\Transporte\TteZona',
                 'query_builder' => function (EntityRepository $er) {
@@ -31,7 +41,7 @@ class DescuentoZonaType extends AbstractType
                 'label' => 'Zona:',
                 'required' => true,
             ])
-            ->add('descuento',NumberType::class,['required' => true,'label' => 'Descuento:'])
+            ->add('descuentoPeso',NumberType::class,['required' => true,'label' => 'Descuento:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
 
     }

@@ -190,6 +190,11 @@ class TteCiudad
     protected $monitoreosCiudadDestinoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteDescuentoZona", mappedBy="ciudadOrigenRel")
+     */
+    protected $descuentosZonasCiudadOrigenRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -747,6 +752,22 @@ class TteCiudad
     public function setZonaRel($zonaRel): void
     {
         $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescuentosZonasCiudadOrigenRel()
+    {
+        return $this->descuentosZonasCiudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $descuentosZonasCiudadOrigenRel
+     */
+    public function setDescuentosZonasCiudadOrigenRel($descuentosZonasCiudadOrigenRel): void
+    {
+        $this->descuentosZonasCiudadOrigenRel = $descuentosZonasCiudadOrigenRel;
     }
 
 

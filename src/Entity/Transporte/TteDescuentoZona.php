@@ -28,14 +28,19 @@ class TteDescuentoZona
     private $codigoCondicionFk;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_origen_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCiudadOrigenFk;
+
+    /**
      * @ORM\Column(name="codigo_zona_fk", length=20, nullable=true)
      */
     private $codigoZonaFk;
 
     /**
-     * @ORM\Column(name="descuento", type="float", options={"default" : 0})
+     * @ORM\Column(name="descuento_peso", type="float", options={"default" : 0})
      */
-    private $descuento = 0;
+    private $descuentoPeso = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteCondicion", inversedBy="descuentosZonasCondicionRel")
@@ -48,6 +53,12 @@ class TteDescuentoZona
      * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
      */
     private $zonaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="descuentosZonasCiudadOrigenRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_origen_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    private $ciudadOrigenRel;
 
     /**
      * @return mixed
@@ -100,17 +111,17 @@ class TteDescuentoZona
     /**
      * @return mixed
      */
-    public function getDescuento()
+    public function getDescuentoPeso()
     {
-        return $this->descuento;
+        return $this->descuentoPeso;
     }
 
     /**
-     * @param mixed $descuento
+     * @param mixed $descuentoPeso
      */
-    public function setDescuento($descuento): void
+    public function setDescuentoPeso($descuentoPeso): void
     {
-        $this->descuento = $descuento;
+        $this->descuentoPeso = $descuentoPeso;
     }
 
     /**
@@ -145,6 +156,37 @@ class TteDescuentoZona
         $this->zonaRel = $zonaRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadOrigenFk()
+    {
+        return $this->codigoCiudadOrigenFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadOrigenFk
+     */
+    public function setCodigoCiudadOrigenFk($codigoCiudadOrigenFk): void
+    {
+        $this->codigoCiudadOrigenFk = $codigoCiudadOrigenFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadOrigenRel()
+    {
+        return $this->ciudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $ciudadOrigenRel
+     */
+    public function setCiudadOrigenRel($ciudadOrigenRel): void
+    {
+        $this->ciudadOrigenRel = $ciudadOrigenRel;
+    }
 
 
 }

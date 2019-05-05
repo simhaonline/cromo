@@ -161,6 +161,7 @@ class TteCiudadRepository extends ServiceEntityRepository
                 ->select('c.codigoCiudadPk')
                 ->addSelect('c.nombre')
                 ->addSelect('c.codigoRutaFk')
+                ->addSelect('c.codigoZonaFk')
                 ->addSelect('c.ordenRuta');
             if($codigo) {
                 $queryBuilder->where("c.codigoCiudadPk=" . $codigo);

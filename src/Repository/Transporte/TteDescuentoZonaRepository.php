@@ -19,9 +19,11 @@ class TteDescuentoZonaRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDescuentoZona::class, 'dz')
             ->select('dz.codigoDescuentoZonaPk')
-            ->addSelect('dz.descuento')
+            ->addSelect('dz.descuentoPeso')
             ->addSelect('z.nombre as zonaNombre')
-        ->leftJoin('dz.zonaRel', 'z')
+            ->addSelect('co.nombre as ciudadOrigenNombre')
+            ->leftJoin('dz.zonaRel', 'z')
+            ->leftJoin('dz.ciudadOrigenRel', 'co')
         ->where('dz.codigoCondicionFk = ' . $id);
         $arDescuentosZona = $queryBuilder->getQuery()->getResult();
         return $arDescuentosZona;
@@ -38,6 +40,32 @@ class TteDescuentoZonaRepository extends ServiceEntityRepository
             }
         }
         $em->flush();
+    }
+
+    public function apiWindowsDetalle($raw) {
+        $em = $this->getEntityManager();
+        $condicion = $raw['codigoCondicion']?? null;
+        $origen = $raw['origen']?? null;
+        $zona = $raw['codigoZona']?? null;
+        if($condicion && $origen && $zona) {
+            $queryBuilder = $em->createQueryBuilder()->from(TteDescuentoZona::class, 'dz')
+                ->select('dz.descuentoPeso')
+                ->where('dz.codigoCiudadOrigenFk=' . $origen)
+                ->andWhere("dz.codigoCondicionFk=" . $condicion)
+                ->andWhere("dz.codigoZonaFk='" . $zona . "'");
+            $arDescuentosZona = $queryBuilder->getQuery()->getResult();
+            if($arDescuentosZona) {
+                return $arDescuentosZona[0];
+            } else {
+                return [
+                    "error" => "No se encontraron resultados"
+                ];
+            }
+        } else {
+            return [
+                "error" => "Faltan datos para la api"
+            ];
+        }
     }
 
 }

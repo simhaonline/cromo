@@ -17,6 +17,7 @@ use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteDesembarco;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
+use App\Entity\Transporte\TteDestinatario;
 use App\Entity\Transporte\TteDocumental;
 use App\Entity\Transporte\TteEmpaque;
 use App\Entity\Transporte\TteFactura;
@@ -29,6 +30,7 @@ use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteRedespacho;
 use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteServicio;
+use App\Entity\Transporte\TteZona;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -2990,6 +2992,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             $arEmpaque = $em->getRepository(TteEmpaque::class)->find($raw['codigoEmpaqueFk']);
             $arServicio = $em->getRepository(TteServicio::class)->find($raw['codigoServicioFk']);
             $arRuta = $em->getRepository(TteRuta::class)->find($raw['codigoRutaFk']);
+            $arZona = $em->getRepository(TteZona::class)->find($raw['codigoZonaFk']);
             $arGuia = new TteGuia();
             $numeroFactura = null;
             if($arGuiaTipo->getCortesia()) {
@@ -3058,6 +3061,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             $arGuia->setNumeroFactura($numeroFactura);
             $arGuia->setMercanciaPeligrosa($raw['mercanciaPeligrosa']);
             $arGuia->setOrdenRuta($raw['ordenRuta']);
+            $arGuia->setZonaRel($arZona);
+            $arGuia->setCodigoDestinatarioFk($raw['codigoDestinatarioFk']);
             $em->persist($arGuia);
             $em->flush();
             return [

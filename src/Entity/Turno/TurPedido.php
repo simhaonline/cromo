@@ -49,6 +49,11 @@ class TurPedido
     private $codigoSectorFk;
 
     /**
+     * @ORM\Column(name="fecha_programacion", type="date", nullable=true)
+     */
+    private $fechaProgramacion;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":false})
      */
     private $estadoAutorizado = false;
@@ -170,6 +175,21 @@ class TurPedido
      */
     protected $sectorRel;
 
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -265,6 +285,22 @@ class TurPedido
     public function setCodigoSectorFk($codigoSectorFk): void
     {
         $this->codigoSectorFk = $codigoSectorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaProgramacion()
+    {
+        return $this->fechaProgramacion;
+    }
+
+    /**
+     * @param mixed $fechaProgramacion
+     */
+    public function setFechaProgramacion($fechaProgramacion): void
+    {
+        $this->fechaProgramacion = $fechaProgramacion;
     }
 
     /**
@@ -587,7 +623,52 @@ class TurPedido
         $this->estrato = $estrato;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPedidoTipoRel()
+    {
+        return $this->pedidoTipoRel;
+    }
 
+    /**
+     * @param mixed $pedidoTipoRel
+     */
+    public function setPedidoTipoRel($pedidoTipoRel): void
+    {
+        $this->pedidoTipoRel = $pedidoTipoRel;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSectorRel()
+    {
+        return $this->sectorRel;
+    }
+
+    /**
+     * @param mixed $sectorRel
+     */
+    public function setSectorRel($sectorRel): void
+    {
+        $this->sectorRel = $sectorRel;
+    }
 }
 

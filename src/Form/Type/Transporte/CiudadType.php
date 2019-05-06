@@ -57,7 +57,7 @@ class CiudadType extends AbstractType
             ->add('codigoMunicipio',TextType::class,['required' => true,'label' => 'Codigo municipio:'])
             ->add('nombreMunicipio',TextType::class,['required' => true,'label' => 'Nombre municipio:'])
             ->add('ordenRuta',TextType::class,['required' => true,'label' => 'Orden ruta:'])
-            ->add('codigoInterface',NumberType::class,['required' => true,'label' => 'Codigo interfaz:'])
+            ->add('codigoInterface',TextType::class,['required' => true,'label' => 'Codigo interfaz:'])
             ->add('reexpedicion',CheckboxType::class,['required' => false,'label' => 'Reexpedicion'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;

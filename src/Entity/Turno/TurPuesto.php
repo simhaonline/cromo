@@ -5,6 +5,7 @@ namespace App\Entity\Turno;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Turno\TurPuestoRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
@@ -13,7 +14,7 @@ class TurPuesto
 {
     public $infoLog = [
         "primaryKey" => "codigoPuestoPk",
-        "todos"     => true,
+        "todos" => true,
     ];
 
     /**
@@ -247,10 +248,10 @@ class TurPuesto
      */
     private $codigoCoordinadorFk;
 
-    /**
-     * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="puestoRel")
-     */
-    protected $programacionesPuestoRel;
+//    /**
+//     * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="puestoRel")
+//     */
+//    protected $programacionesPuestoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurCliente", inversedBy="PuestosClienteRel")
@@ -270,6 +271,26 @@ class TurPuesto
      */
     protected $programadorRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="puestoRel")
+     */
+    protected $pedidosDetallesPuestoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -896,38 +917,6 @@ class TurPuesto
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProgramacionesPuestoRel()
-    {
-        return $this->programacionesPuestoRel;
-    }
-
-    /**
-     * @param mixed $programacionesPuestoRel
-     */
-    public function setProgramacionesPuestoRel($programacionesPuestoRel): void
-    {
-        $this->programacionesPuestoRel = $programacionesPuestoRel;
-    }
-
-    /**
      * @return mixed
      */
     public function getClienteRel()
@@ -975,7 +964,21 @@ class TurPuesto
         $this->programadorRel = $programadorRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesPuestoRel()
+    {
+        return $this->pedidosDetallesPuestoRel;
+    }
 
+    /**
+     * @param mixed $pedidosDetallesPuestoRel
+     */
+    public function setPedidosDetallesPuestoRel($pedidosDetallesPuestoRel): void
+    {
+        $this->pedidosDetallesPuestoRel = $pedidosDetallesPuestoRel;
+    }
 
 }
 

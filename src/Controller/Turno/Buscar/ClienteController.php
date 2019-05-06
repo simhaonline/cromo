@@ -30,12 +30,13 @@ class ClienteController extends Controller
             ->add('btnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
-        if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroTurNombreCliente', $form->get('TxtNombre')->getData());
-            $session->set('filtroTurNitCliente', $form->get('TxtNit')->getData());
-            $session->set('filtroTurCodigoCliente', $form->get('TxtCodigo')->getData());
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTurNombreCliente', $form->get('TxtNombre')->getData());
+                $session->set('filtroTurNitCliente', $form->get('TxtNit')->getData());
+                $session->set('filtroTurCodigoCliente', $form->get('TxtCodigo')->getData());
+            }
         }
-        $arClientes = $em->getRepository(TurCliente::class)->findAll();
         $arClientes = $paginator->paginate($em->getRepository(TurCliente::class)->lista(), $request->query->getInt('page', 1),20);
         return $this->render('turno/buscar/cliente.html.twig', array(
             'arClientes' => $arClientes,

@@ -5,6 +5,7 @@ namespace App\Controller\Turno\Administracion\Puesto;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurPuesto;
@@ -39,8 +40,16 @@ class PuestoController extends ControllerListenerGeneral
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
+
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+            }
+        }
+        $datos = $this->getDatosLista(true);
+
         return $this->render('turno/administracion/puesto/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
+            'arrDatosLista' => $datos,
             'formBotonera'=> $formBotonera->createView(),
             'formFiltro'=>$formFiltro->createView()
         ]);
@@ -82,7 +91,7 @@ class PuestoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('turno_administracion_cliente_puesto_detalle', ['id'=>$arTurPuesto->getCodigoPuestoPk()]));
             }
         }
-        return $this->render('transporte/administracion/zona/nuevo.html.twig', [
+        return $this->render('turno/administracion/puesto/nuevo.html.twig', [
             'arTurno' => $arTurPuesto,
             'form' => $form->createView()
         ]);

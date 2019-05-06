@@ -52,6 +52,7 @@ class ClienteController extends ControllerListenerGeneral
                 FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
+        $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
@@ -67,7 +68,7 @@ class ClienteController extends ControllerListenerGeneral
         }
 
         return $this->render('turno/administracion/cliente/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
+            'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
 

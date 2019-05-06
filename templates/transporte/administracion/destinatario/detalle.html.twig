@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_administracion_guia_destinatario_lista') }}">Volver</a>
+        </div>
+    </div>
+    <br /><br />
+    {% include 'transporte/administracion/destinatario/informacion.html.twig' %}
+    <a name="marcador"></a>
+{% endblock %}

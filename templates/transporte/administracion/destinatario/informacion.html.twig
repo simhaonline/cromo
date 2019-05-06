@@ -1,0 +1,56 @@
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
+    <tr>
+        <td class="titulo"><b>CODIGO CLIENTE:</b></td>
+        <td class="td-in-well">{{ arDestinatario.codigoDestinatarioPk }}</td>
+        <td class="titulo"><b>TIPO IDENTIFICACION</b></td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arDestinatario.identificacionRel.nombre }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"><b>IDENTIFICACION:</b></td>
+        <td class="td-in-well">{{ arDestinatario.numeroIdentificacion }}</td>
+        <td class="titulo"><b>DIGITO</b></td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arDestinatario.digitoVerificacion }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"><b>PRIMER NOMBRE:</b></td>
+        <td class="td-in-well">{{ arDestinatario.nombre1 }}</td>
+        <td class="titulo"><b>SEGUNDO NOMBRE:</b></td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arDestinatario.nombre2 }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"><b>PRIMER APELLIDO:</b></td>
+        <td class="td-in-well">{{ arDestinatario.apellido1 }}</td>
+        <td class="titulo"><b>SEGUNDO APELLIDO:</b></td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arDestinatario.apellido2 }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"><b>NOMBRE CORTO:</b></td>
+        <td class="td-in-well">{{ arDestinatario.nombreCorto }}</td>
+        <td class="titulo"><b>DIRECCION:</b></td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arDestinatario.direccion }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"><b>NOMBRE EXTENDIDO:</b></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"><b>CELULAR:</b></td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arDestinatario.movil }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"><b>TELEFONO:</b></td>
+        <td class="td-in-well">{{ arDestinatario.telefono }}</td>
+        <td class="titulo"><b>CORREO:</b></td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arDestinatario.correo }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"><b>CIUDAD:</b></td>
+        <td class="td-in-well">{{ arDestinatario.ciudadRel.nombre | default('') }}</td>
+        <td class="titulo"><b>PLAZO PAGO:</b></td>
+        <td class="td-in-well"></td>
+    </tr>
+    <tr>
+        <td class="titulo"><b>COMENTARIOS:</b></td>
+        <td class="td-in-well">{{ arDestinatario.comentario }}</td>
+        <td class="titulo"><b></b></td>
+        <td class="td-in-well"></td>
+    </tr>
+</table>

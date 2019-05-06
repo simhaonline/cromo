@@ -91,6 +91,7 @@ class PedidoController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+//                dd($txtCodigoTercero);
                 if ($txtCodigoTercero != '') {
                     $arTercero = $em->getRepository(InvTercero::class)->find($txtCodigoTercero);
                     if ($arTercero) {

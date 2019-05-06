@@ -29,20 +29,24 @@ class TurPedidoDetalle
     private $codigoPedidoFk;
 
     /**
+     * @ORM\Column(name="codigo_contrato_concepto_fk", type="integer", nullable=true)
+     */
+    private $codigoContratoConceptoFk;
+
+    /**
+     * @ORM\Column(name="codigo_contrato_concepto_facturacion_fk", type="integer", nullable=true)
+     */
+    private $codigoContratoConceptoFacturacionFk;
+
+    /**
+     * @ORM\Column(name="codigo_contrato_modalidad_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoContratoModalidadFk;
+
+    /**
      * @ORM\Column(name="codigo_puesto_fk", type="integer", nullable=true)
      */
     private $codigoPuestoFk;
-
-    /**
-     * @ORM\Column(name="codigo_concepto_fk", type="integer")
-     */
-    private $codigoConceptoFk;
-
-
-    /**
-     * @ORM\Column(name="codigo_modalidad_fk", type="integer")
-     */
-    private $codigoModalidadFk;
 
     /**
      * @ORM\Column(name="anio", type="integer")
@@ -100,7 +104,7 @@ class TurPedidoDetalle
     private $cantidad = 0;
 
     /**
-     * @ORM\Column(name="vr_precio_ajustado", type="float")
+     * @ORM\Column(name="vr_precio_ajustado", type="float", nullable=true)
      */
     private $vrPrecioAjustado = 0;
 
@@ -214,6 +218,12 @@ class TurPedidoDetalle
     private $detalle;
 
     /**
+     *
+     * @ORM\Column(name="detalle_factura", type="string", nullable=true, length=150)
+     */
+    private $detalleFactura;
+
+    /**
      * @ORM\Column(name="vr_salario_base", type="float")
      */
     private $vrSalarioBase = 0;
@@ -229,9 +239,54 @@ class TurPedidoDetalle
     private $horaFin;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="pedidoDetalleRel")
+     * @ORM\Column(name="compuesto", type="boolean")
      */
-    protected $programacionesPedidoDetalleRel;
+    private $compuesto = false;
+
+    /**
+     * @ORM\Column(name="factura_distribuida", type="boolean", nullable=true)
+     */
+    private $facturaDistribuida = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurContratoConcepto", inversedBy="pedidosDetallesContratoConceptoRel")
+     * @ORM\JoinColumn(name="codigo_contrato_concepto_fk", referencedColumnName="codigo_contrato_concepto_pk")
+     */
+    protected $contratoConceptoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurContratoConcepto", inversedBy="pedidosDetallesContratoConceptoFacturacionRel")
+     * @ORM\JoinColumn(name="codigo_contrato_concepto_facturacion_fk", referencedColumnName="codigo_contrato_concepto_pk")
+     */
+    protected $contratoConceptoFacturacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurContratoModalidad", inversedBy="pedidosDetallesContratoModalidadRel")
+     * @ORM\JoinColumn(name="codigo_contrato_modalidad_fk", referencedColumnName="codigo_contrato_modalidad_pk")
+     */
+    protected $contratoModalidadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurPuesto", inversedBy="pedidosDetallesPuestoRel")
+     * @ORM\JoinColumn(name="codigo_puesto_fk", referencedColumnName="codigo_puesto_pk")
+     */
+    protected $puestoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -268,6 +323,54 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
+    public function getCodigoContratoConceptoFk()
+    {
+        return $this->codigoContratoConceptoFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoConceptoFk
+     */
+    public function setCodigoContratoConceptoFk($codigoContratoConceptoFk): void
+    {
+        $this->codigoContratoConceptoFk = $codigoContratoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoConceptoFacturacionFk()
+    {
+        return $this->codigoContratoConceptoFacturacionFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoConceptoFacturacionFk
+     */
+    public function setCodigoContratoConceptoFacturacionFk($codigoContratoConceptoFacturacionFk): void
+    {
+        $this->codigoContratoConceptoFacturacionFk = $codigoContratoConceptoFacturacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoModalidadFk()
+    {
+        return $this->codigoContratoModalidadFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoModalidadFk
+     */
+    public function setCodigoContratoModalidadFk($codigoContratoModalidadFk): void
+    {
+        $this->codigoContratoModalidadFk = $codigoContratoModalidadFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoPuestoFk()
     {
         return $this->codigoPuestoFk;
@@ -279,38 +382,6 @@ class TurPedidoDetalle
     public function setCodigoPuestoFk($codigoPuestoFk): void
     {
         $this->codigoPuestoFk = $codigoPuestoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoConceptoFk()
-    {
-        return $this->codigoConceptoFk;
-    }
-
-    /**
-     * @param mixed $codigoConceptoFk
-     */
-    public function setCodigoConceptoFk($codigoConceptoFk): void
-    {
-        $this->codigoConceptoFk = $codigoConceptoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoModalidadFk()
-    {
-        return $this->codigoModalidadFk;
-    }
-
-    /**
-     * @param mixed $codigoModalidadFk
-     */
-    public function setCodigoModalidadFk($codigoModalidadFk): void
-    {
-        $this->codigoModalidadFk = $codigoModalidadFk;
     }
 
     /**
@@ -844,6 +915,22 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
+    public function getDetalleFactura()
+    {
+        return $this->detalleFactura;
+    }
+
+    /**
+     * @param mixed $detalleFactura
+     */
+    public function setDetalleFactura($detalleFactura): void
+    {
+        $this->detalleFactura = $detalleFactura;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrSalarioBase()
     {
         return $this->vrSalarioBase;
@@ -889,7 +976,100 @@ class TurPedidoDetalle
         $this->horaFin = $horaFin;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCompuesto()
+    {
+        return $this->compuesto;
+    }
 
+    /**
+     * @param mixed $compuesto
+     */
+    public function setCompuesto($compuesto): void
+    {
+        $this->compuesto = $compuesto;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getFacturaDistribuida()
+    {
+        return $this->facturaDistribuida;
+    }
+
+    /**
+     * @param mixed $facturaDistribuida
+     */
+    public function setFacturaDistribuida($facturaDistribuida): void
+    {
+        $this->facturaDistribuida = $facturaDistribuida;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoConceptoRel()
+    {
+        return $this->contratoConceptoRel;
+    }
+
+    /**
+     * @param mixed $contratoConceptoRel
+     */
+    public function setContratoConceptoRel($contratoConceptoRel): void
+    {
+        $this->contratoConceptoRel = $contratoConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoConceptoFacturacionRel()
+    {
+        return $this->contratoConceptoFacturacionRel;
+    }
+
+    /**
+     * @param mixed $contratoConceptoFacturacionRel
+     */
+    public function setContratoConceptoFacturacionRel($contratoConceptoFacturacionRel): void
+    {
+        $this->contratoConceptoFacturacionRel = $contratoConceptoFacturacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoModalidadRel()
+    {
+        return $this->contratoModalidadRel;
+    }
+
+    /**
+     * @param mixed $contratoModalidadRel
+     */
+    public function setContratoModalidadRel($contratoModalidadRel): void
+    {
+        $this->contratoModalidadRel = $contratoModalidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPuestoRel()
+    {
+        return $this->puestoRel;
+    }
+
+    /**
+     * @param mixed $puestoRel
+     */
+    public function setPuestoRel($puestoRel): void
+    {
+        $this->puestoRel = $puestoRel;
+    }
 }
 

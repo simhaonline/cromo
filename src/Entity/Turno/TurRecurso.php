@@ -32,10 +32,7 @@ class TurRecurso
      */
     private $comentario;
 
-    /**
-     * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="recursoRel")
-     */
-    protected $programacionesRecursoRel;
+
 
 
 }

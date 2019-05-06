@@ -190,25 +190,9 @@ class TteCiudad
     protected $monitoreosCiudadDestinoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TteDescuentoZona", mappedBy="ciudadOrigenRel")
+     * @ORM\OneToMany(targetEntity="TteCondicionZona", mappedBy="ciudadOrigenRel")
      */
-    protected $descuentosZonasCiudadOrigenRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    protected $condicionesZonasCiudadOrigenRel;
 
     /**
      * @return mixed
@@ -373,6 +357,22 @@ class TteCiudad
     /**
      * @return mixed
      */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getOrdenRuta()
     {
         return $this->ordenRuta;
@@ -432,6 +432,38 @@ class TteCiudad
     public function setRutaRel($rutaRel): void
     {
         $this->rutaRel = $rutaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartamentoRel()
+    {
+        return $this->departamentoRel;
+    }
+
+    /**
+     * @param mixed $departamentoRel
+     */
+    public function setDepartamentoRel($departamentoRel): void
+    {
+        $this->departamentoRel = $departamentoRel;
     }
 
     /**
@@ -613,22 +645,6 @@ class TteCiudad
     /**
      * @return mixed
      */
-    public function getDepartamentoRel()
-    {
-        return $this->departamentoRel;
-    }
-
-    /**
-     * @param mixed $departamentoRel
-     */
-    public function setDepartamentoRel($departamentoRel): void
-    {
-        $this->departamentoRel = $departamentoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCiudadRel()
     {
         return $this->ciudadRel;
@@ -725,50 +741,19 @@ class TteCiudad
     /**
      * @return mixed
      */
-    public function getCodigoZonaFk()
+    public function getCondicionesZonasCiudadOrigenRel()
     {
-        return $this->codigoZonaFk;
+        return $this->condicionesZonasCiudadOrigenRel;
     }
 
     /**
-     * @param mixed $codigoZonaFk
+     * @param mixed $condicionesZonasCiudadOrigenRel
      */
-    public function setCodigoZonaFk($codigoZonaFk): void
+    public function setCondicionesZonasCiudadOrigenRel($condicionesZonasCiudadOrigenRel): void
     {
-        $this->codigoZonaFk = $codigoZonaFk;
+        $this->condicionesZonasCiudadOrigenRel = $condicionesZonasCiudadOrigenRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getZonaRel()
-    {
-        return $this->zonaRel;
-    }
-
-    /**
-     * @param mixed $zonaRel
-     */
-    public function setZonaRel($zonaRel): void
-    {
-        $this->zonaRel = $zonaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescuentosZonasCiudadOrigenRel()
-    {
-        return $this->descuentosZonasCiudadOrigenRel;
-    }
-
-    /**
-     * @param mixed $descuentosZonasCiudadOrigenRel
-     */
-    public function setDescuentosZonasCiudadOrigenRel($descuentosZonasCiudadOrigenRel): void
-    {
-        $this->descuentosZonasCiudadOrigenRel = $descuentosZonasCiudadOrigenRel;
-    }
 
 
 }

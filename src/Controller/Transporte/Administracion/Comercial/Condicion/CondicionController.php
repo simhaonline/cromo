@@ -6,6 +6,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Entity\Transporte\TteClienteCondicion;
 use App\Entity\Transporte\TteCondicion;
+use App\Entity\Transporte\TteCondicionZona;
 use App\Entity\Transporte\TteDescuentoZona;
 use App\Form\Type\Transporte\CondicionType;
 use App\Form\Type\Transporte\DescuentoZonaType;
@@ -66,10 +67,10 @@ class CondicionController extends ControllerListenerGeneral
                 $em->getRepository(TteDescuentoZona::class)->eliminar($arrSeleccionados);
             }
         }
-        $arDescuentosZona = $em->getRepository(TteDescuentoZona::class)->condicion($id);
+        $arCondicionesZona = $em->getRepository(TteCondicionZona::class)->condicion($id);
         return $this->render('transporte/administracion/comercial/condicion/detalle.html.twig', array(
             'arCondicion' => $arCondicion,
-            'arDescuentosZona' => $arDescuentosZona,
+            'arCondicionesZona' => $arCondicionesZona,
             'form' => $form->createView()
         ));
     }

@@ -124,9 +124,9 @@ class TteCondicion
     protected $clientesCondicionesCondicionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TteDescuentoZona", mappedBy="condicionRel")
+     * @ORM\OneToMany(targetEntity="TteCondicionZona", mappedBy="condicionRel")
      */
-    protected $descuentosZonasCondicionRel;
+    protected $condicionesZonasCondicionRel;
 
     /**
      * @return mixed
@@ -467,18 +467,19 @@ class TteCondicion
     /**
      * @return mixed
      */
-    public function getDescuentosZonasCondicionRel()
+    public function getCondicionesZonasCondicionRel()
     {
-        return $this->descuentosZonasCondicionRel;
+        return $this->condicionesZonasCondicionRel;
     }
 
     /**
-     * @param mixed $descuentosZonasCondicionRel
+     * @param mixed $condicionesZonasCondicionRel
      */
-    public function setDescuentosZonasCondicionRel($descuentosZonasCondicionRel): void
+    public function setCondicionesZonasCondicionRel($condicionesZonasCondicionRel): void
     {
-        $this->descuentosZonasCondicionRel = $descuentosZonasCondicionRel;
+        $this->condicionesZonasCondicionRel = $condicionesZonasCondicionRel;
     }
+
 
 
 }

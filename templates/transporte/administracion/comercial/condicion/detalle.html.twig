@@ -59,7 +59,7 @@
         </tr>
     </table>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#descuento" data-toggle="tab">Descuento</a></li>
+        <li class="active"><a href="#descuento" data-toggle="tab">Zonas</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="descuento">
@@ -77,16 +77,16 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arDescuentoZona in arDescuentosZona %}
+                        {% for arCondicionZona in arCondicionesZona %}
                             <tr>
-                                <td>{{ arDescuentoZona.codigoDescuentoZonaPk }}</td>
-                                <td>{{ arDescuentoZona.ciudadOrigenNombre }}</td>
-                                <td>{{ arDescuentoZona.zonaNombre }}</td>
-                                <td>{{ arDescuentoZona.descuentoPeso }}</td>
+                                <td>{{ arCondicionZona.codigoCondicionZonaPk }}</td>
+                                <td>{{ arCondicionZona.ciudadOrigenNombre }}</td>
+                                <td>{{ arCondicionZona.zonaNombre }}</td>
+                                <td>{{ arCondicionZona.descuentoPeso }}</td>
                                 <td style="text-align: center;">
-                                    <a href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_condicion_detalle_nuevo', {'codigoCondicion': arCondicion.codigoCondicionPk, 'id': arDescuentoZona.codigoDescuentoZonaPk }) }}', 'descuentos', 600, 900)"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                                    <a href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_condicion_detalle_nuevo', {'codigoCondicion': arCondicion.codigoCondicionPk, 'id': arCondicionZona.codigoCondicionZonaPk }) }}', 'condiciones', 600, 900)"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
                                 </td>
-                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arDescuentoZona.codigoDescuentoZonaPk }}"/>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arCondicionZona.codigoCondicionZonaPk }}"/>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -97,7 +97,7 @@
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         <a class="btn btn-default btn-sm"
-                           href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_condicion_detalle_nuevo', {'codigoCondicion': arCondicion.codigoCondicionPk, 'id': '0' }) }}', 'descuentos', 600, 900)">Nuevo</a>
+                           href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_condicion_detalle_nuevo', {'codigoCondicion': arCondicion.codigoCondicionPk, 'id': '0' }) }}', 'condiciones', 600, 900)">Nuevo</a>
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}

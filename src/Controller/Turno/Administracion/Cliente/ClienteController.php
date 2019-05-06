@@ -4,6 +4,7 @@ namespace App\Controller\Turno\Administracion\Cliente;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurPuesto;
 use App\Form\Type\Turno\ClienteType;

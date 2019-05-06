@@ -82,7 +82,7 @@ class PuestoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('turno_administracion_cliente_puesto_detalle', ['id'=>$arTurPuesto->getCodigoPuestoPk()]));
             }
         }
-        return $this->render('turno/administracion/puesto/nuevo.html.twig', [
+        return $this->render('transporte/administracion/zona/nuevo.html.twig', [
             'arTurno' => $arTurPuesto,
             'form' => $form->createView()
         ]);

@@ -261,6 +261,7 @@ class GenModelo extends Fixture
                 'TteTipoCarroceria',
                 'TteTipoCombustible',
                 'TteVehiculo',
+                'TteZona',
             )),
             array('modulo'=>'Crm','modelo'=>array(
                'CrmVisita',

@@ -89,7 +89,7 @@ class ClienteType extends AbstractType
     {
         $campos = '[
             {"child":"codigoClientePk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
-            {"child":"nombre", "tipo":"TextType",    "propiedades":{"label":"Nombre"}}
+            {"child":"nombreCorto", "tipo":"TextType",    "propiedades":{"label":"Nombre"}}
         ]';
         return $campos;
     }

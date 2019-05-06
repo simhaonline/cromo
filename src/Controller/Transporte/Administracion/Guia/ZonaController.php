@@ -50,7 +50,7 @@ class ZonaController extends ControllerListenerGeneral
             }
         }
         return $this->render('transporte/administracion/zona/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
+            'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
         ]);
@@ -59,7 +59,13 @@ class ZonaController extends ControllerListenerGeneral
     /**
      * @Route("/transporte/administracion/zona/detalle/{id}", name="transporte_administracion_guia_zona_detalle")
      */
-    public function detalle(){
+    public function detalle(Request $request, $id){
+        $em = $this->getDoctrine()->getManager();
+        $arZona = $em->getRepository(TteZona::class)->find($id);
+
+        return $this->render('transporte/administracion/zona/detalle.html.twig', [
+            'arZona'=>$arZona
+        ]);
     }
 
     /**
@@ -81,7 +87,7 @@ class ZonaController extends ControllerListenerGeneral
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arZona);
                 $em->flush();
-                return $this->redirect($this->generateUrl('turno_administracion_cliente_puesto_detalle', ['id'=>$arZona->getCodigoZonaPk()]));
+                return $this->redirect($this->generateUrl('transporte_administracion_guia_zona_detalle', ['id'=>$arZona->getCodigoZonaPk()]));
             }
         }
         return $this->render('transporte/administracion/zona/nuevo.html.twig', [

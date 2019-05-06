@@ -7,6 +7,7 @@ use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteCondicion;
+use App\Entity\Transporte\TteDescuentoZona;
 use App\Entity\Transporte\TteDestinatario;
 use App\Entity\Transporte\TteEmpaque;
 use App\Entity\Transporte\TteGuia;
@@ -289,6 +290,22 @@ class ApiWindowsController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(TtePrecioDetalle::class)->apiWindowsDetalle($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/windows/descuentozona/detalle")
+     */
+    public function descuentoZonaDetalle(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteDescuentoZona::class)->apiWindowsDetalle($raw);
         } catch (\Exception $e) {
             return [
                 'error' => "Ocurrio un error en la api " . $e->getMessage(),

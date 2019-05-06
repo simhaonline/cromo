@@ -30,6 +30,7 @@ use App\Form\Type\Transporte\FacturaType;
 use App\Formato\Transporte\Factura;
 
 use App\Formato\Transporte\Factura2;
+use App\Formato\Transporte\Factura3;
 use App\Formato\Transporte\ListaFactura;
 use App\Formato\Transporte\NotaCredito;
 use App\General\General;
@@ -149,8 +150,11 @@ class FacturaController extends ControllerListenerGeneral
                     if ($codigoFactura == 1) {
                         $formato = new Factura();
                         $formato->Generar($em, $id);
-                    } else {
+                    } if($codigoFactura == 2) {
                         $formato = new Factura2();
+                        $formato->Generar($em, $id);
+                    } if($codigoFactura == 3){
+                        $formato = new Factura3();
                         $formato->Generar($em, $id);
                     }
                 }

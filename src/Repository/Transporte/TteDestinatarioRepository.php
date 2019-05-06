@@ -20,7 +20,10 @@ class TteDestinatarioRepository extends ServiceEntityRepository
         $nombre = $raw['nombre']?? null;
         $queryBuilder = $em->createQueryBuilder()->from(TteDestinatario::class, 'd')
             ->select('d.codigoDestinatarioPk')
+            ->addSelect('d.numeroIdentificacion')
             ->addSelect('d.nombreCorto')
+            ->addSelect('c.nombre as ciudadNombre')
+            ->leftJoin('d.ciudadRel', 'c')
             ->setMaxResults(10);
         if($nombre) {
             $queryBuilder->andWhere("d.nombreCorto LIKE '%${nombre}%'");

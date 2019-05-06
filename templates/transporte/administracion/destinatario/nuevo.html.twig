@@ -5,29 +5,23 @@
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_codigoVehiculoPk" class="col-sm-2 control-label">Identificacion tipo:</label>
+                <label for="form_pĺaca" class="col-sm-2 control-label">Identificacion tipo:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.identificacionRel, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{  form_widget(form.identificacionRel )}}
                 </div>
                 <label for="form_pĺaca" class="col-sm-2 control-label">Identificacion:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.numeroIdentificacion, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                   {{  form_widget(form.numeroIdentificacion )}}
                 </div>
-                <label for="form_digitoVerificacion" class="col-sm-2 control-label">Digito:</label>
+                <label for="form_Digito" class="col-sm-1 col-sm-offset-1 control-label">Digito:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.digitoVerificacion, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{  form_widget(form.digitoVerificacion )}}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_razonSocial" class="col-sm-2 control-label">Nombre corto:</label>
+                <label for="form_nombreCorto" class="col-sm-2 control-label">Nombre corto:</label>
                 <div class="col-sm-10">
-                    {{ form_widget(form.nombreCorto, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_razonSocial" class="col-sm-2 control-label">Nombre Extendido:</label>
-                <div class="col-sm-10">
-                    {{ form_widget(form.nombreExtendido, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{  form_widget(form.nombreCorto )}}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -75,25 +69,11 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.correo, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Plazo pago:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.plazoPago, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_plazoPago" class="col-sm-2 control-label">Asesor:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.asesorRel, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_plazoPago" class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
                     {{ form_widget(form.estadoInactivo) }}
-                </div>
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.retencionFuenteSinBase) }}
                 </div>
             </div>
             <div class="form-group">
@@ -104,38 +84,9 @@
             </div>
         </div>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">Información comercial</div>
-        <div class="panel-body">
-            <div class="form-group form-group-sm">
-                <label for="form_condiciionRel" class="col-sm-2 control-label">Condicion:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.condicionRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
-                    {{ form_errors(form.condicionRel) }}
-                </div>
-                <label for="form_condiciionRel" class="col-sm-2 control-label">Operacion:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.operacionRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
-                    {{ form_errors(form.operacionRel) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_condiciionRel" class="col-sm-2 control-label"></label>
-                <div class="col-sm-10">
-                    {{ form_widget(form.guiaPagoCredito) }}
-                    {{ form_widget(form.guiaPagoContado) }}
-                    {{ form_widget(form.guiaPagoDestino) }}
-                    {{ form_widget(form.guiaPagoCortesia) }}
-                    {{ form_widget(form.guiaPagoRecogida) }}
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_comercial_cliente_lista') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('transporte_administracion_guia_destinatario_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

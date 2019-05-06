@@ -54,6 +54,11 @@ class TurContratoModalidad
     private $comentarios;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="contratoModalidadRel")
+     */
+    protected $pedidosDetallesContratoModalidadRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -180,6 +185,23 @@ class TurContratoModalidad
     {
         $this->comentarios = $comentarios;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesContratoModalidadRel()
+    {
+        return $this->pedidosDetallesContratoModalidadRel;
+    }
+
+    /**
+     * @param mixed $pedidosDetallesContratoModalidadRel
+     */
+    public function setPedidosDetallesContratoModalidadRel($pedidosDetallesContratoModalidadRel): void
+    {
+        $this->pedidosDetallesContratoModalidadRel = $pedidosDetallesContratoModalidadRel;
+    }
+
 
 
 }

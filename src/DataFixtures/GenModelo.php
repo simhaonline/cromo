@@ -14,7 +14,8 @@ class GenModelo extends Fixture
             array('modulo'=>'Turno','modelo'=>array(
                 'TurCliente',
                 'TurContrato',
-                'TurPuesto'
+                'TurPuesto',
+                'TurPedido',
             )),
             array('modulo'=>'Cartera','modelo'=>array(
                 'CarCliente',

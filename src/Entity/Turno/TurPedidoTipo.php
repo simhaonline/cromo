@@ -32,5 +32,68 @@ class TurPedidoTipo
      */
     protected $pedidosPedidoTipoRel;
 
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPedidoTipoPk()
+    {
+        return $this->codigoPedidoTipoPk;
+    }
+
+    /**
+     * @param mixed $codigoPedidoTipoPk
+     */
+    public function setCodigoPedidoTipoPk($codigoPedidoTipoPk): void
+    {
+        $this->codigoPedidoTipoPk = $codigoPedidoTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosPedidoTipoRel()
+    {
+        return $this->pedidosPedidoTipoRel;
+    }
+
+    /**
+     * @param mixed $pedidosPedidoTipoRel
+     */
+    public function setPedidosPedidoTipoRel($pedidosPedidoTipoRel): void
+    {
+        $this->pedidosPedidoTipoRel = $pedidosPedidoTipoRel;
+    }
 }
 

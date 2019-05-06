@@ -14,7 +14,7 @@ class TurContratoConcepto
 {
     public $infoLog = [
         "primaryKey" => "codigoContratoConceptoPk",
-        "todos"     => true,
+        "todos" => true,
     ];
 
     /**
@@ -73,6 +73,16 @@ class TurContratoConcepto
      * @ORM\Column(name="porcentaje_retencion_fuente", type="float",nullable=true)
      */
     private $porcentajeRetencionFuente = 0;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="contratoConceptoRel")
+     */
+    protected $pedidosDetallesContratoConceptoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="contratoConceptoFacturacionRel")
+     */
+    protected $pedidosDetallesContratoConceptoFacturacionRel;
 
     /**
      * @return array
@@ -264,6 +274,38 @@ class TurContratoConcepto
     public function setPorcentajeRetencionFuente($porcentajeRetencionFuente): void
     {
         $this->porcentajeRetencionFuente = $porcentajeRetencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesContratoConceptoRel()
+    {
+        return $this->pedidosDetallesContratoConceptoRel;
+    }
+
+    /**
+     * @param mixed $pedidosDetallesContratoConceptoRel
+     */
+    public function setPedidosDetallesContratoConceptoRel($pedidosDetallesContratoConceptoRel): void
+    {
+        $this->pedidosDetallesContratoConceptoRel = $pedidosDetallesContratoConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesContratoConceptoFacturacionRel()
+    {
+        return $this->pedidosDetallesContratoConceptoFacturacionRel;
+    }
+
+    /**
+     * @param mixed $pedidosDetallesContratoConceptoFacturacionRel
+     */
+    public function setPedidosDetallesContratoConceptoFacturacionRel($pedidosDetallesContratoConceptoFacturacionRel): void
+    {
+        $this->pedidosDetallesContratoConceptoFacturacionRel = $pedidosDetallesContratoConceptoFacturacionRel;
     }
 
 

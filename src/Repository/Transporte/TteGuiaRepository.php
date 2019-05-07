@@ -6,6 +6,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenFormaPago;
 use App\Entity\General\GenIdentificacion;
 use App\Entity\Transporte\TteCiudad;
@@ -23,6 +24,7 @@ use App\Entity\Transporte\TteEmpaque;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaPlanilla;
+use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteOperacion;
@@ -3162,13 +3164,55 @@ class TteGuiaRepository extends ServiceEntityRepository
         $codigo = $raw['codigoGuiaPk']?? null;
         if($codigo) {
             $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g')
-                ->select('g.codigoGuiaPk');
+                ->select('g.codigoGuiaPk')
+                ->addSelect('g.numero')
+                ->addSelect('g.factura')
+                ->addSelect('g.numeroFactura')
+                ->addSelect('gt.codigoFacturaTipoFk')
+                ->addSelect('gt.nombre as guiaTipoNombre')
+                ->addSelect('g.fechaIngreso')
+                ->addSelect('co.nombre as ciudadOrigenNombre')
+                ->addSelect('cd.nombre as ciudadDestinoNombre')
+                ->addSelect('g.remitente')
+                ->addSelect('g.nombreDestinatario')
+                ->addSelect('g.telefonoDestinatario')
+                ->addSelect('g.direccionDestinatario')
+                ->addSelect('c.nombreCorto as clienteNombre')
+                ->addSelect('c.direccion as clienteDireccion')
+                ->addSelect('c.telefono as clienteTelefono')
+                ->addSelect('g.documentoCliente')
+                ->addSelect('g.vrDeclara')
+                ->addSelect('g.vrFlete')
+                ->addSelect('g.vrManejo')
+                ->addSelect('g.comentario')
+            ->leftJoin('g.guiaTipoRel', 'gt')
+            ->leftJoin('g.ciudadOrigenRel', 'co')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.clienteRel', 'c');
             $queryBuilder->where("g.codigoGuiaPk=" . $codigo);
             $arGuias = $queryBuilder->getQuery()->getResult();
             if($arGuias) {
                 $arGuia = $arGuias[0];
+                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
+                $numeroFactura = null;
+                if($arGuia['factura']) {
+                    if($arGuia['codigoFacturaTipoFk']) {
+                        $arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arGuia['codigoFacturaTipoFk']);
+                        if($arFacturaTipo) {
+                            $numeroFactura = $arFacturaTipo->getPrefijo() . $arGuia['numeroFactura'];
+                        }
+                    }
+                }
+
                 $arrGuia = [
-                    "codigoGuiaPk" => $arGuia['codigoGuiaPk']
+                    "empresaNit" => $arConfiguracion->getNit(),
+                    "empresaNombre" => $arConfiguracion->getNombre(),
+                    "empresaDireccion" => $arConfiguracion->getDireccion(),
+                    "codigoGuiaPk" => $arGuia['codigoGuiaPk'],
+                    "numero" => $arGuia['numero'],
+                    "numeroFactura" => $numeroFactura,
+                    "codigoFacturaTipoFk" => $arGuia['codigoFacturaTipoFk'],
+                    "guiaTipoNombre" => $arGuia['guiaTipoNombre']
                 ];
                 return $arrGuia;
             } else {

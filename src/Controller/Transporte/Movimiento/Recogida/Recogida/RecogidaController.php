@@ -26,7 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RecogidaController extends ControllerListenerGeneral
 {
-    protected $clase= TteRecogida::class;
+    protected $clase = TteRecogida::class;
     protected $claseNombre = "TteRecogida";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
@@ -50,15 +50,14 @@ class RecogidaController extends ControllerListenerGeneral
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
-//                $datos = $this->getDatosLista();
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 $fechaActual = new \DateTime('now');
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "recogida".$fechaActual->format('ymd'));
+                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "recogida" . $fechaActual->format('ymd'));
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -73,42 +72,6 @@ class RecogidaController extends ControllerListenerGeneral
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
         ]);
-//        $em = $this->getDoctrine()->getManager();
-//        $session = new Session();
-//        $paginator  = $this->get('knp_paginator');
-//        $form = $this->createFormBuilder()
-//            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-//            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
-//            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteRecogidaCodigo')])
-//            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-//            ->add('chkEstadoProgramado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTteRecogidaEstadoProgramado'), 'required' => false])
-//            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-//            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-//            ->getForm();
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted()) {
-//            if ($form->isValid()) {
-//                if ($form->get('btnFiltrar')->isClicked()) {
-//                    $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
-//                    $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
-//                    $session->set('filtroTteRecogidaEstadoProgramado', $form->get('chkEstadoProgramado')->getData());
-//                    $session->set('filtroTteRecogidaCodigo', $form->get('txtCodigo')->getData());
-//                }
-//                if($form->get('btnEliminar')->isClicked()){
-//                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                    $em->getRepository(TteRecogida::class)->eliminar($arrSeleccionados);
-//                }
-//                if ($form->get('btnExcel')->isClicked()) {
-//                    General::get()->setExportar($em->createQuery($em->getRepository(TteRecogida::class)->lista())->execute(), "Recogida");
-//                }
-//            }
-//        }
-//        $query = $this->getDoctrine()->getRepository(TteRecogida::class)->lista();
-//        $arRecogidas = $paginator->paginate($query, $request->query->getInt('page', 1),20);
-//        return $this->render('transporte/movimiento/recogida/recogida/lista.html.twig', [
-//            'arRecogidas' => $arRecogidas ,
-//            'form' => $form->createView()
-//        ]);
     }
 
     /**
@@ -118,7 +81,7 @@ class RecogidaController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arRecogida = $em->getRepository(TteRecogida::class)->find($id);
-        $form = Estandares::botonera($arRecogida->getEstadoAutorizado(),$arRecogida->getEstadoAprobado(),$arRecogida->getEstadoAnulado());
+        $form = Estandares::botonera($arRecogida->getEstadoAutorizado(), $arRecogida->getEstadoAprobado(), $arRecogida->getEstadoAnulado());
         $form->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -163,9 +126,9 @@ class RecogidaController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             $arRecogida = $form->getData();
             $txtCodigoCliente = $request->request->get('txtCodigoCliente');
-            if($txtCodigoCliente != '') {
+            if ($txtCodigoCliente != '') {
                 $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
-                if($arCliente) {
+                if ($arCliente) {
                     $arRecogida->setClienteRel($arCliente);
                     $arRecogida->setOperacionRel($this->getUser()->getOperacionRel());
                     $arRecogida->setAnunciante($arCliente->getNombreCorto());
@@ -176,12 +139,12 @@ class RecogidaController extends ControllerListenerGeneral
                     if ($form->get('guardarnuevo')->isClicked()) {
                         return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_nuevo', array('id' => 0)));
                     } else {
-                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_detalle',['id' => $arRecogida->getCodigoRecogidaPk()]));
+                        return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_detalle', ['id' => $arRecogida->getCodigoRecogidaPk()]));
                     }
                 }
             }
         }
-        return $this->render('transporte/movimiento/recogida/recogida/nuevo.html.twig', ['arRecogida' => $arRecogida,'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/recogida/recogida/nuevo.html.twig', ['arRecogida' => $arRecogida, 'form' => $form->createView()]);
     }
 
     /**
@@ -190,23 +153,24 @@ class RecogidaController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/transporte/movimiento/recogida/recogida/reprogramar/{id}", name="transporte_movimiento_recogida_reprogramar_nuevo")
      */
-    public function reprogramarRecodiga(Request $request, $id){
+    public function reprogramarRecodiga(Request $request, $id)
+    {
         $em = $this->getDoctrine()->getManager();
         $arRecogida = $em->getRepository(TteRecogida::class)->find($id);
         $form = $this->createFormBuilder()
-            ->add('fecha', DateType::class,array('widget' => 'single_text','data' => $arRecogida->getFecha(), 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
-            ->add('btnGuardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('fecha', DateType::class, array('widget' => 'single_text', 'data' => $arRecogida->getFecha(), 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            if($form->get('btnGuardar')->isClicked()){
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
                 $arRecogida->setFecha($form->get('fecha')->getData());
                 $em->persist($arRecogida);
                 $em->flush();
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        return $this->render('transporte/movimiento/recogida/recogida/reprogramar.html.twig',[
+        return $this->render('transporte/movimiento/recogida/recogida/reprogramar.html.twig', [
             'form' => $form->createView()
         ]);
     }

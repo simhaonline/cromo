@@ -114,6 +114,8 @@ class RecogidaType extends AbstractType {
         $campos = '[
             {"child":"codigoClienteFk", "tipo":"TextType",  "propiedades":{"label":"Cliente"}},
             {"child":"codigoRecogidaPk","tipo":"TextType",  "propiedades":{"label":"Codigo"}},
+            {"child":"fechaDesde",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
             {"child":"estadoProgramado","tipo":"ChoiceType","propiedades":{"label":"Programado", "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAutorizado","tipo":"ChoiceType","propiedades":{"label":"Autorizado", "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAprobado",  "tipo":"ChoiceType","propiedades":{"label":"Aprobado",   "choices":{"SI":true,"NO":false}}},

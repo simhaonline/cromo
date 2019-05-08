@@ -81,6 +81,7 @@ class RelacionCajaController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arRelacionCaja = $form->getData();
+            $arRelacionCaja->setUsuario($this->getUser()->getUsername());
             $em->persist($arRelacionCaja);
             $em->flush();
             if ($form->get('guardarnuevo')->isClicked()) {

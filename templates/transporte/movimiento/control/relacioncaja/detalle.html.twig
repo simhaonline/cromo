@@ -74,7 +74,7 @@
                             <th>FECHA</th>
                             <th>GUIA</th>
                             <th>F_ING</th>
-                            <th>NUMERO</th>
+                            <th>NUMERO_FAC</th>
                             <th>CLIENTE</th>
                             <th>DOCUMENTO</th>
                             <th>FLETE</th>
@@ -90,7 +90,7 @@
                                 <td>{{ arRecibo.fecha | date('Y-m-d') }}</td>
                                 <td>{{ arRecibo.codigoGuiaFk }}</td>
                                 <td>{{ arRecibo.fechaIngreso | date('Y-m-d') }}</td>
-                                <td>{{ arRecibo.guiaNumero }}</td>
+                                <td>{{ arRecibo.numeroFactura }}</td>
                                 <td>{{ arRecibo.clienteNombre }}</td>
                                 <td>{{ arRecibo.documentoCliente }}</td>
                                 <td class="numero">{{ arRecibo.vrFlete | number_format }}</td>

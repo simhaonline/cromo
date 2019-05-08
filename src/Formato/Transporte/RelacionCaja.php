@@ -4,6 +4,7 @@ namespace App\Formato\Transporte;
 
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
+use App\Entity\Transporte\TteDocumental;
 use App\Entity\Transporte\TteRelacionCaja;
 use App\Entity\Transporte\TteRecibo;
 use App\Utilidades\Estandares;
@@ -30,6 +31,35 @@ class RelacionCaja extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
 
         Estandares::generarEncabezado($this,'RELACION CAJA', self::$em);
+        $arRelacionCaja = self::$em->getRepository(TteRelacionCaja::class)->find(self::$codigoRelacionCaja);
+
+        //linea 1
+        $this->SetXY(10, 40);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(48, 6, utf8_decode("NUMERO:"), 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(47, 6, $arRelacionCaja->getCodigoRelacionCajaPk(), 1, 0, 'R', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(48, 6, "CANTIDAD:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(47, 6, $arRelacionCaja->getCantidad(), 1, 0, 'R', 1);
+        $this->SetXY(10, 46);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(48, 6, utf8_decode("FECHA:"), 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(47, 6, $arRelacionCaja->getFecha()->format('Y-m-d'), 1, 'R', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(48, 6, utf8_decode("USUARIO:"), 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(47, 6, $arRelacionCaja->getUsuario(), 1, 'R', 1);
 
         $this->EncabezadoDetalles();
 
@@ -37,7 +67,7 @@ class RelacionCaja extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('ID', 'FECHA', 'TIPO', 'GUIA', 'NUMERO','F_ING', 'CLIENTE', 'FLETE', 'MANEJO', 'TOTAL');
+        $header = array('ID', 'FECHA', 'TIPO', 'GUIA', 'NUMERO_FAC','F_ING', 'CLIENTE', 'FLETE', 'MANEJO', 'TOTAL');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -68,7 +98,7 @@ class RelacionCaja extends \FPDF {
                 $pdf->Cell(16, 4, $arRecibo['fecha']->format('Y-m-d'), 1, 0, 'L');
                 $pdf->Cell(10, 4, $arRecibo['codigoGuiaTipoFk'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arRecibo['codigoGuiaFk'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arRecibo['guiaNumero'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arRecibo['numeroFactura'], 1, 0, 'L');
                 $pdf->Cell(16, 4, $arRecibo['fechaIngreso']->format('Y-m-d'), 1, 0, 'L');
                 $pdf->Cell(53, 4, substr(utf8_decode($arRecibo['clienteNombre']),0,33), 1, 0, 'L');
                 $pdf->Cell(15, 4, number_format($arRecibo['vrFlete'], 0, '.', ','), 1, 0, 'R');

@@ -67,6 +67,8 @@ class NovedadType extends AbstractType {
 
         $campos = '[
             {"child":"guiaRel.numero",                  "tipo":"TextType",   "propiedades":{"label":"Guia"},        "relacion":""},
+            {"child":"fechaReporteDesde",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaReporteHasta",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
             {"child":"codigoNovedadTipoFk",             "tipo":"EntityType", "propiedades":{"class":"TteNovedadTipo",   "choice_label":"nombre",    "label":"TODOS"}}
         ]';
 
@@ -75,7 +77,7 @@ class NovedadType extends AbstractType {
 
     public function getOrdenamiento(){
         $campos ='[
-            {"campo":"codigoNovedadPk","tipo":"ASC"}
+            {"campo":"codigoNovedadPk","tipo":"DESC"}
         ]';
         return $campos;
     }

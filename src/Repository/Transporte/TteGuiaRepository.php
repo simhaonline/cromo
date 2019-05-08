@@ -3169,6 +3169,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 ->addSelect('g.factura')
                 ->addSelect('g.numeroFactura')
                 ->addSelect('gt.codigoFacturaTipoFk')
+                ->addSelect('gt.mensajeFormato')
                 ->addSelect('gt.nombre as guiaTipoNombre')
                 ->addSelect('g.fechaIngreso')
                 ->addSelect('co.nombre as ciudadOrigenNombre')
@@ -3184,6 +3185,9 @@ class TteGuiaRepository extends ServiceEntityRepository
                 ->addSelect('g.vrDeclara')
                 ->addSelect('g.vrFlete')
                 ->addSelect('g.vrManejo')
+                ->addSelect('g.vrCobroEntrega')
+                ->addSelect('g.unidades')
+                ->addSelect('g.pesoReal')
                 ->addSelect('g.comentario')
             ->leftJoin('g.guiaTipoRel', 'gt')
             ->leftJoin('g.ciudadOrigenRel', 'co')
@@ -3194,25 +3198,62 @@ class TteGuiaRepository extends ServiceEntityRepository
             if($arGuias) {
                 $arGuia = $arGuias[0];
                 $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
-                $numeroFactura = null;
+                $numeroFactura = "";
+                $fleteFactura = 0;
+                $manejoFactura = 0;
+                $totalFactura = 0;
+                $tituloFactura = "";
+                $resolucionFactura = "";
                 if($arGuia['factura']) {
                     if($arGuia['codigoFacturaTipoFk']) {
                         $arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arGuia['codigoFacturaTipoFk']);
                         if($arFacturaTipo) {
                             $numeroFactura = $arFacturaTipo->getPrefijo() . $arGuia['numeroFactura'];
+                            $tituloFactura = $arFacturaTipo->getNombre();
                         }
                     }
+                    $fleteFactura = $arGuia['vrFlete'];
+                    $manejoFactura = $arGuia['vrManejo'];
+                    $totalFactura = $arGuia['vrFlete'] + $arGuia['vrManejo'];
+                    $resolucionFactura = $arGuia['mensajeFormato'];
                 }
 
                 $arrGuia = [
-                    "empresaNit" => $arConfiguracion->getNit(),
+                    "empresaNit" => $arConfiguracion->getNit() . "-" . $arConfiguracion->getDigitoVerificacion(),
                     "empresaNombre" => $arConfiguracion->getNombre(),
                     "empresaDireccion" => $arConfiguracion->getDireccion(),
+                    "empresaTelefono" => $arConfiguracion->getTelefono(),
                     "codigoGuiaPk" => $arGuia['codigoGuiaPk'],
                     "numero" => $arGuia['numero'],
+                    "codigoBarras" => "*" . $arGuia['codigoGuiaPk'] . "*",
                     "numeroFactura" => $numeroFactura,
+                    "tituloFactura" => $tituloFactura,
+                    "resolucionFactura" => $resolucionFactura,
                     "codigoFacturaTipoFk" => $arGuia['codigoFacturaTipoFk'],
-                    "guiaTipoNombre" => $arGuia['guiaTipoNombre']
+                    "factura" => $arGuia['factura'],
+                    "guiaTipoNombre" => $arGuia['guiaTipoNombre'],
+                    "fechaIngreso" => $arGuia['fechaIngreso'],
+                    "ciudadOrigenNombre" => $arGuia['ciudadOrigenNombre'],
+                    "ciudadDestinoNombre" => $arGuia['ciudadDestinoNombre'],
+                    "remitente" => $arGuia['remitente'],
+                    "nombreDestinatario" => $arGuia['nombreDestinatario'],
+                    "telefonoDestinatario" => $arGuia['telefonoDestinatario'],
+                    "direccionDestinatario" => $arGuia['direccionDestinatario'],
+                    "clienteNombre" => $arGuia['clienteNombre'],
+                    "clienteDireccion" => $arGuia['clienteDireccion'],
+                    "clienteTelefono" => $arGuia['clienteTelefono'],
+                    "documentoCliente" => $arGuia['documentoCliente'],
+                    "vrDeclara" => $arGuia['vrDeclara'],
+                    "vrFlete" => $arGuia['vrFlete'],
+                    "vrManejo" => $arGuia['vrManejo'],
+                    "vrTotal" => $arGuia['vrFlete'] + $arGuia['vrManejo'],
+                    "vrCobroEntrega" => $arGuia['vrCobroEntrega'],
+                    "vrFleteFactura" => $fleteFactura,
+                    "vrManejoFactura" => $manejoFactura,
+                    "vrTotalFactura" => $totalFactura,
+                    "unidades" => $arGuia['unidades'],
+                    "pesoReal" => $arGuia['pesoReal'],
+                    "comentario" => $arGuia['comentario'],
                 ];
                 return $arrGuia;
             } else {

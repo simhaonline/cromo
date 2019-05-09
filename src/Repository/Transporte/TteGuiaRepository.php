@@ -2942,7 +2942,6 @@ class TteGuiaRepository extends ServiceEntityRepository
         return true;
     }
 
-
     public function apiCesioListaCliente($codigoCliente, $fechaDesde, $fechaHasta, $numero, $documento)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 't')

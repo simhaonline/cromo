@@ -62,4 +62,35 @@ class TteGuiaCargaRepository extends ServiceEntityRepository
         } catch (\Exception $exception){
         }
     }
+
+    public function apiWindowsDetalle($raw) {
+        $em = $this->getEntityManager();
+        $documentoCliente = $raw['documentoCliente']?? null;
+        if($documentoCliente) {
+            $queryBuilder = $em->createQueryBuilder()->from(TteGuiaCarga::class, 'gc')
+                ->select('gc.codigoGuiaCargaPk')
+                ->addSelect('gc.documentoCliente')
+                ->addSelect('gc.remitente')
+                ->addSelect('gc.numero')
+                ->addSelect('gc.relacionCliente')
+                ->addSelect('gc.nombreDestinatario')
+                ->addSelect('gc.direccionDestinatario')
+                ->addSelect('gc.telefonoDestinatario')
+                ->addSelect('gc.comentario')
+                ->addSelect('gc.vrDeclarado')
+                ->where("gc.documentoCliente = '{$documentoCliente}'");
+            $arGuiasCargas = $queryBuilder->getQuery()->getResult();
+            if($arGuiasCargas) {
+                return $arGuiasCargas[0];
+            } else {
+                return [
+                    "error" => "No se encontraron resultados"
+                ];
+            }
+            return $arGuiasCargas;
+        } else {
+            return ["error" => "Faltan datos para la api"];
+        }
+    }
+
 }

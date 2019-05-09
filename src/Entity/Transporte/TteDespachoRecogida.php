@@ -38,6 +38,11 @@ class TteDespachoRecogida
     private $codigoRutaRecogidaFk;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCiudadnFk;
+
+    /**
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
@@ -178,6 +183,12 @@ class TteDespachoRecogida
     private $usuario;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="despachosRecogidasCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    private $ciudadRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespachoRecogidaTipo", inversedBy="despachosRecogidasDespachoRecogidaTipoRel")
      * @ORM\JoinColumn(name="codigo_despacho_recogida_tipo_fk", referencedColumnName="codigo_despacho_recogida_tipo_pk")
      */
@@ -218,6 +229,27 @@ class TteDespachoRecogida
     protected $despachosRecogidasAuxiliaresDespachoRecogidaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteMonitoreo", mappedBy="despachoRecogidaRel")
+     */
+    protected $monitoreosDespachoRecogidaRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoDespachoRecogidaPk()
@@ -231,6 +263,22 @@ class TteDespachoRecogida
     public function setCodigoDespachoRecogidaPk($codigoDespachoRecogidaPk): void
     {
         $this->codigoDespachoRecogidaPk = $codigoDespachoRecogidaPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoRecogidaTipoFk()
+    {
+        return $this->codigoDespachoRecogidaTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoRecogidaTipoFk
+     */
+    public function setCodigoDespachoRecogidaTipoFk($codigoDespachoRecogidaTipoFk): void
+    {
+        $this->codigoDespachoRecogidaTipoFk = $codigoDespachoRecogidaTipoFk;
     }
 
     /**
@@ -268,6 +316,22 @@ class TteDespachoRecogida
     /**
      * @return mixed
      */
+    public function getCodigoCiudadnFk()
+    {
+        return $this->codigoCiudadnFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadnFk
+     */
+    public function setCodigoCiudadnFk($codigoCiudadnFk): void
+    {
+        $this->codigoCiudadnFk = $codigoCiudadnFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFecha()
     {
         return $this->fecha;
@@ -284,6 +348,22 @@ class TteDespachoRecogida
     /**
      * @return mixed
      */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoVehiculoFk()
     {
         return $this->codigoVehiculoFk;
@@ -295,6 +375,22 @@ class TteDespachoRecogida
     public function setCodigoVehiculoFk($codigoVehiculoFk): void
     {
         $this->codigoVehiculoFk = $codigoVehiculoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConductorFk()
+    {
+        return $this->codigoConductorFk;
+    }
+
+    /**
+     * @param mixed $codigoConductorFk
+     */
+    public function setCodigoConductorFk($codigoConductorFk): void
+    {
+        $this->codigoConductorFk = $codigoConductorFk;
     }
 
     /**
@@ -540,6 +636,22 @@ class TteDespachoRecogida
     /**
      * @return mixed
      */
+    public function getVrSaldo()
+    {
+        return $this->vrSaldo;
+    }
+
+    /**
+     * @param mixed $vrSaldo
+     */
+    public function setVrSaldo($vrSaldo): void
+    {
+        $this->vrSaldo = $vrSaldo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoDescargado()
     {
         return $this->estadoDescargado;
@@ -620,6 +732,22 @@ class TteDespachoRecogida
     /**
      * @return mixed
      */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -631,6 +759,54 @@ class TteDespachoRecogida
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoRecogidaTipoRel()
+    {
+        return $this->despachoRecogidaTipoRel;
+    }
+
+    /**
+     * @param mixed $despachoRecogidaTipoRel
+     */
+    public function setDespachoRecogidaTipoRel($despachoRecogidaTipoRel): void
+    {
+        $this->despachoRecogidaTipoRel = $despachoRecogidaTipoRel;
     }
 
     /**
@@ -684,6 +860,22 @@ class TteDespachoRecogida
     /**
      * @return mixed
      */
+    public function getConductorRel()
+    {
+        return $this->conductorRel;
+    }
+
+    /**
+     * @param mixed $conductorRel
+     */
+    public function setConductorRel($conductorRel): void
+    {
+        $this->conductorRel = $conductorRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRecogidasDespachoRecogidaRel()
     {
         return $this->recogidasDespachoRecogidaRel;
@@ -716,129 +908,17 @@ class TteDespachoRecogida
     /**
      * @return mixed
      */
-    public function getVrSaldo()
+    public function getMonitoreosDespachoRecogidaRel()
     {
-        return $this->vrSaldo;
+        return $this->monitoreosDespachoRecogidaRel;
     }
 
     /**
-     * @param mixed $vrSaldo
+     * @param mixed $monitoreosDespachoRecogidaRel
      */
-    public function setVrSaldo($vrSaldo): void
+    public function setMonitoreosDespachoRecogidaRel($monitoreosDespachoRecogidaRel): void
     {
-        $this->vrSaldo = $vrSaldo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoConductorFk()
-    {
-        return $this->codigoConductorFk;
-    }
-
-    /**
-     * @param mixed $codigoConductorFk
-     */
-    public function setCodigoConductorFk($codigoConductorFk): void
-    {
-        $this->codigoConductorFk = $codigoConductorFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConductorRel()
-    {
-        return $this->conductorRel;
-    }
-
-    /**
-     * @param mixed $conductorRel
-     */
-    public function setConductorRel($conductorRel): void
-    {
-        $this->conductorRel = $conductorRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoDespachoRecogidaTipoFk()
-    {
-        return $this->codigoDespachoRecogidaTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoDespachoRecogidaTipoFk
-     */
-    public function setCodigoDespachoRecogidaTipoFk($codigoDespachoRecogidaTipoFk): void
-    {
-        $this->codigoDespachoRecogidaTipoFk = $codigoDespachoRecogidaTipoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUsuario()
-    {
-        return $this->usuario;
-    }
-
-    /**
-     * @param mixed $usuario
-     */
-    public function setUsuario($usuario): void
-    {
-        $this->usuario = $usuario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachoRecogidaTipoRel()
-    {
-        return $this->despachoRecogidaTipoRel;
-    }
-
-    /**
-     * @param mixed $despachoRecogidaTipoRel
-     */
-    public function setDespachoRecogidaTipoRel($despachoRecogidaTipoRel): void
-    {
-        $this->despachoRecogidaTipoRel = $despachoRecogidaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumero()
-    {
-        return $this->numero;
-    }
-
-    /**
-     * @param mixed $numero
-     */
-    public function setNumero($numero): void
-    {
-        $this->numero = $numero;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoContabilizado()
-    {
-        return $this->estadoContabilizado;
-    }
-
-    /**
-     * @param mixed $estadoContabilizado
-     */
-    public function setEstadoContabilizado($estadoContabilizado): void
-    {
-        $this->estadoContabilizado = $estadoContabilizado;
+        $this->monitoreosDespachoRecogidaRel = $monitoreosDespachoRecogidaRel;
     }
 
 

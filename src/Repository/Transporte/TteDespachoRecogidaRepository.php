@@ -10,6 +10,7 @@ use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteDespachoRecogidaTipo;
+use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TtePoseedor;
 use App\Entity\Transporte\TteRecogida;
 use App\Utilidades\Mensajes;
@@ -224,20 +225,31 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arDespachoRecogida->getEstadoAutorizado() == 1 && $arDespachoRecogida->getEstadoAprobado() == 0) {
+            $arDespachoRecogidaTipo = $em->getRepository(TteDespachoRecogidaTipo::class)->find($arDespachoRecogida->getCodigoDespachoRecogidaTipoFk());
             if ($arDespachoRecogida) {
                 if ($arDespachoRecogida->getNumero() == 0 || $arDespachoRecogida->getNumero() == NULL) {
-                    $arDespachoRecogidaTipo = $em->getRepository(TteDespachoRecogidaTipo::class)->find($arDespachoRecogida->getCodigoDespachoRecogidaTipoFk());
                     $arDespachoRecogida->setNumero($arDespachoRecogidaTipo->getConsecutivo());
                     $arDespachoRecogidaTipo->setConsecutivo($arDespachoRecogidaTipo->getConsecutivo() + 1);
                     $em->persist($arDespachoRecogidaTipo);
                 }
                 $arDespachoRecogida->setEstadoAprobado(1);
-                $em->persist($arDespachoRecogida);
-                $em->flush();
                 $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
                 if ($arConfiguracion['contabilidadAutomatica']) {
                     $this->contabilizar(array($arDespachoRecogida->getCodigoDespachoRecogidaPk()));
                 }
+                //Generar monitoreo
+                if ($arDespachoRecogidaTipo->getGeneraMonitoreo()) {
+                    $arMonitoreo = new TteMonitoreo();
+                    $arMonitoreo->setVehiculoRel($arDespachoRecogida->getVehiculoRel());
+                    $arMonitoreo->setDespachoRecogidaRel($arDespachoRecogida);
+                    $arMonitoreo->setCiudadDestinoRel($arDespachoRecogida->getCiudadRel());
+                    $arMonitoreo->setFechaRegistro(new \DateTime('now'));
+                    $arMonitoreo->setFechaInicio(new \DateTime('now'));
+                    $arMonitoreo->setFechaFin(new \DateTime('now'));
+                    $em->persist($arMonitoreo);
+                }
+                $em->flush();
+                $em->persist($arDespachoRecogida);
             } else {
                 Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
             }

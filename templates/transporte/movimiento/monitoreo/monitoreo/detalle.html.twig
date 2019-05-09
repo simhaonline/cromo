@@ -2,7 +2,7 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
-        <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_guia_lista') }}">Volver</a>
+        <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_monitoreo_monitoreo_lista') }}">Volver</a>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
         </div>
@@ -29,9 +29,15 @@
         </tr>
         <tr>
             <td class="titulo">CONDUCTOR</td>
-            <td class="td-in-well">{{ arMonitoreo.despachoRel.conductorRel.nombreCorto }}</td>
+            <td class="td-in-well">{% if arMonitoreo.codigoDespachoFk != null  %}{{ arMonitoreo.despachoRel.conductorRel.nombreCorto  }}{% else %}{{ arMonitoreo.despachoRecogidaRel.conductorRel.nombreCorto  }}{% endif %}</td>
             <td class="titulo">DESTINO</td>
-            <td class="td-in-well">{{ arMonitoreo.despachoRel.ciudadDestinoRel.nombre }}</td>
+            <td class="td-in-well">{% if arMonitoreo.codigoDespachoFk != null %}{{ arMonitoreo.despachoRel.ciudadDestinoRel.nombre }}{% else %}{{ arMonitoreo.despachoRecogidaRel.ciudadRel.nombre  }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TIPO</td>
+            <td class="td-in-well">{% if arMonitoreo.codigoDespachoFk != null  %}{{ 'DESPACHO' }}{% else %}{{ 'DESPACHO RECOGIDA' }}{% endif %}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
         </tr>
     </table>
     <ul class="nav nav-tabs">

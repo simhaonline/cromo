@@ -48,8 +48,12 @@ class DespachoRecogidaController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         if ($id == 0) {
+            $arOperacion = $em->getRepository(TteOperacion::class)->find($this->getUser()->getCodigoOperacionFK());
             $arDespachoRecogida = new TteDespachoRecogida();
             $arDespachoRecogida->setFecha(new \DateTime('now'));
+            $arDespachoRecogida->setOperacionRel($arOperacion);
+            $arDespachoRecogida->setCiudadRel($arOperacion->getCiudadRel());
+
         } else {
             $arDespachoRecogida = $em->getRepository(TteDespachoRecogida::class)->find($id);
         }
@@ -83,6 +87,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                                 $arDespachoRecogida->setVrRetencionFuente($retencionFuente);
                                 $arDespachoRecogida->setVrTotal($total);
                                 $arDespachoRecogida->setVrSaldo($saldo);
+                                $arDespachoRecogida->setUsuario($this->getUser()->getUsername());
 
                                 $em->persist($arDespachoRecogida);
                                 $em->flush();

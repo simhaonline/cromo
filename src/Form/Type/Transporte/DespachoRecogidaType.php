@@ -2,22 +2,19 @@
 
 namespace App\Form\Type\Transporte;
 
+use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteDespachoRecogidaTipo;
 use App\Entity\Transporte\TteRutaRecogida;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
 class DespachoRecogidaType extends AbstractType {
-
     /**
      * {@inheritdoc}
      */
@@ -33,9 +30,10 @@ class DespachoRecogidaType extends AbstractType {
             ))
             ->add('rutaRecogidaRel', EntityType::class, array(
                 'class' => TteRutaRecogida::class,
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('rr')
-                        ->orderBy('rr.nombre', 'ASC');
+                        ->orderBy('rr.nombre', 'ASC')
+                        ->where("rr.codigoOperacionFk = '". $options['data']->getOperacionRel()->getCodigoOperacionPk() ."'");
                 },
                 'choice_label' => 'nombre',
             ))

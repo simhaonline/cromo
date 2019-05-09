@@ -53,6 +53,11 @@ class TteMonitoreo
     private $codigoDespachoFk;
 
     /**
+     * @ORM\Column(name="codigo_despacho_recogida_fk", type="integer", nullable=true)
+     */
+    private $codigoDespachoRecogidaFk;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAutorizado = false;
@@ -93,6 +98,12 @@ class TteMonitoreo
      * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
      */
     private $despachoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteDespachoRecogida", inversedBy="monitoreosDespachoRecogidaRel")
+     * @ORM\JoinColumn(name="codigo_despacho_recogida_fk", referencedColumnName="codigo_despacho_recogida_pk")
+     */
+    private $despachoRecogidaRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="monitoreosCiudadDestinoRel")
@@ -412,6 +423,38 @@ class TteMonitoreo
     public function setCiudadDestinoRel($ciudadDestinoRel): void
     {
         $this->ciudadDestinoRel = $ciudadDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoRecogidaFk()
+    {
+        return $this->codigoDespachoRecogidaFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoRecogidaFk
+     */
+    public function setCodigoDespachoRecogidaFk($codigoDespachoRecogidaFk): void
+    {
+        $this->codigoDespachoRecogidaFk = $codigoDespachoRecogidaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoRecogidaRel()
+    {
+        return $this->despachoRecogidaRel;
+    }
+
+    /**
+     * @param mixed $despachoRecogidaRel
+     */
+    public function setDespachoRecogidaRel($despachoRecogidaRel): void
+    {
+        $this->despachoRecogidaRel = $despachoRecogidaRel;
     }
 
 

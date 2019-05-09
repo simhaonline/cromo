@@ -69,13 +69,26 @@ class Monitoreo extends \FPDF {
         $this->Cell(40, 6, utf8_decode("CONDUCTOR:"), 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(70, 6, $arMonitoreo->getDespachoRel()->getConductorRel()->getNombreCorto(), 1, 0, 'L', 1);
+        $this->Cell(70, 6, utf8_decode($arMonitoreo->getCodigoDespachoFk() ?  $arMonitoreo->getDespachoRel()->getConductorRel()->getNombreCorto() : $arMonitoreo->getDespachoRecogidaRel()->getConductorRel()->getNombreCorto()), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(40, 6, "DESTINO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(40, 6, utf8_decode($arMonitoreo->getDespachoRel()->getCiudadDestinoRel()->getNombre()), 1, 0, 'L', 1);
+        $this->Cell(40, 6, utf8_decode($arMonitoreo->getCodigoDespachoFk() ? $arMonitoreo->getDespachoRel()->getCiudadDestinoRel()->getNombre() : $arMonitoreo->getDespachoRecogidaRel()->getCiudadRel()->getNombre()), 1, 0, 'L', 1);
+        $this->Ln();
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(40, 6, utf8_decode("TIPO:"), 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(70, 6, utf8_decode($arMonitoreo->getCodigoDespachoFk() ?  'DESPACHO' : 'DESPACHO TIPO'), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(40, 6, "", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(40, 6, '', 1, 0, 'L', 1);
 
         $this->EncabezadoDetalles();
 

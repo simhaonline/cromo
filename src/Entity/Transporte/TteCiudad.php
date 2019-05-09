@@ -120,6 +120,11 @@ class TteCiudad
     protected $despachosCiudadOrigenRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteDespachoRecogida", mappedBy="ciudadRel")
+     */
+    protected $despachosRecogidasCiudadRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteDespacho", mappedBy="ciudadDestinoRel")
      */
     protected $despachosCiudadDestinoRel;

@@ -1389,5 +1389,23 @@ class TteDespacho
     {
         $this->desembarcosDespachoRel = $desembarcosDespachoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoAuxiliarRel()
+    {
+        return $this->despachoAuxiliarRel;
+    }
+
+    /**
+     * @param mixed $despachoAuxiliarRel
+     */
+    public function setDespachoAuxiliarRel($despachoAuxiliarRel): void
+    {
+        $this->despachoAuxiliarRel = $despachoAuxiliarRel;
+    }
+
+
 }
 

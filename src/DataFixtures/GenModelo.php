@@ -181,6 +181,7 @@ class GenModelo extends Fixture
                 'RhuSolicitud',
                 'RhuSolicitudExperiencia',
                 'RhuSolicitudMotivo',
+                'RhuSsPeriodo',
                 'RhuSubtipoCotizante',
                 'RhuSucursal',
                 'RhuTiempo',

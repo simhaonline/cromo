@@ -19,16 +19,6 @@ class DespachoRecogidaTipoType extends AbstractType
     {
         $builder
             ->add('codigoDespachoRecogidaTipoPk',TextType::class,['required' => true,'label' => 'Codigo despacho recogida tipo pk:'])
-            ->add('despachosRecogidasDespachoRecogidaTipoRel',EntityType::class,[
-                'required' => false,
-                'class' => 'App\Entity\Transporte\TteDespachoRecogidaTipo',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('drt')
-                        ->orderBy('drt.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'Despacho recogida tipo:'
-            ])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('consecutivo',NumberType::class,['required' => true,'label' => 'Consecutivo:'])
             ->add('generaMonitoreo', CheckboxType::class, array('required'  => false))

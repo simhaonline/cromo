@@ -59,6 +59,11 @@ class TurContratoModalidad
     protected $pedidosDetallesContratoModalidadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurContratoDetalle", mappedBy="contratoModalidadRel")
+     */
+    protected $contratosDetallesContratoModalidadRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -202,7 +207,20 @@ class TurContratoModalidad
         $this->pedidosDetallesContratoModalidadRel = $pedidosDetallesContratoModalidadRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getContratosDetallesContratoModalidadRel()
+    {
+        return $this->contratosDetallesContratoModalidadRel;
+    }
 
-
+    /**
+     * @param mixed $contratosDetallesContratoModalidadRel
+     */
+    public function setContratosDetallesContratoModalidadRel($contratosDetallesContratoModalidadRel): void
+    {
+        $this->contratosDetallesContratoModalidadRel = $contratosDetallesContratoModalidadRel;
+    }
 }
 

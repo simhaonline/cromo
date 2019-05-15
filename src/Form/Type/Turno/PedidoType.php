@@ -76,13 +76,12 @@ class PedidoType extends AbstractType
 
         $campos = '[
             {"child":"codigoPedidoPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
-            {"child":"numero",             "tipo":"TextType",  "propiedades":{"label":"Numero"}},
+            {"child":"numero",     "tipo":"TextType",  "propiedades":{"label":"Numero"}},
             {"child":"codigoPedidoTipoFk", "tipo":"EntityType","propiedades":{"class":"TurPedidoTipo","choice_label":"nombre", "label":"TODOS"}},
-            {"child":"fechaDesde",         "tipo":"DateType",  "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta",         "tipo":"DateType",  "propiedades":{"label":"Fecha Hasta"}},
+            {"child":"codigoPedidoTipoFk", "tipo":"EntityType","propiedades":{"class":"TurPedidoTipo","choice_label":"nombre", "label":"TODOS"}},
             {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",     "tipo":"ChoiceType","propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",      "tipo":"ChoiceType","propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
+            {"child":"estadoAprobado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}}
         ]';
 
         return $campos;

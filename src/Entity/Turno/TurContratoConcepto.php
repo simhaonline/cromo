@@ -80,9 +80,19 @@ class TurContratoConcepto
     protected $pedidosDetallesContratoConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurContratoDetalle", mappedBy="contratoConceptoRel")
+     */
+    protected $contratosDetallesContratoConceptoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="contratoConceptoFacturacionRel")
      */
     protected $pedidosDetallesContratoConceptoFacturacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurContratoDetalle", mappedBy="contratoConceptoFacturacionRel")
+     */
+    protected $contratosDetallesContratoConceptoFacturacionRel;
 
     /**
      * @return array
@@ -295,6 +305,22 @@ class TurContratoConcepto
     /**
      * @return mixed
      */
+    public function getContratosDetallesContratoConceptoRel()
+    {
+        return $this->contratosDetallesContratoConceptoRel;
+    }
+
+    /**
+     * @param mixed $contratosDetallesContratoConceptoRel
+     */
+    public function setContratosDetallesContratoConceptoRel($contratosDetallesContratoConceptoRel): void
+    {
+        $this->contratosDetallesContratoConceptoRel = $contratosDetallesContratoConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPedidosDetallesContratoConceptoFacturacionRel()
     {
         return $this->pedidosDetallesContratoConceptoFacturacionRel;
@@ -308,6 +334,20 @@ class TurContratoConcepto
         $this->pedidosDetallesContratoConceptoFacturacionRel = $pedidosDetallesContratoConceptoFacturacionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getContratosDetallesContratoConceptoFacturacionRel()
+    {
+        return $this->contratosDetallesContratoConceptoFacturacionRel;
+    }
 
+    /**
+     * @param mixed $contratosDetallesContratoConceptoFacturacionRel
+     */
+    public function setContratosDetallesContratoConceptoFacturacionRel($contratosDetallesContratoConceptoFacturacionRel): void
+    {
+        $this->contratosDetallesContratoConceptoFacturacionRel = $contratosDetallesContratoConceptoFacturacionRel;
+    }
 }
 

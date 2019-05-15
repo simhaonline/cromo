@@ -13,7 +13,7 @@ class TurCliente
 {
     public $infoLog = [
         "primaryKey" => "codigoClientePk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id
@@ -139,6 +139,11 @@ class TurCliente
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="clienteRel")
      */
     protected $contratosClienteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurPuesto", mappedBy="clienteRel")
+     */
+    protected $PuestosClienteRel;
 
     /**
      * @return array
@@ -511,22 +516,6 @@ class TurCliente
     /**
      * @return mixed
      */
-    public function getContratosClienteRel()
-    {
-        return $this->contratosClienteRel;
-    }
-
-    /**
-     * @param mixed $contratosClienteRel
-     */
-    public function setContratosClienteRel($contratosClienteRel): void
-    {
-        $this->contratosClienteRel = $contratosClienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getPedidosClienteRel()
     {
         return $this->pedidosClienteRel;
@@ -538,6 +527,22 @@ class TurCliente
     public function setPedidosClienteRel($pedidosClienteRel): void
     {
         $this->pedidosClienteRel = $pedidosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratosClienteRel()
+    {
+        return $this->contratosClienteRel;
+    }
+
+    /**
+     * @param mixed $contratosClienteRel
+     */
+    public function setContratosClienteRel($contratosClienteRel): void
+    {
+        $this->contratosClienteRel = $contratosClienteRel;
     }
 
     /**
@@ -555,8 +560,5 @@ class TurCliente
     {
         $this->PuestosClienteRel = $PuestosClienteRel;
     }
-
-
-
 }
 

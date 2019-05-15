@@ -13,7 +13,7 @@ class GenDepartamento
 {
     public $infoLog = [
         "primaryKey" => "codigoDepartamentoPk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id
@@ -31,7 +31,7 @@ class GenDepartamento
      * @ORM\Column(name="codigo_pais_fk", type="integer")
      */
     private $codigoPaisFk;
-    
+
     /**
      * @ORM\Column(name="codigo_dane", type="string", length=5)
      */
@@ -43,10 +43,31 @@ class GenDepartamento
     protected $ciudadesRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="departamentoRel")
+     */
+    protected $contratosDepartamentoRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="GenPais", inversedBy="departamentosPaisRel")
      * @ORM\JoinColumn(name="codigo_pais_fk", referencedColumnName="codigo_pais_pk")
      */
     protected $paisRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -131,6 +152,22 @@ class GenDepartamento
     /**
      * @return mixed
      */
+    public function getContratosDepartamentoRel()
+    {
+        return $this->contratosDepartamentoRel;
+    }
+
+    /**
+     * @param mixed $contratosDepartamentoRel
+     */
+    public function setContratosDepartamentoRel($contratosDepartamentoRel): void
+    {
+        $this->contratosDepartamentoRel = $contratosDepartamentoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPaisRel()
     {
         return $this->paisRel;
@@ -143,7 +180,5 @@ class GenDepartamento
     {
         $this->paisRel = $paisRel;
     }
-
-
 }
 

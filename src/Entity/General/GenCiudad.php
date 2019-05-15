@@ -151,7 +151,12 @@ class GenCiudad
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurPuesto", mappedBy="ciudadRel")
      */
-    protected $turClientePuestoRel;
+    protected $turCiudadPuestoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="ciudadRel")
+     */
+    protected $contratosCiudadRel;
 
     /**
      * @return array
@@ -601,6 +606,20 @@ class GenCiudad
         $this->turClientePuestoRel = $turClientePuestoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getContratosCiudadRel()
+    {
+        return $this->contratosCiudadRel;
+    }
 
+    /**
+     * @param mixed $contratosCiudadRel
+     */
+    public function setContratosCiudadRel($contratosCiudadRel): void
+    {
+        $this->contratosCiudadRel = $contratosCiudadRel;
+    }
 }
 

@@ -79,9 +79,18 @@ class TurPedidoRepository extends ServiceEntityRepository
         $vrTotalBrutoGlobal = 0;
         $vrIvaGlobal = 0;
         $vrSalarioBaseGlobal = 0;
+        $totalHoras = 0;
+        $totalHorasDiurnas = 0;
+        $totalHorasNocturnas = 0;
         $arPedidoDetalles = $this->getEntityManager()->getRepository(TurPedidoDetalle::class)->findBy(['codigoPedidoFk' => $arPedido->getCodigoPedidoPk()]);
 
         foreach ($arPedidoDetalles as $arPedidoDetalle) {
+            $horas = $arPedidoDetalle->getHoras();
+            $totalHoras += $horas;
+            $horasDiurnas = $arPedidoDetalle->getHorasDiurnas();
+            $totalHorasDiurnas += $horasDiurnas;
+            $horasNocturnas = $arPedidoDetalle->getHorasNocturnas();
+            $totalHorasNocturnas += $horasNocturnas;
             $vrSubtotal = $arPedidoDetalle->getVrSubtotal();
             $vrSubtotalGlobal += $vrSubtotal;
             $vrTotal = $arPedidoDetalle->getVrTotalDetalle();
@@ -97,6 +106,9 @@ class TurPedidoRepository extends ServiceEntityRepository
         $arPedido->setVrIva($vrIvaGlobal);
         $arPedido->setVrTotalServicio($vrTotalBrutoGlobal);
         $arPedido->setVrSalarioBase($vrSalarioBaseGlobal);
+        $arPedido->setHoras($totalHoras);
+        $arPedido->setHorasDiurnas($totalHorasDiurnas);
+        $arPedido->setHorasNocturnas($totalHorasNocturnas);
 
         $em->persist($arPedido);
         $em->flush();

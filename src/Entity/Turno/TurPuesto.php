@@ -260,7 +260,7 @@ class TurPuesto
     protected $clienteRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="turClientePuestoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="turCiudadPuestoRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadRel;
@@ -275,6 +275,11 @@ class TurPuesto
      * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="puestoRel")
      */
     protected $pedidosDetallesPuestoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurContratoDetalle", mappedBy="puestoRel")
+     */
+    protected $contratosDetallesPuestoRel;
 
     /**
      * @return array
@@ -980,5 +985,20 @@ class TurPuesto
         $this->pedidosDetallesPuestoRel = $pedidosDetallesPuestoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getContratosDetallesPuestoRel()
+    {
+        return $this->contratosDetallesPuestoRel;
+    }
+
+    /**
+     * @param mixed $contratosDetallesPuestoRel
+     */
+    public function setContratosDetallesPuestoRel($contratosDetallesPuestoRel): void
+    {
+        $this->contratosDetallesPuestoRel = $contratosDetallesPuestoRel;
+    }
 }
 

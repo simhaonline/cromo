@@ -119,7 +119,7 @@
                                    value="Nuevo"/>
                         {% else %}
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('turno_movimiento_comercial_pedido_detalle_nuevo', {'codigoPedido':arPedido.codigoPedidoPk }) }}', 'PedidoAdicionarDetalle', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_comercial_pedido_detalle_nuevo', {'codigoPedido':arPedido.codigoPedidoPk,'id': 0  }) }}', 'PedidoAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">

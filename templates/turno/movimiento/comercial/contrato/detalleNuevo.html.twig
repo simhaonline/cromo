@@ -1,0 +1,154 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block title %}Pedido detalle nuevo - Soga App{% endblock %}
+{% block content %}
+    <section class="content-header">
+        <h1>
+            Programacion turnos
+            <small>Pedido: nuevo detalle</small>
+        </h1>
+    </section>
+
+    <section class="content">
+        {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+        <div class="panel panel-default">
+            <div class="panel-heading">Informacion</div>
+            <div class="panel-body">
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Contrato Concepto:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.contratoConceptoRel) }}
+                        {{ form_errors(form.contratoConceptoRel) }}
+
+                    </div>
+                    <label class="col-sm-2 control-label">Contrato (facturacion):</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.contratoConceptoFacturacionRel) }}
+                        {{ form_errors(form.contratoConceptoFacturacionRel) }}
+
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Modalidad:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.contratoModalidadRel) }}
+                        {{ form_errors(form.contratoModalidadRel) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Puesto:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.puestoRel) }}
+                        {{ form_errors(form.puestoRel) }}
+
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-1">
+                    </div>
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-1">
+                    </div>
+                    <label class="col-sm-2 control-label">Cantidad:</label>
+                    <div class="col-sm-1">
+                        {{ form_widget(form.cantidad) }}
+                        {{ form_errors(form.cantidad) }}
+
+                    </div>
+                    <label class="col-sm-2 control-label">Precio (Ajustado):</label>
+                    <div class="col-sm-1">
+                        {{ form_widget(form.vrPrecioAjustado, { 'attr': {'class': 'form-control'} }) }}
+                        {{ form_errors(form.vrPrecioAjustado) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group form-group-sm">
+                            <label for="form_fechaDesde" class="col-sm-4 control-label">Desde:</label>
+                            <div class="col-sm-8">
+                                {{ form_widget(form.fechaDesde) }}
+                                {{ form_errors(form.fechaDesde) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="form_fechaHasta" class="col-sm-4 control-label">Hasta:</label>
+                            <div class="col-sm-8">
+                                {{ form_widget(form.fechaHasta) }}
+                                {{ form_errors(form.fechaHasta) }}
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-sm">
+                            <label for="form_horaInicio" class="col-sm-4 control-label">Hora inicio (Servicio):</label>
+                            <div class="col-sm-8">
+                                {{ form_widget(form.horaInicio) }}
+                                {{ form_errors(form.horaInicio) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="form_horaFin" class="col-sm-4 control-label">Hora Fin (Servicio):</label>
+                            <div class="col-sm-8">
+                                {{ form_widget(form.horaFin) }}
+                                {{ form_errors(form.horaFin) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-sm-4 control-label">Base (iva):</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.porcentajeBaseIva, { 'attr': {'class': 'form-control'} }) }}
+                            {{ form_errors(form.porcentajeBaseIva) }}
+                        </div>
+                        <label class="col-sm-4 control-label">Salario base (Liquidacion):</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.vrSalarioBase, { 'attr': {'class': 'form-control'} }) }}
+                            {{ form_errors(form.vrSalarioBase) }}
+                        </div>
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div class="col-sm-4">{{ form_widget(form.lunes) }}
+                            {{ form_errors(form.lunes) }}</div>
+                            <div class="col-sm-4">{{ form_widget(form.martes) }}
+                            {{ form_errors(form.martes) }}</div>
+                            <div class="col-sm-4">{{ form_widget(form.miercoles) }}
+                            {{ form_errors(form.miercoles) }}</div>
+                            <div class="col-sm-4">{{ form_widget(form.jueves) }}
+                            {{ form_errors(form.jueves) }}</div>
+                            <div class="col-sm-4">{{ form_widget(form.viernes) }}
+                            {{ form_errors(form.viernes) }}</div>
+                            <div class="col-sm-4">{{ form_widget(form.sabado) }}
+                            {{ form_errors(form.sabado) }}</div>
+                            <div class="col-sm-4">{{ form_widget(form.domingo) }}
+                            {{ form_errors(form.domingo) }}</div>
+                            <div class="col-sm-4">{{ form_widget(form.festivo) }}
+                            {{ form_errors(form.festivo) }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">Detalle (Factura):</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.detalleFactura) }}
+                            {{ form_errors(form.detalleFactura) }}
+                        </div>
+                        <label class="col-sm-8 control-label"></label>
+                        <div class="col-sm-4">
+                            <div class="col-sm-4">{{ form_widget(form.compuesto) }}
+                                {{ form_errors(form.compuesto) }}</div>
+                            <div class="col-sm-4">{{ form_widget(form.liquidarDiasReales) }}
+                                {{ form_errors(form.liquidarDiasReales) }}</div>
+                            <div class="col-sm-4">{{ form_widget(form.dia31) }}
+                                {{ form_errors(form.dia31) }}</div>
+                            <div class="col-sm-4">{{ form_widget(form.noFacturar) }}
+                                {{ form_errors(form.noFacturar) }}</div>
+                            <div class="col-sm-6">{{ form_widget(form.facturaDistribuida) }}
+                                {{ form_errors(form.facturaDistribuida) }}</div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        </div>
+        {{ form_end(form) }}
+        <br/><br/><br/><br/>
+    </section>
+{% endblock %}

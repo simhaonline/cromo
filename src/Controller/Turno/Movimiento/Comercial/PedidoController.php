@@ -52,13 +52,13 @@ class PedidoController extends ControllerListenerGeneral
             }
         }
         $datos = $this->getDatosLista(true);
+//        dd($datos);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Pedidos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                dd($arrSeleccionados);
                 $em->getRepository(TurPedido::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_comercial_pedido_lista'));
             }
@@ -120,6 +120,10 @@ class PedidoController extends ControllerListenerGeneral
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/turno/movimiento/comercial/pedido/detalle/{id}", name="turno_movimiento_comercial_pedido_detalle")
      */
     public function detalle(Request $request, $id)
@@ -151,6 +155,7 @@ class PedidoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
+            $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
 //            if ($form->get('btnAutorizar')->isClicked()) {
 //                $em->getRepository(TurPedido::class)->actualizarDetalles($id, $arrControles);
 //                $em->getRepository(TurPedido::class)->autorizar($arPedido);
@@ -169,13 +174,11 @@ class PedidoController extends ControllerListenerGeneral
 //                $em->getRepository(TurPedido::class)->anular($arPedido);
 //            }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurPedidoDetalle::class)->eliminar($arPedido, $arrDetallesSeleccionados);
                 $em->getRepository(TurPedido::class)->liquidar($id);
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TurPedidoDetalle::class)->actualizarDetalles($arrControles, $form, $arPedido);
-//                dd($arPedido);
             }
             return $this->redirect($this->generateUrl('turno_movimiento_comercial_pedido_detalle', ['id' => $id]));
         }
@@ -193,24 +196,23 @@ class PedidoController extends ControllerListenerGeneral
      * @param $codigoPedidoDetalle
      * @return Response
      * @throws \Exception
-     * @Route("/turno/movimiento/comercial/pedido/detalle/nuevo/{codigoPedido}", name="turno_movimiento_comercial_pedido_detalle_nuevo")
+     * @Route("/turno/movimiento/comercial/pedido/detalle/nuevo/{codigoPedido}/{id}", name="turno_movimiento_comercial_pedido_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $codigoPedido, $codigoPedidoDetalle = 0)
+    public function detalleNuevo(Request $request, $codigoPedido, $id)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-//        $arPedido = new TurPedido();
-        $arPedido = $em->getRepository(TurPedido::class)->find($codigoPedido);
-
         $arPedidoDetalle = new TurPedidoDetalle();
-        $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
+        $arPedido = $em->getRepository(TurPedido::class)->find($codigoPedido);
+        if ($id != '0') {
+            $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($id);
+        }
         $form = $this->createForm(TurPedidoDetalleType::class, $arPedidoDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
 
-                $arPedidoDetalle = $form->getData();
                 $arPedidoDetalle->setCodigoPedidoFk($arPedido->getCodigoPedidoPk());
 
                 $em->persist($arPedidoDetalle);

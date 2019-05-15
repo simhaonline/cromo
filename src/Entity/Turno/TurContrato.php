@@ -13,7 +13,7 @@ class TurContrato
 {
     public $infoLog = [
         "primaryKey" => "codigoContratoPk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id
@@ -38,9 +38,39 @@ class TurContrato
     private $codigoClienteFk;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
+     */
+    private $codigoCiudadFk;
+
+    /**
+     * @ORM\Column(name="codigo_departamento_fk", type="integer", nullable=true)
+     */
+    private $codigoDepartamentoFk;
+
+    /**
      * @ORM\Column(name="codigo_contrato_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoContratoTipoFk;
+
+    /**
+     * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":false})
+     */
+    private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", type="boolean", options={"default":false})
+     */
+    private $estadoAprobado = false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean", options={"default":false})
+     */
+    private $estadoAnulado = false;
+
+    /**
+     * @ORM\Column(name="estado_cerrado", type="boolean", options={"default":false})
+     */
+    private $estadoCerrado = false;
 
     /**
      * @ORM\Column(name="codigo_sector_fk", type="string", length=10, nullable=true)
@@ -118,6 +148,11 @@ class TurContrato
     private $vrTotal = 0;
 
     /**
+     * @ORM\Column(name="vr_total_servicio", type="float", options={"default":0})
+     */
+    private $vrTotalServicio = 0;
+
+    /**
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
      */
     private $usuario;
@@ -144,6 +179,23 @@ class TurContrato
      * @ORM\JoinColumn(name="codigo_sector_fk", referencedColumnName="codigo_sector_pk")
      */
     protected $sectorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="contratosCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenDepartamento", inversedBy="contratosDepartamentoRel")
+     * @ORM\JoinColumn(name="codigo_departamento_fk", referencedColumnName="codigo_departamento_pk")
+     */
+    protected $departamentoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurContratoDetalle", mappedBy="contratoRel")
+     */
+    protected $contratosDetallesContratoRel;
 
     /**
      * @return array
@@ -228,6 +280,38 @@ class TurContrato
     /**
      * @return mixed
      */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDepartamentoFk()
+    {
+        return $this->codigoDepartamentoFk;
+    }
+
+    /**
+     * @param mixed $codigoDepartamentoFk
+     */
+    public function setCodigoDepartamentoFk($codigoDepartamentoFk): void
+    {
+        $this->codigoDepartamentoFk = $codigoDepartamentoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoContratoTipoFk()
     {
         return $this->codigoContratoTipoFk;
@@ -239,6 +323,70 @@ class TurContrato
     public function setCodigoContratoTipoFk($codigoContratoTipoFk): void
     {
         $this->codigoContratoTipoFk = $codigoContratoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoCerrado()
+    {
+        return $this->estadoCerrado;
+    }
+
+    /**
+     * @param mixed $estadoCerrado
+     */
+    public function setEstadoCerrado($estadoCerrado): void
+    {
+        $this->estadoCerrado = $estadoCerrado;
     }
 
     /**
@@ -484,6 +632,22 @@ class TurContrato
     /**
      * @return mixed
      */
+    public function getVrTotalServicio()
+    {
+        return $this->vrTotalServicio;
+    }
+
+    /**
+     * @param mixed $vrTotalServicio
+     */
+    public function setVrTotalServicio($vrTotalServicio): void
+    {
+        $this->vrTotalServicio = $vrTotalServicio;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getUsuario()
     {
         return $this->usuario;
@@ -561,7 +725,52 @@ class TurContrato
         $this->sectorRel = $sectorRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
 
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getDepartamentoRel()
+    {
+        return $this->departamentoRel;
+    }
+
+    /**
+     * @param mixed $departamentoRel
+     */
+    public function setDepartamentoRel($departamentoRel): void
+    {
+        $this->departamentoRel = $departamentoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratosDetallesContratoRel()
+    {
+        return $this->contratosDetallesContratoRel;
+    }
+
+    /**
+     * @param mixed $contratosDetallesContratoRel
+     */
+    public function setContratosDetallesContratoRel($contratosDetallesContratoRel): void
+    {
+        $this->contratosDetallesContratoRel = $contratosDetallesContratoRel;
+    }
 }
 

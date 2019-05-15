@@ -124,11 +124,6 @@ class TteCondicion
     protected $clientesCondicionesCondicionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TteCondicionZona", mappedBy="condicionRel")
-     */
-    protected $condicionesZonasCondicionRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoCondicionPk()
@@ -464,21 +459,6 @@ class TteCondicion
         $this->clientesCondicionesCondicionRel = $clientesCondicionesCondicionRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCondicionesZonasCondicionRel()
-    {
-        return $this->condicionesZonasCondicionRel;
-    }
-
-    /**
-     * @param mixed $condicionesZonasCondicionRel
-     */
-    public function setCondicionesZonasCondicionRel($condicionesZonasCondicionRel): void
-    {
-        $this->condicionesZonasCondicionRel = $condicionesZonasCondicionRel;
-    }
 
 
 

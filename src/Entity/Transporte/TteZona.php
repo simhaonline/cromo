@@ -39,9 +39,9 @@ class TteZona
     protected $guiasZonaRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TteCondicionZona", mappedBy="zonaRel")
+     * @ORM\OneToMany(targetEntity="TteCondicionFlete", mappedBy="zonaRel")
      */
-    protected $condicionesZonasZonaRel;
+    protected $condicionesClientesZonaRel;
 
     /**
      * @return mixed
@@ -110,17 +110,17 @@ class TteZona
     /**
      * @return mixed
      */
-    public function getCondicionesZonasZonaRel()
+    public function getCondicionesClientesZonaRel()
     {
-        return $this->condicionesZonasZonaRel;
+        return $this->condicionesClientesZonaRel;
     }
 
     /**
-     * @param mixed $condicionesZonasZonaRel
+     * @param mixed $condicionesClientesZonaRel
      */
-    public function setCondicionesZonasZonaRel($condicionesZonasZonaRel): void
+    public function setCondicionesClientesZonaRel($condicionesClientesZonaRel): void
     {
-        $this->condicionesZonasZonaRel = $condicionesZonasZonaRel;
+        $this->condicionesClientesZonaRel = $condicionesClientesZonaRel;
     }
 
 

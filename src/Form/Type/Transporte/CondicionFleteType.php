@@ -3,6 +3,7 @@
 namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteCondicionFlete;
 use App\Entity\Transporte\TteDescuentoZona;
 use App\Entity\Transporte\TteOperacion;
 use Doctrine\ORM\EntityRepository;
@@ -16,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class DescuentoZonaType extends AbstractType
+class CondicionFleteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -28,8 +29,17 @@ class DescuentoZonaType extends AbstractType
                         ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Ciudad:',
+                'label' => 'Origen:',
                 'required' => true,
+            ])
+            ->add('ciudadDestinoRel',EntityType::class,[
+                'class' => 'App\Entity\Transporte\TteCiudad',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Destino:',
             ])
             ->add('zonaRel',EntityType::class,[
                 'class' => 'App\Entity\Transporte\TteZona',
@@ -42,6 +52,11 @@ class DescuentoZonaType extends AbstractType
                 'required' => true,
             ])
             ->add('descuentoPeso',NumberType::class,['required' => true,'label' => 'Descuento:'])
+            ->add('descuentoUnidad',NumberType::class,['required' => true,'label' => 'Descuento:'])
+            ->add('pesoMinimo',NumberType::class,['required' => true,'label' => 'Descuento:'])
+            ->add('pesoMinimoGuia',NumberType::class,['required' => true,'label' => 'Descuento:'])
+            ->add('fleteMinimo',NumberType::class,['required' => true,'label' => 'Descuento:'])
+            ->add('fleteMinimoGuia',NumberType::class,['required' => true,'label' => 'Descuento:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
 
     }
@@ -49,7 +64,7 @@ class DescuentoZonaType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => TteDescuentoZona::class,
+            'data_class' => TteCondicionFlete::class,
         ]);
     }
 }

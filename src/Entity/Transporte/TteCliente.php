@@ -250,6 +250,11 @@ class TteCliente
     protected $guiasTemporalesClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteCondicionFlete", mappedBy="clienteRel")
+     */
+    protected $condicionesFletesClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()

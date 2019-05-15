@@ -3,6 +3,8 @@
 namespace App\Controller\Transporte\Administracion\Comercial\Cliente;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Entity\Transporte\TteCondicionFlete;
+use App\Form\Type\Transporte\CondicionFleteType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteClienteCondicion;
@@ -94,18 +96,20 @@ class ClienteController extends ControllerListenerGeneral
         $arCondicion = $arCliente->getCondicionRel();
         $form = $this->createFormBuilder()
             ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('btnEliminarFlete', SubmitType::class, array('label' => 'Eliminar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnEliminarDetalle')->isClicked()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             $em->getRepository(TteClienteCondicion::class)->eliminar($arrSeleccionados);
         }
-
+        $arCondicionesFlete = $em->getRepository(TteCondicionFlete::class)->cliente($id);
         $arCondiciones = $em->getRepository(TteClienteCondicion::class)->clienteCondicion($id);
         return $this->render('transporte/administracion/comercial/cliente/detalle.html.twig', array(
             'arCliente' => $arCliente,
             'arCondiciones' => $arCondiciones,
             'arCondicion' => $arCondicion,
+            'arCondicionesFlete' => $arCondicionesFlete,
             'form' => $form->createView()
         ));
     }
@@ -152,5 +156,33 @@ class ClienteController extends ControllerListenerGeneral
         $arCondiciones = $paginator->paginate($em->getRepository(TteCondicion::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/administracion/comercial/cliente/detalleNuevo.html.twig', ['arCondiciones' => $arCondiciones, 'form' => $form->createView()]);
     }
+
+    /**
+     * @Route("/transporte/administracion/comercial/cliente/flete/detalle/nuevo/{codigoCliente}/{id}", name="transporte_administracion_comercial_cliente_flete_detalle_nuevo")
+     */
+    public function fleteDetalleNuevo(Request $request, $codigoCliente, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arCliente = $em->getRepository(TteCliente::class)->find($codigoCliente);
+        $arCondicionFlete = new TteCondicionFlete();
+        if ($id != '0') {
+            $arCondicionFlete = $em->getRepository(TteCondicionFlete::class)->find($id);
+        } else {
+            $arCondicionFlete->setClienteRel($arCliente);
+        }
+        $form = $this->createForm(CondicionFleteType::class, $arCondicionFlete);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $em->persist($arCondicionFlete);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('transporte/administracion/comercial/cliente/detalleFleteNuevo.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
 }
 

@@ -195,9 +195,14 @@ class TteCiudad
     protected $monitoreosCiudadDestinoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TteCondicionZona", mappedBy="ciudadOrigenRel")
+     * @ORM\OneToMany(targetEntity="TteCondicionFlete", mappedBy="ciudadOrigenRel")
      */
-    protected $condicionesZonasCiudadOrigenRel;
+    protected $condicionesFletesCiudadOrigenRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteCondicionFlete", mappedBy="ciudadDestinoRel")
+     */
+    protected $condicionesFletesCiudadDestinoRel;
 
     /**
      * @return mixed
@@ -522,6 +527,22 @@ class TteCiudad
     /**
      * @return mixed
      */
+    public function getDespachosRecogidasCiudadRel()
+    {
+        return $this->despachosRecogidasCiudadRel;
+    }
+
+    /**
+     * @param mixed $despachosRecogidasCiudadRel
+     */
+    public function setDespachosRecogidasCiudadRel($despachosRecogidasCiudadRel): void
+    {
+        $this->despachosRecogidasCiudadRel = $despachosRecogidasCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDespachosCiudadDestinoRel()
     {
         return $this->despachosCiudadDestinoRel;
@@ -746,18 +767,35 @@ class TteCiudad
     /**
      * @return mixed
      */
-    public function getCondicionesZonasCiudadOrigenRel()
+    public function getCondicionesFletesCiudadOrigenRel()
     {
-        return $this->condicionesZonasCiudadOrigenRel;
+        return $this->condicionesFletesCiudadOrigenRel;
     }
 
     /**
-     * @param mixed $condicionesZonasCiudadOrigenRel
+     * @param mixed $condicionesFletesCiudadOrigenRel
      */
-    public function setCondicionesZonasCiudadOrigenRel($condicionesZonasCiudadOrigenRel): void
+    public function setCondicionesFletesCiudadOrigenRel($condicionesFletesCiudadOrigenRel): void
     {
-        $this->condicionesZonasCiudadOrigenRel = $condicionesZonasCiudadOrigenRel;
+        $this->condicionesFletesCiudadOrigenRel = $condicionesFletesCiudadOrigenRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCondicionesFletesCiudadDestinoRel()
+    {
+        return $this->condicionesFletesCiudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $condicionesFletesCiudadDestinoRel
+     */
+    public function setCondicionesFletesCiudadDestinoRel($condicionesFletesCiudadDestinoRel): void
+    {
+        $this->condicionesFletesCiudadDestinoRel = $condicionesFletesCiudadDestinoRel;
+    }
+
 
 
 

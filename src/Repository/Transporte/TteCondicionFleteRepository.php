@@ -2,29 +2,31 @@
 
 namespace App\Repository\Transporte;
 
-use App\Entity\Transporte\TteCondicionZona;
+use App\Entity\Transporte\TteCondicionFlete;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class TteCondicionZonaRepository extends ServiceEntityRepository
+class TteCondicionFleteRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, TteCondicionZona::class);
+        parent::__construct($registry, TteCondicionFlete::class);
     }
 
-    public function condicion($id){
+    public function cliente($id){
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCondicionZona::class, 'cz')
-            ->select('cz.codigoCondicionZonaPk')
-            ->addSelect('cz.descuentoPeso')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCondicionFlete::class, 'cf')
+            ->select('cf.codigoCondicionFletePk')
+            ->addSelect('cf.descuentoPeso')
             ->addSelect('z.nombre as zonaNombre')
             ->addSelect('co.nombre as ciudadOrigenNombre')
-            ->leftJoin('cz.zonaRel', 'z')
-            ->leftJoin('cz.ciudadOrigenRel', 'co')
-        ->where('cz.codigoCondicionFk = ' . $id);
-        $arCondicionsZona = $queryBuilder->getQuery()->getResult();
-        return $arCondicionsZona;
+            ->addSelect('cd.nombre as ciudadDestinoNombre')
+            ->leftJoin('cf.zonaRel', 'z')
+            ->leftJoin('cf.ciudadOrigenRel', 'co')
+            ->leftJoin('cf.ciudadDestinoRel', 'cd')
+            ->where('cf.codigoClienteFk = ' . $id);
+        $arCondicionesFlete = $queryBuilder->getQuery()->getResult();
+        return $arCondicionesFlete;
 
     }
 
@@ -32,7 +34,7 @@ class TteCondicionZonaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         foreach ($arrSeleccionados as $codigo) {
-            $ar = $em->getRepository(TteCondicionZona::class)->find($codigo);
+            $ar = $em->getRepository(TteCondicionFlete::class)->find($codigo);
             if ($ar) {
                 $em->remove($ar);
             }
@@ -46,7 +48,7 @@ class TteCondicionZonaRepository extends ServiceEntityRepository
         $origen = $raw['origen']?? null;
         $zona = $raw['codigoZona']?? null;
         if($condicion && $origen && $zona) {
-            $queryBuilder = $em->createQueryBuilder()->from(TteCondicionZona::class, 'dz')
+            $queryBuilder = $em->createQueryBuilder()->from(TteCondicionFlete::class, 'dz')
                 ->select('dz.descuentoPeso')
                 ->where('dz.codigoCiudadOrigenFk=' . $origen)
                 ->andWhere("dz.codigoCondicionFk=" . $condicion)

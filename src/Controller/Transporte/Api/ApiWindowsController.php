@@ -7,6 +7,7 @@ use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteCondicion;
+use App\Entity\Transporte\TteCondicionFlete;
 use App\Entity\Transporte\TteDescuentoZona;
 use App\Entity\Transporte\TteDestinatario;
 use App\Entity\Transporte\TteEmpaque;
@@ -419,6 +420,38 @@ class ApiWindowsController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(TteGuiaCarga::class)->apiWindowsDetalle($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/windows/condicionflete/cliente")
+     */
+    public function condicionFleteCliente(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteCondicionFlete::class)->apiWindowsCliente($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/windows/condicionflete/liquidar")
+     */
+    public function condicionFleteLiquidar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteCondicionFlete::class)->apiWindowsLiquidar($raw);
         } catch (\Exception $e) {
             return [
                 'error' => "Ocurrio un error en la api " . $e->getMessage(),

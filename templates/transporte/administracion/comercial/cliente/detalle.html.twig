@@ -104,7 +104,7 @@
                                 <td style="text-align: center;">
                                     <a href="javascript:abrirVentana3('{{ path('transporte_administracion_comercial_cliente_flete_detalle_nuevo', {'codigoCliente': arCliente.codigoClientePk, 'id': arCondicionFlete.codigoCondicionFletePk }) }}', 'condiciones', 600, 900)"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
                                 </td>
-                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arCondicionFlete.codigoCondicionFletePk }}"/>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionarCondicionFlete[]" value="{{ arCondicionFlete.codigoCondicionFletePk }}"/>
                                 </td>
                             </tr>
                         {% endfor %}

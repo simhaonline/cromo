@@ -99,10 +99,18 @@ class ClienteController extends ControllerListenerGeneral
             ->add('btnEliminarFlete', SubmitType::class, array('label' => 'Eliminar'))
             ->getForm();
         $form->handleRequest($request);
-        if ($form->get('btnEliminarDetalle')->isClicked()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            $em->getRepository(TteClienteCondicion::class)->eliminar($arrSeleccionados);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnEliminarFlete')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionarCondicionFlete');
+                $em->getRepository(TteCondicionFlete::class)->eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnEliminarDetalle')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteClienteCondicion::class)->eliminar($arrSeleccionados);
+            }
+
         }
+
         $arCondicionesFlete = $em->getRepository(TteCondicionFlete::class)->cliente($id);
         $arCondiciones = $em->getRepository(TteClienteCondicion::class)->clienteCondicion($id);
         return $this->render('transporte/administracion/comercial/cliente/detalle.html.twig', array(

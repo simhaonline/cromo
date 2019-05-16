@@ -30,7 +30,7 @@ class CondicionFleteType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Origen:',
-                'required' => true,
+                'required' => false,
             ])
             ->add('ciudadDestinoRel',EntityType::class,[
                 'class' => 'App\Entity\Transporte\TteCiudad',
@@ -40,6 +40,7 @@ class CondicionFleteType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Destino:',
+                'required' => false,
             ])
             ->add('zonaRel',EntityType::class,[
                 'class' => 'App\Entity\Transporte\TteZona',
@@ -49,7 +50,7 @@ class CondicionFleteType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Zona:',
-                'required' => true,
+                'required' => false,
             ])
             ->add('descuentoPeso',NumberType::class,['required' => true,'label' => 'Descuento:'])
             ->add('descuentoUnidad',NumberType::class,['required' => true,'label' => 'Descuento:'])

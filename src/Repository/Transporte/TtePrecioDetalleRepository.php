@@ -85,7 +85,9 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
                 ->addSelect('pd.vrPesoTopeAdicional')
                 ->addSelect('pd.pesoTope')
                 ->addSelect('p.nombre as productoNombre')
+                ->addSelect('p.omitirDescuento')
                 ->leftJoin('pd.productoRel', 'p')
+                ->leftJoin('pd.precioRel', 'p')
                 ->where('pd.codigoPrecioFk=' . $precio)
                 ->andWhere('pd.codigoCiudadOrigenFk=' . $origen)
                 ->andWhere('pd.codigoCiudadDestinoFk=' . $destino);

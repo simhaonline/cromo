@@ -33,6 +33,11 @@ class TtePrecio
     private $fechaVence;
 
     /**
+     * @ORM\Column(name="omitir_descuento", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $omitirDescuento = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;

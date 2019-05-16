@@ -63,14 +63,24 @@ class TteCondicionFlete
     private $pesoMinimoGuia = 0;
 
     /**
-     * @ORM\Column(name="flete_minimo", type="integer", options={"default" : 0})
+     * @ORM\Column(name="flete_minimo", type="float", options={"default" : 0})
      */
     private $fleteMinimo = 0;
 
     /**
-     * @ORM\Column(name="flete_minimo_guia", type="integer", options={"default" : 0})
+     * @ORM\Column(name="flete_minimo_guia", type="float", options={"default" : 0})
      */
     private $fleteMinimoGuia = 0;
+
+    /**
+     * @ORM\Column(name="vr_peso", type="float", options={"default" : 0})
+     */
+    private $vrPeso = 0;
+
+    /**
+     * @ORM\Column(name="vr_unidad", type="float", options={"default" : 0})
+     */
+    private $vrUnidad = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteCliente", inversedBy="condicionesFletesClienteRel")
@@ -334,6 +344,38 @@ class TteCondicionFlete
     public function setFleteMinimoGuia($fleteMinimoGuia): void
     {
         $this->fleteMinimoGuia = $fleteMinimoGuia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPeso()
+    {
+        return $this->vrPeso;
+    }
+
+    /**
+     * @param mixed $vrPeso
+     */
+    public function setVrPeso($vrPeso): void
+    {
+        $this->vrPeso = $vrPeso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrUnidad()
+    {
+        return $this->vrUnidad;
+    }
+
+    /**
+     * @param mixed $vrUnidad
+     */
+    public function setVrUnidad($vrUnidad): void
+    {
+        $this->vrUnidad = $vrUnidad;
     }
 
 

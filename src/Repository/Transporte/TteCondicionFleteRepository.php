@@ -85,6 +85,43 @@ class TteCondicionFleteRepository extends ServiceEntityRepository
                     ->where("cf.codigoClienteFk = {$codigoCliente}");
                 $arCondicionesFlete = $queryBuilder->getQuery()->getResult();
                 if($arCondicionesFlete) {
+                    if($codigoCiudadOrigen && $codigoCiudadDestino) {
+                        $queryBuilder = $em->createQueryBuilder()->from(TteCondicionFlete::class, 'cf')
+                            ->select('gc.codigoGuiaCargaPk')
+                            ->select('cf.codigoCondicionFletePk')
+                            ->addSelect('cf.descuentoPeso')
+                            ->addSelect('cf.descuentoUnidad')
+                            ->addSelect('cf.pesoMinimo')
+                            ->addSelect('cf.pesoMinimoGuia')
+                            ->addSelect('cf.fleteMinimo')
+                            ->addSelect('cf.fleteMinimoGuia')
+                            ->where("cf.codigoClienteFk = {$codigoCliente}")
+                            ->andWhere("cf.codigoCiudadOrigenFk = {$codigoCiudadOrigen}")
+                            ->andWhere("cf.codigoCiudadDestinoFk = {$codigoCiudadDestino}");
+                        $arCondicionFlete = $queryBuilder->getQuery()->getResult();
+                        if($arCondicionFlete) {
+                            return $arCondicionFlete[0];
+                        }
+                    }
+
+                    if($codigoZona) {
+                        $queryBuilder = $em->createQueryBuilder()->from(TteCondicionFlete::class, 'cf')
+                            ->select('gc.codigoGuiaCargaPk')
+                            ->select('cf.codigoCondicionFletePk')
+                            ->addSelect('cf.descuentoPeso')
+                            ->addSelect('cf.descuentoUnidad')
+                            ->addSelect('cf.pesoMinimo')
+                            ->addSelect('cf.pesoMinimoGuia')
+                            ->addSelect('cf.fleteMinimo')
+                            ->addSelect('cf.fleteMinimoGuia')
+                            ->where("cf.codigoClienteFk = {$codigoCliente}")
+                            ->andWhere("cf.codigoZonaFk = '{$codigoZona}'");
+                        $arCondicionFlete = $queryBuilder->getQuery()->getResult();
+                        if($arCondicionFlete) {
+                            return $arCondicionFlete[0];
+                        }
+                    }
+
                     $queryBuilder = $em->createQueryBuilder()->from(TteCondicionFlete::class, 'cf')
                         ->select('gc.codigoGuiaCargaPk')
                         ->select('cf.codigoCondicionFletePk')
@@ -94,88 +131,14 @@ class TteCondicionFleteRepository extends ServiceEntityRepository
                         ->addSelect('cf.pesoMinimoGuia')
                         ->addSelect('cf.fleteMinimo')
                         ->addSelect('cf.fleteMinimoGuia')
-                        ->where("cf.codigoClienteFk = {$codigoCliente}")
-                    ->andWhere("cf.codigoCiudadOrigenFk IS NULL")
-                    ->andWhere("cf.codigoCiudadDestinoFk IS NULL")
-                    ->andWhere("cf.codigoZonaFk IS NULL");
+                        ->where("cf.codigoClienteFk = {$codigoCliente}");
                     $arCondicionFlete = $queryBuilder->getQuery()->getResult();
                     if($arCondicionFlete) {
                         return $arCondicionFlete[0];
                     } else {
-                        if($codigoCiudadOrigen) {
-                            $queryBuilder = $em->createQueryBuilder()->from(TteCondicionFlete::class, 'cf')
-                                ->select('gc.codigoGuiaCargaPk')
-                                ->select('cf.codigoCondicionFletePk')
-                                ->addSelect('cf.descuentoPeso')
-                                ->addSelect('cf.descuentoUnidad')
-                                ->addSelect('cf.pesoMinimo')
-                                ->addSelect('cf.pesoMinimoGuia')
-                                ->addSelect('cf.fleteMinimo')
-                                ->addSelect('cf.fleteMinimoGuia')
-                                ->where("cf.codigoClienteFk = {$codigoCliente}")
-                                ->andWhere("cf.codigoCiudadOrigenFk = {$codigoCiudadOrigen}")
-                                ->andWhere("cf.codigoCiudadDestinoFk IS NULL")
-                                ->andWhere("cf.codigoZonaFk IS NULL");
-                            $arCondicionFlete = $queryBuilder->getQuery()->getResult();
-                            if($arCondicionFlete) {
-                                return $arCondicionFlete[0];
-                            } else {
-                                if($codigoZona) {
-                                    $queryBuilder = $em->createQueryBuilder()->from(TteCondicionFlete::class, 'cf')
-                                        ->select('gc.codigoGuiaCargaPk')
-                                        ->select('cf.codigoCondicionFletePk')
-                                        ->addSelect('cf.descuentoPeso')
-                                        ->addSelect('cf.descuentoUnidad')
-                                        ->addSelect('cf.pesoMinimo')
-                                        ->addSelect('cf.pesoMinimoGuia')
-                                        ->addSelect('cf.fleteMinimo')
-                                        ->addSelect('cf.fleteMinimoGuia')
-                                        ->where("cf.codigoClienteFk = {$codigoCliente}")
-                                        ->andWhere("cf.codigoCiudadOrigenFk = {$codigoCiudadOrigen}")
-                                        ->andWhere("cf.codigoZonaFk = '{$codigoZona}'");
-                                    $arCondicionFlete = $queryBuilder->getQuery()->getResult();
-                                    if($arCondicionFlete) {
-                                        return $arCondicionFlete[0];
-                                    } else {
-                                        return [
-                                            "error" => "No se encontraron resultados"
-                                        ];
-                                    }
-                                } else {
-                                    if($codigoCiudadDestino) {
-                                        $queryBuilder = $em->createQueryBuilder()->from(TteCondicionFlete::class, 'cf')
-                                            ->select('gc.codigoGuiaCargaPk')
-                                            ->select('cf.codigoCondicionFletePk')
-                                            ->addSelect('cf.descuentoPeso')
-                                            ->addSelect('cf.descuentoUnidad')
-                                            ->addSelect('cf.pesoMinimo')
-                                            ->addSelect('cf.pesoMinimoGuia')
-                                            ->addSelect('cf.fleteMinimo')
-                                            ->addSelect('cf.fleteMinimoGuia')
-                                            ->where("cf.codigoClienteFk = {$codigoCliente}")
-                                            ->andWhere("cf.codigoCiudadOrigenFk = {$codigoCiudadOrigen}")
-                                            ->andWhere("cf.codigoCiudadDestinoFk = {$codigoCiudadDestino}");
-                                        $arCondicionFlete = $queryBuilder->getQuery()->getResult();
-                                        if($arCondicionFlete) {
-                                            return $arCondicionFlete[0];
-                                        } else {
-                                            return [
-                                                "error" => "No se encontraron resultados"
-                                            ];
-                                        }
-                                    } else {
-                                        return [
-                                            "error" => "No se encontraron resultados"
-                                        ];
-                                    }
-                                }
-                            }
-                        } else {
-                            return [
-                                "error" => "No se encontraron resultados"
-                            ];
-                        }
-
+                        return [
+                            "error" => "No se encontraron resultados"
+                        ];
                     }
                 } else {
                     return [

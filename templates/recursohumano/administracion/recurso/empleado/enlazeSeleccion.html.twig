@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="row">
+        {{ notificar()|raw }}
+        <br>
+        {{ form_start(form, {'attr': {'class':'form-horizontal'}}) }}
+        <div class="col-md-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <h2 class="panel-title">Filtro de busqueda</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Identificacion:</label>
+                        <div class="col-md-11">
+                            {{ form_widget(form.identificacion) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-9 col-sm-offset-3">
+                            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-primary', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    <div class="col-md-12">
+    <section class="panel">
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>ID</td>
+                            <td>FECHA</td>
+                            <td>TIPO</td>
+                            <td>GRUPO</td>
+                            <td>IDENTIFICACION</td>
+                            <td>NOMBRE</td>
+                            <td>PRUEBAS</td>
+                            <td>TELEFONO</td>
+                            <td>CELULAR</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if arseleccion != null %}
+                        {% for arseleccion in arseleccion %}
+                            <tr>
+                                <td>
+                                    {{ arseleccion.codigoSeleccionPk }}
+                                </td>
+                                <td>
+                                    {{ arseleccion.fecha | date('Y-m-d') }}
+                                </td>
+                                <td>
+                                    {{ arseleccion.seleccionTipoRel.nombre }}
+                                </td>
+                                <td>
+                                    {{ arseleccion.codigoGrupoPagoFk | default() }}
+                                </td>
+                                <td>
+                                    {{ arseleccion.numeroIdentificacion }}
+                                </td>
+                                <td>
+                                    {{ arseleccion.nombreCorto }}
+                                </td>
+                                <td>
+                                    {{ arseleccion.presentaPruebas? "si":"no" }}
+                                </td>
+                                <td>
+                                    {{ arseleccion.telefono }}
+                                </td>
+                                <td>
+                                    {{ arseleccion.celular }}
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ path('recursohumano_administracion_recurso_empleado_nuevo', { 'id': 0, 'codigoSeleccion': arseleccion.codigoSeleccionPk}) }}">
+                                        <i style="font-size: large;color: black;" class="fa fa-share-square-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    </div>
+    {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

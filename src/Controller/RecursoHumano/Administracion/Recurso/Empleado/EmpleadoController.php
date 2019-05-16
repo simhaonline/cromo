@@ -7,10 +7,14 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuSeleccion;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -64,9 +68,9 @@ class EmpleadoController extends BaseController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/administracion/recurso/empleado/nuevo/{id}", name="recursohumano_administracion_recurso_empleado_nuevo")
+     * @Route("recursohumano/administracion/recurso/empleado/nuevo/{id}/{codigoSeleccion}",requirements={"codigoEmpleado":"\d+","codigoSeleccion":"\d+"},  defaults={"codigoSeleccion"=0}, name="recursohumano_administracion_recurso_empleado_nuevo")
      */
-    public function nuevo(Request $request, $id)
+    public function nuevo(Request $request, $id, $codigoSeleccion =0)
     {
         $em = $this->getDoctrine()->getManager();
         $arEmpleado = new RhuEmpleado();
@@ -76,6 +80,29 @@ class EmpleadoController extends BaseController
                 return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_lista'));
             }
         }
+        if ($codigoSeleccion != 0){
+            $arSeleccion = $em->getRepository(RhuSeleccion::class)->find($codigoSeleccion);
+            $arEmpleado->setIdentificacionRel($arSeleccion->getIdentificacionRel());
+            $arEmpleado->setNumeroIdentificacion($arSeleccion->getNumeroIdentificacion());
+            $arEmpleado->setNombre1($arSeleccion->getnombre1());
+            $arEmpleado->setNombre2($arSeleccion->getnombre2());
+            $arEmpleado->setApellido1($arSeleccion->getApellido1());
+            $arEmpleado->setApellido2($arSeleccion->getApellido2());
+            $arEmpleado->setEstadoCivilRel($arSeleccion->getEstadoCivilRel());
+            $arEmpleado->setFechaExpedicionIdentificacion($arSeleccion->getFechaExpedicion());
+            $arEmpleado->setFechaNacimiento($arSeleccion->getFechaNacimiento());
+            $arEmpleado->setTelefono($arSeleccion->getTelefono());
+            $arEmpleado->setCelular($arSeleccion->getCelular());
+            $arEmpleado->setCorreo($arSeleccion->getCorreo());
+            $arEmpleado->setDireccion($arSeleccion->getDireccion());
+            $arEmpleado->setBarrio($arSeleccion->getBarrio());
+            $arEmpleado->setFechaExpedicionIdentificacion($arSeleccion->getFechaExpedicion());
+            $arEmpleado->setRhRel($arSeleccion->getRhRel());
+            $arEmpleado->setCiudadRel($arSeleccion->getCiudadRel());
+            $arEmpleado->setCiudadExpedicionRel($arSeleccion->getCiudadExpedicionRel());
+            $arEmpleado->setCiudadNacimientoRel($arSeleccion->getCiudadNacimientoRel());
+        }
+
         $form = $this->createForm(EmpleadoType::class, $arEmpleado);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -179,6 +206,37 @@ class EmpleadoController extends BaseController
         }
         return $this->render('recursohumano/administracion/recurso/empleado/nuevoContrato.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("recursohumano/administracion/recurso/empleado/nuevo/enlazar/seleccion", name="recursohumano_administracion_recurso_empleado_enlazar_seleccion")
+     */
+    public function EnlazarSeleccion(Request $request){
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $form = $this-> createFormBuilder()
+            ->add('identificacion', TextType::class,['required' => false, 'data' => $session->get('filtroIdentificacion')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $arseleccion = null;
+        if ($form->isSubmitted() && $form->isValid()){
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $identificacion = $form->get('identificacion')->getData();
+                $arseleccion =$paginator->paginate($em->getRepository(RhuSeleccion::class)->findBy(['numeroIdentificacion'=>$identificacion]), $request->query->getInt('page',1), 30);
+                $session->set('arseleccion', $em->getRepository(RhuSeleccion::class)->findBy(['numeroIdentificacion'=>$identificacion]));
+            }
+        }
+
+        return $this->render('recursohumano/administracion/recurso/empleado/enlazeSeleccion.html.twig', [
+            'form'=>$form->createView(),
+            'arseleccion'=>$arseleccion
         ]);
     }
 }

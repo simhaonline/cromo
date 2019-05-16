@@ -81,17 +81,29 @@ class SeleccionController extends ControllerListenerGeneral
                 $arSeleccion->setFecha(new \DateTime('now'));
                 $em->persist($arSeleccion);
                 $em->flush();
-                return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'recursoHumano','entidad' => 'seleccion']));
+                //return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'recursoHumano','entidad' => 'seleccion']));
             }
-            if ($form->get('guardarnuevo')->isClicked()) {
+            /*if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arSeleccion);
                 $em->flush($arSeleccion);
                 return $this->redirect($this->generateUrl('recursoHumano_movimiento_seleccion_seleccion_nuevo', ['codigoSeleccion' => 0]));
-            }
+            }*/
         }
         return $this->render('recursohumano/movimiento/seleccion/seleccion/nuevo.html.twig', [
             'form' => $form->createView(), 'arSeleccion' => $arSeleccion
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("recursohumano/movimiento/seleccion/seleccion/detalle/{id}", name="recursohumano_movimiento_seleccion_seleccion_detalle")
+     */
+    public function detalle(Request $request, $id)
+    {
+
+    }
+
 }
 

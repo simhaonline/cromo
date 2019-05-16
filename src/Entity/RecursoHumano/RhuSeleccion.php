@@ -139,6 +139,7 @@ class RhuSeleccion
      */
     private $telefono;
 
+
     /**
      * @ORM\Column(name="celular", type="string", length=20, nullable=true)
      * @Assert\Length(

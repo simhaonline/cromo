@@ -27,8 +27,8 @@
             <div class="form-group form-group-sm">
                 <label for="form_identificacionTipo" class="col-sm-2 control-label">Tipo identificación:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.genIdentificacionRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.genIdentificacionRel) }}
+                     {{ form_widget(form.identificacionRel, { 'attr': {'class': 'form-control'} }) }}
+                     {{ form_errors(form.identificacionRel) }}
                 </div>
                 <label for="form_numeroIdentificacion" class="col-sm-2 control-label">Identificación:</label>
                 <div class="col-sm-4">
@@ -151,7 +151,6 @@
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'solicitud'}) }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
-        {{ form_widget(form.guardarnuevo, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}
 {% endblock %}

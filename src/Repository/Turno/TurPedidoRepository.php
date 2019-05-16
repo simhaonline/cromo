@@ -72,7 +72,7 @@ class TurPedidoRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function liquidar($arPedido)
+    public function liquidar($id)
     {
         $em = $this->getEntityManager();
         $vrSubtotalGlobal = 0;
@@ -82,8 +82,8 @@ class TurPedidoRepository extends ServiceEntityRepository
         $totalHoras = 0;
         $totalHorasDiurnas = 0;
         $totalHorasNocturnas = 0;
+        $arPedido = $em->getRepository(TurPedido::class)->find($id);
         $arPedidoDetalles = $this->getEntityManager()->getRepository(TurPedidoDetalle::class)->findBy(['codigoPedidoFk' => $arPedido->getCodigoPedidoPk()]);
-
         foreach ($arPedidoDetalles as $arPedidoDetalle) {
             $horas = $arPedidoDetalle->getHoras();
             $totalHoras += $horas;
@@ -99,7 +99,6 @@ class TurPedidoRepository extends ServiceEntityRepository
             $vrIvaGlobal += $vrIva;
             $vrSalarioBase = $arPedidoDetalle->getVrSalarioBase();
             $vrSalarioBaseGlobal += $vrSalarioBase;
-
         }
         $arPedido->setVrSubtotal($vrSubtotalGlobal);
         $arPedido->setVrTotal($vrTotalBrutoGlobal);

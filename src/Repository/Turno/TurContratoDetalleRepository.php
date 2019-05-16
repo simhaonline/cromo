@@ -58,7 +58,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
     /**
      * @param $arrControles
      * @param $form
-     * @param $arContratos
+     * @param $arContratos TurContrato
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException

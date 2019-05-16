@@ -72,9 +72,9 @@ class TurContratoRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function liquidar($arContratos)
+    public function liquidar($id)
     {
-//        $em = $this->getEntityManager();
+        $em = $this->getEntityManager();
         $vrSubtotalGlobal = 0;
         $vrTotalBrutoGlobal = 0;
         $vrIvaGlobal = 0;
@@ -83,8 +83,8 @@ class TurContratoRepository extends ServiceEntityRepository
         $totalHoras = 0;
         $totalHorasDiurnas = 0;
         $totalHorasNocturnas = 0;
-        $arContratoDetalles = $this->getEntityManager()->getRepository(TurContratoDetalle::class)->findBy(['codigoContratoFk' => $arContratos->getCodigoContratoPk()]);
-
+        $arContratos = $em->getRepository(TurContrato::class)->find($id);
+        $arContratoDetalles = $this->getEntityManager()->getRepository(TurContratoDetalle::class)->findBy(array('codigoContratoFk' => $arContratos->getCodigoContratoPk()));
         foreach ($arContratoDetalles as $arContratoDetalle) {
             $horas = $arContratoDetalle->getHoras();
             $totalHoras += $horas;

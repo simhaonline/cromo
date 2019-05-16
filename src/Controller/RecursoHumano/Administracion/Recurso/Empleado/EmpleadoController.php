@@ -234,7 +234,7 @@ class EmpleadoController extends BaseController
             }
         }
 
-        return $this->render('recursohumano/administracion/recurso/empleado/enlazeSeleccion.html.twig', [
+        return $this->render('recursohumano/administracion/recurso/empleado/enlaceSeleccion.html.twig', [
             'form'=>$form->createView(),
             'arseleccion'=>$arseleccion
         ]);

@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_dotacion_dotacion_lista') }}">Volver</a>&nbsp;&nbsp;
+        </div>
+        <div class="btn-group">
+{#            <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Parámetros iniciales</a>#}
+        </div>
+        <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+            <tr>
+                <td class="titulo">CODIGO:</td>
+                <td class="td-in-well">{{ arDotacion.codigoDotacionPk }}</td>
+                <td class="titulo">EMPLEADO</td>
+                <td class="td-in-well" style="text-transform: uppercase;">
+                    {{ arDotacion.empleadoRel.nombreCorto }}
+                </td>
+                <td class="titulo">COMPENTARIOS</td>
+                <td class="td-in-well" style="text-transform: uppercase;">
+                    {{ arDotacion.comentarios }}
+                </td>
+            </tr>
+            <tr>
+                <td class="titulo">FECHA:</td>
+                <td class="td-in-well">{{ arDotacion.fecha | date('Y-m-d') }}</td>
+                <td class="titulo">FECHA EMTREGA:</td>
+                <td class="td-in-well">{{ arDotacion.fechaEntrega | date('Y-m-d') }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">FECHA:</td>
+                <td class="td-in-well">{{ arDotacion.estadoCerrado ?"SI":"NO" }}</td>
+                <td class="titulo">FECHA EMTREGA:</td>
+                <td class="td-in-well">{{ arDotacion.estadoAutorizado ?"SI":"NO" }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">AFECTA INVENTARIO:</td>
+                <td class="td-in-well">{{ arDotacion.afectaInventario ?"SI":"NO" }}</td>
+                <td class="titulo">USUARIO:</td>
+                <td class="td-in-well">{{ arDotacion.codigoUsuario}}</td>
+            <tr>
+                <td class="titulo">TIPO DOTACIÓN:</td>
+                <td class="td-in-well">{{ arDotacion.tipoDotacion}}</td>
+
+            </tr>
+        </table>
+    </div>
+    <br/><br/>
+{% endblock %}

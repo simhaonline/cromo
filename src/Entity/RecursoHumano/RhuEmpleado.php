@@ -367,6 +367,11 @@ class RhuEmpleado
     protected $reclamosEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuDotacion", mappedBy="empleadoRel")
+     */
+    protected $dotacionesEmpleadoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()
@@ -1324,6 +1329,22 @@ class RhuEmpleado
     public function setReclamosEmpleadoRel($reclamosEmpleadoRel): void
     {
         $this->reclamosEmpleadoRel = $reclamosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDotacionesEmpleadoRel()
+    {
+        return $this->dotacionesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $dotacionesEmpleadoRel
+     */
+    public function setDotacionesEmpleadoRel($dotacionesEmpleadoRel): void
+    {
+        $this->dotacionesEmpleadoRel = $dotacionesEmpleadoRel;
     }
 
 

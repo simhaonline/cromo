@@ -26,8 +26,9 @@
                         <thead>
                         <tr>
                             <th><p data-toggle="tooltip" data-placement="top" title="PORCENTAJE MANEJO">ID</p></th>
-                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD ORIGEN">CIUDAD ORIGEN</p></th>
-                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">CIDUAD DESTINO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD ORIGEN">ORIGEN</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">DESTINO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="ZONA">ZONA</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="PRODUCTO">PRODUCTO</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO">PESO</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="VALOR UNIDAD">UND</p>
@@ -46,6 +47,7 @@
                                 <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
                                 <td>{{ arPrecioDetalle.ciudadOrigen }}</td>
                                 <td>{{ arPrecioDetalle.ciudadDestino }}</td>
+                                <td>{{ arPrecioDetalle.zonaNombre }}</td>
                                 <td>{{ arPrecioDetalle.nombre }}</td>
                                 <td class="numero">{{ arPrecioDetalle.vrPeso | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arPrecioDetalle.vrUnidad | number_format(0, '.', ',') }}</td>

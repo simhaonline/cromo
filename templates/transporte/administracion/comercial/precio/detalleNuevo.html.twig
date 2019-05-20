@@ -6,12 +6,6 @@
         <div class="panel-heading">Detalle nuevo</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_apellido1" class="col-sm-2 control-label">Producto:</label>
-                <div class="col-sm-10">
-                    {{ form_widget(form.productoRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
                 <label for="form_apellido1" class="col-sm-2 control-label">Ciudad origen:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.ciudadOrigenRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
@@ -19,6 +13,16 @@
                 <label for="form_apellido2" class="col-sm-2 control-label">Ciudad destino:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.ciudadDestinoRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_apellido1" class="col-sm-2 control-label">Zona:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.zonaRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
+                </div>
+                <label for="form_apellido1" class="col-sm-2 control-label">Producto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.productoRel, { 'attr': {'class': 'form-control to-select-2'}}) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

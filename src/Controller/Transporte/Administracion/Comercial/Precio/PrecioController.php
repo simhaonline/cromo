@@ -141,7 +141,12 @@ class PrecioController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arPrecioDetalleExistente = $em->getRepository(TtePrecioDetalle::class)
-                ->findBy(['ciudadOrigenRel' => $arPrecioDetalle->getCiudadOrigenRel(), 'ciudadDestinoRel' => $arPrecioDetalle->getCiudadDestinoRel(), 'productoRel' => $arPrecioDetalle->getProductoRel()]);
+                ->findBy([
+                    'precioRel' => $arPrecioDetalle->getPrecioRel(),
+                    'ciudadOrigenRel' => $arPrecioDetalle->getCiudadOrigenRel(),
+                    'ciudadDestinoRel' => $arPrecioDetalle->getCiudadDestinoRel(),
+                    'zonaRel' => $arPrecioDetalle->getZonaRel(),
+                    'productoRel' => $arPrecioDetalle->getProductoRel()]);
             if (!$arPrecioDetalleExistente) {
                 if ($form->get('guardar')->isClicked()) {
                     $arPrecioDetalle->setPrecioRel($arPrecio);

@@ -5,6 +5,7 @@ namespace App\Form\Type\Transporte;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TtePrecioDetalle;
 use App\Entity\Transporte\TteProducto;
+use App\Entity\Transporte\TteZona;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -36,7 +37,7 @@ class PrecioDetalleType extends AbstractType
                 'label' => 'Ciudad origen:'
             ])
             ->add('ciudadDestinoRel',EntityType::class,[
-                'required' => true,
+                'required' => false,
                 'class' => TteCiudad::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('st')
@@ -47,6 +48,16 @@ class PrecioDetalleType extends AbstractType
                     return $ciudad. '-' . $er->getDepartamentoRel()->getNombre();
                 },
                 'label' => 'Ciudad destino:'
+            ])
+            ->add('zonaRel',EntityType::class,[
+                'required' => false,
+                'class' => TteZona::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('z')
+                        ->orderBy('z.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Zona:'
             ])
             ->add('productoRel',EntityType::class,[
                 'required' => true,

@@ -44,6 +44,11 @@ class TteZona
     protected $condicionesClientesZonaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TtePrecioDetalle", mappedBy="zonaRel")
+     */
+    protected $preciosDetallesZonaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoZonaPk()
@@ -121,6 +126,22 @@ class TteZona
     public function setCondicionesClientesZonaRel($condicionesClientesZonaRel): void
     {
         $this->condicionesClientesZonaRel = $condicionesClientesZonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPreciosDetallesZonaRel()
+    {
+        return $this->preciosDetallesZonaRel;
+    }
+
+    /**
+     * @param mixed $preciosDetallesZonaRel
+     */
+    public function setPreciosDetallesZonaRel($preciosDetallesZonaRel): void
+    {
+        $this->preciosDetallesZonaRel = $preciosDetallesZonaRel;
     }
 
 

@@ -38,6 +38,11 @@ class TtePrecioDetalle
     private $codigoCiudadDestinoFk;
 
     /**
+     * @ORM\Column(name="codigo_zona_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoZonaFk;
+
+    /**
      * @ORM\Column(name="codigo_producto_fk", type="string", length=20, nullable=true)
      */
     private $codigoProductoFk;
@@ -90,6 +95,12 @@ class TtePrecioDetalle
      * @ORM\JoinColumn(name="codigo_ciudad_destino_fk", referencedColumnName="codigo_ciudad_pk")
      */
     private $ciudadDestinoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteZona", inversedBy="preciosDetallesZonaRel")
+     * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
+     */
+    private $zonaRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteProducto", inversedBy="preciosDetallesProductoRel")
@@ -335,6 +346,38 @@ class TtePrecioDetalle
     public function setProductoRel($productoRel): void
     {
         $this->productoRel = $productoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
     }
 
 

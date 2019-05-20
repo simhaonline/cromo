@@ -85,6 +85,11 @@ class RhuDotacion
     private $tipoDotacion;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuDotacionDetalle", mappedBy="dotacionRel")
+     */
+    protected $dotacionesDetallesDotacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoDotacionPk()

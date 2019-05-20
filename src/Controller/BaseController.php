@@ -32,6 +32,7 @@ abstract class BaseController extends Controller
         } else {
             $camposFiltro = json_decode($namespaceType::getEstructuraPropiedadesFiltro(), true);
             $queryBuilder = $this->getGenerarQueryConFiltro($nombreRepositorio, $camposFiltro);
+          //  dd($queryBuilder->getDQL());
         }
         /** @var  $queryBuilder QueryBuilder */
         if($paginar) {
@@ -306,7 +307,7 @@ abstract class BaseController extends Controller
         $usuario = $this->getUser();
         /** @var  $queryBuilder QueryBuilder */
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()->from($nombreRepositorio, 'e');
-        $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
+         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
 
         $camposTabla = json_decode($namespaceType::getEstructuraPropiedadesLista());
         $formType = new $namespaceType;

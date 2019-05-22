@@ -89,6 +89,7 @@ class DespachoType extends AbstractType {
             {"campo":"ciudadOrigenRel.nombre",                  "tipo":"texto",     "ayuda":"Ciudad origen",                            "titulo":"ORIGEN",              "relacion":""},
             {"campo":"ciudadDestinoRel.nombre",                 "tipo":"texto",     "ayuda":"Ciudad destino",                           "titulo":"DESTINO",             "relacion":""},
             {"campo":"vrFletePago",                             "tipo":"moneda",    "ayuda":"Valor flete pago",                         "titulo":"FLETE"},
+            {"campo":"vrAnticipo",                              "tipo":"moneda",    "ayuda":"Valor anticipo pago",                      "titulo":"ANTICIPO"},
             {"campo":"cantidad",                                "tipo":"moneda",    "ayuda":"Cantidad",                                 "titulo":"CANT"},
             {"campo":"unidades",                                "tipo":"moneda",    "ayuda":"Unidades",                                 "titulo":"UND"},
             {"campo":"pesoReal",                                "tipo":"moneda",    "ayuda":"Peso real",                                "titulo":"PES"},

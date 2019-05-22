@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form,{'attr': {'class' :'form-horizontal'}}) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="">Autorizar</a>
+            {{ form_widget(form.btnAutorizar) }}
             <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_dotacion_dotacion_lista') }}">Volver</a>&nbsp;&nbsp;
         </div>
     </div>
@@ -62,11 +63,27 @@
                 <th>CANTIDAD</th>
                 <th>DEVUELTA</th>
                 <th>ENLACE</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
-
+        {% for detalle in arDotacionDetalle%}
+            <tr>
+               <td>{{ detalle.codigoDotacionDetallePk }}</td>
+               <td>{{ detalle.dotacionElementoRel.nombre }}</td>
+                <td>{{ detalle.cantidadAsignada }}</td>
+                <td>{{ detalle.cantidadDevuelta }}</td>
+                <td></td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
+    <div class="row">
+        <div class="btn-group pull-right">
+            <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_dotacion_elemento_nuevo', { 'id': 0 }) }}', 'elementosDotacion', 600, 900)"
+               class="btn btn-default btn-sm">Agregar inventario elemento</a>
+            <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_dotacion_detalle_nuevo', { 'id': 0,  'codigoDotacion':arDotacion.codigoDotacionPk }) }}')"
+                class="btn btn-primary btn-sm">nuevo</a>
+        </div>
+    </div>
+    {{ form_end(form) }}
 {% endblock %}

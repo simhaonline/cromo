@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="rhu_dotacion_elemento")
- * @ORM\Entity(repositoryClass="Brasa\RecursoHumanoBundle\Repository\RhuDotacionElementoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuDotacionElementoRepository")
  */
 class RhuDotacionElemento
 {
@@ -27,4 +27,54 @@ class RhuDotacionElemento
      * @ORM\OneToMany(targetEntity="RhuDotacionDetalle", mappedBy="dotacionElementoRel")
      */
     protected $elementosDotacionesDetalleDotacionElementoRel;
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDotacionElementoPk()
+    {
+        return $this->codigoDotacionElementoPk;
+    }
+
+    /**
+     * @param mixed $codigoDotacionElementoPk
+     */
+    public function setCodigoDotacionElementoPk($codigoDotacionElementoPk): void
+    {
+        $this->codigoDotacionElementoPk = $codigoDotacionElementoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getElementosDotacionesDetalleDotacionElementoRel()
+    {
+        return $this->elementosDotacionesDetalleDotacionElementoRel;
+    }
+
+    /**
+     * @param mixed $elementosDotacionesDetalleDotacionElementoRel
+     */
+    public function setElementosDotacionesDetalleDotacionElementoRel($elementosDotacionesDetalleDotacionElementoRel): void
+    {
+        $this->elementosDotacionesDetalleDotacionElementoRel = $elementosDotacionesDetalleDotacionElementoRel;
+    }
+
+
 }

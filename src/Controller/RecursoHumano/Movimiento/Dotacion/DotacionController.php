@@ -7,10 +7,16 @@ namespace App\Controller\RecursoHumano\Movimiento\Dotacion;
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuDotacion;
+use App\Entity\RecursoHumano\RhuDotacionDetalle;
+use App\Entity\RecursoHumano\RhuDotacionElemento;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Form\Type\RecursoHumano\DotacionElementoType;
 use App\Form\Type\RecursoHumano\DotacionType;
 use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\Utilidades\Mensajes;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -101,10 +107,111 @@ class DotacionController extends BaseController
     public function detalle(Request $request, $id){
         $em = $this->getDoctrine()->getManager();
         $arDotacion = $em->getRepository(RhuDotacion::class)->find($id);
+        $arDotacionDetalle = $em->getRepository(RhuDotacionDetalle::class)->findBy(['codigoDotacionFk'=>$id]);
+        $form = $this->createFormBuilder()
+            ->add('btnAutorizar', SubmitType::class, ['label' => 'Autorizar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnAutorizar')->isClicked()) {
+                if (count($arDotacionDetalle) > 0){
+                    if ( $arDotacion->getEstadoAutorizado() != true){
+                        $arDotacion->setEstadoAutorizado(1);
+                        $em->persist($arDotacion);
+                        $em->flush();
+                    }else{
+                        Mensajes::info("La dotación ya esta autorizada");
+                    }
+                }else{
+                    Mensajes::warning("No se puede autorizar una dotación sin elementos");
+                }
+            }
+        }
         return $this->render('recursohumano/movimiento/dotacion/dotacion/detalle.html.twig',[
-            'arDotacion'=>$arDotacion
+            'arDotacion'=>$arDotacion,
+            'arDotacionDetalle'=>$arDotacionDetalle,
+            'form'=>$form->createView()
         ]);
 
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("recursohumano/moviento/dotacion/elemento/nuevo/{id}", name="recursohumano_movimiento_dotacion_elemento_nuevo")
+     */
+    public function nuevoElemento(Request $request, $id){
+        $em = $this->getDoctrine()->getManager();
+        $arDotacionElemento =  new RhuDotacionElemento();
+        $form = $this->createForm(DotacionElementoType::class, $arDotacionElemento);
+        $form->handleRequest($request);
+        if ($id != 0) {
+            $arDotacionElemento = $em->getRepository(RhuDotacionElemento::class)->find($id);
+        }
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $em->persist($arDotacionElemento);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }else{
+                Mensajes::error('Debe se puede reguistrar el elemento');
+            }
+
+        }
+        return $this->render('recursohumano/movimiento/dotacion/dotacion/nuevoElemento.html.twig', [
+            'form' => $form->createView(),
+            'arDotacionElemento' => $arDotacionElemento
+        ]);
+    }
+
+    /**
+    * @param Request $request
+    * @param $id
+    * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    * @Route("recursohumano/moviento/dotacion/detalle/nuevo/{id}/{codigoDotacion}", name="recursohumano_movimiento_dotacion_detalle_nuevo")
+    */
+    public function nuevoDetalleDotacion(Request $request, $id, $codigoDotacion){
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+
+        $form = $this-> createFormBuilder()
+            ->add('clave', TextType::class,['required' => false, 'data' => $session->get('filtroClave')])
+            ->add('nombre', TextType::class,['required' => false, 'data' => $session->get('filtroNombre')])
+            ->add('cantidad', TextType::class,['required' => false, 'data' => $session->get('filtroNombre')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrCantidad = $request->request->get('arrCantidad');
+                $arDotacion = $em->getRepository(RhuDotacion::class)->find($codigoDotacion);
+                foreach ($arrCantidad as $elemento => $cantidad){
+                    $arDotacionElemento = $em->getRepository(RhuDotacionElemento::class)->find($elemento);
+                    if ($arDotacionElemento && $cantidad > 0){
+                        $arDetalleDotacion= new RhuDotacionDetalle();
+                        $arDetalleDotacion->setCantidadAsignada($cantidad);
+                        $arDetalleDotacion->setCantidadDevuelta(0);
+                        $arDetalleDotacion->setDotacionElementoRel($arDotacionElemento);
+                        $arDetalleDotacion->setDotacionRel($arDotacion);
+                        $em->persist($arDetalleDotacion);
+                        $em->flush();
+                    }
+                }
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }else{
+                Mensajes::error('Debe se puede reguistrar el elemento');
+            }
+
+        }
+        $arDotacionElementos = $paginator->paginate($em->getRepository(RhuDotacionElemento::class)->lista(),$request->query->getInt('page', 1), 30);
+
+        return $this->render('recursohumano/movimiento/dotacion/dotacion/nuevoDetalleDotacion.html.twig', [
+            'form' => $form->createView(),
+            'arDotacionElementos' => $arDotacionElementos
+        ]);
     }
 
 }

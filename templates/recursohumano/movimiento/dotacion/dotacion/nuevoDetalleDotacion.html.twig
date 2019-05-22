@@ -1,0 +1,73 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form,{'attr': {'class' :'form-horizontal'}}) }}
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="true">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+            <h2>Información de la dotación</h2>
+        </header>
+        <div>
+            <div class="widget-body no-padding">
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Id:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.clave) }}
+                    </div>
+                    <label class="col-sm-1 control-label">Nombre:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.nombre) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-sm-9 col-sm-offset-3">
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-primary', 'style':'float:right'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered">
+        <thead>
+        <tr>
+            <th>
+                CÓDIGO
+            </th>
+            <th>
+                NOMBRE
+            </th>
+            <th>
+                CANTIDAD
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for elemento in arDotacionElementos %}
+            <tr>
+                <td>
+                    {{ elemento.codigoDotacionElementoPk }}
+                </td>
+                <td>
+                    {{ elemento.nombre }}
+                </td>
+                <td>
+                    <input type="number" class="form-control" name="arrCantidad[{{ elemento.codigoDotacionElementoPk }}]" min="0"/>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div style="display: flex; flex-direction: row; align-items: center">
+        <span style="margin-right: 4px">registros: {{ arDotacionElementos.getTotalItemCount }}</span>
+        {{ knp_pagination_render(arDotacionElementos) }}
+    </div>
+    <div class="row">
+        <div class="btn-group pull-right">
+            {{ form_widget(form.btnGuardar, {'attr': {'class': 'btn btn-primary'}}) }}
+        </div>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}

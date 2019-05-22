@@ -179,7 +179,6 @@ class DotacionController extends BaseController
         $form = $this-> createFormBuilder()
             ->add('clave', TextType::class,['required' => false, 'data' => $session->get('filtroClave')])
             ->add('nombre', TextType::class,['required' => false, 'data' => $session->get('filtroNombre')])
-            ->add('cantidad', TextType::class,['required' => false, 'data' => $session->get('filtroNombre')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -203,6 +202,10 @@ class DotacionController extends BaseController
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }else{
                 Mensajes::error('Debe se puede reguistrar el elemento');
+            }
+            if ($form->get('btnFiltrar')){
+                $session->set('filtroClave', $form->get('clave')->getData());
+                $session->set('filtroNombre', $form->get('nombre')->getData());
             }
 
         }

@@ -23,11 +23,11 @@ class RhuDotacionElementoRepository extends ServiceEntityRepository
             ->addSelect('e.nombre');
         $queryBuilder->orderBy('e.codigoDotacionElementoPk', 'DESC');
 
-        if ($session->get('filtroPaisId') != '') {
-            $queryBuilder->andWhere("p.codigoPaisPk = '{$session->get('filtroPaisId')}'");
+        if ($session->get('filtroClave') != '') {
+            $queryBuilder->andWhere("e.codigoDotacionElementoPk = '{$session->get('filtroClave')}'");
         }
-        if ($session->get('filtroPaisNombre') != '') {
-            $queryBuilder->andWhere("p.nombre LIKE '%{$session->get('filtroPaisNombre')}%'");
+        if ($session->get('filtroNombre') != '') {
+            $queryBuilder->andWhere("e.nombre LIKE '%{$session->get('filtroNombre')}%'");
         }
         return $queryBuilder;
     }

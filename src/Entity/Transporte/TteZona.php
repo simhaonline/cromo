@@ -41,7 +41,12 @@ class TteZona
     /**
      * @ORM\OneToMany(targetEntity="TteCondicionFlete", mappedBy="zonaRel")
      */
-    protected $condicionesClientesZonaRel;
+    protected $condicionesFletesZonaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteCondicionManejo", mappedBy="zonaRel")
+     */
+    protected $condicionesManejosZonaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TtePrecioDetalle", mappedBy="zonaRel")
@@ -115,17 +120,33 @@ class TteZona
     /**
      * @return mixed
      */
-    public function getCondicionesClientesZonaRel()
+    public function getCondicionesFletesZonaRel()
     {
-        return $this->condicionesClientesZonaRel;
+        return $this->condicionesFletesZonaRel;
     }
 
     /**
-     * @param mixed $condicionesClientesZonaRel
+     * @param mixed $condicionesFletesZonaRel
      */
-    public function setCondicionesClientesZonaRel($condicionesClientesZonaRel): void
+    public function setCondicionesFletesZonaRel($condicionesFletesZonaRel): void
     {
-        $this->condicionesClientesZonaRel = $condicionesClientesZonaRel;
+        $this->condicionesFletesZonaRel = $condicionesFletesZonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCondicionesManejosZonaRel()
+    {
+        return $this->condicionesManejosZonaRel;
+    }
+
+    /**
+     * @param mixed $condicionesManejosZonaRel
+     */
+    public function setCondicionesManejosZonaRel($condicionesManejosZonaRel): void
+    {
+        $this->condicionesManejosZonaRel = $condicionesManejosZonaRel;
     }
 
     /**

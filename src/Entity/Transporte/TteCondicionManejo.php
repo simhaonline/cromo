@@ -6,13 +6,13 @@ namespace App\Entity\Transporte;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteCondicionFleteRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Transporte\TteCondicionManejoRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
-class TteCondicionFlete
+class TteCondicionManejo
 {
     public $infoLog = [
-        "primaryKey" => "codigoCondicionFletePk",
+        "primaryKey" => "codigoCondicionManejoPk",
         "todos"     => true,
     ];
     /**
@@ -20,7 +20,7 @@ class TteCondicionFlete
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $codigoCondicionFletePk;
+    private $codigoCondicionManejoPk;
 
     /**
      * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
@@ -43,65 +43,40 @@ class TteCondicionFlete
     private $codigoZonaFk;
 
     /**
-     * @ORM\Column(name="descuento_peso", type="float", options={"default" : 0})
+     * @ORM\Column(name="porcentaje", type="float", options={"default" : 0})
      */
-    private $descuentoPeso = 0;
+    private $porcentaje = 0;
 
     /**
-     * @ORM\Column(name="descuento_unidad", type="float", options={"default" : 0})
+     * @ORM\Column(name="minimo_unidad", type="float", options={"default" : 0})
      */
-    private $descuentoUnidad = 0;
+    private $minimoUnidad = 0;
 
     /**
-     * @ORM\Column(name="peso_minimo", type="integer", options={"default" : 0})
+     * @ORM\Column(name="minimo_despacho", type="float", options={"default" : 0})
      */
-    private $pesoMinimo = 0;
+    private $minimoDespacho = 0;
 
     /**
-     * @ORM\Column(name="peso_minimo_guia", type="integer", options={"default" : 0})
-     */
-    private $pesoMinimoGuia = 0;
-
-    /**
-     * @ORM\Column(name="flete_minimo", type="float", options={"default" : 0})
-     */
-    private $fleteMinimo = 0;
-
-    /**
-     * @ORM\Column(name="flete_minimo_guia", type="float", options={"default" : 0})
-     */
-    private $fleteMinimoGuia = 0;
-
-    /**
-     * @ORM\Column(name="vr_peso", type="float", options={"default" : 0})
-     */
-    private $vrPeso = 0;
-
-    /**
-     * @ORM\Column(name="vr_unidad", type="float", options={"default" : 0})
-     */
-    private $vrUnidad = 0;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="TteCliente", inversedBy="condicionesFletesClienteRel")
+     * @ORM\ManyToOne(targetEntity="TteCliente", inversedBy="condicionesManejosClienteRel")
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
     private $clienteRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TteZona", inversedBy="condicionesFletesZonaRel")
+     * @ORM\ManyToOne(targetEntity="TteZona", inversedBy="condicionesManejosZonaRel")
      * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
      */
     private $zonaRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="condicionesFletesCiudadOrigenRel")
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="condicionesManejosCiudadOrigenRel")
      * @ORM\JoinColumn(name="codigo_ciudad_origen_fk", referencedColumnName="codigo_ciudad_pk")
      */
     private $ciudadOrigenRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="condicionesFletesCiudadDestinoRel")
+     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="condicionesManejosCiudadDestinoRel")
      * @ORM\JoinColumn(name="codigo_ciudad_destino_fk", referencedColumnName="codigo_ciudad_pk")
      */
     private $ciudadDestinoRel;
@@ -109,17 +84,17 @@ class TteCondicionFlete
     /**
      * @return mixed
      */
-    public function getCodigoCondicionFletePk()
+    public function getCodigoCondicionManejoPk()
     {
-        return $this->codigoCondicionFletePk;
+        return $this->codigoCondicionManejoPk;
     }
 
     /**
-     * @param mixed $codigoCondicionFletePk
+     * @param mixed $codigoCondicionManejoPk
      */
-    public function setCodigoCondicionFletePk($codigoCondicionFletePk): void
+    public function setCodigoCondicionManejoPk($codigoCondicionManejoPk): void
     {
-        $this->codigoCondicionFletePk = $codigoCondicionFletePk;
+        $this->codigoCondicionManejoPk = $codigoCondicionManejoPk;
     }
 
     /**
@@ -189,129 +164,49 @@ class TteCondicionFlete
     /**
      * @return mixed
      */
-    public function getDescuentoPeso()
+    public function getPorcentaje()
     {
-        return $this->descuentoPeso;
+        return $this->porcentaje;
     }
 
     /**
-     * @param mixed $descuentoPeso
+     * @param mixed $porcentaje
      */
-    public function setDescuentoPeso($descuentoPeso): void
+    public function setPorcentaje($porcentaje): void
     {
-        $this->descuentoPeso = $descuentoPeso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescuentoUnidad()
-    {
-        return $this->descuentoUnidad;
-    }
-
-    /**
-     * @param mixed $descuentoUnidad
-     */
-    public function setDescuentoUnidad($descuentoUnidad): void
-    {
-        $this->descuentoUnidad = $descuentoUnidad;
+        $this->porcentaje = $porcentaje;
     }
 
     /**
      * @return mixed
      */
-    public function getPesoMinimo()
+    public function getMinimoUnidad()
     {
-        return $this->pesoMinimo;
+        return $this->minimoUnidad;
     }
 
     /**
-     * @param mixed $pesoMinimo
+     * @param mixed $minimoUnidad
      */
-    public function setPesoMinimo($pesoMinimo): void
+    public function setMinimoUnidad($minimoUnidad): void
     {
-        $this->pesoMinimo = $pesoMinimo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPesoMinimoGuia()
-    {
-        return $this->pesoMinimoGuia;
-    }
-
-    /**
-     * @param mixed $pesoMinimoGuia
-     */
-    public function setPesoMinimoGuia($pesoMinimoGuia): void
-    {
-        $this->pesoMinimoGuia = $pesoMinimoGuia;
+        $this->minimoUnidad = $minimoUnidad;
     }
 
     /**
      * @return mixed
      */
-    public function getFleteMinimo()
+    public function getMinimoDespacho()
     {
-        return $this->fleteMinimo;
+        return $this->minimoDespacho;
     }
 
     /**
-     * @param mixed $fleteMinimo
+     * @param mixed $minimoDespacho
      */
-    public function setFleteMinimo($fleteMinimo): void
+    public function setMinimoDespacho($minimoDespacho): void
     {
-        $this->fleteMinimo = $fleteMinimo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFleteMinimoGuia()
-    {
-        return $this->fleteMinimoGuia;
-    }
-
-    /**
-     * @param mixed $fleteMinimoGuia
-     */
-    public function setFleteMinimoGuia($fleteMinimoGuia): void
-    {
-        $this->fleteMinimoGuia = $fleteMinimoGuia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrPeso()
-    {
-        return $this->vrPeso;
-    }
-
-    /**
-     * @param mixed $vrPeso
-     */
-    public function setVrPeso($vrPeso): void
-    {
-        $this->vrPeso = $vrPeso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrUnidad()
-    {
-        return $this->vrUnidad;
-    }
-
-    /**
-     * @param mixed $vrUnidad
-     */
-    public function setVrUnidad($vrUnidad): void
-    {
-        $this->vrUnidad = $vrUnidad;
+        $this->minimoDespacho = $minimoDespacho;
     }
 
     /**
@@ -377,6 +272,9 @@ class TteCondicionFlete
     {
         $this->ciudadDestinoRel = $ciudadDestinoRel;
     }
+
+
+
 
 
 }

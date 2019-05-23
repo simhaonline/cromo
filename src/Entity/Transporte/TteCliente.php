@@ -255,6 +255,11 @@ class TteCliente
     protected $condicionesFletesClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteCondicionManejo", mappedBy="clienteRel")
+     */
+    protected $condicionesManejosClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()
@@ -972,6 +977,38 @@ class TteCliente
     public function setGuiasTemporalesClienteRel($guiasTemporalesClienteRel): void
     {
         $this->guiasTemporalesClienteRel = $guiasTemporalesClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCondicionesFletesClienteRel()
+    {
+        return $this->condicionesFletesClienteRel;
+    }
+
+    /**
+     * @param mixed $condicionesFletesClienteRel
+     */
+    public function setCondicionesFletesClienteRel($condicionesFletesClienteRel): void
+    {
+        $this->condicionesFletesClienteRel = $condicionesFletesClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCondicionesManejosClienteRel()
+    {
+        return $this->condicionesManejosClienteRel;
+    }
+
+    /**
+     * @param mixed $condicionesManejosClienteRel
+     */
+    public function setCondicionesManejosClienteRel($condicionesManejosClienteRel): void
+    {
+        $this->condicionesManejosClienteRel = $condicionesManejosClienteRel;
     }
 
 

@@ -205,6 +205,16 @@ class TteCiudad
     protected $condicionesFletesCiudadDestinoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteCondicionManejo", mappedBy="ciudadOrigenRel")
+     */
+    protected $condicionesManejosCiudadOrigenRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteCondicionManejo", mappedBy="ciudadDestinoRel")
+     */
+    protected $condicionesManejosCiudadDestinoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -796,6 +806,37 @@ class TteCiudad
         $this->condicionesFletesCiudadDestinoRel = $condicionesFletesCiudadDestinoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCondicionesManejosCiudadOrigenRel()
+    {
+        return $this->condicionesManejosCiudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $condicionesManejosCiudadOrigenRel
+     */
+    public function setCondicionesManejosCiudadOrigenRel($condicionesManejosCiudadOrigenRel): void
+    {
+        $this->condicionesManejosCiudadOrigenRel = $condicionesManejosCiudadOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCondicionesManejosCiudadDestinoRel()
+    {
+        return $this->condicionesManejosCiudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $condicionesManejosCiudadDestinoRel
+     */
+    public function setCondicionesManejosCiudadDestinoRel($condicionesManejosCiudadDestinoRel): void
+    {
+        $this->condicionesManejosCiudadDestinoRel = $condicionesManejosCiudadDestinoRel;
+    }
 
 
 

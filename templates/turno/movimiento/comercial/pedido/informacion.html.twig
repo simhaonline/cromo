@@ -24,15 +24,15 @@
         <td align="right">{{ arPedido.vrTotalPrecioMinimo | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">SECTOR</td>
+        <td class="titulo">SECTOR:</td>
         <td class="td-in-well">{{ arPedido.sectorRel.nombre }}</td>
-        <td class="titulo">FECHA PROGRAMACION</td>
+        <td class="titulo">FECHA PROGRAMACION:</td>
         <td class="td-in-well">{{ arPedido.fechaProgramacion | date("Y-m-d H:i:s") }}</td>
         <td class="titulo">TOTAL SERVICIOS:</td>
         <td align="right">{{ arPedido.vrTotalServicio | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">TIPO</td>
+        <td class="titulo">TIPO:</td>
         <td class="td-in-well">{{ arPedido.pedidoTipoRel.nombre }}</td>
         <td class="titulo">ESTRATO:</td>
         <td class="td-in-well">{{ arPedido.estrato }}</td>
@@ -40,7 +40,7 @@
         <td align="right">{{ arPedido.vrSubtotal | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">HORAS</td>
+        <td class="titulo">HORAS:</td>
         <td class="td-in-well">{{ arPedido.horas }}</td>
         <td class="titulo">SOPORTE:</td>
         <td class="td-in-well">{{ arPedido.soporte }}</td>
@@ -49,7 +49,7 @@
         <td align="right">{{ arPedido.vrBaseAiu | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">HORAS DIURNAS</td>
+        <td class="titulo">HORAS DIURNAS:</td>
         <td class="td-in-well">{{ arPedido.horasDiurnas }}</td>
 
         <td class="titulo"></td>
@@ -58,7 +58,7 @@
         <td align="right">{{ arPedido.vrIva | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">HORAS NOCTURNAS</td>
+        <td class="titulo">HORAS NOCTURNAS:</td>
         <td class="td-in-well">{{ arPedido.horasNocturnas }}</td>
 
         <td class="titulo"></td>

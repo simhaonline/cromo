@@ -22,7 +22,7 @@ class ClienteType extends AbstractType
             ->add('identificacionRel', EntityType::class, [
                 'required' => true,
                 'class' => 'App\Entity\General\GenIdentificacion',
-                'query_builder' => function(EntityRepository $er){
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
                         ->orderBy('i.nombre', 'ASC');
                 },
@@ -30,40 +30,39 @@ class ClienteType extends AbstractType
                 'label' => 'identificacion tipo:'
             ])
             ->add('formaPagoRel', EntityType::class, [
-              'class' => 'App\Entity\General\GenFormaPago',
-              'query_builder' => function(EntityRepository $er){
+                'class' => 'App\Entity\General\GenFormaPago',
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('f')
                         ->orderBy('f.nombre');
-              },
-              'choice_label' => 'nombre',
-              'label' => 'forma pago:'
+                },
+                'choice_label' => 'nombre',
+                'label' => 'forma pago:'
             ])
             ->add('ciudadRel', EntityType::class, [
                 'class' => 'App\Entity\General\GenCiudad',
-                'query_builder' => function(EntityRepository $er){
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.nombre');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'ciudad:'
             ])
-            ->add('numeroIdentificacion',NumberType::class)
-            ->add('digitoVerificacion',NumberType::class)
-            ->add('nombreCorto',TextType::class, ['required' => true])
+            ->add('numeroIdentificacion', NumberType::class)
+            ->add('digitoVerificacion', NumberType::class)
+            ->add('nombreCorto', TextType::class, ['required' => true])
             ->add('nombreExtendido', TextType::class)
             ->add('nombre1', TextType::class, ['required' => true])
             ->add('nombre2', TextType::class)
             ->add('apellido1', TextType::class, ['required' => true])
             ->add('apellido2', TextType::class)
-            ->add('direccion', TextType::class , ['required' => true])
+            ->add('direccion', TextType::class, ['required' => true])
             ->add('telefono', TextType::class)
             ->add('movil', TextType::class)
-            ->add('plazoPago',NumberType::class)
+            ->add('plazoPago', NumberType::class)
             ->add('correo', TextType::class)
             ->add('estadoInactivo', CheckboxType::class)
-            ->add('comentario',TextareaType::class,['label' => 'Comentarios:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-        ;
+            ->add('comentario', TextareaType::class, ['label' => 'Comentarios:'])
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -89,6 +88,7 @@ class ClienteType extends AbstractType
     {
         $campos = '[
             {"child":"codigoClientePk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
+            {"child":"numeroIdentificacion",     "tipo":"TextType",    "propiedades":{"label":"Nit"}},
             {"child":"nombreCorto", "tipo":"TextType",    "propiedades":{"label":"Nombre"}}
         ]';
         return $campos;

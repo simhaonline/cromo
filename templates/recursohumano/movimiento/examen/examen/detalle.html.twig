@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('recursohumano_movimiento_examen_examen_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <div style="float:right">
+        {% if arExamenes.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arExamenes.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arExamenes.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+    </div>
+    <br/><br/>
+    {% include 'recursohumano/movimiento/examen/examen/informacion.html.twig' %}
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
+
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-condensed tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>CODIGO</th>
+                            <th>EXAMEN</th>
+                            <th>PRECIO</th>
+                            <th>FECHA EXAMEN</th>
+                            <th>VENCE</th>
+                            <th>VALIDAR VENCE</th>
+                            <th>APTO</th>
+                            <th title="Aprobado">APR</th>
+                            <th title="Anulado">ANU</th>
+                            <th>COMENTARIO</th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodos"
+                                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arExamenDetalle in arExamenDetalles %}
+                            <tr>
+                                <td>{{ arExamenDetalle.codigoExamenDetallePk }}<input type="hidden" name="arrCodigo[]"
+                                                                                      value="{{ arExamenDetalle.codigoExamenDetallePk }}">
+                                </td>
+                                <td>{{ arExamenDetalle.codigoExamenTipoFk }}</td>
+                                <td>{{ arExamenDetalle.examenTipoRel.nombre|default('ERROR') }}</td>
+                                {#                                {% if arExamenes.estadoAutorizado == 0 %}#}
+                                {#                                    <td style="text-align: right"><input type="number" name="arrPrecio{{ arExamenDetalle.codigoExamenDetallePk }}" value="{{ arExamenDetalle.vrPrecio  }}" size="20" style="text-align: right; width:85px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>#}
+                                {#                                    <td style="text-align: right"><input type="number" name="arrPrecio{{ arExamenDetalle.codigoExamenDetallePk }}" value="{{ arExamenDetalle.vrPrecio  }}"/></td>#}
+                                <td style="text-align: center;"><input type="text"
+                                                                       name="arrPrecio[{{ arExamenDetalle.codigoExamenDetallePk }}]"
+                                                                       value="{{ arExamenDetalle.vrPrecio }} "
+                                                                       style="text-align: right; width:60px"
+                                                                       size="10"></td>
+
+                                <td style="text-align: center;"><input type="text"
+                                                                       name="arrFechaExamen[{{ arExamenDetalle.codigoExamenDetallePk }}]"
+                                                                       value="{{ arExamenDetalle.fechaExamen | date("Y/m/d") }} }}"
+                                                                       style="text-align: right; width:60px"
+                                                                       size="10"></td>
+
+                                <td style="text-align: center;"><input type="text"
+                                                                       name="arrVence[{{ arExamenDetalle.codigoExamenDetallePk }}]"
+                                                                       value="{{ arExamenDetalle.fechaVence | date("Y/m/d") }} }}"
+                                                                       style="text-align: right; width:60px"
+                                                                       size="10"></td>
+                                {#                                    <td style="text-align: right"><input class="input-grid" type="text" name="arrFechaExamen{{ arExamenDetalle.codigoExamenDetallePk }}" value="{{ arExamenDetalle.fechaExamen | date("Y/m/d")}}" size="15" style="width:85px" onclick="this.select()"/></td>#}
+                                {#                                    <td style="text-align: right"><input class="input-grid" type="text" name="arrVence{{ arExamenDetalle.codigoExamenDetallePk }}" value="{{ arExamenDetalle.fechaVence | date("Y/m/d")}}" size="15" style="width:85px" onclick="this.select()"/></td>#}
+                                <td align="center">
+                                    <select name="cboValidarVencimiento{{ arExamenDetalle.codigoExamenDetallePk }}">
+                                        <option value="0" {% if arExamenDetalle.validarVencimiento == 0 %} selected="true" {% endif %}>
+                                            NO
+                                        </option>
+                                        <option value="1" {% if arExamenDetalle.validarVencimiento == 1 %} selected="true" {% endif %}>
+                                            SI
+                                        </option>
+                                    </select>
+                                </td>
+                                {#                                {% else %}#}
+                                {#                                    <td class="td-in-well" align="right">{{ arExamenDetalle.vrPrecio | number_format(0, '.', ',') }}</td>#}
+                                {#                                    <td>{{ arExamenDetalle.fechaExamen | date("Y/m/d") }}</td>#}
+                                {#                                    <td>{{ arExamenDetalle.fechaVence | date("Y/m/d")}}</td>#}
+                                {#                                                                    <td>{% if arExamenDetalle.validarVencimiento == 1 %} SI {% else %} NO {% endif %}</td>#}
+                                {#                                {% endif %}#}
+                                {#                                <td>{{ arExamenDetalle.validarVencimiento ? 'SI':'NO' }}</td>#}
+                                <td>{{ arExamenDetalle.estadoApto ? 'SI':'NO' }}</td>
+                                <td>{{ arExamenDetalle.estadoAprobado ? 'SI':'NO' }}</td>
+                                <td>{{ arExamenDetalle.estadoAnulado ? 'SI':'NO' }}</td>
+                                {#                                                                <td>{% if arExamenDetalle.estadoApto == 1 %} SI {% else %} NO {% endif %}</td>#}
+                                {#                                <td>{% if arExamenDetalle.estadoAprobado == 1 %} SI {% else %} NO {% endif %}</td>#}
+                                {#                                <td>{% if arExamenDetalle.estadoAnulado == 1 %} SI {% else %} NO {% endif %}</td>#}
+                                <td>{{ arExamenDetalle.comentario }}</td>
+                                <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                          value="{{ arExamenDetalle.codigoExamenDetallePk }}"/></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {% if arExamenes.estadoAutorizado == true %}
+                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                                   value="Nuevo"/>
+                        {% else %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_examen_examen_detalle_nuevo', {'codigoExamen':arExamenes.codigoExamenPk,'id': 0 }) }}', 'ExamenAdicionarDetalle', 600, 900)">Nuevo</a>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnActualizar) }}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminar) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

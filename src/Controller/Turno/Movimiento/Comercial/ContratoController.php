@@ -41,7 +41,7 @@ class ContratoController extends ControllerListenerGeneral
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
+        $formBotonera = $this->botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
@@ -65,7 +65,7 @@ class ContratoController extends ControllerListenerGeneral
         return $this->render('turno/movimiento/comercial/contrato/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'formFiltro' => $formFiltro->createView()
         ]);
     }
 
@@ -204,7 +204,7 @@ class ContratoController extends ControllerListenerGeneral
         }
         return $this->render('turno/movimiento/comercial/contrato/detalleNuevo.html.twig', [
             'arContratos' => $arContratos,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
 }

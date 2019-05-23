@@ -15,28 +15,30 @@ class TurClienteRepository extends ServiceEntityRepository
         parent::__construct($registry, TurCliente::class);
     }
 
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     public function lista()
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurCliente::class, 'tc')
-            ->select('tc.codigoClientePk')
-            ->addSelect('tc.nombreCorto')
-            ->addSelect('tc.numeroIdentificacion')
-            ->addSelect('tc.telefono')
-            ->addSelect('tc.movil')
-            ->addSelect('tc.direccion')
-            ->where('tc.codigoClientePk IS NOT NULL')
-            ->orderBy('tc.codigoClientePk', 'ASC');
-        if ($session->get('filtroTurNombreCliente') != '') {
-            $queryBuilder->andWhere("tc.nombreCorto LIKE '%{$session->get('filtroTurNombreCliente')}%' ");
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurCliente::class, 'c')
+            ->select('c.codigoClientePk')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.telefono')
+            ->addSelect('c.movil')
+            ->addSelect('c.direccion')
+            ->where('c.codigoClientePk <> 0');
+//            ->orderBy('c.codigoClientePk', 'ASC');
+        if ($session->get('filtroTurClienteNombre') != '') {
+            $queryBuilder->andWhere("c.nombreCorto LIKE '%{$session->get('filtroTurClienteNombre')}%' ");
         }
-        if ($session->get('filtroTurNitCliente') != '') {
-            $queryBuilder->andWhere("tc.numeroIdentificacion = {$session->get('filtroTurNitCliente')} ");
+        if ($session->get('filtroTurClienteNit') != '') {
+            $queryBuilder->andWhere("c.numeroIdentificacion = {$session->get('filtroTurClienteIdentificacion')} ");
         }
-        if ($session->get('filtroTurCodigoCliente') != '') {
-            $queryBuilder->andWhere("tc.codigoClientePk = {$session->get('filtroTurCodigoCliente')} ");
+        if ($session->get('filtroTurClienteCodigo') != '') {
+            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTurClienteCodigo')} ");
         }
-
         return $queryBuilder;
     }
 

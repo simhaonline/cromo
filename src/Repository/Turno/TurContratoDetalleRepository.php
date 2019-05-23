@@ -58,7 +58,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
     /**
      * @param $arrControles
      * @param $form
-     * @param $arContratos TurContrato
+     * @param $arContratos
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
@@ -101,7 +101,6 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
      */
     public function eliminar($arrDetallesSeleccionados,$id)
     {
-//        $em = $this->getDoctrine()->getManager();
         $em = $this->getEntityManager();
         $arRegistro = $em->getRepository(TurContrato::class)->find($id);
         if ($arRegistro->getEstadoAutorizado() == 0) {

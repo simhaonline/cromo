@@ -1,0 +1,51 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block title %}Examen detalle nuevo - Soga App{% endblock %}
+{% block content %}
+    <section class="content-header">
+        <h1>
+            Programacion turnos
+            <small>Examen: nuevo detalle</small>
+        </h1>
+    </section>
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Informacion</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <table class="table table-striped table-bordered table-hover tabla-datos">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>CODIGO</th>
+                        <th>NOMBRE</th>
+                        <th>PRECIO</th>
+                        <th title="Ingreso">ING</th>
+                        <th><input type="checkbox" name="ChkSeleccionarTodos"
+                                   OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for arExamenListaPrecio in arExamenListaPrecios %}
+                        <tr>
+                            <td>{{ arExamenListaPrecio.codigoExamenListaPrecioPk }}</td>
+                            <td>{{ arExamenListaPrecio.codigoExamenTipoFk }}</td>
+                            <td>{{ arExamenListaPrecio.examenTipoRel.nombre }}</td>
+                            <td class="td-in-well"
+                                align="right">{{ arExamenListaPrecio.precio | number_format(0, '.', ',') }}</td>
+                            <td>{% if arExamenListaPrecio.examenTipoRel.ingreso == 1 %} SI {% else %} NO {% endif %}</td>
+                            <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                                  value="{{ arExamenListaPrecio.codigoExamenListaPrecioPk }}"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+    <br/><br/><br/><br/>
+{% endblock %}

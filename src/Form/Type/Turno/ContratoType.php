@@ -43,7 +43,7 @@ class ContratoType extends AbstractType
             ->add('vrSalarioBase', NumberType::class)
             ->add('soporte', TextType::class)
             ->add('estrato', TextType::class)
-            ->add('comentarios', TextareaType::class)
+            ->add('comentarios', TextareaType::class,['required'=>false])
             ->add('guardar', SubmitType::class);
     }
 

@@ -23,29 +23,9 @@ class TurContrato
     private $codigoContratoPk;
 
     /**
-     * @ORM\Column(name="fecha_generacion", type="datetime", nullable=true)
-     */
-    private $fechaGeneracion;
-
-    /**
-     * @ORM\Column(name="soporte", type="string", length=50, nullable=true)
-     */
-    private $soporte;
-
-    /**
      * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
      */
     private $codigoClienteFk;
-
-    /**
-     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
-     */
-    private $codigoCiudadFk;
-
-    /**
-     * @ORM\Column(name="codigo_departamento_fk", type="integer", nullable=true)
-     */
-    private $codigoDepartamentoFk;
 
     /**
      * @ORM\Column(name="codigo_contrato_tipo_fk", type="string", length=10, nullable=true)
@@ -179,39 +159,11 @@ class TurContrato
      * @ORM\JoinColumn(name="codigo_sector_fk", referencedColumnName="codigo_sector_pk")
      */
     protected $sectorRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="contratosCiudadRel")
-     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
-     */
-    protected $ciudadRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenDepartamento", inversedBy="contratosDepartamentoRel")
-     * @ORM\JoinColumn(name="codigo_departamento_fk", referencedColumnName="codigo_departamento_pk")
-     */
-    protected $departamentoRel;
-
+    
     /**
      * @ORM\OneToMany(targetEntity="TurContratoDetalle", mappedBy="contratoRel")
      */
     protected $contratosDetallesContratoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -232,38 +184,6 @@ class TurContrato
     /**
      * @return mixed
      */
-    public function getFechaGeneracion()
-    {
-        return $this->fechaGeneracion;
-    }
-
-    /**
-     * @param mixed $fechaGeneracion
-     */
-    public function setFechaGeneracion($fechaGeneracion): void
-    {
-        $this->fechaGeneracion = $fechaGeneracion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSoporte()
-    {
-        return $this->soporte;
-    }
-
-    /**
-     * @param mixed $soporte
-     */
-    public function setSoporte($soporte): void
-    {
-        $this->soporte = $soporte;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoClienteFk()
     {
         return $this->codigoClienteFk;
@@ -275,38 +195,6 @@ class TurContrato
     public function setCodigoClienteFk($codigoClienteFk): void
     {
         $this->codigoClienteFk = $codigoClienteFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCiudadFk()
-    {
-        return $this->codigoCiudadFk;
-    }
-
-    /**
-     * @param mixed $codigoCiudadFk
-     */
-    public function setCodigoCiudadFk($codigoCiudadFk): void
-    {
-        $this->codigoCiudadFk = $codigoCiudadFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoDepartamentoFk()
-    {
-        return $this->codigoDepartamentoFk;
-    }
-
-    /**
-     * @param mixed $codigoDepartamentoFk
-     */
-    public function setCodigoDepartamentoFk($codigoDepartamentoFk): void
-    {
-        $this->codigoDepartamentoFk = $codigoDepartamentoFk;
     }
 
     /**
@@ -728,38 +616,6 @@ class TurContrato
     /**
      * @return mixed
      */
-    public function getCiudadRel()
-    {
-        return $this->ciudadRel;
-    }
-
-    /**
-     * @param mixed $ciudadRel
-     */
-    public function setCiudadRel($ciudadRel): void
-    {
-        $this->ciudadRel = $ciudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDepartamentoRel()
-    {
-        return $this->departamentoRel;
-    }
-
-    /**
-     * @param mixed $departamentoRel
-     */
-    public function setDepartamentoRel($departamentoRel): void
-    {
-        $this->departamentoRel = $departamentoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getContratosDetallesContratoRel()
     {
         return $this->contratosDetallesContratoRel;
@@ -772,5 +628,8 @@ class TurContrato
     {
         $this->contratosDetallesContratoRel = $contratosDetallesContratoRel;
     }
+
+
+
 }
 

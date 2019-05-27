@@ -9,7 +9,7 @@ use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Form\Type\Turno\PedidoType;
-use App\Form\Type\Turno\TurPedidoDetalleType;
+use App\Form\Type\Turno\PedidoDetalleType;
 use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -208,7 +208,7 @@ class PedidoController extends ControllerListenerGeneral
         if ($id != '0') {
             $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($id);
         }
-        $form = $this->createForm(TurPedidoDetalleType::class, $arPedidoDetalle);
+        $form = $this->createForm(PedidoDetalleType::class, $arPedidoDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {

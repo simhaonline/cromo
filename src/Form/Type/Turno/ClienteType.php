@@ -51,17 +51,17 @@ class ClienteType extends AbstractType
             ->add('digitoVerificacion', NumberType::class)
             ->add('nombreCorto', TextType::class, ['required' => true])
             ->add('nombreExtendido', TextType::class)
-            ->add('nombre1', TextType::class, ['required' => true])
-            ->add('nombre2', TextType::class)
-            ->add('apellido1', TextType::class, ['required' => true])
-            ->add('apellido2', TextType::class)
-            ->add('direccion', TextType::class, ['required' => true])
-            ->add('telefono', TextType::class)
-            ->add('movil', TextType::class)
+            ->add('nombre1', TextType::class, ['required' => false])
+            ->add('nombre2', TextType::class, ['required' => false])
+            ->add('apellido1', TextType::class, ['required' => false])
+            ->add('apellido2', TextType::class, ['required' => false])
+            ->add('direccion', TextType::class, ['required' => false])
+            ->add('telefono', TextType::class, ['required' => false])
+            ->add('movil', TextType::class, ['required' => false])
             ->add('plazoPago', NumberType::class)
-            ->add('correo', TextType::class)
-            ->add('estadoInactivo', CheckboxType::class)
-            ->add('comentario', TextareaType::class, ['label' => 'Comentarios:'])
+            ->add('correo', TextType::class, ['required' => false])
+            ->add('estadoInactivo', CheckboxType::class, ['required' => false])
+            ->add('comentario', TextareaType::class, ['label' => 'Comentarios:', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
@@ -76,8 +76,8 @@ class ClienteType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoClientePk",       "tipo":"pk"      ,"ayuda":"Codigo del registro"                      ,"titulo":"ID"},
+            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del cliente"     ,"titulo":"IDENTIFICACION"},
             {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del cliente"                       ,"titulo":"NOMBRE"},
-            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del cliente"     ,"titulo":"NUMERO_IDENTIFICACION"},
             {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del cliente"                     ,"titulo":"TELEFONO"},
             {"campo":"plazoPago",             "tipo":"texto"   ,"ayuda":"Plazo de pago del cliente"                ,"titulo":"PLAZO_PAGO"}
         ]';

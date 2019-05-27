@@ -9,7 +9,7 @@ use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Form\Type\Turno\ContratoType;
-use App\Form\Type\Turno\TurContratoDetalleType;
+use App\Form\Type\Turno\ContratoDetalleType;
 use App\General\General;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Estandares;
@@ -192,7 +192,7 @@ class ContratoController extends ControllerListenerGeneral
         if ($id != '0') {
             $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($id);
         }
-        $form = $this->createForm(TurContratoDetalleType::class, $arContratoDetalle);
+        $form = $this->createForm(ContratoDetalleType::class, $arContratoDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {

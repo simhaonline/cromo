@@ -154,30 +154,9 @@ class GenCiudad
     protected $turCiudadPuestoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="ciudadRel")
-     */
-    protected $contratosCiudadRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuExamen", mappedBy="ciudadRel")
      */
     protected $examenesCiudadRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -614,22 +593,6 @@ class GenCiudad
     /**
      * @return mixed
      */
-    public function getContratosCiudadRel()
-    {
-        return $this->contratosCiudadRel;
-    }
-
-    /**
-     * @param mixed $contratosCiudadRel
-     */
-    public function setContratosCiudadRel($contratosCiudadRel): void
-    {
-        $this->contratosCiudadRel = $contratosCiudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getExamenesCiudadRel()
     {
         return $this->examenesCiudadRel;
@@ -642,5 +605,8 @@ class GenCiudad
     {
         $this->examenesCiudadRel = $examenesCiudadRel;
     }
+
+
+
 }
 

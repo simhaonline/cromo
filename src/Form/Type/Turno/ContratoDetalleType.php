@@ -2,7 +2,7 @@
 
 namespace App\Form\Type\Turno;
 
-use App\Entity\Turno\TurPedidoDetalle;
+use App\Entity\Turno\TurContratoDetalle;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\ORM\EntityRepository;
@@ -12,11 +12,10 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TurPedidoDetalleType extends AbstractType
+class ContratoDetalleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -63,8 +62,6 @@ class TurPedidoDetalleType extends AbstractType
             ])
             ->add('cantidad', NumberType::class)
             ->add('vrPrecioAjustado', NumberType::class, array('required' => false))
-            ->add('diaDesde', NumberType::class)
-            ->add('diaHasta', NumberType::class)
             ->add('porcentajeBaseIva', NumberType::class)
             ->add('detalleFactura', TextType::class, array('required' => false))
             ->add('horaInicio', TimeType::class)
@@ -78,15 +75,20 @@ class TurPedidoDetalleType extends AbstractType
             ->add('domingo', CheckboxType::class, array('required' => false))
             ->add('festivo', CheckboxType::class, array('required' => false))
             ->add('compuesto', CheckboxType::class, array('required' => false))
-            ->add('detalle', TextareaType::class, array('required' => false))
             ->add('vrSalarioBase', NumberType::class)
+            ->add('fechaDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
+            ->add('fechaHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
+            ->add('liquidarDiasReales', CheckboxType::class, ['required' => false])
+            ->add('dia31', CheckboxType::class, ['required' => false, 'label' => 'Habilitar dia 31'])
+            ->add('noFacturar', CheckboxType::class, ['required' => false])
+            ->add('facturaDistribuida', CheckboxType::class, ['required' => false])
             ->add('guardar', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => TurPedidoDetalle::class,
+            'data_class' => TurContratoDetalle::class,
         ]);
     }
 }

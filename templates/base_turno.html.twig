@@ -62,6 +62,22 @@
             </ul>
             <!-- /.nav-second-level -->
         </li>
+        <li {% if arrRuta.1 == 'tablero' %}class="open" {% endif %}>
+            <a href="#"><i class="fa fa-bar-chart"></i>
+                <span class="menu-item-parent">Tablero</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul {% if arrRuta.1 == 'tablero' %}style="display: block;"{% endif %}>
+                <li>
+                    <a href="#">Gerente <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('turno_tablero_gerente_comercial') }}">Comercial</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
         <li>
             <a href="#"><i class="fa fa-cogs"></i>
                 <span class="menu-item-parent">Configuracion</span>

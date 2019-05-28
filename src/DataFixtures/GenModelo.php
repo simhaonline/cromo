@@ -159,6 +159,7 @@ class GenModelo extends Fixture
                 'RhuEmbargoTipo',
                 'RhuEmpleado',
                 'RhuExamen',
+                'RhuEntidadExamen',
                 'RhuEntidad',
                 'RhuGrupo',
                 'RhuLiquidacion',

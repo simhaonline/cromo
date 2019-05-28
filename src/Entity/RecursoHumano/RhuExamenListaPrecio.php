@@ -21,43 +21,38 @@ class RhuExamenListaPrecio
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoExamenListaPrecioPk;
-    
+
     /**
      * @ORM\Column(name="codigo_entidad_examen_fk", type="integer", nullable=true)
-     */    
-    private $codigoEntidadExamenFk;    
-    
+     */
+    private $codigoEntidadExamenFk;
+
     /**
      * @ORM\Column(name="codigo_examen_tipo_fk", type="integer", nullable=true)
-     */    
-    private $codigoExamenTipoFk;        
-    
-    /**
-     * @ORM\Column(name="precio", type="float")
      */
-    private $precio;
-    
+    private $codigoExamenTipoFk;
+
     /**
-     * @ORM\Column(name="codigo_usuario", type="string", length=50, nullable=true)
-     */    
-    private $codigoUsuario;
+     * @ORM\Column(name="vr_precio", type="float")
+     */
+    private $vrPrecio;
+
+    /**
+     * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
+     */
+    private $Usuario;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuEntidadExamen", inversedBy="examenListaPreciosEntidadExamenRel")
      * @ORM\JoinColumn(name="codigo_entidad_examen_fk", referencedColumnName="codigo_entidad_examen_pk")
      */
     protected $entidadExamenRel;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="RhuExamenTipo", inversedBy="examenListaPreciosExamenTipoRel")
      * @ORM\JoinColumn(name="codigo_examen_tipo_fk", referencedColumnName="codigo_examen_tipo_pk")
      */
     protected $examenTipoRel;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="RhuExamenDetalle", mappedBy="examenListaPrecioRel")
-     */
-    protected $examenDetallesListaPrecioRel;
 
     /**
      * @return array
@@ -126,33 +121,33 @@ class RhuExamenListaPrecio
     /**
      * @return mixed
      */
-    public function getPrecio()
+    public function getVrPrecio()
     {
-        return $this->precio;
+        return $this->vrPrecio;
     }
 
     /**
-     * @param mixed $precio
+     * @param mixed $vrPrecio
      */
-    public function setPrecio($precio): void
+    public function setVrPrecio($vrPrecio): void
     {
-        $this->precio = $precio;
+        $this->vrPrecio = $vrPrecio;
     }
 
     /**
      * @return mixed
      */
-    public function getCodigoUsuario()
+    public function getUsuario()
     {
-        return $this->codigoUsuario;
+        return $this->Usuario;
     }
 
     /**
-     * @param mixed $codigoUsuario
+     * @param mixed $Usuario
      */
-    public function setCodigoUsuario($codigoUsuario): void
+    public function setUsuario($Usuario): void
     {
-        $this->codigoUsuario = $codigoUsuario;
+        $this->Usuario = $Usuario;
     }
 
     /**
@@ -185,21 +180,5 @@ class RhuExamenListaPrecio
     public function setExamenTipoRel($examenTipoRel): void
     {
         $this->examenTipoRel = $examenTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getExamenDetallesListaPrecioRel()
-    {
-        return $this->examenDetallesListaPrecioRel;
-    }
-
-    /**
-     * @param mixed $examenDetallesListaPrecioRel
-     */
-    public function setExamenDetallesListaPrecioRel($examenDetallesListaPrecioRel): void
-    {
-        $this->examenDetallesListaPrecioRel = $examenDetallesListaPrecioRel;
     }
 }

@@ -638,5 +638,3 @@ class Factura3 extends \FPDF
 }
 
 
-?>
-

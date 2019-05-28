@@ -1,55 +1,58 @@
 <table width="100%" class="table table-condensed table-bordered tabla-informacion">
     <tr>
         <td class="titulo">ENTIDAD:</td>
-        <td class="td-in-well">{{ arExamenes.entidadExamenRel.nombre }}</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arExamenes.entidadExamenRel.nombre }}</td>
         <td class="titulo">CLIENTE:</td>
-        <td align="td-in-well" colspan="5"></td>
+        <td class="td-in-well" style="text-transform: uppercase;"></td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
 {#        <td class="td-in-well">{% if arExamenes.clienteRel == null %} SIN CONTRATO {% else %} {{ arExamenes.clienteRel.nombreCorto}} {%endif %}</td>#}
     </tr>
     <tr>
         <td class="titulo">GRUPO PAGO:</td>
 {#        <td class="td-in-well">{% if arExamenes.centroCostoRel == null %} SIN CONTRATO {% else %} {{ arExamenes.centroCostoRel.nombre }}{% endif %}</td>#}
-        <td align="td-in-well"></td>
-        <td class="titulo">NOMBRE:</td>
-        <td align="td-in-well" colspan="5">{{ arExamenes.nombreCorto }}</td>
+        <td class="td-in-well"></td>
+        <td class="titulo">CONTROL PAGO:</td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td class="right"></td>
     </tr>
     <tr>
         <td class="titulo">IDENTIFICACION:</td>
         <td class="td-in-well">{{ arExamenes.numeroIdentificacion }}</td>
-        <td class="titulo">COBRO:</td>
-{#        <td class="td-in-well"></td>#}
-        <td class="td-in-well" colspan="5">{%if arExamenes.cobro == 'E' %} EMPLEADO {%endif%} {% if arExamenes.cobro == 'C' %}CLIENTE {%endif%} {% if arExamenes.cobro == 'N' %} NO COBRAR {%endif%}</td>
+        <td class="titulo">NOMBRE:</td>
+        <td class="td-in-well">{{ arExamenes.nombreCorto }}</td>
+        <td class="titulo"></td>
+        <td class="right"></td>
     </tr>
     <tr>
         <td class="titulo">CARGO:</td>
-        <td align="td-in-well">{{ arExamenes.cargoRel.nombre }}</td>
-        <td class="titulo">CONTROL:</td>
-        <td align="td-in-well" colspan="5"></td>
-{#        <td> {% if arExamenes.control == 1 %}SI{% else %}NO{% endif %}</td>#}
+        <td class="td-in-well">{{ arExamenes.cargoRel.nombre }}</td>
+        <td class="titulo">COBRO:</td>
+        <td class="td-in-well">{%if arExamenes.cobro == 'E' %} EMPLEADO {%endif%} {% if arExamenes.cobro == 'C' %}CLIENTE {%endif%} {% if arExamenes.cobro == 'N' %} NO COBRAR {%endif%}</td>
+        <td class="titulo"></td>
+        <td class="right"></td>
     </tr>
     <tr>
         <td class="titulo">FECHA Y HORA:</td>
         <td class="td-in-well">{{ arExamenes.fecha | date('Y/m/d H:i:s') }}</td>
-        <td class="titulo">TOTAL:</td>
-        <td align="right" colspan="5">{{ arExamenes.vrTotal | number_format(0, '.', ',') }}</td>
-    </tr>
-    <tr>
-        <td class="titulo">CONTROL PAGO:</td>
+        <td class="titulo">CONTROL:</td>
         <td class="td-in-well"></td>
-{#        <td class="td-in-well" {% if arExamenes.controlPago == 1 %}> SI {% else %}<td class="td-in-well">NO {% endif %}</td>#}
+        {#        <td> {% if arExamenes.control == 1 %}SI{% else %}NO{% endif %}</td>#}
         <td class="titulo"></td>
-        <td class="td-in-well" colspan="5"></td>
-{#        <td align="right">{{ arExamenes.vrIva | number_format(0, '.', ',') }}</td>#}
+        <td class="right"></td>
     </tr>
     <tr>
+
         <td class="titulo">CLASE:</td>
         <td class="td-in-well">{{ arExamenes.examenClaseRel.nombre }}</td>
         <td class="titulo"></td>
-        <td class="td-in-well" colspan="5"></td>
-{#        <td align="right">{{ arExamenes.vrTotal | number_format(0, '.', ',') }}</td>#}
+        <td class="right"></td>
+        <td class="titulo">TOTAL:</td>
+        <td class="right">{{ arExamenes.vrTotal | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
         <td class="titulo">COMENTARIO:</td>
-        <td class="td-in-well" colspan="5" colspan="5">{{ arExamenes.comentario }}</td>
+        <td class="td-in-well" colspan="5">{{ arExamenes.comentario }}</td>
     </tr>
 </table>

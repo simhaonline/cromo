@@ -9,35 +9,48 @@
                 {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
 {#                {% include 'turno/buscar/cliente.html.twig' %}#}
                 <div class="form-group form-group-sm">
-                    <label for="form_examenClaseRel" class="col-sm-2 control-label">Codigo:</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-1 control-label">Codigo:</label>
+                    <div class="col-sm-2">
                         {{ form_widget(formFiltro.codigoExamenPk, { 'attr': {'class': 'form-control'} }) }}
                     </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <label for="form_examenClaseRel" class="col-sm-2 control-label">Tipo:</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-1 control-label">Tipo:</label>
+                    <div class="col-sm-2">
                         {{ form_widget(formFiltro.codigoExamenClaseFk, { 'attr': {'class': 'form-control'} }) }}
                     </div>
-                    <label class="col-sm-2 control-label">Autorizado:</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2">
+                    </div>
+                    <label class="col-sm-1 control-label">Autorizado:</label>
+                    <div class="col-sm-2">
                         {{ form_widget(formFiltro.estadoAutorizado, { 'attr': {'class': 'form-control'} }) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label for="form_fechaDesde" class="col-sm-2 control-label">Desde:</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-1 control-label">Desde:</label>
+                    <div class="col-sm-2">
                         {{ form_widget(formFiltro.fechaDesde) }}
                     </div>
-                    <label class="col-sm-2 control-label">Aprobado:</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2">
+                    </div>
+                    <label class="col-sm-1 col-sm-offset-3 control-label">Aprobado:</label>
+                    <div class="col-sm-2">
                         {{ form_widget(formFiltro.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label for="form_fechaHasta" class="col-sm-2 control-label">Hasta:</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-1 control-label">Hasta:</label>
+                    <div class="col-sm-2">
                         {{ form_widget(formFiltro.fechaHasta) }}
+                    </div>
+                    <label class="col-sm-1 col-sm-offset-6 control-label">Anulado:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.estadoAnulado, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2">
                     </div>
                 </div>
             </div>

@@ -89,6 +89,7 @@ class ExamenController extends ControllerListenerGeneral
             }
         } else {
             $arExamen->setUsuario($this->getUser()->getUserName());
+            $arExamen->setFecha(new \DateTime('now'));
         }
         $form = $this->createForm(ExamenType::class, $arExamen);
         $form->handleRequest($request);
@@ -124,79 +125,6 @@ class ExamenController extends ControllerListenerGeneral
             'form' => $form->createView()
         ]);
     }
-
-//    /**
-//     * @Route("/recursohumano/movimiento/examen/nuevo/control/{codigoExamen}", name="recursohumano_movimiento_examen_nuevo_control")
-//     */
-//    public function nuevoControl(Request $request, $codigoExamen)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $arExamen = new RhuExamen();
-//
-//        $form = $this->createForm(ExamenControlType::class, $arExamen);
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $arUsuario = $this->get('security.token_storage')->getToken()->getUser();
-//            $arExamen = $form->getData();
-//            $arExamen->setClienteRel($arExamen->getCentroCostoRel()->getClienteRel());
-//            if ($codigoExamen == 0) {
-//                if ($arExamen->getClienteRel()) {
-//                    $arExamen->setCobro($arExamen->getClienteRel()->getCobroExamen());
-//                } else {
-//                    $arExamen->setCobro('N');
-//                }
-//                $arExamen->setCodigoUsuario($arUsuario->getUserName());
-//                if ($arExamen->getExamenClaseRel()->getCodigoExamenClasePk() == 1 && $codigoExamen == 0) {
-//                    $arExamenTipos = new RhuExamenTipo();
-//                    $arExamenTipos = $em->getRepository(RhuExamenTipo::class)->findBy(array('ingreso' => 1));
-//                    foreach ($arExamenTipos as $arExamenTipo) {
-//                        $arExamenListaPrecio = $em->getRepository(RhuExamenListaPrecio::class)->findOneBy(array('codigoEntidadExamenFk' => $arExamen->getEntidadExamenRel()->getCodigoEntidadExamenPk(), 'codigoExamenTipoFk' => $arExamenTipo->getCodigoExamenTipoPk()));
-//                        if ($arExamenListaPrecio) {
-//                            $arExamenDetalle = new RhuExamenDetalle();
-//                            $arExamenDetalle->setExamenRel($arExamen);
-//                            $arExamenDetalle->setExamenTipoRel($arExamenTipo);
-//                            $arExamenDetalle->setVrPrecio($arExamenListaPrecio->getPrecio());
-//                            $arExamenDetalle->setFechaVence(new \DateTime('now'));
-//                            $arExamenDetalle->setFechaExamen(new \DateTime('now'));
-//                            $em->persist($arExamenDetalle);
-//                        }
-//                    }
-//                }
-//                $arCargo = $form->get('cargoRel')->getData();
-//                $arExamenCargo = new RhuCargo();
-//                $arExamenCargo = $em->getRepository(RhuCargo::class)->findBy(array('codigoCargoFk' => $arCargo->getCodigoCargoPk()));
-//                foreach ($arExamenCargo as $arExamenCargo) {
-//                    $arExamenListaPrecio = $em->getRepository(RhuExamenListaPrecio::class)->findOneBy(array('codigoEntidadExamenFk' => $arExamen->getEntidadExamenRel()->getCodigoEntidadExamenPk(), 'codigoExamenTipoFk' => $arExamenCargo->getCodigoExamenTipoFk()));
-//                    if ($arExamenListaPrecio) {
-//                        $arExamenDetalle = new RhuExamenDetalle();
-//                        $arExamenDetalle->setExamenRel($arExamen);
-//                        $arExamenDetalle->setExamenTipoRel($arExamenCargo->getExamenTipoRel());
-//                        $arExamenDetalle->setVrPrecio($arExamenListaPrecio->getPrecio());
-//                        $arExamenDetalle->setFechaVence(new \DateTime('now'));
-//                        $arExamenDetalle->setFechaExamen(new \DateTime('now'));
-//                        $em->persist($arExamenDetalle);
-//                    }
-//                }
-//            }
-//
-//            $em->persist($arExamen);
-//            if($codigoExamen == 0){
-//                $validarExamen = $em->getRepository(RhuExamen::class)->validarExamenes($arExamen);
-//                if($validarExamen == 1){
-//                    Mensajes::error("error","Ya existe una incapacidad con los datos ingresados");
-//                }else{
-//                    $em->flush();
-//                }
-//            }else{
-//                $em->flush();
-//            }
-//        }
-//        return $this->render('recursohumano/movimiento/examen/examen/nuevoControl.html.twig', array(
-//            'arExamen' => $arExamen,
-//            'form' => $form->createView()));
-//
-//    }
 
     /**
      * @param Request $request
@@ -261,19 +189,18 @@ class ExamenController extends ControllerListenerGeneral
      * @return Response
      * @Route("/recursohumano/movimiento/examen/examen/detalle/nuevo/{codigoExamen}/{id}", name="recursohumano_movimiento_examen_examen_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $codigoExamen, $id)
+    public function detalleNuevo(Request $request, $codigoExamen)
     {
         $em = $this->getDoctrine()->getManager();
-        $arExamen = new RhuExamen();
+        $paginator = $this->get('knp_paginator');
         $arExamen = $em->getRepository(RhuExamen::class)->find($codigoExamen);
         $arExamenListaPrecios = $em->getRepository(RhuExamenListaPrecio::class)->findBy(array('codigoEntidadExamenFk' => $arExamen->getCodigoEntidadExamenFk()));
         $form = $this->createFormBuilder()
-            ->add('guardar', SubmitType::class, array('label' => 'Guardar',))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
             ->getForm();
-//        $form = $this->createForm(ExamenDetalleType::class, $arExamenDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
+            if ($form->get('btnGuardar')->isClicked()) {
                 if ($arExamen->getEstadoAutorizado() == 0) {
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');
                     if ($arrSeleccionados) {
@@ -289,7 +216,7 @@ class ExamenController extends ControllerListenerGeneral
                                 $arExamenDetalle->setExamenRel($arExamen);
                                 $arExamenDetalle->setFechaExamen($arExamen->getFecha());
                                 $arExamenDetalle->setFechaVence($arExamen->getFecha());
-                                $arExamenDetalle->setVrPrecio($arExamenListaPrecio->getPrecio());
+                                $arExamenDetalle->setVrPrecio($arExamenListaPrecio->getVrPrecio());
                                 $em->persist($arExamenDetalle);
                             }
                         }
@@ -304,6 +231,7 @@ class ExamenController extends ControllerListenerGeneral
                 }
             }
         }
+        $arExamenListaPrecios = $paginator->paginate($arExamenListaPrecios, $request->query->get('page', 1), 50);
         return $this->render('recursohumano/movimiento/examen/examen/detalleNuevo.html.twig', array(
             'arExamenListaPrecios' => $arExamenListaPrecios,
             'arExamen' => $arExamen,

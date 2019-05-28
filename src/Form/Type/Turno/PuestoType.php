@@ -4,6 +4,7 @@
 namespace App\Form\Type\Turno;
 
 
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Turno\TurProgramador;
 use App\Entity\Turno\TurPuesto;
 use Doctrine\ORM\EntityRepository;
@@ -41,15 +42,23 @@ class PuestoType  extends AbstractType
                 },
                 'choice_label' => 'nombre',
             ])
+            ->add('centroCostoRel',EntityType::class,[
+                'class' => FinCentroCosto::class,
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('cc')
+                        ->orderBy('cc.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+            ])
+
             ->add('nombre', TextType::class)
-            ->add('direccion', TextType::class)
-            ->add('telefono', IntegerType::class)
-            ->add('celular', IntegerType::class)
-            ->add('comunicacion', TextType::class)
-            ->add('comentario', TextareaType::class)
-            ->add('codigoCentroCostoFk', TextType::class)
-            ->add('ubicacionGps', TextType::class)
-            ->add('estadoInactivo', CheckboxType::class)
+            ->add('direccion', TextType::class, ['required' => false])
+            ->add('telefono', TextType::class, ['required' => false])
+            ->add('celular', TextType::class, ['required' => false])
+            ->add('comunicacion', TextType::class, ['required' => false])
+            ->add('comentario', TextareaType::class, ['required' => false])
+            ->add('ubicacionGps', TextType::class, ['required' => false])
+            ->add('estadoInactivo', CheckboxType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

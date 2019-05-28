@@ -33,6 +33,11 @@ class TurContrato
     private $codigoContratoTipoFk;
 
     /**
+     * @ORM\Column(name="fecha_generacion", type="date", nullable=true)
+     */
+    private $fechaGeneracion;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":false})
      */
     private $estadoAutorizado = false;
@@ -627,6 +632,22 @@ class TurContrato
     public function setContratosDetallesContratoRel($contratosDetallesContratoRel): void
     {
         $this->contratosDetallesContratoRel = $contratosDetallesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaGeneracion()
+    {
+        return $this->fechaGeneracion;
+    }
+
+    /**
+     * @param mixed $fechaGeneracion
+     */
+    public function setFechaGeneracion($fechaGeneracion): void
+    {
+        $this->fechaGeneracion = $fechaGeneracion;
     }
 
 

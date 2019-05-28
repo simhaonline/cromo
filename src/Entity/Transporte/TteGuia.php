@@ -199,7 +199,7 @@ class TteGuia
     private $estadoEmbarcado = false;
 
     /**
-     * @ORM\Column(name="estado_despachado", type="boolean",options={"default":false})
+     * @ORM\Column(name="estado_despachado", type="boolean", options={"default":false})
      */
     private $estadoDespachado = false;
 

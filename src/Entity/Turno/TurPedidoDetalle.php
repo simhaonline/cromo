@@ -29,24 +29,24 @@ class TurPedidoDetalle
     private $codigoPedidoFk;
 
     /**
-     * @ORM\Column(name="codigo_contrato_concepto_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_concepto_fk", type="integer", nullable=true)
      */
-    private $codigoContratoConceptoFk;
+    private $codigoConceptoFk;
 
     /**
-     * @ORM\Column(name="codigo_contrato_concepto_facturacion_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_modalidad_fk", type="string", length=10, nullable=true)
      */
-    private $codigoContratoConceptoFacturacionFk;
-
-    /**
-     * @ORM\Column(name="codigo_contrato_modalidad_fk", type="string", length=10, nullable=true)
-     */
-    private $codigoContratoModalidadFk;
+    private $codigoModalidadFk;
 
     /**
      * @ORM\Column(name="codigo_puesto_fk", type="integer", nullable=true)
      */
     private $codigoPuestoFk;
+
+    /**
+     * @ORM\Column(name="periodo", type="string", length=1, nullable=true)
+     */
+    private $periodo;
 
     /**
      * @ORM\Column(name="anio", type="integer")
@@ -243,50 +243,30 @@ class TurPedidoDetalle
      */
     private $compuesto = false;
 
-    /**
-     * @ORM\Column(name="factura_distribuida", type="boolean", nullable=true)
-     */
-    private $facturaDistribuida = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TurContratoConcepto", inversedBy="pedidosDetallesContratoConceptoRel")
-     * @ORM\JoinColumn(name="codigo_contrato_concepto_fk", referencedColumnName="codigo_contrato_concepto_pk")
+     * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="pedidosDetallesPedidoRel")
+     * @ORM\JoinColumn(name="codigo_pedido_fk", referencedColumnName="codigo_pedido_pk")
      */
-    protected $contratoConceptoRel;
+    protected $pedidoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TurContratoConcepto", inversedBy="pedidosDetallesContratoConceptoFacturacionRel")
-     * @ORM\JoinColumn(name="codigo_contrato_concepto_facturacion_fk", referencedColumnName="codigo_contrato_concepto_pk")
+     * @ORM\ManyToOne(targetEntity="TurConcepto", inversedBy="pedidosDetallesConceptoRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
      */
-    protected $contratoConceptoFacturacionRel;
+    protected $conceptoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TurContratoModalidad", inversedBy="pedidosDetallesContratoModalidadRel")
-     * @ORM\JoinColumn(name="codigo_contrato_modalidad_fk", referencedColumnName="codigo_contrato_modalidad_pk")
+     * @ORM\ManyToOne(targetEntity="TurModalidad", inversedBy="pedidosDetallesModalidadRel")
+     * @ORM\JoinColumn(name="codigo_modalidad_fk", referencedColumnName="codigo_modalidad_pk")
      */
-    protected $contratoModalidadRel;
+    protected $modalidadRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurPuesto", inversedBy="pedidosDetallesPuestoRel")
      * @ORM\JoinColumn(name="codigo_puesto_fk", referencedColumnName="codigo_puesto_pk")
      */
     protected $puestoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -323,49 +303,33 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
-    public function getCodigoContratoConceptoFk()
+    public function getCodigoConceptoFk()
     {
-        return $this->codigoContratoConceptoFk;
+        return $this->codigoConceptoFk;
     }
 
     /**
-     * @param mixed $codigoContratoConceptoFk
+     * @param mixed $codigoConceptoFk
      */
-    public function setCodigoContratoConceptoFk($codigoContratoConceptoFk): void
+    public function setCodigoConceptoFk($codigoConceptoFk): void
     {
-        $this->codigoContratoConceptoFk = $codigoContratoConceptoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoContratoConceptoFacturacionFk()
-    {
-        return $this->codigoContratoConceptoFacturacionFk;
-    }
-
-    /**
-     * @param mixed $codigoContratoConceptoFacturacionFk
-     */
-    public function setCodigoContratoConceptoFacturacionFk($codigoContratoConceptoFacturacionFk): void
-    {
-        $this->codigoContratoConceptoFacturacionFk = $codigoContratoConceptoFacturacionFk;
+        $this->codigoConceptoFk = $codigoConceptoFk;
     }
 
     /**
      * @return mixed
      */
-    public function getCodigoContratoModalidadFk()
+    public function getCodigoModalidadFk()
     {
-        return $this->codigoContratoModalidadFk;
+        return $this->codigoModalidadFk;
     }
 
     /**
-     * @param mixed $codigoContratoModalidadFk
+     * @param mixed $codigoModalidadFk
      */
-    public function setCodigoContratoModalidadFk($codigoContratoModalidadFk): void
+    public function setCodigoModalidadFk($codigoModalidadFk): void
     {
-        $this->codigoContratoModalidadFk = $codigoContratoModalidadFk;
+        $this->codigoModalidadFk = $codigoModalidadFk;
     }
 
     /**
@@ -1011,49 +975,33 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
-    public function getContratoConceptoRel()
+    public function getConceptoRel()
     {
-        return $this->contratoConceptoRel;
+        return $this->conceptoRel;
     }
 
     /**
-     * @param mixed $contratoConceptoRel
+     * @param mixed $conceptoRel
      */
-    public function setContratoConceptoRel($contratoConceptoRel): void
+    public function setConceptoRel($conceptoRel): void
     {
-        $this->contratoConceptoRel = $contratoConceptoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContratoConceptoFacturacionRel()
-    {
-        return $this->contratoConceptoFacturacionRel;
-    }
-
-    /**
-     * @param mixed $contratoConceptoFacturacionRel
-     */
-    public function setContratoConceptoFacturacionRel($contratoConceptoFacturacionRel): void
-    {
-        $this->contratoConceptoFacturacionRel = $contratoConceptoFacturacionRel;
+        $this->conceptoRel = $conceptoRel;
     }
 
     /**
      * @return mixed
      */
-    public function getContratoModalidadRel()
+    public function getModalidadRel()
     {
-        return $this->contratoModalidadRel;
+        return $this->modalidadRel;
     }
 
     /**
-     * @param mixed $contratoModalidadRel
+     * @param mixed $modalidadRel
      */
-    public function setContratoModalidadRel($contratoModalidadRel): void
+    public function setModalidadRel($modalidadRel): void
     {
-        $this->contratoModalidadRel = $contratoModalidadRel;
+        $this->modalidadRel = $modalidadRel;
     }
 
     /**
@@ -1071,5 +1019,41 @@ class TurPedidoDetalle
     {
         $this->puestoRel = $puestoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPeriodo()
+    {
+        return $this->periodo;
+    }
+
+    /**
+     * @param mixed $periodo
+     */
+    public function setPeriodo($periodo): void
+    {
+        $this->periodo = $periodo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidoRel()
+    {
+        return $this->pedidoRel;
+    }
+
+    /**
+     * @param mixed $pedidoRel
+     */
+    public function setPedidoRel($pedidoRel): void
+    {
+        $this->pedidoRel = $pedidoRel;
+    }
+
+
+
+
 }
 

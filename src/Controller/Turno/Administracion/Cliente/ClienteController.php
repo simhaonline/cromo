@@ -110,8 +110,6 @@ class ClienteController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arCliente = $em->getRepository(TurCliente::class)->find($id);
-        $arPuestos = $em->getRepository(TurPuesto::class)->findBy( ['codigoClienteFk' => $id],['codigoPuestoPk' => 'ASC']);
-        //dd($arPuestos);
         $form = $this->createFormBuilder()
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -123,7 +121,7 @@ class ClienteController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('turno_administracion_cliente__detalle', ['id' => $id]));
             }
         }
-
+        $arPuestos = $em->getRepository(TurPuesto::class)->cliente($id);
         return $this->render('turno/administracion/cliente/detalle.html.twig', array(
             'arCliente' => $arCliente,
             'arPuestos'=>$arPuestos,
@@ -138,26 +136,26 @@ class ClienteController extends ControllerListenerGeneral
     public function puestoNuevo(Request $request, $id, $codigoCliente)
     {
         $em = $this->getDoctrine()->getManager();
-        $arTurno = new TurPuesto();
+        $arPuesto = new TurPuesto();
         if ($id != '0') {
-            $arTurno = $em->getRepository(TurPuesto::class)->find($id);
-            if (!$arTurno) {
+            $arPuesto = $em->getRepository(TurPuesto::class)->find($id);
+            if (!$arPuesto) {
                 return $this->redirect($this->generateUrl('turno_administracion_cliente_puesto_lista'));
             }
         }
-        $form = $this->createForm(PuestoType::class, $arTurno);
+        $form = $this->createForm(PuestoType::class, $arPuesto);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arCliente = $em->getRepository(TurCliente::class)->find($codigoCliente);
-                $arTurno->setClienteRel($arCliente);
-                $em->persist($arTurno);
+                $arPuesto->setClienteRel($arCliente);
+                $em->persist($arPuesto);
                 $em->flush();
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
         return $this->render('turno/administracion/cliente/nuevoPuesto.html.twig', [
-            'arTurno' => $arTurno,
+            'arTurno' => $arPuesto,
             'form' => $form->createView()
         ]);
     }

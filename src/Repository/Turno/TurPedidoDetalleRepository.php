@@ -42,10 +42,10 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.porcentajeIva')
             ->addSelect('pd.vrIva')
             ->addSelect('pd.vrSubtotal')
-            ->addSelect('coc.nombre as nombreConcepto')
-            ->addSelect('com.nombre as nombreModalidad')
-            ->leftJoin('pd.contratoConceptoRel', 'coc')
-            ->leftJoin('pd.contratoModalidadRel', 'com')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('m.nombre as modalidadNombre')
+            ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.modalidadRel', 'm')
             ->where('pd.codigoPedidoFk = ' . $id);
 
         return $queryBuilder;

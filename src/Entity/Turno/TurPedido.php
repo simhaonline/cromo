@@ -49,11 +49,6 @@ class TurPedido
     private $codigoSectorFk;
 
     /**
-     * @ORM\Column(name="fecha_programacion", type="date", nullable=true)
-     */
-    private $fechaProgramacion;
-
-    /**
      * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":false})
      */
     private $estadoAutorizado = false;
@@ -72,11 +67,6 @@ class TurPedido
      * @ORM\Column(name="estado_contabilizado", type="boolean", options={"default":false})
      */
     private $estadoContabilizado = false;
-
-    /**
-     * @ORM\Column(name="cantidad", type="integer")
-     */
-    private $cantidad = 0;
 
     /**
      * @ORM\Column(name="horas", type="integer")
@@ -144,15 +134,6 @@ class TurPedido
     private $vrSalarioBase = 0;
 
     /**
-     * @ORM\Column(name="soporte", type="string", length=200, nullable=true)
-     * @Assert\Length(
-     *     max = 200,
-     *     maxMessage="El campo no puede contener mas de 200 caracteres"
-     * )
-     */
-    private $soporte;
-
-    /**
      * @ORM\Column(name="estrato", type="integer", nullable=true)
      */
     private $estrato = 0;
@@ -176,20 +157,9 @@ class TurPedido
     protected $sectorRel;
 
     /**
-     * @return array
+     * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="pedidoRel")
      */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    protected $pedidosDetallesPedidoRel;
 
     /**
      * @return mixed
@@ -290,22 +260,6 @@ class TurPedido
     /**
      * @return mixed
      */
-    public function getFechaProgramacion()
-    {
-        return $this->fechaProgramacion;
-    }
-
-    /**
-     * @param mixed $fechaProgramacion
-     */
-    public function setFechaProgramacion($fechaProgramacion): void
-    {
-        $this->fechaProgramacion = $fechaProgramacion;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -365,22 +319,6 @@ class TurPedido
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidad()
-    {
-        return $this->cantidad;
-    }
-
-    /**
-     * @param mixed $cantidad
-     */
-    public function setCantidad($cantidad): void
-    {
-        $this->cantidad = $cantidad;
     }
 
     /**
@@ -594,22 +532,6 @@ class TurPedido
     /**
      * @return mixed
      */
-    public function getSoporte()
-    {
-        return $this->soporte;
-    }
-
-    /**
-     * @param mixed $soporte
-     */
-    public function setSoporte($soporte): void
-    {
-        $this->soporte = $soporte;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getEstrato()
     {
         return $this->estrato;
@@ -670,5 +592,24 @@ class TurPedido
     {
         $this->sectorRel = $sectorRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesPedidoRel()
+    {
+        return $this->pedidosDetallesPedidoRel;
+    }
+
+    /**
+     * @param mixed $pedidosDetallesPedidoRel
+     */
+    public function setPedidosDetallesPedidoRel($pedidosDetallesPedidoRel): void
+    {
+        $this->pedidosDetallesPedidoRel = $pedidosDetallesPedidoRel;
+    }
+
+
+
 }
 

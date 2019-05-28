@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\Turno;
 
+use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurPedidoDetalle;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,7 +24,7 @@ class PedidoDetalleType extends AbstractType
         $builder
             ->add('contratoConceptoRel', EntityType::class, [
                 'required' => true,
-                'class' => 'App\Entity\Turno\TurContratoConcepto',
+                'class' => TurConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('coc')
                         ->orderBy('coc.nombre', 'ASC');
@@ -33,20 +34,10 @@ class PedidoDetalleType extends AbstractType
             ])
             ->add('contratoModalidadRel', EntityType::class, [
                 'required' => true,
-                'class' => 'App\Entity\Turno\TurContratoModalidad',
+                'class' => 'TurModalidad.php',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('com')
                         ->orderBy('com.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'nombre:'
-            ])
-            ->add('contratoConceptoFacturacionRel', EntityType::class, [
-                'required' => true,
-                'class' => 'App\Entity\Turno\TurContratoConcepto',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('coc')
-                        ->orderBy('coc.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'nombre:'

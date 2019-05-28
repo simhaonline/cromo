@@ -50,7 +50,7 @@
                 <td><input type="hidden" name="LblCodigo[]" value="{{ arCliente.codigoClientePk }}">{{ arCliente.codigoClientePk }} </td>
                 <td>{{ arCliente.numeroIdentificacion  }}</td>
                 <td>{{ arCliente.nombreCorto }}</td>
-                <td style="text-align: center"><a href="javascript:selTercero('{{ arCliente.codigoClientePk }}','{{ arCliente.nombreCorto }}','{{ campoCodigo }}','{{ campoNombre }}')" ><i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a>
+                <td style="text-align: center"><a href="javascript:selCliente('{{ arCliente.codigoClientePk }}','{{ arCliente.nombreCorto }}','{{ campoCodigo }}','{{ campoNombre }}')" ><i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a>
                     </td>
             </tr>
         {% endfor %}

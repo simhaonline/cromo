@@ -31,9 +31,8 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>CONTRATO</th>
+                            <th>CONCEPTO</th>
                             <th>MOD</th>
-                            <th>PERIODO</th>
                             <th title="Dia desde">DES</th>
                             <th title="Dia hasta">HAS</th>
                             <th>CANT</th>
@@ -52,7 +51,6 @@
                             <th title="Valor salario base">BASE</th>
                             <th title="Precio minimo">P.MINIMO</th>
                             <th title="Precio ajustado">P.AJUSTADO</th>
-                            <th title="Base iva">B_IVA</th>
                             <th title="Porcentaje iva">%IVA</th>
                             <th title="Iva">IVA</th>
                             <th>SUBTOTAL</th>
@@ -62,24 +60,20 @@
                         </thead>
                         <tbody>
                         {% for arPedidoDetalle in arPedidoDetalles %}
-                            <td> {{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
-                            <input type="hidden"
-                                   name="arrCodigo[]"
-                                   value="{{ arPedidoDetalle.codigoPedidoDetallePk }}">
-                            <td>{{ arPedidoDetalle.nombreConcepto }}</td>
-                            <td>{{ arPedidoDetalle.nombreModalidad }}</td>
-                            <td></td>
+                            <td> {{ arPedidoDetalle.codigoPedidoDetallePk }} <input type="hidden" name="arrCodigo[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"></td>
+                            <td>{{ arPedidoDetalle.conceptoNombre }}</td>
+                            <td>{{ arPedidoDetalle.modalidadNombre }}</td>
                             <td>{{ arPedidoDetalle.diaDesde }}</td>
                             <td>{{ arPedidoDetalle.diaHasta }}</td>
                             <td>{{ arPedidoDetalle.cantidad }}</td>
-                            <td>{{ arPedidoDetalle.lunes ? 'SI':'NO' }}</td>
-                            <td>{{ arPedidoDetalle.martes ? 'SI':'NO' }}</td>
-                            <td>{{ arPedidoDetalle.miercoles ? 'SI':'NO' }}</td>
-                            <td>{{ arPedidoDetalle.jueves  ? 'SI':'NO' }}</td>
-                            <td>{{ arPedidoDetalle.viernes ? 'SI':'NO' }}</td>
-                            <td>{{ arPedidoDetalle.sabado  ? 'SI':'NO' }}</td>
-                            <td>{{ arPedidoDetalle.domingo ? 'SI':'NO' }}</td>
-                            <td>{{ arPedidoDetalle.festivo ? 'SI':'NO' }}</td>
+                            <td>{{ arPedidoDetalle.lunes ? 'S':'N' }}</td>
+                            <td>{{ arPedidoDetalle.martes ? 'S':'N' }}</td>
+                            <td>{{ arPedidoDetalle.miercoles ? 'S':'N' }}</td>
+                            <td>{{ arPedidoDetalle.jueves  ? 'S':'N' }}</td>
+                            <td>{{ arPedidoDetalle.viernes ? 'S':'N' }}</td>
+                            <td>{{ arPedidoDetalle.sabado  ? 'S':'N' }}</td>
+                            <td>{{ arPedidoDetalle.domingo ? 'S':'N' }}</td>
+                            <td>{{ arPedidoDetalle.festivo ? 'S':'N' }}</td>
                             <td>{{ arPedidoDetalle.horasProgramadas }}</td>
                             <td>{{ arPedidoDetalle.horasDiurnasProgramadas }}</td>
                             <td>{{ arPedidoDetalle.horasNocturnasProgramadas }}</td>
@@ -91,11 +85,6 @@
                                                                    value="{{ arPedidoDetalle.vrPrecioAjustado }}"
                                                                    style="text-align: right; width:60px"
                                                                    size="10"></td>
-                                                        <td style="text-align: center;"><input type="number"
-                                                                                               name="arrPorcentajeBaseIva[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
-                                                                                               value="{{ arPedidoDetalle.porcentajeBaseIva }}"
-                                                                                               style="text-align: right; width:60px"
-                                                                                               size="10"></td>
                                                         <td style="text-align: center;"><input type="number"
                                                                                                name="arrPorcentajeIva[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
                                                                                                value="{{ arPedidoDetalle.porcentajeIva }}"

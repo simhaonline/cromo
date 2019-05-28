@@ -92,9 +92,9 @@
                                 <tr>
                                     <td>{{ arPuesto.codigoPuestoPk }}</td>
                                     <td>{{ arPuesto.nombre }}</td>
-                                    <td>{{ arPuesto.programadorRel.nombre }}</td>
+                                    <td>{{ arPuesto.programadorNombre }}</td>
                                     <td>{{ arPuesto.direccion }}</td>
-                                    <td>{{ arPuesto.ciudadRel.nombre }}</td>
+                                    <td>{{ arPuesto.ciudadNombre }}</td>
                                     <td>{{ arPuesto.codigoCentroCostoFk }}</td>
                                     <td style="text-align: center;">
                                         <a  href="javascript:abrirVentana3('{{ path('turno_administracion_cliente_clientepuesto_nuevo', {'id': arPuesto.codigoPuestoPk, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Editar puesto', 600, 1200) "><i class="fa fa-edit" style="color: black;font-size: large;"></i>
@@ -120,7 +120,7 @@
         <div class="btn-toolbar" style="float: right;">
             <div class="btn-group">
                 <div class="btn-group">
-                    <a href="javascript:abrirVentana3('{{ path('turno_administracion_cliente_clientepuesto_nuevo', {'id': 0, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Nuevo puesto', 600, 1200) " class="btn btn-default">nuevo</a>
+                    <a href="javascript:abrirVentana3('{{ path('turno_administracion_cliente_clientepuesto_nuevo', {'id': 0, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Nuevo puesto', 600, 1200) " class="btn btn-default">Nuevo</a>
                     {{ form_widget(form.btnEliminar) }}
                 </div>
             </div>

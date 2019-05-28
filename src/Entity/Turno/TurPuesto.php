@@ -125,6 +125,12 @@ class TurPuesto
     protected $programadorRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCentroCosto", inversedBy="turPuestosCentroCostoRel")
+     * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
+     */
+    protected $centroCostoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="puestoRel")
      */
     protected $pedidosDetallesPuestoRel;
@@ -388,6 +394,22 @@ class TurPuesto
     public function setProgramadorRel($programadorRel): void
     {
         $this->programadorRel = $programadorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCentroCostoRel()
+    {
+        return $this->centroCostoRel;
+    }
+
+    /**
+     * @param mixed $centroCostoRel
+     */
+    public function setCentroCostoRel($centroCostoRel): void
+    {
+        $this->centroCostoRel = $centroCostoRel;
     }
 
     /**

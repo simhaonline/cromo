@@ -71,45 +71,11 @@ class TurPedidoRepository extends ServiceEntityRepository
      * @param $arPedido TurPedido
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @var $arPedido TurPedido
      */
-    public function liquidar($id)
+    public function liquidar($arPedido)
     {
         $em = $this->getEntityManager();
-        $vrSubtotalGlobal = 0;
-        $vrTotalBrutoGlobal = 0;
-        $vrIvaGlobal = 0;
-        $vrSalarioBaseGlobal = 0;
-        $totalHoras = 0;
-        $totalHorasDiurnas = 0;
-        $totalHorasNocturnas = 0;
-        $arPedido = $em->getRepository(TurPedido::class)->find($id);
-        $arPedidoDetalles = $this->getEntityManager()->getRepository(TurPedidoDetalle::class)->findBy(['codigoPedidoFk' => $arPedido->getCodigoPedidoPk()]);
-        foreach ($arPedidoDetalles as $arPedidoDetalle) {
-            $horas = $arPedidoDetalle->getHoras();
-            $totalHoras += $horas;
-            $horasDiurnas = $arPedidoDetalle->getHorasDiurnas();
-            $totalHorasDiurnas += $horasDiurnas;
-            $horasNocturnas = $arPedidoDetalle->getHorasNocturnas();
-            $totalHorasNocturnas += $horasNocturnas;
-            $vrSubtotal = $arPedidoDetalle->getVrSubtotal();
-            $vrSubtotalGlobal += $vrSubtotal;
-            $vrTotal = $arPedidoDetalle->getVrTotalDetalle();
-            $vrTotalBrutoGlobal += $vrTotal;
-            $vrIva = $arPedidoDetalle->getVrIva();
-            $vrIvaGlobal += $vrIva;
-            $vrSalarioBase = $arPedidoDetalle->getVrSalarioBase();
-            $vrSalarioBaseGlobal += $vrSalarioBase;
-        }
-        $arPedido->setVrSubtotal($vrSubtotalGlobal);
-        $arPedido->setVrTotal($vrTotalBrutoGlobal);
-        $arPedido->setVrIva($vrIvaGlobal);
-        $arPedido->setVrTotalServicio($vrTotalBrutoGlobal);
-        $arPedido->setVrSalarioBase($vrSalarioBaseGlobal);
-        $arPedido->setHoras($totalHoras);
-        $arPedido->setHorasDiurnas($totalHorasDiurnas);
-        $arPedido->setHorasNocturnas($totalHorasNocturnas);
 
-        $em->persist($arPedido);
-        $em->flush();
     }
 }

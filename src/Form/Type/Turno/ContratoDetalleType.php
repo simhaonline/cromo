@@ -2,7 +2,10 @@
 
 namespace App\Form\Type\Turno;
 
+use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContratoDetalle;
+use App\Entity\Turno\TurModalidad;
+use App\Entity\Turno\TurPuesto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\ORM\EntityRepository;
@@ -20,39 +23,29 @@ class ContratoDetalleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('contratoConceptoRel', EntityType::class, [
+            ->add('conceptoRel', EntityType::class, [
                 'required' => true,
-                'class' => 'App\Entity\Turno\TurContratoConcepto',
+                'class' => TurConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('coc')
-                        ->orderBy('coc.nombre', 'ASC');
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'nombre:'
             ])
-            ->add('contratoModalidadRel', EntityType::class, [
+            ->add('modalidadRel', EntityType::class, [
                 'required' => true,
-                'class' => 'App\Entity\Turno\TurContratoModalidad',
+                'class' => TurModalidad::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('com')
-                        ->orderBy('com.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'nombre:'
-            ])
-            ->add('contratoConceptoFacturacionRel', EntityType::class, [
-                'required' => true,
-                'class' => 'App\Entity\Turno\TurContratoConcepto',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('coc')
-                        ->orderBy('coc.nombre', 'ASC');
+                    return $er->createQueryBuilder('m')
+                        ->orderBy('m.nombre', 'DESC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'nombre:'
             ])
             ->add('puestoRel', EntityType::class, [
                 'required' => true,
-                'class' => 'App\Entity\Turno\TurPuesto',
+                'class' => TurPuesto::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('p')
                         ->orderBy('p.nombre', 'ASC');
@@ -62,10 +55,6 @@ class ContratoDetalleType extends AbstractType
             ])
             ->add('cantidad', NumberType::class)
             ->add('vrPrecioAjustado', NumberType::class, array('required' => false))
-            ->add('porcentajeBaseIva', NumberType::class)
-            ->add('detalleFactura', TextType::class, array('required' => false))
-            ->add('horaInicio', TimeType::class)
-            ->add('horaFin', TimeType::class)
             ->add('lunes', CheckboxType::class, array('required' => false))
             ->add('martes', CheckboxType::class, array('required' => false))
             ->add('miercoles', CheckboxType::class, array('required' => false))
@@ -78,10 +67,6 @@ class ContratoDetalleType extends AbstractType
             ->add('vrSalarioBase', NumberType::class)
             ->add('fechaDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('fechaHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
-            ->add('liquidarDiasReales', CheckboxType::class, ['required' => false])
-            ->add('dia31', CheckboxType::class, ['required' => false, 'label' => 'Habilitar dia 31'])
-            ->add('noFacturar', CheckboxType::class, ['required' => false])
-            ->add('facturaDistribuida', CheckboxType::class, ['required' => false])
             ->add('guardar', SubmitType::class);
     }
 

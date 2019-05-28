@@ -35,11 +35,6 @@ class TurSector
     private $porcentaje = 0;
 
     /**
-     * @ORM\Column(name="comentarios", type="string", length=200, nullable=true)
-     */
-    private $comentarios;
-
-    /**
      * @ORM\OneToMany(targetEntity="TurPedido", mappedBy="sectorRel")
      */
     protected $pedidosSectorRel;
@@ -48,22 +43,6 @@ class TurSector
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="sectorRel")
      */
     protected $contratosSectorRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -116,17 +95,17 @@ class TurSector
     /**
      * @return mixed
      */
-    public function getComentarios()
+    public function getPedidosSectorRel()
     {
-        return $this->comentarios;
+        return $this->pedidosSectorRel;
     }
 
     /**
-     * @param mixed $comentarios
+     * @param mixed $pedidosSectorRel
      */
-    public function setComentarios($comentarios): void
+    public function setPedidosSectorRel($pedidosSectorRel): void
     {
-        $this->comentarios = $comentarios;
+        $this->pedidosSectorRel = $pedidosSectorRel;
     }
 
     /**

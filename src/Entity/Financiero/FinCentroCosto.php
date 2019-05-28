@@ -65,6 +65,11 @@ class FinCentroCosto
     protected $rhuCostosGruposCentroCostoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurPuesto", mappedBy="centroCostoRel")
+     */
+    protected $turPuestosCentroCostoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCentroCostoPk()
@@ -159,5 +164,23 @@ class FinCentroCosto
     {
         $this->rhuCostosGruposCentroCostoRel = $rhuCostosGruposCentroCostoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTurPuestosCentroCostoRel()
+    {
+        return $this->turPuestosCentroCostoRel;
+    }
+
+    /**
+     * @param mixed $turPuestosCentroCostoRel
+     */
+    public function setTurPuestosCentroCostoRel($turPuestosCentroCostoRel): void
+    {
+        $this->turPuestosCentroCostoRel = $turPuestosCentroCostoRel;
+    }
+
+
 }
 

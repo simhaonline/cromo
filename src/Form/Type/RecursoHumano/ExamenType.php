@@ -73,6 +73,7 @@ class ExamenType extends AbstractType
         $campos = '[
             {"child":"codigoExamenPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
             {"child":"codigoExamenClaseFk", "tipo":"EntityType","propiedades":{"class":"RhuExamenClase","choice_label":"nombre", "label":"TODOS"}},
+            {"child":"codigoEmpleadoFk",         "tipo":"TextType",    "propiedades":{"label":"Codigo Empleado"}},
             {"child":"fechaDesde",                      "tipo":"DateType",      "propiedades":{"label":"Fecha Desde"}},
             {"child":"fechaHasta",                      "tipo":"DateType",      "propiedades":{"label":"Fecha Hasta"}},        
             {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},

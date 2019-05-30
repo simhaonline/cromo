@@ -63,11 +63,6 @@ class RhuEmpleado
     private $discapacidad = false;
 
     /**
-     * @ORM\Column(name="estado_contrato", type="boolean", nullable=false,options={"default":false})
-     */
-    private $estadoContrato = false;
-
-    /**
      * @ORM\Column(name="carro", type="boolean",options={"default":false}, nullable=false)
      */
     private $carro = false;
@@ -86,6 +81,41 @@ class RhuEmpleado
      * @ORM\Column(name="cabeza_hogar", type="boolean", nullable=false,options={"default":false})
      */
     private $cabezaHogar = false;
+
+    /**
+     * @ORM\Column(name="barrio", type="string", length=100, nullable=true)
+     * @Assert\Length(
+     *     max=100,
+     *     maxMessage="El campo no puede tener mas de 100 caracteres"
+     * )
+     */
+    private $barrio;
+
+    /**
+     * @ORM\Column(name="talla_camisa", type="string", length=10,  nullable=true)
+     */
+    private $tallaCamisa;
+    /**
+     * @ORM\Column(name="talla_pantalon", type="string", length=10,  nullable=true)
+     */
+    private $tallaPantalon;
+    /**
+     * @ORM\Column(name="talla_calzado", type="string", length=10,  nullable=true)
+     */
+    private $tallaCalzado;
+    /**
+     * @ORM\Column(name="estatura", type="integer", nullable=true)
+     */
+    private $estatura = 0;
+    /**
+     * @ORM\Column(name="peso", type="integer", nullable=true)
+     */
+    private $peso = 0;
+
+    /**
+     * @ORM\Column(name="estado_contrato", type="boolean", nullable=false,options={"default":false})
+     */
+    private $estadoContrato = false;
 
     /**
      * @ORM\Column(name="nombre_corto", type="string", length=80, nullable=true)
@@ -170,15 +200,6 @@ class RhuEmpleado
     private $fechaExpedicionIdentificacion;
 
     /**
-     * @ORM\Column(name="barrio", type="string", length=100, nullable=true)
-     * @Assert\Length(
-     *     max=100,
-     *     maxMessage="El campo no puede tener mas de 100 caracteres"
-     * )
-     */
-    private $barrio;
-
-    /**
      * @ORM\Column(name="codigo_rh_fk", type="string", length=10, nullable=true)
      */
     private $codigoRhFk;
@@ -231,31 +252,6 @@ class RhuEmpleado
      * @ORM\Column(name="codigo_banco_fk", type="string", length=10, nullable=true)
      */
     private $codigoBancoFk;
-
-    /**
-     * @ORM\Column(name="talla_camisa", type="string", length=10,  nullable=true)
-     */
-    private $tallaCamisa;
-
-    /**
-     * @ORM\Column(name="talla_pantalon", type="string", length=10,  nullable=true)
-     */
-    private $tallaPantalon;
-
-    /**
-     * @ORM\Column(name="talla_calzado", type="string", length=10,  nullable=true)
-     */
-    private $tallaCalzado;
-
-    /**
-     * @ORM\Column(name="estatura", type="integer", nullable=true)
-     */
-    private $estatura = 0;
-
-    /**
-     * @ORM\Column(name="peso", type="integer", nullable=true)
-     */
-    private $peso = 0;
 
     /**
      * @ORM\Column(name="codigo_cargo_fk", type="string", length=10, nullable=true)

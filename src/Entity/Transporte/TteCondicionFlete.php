@@ -89,7 +89,7 @@ class TteCondicionFlete
     private $clienteRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TteZona", inversedBy="condicionesClientesZonaRel")
+     * @ORM\ManyToOne(targetEntity="TteZona", inversedBy="condicionesFletesZonaRel")
      * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
      */
     private $zonaRel;
@@ -253,70 +253,6 @@ class TteCondicionFlete
     /**
      * @return mixed
      */
-    public function getClienteRel()
-    {
-        return $this->clienteRel;
-    }
-
-    /**
-     * @param mixed $clienteRel
-     */
-    public function setClienteRel($clienteRel): void
-    {
-        $this->clienteRel = $clienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getZonaRel()
-    {
-        return $this->zonaRel;
-    }
-
-    /**
-     * @param mixed $zonaRel
-     */
-    public function setZonaRel($zonaRel): void
-    {
-        $this->zonaRel = $zonaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCiudadOrigenRel()
-    {
-        return $this->ciudadOrigenRel;
-    }
-
-    /**
-     * @param mixed $ciudadOrigenRel
-     */
-    public function setCiudadOrigenRel($ciudadOrigenRel): void
-    {
-        $this->ciudadOrigenRel = $ciudadOrigenRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCiudadDestinoRel()
-    {
-        return $this->ciudadDestinoRel;
-    }
-
-    /**
-     * @param mixed $ciudadDestinoRel
-     */
-    public function setCiudadDestinoRel($ciudadDestinoRel): void
-    {
-        $this->ciudadDestinoRel = $ciudadDestinoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getFleteMinimo()
     {
         return $this->fleteMinimo;
@@ -378,6 +314,69 @@ class TteCondicionFlete
         $this->vrUnidad = $vrUnidad;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadOrigenRel()
+    {
+        return $this->ciudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $ciudadOrigenRel
+     */
+    public function setCiudadOrigenRel($ciudadOrigenRel): void
+    {
+        $this->ciudadOrigenRel = $ciudadOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadDestinoRel()
+    {
+        return $this->ciudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $ciudadDestinoRel
+     */
+    public function setCiudadDestinoRel($ciudadDestinoRel): void
+    {
+        $this->ciudadDestinoRel = $ciudadDestinoRel;
+    }
 
 
 }

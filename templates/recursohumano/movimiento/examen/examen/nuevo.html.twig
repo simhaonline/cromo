@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtNit" class="col-sm-2 control-label">Empleado:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                <input id="txtCodigoEmpleado" name="txtCodigoEmpleado" type="number"
+                                       class="form-control"
+                                       value="{{ arExamen.empleadoRel.codigoEmpleadoPK |default('') }}"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
+                                       value="{{ arExamen.empleadoRel.nombreCorto |default('') }}"
+                                       readOnly="ReadOnly"/>
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'txtCodigoEmpleado', 'campoNombre': 'txtNombreCorto'  }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.examenClaseRel, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                    {{ form_errors(form.examenClaseRel) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Entidad examen:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.entidadExamenRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.entidadExamenRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Fecha examen:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fecha, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.fecha) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="form_comentario" class="col-sm-2 control-label">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentario, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.comentario) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_examen_examen_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

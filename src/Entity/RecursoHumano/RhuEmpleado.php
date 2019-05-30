@@ -314,6 +314,27 @@ class RhuEmpleado
     protected $dotacionesEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuExamen", mappedBy="empleadoRel")
+     */
+    protected $examenesEmpleadoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()
@@ -1289,6 +1310,19 @@ class RhuEmpleado
         $this->dotacionesEmpleadoRel = $dotacionesEmpleadoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getExamenesEmpleadoRel()
+    {
+        return $this->examenesEmpleadoRel;
+    }
 
-
+    /**
+     * @param mixed $examenesEmpleadoRel
+     */
+    public function setExamenesEmpleadoRel($examenesEmpleadoRel): void
+    {
+        $this->examenesEmpleadoRel = $examenesEmpleadoRel;
+    }
 }

@@ -58,12 +58,16 @@ class PedidoType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoPedidoPk",               "tipo":"pk",    "ayuda":"Codigo del registro",                  "titulo":"ID"},
-            {"campo":"numero",                         "tipo":"texto", "ayuda":"Consecutivo de aprobación",            "titulo":"NUMERO"},
             {"campo":"pedidoTipoRel.nombre",         "tipo":"texto", "ayuda":"Tipo pedido",                        "titulo":"TIPO",          "relacion":""},
-            {"campo":"fecha",                          "tipo":"fecha", "ayuda":"Fecha",                                "titulo":"FECHA"},
-            {"campo":"clienteRel.numeroIdentificacion","tipo":"texto", "ayuda":"Numero de identificacion del cliente", "titulo":"IDENTIFICACION","relacion":""},
-            {"campo":"clienteRel.nombreCorto",         "tipo":"texto", "ayuda":"Nombre del cliente",                   "titulo":"NOMBRE",        "relacion":""},
-            {"campo":"usuario",                        "tipo":"texto", "ayuda":"Usuario",                              "titulo":"USU"},
+            {"campo":"numero",                         "tipo":"texto", "ayuda":"Consecutivo de aprobación",            "titulo":"NUMERO"},
+            {"campo":"fecha",                          "tipo":"fecha", "ayuda":"Fecha",                                "titulo":"FECHA"},            
+            {"campo":"clienteRel.nombreCorto",         "tipo":"texto", "ayuda":"Nombre del cliente",                   "titulo":"CLIENTE",        "relacion":""},
+            {"campo":"sectorRel.nombre",         "tipo":"texto", "ayuda":"Nombre del sector",                   "titulo":"SECTOR",        "relacion":""},
+            {"campo":"horas",                         "tipo":"texto", "ayuda":"Horas",            "titulo":"H"},
+            {"campo":"horasDiurnas",                         "tipo":"texto", "ayuda":"Horas diurnas",            "titulo":"HD"},
+            {"campo":"horasNocturnas",                         "tipo":"texto", "ayuda":"Horas nocturnas",            "titulo":"HN"},
+            {"campo":"vrTotal",                         "tipo":"moneda", "ayuda":"Total",            "titulo":"TOTAL"},
+            {"campo":"usuario",                        "tipo":"texto", "ayuda":"Usuario",                              "titulo":"USU"},            
             {"campo":"estadoAutorizado",               "tipo":"bool",  "ayuda":"Autorizado",                           "titulo":"AUT"},
             {"campo":"estadoAprobado",                 "tipo":"bool",  "ayuda":"Aprobado",                             "titulo":"APR"},
             {"campo":"estadoAnulado",                  "tipo":"bool",  "ayuda":"Anulado",                              "titulo":"ANU"}

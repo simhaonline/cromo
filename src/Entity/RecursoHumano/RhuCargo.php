@@ -53,6 +53,27 @@ class RhuCargo
     protected $contratosCargoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuExamen", mappedBy="cargoRel")
+     */
+    protected $examenesCargoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoCargoPk()
@@ -103,17 +124,17 @@ class RhuCargo
     /**
      * @return mixed
      */
-    public function getSeleccionCargoRel()
+    public function getSeleccionesCargoRel()
     {
-        return $this->seleccionCargoRel;
+        return $this->seleccionesCargoRel;
     }
 
     /**
-     * @param mixed $seleccionCargoRel
+     * @param mixed $seleccionesCargoRel
      */
-    public function setSeleccionCargoRel($seleccionCargoRel): void
+    public function setSeleccionesCargoRel($seleccionesCargoRel): void
     {
-        $this->seleccionCargoRel = $seleccionCargoRel;
+        $this->seleccionesCargoRel = $seleccionesCargoRel;
     }
 
     /**
@@ -162,5 +183,21 @@ class RhuCargo
     public function setContratosCargoRel($contratosCargoRel): void
     {
         $this->contratosCargoRel = $contratosCargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExamenesCargoRel()
+    {
+        return $this->examenesCargoRel;
+    }
+
+    /**
+     * @param mixed $examenesCargoRel
+     */
+    public function setExamenesCargoRel($examenesCargoRel): void
+    {
+        $this->examenesCargoRel = $examenesCargoRel;
     }
 }

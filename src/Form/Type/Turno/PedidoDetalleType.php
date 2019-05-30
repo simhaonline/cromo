@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\Turno;
 
+use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurPedidoDetalle;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,14 +17,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TurPedidoDetalleType extends AbstractType
+class PedidoDetalleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('contratoConceptoRel', EntityType::class, [
                 'required' => true,
-                'class' => 'App\Entity\Turno\TurContratoConcepto',
+                'class' => TurConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('coc')
                         ->orderBy('coc.nombre', 'ASC');
@@ -33,20 +34,10 @@ class TurPedidoDetalleType extends AbstractType
             ])
             ->add('contratoModalidadRel', EntityType::class, [
                 'required' => true,
-                'class' => 'App\Entity\Turno\TurContratoModalidad',
+                'class' => 'TurModalidad.php',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('com')
                         ->orderBy('com.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'nombre:'
-            ])
-            ->add('contratoConceptoFacturacionRel', EntityType::class, [
-                'required' => true,
-                'class' => 'App\Entity\Turno\TurContratoConcepto',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('coc')
-                        ->orderBy('coc.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'nombre:'

@@ -11,178 +11,64 @@
             <div class="form-group form-group-sm">
                 <label for="puesto_nombre" class="col-sm-2 control-label">Nombre:</label>
                 <div class="col-sm-10">
-                    {{   form_widget(form.nombre, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{   form_widget(form.nombre) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_pĺaca" class="col-sm-2 control-label">Direccion:</label>
-                <div class="col-sm-2">
-                    {{  form_widget(form.direccion, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                <div class="col-sm-4">
+                    {{  form_widget(form.direccion) }}
                 </div>
-                <label for="form_digitoVerificacion" class="col-sm-2 control-label">Teléfono:</label>
-                <div class="col-sm-2">
-                    {{    form_widget(form.telefono, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-                <label for="form_codigoVehiculoPk" class="col-sm-2 control-label">telefono contacto:</label>
-                <div class="col-sm-2">
-                    {{  form_widget(form.telefonoContacto, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                <label for="form_digitoVerificacion" class="col-sm-2 control-label">Ciudad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_razonSocial" class="col-sm-2 control-label">Celular:</label>
                 <div class="col-sm-4">
-                    {{   form_widget(form.celular, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{   form_widget(form.celular) }}
                 </div>
                 <label for="form_razonSocial" class="col-sm-2 control-label">Otra medio de comunicación:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.otraComunicacion, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_widget(form.comunicacion) }}
                 </div>
             </div>
-            <div class="form-group form-group-sm">
-                <label for="form_nombre1" class="col-sm-2 control-label">Contacto principal:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.contactoPrincipal, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-                <label for="form_nombre2" class="col-sm-2 control-label">Celular contacto:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.celularContacto, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-            </div>
+
             <div class="form-group form-group-sm">
                 <label for="form_apellido1" class="col-sm-2 control-label">Codigo programador:</label>
                 <div class="col-sm-4">
-                    {{   form_widget(form.programadorRel, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{   form_widget(form.programadorRel) }}
                 </div>
-                <label for="form_apellido2" class="col-sm-2 control-label">Codigo zona:</label>
+                <label for="form_apellido2" class="col-sm-2 control-label">Telefono:</label>
                 <div class="col-sm-4">
-                    {{   form_widget(form.codigoZonaFk, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_widget(form.telefono) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_direccion" class="col-sm-2 control-label">Ciudad:</label>
+                <label for="form_apellido1" class="col-sm-2 control-label">Centro costo:</label>
                 <div class="col-sm-4">
-                    {{  form_widget(form.ciudadRel, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{   form_widget(form.centroCostoRel) }}
                 </div>
-                <label for="form_telefono" class="col-sm-2 control-label">codigo Supervisor:</label>
+                <label for="form_apellido2" class="col-sm-2 control-label">Ubicacion:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.codigoSupervisorFk,  { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.ubicacionGps) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_apellido1" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{   form_widget(form.estadoInactivo) }}
+                </div>
+                <label for="form_apellido2" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_movil" class="col-sm-2 control-label">Comentario:</label>
                 <div class="col-sm-10">
-                    {{   form_widget(form.comentario, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-            <label for="form_correo" class="col-sm-2 control-label">codigo Centro Costo:</label>
-            <div class="col-sm-4">
-                {{  form_widget(form.codigoCentroCostoFk, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-            </div>
-        </div>
-            <div class="form-group form-group-sm">
-            <label for="form_plazoPago" class="col-sm-2 control-label">codigo sucursal:</label>
-            <div class="col-sm-4">
-                {{  form_widget(form.codigoSucursalFk, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-            </div>
-            <label class="col-sm-2 control-label">codigo proyecto:</label>
-            <div class="col-sm-4">
-                {{   form_widget(form.codigoProyectoFk, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-            </div>
-        </div>
-            <div class="form-group form-group-sm">
-            <label for="form_formaPagoRel" class="col-sm-2 control-label"></label>
-            <div class="col-sm-4">
-                {{   form_widget(form.controlPuesto) }}
-            </div>
-        </div>
-            <div class="form-group form-group-sm">
-            <label for="form_plazoPago" class="col-sm-2 control-label">Edad minima</label>
-            <div class="col-sm-4">
-                {{   form_widget(form.edad_minima) }}
-            </div>
-            <label class="col-sm-2 control-label">Edad maxima:</label>
-            <div class="col-sm-4">
-                {{   form_widget(form.edad_maxima, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-            </div>
-        </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Estatura minima:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.estaturaMinima, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">estatura maxima:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.estaturaMaxima, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Peso minimo:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.peso_minimo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Peso maximo:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.peso_maximo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">codigo Estado Civil:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.codigoEstadoCivilFk, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.moto)}}
-                </div>
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.carro) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Validar perfil:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.validarPerfil, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Visita domiciliaria:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.visitaDomiciliaria, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Poligrafia:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.poligrafia, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Hora inicio:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.horaInicio)}}
-                </div>
-                <label class="col-sm-2 control-label">Hora final:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.horaFinal) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Ubicacion Gps:</label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.ubicacionGps, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-                    {{   form_widget(form.estadoInactivo ) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">codigo Coordinador:</label>
-                <div class="col-sm-10">
-                    {{   form_widget(form.codigoCoordinadorFk, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{   form_widget(form.comentario) }}
                 </div>
             </div>
     </div>

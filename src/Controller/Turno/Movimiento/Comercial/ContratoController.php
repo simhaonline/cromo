@@ -6,10 +6,11 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Turno\TurCliente;
+use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Form\Type\Turno\ContratoType;
-use App\Form\Type\Turno\TurContratoDetalleType;
+use App\Form\Type\Turno\ContratoDetalleType;
 use App\General\General;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Estandares;
@@ -41,7 +42,7 @@ class ContratoController extends ControllerListenerGeneral
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
+        $formBotonera = $this->botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
@@ -65,7 +66,7 @@ class ContratoController extends ControllerListenerGeneral
         return $this->render('turno/movimiento/comercial/contrato/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'formFiltro' => $formFiltro->createView()
         ]);
     }
 
@@ -86,7 +87,11 @@ class ContratoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('turno_movimiento_comercial_contrato_lista'));
             }
         } else {
+            $arrConfiguracion = $em->getRepository(TurConfiguracion::class)->comercialNuevo();
+            $arContrato->setVrSalarioBase($arrConfiguracion['vrSalarioMinimo']);
             $arContrato->setUsuario($this->getUser()->getUserName());
+            $arContrato->setEstrato(6);
+
         }
         $form = $this->createForm(ContratoType::class, $arContrato);
         $form->handleRequest($request);
@@ -98,9 +103,10 @@ class ContratoController extends ControllerListenerGeneral
                     $arCliente = $em->getRepository(TurCliente::class)->find($txtCodigoCliente);
                     if ($arCliente) {
                         $arContrato->setClienteRel($arCliente);
-                        $arContrato->setFechaGeneracion(new \DateTime('now'));
                         if ($id == 0) {
-                            $arContrato->setFechaGeneracion(new \DateTime('now'));
+                            $nuevafecha = date('Y/m/', strtotime('-1 month', strtotime(date('Y/m/j'))));
+                            $dateFechaGeneracion = date_create($nuevafecha . '01');
+                            $arContrato->setFechaGeneracion($dateFechaGeneracion);
                             $arContrato->setUsuario($this->getUser()->getUserName());
                         }
                         $em->persist($arContrato);
@@ -133,27 +139,30 @@ class ContratoController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $arContratos = $em->getRepository(TurContrato::class)->find($id);
-        $form = Estandares::botonera($arContratos->getEstadoAutorizado(), $arContratos->getEstadoAprobado(), $arContratos->getEstadoAnulado());
+        $arContrato = $em->getRepository(TurContrato::class)->find($id);
+        $form = Estandares::botonera($arContrato->getEstadoAutorizado(), $arContrato->getEstadoAprobado(), $arContrato->getEstadoAnulado());
 
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnLiquidar = ['label' => 'Liquidar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobado = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        if ($arContratos->getEstadoAutorizado()) {
+        if ($arContrato->getEstadoAutorizado()) {
             $arrBtnAutorizar['disable'] = true;
             $arrBtnEliminar['disable'] = true;
             $arrBtnActualizar['disable'] = true;
+            $arrBtnLiquidar['disable'] = true;
             $arrBtnAprobado['disable'] = true;
             $arrBtnDesautorizar['disable'] = false;
         }
-        if ($arContratos->getEstadoAprobado()) {
+        if ($arContrato->getEstadoAprobado()) {
             $arrBtnDesautorizar['disable'] = true;
             $arrBtnAprobado['disable'] = true;
         }
 
         $form->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
+        $form->add('btnLiquidar', SubmitType::class, $arrBtnLiquidar);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -161,10 +170,14 @@ class ContratoController extends ControllerListenerGeneral
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(TurContratoDetalle::class)->eliminar($arrDetallesSeleccionados, $id);
-                $em->getRepository(TurContrato::class)->liquidar($id);
+                $em->getRepository(TurContrato::class)->liquidar($arContrato);
             }
             if ($form->get('btnActualizar')->isClicked()) {
-                $em->getRepository(TurContratoDetalle::class)->actualizarDetalles($arrControles, $form, $arContratos);
+                $em->getRepository(TurContratoDetalle::class)->actualizarDetalles($arrControles, $form, $arContrato);
+                $em->getRepository(TurContrato::class)->liquidar($arContrato);
+            }
+            if ($form->get('btnLiquidar')->isClicked()) {
+                $em->getRepository(TurContrato::class)->liquidar($arContrato);
             }
             return $this->redirect($this->generateUrl('turno_movimiento_comercial_contrato_detalle', ['id' => $id]));
         }
@@ -172,7 +185,7 @@ class ContratoController extends ControllerListenerGeneral
         return $this->render('turno/movimiento/comercial/contrato/detalle.html.twig', array(
             'form' => $form->createView(),
             'arContratoDetalles' => $arContratoDetalles,
-            'arContratos' => $arContratos
+            'arContrato' => $arContrato
         ));
     }
 
@@ -188,23 +201,42 @@ class ContratoController extends ControllerListenerGeneral
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $arContratoDetalle = new TurContratoDetalle();
-        $arContratos = $em->getRepository(TurContrato::class)->find($codigoContrato);
+        $arContrato = $em->getRepository(TurContrato::class)->find($codigoContrato);
         if ($id != '0') {
             $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($id);
+        } else {
+            $arContratoDetalle->setContratoRel($arContrato);
+            $arContratoDetalle->setLunes(true);
+            $arContratoDetalle->setMartes(true);
+            $arContratoDetalle->setMiercoles(true);
+            $arContratoDetalle->setJueves(true);
+            $arContratoDetalle->setViernes(true);
+            $arContratoDetalle->setSabado(true);
+            $arContratoDetalle->setDomingo(true);
+            $arContratoDetalle->setFestivo(true);
+            $arContratoDetalle->setCantidad(1);
+            $arContratoDetalle->setFechaDesde(new \DateTime('now'));
+            $arContratoDetalle->setFechaHasta(new \DateTime('now'));
+            $arContratoDetalle->setVrSalarioBase($arContrato->getVrSalarioBase());
+            $arContratoDetalle->setPeriodo('M');
         }
-        $form = $this->createForm(TurContratoDetalleType::class, $arContratoDetalle);
+        $form = $this->createForm(ContratoDetalleType::class, $arContratoDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arContratoDetalle->setContratoRel($arContratos);
+                if($id == 0) {
+                    $arContratoDetalle->setPorcentajeIva($arContratoDetalle->getConceptoRel()->getPorcentajeIva());
+                    $arContratoDetalle->setPorcentajeBaseIva(100);
+                }
                 $em->persist($arContratoDetalle);
                 $em->flush();
+                $em->getRepository(TurContrato::class)->liquidar($arContrato);
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
         return $this->render('turno/movimiento/comercial/contrato/detalleNuevo.html.twig', [
-            'arContratos' => $arContratos,
-            'form' => $form->createView(),
+            'arContrato' => $arContrato,
+            'form' => $form->createView()
         ]);
     }
 }

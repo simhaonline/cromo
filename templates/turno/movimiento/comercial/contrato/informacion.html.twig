@@ -1,74 +1,70 @@
 <table width="100%" class="table table-condensed table-bordered tabla-informacion">
     <tr>
         <td class="titulo">CODIGO:</td>
-        <td class="td-in-well">{{ arContratos.codigoContratoPk }}</td>
-        <td class="titulo">FECHA GENERADO (ULT):</td>
-        <td class="td-in-well">{{ arContratos.fechaGeneracion | date("Y-m-d H:i:s") }}</td>
+        <td class="td-in-well">{{ arContrato.codigoContratoPk }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
         <td class="titulo">COSTO:</td>
-        <td align="right">{{ arContratos.vrTotalCosto | number_format(0, '.', ',') }}</td>
+        <td align="right">{{ arContrato.vrTotalCosto | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
         <td class="titulo">CLIENTE:</td>
-        <td class="td-in-well">{{ arContratos.clienteRel.nombreCorto }}</td>
+        <td class="td-in-well">{{ arContrato.clienteRel.nombreCorto }}</td>
         <td class="titulo">SALARIO BASE:</td>
-        <td align="right">{{ arContratos.vrSalarioBase | number_format(0, '.', ',') }}</td>
+        <td align="right">{{ arContrato.vrSalarioBase | number_format(0, '.', ',') }}</td>
         <td class="titulo">MINIMO:</td>
-        <td align="right">{{ arContratos.vrTotalPrecioMinimo | number_format(0, '.', ',') }}</td>
+        <td align="right">{{ arContrato.vrTotalPrecioMinimo | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">TIPO</td>
-        <td class="td-in-well">{{ arContratos.contratoTipoRel.nombre }}</td>
+        <td class="titulo">TIPO:</td>
+        <td class="td-in-well">{{ arContrato.contratoTipoRel.nombre }}</td>
         <td class="titulo">ESTRATO:</td>
-        <td class="td-in-well">{{ arContratos.estrato }}</td>
+        <td class="td-in-well">{{ arContrato.estrato }}</td>
         <td class="titulo">TOTAL SERVICIOS:</td>
-        <td align="right">{{ arContratos.vrTotalServicio | number_format(0, '.', ',') }}</td>
+        <td align="right">{{ arContrato.vrTotalServicio | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">SECTOR</td>
-        <td class="td-in-well">{{ arContratos.sectorRel.nombre }}</td>
+        <td class="titulo">SECTOR:</td>
+        <td class="td-in-well">{{ arContrato.sectorRel.nombre }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
         <td class="titulo">SUBTOTAL:</td>
-        <td align="right">{{ arContratos.vrSubtotal | number_format(0, '.', ',') }}</td>
+        <td align="right">{{ arContrato.vrSubtotal | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
         <td class="titulo">USUARIO:</td>
-        <td class="td-in-well" style="text-transform: uppercase;">{{ arContratos.usuario }}</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arContrato.usuario }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
         <td class="titulo">BASE AIU:</td>
-        <td align="right">{{ arContratos.vrBaseAiu | number_format(0, '.', ',') }}</td>
+        <td align="right">{{ arContrato.vrBaseAiu | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">HORAS</td>
-        <td class="td-in-well">{{ arContratos.horas }}</td>
+        <td class="titulo">HORAS:</td>
+        <td class="td-in-well">{{ arContrato.horas }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
         <td class="titulo">IVA:</td>
-        <td align="right">{{ arContratos.vrIva | number_format(0, '.', ',') }}</td>
+        <td align="right">{{ arContrato.vrIva | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">HORAS DIURNAS</td>
-        <td class="td-in-well">{{ arContratos.horasDiurnas }}</td>
+        <td class="titulo">HORAS DIURNAS:</td>
+        <td class="td-in-well">{{ arContrato.horasDiurnas }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
         <td class="titulo">TOTAL:</td>
-        <td align="right">{{ arContratos.vrTotal | number_format(0, '.', ',') }}</td>
+        <td align="right">{{ arContrato.vrTotal | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">HORAS NOCTURNAS</td>
-        <td class="td-in-well">{{ arContratos.horasNocturnas }}</td>
+        <td class="titulo">HORAS NOCTURNAS:</td>
+        <td class="td-in-well">{{ arContrato.horasNocturnas }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
-    </tr>
-    <tr>
-        <td class="titulo">SOPORTE:</td>
-        <td class="td-in-well" colspan="5">{{ arContratos.soporte }}</td>
     </tr>
     <tr>
         <td class="titulo">COMENTARIO:</td>
-        <td class="td-in-well" colspan="5" colspan="5">{{ arContratos.comentarios }}</td>
+        <td class="td-in-well" colspan="5" colspan="5">{{ arContrato.comentarios }}</td>
     </tr>
 </table>

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form,{'attr' : {'class' : 'form-horizontal'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre) }}
+                    {{ form_errors(form.nombre) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Nit:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nit) }}
+                    {{ form_errors(form.nit) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Direccion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.direccion) }}
+                    {{ form_errors(form.direccion) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Telefono:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.telefono) }}
+                    {{ form_errors(form.telefono) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_administracion_examen_entidadexamen_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+    <div></div>
+{% endblock %}

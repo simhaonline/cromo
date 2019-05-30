@@ -22,8 +22,6 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd');
         $queryBuilder
             ->select('cd.codigoContratoDetallePk')
-            ->addSelect('cd.horaInicio')
-            ->addSelect('cd.horaFin')
             ->addSelect('cd.cantidad')
             ->addSelect('cd.lunes')
             ->addSelect('cd.martes')
@@ -40,16 +38,15 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->addSelect('cd.porcentajeIva')
             ->addSelect('cd.vrIva')
             ->addSelect('cd.vrSubtotal')
-            ->addSelect('cd.liquidarDiasReales')
             ->addSelect('cd.fechaDesde')
             ->addSelect('cd.fechaHasta')
             ->addSelect('cd.horas')
             ->addSelect('cd.horasDiurnas')
             ->addSelect('cd.horasNocturnas')
-            ->addSelect('coc.nombre as nombreConcepto')
-            ->addSelect('com.nombre as nombreModalidad')
-            ->leftJoin('cd.contratoConceptoRel', 'coc')
-            ->leftJoin('cd.contratoModalidadRel', 'com')
+            ->addSelect('con.nombre as conceptoNombre')
+            ->addSelect('mod.nombre as modalidadNombre')
+            ->leftJoin('cd.conceptoRel', 'con')
+            ->leftJoin('cd.modalidadRel', 'mod')
             ->where("cd.codigoContratoFk = {$id}");
 
         return $queryBuilder;
@@ -58,7 +55,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
     /**
      * @param $arrControles
      * @param $form
-     * @param $arContratos TurContrato
+     * @param $arContratos
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
@@ -70,19 +67,16 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
 
         if ($this->getEntityManager()->getRepository(TurContrato::class)->contarDetalles($arContratos->getCodigoContratoPk()) > 0) {
             $arrPrecioAjustado = $arrControles['arrPrecioAjustado'];
-            $arrPorcentajeBaseIva = $arrControles['arrPorcentajeBaseIva'];
             $arrPorcentajeIva = $arrControles['arrPorcentajeIva'];
             $arrCodigo = $arrControles['arrCodigo'];
             foreach ($arrCodigo as $codigoContratoDetalle) {
                 $arContratoDetalle = $this->getEntityManager()->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
-                $arContratoDetalle->setVrCosto($arContratoDetalle->getCantidad() * $arContratoDetalle->getContratoConceptoRel()->getVrCosto());
-                $arContratoDetalle->setHoras($arContratoDetalle->getContratoConceptoRel()->getHoras());
-                $arContratoDetalle->setHorasDiurnas($arContratoDetalle->getContratoConceptoRel()->getHorasDiurnas());
-                $arContratoDetalle->setHorasNocturnas($arContratoDetalle->getContratoConceptoRel()->getHorasNocturnas());
+                $arContratoDetalle->setHoras($arContratoDetalle->getConceptoRel()->getHoras());
+                $arContratoDetalle->setHorasDiurnas($arContratoDetalle->getConceptoRel()->getHorasDiurnas());
+                $arContratoDetalle->setHorasNocturnas($arContratoDetalle->getConceptoRel()->getHorasNocturnas());
                 $arContratoDetalle->setVrSalarioBase($arContratoDetalle->getVrSalarioBase());
                 $arContratoDetalle->setVrPrecioAjustado($arrPrecioAjustado[$codigoContratoDetalle]);
                 $arContratoDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoContratoDetalle]);
-                $arContratoDetalle->setPorcentajeBaseIva($arrPorcentajeBaseIva[$codigoContratoDetalle]);
                 $arContratoDetalle->setVrSubtotal($arContratoDetalle->getVrPrecioAjustado() * $arContratoDetalle->getCantidad());
                 $arContratoDetalle->setVrIva($arContratoDetalle->getVrSubtotal() * $arContratoDetalle->getPorcentajeIva() / 100);
                 $arContratoDetalle->setVrTotalDetalle($arContratoDetalle->getVrSubtotal() + $arContratoDetalle->getVrIva());
@@ -101,7 +95,6 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
      */
     public function eliminar($arrDetallesSeleccionados,$id)
     {
-//        $em = $this->getDoctrine()->getManager();
         $em = $this->getEntityManager();
         $arRegistro = $em->getRepository(TurContrato::class)->find($id);
         if ($arRegistro->getEstadoAutorizado() == 0) {

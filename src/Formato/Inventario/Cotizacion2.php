@@ -39,12 +39,14 @@ class Cotizacion2 extends \FPDF
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("Cotizacion$codigoCotizacion.pdf", 'D');
+        $pdf->Output("Cotizacion$codigoCotizacion.pdf", 'I');
     }
 
     public function Header()
     {
-
+        /**
+         * @var $arCotizacion InvCotizacion
+         */
         $arCotizacion = self::$em->getRepository(InvCotizacion::class)->find(self::$codigoCotizacion);
         Estandares::generarEncabezado($this, 'COTIZACION', self::$em);
         $intY = 40;
@@ -59,13 +61,13 @@ class Cotizacion2 extends \FPDF
         $this->Cell(30, 4, "FECHA:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arCotizacion->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+        $this->Cell(65, 4, $arCotizacion->getFecha()->format('Y-m-d'), 1, 0, 'L', 1);
 
         $this->SetXY(10, $intY + 4);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, "TERCERO:", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 8);
+        $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(65, 4, utf8_decode($arCotizacion->getTerceroRel()->getNombreCorto()));
         $this->SetFont('Arial', 'B', 8);
@@ -78,10 +80,38 @@ class Cotizacion2 extends \FPDF
         $this->SetXY(10, $intY + 8);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, "FECHA ENTREGA", 1, 0, 'L', 1);
+        $this->Cell(30, 4, "CONTACTO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, $arCotizacion->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
+        $this->Cell(65, 4, utf8_decode($arCotizacion->getContactoRel() ? $arCotizacion->getContactoRel()->getNombreCorto() : ''), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, 'TELEFONO:', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, $arCotizacion->getContactoRel() ? $arCotizacion->getContactoRel()->getTelefono() : '', 1, 0, 'L', 1);
+
+        $this->SetXY(10, $intY + 12);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "ASESOR:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, utf8_decode($arCotizacion->getAsesorRel()->getNombre()), 1, 0, 'L',1 );
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, 'VIGENCIA:', 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, $arCotizacion->getVencimiento()->format('Y-m-d'), 1, 0, 'L', 1);
+
+        $this->SetXY(10, $intY + 16);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 4, "TIEMPO ENTREGA:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 4, utf8_decode($arCotizacion->getTiempoEntrega() ? $arCotizacion->getTiempoEntrega() : 'SIN TIEMPO DE ENTREGA ESTIMADO'), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, 'SOPORTE:', 1, 0, 'L', 1);
@@ -90,14 +120,13 @@ class Cotizacion2 extends \FPDF
         $this->Cell(65, 4, $arCotizacion->getSoporte(), 1, 0, 'L', 1);
 
 
-        $this->SetXY(10, $intY + 12);
+        $this->SetXY(10, $intY + 20);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, "COMENTARIO", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-//        $this->Cell(160, 4, $arSolicitud->getFecha()->format('Y/m/d'), 1, 0, 'L', 1);
-        $this->MultiCell(160, 4, $arCotizacion->getComentarios(), 1, 'L');
+        $this->MultiCell(160, 4, utf8_decode($arCotizacion->getComentarios()), 1, 'L');
 
         $this->EncabezadoDetalles();
 
@@ -106,7 +135,7 @@ class Cotizacion2 extends \FPDF
     public function EncabezadoDetalles()
     {
         $this->Ln(14);
-        $header = array('REFERENCIA', 'CANT', 'VALOR UNITARIO', 'VALOR TOTAL', 'DESCRIPCION');
+        $header = array('REFERENCIA', 'CANT', 'VALOR UND', 'DESCUENTO', 'TOTAL', 'DESCRIPCION');
         $this->SetFillColor(200, 200, 200);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -114,7 +143,7 @@ class Cotizacion2 extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //creamos la cabecera de la tabla.
-        $w = array(30, 15, 30, 30, 85, 30);
+        $w = array(30, 15, 20, 20,  20, 85, 30);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -141,8 +170,8 @@ class Cotizacion2 extends \FPDF
         $pdf->SetFont('Arial', '', 7);
 
         $arrConfiguracionDocumental = self::$em->getRepository(DocConfiguracion::class)->archivoMasivo();
-        $y = 74;
-        $linea = 74;
+        $y = 82;
+        $linea = 82;
         $contador = 0;
         $cantRegistros = count($arCotizacionDetalles);
         foreach ($arCotizacionDetalles as $arCotizacionDetalle) {
@@ -158,14 +187,15 @@ class Cotizacion2 extends \FPDF
             $pdf->Rect(115, $y, 85, 30);
             $pdf->Cell(30, 30, "", 1, 0, 'L');
             $pdf->Cell(15, 30, $arCotizacionDetalle->getCantidad(), 1, 0, 'C');
-            $pdf->Cell(30, 30, number_format($arCotizacionDetalle->getVrSubtotal()), 1, 0, 'R');
-            $pdf->Cell(30, 30, number_format($arCotizacionDetalle->getVrTotal()), 1, 0, 'R');
+            $pdf->Cell(20, 30, number_format($arCotizacionDetalle->getVrSubtotal()), 1, 0, 'R');
+            $pdf->Cell(20, 30, number_format($arCotizacionDetalle->getVrDescuento()), 1, 0, 'R');
+            $pdf->Cell(20, 30, number_format($arCotizacionDetalle->getVrTotal()), 1, 0, 'R');
             $pdf->Multicell(85, 3, utf8_decode($arCotizacionDetalle->getItemRel()->getDescripcion()), 0);
             $linea += 30;
             $pdf->setY($linea);
             if ($contador == 5 && $cantRegistros > 0) {
-                $y = 74;
-                $linea = 74;
+                $y = 82;
+                $linea = 82;
                 $contador = 0;
                 $pdf->AddPage();
             } else {
@@ -178,27 +208,38 @@ class Cotizacion2 extends \FPDF
         $pdf->Cell(145, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->SetFillColor(236, 236, 236);
-        $pdf->Cell(20, 4, "SUBTOTAL:", 1, 0, 'R', true);
+        $pdf->Cell(20, 4, "SUBTOTAL:", 1, 0, 'L', true);
         $pdf->SetFont('Arial', '', 7);
         $pdf->Cell(25, 4, number_format($arCotizacion->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln();
         $pdf->Cell(145, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
-        $pdf->Cell(20, 4, "IVA:", 1, 0, 'R', true);
+        $pdf->Cell(20, 4, "IVA:", 1, 0, 'L', true);
         $pdf->SetFont('Arial', '', 7);
         $pdf->Cell(25, 4, number_format($arCotizacion->getVrIva(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln();
         $pdf->Cell(145, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
-        $pdf->Cell(20, 4, "NETO PAGAR", 1, 0, 'R', true);
+        $pdf->Cell(20, 4, "DESCUENTO:", 1, 0, 'L', true);
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(25, 4, number_format($arCotizacion->getVrDescuento(), 0, '.', ','), 1, 0, 'R');
+        $pdf->Ln();
+        $pdf->Cell(145, 4, "", 0, 0, 'R');
+        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->Cell(20, 4, "NETO PAGAR", 1, 0, 'L', true);
         $pdf->SetFont('Arial', '', 7);
         $pdf->Cell(25, 4, number_format($arCotizacion->getVrTotal(), 0, '.', ','), 1, 0, 'R');
     }
 
     public function Footer()
     {
-        $this->SetFont('Arial', '', 8);
-        $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+        $arCotizacion = self::$em->getRepository(InvCotizacion::class)->find(self::$codigoCotizacion);
+        $this->SetFont('Arial', 'B', 7.5);
+        $this->Text(24, 216, utf8_decode($arCotizacion->getAsesorRel()->getNombre()));
+        $this->Text(24, 224, utf8_decode('____________________________________________'));
+
+        $this->SetFont('Arial', '', 6.5);
+        $this->Text(188, 275, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }
 
     var $angle = 0;

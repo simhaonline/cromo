@@ -41,8 +41,13 @@ class ConceptoType extends AbstractType
     public function getEstructuraPropiedadesLista()
     {
         $campos = '[
-            {"campo":"codigoConceptoPk"}
-            
+            {"campo":"codigoConceptoPk",       "tipo":"pk"      ,"ayuda":"Codigo del registro"                      ,"titulo":"ID"},
+            {"campo":"nombre",                 "tipo":"texto"   ,"ayuda":"",                                         "titulo":"NOMBRE"},
+            {"campo":"nombreFacturacion",      "tipo":"texto"   ,"ayuda":""                                         ,"titulo":"NOMBRE FACTURACION"},
+            {"campo":"horas",                  "tipo":"texto"   ,"ayuda":""                                         ,"titulo":"HORAS"},
+            {"campo":"horasDiurnas",           "tipo":"texto"   ,"ayuda":""                                         ,"titulo":"HORAS DIURNAS"},
+            {"campo":"horasNocturnas",         "tipo":"texto"   ,"ayuda":""                                         ,"titulo":"HORAS NOCTURNAS"},
+            {"campo":"porcentajeIva",          "tipo":"texto"   ,"ayuda":"Porcentaje IVA"                           ,"titulo":"% IVA"}
         ]';
         return $campos;
     }
@@ -50,6 +55,8 @@ class ConceptoType extends AbstractType
     public function getEstructuraPropiedadesFiltro()
     {
         $campos = '[
+            {"child":"codigoConceptoPk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
+            {"child":"nombre",               "tipo":"TextType",    "propiedades":{"label":"Nombre"}}
         ]';
         return $campos;
     }

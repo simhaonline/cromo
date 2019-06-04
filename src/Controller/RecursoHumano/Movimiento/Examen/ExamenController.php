@@ -4,13 +4,11 @@ namespace App\Controller\RecursoHumano\Movimiento\Examen;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
-use App\Entity\RecursoHumano\RhuCargo;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuExamen;
 use App\Entity\RecursoHumano\RhuExamenDetalle;
 use App\Entity\RecursoHumano\RhuExamenListaPrecio;
 use App\Entity\RecursoHumano\RhuExamenTipo;
-use App\Form\Type\RecursoHumano\ExamenControlType;
 use App\Form\Type\RecursoHumano\ExamenType;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -18,7 +16,6 @@ use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 

@@ -51,7 +51,7 @@ class EntidadExamenController extends ControllerListenerGeneral
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuEntidadExamen::class)->eliminar($arrSeleccionados);
+                $this->get("UtilidadesModelo")->eliminar(RhuEntidadExamen::class, $arrSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_administracion_examen_entidadexamen_lista'));
             }
         }

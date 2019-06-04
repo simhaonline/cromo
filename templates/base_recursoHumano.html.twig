@@ -156,11 +156,17 @@
                     <ul>
                         <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'cargo'}) }}">Cargo</a>
                         </li>
+                        <li>
+                            <a href="{{ path('recursohumano_administracion_contratacion_requisitoconcepto_lista') }}">Concepto requisito</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('recursohumano_administracion_contratacion_requisitocargo_lista') }}">Requisito por cargo</a>
+                        </li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#">Dotación <span class="fa arrow"></span></a>
-                    <ul>
+                <a href="#">Dotación <span class="fa arrow"></span></a>
+                <ul>
                         <li><a href="{{ path('recursohumano_administracion_dotacion_dotacionelemento_lista') }}">Elementos</a>
                         </li>
                     </ul>

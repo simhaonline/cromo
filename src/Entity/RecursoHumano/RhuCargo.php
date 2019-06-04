@@ -28,6 +28,11 @@ class RhuCargo
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_cargo_supervigilancia_fk", type="integer", nullable=true)
+     */
+    private $codigoCargoSupervigilanciaFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="cargoRel")
      */
     protected $solicitudesCargoRel;
@@ -56,6 +61,17 @@ class RhuCargo
      * @ORM\OneToMany(targetEntity="RhuExamen", mappedBy="cargoRel")
      */
     protected $examenesCargoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuRequisitoCargo", mappedBy="cargoRel")
+     */
+    protected $requisitosCargosCargoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuCargoSupervigilancia", inversedBy="cargosCargoSupervigilanciaRel")
+     * @ORM\JoinColumn(name="codigo_cargo_supervigilancia_fk", referencedColumnName="codigo_cargo_supervigilancia_pk")
+     */
+    protected $cargoSupervigilanciaRel;
 
     /**
      * @return array
@@ -103,6 +119,22 @@ class RhuCargo
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCargoSupervigilanciaFk()
+    {
+        return $this->codigoCargoSupervigilanciaFk;
+    }
+
+    /**
+     * @param mixed $codigoCargoSupervigilanciaFk
+     */
+    public function setCodigoCargoSupervigilanciaFk($codigoCargoSupervigilanciaFk): void
+    {
+        $this->codigoCargoSupervigilanciaFk = $codigoCargoSupervigilanciaFk;
     }
 
     /**
@@ -199,5 +231,37 @@ class RhuCargo
     public function setExamenesCargoRel($examenesCargoRel): void
     {
         $this->examenesCargoRel = $examenesCargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequisitosCargosCargoRel()
+    {
+        return $this->requisitosCargosCargoRel;
+    }
+
+    /**
+     * @param mixed $requisitosCargosCargoRel
+     */
+    public function setRequisitosCargosCargoRel($requisitosCargosCargoRel): void
+    {
+        $this->requisitosCargosCargoRel = $requisitosCargosCargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargoSupervigilanciaRel()
+    {
+        return $this->cargoSupervigilanciaRel;
+    }
+
+    /**
+     * @param mixed $cargoSupervigilanciaRel
+     */
+    public function setCargoSupervigilanciaRel($cargoSupervigilanciaRel): void
+    {
+        $this->cargoSupervigilanciaRel = $cargoSupervigilanciaRel;
     }
 }

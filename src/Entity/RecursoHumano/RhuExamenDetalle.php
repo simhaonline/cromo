@@ -28,11 +28,6 @@ class RhuExamenDetalle
     private $codigoExamenFk;
 
     /**
-     * @ORM\Column(name="codigo_examen_lista_precio_fk", type="integer", nullable=true)
-     */
-    private $codigoExamenListaPrecioFk;
-
-    /**
      * @ORM\Column(name="codigo_examen_tipo_fk", type="integer", nullable=true)
      */
     private $codigoExamenTipoFk;
@@ -82,12 +77,6 @@ class RhuExamenDetalle
      * @ORM\JoinColumn(name="codigo_examen_fk", referencedColumnName="codigo_examen_pk")
      */
     protected $examenRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="RhuExamenListaPrecio", inversedBy="examenDetallesListaPrecioRel")
-     * @ORM\JoinColumn(name="codigo_examen_lista_precio_fk", referencedColumnName="codigo_examen_lista_precio_pk")
-     */
-    protected $examenListaPrecioRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuExamenTipo", inversedBy="examenDetallesExamenTipoRel")
@@ -141,22 +130,6 @@ class RhuExamenDetalle
     public function setCodigoExamenFk($codigoExamenFk): void
     {
         $this->codigoExamenFk = $codigoExamenFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoExamenListaPrecioFk()
-    {
-        return $this->codigoExamenListaPrecioFk;
-    }
-
-    /**
-     * @param mixed $codigoExamenListaPrecioFk
-     */
-    public function setCodigoExamenListaPrecioFk($codigoExamenListaPrecioFk): void
-    {
-        $this->codigoExamenListaPrecioFk = $codigoExamenListaPrecioFk;
     }
 
     /**
@@ -317,22 +290,6 @@ class RhuExamenDetalle
     public function setExamenRel($examenRel): void
     {
         $this->examenRel = $examenRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getExamenListaPrecioRel()
-    {
-        return $this->examenListaPrecioRel;
-    }
-
-    /**
-     * @param mixed $examenListaPrecioRel
-     */
-    public function setExamenListaPrecioRel($examenListaPrecioRel): void
-    {
-        $this->examenListaPrecioRel = $examenListaPrecioRel;
     }
 
     /**

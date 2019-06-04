@@ -61,9 +61,9 @@ class ExamenType extends AbstractType
             {"campo":"cargoRel.nombre",       "tipo":"texto",  "ayuda":"Nombre del cargo",                   "titulo":"CARGO", "relacion":""},
             {"campo":"cobro",                "tipo":"texto",   "ayuda":"Cobro",                              "titulo":"C"},
             {"campo":"vrTotal",              "tipo":"texto",   "ayuda":"",                                   "titulo":"TOTAL"},
-            {"campo":"estadoAutorizado",     "tipo":"texto",   "ayuda":"Autorizado",                         "titulo":"AUT"},
-            {"campo":"estadoAprobado",       "tipo":"texto",   "ayuda":"Aprobado",                           "titulo":"APR"},
-            {"campo":"estadoAnulado",         "tipo":"texto",  "ayuda":"Anulado",                            "titulo":"ANU"}
+            {"campo":"estadoAutorizado",     "tipo":"bool",   "ayuda":"Autorizado",                         "titulo":"AUT"},
+            {"campo":"estadoAprobado",       "tipo":"bool",   "ayuda":"Aprobado",                           "titulo":"APR"},
+            {"campo":"estadoAnulado",         "tipo":"bool",  "ayuda":"Anulado",                            "titulo":"ANU"}
         ]';
         return $campos;
     }

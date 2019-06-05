@@ -702,9 +702,13 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.vrFlete')
             ->addSelect('f.vrManejo')
             ->addSelect('f.vrTotal')
+            ->addSelect('f.codigoOperacionFk')
             ->addSelect('ft.codigoCuentaClienteFk')
             ->addSelect('ft.codigoComprobanteFk')
             ->addSelect('ft.prefijo')
+            ->addSelect('ft.contabilizarIngresoInicialFijo')
+            ->addSelect('ft.codigoCuentaIngresoInicialFijoFleteFk')
+            ->addSelect('ft.codigoCuentaIngresoInicialFijoManejoFk')
             ->addSelect('o.codigoCentroCostoFk')
             ->addSelect('f.codigoFacturaReferenciaFk')
             ->addSelect('f.codigoFacturaClaseFk')
@@ -726,19 +730,19 @@ class TteFacturaRepository extends ServiceEntityRepository
                     if($arFactura['estadoAprobado'] == 1 && $arFactura['estadoContabilizado'] == 0) {
                         $arComprobante = $em->getRepository(FinComprobante::class)->find($arFactura['codigoComprobanteFk']);
                         $arTercero = $em->getRepository(TteCliente::class)->terceroFinanciero($arFactura['codigoClienteFk']);
-                        $arIngresos = $em->getRepository(TteFacturaDetalle::class)->contabilizarIngreso($arFactura['codigoFacturaPk']);
-                        foreach ($arIngresos as $arIngreso) {
-                            $arOperacion = $em->getRepository(TteOperacion::class)->find($arIngreso['codigoOperacionIngresoFk']);
-                            $arCentroCosto = null;
-                            if($arOperacion->getCodigoCentroCostoFk()) {
-                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arOperacion->getCodigoCentroCostoFk());
-                            }
 
+                        //Ingresos flete y manejo
+                        if($arFactura['contabilizarIngresoInicialFijo']) {
+                            $arOperacion = $em->getRepository(TteOperacion::class)->find($arFactura['codigoOperacionFk']);
+                            $arCentroCosto = null;
+                            if($arFactura['codigoCentroCostoFk']) {
+                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arFactura['codigoCentroCostoFk']);
+                            }
                             //Cuenta del ingreso flete
-                            if($arOperacion->getCodigoCuentaIngresoFleteFk()) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arOperacion->getCodigoCuentaIngresoFleteFk());
+                            if($arFactura['codigoCuentaIngresoInicialFijoFleteFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaIngresoInicialFijoFleteFk']);
                                 if(!$arCuenta) {
-                                    $error = "No se encuentra la cuenta del flete " . $arOperacion->getCodigoCuentaIngresoFleteFk();
+                                    $error = "No se encuentra la cuenta del flete " . $arFactura['codigoCuentaIngresoInicialFijoFleteFk'];
                                     break;
                                 }
                                 $arRegistro = new FinRegistro();
@@ -750,10 +754,10 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setNumero($arFactura['numero']);
                                 $arRegistro->setFecha($arFactura['fecha']);
                                 if($arFactura['codigoFacturaClaseFk'] == 'FA') {
-                                    $arRegistro->setVrCredito($arIngreso['vrFlete']);
+                                    $arRegistro->setVrCredito($arFactura['vrFlete']);
                                     $arRegistro->setNaturaleza('C');
                                 } else {
-                                    $arRegistro->setVrDebito($arIngreso['vrFlete']);
+                                    $arRegistro->setVrDebito($arFactura['vrFlete']);
                                     $arRegistro->setNaturaleza('D');
                                 }
                                 if($arCuenta->getExigeDocumentoReferencia()) {
@@ -767,15 +771,15 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
                                 $em->persist($arRegistro);
                             } else {
-                                $error = "La operacion no tiene configurada una cuenta de ingreso para flete " . " en el documento numero " . $arFactura['numero'];
+                                $error = "En el tipo de factura no esta configurada configurada una cuenta de ingreso para flete fijo en el documento numero " . $arFactura['numero'];
                                 break;
                             }
 
                             //Cuenta del ingreso manejo
-                            if($arOperacion->getCodigoCuentaIngresoManejoFk()) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arOperacion->getCodigoCuentaIngresoManejoFk());
+                            if($arFactura['codigoCuentaIngresoInicialFijoManejoFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaIngresoInicialFijoManejoFk']);
                                 if(!$arCuenta) {
-                                    $error = "No se encuentra la cuenta del manejo " . $arOperacion->getCodigoCuentaIngresoManejoFk();
+                                    $error = "No se encuentra la cuenta del manejo " . $arFactura['codigoCuentaIngresoInicialFijoManejoFk'];
                                     break;
                                 }
                                 $arRegistro = new FinRegistro();
@@ -787,10 +791,10 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setNumero($arFactura['numero']);
                                 $arRegistro->setFecha($arFactura['fecha']);
                                 if($arFactura['codigoFacturaClaseFk'] == 'FA') {
-                                    $arRegistro->setVrCredito($arIngreso['vrManejo']);
+                                    $arRegistro->setVrCredito($arFactura['vrManejo']);
                                     $arRegistro->setNaturaleza('C');
                                 } else {
-                                    $arRegistro->setVrDebito($arIngreso['vrManejo']);
+                                    $arRegistro->setVrDebito($arFactura['vrManejo']);
                                     $arRegistro->setNaturaleza('D');
                                 }
                                 if($arCuenta->getExigeDocumentoReferencia()) {
@@ -804,12 +808,96 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
                                 $em->persist($arRegistro);
                             } else {
-                                $error = "La operacion no tiene configurada una cuenta de ingreso para manejo" . " en el documento numero " . $arFactura['numero'];
+                                $error = "En el tipo de factura no esta configurada configurada una cuenta de ingreso para manejo fijo en el documento numero " . $arFactura['numero'];
                                 break;
+                            }
+                        } else {
+                            $arIngresos = $em->getRepository(TteFacturaDetalle::class)->contabilizarIngreso($arFactura['codigoFacturaPk']);
+                            foreach ($arIngresos as $arIngreso) {
+                                $arOperacion = $em->getRepository(TteOperacion::class)->find($arIngreso['codigoOperacionIngresoFk']);
+                                $arCentroCosto = null;
+                                if($arOperacion->getCodigoCentroCostoFk()) {
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arOperacion->getCodigoCentroCostoFk());
+                                }
+
+                                //Cuenta del ingreso flete
+                                if($arOperacion->getCodigoCuentaIngresoFleteFk()) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arOperacion->getCodigoCuentaIngresoFleteFk());
+                                    if(!$arCuenta) {
+                                        $error = "No se encuentra la cuenta del flete " . $arOperacion->getCodigoCuentaIngresoFleteFk();
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
+                                    $arRegistro->setNumero($arFactura['numero']);
+                                    $arRegistro->setFecha($arFactura['fecha']);
+                                    if($arFactura['codigoFacturaClaseFk'] == 'FA') {
+                                        $arRegistro->setVrCredito($arIngreso['vrFlete']);
+                                        $arRegistro->setNaturaleza('C');
+                                    } else {
+                                        $arRegistro->setVrDebito($arIngreso['vrFlete']);
+                                        $arRegistro->setNaturaleza('D');
+                                    }
+                                    if($arCuenta->getExigeDocumentoReferencia()) {
+                                        if($arFactura['codigoFacturaClaseFk'] == "FA") {
+                                            $arRegistro->setNumeroReferencia($arFactura['numero']);
+                                            $arRegistro->setNumeroReferenciaPrefijo($arFactura['prefijo']);
+                                        }
+                                    }
+                                    $arRegistro->setDescripcion('INGRESO FLETE CLIENTE');
+                                    $arRegistro->setCodigoModeloFk('TteFactura');
+                                    $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "La operacion no tiene configurada una cuenta de ingreso para flete " . " en el documento numero " . $arFactura['numero'];
+                                    break;
+                                }
+
+                                //Cuenta del ingreso manejo
+                                if($arOperacion->getCodigoCuentaIngresoManejoFk()) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arOperacion->getCodigoCuentaIngresoManejoFk());
+                                    if(!$arCuenta) {
+                                        $error = "No se encuentra la cuenta del manejo " . $arOperacion->getCodigoCuentaIngresoManejoFk();
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
+                                    $arRegistro->setNumero($arFactura['numero']);
+                                    $arRegistro->setFecha($arFactura['fecha']);
+                                    if($arFactura['codigoFacturaClaseFk'] == 'FA') {
+                                        $arRegistro->setVrCredito($arIngreso['vrManejo']);
+                                        $arRegistro->setNaturaleza('C');
+                                    } else {
+                                        $arRegistro->setVrDebito($arIngreso['vrManejo']);
+                                        $arRegistro->setNaturaleza('D');
+                                    }
+                                    if($arCuenta->getExigeDocumentoReferencia()) {
+                                        if($arFactura['codigoFacturaClaseFk'] == "FA") {
+                                            $arRegistro->setNumeroReferencia($arFactura['numero']);
+                                            $arRegistro->setNumeroReferenciaPrefijo($arFactura['prefijo']);
+                                        }
+                                    }
+                                    $arRegistro->setDescripcion('INGRESO MANEJO CLIENTE');
+                                    $arRegistro->setCodigoModeloFk('TteFactura');
+                                    $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "La operacion no tiene configurada una cuenta de ingreso para manejo" . " en el documento numero " . $arFactura['numero'];
+                                    break;
+                                }
                             }
                         }
 
 
+                        //Otros ingresos
                         $arFacturaDetalleConceptos = $em->getRepository(TteFacturaDetalleConcepto::class)->findBy(array('codigoFacturaFk' => $arFactura['codigoFacturaPk']));
                         if($arFacturaDetalleConceptos) {
                             $arCentroCosto = null;

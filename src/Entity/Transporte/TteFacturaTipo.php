@@ -82,6 +82,22 @@ class TteFacturaTipo
     private $operacionComercial = 0;
 
     /**
+     * Para imputar el ingreso a cuentas fijas para este tipo de factura no por CO
+     * @ORM\Column(name="contabilizar_ingreso_inicial_fijo", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $contabilizarIngresoInicialFijo = false;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_ingreso_inicial_fijo_flete_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIngresoInicialFijoFleteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_ingreso_inicial_fijo_manejo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIngresoInicialFijoManejoFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
@@ -350,6 +366,54 @@ class TteFacturaTipo
     public function setIntermediacionesDetallesFacturaTipoRel( $intermediacionesDetallesFacturaTipoRel ): void
     {
         $this->intermediacionesDetallesFacturaTipoRel = $intermediacionesDetallesFacturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContabilizarIngresoInicialFijo()
+    {
+        return $this->contabilizarIngresoInicialFijo;
+    }
+
+    /**
+     * @param mixed $contabilizarIngresoInicialFijo
+     */
+    public function setContabilizarIngresoInicialFijo($contabilizarIngresoInicialFijo): void
+    {
+        $this->contabilizarIngresoInicialFijo = $contabilizarIngresoInicialFijo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIngresoInicialFijoFleteFk()
+    {
+        return $this->codigoCuentaIngresoInicialFijoFleteFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIngresoInicialFijoFleteFk
+     */
+    public function setCodigoCuentaIngresoInicialFijoFleteFk($codigoCuentaIngresoInicialFijoFleteFk): void
+    {
+        $this->codigoCuentaIngresoInicialFijoFleteFk = $codigoCuentaIngresoInicialFijoFleteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIngresoInicialFijoManejoFk()
+    {
+        return $this->codigoCuentaIngresoInicialFijoManejoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIngresoInicialFijoManejoFk
+     */
+    public function setCodigoCuentaIngresoInicialFijoManejoFk($codigoCuentaIngresoInicialFijoManejoFk): void
+    {
+        $this->codigoCuentaIngresoInicialFijoManejoFk = $codigoCuentaIngresoInicialFijoManejoFk;
     }
 
 

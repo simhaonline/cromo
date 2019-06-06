@@ -73,7 +73,7 @@ class FacturaController extends Controller
                 $respuesta = $this->getDoctrine()->getRepository(TteFactura::class)->contabilizar($arr);
             }
         }
-        $arFacturas = $paginator->paginate($em->getRepository(TteFactura::class)->listaContabilizar(), $request->query->getInt('page', 1),100);
+        $arFacturas = $paginator->paginate($em->getRepository(TteFactura::class)->listaContabilizar(), $request->query->getInt('page', 1),500);
         return $this->render('transporte/proceso/contabilidad/factura/lista.html.twig',
             ['arFacturas' => $arFacturas,
                 'form' => $form->createView()]);

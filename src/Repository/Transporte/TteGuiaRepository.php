@@ -37,7 +37,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Mensajes;
-
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\OptimisticLockException;
 class TteGuiaRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -2980,101 +2981,110 @@ class TteGuiaRepository extends ServiceEntityRepository
         $flete = $raw['vrFlete']?? 0;
         $manejo = $raw['vrManejo']?? 0;
         $numero = $raw['numero']?? null;
-        $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($raw['codigoGuiaTipoFk']);
-        $validarNumero = $this->apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia);
-        if($validarNumero['mensaje'] == "") {
-            $numero = $validarNumero['numero'];
-            $arOperacion = $em->getRepository(TteOperacion::class)->find($raw['codigoOperacionIngresoFk']);
-            $arCliente = $em->getRepository(TteCliente::class)->find($raw['codigoClienteFk']);
-            $arCondicion = $em->getRepository(TteCondicion::class)->find($raw['codigoCondicionFk']);
-            $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadOrigenFk']);
-            $arCiudadDestino = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadDestinoFk']);
-            $arProducto = $em->getRepository(TteProducto::class)->find($raw['codigoProductoFk']);
-            $arEmpaque = $em->getRepository(TteEmpaque::class)->find($raw['codigoEmpaqueFk']);
-            $arServicio = $em->getRepository(TteServicio::class)->find($raw['codigoServicioFk']);
-            $arRuta = $em->getRepository(TteRuta::class)->find($raw['codigoRutaFk']);
-            $arZona = $em->getRepository(TteZona::class)->find($raw['codigoZonaFk']);
-            $arGuia = new TteGuia();
-            $numeroFactura = null;
-            if($arGuiaTipo->getCortesia()) {
-                $flete = 0;
-                $manejo = 0;
-                $arGuia->setCortesia(1);
-            }
-            if($arGuiaTipo->getFactura()) {
-                $numeroFactura = $arGuiaTipo->getConsecutivoFactura();
-                $arGuiaTipo->setConsecutivoFactura($arGuiaTipo->getConsecutivoFactura()+1);
-                $em->persist($arGuiaTipo);
-                $arGuia->setFactura(1);
-            }
+        $em->getConnection()->beginTransaction();
+        try {
+            $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($raw['codigoGuiaTipoFk'], LockMode::PESSIMISTIC_READ);
+            $validarNumero = $this->apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia);
+            if($validarNumero['mensaje'] == "") {
+                $numero = $validarNumero['numero'];
+                $arOperacion = $em->getRepository(TteOperacion::class)->find($raw['codigoOperacionIngresoFk']);
+                $arCliente = $em->getRepository(TteCliente::class)->find($raw['codigoClienteFk']);
+                $arCondicion = $em->getRepository(TteCondicion::class)->find($raw['codigoCondicionFk']);
+                $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadOrigenFk']);
+                $arCiudadDestino = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadDestinoFk']);
+                $arProducto = $em->getRepository(TteProducto::class)->find($raw['codigoProductoFk']);
+                $arEmpaque = $em->getRepository(TteEmpaque::class)->find($raw['codigoEmpaqueFk']);
+                $arServicio = $em->getRepository(TteServicio::class)->find($raw['codigoServicioFk']);
+                $arRuta = $em->getRepository(TteRuta::class)->find($raw['codigoRutaFk']);
+                $arZona = $em->getRepository(TteZona::class)->find($raw['codigoZonaFk']);
+                $arGuia = new TteGuia();
+                $numeroFactura = null;
+                if($arGuiaTipo->getCortesia()) {
+                    $flete = 0;
+                    $manejo = 0;
+                    $arGuia->setCortesia(1);
+                }
+                if($arGuiaTipo->getFactura()) {
+                    $numeroFactura = $arGuiaTipo->getConsecutivoFactura();
+                    $arGuiaTipo->setConsecutivoFactura($arGuiaTipo->getConsecutivoFactura()+1);
+                    $em->persist($arGuiaTipo);
+                    $arGuia->setFactura(1);
+                }
 
-            if($numeroUnicoGuia == "S") {
-                $arGuia->setCodigoGuiaPk($numero);
+                if($numeroUnicoGuia == "S") {
+                    $arGuia->setCodigoGuiaPk($numero);
+                } else {
+                    $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
+                    $arGuia->setCodigoGuiaPk($arConsecutivo->getGuia());
+                    $arConsecutivo->setGuia($arConsecutivo->getGuia() + 1);
+                    $em->persist($arConsecutivo);
+                }
+                if(!$arGuiaTipo->getExigeNumero()) {
+                    $arGuiaTipo->setConsecutivo($arGuiaTipo->getConsecutivo() + 1);
+                    $em->persist($arGuiaTipo);
+                }
+                if($arCiudadDestino->getReexpedicion()) {
+                    $arGuia->setReexpedicion(1);
+                }
+                $arGuia->setGuiaTipoRel($arGuiaTipo);
+                $arGuia->setOperacionIngresoRel($arOperacion);
+                $arGuia->setOperacionCargoRel($arOperacion);
+                $arGuia->setNumero($numero);
+                $arGuia->setClienteRel($arCliente);
+                $arGuia->setCondicionRel($arCondicion);
+                $arGuia->setCiudadOrigenRel($arCiudadOrigen);
+                $arGuia->setCiudadDestinoRel($arCiudadDestino);
+                $arGuia->setProductoRel($arProducto);
+                $arGuia->setEmpaqueRel($arEmpaque);
+                $arGuia->setServicioRel($arServicio);
+                $arGuia->setRutaRel($arRuta);
+                $arGuia->setDocumentoCliente($raw['documentoCliente']);
+                $arGuia->setRelacionCliente($raw['relacionCliente']);
+                $arGuia->setRemitente($raw['remitente']);
+                $arGuia->setNombreDestinatario($raw['nombreDestinatario']);
+                $arGuia->setDireccionDestinatario($raw['direccionDestinatario']);
+                $arGuia->setTelefonoDestinatario($raw['telefonoDestinatario']);
+                $arGuia->setFechaIngreso(new \DateTime('now'));
+                $arGuia->setPesoReal($raw['pesoReal']);
+                $arGuia->setPesoVolumen($raw['pesoVolumen']);
+                $arGuia->setPesoFacturado($raw['pesoFacturado']);
+                $arGuia->setUnidades($raw['unidades']);
+                $arGuia->setVrRecaudo($raw['vrRecaudo']);
+                $arGuia->setVrDeclara($raw['vrDeclara']);
+                $arGuia->setVrFlete($flete);
+                $arGuia->setVrManejo($manejo);
+                $arGuia->setVrCobroEntrega($raw['vrCobroEntrega']);
+                $arGuia->setVrCostoReexpedicion($raw['vrCostoReexpedicion']);
+                $arGuia->setEstadoAprobado(1);
+                $arGuia->setEstadoAutorizado(1);
+                $arGuia->setEstadoImpreso(1);
+                $arGuia->setUsuario($raw['usuario']);
+                $arGuia->setEmpaqueReferencia($raw['empaqueReferencia']);
+                $arGuia->setTipoLiquidacion($raw['tipoLiquidacion']);
+                $arGuia->setComentario($raw['comentario']);
+                $arGuia->setNumeroFactura($numeroFactura);
+                $arGuia->setMercanciaPeligrosa($raw['mercanciaPeligrosa']);
+                $arGuia->setOrdenRuta($raw['ordenRuta']);
+                $arGuia->setZonaRel($arZona);
+                $arGuia->setCodigoDestinatarioFk($raw['codigoDestinatarioFk']);
+                $em->persist($arGuia);
+                $em->flush();
+                $em->getConnection()->commit();
+                return [
+                    "numero" => $arGuia->getNumero(),
+                    "codigoGuiaPk" => $arGuia->getCodigoGuiaPk(),
+                    "numeroFactura" => $arGuia->getNumeroFactura()
+                ];
+
             } else {
-                $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
-                $arGuia->setCodigoGuiaPk($arConsecutivo->getGuia());
-                $arConsecutivo->setGuia($arConsecutivo->getGuia() + 1);
-                $em->persist($arConsecutivo);
+                return ["error" => $validarNumero['mensaje']];
             }
-            if(!$arGuiaTipo->getExigeNumero()) {
-                $arGuiaTipo->setConsecutivo($arGuiaTipo->getConsecutivo() + 1);
-                $em->persist($arGuiaTipo);
-            }
-            if($arCiudadDestino->getReexpedicion()) {
-                $arGuia->setReexpedicion(1);
-            }
-            $arGuia->setGuiaTipoRel($arGuiaTipo);
-            $arGuia->setOperacionIngresoRel($arOperacion);
-            $arGuia->setOperacionCargoRel($arOperacion);
-            $arGuia->setNumero($numero);
-            $arGuia->setClienteRel($arCliente);
-            $arGuia->setCondicionRel($arCondicion);
-            $arGuia->setCiudadOrigenRel($arCiudadOrigen);
-            $arGuia->setCiudadDestinoRel($arCiudadDestino);
-            $arGuia->setProductoRel($arProducto);
-            $arGuia->setEmpaqueRel($arEmpaque);
-            $arGuia->setServicioRel($arServicio);
-            $arGuia->setRutaRel($arRuta);
-            $arGuia->setDocumentoCliente($raw['documentoCliente']);
-            $arGuia->setRelacionCliente($raw['relacionCliente']);
-            $arGuia->setRemitente($raw['remitente']);
-            $arGuia->setNombreDestinatario($raw['nombreDestinatario']);
-            $arGuia->setDireccionDestinatario($raw['direccionDestinatario']);
-            $arGuia->setTelefonoDestinatario($raw['telefonoDestinatario']);
-            $arGuia->setFechaIngreso(new \DateTime('now'));
-            $arGuia->setPesoReal($raw['pesoReal']);
-            $arGuia->setPesoVolumen($raw['pesoVolumen']);
-            $arGuia->setPesoFacturado($raw['pesoFacturado']);
-            $arGuia->setUnidades($raw['unidades']);
-            $arGuia->setVrRecaudo($raw['vrRecaudo']);
-            $arGuia->setVrDeclara($raw['vrDeclara']);
-            $arGuia->setVrFlete($flete);
-            $arGuia->setVrManejo($manejo);
-            $arGuia->setVrCobroEntrega($raw['vrCobroEntrega']);
-            $arGuia->setVrCostoReexpedicion($raw['vrCostoReexpedicion']);
-            $arGuia->setEstadoAprobado(1);
-            $arGuia->setEstadoAutorizado(1);
-            $arGuia->setEstadoImpreso(1);
-            $arGuia->setUsuario($raw['usuario']);
-            $arGuia->setEmpaqueReferencia($raw['empaqueReferencia']);
-            $arGuia->setTipoLiquidacion($raw['tipoLiquidacion']);
-            $arGuia->setComentario($raw['comentario']);
-            $arGuia->setNumeroFactura($numeroFactura);
-            $arGuia->setMercanciaPeligrosa($raw['mercanciaPeligrosa']);
-            $arGuia->setOrdenRuta($raw['ordenRuta']);
-            $arGuia->setZonaRel($arZona);
-            $arGuia->setCodigoDestinatarioFk($raw['codigoDestinatarioFk']);
-            $em->persist($arGuia);
-            $em->flush();
-            return [
-                "numero" => $arGuia->getNumero(),
-                "codigoGuiaPk" => $arGuia->getCodigoGuiaPk(),
-                "numeroFactura" => $arGuia->getNumeroFactura()
-            ];
-
-        } else {
-            return ["error" => $validarNumero['mensaje']];
+        } catch (Exception $e) {
+            $em->getConnection()->rollBack();
+            return ["error" => $e->getMessage()];
+            //throw $e;
         }
+
     }
 
     public function apiWindowsDetalle($raw) {

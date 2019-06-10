@@ -51,7 +51,7 @@ class Remision2 extends \FPDF
         $this->Cell(35, 5.333333, "CODIGO: F-CO-05", 0, 0, 'L', 1);
         $this->SetXY(165, 23.5);
         $this->SetFont('Arial', 'B', 9);
-        $this->Cell(35, 5.333333, "VERSION: 05", 0, 0, 'L', 1);
+        $this->Cell(35, 5.333333, "VERSION: 06", 0, 0, 'L', 1);
         $this->SetXY(165, 29);
         $this->SetFont('Arial', 'B', 9);
         $this->Cell(35, 5.333333, "FECHA: 03/18/16", 0, 0, 'L', 1);

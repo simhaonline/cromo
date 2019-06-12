@@ -49,4 +49,13 @@ class TteOperacionRepository extends ServiceEntityRepository
         return $array;
     }
 
+
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TteOperacion::class,'o')
+            ->select('o');
+        return $queryBuilder;
+
+    }
 }

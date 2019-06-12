@@ -28,7 +28,6 @@ class CiudadController extends ControllerListenerGeneral
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-
         $formBotonera = BaseController::botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();

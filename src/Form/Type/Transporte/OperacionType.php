@@ -30,8 +30,14 @@ class OperacionType extends AbstractType
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('codigoCuentaIngresoFleteFk',TextType::class,['required' => false,'label' => 'Cuenta flete (Ing):'])
             ->add('codigoCuentaIngresoManejoFk',TextType::class,['required' => false,'label' => 'Cuenta manejo (Ing):'])
-            ->add('codigoCuentaIngresoManejoFk',TextType::class,['required' => false,'label' => 'Cuenta manejo (Ing):'])
             ->add('codigoCentroCostoFk',TextType::class,['required' => false,'label' => 'Centro costo:'])
+            ->add('codigoCuentaDespachoFleteFk',TextType::class,['required' => false,'label' => 'Cuenta manejo (Ing):'])
+            ->add('codigoCuentaDespachoRetencionFuenteFk',TextType::class,['required' => false,'label' => 'Cuenta despacho retencion ruente'])
+            ->add('codigoCuentaDespachoIndustriaComercioFk',TextType::class,['required' => false,'label' => 'Cuenta despacho industria comercio'])
+            ->add('codigoCuentaDespachoSeguridadFk',TextType::class,['required' => false,'label' => 'Cuenta despacho deguridad'])
+            ->add('codigoCuentaDespachoEstampillaFk',TextType::class,['required' => false,'label' => 'Cuenta despacho estampilla'])
+            ->add('codigoCuentaDespachoPapeleriaFk',TextType::class,['required' => false,'label' => 'Cuenta despacho papeleria'])
+            ->add('codigoCuentaDespachoAnticipoFk',TextType::class,['required' => false,'label' => 'Cuenta despacho anticipo'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

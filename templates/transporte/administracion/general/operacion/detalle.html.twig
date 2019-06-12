@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float: left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_administracion_general_operacion_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo">CÓDIGO OPERACIÓN:</td>
+            <td class="td-in-well">{{ arOperacion.codigoOperacionPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arOperacion.nombre}}</td>
+            <td class="titulo">CIUDAD:</td>
+{#            <td class="td-in-well">{{ arOperacion.ciudadRel.nombre }}</td>#}
+        </tr>
+        <tr>
+            <td class="titulo">INGRESO FLETE</td>
+            <td class="td-in-well">{{ arOperacion.codigoCuentaIngresoFleteFk }}</td>
+            <td class="titulo">INGRESO MANEJO</td>
+            <td class="td-in-well">{{ arOperacion.codigoCuentaIngresoManejoFk}}</td>
+            <td class="titulo">CENTRO COSTO:</td>
+            <td class="td-in-well">{{ arOperacion.codigoCentroCostoFk}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CUENTA DESPECHO FLETE</td>
+            <td class="td-in-well">{{ arOperacion.codigoCuentaDespachoFleteFk}}</td>
+            <td class="titulo">CUENTA DESPECHO RETENCIÓN FUENTE</td>
+            <td class="td-in-well">{{ arOperacion.codigoCuentaDespachoRetencionFuenteFk }}</td>
+            <td class="titulo">CUENTA DESPECHO INDUSTRIA Y COMERCIO:</td>
+            <td class="td-in-well">{{ arOperacion.codigoCuentaDespachoIndustriaComercioFk }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CUENTA DESPECHO SEGURIDAD</td>
+            <td class="td-in-well">{{ arOperacion.codigoCuentaDespachoSeguridadFk }}</td>
+            <td class="titulo">CUENTA DESPECHO CARGUE</td>
+            <td class="td-in-well">{{ arOperacion.codigoCuentaDespachoCargueFk }}</td>
+            <td class="titulo">CUENTA DESPECHO ESTAMPILLA</td>
+            <td class="td-in-well">{{ arOperacion.codigoCuentaDespachoEstampillaFk }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CUENTA DESPECHO PAPELERIA</td>
+            <td class="td-in-well">{{ arOperacion.codigoCuentaDespachoPapeleriaFk }}</td>
+            <td class="titulo">CUENTA DESPECHO ANTICIPO</td>
+            <td class="td-in-well">{{ arOperacion.codigoCuentaDespachoAnticipoFk }}</td>
+        </tr>
+    </table>
+{% endblock %}

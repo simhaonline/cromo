@@ -19,55 +19,72 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.ciudadRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
+                <label class="col-sm-2 control-label">Centro costo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoCentroCostoFk) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Cuentas ventas (contables) </div>
+        <div class="panel-body">
+
+            <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Cuenta flete (Ing):</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCuentaIngresoFleteFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Código cuenta ingreso manejo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoCuentaIngresoManejoFk, { 'attr': {'class': 'form-control'} }) }}
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Cuentas despachos (contables)</div>
+        <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Cuenta despacho retencion ruente:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Retencion fuente:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCuentaDespachoRetencionFuenteFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Cuenta despacho industria comercio:</label>
+                <label class="col-sm-2 control-label">Industria comercio:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCuentaDespachoIndustriaComercioFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Cuenta despacho seguridad:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Dcto seguridad:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCuentaDespachoSeguridadFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Cuenta despacho estampilla:</label>
+                <label class="col-sm-2 control-label">Dcto estampilla:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCuentaDespachoEstampillaFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Código cuenta despacho papeleria:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Dcto papeleria:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCuentaDespachoPapeleriaFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Cuenta despacho anticipo:</label>
+                <label class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.codigoCuentaDespachoAnticipoFk, { 'attr': {'class': 'form-control'} }) }}
+
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Código cuenta despacho flete:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Flete:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCuentaDespachoFleteFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Centro costo:</label>
+                <label class="col-sm-2 control-label">Anticipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.codigoCentroCostoFk, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Código cuenta ingreso manejo</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.codigoCuentaIngresoManejoFk, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.codigoCuentaDespachoAnticipoFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>
@@ -77,7 +94,6 @@
             {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         </div>
     </div>
-
     {{ form_end(form) }}
 
 {% endblock %}

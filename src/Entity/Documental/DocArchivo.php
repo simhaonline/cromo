@@ -73,6 +73,11 @@ class DocArchivo
     private $comentarios;
 
     /**
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
+     */
+    private $usuario;
+
+    /**
      * @return mixed
      */
     public function getCodigoArchivoPk()
@@ -246,6 +251,22 @@ class DocArchivo
     public function setComentarios($comentarios): void
     {
         $this->comentarios = $comentarios;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
 

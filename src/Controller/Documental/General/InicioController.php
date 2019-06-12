@@ -83,6 +83,7 @@ class InicioController extends Controller
                     $arArchivo->setTipo($objArchivo->getClientMimeType());
                     $arArchivo->setCodigoArchivoTipoFk($tipo);
                     $arArchivo->setCodigo($codigo);
+                    $arArchivo->setUsuario($this->getUser()->getUsername());
                     $dateFecha = new \DateTime('now');
                     $arArchivo->setFecha($dateFecha);
                     $arArchivo->setDescripcion($form->get('descripcion')->getData());

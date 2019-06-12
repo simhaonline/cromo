@@ -35,6 +35,7 @@ class DocArchivoRepository extends ServiceEntityRepository
             ->addSelect('a.nombre')
             ->addSelect('a.fecha')
             ->addSelect('a.descripcion')
+            ->addSelect('a.usuario')
             ->where("a.codigoArchivoTipoFk = '" . $tipo . "'")
             ->andWhere("a.codigo = '" . $codigo . "'");
         return $queryBuilder;

@@ -2235,6 +2235,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 if ($arGuia->getEstadoAnulado() == 0) {
                     if ($arGuia->getCodigoClienteFk() == $arCumplido->getCodigoClienteFk()) {
                         $arGuia->setCumplidoRel($arCumplido);
+                        $arGuia->setFechaCumplido(new \DateTime('now'));
                         $arGuia->setEstadoCumplido(1);
                         $em->persist($arGuia);
 

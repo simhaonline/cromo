@@ -108,6 +108,7 @@ class TteCumplidoRepository extends ServiceEntityRepository
                 foreach ($arrGuias AS $codigoGuia) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
                     $arGuia->setCumplidoRel(null);
+                    $arGuia->setFechaCumplido(null);
                     $arGuia->setEstadoCumplido(0);
                     $em->persist($arGuia);
                 }
@@ -126,11 +127,17 @@ class TteCumplidoRepository extends ServiceEntityRepository
 
     public function aprobar($arCumplido)
     {
+        $em = $this->getEntityManager();
         $arCumplido->setEstadoAprobado(1);
         $fecha = new \DateTime('now');
         $arCumplido->setFecha($fecha);
-        $this->getEntityManager()->persist($arCumplido);
-        $this->getEntityManager()->flush();
+        $em->persist($arCumplido);
+        $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoCumplido = 1, g.fechaCumplido=:fecha 
+                      WHERE g.codigoCumplidoFk = :codigoCumplido')
+            ->setParameter('codigoCumplido', $arCumplido->getCodigoCumplidoPk())
+            ->setParameter('fecha', $fecha->format('Y-m-d H:i'));
+        $query->execute();
+        $em->flush();
     }
 
     public function desAutorizar($arCumplido)

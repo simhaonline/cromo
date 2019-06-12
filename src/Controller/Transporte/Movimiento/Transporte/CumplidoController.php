@@ -143,6 +143,7 @@ class CumplidoController extends ControllerListenerGeneral
                 foreach ($arrSeleccionados AS $codigo) {
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigo);
                     $arGuia->setCumplidoRel($arCumplido);
+                    $arGuia->setFechaCumplido(new \DateTime('now'));
                     $arGuia->setEstadoCumplido(1);
                     $em->persist($arGuia);
                 }

@@ -47,6 +47,46 @@ class TteOperacion
     private $codigoCentroCostoFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_despacho_flete_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDespachoFleteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_despacho_retencion_fuente_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDespachoRetencionFuenteFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_despacho_industria_comercio_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDespachoIndustriaComercioFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_despacho_seguridad_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDespachoSeguridadFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_despacho_cargue_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDespachoCargueFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_despacho_estampilla_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDespachoEstampillaFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_despacho_papeleria_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDespachoPapeleriaFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_despacho_anticipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDespachoAnticipoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="operacionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -393,6 +433,134 @@ class TteOperacion
     public function setClientesOperacionRel($clientesOperacionRel): void
     {
         $this->clientesOperacionRel = $clientesOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDespachoFleteFk()
+    {
+        return $this->codigoCuentaDespachoFleteFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDespachoFleteFk
+     */
+    public function setCodigoCuentaDespachoFleteFk($codigoCuentaDespachoFleteFk): void
+    {
+        $this->codigoCuentaDespachoFleteFk = $codigoCuentaDespachoFleteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDespachoRetencionFuenteFk()
+    {
+        return $this->codigoCuentaDespachoRetencionFuenteFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDespachoRetencionFuenteFk
+     */
+    public function setCodigoCuentaDespachoRetencionFuenteFk($codigoCuentaDespachoRetencionFuenteFk): void
+    {
+        $this->codigoCuentaDespachoRetencionFuenteFk = $codigoCuentaDespachoRetencionFuenteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDespachoIndustriaComercioFk()
+    {
+        return $this->codigoCuentaDespachoIndustriaComercioFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDespachoIndustriaComercioFk
+     */
+    public function setCodigoCuentaDespachoIndustriaComercioFk($codigoCuentaDespachoIndustriaComercioFk): void
+    {
+        $this->codigoCuentaDespachoIndustriaComercioFk = $codigoCuentaDespachoIndustriaComercioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDespachoSeguridadFk()
+    {
+        return $this->codigoCuentaDespachoSeguridadFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDespachoSeguridadFk
+     */
+    public function setCodigoCuentaDespachoSeguridadFk($codigoCuentaDespachoSeguridadFk): void
+    {
+        $this->codigoCuentaDespachoSeguridadFk = $codigoCuentaDespachoSeguridadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDespachoCargueFk()
+    {
+        return $this->codigoCuentaDespachoCargueFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDespachoCargueFk
+     */
+    public function setCodigoCuentaDespachoCargueFk($codigoCuentaDespachoCargueFk): void
+    {
+        $this->codigoCuentaDespachoCargueFk = $codigoCuentaDespachoCargueFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDespachoEstampillaFk()
+    {
+        return $this->codigoCuentaDespachoEstampillaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDespachoEstampillaFk
+     */
+    public function setCodigoCuentaDespachoEstampillaFk($codigoCuentaDespachoEstampillaFk): void
+    {
+        $this->codigoCuentaDespachoEstampillaFk = $codigoCuentaDespachoEstampillaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDespachoPapeleriaFk()
+    {
+        return $this->codigoCuentaDespachoPapeleriaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDespachoPapeleriaFk
+     */
+    public function setCodigoCuentaDespachoPapeleriaFk($codigoCuentaDespachoPapeleriaFk): void
+    {
+        $this->codigoCuentaDespachoPapeleriaFk = $codigoCuentaDespachoPapeleriaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDespachoAnticipoFk()
+    {
+        return $this->codigoCuentaDespachoAnticipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDespachoAnticipoFk
+     */
+    public function setCodigoCuentaDespachoAnticipoFk($codigoCuentaDespachoAnticipoFk): void
+    {
+        $this->codigoCuentaDespachoAnticipoFk = $codigoCuentaDespachoAnticipoFk;
     }
 
 

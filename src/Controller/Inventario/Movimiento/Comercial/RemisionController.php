@@ -436,6 +436,7 @@ class RemisionController extends ControllerListenerGeneral
                                     $arRemisionDetalle->setPorcentajeIva($arRemisionDetalleOrigen->getPorcentajeIva());
                                     $arRemisionDetalle->setRemisionDetalleRel($arRemisionDetalleOrigen);
                                     $arRemisionDetalle->setLoteFk($arRemisionDetalleOrigen->getLoteFk());
+                                    $arRemisionDetalle->setFechaVencimiento($arRemisionDetalleOrigen->getFechaVencimiento());
                                     $arRemisionDetalle->setCodigoBodegaFk($arRemisionDetalleOrigen->getCodigoBodegaFk());
                                     $em->persist($arRemisionDetalle);
                                 } else {

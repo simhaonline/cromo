@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteRecogida;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -395,6 +396,38 @@ class TteRecogidaRepository extends ServiceEntityRepository
         $queryBuilder->orderBy('r.fecha', 'ASC');
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function correccion()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r')
+            ->select('r.codigoRecogidaPk')
+            ->addSelect('r.codigoOperacionFk')
+            ->addSelect('r.fechaRegistro')
+            ->addSelect('r.fecha')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('r.direccion')
+            ->addSelect('r.anunciante')
+            ->addSelect('co.nombre AS ciudad')
+            ->addSelect('r.telefono')
+            ->addSelect('r.unidades')
+            ->addSelect('r.pesoReal')
+            ->addSelect('r.pesoVolumen')
+            ->addSelect('r.estadoProgramado')
+            ->addSelect('r.estadoRecogido')
+            ->addSelect('r.estadoAutorizado')
+            ->addSelect('r.estadoAprobado')
+            ->addSelect('r.estadoAnulado')
+            ->addSelect('r.estadoDescargado')
+            ->leftJoin('r.clienteRel', 'c')
+            ->leftJoin('r.ciudadRel', 'co')
+            ->where('r.estadoAnulado = 0');
+        if ($session->get('filtroTteRecogidaCodigo') != "") {
+            $queryBuilder->andWhere("r.codigoRecogidaPk = " . $session->get('filtroTteRecogidaCodigo'));
+        }
+        $queryBuilder->orderBy('r.fecha', 'DESC');
+        return $queryBuilder;
     }
 
 }

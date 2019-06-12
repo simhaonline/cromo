@@ -37,7 +37,7 @@ class OperacionController extends ControllerListenerGeneral
         $form = $this-> createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteOperacionCodigo'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroTteOperacionNombre'), 'attr' => ['class' => 'form-control']])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtro', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();

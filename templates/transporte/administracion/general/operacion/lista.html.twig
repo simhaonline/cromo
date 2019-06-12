@@ -2,32 +2,27 @@
 {% block content %}
     {{ form_start(form, {'attr': {'class':'form-horizontal'}}) }}
     {{ form_errors(form) }}
-
-    <div class="panel panel-default">
-        <div class="panel-heading">Filtros</div>
-        <div class="panel-body">
-            <div class="form-group form-group-sm">
-                <label for="txtNit" class="col-sm-2 control-label">Tercero:</label>
-                <div class="col-sm-10">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <div class="input-group">
-                                {{ form_widget(form.txtCodigo) }}
-                            </div>
-                        </div>
-                        <div class="col-lg-10">
-                            <div class="input-group">
-                                {{ form_widget(form.txtNombre) }}
-                            </div>
-                        </div>
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div class="widget-body">
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Código:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.txtCodigo) }}
+                    </div>
+                    <label class="col-sm-1 control-label">Nombre:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.txtNombre) }}
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <div class="form-group form-group-sm">
-                <div class="col-sm-offset-2 col-sm-10">
-                    {{ form_widget(form.btnFiltrar) }}
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -35,25 +30,26 @@
     <div class="table-responsive" style="padding:0px;">
         <table class="table table-bordered table-striped tabla-datos">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>NOMBRE</th>
-                    <th>CIUDAD</th>
-                    <th>INGRESO FLETE</th>
-                    <th>INGRESO MANEJO</th>
-                    <th>CENTRO COSTO</th>
-                    <th>CUENTA DESPECHO FLETE</th>
-                    <th>CUENTA DESPECHO RETENCIÓN FUENTE</th>
-                    <th>CUENTA DESPECHO INDUSTRIA Y COMERCIO</th>
-                    <th>CUENTA DESPECHO SEGURIDAD</th>
-                    <th>CUENTA DESPECHO CARGUE</th>
-                    <th>CUENTA DESPECHO ESTAMPILLA</th>
-                    <th>CUENTA DESPECHO PAPELERIA</th>
-                    <th>CUENTA DESPECHO ANTICIPO</th>
-                    <th></th>
-                    <th></th>
-                    <th class="text-center"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
-                </tr>
+            <tr>
+                <th>ID</th>
+                <th>NOMBRE</th>
+                <th>CIUDAD</th>
+                <th>INGRESO FLETE</th>
+                <th>INGRESO MANEJO</th>
+                <th>CENTRO COSTO</th>
+                <th>CUENTA DESPECHO FLETE</th>
+                <th>CUENTA DESPECHO RETENCIÓN FUENTE</th>
+                <th>CUENTA DESPECHO INDUSTRIA Y COMERCIO</th>
+                <th>CUENTA DESPECHO SEGURIDAD</th>
+                <th>CUENTA DESPECHO CARGUE</th>
+                <th>CUENTA DESPECHO ESTAMPILLA</th>
+                <th>CUENTA DESPECHO PAPELERIA</th>
+                <th>CUENTA DESPECHO ANTICIPO</th>
+                <th></th>
+                <th></th>
+                <th class="text-center"><input type="checkbox" name="ChkSeleccionarTodos"
+                                               onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"></th>
+            </tr>
             </thead>
             <tbody>
             {% for arOperaciones in arOperaciones %}
@@ -112,4 +108,4 @@
         </div>
     </div>
     {{ form_end(form) }}
-    {% endblock %}
+{% endblock %}

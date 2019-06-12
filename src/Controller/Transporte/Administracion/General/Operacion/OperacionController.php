@@ -9,7 +9,9 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Transporte\TteOperacion;
 use App\Form\Type\Transporte\OperacionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -29,9 +31,14 @@ class OperacionController extends ControllerListenerGeneral
     public function lista(Request $request)
     {
         $this->request = $request;
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this-> createFormBuilder()
+            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteOperacionCodigo'), 'attr' => ['class' => 'form-control']])
+            ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroTteOperacionNombre'), 'attr' => ['class' => 'form-control']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtro', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
@@ -40,6 +47,10 @@ class OperacionController extends ControllerListenerGeneral
                 $arOperacion = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(TteOperacion::class, $arOperacion);
                 return $this->redirect($this->generateUrl('transporte_administracion_general_operacion_lista'));
+            }
+            if ($form->get('btnFiltrar')->isClicked()){
+                $session->set('filtroTteOperacionCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroTteOperacionNombre', $form->get('txtNombre')->getData());
             }
         }
         $arOperaciones = $paginator->paginate($em->getRepository(TteOperacion::class)->lista(), $request->query->get('page', 1), 20);

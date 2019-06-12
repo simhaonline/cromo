@@ -55,6 +55,12 @@ class TteOperacionRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->_em->createQueryBuilder()->from(TteOperacion::class,'o')
             ->select('o');
+        if ($session->get('filtroTteOperacionCodigo') != '') {
+            $queryBuilder->andWhere("o.codigoOperacionPk = '{$session->get('filtroTteOperacionCodigo')}'");
+        }
+        if ($session->get('filtroTteOperacionNombre') != '') {
+            $queryBuilder->andWhere("o.nombre LIKE '%{$session->get('filtroTteOperacionNombre')}%'");
+        }
         return $queryBuilder;
 
     }

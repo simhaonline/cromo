@@ -176,41 +176,6 @@ class CuentaCobrarController extends Controller
         ]);
     }
 
-//    /**
-//     * @Route("/cartera/informe/cuentaCobrar/cuentaCobrar/compromisoNuevo", name="cartera_informe_cuentaCobrar_cuentaCobrar_compromiso_nuevo")
-//     */
-//    public function compromisoNuevo(Request $request)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $arCompromiso = new CarCompromiso();
-//        $arCompromiso->setFecha(new \DateTime('now'));
-//        $arCompromiso->setFechaCompromiso(new \DateTime('now'));
-//        $arCompromiso->setUsuario($this->getUser()->getUserName());
-//
-//        $form = $this->createForm(CompromisoType::class, $arCompromiso);
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-////            if ($form->get('guardar')->isClicked()) {
-////                $txtCodigoCliente = $request->request->get('txtCodigoCliente');
-////                if ($txtCodigoCliente != '') {
-////                    $arCliente = $em->getRepository(CarCliente::class)->find($txtCodigoCliente);
-////                    if ($arCliente) {
-////                        $arCompromiso->setClienteRel($arCliente);
-////                        if ($id == 0) {
-////                            $arCompromiso->setFecha(new \DateTime('now'));
-////                        }
-////                        $em->persist($arCompromiso);
-////                        $em->flush();
-////                    }
-////                }
-////
-////            }
-//        }
-//        return $this->render('cartera/informe/cuentaCobrar/nuevo.html.twig', [
-//            'arCompromiso' => $arCompromiso,
-//            'form' => $form->createView()
-//        ]);
-//    }
 
 }
 

@@ -48,7 +48,6 @@
             <th>APR</th>
             <th>ANU</th>
             <th></th>
-            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -68,9 +67,8 @@
                 <td class="estado">{{ arFactura.estadoAprobado?'SI':'NO' }}</td>
                 <td class="estado">{{ arFactura.estadoAnulado?'SI':'NO' }}</td>
                 <td>
-                    <button class="btn btn-default btn-xs" type="submit" name="OpCumplir" value="{{ arFactura.codigoFacturaPk }}">Cumplir</button>
+                    <button class="btn btn-default btn-xs" type="submit" name="OpSeleccionar" value="{{ arFactura.codigoFacturaPk }}">Seleccionar</button>
                 </td>
-                <td  style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arFactura.codigoFacturaPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -85,7 +83,7 @@
         {{ knp_pagination_render(arFacturas) }}
     </div>
     <div class="btn-toolbar" style="float: right">
-        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+
     </div>
     {{ form_end(form) }}
 {% endblock %}

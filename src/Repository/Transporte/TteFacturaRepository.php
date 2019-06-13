@@ -503,6 +503,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arCuentaCobrar->setAsesorRel($arFactura->getClienteRel()->getAsesorRel());
                 $em->persist($arCuentaCobrar);
                 $em->flush();
+
                 if($arFactura->getCodigoFacturaClaseFk() == 'NC') {
 
                 }

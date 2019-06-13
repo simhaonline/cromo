@@ -581,43 +581,40 @@ class FacturaController extends ControllerListenerGeneral
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class, ['data' => $session->get('filtroTteFacturaNumero')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnGuardar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                if (count($arrSeleccionados) > 0) {
-                    $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();
-                    foreach ($arrSeleccionados AS $codigo) {
-                        $arFactura->setCodigoFacturaReferenciaFk($codigo);
-                        $em->persist($arFactura);
-                        //$arFacturaReferencia = $em->getRepository(TteFactura::class)->find($codigo);
-                        $arFacturaDetallesReferencia = $em->getRepository(TteFacturaDetalle::class)->findBy(array('codigoFacturaFk' => $codigo));
-                        foreach ($arFacturaDetallesReferencia as $arFacturaDetalleReferencia) {
-                            $arFacturaDetalle = new TteFacturaDetalle();
-                            $arFacturaDetalle->setFacturaRel($arFactura);
-                            $arFacturaDetalle->setFacturaDetalleRel($arFacturaDetalleReferencia);
-                            $arFacturaDetalle->setGuiaRel($arFacturaDetalleReferencia->getGuiaRel());
-                            $arFacturaDetalle->setVrDeclara($arFacturaDetalleReferencia->getVrDeclara());
-                            $arFacturaDetalle->setVrFlete($arFacturaDetalleReferencia->getVrFlete());
-                            $arFacturaDetalle->setVrManejo($arFacturaDetalleReferencia->getVrManejo());
-                            $arFacturaDetalle->setUnidades($arFacturaDetalleReferencia->getUnidades());
-                            $arFacturaDetalle->setPesoReal($arFacturaDetalleReferencia->getPesoReal());
-                            $arFacturaDetalle->setPesoVolumen($arFacturaDetalleReferencia->getPesoVolumen());
-                            $arFacturaDetalle->setCodigoImpuestoRetencionFk($arrConfiguracion['codigoImpuestoRetencionTransporteFk']);
-                            $em->persist($arFacturaDetalle);
-
-                            $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalleReferencia->getCodigoGuiaFk());
-                            $arGuia->setFacturaRel($arFactura);
-                            $em->persist($arGuia);
-                        }
-                    }
-                    $em->flush();
-                    $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
+            if ($request->request->get('OpSeleccionar')) {
+                $codigo = $request->request->get('OpSeleccionar');
+                $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->retencionTransporte();
+                $arFactura->setCodigoFacturaReferenciaFk($codigo);
+                $em->persist($arFactura);
+                //$arFacturaReferencia = $em->getRepository(TteFactura::class)->find($codigo);
+                $arFacturaDetallesReferencia = $em->getRepository(TteFacturaDetalle::class)->findBy(array('codigoFacturaFk' => $codigo));
+                foreach ($arFacturaDetallesReferencia as $arFacturaDetalleReferencia) {
+                    $arFacturaDetalle = new TteFacturaDetalle();
+                    $arFacturaDetalle->setFacturaRel($arFactura);
+                    $arFacturaDetalle->setFacturaDetalleRel($arFacturaDetalleReferencia);
+                    $arFacturaDetalle->setGuiaRel($arFacturaDetalleReferencia->getGuiaRel());
+                    $arFacturaDetalle->setVrDeclara($arFacturaDetalleReferencia->getVrDeclara());
+                    $arFacturaDetalle->setVrFlete($arFacturaDetalleReferencia->getVrFlete());
+                    $arFacturaDetalle->setVrManejo($arFacturaDetalleReferencia->getVrManejo());
+                    $arFacturaDetalle->setUnidades($arFacturaDetalleReferencia->getUnidades());
+                    $arFacturaDetalle->setPesoReal($arFacturaDetalleReferencia->getPesoReal());
+                    $arFacturaDetalle->setPesoVolumen($arFacturaDetalleReferencia->getPesoVolumen());
+                    $arFacturaDetalle->setCodigoImpuestoRetencionFk($arrConfiguracion['codigoImpuestoRetencionTransporteFk']);
+                    $em->persist($arFacturaDetalle);
+                    $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalleReferencia->getCodigoGuiaFk());
+                    $arGuia->setFacturaRel($arFactura);
+                    $em->persist($arGuia);
                 }
+
+                $em->flush();
+                $em->getRepository(TteFactura::class)->liquidar($codigoFactura);
+
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
+
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroTteFacturaNumero', $form->get('txtNumero')->getData());
             }

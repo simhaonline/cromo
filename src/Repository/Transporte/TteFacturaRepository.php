@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
@@ -505,7 +506,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $em->flush();
 
                 if($arFactura->getCodigoFacturaClaseFk() == 'NC') {
-
+                    $em->getRepository(CarAplicacion::class)->aplicar($arCuentaCobrar, 'TTE', $arFactura->getCodigoFacturaReferenciaFk());
                 }
                 $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
                 if ($arConfiguracion['contabilidadAutomatica']) {

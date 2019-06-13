@@ -72,6 +72,11 @@ class CarAplicacion
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="automatica", type="boolean", options={"default":false})
+     */
+    private $automatica = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrar", inversedBy="aplicacionesCuentaCobrarRel")
      * @ORM\JoinColumn(name="codigo_cuenta_cobrar_fk", referencedColumnName="codigo_cuenta_cobrar_pk")
      */
@@ -289,6 +294,22 @@ class CarAplicacion
     public function setNumeroDocumentoAplicacion($numeroDocumentoAplicacion): void
     {
         $this->numeroDocumentoAplicacion = $numeroDocumentoAplicacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAutomatica()
+    {
+        return $this->automatica;
+    }
+
+    /**
+     * @param mixed $automatica
+     */
+    public function setAutomatica($automatica): void
+    {
+        $this->automatica = $automatica;
     }
 
 

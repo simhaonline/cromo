@@ -78,4 +78,16 @@ class CarCuentaCobrarTipoRepository extends ServiceEntityRepository
         }
         return $array;
     }
+    /*
+    * se creo esta función para cumplir las necesidad del caso 30
+     * att andres
+    */
+    public function selectCodigoNombre()
+    {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from(CarCuentaCobrarTipo::class, 'cct');
+        $qb->select('cct.codigoCuentaCobrarTipoPk')
+            ->addSelect('cct.nombre');
+        return $qb->getQuery()->getResult();
+    }
 }

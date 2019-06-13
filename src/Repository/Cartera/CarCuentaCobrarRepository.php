@@ -112,7 +112,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addOrderBy('cc.fecha', 'ASC');
         $fecha =  new \DateTime('now');
         if ($session->get('filtroCarCuentaCobrarTipo') != "") {
-            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo')."'");
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk in ({$session->get('filtroCarCuentaCobrarTipo')})");
         }
         if($session->get('filtroCarNumeroReferencia') != ''){
             $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
@@ -123,9 +123,9 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         if($session->get('filtroCarCodigoCliente')){
             $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
         }
-        if ($session->get('filtroCarCuentaCobrarTipo')) {
-            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo') . "'");
-        }
+//        if ($session->get('filtroCarCuentaCobrarTipo')) {
+//            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '" . $session->get('filtroCarCuentaCobrarTipo') . "'");
+//        }
         if($session->get('filtroGenAsesor')) {
             $queryBuilder->andWhere("cc.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
         }

@@ -48,7 +48,6 @@ class CuentaCobrarController extends Controller
             ->add('btnGenerarVencimientos', SubmitType::class, array('label' => 'Generar rango'))
             ->add('btnCarteraEdadesCliente', SubmitType::class, array('label' => 'Cartera edades'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->add('cboTipoCuentaRel', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
             ->add('cboAsesor', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
@@ -61,11 +60,17 @@ class CuentaCobrarController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked() || $form->get('btnPdf')->isClicked() || $form->get('btnCarteraEdadesCliente')->isClicked() || $form->get('btnExcel')->isClicked()) {
-            $arCuentaCobrarTipo = $form->get('cboTipoCuentaRel')->getData();
-            if ($arCuentaCobrarTipo) {
-                $session->set('filtroCarCuentaCobrarTipo', $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk());
-            } else {
+            if ($request->get('cboTipoCuentaRel')){
+                $codigosCuenta = null;
+                foreach ($request->get('cboTipoCuentaRel') as $codigo){
+                    $codigosCuenta .= "'{$codigo}',";
+                }
+                $session->set('filtroCarCuentaCobrarTipo', substr($codigosCuenta, 0, -1));
+                $session->set('selectCuentaCobrarTipo', $request->get('cboTipoCuentaRel'));
+            }else{
                 $session->set('filtroCarCuentaCobrarTipo', null);
+                $session->set('selectCuentaCobrarTipo', null);
+
             }
             $arAsesor = $form->get('cboAsesor')->getData();
             if ($arAsesor != '') {
@@ -90,7 +95,7 @@ class CuentaCobrarController extends Controller
             $formato = new CuentaCobrar();
             $formato->Generar($em);
         }
-            $session->set('arrCuentasCobrar', $request->request->get('ChkSeleccionar'));
+        $session->set('arrCuentasCobrar', $request->request->get('ChkSeleccionar'));
         if ($form->get('btnCarteraEdadesCliente')->isClicked()) {
             $formato = new CarteraEdadCliente();
             $formato->Generar($em);
@@ -103,8 +108,10 @@ class CuentaCobrarController extends Controller
         }
         $query = $this->getDoctrine()->getRepository(CarCuentaCobrar::class)->pendientes();
         $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
+        $cboTipoCuentaRel = $em->getRepository(CarCuentaCobrarTipo::class)->selectCodigoNombre();
         return $this->render('cartera/informe/cuentaCobrar/pendientes.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,
+            'cboTipoCuentaRel'=>$cboTipoCuentaRel,
             'form' => $form->createView()]);
     }
 

@@ -59,4 +59,8 @@ class CarAplicacionRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function aplicar($arNotaCredito, $codigoMovimiento) {
+
+    }
+
 }

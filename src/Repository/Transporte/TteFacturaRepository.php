@@ -503,6 +503,9 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $arCuentaCobrar->setAsesorRel($arFactura->getClienteRel()->getAsesorRel());
                 $em->persist($arCuentaCobrar);
                 $em->flush();
+                if($arFactura->getCodigoFacturaClaseFk() == 'NC') {
+
+                }
                 $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
                 if ($arConfiguracion['contabilidadAutomatica']) {
                     $this->contabilizar(array($arFactura->getCodigoFacturaPk()));
@@ -633,6 +636,9 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->where('f.codigoClienteFk = ' . $codigoCliente)
         ->andWhere('f.estadoAprobado = 1')
             ->andWhere('f.estadoAnulado = 0');
+        if($session->get('filtroTteFacturaNumero') != ''){
+            $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
+        }
         $queryBuilder->orderBy('f.fecha', 'DESC');
         return $queryBuilder;
     }

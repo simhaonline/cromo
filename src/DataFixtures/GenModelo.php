@@ -171,6 +171,8 @@ class GenModelo extends Fixture
                 'RhuPension',
                 'RhuProgramacion',
                 'RhuProgramacionDetalle',
+                'RhuRequisito',
+                'RhuRequisitoDetalle',
                 'RhuRecaudo',
                 'RhuReclamo',
                 'RhuRh',

@@ -38,6 +38,11 @@ class RhuRequisitoConcepto
     protected $requisitosCargosRequisitoConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuRequisitoDetalle", mappedBy="requisitoConceptoRel")
+     */
+    protected $requisitosDetallesRequisitoConceptoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -116,4 +121,22 @@ class RhuRequisitoConcepto
     {
         $this->requisitosCargosRequisitoConceptoRel = $requisitosCargosRequisitoConceptoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRequisitosDetallesRequisitoConceptoRel()
+    {
+        return $this->requisitosDetallesRequisitoConceptoRel;
+    }
+
+    /**
+     * @param mixed $requisitosDetallesRequisitoConceptoRel
+     */
+    public function setRequisitosDetallesRequisitoConceptoRel($requisitosDetallesRequisitoConceptoRel): void
+    {
+        $this->requisitosDetallesRequisitoConceptoRel = $requisitosDetallesRequisitoConceptoRel;
+    }
+
+
 }

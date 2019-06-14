@@ -33,6 +33,12 @@ class RhuCargo
     private $codigoCargoSupervigilanciaFk;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RhuCargoSupervigilancia", inversedBy="cargosCargoSupervigilanciaRel")
+     * @ORM\JoinColumn(name="codigo_cargo_supervigilancia_fk", referencedColumnName="codigo_cargo_supervigilancia_pk")
+     */
+    protected $cargoSupervigilanciaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="cargoRel")
      */
     protected $solicitudesCargoRel;
@@ -68,10 +74,9 @@ class RhuCargo
     protected $requisitosCargosCargoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuCargoSupervigilancia", inversedBy="cargosCargoSupervigilanciaRel")
-     * @ORM\JoinColumn(name="codigo_cargo_supervigilancia_fk", referencedColumnName="codigo_cargo_supervigilancia_pk")
+     * @ORM\OneToMany(targetEntity="RhuRequisito", mappedBy="cargoRel")
      */
-    protected $cargoSupervigilanciaRel;
+    protected $requisitosCargoRel;
 
     /**
      * @return array

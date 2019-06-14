@@ -9,6 +9,14 @@
             {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
+    <div style="float:right">
+        {% if arCuentaCobrar.estadoAutorizado == 1 %}<span
+                class="label label-default">Autorizado</span>{% endif %}
+        {% if arCuentaCobrar.estadoAprobado == 1 %}<span
+                class="label label-default">Aprobado</span>{% endif %}
+        {% if arCuentaCobrar.estadoAnulado == 1 %}<span
+                class="label label-default">Anulado</span>{% endif %}
+    </div>
     <br/><br/>
     {% include 'cartera/movimiento/cuentacobrar/cuentacobrar/informacion.html.twig' %}
     <ul class="nav nav-tabs">

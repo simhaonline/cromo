@@ -4,7 +4,10 @@ namespace App\Repository\Cartera;
 
 
 use App\Entity\Cartera\CarAplicacion;
+use App\Entity\Cartera\CarCompromisoDetalle;
 use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarNotaCreditoDetalle;
+use App\Entity\Cartera\CarNotaDebitoDetalle;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -24,8 +27,8 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
             ->select('cc.codigoCuentaCobrarPk')
-            ->leftJoin('cc.clienteRel','cl')
-            ->leftJoin('cc.cuentaCobrarTipoRel','cct')
+            ->leftJoin('cc.clienteRel', 'cl')
+            ->leftJoin('cc.cuentaCobrarTipoRel', 'cct')
             ->addSelect('cc.numeroDocumento')
             ->addSelect('cc.codigoCuentaCobrarTipoFk')
             ->addSelect('cc.numeroReferencia')
@@ -42,20 +45,20 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrSaldoOperado')
             ->where('cc.codigoCuentaCobrarPk <> 0')
             ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');
-        $fecha =  new \DateTime('now');
+        $fecha = new \DateTime('now');
         if ($session->get('filtroCarCuentaCobrarTipo') != "") {
             $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk in ({$session->get('filtroCarCuentaCobrarTipo')})");
         }
-        if($session->get('filtroCarNumeroReferencia') != ''){
+        if ($session->get('filtroCarNumeroReferencia') != '') {
             $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
         }
-        if($session->get('filtroCarCuentaCobrarNumero') != ''){
+        if ($session->get('filtroCarCuentaCobrarNumero') != '') {
             $queryBuilder->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
         }
-        if($session->get('filtroCarCodigoCliente')){
+        if ($session->get('filtroCarCodigoCliente')) {
             $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
         }
-        if($session->get('filtroFecha') == true){
+        if ($session->get('filtroFecha') == true) {
             if ($session->get('filtroFechaDesde') != null) {
                 $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
             } else {
@@ -73,7 +76,8 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
     /**
      * @param $arrSeleccionados
      */
-    public function eliminar($arrSeleccionados){
+    public function eliminar($arrSeleccionados)
+    {
 
     }
 
@@ -101,29 +105,29 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrSaldoOperado')
             ->addSelect('cc.comentario')
             ->leftJoin('cc.asesorRel', 'a')
-            ->leftJoin('cc.clienteRel','cl')
-            ->leftJoin('cc.cuentaCobrarTipoRel','cct')
+            ->leftJoin('cc.clienteRel', 'cl')
+            ->leftJoin('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.codigoCuentaCobrarPk <> 0')
             ->andWhere('cc.vrSaldo > 0')
             ->orderBy('cl.nombreCorto', 'ASC')
             ->addOrderBy('cc.fecha', 'ASC');
-        $fecha =  new \DateTime('now');
+        $fecha = new \DateTime('now');
         if ($session->get('filtroCarCuentaCobrarTipo') != "") {
             $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk in ({$session->get('filtroCarCuentaCobrarTipo')})");
         }
-        if($session->get('filtroCarNumeroReferencia') != ''){
+        if ($session->get('filtroCarNumeroReferencia') != '') {
             $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
         }
-        if($session->get('filtroCarCuentaCobrarNumero') != ''){
+        if ($session->get('filtroCarCuentaCobrarNumero') != '') {
             $queryBuilder->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
         }
-        if($session->get('filtroCarCodigoCliente')){
+        if ($session->get('filtroCarCodigoCliente')) {
             $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
         }
-        if($session->get('filtroGenAsesor')) {
+        if ($session->get('filtroGenAsesor')) {
             $queryBuilder->andWhere("cc.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
         }
-        if($session->get('filtroFecha') == true){
+        if ($session->get('filtroFecha') == true) {
             if ($session->get('filtroFechaDesde') != null) {
                 $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
             } else {
@@ -150,7 +154,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.fecha')
             ->addSelect('cc.fechaVence')
             ->addSelect('cct.nombre')
-            ->join('cc.clienteRel','cl')
+            ->join('cc.clienteRel', 'cl')
             ->join('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.vrSaldo <> 0')
             ->andWhere('cc.operacion = 1')
@@ -172,7 +176,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.fecha')
             ->addSelect('cc.fechaVence')
             ->addSelect('cct.nombre')
-            ->join('cc.clienteRel','cl')
+            ->join('cc.clienteRel', 'cl')
             ->join('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.vrSaldo <> 0')
             ->andWhere('cc.operacion = 1')
@@ -199,7 +203,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.fecha')
             ->addSelect('cc.fechaVence')
             ->addSelect('cct.nombre')
-            ->join('cc.clienteRel','cl')
+            ->join('cc.clienteRel', 'cl')
             ->join('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.vrSaldo > 0')
             ->andWhere('cc.operacion = -1')
@@ -227,7 +231,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.fecha')
             ->addSelect('cc.fechaVence')
             ->addSelect('cct.nombre')
-            ->join('cc.clienteRel','cl')
+            ->join('cc.clienteRel', 'cl')
             ->join('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.vrSaldo > 0')
             ->andWhere('cc.operacion = -1')
@@ -256,7 +260,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->where(TO_DAYS(NOW()) - TO_DAYS('cc.fechaVence AS diasVenciada'
                 ))
             ->addSelect(CASE_WHEN(TO_DAYS(NOW()) - TO_DAYS('cc.fechaVence') < 1))
-            ->join('cc.clienteRel','cl')
+            ->join('cc.clienteRel', 'cl')
             ->join('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.vrSaldo > 0')
             ->orderBy('cc.codigoCuentaCobrarPk', 'ASC');
@@ -264,7 +268,8 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function generarVencimientos () {
+    public function generarVencimientos()
+    {
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
             ->select('cc.codigoCuentaCobrarPk')
@@ -279,19 +284,19 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             $dias = $interval->format('%r%a');
             $arCuentaCobrarAct->setDiasVencimiento($dias);
             $rango = 1;
-            if($dias <= 0) {
+            if ($dias <= 0) {
                 $rango = 1;
             } else {
-                if($dias <= 30 ) {
+                if ($dias <= 30) {
                     $rango = 2;
                 } else {
-                    if($dias <= 60 ) {
+                    if ($dias <= 60) {
                         $rango = 3;
                     } else {
-                        if($dias <= 90 ) {
+                        if ($dias <= 90) {
                             $rango = 4;
                         } else {
-                            if($dias <= 180 ) {
+                            if ($dias <= 180) {
                                 $rango = 5;
                             } else {
                                 $rango = 6;
@@ -324,28 +329,28 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.fechaVence')
             ->addSelect('c.nombreCorto as clienteNombre')
             ->addSelect('c.numeroIdentificacion')
-            ->join('cc.clienteRel','c')
+            ->join('cc.clienteRel', 'c')
             ->join('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.vrSaldo <> 0')
             ->orderBy('c.nombreCorto', 'ASC')
             ->addOrderBy('cc.rango', 'DESC')
             ->addOrderBy('cc.fecha', 'ASC')
-        ->addOrderBy('cc.numeroDocumento', 'ASC');
+            ->addOrderBy('cc.numeroDocumento', 'ASC');
 
-        $fecha =  new \DateTime('now');
+        $fecha = new \DateTime('now');
         if ($session->get('filtroCarCuentaCobrarTipo') != "") {
             $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk in ({$session->get('filtroCarCuentaCobrarTipo')})");
         }
-        if($session->get('filtroCarNumeroReferencia') != ''){
+        if ($session->get('filtroCarNumeroReferencia') != '') {
             $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
         }
-        if($session->get('filtroCarCuentaCobrarNumero') != ''){
+        if ($session->get('filtroCarCuentaCobrarNumero') != '') {
             $queryBuilder->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
         }
-        if($session->get('filtroCarCodigoCliente')){
+        if ($session->get('filtroCarCodigoCliente')) {
             $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
         }
-        if($session->get('filtroFecha') == true){
+        if ($session->get('filtroFecha') == true) {
             if ($session->get('filtroFechaDesde') != null) {
                 $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
             } else {
@@ -378,28 +383,28 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.fechaVence')
             ->addSelect('c.nombreCorto as clienteNombre')
             ->addSelect('c.numeroIdentificacion')
-            ->join('cc.clienteRel','c')
+            ->join('cc.clienteRel', 'c')
             ->join('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.vrSaldo <> 0')
             ->orderBy('c.nombreCorto', 'ASC')
             ->addOrderBy('cc.fecha', 'ASC');
-        $fecha =  new \DateTime('now');
+        $fecha = new \DateTime('now');
         if ($session->get('filtroCarCuentaCobrarTipo') != "") {
             $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk in ({$session->get('filtroCarCuentaCobrarTipo')})");
         }
-        if($session->get('filtroCarNumeroReferencia') != ''){
+        if ($session->get('filtroCarNumeroReferencia') != '') {
             $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
         }
-        if($session->get('filtroCarCuentaCobrarNumero') != ''){
+        if ($session->get('filtroCarCuentaCobrarNumero') != '') {
             $queryBuilder->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
         }
-        if($session->get('filtroCarCodigoCliente')){
+        if ($session->get('filtroCarCodigoCliente')) {
             $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
         }
-        if($session->get('filtroGenAsesor')) {
+        if ($session->get('filtroGenAsesor')) {
             $queryBuilder->andWhere("cc.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
         }
-        if($session->get('filtroFecha') == true){
+        if ($session->get('filtroFecha') == true) {
             if ($session->get('filtroFechaDesde') != null) {
                 $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
             } else {
@@ -419,9 +424,9 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         $respuesta = true;
         $em = $this->getEntityManager();
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->findOneBy(array('modulo' => $modulo, 'codigoDocumento' => $codigoDocumento));
-        if($arCuentaCobrar) {
+        if ($arCuentaCobrar) {
             $arRecibosDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoCuentaCobrarFk' => $arCuentaCobrar->getCodigoCuentaCobrarPk()));
-            if($arRecibosDetalles) {
+            if ($arRecibosDetalles) {
                 Mensajes::error("La cuenta por cobrar enlazada a este documento tiene recibos de caja, no se puede anular el documento");
                 $respuesta = false;
             } else {
@@ -441,12 +446,13 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
-    public function crearReciboMasivoLista(){
-        $em=$this->getEntityManager();
-        $session=new Session();
+    public function crearReciboMasivoLista()
+    {
+        $em = $this->getEntityManager();
+        $session = new Session();
 
-        $arCrearReciboMasivo=$em->createQueryBuilder()
-            ->from('App:Cartera\CarCuentaCobrar','cc')
+        $arCrearReciboMasivo = $em->createQueryBuilder()
+            ->from('App:Cartera\CarCuentaCobrar', 'cc')
             ->addSelect("cc.codigoCuentaCobrarPk")
             ->addSelect('cc.numeroDocumento')
             ->addSelect('cc.numeroReferencia')
@@ -456,14 +462,14 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect("cc.fechaVence")
             ->addSelect("cc.vrTotal")
             ->addSelect("cc.vrSaldo")
-            ->leftJoin('cc.clienteRel','c')
-            ->leftJoin('cc.cuentaCobrarTipoRel','cct')
+            ->leftJoin('cc.clienteRel', 'c')
+            ->leftJoin('cc.cuentaCobrarTipoRel', 'cct')
             ->andWhere("cc.vrSaldo > 0")
             ->andWhere("cct.permiteReciboMasivo = 1");
-        if($session->get('filtroCarReciboCodigoReciboTipo')){
+        if ($session->get('filtroCarReciboCodigoReciboTipo')) {
             $arCrearReciboMasivo->andWhere("cc.codigoCuentaCobrarTipoFk='{$session->get("filtroCarReciboCodigoReciboTipo")}'");
         }
-        if($session->get('filtroCarNumeroReferencia') != ''){
+        if ($session->get('filtroCarNumeroReferencia') != '') {
             $arCrearReciboMasivo->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
         }
         return $arCrearReciboMasivo->getQuery()->execute();
@@ -486,11 +492,11 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
                 ->Select("SUM(rd.vrPagoAfectar) AS totalAfectar")
                 ->leftJoin('rd.reciboRel', 'r')
                 ->where("rd.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
-            ->andWhere("r.estadoAutorizado = 1")
-            ->andWhere("r.estadoAnulado = 0");
+                ->andWhere("r.estadoAutorizado = 1")
+                ->andWhere("r.estadoAnulado = 0");
             $arrResultado = $queryBuilder->getQuery()->getSingleResult();
             if ($arrResultado) {
-                if($arrResultado['totalAfectar']) {
+                if ($arrResultado['totalAfectar']) {
                     $abonos += $arrResultado['totalAfectar'];
                 }
             }
@@ -505,7 +511,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
                 ->andWhere("r.estadoAnulado = 0");
             $arrResultado = $queryBuilder->getQuery()->getSingleResult();
             if ($arrResultado) {
-                if($arrResultado['totalAfectar']) {
+                if ($arrResultado['totalAfectar']) {
                     $abonos += $arrResultado['totalAfectar'];
                 }
             }
@@ -513,10 +519,10 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             $queryBuilder = $em->createQueryBuilder()->from(CarAplicacion::class, 'a')
                 ->Select("SUM(a.vrAplicacion) as vrAplicacion")
                 ->where("a.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
-            ->orWhere("a.codigoCuentaCobrarAplicacionFk = " . $arCuentaCobrar['codigoCuentaCobrarPk']);
+                ->orWhere("a.codigoCuentaCobrarAplicacionFk = " . $arCuentaCobrar['codigoCuentaCobrarPk']);
             $arrResultado = $queryBuilder->getQuery()->getSingleResult();
             if ($arrResultado) {
-                if($arrResultado['vrAplicacion']) {
+                if ($arrResultado['vrAplicacion']) {
                     $abonos += $arrResultado['vrAplicacion'];
                 }
             }
@@ -549,11 +555,11 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             $abonos = $arCuentaCobrar['vrAbono'];
             $saldoOriginal = $arCuentaCobrar['vrSaldoOriginal'];
             $diferencia = $saldoOriginal - $abonos;
-            if($diferencia != 0) {
-                if($diferencia >= -5 ){
-                    if($diferencia <= 5) {
+            if ($diferencia != 0) {
+                if ($diferencia >= -5) {
+                    if ($diferencia <= 5) {
                         $saldo = $arCuentaCobrar['vrSaldoOriginal'] - ($abonos + $diferencia);
-                        if($saldo == 0) {
+                        if ($saldo == 0) {
                             $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar['codigoCuentaCobrarPk']);
                             $arCuentaCobrarAct->setVrSaldo(0);
                             $arCuentaCobrarAct->setVrSaldoOperado(0);
@@ -568,6 +574,70 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         $em->flush();
         Mensajes::success("El proceso se ejecuto con exito corrigiendo automaticamente " . $contador . " registros");
         return true;
+    }
+
+    public function anular($arCuentaCobrar)
+    {
+        /**
+         * @var $arCuentaCobrar CarCuentaCobrar
+         */
+        $em = $this->getEntityManager();
+        $validacion = true;
+        if ($arCuentaCobrar->getEstadoAprobado() == 1 && $arCuentaCobrar->getEstadoAnulado() == 0) {
+            $arRecibosDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoCuentaCobrarFk' => $arCuentaCobrar->getCodigoCuentaCobrarPk()));
+            foreach ($arRecibosDetalles as $arRecibosDetalleDetalle) {
+                if ($arRecibosDetalleDetalle) {
+                    Mensajes::error("No se puede anular la cuenta por cobrar porque esta asociada a un recibo detalle con código {$arRecibosDetalleDetalle->getCodigoReciboDetallePk()}");
+                    $validacion = false;
+                    break;
+                }
+            }
+            $arNotasCreditoDetalles = $em->getRepository(CarNotaCreditoDetalle::class)->findBy(array('codigoCuentaCobrarFk' => $arCuentaCobrar->getCodigoCuentaCobrarPk()));
+            foreach ($arNotasCreditoDetalles as $arNotasCreditoDetalle) {
+                if ($arNotasCreditoDetalle) {
+                    Mensajes::error("No se puede anular la cuenta por cobrar porque esta asociada a una nota credito detalle con código {$arNotasCreditoDetalle->getCodigoNotaCreditoDetallePk()}");
+                    $validacion = false;
+                    break;
+                }
+            }
+            $arNotasDebitoDetalles = $em->getRepository(CarNotaDebitoDetalle::class)->findBy(array('codigoCuentaCobrarFk' => $arCuentaCobrar->getCodigoCuentaCobrarPk()));
+            foreach ($arNotasDebitoDetalles as $arNotasDebitoDetalle) {
+                if ($arNotasDebitoDetalle) {
+                    Mensajes::error("No se puede anular la cuenta por cobrar porque esta asociada a una nota debito detalle con código {$arNotasDebitoDetalle->getCodigoNotaDebitoDetallePk()}");
+                    $validacion = false;
+                    break;
+                }
+            }
+            $arCompromisosDetalles = $em->getRepository(CarCompromisoDetalle::class)->findBy(array('codigoCuentaCobrarFk' => $arCuentaCobrar->getCodigoCuentaCobrarPk()));
+            foreach ($arCompromisosDetalles as $arCompromisosDetalle) {
+                if ($arCompromisosDetalle) {
+                    Mensajes::error("No se puede anular la cuenta por cobrar porque esta asociada a un compromiso detalle con código {$arCompromisosDetalle->getCodigoCompromisoDetallePk()}");
+                    $validacion = false;
+                    break;
+                }
+            }
+            $arAplicaciones = $em->getRepository(CarAplicacion::class)->findBy(array('codigoCuentaCobrarAplicacionFk' => $arCuentaCobrar->getCodigoCuentaCobrarPk()));
+            foreach ($arAplicaciones as $arAplicacion) {
+                if ($arAplicacion) {
+                    Mensajes::error("No se puede anular la cuenta por cobrar porque esta asociada a una aplicacion con código {$arAplicacion->getCodigoAplicacionPk()}");
+                    $validacion = false;
+                    break;
+                }
+            }
+            if ($validacion == true) {
+                $arCuentaCobrar->setEstadoAnulado(1);
+                $arCuentaCobrar->setVrSubtotal(0);
+                $arCuentaCobrar->setVrIva(0);
+                $arCuentaCobrar->setVrRetencionFuente(0);
+                $arCuentaCobrar->setVrRetencionIva(0);
+                $arCuentaCobrar->setVrTotal(0);
+                $arCuentaCobrar->setVrSaldo(0);
+                $arCuentaCobrar->setVrSaldoOriginal(0);
+                $arCuentaCobrar->setVrSaldoOperado(0);
+                $em->persist($arCuentaCobrar);
+                $em->flush();
+            }
+        }
     }
 
 }

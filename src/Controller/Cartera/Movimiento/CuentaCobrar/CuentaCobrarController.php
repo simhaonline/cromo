@@ -121,8 +121,12 @@ class CuentaCobrarController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
-        $form = Estandares::botonera(false, false, false);
+        $form = Estandares::botonera($arCuentaCobrar->getEstadoAutorizado(), $arCuentaCobrar->getEstadoAprobado(), $arCuentaCobrar->getEstadoAnulado());
         $form->handleRequest($request);
+        if ($form->get('btnAnular')->isClicked()) {
+            $em->getRepository(CarCuentaCobrar::class)->anular($arCuentaCobrar);
+            return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_detalle', ['id' => $id]));
+        }
         return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/detalle.html.twig', [
             'arCuentaCobrar' => $arCuentaCobrar,
             'form' => $form->createView()

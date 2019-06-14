@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.requisitoTipoRel, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                    {{ form_errors(form.requisitoTipoRel) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Cargo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.cargoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Identificacion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroIdentificacion, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.numeroIdentificacion) }}
+                </div>
+                <label class="col-sm-2 control-label">Nombre corto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombreCorto, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.nombreCorto) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="form_comentario" class="col-sm-2 control-label">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentarios, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_contratacion_requisito_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

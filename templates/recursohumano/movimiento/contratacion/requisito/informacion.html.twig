@@ -1,0 +1,22 @@
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
+    <tr>
+        <td class="titulo">ID:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arRequisito.codigoRequisitoPk }}</td>
+        <td class="titulo">FECHA:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arRequisito.fecha | date('Y-m-d') }}</td>
+        <td class="titulo">TIPO:</td>
+        <td class="td-in-well">{{ arRequisito.requisitoTipoRel.nombre }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">IDENTIFICACION:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arRequisito.numeroIdentificacion }}</td>
+        <td class="titulo">NOMBRE CORTO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arRequisito.nombreCorto }}</td>
+        <td class="titulo">CARGO:</td>
+        <td class="td-in-well">{{ arRequisito.cargoRel.nombre }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">COMENTARIO:</td>
+        <td class="td-in-well" colspan="5">{{ arRequisito.comentarios }}</td>
+    </tr>
+</table>

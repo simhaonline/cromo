@@ -272,6 +272,8 @@ class GenModelo extends Fixture
             array('modulo'=>'Crm','modelo'=>array(
                'CrmVisita',
                'CrmVisitaTipo',
+               'CrmFase',
+               'CrmNegocio',
             )),
         );
         foreach ($arrayGenModulo as $arrGenModulo){

@@ -12,6 +12,7 @@ use App\Entity\Cartera\CarIngresoConcepto;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Financiero\FinTercero;
+use App\Entity\General\GenAsesor;
 use App\Form\Type\Cartera\ReciboType;
 use App\Formato\Cartera\Recibo;
 use App\General\General;
@@ -183,12 +184,14 @@ class ReciboController extends ControllerListenerGeneral
 
         $arDescuentosConceptos = $em->getRepository(CarDescuentoConcepto::class)->findAll();
         $arIngresosConceptos = $em->getRepository(CarIngresoConcepto::class)->findAll();
+        $arAsesores = $em->getRepository(GenAsesor::class)->findAll();
         $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
         return $this->render('cartera/movimiento/recibo/recibo/detalle.html.twig', array(
             'arRecibo'=> $arRecibo,
             'arReciboDetalle'=> $arReciboDetalle,
             'arDescuentoConceptos' => $arDescuentosConceptos,
             'arIngresoConceptos' => $arIngresosConceptos,
+            'arAsesores' => $arAsesores,
             'clase' => array('clase' => 'CarRecibo', 'codigo' => $id),
             'form' => $form->createView()
         ));
@@ -232,6 +235,7 @@ class ReciboController extends ControllerListenerGeneral
                         $arReciboDetalle->setNumeroFactura($arCuentaCobrar->getNumeroDocumento());
                         $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
                         $arReciboDetalle->setOperacion(1);
+                        $arReciboDetalle->setAsesorRel($arRecibo->getAsesorRel());
                         $em->persist($arReciboDetalle);
                     }
                     $em->flush();

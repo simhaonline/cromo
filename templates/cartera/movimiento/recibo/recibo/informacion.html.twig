@@ -56,7 +56,7 @@
         <td class="td-in-well"  align="right">{{ arRecibo.vrTotalRetencionIva | number_format }}</td>
     </tr>
     <tr>
-        <td class="titulo">Documento cruce:</td>
+        <td class="titulo">DOCUMENTO CRUCE:</td>
         <td class="td-in-well">{{ arRecibo.numeroReferenciaPrefijo }}{{ arRecibo.numeroReferencia }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
@@ -64,7 +64,7 @@
         <td class="td-in-well"  align="right">{{ arRecibo.vrTotalRetencionFuente | number_format }}</td>
     </tr>
     <tr>
-        <td class="titulo">Asesor:</td>
+        <td class="titulo">ASESOR:</td>
         <td class="td-in-well">{{ arRecibo.asesorRel.nombre | default('') }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
@@ -72,7 +72,7 @@
         <td class="td-in-well"  align="right">{{ arRecibo.vrPago | number_format }}</td>
     </tr>
     <tr>
-        <td class="titulo">Tercero cruce:</td>
+        <td class="titulo">TERCERO CRUCE:</td>
         <td class="td-in-well">{{ arRecibo.terceroRel.nombreCorto | default('') }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>

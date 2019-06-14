@@ -93,6 +93,7 @@ class CrearReciboMasivoController extends Controller
                             $arReciboDetalle->setNumeroFactura($arCuentaCobrar->getNumeroDocumento());
                             $arReciboDetalle->setCodigoCuentaCobrarTipoFk($arCuentaCobrar->getCodigoCuentaCobrarTipoFk());
                             $arReciboDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
+                            $arReciboDetalle->setAsesorRel($arRecibo->getAsesorRel());
                             $arReciboDetalle->setOperacion(1);
                             $em->persist($arReciboDetalle);
                         }

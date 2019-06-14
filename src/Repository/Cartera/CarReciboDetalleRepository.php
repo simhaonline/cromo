@@ -6,6 +6,7 @@ use App\Entity\Cartera\CarDescuentoConcepto;
 use App\Entity\Cartera\CarIngresoConcepto;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Entity\General\GenAsesor;
 use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -101,6 +102,15 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
                 $valorRetencionFte = isset($arrControles['TxtVrRetencionFuente' . $intCodigo]) && $arrControles['TxtVrRetencionFuente' . $intCodigo] != '' ? $arrControles['TxtVrRetencionFuente' . $intCodigo] : 0;
                 $valorOtroDescuento = isset($arrControles['TxtVrOtroDescuento' . $intCodigo]) && $arrControles['TxtVrOtroDescuento' . $intCodigo] != '' ? $arrControles['TxtVrOtroDescuento' . $intCodigo] : 0;
                 $valorOtroIngreso = isset($arrControles['TxtVrOtroIngreso' . $intCodigo]) && $arrControles['TxtVrOtroIngreso' . $intCodigo] != '' ? $arrControles['TxtVrOtroIngreso' . $intCodigo] : 0;
+                $comentario = isset($arrControles['TxtComentario' . $intCodigo]) && $arrControles['TxtComentario' . $intCodigo] != '' ? $arrControles['TxtComentario' . $intCodigo] : '';
+                $arReciboDetalle->setComentario($comentario);
+                $codigoAsesor = isset($arrControles['cboAsesor' . $intCodigo]) && $arrControles['cboAsesor' . $intCodigo] != '' ? $arrControles['cboAsesor' . $intCodigo] : null;
+                if($codigoAsesor) {
+                    $arAsesor = $em->getRepository(GenAsesor::class)->find($codigoAsesor);
+                    if($arAsesor) {
+                        $arReciboDetalle->setAsesorRel($arAsesor);
+                    }
+                }
                 if(is_numeric($valorPago) && is_numeric($valorDescuento) && is_numeric($valorRetencionIca) && is_numeric($valorRetencionIva) && is_numeric($valorRetencionFte) && is_numeric($valorOtroDescuento) && is_numeric($valorOtroIngreso)) {
                     if($valorOtroDescuento > 0) {
                         if($codigoDescuentoConcepto != "SS") {

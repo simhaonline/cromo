@@ -47,6 +47,11 @@ class CarReciboDetalle
     private $codigoCuentaCobrarAplicacionTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_asesor_fk", type="integer", nullable=true)
+     */
+    private $codigoAsesorFk;
+
+    /**
      * @ORM\Column(name="numero_factura", type="string", length=30, nullable=true)
      */
     private $numeroFactura;
@@ -122,6 +127,11 @@ class CarReciboDetalle
     private $codigoIngresoConceptoFk;
 
     /**
+     * @ORM\Column(name="comentario", type="string", length=200, nullable=true)
+     */
+    private $comentario;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarRecibo", inversedBy="recibosDetallesRecibosRel")
      * @ORM\JoinColumn(name="codigo_recibo_fk", referencedColumnName="codigo_recibo_pk")
      */
@@ -162,6 +172,12 @@ class CarReciboDetalle
      * @ORM\JoinColumn(name="codigo_ingreso_concepto_fk", referencedColumnName="codigo_ingreso_concepto_pk")
      */
     protected $ingresoConceptoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="recibosDetallesAsesorRel")
+     * @ORM\JoinColumn(name="codigo_asesor_fk", referencedColumnName="codigo_asesor_pk")
+     */
+    protected $asesorRel;
 
     /**
      * @return mixed
@@ -609,6 +625,54 @@ class CarReciboDetalle
     public function setCuentaCobrarAplicacionTipoRel($cuentaCobrarAplicacionTipoRel): void
     {
         $this->cuentaCobrarAplicacionTipoRel = $cuentaCobrarAplicacionTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAsesorFk()
+    {
+        return $this->codigoAsesorFk;
+    }
+
+    /**
+     * @param mixed $codigoAsesorFk
+     */
+    public function setCodigoAsesorFk($codigoAsesorFk): void
+    {
+        $this->codigoAsesorFk = $codigoAsesorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel($asesorRel): void
+    {
+        $this->asesorRel = $asesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param mixed $comentario
+     */
+    public function setComentario($comentario): void
+    {
+        $this->comentario = $comentario;
     }
 
 

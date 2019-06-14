@@ -78,6 +78,11 @@ class GenAsesor
     protected $reciboAsesorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarReciboDetalle",mappedBy="asesorRel")
+     */
+    protected $recibosDetallesAsesorRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo",mappedBy="asesorRel")
      */
     protected $anticipoAsesorRel;

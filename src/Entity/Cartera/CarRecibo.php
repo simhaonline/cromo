@@ -193,7 +193,6 @@ class CarRecibo
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="reciboAsesorRel")
      * @ORM\JoinColumn(name="codigo_asesor_fk", referencedColumnName="codigo_asesor_pk")
-
      */
     protected $asesorRel;
 

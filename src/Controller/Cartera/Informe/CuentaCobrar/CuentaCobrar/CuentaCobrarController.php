@@ -44,7 +44,7 @@ class CuentaCobrarController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('btnPdf', SubmitType::class, array('label' => 'Estado cuenta'))
+            ->add('btnEstadoCuenta', SubmitType::class, array('label' => 'Estado cuenta'))
             ->add('btnGenerarVencimientos', SubmitType::class, array('label' => 'Generar rango'))
             ->add('btnCarteraEdadesCliente', SubmitType::class, array('label' => 'Cartera edades'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
@@ -59,7 +59,7 @@ class CuentaCobrarController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
-        if ($form->get('btnFiltrar')->isClicked() || $form->get('btnPdf')->isClicked() || $form->get('btnCarteraEdadesCliente')->isClicked() || $form->get('btnExcel')->isClicked()) {
+        if ($form->get('btnFiltrar')->isClicked() || $form->get('btnEstadoCuenta')->isClicked() || $form->get('btnCarteraEdadesCliente')->isClicked() || $form->get('btnExcel')->isClicked()) {
             if ($request->get('cboTipoCuentaRel')){
                 $codigosCuenta = null;
                 foreach ($request->get('cboTipoCuentaRel') as $codigo){
@@ -91,7 +91,7 @@ class CuentaCobrarController extends Controller
             $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
             $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
         }
-        if ($form->get('btnPdf')->isClicked()) {
+        if ($form->get('btnEstadoCuenta')->isClicked()) {
             $formato = new CuentaCobrar();
             $formato->Generar($em);
         }

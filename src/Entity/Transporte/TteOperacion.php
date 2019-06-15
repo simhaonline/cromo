@@ -87,6 +87,11 @@ class TteOperacion
     private $codigoCuentaDespachoAnticipoFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_despacho_pagar_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaDespachoPagarFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="operacionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -561,6 +566,22 @@ class TteOperacion
     public function setCodigoCuentaDespachoAnticipoFk($codigoCuentaDespachoAnticipoFk): void
     {
         $this->codigoCuentaDespachoAnticipoFk = $codigoCuentaDespachoAnticipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaDespachoPagarFk()
+    {
+        return $this->codigoCuentaDespachoPagarFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaDespachoPagarFk
+     */
+    public function setCodigoCuentaDespachoPagarFk($codigoCuentaDespachoPagarFk): void
+    {
+        $this->codigoCuentaDespachoPagarFk = $codigoCuentaDespachoPagarFk;
     }
 
 

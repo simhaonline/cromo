@@ -72,15 +72,15 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCuentaDespachoPapeleriaFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label"></label>
+                <label class="col-sm-2 control-label">Flete:</label>
                 <div class="col-sm-4">
-
+                    {{ form_widget(form.codigoCuentaDespachoFleteFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Flete:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Por pagar:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.codigoCuentaDespachoFleteFk, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.codigoCuentaDespachoPagarFk, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label class="col-sm-2 control-label">Anticipo:</label>
                 <div class="col-sm-4">

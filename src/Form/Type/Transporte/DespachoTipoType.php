@@ -22,6 +22,7 @@ class DespachoTipoType extends AbstractType
             ->add('exigeNumero', CheckboxType::class, array('required'  => false))
             ->add('generaMonitoreo', CheckboxType::class, array('required'  => false))
             ->add('viaje', CheckboxType::class, array('required'  => false))
+            ->add('contabilizar', CheckboxType::class, array('required'  => false))
             ->add('codigoComprobanteFk',TextType::class,['required' => false,'label' => 'Codigo comprobante:'])
             ->add('codigoCuentaFleteFk',TextType::class,['required' => false,'label' => 'Codigo cuenta flete:'])
             ->add('codigoCuentaRetencionFuenteFk',TextType::class,['required' => false,'label' => 'Codigo cuenta retencion fuente:'])
@@ -32,8 +33,7 @@ class DespachoTipoType extends AbstractType
             ->add('codigoCuentaPapeleriaFk',TextType::class,['required' => false,'label' => 'Codigo cuenta papeleria:'])
             ->add('codigoCuentaAnticipoFk',TextType::class,['required' => false,'label' => 'Codigo cuenta anticipo:'])
             ->add('codigoCuentaPagarFk',TextType::class,['required' => false,'label' => 'Codigo cuenta pagar:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

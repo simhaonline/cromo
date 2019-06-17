@@ -48,6 +48,11 @@ class CrmContacto
     protected $visitaContactoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmNegocio", mappedBy="contactoRel")
+     */
+    protected $negociosContactoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array

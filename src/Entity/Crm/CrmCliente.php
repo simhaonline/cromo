@@ -93,6 +93,11 @@ class CrmCliente
     protected $visitaClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmNegocio", mappedBy="clienteRel")
+     */
+    protected $negociosClienteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoClientePk()

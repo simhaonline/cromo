@@ -276,6 +276,8 @@
     <script src="{{ asset('js/plugin/bootstrap-slider/bootstrap-slider.min.js') }}"></script>
     <script src="{{ asset('js/plugin/msie-fix/jquery.mb.browser.min.js') }}"></script>
     <script src="{{ asset('js/plugin/fastclick/fastclick.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/chartjs/chart.min.js') }}"></script>
     <script src="{{ asset('js/demo.min.js') }}"></script>
     <script src="{{ asset('js/app.min.js') }}"></script>
     <script src="{{ asset('js/moment.min.js') }}"></script>
@@ -393,6 +395,57 @@
                 }
             });
         }
+    </script>
+    <script>
+        $(document).ready(function(){
+            var doughnutChart = function() {
+                var config = {
+                    type: 'doughnut',
+                    data:
+                        {
+                            datasets: [
+                                {
+                                    data: [
+                                        11,
+                                        16,
+                                        7,
+                                        3,
+                                        14
+                                    ],
+                                    backgroundColor: [
+                                        myapp_get_color.success_200,
+                                        myapp_get_color.success_400,
+                                        myapp_get_color.primary_50,
+                                        myapp_get_color.primary_300,
+                                        myapp_get_color.primary_500
+                                    ],
+                                    label: 'My dataset' // for legend
+
+
+                                }],
+                            labels: [
+                                "USA",
+                                "Germany",
+                                "Austalia",
+                                "Canada",
+                                "France"
+                            ]
+                        },
+                    options:
+                        {
+                            responsive: true,
+                            legend:
+                                {
+                                    display: true,
+                                    position: 'bottom',
+                                }
+                        }
+                };
+                new Chart($("#doughnutChart > canvas").get(0).getContext("2d"), config);
+                doughnutChart();
+            }
+        });
+
     </script>
 {% endblock %}
 </body>

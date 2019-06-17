@@ -22,6 +22,11 @@ class CrmFase
     private $nombre;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmNegocio", mappedBy="negociosContactoRel")
+     */
+    protected $negociosFaseRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoFasePk()
@@ -51,6 +56,22 @@ class CrmFase
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNegociosFaseRel()
+    {
+        return $this->negociosFaseRel;
+    }
+
+    /**
+     * @param mixed $negociosFaseRel
+     */
+    public function setNegociosFaseRel($negociosFaseRel): void
+    {
+        $this->negociosFaseRel = $negociosFaseRel;
     }
 
 

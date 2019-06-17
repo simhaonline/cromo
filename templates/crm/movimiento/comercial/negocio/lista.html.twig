@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {#    <canvas id="myChart" style="height:40vh; width:80vw"></canvas>#}
+    <div id="doughnutChart">
+        <canvas style="width:100%; height:300px;"></canvas>
+    </div>
+    <br>
+    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
+    <div class="table-responsive" style="padding:0px;">
+        {{ form_start(formBotonera) }}
+        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
+        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
+        {{ form_end(formBotonera) }}
+    </div>
+{% endblock %}

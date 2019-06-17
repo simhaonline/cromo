@@ -16,7 +16,7 @@ class FaseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoFasePk',TextType::class,['required' => true,'label' => 'Codigo face:'])
+            ->add('codigoFasePk',TextType::class,['required' => true,'label' => 'Codigo fase:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('crm_movimiento_comercial_negocio_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arNegocio.codigoNegocioPk }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arNegocio.fecha| date('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA CIERRE:</td>
+            <td class="td-in-well">{{ arNegocio.fechaCierre| date('Y-m-d') }}</td>
+            <td class="titulo">FECHA NEGOCIO:</td>
+            <td class="td-in-well">{{ arNegocio.fechaNegocio| date('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">VALOR:</td>
+            <td class="numero">{{ arNegocio.VALOR | number_format(0, '.', ',') }}</td>
+            <td class="titulo">FECHA NEGOCIO:</td>
+            <td class="td-in-well">{{ arNegocio.comentarios }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CLIENTE:</td>
+            <td class="td-in-well">{{ arNegocio.clienteRel.nombreCorto|default("") }}</td>
+
+            <td class="titulo">CONTACTO:</td>
+            <td class="td-in-well">{{ arNegocio.contactoRel.nombreCorto | default("") }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FASE:</td>
+            <td class="td-in-well">{{ arNegocio.faseRel.nombre | default("") }}</td>
+
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

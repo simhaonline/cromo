@@ -38,6 +38,7 @@ class OperacionType extends AbstractType
             ->add('codigoCuentaDespachoEstampillaFk',TextType::class,['required' => false,'label' => 'Cuenta despacho estampilla'])
             ->add('codigoCuentaDespachoPapeleriaFk',TextType::class,['required' => false,'label' => 'Cuenta despacho papeleria'])
             ->add('codigoCuentaDespachoAnticipoFk',TextType::class,['required' => false,'label' => 'Cuenta despacho anticipo'])
+            ->add('codigoCuentaDespachoPagarFk',TextType::class,['required' => false,'label' => 'Cuenta despacho pagar'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

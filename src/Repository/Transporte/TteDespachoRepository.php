@@ -1259,17 +1259,17 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('d.vrDescuentoPapeleria')
             ->addSelect('d.vrDescuentoSeguridad')
             ->addSelect('dt.codigoComprobanteFk')
-            ->addSelect('dt.codigoCuentaFleteFk')
-            ->addSelect('dt.codigoCuentaIndustriaComercioFk')
-            ->addSelect('dt.codigoCuentaRetencionFuenteFk')
-            ->addSelect('dt.codigoCuentaCargueFk')
-            ->addSelect('dt.codigoCuentaSeguridadFk')
-            ->addSelect('dt.codigoCuentaEstampillaFk')
-            ->addSelect('dt.codigoCuentaAnticipoFk')
-            ->addSelect('dt.codigoCuentaPapeleriaFk')
-            ->addSelect('dt.codigoCuentaPagarFk')
             ->addSelect('dt.contabilizar')
             ->addSelect('o.codigoCentroCostoFk')
+            ->addSelect('o.codigoCuentaDespachoFleteFk')
+            ->addSelect('o.codigoCuentaDespachoIndustriaComercioFk')
+            ->addSelect('o.codigoCuentaDespachoRetencionFuenteFk')
+            ->addSelect('o.codigoCuentaDespachoCargueFk')
+            ->addSelect('o.codigoCuentaDespachoSeguridadFk')
+            ->addSelect('o.codigoCuentaDespachoEstampillaFk')
+            ->addSelect('o.codigoCuentaDespachoAnticipoFk')
+            ->addSelect('o.codigoCuentaDespachoPapeleriaFk')
+            ->addSelect('o.codigoCuentaDespachoPagarFk')
             ->leftJoin('d.vehiculoRel', 'v')
             ->leftJoin('d.despachoTipoRel', 'dt')
             ->leftJoin('d.operacionRel', 'o')
@@ -1293,10 +1293,10 @@ class TteDespachoRepository extends ServiceEntityRepository
 
                             //Cuenta flete pagado
                             if ($arDespacho['vrFletePago'] > 0) {
-                                if ($arDespacho['codigoCuentaFleteFk']) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arDespacho['codigoCuentaFleteFk']);
+                                if ($arDespacho['codigoCuentaDespachoFleteFk']) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arDespacho['codigoCuentaDespachoFleteFk']);
                                     if (!$arCuenta) {
-                                        $error = "No se encuentra la cuenta del flete " . $arDespacho['codigoCuentaFleteFk'];
+                                        $error = "No se encuentra la cuenta del flete " . $arDespacho['codigoCuentaDespachoFleteFk'];
                                         break;
                                     }
                                     $arRegistro = new FinRegistro();
@@ -1331,7 +1331,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                             //Cuenta industria y comercio
                             if ($arDespacho['vrIndustriaComercio'] > 0) {
                                 $descripcion = "INDUSTRIA COMERCIO";
-                                $cuenta = $arDespacho['codigoCuentaIndustriaComercioFk'];
+                                $cuenta = $arDespacho['codigoCuentaDespachoIndustriaComercioFk'];
                                 if ($cuenta) {
                                     $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if (!$arCuenta) {
@@ -1373,7 +1373,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                             //Cuenta retencion fuente
                             if ($arDespacho['vrRetencionFuente'] > 0) {
                                 $descripcion = "RETENCION FUENTE";
-                                $cuenta = $arDespacho['codigoCuentaRetencionFuenteFk'];
+                                $cuenta = $arDespacho['codigoCuentaDespachoRetencionFuenteFk'];
                                 if ($cuenta) {
                                     $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if (!$arCuenta) {
@@ -1415,7 +1415,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                             //Descuento seguridad
                             if ($arDespacho['vrDescuentoSeguridad'] > 0) {
                                 $descripcion = "DESCUENTO SEGURIDAD";
-                                $cuenta = $arDespacho['codigoCuentaSeguridadFk'];
+                                $cuenta = $arDespacho['codigoCuentaDespachoSeguridadFk'];
                                 if ($cuenta) {
                                     $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if (!$arCuenta) {
@@ -1454,7 +1454,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                             //Descuento cargue
                             if ($arDespacho['vrDescuentoCargue'] > 0) {
                                 $descripcion = "DESCUENTO CARGUE";
-                                $cuenta = $arDespacho['codigoCuentaCargueFk'];
+                                $cuenta = $arDespacho['codigoCuentaDespachoCargueFk'];
                                 if ($cuenta) {
                                     $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if (!$arCuenta) {
@@ -1493,7 +1493,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                             //Descuento estampilla
                             if ($arDespacho['vrDescuentoEstampilla'] > 0) {
                                 $descripcion = "DESCUENTO ESTAMPILLA";
-                                $cuenta = $arDespacho['codigoCuentaEstampillaFk'];
+                                $cuenta = $arDespacho['codigoCuentaDespachoEstampillaFk'];
                                 if ($cuenta) {
                                     $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if (!$arCuenta) {
@@ -1532,7 +1532,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                             //Descuento papeleria
                             if ($arDespacho['vrDescuentoPapeleria'] > 0) {
                                 $descripcion = "DESCUENTO PAPELERIA";
-                                $cuenta = $arDespacho['codigoCuentaPapeleriaFk'];
+                                $cuenta = $arDespacho['codigoCuentaDespachoPapeleriaFk'];
                                 if ($cuenta) {
                                     $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if (!$arCuenta) {
@@ -1571,7 +1571,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                             //Anticipo
                             if ($arDespacho['vrAnticipo'] > 0) {
                                 $descripcion = "ANTICIPO";
-                                $cuenta = $arDespacho['codigoCuentaAnticipoFk'];
+                                $cuenta = $arDespacho['codigoCuentaDespachoAnticipoFk'];
                                 if ($cuenta) {
                                     $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if (!$arCuenta) {
@@ -1609,7 +1609,7 @@ class TteDespachoRepository extends ServiceEntityRepository
 
                             //Saldo
                             $descripcion = "POR PAGAR";
-                            $cuenta = $arDespacho['codigoCuentaPagarFk'];
+                            $cuenta = $arDespacho['codigoCuentaDespachoPagarFk'];
                             if ($cuenta) {
                                 $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                 if (!$arCuenta) {
@@ -1643,7 +1643,6 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
                                 break;
                             }
-
 
                             $arDespachoAct = $em->getRepository(TteDespacho::class)->find($arDespacho['codigoDespachoPk']);
                             $arDespachoAct->setEstadoContabilizado(1);

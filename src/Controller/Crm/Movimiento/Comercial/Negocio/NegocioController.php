@@ -33,16 +33,11 @@ class NegocioController extends ControllerListenerGeneral
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);
-//        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-//            if ($formFiltro->get('btnFiltro')->isClicked()) {
-//                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
-//            }
-//            if($formFiltro->get('form_btnEliminar')->isClicked()){
-//                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                $this->get("UtilidadesModelo")->eliminar(CrmFase::class, $arrSeleccionados);
-//                return $this->redirect($this->generateUrl('crm_movimiento_comercial_fase_lista'));
-//            }
-//        }
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltro')->isClicked()) {
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+            }
+        }
         $datos = $this->getDatosLista();
 
         // Chart

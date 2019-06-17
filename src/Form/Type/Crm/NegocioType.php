@@ -27,6 +27,7 @@ class NegocioType extends AbstractType
             ->add('fechaNegocio', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
             ->add('valor', NumberType::class, ['required' => true, 'label' => 'Codigo fase:'])
             ->add('comentarios', TextareaType::class, ['required' => true, 'label' => 'Codigo fase:'])
+            ->add('nombre', TextType::class, ['required' => true, 'label' => 'Codigo fase:'])
             ->add('clienteRel', EntityType::class, [
                 'required' => false,
                 'class' => 'App\Entity\Crm\CrmCliente',
@@ -72,11 +73,9 @@ class NegocioType extends AbstractType
         $campos = '[
             {"campo":"codigoNegocioPk", "tipo":"pk",        "ayuda":"Codigo",           "titulo":"ID"},
             {"campo":"fecha",           "tipo":"fecha",     "ayuda":"Fecha",            "titulo":"FECHA"},
-            
             {"campo":"fechaCierre",     "tipo":"fecha",     "ayuda":"Fecha cierre",     "titulo":"FECHA CIERRE"},
             {"campo":"fechaNegocio",    "tipo":"fecha",     "ayuda":"Fecha nagocio",    "titulo":"FECHA NEGOCIO"},
             {"campo":"comentarios",     "tipo":"texto",     "ayuda":"Comentarios",      "titulo":"COMENTARIOS"}
-          
         ]';
         //{"campo":"cargoRel.nombre",                     "tipo":"texto"   ,"ayuda":""                     ,              "titulo":"CARGO", "relacion":""}
         return $campos;
@@ -85,8 +84,7 @@ class NegocioType extends AbstractType
     public function getEstructuraPropiedadesFiltro()
     {
         $campos = '[
-            {"child":"codigoNegocioPk",       "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
-
+            {"child":"codigoClienteFk", "tipo":"EntityType","propiedades":{"class":"CrmCliente","choice_label":"nombreCorto", "label":"TODOS"}}
         ]';
         return $campos;
     }

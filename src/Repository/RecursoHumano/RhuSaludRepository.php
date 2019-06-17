@@ -18,7 +18,7 @@ class RhuSaludRepository extends ServiceEntityRepository
     }
 
     public function camposPredeterminados(){
-        return $this->_em->createQueryBuilder()
+        $qb = $this-> _em->createQueryBuilder()
             ->select('s.codigoSaludPk AS ID')
             ->addSelect('s.nombre')
             ->addSelect('s.porcentajeEmpleado')

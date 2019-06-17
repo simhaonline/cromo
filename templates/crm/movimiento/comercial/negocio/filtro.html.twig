@@ -11,11 +11,7 @@
                 <div class="form-group form-group-sm">
                     <label class="col-sm-1 control-label">Codigo:</label>
                     <div class="col-sm-5">
-                        {#                        {{ form_widget(formFiltro.codigoNegocioPk, { 'attr': {'class': 'form-control'} }) }}#}
-                    </div>
-                    <label class="col-sm-1 control-label">Tipo:</label>
-                    <div class="col-sm-5">
-                        {#                        {{ form_widget(formFiltro.nombre, { 'attr': {'class': 'form-control'} }) }}#}
+                        {{ form_widget(formFiltro.codigoClienteFk, { 'attr': {'class': 'form-control'} }) }}
                     </div>
                 </div>
                 {{ form_end(formFiltro) }}

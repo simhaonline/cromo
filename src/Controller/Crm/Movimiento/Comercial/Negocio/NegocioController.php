@@ -8,6 +8,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Crm\CrmNegocio;
 use App\Form\Type\Crm\NegocioType;
+use Ob\HighchartsBundle\Highcharts\Highchart;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -43,10 +44,23 @@ class NegocioController extends ControllerListenerGeneral
 //            }
 //        }
         $datos = $this->getDatosLista();
+
+        // Chart
+        $series = array(
+            array("name" => "Data Serie Name",    "data" => array(1,2,4,5,6,3,8))
+        );
+        $ob = new Highchart();
+        $ob->chart->renderTo('doughnut');  // The #id of the div where to render the chart
+        $ob->title->text('Chart Title');
+        $ob->xAxis->title(array('text'  => "Horizontal x title"));
+        $ob->yAxis->title(array('text'  => "Vertical y title"));
+        $ob->series($series);
+
         return $this->render('crm/movimiento/comercial/negocio/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView()
+            'formFiltro' => $formFiltro->createView(),
+            'chart' => $ob
         ]);
     }
 

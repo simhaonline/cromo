@@ -19,6 +19,11 @@ class CrmNegocio
     private $codigoNegocioPk;
 
     /**
+     * @ORM\Column(name="nombre" , type="string" , length=50)
+     */
+    private  $nombre;
+
+    /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
@@ -266,5 +271,21 @@ class CrmNegocio
     public function setFaseRel($faseRel): void
     {
         $this->faseRel = $faseRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
     }
 }

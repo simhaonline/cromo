@@ -31,40 +31,42 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>CONCEPTO</th>
-                            <th>MOD</th>
-                            <th title="Dia desde">DES</th>
-                            <th title="Dia hasta">HAS</th>
+                            <th title="Concepto">CONCEPTO</th>
+                            <th title="Modalidad">MOD</th>
+                            <th title="Fecha desde">DES</th>
+                            <th title="Fecha hasta">HAS</th>
                             <th>CANT</th>
-                            <th>LU</th>
-                            <th>MA</th>
-                            <th>MI</th>
-                            <th>JU</th>
-                            <th>VI</th>
-                            <th>SA</th>
-                            <th>DO</th>
-                            <th>FE</th>
-                            <th title="Horas (Programadas)">H(P)</th>
-                            <th title="Horas diurnas (Programadas)">HD(P)</th>
-                            <th title="Horas nocturnas (Programadas)">HN(P)</th>
-                            <th>DIAS</th>
-                            <th title="Valor salario base">BASE</th>
+                            <th>L</th>
+                            <th>M</th>
+                            <th>X</th>
+                            <th>J</th>
+                            <th>V</th>
+                            <th>S</th>
+                            <th>D</th>
+                            <th>F</th>
+                            <th title="Horas totales">H</th>
+                            <th title="Horas diurnas">HD</th>
+                            <th title="Horas nocturnas">HN</th>
+                            <th title="Salario base">BASE</th>
                             <th title="Precio minimo">P.MINIMO</th>
                             <th title="Precio ajustado">P.AJUSTADO</th>
                             <th title="Porcentaje iva">%IVA</th>
                             <th title="Iva">IVA</th>
                             <th>SUBTOTAL</th>
+                            <td></td>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for arPedidoDetalle in arPedidoDetalles %}
-                            <td> {{ arPedidoDetalle.codigoPedidoDetallePk }} <input type="hidden" name="arrCodigo[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"></td>
+                            <td> {{ arPedidoDetalle.codigoPedidoDetallePk }} <input type="hidden" name="arrCodigo[]"
+                                                                                    value="{{ arPedidoDetalle.codigoPedidoDetallePk }}">
+                            </td>
                             <td>{{ arPedidoDetalle.conceptoNombre }}</td>
                             <td>{{ arPedidoDetalle.modalidadNombre }}</td>
-                            <td>{{ arPedidoDetalle.diaDesde }}</td>
-                            <td>{{ arPedidoDetalle.diaHasta }}</td>
+                            <td>{{ arPedidoDetalle.fechaDesde | date('Y-m-d') }}</td>
+                            <td>{{ arPedidoDetalle.fechaHasta | date('Y-m-d') }}</td>
                             <td>{{ arPedidoDetalle.cantidad }}</td>
                             <td>{{ arPedidoDetalle.lunes ? 'S':'N' }}</td>
                             <td>{{ arPedidoDetalle.martes ? 'S':'N' }}</td>
@@ -78,18 +80,18 @@
                             <td>{{ arPedidoDetalle.horasDiurnasProgramadas }}</td>
                             <td>{{ arPedidoDetalle.horasNocturnasProgramadas }}</td>
                             <td></td>
-                            <td class="numero" >{{ arPedidoDetalle.vrSalarioBase }}</td>
+                            <td class="numero">{{ arPedidoDetalle.vrSalarioBase }}</td>
                             <td class="numero">{{ arPedidoDetalle.vrPrecioMinimo }}</td>
                             <td style="text-align: center;"><input type="number"
                                                                    name="arrPrecioAjustado[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
                                                                    value="{{ arPedidoDetalle.vrPrecioAjustado }}"
                                                                    style="text-align: right; width:60px"
                                                                    size="10"></td>
-                                                        <td style="text-align: center;"><input type="number"
-                                                                                               name="arrPorcentajeIva[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
-                                                                                               value="{{ arPedidoDetalle.porcentajeIva }}"
-                                                                                               style="text-align: right; width:60px"
-                                                                                               size="10"></td>
+                            <td style="text-align: center;"><input type="number"
+                                                                   name="arrPorcentajeIva[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
+                                                                   value="{{ arPedidoDetalle.porcentajeIva }}"
+                                                                   style="text-align: right; width:60px"
+                                                                   size="10"></td>
                             <td class="numero">{{ arPedidoDetalle.vrIva }}</td>
                             <td class="numero">{{ arPedidoDetalle.vrSubtotal }}</td>
                             <td><input type="checkbox" name="ChkSeleccionar[]"

@@ -3,6 +3,7 @@
 namespace App\Form\Type\Turno;
 
 use App\Entity\Turno\TurConcepto;
+use App\Entity\Turno\TurModalidad;
 use App\Entity\Turno\TurPedidoDetalle;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,7 +23,7 @@ class PedidoDetalleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('contratoConceptoRel', EntityType::class, [
+            ->add('conceptoRel', EntityType::class, [
                 'required' => true,
                 'class' => TurConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -32,12 +33,12 @@ class PedidoDetalleType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'nombre:'
             ])
-            ->add('contratoModalidadRel', EntityType::class, [
+            ->add('modalidadRel', EntityType::class, [
                 'required' => true,
-                'class' => 'TurModalidad.php',
+                'class' => TurModalidad::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('com')
-                        ->orderBy('com.nombre', 'ASC');
+                    return $er->createQueryBuilder('m')
+                        ->orderBy('m.nombre', 'DESC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'nombre:'
@@ -54,12 +55,8 @@ class PedidoDetalleType extends AbstractType
             ])
             ->add('cantidad', NumberType::class)
             ->add('vrPrecioAjustado', NumberType::class, array('required' => false))
-            ->add('diaDesde', NumberType::class)
-            ->add('diaHasta', NumberType::class)
-            ->add('porcentajeBaseIva', NumberType::class)
-            ->add('detalleFactura', TextType::class, array('required' => false))
-            ->add('horaInicio', TimeType::class)
-            ->add('horaFin', TimeType::class)
+            ->add('fechaDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
+            ->add('fechaHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('lunes', CheckboxType::class, array('required' => false))
             ->add('martes', CheckboxType::class, array('required' => false))
             ->add('miercoles', CheckboxType::class, array('required' => false))
@@ -69,7 +66,6 @@ class PedidoDetalleType extends AbstractType
             ->add('domingo', CheckboxType::class, array('required' => false))
             ->add('festivo', CheckboxType::class, array('required' => false))
             ->add('compuesto', CheckboxType::class, array('required' => false))
-            ->add('detalle', TextareaType::class, array('required' => false))
             ->add('vrSalarioBase', NumberType::class)
             ->add('guardar', SubmitType::class);
     }

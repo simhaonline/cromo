@@ -33,7 +33,9 @@ class ContratoController extends ControllerListenerGeneral
 
     /**
      * @param Request $request
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/turno/movimiento/comercial/contrato/lista", name="turno_movimiento_comercial_contrato_lista")
@@ -211,8 +213,10 @@ class ContratoController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @param $codigoContrato
-     * @param int $codigoContratoDetalle
+     * @param $id
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/turno/movimiento/comercial/contrato/detalle/nuevo/{codigoContrato}/{id}", name="turno_movimiento_comercial_contrato_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $codigoContrato, $id)

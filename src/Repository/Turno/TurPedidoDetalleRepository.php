@@ -2,8 +2,11 @@
 
 namespace App\Repository\Turno;
 
+use App\Entity\Turno\TurContrato;
+use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -21,8 +24,8 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd');
         $queryBuilder
             ->select('pd.codigoPedidoDetallePk')
-            ->addSelect('pd.diaDesde')
-            ->addSelect('pd.diaHasta')
+            ->addSelect('pd.fechaDesde')
+            ->addSelect('pd.fechaHasta')
             ->addSelect('pd.cantidad')
             ->addSelect('pd.lunes')
             ->addSelect('pd.martes')
@@ -89,22 +92,34 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arPedido
-     * @param $arrSeleccionados
+     * @param $arrDetallesSeleccionados
+     * @param $id
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function eliminar($arPedido, $arrSeleccionados)
+    public function eliminar($id, $arrDetallesSeleccionados)
     {
         $em = $this->getEntityManager();
-        if (count($arrSeleccionados) > 0) {
-            foreach ($arrSeleccionados as $codigoPedidoDetalle) {
-                $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
-                if ($arPedidoDetalle) {
-                    $em->remove($arPedidoDetalle);
+        $arRegistro = $em->getRepository(TurPedido::class)->find($id);
+        if ($arRegistro->getEstadoAutorizado() == 0) {
+            if ($arrDetallesSeleccionados) {
+                if (count($arrDetallesSeleccionados)) {
+                    foreach ($arrDetallesSeleccionados as $codigo) {
+                        $ar = $this->getEntityManager()->getRepository(TurPedidoDetalle::class)->find($codigo);
+                        if ($ar) {
+                            $this->getEntityManager()->remove($ar);
+                            $this->getEntityManager()->flush();
+                        }
+                    }
+                    try {
+                        $this->getEntityManager()->flush();
+                    } catch (\Exception $e) {
+                        Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                    }
                 }
             }
-            $em->flush();
+        } else {
+            Mensajes::error('No se puede eliminar, el registro se encuentra autorizado');
         }
     }
 

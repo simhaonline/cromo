@@ -1,5 +1,5 @@
 {% extends 'base_sin_menu.html.twig' %}
-{% block title %}Contrato detalle nuevo - Soga App{% endblock %}
+{% block title %}Contrato detalle nuevo - Semantica{% endblock %}
 {% block content %}
     <section class="content-header">
         <h1>
@@ -20,8 +20,10 @@
                         {{ form_errors(form.conceptoRel) }}
 
                     </div>
-                    <label class="col-sm-2 control-label"></label>
+                    <label class="col-sm-2 control-label">Puesto:</label>
                     <div class="col-sm-4">
+                        {{ form_widget(form.puestoRel) }}
+                        {{ form_errors(form.puestoRel) }}
 
                     </div>
                 </div>
@@ -31,14 +33,6 @@
                         {{ form_widget(form.modalidadRel) }}
                         {{ form_errors(form.modalidadRel) }}
                     </div>
-                    <label class="col-sm-2 control-label">Puesto:</label>
-                    <div class="col-sm-4">
-                        {{ form_widget(form.puestoRel) }}
-                        {{ form_errors(form.puestoRel) }}
-
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
                     <label class="col-sm-2 control-label"></label>
                     <div class="col-sm-1">
                     </div>
@@ -82,35 +76,35 @@
                         </div>
                         <div class="col-sm-offset-3 col-sm-9">
                             <div class="col-sm-4">{{ form_widget(form.lunes) }}
-                            {{ form_errors(form.lunes) }}</div>
+                                {{ form_errors(form.lunes) }}</div>
                             <div class="col-sm-4">{{ form_widget(form.martes) }}
-                            {{ form_errors(form.martes) }}</div>
+                                {{ form_errors(form.martes) }}</div>
                             <div class="col-sm-4">{{ form_widget(form.miercoles) }}
-                            {{ form_errors(form.miercoles) }}</div>
+                                {{ form_errors(form.miercoles) }}</div>
                             <div class="col-sm-4">{{ form_widget(form.jueves) }}
-                            {{ form_errors(form.jueves) }}</div>
+                                {{ form_errors(form.jueves) }}</div>
                             <div class="col-sm-4">{{ form_widget(form.viernes) }}
-                            {{ form_errors(form.viernes) }}</div>
+                                {{ form_errors(form.viernes) }}</div>
                             <div class="col-sm-4">{{ form_widget(form.sabado) }}
-                            {{ form_errors(form.sabado) }}</div>
+                                {{ form_errors(form.sabado) }}</div>
                             <div class="col-sm-4">{{ form_widget(form.domingo) }}
-                            {{ form_errors(form.domingo) }}</div>
+                                {{ form_errors(form.domingo) }}</div>
                             <div class="col-sm-4">{{ form_widget(form.festivo) }}
-                            {{ form_errors(form.festivo) }}</div>
+                                {{ form_errors(form.festivo) }}</div>
                         </div>
                     </div>
                 </div>
 
-                    <div class="form-group form-group-sm">
-                        <label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-4">
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4">
 
-                        </div>
-                        <label class="col-sm-8 control-label"></label>
-                        <div class="col-sm-4">
-                            <div class="col-sm-4">{{ form_widget(form.compuesto) }}</div>
-                        </div>
                     </div>
+                    <label class="col-sm-8 control-label"></label>
+                    <div class="col-sm-4">
+                        <div class="col-sm-4">{{ form_widget(form.compuesto) }}</div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="modal-footer">

@@ -39,12 +39,10 @@ class PedidoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Tipo pedido:'
             ])
-        ->add('fechaProgramacion', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
-        ->add('estrato', NumberType::class, array('required'=>false))
-        ->add('vrSalarioBase', NumberType::class)
-        ->add('comentario', TextareaType::class, array('required' => false))
-        ->add('soporte', TextType::class, array('required' => false))
-        ->add('guardar', SubmitType::class);
+            ->add('estrato', NumberType::class, array('required' => false))
+            ->add('vrSalarioBase', NumberType::class)
+            ->add('comentario', TextareaType::class, array('required' => false))
+            ->add('guardar', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

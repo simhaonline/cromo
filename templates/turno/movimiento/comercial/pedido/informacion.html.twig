@@ -2,72 +2,69 @@
     <tr>
         <td class="titulo">CODIGO:</td>
         <td class="td-in-well">{{ arPedido.codigoPedidoPk }}</td>
-        <td class="titulo">USUARIO:</td>
-        <td class="td-in-well" style="text-transform: uppercase;">{{ arPedido.usuario }}</td>
-        <td class="titulo">PRECIO AJUSTADO:</td>
-        <td align="right">{{ arPedido.vrTotalPrecioAjustado | number_format(0, '.', ',') }}</td>
-    </tr>
-    <tr>
-        <td class="titulo">NUMERO:</td>
-        <td class="td-in-well">{{ arPedido.numero }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
-        <td class="titulo">SALARIO BASE:</td>
-        <td align="right">{{ arPedido.vrSalarioBase | number_format(0, '.', ',') }}</td>
+        <td class="titulo">COSTO:</td>
+        <td align="right">{{ arPedido.vrTotalCosto | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
         <td class="titulo">CLIENTE:</td>
         <td class="td-in-well">{{ arPedido.clienteRel.nombreCorto }}</td>
-        <td class="titulo">FECHA:</td>
-        <td class="td-in-well">{{ arPedido.fecha | date("Y-m-d H:i:s") }}</td>
+        <td class="titulo">SALARIO BASE:</td>
+        <td align="right">{{ arPedido.vrSalarioBase | number_format(0, '.', ',') }}</td>
         <td class="titulo">MINIMO:</td>
         <td align="right">{{ arPedido.vrTotalPrecioMinimo | number_format(0, '.', ',') }}</td>
-    </tr>
-    <tr>
-        <td class="titulo">SECTOR:</td>
-        <td class="td-in-well">{{ arPedido.sectorRel.nombre }}</td>
-        <td class="titulo"></td>
-        <td class="td-in-well"></td>
-        <td class="titulo">TOTAL SERVICIOS:</td>
-        <td align="right">{{ arPedido.vrTotalServicio | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
         <td class="titulo">TIPO:</td>
         <td class="td-in-well">{{ arPedido.pedidoTipoRel.nombre }}</td>
         <td class="titulo">ESTRATO:</td>
         <td class="td-in-well">{{ arPedido.estrato }}</td>
+        <td class="titulo">TOTAL SERVICIOS:</td>
+        <td align="right">{{ arPedido.vrTotalServicio | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">SECTOR:</td>
+        <td class="td-in-well">{{ arPedido.sectorRel.nombre }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
         <td class="titulo">SUBTOTAL:</td>
         <td align="right">{{ arPedido.vrSubtotal | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">USUARIO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arPedido.usuario }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo">BASE AIU:</td>
+        <td align="right">{{ arPedido.vrBaseAiu | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
         <td class="titulo">HORAS:</td>
         <td class="td-in-well">{{ arPedido.horas }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
-
-        <td class="titulo">BASE AIU:</td>
-        <td align="right">{{ arPedido.vrBaseAiu | number_format(0, '.', ',') }}</td>
-    </tr>
-    <tr>
-        <td class="titulo">HORAS DIURNAS:</td>
-        <td class="td-in-well">{{ arPedido.horasDiurnas }}</td>
-
-        <td class="titulo"></td>
-        <td class="td-in-well"></td>
         <td class="titulo">IVA:</td>
         <td align="right">{{ arPedido.vrIva | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
-        <td class="titulo">HORAS NOCTURNAS:</td>
-        <td class="td-in-well">{{ arPedido.horasNocturnas }}</td>
-
+        <td class="titulo">HORAS DIURNAS:</td>
+        <td class="td-in-well">{{ arPedido.horasDiurnas }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
         <td class="titulo">TOTAL:</td>
         <td align="right">{{ arPedido.vrTotal | number_format(0, '.', ',') }}</td>
     </tr>
     <tr>
+        <td class="titulo">HORAS NOCTURNAS:</td>
+        <td class="td-in-well">{{ arPedido.horasNocturnas }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+    </tr>
+    <tr>
         <td class="titulo">COMENTARIO:</td>
-        <td class="td-in-well" colspan="5">{{ arPedido.comentario }}</td>
+        <td class="td-in-well" colspan="5" colspan="5">{{ arPedido.comentario }}</td>
     </tr>
 </table>

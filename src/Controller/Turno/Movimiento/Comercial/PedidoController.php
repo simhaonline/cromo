@@ -6,8 +6,12 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Turno\TurCliente;
+use App\Entity\Turno\TurConfiguracion;
+use App\Entity\Turno\TurContrato;
+use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
+use App\Form\Type\Turno\ContratoDetalleType;
 use App\Form\Type\Turno\PedidoType;
 use App\Form\Type\Turno\PedidoDetalleType;
 use App\Formato\Inventario\Pedido;
@@ -83,8 +87,10 @@ class PedidoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('turno_movimiento_comercial_pedido_lista'));
             }
         } else {
-//            $arPedido->setFechaPago(new \DateTime('now'));
+            $arrConfiguracion = $em->getRepository(TurConfiguracion::class)->comercialNuevo();
+            $arPedido->setVrSalarioBase($arrConfiguracion['vrSalarioMinimo']);
             $arPedido->setUsuario($this->getUser()->getUserName());
+            $arPedido->setEstrato(6);
         }
         $form = $this->createForm(PedidoType::class, $arPedido);
         $form->handleRequest($request);
@@ -97,7 +103,9 @@ class PedidoController extends ControllerListenerGeneral
                         $arPedido->setClienteRel($arCliente);
                         $arPedido->setFecha(new \DateTime('now'));
                         if ($id == 0) {
-                            $arPedido->setFecha(new \DateTime('now'));
+                            $nuevafecha = date('Y/m/', strtotime('-1 month', strtotime(date('Y/m/j'))));
+                            $dateFechaGeneracion = date_create($nuevafecha . '01');
+                            $arPedido->setFechaGeneracion($dateFechaGeneracion);
                             $arPedido->setUsuario($this->getUser()->getUserName());
                         }
                         $em->persist($arPedido);
@@ -156,26 +164,18 @@ class PedidoController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-//            if ($form->get('btnAutorizar')->isClicked()) {
-//                $em->getRepository(TurPedido::class)->actualizarDetalles($id, $arrControles);
-//                $em->getRepository(TurPedido::class)->autorizar($arPedido);
-//            }
-//            if ($form->get('btnDesautorizar')->isClicked()) {
-//                $em->getRepository(TurPedido::class)->desautorizar($arPedido);
-//            }
-//            if ($form->get('btnImprimir')->isClicked()) {
-//                $objFormatopedido = new Pedido();
-//                $objFormatopedido->Generar($em, $id);
-//            }
-//            if ($form->get('btnAprobar')->isClicked()) {
-//                $em->getRepository(TurPedido::class)->aprobar($arPedido);
-//            }
-//            if ($form->get('btnAnular')->isClicked()) {
-//                $em->getRepository(TurPedido::class)->anular($arPedido);
-//            }
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(TurPedido::class)->autorizar($arPedido);
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(TurPedido::class)->desautorizar($arPedido);
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(TurPedido::class)->aprobar($arPedido);
+            }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(TurPedidoDetalle::class)->eliminar($arPedido, $arrDetallesSeleccionados);
-                $em->getRepository(TurPedido::class)->liquidar($id);
+                $em->getRepository(TurPedido::class)->liquidar($arPedido);
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TurPedidoDetalle::class)->actualizarDetalles($arrControles, $form, $arPedido);
@@ -202,30 +202,43 @@ class PedidoController extends ControllerListenerGeneral
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arPedidoDetalle = new TurPedidoDetalle();
         $arPedido = $em->getRepository(TurPedido::class)->find($codigoPedido);
         if ($id != '0') {
             $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($id);
+        } else {
+            $arPedidoDetalle->setPedidoRel($arPedido);
+            $arPedidoDetalle->setLunes(true);
+            $arPedidoDetalle->setMartes(true);
+            $arPedidoDetalle->setMiercoles(true);
+            $arPedidoDetalle->setJueves(true);
+            $arPedidoDetalle->setViernes(true);
+            $arPedidoDetalle->setSabado(true);
+            $arPedidoDetalle->setDomingo(true);
+            $arPedidoDetalle->setFestivo(true);
+            $arPedidoDetalle->setCantidad(1);
+            $arPedidoDetalle->setFechaDesde(new \DateTime('now'));
+            $arPedidoDetalle->setFechaHasta(new \DateTime('now'));
+            $arPedidoDetalle->setVrSalarioBase($arPedido->getVrSalarioBase());
+            $arPedidoDetalle->setPeriodo('M');
         }
         $form = $this->createForm(PedidoDetalleType::class, $arPedidoDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-
-                $arPedidoDetalle->setCodigoPedidoFk($arPedido->getCodigoPedidoPk());
-
+                if($id == 0) {
+                    $arPedidoDetalle->setPorcentajeIva($arPedidoDetalle->getConceptoRel()->getPorcentajeIva());
+                    $arPedidoDetalle->setPorcentajeBaseIva(100);
+                }
                 $em->persist($arPedidoDetalle);
-
                 $em->flush();
+                $em->getRepository(TurPedido::class)->liquidar($arPedido);
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-
             }
         }
-
         return $this->render('turno/movimiento/comercial/pedido/detalleNuevo.html.twig', [
             'arPedido' => $arPedido,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
 

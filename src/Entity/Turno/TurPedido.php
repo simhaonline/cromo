@@ -69,6 +69,11 @@ class TurPedido
     private $estadoContabilizado = false;
 
     /**
+     * @ORM\Column(name="fecha_generacion", type="date", nullable=true)
+     */
+    private $fechaGeneracion;
+
+    /**
      * @ORM\Column(name="horas", type="integer")
      */
     private $horas = 0;
@@ -117,6 +122,11 @@ class TurPedido
      * @ORM\Column(name="vr_total", type="float", nullable=true)
      */
     private $vrTotal = 0;
+
+    /**
+     * @ORM\Column(name="vr_total_costo", type="float", options={"default":0})
+     */
+    private $vrTotalCosto = 0;
 
     /**
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
@@ -607,6 +617,54 @@ class TurPedido
     public function setPedidosDetallesPedidoRel($pedidosDetallesPedidoRel): void
     {
         $this->pedidosDetallesPedidoRel = $pedidosDetallesPedidoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaGeneracion()
+    {
+        return $this->fechaGeneracion;
+    }
+
+    /**
+     * @param mixed $fechaGeneracion
+     */
+    public function setFechaGeneracion($fechaGeneracion): void
+    {
+        $this->fechaGeneracion = $fechaGeneracion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalCosto()
+    {
+        return $this->vrTotalCosto;
+    }
+
+    /**
+     * @param mixed $vrTotalCosto
+     */
+    public function setVrTotalCosto($vrTotalCosto): void
+    {
+        $this->vrTotalCosto = $vrTotalCosto;
     }
 
 

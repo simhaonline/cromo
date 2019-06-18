@@ -59,14 +59,19 @@ class TurPedidoDetalle
     private $mes = 0;
 
     /**
-     * @ORM\Column(name="dia_desde", type="integer")
+     * @ORM\Column(name="fecha_desde", type="date", nullable=true)
      */
-    private $diaDesde = 1;
+    private $fechaDesde;
 
     /**
-     * @ORM\Column(name="dia_hasta", type="integer")
+     * @ORM\Column(name="fecha_hasta", type="date", nullable=true)
      */
-    private $diaHasta = 1;
+    private $fechaHasta;
+
+    /**
+     * @ORM\Column(name="dias", type="integer")
+     */
+    private $dias = 0;
 
     /**
      * @ORM\Column(name="horas", type="float")
@@ -243,6 +248,10 @@ class TurPedidoDetalle
      */
     private $compuesto = false;
 
+    /**
+     * @ORM\Column(name="estado_terminado", type="boolean", options={"default":false})
+     */
+    private $estadoTerminado = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="pedidosDetallesPedidoRel")
@@ -1050,6 +1059,86 @@ class TurPedidoDetalle
     public function setPedidoRel($pedidoRel): void
     {
         $this->pedidoRel = $pedidoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDesde()
+    {
+        return $this->fechaDesde;
+    }
+
+    /**
+     * @param mixed $fechaDesde
+     */
+    public function setFechaDesde($fechaDesde): void
+    {
+        $this->fechaDesde = $fechaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHasta()
+    {
+        return $this->fechaHasta;
+    }
+
+    /**
+     * @param mixed $fechaHasta
+     */
+    public function setFechaHasta($fechaHasta): void
+    {
+        $this->fechaHasta = $fechaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDias()
+    {
+        return $this->dias;
+    }
+
+    /**
+     * @param mixed $dias
+     */
+    public function setDias($dias): void
+    {
+        $this->dias = $dias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoTerminado()
+    {
+        return $this->estadoTerminado;
+    }
+
+    /**
+     * @param mixed $estadoTerminado
+     */
+    public function setEstadoTerminado($estadoTerminado): void
+    {
+        $this->estadoTerminado = $estadoTerminado;
     }
 
 

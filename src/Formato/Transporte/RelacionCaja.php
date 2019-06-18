@@ -67,14 +67,14 @@ class RelacionCaja extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('ID', 'FECHA', 'TIPO', 'GUIA', 'NUMERO_FAC','F_ING', 'CLIENTE', 'FLETE', 'MANEJO', 'TOTAL');
+        $header = array('ID', 'FECHA', 'TIPO', 'GUIA',' NUMERO', 'NUM_FAC','F_ING', 'CLIENTE', 'FLETE', 'MANEJO', 'TOTAL');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(10, 16, 10, 20, 20, 16, 53, 15, 15, 15);
+        $w = array(10, 16, 10, 20, 15 , 15, 16, 45, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -98,16 +98,17 @@ class RelacionCaja extends \FPDF {
                 $pdf->Cell(16, 4, $arRecibo['fecha']->format('Y-m-d'), 1, 0, 'L');
                 $pdf->Cell(10, 4, $arRecibo['codigoGuiaTipoFk'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arRecibo['codigoGuiaFk'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arRecibo['numeroFactura'], 1, 0, 'L');
+                $pdf->Cell(15, 4, $arRecibo['numero'], 1, 0, 'L');
+                $pdf->Cell(15, 4, $arRecibo['numeroFactura'], 1, 0, 'L');
                 $pdf->Cell(16, 4, $arRecibo['fechaIngreso']->format('Y-m-d'), 1, 0, 'L');
-                $pdf->Cell(53, 4, substr(utf8_decode($arRecibo['clienteNombre']),0,33), 1, 0, 'L');
+                $pdf->Cell(45, 4, substr(utf8_decode($arRecibo['clienteNombre']),0,33), 1, 0, 'L');
                 $pdf->Cell(15, 4, number_format($arRecibo['vrFlete'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arRecibo['vrManejo'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arRecibo['vrTotal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 15);
             }
-            $pdf->Cell(145, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(147, 4, 'TOTAL', 1, 0, 'L');
             $pdf->Cell(15, 4, number_format($arRelacionCaja->getVrFlete(), 0, '.', ',') , 1, 0, 'R');
             $pdf->Cell(15, 4, number_format($arRelacionCaja->getVrManejo(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(15, 4, number_format($arRelacionCaja->getVrTotal(), 0, '.', ','), 1, 0, 'R');

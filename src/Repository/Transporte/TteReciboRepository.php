@@ -30,6 +30,7 @@ class TteReciboRepository extends ServiceEntityRepository
         g.fechaIngreso,
         g.codigoGuiaTipoFk,
         g.numeroFactura as numeroFactura,
+        g.numero as numero,
         g.documentoCliente,
         r.codigoGuiaFk,
         c.nombreCorto AS clienteNombre         

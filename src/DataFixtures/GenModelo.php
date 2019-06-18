@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Turno\TurItem;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
@@ -16,6 +17,7 @@ class GenModelo extends Fixture
                 'TurContrato',
                 'TurPuesto',
                 'TurPedido',
+                'TurItem'
             )),
             array('modulo'=>'Cartera','modelo'=>array(
                 'CarCliente',

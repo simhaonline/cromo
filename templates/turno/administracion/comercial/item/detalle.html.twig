@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default" href="{{ path('turno_administracion_comercial_item_lista') }}">Volver</a>
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered">
+        <tr>
+            <td class="titulo"><b>CODIGO ITEM:</b></td>
+            <td class="td-in-well">{{ arItem.codigoItemPk }}</td>
+            <td class="titulo"><b>NOMBRE</b></td>
+            <td class="td-in-well">{{ arItem.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CODIGO IMP:</td>
+            <td class="td-in-well">{{ arItem.impuestoRetencionRel.codigoImpuestoPk }}</td>
+            <td class="titulo">CODIGO RETENCIÓN:</td>
+            <td class="td-in-well" >{{ arItem.impuestoRetencionRel.codigoImpuestoPk }}</td>
+        </tr>
+    </table>
+
+    {{ form_end(form) }}
+
+
+{% endblock %}

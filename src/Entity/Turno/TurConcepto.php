@@ -30,11 +30,6 @@ class TurConcepto
     private $nombre;
 
     /**
-     * @ORM\Column(name="nombre_facturacion", type="string", length=500, nullable=true)
-     */
-    private $nombreFacturacion;
-
-    /**
      * @ORM\Column(name="horas", options={"default":0}, type="float", nullable=true)
      */
     private $horas = 0;
@@ -94,22 +89,6 @@ class TurConcepto
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNombreFacturacion()
-    {
-        return $this->nombreFacturacion;
-    }
-
-    /**
-     * @param mixed $nombreFacturacion
-     */
-    public function setNombreFacturacion($nombreFacturacion): void
-    {
-        $this->nombreFacturacion = $nombreFacturacion;
     }
 
     /**

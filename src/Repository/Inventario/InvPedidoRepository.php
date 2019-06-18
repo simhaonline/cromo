@@ -95,6 +95,7 @@ class InvPedidoRepository extends ServiceEntityRepository
      */
     public function autorizar($arPedido)
     {
+        $em = $this->getEntityManager();
         if (!$arPedido->getEstadoAutorizado()) {
             $registros = $this->getEntityManager()->createQueryBuilder()->from(InvPedidoDetalle::class, 'pd')
                 ->select('COUNT(pd.codigoPedidoDetallePk) AS registros')
@@ -102,8 +103,8 @@ class InvPedidoRepository extends ServiceEntityRepository
                 ->getQuery()->getSingleResult();
             if ($registros['registros'] > 0) {
                 $arPedido->setEstadoAutorizado(1);
-                $this->getEntityManager()->persist($arPedido);
-                $this->getEntityManager()->flush();
+                $em->persist($arPedido);
+                $em->flush();
             } else {
                 Mensajes::error("El registro no tiene detalles");
             }

@@ -22,6 +22,27 @@ class TurContratoRepository extends ServiceEntityRepository
         parent::__construct($registry, TurContrato::class);
     }
 
+    public function autorizar($arContrato)
+    {
+        $em = $this->getEntityManager();
+        if (!$arContrato->getEstadoAutorizado()) {
+            $registros = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'c')
+                ->select('COUNT(c.codigoContratoDetallePk) AS registros')
+                ->where('c.codigoContratoFk = ' . $arContrato->getCodigoContratoPk())
+                ->getQuery()->getSingleResult();
+            if ($registros['registros'] > 0) {
+                $arContrato->setEstadoAutorizado(1);
+                $em->persist($arContrato);
+                $em->flush();
+            } else {
+                Mensajes::error("El registro no tiene detalles");
+            }
+        } else {
+            Mensajes::error('El documento ya esta autorizado');
+        }
+    }
+
+
     /**
      * @param $arrSeleccionados
      * @throws \Doctrine\ORM\ORMException

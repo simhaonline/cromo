@@ -20,7 +20,6 @@ class TurConceptoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurConcepto::class, 'tc')
             ->select('tc.codigoConceptoPk')
             ->addSelect('tc.nombre')
-            ->addSelect('tc.nombreFacturacion')
             ->addSelect('tc.porcentajeIva')
             ->addSelect('tc.horas')
             ->addSelect('tc.horasDiurnas')

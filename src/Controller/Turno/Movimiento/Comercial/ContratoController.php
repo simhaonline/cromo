@@ -149,12 +149,12 @@ class ContratoController extends ControllerListenerGeneral
         $arrBtnAprobado = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if ($arContrato->getEstadoAutorizado()) {
-            $arrBtnAutorizar['disable'] = true;
-            $arrBtnEliminar['disable'] = true;
-            $arrBtnActualizar['disable'] = true;
-            $arrBtnLiquidar['disable'] = true;
-            $arrBtnAprobado['disable'] = true;
-            $arrBtnDesautorizar['disable'] = false;
+            $arrBtnAutorizar['disabled'] = true;
+            $arrBtnEliminar['disabled'] = true;
+            $arrBtnActualizar['disabled'] = true;
+            $arrBtnLiquidar['disabled'] = true;
+            $arrBtnAprobado['disabled'] = true;
+            $arrBtnDesautorizar['disabled'] = false;
         }
         if ($arContrato->getEstadoAprobado()) {
             $arrBtnDesautorizar['disable'] = true;
@@ -168,6 +168,27 @@ class ContratoController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+            /*if ($form->get('btnLiquidar')->isClicked()) {
+                $em->getRepository(TurContrato::class)->liquidar($arContrato);
+            }*/
+
+            if ($form->get('btnAutorizar')->isClicked()) {
+                //$em->getRepository(TurContrato::class)->actualizarDetalles($id, $arrControles);
+                $em->getRepository(TurContrato::class)->autorizar($arContrato);
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                //$em->getRepository(InvPedido::class)->desautorizar($arPedido);
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                //$objFormatopedido = new Pedido();
+                //$objFormatopedido->Generar($em, $id);
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                //$em->getRepository(InvPedido::class)->aprobar($arPedido);
+            }
+            if ($form->get('btnAnular')->isClicked()) {
+                //$em->getRepository(InvPedido::class)->anular($arPedido);
+            }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(TurContratoDetalle::class)->eliminar($arrDetallesSeleccionados, $id);
                 $em->getRepository(TurContrato::class)->liquidar($arContrato);
@@ -176,9 +197,7 @@ class ContratoController extends ControllerListenerGeneral
                 $em->getRepository(TurContratoDetalle::class)->actualizarDetalles($arrControles, $form, $arContrato);
                 $em->getRepository(TurContrato::class)->liquidar($arContrato);
             }
-            if ($form->get('btnLiquidar')->isClicked()) {
-                $em->getRepository(TurContrato::class)->liquidar($arContrato);
-            }
+
             return $this->redirect($this->generateUrl('turno_movimiento_comercial_contrato_detalle', ['id' => $id]));
         }
         $arContratoDetalles = $paginator->paginate($em->getRepository(TurContratoDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);

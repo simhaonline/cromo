@@ -76,16 +76,22 @@
                             <td>{{ arContratoDetalle.horasNocturnas }}</td>
                             <td class="numero">{{ arContratoDetalle.vrSalarioBase | number_format(0, '.', ',')}}</td>
                             <td class="numero">{{ arContratoDetalle.vrPrecioMinimo | number_format(0, '.', ',') }}</td>
-                            <td style="text-align: center;"><input type="number"
-                                                                   name="arrPrecioAjustado[{{ arContratoDetalle.codigoContratoDetallePk }}]"
-                                                                   value="{{ arContratoDetalle.vrPrecioAjustado }}"
-                                                                   style="text-align: right; width:60px"
-                                                                   size="10"></td>
-                            <td style="text-align: center;"><input type="number"
-                                                                   name="arrPorcentajeIva[{{ arContratoDetalle.codigoContratoDetallePk }}]"
-                                                                   value="{{ arContratoDetalle.porcentajeIva }}"
-                                                                   style="text-align: right; width:60px"
-                                                                   size="10"></td>
+                            {% if arContrato.estadoAutorizado %}
+                                <td class="numero">{{ arContratoDetalle.vrPrecioAjustado | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arContratoDetalle.porcentajeIva | number_format(0, '.', ',') }}</td>
+                            {% else %}
+                                <td style="text-align: center;"><input type="number"
+                                                                       name="arrPrecioAjustado[{{ arContratoDetalle.codigoContratoDetallePk }}]"
+                                                                       value="{{ arContratoDetalle.vrPrecioAjustado }}"
+                                                                       style="text-align: right; width:60px"
+                                                                       size="10"></td>
+                                <td style="text-align: center;"><input type="number"
+                                                                       name="arrPorcentajeIva[{{ arContratoDetalle.codigoContratoDetallePk }}]"
+                                                                       value="{{ arContratoDetalle.porcentajeIva }}"
+                                                                       style="text-align: right; width:60px"
+                                                                       size="10"></td>
+                            {% endif  %}
+
                             <td class="numero">{{ arContratoDetalle.vrIva | number_format(0, '.', ',') }}</td>
                             <td class="numero">{{ arContratoDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
                             <td style="text-align: center;">

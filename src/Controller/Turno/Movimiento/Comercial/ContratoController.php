@@ -177,7 +177,7 @@ class ContratoController extends ControllerListenerGeneral
                 $em->getRepository(TurContrato::class)->autorizar($arContrato);
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                //$em->getRepository(InvPedido::class)->desautorizar($arPedido);
+                $em->getRepository(TurContrato::class)->desautorizar($arContrato);
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 //$objFormatopedido = new Pedido();

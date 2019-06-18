@@ -120,10 +120,11 @@ class InvPedidoRepository extends ServiceEntityRepository
      */
     public function desautorizar($arPedido)
     {
+        $em = $this->getEntityManager();
         if ($arPedido->getEstadoAutorizado()) {
             $arPedido->setEstadoAutorizado(0);
-            $this->getEntityManager()->persist($arPedido);
-            $this->getEntityManager()->flush();
+            $em->persist($arPedido);
+            $em->flush();
 
         } else {
             Mensajes::error('El documento no esta autorizado');

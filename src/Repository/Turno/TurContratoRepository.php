@@ -42,6 +42,18 @@ class TurContratoRepository extends ServiceEntityRepository
         }
     }
 
+    public function desautorizar($arContrato)
+    {
+        $em = $this->getEntityManager();
+        if ($arContrato->getEstadoAutorizado()) {
+            $arContrato->setEstadoAutorizado(0);
+            $em->persist($arContrato);
+            $em->flush();
+
+        } else {
+            Mensajes::error('El documento no esta autorizado');
+        }
+    }
 
     /**
      * @param $arrSeleccionados

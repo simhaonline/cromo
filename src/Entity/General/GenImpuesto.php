@@ -68,6 +68,16 @@ class GenImpuesto
     private $itemsImpuestoIvaVentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurItem", mappedBy="impuestoRetencionRel")
+     */
+    private $turItemsImpuestoRetencionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurItem", mappedBy="impuestoIvaVentaRel")
+     */
+    private $turItemsImpuestoIvaVentaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaConceptoDetalle", mappedBy="impuestoRetencionRel")
      */
     private $facturasConceptosDetallesImpuestoRetencionRel;
@@ -266,6 +276,38 @@ class GenImpuesto
     public function setFacturasConceptosDetallesImpuestoIvaVentaRel( $facturasConceptosDetallesImpuestoIvaVentaRel ): void
     {
         $this->facturasConceptosDetallesImpuestoIvaVentaRel = $facturasConceptosDetallesImpuestoIvaVentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurItemsImpuestoRetencionRel()
+    {
+        return $this->turItemsImpuestoRetencionRel;
+    }
+
+    /**
+     * @param mixed $turItemsImpuestoRetencionRel
+     */
+    public function setTurItemsImpuestoRetencionRel($turItemsImpuestoRetencionRel): void
+    {
+        $this->turItemsImpuestoRetencionRel = $turItemsImpuestoRetencionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurItemsImpuestoIvaVentaRel()
+    {
+        return $this->turItemsImpuestoIvaVentaRel;
+    }
+
+    /**
+     * @param mixed $turItemsImpuestoIvaVentaRel
+     */
+    public function setTurItemsImpuestoIvaVentaRel($turItemsImpuestoIvaVentaRel): void
+    {
+        $this->turItemsImpuestoIvaVentaRel = $turItemsImpuestoIvaVentaRel;
     }
 
 

@@ -18,9 +18,6 @@
                     <ul>
                         <li><a href=" {{ path('crm_movimiento_comercial_negocio_lista')}}">Negocio
                             </a></li>
-                        <li>
-                            <a href="{{ path('crm_movimiento_comercial_fase_lista') }}">Fase</a>
-                        </li>
                     </ul>
                 </li>
             </ul>
@@ -48,7 +45,14 @@
                         </li>
                     </ul>
                 </li>
-
+                <li>
+                    <a href="#">Fase<span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('crm_administracion_fase_fase_lista') }}">Fase</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </li>
     </ul>

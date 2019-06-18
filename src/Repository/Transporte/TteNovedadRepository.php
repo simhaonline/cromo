@@ -23,6 +23,7 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->select('n.codigoNovedadPk')
             ->join('n.novedadTipoRel', 'nt')
             ->join('n.guiaRel', 'g')
+            ->join('g.clienteRel', 'c')
             ->addSelect('nt.nombre')
             ->addSelect('g.numero')
             ->addSelect('n.descripcion')
@@ -31,12 +32,24 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->addSelect('n.fechaAtencion')
             ->addSelect('n.fechaSolucion')
             ->where('n.codigoNovedadPk IS NOT NULL')
-            ->orderBy('n.codigoNovedadPk', 'ASC');
+            ->orderBy('n.codigoNovedadPk', 'DESC');
         if ($session->get('filtroNumeroGuia') != '') {
             $queryBuilder->andWhere("g.numero LIKE '%{$session->get('filtroNumeroGuia')}%' ");
         }
         if ($session->get('filtroTteCodigoNovedadTipo')) {
             $queryBuilder->andWhere("n.codigoNovedadTipoFk = '{$session->get('filtroTteCodigoNovedadTipo')}'");
+        }
+        if ($session->get('filtroNovadadCodigoCliente')) {
+            $queryBuilder->andWhere("c.codigoClientePk = '{$session->get('filtroNovadadCodigoCliente')}'");
+        }
+        if ($session->get('filtroNovadadNumeroGuia')) {
+            $queryBuilder->andWhere("g.numero = '{$session->get('filtroNovadadNumeroGuia')}'");
+        }
+        if ($session->get('filtroNovadadFechaReporteDesde') != null) {
+            $queryBuilder->andWhere("n.fechaReporte >= '{$session->get('filtroNovadadFechaReporteDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroNovadadFechaReporteHasta') != null) {
+            $queryBuilder->andWhere("n.fechaReporte <= '{$session->get('filtroNovadadFechaReporteHasta')} 23:59:59'");
         }
 
         return $queryBuilder;

@@ -17,14 +17,14 @@ class CrmNegocioRepository extends ServiceEntityRepository
 
     public function GraficaNegociosporFace()
     {
-        $queryBuilder = $this-> _em->createQueryBuilder()
-            ->Select('COUNT(n.codigo_fase_fk) as cuenta')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CrmNegocio::class, 'n')
+            ->Select('COUNT(n.codigoFaseFk) as cuenta')
             ->addSelect('f.nombre')
-            ->from(CrmNegocio::class,'n')
             ->leftJoin('n.faseRel', 'f')
-            ->where("Date_format(n.fecha,'Y-m') = Date_format(now(),'Y-m')")
-            ->groupby('n.codigo_fase_fk');
-        return $queryBuilder->getQuery()->getArrayResult();
+//            ->where("Date_format(n.fecha,'%Y-%m) = Date_format(now(),'Y-m')")
+            ->groupby('n.codigoFaseFk');
+
+         dd($queryBuilder->getQuery()->getArrayResult());
 
     }
 }

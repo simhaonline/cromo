@@ -39,23 +39,10 @@ class NegocioController extends ControllerListenerGeneral
             }
         }
         $datos = $this->getDatosLista();
-
-        // Chart
-        $series = array(
-            array("name" => "Data Serie Name",    "data" => array(1,2,4,5,6,3,8))
-        );
-        $ob = new Highchart();
-        $ob->chart->renderTo('doughnut');  // The #id of the div where to render the chart
-        $ob->title->text('Chart Title');
-        $ob->xAxis->title(array('text'  => "Horizontal x title"));
-        $ob->yAxis->title(array('text'  => "Vertical y title"));
-        $ob->series($series);
-
         return $this->render('crm/movimiento/comercial/negocio/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
-            'chart' => $ob
         ]);
     }
 

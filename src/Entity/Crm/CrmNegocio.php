@@ -59,7 +59,7 @@ class CrmNegocio
     private $codigoContactoFk;
 
     /**
-     * @ORM\Column(name="codigo_fase_fk" , type="string" , length=50, nullable=true)
+     * @ORM\Column(name="codigo_fase_fk" , type="string" , length=10, nullable=true)
      */
     private  $codigoFaseFk;
 

@@ -22,7 +22,7 @@ class CrmFase
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmNegocio", mappedBy="negociosContactoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmNegocio", mappedBy="faseRel")
      */
     protected $negociosFaseRel;
 

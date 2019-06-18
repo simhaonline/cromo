@@ -73,11 +73,10 @@ class NegocioType extends AbstractType
         $campos = '[
             {"campo":"codigoNegocioPk", "tipo":"pk",        "ayuda":"Codigo",           "titulo":"ID"},
             {"campo":"fecha",           "tipo":"fecha",     "ayuda":"Fecha",            "titulo":"FECHA"},
-            {"campo":"fechaCierre",     "tipo":"fecha",     "ayuda":"Fecha cierre",     "titulo":"FECHA CIERRE"},
-            {"campo":"fechaNegocio",    "tipo":"fecha",     "ayuda":"Fecha nagocio",    "titulo":"FECHA NEGOCIO"},
-            {"campo":"comentarios",     "tipo":"texto",     "ayuda":"Comentarios",      "titulo":"COMENTARIOS"}
+            {"campo":"fechaCierre",     "tipo":"fecha",     "ayuda":"FECHA CIERRE",     "titulo":"F.C"},
+            {"campo":"fechaNegocio",    "tipo":"fecha",     "ayuda":"FECHA NEGOCIO",    "titulo":"F.N   "}
         ]';
-        //{"campo":"cargoRel.nombre",                     "tipo":"texto"   ,"ayuda":""                     ,              "titulo":"CARGO", "relacion":""}
+        //            {"campo":"faseRel.nombre", "tipo":"texto",     "ayuda":"", "titulo":"fase", "relacion":""}
         return $campos;
     }
 

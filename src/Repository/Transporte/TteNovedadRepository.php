@@ -25,6 +25,7 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->join('n.guiaRel', 'g')
             ->join('g.clienteRel', 'c')
             ->addSelect('nt.nombre')
+            ->addSelect('c.nombreCorto')
             ->addSelect('g.numero')
             ->addSelect('n.descripcion')
             ->addSelect('n.solucion')

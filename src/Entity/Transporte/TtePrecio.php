@@ -148,8 +148,36 @@ class TtePrecio
         $this->condicionesPrecioRel = $condicionesPrecioRel;
     }
 
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
 
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getOmitirDescuento()
+    {
+        return $this->omitirDescuento;
+    }
 
+    /**
+     * @param mixed $omitirDescuento
+     */
+    public function setOmitirDescuento($omitirDescuento): void
+    {
+        $this->omitirDescuento = $omitirDescuento;
+    }
 }
 

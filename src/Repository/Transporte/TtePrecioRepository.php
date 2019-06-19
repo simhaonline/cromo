@@ -24,6 +24,7 @@ class TtePrecioRepository extends ServiceEntityRepository
             ->addSelect('pr.nombre')
             ->addSelect('pr.fechaVence')
             ->addSelect('pr.comentario')
+            ->addSelect('pr.omitirDescuento')
             ->where('pr.codigoPrecioPk IS NOT NULL')
             ->orderBy('pr.codigoPrecioPk', 'DESC');
         if ($session->get('filtroTteNombrePrecio') != '') {

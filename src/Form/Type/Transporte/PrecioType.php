@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteRuta;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -25,6 +26,7 @@ class PrecioType extends AbstractType {
             ->add('nombre', TextType::class)
             ->add('comentario',TextareaType::class, array('required' => false))
             ->add('fechaVence', DateType::class, array('format' => 'yyyyMMdd'))
+            ->add('omitirDescuento', CheckboxType::class, ['required' => false])
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
             ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
     }

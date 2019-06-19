@@ -30,6 +30,7 @@
             <th>ID</th>
             <th>NOMBRE</th>
             <th>FECHA VENCIMIENTO</th>
+            <th>OMITIR DESCUENTO</th>
             <th>COMENTARIOS</th>
             <th></th>
             <th></th>
@@ -42,6 +43,7 @@
                 <td>{{ arPrecio.codigoPrecioPk }}</td>
                 <td>{{ arPrecio.nombre }}</td>
                 <td>{{ arPrecio.fechaVence | date('Y-m-d') }}</td>
+                <td class="estado">{{ arPrecio.omitirDescuento?'SI':'NO' }}</td>
                 <td>{{ arPrecio.comentario }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_administracion_comercial_precio_nuevo',{'id' : arPrecio.codigoPrecioPk}) }}">

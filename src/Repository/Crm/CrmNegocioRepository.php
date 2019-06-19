@@ -23,8 +23,7 @@ class CrmNegocioRepository extends ServiceEntityRepository
             ->leftJoin('n.faseRel', 'f')
 //            ->where("Date_format(n.fecha,'%Y-%m) = Date_format(now(),'Y-m')")
             ->groupby('n.codigoFaseFk');
-
-         dd($queryBuilder->getQuery()->getArrayResult());
+         $queryBuilder->getQuery()->getResult() ;
 
     }
 }

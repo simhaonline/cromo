@@ -15,15 +15,15 @@
                         <thead>
                         <tr>
                             <th><p data-toggle="tooltip" data-placement="top" title="PORCENTAJE MANEJO">ID</p></th>
-                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD ORIGEN">CIUDAD ORIGEN</p></th>
-                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">CIDUAD DESTINO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD ORIGEN">ORIGEN</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">DESTINO</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">ZONA</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="PRODUCTO">PRODUCTO</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO">PESO</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="VALOR UNIDAD">UND</p>
-                            <th><p data-toggle="tooltip" data-placement="top" title="PESO TOPE">PESO TOPE</p>
-                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE">VR PESO TOPE</p>
-                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE ADICION">VR PESO
-                                    TOPE ADIC</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="PESO TOPE">TOPE</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE">VR TOPE</p>
+                            <th><p data-toggle="tooltip" data-placement="top" title="VALOR PESO TOPE ADICION">VR ADIC</p>
                             <th><p data-toggle="tooltip" data-placement="top" title="MINIMO">MINIMO</p></th>
                         </tr>
                         </thead>
@@ -33,6 +33,7 @@
                                 <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
                                 <td>{{ arPrecioDetalle.ciudadOrigen }}</td>
                                 <td>{{ arPrecioDetalle.ciudadDestino }}</td>
+                                <td>{{ arPrecioDetalle.zonaNombre }}</td>
                                 <td>{{ arPrecioDetalle.nombre }}</td>
                                 <td class="numero">{{ arPrecioDetalle.vrPeso | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arPrecioDetalle.vrUnidad | number_format(0, '.', ',') }}</td>

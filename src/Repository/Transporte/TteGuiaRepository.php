@@ -392,6 +392,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->select('g.codigoGuiaPk')
             ->addSelect('g.codigoGuiaTipoFk')
             ->addSelect('g.numero')
+            ->addSelect('g.documentoCliente')
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.unidades')
             ->addSelect('g.pesoReal')

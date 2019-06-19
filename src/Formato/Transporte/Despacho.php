@@ -77,14 +77,14 @@ class Despacho extends \FPDF {
     public function EncabezadoDetalles() {
         $this->Ln(12);
         $this->SetX(5);
-        $header = array('TP', 'GUIA', 'FECHA', 'SER', 'NUMERO','CLIENTE','DESTINATARIO', 'DIRECCION', 'EMP', 'UND', 'PES');
+        $header = array('TP', 'GUIA', 'FECHA', 'SER', 'NUMERO', 'DOC', 'CLIENTE','DESTINATARIO', 'DIRECCION', 'EMP', 'UND', 'PES');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(8, 20, 10, 7, 20, 32, 40, 35, 10, 10, 10);
+        $w = array(8, 15, 10, 7, 18, 18, 30, 30, 30, 10, 10, 10);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -114,13 +114,14 @@ class Despacho extends \FPDF {
             foreach ($arGuias as $arGuia) {
                 $pdf->SetX(5);
                 $pdf->Cell(8, 4, $arGuia['codigoGuiaTipoFk'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
+                $pdf->Cell(15, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['fechaIngreso']->format('m-d'), 1, 0, 'L');
                 $pdf->Cell(7, 4, $arGuia['codigoServicioFk'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arGuia['numero'], 1, 0, 'L');
-                $pdf->Cell(32, 4, substr(utf8_decode($arGuia['clienteNombre']),0,20), 1, 0, 'L');
-                $pdf->Cell(40, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,28), 1, 0, 'L');
-                $pdf->Cell(35, 4, substr(utf8_decode($arGuia['direccionDestinatario']),0,25), 1, 0, 'L');
+                $pdf->Cell(18, 4, $arGuia['numero'], 1, 0, 'L');
+                $pdf->Cell(18, 4, $arGuia['documentoCliente'], 1, 0, 'L');
+                $pdf->Cell(30, 4, substr(utf8_decode($arGuia['clienteNombre']),0,20), 1, 0, 'L');
+                $pdf->Cell(30, 4, substr(utf8_decode($arGuia['nombreDestinatario']),0,28), 1, 0, 'L');
+                $pdf->Cell(30, 4, substr(utf8_decode($arGuia['direccionDestinatario']),0,25), 1, 0, 'L');
                 $pdf->Cell(10, 4, substr($arGuia['empaqueReferencia'],0, 6), 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arGuia['pesoReal'], 0, '.', ','), 1, 0, 'R');
@@ -146,7 +147,7 @@ class Despacho extends \FPDF {
                 }
                 if($imprimirTotalGrupo) {
                     $pdf->SetX(5);
-                    $pdf->Cell(182, 4, "TOTAL CIUDAD: ". $arGuia['ciudadDestino'], 1, 0, 'L');
+                    $pdf->Cell(176, 4, "TOTAL CIUDAD: ". $arGuia['ciudadDestino'], 1, 0, 'L');
                     $pdf->Cell(10, 4, $unidades, 1, 0, 'R');
                     $pdf->Cell(10, 4, $peso, 1, 0, 'R');
                     $pdf->Ln();
@@ -158,7 +159,7 @@ class Despacho extends \FPDF {
 
             }
             $pdf->SetX(5);
-            $pdf->Cell(182, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(176, 4, 'TOTAL', 1, 0, 'L');
             $pdf->Cell(10, 4, $unidadesTotal, 1, 0, 'R');
             $pdf->Cell(10, 4, $pesoTotal, 1, 0, 'R');
             $pdf->SetX(5);
@@ -172,11 +173,17 @@ class Despacho extends \FPDF {
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(10, 200);
 
-        //$this->Text(10, 260, "CONDUCTOR: _____________________________________________");
-        //$this->Text(10, 267, "");
-        //$this->Text(10, 274, "C.C.:     ______________________ de ____________________");
+        $this->SetFont('Arial','', 8);
+        $this->SetFont('Arial', 'B', 9);
+        $this->SetXY(10, 200);
 
-        //$this->Text(105, 260, "EMPRESA: _____________________________________________");
+        $this->Text(10, 260, "______________________________________________");
+        $this->Text(10, 264, "DESPACHADO POR");
+        $this->Text(10, 268, "C.C:");
+
+        $this->Text(120, 260, "______________________________________________");
+        $this->Text(120, 264, "CONDUCTOR");
+        $this->Text(120, 268, "C.C:");
 
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');

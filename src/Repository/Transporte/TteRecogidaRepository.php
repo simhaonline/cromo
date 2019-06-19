@@ -391,6 +391,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->addSelect('c.direccion AS clienteDireccion')
             ->addSelect('r.unidades')
             ->addSelect('r.pesoReal')
+            ->addSelect('r.pesoVolumen')
             ->leftJoin('r.clienteRel', 'c')
             ->where('r.codigoDespachoRecogidaFk = ' . $codigoDespachoRecogida);
         $queryBuilder->orderBy('r.fecha', 'ASC');

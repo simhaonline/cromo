@@ -89,6 +89,7 @@ class RecogidaType extends AbstractType {
             {"campo":"fechaRegistro",                           "tipo":"fecha",     "ayuda":"Fecha registro",                           "titulo":"REG"},
             {"campo":"fecha",                                   "tipo":"fecha",     "ayuda":"Fecha",                                    "titulo":"FECHA"},
             {"campo":"fecha",                                   "tipo":"hora",      "ayuda":"Hora",                                     "titulo":"HORA"},
+            {"campo":"rutaRecogidaRel.nombre",                  "tipo":"texto",     "ayuda":"Ruta",                       "titulo":"RUTA",             "relacion":""},
             {"campo":"clienteRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Nombre del cliente",                       "titulo":"CLIENTE",             "relacion":""},
             {"campo":"anunciante",                              "tipo":"texto",     "ayuda":"Anunciante",                               "titulo":"ANUNCIANTE"},
             {"campo":"direccion",                               "tipo":"texto",     "ayuda":"Direccion",                                "titulo":"DIRECCION"},

@@ -5,10 +5,12 @@ namespace App\Controller\Transporte\Movimiento\Recogida\Despacho;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TteRutaRecogida;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoRecogidaType;
 use App\Entity\Transporte\TteDespachoRecogidaAuxiliar;
@@ -34,7 +36,7 @@ use Symfony\Component\Validator\Constraints\Count;
 
 class DespachoRecogidaController extends ControllerListenerGeneral
 {
-    protected $clase= TteDespachoRecogida::class;
+    protected $clase = TteDespachoRecogida::class;
     protected $claseNombre = "TteDespachoRecogida";
     protected $modulo = "Transporte";
     protected $funcion = "Movimiento";
@@ -76,10 +78,10 @@ class DespachoRecogidaController extends ControllerListenerGeneral
 
                                 $descuentos = $arDespachoRecogida->getVrDescuentoPapeleria() + $arDespachoRecogida->getVrDescuentoSeguridad() + $arDespachoRecogida->getVrDescuentoCargue() + $arDespachoRecogida->getVrDescuentoEstampilla();
                                 $retencionFuente = 0;
-                                if($arDespachoRecogida->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
+                                if ($arDespachoRecogida->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
                                     $retencionFuente = $arDespachoRecogida->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
                                 }
-                                $industriaComercio = $arDespachoRecogida->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] /100;
+                                $industriaComercio = $arDespachoRecogida->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
 
                                 $total = $arDespachoRecogida->getVrFletePago() - ($arDespachoRecogida->getVrAnticipo() + $retencionFuente + $industriaComercio);
                                 $saldo = $total - $descuentos;
@@ -130,7 +132,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
@@ -164,10 +166,10 @@ class DespachoRecogidaController extends ControllerListenerGeneral
     {
         $em = $this->getDoctrine()->getManager();
         $arDespachoRecogida = $em->getRepository(TteDespachoRecogida::class)->find($id);
-        $form = Estandares::botonera($arDespachoRecogida->getEstadoAutorizado(),$arDespachoRecogida->getEstadoAprobado(),$arDespachoRecogida->getEstadoAnulado());
-        $arrBtnEliminarRecogida = ['label' => 'Eliminar','disabled' => false];
-        $arrBtnEliminarAuxiliar = ['label' => 'Eliminar','disabled' => false];
-        if($arDespachoRecogida->getEstadoAutorizado()){
+        $form = Estandares::botonera($arDespachoRecogida->getEstadoAutorizado(), $arDespachoRecogida->getEstadoAprobado(), $arDespachoRecogida->getEstadoAnulado());
+        $arrBtnEliminarRecogida = ['label' => 'Eliminar', 'disabled' => false];
+        $arrBtnEliminarAuxiliar = ['label' => 'Eliminar', 'disabled' => false];
+        if ($arDespachoRecogida->getEstadoAutorizado()) {
             $arrBtnEliminarRecogida['disabled'] = true;
             $arrBtnEliminarAuxiliar['disabled'] = true;
         }
@@ -202,19 +204,19 @@ class DespachoRecogidaController extends ControllerListenerGeneral
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->autorizar($arDespachoRecogida);
-                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->desautorizar($arDespachoRecogida);
-                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->aprobar($arDespachoRecogida);
-                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->anular($arDespachoRecogida);
-                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle',['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));
             }
         }
         $arRecogidas = $this->getDoctrine()->getRepository(TteRecogida::class)->despacho($id);
@@ -232,28 +234,43 @@ class DespachoRecogidaController extends ControllerListenerGeneral
      */
     public function detalleAdicionarRecogida(Request $request, $codigoDespachoRecogida)
     {
+        $session = new session;
         $em = $this->getDoctrine()->getManager();
         $arDespachoRecogida = $em->getRepository(TteDespachoRecogida::class)->find($codigoDespachoRecogida);
         $form = $this->createFormBuilder()
+            ->add('cboRutaRecogida', EntityType::class, $em->getRepository(TteRutaRecogida::class)->llenarCombo())
+            ->add('ChkMostrarSoloRecogidasRuta', CheckboxType::class, array('label' => false, 'required' => false, 'data' => $session->get('filtroTteMostrarSoloRecogidasRuta')))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            if ($arrSeleccionados) {
-                foreach ($arrSeleccionados AS $codigo) {
-                    $arRecogida = $em->getRepository(TteRecogida::class)->find($codigo);
-                    $arRecogida->setDespachoRecogidaRel($arDespachoRecogida);
-                    $arRecogida->setEstadoProgramado(1);
-                    $em->persist($arRecogida);
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTteMostrarSoloRecogidasRuta', $form->get('ChkMostrarSoloRecogidasRuta')->getData());
+                $rutaRecogida = $form->get('cboRutaRecogida')->getData();
+                if ($rutaRecogida != '') {
+                    $session->set('filtroTteCodigoRutaRecogida', $form->get('cboRutaRecogida')->getData()->getCodigoRutaRecogidaPk());
+                } else {
+                    $session->set('filtroTteCodigoRutaRecogida', null);
                 }
-                $em->flush();
             }
-            $em->getRepository(TteDespachoRecogida::class)->liquidar($codigoDespachoRecogida);
-            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados AS $codigo) {
+                        $arRecogida = $em->getRepository(TteRecogida::class)->find($codigo);
+                        $arRecogida->setDespachoRecogidaRel($arDespachoRecogida);
+                        $arRecogida->setEstadoProgramado(1);
+                        $em->persist($arRecogida);
+                    }
+                    $em->flush();
+                }
+                $em->getRepository(TteDespachoRecogida::class)->liquidar($codigoDespachoRecogida);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
         }
-        $arRecogidas = $this->getDoctrine()->getRepository(TteRecogida::class)->despachoPendiente($arDespachoRecogida->getFecha()->format('Y-m-d'));
-        if(count($arRecogidas) == 0){
+        $arRecogidas = $this->getDoctrine()->getRepository(TteRecogida::class)->despachoPendiente($arDespachoRecogida->getFecha()->format('Y-m-d'), $arDespachoRecogida->getCodigoRutaRecogidaFk());
+        if (count($arRecogidas) == 0) {
             Mensajes::error('No hay recogidas autorizadas y aprobadas pendientes por asignar');
         }
         return $this->render('transporte/movimiento/recogida/despacho/detalleAdicionarRecogida.html.twig', ['arRecogidas' => $arRecogidas, 'form' => $form->createView()]);

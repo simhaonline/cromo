@@ -40,14 +40,14 @@ class NegocioType extends AbstractType
                 'choice_label' => 'nombreCorto',
             ])
             ->add('faseRel', EntityType::class, [
-                'required' => true,
                 'class' => 'App\Entity\Crm\CrmFase',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('f')
                         ->orderBy('f.codigoFasePk', 'ASC');
                 },
-                'required' => false,
+                'required' => true,
                 'choice_label' => 'nombre',
+                'placeholder'=>''
             ])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

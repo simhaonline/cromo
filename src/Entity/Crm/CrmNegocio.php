@@ -44,7 +44,7 @@ class CrmNegocio
     private $valor = 0;
 
     /**
-     * @ORM\Column(name="comentarios", type="string", length=100)
+     * @ORM\Column(name="comentarios", type="string", length=100, nullable=true)
      */
     private $comentarios;
 

@@ -205,31 +205,71 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->addSelect('r.unidades')
             ->addSelect('r.pesoReal')
             ->addSelect('r.pesoVolumen')
+            ->addSelect('rr.nombre AS ruta')
             ->leftJoin('r.clienteRel', 'c')
             ->leftJoin('r.ciudadRel', 'co')
+            ->leftJoin('r.rutaRecogidaRel', 'rr')
             ->where('r.codigoDespachoRecogidaFk = ' . $codigoRecogidaDespacho);
 
         return $queryBuilder->getQuery()->getResult();
 
     }
 
-    public function despachoPendiente($fecha = null): array
+    public function despachoPendiente($fecha = null, $rutaRecogida)
     {
-        $em = $this->getEntityManager();
         $fechaDesde = $fecha . " 00:00";
         $fechaHasta = $fecha . " 23:59";
-        $query = $em->createQuery(
-            'SELECT r.codigoRecogidaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad,
-              r.fecha, r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen,
-              r.codigoOperacionFk, r.anunciante, r.direccion, r.telefono, rr.nombre
-        FROM App\Entity\Transporte\TteRecogida r 
-        LEFT JOIN r.rutaRecogidaRel rr
-        LEFT JOIN r.clienteRel c
-        LEFT JOIN r.ciudadRel co
-        WHERE r.estadoProgramado = 0 AND r.estadoAprobado = 1 AND r.fecha BETWEEN :fechaDesde AND :fechaHasta'
-        )->setParameter('fechaDesde', $fechaDesde)
-            ->setParameter('fechaHasta', $fechaHasta);
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r');
+        $queryBuilder
+            ->select('r.codigoRecogidaPk')
+            ->addSelect('r.fechaRegistro')
+            ->addSelect('r.fecha')
+            ->addSelect('rr.nombre')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('co.nombre AS ciudad')
+            ->addSelect('r.codigoOperacionFk')
+            ->addSelect('r.anunciante')
+            ->addSelect('r.direccion')
+            ->addSelect('r.telefono')
+            ->addSelect('r.estadoProgramado')
+            ->addSelect('r.estadoRecogido')
+            ->addSelect('r.unidades')
+            ->addSelect('r.pesoReal')
+            ->addSelect('r.pesoVolumen')
+            ->leftJoin('r.clienteRel', 'c')
+            ->leftJoin('r.ciudadRel', 'co')
+            ->leftJoin('r.rutaRecogidaRel', 'rr')
+            ->where('r.estadoProgramado = 0')
+            ->andWhere('r.estadoAprobado = 1')
+            ->andWhere("(r.fecha BETWEEN '$fechaDesde' AND '$fechaHasta')");
+        if ($session->get('filtroTteCodigoRutaRecogida') != "") {
+            $queryBuilder->andWhere("r.codigoRutaRecogidaFk = '" . $session->get('filtroTteCodigoRutaRecogida') . "'");
+        }
+        if ($session->get('filtroTteMostrarSoloRecogidasRuta') != "") {
+            $queryBuilder->andWhere("r.codigoRutaRecogidaFk = '$rutaRecogida'");
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+
+//        $em = $this->getEntityManager();
+//        $fechaDesde = $fecha . " 00:00";
+//        $fechaHasta = $fecha . " 23:59";
+//        $query = $em->createQuery(
+//            'SELECT r.codigoRecogidaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad,
+//              r.fecha, r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen,
+//              r.codigoOperacionFk, r.anunciante, r.direccion, r.telefono, rr.nombre
+//        FROM App\Entity\Transporte\TteRecogida r
+//        LEFT JOIN r.rutaRecogidaRel rr
+//        LEFT JOIN r.clienteRel c
+//        LEFT JOIN r.ciudadRel co
+//        WHERE r.estadoProgramado = 0 AND r.estadoAprobado = 1 AND r.fecha BETWEEN :fechaDesde AND :fechaHasta'
+//        )->setParameter('fechaDesde', $fechaDesde)
+//            ->setParameter('fechaHasta', $fechaHasta);
+//        if ($session->get('filtroTteCodigoRutaRecogida')) {
+//            $query .= " AND r.codigoRutaRecogidaFk = '" . $session->get('filtroTteCodigoRutaRecogida') . "'";
+//        }
+//        return $query->execute();
     }
 
     public function listaRecoge($codigoRecogidaDespacho)
@@ -249,8 +289,8 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->addSelect('r.pesoVolumen')
             ->leftJoin('r.clienteRel', 'c')
             ->leftJoin('r.ciudadRel', 'co')
-        ->where('r.codigoDespachoRecogidaFk = '. $codigoRecogidaDespacho)
-        ->andWhere('r.estadoRecogido = 0');
+            ->where('r.codigoDespachoRecogidaFk = ' . $codigoRecogidaDespacho)
+            ->andWhere('r.estadoRecogido = 0');
 
         return $queryBuilder;
 

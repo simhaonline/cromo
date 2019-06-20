@@ -38,13 +38,14 @@
                             <th>REG</th>
                             <th>FECHA</th>
                             <th>HORA</th>
+                            <th>RUTA</th>
                             <th>CLIENTE</th>
                             <th>CIUDAD</th>
                             <th>UND</th>
                             <th>PES</th>
                             <th>VOL</th>
                             <th>R</th>
-                            <th></th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -54,6 +55,7 @@
                                 <td>{{ arRecogida.fechaRegistro | date('Y-m-d') }}</td>
                                 <td>{{ arRecogida.fecha | date('Y-m-d') }}</td>
                                 <td>{{ arRecogida.fecha | date('H:i') }}</td>
+                                <td>{{ arRecogida.ruta }}</td>
                                 <td>{{ arRecogida.clienteNombreCorto }}</td>
                                 <td>{{ arRecogida.ciudad }}</td>
                                 <td style="text-align: right">{{ arRecogida.unidades }}</td>

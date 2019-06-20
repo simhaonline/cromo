@@ -109,7 +109,7 @@ class TurPedido
     private $vrSubtotal = 0;
 
     /**
-     * @ORM\Column(name="vr_iva", type="float", nullable=true)
+     * @ORM\Column(name="vr_iva", type="float", nullable=true)estado
      */
     private $vrIva = 0;
 

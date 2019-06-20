@@ -131,9 +131,9 @@ class TurCliente
     protected $ciudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurPedido", mappedBy="clienteRel")
+     * @ORM\OneToMany(targetEntity="TurFactura", mappedBy="clienteRel")
      */
-    protected $pedidosClienteRel;
+    protected $facturasClienteRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="clienteRel")
@@ -560,5 +560,23 @@ class TurCliente
     {
         $this->PuestosClienteRel = $PuestosClienteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasClienteRel()
+    {
+        return $this->facturasClienteRel;
+    }
+
+    /**
+     * @param mixed $facturasClienteRel
+     */
+    public function setFacturasClienteRel($facturasClienteRel): void
+    {
+        $this->facturasClienteRel = $facturasClienteRel;
+    }
+
+
 }
 

@@ -37,6 +37,7 @@ class ProgramadaController extends Controller
                     $arRecogida->setFechaRegistro(new \DateTime('now'));
                     $arRecogida->setFecha($fechaRecogida);
                     $arRecogida->setClienteRel($arRecogidaProgramada->getClienteRel());
+                    $arRecogida->setRutaRecogidaRel($arRecogidaProgramada->getRutaRecogidaRel());
                     $arRecogida->setOperacionRel($arRecogidaProgramada->getOperacionRel());
                     $arRecogida->setCiudadRel($arRecogidaProgramada->getCiudadRel());
                     $arRecogida->setAnunciante($arRecogidaProgramada->getAnunciante());

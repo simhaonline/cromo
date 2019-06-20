@@ -6,10 +6,14 @@ namespace App\Controller\Crm\Movimiento\Comercial\Negocio;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Crm\CrmCliente;
 use App\Entity\Crm\CrmNegocio;
 use App\Form\Type\Crm\NegocioType;
 use Ob\HighchartsBundle\Highcharts\Highchart;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class NegocioController extends ControllerListenerGeneral
@@ -27,22 +31,30 @@ class NegocioController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $this->request = $request;
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroCrmNegocioCodigoCliente')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add( 'btnExcel', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
+            ->add( 'btnEliminar', SubmitType::class, ['label'=>'Eliminar', 'attr'=>['class'=> 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroCrmNegocioCodigoCliente', $form->get('txtCodigoCliente')->getData());
             }
         }
-        $datos = $this->getDatosLista();
+        if ($form->get('btnEliminar')->isClicked()){
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            $this->get("UtilidadesModelo")->eliminar(CrmNegocio::class, $arrSeleccionados);
+            return $this->redirect($this->generateUrl('crm_movimiento_comercial_negocio_lista'));
+        }
+        $arNegocios = $paginator->paginate($em->getRepository(CrmNegocio::class)->lista(), $request->query->getInt('page', 1), 500);
         return $this->render('crm/movimiento/comercial/negocio/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arNegocios' => $arNegocios,
+            'form' => $form->createView()
         ]);
     }
 
@@ -61,16 +73,24 @@ class NegocioController extends ControllerListenerGeneral
             if (!$arNegocio) {
                 return $this->redirect($this->generateUrl('crm_movimiento_comercial_negocio_lista'));
             }
+        }else{
+            $arNegocio->setFechaCierre(new \DateTime('now'));
+            $arNegocio->setFechaNegocio(new \DateTime('now'));
         }
         $form = $this->createForm(NegocioType::class, $arNegocio);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arNegocio->setFecha(new \DateTime('now'));
-                $arNegocio = $form->getData();
-                $em->persist($arNegocio);
-                $em->flush();
-                return $this->redirect($this->generateUrl('crm_movimiento_comercial_negocio_detalle', ['id' => $arNegocio->getCodigoNegocioPk()]));
+                $arCliente =$em->getRepository(CrmCliente::class)->find($form->get('codigoClienteFk')->getData());
+                if ($arCliente){
+                    $arNegocio = $form->getData();
+                    $arNegocio->setClienteRel($arCliente);
+                    $em->persist($arNegocio);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('crm_movimiento_comercial_negocio_detalle', ['id' => $arNegocio->getCodigoNegocioPk()]));
+                }
+
             }
         }
         return $this->render('crm/movimiento/comercial/negocio/nuevo.html.twig', [

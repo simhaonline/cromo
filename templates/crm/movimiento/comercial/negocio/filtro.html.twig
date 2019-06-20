@@ -7,9 +7,8 @@
         <div>
             <div class="widget-body">
                 {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
-
+                {% include ('estructura/buscarClienteCrm.html.twig') %}
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-1 control-label">Codigo:</label>
                     <div class="col-sm-5">
                         {{ form_widget(formFiltro.codigoClienteFk, { 'attr': {'class': 'form-control'} }) }}
                     </div>

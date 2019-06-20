@@ -7,6 +7,7 @@ namespace App\Repository\Crm;
 use App\Entity\Crm\CrmNegocio;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class CrmNegocioRepository extends ServiceEntityRepository
 {
@@ -15,6 +16,24 @@ class CrmNegocioRepository extends ServiceEntityRepository
         parent::__construct($registry, CrmNegocio::class);
     }
 
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CrmNegocio::class, 'n')
+            ->select('n.codigoNegocioPk')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('n.fecha')
+            ->addSelect('n.fechaNegocio')
+            ->addSelect('n.fechaCierre')
+            ->addSelect('c.nombreCorto')
+            ->leftJoin('n.clienteRel', 'c');
+        if($session->get('filtroCrmNegocioCodigoCliente')){
+            $queryBuilder->andWhere("n.codigoClienteFk  = '{$session->get('filtroCrmNegocioCodigoCliente')}' ");
+        }
+
+        return $queryBuilder;
+    }
+    
     public function GraficaNegociosporFace()
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CrmNegocio::class, 'n')

@@ -23,21 +23,12 @@ class NegocioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fechaCierre', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
-            ->add('fechaNegocio', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
+            ->add('fechaCierre', DateType::class, ['required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
+            ->add('fechaNegocio', DateType::class, ['required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
             ->add('valor', NumberType::class, ['required' => true, 'label' => 'Codigo fase:'])
             ->add('comentarios', TextareaType::class, ['required' => true, 'label' => 'Codigo fase:'])
             ->add('nombre', TextType::class, ['required' => true, 'label' => 'Codigo fase:'])
-            ->add('clienteRel', EntityType::class, [
-                'required' => false,
-                'class' => 'App\Entity\Crm\CrmCliente',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
-                        ->orderBy('c.codigoClientePk', 'ASC');
-                },
-                'required' => false,
-                'choice_label' => 'nombreCorto',
-            ])
+            ->add('codigoClienteFk', TextType::class, ['required' => true, 'label' => 'Codigo Cliente:'])
             ->add('contactoRel', EntityType::class, [
                 'required' => false,
                 'class' => 'App\Entity\Crm\CrmContacto',
@@ -76,14 +67,13 @@ class NegocioType extends AbstractType
             {"campo":"fechaCierre",     "tipo":"fecha",     "ayuda":"FECHA CIERRE",     "titulo":"F.C"},
             {"campo":"fechaNegocio",    "tipo":"fecha",     "ayuda":"FECHA NEGOCIO",    "titulo":"F.N   "}
         ]';
-        //            {"campo":"faseRel.nombre", "tipo":"texto",     "ayuda":"", "titulo":"fase", "relacion":""}
         return $campos;
     }
 
     public function getEstructuraPropiedadesFiltro()
     {
         $campos = '[
-            {"child":"codigoClienteFk", "tipo":"EntityType","propiedades":{"class":"CrmCliente","choice_label":"nombreCorto", "label":"TODOS"}}
+              {"child":"codigoClienteFk", "tipo":"TextType",   "propiedades":{"label":"Cliente"}}
         ]';
         return $campos;
     }

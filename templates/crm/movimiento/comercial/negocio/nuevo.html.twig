@@ -5,15 +5,41 @@
         <div class="panel-heading">Informacion general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
+                <div class="form-group form-group-sm">
+                    <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                    <div class="col-sm-11">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="input-group">
+                                    {{ form_widget(form.codigoClienteFk) }}
+                                </div>
+                            </div>
+                            <div class="col-lg-10">
+                                <div class="input-group">
+                                    <input id="form_txtNombreCorto" class="form-control" readonly>
+                                    <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('crm_cliente', { 'campoCodigo': 'negocio_codigoClienteFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label  class="col-sm-2 control-label">Nombre:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
                 </div>
+                <label  class="col-sm-2 control-label">Contacto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.contactoRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
             </div>
             <div class="form-group form-group-sm">
-                <label  class="col-sm-2 control-label">Fecha cierre:</label>
+                <label  class="col-sm-2 control-label">fase:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.fechaCierre, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.faseRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label class="col-sm-2 control-label">Fecha negocio:</label>
                 <div class="col-sm-4">
@@ -25,20 +51,15 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.valor, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label  class="col-sm-2 control-label">fase:</label>
+
+                <label  class="col-sm-2 control-label">Fecha cierre:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.faseRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.fechaCierre, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label  class="col-sm-2 control-label">Cliente:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.clienteRel, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label  class="col-sm-2 control-label">Contacto:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.contactoRel, { 'attr': {'class': 'form-control'} }) }}
-                </div>
+
+
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Comentario:</label>

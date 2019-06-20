@@ -44,9 +44,9 @@ class CrmNegocio
     private $valor = 0;
 
     /**
-     * @ORM\Column(name="comentarios", type="string", length=100, nullable=true)
+     * @ORM\Column(name="comentario", type="string", length=100, nullable=true)
      */
-    private $comentarios;
+    private $comentario;
 
     /**
      * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
@@ -164,17 +164,17 @@ class CrmNegocio
     /**
      * @return mixed
      */
-    public function getComentarios()
+    public function getcomentario()
     {
-        return $this->comentarios;
+        return $this->comentario;
     }
 
     /**
-     * @param mixed $comentarios
+     * @param mixed $comentario
      */
-    public function setComentarios($comentarios): void
+    public function setcomentario($comentario): void
     {
-        $this->comentarios = $comentarios;
+        $this->comentario = $comentario;
     }
 
     /**

@@ -42,10 +42,10 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>CLIENTE</th>
             <th>FECHA</th>
             <th title="FECHA CIERRE">F.N</th>
             <th title="FECHA NEGOCIO">F.C</th>
+            <th>CLIENTE</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
@@ -55,10 +55,10 @@
         {% for arNegocio in arNegocios %}
             <tr>
                 <td>{{ arNegocio.codigoNegocioPk }}</td>
-                <td>{{ arNegocio.nombreCorto }}</td>
                 <td>{{ arNegocio.fecha | date('Y-m-d') }}</td>
                 <td>{{ arNegocio.fechaNegocio | date('Y-m-d') }}</td>
                 <td>{{ arNegocio.fechaCierre | date('Y-m-d') }}</td>
+                <td>{{ arNegocio.nombreCorto }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('crm_movimiento_comercial_negocio_nuevo',{'id': arNegocio.codigoNegocioPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

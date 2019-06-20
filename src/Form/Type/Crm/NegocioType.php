@@ -26,7 +26,7 @@ class NegocioType extends AbstractType
             ->add('fechaCierre', DateType::class, ['required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
             ->add('fechaNegocio', DateType::class, ['required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
             ->add('valor', NumberType::class, ['required' => true, 'label' => 'Codigo fase:'])
-            ->add('comentarios', TextareaType::class, ['required' => false, 'label' => 'Codigo fase:'])
+            ->add('comentario', TextareaType::class, ['required' => false, 'label' => 'Codigo fase:'])
             ->add('nombre', TextType::class, ['required' => true, 'label' => 'Codigo fase:'])
             ->add('codigoClienteFk', TextType::class, ['required' => true, 'label' => 'Codigo Cliente:'])
             ->add('contactoRel', EntityType::class, [

@@ -128,6 +128,43 @@ class TteRecogidaRepository extends ServiceEntityRepository
 
     }
 
+    public function fecha($fechaDesde, $fechaHasta)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r');
+        $queryBuilder
+            ->select('r.codigoRecogidaPk')
+            ->addSelect('r.fechaRegistro')
+            ->addSelect('r.fecha')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('co.nombre AS ciudad')
+            ->addSelect('r.anunciante')
+            ->addSelect('r.direccion')
+            ->addSelect('r.telefono')
+            ->addSelect('r.unidades')
+            ->addSelect('r.pesoReal')
+            ->addSelect('r.pesoVolumen')
+            ->addSelect('r.estadoAutorizado')
+            ->addSelect('r.estadoAprobado')
+            ->addSelect('r.estadoProgramado')
+            ->addSelect('r.estadoRecogido')
+            ->addSelect('r.estadoDescargado')
+            ->leftJoin('r.clienteRel', 'c')
+            ->leftJoin('r.ciudadRel', 'co')
+            ->where("r.fecha >= '" . $fechaDesde . " 00:00:00'")
+            ->andWhere("r.fecha <= '" . $fechaHasta . " 23:59:59'");
+        if ($session->get('filtroTteCodigoCliente')) {
+            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if ($session->get('filtroTteRecogidaCodigo') != '') {
+            $queryBuilder->andWhere("r.codigoRecogidaPk = {$session->get('filtroTteRecogidaCodigo')}");
+        }
+        $queryBuilder->orderBy('r.fecha', 'DESC');
+
+        return $queryBuilder;
+
+    }
+
     public function autorizar($arRecogida)
     {
         $arRecogida->setEstadoAutorizado(1);

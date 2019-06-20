@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Informacion general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Codigo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoTurnoPk, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+
+                <label class="col-sm-2 control-label">Horas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.horas) }}
+                </div>
+                <label class="col-sm-2 control-label">Hora desde:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.horaDesde) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Horas diurnas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.horasDiurnas, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Hora hasta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.horaHasta) }}
+                </div>
+
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Horas nocturnas:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.horasNocturnas, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-1 col-sm-offset-1">
+                    {{ form_widget(form.novedad) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.descanso) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.incapacidad) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.incapacidad) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.licencia) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.vacacion) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.ingreso) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.ausentismo) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.dia) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.noche) }}
+                </div>
+                <div class="col-sm-1">
+                    {{ form_widget(form.induccion) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('turno_administracion_operacion_turno_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

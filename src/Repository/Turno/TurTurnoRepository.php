@@ -15,4 +15,18 @@ class TurTurnoRepository extends ServiceEntityRepository
         parent::__construct($registry, TurTurno::class);
     }
 
+    public function lista(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurTurno::class, 't')
+            ->select('t');
+
+        if ($session->get('filtroTurTurnoCodigoTurno') != '') {
+            $queryBuilder->andWhere("t.codigoTurnoPk = '{$session->get('filtroTurTurnoCodigoTurno')}'");
+        }
+        if ($session->get('filtroTurTurnoNombre') != '') {
+            $queryBuilder->andWhere("t.nombre LIKE '%{$session->get('filtroTurTurnoNombre')}%'");
+        }
+        return $queryBuilder;
+    }
+
 }

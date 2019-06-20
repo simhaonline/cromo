@@ -130,6 +130,12 @@ class DespachoController extends ControllerListenerGeneral
                         if ($txtCodigoVehiculo != '') {
                             $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
                             if ($arVehiculo) {
+                                if ($id == 0) {
+                                    $arDespacho->setFechaRegistro(new \DateTime('now'));
+                                    $arDespacho->setFechaSalida(new \DateTime('now'));
+                                    $arDespacho->setUsuario($this->getUser()->getUsername());
+                                    $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
+                                }
                                 $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();
                                 $arDespacho->setVehiculoRel($arVehiculo);
                                 $arDespacho->setConductorRel($arConductor);
@@ -138,7 +144,11 @@ class DespachoController extends ControllerListenerGeneral
                                 if ($arDespacho->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
                                     $retencionFuente = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
                                 }
-                                $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
+                                $industriaComercio = 0;
+                                if($arDespacho->getOperacionRel()->getRetencionIndustriaComercio()) {
+                                    $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
+                                }
+
 
                                 $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
                                 $saldo = $total - $descuentos;
@@ -148,12 +158,7 @@ class DespachoController extends ControllerListenerGeneral
                                 $arDespacho->setVrTotal($total);
                                 $arDespacho->setVrSaldo($saldo);
                                 $arDespacho->setVrTotalNeto($totalNeto);
-                                if ($id == 0) {
-                                    $arDespacho->setFechaRegistro(new \DateTime('now'));
-                                    $arDespacho->setFechaSalida(new \DateTime('now'));
-                                    $arDespacho->setUsuario($this->getUser()->getUsername());
-                                    $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
-                                }
+
                                 $em->persist($arDespacho);
                                 $em->flush();
                                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $arDespacho->getCodigoDespachoPk())));

@@ -92,6 +92,11 @@ class TteOperacion
     private $codigoCuentaDespachoPagarFk;
 
     /**
+     * @ORM\Column(name="retencion_industria_comercio", type="boolean", nullable=true, options={"default" : true})
+     */
+    private $retencionIndustriaComercio = true;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="operacionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -582,6 +587,22 @@ class TteOperacion
     public function setCodigoCuentaDespachoPagarFk($codigoCuentaDespachoPagarFk): void
     {
         $this->codigoCuentaDespachoPagarFk = $codigoCuentaDespachoPagarFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionIndustriaComercio()
+    {
+        return $this->retencionIndustriaComercio;
+    }
+
+    /**
+     * @param mixed $retencionIndustriaComercio
+     */
+    public function setRetencionIndustriaComercio($retencionIndustriaComercio): void
+    {
+        $this->retencionIndustriaComercio = $retencionIndustriaComercio;
     }
 
 

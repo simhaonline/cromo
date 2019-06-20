@@ -269,7 +269,10 @@ class TteDespachoRepository extends ServiceEntityRepository
         if ($arDespacho->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
             $retencionFuente = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
         }
-        $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
+        $industriaComercio = 0;
+        if($arDespacho->getOperacionRel()->getRetencionIndustriaComercio()) {
+            $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
+        }
 
         $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
         $saldo = ($total + $arDespacho->getVrCobroEntregaRechazado()) - ($descuentos + $arDespacho->getVrCobroEntrega());

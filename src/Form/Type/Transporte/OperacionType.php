@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteOperacion;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -40,6 +41,7 @@ class OperacionType extends AbstractType
             ->add('codigoCuentaDespachoCargueFk',TextType::class,['required' => false,'label' => 'Cuenta despacho cargue'])
             ->add('codigoCuentaDespachoAnticipoFk',TextType::class,['required' => false,'label' => 'Cuenta despacho anticipo'])
             ->add('codigoCuentaDespachoPagarFk',TextType::class,['required' => false,'label' => 'Cuenta despacho pagar'])
+            ->add('retencionIndustriaComercio', CheckboxType::class, array('required' => false))
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

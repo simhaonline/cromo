@@ -20,7 +20,8 @@ class GenModelo extends Fixture
                 'TurItem',
                 'TurTurno',
                 'TurFactura',
-                'TurFacturaDetalle'
+                'TurFacturaDetalle',
+                'TurSecuencia'
             )),
             array('modulo'=>'Cartera','modelo'=>array(
                 'CarCliente',

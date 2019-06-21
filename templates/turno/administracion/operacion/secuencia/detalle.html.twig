@@ -1,0 +1,160 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_administracion_operacion_secuencia_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arSecuencia.codigoSecuenciaPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arSecuencia.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">HORAS:</td>
+            <td class="td-in-well">{{ arSecuencia.horas }}</td>
+            <td class="titulo">DIAS:</td>
+            <td class="td-in-well">{{ arSecuencia.dias  }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 1:</td>
+            <td class="td-in-well">{{ arSecuencia.dia1  }}</td>
+            <td class="titulo">LUNES:</td>
+            <td class="td-in-well">{{ arSecuencia.lunes  }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 2:</td>
+            <td class="td-in-well">{{ arSecuencia.dia2}}</td>
+            <td class="titulo">MARTES:</td>
+            <td class="td-in-well">{{ arSecuencia.martes}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 3:</td>
+            <td class="td-in-well">{{ arSecuencia.dia3}}</td>
+            <td class="titulo">MIERCOLES:</td>
+            <td class="td-in-well">{{ arSecuencia.miercoles}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 4:</td>
+            <td class="td-in-well">{{ arSecuencia.dia4 }}</td>
+            <td class="titulo">JUEVES:</td>
+            <td class="td-in-well">{{ arSecuencia.jueves }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 5:</td>
+            <td class="td-in-well">{{ arSecuencia.dia5 }}</td>
+            <td class="titulo">VIERNES:</td>
+            <td class="td-in-well">{{ arSecuencia.viernes }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 6:</td>
+            <td class="td-in-well">{{ arSecuencia.dia6 }}</td>
+            <td class="titulo">SÁBADO:</td>
+            <td class="td-in-well">{{ arSecuencia.sabado }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 7:</td>
+            <td class="td-in-well">{{ arSecuencia.dia7 }}</td>
+            <td class="titulo">SÁBADO:</td>
+            <td class="td-in-well">{{ arSecuencia.domingo }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 8:</td>
+            <td class="td-in-well">{{ arSecuencia.dia8}}</td>
+            <td class="titulo">DOMINGO FESTIVO:</td>
+            <td class="td-in-well">{{ arSecuencia.domingoFestivo }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 9:</td>
+            <td class="td-in-well">{{ arSecuencia.dia9}}</td>
+            <td class="titulo">FESTIVO:</td>
+            <td class="td-in-well">{{ arSecuencia.FESTIVO }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 10:</td>
+            <td class="td-in-well">{{ arSecuencia.dia10}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 11:</td>
+            <td class="td-in-well">{{ arSecuencia.dia11}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 12:</td>
+            <td class="td-in-well">{{ arSecuencia.dia12}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 13:</td>
+            <td class="td-in-well">{{ arSecuencia.dia14}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 14:</td>
+            <td class="td-in-well">{{ arSecuencia.dia14}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 15:</td>
+            <td class="td-in-well">{{ arSecuencia.dia15}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 16:</td>
+            <td class="td-in-well">{{ arSecuencia.dia16}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 17:</td>
+            <td class="td-in-well">{{ arSecuencia.dia18}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 18:</td>
+            <td class="td-in-well">{{ arSecuencia.dia18}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 19:</td>
+            <td class="td-in-well">{{ arSecuencia.dia19}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 20:</td>
+            <td class="td-in-well">{{ arSecuencia.dia20}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 21:</td>
+            <td class="td-in-well">{{ arSecuencia.dia22}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 23:</td>
+            <td class="td-in-well">{{ arSecuencia.dia23}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 24:</td>
+            <td class="td-in-well">{{ arSecuencia.dia24}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 25:</td>
+            <td class="td-in-well">{{ arSecuencia.dia25}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 26:</td>
+            <td class="td-in-well">{{ arSecuencia.dia26}}</td>
+        </tr><tr>
+            <td class="titulo">DÍA 27:</td>
+            <td class="td-in-well">{{ arSecuencia.dia27}}</td>
+        </tr><tr>
+            <td class="titulo">DÍA 28:</td>
+            <td class="td-in-well">{{ arSecuencia.dia28}}</td>
+        </tr><tr>
+            <td class="titulo">DÍA 29:</td>
+            <td class="td-in-well">{{ arSecuencia.dia29}}</td>
+        </tr><tr>
+            <td class="titulo">DÍA 30:</td>
+            <td class="td-in-well">{{ arSecuencia.dia9}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍA 31:</td>
+            <td class="td-in-well">{{ arSecuencia.dia31}}</td>
+        </tr>
+  </tbody>
+    </table>
+{% endblock %}

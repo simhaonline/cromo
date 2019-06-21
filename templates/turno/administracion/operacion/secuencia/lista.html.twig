@@ -1,0 +1,172 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">Código:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.txtSecuencia, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <label class="col-sm-2 control-label">Nombre:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.txtNombre, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NOMBRE</th>
+                <th>HORAS</th>
+                <th>Dias</th>
+                <th>dia 1</th>
+                <th>dia 2</th>
+                <th>dia 3</th>
+                <th>dia 4</th>
+                <th>dia 5</th>
+                <th>dia 6</th>
+                <th>dia 7</th>
+                <th>dia 8</th>
+                <th>dia 9</th>
+                <th>dia 10</th>
+                <th>dia 11</th>
+                <th>dia 12</th>
+                <th>dia 13</th>
+                <th>dia 14</th>
+                <th>dia 15</th>
+                <th>dia 16</th>
+                <th>dia 17</th>
+                <th>dia 18</th>
+                <th>dia 19</th>
+                <th>dia 20</th>
+                <th>dia 21</th>
+                <th>dia 22</th>
+                <th>dia 23</th>
+                <th>dia 24</th>
+                <th>dia 25</th>
+                <th>dia 26</th>
+                <th>dia 27</th>
+                <th>dia 28</th>
+                <th>dia 29</th>
+                <th>dia 30</th>
+                <th>dia 31</th>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miercoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+                <th>Sábado</th>
+                <th>Domingo</th>
+                <th>Festivo</th>
+                <th>Domingo festivo</th>
+                <th></th>
+                <th></th>
+                <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arSecuencia in arSecuencias %}
+                <tr>
+                    <td>{{ arSecuencia.codigoSecuenciaPk }}</td>
+                    <td>{{ arSecuencia.nombre }}</td>
+                    <td>{{ arSecuencia.horas }}</td>
+                    <td>{{ arSecuencia.dias }}</td>
+                    <td>{{ arSecuencia.dia1 }}</td>
+                    <td>{{ arSecuencia.dia2 }}</td>
+                    <td>{{ arSecuencia.dia3 }}</td>
+                    <td>{{ arSecuencia.dia4 }}</td>
+                    <td>{{ arSecuencia.dia5 }}</td>
+                    <td>{{ arSecuencia.dia6 }}</td>
+                    <td>{{ arSecuencia.dia7 }}</td>
+                    <td>{{ arSecuencia.dia8 }}</td>
+                    <td>{{ arSecuencia.dia9 }}</td>
+                    <td>{{ arSecuencia.dia10 }}</td>
+                    <td>{{ arSecuencia.dia11 }}</td>
+                    <td>{{ arSecuencia.dia12 }}</td>
+                    <td>{{ arSecuencia.dia13 }}</td>
+                    <td>{{ arSecuencia.dia14 }}</td>
+                    <td>{{ arSecuencia.dia15 }}</td>
+                    <td>{{ arSecuencia.dia16 }}</td>
+                    <td>{{ arSecuencia.dia17 }}</td>
+                    <td>{{ arSecuencia.dia18 }}</td>
+                    <td>{{ arSecuencia.dia19 }}</td>
+                    <td>{{ arSecuencia.dia20 }}</td>
+                    <td>{{ arSecuencia.dia21 }}</td>
+                    <td>{{ arSecuencia.dia22 }}</td>
+                    <td>{{ arSecuencia.dia23 }}</td>
+                    <td>{{ arSecuencia.dia24 }}</td>
+                    <td>{{ arSecuencia.dia25 }}</td>
+                    <td>{{ arSecuencia.dia26 }}</td>
+                    <td>{{ arSecuencia.dia27 }}</td>
+                    <td>{{ arSecuencia.dia28 }}</td>
+                    <td>{{ arSecuencia.dia29 }}</td>
+                    <td>{{ arSecuencia.dia30 }}</td>
+                    <td>{{ arSecuencia.dia31 }}</td>
+                    <td>{{ arSecuencia.lunes }}</td>
+                    <td>{{ arSecuencia.martes }}</td>
+                    <td>{{ arSecuencia.miercoles }}</td>
+                    <td>{{ arSecuencia.jueves }}</td>
+                    <td>{{ arSecuencia.viernes }}</td>
+                    <td>{{ arSecuencia.sabado }}</td>
+                    <td>{{ arSecuencia.domingo }}</td>
+                    <td>{{ arSecuencia.festivo }}</td>
+                    <td>{{ arSecuencia.domingoFestivo }}</td>
+                    <td style="text-align: center;">
+                        <a href="{{ path('turno_administracion_operacion_secuencia_nuevo',{'id': arSecuencia.codigoSecuenciaPk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                    <td style="text-align: center;">
+                        <a href="{{ path('turno_administracion_operacion_secuencia_detalle',{'id' : arSecuencia.codigoSecuenciaPk}) }}">
+                            <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                            </i>
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" name="ChkSeleccionar[]" value="{{ arSecuencia.codigoSecuenciaPk  }}"/>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arSecuencias.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arSecuencias) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_administracion_operacion_secuencia_nuevo', {'id': 0}) }}">Nuevo</a>
+        </div>
+    </div>
+    <br/><br/>
+    {{ form_end(form) }}
+{% endblock %}

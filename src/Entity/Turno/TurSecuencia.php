@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Entity\Secuencia;
+namespace App\Entity\Turno;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Secuencia\TurSecuenciaRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Turno\TurSecuenciaRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class TurSecuencia

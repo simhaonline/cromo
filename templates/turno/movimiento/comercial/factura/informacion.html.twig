@@ -1,0 +1,68 @@
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
+    <tr>
+        <td class="titulo">CODIGO:</td>
+        <td class="td-in-well">{{ arFactura.codigoFacturaPk }}</td>
+        <td class="titulo">USUARIO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arFactura.usuario }}</td>
+        <td class="titulo">SUBTOTAL:</td>
+        <td class="td-in-well"
+            style="text-align: right;">{{ arFactura.vrSubtotal |number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">NUMERO:</td>
+        <td class="td-in-well">{{ arFactura.numero }}</td>
+        <td class="titulo">FECHA VENCE:</td>
+        <td class="td-in-well">{{ arFactura.fechaVence | date('Y-m-d H:i') }}</td>
+        <td class="titulo">(+)IVA:</td>
+        <td class="td-in-well" style="text-align: right;">{{ arFactura.vrIva | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">FECHA:</td>
+        <td class="td-in-well">{{ arFactura.fecha | date('Y-m-d H:i') }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well" style="text-transform: uppercase;"></td>
+        <td class="titulo">BRUTO:</td>
+        <td class="td-in-well" style="text-align: right;">{{ arFactura.vrTotal | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">TERCERO:</td>
+        <td class="td-in-well">{{ arFactura.clienteRel.numeroIdentificacion }}
+            -{{ arFactura.clienteRel.nombreCorto }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well" style="text-align: left;"></td>
+        <td class="titulo">(-)RTE FUENTE:</td>
+        <td class="td-in-well"
+            style="text-align: right;">{{ arFactura.vrRetencionFuente | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">ASESOR:</td>
+        <td class="td-in-well">{{ arFactura.asesorRel.nombre | default('') }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well" style="text-align: left;"></td>
+        <td class="titulo">(-)RTE IVA:</td>
+        <td class="td-in-well"
+            style="text-align: right;">{{ arFactura.vrRetencionIva | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td class="td-in-well" style="text-align: left;"></td>
+        <td class="titulo">AUTORETENCION:</td>
+        <td class="td-in-well"
+            style="text-align: right;">{{ arFactura.vrAutoretencion | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo"></td>
+        <td class="td-in-well" style="text-align: left;"></td>
+        <td class="titulo"></td>
+        <td class="td-in-well" style="text-align: left;"></td>
+        <td class="titulo">NETO:</td>
+        <td class="td-in-well"
+            style="text-align: right;">{{ arFactura.vrNeto | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">COMENTARIO:</td>
+        <td class="td-in-well" colspan="5">{{ arFactura.comentarios }}</td>
+    </tr>
+</table>

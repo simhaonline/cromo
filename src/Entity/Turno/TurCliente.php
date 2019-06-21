@@ -103,6 +103,16 @@ class TurCliente
     private $estadoInactivo = false;
 
     /**
+     * @ORM\Column(name="retencion_fuente", type="boolean", options={"default":false})
+     */
+    private $retencionFuente = false;
+
+    /**
+     * @ORM\Column(name="retencion_fuente_sin_base", type="boolean", options={"default":false})
+     */
+    private $retencionFuenteSinBase = false;
+
+    /**
      * @ORM\Column(name="codigo_forma_pago_fk", type="string", length=10, nullable=true)
      */
     private $codigoFormaPagoFk;
@@ -576,6 +586,39 @@ class TurCliente
     {
         $this->facturasClienteRel = $facturasClienteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionFuente()
+    {
+        return $this->retencionFuente;
+    }
+
+    /**
+     * @param mixed $retencionFuente
+     */
+    public function setRetencionFuente($retencionFuente): void
+    {
+        $this->retencionFuente = $retencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionFuenteSinBase()
+    {
+        return $this->retencionFuenteSinBase;
+    }
+
+    /**
+     * @param mixed $retencionFuenteSinBase
+     */
+    public function setRetencionFuenteSinBase($retencionFuenteSinBase): void
+    {
+        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
+    }
+
 
 
 }

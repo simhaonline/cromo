@@ -12,104 +12,92 @@
         </div>
     </div>
     <div style="float:right">
-        {% if arPedido.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
-        {% if arPedido.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
-        {% if arPedido.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arFactura.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arFactura.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arFactura.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-{#    {% include 'turno/movimiento/comercial/factura/informacion.html.twig' %}#}
+    {% include 'turno/movimiento/comercial/factura/informacion.html.twig' %}
     <ul class="nav nav-tabs">
-
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
-
-
     <div class="tab-content">
         <div class="tab-pane active" id="detalles">
-            <div id="detalles" style="width: 100%"><br>
+            <div id="detalles" style="width: 100%">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-condensed tabla-datos">
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th title="Concepto">CONCEPTO</th>
-                            <th title="Modalidad">MOD</th>
-                            <th title="Fecha desde">DES</th>
-                            <th title="Fecha hasta">HAS</th>
+                            <th>ITEM</th>
                             <th>CANT</th>
-                            <th>L</th>
-                            <th>M</th>
-                            <th>X</th>
-                            <th>J</th>
-                            <th>V</th>
-                            <th>S</th>
-                            <th>D</th>
-                            <th>F</th>
-                            <th title="Horas totales">H</th>
-                            <th title="Horas diurnas">HD</th>
-                            <th title="Horas nocturnas">HN</th>
-                            <th title="Salario base">BASE</th>
-                            <th title="Precio minimo">P.MINIMO</th>
-                            <th title="Precio ajustado">P.AJUSTADO</th>
-                            <th title="Porcentaje iva">%IVA</th>
-                            <th title="Iva">IVA</th>
+                            <th>PRECIO</th>
                             <th>SUBTOTAL</th>
-                            <td></td>
+                            <th>IVA</th>
+                            <th>IVA</th>
+                            <th>RET</th>
+                            <th>TOTAL</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arPedidoDetalle in arPedidoDetalles %}
-                            <td> {{ arPedidoDetalle.codigoPedidoDetallePk }} <input type="hidden" name="arrCodigo[]"
-                                                                                    value="{{ arPedidoDetalle.codigoPedidoDetallePk }}">
+                        {% for arFacturaDetalle in arFacturaDetalles %}
+                            <td> {{ arFacturaDetalle.codigoFacturaDetallePk }} <input type="hidden" name="arrCodigo[]"
+                                                                                      value="{{ arFacturaDetalle.codigoFacturaDetallePk }}">
+                            <td>{{ arFacturaDetalle.item }}</td>
+                            {% if arFactura.estadoAutorizado %}
+                                <td style="text-align: right;">{{ arFacturaDetalle.cantidad }}</td>
+                                <td style="text-align: right;">{{ arFacturaDetalle.vrPrecio | number_format(0,'.',',') }}</td>
+                            {% else %}
+                                <td style="text-align: center;"><input type="number"
+                                                                       name="arrCantidad[{{ arFacturaDetalle.codigoFacturaDetallePk }}]"
+                                                                       value="{{ arFacturaDetalle.cantidad }}"
+                                                                       style="text-align: right; width:60px"
+                                                                       size="10"></td>
+                                <td style="text-align: center;"><input type="number"
+                                                                       name="arrValor[{{ arFacturaDetalle.codigoFacturaDetallePk }}]"
+                                                                       value="{{ arFacturaDetalle.vrPrecio }}"
+                                                                       style="text-align: right; width:90px"
+                                                                       size="10"></td>
+                            {% endif %}
+                            <td class="numero">{{ arFacturaDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
+                            {% if arFactura.estadoAutorizado %}
+                                <td>{{ arFacturaDetalle.codigoImpuestoIvaFk }}</td>
+                                <td style="text-align: right;">{{ arFacturaDetalle.vrIva | number_format(0,'.',',') }}</td>
+                                <td>{{ arFacturaDetalle.codigoImpuestoRetencionFk }}</td>
+                            {% else %}
+                                <td style="text-align: left">
+                                    <select name="cboImpuestoIva[{{ arFacturaDetalle.codigoFacturaDetallePk }}]">
+                                        {% for arImpuestoIva in arImpuestosIva %}
+                                            <option value="{{ arImpuestoIva.codigoImpuestoPk }}" {% if arFacturaDetalle.codigoImpuestoIvaFk == arImpuestoIva.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoIva.nombre }}</option>
+                                        {% endfor %}
+                                    </select></td>
+                                <td style="text-align: right;">{{ arFacturaDetalle.vrIva | number_format(0,'.',',') }}</td>
+                                <td style="text-align: left">
+                                    <select name="cboImpuestoRetencion[{{ arFacturaDetalle.codigoFacturaDetallePk }}]">
+                                        {% for arImpuestoRetencion in arImpuestosRetencion %}
+                                            <option value="{{ arImpuestoRetencion.codigoImpuestoPk }}" {% if arFacturaDetalle.codigoImpuestoRetencionFk == arImpuestoRetencion.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoRetencion.nombre }}</option>
+                                        {% endfor %}
+                                    </select></td>
+                            {% endif %}
+                            <td class="numero">{{ arFacturaDetalle.vrTotal  | number_format(0,'.',',') }}</td>
+                            <td style="text-align: center;"><input type="checkbox" style="text-align: right;"
+                                                                   name="ChkSeleccionar[]"
+                                                                   value="{{ arFacturaDetalle.codigoFacturaDetallePk }}"/>
                             </td>
-                            <td>{{ arPedidoDetalle.conceptoNombre }}</td>
-                            <td>{{ arPedidoDetalle.modalidadNombre }}</td>
-                            <td>{{ arPedidoDetalle.fechaDesde | date('Y-m-d') }}</td>
-                            <td>{{ arPedidoDetalle.fechaHasta | date('Y-m-d') }}</td>
-                            <td>{{ arPedidoDetalle.cantidad }}</td>
-                            <td>{{ arPedidoDetalle.lunes ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.martes ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.miercoles ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.jueves  ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.viernes ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.sabado  ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.domingo ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.festivo ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.horasProgramadas }}</td>
-                            <td>{{ arPedidoDetalle.horasDiurnasProgramadas }}</td>
-                            <td>{{ arPedidoDetalle.horasNocturnasProgramadas }}</td>
-                            <td></td>
-                            <td class="numero">{{ arPedidoDetalle.vrSalarioBase }}</td>
-                            <td class="numero">{{ arPedidoDetalle.vrPrecioMinimo }}</td>
-                            <td style="text-align: center;"><input type="number"
-                                                                   name="arrPrecioAjustado[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
-                                                                   value="{{ arPedidoDetalle.vrPrecioAjustado }}"
-                                                                   style="text-align: right; width:60px"
-                                                                   size="10"></td>
-                            <td style="text-align: center;"><input type="number"
-                                                                   name="arrPorcentajeIva[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
-                                                                   value="{{ arPedidoDetalle.porcentajeIva }}"
-                                                                   style="text-align: right; width:60px"
-                                                                   size="10"></td>
-                            <td class="numero">{{ arPedidoDetalle.vrIva }}</td>
-                            <td class="numero">{{ arPedidoDetalle.vrSubtotal }}</td>
-                            <td><input type="checkbox" name="ChkSeleccionar[]"
-                                       value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/></td>
-                            </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        {% if arPedido.estadoAutorizado == true %}
+                        {% if arFactura.estadoAutorizado == true %}
                             <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
                                    value="Nuevo"/>
                         {% else %}
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('turno_movimiento_comercial_pedido_detalle_nuevo', {'codigoPedido':arPedido.codigoPedidoPk,'id': 0  }) }}', 'PedidoAdicionarDetalle', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_comercial_factura_detalle_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">

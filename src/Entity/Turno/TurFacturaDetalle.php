@@ -52,6 +52,11 @@ class TurFacturaDetalle
     private $vrIva = 0;
 
     /**
+     * @ORM\Column(name="cantidad", type="integer", options={"default" : 0})
+     */
+    private $cantidad = 0;
+
+    /**
      * @ORM\Column(name="vr_precio", type="float", options={"default" : 0})
      */
     private $vrPrecio = 0;
@@ -81,6 +86,12 @@ class TurFacturaDetalle
      * @ORM\JoinColumn(name="codigo_factura_fk", referencedColumnName="codigo_factura_pk")
      */
     protected $facturaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurItem", inversedBy="facturasDetallesItemRel")
+     * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
+     */
+    protected $itemRel;
 
     /**
      * @return mixed
@@ -290,7 +301,52 @@ class TurFacturaDetalle
         $this->facturaRel = $facturaRel;
     }
 
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
 
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getItemRel()
+    {
+        return $this->itemRel;
+    }
+
+    /**
+     * @param mixed $itemRel
+     */
+    public function setItemRel($itemRel): void
+    {
+        $this->itemRel = $itemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * @param mixed $cantidad
+     */
+    public function setCantidad($cantidad): void
+    {
+        $this->cantidad = $cantidad;
+    }
 
 }

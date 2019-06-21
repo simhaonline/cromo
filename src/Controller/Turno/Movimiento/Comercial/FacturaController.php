@@ -5,18 +5,12 @@ namespace App\Controller\Turno\Movimiento\Comercial;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\General\GenImpuesto;
 use App\Entity\Turno\TurCliente;
-use App\Entity\Turno\TurConfiguracion;
-use App\Entity\Turno\TurContrato;
-use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurFactura;
-use App\Entity\Turno\TurPedido;
-use App\Entity\Turno\TurPedidoDetalle;
-use App\Form\Type\Turno\ContratoDetalleType;
+use App\Entity\Turno\TurFacturaDetalle;
+use App\Entity\Turno\TurItem;
 use App\Form\Type\Turno\FacturaType;
-use App\Form\Type\Turno\PedidoType;
-use App\Form\Type\Turno\PedidoDetalleType;
-use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -65,7 +59,7 @@ class FacturaController extends ControllerListenerGeneral
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurFactura::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('turno_movimiento_comercial_pedido_lista'));
+                return $this->redirect($this->generateUrl('turno_movimiento_comercial_factura_lista'));
             }
         }
         return $this->render('turno/movimiento/comercial/factura/lista.html.twig', [
@@ -130,22 +124,22 @@ class FacturaController extends ControllerListenerGeneral
     {
         $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
-        $arPedido = $em->getRepository(TurPedido::class)->find($id);
-        $form = Estandares::botonera($arPedido->getEstadoAutorizado(), $arPedido->getEstadoAprobado(), $arPedido->getEstadoAnulado());
+        $arFactura = $em->getRepository(TurFactura::class)->find($id);
+        $form = Estandares::botonera($arFactura->getEstadoAutorizado(), $arFactura->getEstadoAprobado(), $arFactura->getEstadoAnulado());
 
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobado = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        if ($arPedido->getEstadoAutorizado()) {
+        if ($arFactura->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobado['disabled'] = false;
             $arrBtnActualizar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
         }
-        if ($arPedido->getEstadoAprobado()) {
+        if ($arFactura->getEstadoAprobado()) {
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnAprobado['disabled'] = true;
         }
@@ -157,81 +151,92 @@ class FacturaController extends ControllerListenerGeneral
             $arrControles = $request->request->all();
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository(TurPedido::class)->autorizar($arPedido);
+                $em->getRepository(TurFactura::class)->autorizar($arFactura);
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository(TurPedido::class)->desautorizar($arPedido);
+                $em->getRepository(TurFactura::class)->desautorizar($arFactura);
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository(TurPedido::class)->aprobar($arPedido);
+                $em->getRepository(TurFactura::class)->aprobar($arFactura);
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $em->getRepository(TurPedidoDetalle::class)->eliminar($arPedido, $arrDetallesSeleccionados);
-                $em->getRepository(TurPedido::class)->liquidar($arPedido);
+                $em->getRepository(TurFacturaDetalle::class)->eliminar($arFactura, $arrDetallesSeleccionados);
+                $em->getRepository(TurFactura::class)->liquidar($arFactura);
             }
             if ($form->get('btnActualizar')->isClicked()) {
-                $em->getRepository(TurPedidoDetalle::class)->actualizarDetalles($arrControles, $form, $arPedido);
+                $em->getRepository(TurFacturaDetalle::class)->actualizarDetalles($arrControles, $form, $arFactura);
             }
-            return $this->redirect($this->generateUrl('turno_movimiento_comercial_pedido_detalle', ['id' => $id]));
+            return $this->redirect($this->generateUrl('turno_movimiento_comercial_factura_detalle', ['id' => $id]));
         }
-        $arPedidoDetalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);
-        return $this->render('turno/movimiento/comercial/pedido/detalle.html.twig', [
+        $arImpuestosIva = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'I'));
+        $arImpuestosRetencion = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'R'));
+        $arFacturaDetalles = $paginator->paginate($em->getRepository(TurFacturaDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);
+        return $this->render('turno/movimiento/comercial/factura/detalle.html.twig', [
             'form' => $form->createView(),
-            'arPedidoDetalles' => $arPedidoDetalles,
-            'arPedido' => $arPedido
+            'arFacturaDetalles' => $arFacturaDetalles,
+            'arFactura' => $arFactura,
+            'arImpuestosIva' => $arImpuestosIva,
+            'arImpuestosRetencion' => $arImpuestosRetencion
         ]);
     }
 
     /**
      * @param Request $request
-     * @param $codigoPedido
-     * @param $codigoPedidoDetalle
+     * @param $id
      * @return Response
-     * @throws \Exception
-     * @Route("/turno/movimiento/comercial/pedido/detalle/nuevo/{codigoPedido}/{id}", name="turno_movimiento_comercial_pedido_detalle_nuevo")
+     * @Route("/turno/movimiento/comercial/factura/detalle/nuevo/{id}", name="turno_movimiento_comercial_factura_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $codigoPedido, $id)
+    public function detalleNuevo(Request $request, $id)
     {
+        /**
+         * @var $arItem TurItem
+         */
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $arPedidoDetalle = new TurPedidoDetalle();
-        $arPedido = $em->getRepository(TurPedido::class)->find($codigoPedido);
-        if ($id != '0') {
-            $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($id);
-        } else {
-            $arPedidoDetalle->setPedidoRel($arPedido);
-            $arPedidoDetalle->setLunes(true);
-            $arPedidoDetalle->setMartes(true);
-            $arPedidoDetalle->setMiercoles(true);
-            $arPedidoDetalle->setJueves(true);
-            $arPedidoDetalle->setViernes(true);
-            $arPedidoDetalle->setSabado(true);
-            $arPedidoDetalle->setDomingo(true);
-            $arPedidoDetalle->setFestivo(true);
-            $arPedidoDetalle->setCantidad(1);
-            $arPedidoDetalle->setFechaDesde(new \DateTime('now'));
-            $arPedidoDetalle->setFechaHasta(new \DateTime('now'));
-            $arPedidoDetalle->setVrSalarioBase($arPedido->getVrSalarioBase());
-            $arPedidoDetalle->setPeriodo('M');
-        }
-        $form = $this->createForm(PedidoDetalleType::class, $arPedidoDetalle);
+        $paginator = $this->get('knp_paginator');
+        $respuesta = '';
+        $arFactura = $em->getRepository(TurFactura::class)->find($id);
+        $form = $this->createFormBuilder()
+//            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
+//            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
+//            ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemReferencia')])
+//            ->add('itemConExistencia', CheckboxType::class, array('label' => ' ', 'required' => false, 'data' => $session->get('itemConExistencia')))
+//            ->add('itemConDisponibilidad', CheckboxType::class, array('label' => ' ', 'required' => false, 'data' => $session->get('filtroItemConDisponibilidad')))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                if ($id == 0) {
-                    $arPedidoDetalle->setPorcentajeIva($arPedidoDetalle->getConceptoRel()->getPorcentajeIva());
-                    $arPedidoDetalle->setPorcentajeBaseIva(100);
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrItems = $request->request->get('itemCantidad');
+                if (count($arrItems) > 0) {
+                    foreach ($arrItems as $codigoItem => $cantidad) {
+                        $arItem = $em->getRepository(TurItem::class)->find($codigoItem);
+                        if ($cantidad != '' && $cantidad != 0) {
+                            $arFacturaDetalle = New TurFacturaDetalle();
+                            $arFacturaDetalle->setFacturaRel($arFactura);
+                            $arFacturaDetalle->setItemRel($arItem);
+                            $arFacturaDetalle->setCantidad($cantidad);
+                            $arFacturaDetalle->setCodigoImpuestoRetencionFk($arItem->getCodigoImpuestoRetencionFk());
+                            $arFacturaDetalle->setCodigoImpuestoIvaFk($arItem->getCodigoImpuestoIvaVentaFk());
+                            $arFacturaDetalle->setPorcentajeIva($arItem->getImpuestoIvaVentaRel()->getPorcentaje());
+                            $em->persist($arFacturaDetalle);
+                        }
+                    }
+                    if ($respuesta == '') {
+                        $em->flush();
+                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    } else {
+                        Mensajes::error($respuesta);
+                    }
                 }
-                $em->persist($arPedidoDetalle);
-                $em->flush();
-                $em->getRepository(TurPedido::class)->liquidar($arPedido);
-                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        return $this->render('turno/movimiento/comercial/pedido/detalleNuevo.html.twig', [
-            'arPedido' => $arPedido,
+        $arItems = $paginator->paginate($em->getRepository(TurItem::class)->lista(), $request->query->getInt('page', 1), 50);
+        return $this->render('turno/movimiento/comercial/factura/detalleNuevo.html.twig', [
+            'arItems' => $arItems,
             'form' => $form->createView()
         ]);
     }
-
 }
+

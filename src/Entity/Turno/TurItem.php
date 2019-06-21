@@ -51,6 +51,11 @@ class TurItem
      */
     protected $impuestoIvaVentaRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="TurFacturaDetalle", mappedBy="itemRel")
+     */
+    protected $facturasDetallesItemRel;
+
 
     /**
      * @return mixed
@@ -146,6 +151,38 @@ class TurItem
     public function setImpuestoIvaVentaRel($impuestoIvaVentaRel): void
     {
         $this->impuestoIvaVentaRel = $impuestoIvaVentaRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesItemRel()
+    {
+        return $this->facturasDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesItemRel
+     */
+    public function setFacturasDetallesItemRel($facturasDetallesItemRel): void
+    {
+        $this->facturasDetallesItemRel = $facturasDetallesItemRel;
     }
 
 

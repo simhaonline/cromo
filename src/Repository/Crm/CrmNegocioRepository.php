@@ -25,8 +25,11 @@ class CrmNegocioRepository extends ServiceEntityRepository
             ->addSelect('n.fecha')
             ->addSelect('n.fechaNegocio')
             ->addSelect('n.fechaCierre')
+            ->addSelect('n.valor')
             ->addSelect('c.nombreCorto')
-            ->leftJoin('n.clienteRel', 'c');
+            ->addSelect('f.nombre as faseNombre')
+            ->leftJoin('n.clienteRel', 'c')
+        ->leftJoin('n.faseRel', 'f');
         if($session->get('filtroCrmNegocioCodigoCliente')){
             $queryBuilder->andWhere("n.codigoClienteFk  = '{$session->get('filtroCrmNegocioCodigoCliente')}' ");
         }

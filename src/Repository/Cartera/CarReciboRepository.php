@@ -415,7 +415,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                     }
                                     //Cuenta cliente
                                     if ($arReciboDetalle['vrPagoAfectar'] > 0) {
-                                        $descripcion = "CLIENTES";
+                                        $descripcion = "CLIENTES DOC " . $arReciboDetalle['numeroDocumento'] ;
                                         $cuenta = $arReciboDetalle['codigoCuentaClienteFk'];
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);

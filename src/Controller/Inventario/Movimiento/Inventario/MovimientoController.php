@@ -12,6 +12,7 @@ use App\Entity\Inventario\InvImportacionDetalle;
 use App\Entity\Inventario\InvOrden;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
+use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Form\Type\Inventario\FacturaType;
@@ -87,8 +88,8 @@ class MovimientoController extends ControllerListenerGeneral
         $session = new Session();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvMovimientoFechaDesde') ? date_create($session->get('filtroInvMovimientoFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvMovimeintoFechaHasta') ? date_create($session->get('filtroInvMovimeintoFechaHasta')): null])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvMovimientoFechaDesde') ? date_create($session->get('filtroInvMovimientoFechaDesde')) : null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvMovimeintoFechaHasta') ? date_create($session->get('filtroInvMovimeintoFechaHasta')) : null])
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoCodigo')))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvMovimientoNumero')))
@@ -103,8 +104,8 @@ class MovimientoController extends ControllerListenerGeneral
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
-                    $session->set('filtroInvMovimientoFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-                    $session->set('filtroInvMovimeintoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+                    $session->set('filtroInvMovimientoFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
+                    $session->set('filtroInvMovimeintoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
                     $session->set('filtroInvMovimientoNumero', $form->get('txtNumero')->getData());
                     $session->set('filtroInvMovimientoCodigo', $form->get('txtCodigo')->getData());
                     $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
@@ -270,7 +271,7 @@ class MovimientoController extends ControllerListenerGeneral
             $arrBtnActualizar['disabled'] = true;
             $arrBtnDuplicar['disabled'] = true;
         }
-        if($arMovimiento->getEstadoContabilizado()) {
+        if ($arMovimiento->getEstadoContabilizado()) {
             $arrBtnActualizarImportacion['disabled'] = true;
         }
         $form
@@ -353,7 +354,7 @@ class MovimientoController extends ControllerListenerGeneral
             'arMovimiento' => $arMovimiento,
             'arImpuestosIva' => $arImpuestosIva,
             'arImpuestosRetencion' => $arImpuestosRetencion,
-            'clase' => array('clase'=>'InvMovimiento', 'codigo' => $id),
+            'clase' => array('clase' => 'InvMovimiento', 'codigo' => $id),
         ]);
     }
 
@@ -365,6 +366,9 @@ class MovimientoController extends ControllerListenerGeneral
      */
     public function detalleNuevo(Request $request, $id)
     {
+        /**
+         * @var $arMovimiento InvMovimiento
+         */
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
@@ -394,8 +398,14 @@ class MovimientoController extends ControllerListenerGeneral
                     foreach ($arrItems as $codigoItem => $cantidad) {
                         $arItem = $em->getRepository(InvItem::class)->find($codigoItem);
                         if ($cantidad != '' && $cantidad != 0) {
-                            if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT' or 'COM'|| $cantidad <= $arItem->getCantidadExistencia() || $arItem->getAfectaInventario() == 0) {
+                            if ($arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'ENT' or 'COM' || $cantidad <= $arItem->getCantidadExistencia() || $arItem->getAfectaInventario() == 0) {
                                 $arMovimientoDetalle = new InvMovimientoDetalle();
+                                if ($arMovimiento->getTerceroRel()->getPrecioVentaRel() || $arMovimiento->getDocumentoRel()->getCodigoDocumentoTipoFk() == 'FAC') {
+                                    $precio = $em->getRepository(InvPrecioDetalle::class)->findOneBy(array('codigoItemFk' => $arItem->getCodigoItemPk(), 'codigoPrecioFk' => $arMovimiento->getTerceroRel()->getCodigoPrecioVentaFk()));
+                                    if ($precio) {
+                                        $arMovimientoDetalle->setVrPrecio($precio->getVrPrecio());
+                                    }
+                                }
                                 $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                                 $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
                                 $arMovimientoDetalle->setItemRel($arItem);

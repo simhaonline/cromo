@@ -73,7 +73,13 @@ class Cliente extends \FPDF
         $pdf->SetFont('arial', 'B', 7);
         // tabla cliente.
         $pdf->Ln();
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Cell(195, 5, "CLIENTE", 1, 0, 'C', 1);
+        $pdf->Ln(5);
         $arCliente = $em->getRepository(TteCliente::class)->find($codigoCliente);
+        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(97.5, 5, "NOMBRE CLIENTE", 1, 0, 'L', 1);
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
@@ -90,6 +96,10 @@ class Cliente extends \FPDF
         $pdf->Cell(97.5, 5, utf8_decode($arCliente->getNumeroIdentificacion()), 1, 0, 'L', 1);
         $pdf->Ln(8);
         // tabla flete.
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->SetFont('arial', 'B', 7);
+        $pdf->Cell(197, 5, "FLETE", 1, 0, 'C', 1);
+        $pdf->Ln(5);
         $headerFlete = array('ID',	'ORIGEN',	'DESTINO','ZONA',	'D_PESO',	'D_UND',	'P_MIN',	'P_MIN_GUIA',	'F_MIN', 'F_MIN_GUIA');
         $weightFlete = array(15, 40, 30, 20, 15, 15, 15,16,15,16 );
         $arCondicionesFletes = $em->getRepository(TteCondicionFlete::class)->cliente($codigoCliente);
@@ -116,6 +126,9 @@ class Cliente extends \FPDF
         }
         // tabla manejo
         $pdf->Ln();
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Cell(165, 5, "MANEJO", 1, 0, 'C', 1);
+        $pdf->Ln(5);
         $headerManejo = array('ID','ORIGEN','DESTINO','ZONA','PORCENTAJE','MIN(UND)','MIN(DES)');
         $weightManejo= array(15, 40, 40, 20, 20, 15, 15);
         $arCondicionesManejos = $em->getRepository(TteCondicionManejo::class)->cliente($codigoCliente);
@@ -139,6 +152,10 @@ class Cliente extends \FPDF
         }
         $pdf->AddPage();
         //tabla de precios
+        $pdf->Ln();
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Cell(190, 5, "PRECIO", 1, 0, 'C', 1);
+        $pdf->Ln(5);
         $headerPrecio = array('ID','ORIGEN','DESTINO','ZONA','PRODUCTO','PESO','UND','TOPE','VR T.', 'VR A.','DIC', 'MIN');
         $weightPrecio = array(15, 20, 20, 15, 15,15,15,15,15,15,15,15 );
 

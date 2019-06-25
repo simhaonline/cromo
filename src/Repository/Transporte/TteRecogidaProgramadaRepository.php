@@ -28,4 +28,22 @@ class TteRecogidaProgramadaRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function eliminar($arrSeleccionados)
+    {
+        if($arrSeleccionados) {
+            foreach ($arrSeleccionados as $arrSeleccionado) {
+                $ar = $this->getEntityManager()->getRepository(TteRecogidaProgramada::class)->find($arrSeleccionado);
+                if ($ar) {
+                    $this->getEntityManager()->remove($ar);
+                }
+            }
+            $this->getEntityManager()->flush();
+        }
+    }
+
 }

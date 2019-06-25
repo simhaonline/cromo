@@ -16,6 +16,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class ProgramadaController extends Controller
 {
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/transporte/proceso/recogida/recogida/programada", name="transporte_proceso_recogida_recogida_programada")
      */
     public function lista(Request $request)
@@ -24,9 +28,15 @@ class ProgramadaController extends Controller
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnGenerar', SubmitType::class, array('label' => 'Generar'))
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn-sm btn btn-danger']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteRecogidaProgramada::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('transporte_proceso_recogida_recogida_programada'));
+            }
             if ($form->get('btnGenerar')->isClicked()) {
                 $arRecogidasProgramadas = $this->getDoctrine()->getRepository(TteRecogidaProgramada::class)->findAll();
                 $fecha = new \DateTime('now');

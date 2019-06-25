@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteCondicionFlete;
 use App\Entity\Transporte\TteCondicionManejo;
 use App\Form\Type\Transporte\CondicionFleteType;
 use App\Form\Type\Transporte\CondicionManejoType;
+use App\Formato\Transporte\Cliente;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteClienteCondicion;
@@ -100,6 +101,7 @@ class ClienteController extends ControllerListenerGeneral
             ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
             ->add('btnEliminarFlete', SubmitType::class, array('label' => 'Eliminar'))
             ->add('btnEliminarManejo', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('btnImprimir', SubmitType::class, ['label' => 'Imprimir', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -114,6 +116,10 @@ class ClienteController extends ControllerListenerGeneral
             if ($form->get('btnEliminarDetalle')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteClienteCondicion::class)->eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnImprimir')->isClicked()){
+                $objFormatoCliente = new Cliente();
+                $objFormatoCliente->Generar($em, $id);
             }
 
         }

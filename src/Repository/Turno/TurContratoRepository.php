@@ -493,4 +493,11 @@ class TurContratoRepository extends ServiceEntityRepository
         }
     }
 
+    public function listaPrototipo(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContrato::class, 'c')
+            ->select('c.codigoContratoPk');
+        return $queryBuilder;
+    }
+
 }

@@ -87,6 +87,20 @@
             </ul>
             <!-- /.nav-second-level -->
         </li>
+        <li {% if arrRuta.1 == 'utilidad' %}class="open" {% endif %}>
+            <a href="#"><i class="fa fa-wrench"></i>
+                <span class="menu-item-parent">Utilidad</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul {% if arrRuta.1 == 'utilidad' %}style="display: block;"{% endif %}>
+                <li>
+                    <a href="#">Operacion <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('turno_utilidad_operacion_prototipo') }}">Prototipo</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
         <li {% if arrRuta.1 == 'tablero' %}class="open" {% endif %}>
             <a href="#"><i class="fa fa-bar-chart"></i>
                 <span class="menu-item-parent">Tablero</span>

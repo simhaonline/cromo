@@ -140,22 +140,28 @@ class PrecioController extends ControllerListenerGeneral
         $form = $this->createForm(PrecioDetalleType::class, $arPrecioDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arPrecioDetalleExistente = $em->getRepository(TtePrecioDetalle::class)
-                ->findBy([
-                    'precioRel' => $arPrecioDetalle->getPrecioRel(),
-                    'ciudadOrigenRel' => $arPrecioDetalle->getCiudadOrigenRel(),
-                    'ciudadDestinoRel' => $arPrecioDetalle->getCiudadDestinoRel(),
-                    'zonaRel' => $arPrecioDetalle->getZonaRel(),
-                    'productoRel' => $arPrecioDetalle->getProductoRel()]);
-            if (!$arPrecioDetalleExistente) {
-                if ($form->get('guardar')->isClicked()) {
+            if ($form->get('guardar')->isClicked()) {
+                $validacion = true;
+                if ($id == '0') {
+                    $arPrecioDetalleExistente = $em->getRepository(TtePrecioDetalle::class)
+                        ->findBy([
+                            'precioRel' => $arPrecioDetalle->getPrecioRel(),
+                            'ciudadOrigenRel' => $arPrecioDetalle->getCiudadOrigenRel(),
+                            'ciudadDestinoRel' => $arPrecioDetalle->getCiudadDestinoRel(),
+                            'zonaRel' => $arPrecioDetalle->getZonaRel(),
+                            'productoRel' => $arPrecioDetalle->getProductoRel()]);
+                    if ($arPrecioDetalleExistente) {
+                        $validacion = false;
+                        Mensajes::error('Ya existe un producto con la misma ciudad de origen y destino');
+                    }
+                }
+
+                if ($validacion) {
                     $arPrecioDetalle->setPrecioRel($arPrecio);
                     $em->persist($arPrecioDetalle);
                     $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
-                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-            } else {
-                Mensajes::error('Ya existe un producto con la misma ciudad de origen y destino');
             }
         }
         return $this->render('transporte/administracion/comercial/precio/detalleNuevo.html.twig', [

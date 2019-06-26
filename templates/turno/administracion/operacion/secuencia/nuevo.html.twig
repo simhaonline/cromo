@@ -1,253 +1,105 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <div class="panel panel-default">
-        <div class="panel-heading">Informacion general</div>
-        <div class="panel-body">
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Codigo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.codigoSecuenciaPk, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Nombre:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-
-                <label class="col-sm-2 control-label">Horas:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.horas) }}
-                </div>
-                <label class="col-sm-2 control-label">Dias:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dias) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 1:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia1, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Lunes:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.lunes) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 2:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia2, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Martes:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.martes) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 3:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia3, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Miercoles:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.miercoles) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 4:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia4, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Jueves:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.jueves) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 5:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia5, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Viernes:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.viernes) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 6:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia6, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Sábado:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.sabado) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 7:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia7, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Domingo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.domingo) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 8:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia8, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Domingo festivo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.domingoFestivo) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 9:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia9, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-2 control-label">Festivo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.festivo, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 10:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia10, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 11:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia11, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 12:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia12, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 13:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia13, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 14:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia14, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 15:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia15, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 16:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia16, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 17:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia17, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 18:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia18, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 19:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia19, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 20:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia20, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 21:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia21, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 22:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia22, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 23:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia23, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 24:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia24, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 25:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia25, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 26:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia26, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 27:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia27, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 28:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia28, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 29:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia29, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 30:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia30, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Día 31:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.dia31, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-        </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+                <tr>
+                    <th title="CÓDIGO">Cód.</th>
+                    <th title="NOMBRE">Nom.</th>
+                    <th title="HORAS">Hor.</th>
+                    <th title="DÍAS">Días.</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                    <th>7</th>
+                    <th>8</th>
+                    <th>9</th>
+                    <th>10</th>
+                    <th>11</th>
+                    <th>12</th>
+                    <th>13</th>
+                    <th>14</th>
+                    <th>15</th>
+                    <th>16</th>
+                    <th>17</th>
+                    <th>18</th>
+                    <th>19</th>
+                    <th>20</th>
+                    <th>21</th>
+                    <th>22</th>
+                    <th>23</th>
+                    <th>24</th>
+                    <th>25</th>
+                    <th>26</th>
+                    <th>27</th>
+                    <th>28</th>
+                    <th>29</th>
+                    <th>30</th>
+                    <th>31</th>
+                    <th title="LUNES">Lun</th>
+                    <th title="MARTES">Mar</th>
+                    <th title="MIERCOLES">Mier</th>
+                    <th title="JUEVES">Jue</th>
+                    <th title="VIERNES">Vie</th>
+                    <th title="SÁBADO">Sáb</th>
+                    <th title="DOMINGO">Dom</th>
+                    <th title="FESTIVO">Fes</th>
+                    <th title="DOMINGO FESTIVO">Dom. fes.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ form_widget(form.codigoSecuenciaPk) }}</td>
+                    <td>{{ form_widget(form.nombre) }}</td>
+                    <td>{{ form_widget(form.horas) }}</td>
+                    <td>{{ form_widget(form.dias) }}</td>
+                    <td>{{ form_widget(form.dia1) }}</td>
+                    <td>{{ form_widget(form.dia2) }}</td>
+                    <td>{{ form_widget(form.dia3) }}</td>
+                    <td>{{ form_widget(form.dia4) }}</td>
+                    <td>{{ form_widget(form.dia5) }}</td>
+                    <td>{{ form_widget(form.dia6) }}</td>
+                    <td>{{ form_widget(form.dia7) }}</td>
+                    <td>{{ form_widget(form.dia8) }}</td>
+                    <td>{{ form_widget(form.dia9) }}</td>
+                    <td>{{ form_widget(form.dia10) }}</td>
+                    <td>{{ form_widget(form.dia11) }}</td>
+                    <td>{{ form_widget(form.dia12) }}</td>
+                    <td>{{ form_widget(form.dia13) }}</td>
+                    <td>{{ form_widget(form.dia14) }}</td>
+                    <td>{{ form_widget(form.dia15) }}</td>
+                    <td>{{ form_widget(form.dia16) }}</td>
+                    <td>{{ form_widget(form.dia17) }}</td>
+                    <td>{{ form_widget(form.dia18) }}</td>
+                    <td>{{ form_widget(form.dia19) }}</td>
+                    <td>{{ form_widget(form.dia20) }}</td>
+                    <td>{{ form_widget(form.dia21) }}</td>
+                    <td>{{ form_widget(form.dia22) }}</td>
+                    <td>{{ form_widget(form.dia23) }}</td>
+                    <td>{{ form_widget(form.dia24) }}</td>
+                    <td>{{ form_widget(form.dia25) }}</td>
+                    <td>{{ form_widget(form.dia26) }}</td>
+                    <td>{{ form_widget(form.dia27) }}</td>
+                    <td>{{ form_widget(form.dia28) }}</td>
+                    <td>{{ form_widget(form.dia29) }}</td>
+                    <td>{{ form_widget(form.dia30) }}</td>
+                    <td>{{ form_widget(form.dia31) }}</td>
+                    <td>{{ form_widget(form.lunes) }}</td>
+                    <td>{{ form_widget(form.martes) }}</td>
+                    <td>{{ form_widget(form.miercoles) }}</td>
+                    <td>{{ form_widget(form.jueves) }}</td>
+                    <td>{{ form_widget(form.viernes) }}</td>
+                    <td>{{ form_widget(form.sabado) }}</td>
+                    <td>{{ form_widget(form.domingo) }}</td>
+                    <td>{{ form_widget(form.festivo) }}</td>
+                    <td>{{ form_widget(form.domingoFestivo) }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm"

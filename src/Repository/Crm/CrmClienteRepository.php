@@ -20,13 +20,22 @@ class CrmClienteRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CrmCliente::class, 'c')
             ->select('c.codigoClientePk')
-            ->addSelect('c.nombreCorto');
+            ->addSelect('c.nombreCorto')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.digitoVerificacion')
+            ->addSelect('ci.nombre as ciudad' )
+            ->addSelect('c.direccion')
+            ->leftJoin('c.ciudadRel', 'ci');
         if ($session->get('filtroCrmCodigoCliente') != '') {
             $queryBuilder->andWhere("c.codigoClientePk  = '{$session->get('filtroCrmCodigoCliente')}' ");
         }
         if ($session->get('filtroCrmNombreCliente') != '') {
             $queryBuilder->andWhere("c.nombreCorto LIKE '%{$session->get('filtroCrmNombreCliente')}%' ");
         }
+        if ($session->get('filtroCrmClienteNombre') != '') {
+            $queryBuilder->andWhere("c.nombreCorto LIKE '%{$session->get('filtroCrmClienteNombre')}%' ");
+        }
+
         return $queryBuilder;
     }
 }

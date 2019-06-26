@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('crm_administracion_control_cliente_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arCliente.codigoClientePk }}</td>
+            <td class="titulo">INGRESO:</td>
+            <td class="td-in-well">{{ arCliente.codigoIdentificacionFk }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NUMERO IDENTIFICACIÓN:</td>
+            <td class="td-in-well">{{ arCliente.numeroIdentificacion }}</td>
+            <td class="titulo">CIUDAD:</td>
+            <td class="td-in-well">{{ arCliente.ciudadRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DÍGITO VERIFICACIÓN:</td>
+            <td class="td-in-well">{{ arCliente.digitoVerificacion }}</td>
+            <td class="titulo">NOMBRE CORTO:</td>
+            <td class="td-in-well">{{ arCliente.nombreCorto }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NOMBRES:</td>
+            <td class="td-in-well">{{ arCliente.nombres }}</td>
+            <td class="titulo">APELLIDO 1:</td>
+            <td class="td-in-well">{{ arCliente.apellido1 }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">APELLIDO 2:</td>
+            <td class="td-in-well">{{ arCliente.apellido2 }}</td>
+            <td class="titulo">DIRECCIÓN:</td>
+            <td class="td-in-well">{{ arCliente.direccion }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TELÉFONO:</td>
+            <td class="td-in-well">{{ arCliente.telefono }}</td>
+            <td class="titulo">CELULAR:</td>
+            <td class="td-in-well">{{ arCliente.celular }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">EMAIL:</td>
+            <td class="td-in-well">{{ arCliente.email }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

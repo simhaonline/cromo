@@ -170,7 +170,7 @@ class DespachoRecogida extends \FPDF {
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(15, 22, 60, 60,  10, 10, 10);
+        $w = array(15, 22, 60, 70,  10, 10, 10);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -186,13 +186,13 @@ class DespachoRecogida extends \FPDF {
     public function Body($pdf) {
         $arRecogidas = self::$em->getRepository(TteRecogida::class)->listaFormato(self::$codigoDespacho);
         $pdf->SetX(10);
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Arial', '', 6.5);
         if($arRecogidas) {
             foreach ($arRecogidas as $arRecogida) {
                 $pdf->Cell(15, 4, $arRecogida['codigoRecogidaPk'], 1, 0, 'L');
                 $pdf->Cell(22, 4, $arRecogida['fecha']->format('Y-m-d H:i'), 1, 0, 'L');
-                $pdf->Cell(60, 4, substr($arRecogida['clienteNombreCorto'],0,100), 1, 0, 'L');
-                $pdf->Cell(60, 4, substr($arRecogida['clienteDireccion'],0,100), 1, 0, 'L');
+                $pdf->Cell(60, 4, substr($arRecogida['clienteNombreCorto'],0,40), 1, 0, 'L');
+                $pdf->Cell(70, 4, substr($arRecogida['clienteDireccion'],0,50), 1, 0, 'L');
                 $pdf->Cell(10, 4, number_format($arRecogida['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arRecogida['pesoReal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(10, 4, number_format($arRecogida['pesoVolumen'], 0, '.', ','), 1, 0, 'R');

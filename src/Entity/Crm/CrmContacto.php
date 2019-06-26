@@ -83,6 +83,11 @@ class CrmContacto
     protected $negociosContactoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmCliente", mappedBy="contactoRel")
+     */
+    protected $clientesContactoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -304,6 +309,22 @@ class CrmContacto
     public function setSecretaria($secretaria): void
     {
         $this->secretaria = $secretaria;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientesContactoRel()
+    {
+        return $this->clientesContactoRel;
+    }
+
+    /**
+     * @param mixed $clientesContactoRel
+     */
+    public function setClientesContactoRel($clientesContactoRel): void
+    {
+        $this->clientesContactoRel = $clientesContactoRel;
     }
 
 

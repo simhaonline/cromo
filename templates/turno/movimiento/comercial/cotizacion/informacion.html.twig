@@ -1,0 +1,70 @@
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
+    <tr>
+        <td class="titulo">CODIGO:</td>
+        <td class="td-in-well">{{ arCotizacion.codigoCotizacionPk }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo">COSTO:</td>
+        <td align="right">{{ arCotizacion.vrTotalCosto | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">CLIENTE:</td>
+        <td class="td-in-well">{{ arCotizacion.clienteRel.nombreCorto }}</td>
+        <td class="titulo">SALARIO BASE:</td>
+        <td align="right">{{ arCotizacion.vrSalarioBase | number_format(0, '.', ',') }}</td>
+        <td class="titulo">MINIMO:</td>
+        <td align="right">{{ arCotizacion.vrTotalPrecioMinimo | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">TIPO:</td>
+        <td class="td-in-well">{{ arCotizacion.cotizacionTipoRel.nombre }}</td>
+        <td class="titulo">ESTRATO:</td>
+        <td class="td-in-well">{{ arCotizacion.estrato }}</td>
+        <td class="titulo">TOTAL SERVICIOS:</td>
+        <td align="right">{{ arCotizacion.vrTotalServicio | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">SECTOR:</td>
+        <td class="td-in-well">{{ arCotizacion.sectorRel.nombre }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo">SUBTOTAL:</td>
+        <td align="right">{{ arCotizacion.vrSubtotal | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">USUARIO:</td>
+        <td class="td-in-well" style="text-transform: uppercase;">{{ arCotizacion.usuario }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo">BASE AIU:</td>
+        <td align="right">{{ arCotizacion.vrBaseAiu | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">HORAS:</td>
+        <td class="td-in-well">{{ arCotizacion.horas }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo">IVA:</td>
+        <td align="right">{{ arCotizacion.vrIva | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">HORAS DIURNAS:</td>
+        <td class="td-in-well">{{ arCotizacion.horasDiurnas }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo">TOTAL:</td>
+        <td align="right">{{ arCotizacion.vrTotal | number_format(0, '.', ',') }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">HORAS NOCTURNAS:</td>
+        <td class="td-in-well">{{ arCotizacion.horasNocturnas }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+    </tr>
+    <tr>
+        <td class="titulo">COMENTARIO:</td>
+        <td class="td-in-well" colspan="5" colspan="5">{{ arCotizacion.comentario }}</td>
+    </tr>
+</table>

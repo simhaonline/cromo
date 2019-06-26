@@ -34,13 +34,43 @@ class CrmContacto
     private $nombreCorto;
 
     /**
-     * @ORM\Column(name="direccion", type="string", length=80,nullable=true)
+     * @ORM\Column(name="direccion", type="string", length=200,nullable=true)
      */
     private $direccion;
     /**
-     * @ORM\Column(name="telefono", type="string", length=20,nullable=true)
+     * @ORM\Column(name="telefono", type="string", length=80,nullable=true)
      */
     private $telefono;
+
+    /**
+     * @ORM\Column(name="saludo", type="string", length=20,nullable=true)
+     */
+    private $saludo;
+
+    /**
+     * @ORM\Column(name="correo", type="string", length=150,nullable=true)
+     */
+    private $correo;
+
+    /**
+     * @ORM\Column(name="cargo", type="string", length=100,nullable=true)
+     */
+    private $cargo;
+
+    /**
+     * @ORM\Column(name="especialidad", type="string", length=100,nullable=true)
+     */
+    private $especialidad;
+
+    /**
+     * @ORM\Column(name="horario_visita", type="string", length=100,nullable=true)
+     */
+    private $horarioVisita;
+
+    /**
+     * @ORM\Column(name="secretaria", type="string", length=150,nullable=true)
+     */
+    private $secretaria;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmVisita", mappedBy="contactoRel", cascade={"remove","persist"})
@@ -162,6 +192,118 @@ class CrmContacto
     public function setVisitaContactoRel($visitaContactoRel): void
     {
         $this->visitaContactoRel = $visitaContactoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSaludo()
+    {
+        return $this->saludo;
+    }
+
+    /**
+     * @param mixed $saludo
+     */
+    public function setSaludo($saludo): void
+    {
+        $this->saludo = $saludo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCorreo()
+    {
+        return $this->correo;
+    }
+
+    /**
+     * @param mixed $correo
+     */
+    public function setCorreo($correo): void
+    {
+        $this->correo = $correo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargo()
+    {
+        return $this->cargo;
+    }
+
+    /**
+     * @param mixed $cargo
+     */
+    public function setCargo($cargo): void
+    {
+        $this->cargo = $cargo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEspecialidad()
+    {
+        return $this->especialidad;
+    }
+
+    /**
+     * @param mixed $especialidad
+     */
+    public function setEspecialidad($especialidad): void
+    {
+        $this->especialidad = $especialidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorarioVisita()
+    {
+        return $this->horarioVisita;
+    }
+
+    /**
+     * @param mixed $horarioVisita
+     */
+    public function setHorarioVisita($horarioVisita): void
+    {
+        $this->horarioVisita = $horarioVisita;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNegociosContactoRel()
+    {
+        return $this->negociosContactoRel;
+    }
+
+    /**
+     * @param mixed $negociosContactoRel
+     */
+    public function setNegociosContactoRel($negociosContactoRel): void
+    {
+        $this->negociosContactoRel = $negociosContactoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSecretaria()
+    {
+        return $this->secretaria;
+    }
+
+    /**
+     * @param mixed $secretaria
+     */
+    public function setSecretaria($secretaria): void
+    {
+        $this->secretaria = $secretaria;
     }
 
 

@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_movimiento_comercial_cotizacion_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <div style="float:right">
+        {% if arCotizacion.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arCotizacion.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arCotizacion.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+    </div>
+    <br/><br/>
+    {% include 'turno/movimiento/comercial/cotizacion/informacion.html.twig' %}
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
+
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-condensed tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th title="Concepto">CONCEPTO</th>
+                            <th title="Modalidad">MOD</th>
+                            <th title="Fecha desde">DES</th>
+                            <th title="Fecha hasta">HAS</th>
+                            <th>CANT</th>
+                            <th>L</th>
+                            <th>M</th>
+                            <th>X</th>
+                            <th>J</th>
+                            <th>V</th>
+                            <th>S</th>
+                            <th>D</th>
+                            <th>F</th>
+                            <th title="Horas totales">H</th>
+                            <th title="Horas diurnas">HD</th>
+                            <th title="Horas nocturnas">HN</th>
+                            <th title="Salario base">BASE</th>
+                            <th title="Precio minimo">P.MINIMO</th>
+                            <th title="Precio ajustado">P.AJUSTADO</th>
+                            <th title="Porcentaje iva">%IVA</th>
+                            <th title="Iva">IVA</th>
+                            <th>SUBTOTAL</th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodos"
+                                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arCotizacionDetalle in arCotizacionDetalles %}
+                            <td> {{ arCotizacionDetalle.codigoCotizacionDetallePk }} <input type="hidden"
+                                                                                            name="arrCodigo[]"
+                                                                                            value="{{ arCotizacionDetalle.codigoCotizacionDetallePk }}">
+                            </td>
+                            <td>{{ arCotizacionDetalle.conceptoNombre }}</td>
+                            <td>{{ arCotizacionDetalle.modalidadNombre }}</td>
+                            <td>{{ arCotizacionDetalle.fechaDesde | date('Y-m-d') }}</td>
+                            <td>{{ arCotizacionDetalle.fechaHasta | date('Y-m-d') }}</td>
+                            <td>{{ arCotizacionDetalle.cantidad }}</td>
+                            <td>{{ arCotizacionDetalle.lunes ? 'S':'N' }}</td>
+                            <td>{{ arCotizacionDetalle.martes ? 'S':'N' }}</td>
+                            <td>{{ arCotizacionDetalle.miercoles ? 'S':'N' }}</td>
+                            <td>{{ arCotizacionDetalle.jueves  ? 'S':'N' }}</td>
+                            <td>{{ arCotizacionDetalle.viernes ? 'S':'N' }}</td>
+                            <td>{{ arCotizacionDetalle.sabado  ? 'S':'N' }}</td>
+                            <td>{{ arCotizacionDetalle.domingo ? 'S':'N' }}</td>
+                            <td>{{ arCotizacionDetalle.festivo ? 'S':'N' }}</td>
+                            <td>{{ arCotizacionDetalle.horasProgramadas }}</td>
+                            <td>{{ arCotizacionDetalle.horasDiurnasProgramadas }}</td>
+                            <td>{{ arCotizacionDetalle.horasNocturnasProgramadas }}</td>
+                            <td class="numero">{{ arCotizacionDetalle.vrSalarioBase }}</td>
+                            <td class="numero">{{ arCotizacionDetalle.vrPrecioMinimo }}</td>
+                            {% if arCotizacion.estadoAutorizado == 0 %}
+                                <td style="text-align: center;"><input type="number"
+                                                                       name="arrPrecioAjustado[{{ arCotizacionDetalle.codigoCotizacionDetallePk }}]"
+                                                                       value="{{ arCotizacionDetalle.vrPrecioAjustado | default('0')}}"
+                                                                       style="text-align: right; width:60px"
+                                                                       size="10"></td>
+                                <td style="text-align: center;"><input type="number"
+                                                                       name="arrPorcentajeIva[{{ arCotizacionDetalle.codigoCotizacionDetallePk }}]"
+                                                                       value="{{ arCotizacionDetalle.porcentajeIva }}"
+                                                                       style="text-align: right; width:60px"
+                                                                       size="10"></td>
+                            {% else %}
+                                <td class="numero">{{ arCotizacionDetalle.vrPrecioAjustado | number_format }}</td>
+                                <td>{{ arCotizacionDetalle.porcentajeIva }}</td>
+                            {% endif %}
+                            <td class="numero">{{ arCotizacionDetalle.vrIva }}</td>
+                            <td class="numero">{{ arCotizacionDetalle.vrSubtotal }}</td>
+                            <td><input type="checkbox" name="ChkSeleccionar[]"
+                                       value="{{ arCotizacionDetalle.codigoCotizacionDetallePk }}"/></td>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {% if arCotizacion.estadoAutorizado == true %}
+                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                                   value="Nuevo"/>
+                        {% else %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_comercial_cotizacion_detalle_nuevo', {'codigoCotizacion':arCotizacion.codigoCotizacionPk,'id': 0  }) }}', 'CotizacionAdicionarDetalle', 600, 900)">Nuevo</a>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnActualizar) }}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminar) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

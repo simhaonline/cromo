@@ -72,6 +72,12 @@ class CrmContacto
      */
     private $secretaria;
 
+
+    /**
+     * @ORM\Column(name="codigo_contacto_fk", type="integer", nullable=true)
+     */
+    private $codigoClienteFk;
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmVisita", mappedBy="contactoRel", cascade={"remove","persist"})
      */
@@ -83,9 +89,10 @@ class CrmContacto
     protected $negociosContactoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmCliente", mappedBy="contactoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Crm\CrmCliente",inversedBy="ContactosClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk",referencedColumnName="codigo_cliente_pk")
      */
-    protected $clientesContactoRel;
+    protected $clienteRel;
 
     /**
      * @return array
@@ -314,18 +321,36 @@ class CrmContacto
     /**
      * @return mixed
      */
-    public function getClientesContactoRel()
+    public function getCodigoClienteFk()
     {
-        return $this->clientesContactoRel;
+        return $this->codigoClienteFk;
     }
 
     /**
-     * @param mixed $clientesContactoRel
+     * @param mixed $codigoClienteFk
      */
-    public function setClientesContactoRel($clientesContactoRel): void
+    public function setCodigoClienteFk($codigoClienteFk): void
     {
-        $this->clientesContactoRel = $clientesContactoRel;
+        $this->codigoClienteFk = $codigoClienteFk;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
+
 
 
 

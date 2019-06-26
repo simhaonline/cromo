@@ -75,12 +75,6 @@ class CrmCliente
      */
     private $email;
 
-
-    /**
-     * @ORM\Column(name="codigo_contacto_fk", type="integer", nullable=true)
-     */
-    private $codigoContactoFk;
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="crmClienteIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
@@ -104,10 +98,9 @@ class CrmCliente
     protected $negociosClienteRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Crm\CrmContacto",inversedBy="clientesContactoRel")
-     * @ORM\JoinColumn(name="codigo_contacto_fk",referencedColumnName="codigo_contacto_pk")
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmContacto", mappedBy="clienteRel")
      */
-    protected $contactoRel;
+    protected $ContactosClienteRel;
 
     /**
      * @return mixed
@@ -368,22 +361,6 @@ class CrmCliente
     /**
      * @return mixed
      */
-    public function getCodigoContactoFk()
-    {
-        return $this->codigoContactoFk;
-    }
-
-    /**
-     * @param mixed $codigoContactoFk
-     */
-    public function setCodigoContactoFk($codigoContactoFk): void
-    {
-        $this->codigoContactoFk = $codigoContactoFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getNegociosClienteRel()
     {
         return $this->negociosClienteRel;
@@ -400,18 +377,20 @@ class CrmCliente
     /**
      * @return mixed
      */
-    public function getContactoRel()
+    public function getContactosClienteRel()
     {
-        return $this->contactoRel;
+        return $this->ContactosClienteRel;
     }
 
     /**
-     * @param mixed $contactoRel
+     * @param mixed $ContactosClienteRel
      */
-    public function setContactoRel($contactoRel): void
+    public function setContactosClienteRel($ContactosClienteRel): void
     {
-        $this->contactoRel = $contactoRel;
+        $this->ContactosClienteRel = $ContactosClienteRel;
     }
+
+
 
 
 

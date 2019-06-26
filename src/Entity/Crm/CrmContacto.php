@@ -74,7 +74,7 @@ class CrmContacto
 
 
     /**
-     * @ORM\Column(name="codigo_contacto_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
      */
     private $codigoClienteFk;
 

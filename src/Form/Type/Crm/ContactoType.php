@@ -18,6 +18,11 @@ class ContactoType extends AbstractType
             ->add('nombreCorto', TextType::class, ['label' => 'Nombre:', 'required' => true])
             ->add('direccion', TextType::class, ['label' => 'Direccion:', 'required' => true])
             ->add('telefono', TextType::class, ['label' => 'Telefono:', 'required' => true])
+            ->add('saludo', TextType::class, ['label' => 'saludo:', 'required' => true])
+            ->add('cargo', TextType::class, ['label' => 'Cargo:', 'required' => true])
+            ->add('especialidad', TextType::class, ['label' => 'Especialidad:', 'required' => true])
+            ->add('horarioVisita', TextType::class, ['label' => 'Horario visita:', 'required' => true])
+            ->add('secretaria', TextType::class, ['label' => 'Secretaria:', 'required' => true])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
@@ -35,7 +40,12 @@ class ContactoType extends AbstractType
             {"campo":"numeroIdentificacion",   "tipo":"texto"  ,"ayuda":"Numero identificacion",   "titulo":"IDENTIFICACION"},
             {"campo":"nombreCorto",            "tipo":"texto"  ,"ayuda":"Nombre del contacto",     "titulo":"NOMBRE"},
             {"campo":"direccion",              "tipo":"texto"  ,"ayuda":"Direccion del contacto",  "titulo":"DIRECCION"},
-            {"campo":"telefono",               "tipo":"texto"  ,"ayuda":"Telefono del contacto",   "titulo":"TELEFONO"}                                                                                      
+            {"campo":"telefono",               "tipo":"texto"  ,"ayuda":"Telefono del contacto",   "titulo":"TELEFONO"},                                                                                      
+            {"campo":"saludo",               "tipo":"texto"  ,"ayuda":"Saludo del contacto",   "titulo":"SALUDO"},                                                                                      
+            {"campo":"cargo",               "tipo":"texto"  ,"ayuda":"cargo del contacto",   "titulo":"CARGO"},                                                                                      
+            {"campo":"especialidad",               "tipo":"texto"  ,"ayuda":"Especialidad del contacto",   "titulo":"ESPECIALIDAD"},                                                                                      
+            {"campo":"horarioVisita",               "tipo":"texto"  ,"ayuda":"Horario Visita del contacto",   "titulo":"HORARIO VISITA"},                                                                                      
+            {"campo":"secretaria",               "tipo":"texto"  ,"ayuda":"secretaria del contacto",   "titulo":"SECRETARIA"}                                                                                      
         ]';
         return $campos;
     }

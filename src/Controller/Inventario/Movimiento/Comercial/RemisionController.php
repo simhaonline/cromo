@@ -187,7 +187,7 @@ class RemisionController extends ControllerListenerGeneral
             }
             return $this->redirect($this->generateUrl('inventario_movimiento_comercial_remision_detalle', ['id' => $id]));
         }
-        $arRemisionDetalles = $paginator->paginate($em->getRepository(InvRemisionDetalle::class)->remision($id), $request->query->getInt('page', 1), 10);
+        $arRemisionDetalles = $paginator->paginate($em->getRepository(InvRemisionDetalle::class)->remision($id), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/comercial/remision/detalle.html.twig', [
             'form' => $form->createView(),
             'clase' => array('clase'=>'InvRemision', 'codigo' => $id),

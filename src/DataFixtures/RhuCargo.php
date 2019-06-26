@@ -13,10 +13,11 @@ class RhuCargo extends Fixture
         if(!$arCargo){
             $arCargo = new \App\Entity\RecursoHumano\RhuCargo();
             $arCargo->setCodigoCargoPk('0001');
-            $arCargo->setNombre('GERENTE');
+            $arCargo->setNombre('AUXILIAR');
             $manager->persist($arCargo);
         }
-        $arCargo = $manager->getRepository(\App\Entity\RecursoHumano\RhuCargo::class)->find('0002');
+        //No se pueden generar por fixture los cargos porque cada compañia tiene sus propios cargos
+        /*$arCargo = $manager->getRepository(\App\Entity\RecursoHumano\RhuCargo::class)->find('0002');
         if(!$arCargo){
             $arCargo = new \App\Entity\RecursoHumano\RhuCargo();
             $arCargo->setCodigoCargoPk('0002');
@@ -85,7 +86,7 @@ class RhuCargo extends Fixture
             $arCargo->setCodigoCargoPk('0011');
             $arCargo->setNombre('SUPERVISOR');
             $manager->persist($arCargo);
-        }
+        }*/
         $manager->flush();
     }
 }

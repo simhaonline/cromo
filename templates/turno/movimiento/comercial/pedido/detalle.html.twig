@@ -36,6 +36,8 @@
                             <th title="Fecha desde">DES</th>
                             <th title="Fecha hasta">HAS</th>
                             <th>CANT</th>
+                            <th>DESDE(DIA)</th>
+                            <th>HASTA(DIA)</th>
                             <th>L</th>
                             <th>M</th>
                             <th>X</th>
@@ -53,49 +55,56 @@
                             <th title="Porcentaje iva">%IVA</th>
                             <th title="Iva">IVA</th>
                             <th>SUBTOTAL</th>
-                            <td></td>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for arPedidoDetalle in arPedidoDetalles %}
-                            <td> {{ arPedidoDetalle.codigoPedidoDetallePk }} <input type="hidden" name="arrCodigo[]"
-                                                                                    value="{{ arPedidoDetalle.codigoPedidoDetallePk }}">
-                            </td>
-                            <td>{{ arPedidoDetalle.conceptoNombre }}</td>
-                            <td>{{ arPedidoDetalle.modalidadNombre }}</td>
-                            <td>{{ arPedidoDetalle.fechaDesde | date('Y-m-d') }}</td>
-                            <td>{{ arPedidoDetalle.fechaHasta | date('Y-m-d') }}</td>
-                            <td>{{ arPedidoDetalle.cantidad }}</td>
-                            <td>{{ arPedidoDetalle.lunes ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.martes ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.miercoles ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.jueves  ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.viernes ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.sabado  ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.domingo ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.festivo ? 'S':'N' }}</td>
-                            <td>{{ arPedidoDetalle.horasProgramadas }}</td>
-                            <td>{{ arPedidoDetalle.horasDiurnasProgramadas }}</td>
-                            <td>{{ arPedidoDetalle.horasNocturnasProgramadas }}</td>
-                            <td></td>
-                            <td class="numero">{{ arPedidoDetalle.vrSalarioBase }}</td>
-                            <td class="numero">{{ arPedidoDetalle.vrPrecioMinimo }}</td>
-                            <td style="text-align: center;"><input type="number"
-                                                                   name="arrPrecioAjustado[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
-                                                                   value="{{ arPedidoDetalle.vrPrecioAjustado }}"
-                                                                   style="text-align: right; width:60px"
-                                                                   size="10"></td>
-                            <td style="text-align: center;"><input type="number"
-                                                                   name="arrPorcentajeIva[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
-                                                                   value="{{ arPedidoDetalle.porcentajeIva }}"
-                                                                   style="text-align: right; width:60px"
-                                                                   size="10"></td>
-                            <td class="numero">{{ arPedidoDetalle.vrIva }}</td>
-                            <td class="numero">{{ arPedidoDetalle.vrSubtotal }}</td>
-                            <td><input type="checkbox" name="ChkSeleccionar[]"
-                                       value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/></td>
+                            <tr>
+                                <td> {{ arPedidoDetalle.codigoPedidoDetallePk }} <input type="hidden"
+                                                                                        name="arrCodigo[]"
+                                                                                        value="{{ arPedidoDetalle.codigoPedidoDetallePk }}">
+                                </td>
+                                <td>{{ arPedidoDetalle.conceptoNombre }}</td>
+                                <td>{{ arPedidoDetalle.modalidadNombre }}</td>
+                                <td>{{ arPedidoDetalle.fechaDesde | date('Y-m-d') }}</td>
+                                <td>{{ arPedidoDetalle.fechaHasta | date('Y-m-d') }}</td>
+                                <td>{{ arPedidoDetalle.cantidad }}</td>
+                                <td>{{ arPedidoDetalle.diaDesde }}</td>
+                                <td>{{ arPedidoDetalle.diaHasta }}</td>
+                                <td>{{ arPedidoDetalle.lunes ? 'S':'N' }}</td>
+                                <td>{{ arPedidoDetalle.martes ? 'S':'N' }}</td>
+                                <td>{{ arPedidoDetalle.miercoles ? 'S':'N' }}</td>
+                                <td>{{ arPedidoDetalle.jueves  ? 'S':'N' }}</td>
+                                <td>{{ arPedidoDetalle.viernes ? 'S':'N' }}</td>
+                                <td>{{ arPedidoDetalle.sabado  ? 'S':'N' }}</td>
+                                <td>{{ arPedidoDetalle.domingo ? 'S':'N' }}</td>
+                                <td>{{ arPedidoDetalle.festivo ? 'S':'N' }}</td>
+                                <td>{{ arPedidoDetalle.horasProgramadas }}</td>
+                                <td>{{ arPedidoDetalle.horasDiurnasProgramadas }}</td>
+                                <td>{{ arPedidoDetalle.horasNocturnasProgramadas }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrSalarioBase }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrPrecioMinimo }}</td>
+                                {% if arPedido.estadoAutorizado == 0 %}
+                                    <td style="text-align: center;"><input type="number"
+                                                                           name="arrPrecioAjustado[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
+                                                                           value="{{ arPedidoDetalle.vrPrecioAjustado | default('0') }}"
+                                                                           style="text-align: right; width:60px"
+                                                                           size="10"></td>
+                                    <td style="text-align: center;"><input type="number"
+                                                                           name="arrPorcentajeIva[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
+                                                                           value="{{ arPedidoDetalle.porcentajeIva }}"
+                                                                           style="text-align: right; width:60px"
+                                                                           size="10"></td>
+                                {% else %}
+                                    <td class="numero">{{ arPedidoDetalle.vrPrecioAjustado | number_format }}</td>
+                                    <td>{{ arPedidoDetalle.porcentajeIva }}</td>
+                                {% endif %}
+                                <td class="numero">{{ arPedidoDetalle.vrIva }}</td>
+                                <td class="numero">{{ arPedidoDetalle.vrSubtotal }}</td>
+                                <td><input type="checkbox" name="ChkSeleccionar[]"
+                                           value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/></td>
                             </tr>
                         {% endfor %}
                         </tbody>

@@ -27,6 +27,8 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.fechaDesde')
             ->addSelect('pd.fechaHasta')
             ->addSelect('pd.cantidad')
+            ->addSelect('pd.diaDesde')
+            ->addSelect('pd.diaHasta')
             ->addSelect('pd.lunes')
             ->addSelect('pd.martes')
             ->addSelect('pd.miercoles')

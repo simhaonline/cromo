@@ -66,7 +66,7 @@ class DespachoRecogidaType extends AbstractType {
             {"campo":"codigoOperacionFk",                       "tipo":"texto",     "ayuda":"Codigo operacion",                         "titulo":"OP"},
             {"campo":"codigoVehiculoFk",                        "tipo":"texto",     "ayuda":"Codigo vehiculo",                          "titulo":"VEH"},
             {"campo":"conductorRel.nombreCorto",                "tipo":"texto",     "ayuda":"Conductor",                                "titulo":"CONDUCTOR",                "relacion":""},
-            {"campo":"codigoRutaRecogidaFk",                    "tipo":"texto",     "ayuda":"Codigo ruta recogida",                     "titulo":"RUTA"},
+            {"campo":"rutaRecogidaRel.nombre",                "tipo":"texto",     "ayuda":"Ruta",                                "titulo":"RUTA",                "relacion":""},
             {"campo":"cantidad",                                "tipo":"entero",    "ayuda":"Cantidad",                                 "titulo":"CAN"},
             {"campo":"unidades",                                "tipo":"entero",    "ayuda":"Unidad",                                   "titulo":"UND"},
             {"campo":"pesoReal",                                "tipo":"entero",    "ayuda":"Peso real",                                "titulo":"PES"},

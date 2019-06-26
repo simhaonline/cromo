@@ -51,6 +51,25 @@
                         {{ form_errors(form.vrPrecioAjustado) }}
                     </div>
                 </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Desde (Dia):</label>
+                    <div class="col-sm-1">
+                        {{ form_widget(form.diaDesde) }}
+                        {{ form_errors(form.diaDesde) }}
+
+                    </div>
+                    <label for="form_fechaHasta" class="col-sm-2 control-label">Hasta:</label>
+                    <div class="col-sm-1">
+                        {{ form_widget(form.diaHasta) }}
+                        {{ form_errors(form.diaHasta) }}
+
+                    </div>
+                    <label class="col-sm-2 control-label">Salario (Liquidacion):</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.vrSalarioBase, { 'attr': {'class': 'form-control'} }) }}
+                        {{ form_errors(form.vrSalarioBase) }}
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group form-group-sm">
@@ -69,11 +88,6 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label class="col-sm-4 control-label">Salario (Liquidacion):</label>
-                        <div class="col-sm-8">
-                            {{ form_widget(form.vrSalarioBase, { 'attr': {'class': 'form-control'} }) }}
-                            {{ form_errors(form.vrSalarioBase) }}
-                        </div>
                         <div class="col-sm-offset-3 col-sm-9">
                             <div class="col-sm-4">{{ form_widget(form.lunes) }}
                                 {{ form_errors(form.lunes) }}</div>
@@ -94,7 +108,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group form-group-sm">
                     <label class="col-sm-2 control-label"></label>
                     <div class="col-sm-4">

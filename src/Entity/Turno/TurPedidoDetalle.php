@@ -59,6 +59,16 @@ class TurPedidoDetalle
     private $mes = 0;
 
     /**
+     * @ORM\Column(name="dia_desde", type="integer")
+     */
+    private $diaDesde = 1;
+
+    /**
+     * @ORM\Column(name="dia_hasta", type="integer")
+     */
+    private $diaHasta = 1;
+
+    /**
      * @ORM\Column(name="fecha_desde", type="date", nullable=true)
      */
     private $fechaDesde;

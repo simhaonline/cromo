@@ -59,6 +59,16 @@ class TurCotizacionDetalle
     private $mes = 0;
 
     /**
+     * @ORM\Column(name="dia_desde", type="integer")
+     */
+    private $diaDesde = 1;
+
+    /**
+     * @ORM\Column(name="dia_hasta", type="integer")
+     */
+    private $diaHasta = 1;
+
+    /**
      * @ORM\Column(name="fecha_desde", type="date", nullable=true)
      */
     private $fechaDesde;
@@ -1070,6 +1080,39 @@ class TurCotizacionDetalle
     {
         $this->puestoRel = $puestoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDiaDesde()
+    {
+        return $this->diaDesde;
+    }
+
+    /**
+     * @param mixed $diaDesde
+     */
+    public function setDiaDesde($diaDesde): void
+    {
+        $this->diaDesde = $diaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiaHasta()
+    {
+        return $this->diaHasta;
+    }
+
+    /**
+     * @param mixed $diaHasta
+     */
+    public function setDiaHasta($diaHasta): void
+    {
+        $this->diaHasta = $diaHasta;
+    }
+
 
 
 }

@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteCondicion;
 use App\Entity\Transporte\TteCondicionFlete;
+use App\Entity\Transporte\TteCondicionManejo;
 use App\Entity\Transporte\TteDescuentoZona;
 use App\Entity\Transporte\TteDestinatario;
 use App\Entity\Transporte\TteEmpaque;
@@ -452,6 +453,22 @@ class ApiWindowsController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(TteCondicionFlete::class)->apiWindowsLiquidar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/windows/condicionmanejo/liquidar")
+     */
+    public function condicionManejoLiquidar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteCondicionManejo::class)->apiWindowsLiquidar($raw);
         } catch (\Exception $e) {
             return [
                 'error' => "Ocurrio un error en la api " . $e->getMessage(),

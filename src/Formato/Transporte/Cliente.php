@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteClienteCondicion;
 use App\Entity\Transporte\TteCondicionFlete;
 use App\Entity\Transporte\TteCondicionManejo;
+use App\Entity\Transporte\TtePrecio;
 use App\Entity\Transporte\TtePrecioDetalle;
 use App\Utilidades\BaseDatos;
 use App\Utilidades\Estandares;
@@ -162,6 +163,46 @@ class Cliente extends \FPDF
             $pdf->SetAutoPageBreak(true, 15);
         }
         $pdf->AddPage();
+        //información precio
+        $arCondicion = $arCliente->getCondicionRel();
+        $arPrecio = $em->getRepository(TtePrecio::class)->find($arCondicion->getCodigoPrecioFk());
+        $arPrecios = $em->getRepository(TtePrecioDetalle::class)->lista($arCondicion->getCodigoPrecioFk());
+        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('arial', 'B', 7);
+        $pdf->Cell(97.5, 5, utf8_decode("CÓDIGO"), 1, 0, 'L', 1);
+        $pdf->SetFillColor(253, 254, 254);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Cell(97.5, 5, utf8_decode($arPrecio->getCodigoPrecioPk()), 1, 0, 'L', 1);
+        $pdf->Ln();
+        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('arial', 'B', 7);
+        $pdf->Cell(97.5, 5, utf8_decode("NOMBRE"), 1, 0, 'L', 1);
+        $pdf->SetFillColor(253, 254, 254);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Cell(97.5, 5, utf8_decode($arPrecio->getNombre()), 1, 0, 'L', 1);
+        $pdf->Ln();
+        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('arial', 'B', 7);
+        $pdf->Cell(97.5, 5, utf8_decode("FECHA VENCE"), 1, 0, 'L', 1);
+        $pdf->SetFillColor(253, 254, 254);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Cell(97.5, 5,  date_format($arPrecio->getFechaVence(),"Y/m/d") , 1, 0, 'L', 1);
+        $pdf->Ln();
+        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('arial', 'B', 7);
+        $pdf->Cell(97.5, 5, utf8_decode("COMENTARIOS"), 1, 0, 'L', 1);
+        $pdf->SetFillColor(253, 254, 254);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Cell(97.5, 5, utf8_decode(substr($arPrecio->getComentario(), 0, 100)), 1, 0, 'L', 1);
+        $pdf->Ln(5);
         //tabla de precios
         $pdf->Ln();
         $pdf->SetFillColor(200, 200, 200);
@@ -169,9 +210,6 @@ class Cliente extends \FPDF
         $pdf->Ln(5);
         $headerPrecio = array('ID','ORIGEN','DESTINO','ZONA','PRODUCTO','PESO','UND','TOPE','VR T.', 'VR A.','DIC', 'MIN');
         $weightPrecio = array(15, 20, 20, 15, 15,15,15,15,15,15,15,15 );
-
-        $arCondicion = $arCliente->getCondicionRel();
-        $arPrecios = $em->getRepository(TtePrecioDetalle::class)->lista($arCondicion->getCodigoPrecioFk());
         for ($i = 0; $i < count($headerPrecio); $i++){
             $pdf->SetFillColor(170, 170, 170);
             $pdf->SetTextColor(0);

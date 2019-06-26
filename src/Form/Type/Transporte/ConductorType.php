@@ -55,6 +55,8 @@ class ConductorType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Rh:'
             ])
+            ->add('correo', TextType::class, array('required' => false))
+            ->add('codigoActividadEconomicaFk', TextType::class, array('required' => false))
             ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
             ->add('arl',TextType::class,['required' => true,'label' => 'Arl:'])
             ->add('fechaVenceArl', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
@@ -105,3 +107,4 @@ class ConductorType extends AbstractType
         return $campos;
     }
 }
+

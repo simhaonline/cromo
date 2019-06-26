@@ -76,6 +76,16 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_direccion" class="col-sm-2 control-label">Correo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.correo) }}
+                </div>
+                <label for="form_alias" class="col-sm-2 control-label">Actividad economica:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoActividadEconomicaFk, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_codigoVehiculo" class="col-sm-2 control-label">Codigo vehiculo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoVehiculo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}

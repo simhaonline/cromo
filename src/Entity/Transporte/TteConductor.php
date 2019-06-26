@@ -139,6 +139,16 @@ class TteConductor
     private $codigoVehiculo;
 
     /**
+     * @ORM\Column(name="correo", type="string", length=200, nullable=true)
+     */
+    private $correo;
+
+    /**
+     * @ORM\Column(name="codigo_actividad_economica_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoActividadEconomicaFk ;
+
+    /**
      * @ORM\Column(name="estado_inactivo", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoInactivo = false;
@@ -691,6 +701,38 @@ class TteConductor
     public function setRhRel($rhRel): void
     {
         $this->rhRel = $rhRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCorreo()
+    {
+        return $this->correo;
+    }
+
+    /**
+     * @param mixed $correo
+     */
+    public function setCorreo($correo): void
+    {
+        $this->correo = $correo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoActividadEconomicaFk()
+    {
+        return $this->codigoActividadEconomicaFk;
+    }
+
+    /**
+     * @param mixed $codigoActividadEconomicaFk
+     */
+    public function setCodigoActividadEconomicaFk($codigoActividadEconomicaFk): void
+    {
+        $this->codigoActividadEconomicaFk = $codigoActividadEconomicaFk;
     }
 
 

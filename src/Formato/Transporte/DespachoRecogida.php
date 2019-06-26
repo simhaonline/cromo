@@ -123,19 +123,32 @@ class DespachoRecogida extends \FPDF {
         $this->SetXY(10, 70);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, '', 1, 0, 'L', 1);
+        $this->Cell(30, 6, 'RUTA', 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial','', 8);
-        $this->Cell(66, 6, '' , 1, 0, 'R', 1);
+        $this->Cell(66, 6, $arDespacho->getRutaRecogidaRel()->getNombre() , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 6, "SALDO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arDespacho->getVrSaldo()), 1, 0, 'R', 1);
-        //linea 4
-        //linea 4
+        $this->Cell(65, 6, number_format($arDespacho->getVrSaldo()), 1, 0, 'L', 1);
+
         $this->SetXY(10, 76);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, 'PLACA', 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial','', 8);
+        $this->Cell(66, 6, $arDespacho->getCodigoVehiculoFk() , 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 6, '', 1, 0, 'L', 1);
+
+        $this->SetXY(10, 82);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(30, 6, 'COMENTARIOS:', 1, 0, 'L', 1);

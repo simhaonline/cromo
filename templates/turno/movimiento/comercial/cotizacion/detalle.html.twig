@@ -59,6 +59,7 @@
                         </thead>
                         <tbody>
                         {% for arCotizacionDetalle in arCotizacionDetalles %}
+                            <tr>
                             <td> {{ arCotizacionDetalle.codigoCotizacionDetallePk }} <input type="hidden"
                                                                                             name="arrCodigo[]"
                                                                                             value="{{ arCotizacionDetalle.codigoCotizacionDetallePk }}">
@@ -100,7 +101,7 @@
                             <td class="numero">{{ arCotizacionDetalle.vrSubtotal }}</td>
                             <td><input type="checkbox" name="ChkSeleccionar[]"
                                        value="{{ arCotizacionDetalle.codigoCotizacionDetallePk }}"/></td>
-
+                            </tr>
                         {% endfor %}
                         </tbody>
                     </table>

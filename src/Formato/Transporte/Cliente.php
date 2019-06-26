@@ -77,6 +77,8 @@ class Cliente extends \FPDF
         $pdf->Cell(195, 5, "CLIENTE", 1, 0, 'C', 1);
         $pdf->Ln(5);
         $arCliente = $em->getRepository(TteCliente::class)->find($codigoCliente);
+        $arAsesor = $arCliente->getAsesorRel();
+
         $pdf->SetFillColor(170, 170, 170);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
@@ -94,6 +96,15 @@ class Cliente extends \FPDF
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(97.5, 5, utf8_decode($arCliente->getNumeroIdentificacion()), 1, 0, 'L', 1);
+        $pdf->Ln();
+        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('arial', 'B', 7);
+        $pdf->Cell(97.5, 5, utf8_decode("ASESOR"), 1, 0, 'L', 1);
+        $pdf->SetFillColor(253, 254, 254);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Cell(97.5, 5, utf8_decode($arAsesor->getNombre()), 1, 0, 'L', 1);
         $pdf->Ln(8);
         // tabla flete.
         $pdf->SetFillColor(200, 200, 200);

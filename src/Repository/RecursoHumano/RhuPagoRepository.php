@@ -52,7 +52,7 @@ class RhuPagoRepository extends ServiceEntityRepository
      * @return int|mixed
      * @throws \Doctrine\ORM\ORMException
      */
-    public function generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoPension, $usuario)
+    public function generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoSolidaridadPension, $usuario)
     {
         $em = $this->getEntityManager();
 
@@ -242,9 +242,9 @@ class RhuPagoRepository extends ServiceEntityRepository
                             //Se guarda el concepto deduccion de fondo solidaridad pensional
                             $arPagoDetalle = new RhuPagoDetalle();
                             $arPagoDetalle->setPagoRel($arPago);
-                            $arPagoDetalle->setConceptoRel($arConceptoFondoPension);
+                            $arPagoDetalle->setConceptoRel($arConceptoFondoSolidaridadPension);
                             $arPagoDetalle->setPorcentaje($porcentajeFondo);
-                            $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConceptoFondoPension, $pagoDetalle);
+                            $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConceptoFondoSolidaridadPension, $pagoDetalle);
                             $em->persist($arPagoDetalle);
 
                         }

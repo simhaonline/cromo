@@ -2,6 +2,7 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuConfiguracion;
@@ -78,7 +79,6 @@ class RhuProgramacionRepository extends ServiceEntityRepository
     public function cargarContratos($arProgramacion)
     {
         $em = $this->getEntityManager();
-        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->cargarContratos();
         $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);
         $arContratos = $em->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select("c")
@@ -113,7 +113,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalle->setFechaHasta($arProgramacion->getFechaHasta());
             $arProgramacionDetalle->setFechaDesdeContrato($fechaDesde);
             $arProgramacionDetalle->setFechaHastaContrato($fechaHasta);
-            $arrIbc = $em->getRepository(RhuPagoDetalle::class)->ibcMes($fechaDesde->format('Y'), $fechaDesde->format('m'), $arContrato->getCodigoContratoPk(), $arConfiguracion['codigoConceptoFondoPensionFk']);
+            $arrIbc = $em->getRepository(RhuPagoDetalle::class)->ibcMes($fechaDesde->format('Y'), $fechaDesde->format('m'), $arContrato->getCodigoContratoPk());
             $arProgramacionDetalle->setVrIbcAcumulado($arrIbc['ibc']);
             $arProgramacionDetalle->setVrDeduccionFondoPensionAnterior($arrIbc['deduccionAnterior']);
             $arrVacaciones = $em->getRepository(RhuVacacion::class)->diasProgramacion($arContrato->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getFechaDesde()->format('Y-m-d'), $arProgramacion->getFechaHasta()->format('Y-m-d'));
@@ -132,6 +132,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         $arProgramacion->setEmpleadosGenerados(1);
         $em->persist($arProgramacion);
         $em->flush();
+
     }
 
     /**
@@ -287,10 +288,10 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         $numeroPagos = 0;
         $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
         $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
-        $arConceptoFondoPension = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoFondoPensionFk']);
+        $arConceptoFondoSolidaridadPension = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoFondoSolidaridadPensionFk']);
         if($codigoProgramacionDetalle) {
             $arProgramacionDetalleActualizar = $em->getRepository(RhuProgramacionDetalle::class)->find($codigoProgramacionDetalle);
-            $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalleActualizar, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoPension, $usuario);
+            $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalleActualizar, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoSolidaridadPension, $usuario);
             $arProgramacionDetalleActualizar->setVrNeto($vrNeto);
             $em->persist($arProgramacionDetalleActualizar);
             $arProgramacion->setVrNeto($arProgramacion->getVrNeto() + $vrNeto);
@@ -300,7 +301,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
             if ($arProgramacionDetalles) {
                 foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
-                    $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoPension, $usuario);
+                    $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoSolidaridadPension, $usuario);
                     $arProgramacionDetalle->setVrNeto($vrNeto);
                     $em->persist($arProgramacionDetalle);
                     $douNetoTotal += $vrNeto;

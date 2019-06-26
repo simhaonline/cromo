@@ -20,7 +20,7 @@ class RhuConfiguracionRepository extends ServiceEntityRepository
             ->select('c.vrSalarioMinimo')
             ->addSelect('c.vrAuxilioTransporte')
             ->addSelect('c.codigoConceptoAuxilioTransporteFk')
-            ->addSelect('c.codigoConceptoFondoPensionFk')
+            ->addSelect('c.codigoConceptoFondoSolidaridadPensionFk')
             ->where('c.codigoConfiguracionPk = 1');
         return $queryBuilder->getQuery()->getSingleResult();
 

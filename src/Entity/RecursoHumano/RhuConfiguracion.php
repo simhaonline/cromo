@@ -39,9 +39,9 @@ class RhuConfiguracion
     private $vrAuxilioTransporte;
 
     /**
-     * @ORM\Column(name="codigo_concepto_fondo_pension_fk", type="string", length=10, nullable=true)
+     * @ORM\Column(name="codigo_concepto_fondo_solidaridad_pension_fk", type="string", length=10, nullable=true)
      */
-    private $codigoConceptoFondoPensionFk;
+    private $codigoConceptoFondoSolidaridadPensionFk;
 
     /**
      * @return mixed
@@ -110,17 +110,17 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getCodigoConceptoFondoPensionFk()
+    public function getCodigoConceptoFondoSolidaridadPensionFk()
     {
-        return $this->codigoConceptoFondoPensionFk;
+        return $this->codigoConceptoFondoSolidaridadPensionFk;
     }
 
     /**
-     * @param mixed $codigoConceptoFondoPensionFk
+     * @param mixed $codigoConceptoFondoSolidaridadPensionFk
      */
-    public function setCodigoConceptoFondoPensionFk($codigoConceptoFondoPensionFk): void
+    public function setCodigoConceptoFondoSolidaridadPensionFk($codigoConceptoFondoSolidaridadPensionFk): void
     {
-        $this->codigoConceptoFondoPensionFk = $codigoConceptoFondoPensionFk;
+        $this->codigoConceptoFondoSolidaridadPensionFk = $codigoConceptoFondoSolidaridadPensionFk;
     }
 
 

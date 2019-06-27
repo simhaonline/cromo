@@ -217,8 +217,6 @@ class PedidoController extends ControllerListenerGeneral
             $arPedidoDetalle->setDomingo(true);
             $arPedidoDetalle->setFestivo(true);
             $arPedidoDetalle->setCantidad(1);
-            $arPedidoDetalle->setFechaDesde(new \DateTime('now'));
-            $arPedidoDetalle->setFechaHasta(new \DateTime('now'));
             $arPedidoDetalle->setVrSalarioBase($arPedido->getVrSalarioBase());
             $arPedidoDetalle->setPeriodo('M');
         }

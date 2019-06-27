@@ -24,8 +24,6 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd');
         $queryBuilder
             ->select('pd.codigoPedidoDetallePk')
-            ->addSelect('pd.fechaDesde')
-            ->addSelect('pd.fechaHasta')
             ->addSelect('pd.cantidad')
             ->addSelect('pd.diaDesde')
             ->addSelect('pd.diaHasta')

@@ -9,9 +9,11 @@ use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
+use App\Entity\Turno\TurTurno;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TurPedidoRepository extends ServiceEntityRepository
 {
@@ -350,5 +352,12 @@ class TurPedidoRepository extends ServiceEntityRepository
         } else {
             Mensajes::error('El pedido ya esta desautorizada');
         }
+    }
+
+    public function lista(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedido::class, 'p')
+            ->select('p.codigoPedidoPk');
+        return $queryBuilder;
     }
 }

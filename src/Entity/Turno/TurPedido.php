@@ -172,6 +172,11 @@ class TurPedido
     protected $pedidosDetallesPedidoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="pedidoRel")
+     */
+    protected $programacionesPedidoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPedidoPk()
@@ -665,6 +670,22 @@ class TurPedido
     public function setVrTotalCosto($vrTotalCosto): void
     {
         $this->vrTotalCosto = $vrTotalCosto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramacionesPedidoRel()
+    {
+        return $this->programacionesPedidoRel;
+    }
+
+    /**
+     * @param mixed $programacionesPedidoRel
+     */
+    public function setProgramacionesPedidoRel($programacionesPedidoRel): void
+    {
+        $this->programacionesPedidoRel = $programacionesPedidoRel;
     }
 
 

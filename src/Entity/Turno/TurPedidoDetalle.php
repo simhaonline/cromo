@@ -69,16 +69,6 @@ class TurPedidoDetalle
     private $diaHasta = 1;
 
     /**
-     * @ORM\Column(name="fecha_desde", type="date", nullable=true)
-     */
-    private $fechaDesde;
-
-    /**
-     * @ORM\Column(name="fecha_hasta", type="date", nullable=true)
-     */
-    private $fechaHasta;
-
-    /**
      * @ORM\Column(name="dias", type="integer")
      */
     private $dias = 0;
@@ -288,6 +278,11 @@ class TurPedidoDetalle
     protected $puestoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="pedidoDetalleRel")
+     */
+    protected $programacionesPedidoDetalleRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPedidoDetallePk()
@@ -370,6 +365,22 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
+    public function getPeriodo()
+    {
+        return $this->periodo;
+    }
+
+    /**
+     * @param mixed $periodo
+     */
+    public function setPeriodo($periodo): void
+    {
+        $this->periodo = $periodo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAnio()
     {
         return $this->anio;
@@ -429,6 +440,22 @@ class TurPedidoDetalle
     public function setDiaHasta($diaHasta): void
     {
         $this->diaHasta = $diaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDias()
+    {
+        return $this->dias;
+    }
+
+    /**
+     * @param mixed $dias
+     */
+    public function setDias($dias): void
+    {
+        $this->dias = $dias;
     }
 
     /**
@@ -978,17 +1005,33 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
-    public function getFacturaDistribuida()
+    public function getEstadoTerminado()
     {
-        return $this->facturaDistribuida;
+        return $this->estadoTerminado;
     }
 
     /**
-     * @param mixed $facturaDistribuida
+     * @param mixed $estadoTerminado
      */
-    public function setFacturaDistribuida($facturaDistribuida): void
+    public function setEstadoTerminado($estadoTerminado): void
     {
-        $this->facturaDistribuida = $facturaDistribuida;
+        $this->estadoTerminado = $estadoTerminado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidoRel()
+    {
+        return $this->pedidoRel;
+    }
+
+    /**
+     * @param mixed $pedidoRel
+     */
+    public function setPedidoRel($pedidoRel): void
+    {
+        $this->pedidoRel = $pedidoRel;
     }
 
     /**
@@ -1042,115 +1085,18 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
-    public function getPeriodo()
+    public function getProgramacionesPedidoDetalleRel()
     {
-        return $this->periodo;
+        return $this->programacionesPedidoDetalleRel;
     }
 
     /**
-     * @param mixed $periodo
+     * @param mixed $programacionesPedidoDetalleRel
      */
-    public function setPeriodo($periodo): void
+    public function setProgramacionesPedidoDetalleRel($programacionesPedidoDetalleRel): void
     {
-        $this->periodo = $periodo;
+        $this->programacionesPedidoDetalleRel = $programacionesPedidoDetalleRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getPedidoRel()
-    {
-        return $this->pedidoRel;
-    }
-
-    /**
-     * @param mixed $pedidoRel
-     */
-    public function setPedidoRel($pedidoRel): void
-    {
-        $this->pedidoRel = $pedidoRel;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaDesde()
-    {
-        return $this->fechaDesde;
-    }
-
-    /**
-     * @param mixed $fechaDesde
-     */
-    public function setFechaDesde($fechaDesde): void
-    {
-        $this->fechaDesde = $fechaDesde;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaHasta()
-    {
-        return $this->fechaHasta;
-    }
-
-    /**
-     * @param mixed $fechaHasta
-     */
-    public function setFechaHasta($fechaHasta): void
-    {
-        $this->fechaHasta = $fechaHasta;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDias()
-    {
-        return $this->dias;
-    }
-
-    /**
-     * @param mixed $dias
-     */
-    public function setDias($dias): void
-    {
-        $this->dias = $dias;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoTerminado()
-    {
-        return $this->estadoTerminado;
-    }
-
-    /**
-     * @param mixed $estadoTerminado
-     */
-    public function setEstadoTerminado($estadoTerminado): void
-    {
-        $this->estadoTerminado = $estadoTerminado;
-    }
-
 
 
 

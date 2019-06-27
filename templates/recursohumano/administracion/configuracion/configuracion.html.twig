@@ -27,8 +27,13 @@
             <div class="form-group form-group-sm">
                 <label for="" class="control-label col-sm-2">Auxilio de transporte:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(formConfiguracion.conceptoRel ) }}
-                    {{ form_errors(formConfiguracion.conceptoRel ) }}
+                    {{ form_widget(formConfiguracion.conceptoAuxilioTransporteRel ) }}
+                    {{ form_errors(formConfiguracion.conceptoAuxilioTransporteRel ) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Fondo de solidaridad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.conceptoFondoSolidaridadRel ) }}
+                    {{ form_errors(formConfiguracion.conceptoFondoSolidaridadRel ) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

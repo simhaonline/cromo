@@ -47,7 +47,29 @@ class RhuConfiguracion
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoAuxilioTransporteRel")
      * @ORM\JoinColumn(name="codigo_concepto_auxilio_transporte_fk", referencedColumnName="codigo_concepto_pk")
      */
-    protected $conceptoRel;
+    protected $conceptoAuxilioTransporteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoFondoSolidaridadRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fondo_solidaridad_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoFondoSolidaridadRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -130,37 +152,35 @@ class RhuConfiguracion
     }
 
     /**
-     * @return array
+     * @return mixed
      */
-    public function getInfoLog(): array
+    public function getConceptoAuxilioTransporteRel()
     {
-        return $this->infoLog;
+        return $this->conceptoAuxilioTransporteRel;
     }
 
     /**
-     * @param array $infoLog
+     * @param mixed $conceptoAuxilioTransporteRel
      */
-    public function setInfoLog(array $infoLog): void
+    public function setConceptoAuxilioTransporteRel($conceptoAuxilioTransporteRel): void
     {
-        $this->infoLog = $infoLog;
+        $this->conceptoAuxilioTransporteRel = $conceptoAuxilioTransporteRel;
     }
 
     /**
      * @return mixed
      */
-    public function getConceptoRel()
+    public function getConceptoFondoSolidaridadRel()
     {
-        return $this->conceptoRel;
+        return $this->conceptoFondoSolidaridadRel;
     }
 
     /**
-     * @param mixed $conceptoRel
+     * @param mixed $conceptoFondoSolidaridadRel
      */
-    public function setConceptoRel($conceptoRel): void
+    public function setConceptoFondoSolidaridadRel($conceptoFondoSolidaridadRel): void
     {
-        $this->conceptoRel = $conceptoRel;
+        $this->conceptoFondoSolidaridadRel = $conceptoFondoSolidaridadRel;
     }
-
-
 
 }

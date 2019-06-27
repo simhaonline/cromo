@@ -264,8 +264,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
     public function anular($arDespachoRecogida)
     {
         $em = $this->getEntityManager();
-        if($arDespachoRecogida->getEstadoAutorizado() == 1 ) {
-            if($arDespachoRecogida->getEstadoAnulado() == 0){
+        if ($arDespachoRecogida->getEstadoAutorizado() == 1) {
+            if ($arDespachoRecogida->getEstadoAnulado() == 0) {
                 $arRecogidas = $em->getRepository(TteRecogida::class)->findBy(['codigoDespachoRecogidaFk' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]);
                 foreach ($arRecogidas AS $arRecogida) {
                     $arRecogida->setDespachoRecogidaRel(null);
@@ -290,7 +290,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                 $arDespachoRecogida->setVrTotal(0);
                 $em->persist($arDespachoRecogida);
                 $em->flush();
-            }else{
+            } else {
                 Mensajes::error('El despacho ya esta anulado');
             }
 
@@ -388,7 +388,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             foreach ($arr AS $codigo) {
                 $arDespachoRecogida = $em->getRepository(TteDespachoRecogida::class)->registroContabilizar($codigo);
                 if ($arDespachoRecogida) {
-                    if($arDespachoRecogida['contabilizar']) {
+                    if ($arDespachoRecogida['contabilizar']) {
                         if ($arDespachoRecogida['estadoAprobado'] == 1 && $arDespachoRecogida['estadoContabilizado'] == 0) {
                             $arComprobante = $em->getRepository(FinComprobante::class)->find($arDespachoRecogida['codigoComprobanteFk']);
                             $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arDespachoRecogida['codigoPropietarioFk']);
@@ -711,41 +711,41 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
 
                             //Saldo
 
-                                $descripcion = "POR PAGAR";
-                                $cuenta = $arDespachoRecogida['codigoCuentaPagarFk'];
-                                if ($cuenta) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                    if (!$arCuenta) {
-                                        $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
-                                        break;
-                                    }
-                                    $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arTercero);
-                                    $arRegistro->setCuentaRel($arCuenta);
-                                    $arRegistro->setComprobanteRel($arComprobante);
-                                    if ($arCuenta->getExigeCentroCosto()) {
-                                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
-                                        $arRegistro->setCentroCostoRel($arCentroCosto);
-                                    }
-                                    $arRegistro->setNumero($arDespachoRecogida['numero']);
-                                    $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
-                                    $arRegistro->setFecha($arDespachoRecogida['fecha']);
-                                    $naturaleza = "C";
-                                    if ($naturaleza == 'D') {
-                                        $arRegistro->setVrDebito($arDespachoRecogida['vrSaldo']);
-                                        $arRegistro->setNaturaleza('D');
-                                    } else {
-                                        $arRegistro->setVrCredito($arDespachoRecogida['vrSaldo']);
-                                        $arRegistro->setNaturaleza('C');
-                                    }
-                                    $arRegistro->setDescripcion($descripcion);
-                                    $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
-                                    $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
-                                    $em->persist($arRegistro);
-                                } else {
-                                    $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
+                            $descripcion = "POR PAGAR";
+                            $cuenta = $arDespachoRecogida['codigoCuentaPagarFk'];
+                            if ($cuenta) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                if (!$arCuenta) {
+                                    $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                     break;
                                 }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arDespachoRecogida['codigoCentroCostoFk']);
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $arRegistro->setNumero($arDespachoRecogida['numero']);
+                                $arRegistro->setNumeroReferencia($arDespachoRecogida['numero']);
+                                $arRegistro->setFecha($arDespachoRecogida['fecha']);
+                                $naturaleza = "C";
+                                if ($naturaleza == 'D') {
+                                    $arRegistro->setVrDebito($arDespachoRecogida['vrSaldo']);
+                                    $arRegistro->setNaturaleza('D');
+                                } else {
+                                    $arRegistro->setVrCredito($arDespachoRecogida['vrSaldo']);
+                                    $arRegistro->setNaturaleza('C');
+                                }
+                                $arRegistro->setDescripcion($descripcion);
+                                $arRegistro->setCodigoModeloFk('TteDespachoRecogida');
+                                $arRegistro->setCodigoDocumento($arDespachoRecogida['codigoDespachoRecogidaPk']);
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "El tipo de despacho no tiene configurada la cuenta " . $descripcion;
+                                break;
+                            }
 
 
                             $arDespachoAct = $em->getRepository(TteDespachoRecogida::class)->find($arDespachoRecogida['codigoDespachoRecogidaPk']);
@@ -766,6 +766,28 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
 
         }
         return true;
+    }
+
+    public function recogidas($codigoRecogida)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'dr')
+            ->select('dr.codigoDespachoRecogidaPk')
+            ->addSelect('dr.numero')
+            ->addSelect('dr.fecha')
+            ->addSelect('dr.codigoOperacionFk')
+            ->addSelect('dr.codigoVehiculoFk')
+            ->addSelect('c.nombreCorto AS conductor')
+            ->addSelect('rc.nombre AS ruta')
+            ->addSelect('dr.estadoAutorizado')
+            ->addSelect('dr.estadoAprobado')
+            ->addSelect('dr.estadoAnulado')
+            ->where("r.codigoRecogidaPk = {$codigoRecogida}")
+            ->leftJoin('dr.recogidasDespachoRecogidaRel', 'r')
+            ->leftJoin('dr.conductorRel', 'c')
+        ->leftJoin('dr.rutaRecogidaRel', 'rc');
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
 }

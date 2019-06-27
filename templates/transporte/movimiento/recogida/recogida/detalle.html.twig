@@ -39,13 +39,43 @@
                     <br/><br/>
                     {% include 'transporte/movimiento/recogida/recogida/informacion.html.twig' %}
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+                        <li class="active"><a href="#detalles" data-toggle="tab">Despachos</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="detalles">
-                            <div id="detalles" style="width: 100%"><br>
-                                <div class="table-responsive">
-                                </div>
+                            <div id="detalles" style="width: 100%">
+                                <table class="table table-striped table-bordered table-hover tabla-datos">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>NUMERO</th>
+                                        <th>FECHA</th>
+                                        <th>OP</th>
+                                        <th>VEHICULO</th>
+                                        <th>CONDUCTOR</th>
+                                        <th>RUTA</th>
+                                        <th>AUT</th>
+                                        <th>APR</th>
+                                        <th>ANU</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for arDespachoRecogida in arDespachoRecogida %}
+                                        <tr>
+                                            <td>{{ arDespachoRecogida.codigoDespachoRecogidaPk }}</td>
+                                            <td>{{ arDespachoRecogida.numero }}</td>
+                                            <td>{{ arDespachoRecogida.fecha |date('Y-m-d H:i') }}</td>
+                                            <td>{{ arDespachoRecogida.codigoOperacionFk }}</td>
+                                            <td>{{ arDespachoRecogida.codigoVehiculoFk }}</td>
+                                            <td>{{ arDespachoRecogida.conductor }}</td>
+                                            <td>{{ arDespachoRecogida.ruta }}</td>
+                                            <td>{{ arDespachoRecogida.estadoAutorizado ? 'SI' :'NO' }}</td>
+                                            <td>{{ arDespachoRecogida.estadoAprobado ? 'SI' :'NO' }}</td>
+                                            <td>{{ arDespachoRecogida.estadoAnulado ? 'SI' :'NO' }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -55,3 +85,7 @@
         </section>
     </div>
 {% endblock %}
+
+
+
+

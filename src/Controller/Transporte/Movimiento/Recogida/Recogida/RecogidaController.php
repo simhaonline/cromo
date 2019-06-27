@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteRecogida;
@@ -102,9 +103,10 @@ class RecogidaController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_detalle', ['id' => $id]));
             }
         }
-
+        $arDespachoRecogida = $em->getRepository(TteDespachoRecogida::class)->recogidas($id);
         return $this->render('transporte/movimiento/recogida/recogida/detalle.html.twig', [
             'arRecogida' => $arRecogida,
+            'arDespachoRecogida' => $arDespachoRecogida,
             'form' => $form->createView()]);
     }
 

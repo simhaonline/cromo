@@ -4,6 +4,7 @@ namespace App\Form\Type\Crm;
 
 use App\Entity\Crm\CrmContacto;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,6 +24,7 @@ class ContactoType extends AbstractType
             ->add('especialidad', TextType::class, ['label' => 'Especialidad:', 'required' => true])
             ->add('horarioVisita', TextType::class, ['label' => 'Horario visita:', 'required' => true])
             ->add('secretaria', TextType::class, ['label' => 'Secretaria:', 'required' => true])
+            ->add('correo', EmailType::class, ['label' => 'Correo:', 'required' => true])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

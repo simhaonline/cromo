@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('crm_administracion_control_contacto_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arContacto.codigoContactoPk }}</td>
+            <td class="titulo">NUMERO IDENTIFICACIÓN:</td>
+            <td class="td-in-well">{{ arContacto.numeroIdentificacion }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NOMBRE CORTO:</td>
+            <td class="td-in-well">{{ arContacto.nombreCorto }}</td>
+            <td class="titulo">DIRECCIÓN:</td>
+            <td class="td-in-well">{{ arContacto.direccion }}</td>
+
+        </tr>
+        <tr>
+            <td class="titulo">TELÉFONO:</td>
+            <td class="td-in-well">{{ arContacto.telefono }}</td>
+            <td class="titulo">SALUDO:</td>
+            <td class="td-in-well">{{ arContacto.saludo }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">EMAIL:</td>
+            <td class="td-in-well">{{ arContacto.correo }}</td>
+            <td class="titulo">CARGO:</td>
+            <td class="td-in-well">{{ arContacto.cargo }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">ESPECIALIDAD:</td>
+            <td class="td-in-well">{{ arContacto.especialidad }}</td>
+            <td class="titulo">APELLIDO 2:</td>
+            <td class="td-in-well">{{ arContacto.horarioVisita }}</td>
+        </tr>
+        <tr>
+
+            <td class="titulo">SECRETARIA:</td>
+            <td class="td-in-well">{{ arContacto.secretaria }}</td>
+            <td class="titulo">CLIENTE:</td>
+            <td class="td-in-well">{{ arContacto.clienteRel.nombreCorto }}</td>
+        </tr>
+        <tr>
+
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

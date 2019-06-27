@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Crm\CrmContacto;
 use App\Entity\Turno\TurItem;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -281,6 +282,7 @@ class GenModelo extends Fixture
                'CrmVisitaTipo',
                'CrmFase',
                'CrmNegocio',
+                'CrmContacto'
             )),
         );
         foreach ($arrayGenModulo as $arrGenModulo){

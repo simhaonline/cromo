@@ -6,6 +6,7 @@ namespace App\Controller\Crm\Administracion\Control\Cliente;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Crm\CrmCliente;
+use App\Entity\Crm\CrmContacto;
 use App\Entity\Crm\CrmNegocio;
 use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Crm\ClienteType;
@@ -93,15 +94,30 @@ class ClienteController extends ControllerListenerGeneral
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+            ->add('btnEliminar', SubmitType::class, array('label'  => 'Eliminar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnEliminar')->isClicked()){
+                $arClienterSeleccionados = $request->request->get('ChkSeleccionar');
+                $this->get("UtilidadesModelo")->eliminar(CrmContacto::class, $arClienterSeleccionados);
+                return $this->redirect($this->generateUrl('crm_administracion_control_cliente_detalle', ['id' => $id]));
+            }
+        }
         if ($id != 0) {
-            $arClienteCliente = $em->getRepository(CrmCliente::class)->find($id);
-            if (!$arClienteCliente) {
+            $arCliente = $em->getRepository(CrmCliente::class)->find($id);
+            if (!$arCliente) {
                 return $this->redirect($this->generateUrl('crm_administracion_control_cliente_lista'));
             }
         }
-        $arClienteCliente = $em->getRepository(CrmCliente::class)->find($id);
+
+        $arCliente = $em->getRepository(CrmCliente::class)->find($id);
+        $arContactos = $em->getRepository(CrmContacto::class)->findBy(array('codigoClienteFk'=>$arCliente->getCodigoClientePk()));
         return $this->render('crm/administracion/control/cliente/detalle.html.twig', [
-            'arCliente' => $arClienteCliente
+            'arCliente' => $arCliente,
+            'form' => $form->createView(),
+            'arContactos'=>$arContactos
         ]);
 	}
     /**

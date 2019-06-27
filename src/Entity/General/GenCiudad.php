@@ -159,6 +159,11 @@ class GenCiudad
     protected $examenesCiudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmContacto", mappedBy="ciudadRel")
+     */
+    protected $crmContactoCiuidadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -604,6 +609,22 @@ class GenCiudad
     public function setExamenesCiudadRel($examenesCiudadRel): void
     {
         $this->examenesCiudadRel = $examenesCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCrmContactoCiuidadRel()
+    {
+        return $this->crmContactoCiuidadRel;
+    }
+
+    /**
+     * @param mixed $crmContactoCiuidadRel
+     */
+    public function setCrmContactoCiuidadRel($crmContactoCiuidadRel): void
+    {
+        $this->crmContactoCiuidadRel = $crmContactoCiuidadRel;
     }
 
 

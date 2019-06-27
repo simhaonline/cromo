@@ -13,9 +13,19 @@
                         <li>
                             <a href="{{ path('turno_movimiento_comercial_cotizacion_lista') }}">Cotizacion</a>
                         </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Juridico <span class="fa arrow"></span></a>
+                    <ul>
                         <li>
                             <a href="{{ path('turno_movimiento_comercial_contrato_lista') }}">Contrato</a>
                         </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Facturacion <span class="fa arrow"></span></a>
+                    <ul>
                         <li>
                             <a href="{{ path('turno_movimiento_comercial_pedido_lista') }}">Pedido</a>
                         </li>
@@ -33,42 +43,30 @@
             </a>
             <ul>
                 <li>
-                    <a href="#">Cliente <span class="fa arrow"></span></a>
+                    <a href="#">Juridico <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('turno_administracion_cliente_cliente_lista') }}">Cliente</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('turno_administracion_cliente_puesto_lista') }}">Puesto</a>
-                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'turno','entidad':'contratoTipo'}) }}">Contrato tipo</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#">General <span class="fa arrow"></span></a>
+                    <a href="#">Comercial <span class="fa arrow"></span></a>
                     <ul>
-                        <li>
-                            <a href="{{ path('turno_administracion_concepto_concepto_lista') }}">Concepto</a>
-                        </li>
-                        <li><a href="{{ path('administracion_lista',{'modulo':'turno','entidad':'contratoTipo'}) }}">Contrato
-                                tipo</a></li>
+                        <li><a href="{{ path('turno_administracion_comercial_cliente_lista') }}">Cliente</a></li>
+                        <li><a href="{{ path('turno_administracion_cliente_puesto_lista') }}">Puesto</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#">Comercial<span class="fa arrow"></span></a>
+                    <a href="#">Facturacion<span class="fa arrow"></span></a>
                     <ul>
-                        <li>
-                            <a href="{{ path('turno_administracion_comercial_item_lista') }}">Item</a>
-                        </li>
+                        <li><a href="{{ path('turno_administracion_comercial_item_lista') }}">Item</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#">Operacion<span class="fa arrow"></span></a>
                     <ul>
-                        <li>
-                            <a href="{{ path('turno_administracion_operacion_turno_lista') }}">Turno</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('turno_administracion_operacion_secuencia_lista') }}">Secuencia</a>
-                        </li>
+                        <li><a href="{{ path('turno_administracion_operacion_turno_lista') }}">Turno</a></li>
+                        <li><a href="{{ path('turno_administracion_operacion_secuencia_lista') }}">Secuencia</a></li>
+                        <li><a href="{{ path('turno_administracion_concepto_concepto_lista') }}">Concepto de servicio</a></li>
                     </ul>
                 </li>
             </ul>

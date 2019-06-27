@@ -27,7 +27,7 @@ class ClienteController extends ControllerListenerGeneral
     protected $claseNombre = "TurCliente";
     protected $modulo = "Turno";
     protected $funcion = "Administracion";
-    protected $grupo = "Cliente";
+    protected $grupo = "Comercial";
     protected $nombre = "Cliente";
 
     /**
@@ -35,7 +35,7 @@ class ClienteController extends ControllerListenerGeneral
      * @return Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/turno/administracion/cliente/cliente/lista", name="turno_administracion_cliente_cliente_lista")
+     * @Route("/turno/administracion/comercial/cliente/lista", name="turno_administracion_comercial_cliente_lista")
      */
     public function lista(Request $request)
     {
@@ -76,7 +76,7 @@ class ClienteController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/turno/administracion/cliente/nuevo/{id}", name="turno_administracion_cliente_cliente_nuevo")
+     * @Route("/turno/administracion/cliente/nuevo/{id}", name="turno_administracion_comercial_cliente_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -104,7 +104,7 @@ class ClienteController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/turno/administracion/cliente/detalle/{id}", name="turno_administracion_cliente__detalle")
+     * @Route("/turno/administracion/comercial/cliente/detalle/{id}", name="turno_administracion_comercial_cliente_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -131,7 +131,7 @@ class ClienteController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/turno/administracion/puesto/nuevo/{id}/{codigoCliente}", name="turno_administracion_cliente_clientepuesto_nuevo")
+     * @Route("/turno/administracion/comercial/puesto/nuevo/{id}/{codigoCliente}", name="turno_administracion_comercial_puesto_nuevo")
      */
     public function puestoNuevo(Request $request, $id, $codigoCliente)
     {

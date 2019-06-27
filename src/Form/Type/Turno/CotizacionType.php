@@ -57,7 +57,7 @@ class CotizacionType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoCotizacionPk",               "tipo":"pk",    "ayuda":"Codigo del registro",                  "titulo":"ID"},
-            {"campo":"cotizacionTipoRel.nombre",         "tipo":"texto", "ayuda":"Tipo pedido",                        "titulo":"TIPO",          "relacion":""},
+            {"campo":"cotizacionTipoRel.nombre",         "tipo":"texto", "ayuda":"Tipo cotizacion",                        "titulo":"TIPO",          "relacion":""},
             {"campo":"numero",                         "tipo":"texto", "ayuda":"Consecutivo de aprobación",            "titulo":"NUMERO"},
             {"campo":"fecha",                          "tipo":"fecha", "ayuda":"Fecha",                                "titulo":"FECHA"},            
             {"campo":"clienteRel.nombreCorto",         "tipo":"texto", "ayuda":"Nombre del cliente",                   "titulo":"CLIENTE",        "relacion":""},
@@ -80,7 +80,7 @@ class CotizacionType extends AbstractType
         $campos = '[
             {"child":"codigoCotizacionPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
             {"child":"numero",     "tipo":"TextType",  "propiedades":{"label":"Numero"}},
-            {"child":"codigoCotizacionTipoFk", "tipo":"EntityType","propiedades":{"class":"TurPedidoTipo","choice_label":"nombre", "label":"TODOS"}},
+            {"child":"codigoCotizacionTipoFk", "tipo":"EntityType","propiedades":{"class":"TurCotizacionTipo","choice_label":"nombre", "label":"TODOS"}},
             {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAprobado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAnulado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}}

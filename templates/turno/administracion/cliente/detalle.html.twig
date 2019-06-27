@@ -97,7 +97,7 @@
                                     <td>{{ arPuesto.ciudadNombre }}</td>
                                     <td>{{ arPuesto.codigoCentroCostoFk }}</td>
                                     <td style="text-align: center;">
-                                        <a  href="javascript:abrirVentana3('{{ path('turno_administracion_cliente_clientepuesto_nuevo', {'id': arPuesto.codigoPuestoPk, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Editar puesto', 600, 1200) "><i class="fa fa-edit" style="color: black;font-size: large;"></i>
+                                        <a  href="javascript:abrirVentana3('{{ path('turno_administracion_comercial_puesto_nuevo', {'id': arPuesto.codigoPuestoPk, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Editar puesto', 600, 1200) "><i class="fa fa-edit" style="color: black;font-size: large;"></i>
                                         </a>
                                     </td>
                                     <td style="text-align: center">
@@ -116,11 +116,11 @@
                 </div>
             </div>
         </div>
-        <a class="btn btn-default btn-sm" href="{{ path('turno_administracion_cliente_cliente_lista') }}">Volver</a>
+        <a class="btn btn-default btn-sm" href="{{ path('turno_administracion_comercial_cliente_lista') }}">Volver</a>
         <div class="btn-toolbar" style="float: right;">
             <div class="btn-group">
                 <div class="btn-group">
-                    <a href="javascript:abrirVentana3('{{ path('turno_administracion_cliente_clientepuesto_nuevo', {'id': 0, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Nuevo puesto', 600, 1200) " class="btn btn-default">Nuevo</a>
+                    <a href="javascript:abrirVentana3('{{ path('turno_administracion_comercial_puesto_nuevo', {'id': 0, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Nuevo puesto', 600, 1200) " class="btn btn-default">Nuevo</a>
                     {{ form_widget(form.btnEliminar) }}
                 </div>
             </div>

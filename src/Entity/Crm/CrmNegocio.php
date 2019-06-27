@@ -43,6 +43,17 @@ class CrmNegocio
      */
     private $valor = 0;
 
+
+    /**
+     * @ORM\Column(name="estado_cerrado", type="boolean")
+     */
+    private $estadoCerrado;
+
+    /**
+     * @ORM\Column(name="estado_ganado", type="boolean")
+     */
+    private $estadoGanado;
+
     /**
      * @ORM\Column(name="comentario", type="string", length=100, nullable=true)
      */
@@ -288,4 +299,37 @@ class CrmNegocio
     {
         $this->nombre = $nombre;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoCerrado()
+    {
+        return $this->estadoCerrado;
+    }
+
+    /**
+     * @param mixed $estadoCerrado
+     */
+    public function setEstadoCerrado($estadoCerrado): void
+    {
+        $this->estadoCerrado = $estadoCerrado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoGanado()
+    {
+        return $this->estadoGanado;
+    }
+
+    /**
+     * @param mixed $estadoGanado
+     */
+    public function setEstadoGanado($estadoGanado): void
+    {
+        $this->estadoGanado = $estadoGanado;
+    }
+
 }

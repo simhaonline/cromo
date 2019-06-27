@@ -44,6 +44,12 @@ class RhuConfiguracion
     private $codigoConceptoFondoSolidaridadPensionFk;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoAuxilioTransporteRel")
+     * @ORM\JoinColumn(name="codigo_concepto_auxilio_transporte_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -122,6 +128,39 @@ class RhuConfiguracion
     {
         $this->codigoConceptoFondoSolidaridadPensionFk = $codigoConceptoFondoSolidaridadPensionFk;
     }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoRel()
+    {
+        return $this->conceptoRel;
+    }
+
+    /**
+     * @param mixed $conceptoRel
+     */
+    public function setConceptoRel($conceptoRel): void
+    {
+        $this->conceptoRel = $conceptoRel;
+    }
+
 
 
 }

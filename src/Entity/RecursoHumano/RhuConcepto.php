@@ -155,6 +155,11 @@ class RhuConcepto
     protected $pensionesConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuConfiguracion", mappedBy="conceptoRel")
+     */
+    protected $configuracionConceptoAuxilioTransporteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()

@@ -61,18 +61,6 @@ class ConfiguracionController extends Controller
         $formConfiguracion = $this->createForm(ConfiguracionType::class, $arConfiguracion);
         $formConfiguracion->handleRequest($request);
         if ('POST' === $request->getMethod()) {
-            if ($request->request->has('configuracion')) {
-                if ($formConfiguracion->isValid()) {
-                    $arConceptoTransporte = $em->find(RhuConcepto::class, $arConfiguracion->getCodigoConceptoAuxilioTransporteFk());
-                    if (!$arConceptoTransporte) {
-                        $em->detach($arConfiguracion);
-                        Mensajes::error('No existe un concepto con el codigo ingresado');
-                    } else {
-                        $em->persist($arConfiguracion);
-                        $em->flush();
-                    }
-                }
-            }
             if ($request->request->has('conceptoHora')) {
                 if ($formConceptoHora->isValid()) {
                     foreach ($formConceptoHora->getViewData() as $nombreHora => $arConceptoRel) {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller\Crm\Administracion\Control\Cliente;
+namespace App\Controller\Crm\Administracion\Comercial\Cliente;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -25,10 +25,10 @@ class ClienteController extends ControllerListenerGeneral
     protected $claseNombre = "CrmVisitaTipo";
     protected $modulo   = "Crm";
     protected $funcion  = "Administracion";
-    protected $grupo    = "Control";
+    protected $grupo    = "Comercial";
     protected $nombre   = "Cliente";
     /**
-     * @Route("/crm/administracion/control/cliente/lista", name="crm_administracion_control_cliente_lista")
+     * @Route("/crm/administracion/comercial/cliente/lista", name="crm_administracion_comercial_cliente_lista")
      */
     public function lista(Request $request)
     {
@@ -49,18 +49,18 @@ class ClienteController extends ControllerListenerGeneral
             if ($form->get('btnEliminar')->isClicked()){
                 $arClienterSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(CrmCliente::class, $arClienterSeleccionados);
-				return $this->redirect($this->generateUrl('crm_administracion_control_cliente_lista'));
+				return $this->redirect($this->generateUrl('crm_administracion_comercial_cliente_lista'));
 			}
         }
         $arClienteClientes = $paginator->paginate($em->getRepository(CrmCliente::class)->lista(), $request->query->getInt('page', 1),20);
-        return $this->render('crm/administracion/control/cliente/lista.html.twig', array(
+        return $this->render('crm/administracion/comercial/cliente/lista.html.twig', array(
             'arClientes' => $arClienteClientes,
             'form' => $form->createView()
         ));
     }
 
     /**
-     * @Route("/crm/administracion/control/cliente/nuevo/{id}", name="crm_administracion_control_cliente_nuevo")
+     * @Route("/crm/administracion/comercial/cliente/nuevo/{id}", name="crm_administracion_comercial_cliente_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -69,7 +69,7 @@ class ClienteController extends ControllerListenerGeneral
         if ($id != 0) {
             $arCliente = $em->getRepository(CrmCliente::class)->find($id);
 			if (!$arCliente) {
-                return $this->redirect($this->generateUrl('crm_administracion_control_cliente_lista'));
+                return $this->redirect($this->generateUrl('crm_administracion_comercial_cliente_lista'));
             }
 		}
         $form = $this->createForm(ClienteType::class, $arCliente);
@@ -79,17 +79,17 @@ class ClienteController extends ControllerListenerGeneral
                 $arCliente = $form->getData();
                 $em->persist($arCliente);
                 $em->flush();
-                return $this->redirect($this->generateUrl('crm_administracion_control_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
+                return $this->redirect($this->generateUrl('crm_administracion_comercial_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
             }
         }
-        return $this->render('crm/administracion/control/cliente/nuevo.html.twig', [
+        return $this->render('crm/administracion/comercial/cliente/nuevo.html.twig', [
             'form' => $form->createView(),
             'arCliente' => $arCliente
         ]);
     }
 
     /**
-     * @Route("/crm/administracion/control/cliente/detalle/{id}", name="crm_administracion_control_cliente_detalle")
+     * @Route("/crm/administracion/comercial/cliente/detalle/{id}", name="crm_administracion_comercial_cliente_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -102,19 +102,19 @@ class ClienteController extends ControllerListenerGeneral
             if ($form->get('btnEliminar')->isClicked()){
                 $arClienterSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(CrmContacto::class, $arClienterSeleccionados);
-                return $this->redirect($this->generateUrl('crm_administracion_control_cliente_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('crm_administracion_comercial_cliente_detalle', ['id' => $id]));
             }
         }
         if ($id != 0) {
             $arCliente = $em->getRepository(CrmCliente::class)->find($id);
             if (!$arCliente) {
-                return $this->redirect($this->generateUrl('crm_administracion_control_cliente_lista'));
+                return $this->redirect($this->generateUrl('crm_administracion_comercial_cliente_lista'));
             }
         }
 
         $arCliente = $em->getRepository(CrmCliente::class)->find($id);
         $arContactos = $em->getRepository(CrmContacto::class)->findBy(array('codigoClienteFk'=>$arCliente->getCodigoClientePk()));
-        return $this->render('crm/administracion/control/cliente/detalle.html.twig', [
+        return $this->render('crm/administracion/comercial/cliente/detalle.html.twig', [
             'arCliente' => $arCliente,
             'form' => $form->createView(),
             'arContactos'=>$arContactos
@@ -139,7 +139,7 @@ class ClienteController extends ControllerListenerGeneral
             $session->set('filtroCrmNombreCliente', $form->get('TxtNombre')->getData());
         }
         $arClienteClientes = $paginator->paginate($em->getRepository(CrmCliente::class)->lista(), $request->query->getInt('page', 1),20);
-        return $this->render('crm/administracion/control/cliente/cliente.html.twig', array(
+        return $this->render('crm/administracion/comercial/cliente/cliente.html.twig', array(
             'arClientes' => $arClienteClientes,
             'campoCodigo' => $campoCodigo,
             'campoNombre' => $campoNombre,

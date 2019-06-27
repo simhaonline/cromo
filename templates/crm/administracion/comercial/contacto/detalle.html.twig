@@ -3,7 +3,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('crm_administracion_control_contacto_lista') }}">Volver</a> &nbsp;&nbsp;
+               href="{{ path('crm_administracion_comercial_contacto_lista') }}">Volver</a> &nbsp;&nbsp;
         </div>
     </div>
     <br><br>
@@ -46,6 +46,10 @@
             <td class="td-in-well">{{ arContacto.secretaria }}</td>
             <td class="titulo">CLIENTE:</td>
             <td class="td-in-well">{{ arContacto.clienteRel.nombreCorto }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CIUDAD:</td>
+            <td class="td-in-well">{{ arContacto.ciudadRel.nombre }}</td>
         </tr>
         <tr>
 

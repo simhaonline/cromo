@@ -3,6 +3,8 @@
 namespace App\Form\Type\Crm;
 
 use App\Entity\Crm\CrmContacto;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -25,6 +27,16 @@ class ContactoType extends AbstractType
             ->add('horarioVisita', TextType::class, ['label' => 'Horario visita:', 'required' => true])
             ->add('secretaria', TextType::class, ['label' => 'Secretaria:', 'required' => true])
             ->add('correo', EmailType::class, ['label' => 'Correo:', 'required' => true])
+            ->add('ciudadRel', EntityType::class, [
+                'class' => 'App\Entity\General\GenCiudad',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre');
+                },
+                'choice_label' => 'nombre',
+                'required' => true,
+                'label' => 'Ciudad:',
+            ])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

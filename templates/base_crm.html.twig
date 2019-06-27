@@ -37,12 +37,17 @@
                         <li>
                             <a href="{{ path('administracion_lista',{'modulo':'crm','entidad':'visitaMotivo'}) }}">Visita motivo</a>
                         </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Comercial <span class="fa arrow"></span></a>
+                    <ul>
                         <li>
-                            <a href="{{ path('crm_administracion_control_cliente_lista') }}">Cliente</a>
+                            <a href="{{ path('crm_administracion_comercial_cliente_lista') }}">Cliente</a>
                         </li>
                         <li>
-{#                            <a href="{{ path('administracion_lista',{'modulo':'crm','entidad':'contacto'}) }}">Contacto</a>#}
-                            <a href="{{ path('crm_administracion_control_contacto_lista') }}">Contacto</a>
+                            <a href="{{ path('crm_administracion_comercial_contacto_lista') }}">Contacto</a>
                         </li>
                     </ul>
                 </li>

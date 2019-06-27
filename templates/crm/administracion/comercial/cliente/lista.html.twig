@@ -47,11 +47,11 @@
                 <td>{{ arClientes.ciudad }}</td>
                 <td>{{ arClientes.direccion }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ path('crm_administracion_control_cliente_nuevo',{'id': arClientes.codigoClientePk }) }}"><i
+                    <a href="{{ path('crm_administracion_comercial_cliente_nuevo',{'id': arClientes.codigoClientePk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('crm_administracion_control_cliente_detalle',{'id' : arClientes.codigoClientePk}) }}">
+                    <a href="{{ path('crm_administracion_comercial_cliente_detalle',{'id' : arClientes.codigoClientePk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
@@ -79,7 +79,7 @@
             </div>
             <div class="btn-group">
                 <a class="btn btn-default btn-sm"
-                   href="{{ path('crm_administracion_control_cliente_nuevo', {'id': 0}) }}">Nuevo</a>
+                   href="{{ path('crm_administracion_comercial_cliente_nuevo', {'id': 0}) }}">Nuevo</a>
             </div>
     </div>
     </div>

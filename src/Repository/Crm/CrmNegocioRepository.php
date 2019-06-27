@@ -26,7 +26,6 @@ class CrmNegocioRepository extends ServiceEntityRepository
             ->addSelect('n.fechaNegocio')
             ->addSelect('n.fechaCierre')
             ->addSelect('n.valor')
-            ->addSelect('n.estadoPresentado')
             ->addSelect('n.estadoCerrado')
             ->addSelect('n.estadoGanado')
             ->addSelect('c.nombreCorto')

@@ -36,33 +36,34 @@ class Factura2 extends \FPDF
     {
         $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
         $arFactura = self::$em->getRepository('App:Transporte\TteFactura')->find(self::$codigoFactura);
-//        $this->Image('../public/img/empresa/iso9001.jpg', 10, 8, 40, 18);
         try {
             if (self::$imagen) {
-                $this->Image(self::$imagen, 10, 8, 40, 18, self::$extension);
+                $this->Image(self::$imagen, 10, 8, 30, 18, self::$extension);
             }
         } catch (\Exception $exception) {
         }
+        $this->Image('../public/img/empresa/iso 39001.png', 160, 2, 15, 18);
+        $this->Image('../public/img/empresa/iso-9001_cotrascal.png', 175, 2, 25, 18);
         $this->SetFont('Arial', 'b', 9);
         $this->SetFillColor(272, 272, 272);
         $this->Text(15, 25, '');
-        $this->SetFont('Arial', 'b', 10);
-        $this->SetXY(112, 10);
-        $this->Cell(30, 4, utf8_decode($arConfiguracion->getNombre()), 0, 0, 'l', 1);
-        $this->SetFont('Arial', '', 10);
-        $this->SetXY(64, 14);
-        $this->Cell(30, 4, utf8_decode($arConfiguracion->getDireccion()), 0, 0, 'l', 1);
-        $this->SetXY(110, 18);
-        $this->Cell(30, 4, utf8_decode($arConfiguracion->getTelefono()), 0, 0, 'l', 1);
+        $this->SetFont('Arial', 'b', 9);
+        $this->SetXY(90, 10);
+        $this->Cell(10, 4, utf8_decode($arConfiguracion->getNombre()), 0, 0, 'C', 1);
+        $this->SetFont('Arial', '', 9);
+        $this->SetXY(90, 14);
+        $this->Cell(10, 4, utf8_decode($arConfiguracion->getDireccion()), 0, 0, 'C', 1);
+        $this->SetXY(90, 18);
+        $this->Cell(10, 4, utf8_decode($arConfiguracion->getTelefono()), 0, 0, 'C', 1);
         $this->SetXY(10, 29);
-        $this->SetFont('Arial', 'b', 10);
-        $this->Cell(25, 5, utf8_decode("NIT."), 0, 0, 'l', 1);
+        $this->SetFont('Arial', 'b', 9);
+        $this->Cell(10, 5, utf8_decode("NIT."), 0, 0, 'L', 1);
         $this->SetXY(20, 29);
-        $this->SetFont('Arial', 'b', 10);
-        $this->Cell(25, 5, utf8_decode($arConfiguracion->getNit() . "-" . $arConfiguracion->getDigitoVerificacion()), 0, 0, 'l', 1);
+        $this->SetFont('Arial', 'b', 9);
+        $this->Cell(10, 5, utf8_decode($arConfiguracion->getNit() . "-" . $arConfiguracion->getDigitoVerificacion()), 0, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
-        $this->SetXY(65, 27);
-        $this->Cell(25, 4, $arFactura->getFacturaTipoRel()->getResolucionFacturacion(), 0, 0, 'l', 1);
+        $this->SetXY(90, 27);
+        $this->Cell(10, 4, $arFactura->getFacturaTipoRel()->getResolucionFacturacion(), 0, 0, 'C', 1);
         $this->SetXY(85, 31);
         $this->SetFont('Arial', 'b', 10);
         $this->Cell(25, 4, utf8_decode('Regimen comun'), 0, 0, 'l', 1);

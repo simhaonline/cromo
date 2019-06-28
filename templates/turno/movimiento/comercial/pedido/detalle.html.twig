@@ -33,11 +33,9 @@
                             <th>ID</th>
                             <th title="Concepto">CONCEPTO</th>
                             <th title="Modalidad">MOD</th>
-                            <th title="Fecha desde">DES</th>
-                            <th title="Fecha hasta">HAS</th>
+                            <th>DES</th>
+                            <th>HAS</th>
                             <th>CANT</th>
-                            <th>DESDE(DIA)</th>
-                            <th>HASTA(DIA)</th>
                             <th>L</th>
                             <th>M</th>
                             <th>X</th>
@@ -68,11 +66,9 @@
                                 </td>
                                 <td>{{ arPedidoDetalle.conceptoNombre }}</td>
                                 <td>{{ arPedidoDetalle.modalidadNombre }}</td>
-                                <td>{{ arPedidoDetalle.fechaDesde | date('Y-m-d') }}</td>
-                                <td>{{ arPedidoDetalle.fechaHasta | date('Y-m-d') }}</td>
-                                <td>{{ arPedidoDetalle.cantidad }}</td>
                                 <td>{{ arPedidoDetalle.diaDesde }}</td>
                                 <td>{{ arPedidoDetalle.diaHasta }}</td>
+                                <td>{{ arPedidoDetalle.cantidad }}</td>
                                 <td>{{ arPedidoDetalle.lunes ? 'S':'N' }}</td>
                                 <td>{{ arPedidoDetalle.martes ? 'S':'N' }}</td>
                                 <td>{{ arPedidoDetalle.miercoles ? 'S':'N' }}</td>

@@ -55,8 +55,6 @@ class PedidoDetalleType extends AbstractType
             ])
             ->add('cantidad', NumberType::class)
             ->add('vrPrecioAjustado', NumberType::class, array('required' => false))
-            ->add('fechaDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
-            ->add('fechaHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('diaDesde', NumberType::class)
             ->add('diaHasta', NumberType::class)
             ->add('lunes', CheckboxType::class, array('required' => false))

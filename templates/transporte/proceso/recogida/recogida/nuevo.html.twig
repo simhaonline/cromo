@@ -11,13 +11,13 @@
                         <div class="col-lg-2">
                             <div class="input-group">
                                 <input id="txtCodigoCliente" name="txtCodigoCliente" type="text" class="form-control"
-                                       value="{{ arRecogida.codigoClienteFk |default('') }}"/>
+                                       value="{{ arRecogidaProgramada.codigoClienteFk |default('') }}"/>
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
                                 <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
-                                       value="{{ arRecogida.clienteRel.nombreCorto |default('') }}"
+                                       value="{{ arRecogidaProgramada.clienteRel.nombreCorto |default('') }}"
                                        readOnly="ReadOnly"/>
                                 <span class="input-group-btn">
                                         <a class="btn btn-default btn-sm"

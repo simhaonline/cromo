@@ -7,6 +7,7 @@ namespace App\Controller\Crm\Movimiento\Comercial\Negocio;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Crm\CrmCliente;
+use App\Entity\Crm\CrmContacto;
 use App\Entity\Crm\CrmNegocio;
 use App\Form\Type\Crm\NegocioType;
 use Ob\HighchartsBundle\Highcharts\Highchart;
@@ -83,9 +84,11 @@ class NegocioController extends ControllerListenerGeneral
             if ($form->get('guardar')->isClicked()) {
                 $arNegocio->setFecha(new \DateTime('now'));
                 $arCliente =$em->getRepository(CrmCliente::class)->find($form->get('codigoClienteFk')->getData());
+                $arContacto =$em->getRepository(CrmContacto::class)->find($form->get('codigoContactoFk')->getData());
                 if ($arCliente){
                     $arNegocio = $form->getData();
                     $arNegocio->setClienteRel($arCliente);
+                    $arNegocio->setContactoRel($arContacto);
                     $em->persist($arNegocio);
                     $em->flush();
                     return $this->redirect($this->generateUrl('crm_movimiento_comercial_negocio_detalle', ['id' => $arNegocio->getCodigoNegocioPk()]));

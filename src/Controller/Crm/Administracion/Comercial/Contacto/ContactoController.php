@@ -109,4 +109,29 @@ class ContactoController extends ControllerListenerGeneral
             'arContacto' => $arContacto
         ]);
 	}
+
+    /**
+     * @Route("/crm/bus/contacto/{campoCodigo}/{campoNombre}", name="crm_contacto")
+     */
+    public function buscar(Request $request, $campoCodigo, $campoNombre)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator  = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtNombre', TextType::class, array('label'  => 'Nombre','data' => $session->get('filtroCrmContactoCodigo')))
+            ->add('btnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroCrmContactoNombre', $form->get('txtNombre')->getData());
+        }
+        $arContactos = $paginator->paginate($em->getRepository(CrmContacto::class)->lista(), $request->query->getInt('page', 1),20);
+        return $this->render('crm/administracion/comercial/contacto/contacto.html.twig', array(
+            'arContactos' => $arContactos,
+            'campoCodigo' => $campoCodigo,
+            'campoNombre' => $campoNombre,
+            'form' => $form->createView()
+        ));
+    }
 }

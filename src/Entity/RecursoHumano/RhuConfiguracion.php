@@ -44,6 +44,34 @@ class RhuConfiguracion
     private $codigoConceptoFondoSolidaridadPensionFk;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoAuxilioTransporteRel")
+     * @ORM\JoinColumn(name="codigo_concepto_auxilio_transporte_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoAuxilioTransporteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoFondoSolidaridadRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fondo_solidaridad_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoFondoSolidaridadRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -123,5 +151,36 @@ class RhuConfiguracion
         $this->codigoConceptoFondoSolidaridadPensionFk = $codigoConceptoFondoSolidaridadPensionFk;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getConceptoAuxilioTransporteRel()
+    {
+        return $this->conceptoAuxilioTransporteRel;
+    }
+
+    /**
+     * @param mixed $conceptoAuxilioTransporteRel
+     */
+    public function setConceptoAuxilioTransporteRel($conceptoAuxilioTransporteRel): void
+    {
+        $this->conceptoAuxilioTransporteRel = $conceptoAuxilioTransporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoFondoSolidaridadRel()
+    {
+        return $this->conceptoFondoSolidaridadRel;
+    }
+
+    /**
+     * @param mixed $conceptoFondoSolidaridadRel
+     */
+    public function setConceptoFondoSolidaridadRel($conceptoFondoSolidaridadRel): void
+    {
+        $this->conceptoFondoSolidaridadRel = $conceptoFondoSolidaridadRel;
+    }
 
 }

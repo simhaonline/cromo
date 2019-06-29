@@ -4,7 +4,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('crm_administracion_control_cliente_lista') }}">Volver</a> &nbsp;&nbsp;
+               href="{{ path('crm_administracion_comercial_cliente_lista') }}">Volver</a> &nbsp;&nbsp;
         </div>
     </div>
     <br><br>
@@ -73,6 +73,7 @@
                             <th>ESPECIALIDAD</th>
                             <th>HORA  VISITA</th>
                             <th>SECRETARIA</th>
+                            <th>CIUDAD</th>
                             <td></td>
                             <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
                         </tr>
@@ -91,9 +92,10 @@
                                 <td>{{ arContacto.especialidad }}</td>
                                 <td>{{ arContacto.horarioVisita }}</td>
                                 <td>{{ arContacto.secretaria }}</td>
+                                <td>{{ arContacto.ciudadRel.nombre }}</td>
                                 <td style="text-align: center;">
                                     <a
-                                       href="javascript:abrirVentana3('{{ path('crm_administracion_control_contacto_nuevo', { 'id':  arContacto.codigoContactoPk, 'codigoCliente': arCliente.codigoClientePk  }) }}', 'nuevoContacto', 600, 900)">
+                                       href="javascript:abrirVentana3('{{ path('crm_administracion_comercial_contacto_nuevo', { 'id':  arContacto.codigoContactoPk, 'codigoCliente': arCliente.codigoClientePk  }) }}', 'nuevoContacto', 600, 900)">
                                         <i class="fa fa-edit" style="color: black;font-size: large;"></i>
                                     </a>
                                 </td>
@@ -111,7 +113,7 @@
                     </div>
                     <div class="btn-group">
                         <a class="btn btn-default btn-sm"
-                           href="javascript:abrirVentana3('{{ path('crm_administracion_control_contacto_nuevo', { 'id': 0, 'codigoCliente': arCliente.codigoClientePk  }) }}', 'nuevoContacto', 600, 900)">Nuevo</a>
+                           href="javascript:abrirVentana3('{{ path('crm_administracion_comercial_contacto_nuevo', { 'id': 0, 'codigoCliente': arCliente.codigoClientePk  }) }}', 'nuevoContacto', 600, 900)">Nuevo</a>
                     </div>
                 </div>
             </div>

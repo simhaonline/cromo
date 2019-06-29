@@ -12,7 +12,7 @@
                     <div class="form-group form-group-sm">
                         <label for="form_TxtNombre" class="col-sm-2 control-label">Nombre:</label>
                         <div class="col-sm-10">
-                            {{ form_widget(form.TxtNombre , { 'attr': {'class': 'form-control','autofocus':true, 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
+                            {{ form_widget(form.txtNombre , { 'attr': {'class': 'form-control','autofocus':true, 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                         </div>
                     </div>
                 </div>
@@ -29,35 +29,27 @@
             <tr>
                 <th>CÓDIGO</th>
                 <th>NOMBRE</th>
-                <td>NUMERO IDENTIFICACIÓN</td>
-                <td>DÍGITO VERIFICACIÓN</td>
-                <td>CIUDAD</td>
-                <td>DIRECCIÓN</td>
                 <th></th>
                 <th></th>
                 <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
             </tr>
         </thead>
-        {% for arClientes in arClientes %}
+        {% for arPedidoTipo in arPedidoTipos %}
             <tr>
-                <td>{{ arClientes.codigoClientePk }}</td>
-                <td>{{ arClientes.nombreCorto }}</td>
-                <td>{{ arClientes.numeroIdentificacion }}</td>
-                <td>{{ arClientes.digitoVerificacion }}</td>
-                <td>{{ arClientes.ciudad }}</td>
-                <td>{{ arClientes.direccion }}</td>
+                <td>{{ arPedidoTipo.codigoPedidoTipoPk }}</td>
+                <td>{{ arPedidoTipo.nombre }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ path('crm_administracion_control_cliente_nuevo',{'id': arClientes.codigoClientePk }) }}"><i
+                    <a href="{{ path('turno_administracion_comercial_pedidotipo_nuevo',{'id': arPedidoTipo.codigoPedidoTipoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('crm_administracion_control_cliente_detalle',{'id' : arClientes.codigoClientePk}) }}">
+                    <a href="{{ path('turno_administracion_comercial_pedidotipo_detalle',{'id' : arPedidoTipo.codigoPedidoTipoPk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arClientes.codigoClientePk  }}"/>
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoTipo.codigoPedidoTipoPk  }}"/>
                 </td>
             </tr>
         {% endfor %}
@@ -65,10 +57,10 @@
     <!-- Botones Menu Items -->
     <div class="btn-toolbar">
         <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arClientes.getTotalItemCount }}</span></div>
+            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arPedidoTipos.getTotalItemCount }}</span></div>
         </div>
         <div class="btn-group btn-sm" style="float: left;margin-left: 0px;padding-top: 0px;">
-            {{ knp_pagination_render(arClientes) }}
+            {{ knp_pagination_render(arPedidoTipos) }}
         </div>
         <div class="btn-toolbar" style="float: right">
             <div class="btn-group">
@@ -79,7 +71,7 @@
             </div>
             <div class="btn-group">
                 <a class="btn btn-default btn-sm"
-                   href="{{ path('crm_administracion_control_cliente_nuevo', {'id': 0}) }}">Nuevo</a>
+                   href="{{ path('turno_administracion_comercial_pedidotipo_nuevo', {'id': 0}) }}">Nuevo</a>
             </div>
     </div>
     </div>

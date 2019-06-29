@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteRecogida;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteRecogidaProgramada;
 use App\Form\Type\RecogidaProgramadaType;
+use App\General\General;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,6 +29,7 @@ class ProgramadaController extends Controller
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnGenerar', SubmitType::class, array('label' => 'Generar'))
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn-sm btn btn-default']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn-sm btn btn-danger']])
             ->getForm();
         $form->handleRequest($request);
@@ -60,6 +62,9 @@ class ProgramadaController extends Controller
                 }
                 $em->flush();
             }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TteRecogidaProgramada::class)->lista(), "Recogidas programadas");
+            }
         }
         $query = $this->getDoctrine()->getRepository(TteRecogidaProgramada::class)->lista();
         $arRecogidasProgramadas = $paginator->paginate($query, $request->query->getInt('page', 1),100);
@@ -75,6 +80,8 @@ class ProgramadaController extends Controller
         if($codigoRecogidaProgramada == 0) {
             $arRecogidaProgramada = new TteRecogidaProgramada();
             $arRecogidaProgramada->setHora(new \DateTime('now'));
+        } else {
+            $arRecogidaProgramada = $em->getRepository(TteRecogidaProgramada::class)->find($codigoRecogidaProgramada);
         }
 
         $form = $this->createForm(\App\Form\Type\Transporte\RecogidaProgramadaType::class, $arRecogidaProgramada);

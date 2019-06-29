@@ -48,6 +48,8 @@
             <th>CLIENTE</th>
             <th>FASE</th>
             <th>VALOR</th>
+            <th title="ESTADO CERRADO">E.C</th>
+            <th title="ESTADO GANADO">E.G</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
@@ -63,6 +65,8 @@
                 <td>{{ arNegocio.nombreCorto }}</td>
                 <td>{{ arNegocio.faseNombre }}</td>
                 <td>{{ arNegocio.valor | number_format(0, '.', ',') }}</td>
+                <td>{{ arNegocio.estadoCerrado? "si":"no" }}</td>
+                <td>{{ arNegocio.estadoGanado?"si":"no" }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('crm_movimiento_comercial_negocio_nuevo',{'id': arNegocio.codigoNegocioPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

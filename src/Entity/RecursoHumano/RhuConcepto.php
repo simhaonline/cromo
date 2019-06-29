@@ -155,6 +155,32 @@ class RhuConcepto
     protected $pensionesConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuConfiguracion", mappedBy="conceptoAuxilioTransporteRel")
+     */
+    protected $configuracionConceptoAuxilioTransporteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuConfiguracion", mappedBy="conceptoFondoSolidaridadRel")
+     */
+    protected $configuracionConceptoFondoSolidaridadRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()
@@ -565,7 +591,7 @@ class RhuConcepto
     /**
      * @param mixed $saludesConceptoRel
      */
-    public function setSaludesConceptoRel( $saludesConceptoRel ): void
+    public function setSaludesConceptoRel($saludesConceptoRel): void
     {
         $this->saludesConceptoRel = $saludesConceptoRel;
     }
@@ -581,9 +607,41 @@ class RhuConcepto
     /**
      * @param mixed $pensionesConceptoRel
      */
-    public function setPensionesConceptoRel( $pensionesConceptoRel ): void
+    public function setPensionesConceptoRel($pensionesConceptoRel): void
     {
         $this->pensionesConceptoRel = $pensionesConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfiguracionConceptoAuxilioTransporteRel()
+    {
+        return $this->configuracionConceptoAuxilioTransporteRel;
+    }
+
+    /**
+     * @param mixed $configuracionConceptoAuxilioTransporteRel
+     */
+    public function setConfiguracionConceptoAuxilioTransporteRel($configuracionConceptoAuxilioTransporteRel): void
+    {
+        $this->configuracionConceptoAuxilioTransporteRel = $configuracionConceptoAuxilioTransporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfiguracionConceptoFondoSolidaridadRel()
+    {
+        return $this->configuracionConceptoFondoSolidaridadRel;
+    }
+
+    /**
+     * @param mixed $configuracionConceptoFondoSolidaridadRel
+     */
+    public function setConfiguracionConceptoFondoSolidaridadRel($configuracionConceptoFondoSolidaridadRel): void
+    {
+        $this->configuracionConceptoFondoSolidaridadRel = $configuracionConceptoFondoSolidaridadRel;
     }
 
 

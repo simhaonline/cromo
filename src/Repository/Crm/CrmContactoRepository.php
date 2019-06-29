@@ -19,7 +19,7 @@ class CrmContactoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CrmContacto::class, 'c')
             ->select('c.codigoContactoPk')
             ->addSelect('c.numeroIdentificacion ')
-            ->addSelect('c.nombreCorto ')
+            ->addSelect('c.nombreCorto')
             ->addSelect('c.direccion ')
             ->addSelect('c.telefono ')
             ->addSelect('c.saludo ')
@@ -34,7 +34,9 @@ class CrmContactoRepository extends ServiceEntityRepository
         if ($session->get('filtroContactoCodigoCliente') != '') {
             $queryBuilder->andWhere("c.codigoClienteFk  = '{$session->get('filtroContactoCodigoCliente')}' ");
         }
-
+        if ($session->get('filtroCrmContactoNombre') != '') {
+            $queryBuilder->andWhere("c.nombreCorto  = '{$session->get('filtroCrmContactoNombre')}' ");
+        }
 
         return $queryBuilder;
     }

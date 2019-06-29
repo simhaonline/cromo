@@ -79,6 +79,11 @@ class CrmContacto
     private $codigoClienteFk;
 
     /**
+     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=false)
+     */
+    private $codigoCiudadFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmVisita", mappedBy="contactoRel", cascade={"remove","persist"})
      */
     protected $visitaContactoRel;
@@ -93,6 +98,12 @@ class CrmContacto
      * @ORM\JoinColumn(name="codigo_cliente_fk",referencedColumnName="codigo_cliente_pk")
      */
     protected $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad",inversedBy="crmContactoCiuidadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk",referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
 
     /**
      * @return array
@@ -348,6 +359,38 @@ class CrmContacto
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadFk()
+    {
+        return $this->codigoCiudadFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadFk
+     */
+    public function setCodigoCiudadFk($codigoCiudadFk): void
+    {
+        $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
     }
 
 

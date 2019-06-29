@@ -37,7 +37,10 @@
         <tr>
             <td class="titulo">FASE:</td>
             <td class="td-in-well">{{ arNegocio.faseRel.nombre | default("") }}</td>
-
+        </tr>
+        <tr>
+            <td class="titulo">ESTADO GANADO:</td>
+            <td class="td-in-well">{{ arNegocio.estadoGanado ? "si": "no" }}</td>
         </tr>
         </tbody>
     </table>

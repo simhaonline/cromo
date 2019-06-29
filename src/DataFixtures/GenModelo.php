@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Crm\CrmContacto;
 use App\Entity\Turno\TurItem;
+use App\Entity\Turno\TurPedidoTipo;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
@@ -23,7 +24,8 @@ class GenModelo extends Fixture
                 'TurTurno',
                 'TurFactura',
                 'TurFacturaDetalle',
-                'TurSecuencia'
+                'TurSecuencia',
+                'TurPedidoTipo'
             )),
             array('modulo'=>'Cartera','modelo'=>array(
                 'CarCliente',

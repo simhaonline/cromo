@@ -25,14 +25,17 @@
         <div class="panel-heading">Conceptos</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="" class="control-label col-sm-2">Auxilio de transporte</label>
+                <label for="" class="control-label col-sm-2">Auxilio de transporte:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(formConfiguracion.codigoConceptoAuxilioTransporteFk ) }}
-                    {{ form_errors(formConfiguracion.codigoConceptoAuxilioTransporteFk ) }}
+                    {{ form_widget(formConfiguracion.conceptoAuxilioTransporteRel ) }}
+                    {{ form_errors(formConfiguracion.conceptoAuxilioTransporteRel ) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Fondo de solidaridad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.conceptoFondoSolidaridadRel ) }}
+                    {{ form_errors(formConfiguracion.conceptoFondoSolidaridadRel ) }}
                 </div>
             </div>
-
-
             <div class="form-group form-group-sm">
                 <label for="" class="col-sm-2 control-label">Horas diurnas:</label>
                 <div class="col-sm-4">

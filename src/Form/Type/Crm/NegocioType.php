@@ -9,6 +9,7 @@ use App\Entity\Crm\CrmNegocio;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -29,16 +30,7 @@ class NegocioType extends AbstractType
             ->add('comentario', TextareaType::class, ['required' => false, 'label' => 'Codigo fase:'])
             ->add('nombre', TextType::class, ['required' => true, 'label' => 'Codigo fase:'])
             ->add('codigoClienteFk', TextType::class, ['required' => true, 'label' => 'Codigo Cliente:'])
-            ->add('contactoRel', EntityType::class, [
-                'required' => false,
-                'class' => 'App\Entity\Crm\CrmContacto',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
-                        ->orderBy('c.codigoContactoPk', 'ASC');
-                },
-                'required' => false,
-                'choice_label' => 'nombreCorto',
-            ])
+            ->add('codigoContactoFk', TextType::class, ['required' => true, 'label' => 'Codigo Contacto:'])
             ->add('faseRel', EntityType::class, [
                 'class' => 'App\Entity\Crm\CrmFase',
                 'query_builder' => function (EntityRepository $er) {
@@ -49,6 +41,8 @@ class NegocioType extends AbstractType
                 'choice_label' => 'nombre',
                 'placeholder'=>''
             ])
+            ->add('estadoCerrado',      CheckboxType::class, ['required' => false])
+            ->add('estadoGanado',       CheckboxType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

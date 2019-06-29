@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_administracion_comercial_pedidotipo_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arPedidoTipo.codigoPedidoTipoPk }}</td>
+            <td class="titulo">INGRESO:</td>
+            <td class="td-in-well">{{ arPedidoTipo.nombre }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

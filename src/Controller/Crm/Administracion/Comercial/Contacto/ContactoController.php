@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller\Crm\Administracion\Control\contacto;
+namespace App\Controller\Crm\Administracion\Comercial\Contacto;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -21,11 +21,11 @@ class ContactoController extends ControllerListenerGeneral
     protected $claseNombre = "CrmContacto";
     protected $modulo   = "Crm";
     protected $funcion  = "Administracion";
-    protected $grupo    = "Control";
+    protected $grupo    = "Comercial";
     protected $nombre   = "Contacto";
 
     /**
-     * @Route("/crm/administracion/control/contacto/lista", name="crm_administracion_control_contacto_lista")
+     * @Route("/crm/administracion/comercial/contacto/lista", name="crm_administracion_comercial_contacto_lista")
      */
     public function lista(Request $request )
     {
@@ -47,19 +47,19 @@ class ContactoController extends ControllerListenerGeneral
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(CrmContacto::class, $arrSeleccionados);
-                return $this->redirect($this->generateUrl('crm_administracion_control_contacto_lista'));
+                return $this->redirect($this->generateUrl('crm_administracion_comercial_contacto_lista'));
             }
         }
 
         $arContactos= $paginator->paginate($em->getRepository(CrmContacto::class)->lista(),$request->query->getInt('page', 1), 30);
-        return $this->render('crm/administracion/control/contacto/lista.html.twig', [
+        return $this->render('crm/administracion/comercial/contacto/lista.html.twig', [
             'arContactos' => $arContactos,
             'form'=>$form->createView()
         ]);
     }
 
     /**
-     * @Route("/crm/administracion/control/contacto/nuevo/{id}/{codigoCliente}", name="crm_administracion_control_contacto_nuevo")
+     * @Route("/crm/administracion/comercial/contacto/nuevo/{id}/{codigoCliente}", name="crm_administracion_comercial_contacto_nuevo")
      */
     public function nuevo(Request $request, $id, $codigoCliente)
     {
@@ -68,7 +68,7 @@ class ContactoController extends ControllerListenerGeneral
         if ($id != 0) {
             $arContacto = $em->getRepository(CrmContacto::class)->find($id);
             if (!$arContacto) {
-                return $this->redirect($this->generateUrl('crm_administracion_control_cliente_lista'));
+                return $this->redirect($this->generateUrl('crm_administracion_comercial_cliente_lista'));
             }
         }
         $form = $this->createForm(ContactoType::class, $arContacto);
@@ -86,14 +86,14 @@ class ContactoController extends ControllerListenerGeneral
                 }
             }
         }
-        return $this->render('crm/administracion/control/contacto/nuevo.html.twig', [
+        return $this->render('crm/administracion/comercial/contacto/nuevo.html.twig', [
             'form' => $form->createView(),
             'arContacto' => $arContacto
         ]);
     }
     
     /**
-     * @Route("/crm/administracion/control/contacto/nuevo/{id}", name="crm_administracion_control_contacto_detalle")
+     * @Route("/crm/administracion/comercial/contacto/nuevo/{id}", name="crm_administracion_comercial_contacto_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -101,12 +101,37 @@ class ContactoController extends ControllerListenerGeneral
         if ($id != 0) {
             $arContacto = $em->getRepository(CrmContacto::class)->find($id);
             if (!$arContacto) {
-                return $this->redirect($this->generateUrl('crm_administracion_control_contacto_lista'));
+                return $this->redirect($this->generateUrl('crm_administracion_comercial_contacto_lista'));
             }
         }
         $arContacto = $em->getRepository(CrmContacto::class)->find($id);
-        return $this->render('crm/administracion/control/contacto/detalle.html.twig', [
+        return $this->render('crm/administracion/comercial/contacto/detalle.html.twig', [
             'arContacto' => $arContacto
         ]);
 	}
+
+    /**
+     * @Route("/crm/bus/contacto/{campoCodigo}/{campoNombre}", name="crm_contacto")
+     */
+    public function buscar(Request $request, $campoCodigo, $campoNombre)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator  = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtNombre', TextType::class, array('label'  => 'Nombre','data' => $session->get('filtroCrmContactoCodigo')))
+            ->add('btnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroCrmContactoNombre', $form->get('txtNombre')->getData());
+        }
+        $arContactos = $paginator->paginate($em->getRepository(CrmContacto::class)->lista(), $request->query->getInt('page', 1),20);
+        return $this->render('crm/administracion/comercial/contacto/contacto.html.twig', array(
+            'arContactos' => $arContactos,
+            'campoCodigo' => $campoCodigo,
+            'campoNombre' => $campoNombre,
+            'form' => $form->createView()
+        ));
+    }
 }

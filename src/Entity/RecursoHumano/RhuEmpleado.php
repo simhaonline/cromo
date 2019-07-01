@@ -373,6 +373,11 @@ class RhuEmpleado
     protected $examenesEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurProgramacion", mappedBy="empleadoRel")
+     */
+    protected $programacionesEmpleadoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -1379,4 +1384,22 @@ class RhuEmpleado
     {
         $this->examenesEmpleadoRel = $examenesEmpleadoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramacionesEmpleadoRel()
+    {
+        return $this->programacionesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $programacionesEmpleadoRel
+     */
+    public function setProgramacionesEmpleadoRel($programacionesEmpleadoRel): void
+    {
+        $this->programacionesEmpleadoRel = $programacionesEmpleadoRel;
+    }
+
+
 }

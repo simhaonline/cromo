@@ -26,7 +26,9 @@ class TurProgramacionRepository extends ServiceEntityRepository
     public function detalleProgramacion(){
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd')
-            ->select('pd.codigoPedidoDetallePk');
+            ->select('pd.codigoPedidoDetallePk')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->leftJoin('pd.conceptoRel', 'c');
         $arrPedidoDetalles = $queryBuilder->getQuery()->getResult();
         $c = 0;
         foreach ($arrPedidoDetalles as $arrPedidoDetalle) {
@@ -34,6 +36,8 @@ class TurProgramacionRepository extends ServiceEntityRepository
                 ->select('p.codigoProgramacionPk')
                 ->addSelect('p.horasDiurnas')
                 ->addSelect('p.horasNocturnas')
+                ->addSelect('e.nombreCorto as empleadoNombreCorto')
+                ->leftJoin('p.empleadoRel', 'e')
                 ->where('p.codigoPedidoDetalleFk = ' . $arrPedidoDetalle['codigoPedidoDetallePk']);
             for ($i = 1;$i<=31;$i++) {
                 $queryBuilder->addSelect("p.dia{$i}");

@@ -30,6 +30,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>EMPLEADO</th>
                             {% for i in 1..31 %}
                                 <th>{{ i }}</th>
                             {% endfor %}
@@ -40,11 +41,14 @@
                         <tbody>
                         {% for arPedidoDetalle in arPedidoDetalles %}
                             <tr>
-                                <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
+                                <td></td>
+                                <td>{{ arPedidoDetalle.conceptoNombre }}</td>
+                                <td colspan="33"></td>
                             </tr>
                             <tr>
                             {% for arProgramacion in arPedidoDetalle.arProgramaciones %}
                                     <td>{{ arProgramacion.codigoProgramacionPk }}</td>
+                                    <td>{{ arProgramacion.empleadoNombreCorto }}</td>
                                     <td>{{ arProgramacion.dia1 }}</td>
                                     <td>{{ arProgramacion.dia2 }}</td>
                                     <td>{{ arProgramacion.dia3 }}</td>

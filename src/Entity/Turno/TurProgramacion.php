@@ -34,6 +34,11 @@ class TurProgramacion
     private $codigoPedidoDetalleFk;
 
     /**
+     * @ORM\Column(name="codigo_empleado_fk", type="integer", nullable=true)
+     */
+    private $codigoEmpleadoFk;
+
+    /**
      * @ORM\Column(name="dia_1", type="string", length=5, nullable=true)
      */
     private $dia1;
@@ -211,6 +216,12 @@ class TurProgramacion
     protected $pedidoDetalleRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", inversedBy="programacionesEmpleadoRel")
+     * @ORM\JoinColumn(name="codigo_empleado_fk",referencedColumnName="codigo_empleado_pk")
+     */
+    protected $empleadoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoProgramacionPk()
@@ -256,6 +267,22 @@ class TurProgramacion
     public function setCodigoPedidoDetalleFk($codigoPedidoDetalleFk): void
     {
         $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpleadoFk()
+    {
+        return $this->codigoEmpleadoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpleadoFk
+     */
+    public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
+    {
+        $this->codigoEmpleadoFk = $codigoEmpleadoFk;
     }
 
     /**
@@ -757,6 +784,38 @@ class TurProgramacion
     /**
      * @return mixed
      */
+    public function getHorasDiurnas()
+    {
+        return $this->horasDiurnas;
+    }
+
+    /**
+     * @param mixed $horasDiurnas
+     */
+    public function setHorasDiurnas($horasDiurnas): void
+    {
+        $this->horasDiurnas = $horasDiurnas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasNocturnas()
+    {
+        return $this->horasNocturnas;
+    }
+
+    /**
+     * @param mixed $horasNocturnas
+     */
+    public function setHorasNocturnas($horasNocturnas): void
+    {
+        $this->horasNocturnas = $horasNocturnas;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPedidoRel()
     {
         return $this->pedidoRel;
@@ -789,35 +848,18 @@ class TurProgramacion
     /**
      * @return mixed
      */
-    public function getHorasDiurnas()
+    public function getEmpleadoRel()
     {
-        return $this->horasDiurnas;
+        return $this->empleadoRel;
     }
 
     /**
-     * @param mixed $horasDiurnas
+     * @param mixed $empleadoRel
      */
-    public function setHorasDiurnas($horasDiurnas): void
+    public function setEmpleadoRel($empleadoRel): void
     {
-        $this->horasDiurnas = $horasDiurnas;
+        $this->empleadoRel = $empleadoRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getHorasNocturnas()
-    {
-        return $this->horasNocturnas;
-    }
-
-    /**
-     * @param mixed $horasNocturnas
-     */
-    public function setHorasNocturnas($horasNocturnas): void
-    {
-        $this->horasNocturnas = $horasNocturnas;
-    }
-
 
 
 }

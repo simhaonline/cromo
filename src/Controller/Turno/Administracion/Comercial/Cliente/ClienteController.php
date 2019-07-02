@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Turno\Administracion\Cliente;
+namespace App\Controller\Turno\Administracion\Comercial\Cliente;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -67,7 +67,7 @@ class ClienteController extends ControllerListenerGeneral
             }
         }
 
-        return $this->render('turno/administracion/cliente/lista.html.twig', [
+        return $this->render('turno/administracion/comercial/cliente/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -76,7 +76,7 @@ class ClienteController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/turno/administracion/cliente/nuevo/{id}", name="turno_administracion_comercial_cliente_nuevo")
+     * @Route("/turno/administracion/comercial/cliente/nuevo/{id}", name="turno_administracion_comercial_cliente_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -85,7 +85,7 @@ class ClienteController extends ControllerListenerGeneral
         if ($id != '0') {
             $arCliente = $em->getRepository(TurCliente::class)->find($id);
             if (!$arCliente) {
-                return $this->redirect($this->generateUrl('turno_administracion_cliente_cliente_lista'));
+                return $this->redirect($this->generateUrl('turno_administracion_comercial_cliente_lista'));
             }
         }
         $form = $this->createForm(ClienteType::class, $arCliente);
@@ -94,10 +94,10 @@ class ClienteController extends ControllerListenerGeneral
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arCliente);
                 $em->flush();
-                return $this->redirect($this->generateUrl('turno_administracion_cliente__detalle', ['id' => $arCliente->getCodigoClientePk()]));
+                return $this->redirect($this->generateUrl('turno_administracion_comercial_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
             }
         }
-        return $this->render('turno/administracion/cliente/nuevo.html.twig', [
+        return $this->render('turno/administracion/comercial/cliente/nuevo.html.twig', [
             'arCliente' => $arCliente,
             'form' => $form->createView()
         ]);
@@ -111,18 +111,18 @@ class ClienteController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arCliente = $em->getRepository(TurCliente::class)->find($id);
         $form = $this->createFormBuilder()
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get('UtilidadesModelo')->eliminar(TurPuesto::class, $arrSeleccionados);
-                return $this->redirect($this->generateUrl('turno_administracion_cliente__detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('turno_administracion_comercial_cliente_detalle', ['id' => $id]));
             }
         }
         $arPuestos = $em->getRepository(TurPuesto::class)->cliente($id);
-        return $this->render('turno/administracion/cliente/detalle.html.twig', array(
+        return $this->render('turno/administracion/comercial/cliente/detalle.html.twig', array(
             'arCliente' => $arCliente,
             'arPuestos'=>$arPuestos,
             'form' => $form->createView()
@@ -131,16 +131,16 @@ class ClienteController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/turno/administracion/comercial/puesto/nuevo/{id}/{codigoCliente}", name="turno_administracion_comercial_puesto_nuevo")
+     * @Route("/turno/administracion/comercial/puesto/nuevo/{codigoCliente}/{id}", name="turno_administracion_comercial_puesto_nuevo")
      */
-    public function puestoNuevo(Request $request, $id, $codigoCliente)
+    public function puestoNuevo(Request $request, $codigoCliente, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arPuesto = new TurPuesto();
         if ($id != '0') {
             $arPuesto = $em->getRepository(TurPuesto::class)->find($id);
             if (!$arPuesto) {
-                return $this->redirect($this->generateUrl('turno_administracion_cliente_puesto_lista'));
+                return $this->redirect($this->generateUrl('turno_administracion_comercial_puesto_nuevo'));
             }
         }
         $form = $this->createForm(PuestoType::class, $arPuesto);
@@ -154,7 +154,7 @@ class ClienteController extends ControllerListenerGeneral
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        return $this->render('turno/administracion/cliente/nuevoPuesto.html.twig', [
+        return $this->render('turno/administracion/comercial/cliente/nuevoPuesto.html.twig', [
             'arTurno' => $arPuesto,
             'form' => $form->createView()
         ]);

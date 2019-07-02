@@ -16,7 +16,8 @@ class TurPuestoRepository extends ServiceEntityRepository
         parent::__construct($registry, TurPuesto::class);
     }
 
-    public function cliente($id){
+    public function cliente($id)
+    {
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPuesto::class, 'p')
             ->select('p.codigoPuestoPk')
@@ -33,6 +34,24 @@ class TurPuestoRepository extends ServiceEntityRepository
         $arPuestos = $queryBuilder->getQuery()->getResult();
         return $arPuestos;
 
+    }
+
+    public function lista()
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPuesto::class, 'p')
+            ->select('p.codigoPuestoPk')
+            ->addSelect("p.nombre")
+            ->addSelect("cl.nombreCorto AS cliente")
+            ->addSelect('pro.nombre as programadorNombre')
+            ->addSelect('p.direccion')
+            ->addSelect('p.telefono')
+            ->addSelect('p.comunicacion')
+            ->addSelect('c.nombre as ciudadNombre')
+            ->addSelect('p.codigoCentroCostoFk')
+            ->leftJoin('p.programadorRel', 'pro')
+            ->leftJoin('p.ciudadRel', 'c')
+        ->leftJoin('p.clienteRel', 'cl');
+        return $queryBuilder;
     }
 
 }

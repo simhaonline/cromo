@@ -160,5 +160,33 @@ class ClienteController extends ControllerListenerGeneral
         ]);
     }
 
+
+    /**
+     * @Route("/turno/bus/cliente/{campoCodigo}/{campoNombre}", name="turno_cliente")
+     */
+    public function buscar(Request $request, $campoCodigo, $campoNombre)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator  = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtNombre', TextType::class, array('label'  => 'Nombre','data' => $session->get('filtroCrmNombreCliente')))
+            ->add('txtNit', TextType::class, array('label'  => 'Nombre','data' => $session->get('filtroCrmNombreCliente')))
+            ->add('txtCodigo', TextType::class, array('label'  => 'Codigo','data' => $session->get('filtroCrmCodigoCliente')))
+            ->add('btnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroCrmCodigoCliente', $form->get('TxtCodigo')->getData());
+            $session->set('filtroCrmNombreCliente', $form->get('TxtNombre')->getData());
+        }
+        $arClienteClientes = $paginator->paginate($em->getRepository(TurCliente::class)->lista(), $request->query->getInt('page', 1),20);
+        return $this->render('turno/buscar/cliente.html.twig', array(
+            'arClientes' => $arClienteClientes,
+            'campoCodigo' => $campoCodigo,
+            'campoNombre' => $campoNombre,
+            'form' => $form->createView()
+        ));
+    }
 }
 

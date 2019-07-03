@@ -204,6 +204,16 @@ class TurProgramacion
     private $horasNocturnas = 0;
 
     /**
+     * @ORM\Column(name="anio", type="integer")
+     */
+    private $anio = 0;
+
+    /**
+     * @ORM\Column(name="mes", type="integer")
+     */
+    private $mes = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="programacionesPedidoRel")
      * @ORM\JoinColumn(name="codigo_pedido_fk", referencedColumnName="codigo_pedido_pk")
      */
@@ -811,6 +821,38 @@ class TurProgramacion
     public function setHorasNocturnas($horasNocturnas): void
     {
         $this->horasNocturnas = $horasNocturnas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnio()
+    {
+        return $this->anio;
+    }
+
+    /**
+     * @param mixed $anio
+     */
+    public function setAnio($anio): void
+    {
+        $this->anio = $anio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMes()
+    {
+        return $this->mes;
+    }
+
+    /**
+     * @param mixed $mes
+     */
+    public function setMes($mes): void
+    {
+        $this->mes = $mes;
     }
 
     /**

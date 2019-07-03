@@ -80,29 +80,28 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
     }
 
-    public function guia($codigoGuia): array
+    public function guia($codigoGuia)
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT dd.codigoDespachoDetallePk,
-                  dd.codigoDespachoFk,
-                  d.fechaRegistro,
-                  d.numero,
-                  cd.nombreCorto AS nombreConductor,
-                  cd.movil,
-                  vd.placa,
-                  dt.nombre AS tipoDespacho,
-                  d.fechaSalida,
-                  d.estadoAprobado             
-        FROM App\Entity\Transporte\TteDespachoDetalle dd 
-        LEFT JOIN dd.despachoRel d
-        LEFT JOIN d.despachoTipoRel dt
-        LEFT JOIN d.conductorRel cd
-        LEFT JOIN d.vehiculoRel vd
-        WHERE dd.codigoGuiaFk = :codigoGuia'
-        )->setParameter('codigoGuia', $codigoGuia);
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
+            ->select('dd.codigoDespachoDetallePk')
+            ->addSelect('dd.codigoDespachoFk')
+            ->addSelect('d.fechaRegistro')
+            ->addSelect('d.numero')
+            ->addSelect('cd.nombreCorto AS nombreConductor')
+            ->addSelect('cd.movil')
+            ->addSelect('vd.placa')
+            ->addSelect('dt.nombre AS tipoDespacho')
+            ->addSelect('d.fechaSalida')
+            ->addSelect('d.estadoAprobado')
+            ->leftJoin('dd.despachoRel', 'd')
+            ->leftJoin('d.despachoTipoRel', 'dt')
+            ->leftJoin('d.conductorRel', 'cd')
+            ->leftJoin('d.vehiculoRel', 'vd')
+            ->where("dd.codigoGuiaFk = {$codigoGuia}")
+            ->orderBy('d.fechaRegistro');
 
-        return $query->execute();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function detalle()

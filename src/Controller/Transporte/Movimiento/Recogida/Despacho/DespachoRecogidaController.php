@@ -202,6 +202,11 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                 }
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', array('id' => $id)));
             }
+            if ($form->get('btnEliminarAuxiliar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionarAuxiliar');
+                $em->getRepository(TteDespachoRecogidaAuxiliar::class)->eliminar($arrSeleccionados, $id);
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', array('id' => $id)));
+            }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteDespachoRecogida::class)->autorizar($arDespachoRecogida);
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));

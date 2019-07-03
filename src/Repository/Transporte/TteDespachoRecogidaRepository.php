@@ -9,6 +9,7 @@ use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
+use App\Entity\Transporte\TteDespachoRecogidaAuxiliar;
 use App\Entity\Transporte\TteDespachoRecogidaTipo;
 use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TtePoseedor;
@@ -96,7 +97,11 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                     if ($arRegistro->getEstadoAprobado() == 0) {
                         if ($arRegistro->getEstadoAutorizado() == 0) {
                             if (count($this->getEntityManager()->getRepository(TteRecogida::class)->findBy(['codigoDespachoRecogidaFk' => $arRegistro->getCodigoDespachoRecogidaPk()])) <= 0) {
-                                $this->getEntityManager()->remove($arRegistro);
+                                if (count($this->getEntityManager()->getRepository(TteDespachoRecogidaAuxiliar::class)->findBy(['codigoDespachoRecogidaFk' => $arRegistro->getCodigoDespachoRecogidaPk()])) <= 0) {
+                                    $this->getEntityManager()->remove($arRegistro);
+                                } else {
+                                    $respuesta = 'No se puede eliminar, el registro tiene auxiliares asignados';
+                                }
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';
                             }
@@ -785,7 +790,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->where("r.codigoRecogidaPk = {$codigoRecogida}")
             ->leftJoin('dr.recogidasDespachoRecogidaRel', 'r')
             ->leftJoin('dr.conductorRel', 'c')
-        ->leftJoin('dr.rutaRecogidaRel', 'rc');
+            ->leftJoin('dr.rutaRecogidaRel', 'rc');
 
         return $queryBuilder->getQuery()->getResult();
     }

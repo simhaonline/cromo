@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arAporte.codigoAportePk }}</td>
+            <td class="titulo">AÑO:</td>
+            <td class="td-in-well">{{ arAporte.anio }}</td>
+            <td class="titulo">MES:</td>
+            <td class="numero">{{ arAporte.mes}}</td>
+    </table>
+{% endblock %}

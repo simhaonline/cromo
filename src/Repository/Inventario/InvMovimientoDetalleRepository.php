@@ -614,6 +614,18 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         return $arrCuentas;
     }
 
+    public function compraFacturaContabilizar($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('i.codigoCuentaCompraFk as codigoCuentaFk')
+            ->addSelect('SUM(md.vrSubtotal) as vrSubtotal')
+            ->leftJoin('md.itemRel', 'i')
+            ->where('md.codigoMovimientoFk = ' . $codigo)
+            ->groupBy('i.codigoCuentaCompraFk');
+        $arrCuentas = $queryBuilder->getQuery()->getResult();
+        return $arrCuentas;
+    }
+
     public function ventaDevolucionFacturaContabilizar($codigo)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')

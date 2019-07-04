@@ -28,7 +28,7 @@ class Despacho extends \FPDF {
         $pdf->SetFont('Arial', '', 30);
         $pdf->SetTextColor(255, 220, 220);
         if ($arDespacho->getEstadoAprobado() != true){
-            $pdf->RotatedText(50, 200, 'SIN APROBAR - PROVISIONAL', 45);
+            $pdf->RotatedText(50, 200, 'SIN APROBAR', 45);
         }
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Times', '', 12);

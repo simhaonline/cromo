@@ -9,11 +9,11 @@
             </header>
             <div>
                 <div class="widget-body">
-                    <div class="form-group form-group-sm">
-                        <label for="form_txtCodigoCliente" class="col-sm-1 control-label">Cliente:</label>
-                        <div class="col-sm-11">
+                    <div class=" form-group form-group-sm">
+                        <label for="form_txtCodigoCliente" class="col-sm-offset-1 col-sm-1 control-label">Cliente:</label>
+                        <div class="col-sm-10">
                             <div class="row">
-                                <div class="col-lg-2">
+                                <div class=" col-lg-2">
                                     <div class="input-group">
                                         {{ form_widget(form.txtCodigoCliente) }}
                                     </div>
@@ -30,13 +30,13 @@
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="col-sm-offset-6 col-sm-2 control-label">Fecha desde:</label>
+                        <label class=" col-sm-2 control-label">Fecha desde:</label>
                         <div class="col-sm-4">
                             {{ form_widget(form.fechaDesde) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="col-sm-offset-6  col-sm-2 control-label">Fecha hasta:</label>
+                        <label class=" col-sm-2 control-label">Fecha hasta:</label>
                         <div class="col-sm-4">
                             {{ form_widget(form.fechaHasta) }}
                         </div>
@@ -59,12 +59,8 @@
             <th>NÚMERO</th>
             <th>FECHA</th>
             <th title="FECHA GENERACIÓN">F. G</th>
-            <th title="PEDIDO TIPO">P. T</th>
+            <th title="PEDIDO TIPO">TIPO</th>
             <th>SECTOR</th>
-            <th title="ESTADO AUTORIZADO">AUT</th>
-            <th title="ESTADO APROBADO">APR</th>
-            <th title="ESTADO ANULADO">ANU</th>
-            <th title="ESTADO CONTABILIZADO">CON</th>
             <th>HORAS</th>
            <th title="HORAS DIURNAS">HD</th>
            <th title="HORAS NOCTURNAS">HN</th>
@@ -78,7 +74,12 @@
             <th title="TOTAL COSTO">COSTO</th>
             <th title="SALARIO BASE">BASE</th>
             <th title="USUARIO">USUARIO</th>
+            <th title="ESTADO AUTORIZADO">AUT</th>
+            <th title="ESTADO APROBADO">APR</th>
+            <th title="ESTADO ANULADO">ANU</th>
+            <th title="ESTADO CONTABILIZADO">CON</th>
             <th title="USUARIO">COMENTARIO</th>
+
             <th></th>
         </tr>
         </thead>
@@ -92,23 +93,23 @@
                 <td>{{ arPedido.fechaGeneracion | date('Y-m-d') }}</td>
                 <td>{{ arPedido.pedidoTipoRel.nombre }}</td>
                 <td>{{ arPedido.codigoSectorFk }}</td>
-                <td>{{ arPedido.estadoAutorizado? "si":"no" }}</td>
-                <td>{{ arPedido.estadoAprobado? "si":"no" }}</td>
-                <td>{{ arPedido.estadoAnulado? "si":"no" }}</td>
-                <td>{{ arPedido.estadoContabilizado? "si":"no" }}</td>
                 <td>{{ arPedido.horas}}</td>
                 <td>{{ arPedido.horasDiurnas}}</td>
                 <td>{{ arPedido.horasNocturnas}}</td>
-                <td>{{ arPedido.vrTotalPrecioAjustado}}</td>
-                <td>{{ arPedido.vrTotalPrecioMinimo}}</td>
-                <td>{{ arPedido.vrTotalServicio}}</td>
-                <td>{{ arPedido.vrSubtotal}}</td>
-                <td>{{ arPedido.vrIva}}</td>
-                <td>{{ arPedido.vrBaseAiu}}</td>
-                <td>{{ arPedido.vrTotal}}</td>
-                <td>{{ arPedido.vrTotalCosto}}</td>
-                <td>{{ arPedido.vrSalarioBase}}</td>
+                <td class="numero">{{ arPedido.vrTotalPrecioAjustado}}</td>
+                <td class="numero">{{ arPedido.vrTotalPrecioMinimo}}</td>
+                <td class="numero">{{ arPedido.vrTotalServicio}}</td>
+                <td class="numero">{{ arPedido.vrSubtotal}}</td>
+                <td class="numero">{{ arPedido.vrIva}}</td>
+                <td class="numero">{{ arPedido.vrBaseAiu}}</td>
+                <td class="numero">{{ arPedido.vrTotal}}</td>
+                <td class="numero">{{ arPedido.vrTotalCosto}}</td>
+                <td class="numero">{{ arPedido.vrSalarioBase}}</td>
                 <td>{{ arPedido.usuario}}</td>
+                <td>{{ arPedido.estadoAutorizado? "SI":"NO" }}</td>
+                <td>{{ arPedido.estadoAprobado? "SI":"NO" }}</td>
+                <td>{{ arPedido.estadoAnulado? "SI":"NO" }}</td>
+                <td>{{ arPedido.estadoContabilizado? "SI":"NO" }}</td>
                 <td>{{ arPedido.comentario}}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('turno_informe_comercial_pedido_detalle',{'id' : arPedido.codigoPedidoPk}) }}">

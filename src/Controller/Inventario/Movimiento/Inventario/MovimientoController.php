@@ -415,9 +415,23 @@ class MovimientoController extends ControllerListenerGeneral
                                     $arMovimientoDetalle->setVrPrecio($arItem->getVrCostoPromedio());
                                     $arMovimientoDetalle->setVrCosto($arItem->getVrCostoPromedio());
                                 }
-                                $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arItem->getCodigoImpuestoRetencionFk());
-                                $arMovimientoDetalle->setCodigoImpuestoIvaFk($arItem->getCodigoImpuestoIvaVentaFk());
-                                $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                                if($arMovimiento->getCodigoDocumentoTipoFk()=='COM') {
+                                    if($arMovimiento->getDocumentoRel()->getCompraExtranjera()) {
+                                        $arMovimientoDetalle->setCodigoImpuestoRetencionFk('R00');
+                                        $arMovimientoDetalle->setCodigoImpuestoIvaFk('I00');
+                                        $arMovimientoDetalle->setPorcentajeIva(0);
+                                    } else {
+                                        $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arItem->getCodigoImpuestoRetencionCompraFk());
+                                        $arMovimientoDetalle->setCodigoImpuestoIvaFk($arItem->getCodigoImpuestoIvaCompraFk());
+                                        $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                                    }
+                                } else {
+                                    $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arItem->getCodigoImpuestoRetencionFk());
+                                    $arMovimientoDetalle->setCodigoImpuestoIvaFk($arItem->getCodigoImpuestoIvaVentaFk());
+                                    $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                                }
+
+
                                 $em->persist($arMovimientoDetalle);
                             } else {
                                 $respuesta = "La cantidad seleccionada para el item: " . $arItem->getNombre() . " no puede ser mayor a las existencias del mismo.";
@@ -472,17 +486,30 @@ class MovimientoController extends ControllerListenerGeneral
                             if ($cantidad != '' && $cantidad != 0) {
                                 $arOrdenDetalle = $em->getRepository(InvOrdenDetalle::class)->find($codigoOrdenDetalle);
                                 if ($cantidad <= $arOrdenDetalle->getCantidadPendiente()) {
+                                    $arItem = $arOrdenDetalle->getItemRel();
                                     $arMovimientoDetalle = new InvMovimientoDetalle();
                                     $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                                     $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
-                                    $arMovimientoDetalle->setItemRel($arOrdenDetalle->getItemRel());
+                                    $arMovimientoDetalle->setItemRel($arItem);
                                     $arMovimientoDetalle->setCantidad($cantidad);
                                     $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setVrPrecio($arOrdenDetalle->getVrPrecio());
                                     $arMovimientoDetalle->setPorcentajeDescuento($arOrdenDetalle->getPorcentajeDescuento());
-                                    $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arOrdenDetalle->getItemRel()->getCodigoImpuestoRetencionFk());
-                                    $arMovimientoDetalle->setPorcentajeIva($arOrdenDetalle->getItemRel()->getPorcentajeIva());
-                                    $arMovimientoDetalle->setCodigoImpuestoIvaFk($arOrdenDetalle->getItemRel()->getCodigoImpuestoIvaVentaFk());
+                                    if($arMovimiento->getCodigoDocumentoTipoFk()=='COM') {
+                                        if($arMovimiento->getDocumentoRel()->getCompraExtranjera()) {
+                                            $arMovimientoDetalle->setCodigoImpuestoRetencionFk('R00');
+                                            $arMovimientoDetalle->setCodigoImpuestoIvaFk('I00');
+                                            $arMovimientoDetalle->setPorcentajeIva(0);
+                                        } else {
+                                            $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arItem->getCodigoImpuestoRetencionCompraFk());
+                                            $arMovimientoDetalle->setCodigoImpuestoIvaFk($arItem->getCodigoImpuestoIvaCompraFk());
+                                            $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                                        }
+                                    } else {
+                                        $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arItem->getCodigoImpuestoRetencionFk());
+                                        $arMovimientoDetalle->setCodigoImpuestoIvaFk($arItem->getCodigoImpuestoIvaVentaFk());
+                                        $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                                    }
                                     $arMovimientoDetalle->setOrdenDetalleRel($arOrdenDetalle);
                                     $em->persist($arMovimientoDetalle);
                                 } else {
@@ -539,16 +566,30 @@ class MovimientoController extends ControllerListenerGeneral
                             if ($cantidad != '' && $cantidad != 0) {
                                 $arImportacionDetalle = $em->getRepository(InvImportacionDetalle::class)->find($codigoImportacionDetalle);
                                 if ($cantidad <= $arImportacionDetalle->getCantidadPendiente()) {
+                                    $arItem = $arImportacionDetalle->getItemRel();
                                     $arMovimientoDetalle = new InvMovimientoDetalle();
                                     $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                                     $arMovimientoDetalle->setOperacionInventario($arMovimiento->getOperacionInventario());
-                                    $arMovimientoDetalle->setItemRel($arImportacionDetalle->getItemRel());
+                                    $arMovimientoDetalle->setItemRel($arItem);
                                     $arMovimientoDetalle->setCantidad($cantidad);
                                     $arMovimientoDetalle->setCantidadOperada($cantidad * $arMovimiento->getOperacionInventario());
                                     $arMovimientoDetalle->setVrPrecio($arImportacionDetalle->getVrPrecioLocalTotal());
                                     //$arMovimientoDetalle->setPorcentajeDescuento($arImportacionDetalle->getPorcentajeDescuentoLocal());
-                                    $arMovimientoDetalle->setPorcentajeIva($arImportacionDetalle->getItemRel()->getPorcentajeIva());
-                                    $arMovimientoDetalle->setCodigoImpuestoIvaFk($arImportacionDetalle->getItemRel()->getCodigoImpuestoIvaVentaFk());
+                                    if($arMovimiento->getCodigoDocumentoTipoFk()=='COM') {
+                                        if($arMovimiento->getDocumentoRel()->getCompraExtranjera()) {
+                                            $arMovimientoDetalle->setCodigoImpuestoRetencionFk('R00');
+                                            $arMovimientoDetalle->setCodigoImpuestoIvaFk('I00');
+                                            $arMovimientoDetalle->setPorcentajeIva(0);
+                                        } else {
+                                            $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arItem->getCodigoImpuestoRetencionCompraFk());
+                                            $arMovimientoDetalle->setCodigoImpuestoIvaFk($arItem->getCodigoImpuestoIvaCompraFk());
+                                            $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                                        }
+                                    } else {
+                                        $arMovimientoDetalle->setCodigoImpuestoRetencionFk($arItem->getCodigoImpuestoRetencionFk());
+                                        $arMovimientoDetalle->setCodigoImpuestoIvaFk($arItem->getCodigoImpuestoIvaVentaFk());
+                                        $arMovimientoDetalle->setPorcentajeIva($arItem->getPorcentajeIva());
+                                    }
                                     $arMovimientoDetalle->setImportacionDetalleRel($arImportacionDetalle);
                                     $em->persist($arMovimientoDetalle);
                                 } else {

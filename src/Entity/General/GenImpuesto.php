@@ -17,7 +17,7 @@ class GenImpuesto
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_impuesto_pk", type="string", length=3, nullable=false)
+     * @ORM\Column(name="codigo_impuesto_pk", type="string", length=5, nullable=false)
      */
     private $codigoImpuestoPk;
 
@@ -63,9 +63,19 @@ class GenImpuesto
     private $itemsImpuestoRetencionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvItem", mappedBy="impuestoRetencionCompraRel")
+     */
+    private $itemsImpuestoRetencionCompraRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvItem", mappedBy="impuestoIvaVentaRel")
      */
     private $itemsImpuestoIvaVentaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvItem", mappedBy="impuestoIvaCompraRel")
+     */
+    private $itemsImpuestoIvaCompraRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurItem", mappedBy="impuestoRetencionRel")
@@ -308,6 +318,38 @@ class GenImpuesto
     public function setTurItemsImpuestoIvaVentaRel($turItemsImpuestoIvaVentaRel): void
     {
         $this->turItemsImpuestoIvaVentaRel = $turItemsImpuestoIvaVentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsImpuestoIvaCompraRel()
+    {
+        return $this->itemsImpuestoIvaCompraRel;
+    }
+
+    /**
+     * @param mixed $itemsImpuestoIvaCompraRel
+     */
+    public function setItemsImpuestoIvaCompraRel($itemsImpuestoIvaCompraRel): void
+    {
+        $this->itemsImpuestoIvaCompraRel = $itemsImpuestoIvaCompraRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsImpuestoRetencionCompraRel()
+    {
+        return $this->itemsImpuestoRetencionCompraRel;
+    }
+
+    /**
+     * @param mixed $itemsImpuestoRetencionCompraRel
+     */
+    public function setItemsImpuestoRetencionCompraRel($itemsImpuestoRetencionCompraRel): void
+    {
+        $this->itemsImpuestoRetencionCompraRel = $itemsImpuestoRetencionCompraRel;
     }
 
 

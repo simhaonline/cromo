@@ -68,7 +68,27 @@ class ItemType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Retencion:'
                 , 'required' => true])
+            ->add('impuestoRetencionCompraRel', EntityType::class, [
+                'class' => 'App\Entity\General\GenImpuesto',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->where("i.codigoImpuestoTipoFk = 'R'")
+                        ->orderBy('i.nombre', 'DESC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Retencion:'
+                , 'required' => true])
             ->add('impuestoIvaVentaRel', EntityType::class, [
+                'class' => 'App\Entity\General\GenImpuesto',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->where("i.codigoImpuestoTipoFk = 'I'")
+                        ->orderBy('i.nombre', 'DESC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Iva:'
+                , 'required' => true])
+            ->add('impuestoIvaCompraRel', EntityType::class, [
                 'class' => 'App\Entity\General\GenImpuesto',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
@@ -95,6 +115,7 @@ class ItemType extends AbstractType
             ->add('codigoCuentaCompraDevolucionFk', TextType::class, ['required' => false])
             ->add('codigoCuentaCostoFk', TextType::class, ['required' => false])
             ->add('codigoCuentaInventarioFk', TextType::class, ['required' => false])
+            ->add('codigoCuentaCompraImportacionFk', TextType::class, ['required' => false])
             ->add('codigoCuentaInventarioTransitoFk', TextType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);

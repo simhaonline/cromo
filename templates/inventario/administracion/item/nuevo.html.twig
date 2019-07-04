@@ -152,8 +152,12 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_codigoCuentaInventarioTransitoFk" class="col-sm-2 control-label">Cuenta inventario
-                    transito:</label>
+                <label for="form_codigoCuentaInventarioTransitoFk" class="col-sm-2 control-label">Cuenta compra importacion:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.codigoCuentaCompraImportacionFk,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoCuentaCompraImportacionFk) }}
+                </div>
+                <label for="form_codigoCuentaInventarioTransitoFk" class="col-sm-2 control-label">Cuenta inventario transito:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.codigoCuentaInventarioTransitoFk,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.codigoCuentaInventarioTransitoFk) }}
@@ -170,12 +174,22 @@
                     {{ form_widget(form.impuestoIvaVentaRel,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.impuestoIvaVentaRel) }}
                 </div>
+                <label for="form_lineaRel" class="col-sm-2 control-label">Iva(Compra):</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.impuestoIvaCompraRel,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.impuestoIvaCompraRel) }}
+                </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_lineaRel" class="col-sm-2 control-label">Retencion:</label>
+                <label for="form_lineaRel" class="col-sm-2 control-label">Retencion(Venta):</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.impuestoRetencionRel,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.impuestoRetencionRel) }}
+                </div>
+                <label for="form_lineaRel" class="col-sm-2 control-label">Retencion(Compra):</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.impuestoRetencionCompraRel,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.impuestoRetencionCompraRel) }}
                 </div>
             </div>
 

@@ -508,4 +508,18 @@ class TteRecogidaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function yaProgramada($fechaRegistro, $cliente, $ruta)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r')
+            ->select('r.codigoRecogidaPk')
+            ->addSelect('r.fecha')
+            ->where("r.fecha >= '$fechaRegistro 00:00:00' AND r.fecha <= '$fechaRegistro 23:59:59'")
+            ->andWhere("r.codigoClienteFk = {$cliente}")
+        ->andWhere("r.codigoRutaRecogidaFk = '{$ruta}'");
+        $arrResultado = $queryBuilder->getQuery()->getResult();
+
+        return $arrResultado;
+    }
+
 }

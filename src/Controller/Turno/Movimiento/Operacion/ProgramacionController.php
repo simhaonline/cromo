@@ -117,18 +117,21 @@ class ProgramacionController extends ControllerListenerGeneral
         }
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
-            ->add('btnNuevoLibre', SubmitType::class, array('label' => 'Nuevo libre'))
-            ->add('btnAdicional', SubmitType::class, array('label' => 'Adicional'))
-            ->add('btnComplementacion', SubmitType::class, array('label' => 'Nuevo libre'))
-
             ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $arrControles = $request->request->All();
+                $resultado = $this->actualizarDetalle($arrControles);
+            }
+        }
         $arTurProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(['codigoPedidoFk'=>$codigoPedido]);
         return $this->render('turno/movimiento/operacion/programacion/programacionMasiva.html.twig', [
             'arrDiaSemana' => $arrDiaSemana,
             'arTurProgramaciones'=>$arTurProgramaciones,
             'form' => $form->createView()
-//            'arPedidoDetalles' => $arPedidoDetalles,
-//            'arPedido' => $arPedido
         ]);
     }
 
@@ -160,6 +163,12 @@ class ProgramacionController extends ControllerListenerGeneral
         }
 
         return $strDia;
+    }
+
+    public function actualizarDetalle($arrControles)
+    {
+        $em = $this->getDoctrine()->getManager();
+
     }
 
 }

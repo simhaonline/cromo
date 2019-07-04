@@ -202,7 +202,7 @@ class GenModelo extends Fixture
                 'RhuTiempo',
                 'RhuTipoCotizacion',
                 'RhuVacacion',
-                'RhuAportePeriodo',
+                'RhuAporte',
             )),
             array('modulo'=>'Financiero','modelo'=>array(
                 'FinAsiento',

@@ -5,21 +5,21 @@ namespace App\Entity\RecursoHumano;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuAportePeriodoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuAporteRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
-class RhuAportePeriodo
+class RhuAporte
 {
     public $infoLog = [
-        "primaryKey" => "codigoAportePeriodoPk",
+        "primaryKey" => "codigoAportePk",
         "todos" => true,
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_aporte_periodo_pk", type="integer")
+     * @ORM\Column(name="codigo_aporte_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $codigoAportePeriodoPk;
+    private $codigoAportePk;
 
     /**
      * @ORM\Column(name="anio", type="integer")
@@ -34,17 +34,17 @@ class RhuAportePeriodo
     /**
      * @return mixed
      */
-    public function getCodigoAportePeriodoPk()
+    public function getCodigoAportePk()
     {
-        return $this->codigoAportePeriodoPk;
+        return $this->codigoAportePk;
     }
 
     /**
-     * @param mixed $codigoAportePeriodoPk
+     * @param mixed $codigoAportePk
      */
-    public function setCodigoAportePeriodoPk($codigoAportePeriodoPk): void
+    public function setCodigoAportePk($codigoAportePk): void
     {
-        $this->codigoAportePeriodoPk = $codigoAportePeriodoPk;
+        $this->codigoAportePk = $codigoAportePk;
     }
 
     /**

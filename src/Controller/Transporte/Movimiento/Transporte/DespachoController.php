@@ -259,7 +259,7 @@ class DespachoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->anular($arDespacho);
+                $this->getDoctrine()->getRepository(TteDespacho::class)->anular($arDespacho);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnEliminarGuia')->isClicked()) {

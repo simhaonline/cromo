@@ -9,7 +9,7 @@
     <div class="row">
         <!-- /.col-lg-12 -->
     </div>
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo"><b>CODIGO CLIENTE:</b></td>
             <td class="td-in-well">{{ arCliente.codigoClientePk }}</td>
@@ -65,7 +65,6 @@
             <td class="td-in-well"></td>
         </tr>
     </table>
-    <br><br>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#puestos" data-toggle="tab">Puestos</a></li>
     </ul>
@@ -101,7 +100,7 @@
                                         </a>
                                     </td>
                                     <td style="text-align: center">
-                                        <a href="{{ path('turno_administracion_cliente_puesto_detalle' , {'id': arPuesto.codigoPuestoPk }) }}" target="_blank">
+                                        <a href="{{ path('turno_administracion_comercial_puesto_detalle', { 'id': arPuesto.codigoPuestoPk }) }}" target="_blank">
                                             <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>
                                         </a>
                                     </td>
@@ -121,6 +120,8 @@
             <div class="btn-group">
                 <div class="btn-group">
                     <a href="javascript:abrirVentana3('{{ path('turno_administracion_comercial_puesto_nuevo', {'id': 0, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Nuevo puesto', 600, 1200) " class="btn btn-default">Nuevo</a>
+                </div>
+                <div class="btn-group">
                     {{ form_widget(form.btnEliminar) }}
                 </div>
             </div>

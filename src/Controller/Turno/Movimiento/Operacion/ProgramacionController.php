@@ -101,5 +101,74 @@ class ProgramacionController extends ControllerListenerGeneral
         ]);
     }
 
+    /**
+     *@Route("/turno/movimiento/operacion/programacion/masiva/{anio}/{mes}/{codigoPedido}", name="turno_movimiento_operacion_programacion_masiva")
+     */
+    public function programacion_masiva(Request $request, $anio, $mes, $codigoPedido)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $strAnioMes = $anio . "/" . $mes;
+        $arrDiaSemana = array();
+        for ($i = 1; $i <= 31; $i++) {
+            $strFecha = $strAnioMes . '/' . $i;
+            $dateFecha = date_create($strFecha);
+            $diaSemana = $this->devuelveDiaSemanaEspaniol($dateFecha);
+            $arrDiaSemana[$i] = ['dia' => $i, 'diaSemana'=> $diaSemana];
+        }
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $arrControles = $request->request->All();
+                $resultado = $this->actualizarDetalle($arrControles);
+            }
+        }
+        $arTurProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(['codigoPedidoFk'=>$codigoPedido]);
+        return $this->render('turno/movimiento/operacion/programacion/programacionMasiva.html.twig', [
+            'arrDiaSemana' => $arrDiaSemana,
+            'arTurProgramaciones'=>$arTurProgramaciones,
+            'form' => $form->createView()
+        ]);
+    }
+
+    public function devuelveDiaSemanaEspaniol($dateFecha)
+    {
+        $strDia = "";
+        switch ($dateFecha->format('N')) {
+            case 1:
+                $strDia = "L";
+                break;
+            case 2:
+                $strDia = "M";
+                break;
+            case 3:
+                $strDia = "I";
+                break;
+            case 4:
+                $strDia = "J";
+                break;
+            case 5:
+                $strDia = "V";
+                break;
+            case 6:
+                $strDia = "S";
+                break;
+            case 7:
+                $strDia = "D";
+                break;
+        }
+
+        return $strDia;
+    }
+
+    public function actualizarDetalle($arrControles)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+    }
 
 }

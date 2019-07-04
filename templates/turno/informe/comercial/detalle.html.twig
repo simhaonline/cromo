@@ -4,7 +4,7 @@
     {{ notificar()|raw }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('turno_movimiento_operacion_programacion_lista') }}">Volver</a>
+            <a class="btn btn-default btn-sm" href="{{ path('turno_informe_comercial_pedido_lista') }}">Volver</a>
         </div>
         <div class="btn-group">
 
@@ -20,6 +20,8 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
+
+
     <div class="tab-content">
         <div class="tab-pane active" id="detalles">
             <div id="detalles" style="width: 100%"><br>
@@ -46,12 +48,7 @@
                             <tr>
                             {% for arProgramacion in arPedidoDetalle.arProgramaciones %}
                                     <td>{{ arProgramacion.codigoProgramacionPk }}</td>
-                                    <td>
-                                        <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_masiva',
-                                            { 'anio': arProgramacion.anio , 'mes':arProgramacion.mes , 'codigoPedido': arPedido.codigoPedidoPk }) }}', 'VerProgramaciones', 600, 1300)">
-                                            {{ arProgramacion.empleadoNombreCorto | default('') }}
-                                        </a>
-                                    </td>
+                                    <td>{{ arProgramacion.empleadoNombreCorto }}</td>
                                     <td>{{ arProgramacion.dia1 }}</td>
                                     <td>{{ arProgramacion.dia2 }}</td>
                                     <td>{{ arProgramacion.dia3 }}</td>

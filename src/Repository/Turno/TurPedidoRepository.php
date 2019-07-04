@@ -357,7 +357,17 @@ class TurPedidoRepository extends ServiceEntityRepository
     public function lista(){
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedido::class, 'p')
-            ->select('p.codigoPedidoPk');
+            ->select('p');
+
+        if($session->get('filtroTurInformeComercialPedidoClienteCodigo') != ''){
+            $queryBuilder->andWhere("p.codigoClienteFk  = '{$session->get('filtroTurInformeComercialPedidoClienteCodigo')}'");
+        }
+        if ($session->get('filtroTurInformeComercialPedidoClienteCodigoFechaDesde') != null) {
+            $queryBuilder->andWhere("p.fecha >= '{$session->get('filtroTurInformeComercialPedidoClienteCodigoFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroTurInformeComercialPedidoClienteCodigoFechaHasta') != null) {
+            $queryBuilder->andWhere("p.fecha <= '{$session->get('filtroTurInformeComercialPedidoClienteCodigoFechaHasta')} 23:59:59'");
+        }
         return $queryBuilder;
     }
 }

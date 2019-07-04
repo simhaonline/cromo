@@ -8,15 +8,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Turno\TurPuestoRepository")
- * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class TurPuesto
 {
-    public $infoLog = [
-        "primaryKey" => "codigoPuestoPk",
-        "todos" => true,
-    ];
-
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_puesto_pk", type="integer")
@@ -28,6 +22,11 @@ class TurPuesto
      * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
      */
     private $codigoClienteFk;
+
+    /**
+     * @ORM\Column(name="codigo_puesto_tipo_fk", type="integer", nullable=true)
+     */
+    private $codigoPuestoTipoFk;
 
     /**
      * @ORM\Column(name="nombre", type="string", length=300)
@@ -139,6 +138,12 @@ class TurPuesto
      * @ORM\OneToMany(targetEntity="TurContratoDetalle", mappedBy="puestoRel")
      */
     protected $contratosDetallesPuestoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurPuestoTipo", inversedBy="puestosPuestoTipoRel")
+     * @ORM\JoinColumn(name="codigo_puesto_tipo_fk", referencedColumnName="codigo_puesto_tipo_pk")
+     */
+    protected $puestoTipoRel;
 
     /**
      * @return mixed
@@ -443,6 +448,39 @@ class TurPuesto
     {
         $this->contratosDetallesPuestoRel = $contratosDetallesPuestoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPuestoTipoFk()
+    {
+        return $this->codigoPuestoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoPuestoTipoFk
+     */
+    public function setCodigoPuestoTipoFk($codigoPuestoTipoFk): void
+    {
+        $this->codigoPuestoTipoFk = $codigoPuestoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPuestoTipoRel()
+    {
+        return $this->puestoTipoRel;
+    }
+
+    /**
+     * @param mixed $puestoTipoRel
+     */
+    public function setPuestoTipoRel($puestoTipoRel): void
+    {
+        $this->puestoTipoRel = $puestoTipoRel;
+    }
+
 
 
 }

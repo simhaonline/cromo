@@ -13,6 +13,7 @@ class GenModelo extends Fixture
 {
     public function load(ObjectManager $manager )
     {
+        //$manager->createQueryBuilder()->delete(\App\Entity\General\GenModelo::class,'g')->getQuery()->execute();
         $arrayGenModulo= array(
             array('modulo'=>'Turno','modelo'=>array(
                 'TurCliente',
@@ -195,12 +196,13 @@ class GenModelo extends Fixture
                 'RhuSolicitud',
                 'RhuSolicitudExperiencia',
                 'RhuSolicitudMotivo',
-                'RhuSsPeriodo',
+                'RhuAportePeriodo',
                 'RhuSubtipoCotizante',
                 'RhuSucursal',
                 'RhuTiempo',
                 'RhuTipoCotizacion',
                 'RhuVacacion',
+                'RhuAporte',
             )),
             array('modulo'=>'Financiero','modelo'=>array(
                 'FinAsiento',
@@ -284,12 +286,11 @@ class GenModelo extends Fixture
                'CrmVisitaTipo',
                'CrmFase',
                'CrmNegocio',
-                'CrmContacto'
+               'CrmContacto'
             )),
         );
         foreach ($arrayGenModulo as $arrGenModulo){
             foreach ($arrGenModulo['modelo'] as $arrGenModelo){
-
                 $arModelo = $manager->getRepository(\App\Entity\General\GenModelo::class)->find($arrGenModelo);
                 if(!$arModelo) {
                     $arModelo = new \App\Entity\General\GenModelo();

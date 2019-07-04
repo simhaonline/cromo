@@ -24,6 +24,14 @@ class Despacho extends \FPDF {
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
+        $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
+        $pdf->SetFont('Arial', '', 30);
+        $pdf->SetTextColor(255, 220, 220);
+        if ($arDespacho->getEstadoAprobado() != true){
+            $pdf->RotatedText(50, 200, 'SIN APROBAR', 45);
+        }
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
         $pdf->Output("TteDespacho$codigoDespacho.pdf", 'D');
     }
@@ -69,9 +77,23 @@ class Despacho extends \FPDF {
         $this->SetFillColor(272, 272, 272);
         $this->Cell(103, 5, $arDespacho->getCodigoVehiculoFk(), 1, 0, 'R', 1);
         $this->SetFont('Arial', 'B', 7);
+        //linea 3
+        $this->SetXY(5, 50);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, utf8_decode("CANTIDAD:"), 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(30, 6, $arDespacho->getCantidad(), 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 7);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(103, 6, "", 1, 0, 'R', 1);
+        $this->SetFont('Arial', 'B', 7);
 
         $this->EncabezadoDetalles();
-
     }
 
     public function EncabezadoDetalles() {
@@ -187,6 +209,35 @@ class Despacho extends \FPDF {
 
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
+    }
+
+    var $angle = 0;
+
+    function Rotate($angle, $x = -1, $y = -1)
+    {
+        if ($x == -1)
+            $x = $this->x;
+        if ($y == -1)
+            $y = $this->y;
+        if ($this->angle != 0)
+            $this->_out('Q');
+        $this->angle = $angle;
+        if ($angle != 0) {
+            $angle *= M_PI / 190;
+            $c = cos($angle);
+            $s = sin($angle);
+            $cx = $x * $this->k;
+            $cy = ($this->h - $y) * $this->k;
+            $this->_out(sprintf('q %.5F %.5F %.5F %.5F %.2F %.2F cm 1 0 0 1 %.2F %.2F cm', $c, $s, -$s, $c, $cx, $cy, -$cx, -$cy));
+        }
+    }
+
+    function RotatedText($x, $y, $txt, $angle)
+    {
+        //Text rotated around its origin
+        $this->Rotate($angle, $x, $y);
+        $this->Text($x, $y, $txt);
+        $this->Rotate(0);
     }
 }
 

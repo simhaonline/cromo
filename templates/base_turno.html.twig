@@ -53,15 +53,19 @@
                 <li>
                     <a href="#">Juridico <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('administracion_lista',{'modulo':'turno','entidad':'contratoTipo'}) }}">Contrato tipo</a></li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'turno','entidad':'contratoTipo'}) }}">Contrato
+                                tipo</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#">Comercial <span class="fa arrow"></span></a>
                     <ul>
                         <li><a href="{{ path('turno_administracion_comercial_cliente_lista') }}">Cliente</a></li>
-                        <li><a href="{{ path('turno_administracion_cliente_puesto_lista') }}">Puesto</a></li>
+                        <li><a href="{{ path('turno_administracion_comercial_puesto_lista') }}">Puesto</a></li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'turno','entidad':'cotizacionTipo'}) }}">Cotizacion
+                                tipo</a></li>
                         <li><a href="{{ path('turno_administracion_comercial_pedidotipo_lista') }}">Pedido tipo</a></li>
+
                     </ul>
                 </li>
                 <li>
@@ -75,7 +79,8 @@
                     <ul>
                         <li><a href="{{ path('turno_administracion_operacion_turno_lista') }}">Turno</a></li>
                         <li><a href="{{ path('turno_administracion_operacion_secuencia_lista') }}">Secuencia</a></li>
-                        <li><a href="{{ path('turno_administracion_concepto_concepto_lista') }}">Concepto de servicio</a></li>
+                        <li><a href="{{ path('turno_administracion_concepto_concepto_lista') }}">Concepto de
+                                servicio</a></li>
                     </ul>
                 </li>
             </ul>
@@ -123,6 +128,20 @@
                         <li>
                             <a href="{{ path('turno_tablero_gerente_comercial') }}">Comercial</a>
                         </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-clipboard"></i>
+                <span class="menu-item-parent">Informe</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul>
+                <li>
+                    <a href="#">Comercial <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{  path('turno_informe_comercial_pedido_lista') }}">Pedido</a></li>
                     </ul>
                 </li>
             </ul>

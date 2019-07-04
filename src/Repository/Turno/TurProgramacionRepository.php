@@ -36,6 +36,8 @@ class TurProgramacionRepository extends ServiceEntityRepository
                 ->select('p.codigoProgramacionPk')
                 ->addSelect('p.horasDiurnas')
                 ->addSelect('p.horasNocturnas')
+                ->addSelect('p.anio')
+                ->addSelect('p.mes')
                 ->addSelect('e.nombreCorto as empleadoNombreCorto')
                 ->leftJoin('p.empleadoRel', 'e')
                 ->where('p.codigoPedidoDetalleFk = ' . $arrPedidoDetalle['codigoPedidoDetallePk']);

@@ -38,7 +38,7 @@ class TteRecogidaProgramada
     private $codigoRutaRecogidaFk;
 
     /**
-     * @ORM\Column(name="fecha_ultima_generada", type="datetime", nullable=true)
+     * @ORM\Column(name="fecha_ultima_generada", type="date", nullable=true)
      */
     private $fechaUltimaGenerada;
 
@@ -352,6 +352,8 @@ class TteRecogidaProgramada
     {
         $this->fechaUltimaGenerada = $fechaUltimaGenerada;
     }
+
+
 
 }
 

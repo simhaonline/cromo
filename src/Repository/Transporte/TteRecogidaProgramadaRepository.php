@@ -20,7 +20,7 @@ class TteRecogidaProgramadaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'SELECT rp.codigoRecogidaProgramadaPk, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad,
-            rp.anunciante, rp.hora, rp.codigoOperacionFk, rp.direccion, rp.telefono, r.nombre
+            rp.anunciante, rp.hora, rp.codigoOperacionFk, rp.direccion, rp.telefono, r.nombre, rp.fechaUltimaGenerada
         FROM App\Entity\Transporte\TteRecogidaProgramada rp 
         LEFT JOIN rp.rutaRecogidaRel r
         LEFT JOIN rp.clienteRel c
@@ -98,7 +98,9 @@ class TteRecogidaProgramadaRepository extends ServiceEntityRepository
             $arRecogida->setComentario($arRecogidaProgramada->getComentario());
             $arRecogida->setEstadoAutorizado(1);
             $arRecogida->setEstadoAprobado(1);
+            $arRecogidaProgramada->setFechaUltimaGenerada(new \DateTime('now'));
             $em->persist($arRecogida);
+            $em->persist($arRecogidaProgramada);
         }
         $em->flush();
     }

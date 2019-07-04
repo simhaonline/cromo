@@ -80,6 +80,7 @@ class ProgramadaController extends Controller
                 if ($arCliente) {
                     $arRecogidaProgramada->setClienteRel($arCliente);
                     $arRecogidaProgramada->setOperacionRel($this->getUser()->getOperacionRel());
+                    $arRecogidaProgramada->setFechaUltimaGenerada(new \DateTime('now'));
                     $em->persist($arRecogidaProgramada);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {

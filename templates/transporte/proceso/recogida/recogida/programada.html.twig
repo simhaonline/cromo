@@ -13,6 +13,7 @@
             <th>DIRECCION</th>
             <th>CIUDAD</th>
             <th>TELEFONO</th>
+            <th title="ULTIMA FECHA GENERADA">GENERADA</th>
             <th></th>
             <th><input type="checkbox" name="ChkSeleccionarTodos"
                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -30,6 +31,7 @@
                 <td>{{ arRecogidaProgramada.direccion }}</td>
                 <td>{{ arRecogidaProgramada.ciudad }}</td>
                 <td>{{ arRecogidaProgramada.telefono }}</td>
+                <td>{{ arRecogidaProgramada.fechaUltimaGenerada | date('Y-m-d H:i')  }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_proceso_recogida_recogida_nuevo',{'codigoRecogidaProgramada' : arRecogidaProgramada.codigoRecogidaProgramadaPk}) }}">
                         <i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;">

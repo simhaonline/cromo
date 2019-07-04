@@ -37,6 +37,7 @@ class DespachoRecogidaType extends AbstractType {
                 },
                 'choice_label' => 'nombre',
                 'required' => true,
+                'placeholder' => ''
             ))
             ->add('vrFletePago', NumberType::class)
             ->add('vrAnticipo', NumberType::class)

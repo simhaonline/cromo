@@ -376,8 +376,8 @@ class InvImportacionRepository extends ServiceEntityRepository
 
                         $arrCompras = $em->getRepository(InvImportacionDetalle::class)->cuentaCompra($codigo);
                         foreach ($arrCompras as $arrCompra) {
-                            if ($arrCompra['codigoCuentaCompraFk']) {
-                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCompra['codigoCuentaCompraFk']);
+                            if ($arrCompra['codigoCuentaCompraImportacionFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCompra['codigoCuentaCompraImportacionFk']);
                                 if (!$arCuenta) {
                                     $error = "No se encuentra la cuenta " . $arrCompra['codigoCuentaCompraFk'];
                                     break 2;

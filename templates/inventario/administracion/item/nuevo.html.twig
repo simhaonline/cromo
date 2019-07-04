@@ -152,8 +152,12 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_codigoCuentaInventarioTransitoFk" class="col-sm-2 control-label">Cuenta inventario
-                    transito:</label>
+                <label for="form_codigoCuentaInventarioTransitoFk" class="col-sm-2 control-label">Cuenta compra importacion:</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.codigoCuentaCompraImportacionFk,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoCuentaCompraImportacionFk) }}
+                </div>
+                <label for="form_codigoCuentaInventarioTransitoFk" class="col-sm-2 control-label">Cuenta inventario transito:</label>
                 <div class="col-sm-3">
                     {{ form_widget(form.codigoCuentaInventarioTransitoFk,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.codigoCuentaInventarioTransitoFk) }}

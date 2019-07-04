@@ -115,6 +115,7 @@ class ItemType extends AbstractType
             ->add('codigoCuentaCompraDevolucionFk', TextType::class, ['required' => false])
             ->add('codigoCuentaCostoFk', TextType::class, ['required' => false])
             ->add('codigoCuentaInventarioFk', TextType::class, ['required' => false])
+            ->add('codigoCuentaCompraImportacionFk', TextType::class, ['required' => false])
             ->add('codigoCuentaInventarioTransitoFk', TextType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']]);

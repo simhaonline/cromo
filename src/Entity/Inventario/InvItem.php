@@ -206,6 +206,11 @@ class InvItem
     private $codigoCuentaCompraDevolucionFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_compra_importacion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaCompraImportacionFk;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_costo_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaCostoFk;
@@ -1336,6 +1341,22 @@ class InvItem
     public function setImpuestoRetencionCompraRel($impuestoRetencionCompraRel): void
     {
         $this->impuestoRetencionCompraRel = $impuestoRetencionCompraRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCompraImportacionFk()
+    {
+        return $this->codigoCuentaCompraImportacionFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCompraImportacionFk
+     */
+    public function setCodigoCuentaCompraImportacionFk($codigoCuentaCompraImportacionFk): void
+    {
+        $this->codigoCuentaCompraImportacionFk = $codigoCuentaCompraImportacionFk;
     }
 
 

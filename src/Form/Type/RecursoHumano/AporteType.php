@@ -4,6 +4,7 @@ namespace App\Form\Type\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuAporte;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,9 +16,16 @@ class AporteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('anio', TextType::class, array('required' => true))
-            ->add('mes', IntegerType::class, array('required' => true))
+            ->add('mes', ChoiceType::class, [
+                'choices' => array(
+                    'Enero' => '01', 'Febrero' => '02', 'Marzo' => '03', 'Abril' => '04', 'Mayo' => '05', 'Junio' => '06', 'Julio' => '07',
+                    'Agosto' => '08', 'Septiembre' => '09', 'Octubre' => '10', 'Noviembre' => '11', 'Diciembre' => '12',
+                ),
+                'required'    => true,
+            ])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
 
     }

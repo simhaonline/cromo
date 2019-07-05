@@ -32,13 +32,12 @@ class AporteController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtAnio', TextType::class, ['required' => false, 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('txtAnio', TextType::class, ['required' => false])
             ->add('txtMes', ChoiceType::class, [
                 'choices' => array(
                     'Enero' => '1', 'Febrero' => '2', 'Marzo' => '3', 'Abril' => '4', 'Mayo' => '5', 'Junio' => '6', 'Julio' => '7',
                     'Agosto' => '8', 'Septiembre' => '9', 'Octubre' => '10', 'Noviembre' => '11', 'Diciembre' => '12',
                 ),
-//                'data' => $mes,
                 'required'    => false,
                 'placeholder' => '',
             ])
@@ -77,7 +76,10 @@ class AporteController extends ControllerListenerGeneral
 			if (!$arAporte) {
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
             }
-		}
+		}else{
+            $arAporte->setAnio((new \DateTime('now'))->format('Y'));
+            $arAporte->setMes((new \DateTime('now'))->format('m'));
+        }
         $form = $this->createForm(AporteType::class, $arAporte);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

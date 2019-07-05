@@ -405,6 +405,11 @@ class RhuContrato
     protected $aportesContratosContratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurSoporteContrato", mappedBy="contratoRel")
+     */
+    protected $soportesContratosContratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoPk()
@@ -1571,6 +1576,23 @@ class RhuContrato
     {
         $this->aportesContratosContratoRel = $aportesContratosContratoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSoportesContratosContratoRel()
+    {
+        return $this->soportesContratosContratoRel;
+    }
+
+    /**
+     * @param mixed $soportesContratosContratoRel
+     */
+    public function setSoportesContratosContratoRel($soportesContratosContratoRel): void
+    {
+        $this->soportesContratosContratoRel = $soportesContratosContratoRel;
+    }
+
 
 
 }

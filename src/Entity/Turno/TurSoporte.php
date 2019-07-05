@@ -69,6 +69,11 @@ class TurSoporte
     protected $grupoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurSoporteContrato", mappedBy="soporteRel")
+     */
+    protected $soportesContratosSoporteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoSoportePk()
@@ -228,6 +233,21 @@ class TurSoporte
         $this->grupoRel = $grupoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSoportesContratosSoporteRel()
+    {
+        return $this->soportesContratosSoporteRel;
+    }
+
+    /**
+     * @param mixed $soportesContratosSoporteRel
+     */
+    public function setSoportesContratosSoporteRel($soportesContratosSoporteRel): void
+    {
+        $this->soportesContratosSoporteRel = $soportesContratosSoporteRel;
+    }
 
 
 

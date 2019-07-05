@@ -378,6 +378,11 @@ class RhuEmpleado
     protected $programacionesEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="empleadoRel")
+     */
+    protected $aportesContratosEmpleadoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -1399,6 +1404,22 @@ class RhuEmpleado
     public function setProgramacionesEmpleadoRel($programacionesEmpleadoRel): void
     {
         $this->programacionesEmpleadoRel = $programacionesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosEmpleadoRel()
+    {
+        return $this->aportesContratosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosEmpleadoRel
+     */
+    public function setAportesContratosEmpleadoRel($aportesContratosEmpleadoRel): void
+    {
+        $this->aportesContratosEmpleadoRel = $aportesContratosEmpleadoRel;
     }
 
 

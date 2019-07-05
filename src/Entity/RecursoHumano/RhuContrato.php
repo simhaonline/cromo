@@ -400,6 +400,11 @@ class RhuContrato
     protected $requisitosContratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="contratoRel")
+     */
+    protected $aportesContratosContratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoPk()
@@ -1534,4 +1539,38 @@ class RhuContrato
     {
         $this->pagosContratoRel = $pagosContratoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRequisitosContratoRel()
+    {
+        return $this->requisitosContratoRel;
+    }
+
+    /**
+     * @param mixed $requisitosContratoRel
+     */
+    public function setRequisitosContratoRel($requisitosContratoRel): void
+    {
+        $this->requisitosContratoRel = $requisitosContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosContratoRel()
+    {
+        return $this->aportesContratosContratoRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosContratoRel
+     */
+    public function setAportesContratosContratoRel($aportesContratosContratoRel): void
+    {
+        $this->aportesContratosContratoRel = $aportesContratosContratoRel;
+    }
+
+
 }

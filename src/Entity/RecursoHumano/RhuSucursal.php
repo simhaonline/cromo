@@ -18,7 +18,7 @@ class RhuSucursal {
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_sucursal_pk", type="string", length=10, )
+     * @ORM\Column(name="codigo_sucursal_pk", type="string", length=10 )
      */
     private $codigoSucursalPk;
 
@@ -36,6 +36,16 @@ class RhuSucursal {
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="sucursalRel")
      */
     protected $contratosSucursalRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAportePlanilla", mappedBy="sucursalRel")
+     */
+    protected $aportesPlanillasSucursalRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="sucursalRel")
+     */
+    protected $aportesContratosSucursalRel;
 
     /**
      * @return mixed
@@ -100,5 +110,39 @@ class RhuSucursal {
     {
         $this->contratosSucursalRel = $contratosSucursalRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesPlanillasSucursalRel()
+    {
+        return $this->aportesPlanillasSucursalRel;
+    }
+
+    /**
+     * @param mixed $aportesPlanillasSucursalRel
+     */
+    public function setAportesPlanillasSucursalRel($aportesPlanillasSucursalRel): void
+    {
+        $this->aportesPlanillasSucursalRel = $aportesPlanillasSucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosSucursalRel()
+    {
+        return $this->aportesContratosSucursalRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosSucursalRel
+     */
+    public function setAportesContratosSucursalRel($aportesContratosSucursalRel): void
+    {
+        $this->aportesContratosSucursalRel = $aportesContratosSucursalRel;
+    }
+
+
 }
 

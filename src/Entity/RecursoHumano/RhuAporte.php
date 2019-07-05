@@ -32,6 +32,16 @@ class RhuAporte
     private $mes = 0;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAportePlanilla", mappedBy="aporteRel")
+     */
+    protected $aportesPlanillasAporteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="aporteRel")
+     */
+    protected $aportesContratosAporteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoAportePk()
@@ -77,6 +87,38 @@ class RhuAporte
     public function setMes($mes): void
     {
         $this->mes = $mes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesPlanillasAporteRel()
+    {
+        return $this->aportesPlanillasAporteRel;
+    }
+
+    /**
+     * @param mixed $aportesPlanillasAporteRel
+     */
+    public function setAportesPlanillasAporteRel($aportesPlanillasAporteRel): void
+    {
+        $this->aportesPlanillasAporteRel = $aportesPlanillasAporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosAporteRel()
+    {
+        return $this->aportesContratosAporteRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosAporteRel
+     */
+    public function setAportesContratosAporteRel($aportesContratosAporteRel): void
+    {
+        $this->aportesContratosAporteRel = $aportesContratosAporteRel;
     }
 
 

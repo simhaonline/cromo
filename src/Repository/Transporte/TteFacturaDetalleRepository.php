@@ -147,6 +147,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         fd.unidades,
         p.nombre AS producto,
         g.pesoReal,
+        ep.nombre AS empaque,
         g.pesoFacturado,                
         fd.vrFlete,
         fd.vrManejo,
@@ -160,6 +161,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         LEFT JOIN g.ciudadDestinoRel cd
         LEFT JOIN g.ciudadOrigenRel co
         LEFT JOIN g.productoRel p
+        LEFT JOIN g.empaqueRel ep
         WHERE fd.codigoFacturaFk = :codigoFactura and fd.codigoFacturaPlanillaFk IS NULL ORDER BY g.numero ASC'
         )->setParameter('codigoFactura', $codigoFactura);
 

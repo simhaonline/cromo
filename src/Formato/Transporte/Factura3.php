@@ -101,6 +101,9 @@ class Factura3 extends \FPDF {
         $this->Cell(60, 5, utf8_decode($arFactura->getClienteRel()->getCiudadRel()->getNombre()), 'LBR', 0, 'l', 1);
         $this->Cell(92, 5, utf8_decode($arFactura->getClienteRel()->getDireccion()), 'LBR', 0, 'l', 1);
         $this->Cell(44, 5, utf8_decode($arFactura->getClienteRel()->getTelefono()), 'LBR', 0, 'l', 1);
+        $this->SetXY(150, 51);
+        $this->SetFont('Arial', 'b', 9);
+        $this->Cell(10, 5, utf8_decode($arFactura->getFacturaTipoRel()->getResolucionFacturacion()), '', 0, 'C', 1);
 
 
 
@@ -109,15 +112,15 @@ class Factura3 extends \FPDF {
     }
 
     public function EncabezadoDetalles() {
-        $this->Ln(15);
-        $header = array('REMESA', 'DOCUMENTO','ORIGEN', 'DESTINO', 'DESTINATARIO', 'PRODUCTO', 'INGRESO', 'ENTR', 'UND', 'PESO DECL', 'PESO COBR', 'VR DECLA', 'FLETE', 'MANEJO', 'OTROS', 'VR TOTAL');
+        $this->Ln(6);
+        $header = array('REMESA', 'DOCUMENTO','ORIGEN', 'DESTINO', 'DESTINATARIO', 'PRODUCTO', 'EMP', 'INGRESO', 'ENTR', 'UND', 'PESO DECL', 'PESO COBR', 'DECLADO', 'FLETE', 'MANEJO', 'OTROS', 'TOTAL');
         $this->SetFillColor(170, 170, 170);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 6);
         //creamos la cabecera de la tabla.
-        $w = array(17, 20, 20, 20, 25, 20, 20, 20, 10, 15, 15, 15, 15 , 15, 15, 15);
+        $w = array(17, 20, 20, 20, 25, 15, 9, 18, 18, 10, 15, 15, 15, 15 , 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -165,9 +168,10 @@ class Factura3 extends \FPDF {
                 $pdf->Cell(20, 5, substr(utf8_decode($arGuia['ciudadOrigen']),0,27), 0, 0, 'L');
                 $pdf->Cell(20, 5, substr(utf8_decode($arGuia['ciudadDestino']),0,15), 0, 0, 'L');
                 $pdf->Cell(25, 5, substr(utf8_decode($arGuia['nombreDestinatario']),0,15), 0, 0, 'L');
-                $pdf->Cell(20, 5, substr(utf8_decode($arGuia['producto']),0,15), 0, 0, 'L');
-                $pdf->Cell(20, 5, substr(utf8_decode($arGuia['fechaIngreso']->format('Y-m-d')),0,15), 0, 0, 'L');
-                $pdf->Cell(20, 5, substr(utf8_decode($arGuia['fechaIngreso']->format('Y-m-d')),0,15), 0, 0, 'L');
+                $pdf->Cell(15, 5, substr(utf8_decode($arGuia['producto']),0,15), 0, 0, 'L');
+                $pdf->Cell(9, 5, substr(utf8_decode(substr($arGuia['empaque'], 0, 3)),0,15), 0, 0, 'L');
+                $pdf->Cell(18, 5, substr(utf8_decode($arGuia['fechaIngreso']->format('Y-m-d')),0,15), 0, 0, 'L');
+                $pdf->Cell(18, 5, substr(utf8_decode($arGuia['fechaIngreso']->format('Y-m-d')),0,15), 0, 0, 'L');
                 $pdf->Cell(10, 5, number_format($arGuia['unidades'], 0, '.', ','), 0, 0, 'C');
                 $pdf->Cell(15, 5, number_format($arGuia['pesoReal'], 0, '.', ','), 0, 0, 'R');
                 $pdf->Cell(15, 5, number_format($arGuia['pesoFacturado'], 0, '.', ','), 0, 0, 'R');

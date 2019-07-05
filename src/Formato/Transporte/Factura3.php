@@ -37,6 +37,7 @@ class Factura3 extends \FPDF {
         $codigoBarras->setThickness(25);
         $codigoBarras->setFontSize(0);
         $codigo = $codigoBarras->generate();
+        $this->Image('../public/img/recursos/transporte/supertransporte.png', 206, 25, 45, 35);
         $this->Image('data:image/png;base64,'.$codigo, 240, 25, 40, 10,'png');
         try {
             $logo=self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');

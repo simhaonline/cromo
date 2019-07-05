@@ -15,4 +15,12 @@ class RhuAportePlanillaRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuAportePlanilla::class);
     }
 
+
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAportePlanilla::class, 'ap')
+            ->select('ap');
+        return $queryBuilder;
+    }
 }

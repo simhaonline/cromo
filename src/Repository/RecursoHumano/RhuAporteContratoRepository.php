@@ -14,5 +14,13 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuAporteContrato::class);
     }
+
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporteContrato::class, 'ac')
+            ->select('ac');
+        return $queryBuilder;
+    }
     
 }

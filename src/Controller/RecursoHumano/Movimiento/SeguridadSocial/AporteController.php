@@ -6,6 +6,8 @@ namespace App\Controller\RecursoHumano\Movimiento\SeguridadSocial;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\RecursoHumano\RhuAporte;
+use App\Entity\RecursoHumano\RhuAporteContrato;
+use App\Entity\RecursoHumano\RhuAportePlanilla;
 use App\Form\Type\RecursoHumano\AporteType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -102,6 +104,7 @@ class AporteController extends ControllerListenerGeneral
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
         if ($id != 0) {
             $arAporte = $em->getRepository(RhuAporte::class)->find($id);
             if (!$arAporte) {
@@ -109,8 +112,12 @@ class AporteController extends ControllerListenerGeneral
             }
         }
         $arAporte = $em->getRepository(RhuAporte::class)->find($id);
+        $arAportePlanillas= $paginator->paginate($em->getRepository(RhuAportePlanilla::class)->lista(), $request->query->getInt('page', 1), 30);
+        $arAporteContratos= $paginator->paginate($em->getRepository(RhuAporteContrato::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/seguridadsocial/aporte/detalle.html.twig', [
-            'arAporte' => $arAporte
+            'arAporte' => $arAporte,
+            'arAportePlanillas'=>$arAportePlanillas,
+            'arAporteContratos'=>$arAporteContratos
         ]);
 	}
 }

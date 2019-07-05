@@ -67,7 +67,6 @@ class RecogidaController extends ControllerListenerGeneral
             }
 
         }
-
         return $this->render('transporte/movimiento/recogida/recogida/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),

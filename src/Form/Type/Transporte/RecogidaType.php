@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class RecogidaType extends AbstractType {
+class   RecogidaType extends AbstractType {
 
     /**
      * {@inheritdoc}
@@ -103,7 +103,8 @@ class RecogidaType extends AbstractType {
             {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"},
             {"campo":"estadoProgramado",                        "tipo":"bool",      "ayuda":"Programado",                               "titulo":"PRO"},
             {"campo":"estadoRecogido",                          "tipo":"bool",      "ayuda":"Recogido",                                 "titulo":"REC"},
-            {"campo":"estadoDescargado",                        "tipo":"bool",      "ayuda":"Descargado",                               "titulo":"DES"}
+            {"campo":"estadoDescargado",                        "tipo":"bool",      "ayuda":"Descargado",                               "titulo":"DES"},
+            {"campo":"comentario",                               "tipo":"texto",     "ayuda":"Comentario",                                 "titulo":"COMENTARIO"}
         ]';
         return $campos;
 

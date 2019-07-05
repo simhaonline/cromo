@@ -22,6 +22,7 @@ use App\Entity\Transporte\TtePoseedor;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteIntermediacionRepository extends ServiceEntityRepository
 {
@@ -30,21 +31,25 @@ class TteIntermediacionRepository extends ServiceEntityRepository
         parent::__construct($registry, TteIntermediacion::class);
     }
 
-    public function lista(): array
+    public function lista()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
-            'SELECT i.codigoIntermediacionPk, 
-        i.anio, 
-        i.mes,
-        i.estadoAutorizado,
-        i.estadoAprobado, 
-        i.vrFletePago,
-        i.vrFleteCobro
-        FROM App\Entity\Transporte\TteIntermediacion i                 
-        ORDER BY i.anio, i.mes DESC '
-        );
-        return $query->execute();
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteIntermediacion::class, 'i')
+            ->select('i.codigoIntermediacionPk')
+            ->addSelect('i.anio')
+            ->addSelect('i.mes')
+            ->addSelect('i.estadoAutorizado')
+            ->addSelect('i.estadoAprobado')
+            ->addSelect('i.vrFletePago')
+            ->addSelect('i.vrFleteCobro')
+            ->orderBy('i.anio', 'DESC');
+        if ($session->get('filtroTteIntermediacionAnio') != '') {
+            $queryBuilder->andWhere("i.anio LIKE '%{$session->get('filtroTteIntermediacionAnio')}%' ");
+        }
+        if ($session->get('filtroTteIntermediacioneMes') != '') {
+            $queryBuilder->andWhere("i.mes = {$session->get('filtroTteIntermediacioneMes')} ");
+        }
+        return $queryBuilder;
     }
 
     /**

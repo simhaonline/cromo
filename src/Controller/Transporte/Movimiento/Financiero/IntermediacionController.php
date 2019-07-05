@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Transporte\Proceso\Transporte\General;
+namespace App\Controller\Transporte\Movimiento\Financiero;
 
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteFactura;
@@ -12,8 +12,10 @@ use App\Entity\TteGuia;
 use App\Form\Type\Transporte\IntermediacionType;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,31 +24,48 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class IntermediacionController extends Controller
 {
    /**
-    * @Route("/transporte/proceso/transporte/general/intermediacion", name="transporte_proceso_transporte_general_intermediacion")
+    * @Route("/transporte/movimiento/financiero/intermediacion", name="transporte_movimiento_financiero_intermediacion_lista")
     */    
     public function lista(Request $request)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('txtAnio', TextType::class, ['required' => false])
+            ->add('txtMes', ChoiceType::class, [
+                'choices' => array(
+                    'Enero' => '1', 'Febrero' => '2', 'Marzo' => '3', 'Abril' => '4', 'Mayo' => '5', 'Junio' => '6', 'Julio' => '7',
+                    'Agosto' => '8', 'Septiembre' => '9', 'Octubre' => '10', 'Noviembre' => '11', 'Diciembre' => '12',
+                ),
+                'required'    => false,
+                'placeholder' => '',
+            ])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add( 'btnExcel', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
+            ->add( 'btnEliminar', SubmitType::class, ['label'=>'Eliminar', 'attr'=>['class'=> 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('btnEliminar')->isClicked()){
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTteIntermediacionAnio', $form->get('txtAnio')->getData());
+                $session->set('filtroTteIntermediacioneMes', $form->get('txtMes')->getData());
+            }
+            if ($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteIntermediacion::class)->eliminar($arrSeleccionados);
+                $this->get("UtilidadesModelo")->eliminar(TteIntermediacion::class, $arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
             }
         }
-        $query = $this->getDoctrine()->getRepository(TteIntermediacion::class)->lista();
-        $arIntermediacions = $paginator->paginate($query, $request->query->getInt('page', 1),10);
-        return $this->render('transporte/proceso/transporte/general/intermediacion/lista.html.twig', [
+        $arIntermediacions = $paginator->paginate($em->getRepository(TteIntermediacion::class)->lista(), $request->query->getInt('page', 1), 10);
+
+        return $this->render('transporte/movimiento/financiero/intermediacion/lista.html.twig', [
             'arIntermediacions' => $arIntermediacions,
             'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/proceso/transporte/general/intermediacion/nuevo/{id}", name="transporte_proceso_transporte_general_intermediacion_nuevo")
+     * @Route("/transporte/movimiento/financiero/intermediacion/nuevo/{id}", name="transporte_movimiento_financiero_intermediacion_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -54,6 +73,9 @@ class IntermediacionController extends Controller
         $arIntermediacion = new TteIntermediacion();
         if($id != 0) {
             $arIntermediacion = $em->getRepository(TteIntermediacion::class)->find($id);
+        }else{
+            $arIntermediacion->setAnio((new \DateTime('now'))->format('Y'));
+            $arIntermediacion->setMes((new \DateTime('now'))->format('m'));
         }
         $form = $this->createForm(IntermediacionType::class, $arIntermediacion);
         $form->handleRequest($request);
@@ -63,16 +85,16 @@ class IntermediacionController extends Controller
             $arIntermediacion->setFecha($fecha);
             $em->persist($arIntermediacion);
             $em->flush();
-            return $this->redirect($this->generateUrl('transporte_proceso_transporte_general_intermediacion_detalle', array('id'=> $arIntermediacion->getCodigoIntermediacionPk())));
+            return $this->redirect($this->generateUrl('transporte_movimiento_financiero_intermediacion_detalle', array('id'=> $arIntermediacion->getCodigoIntermediacionPk())));
 
         }
-        return $this->render('transporte/proceso/transporte/general/intermediacion/nuevo.html.twig', [
+        return $this->render('transporte/movimiento/financiero/intermediacion/nuevo.html.twig', [
             'arIntermediacion' => $arIntermediacion,
             'form' => $form->createView()]);
     }
 
     /**
-     * @Route("/transporte/proceso/transporte/general/intermediacion/detalle/{id}", name="transporte_proceso_transporte_general_intermediacion_detalle")
+     * @Route("/transporte/movimiento/financiero/intermediacion/detalle/{id}", name="transporte_movimiento_financiero_intermediacion_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -102,7 +124,7 @@ class IntermediacionController extends Controller
         }
         $arIntermediacionVentas = $this->getDoctrine()->getRepository(TteIntermediacionVenta::class)->detalle($id);
         $arIntermediacionCompras = $this->getDoctrine()->getRepository(TteIntermediacionCompra::class)->detalle($id);
-        return $this->render('transporte/proceso/transporte/general/intermediacion/detalle.html.twig', [
+        return $this->render('transporte/movimiento/financiero/intermediacion/detalle.html.twig', [
             'arIntermediacion' => $arIntermediacion,
             'arIntermediacionVentas' => $arIntermediacionVentas,
             'arIntermediacionCompras' => $arIntermediacionCompras,

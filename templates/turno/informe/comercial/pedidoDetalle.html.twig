@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+
+
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>CANTIDAD</th>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>LUNES</th>
+            <th>MARTES</th>
+            <th>MIERCOLES</th>
+            <th>JUEVES</th>
+            <th>VIERNES</th>
+            <th>SABADO</th>
+            <th>DOMINGO</th>
+            <th>FESTIVO</th>
+            <th title="HORAS PROGRAMADAS">H.P.</th>
+            <th title="HORAS DIURNAS">H.DIU</th>
+            <th title="HORAS NOCTURNAS">H.NOC</th>
+            <th title="CONCEPTO NOMBRE">NOMBRE</th>
+            <th title="MODALIDAD NOMBRE">MODALIDAD</th>
+
+            <th title="VALOR SALARIO BASE">BASE</th>
+            <th title="VALOR PRECIO AJUSTADO">PRECIO AJUSTADO</th>
+            <th title="BASE IVA">BASE IVA</th>
+            <th title="IVA">IVA</th>
+            <th title="BASE PORCENTAJE IVA">PORCENTAJE IVA</th>
+            <th >SUBTOTAL</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arPedidosDetalle in arPedidosDetalles %}
+            <tr>
+                <td>{{ arPedidosDetalle.codigoPedidoDetallePk }}</td>
+                <td>{{ arPedidosDetalle.cantidad }}</td>
+                <td>{{ arPedidosDetalle.diaDesde }}</td>
+                <td>{{ arPedidosDetalle.diaHasta }}</td>
+                <td>{{ arPedidosDetalle.lunes? "SI":"NO" }}</td>
+                <td>{{ arPedidosDetalle.martes? "SI":"NO" }}</td>
+                <td>{{ arPedidosDetalle.miercoles? "SI":"NO" }}</td>
+                <td>{{ arPedidosDetalle.jueves? "SI":"NO" }}</td>
+                <td>{{ arPedidosDetalle.viernes? "SI":"NO" }}</td>
+                <td>{{ arPedidosDetalle.sabado? "SI":"NO" }}</td>
+                <td>{{ arPedidosDetalle.domingo? "SI":"NO" }}</td>
+                <td>{{ arPedidosDetalle.festivo? "SI":"NO" }}</td>
+                <td>{{ arPedidosDetalle.horasProgramadas}}</td>
+                <td>{{ arPedidosDetalle.horasDiurnasProgramadas}}</td>
+                <td>{{ arPedidosDetalle.horasNocturnasProgramadas}}</td>
+                <td>{{ arPedidosDetalle.conceptoNombre}}</td>
+                <td>{{ arPedidosDetalle.modalidadNombre}}</td>
+                <td class="numero">{{ arPedidosDetalle.vrSalarioBase | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPedidosDetalle.vrPrecioAjustado| number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arPedidosDetalle.porcentajeBaseIva| number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arPedidosDetalle.porcentajeIva| number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arPedidosDetalle.vrIva| number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arPedidosDetalle.vrSubtotal| number_format(0, '.', ',')}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arPedidosDetalles.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arPedidosDetalles) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+    </div>
+    <br/><br/>
+    {{ form_end(form) }}
+{% endblock %}

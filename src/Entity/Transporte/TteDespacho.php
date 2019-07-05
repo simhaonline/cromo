@@ -79,6 +79,11 @@ class TteDespacho
     private $codigoConductorFk;
 
     /**
+     * @ORM\Column(name="codigo_poseedor_fk", type="integer", nullable=true)
+     */
+    private $codigoPoseedorFk;
+
+    /**
      * @ORM\Column(name="codigo_ruta_fk", type="string", length=20, nullable=true)
      */
     private $codigoRutaFk;
@@ -309,6 +314,12 @@ class TteDespacho
      * @ORM\JoinColumn(name="codigo_ruta_fk", referencedColumnName="codigo_ruta_pk")
      */
     private $rutaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TtePoseedor", inversedBy="despachosPoseedorRel")
+     * @ORM\JoinColumn(name="codigo_poseedor_fk", referencedColumnName="codigo_poseedor_pk")
+     */
+    private $poseedorRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="despachoRel")
@@ -1405,6 +1416,39 @@ class TteDespacho
     {
         $this->despachoAuxiliarRel = $despachoAuxiliarRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPoseedorFk()
+    {
+        return $this->codigoPoseedorFk;
+    }
+
+    /**
+     * @param mixed $codigoPoseedorFk
+     */
+    public function setCodigoPoseedorFk($codigoPoseedorFk): void
+    {
+        $this->codigoPoseedorFk = $codigoPoseedorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPoseedorRel()
+    {
+        return $this->poseedorRel;
+    }
+
+    /**
+     * @param mixed $poseedorRel
+     */
+    public function setPoseedorRel($poseedorRel): void
+    {
+        $this->poseedorRel = $poseedorRel;
+    }
+
 
 
 }

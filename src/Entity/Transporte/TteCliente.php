@@ -240,9 +240,9 @@ class TteCliente
     protected $clientesCondicionesClienteRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionDetalle", mappedBy="clienteRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionVenta", mappedBy="clienteRel")
      */
-    protected $intermediacionesDetallesClienteRel;
+    protected $intermediacionesVentasClienteRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuiaTemporal", mappedBy="clienteRel")
@@ -950,17 +950,17 @@ class TteCliente
     /**
      * @return mixed
      */
-    public function getIntermediacionesDetallesClienteRel()
+    public function getIntermediacionesVentasClienteRel()
     {
-        return $this->intermediacionesDetallesClienteRel;
+        return $this->intermediacionesVentasClienteRel;
     }
 
     /**
-     * @param mixed $intermediacionesDetallesClienteRel
+     * @param mixed $intermediacionesVentasClienteRel
      */
-    public function setIntermediacionesDetallesClienteRel($intermediacionesDetallesClienteRel): void
+    public function setIntermediacionesVentasClienteRel($intermediacionesVentasClienteRel): void
     {
-        $this->intermediacionesDetallesClienteRel = $intermediacionesDetallesClienteRel;
+        $this->intermediacionesVentasClienteRel = $intermediacionesVentasClienteRel;
     }
 
     /**

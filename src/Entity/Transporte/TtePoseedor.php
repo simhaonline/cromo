@@ -116,6 +116,16 @@ class TtePoseedor
     protected $vehiculosPropietarioRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionCompra", mappedBy="poseedorRel")
+     */
+    protected $intermediacionesComprasPoseedorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespacho", mappedBy="poseedorRel")
+     */
+    protected $despachosPoseedorRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPoseedorPk()
@@ -401,6 +411,38 @@ class TtePoseedor
     public function setCorreo($correo): void
     {
         $this->correo = $correo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesComprasPoseedorRel()
+    {
+        return $this->intermediacionesComprasPoseedorRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesComprasPoseedorRel
+     */
+    public function setIntermediacionesComprasPoseedorRel($intermediacionesComprasPoseedorRel): void
+    {
+        $this->intermediacionesComprasPoseedorRel = $intermediacionesComprasPoseedorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosPoseedorRel()
+    {
+        return $this->despachosPoseedorRel;
+    }
+
+    /**
+     * @param mixed $despachosPoseedorRel
+     */
+    public function setDespachosPoseedorRel($despachosPoseedorRel): void
+    {
+        $this->despachosPoseedorRel = $despachosPoseedorRel;
     }
 
 

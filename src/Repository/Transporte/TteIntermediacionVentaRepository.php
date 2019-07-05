@@ -19,28 +19,26 @@ use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteIntermediacion;
 use App\Entity\Transporte\TteIntermediacionDetalle;
+use App\Entity\Transporte\TteIntermediacionVenta;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class TteIntermediacionDetalleRepository extends ServiceEntityRepository
+class TteIntermediacionVentaRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, TteIntermediacionDetalle::class);
+        parent::__construct($registry, TteIntermediacionVenta::class);
     }
 
     public function detalle($codigoIntermediacion)
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteIntermediacionDetalle::class, 'id')
-            ->select('id.codigoIntermediacionDetallePk')
-            ->addSelect('id.numero')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteIntermediacionVenta::class, 'id')
+            ->select('id.codigoIntermediacionVentaPk')
             ->addSelect('id.vrFlete')
-            ->addSelect('id.vrPago')
+            ->addSelect('id.vrFleteParticipacion')
+            ->addSelect('id.vrFleteIngreso')
             ->addSelect('id.porcentajeParticipacion')
-            ->addSelect('id.vrIngreso')
-            ->addSelect('id.vrPagoOperado')
-            ->addSelect('id.vrIngresoOperado')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('ft.nombre AS facturaTipoNombre')
             ->leftJoin('id.clienteRel', 'c')

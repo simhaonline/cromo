@@ -5,7 +5,9 @@ namespace App\Controller\Transporte\Proceso\Transporte\General;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteIntermediacion;
+use App\Entity\Transporte\TteIntermediacionCompra;
 use App\Entity\Transporte\TteIntermediacionDetalle;
+use App\Entity\Transporte\TteIntermediacionVenta;
 use App\Entity\TteGuia;
 use App\Form\Type\Transporte\IntermediacionType;
 use App\General\General;
@@ -95,13 +97,15 @@ class IntermediacionController extends Controller
                 return $this->redirect($this->generateUrl('transporte_proceso_transporte_general_intermediacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteIntermediacionDetalle::class)->detalle($id), "Intermediacion");
+                General::get()->setExportar($em->getRepository(TteIntermediacionVenta::class)->detalle($id), "Intermediacion");
             }
         }
-        $arIntermediacionDetalles = $this->getDoctrine()->getRepository(TteIntermediacionDetalle::class)->detalle($id);
+        $arIntermediacionVentas = $this->getDoctrine()->getRepository(TteIntermediacionVenta::class)->detalle($id);
+        $arIntermediacionCompras = $this->getDoctrine()->getRepository(TteIntermediacionCompra::class)->detalle($id);
         return $this->render('transporte/proceso/transporte/general/intermediacion/detalle.html.twig', [
             'arIntermediacion' => $arIntermediacion,
-            'arIntermediacionDetalles' => $arIntermediacionDetalles,
+            'arIntermediacionVentas' => $arIntermediacionVentas,
+            'arIntermediacionCompras' => $arIntermediacionCompras,
             'form' => $form->createView()]);
     }
 

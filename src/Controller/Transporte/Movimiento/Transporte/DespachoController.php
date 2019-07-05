@@ -138,6 +138,7 @@ class DespachoController extends ControllerListenerGeneral
                                 }
                                 $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();
                                 $arDespacho->setVehiculoRel($arVehiculo);
+                                $arDespacho->setPoseedorRel($arVehiculo->getPoseedorRel());
                                 $arDespacho->setConductorRel($arConductor);
                                 $descuentos = $arDespacho->getVrDescuentoPapeleria() + $arDespacho->getVrDescuentoSeguridad() + $arDespacho->getVrDescuentoCargue() + $arDespacho->getVrDescuentoEstampilla();
                                 $retencionFuente = 0;

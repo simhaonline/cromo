@@ -127,11 +127,6 @@ class TteDespachoTipo
     protected $despachosDespachoTipoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionDetalle", mappedBy="despachoTipoRel")
-     */
-    protected $intermediacionesDetallesDespachoTipoRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoDespachoTipoPk()
@@ -142,7 +137,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoDespachoTipoPk
      */
-    public function setCodigoDespachoTipoPk( $codigoDespachoTipoPk ): void
+    public function setCodigoDespachoTipoPk($codigoDespachoTipoPk): void
     {
         $this->codigoDespachoTipoPk = $codigoDespachoTipoPk;
     }
@@ -158,7 +153,7 @@ class TteDespachoTipo
     /**
      * @param mixed $nombre
      */
-    public function setNombre( $nombre ): void
+    public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
     }
@@ -174,7 +169,7 @@ class TteDespachoTipo
     /**
      * @param mixed $consecutivo
      */
-    public function setConsecutivo( $consecutivo ): void
+    public function setConsecutivo($consecutivo): void
     {
         $this->consecutivo = $consecutivo;
     }
@@ -190,7 +185,7 @@ class TteDespachoTipo
     /**
      * @param mixed $viaje
      */
-    public function setViaje( $viaje ): void
+    public function setViaje($viaje): void
     {
         $this->viaje = $viaje;
     }
@@ -206,7 +201,7 @@ class TteDespachoTipo
     /**
      * @param mixed $exigeNumero
      */
-    public function setExigeNumero( $exigeNumero ): void
+    public function setExigeNumero($exigeNumero): void
     {
         $this->exigeNumero = $exigeNumero;
     }
@@ -222,7 +217,7 @@ class TteDespachoTipo
     /**
      * @param mixed $generaMonitoreo
      */
-    public function setGeneraMonitoreo( $generaMonitoreo ): void
+    public function setGeneraMonitoreo($generaMonitoreo): void
     {
         $this->generaMonitoreo = $generaMonitoreo;
     }
@@ -238,7 +233,7 @@ class TteDespachoTipo
     /**
      * @param mixed $generaCuentaPagar
      */
-    public function setGeneraCuentaPagar( $generaCuentaPagar ): void
+    public function setGeneraCuentaPagar($generaCuentaPagar): void
     {
         $this->generaCuentaPagar = $generaCuentaPagar;
     }
@@ -254,7 +249,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoComprobanteFk
      */
-    public function setCodigoComprobanteFk( $codigoComprobanteFk ): void
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
     {
         $this->codigoComprobanteFk = $codigoComprobanteFk;
     }
@@ -270,7 +265,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaFleteFk
      */
-    public function setCodigoCuentaFleteFk( $codigoCuentaFleteFk ): void
+    public function setCodigoCuentaFleteFk($codigoCuentaFleteFk): void
     {
         $this->codigoCuentaFleteFk = $codigoCuentaFleteFk;
     }
@@ -286,7 +281,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaFletePagoIntermediacionFk
      */
-    public function setCodigoCuentaFletePagoIntermediacionFk( $codigoCuentaFletePagoIntermediacionFk ): void
+    public function setCodigoCuentaFletePagoIntermediacionFk($codigoCuentaFletePagoIntermediacionFk): void
     {
         $this->codigoCuentaFletePagoIntermediacionFk = $codigoCuentaFletePagoIntermediacionFk;
     }
@@ -302,7 +297,7 @@ class TteDespachoTipo
     /**
      * @param mixed $naturalezaCuentaFletePagoIntermediacion
      */
-    public function setNaturalezaCuentaFletePagoIntermediacion( $naturalezaCuentaFletePagoIntermediacion ): void
+    public function setNaturalezaCuentaFletePagoIntermediacion($naturalezaCuentaFletePagoIntermediacion): void
     {
         $this->naturalezaCuentaFletePagoIntermediacion = $naturalezaCuentaFletePagoIntermediacion;
     }
@@ -318,7 +313,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaRetencionFuenteFk
      */
-    public function setCodigoCuentaRetencionFuenteFk( $codigoCuentaRetencionFuenteFk ): void
+    public function setCodigoCuentaRetencionFuenteFk($codigoCuentaRetencionFuenteFk): void
     {
         $this->codigoCuentaRetencionFuenteFk = $codigoCuentaRetencionFuenteFk;
     }
@@ -334,7 +329,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaIndustriaComercioFk
      */
-    public function setCodigoCuentaIndustriaComercioFk( $codigoCuentaIndustriaComercioFk ): void
+    public function setCodigoCuentaIndustriaComercioFk($codigoCuentaIndustriaComercioFk): void
     {
         $this->codigoCuentaIndustriaComercioFk = $codigoCuentaIndustriaComercioFk;
     }
@@ -350,7 +345,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaSeguridadFk
      */
-    public function setCodigoCuentaSeguridadFk( $codigoCuentaSeguridadFk ): void
+    public function setCodigoCuentaSeguridadFk($codigoCuentaSeguridadFk): void
     {
         $this->codigoCuentaSeguridadFk = $codigoCuentaSeguridadFk;
     }
@@ -366,7 +361,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaCargueFk
      */
-    public function setCodigoCuentaCargueFk( $codigoCuentaCargueFk ): void
+    public function setCodigoCuentaCargueFk($codigoCuentaCargueFk): void
     {
         $this->codigoCuentaCargueFk = $codigoCuentaCargueFk;
     }
@@ -382,7 +377,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaEstampillaFk
      */
-    public function setCodigoCuentaEstampillaFk( $codigoCuentaEstampillaFk ): void
+    public function setCodigoCuentaEstampillaFk($codigoCuentaEstampillaFk): void
     {
         $this->codigoCuentaEstampillaFk = $codigoCuentaEstampillaFk;
     }
@@ -398,7 +393,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaPapeleriaFk
      */
-    public function setCodigoCuentaPapeleriaFk( $codigoCuentaPapeleriaFk ): void
+    public function setCodigoCuentaPapeleriaFk($codigoCuentaPapeleriaFk): void
     {
         $this->codigoCuentaPapeleriaFk = $codigoCuentaPapeleriaFk;
     }
@@ -414,7 +409,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaAnticipoFk
      */
-    public function setCodigoCuentaAnticipoFk( $codigoCuentaAnticipoFk ): void
+    public function setCodigoCuentaAnticipoFk($codigoCuentaAnticipoFk): void
     {
         $this->codigoCuentaAnticipoFk = $codigoCuentaAnticipoFk;
     }
@@ -430,7 +425,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaPagarFk
      */
-    public function setCodigoCuentaPagarFk( $codigoCuentaPagarFk ): void
+    public function setCodigoCuentaPagarFk($codigoCuentaPagarFk): void
     {
         $this->codigoCuentaPagarFk = $codigoCuentaPagarFk;
     }
@@ -446,7 +441,7 @@ class TteDespachoTipo
     /**
      * @param mixed $codigoCuentaPagarTipoFk
      */
-    public function setCodigoCuentaPagarTipoFk( $codigoCuentaPagarTipoFk ): void
+    public function setCodigoCuentaPagarTipoFk($codigoCuentaPagarTipoFk): void
     {
         $this->codigoCuentaPagarTipoFk = $codigoCuentaPagarTipoFk;
     }
@@ -462,7 +457,7 @@ class TteDespachoTipo
     /**
      * @param mixed $contabilizar
      */
-    public function setContabilizar( $contabilizar ): void
+    public function setContabilizar($contabilizar): void
     {
         $this->contabilizar = $contabilizar;
     }
@@ -478,26 +473,12 @@ class TteDespachoTipo
     /**
      * @param mixed $despachosDespachoTipoRel
      */
-    public function setDespachosDespachoTipoRel( $despachosDespachoTipoRel ): void
+    public function setDespachosDespachoTipoRel($despachosDespachoTipoRel): void
     {
         $this->despachosDespachoTipoRel = $despachosDespachoTipoRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getIntermediacionesDetallesDespachoTipoRel()
-    {
-        return $this->intermediacionesDetallesDespachoTipoRel;
-    }
 
-    /**
-     * @param mixed $intermediacionesDetallesDespachoTipoRel
-     */
-    public function setIntermediacionesDetallesDespachoTipoRel( $intermediacionesDetallesDespachoTipoRel ): void
-    {
-        $this->intermediacionesDetallesDespachoTipoRel = $intermediacionesDetallesDespachoTipoRel;
-    }
 
 
 }

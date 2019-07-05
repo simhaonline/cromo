@@ -20,6 +20,7 @@ use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,6 +88,9 @@ class SoporteController extends ControllerListenerGeneral
             if (!$arSoporte) {
                 return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_lista'));
             }
+        } else {
+            $arSoporte->setFechaDesde(new \DateTime('now'));
+            $arSoporte->setFechaHasta(new \DateTime('now'));
         }
         $form = $this->createForm(SoporteType::class, $arSoporte);
         $form->handleRequest($request);

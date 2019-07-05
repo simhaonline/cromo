@@ -123,4 +123,39 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         }
     }
 
+    public function informe()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd');
+        $queryBuilder
+            ->select('pd.codigoPedidoDetallePk')
+            ->addSelect('pd.cantidad')
+            ->addSelect('pd.diaDesde')
+            ->addSelect('pd.diaHasta')
+            ->addSelect('pd.lunes')
+            ->addSelect('pd.martes')
+            ->addSelect('pd.miercoles')
+            ->addSelect('pd.jueves')
+            ->addSelect('pd.viernes')
+            ->addSelect('pd.sabado')
+            ->addSelect('pd.domingo')
+            ->addSelect('pd.festivo')
+            ->addSelect('pd.horasProgramadas')
+            ->addSelect('pd.horasDiurnasProgramadas')
+            ->addSelect('pd.horasNocturnasProgramadas')
+            ->addSelect('pd.vrSalarioBase')
+            ->addSelect('pd.vrPrecioMinimo')
+            ->addSelect('pd.vrPrecioAjustado')
+            ->addSelect('pd.porcentajeBaseIva')
+            ->addSelect('pd.porcentajeIva')
+            ->addSelect('pd.vrIva')
+            ->addSelect('pd.vrSubtotal')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('m.nombre as modalidadNombre')
+            ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.modalidadRel', 'm');
+
+        return $queryBuilder;
+    }
+
 }

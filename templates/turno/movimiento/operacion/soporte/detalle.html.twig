@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_movimiento_operacion_soporte_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <div style="float:right">
+        {% if arSoporte.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arSoporte.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arSoporte.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+    </div>
+    <br/><br/>
+    {% include 'turno/movimiento/operacion/soporte/informacion.html.twig' %}
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
+    {{ form_end(form) }}
+{% endblock %}

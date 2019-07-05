@@ -20,13 +20,15 @@ class GenModelo extends Fixture
                 'TurContrato',
                 'TurCotizacion',
                 'TurPuesto',
+                'TurSoporte',
+                'TurSoporteDetalle',
                 'TurPedido',
                 'TurItem',
                 'TurTurno',
                 'TurFactura',
                 'TurFacturaDetalle',
                 'TurSecuencia',
-                'TurPedidoTipo'
+                'TurPedidoTipo',
             )),
             array('modulo'=>'Cartera','modelo'=>array(
                 'CarCliente',
@@ -303,3 +305,4 @@ class GenModelo extends Fixture
         $manager->flush();
     }
 }
+

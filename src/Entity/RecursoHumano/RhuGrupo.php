@@ -58,6 +58,11 @@ class RhuGrupo
     protected $solicitudesGrupoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurSoporte", mappedBy="grupoRel")
+     */
+    protected $soportesGrupoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -199,6 +204,22 @@ class RhuGrupo
     public function setSolicitudesGrupoRel($solicitudesGrupoRel): void
     {
         $this->solicitudesGrupoRel = $solicitudesGrupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoportesGrupoRel()
+    {
+        return $this->soportesGrupoRel;
+    }
+
+    /**
+     * @param mixed $soportesGrupoRel
+     */
+    public function setSoportesGrupoRel($soportesGrupoRel): void
+    {
+        $this->soportesGrupoRel = $soportesGrupoRel;
     }
 
 

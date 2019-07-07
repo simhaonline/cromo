@@ -8,7 +8,9 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteContrato;
 use App\Entity\RecursoHumano\RhuAportePlanilla;
+use App\Entity\Transporte\TteGuia;
 use App\Form\Type\RecursoHumano\AporteType;
+use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -74,7 +76,7 @@ class AporteController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arAporte = new RhuAporte();
         if ($id != 0) {
-            $ar = $em->getRepository(RhuAporte::class)->find($id);
+            $arAporte = $em->getRepository(RhuAporte::class)->find($id);
 			if (!$arAporte) {
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
             }
@@ -111,11 +113,23 @@ class AporteController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
             }
         }
+        $form = $this->createFormBuilder()
+            ->add( 'btnExcelPlantillas', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
+            ->add( 'btnExcelContrato', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnExcelPlantillas')->isClicked()) {
+            General::get()->setExportar($em->getRepository(RhuAportePlanilla::class)->lista(), "aporte  plantilla");
+        }
+        if ($form->get('btnExcelContrato')->isClicked()) {
+            General::get()->setExportar($em->getRepository(RhuAporteContrato::class)->lista(), "aporte contrato");
+        }
         $arAporte = $em->getRepository(RhuAporte::class)->find($id);
         $arAportePlanillas= $paginator->paginate($em->getRepository(RhuAportePlanilla::class)->lista(), $request->query->getInt('page', 1), 30);
         $arAporteContratos= $paginator->paginate($em->getRepository(RhuAporteContrato::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/seguridadsocial/aporte/detalle.html.twig', [
             'arAporte' => $arAporte,
+            'form'=>$form->createView(),
             'arAportePlanillas'=>$arAportePlanillas,
             'arAporteContratos'=>$arAporteContratos
         ]);

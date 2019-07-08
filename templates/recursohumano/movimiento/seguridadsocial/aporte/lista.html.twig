@@ -34,6 +34,7 @@
             <th>ID</th>
             <th>AÑO</th>
             <th>MES</th>
+            <th>SUCURSAL</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
@@ -46,6 +47,7 @@
                 <td>{{ arAporte.codigoAportePk }}</td>
                 <td>{{ arAporte.anio }}</td>
                 <td>{{ arAporte.mes }}</td>
+                <td>{{ arAporte.sucursalNombre }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_nuevo',{'id': arAporte.codigoAportePk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

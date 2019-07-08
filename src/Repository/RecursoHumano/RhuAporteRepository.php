@@ -18,7 +18,11 @@ class RhuAporteRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporte::class, 'a')
-            ->select('a')
+            ->select('a.codigoAportePk')
+            ->addSelect('a.anio')
+            ->addSelect('a.mes')
+            ->addSelect('s.nombre as sucursalNombre')
+            ->leftJoin('a.sucursalRel', 's')
             ->orderBy('a.codigoAportePk', 'DESC');
         if ($session->get('filtroRhuAporteAnio') != '') {
             $queryBuilder->andWhere("a.anio LIKE '%{$session->get('filtroRhuAporteAnio')}%' ");

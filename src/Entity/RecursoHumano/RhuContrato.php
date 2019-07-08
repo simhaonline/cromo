@@ -223,7 +223,7 @@ class RhuContrato
     private $codigoCentroTrabajoFk;
 
     /**
-     * @ORM\Column(name="codigo_sucursal_fk", type="string", length=10, nullable=true)
+     * @ORM\Column(name="codigo_sucursal_fk", type="string", length=10)
      */
     private $codigoSucursalFk;
 
@@ -403,6 +403,11 @@ class RhuContrato
      * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="contratoRel")
      */
     protected $aportesContratosContratoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteDetalle", mappedBy="contratoRel")
+     */
+    protected $aportesDetallesContratoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurSoporteContrato", mappedBy="contratoRel")
@@ -1591,6 +1596,22 @@ class RhuContrato
     public function setSoportesContratosContratoRel($soportesContratosContratoRel): void
     {
         $this->soportesContratosContratoRel = $soportesContratosContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesDetallesContratoRel()
+    {
+        return $this->aportesDetallesContratoRel;
+    }
+
+    /**
+     * @param mixed $aportesDetallesContratoRel
+     */
+    public function setAportesDetallesContratoRel($aportesDetallesContratoRel): void
+    {
+        $this->aportesDetallesContratoRel = $aportesDetallesContratoRel;
     }
 
 

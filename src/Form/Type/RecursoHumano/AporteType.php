@@ -3,6 +3,8 @@
 namespace App\Form\Type\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuAporte;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -18,6 +20,16 @@ class AporteType extends AbstractType
     {
 
         $builder
+            ->add('sucursalRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\RecursoHumano\RhuSucursal',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('s')
+                        ->orderBy('s.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Sucursal:'
+            ])
             ->add('anio', TextType::class, array('required' => true))
             ->add('mes', ChoiceType::class, [
                 'choices' => array(

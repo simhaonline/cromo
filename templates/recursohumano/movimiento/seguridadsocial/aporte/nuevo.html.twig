@@ -6,6 +6,15 @@
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
+                <label for="identificacionRel" class="col-sm-2 control-label">Sucursal:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.sucursalRel) }}
+                </div>
+                <label for="form_numeroIdentificacion" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="identificacionRel" class="col-sm-2 control-label">Año:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.anio, { 'attr': {'class': 'form-control'} }) }}

@@ -16,7 +16,7 @@ class RhuAporteContrato
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_aporte_planilla_pk", type="integer")
+     * @ORM\Column(name="codigo_aporte_contrato_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoAporteContratoPk;
@@ -37,16 +37,6 @@ class RhuAporteContrato
     private $codigoEmpleadoFk;
 
     /**
-     * @ORM\Column(name="anio", type="integer")
-     */
-    private $anio = 0;
-
-    /**
-     * @ORM\Column(name="mes", type="integer")
-     */
-    private $mes = 0;
-
-    /**
      * @ORM\Column(name="codigo_sucursal_fk", length=10, nullable=true)
      */
     private $codigoSucursalFk;
@@ -57,9 +47,9 @@ class RhuAporteContrato
     private $dias = 0;
 
     /**
-     * @ORM\Column(name="horas", type="integer")
+     * @ORM\Column(name="salario_integral", type="string", length=1)
      */
-    private $horas = 0;
+    private $salarioIntegral = ' ';
 
     /**
      * @ORM\Column(name="vr_salario", type="float")
@@ -69,32 +59,12 @@ class RhuAporteContrato
     /**
      * @ORM\Column(name="ibc", type="float")
      */
-    private $Ibc = 0;
+    private $ibc = 0;
 
     /**
-     * @ORM\Column(name="ibc_caja_vacaciones", type="float", nullable=true)
-     */
-    private $IbcCajaVacaciones = 0;
-
-    /**
-     * @ORM\Column(name="vr_vacaciones", type="float", nullable=true)
+     * @ORM\Column(name="vrVacaciones", type="float")
      */
     private $vrVacaciones = 0;
-
-    /**
-     * @ORM\Column(name="ingreso", type="string", length=1)
-     */
-    private $ingreso = ' ';
-
-    /**
-     * @ORM\Column(name="retiro", type="string", length=1)
-     */
-    private $retiro = ' ';
-
-    /**
-     * @ORM\Column(name="salario_integral", type="string", length=1)
-     */
-    private $salarioIntegral = ' ';
 
     /**
      * @ORM\Column(name="dias_licencia", type="integer")
@@ -102,44 +72,14 @@ class RhuAporteContrato
     private $diasLicencia = 0;
 
     /**
-     * @ORM\Column(name="dias_incapacidad_general", type="integer")
+     * @ORM\Column(name="dias_incapacidad", type="integer", nullable=true)
      */
-    private $diasIncapacidadGeneral = 0;
-
-    /**
-     * @ORM\Column(name="dias_licencia_maternidad", type="integer")
-     */
-    private $diasLicenciaMaternidad = 0;
-
-    /**
-     * @ORM\Column(name="dias_incapacidad_laboral", type="integer")
-     */
-    private $diasIncapacidadLaboral = 0;
+    private $diasIncapacidad = 0;
 
     /**
      * @ORM\Column(name="dias_vacaciones", type="integer")
      */
     private $diasVacaciones = 0;
-
-    /**
-     * @ORM\Column(name="tarifa_pension", type="float")
-     */
-    private $tarifaPension = 0;
-
-    /**
-     * @ORM\Column(name="tarifa_salud", type="float")
-     */
-    private $tarifaSalud = 0;
-
-    /**
-     * @ORM\Column(name="tarifa_riesgos", type="float")
-     */
-    private $tarifaRiesgos = 0;
-
-    /**
-     * @ORM\Column(name="tarifa_caja", type="float")
-     */
-    private $tarifaCaja = 0;
 
     /**
      * @ORM\Column(name="codigo_entidad_pension_pertenece", type="string", length=6, nullable=true)
@@ -157,89 +97,9 @@ class RhuAporteContrato
     private $codigoEntidadCajaPertenece;
 
     /**
-     * @ORM\Column(name="incapacidad_general", type="boolean")
+     * @ORM\Column(name="ibc_fondo_solidaridad", type="float")
      */
-    private $incapacidadGeneral = false;
-
-    /**
-     * @ORM\Column(name="incapacidad_laboral", type="boolean")
-     */
-    private $incapacidadLaboral = false;
-
-    /**
-     * @ORM\Column(name="licencia", type="boolean")
-     */
-    private $licencia = false;
-
-    /**
-     * @ORM\Column(name="licencia_maternidad", type="boolean")
-     */
-    private $licenciaMaternidad = false;
-
-    /**
-     * @ORM\Column(name="licencia_remunerada", type="boolean", nullable=true)
-     */
-    private $licenciaRemunerada = false;
-
-    /**
-     * @ORM\Column(name="vacaciones", type="boolean")
-     */
-    private $vacaciones = false;
-
-    /**
-     * @ORM\Column(name="fecha_desde", type="date", nullable=true)
-     */
-    private $fechaDesde;
-
-    /**
-     * @ORM\Column(name="fecha_hasta", type="date", nullable=true)
-     */
-    private $fechaHasta;
-
-    /**
-     * @ORM\Column(name="fecha_retiro", type="date", nullable=true)
-     */
-    private $fechaRetiro;
-
-    /**
-     * @ORM\Column(name="fecha_ingreso", type="date", nullable=true)
-     */
-    private $fechaIngreso;
-
-    /**
-     * @ORM\Column(name="variacion_transitoria_salario", type="string", length=1)
-     */
-    private $variacionTransitoriaSalario = ' ';
-
-    /**
-     * @ORM\Column(name="codigo_entidad_salud_traslada", type="string", length=6, nullable=true)
-     */
-    private $codigoEntidadSaludTraslada;
-
-    /**
-     * @ORM\Column(name="codigo_entidad_pension_traslada", type="string", length=6, nullable=true)
-     */
-    private $codigoEntidadPensionTraslada;
-
-    /**
-     * @ORM\Column(name="traslado_a_otra_eps" ,type="boolean", nullable=true)
-     */
-    private $trasladoAOtraEps = false;
-
-    /**
-     * @ORM\Column(name="traslado_a_otra_pension" ,type="boolean", nullable=true)
-     */
-    private $trasladoAOtraPension = false;
-
-    /**
-     * @ORM\Column(name="traslado_desde_otra_eps" ,type="boolean", nullable=true)
-     */
-    private $trasladoDesdeOtraEps = false;
-
-    /**
-     * @ORM\Column(name="traslado_desde_otra_pension" ,type="boolean", nullable=true)
-     */
-    private $trasladoDesdeOtraPension = false;
+    private $IbcFondoSolidaridad = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuAporte", inversedBy="aportesContratosAporteRel")
@@ -264,6 +124,11 @@ class RhuAporteContrato
      * @ORM\JoinColumn(name="codigo_sucursal_fk",referencedColumnName="codigo_sucursal_pk")
      */
     protected $sucursalRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteSoporte", mappedBy="aporteContratoRel")
+     */
+    protected $aportesSoportesAporteContratoRel;
 
     /**
      * @return mixed
@@ -332,38 +197,6 @@ class RhuAporteContrato
     /**
      * @return mixed
      */
-    public function getAnio()
-    {
-        return $this->anio;
-    }
-
-    /**
-     * @param mixed $anio
-     */
-    public function setAnio($anio): void
-    {
-        $this->anio = $anio;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMes()
-    {
-        return $this->mes;
-    }
-
-    /**
-     * @param mixed $mes
-     */
-    public function setMes($mes): void
-    {
-        $this->mes = $mes;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoSucursalFk()
     {
         return $this->codigoSucursalFk;
@@ -396,17 +229,17 @@ class RhuAporteContrato
     /**
      * @return mixed
      */
-    public function getHoras()
+    public function getSalarioIntegral()
     {
-        return $this->horas;
+        return $this->salarioIntegral;
     }
 
     /**
-     * @param mixed $horas
+     * @param mixed $salarioIntegral
      */
-    public function setHoras($horas): void
+    public function setSalarioIntegral($salarioIntegral): void
     {
-        $this->horas = $horas;
+        $this->salarioIntegral = $salarioIntegral;
     }
 
     /**
@@ -430,31 +263,15 @@ class RhuAporteContrato
      */
     public function getIbc()
     {
-        return $this->Ibc;
+        return $this->ibc;
     }
 
     /**
-     * @param mixed $Ibc
+     * @param mixed $ibc
      */
-    public function setIbc($Ibc): void
+    public function setIbc($ibc): void
     {
-        $this->Ibc = $Ibc;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIbcCajaVacaciones()
-    {
-        return $this->IbcCajaVacaciones;
-    }
-
-    /**
-     * @param mixed $IbcCajaVacaciones
-     */
-    public function setIbcCajaVacaciones($IbcCajaVacaciones): void
-    {
-        $this->IbcCajaVacaciones = $IbcCajaVacaciones;
+        $this->ibc = $ibc;
     }
 
     /**
@@ -476,54 +293,6 @@ class RhuAporteContrato
     /**
      * @return mixed
      */
-    public function getIngreso()
-    {
-        return $this->ingreso;
-    }
-
-    /**
-     * @param mixed $ingreso
-     */
-    public function setIngreso($ingreso): void
-    {
-        $this->ingreso = $ingreso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetiro()
-    {
-        return $this->retiro;
-    }
-
-    /**
-     * @param mixed $retiro
-     */
-    public function setRetiro($retiro): void
-    {
-        $this->retiro = $retiro;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSalarioIntegral()
-    {
-        return $this->salarioIntegral;
-    }
-
-    /**
-     * @param mixed $salarioIntegral
-     */
-    public function setSalarioIntegral($salarioIntegral): void
-    {
-        $this->salarioIntegral = $salarioIntegral;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getDiasLicencia()
     {
         return $this->diasLicencia;
@@ -540,49 +309,17 @@ class RhuAporteContrato
     /**
      * @return mixed
      */
-    public function getDiasIncapacidadGeneral()
+    public function getDiasIncapacidad()
     {
-        return $this->diasIncapacidadGeneral;
+        return $this->diasIncapacidad;
     }
 
     /**
-     * @param mixed $diasIncapacidadGeneral
+     * @param mixed $diasIncapacidad
      */
-    public function setDiasIncapacidadGeneral($diasIncapacidadGeneral): void
+    public function setDiasIncapacidad($diasIncapacidad): void
     {
-        $this->diasIncapacidadGeneral = $diasIncapacidadGeneral;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDiasLicenciaMaternidad()
-    {
-        return $this->diasLicenciaMaternidad;
-    }
-
-    /**
-     * @param mixed $diasLicenciaMaternidad
-     */
-    public function setDiasLicenciaMaternidad($diasLicenciaMaternidad): void
-    {
-        $this->diasLicenciaMaternidad = $diasLicenciaMaternidad;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDiasIncapacidadLaboral()
-    {
-        return $this->diasIncapacidadLaboral;
-    }
-
-    /**
-     * @param mixed $diasIncapacidadLaboral
-     */
-    public function setDiasIncapacidadLaboral($diasIncapacidadLaboral): void
-    {
-        $this->diasIncapacidadLaboral = $diasIncapacidadLaboral;
+        $this->diasIncapacidad = $diasIncapacidad;
     }
 
     /**
@@ -599,70 +336,6 @@ class RhuAporteContrato
     public function setDiasVacaciones($diasVacaciones): void
     {
         $this->diasVacaciones = $diasVacaciones;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTarifaPension()
-    {
-        return $this->tarifaPension;
-    }
-
-    /**
-     * @param mixed $tarifaPension
-     */
-    public function setTarifaPension($tarifaPension): void
-    {
-        $this->tarifaPension = $tarifaPension;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTarifaSalud()
-    {
-        return $this->tarifaSalud;
-    }
-
-    /**
-     * @param mixed $tarifaSalud
-     */
-    public function setTarifaSalud($tarifaSalud): void
-    {
-        $this->tarifaSalud = $tarifaSalud;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTarifaRiesgos()
-    {
-        return $this->tarifaRiesgos;
-    }
-
-    /**
-     * @param mixed $tarifaRiesgos
-     */
-    public function setTarifaRiesgos($tarifaRiesgos): void
-    {
-        $this->tarifaRiesgos = $tarifaRiesgos;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTarifaCaja()
-    {
-        return $this->tarifaCaja;
-    }
-
-    /**
-     * @param mixed $tarifaCaja
-     */
-    public function setTarifaCaja($tarifaCaja): void
-    {
-        $this->tarifaCaja = $tarifaCaja;
     }
 
     /**
@@ -716,273 +389,17 @@ class RhuAporteContrato
     /**
      * @return mixed
      */
-    public function getIncapacidadGeneral()
+    public function getIbcFondoSolidaridad()
     {
-        return $this->incapacidadGeneral;
+        return $this->IbcFondoSolidaridad;
     }
 
     /**
-     * @param mixed $incapacidadGeneral
+     * @param mixed $IbcFondoSolidaridad
      */
-    public function setIncapacidadGeneral($incapacidadGeneral): void
+    public function setIbcFondoSolidaridad($IbcFondoSolidaridad): void
     {
-        $this->incapacidadGeneral = $incapacidadGeneral;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIncapacidadLaboral()
-    {
-        return $this->incapacidadLaboral;
-    }
-
-    /**
-     * @param mixed $incapacidadLaboral
-     */
-    public function setIncapacidadLaboral($incapacidadLaboral): void
-    {
-        $this->incapacidadLaboral = $incapacidadLaboral;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLicencia()
-    {
-        return $this->licencia;
-    }
-
-    /**
-     * @param mixed $licencia
-     */
-    public function setLicencia($licencia): void
-    {
-        $this->licencia = $licencia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLicenciaMaternidad()
-    {
-        return $this->licenciaMaternidad;
-    }
-
-    /**
-     * @param mixed $licenciaMaternidad
-     */
-    public function setLicenciaMaternidad($licenciaMaternidad): void
-    {
-        $this->licenciaMaternidad = $licenciaMaternidad;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLicenciaRemunerada()
-    {
-        return $this->licenciaRemunerada;
-    }
-
-    /**
-     * @param mixed $licenciaRemunerada
-     */
-    public function setLicenciaRemunerada($licenciaRemunerada): void
-    {
-        $this->licenciaRemunerada = $licenciaRemunerada;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVacaciones()
-    {
-        return $this->vacaciones;
-    }
-
-    /**
-     * @param mixed $vacaciones
-     */
-    public function setVacaciones($vacaciones): void
-    {
-        $this->vacaciones = $vacaciones;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaDesde()
-    {
-        return $this->fechaDesde;
-    }
-
-    /**
-     * @param mixed $fechaDesde
-     */
-    public function setFechaDesde($fechaDesde): void
-    {
-        $this->fechaDesde = $fechaDesde;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaHasta()
-    {
-        return $this->fechaHasta;
-    }
-
-    /**
-     * @param mixed $fechaHasta
-     */
-    public function setFechaHasta($fechaHasta): void
-    {
-        $this->fechaHasta = $fechaHasta;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaRetiro()
-    {
-        return $this->fechaRetiro;
-    }
-
-    /**
-     * @param mixed $fechaRetiro
-     */
-    public function setFechaRetiro($fechaRetiro): void
-    {
-        $this->fechaRetiro = $fechaRetiro;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaIngreso()
-    {
-        return $this->fechaIngreso;
-    }
-
-    /**
-     * @param mixed $fechaIngreso
-     */
-    public function setFechaIngreso($fechaIngreso): void
-    {
-        $this->fechaIngreso = $fechaIngreso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVariacionTransitoriaSalario()
-    {
-        return $this->variacionTransitoriaSalario;
-    }
-
-    /**
-     * @param mixed $variacionTransitoriaSalario
-     */
-    public function setVariacionTransitoriaSalario($variacionTransitoriaSalario): void
-    {
-        $this->variacionTransitoriaSalario = $variacionTransitoriaSalario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoEntidadSaludTraslada()
-    {
-        return $this->codigoEntidadSaludTraslada;
-    }
-
-    /**
-     * @param mixed $codigoEntidadSaludTraslada
-     */
-    public function setCodigoEntidadSaludTraslada($codigoEntidadSaludTraslada): void
-    {
-        $this->codigoEntidadSaludTraslada = $codigoEntidadSaludTraslada;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoEntidadPensionTraslada()
-    {
-        return $this->codigoEntidadPensionTraslada;
-    }
-
-    /**
-     * @param mixed $codigoEntidadPensionTraslada
-     */
-    public function setCodigoEntidadPensionTraslada($codigoEntidadPensionTraslada): void
-    {
-        $this->codigoEntidadPensionTraslada = $codigoEntidadPensionTraslada;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTrasladoAOtraEps()
-    {
-        return $this->trasladoAOtraEps;
-    }
-
-    /**
-     * @param mixed $trasladoAOtraEps
-     */
-    public function setTrasladoAOtraEps($trasladoAOtraEps): void
-    {
-        $this->trasladoAOtraEps = $trasladoAOtraEps;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTrasladoAOtraPension()
-    {
-        return $this->trasladoAOtraPension;
-    }
-
-    /**
-     * @param mixed $trasladoAOtraPension
-     */
-    public function setTrasladoAOtraPension($trasladoAOtraPension): void
-    {
-        $this->trasladoAOtraPension = $trasladoAOtraPension;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTrasladoDesdeOtraEps()
-    {
-        return $this->trasladoDesdeOtraEps;
-    }
-
-    /**
-     * @param mixed $trasladoDesdeOtraEps
-     */
-    public function setTrasladoDesdeOtraEps($trasladoDesdeOtraEps): void
-    {
-        $this->trasladoDesdeOtraEps = $trasladoDesdeOtraEps;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTrasladoDesdeOtraPension()
-    {
-        return $this->trasladoDesdeOtraPension;
-    }
-
-    /**
-     * @param mixed $trasladoDesdeOtraPension
-     */
-    public function setTrasladoDesdeOtraPension($trasladoDesdeOtraPension): void
-    {
-        $this->trasladoDesdeOtraPension = $trasladoDesdeOtraPension;
+        $this->IbcFondoSolidaridad = $IbcFondoSolidaridad;
     }
 
     /**
@@ -1049,6 +466,21 @@ class RhuAporteContrato
         $this->sucursalRel = $sucursalRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAportesSoportesAporteContratoRel()
+    {
+        return $this->aportesSoportesAporteContratoRel;
+    }
+
+    /**
+     * @param mixed $aportesSoportesAporteContratoRel
+     */
+    public function setAportesSoportesAporteContratoRel($aportesSoportesAporteContratoRel): void
+    {
+        $this->aportesSoportesAporteContratoRel = $aportesSoportesAporteContratoRel;
+    }
 
 
 

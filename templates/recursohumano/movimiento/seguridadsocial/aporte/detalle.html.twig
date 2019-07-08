@@ -17,72 +17,41 @@
             <td class="td-in-well">{{ arAporte.anio }}</td>
             <td class="titulo">MES:</td>
             <td class="numero">{{ arAporte.mes}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">SUCURSAL:</td>
+            <td class="td-in-well">{{ arAporte.sucursalRel.nombre }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="numero"></td>
+        </tr>
     </table>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#recogidas" data-toggle="tab">Planilla</a></li>
-        <li><a href="#auxiliares" data-toggle="tab">Contrato</a></li>
+        <li class="active"><a href="#detalle" data-toggle="tab">Detalle</a></li>
+        <li><a href="#contrato" data-toggle="tab">Contrato</a></li>
     </ul>
     <div class="tab-content">
-        <div class="tab-pane active" id="recogidas">
-            <div id="detalles" style="width: 100%"><br>
+        <div class="tab-pane active" id="detalle">
+            <div id="detalle" style="width: 100%"><br>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover tabla-datos">
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>AÑO</th>
-                            <th>MES</th>
-                            <th>SUCURSAL</th>
-                            <th title="NUMEROS CONTRATOS">CONTRATOS</th>
-                            <th title="NUMEROS EMPLEADO">EMPLEADOS</th>
-                            <th>TOTAL</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for arAportePlanilla in arAportePlanillas %}
-                            <tr>
-                                <td>{{ arAportePlanilla.codigoAportePlanillaPk }}</td>
-                                <td>{{ arAportePlanilla.anio}}</td>
-                                <td>{{ arAportePlanilla.mes}}</td>
-                                <td>{{ arAportePlanilla.sucursalRel.nombre}}</td>
-                                <td>{{ arAportePlanilla.numeroContratos}}</td>
-                                <td>{{ arAportePlanilla.numeroEmpleados}}</td>
-                                <td>{{ arAportePlanilla.total}}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="separador-1"></div>
-                <div class="btn-toolbar" style="float: right">
-                    <div class="btn-group">
-                        {{ form_widget(form.btnExcelPlantillas) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="auxiliares">
-            <div id="auxiliares" style="width: 100%"><br>
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover tabla-datos">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
+                            <th>CON</th>
                             <th>DOC</th>
                             <th>NOMBRE</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arAporteContrato in arAporteContratos %}
+                        {% for arAporteDetalle in arAporteDetalles %}
                             <tr>
                                 <td>{{ arAporteContrato.codigoAporteContratoPk }}</td>
-                                <td>{{ arAporteContrato.codigoAporteFk }}</td>
                                 <td>{{ arAporteContrato.codigoContratoFk }}</td>
-                                <td>{{ arAporteContrato.empleadoRel.nombreCorto |default('')}}</td>
-                                <td>{{ arAporteContrato.anio }}</td>
-                                <td>{{ arAporteContrato.mes }}</td>
-                                <td>{{ arAporteContrato.codigoSucursalFk }}</td>
+                                <td>{{ arAporteContrato.empleadoNumeroIdentificacion }}</td>
+                                <td>{{ arAporteContrato.empleadoNombreCorto }}</td>
                                 <td>{{ arAporteContrato.dias }}</td>
                                 <td>{{ arAporteContrato.horas }}</td>
                                 <td class="numero">{{ arAporteContrato.vrSalario  | number_format(0, '.', ',')}}</td>
@@ -120,8 +89,49 @@
                                 <td>{{ arAporteContrato.trasladoAOtraPension?"SI":"NO" }}</td>
                                 <td>{{ arAporteContrato.trasladoDesdeOtraEps?"SI":"NO" }}</td>
                                 <td>{{ arAporteContrato.trasladoDesdeOtraPension?"SI":"NO" }}</td>
-
                                 </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="separador-1"></div>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {{ form_widget(form.btnExcelDetalle) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="contrato">
+            <div id="contrato" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>DOC</th>
+                            <th>NOMBRE</th>
+                            <th>CON</th>
+                            <th>D</th>
+                            <th>SALARIO</th>
+                            <th>IBC</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arAporteContrato in arAporteContratos %}
+                            <tr>
+                                <td>{{ arAporteContrato.codigoAporteContratoPk }}</td>
+                                <td>{{ arAporteContrato.empleadoNumeroIdentificacion }}</td>
+                                <td>{{ arAporteContrato.empleadoNombreCorto }}</td>
+                                <td>{{ arAporteContrato.codigoContratoFk }}</td>
+                                <td>{{ arAporteContrato.dias }}</td>
+                                <td class="numero">{{ arAporteContrato.vrSalario  | number_format(0, '.', ',')}}</td>
+                                <td class="numero">{{ arAporteContrato.ibc  | number_format(0, '.', ',')}}</td>
+                                <td style="text-align: center;"><a
+                                            href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seguridadsocial_soporte_aporte_detalle',{ 'id': arAporteContrato.codigoAporteContratoPk }) }}','resumen',600,1000)"><i
+                                                class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -135,6 +145,7 @@
                 </div>
             </div>
         </div>
+
     </div>
     {{ form_end(form) }}
 

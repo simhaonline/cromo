@@ -383,6 +383,11 @@ class RhuEmpleado
     protected $aportesContratosEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAporteDetalle", mappedBy="empleadoRel")
+     */
+    protected $aportesDetallesEmpleadoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurSoporteContrato", mappedBy="empleadoRel")
      */
     protected $soportesContratosEmpleadoRel;
@@ -1441,6 +1446,22 @@ class RhuEmpleado
     public function setSoportesContratosEmpleadoRel($soportesContratosEmpleadoRel): void
     {
         $this->soportesContratosEmpleadoRel = $soportesContratosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesDetallesEmpleadoRel()
+    {
+        return $this->aportesDetallesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $aportesDetallesEmpleadoRel
+     */
+    public function setAportesDetallesEmpleadoRel($aportesDetallesEmpleadoRel): void
+    {
+        $this->aportesDetallesEmpleadoRel = $aportesDetallesEmpleadoRel;
     }
 
 

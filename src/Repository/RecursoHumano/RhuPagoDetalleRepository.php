@@ -6,7 +6,6 @@ use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuPagoDetalleRepository extends ServiceEntityRepository
 {
@@ -94,13 +93,32 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->where("p.estadoEgreso = 1")
             ->andWhere('p.codigoContratoFk = ' . $codigoContrato)
             ->andWhere("p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaHasta <= '" . $fechaHasta . "'")
-        ->andWhere("c.fondoSolidaridadPensional = 1");
+            ->andWhere("c.fondoSolidaridadPensional = 1");
         $arrayResultado = $query->getQuery()->getSingleResult();
         if ($arrayResultado) {
             if($arrayResultado['deduccionFondo']) {
                 $arrIbc['deduccionAnterior'] = $arrayResultado['deduccionFondo'];
             }
         }
+        return $arrIbc;
+    }
+
+    public function ibcOrdinario($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $arrIbc = array('ibc' => 0, 'horas' => 0);
+        $query = $em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('SUM(pd.vrIngresoBaseCotizacion) as ibc')
+            ->addSelect('SUM(pd.horas) as horas')
+            ->leftJoin('pd.pagoRel', 'p')
+            ->where("p.fechaDesdeContrato >= '" . $fechaDesde . "' AND p.fechaDesdeContrato <= '" . $fechaHasta . "' AND pd.codigoNovedadFk IS NULL AND pd.codigoVacacionFk IS NULL")
+            ->andWhere('p.codigoContratoFk=' . $codigoContrato);
+        $arrayResultado = $query->getQuery()->getResult();
+        if ($arrayResultado) {
+            $arrIbc['ibc'] = $arrayResultado[0]['ibc'];
+            $arrIbc['horas'] = $arrayResultado[0]['horas'];
+        }
+
         return $arrIbc;
     }
 
@@ -124,9 +142,6 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         if ($session->get('filtroRhuInformePagoFechaHasta') != null) {
             $queryBuilder->andWhere("pa.fechaHasta <= '{$session->get('filtroRhuInformePagoFechaHasta')} 23:59:59'");
         }
-
-
-
         return $queryBuilder->getQuery()->getResult();
 
     }

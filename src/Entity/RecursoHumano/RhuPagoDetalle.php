@@ -98,6 +98,16 @@ class RhuPagoDetalle
     private $vrIngresoBasePrestacion = 0;
 
     /**
+     * @ORM\Column(name="codigo_novedad_fk", type="integer", nullable=true)
+     */
+    private $codigoNovedadFk;
+
+    /**
+     * @ORM\Column(name="codigo_vacacion_fk", type="integer", nullable=true)
+     */
+    private $codigoVacacionFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuPago", inversedBy="pagosDetallesPagoRel")
      * @ORM\JoinColumn(name="codigo_pago_fk", referencedColumnName="codigo_pago_pk")
      */
@@ -438,6 +448,38 @@ class RhuPagoDetalle
     public function setCreditosPagosPagoDetalleRel( $creditosPagosPagoDetalleRel ): void
     {
         $this->creditosPagosPagoDetalleRel = $creditosPagosPagoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoNovedadFk()
+    {
+        return $this->codigoNovedadFk;
+    }
+
+    /**
+     * @param mixed $codigoNovedadFk
+     */
+    public function setCodigoNovedadFk($codigoNovedadFk): void
+    {
+        $this->codigoNovedadFk = $codigoNovedadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVacacionFk()
+    {
+        return $this->codigoVacacionFk;
+    }
+
+    /**
+     * @param mixed $codigoVacacionFk
+     */
+    public function setCodigoVacacionFk($codigoVacacionFk): void
+    {
+        $this->codigoVacacionFk = $codigoVacacionFk;
     }
 
 

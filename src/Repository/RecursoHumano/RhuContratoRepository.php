@@ -122,4 +122,47 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->where('re.codigoContratoPk <> 0');
         return $queryBuilder->getQuery()->execute();
     }
+
+
+    public function contratosPeriodoAporte($fechaDesde = "", $fechaHasta = "")
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuContrato::class, 'c')
+            ->select('c.codigoContratoPk')
+            ->leftJoin('c.empleadoRel', 'e')
+            ->where("(c.fechaHasta >= '" . $fechaDesde . "' OR c.indefinido = 1) "
+                . "AND c.fechaDesde <= '" . $fechaHasta . "' ");
+        $arContratos = $queryBuilder->getQuery()->getResult();
+        return $arContratos;
+    }
+
+    /* Ojo esta depronto se puede borrar */
+    public function contratosPeriodoTemporal($fechaDesde = "", $fechaHasta = "")
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuContrato::class, 'c')
+            ->select('c.codigoContratoPk')
+            ->addSelect('c.codigoTipoCotizanteFk')
+            ->addSelect('c.codigoSubtipoCotizanteFk')
+            ->addSelect('c.indefinido')
+            ->addSelect('c.fechaDesde')
+            ->addSelect('c.fechaHasta')
+            ->addSelect('c.vrSalario')
+            ->addSelect('c.salarioIntegral')
+            ->addSelect('e.codigoIdentificacionFk as empleadoCodigoIdentificacionFk')
+            ->addSelect('e.nombre1 as empleadoNombre1')
+            ->addSelect('e.nombre2 as empleadoNombre2')
+            ->addSelect('e.apellido1 as empleadoApellido1')
+            ->addSelect('e.apellido1 as empleadoApellido2')
+            ->addSelect('cl.codigoDane as ciudadLaboraCodigoDane')
+            ->addSelect('cld.codigoDane as ciudadLaboraDepartamentoCodigoDane')
+            ->leftJoin('c.empleadoRel', 'e')
+            ->leftJoin('c.ciudadLaboraRel', 'cl')
+            ->leftJoin('cl.departamentoRel', 'cld')
+            ->where("(c.fechaHasta >= '" . $fechaDesde . "' OR c.indefinido = 1) "
+                . "AND c.fechaDesde <= '" . $fechaHasta . "' ");
+        $arContratos = $queryBuilder->getQuery()->getResult();
+        return $arContratos;
+    }
+
 }

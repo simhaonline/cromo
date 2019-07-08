@@ -32,14 +32,35 @@ class RhuAporte
     private $mes = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuAportePlanilla", mappedBy="aporteRel")
+     * @ORM\Column(name="fecha_desde", type="date")
      */
-    protected $aportesPlanillasAporteRel;
+    private $fechaDesde = 0;
+
+    /**
+     * @ORM\Column(name="fecha_hasta", type="date")
+     */
+    private $fechaHasta = 0;
+
+    /**
+     * @ORM\Column(name="codigo_sucursal_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoSucursalFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuSucursal", inversedBy="aportesSucursalRel")
+     * @ORM\JoinColumn(name="codigo_sucursal_fk",referencedColumnName="codigo_sucursal_pk")
+     */
+    protected $sucursalRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="aporteRel")
      */
     protected $aportesContratosAporteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteDetalle", mappedBy="aporteRel")
+     */
+    protected $aportesDetallesAporteRel;
 
     /**
      * @return mixed
@@ -92,17 +113,33 @@ class RhuAporte
     /**
      * @return mixed
      */
-    public function getAportesPlanillasAporteRel()
+    public function getCodigoSucursalFk()
     {
-        return $this->aportesPlanillasAporteRel;
+        return $this->codigoSucursalFk;
     }
 
     /**
-     * @param mixed $aportesPlanillasAporteRel
+     * @param mixed $codigoSucursalFk
      */
-    public function setAportesPlanillasAporteRel($aportesPlanillasAporteRel): void
+    public function setCodigoSucursalFk($codigoSucursalFk): void
     {
-        $this->aportesPlanillasAporteRel = $aportesPlanillasAporteRel;
+        $this->codigoSucursalFk = $codigoSucursalFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSucursalRel()
+    {
+        return $this->sucursalRel;
+    }
+
+    /**
+     * @param mixed $sucursalRel
+     */
+    public function setSucursalRel($sucursalRel): void
+    {
+        $this->sucursalRel = $sucursalRel;
     }
 
     /**
@@ -119,6 +156,54 @@ class RhuAporte
     public function setAportesContratosAporteRel($aportesContratosAporteRel): void
     {
         $this->aportesContratosAporteRel = $aportesContratosAporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDesde()
+    {
+        return $this->fechaDesde;
+    }
+
+    /**
+     * @param mixed $fechaDesde
+     */
+    public function setFechaDesde($fechaDesde): void
+    {
+        $this->fechaDesde = $fechaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHasta()
+    {
+        return $this->fechaHasta;
+    }
+
+    /**
+     * @param mixed $fechaHasta
+     */
+    public function setFechaHasta($fechaHasta): void
+    {
+        $this->fechaHasta = $fechaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesDetallesAporteRel()
+    {
+        return $this->aportesDetallesAporteRel;
+    }
+
+    /**
+     * @param mixed $aportesDetallesAporteRel
+     */
+    public function setAportesDetallesAporteRel($aportesDetallesAporteRel): void
+    {
+        $this->aportesDetallesAporteRel = $aportesDetallesAporteRel;
     }
 
 

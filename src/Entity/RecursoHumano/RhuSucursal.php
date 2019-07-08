@@ -38,14 +38,14 @@ class RhuSucursal {
     protected $contratosSucursalRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuAportePlanilla", mappedBy="sucursalRel")
-     */
-    protected $aportesPlanillasSucursalRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="sucursalRel")
      */
     protected $aportesContratosSucursalRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteDetalle", mappedBy="sucursalRel")
+     */
+    protected $aportesDetallesSucursalRel;
 
     /**
      * @return mixed
@@ -114,22 +114,6 @@ class RhuSucursal {
     /**
      * @return mixed
      */
-    public function getAportesPlanillasSucursalRel()
-    {
-        return $this->aportesPlanillasSucursalRel;
-    }
-
-    /**
-     * @param mixed $aportesPlanillasSucursalRel
-     */
-    public function setAportesPlanillasSucursalRel($aportesPlanillasSucursalRel): void
-    {
-        $this->aportesPlanillasSucursalRel = $aportesPlanillasSucursalRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getAportesContratosSucursalRel()
     {
         return $this->aportesContratosSucursalRel;
@@ -141,6 +125,22 @@ class RhuSucursal {
     public function setAportesContratosSucursalRel($aportesContratosSucursalRel): void
     {
         $this->aportesContratosSucursalRel = $aportesContratosSucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesDetallesSucursalRel()
+    {
+        return $this->aportesDetallesSucursalRel;
+    }
+
+    /**
+     * @param mixed $aportesDetallesSucursalRel
+     */
+    public function setAportesDetallesSucursalRel($aportesDetallesSucursalRel): void
+    {
+        $this->aportesDetallesSucursalRel = $aportesDetallesSucursalRel;
     }
 
 

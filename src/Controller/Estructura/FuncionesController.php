@@ -134,6 +134,15 @@ final class FuncionesController
         return $fechaHasta;
     }
 
+    public static function desdeHastaAnioMes($anio, $mes)
+    {
+        $fecha = date_create($anio . '-' . $mes . '-01');
+        $fechaDesde = $fecha->format('Y-m') . '-01';
+        $aux = date('Y-m-d', strtotime("{$fechaDesde} + 1 month"));
+        $fechaHasta = date('Y-m-d', strtotime("{$aux} - 1 day"));
+        return ['fechaDesde' => date_create($fechaDesde), 'fechaHasta' => date_create($fechaHasta)];
+    }
+
     public static function crearNotificacion($id, $descripcion = '', $arrUsuarios = array())
     {
         try {

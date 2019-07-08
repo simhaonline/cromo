@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
@@ -55,15 +56,7 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-{#                        {% if arDespachoRecogida.estadoAutorizado %}#}
-{#                            <input type="button" class="btn btn-sm btn-default" value="Nuevo" disabled>#}
-{#                        {% else %}#}
-{#                            <a class="btn btn-default btn-sm"#}
-{#                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_despacho_detalle_adicionar_recogida', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaAdicionarRecogida', 600, 900)">Nuevo</a>#}
-{#                        {% endif %}#}
-                    </div>
-                    <div class="btn-group">
-{#                        {{ form_widget(form.btnEliminarRecogida, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}#}
+                        {{ form_widget(form.btnExcelPlantillas) }}
                     </div>
                 </div>
             </div>
@@ -114,7 +107,7 @@
                                 <td>{{ arAporteContrato.incapacidadGeneral?"SI":"NO" }}</td>
                                 <td>{{ arAporteContrato.incapacidadLaboral?"SI":"NO"  }}</td>
                                 <td>{{ arAporteContrato.licencia?"SI":"NO"  }}</td>
-                                <td>{{ arAporteContrato.licenciaMaternidad?"SI":"NO"  }}</td>
+                                <td>{{ arAporteContrato.licenciaMaternidad?"SI":"NO"     }}</td>
                                 <td>{{ arAporteContrato.licenciaRemunerada?"SI":"NO"  }}</td>
                                 <td>{{ arAporteContrato.vacaciones?"SI":"NO"  }}</td>
                                 <td>{{ arAporteContrato.fechaDesde | date('Y-m-d') }}</td>
@@ -137,18 +130,12 @@
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-{#                        {% if arDespachoRecogida.estadoAutorizado %}#}
-{#                            <input type="button" class="btn btn-sm btn-default" value="Nuevo" disabled>#}
-{#                        {% else %}#}
-{#                            <a class="btn btn-default btn-sm"#}
-{#                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_recogida_despacho_detalle_adicionar_auxiliar', {'codigoDespachoRecogida': arDespachoRecogida.codigoDespachoRecogidaPk }) }}', 'DespachoRecogidaAdicionarAuxiliar', 600, 900)">Nuevo</a>#}
-{#                        {% endif %}#}
-                    </div>
-                    <div class="btn-group">
-{#                        {{ form_widget(form.btnEliminarAuxiliar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}#}
+                        {{ form_widget(form.btnExcelContrato) }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {{ form_end(form) }}
+
 {% endblock %}

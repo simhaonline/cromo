@@ -1786,12 +1786,14 @@ class TteDespachoRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
             ->select("d.codigoPoseedorFk")
+            ->addSelect('d.codigoDespachoTipoFk')
             ->addSelect("SUM(d.vrFletePago) as fletePago")
             ->leftJoin('d.despachoTipoRel', 'dt')
             ->where("d.fechaSalida >='" . $fechaDesde . "' AND d.fechaSalida <= '" . $fechaHasta . "'")
             ->andWhere('dt.viaje = 1')
             ->andWhere('d.estadoAprobado = 1')
-            ->groupBy('d.codigoPoseedorFk');
+            ->groupBy('d.codigoPoseedorFk')
+            ->addGroupBy('d.codigoDespachoTipoFk');
         $arrResultado = $queryBuilder->getQuery()->getResult();
         return $arrResultado;
     }

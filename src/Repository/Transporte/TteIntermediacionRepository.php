@@ -2,8 +2,12 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
 use App\Entity\Transporte\TteCierre;
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteConsecutivo;
 use App\Entity\Transporte\TteCosto;
 use App\Entity\Transporte\TteDespacho;
@@ -94,12 +98,14 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             $arrFletePagoDetallados = $em->getRepository(TteDespacho::class)->fletePagoDetallado($fechaDesde, $fechaHasta);
             foreach ($arrFletePagoDetallados as $arrFletePagoDetallado) {
                 $arPoseedor = $em->getRepository(TtePoseedor::class)->find($arrFletePagoDetallado['codigoPoseedorFk']);
+                $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arrFletePagoDetallado['codigoDespachoTipoFk']);
                 $fletePagoFactura = $arrFletePagoDetallado['fletePago'];
                 $participacion = ($fletePagoFactura / $fletePago) * 100;
                 $fleteParticipacion = $fletePago * $participacion / 100;
                 $arIntermediacionCompra = new TteIntermediacionCompra();
-                $arIntermediacionCompra->setPoseedorRel($arPoseedor);
                 $arIntermediacionCompra->setIntermediacionRel($arIntermediacion);
+                $arIntermediacionCompra->setPoseedorRel($arPoseedor);
+                $arIntermediacionCompra->setDespachoTipoRel($arDespachoTipo);
                 $arIntermediacionCompra->setAnio($arIntermediacion->getAnio());
                 $arIntermediacionCompra->setMes($arIntermediacion->getMes());
                 $arIntermediacionCompra->setPorcentajeParticipacion($participacion);
@@ -152,14 +158,14 @@ class TteIntermediacionRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if($arIntermediacion->getEstadoAutorizado() && !$arIntermediacion->getEstadoAprobado()) {
-            $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
+            /*$arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
             $arIntermediacionDetalles = $em->getRepository(TteIntermediacionDetalle::class)->findBy(array('codigoIntermediacionFk' => $arIntermediacion->getCodigoIntermediacionPk()));
             foreach ($arIntermediacionDetalles as $arIntermediacionDetalle) {
                 $arIntermediacionDetalle->setNumero($arConsecutivo->getIntermediacion());
                 $em->persist($arIntermediacionDetalle);
                 $arConsecutivo->setIntermediacion($arConsecutivo->getIntermediacion() + 1);
             }
-            $em->persist($arConsecutivo);
+            $em->persist($arConsecutivo);*/
             $arIntermediacion->setEstadoAprobado(1);
             $em->persist($arIntermediacion);
             $em->flush();
@@ -197,5 +203,155 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             }
         }
     }
+
+    public function listaContabilizar()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteIntermediacionDetalle::class, 'id')
+            ->select('id.codigoIntermediacionDetallePk')
+            ->addSelect('id.numero')
+            ->addSelect('id.fecha')
+            ->addSelect('id.anio')
+            ->addSelect('id.mes')
+            ->addSelect('id.vrFlete')
+            ->addSelect('id.vrPago')
+            ->addSelect('id.porcentajeParticipacion')
+            ->addSelect('id.vrIngreso')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('ft.nombre AS facturaTipoNombre')
+            ->leftJoin('id.clienteRel', 'c')
+            ->leftJoin('id.facturaTipoRel','ft')
+            ->where('id.estadoContabilizado =  0');
+        /*if($session->get('filtroTteFacturaNumero') != ''){
+            $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
+        }*/
+
+        return $queryBuilder->getQuery()->execute();
+    }
+
+    public function registroContabilizar($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteIntermediacion::class, 'i')
+            ->select('i.codigoIntermediacionPk')
+            ->addSelect('i.estadoContabilizado')
+            ->addSelect('i.fecha')
+            ->where('i.codigoIntermediacionPk = ' . $codigo);
+        $arIntermediacion = $queryBuilder->getQuery()->getSingleResult();
+        return $arIntermediacion;
+    }
+
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            $arrConfiguracion = $em->getRepository(TteConfiguracion::class)->contabilizarIntermediacion();
+            $arComprobante = $em->getRepository(FinComprobante::class)->find($arrConfiguracion['codigoComprobanteIntermediacionFk']);
+            foreach ($arr AS $codigo) {
+                $arIntermediacion = $em->getRepository(TteIntermediacion::class)->registroContabilizar($codigo);
+                if($arIntermediacion) {
+                    if($arIntermediacion['estadoContabilizado'] == 0) {
+                        //Contabilizar intermediacion parte ventas
+                        $arrIntermediacionesVenta = $em->getRepository(TteIntermediacionVenta::class)->registroContabilizar($codigo);
+                        foreach ($arrIntermediacionesVenta as $arrIntermediacionVenta) {
+                            $arTercero = $em->getRepository(TteCliente::class)->terceroFinanciero($arrIntermediacionVenta['codigoClienteFk']);
+                            //Flete
+                            if($arrIntermediacionVenta['codigoCuentaIngresoFleteFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrIntermediacionVenta['codigoCuentaIngresoFleteFk']);
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta del flete " . $arrIntermediacionVenta['codigoCuentaIngresoFleteFk'];
+                                    break;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                $arRegistro->setFecha($arIntermediacion['fecha']);
+                                $arRegistro->setVrDebito($arrIntermediacionVenta['vrFlete']);
+                                $arRegistro->setNaturaleza('D');
+                                $arRegistro->setCodigoModeloFk('TteIntermediacion');
+                                $arRegistro->setCodigoDocumento($codigo);
+
+                                $arRegistro->setDescripcion('INGRESO FLETE TERCERO DEV_FAC');
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete o flete intermediacion";
+                                break;
+                            }
+
+                            if($arrIntermediacionVenta['codigoCuentaIngresoFleteIntermediacionFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrIntermediacionVenta['codigoCuentaIngresoFleteIntermediacionFk']);
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta del flete " . $arrIntermediacionVenta['codigoCuentaIngresoFleteIntermediacionFk'];
+                                    break;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                $arRegistro->setFecha($arIntermediacion['fecha']);
+                                $arRegistro->setVrCredito($arrIntermediacionVenta['vrFleteIngreso']);
+                                $arRegistro->setNaturaleza('C');
+                                $arRegistro->setCodigoModeloFk('TteIntermediacion');
+                                $arRegistro->setCodigoDocumento($codigo);
+
+                                $arRegistro->setDescripcion('INGRESO REAL');
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "El tipo de factura no tiene configurada la cuenta para el ingreso flete intermediacion";
+                                break;
+                            }
+                        }
+
+                        //Contabilizar intermediacion parte compras
+                        $arrIntermediacionesCompra = $em->getRepository(TteIntermediacionCompra::class)->registroContabilizar($codigo);
+                        foreach ($arrIntermediacionesCompra as $arrIntermediacionCompra) {
+                            $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arrIntermediacionCompra['codigoPoseedorFk']);
+                            //Flete cobro
+                            if($arrIntermediacionCompra['codigoCuentaFleteFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrIntermediacionCompra['codigoCuentaFleteFk']);
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta del flete " . $arrIntermediacionCompra['codigoCuentaFleteFk'];
+                                    break;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                $arRegistro->setFecha($arIntermediacion['fecha']);
+                                $arRegistro->setVrCredito($arrIntermediacionCompra['vrFleteParticipacion']);
+                                $arRegistro->setNaturaleza('C');
+                                $arRegistro->setCodigoModeloFk('TteIntermediacion');
+                                $arRegistro->setCodigoDocumento($codigo);
+
+                                $arRegistro->setDescripcion('FLETE PAGO');
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "El tipo de despacho no tiene configurada la cuenta para el flete pagado";
+                                break;
+                            }
+
+                        }
+
+                        $arIntermediacion = $em->getRepository(TteIntermediacion::class)->find($codigo);
+                        $arIntermediacion->setEstadoContabilizado(1);
+                        $em->persist($arIntermediacion);
+                    }
+                } else {
+                    $error = "El codigo " . $codigo . " no existe";
+                    break;
+                }
+            }
+            if($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
+    }
+
+
 
 }

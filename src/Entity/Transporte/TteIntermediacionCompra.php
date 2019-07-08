@@ -39,6 +39,11 @@ class TteIntermediacionCompra
     private $mes;
 
     /**
+     * @ORM\Column(name="codigo_despacho_tipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoDespachoTipoFk;
+
+    /**
      * @ORM\Column(name="codigo_poseedor_fk", type="integer", nullable=true)
      */
     private $codigoPoseedorFk;
@@ -63,6 +68,12 @@ class TteIntermediacionCompra
      * @ORM\JoinColumn(name="codigo_intermediacion_fk", referencedColumnName="codigo_intermediacion_pk")
      */
     private $intermediacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteDespachoTipo", inversedBy="intermediacionesComprasDespachoTipoRel")
+     * @ORM\JoinColumn(name="codigo_despacho_tipo_fk", referencedColumnName="codigo_despacho_tipo_pk")
+     */
+    private $despachoTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TtePoseedor", inversedBy="intermediacionesComprasPoseedorRel")
@@ -228,6 +239,38 @@ class TteIntermediacionCompra
     public function setPoseedorRel($poseedorRel): void
     {
         $this->poseedorRel = $poseedorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoTipoFk()
+    {
+        return $this->codigoDespachoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoTipoFk
+     */
+    public function setCodigoDespachoTipoFk($codigoDespachoTipoFk): void
+    {
+        $this->codigoDespachoTipoFk = $codigoDespachoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachoTipoRel()
+    {
+        return $this->despachoTipoRel;
+    }
+
+    /**
+     * @param mixed $despachoTipoRel
+     */
+    public function setDespachoTipoRel($despachoTipoRel): void
+    {
+        $this->despachoTipoRel = $despachoTipoRel;
     }
 
 

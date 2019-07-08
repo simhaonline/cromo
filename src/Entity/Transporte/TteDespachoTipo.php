@@ -127,6 +127,11 @@ class TteDespachoTipo
     protected $despachosDespachoTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionCompra", mappedBy="despachoTipoRel")
+     */
+    protected $intermediacionesComprasDespachoTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoDespachoTipoPk()
@@ -476,6 +481,22 @@ class TteDespachoTipo
     public function setDespachosDespachoTipoRel($despachosDespachoTipoRel): void
     {
         $this->despachosDespachoTipoRel = $despachosDespachoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesComprasDespachoTipoRel()
+    {
+        return $this->intermediacionesComprasDespachoTipoRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesComprasDespachoTipoRel
+     */
+    public function setIntermediacionesComprasDespachoTipoRel($intermediacionesComprasDespachoTipoRel): void
+    {
+        $this->intermediacionesComprasDespachoTipoRel = $intermediacionesComprasDespachoTipoRel;
     }
 
 

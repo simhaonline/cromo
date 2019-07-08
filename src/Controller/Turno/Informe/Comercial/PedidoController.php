@@ -47,7 +47,7 @@ class PedidoController extends  Controller
             }
         }
         $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->lista(), $request->query->getInt('page', 1), 30);
-        return $this->render('turno/informe/comercial/pedidoDetalle.html.twig', [
+        return $this->render('turno/informe/comercial/pedido.html.twig', [
             'arPedidos' => $arPedidos,
             'form' => $form->createView()
         ]);

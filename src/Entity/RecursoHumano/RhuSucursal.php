@@ -30,7 +30,7 @@ class RhuSucursal {
     /**
      * @ORM\Column(name="estado_activo",type="boolean", nullable=true,options={"default":false})
      */
-    private $estadoActivo = 0;
+    private $estadoActivo = false;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="sucursalRel")

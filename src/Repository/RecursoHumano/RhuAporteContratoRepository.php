@@ -17,7 +17,7 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuAporteContrato::class);
     }
 
-    public function lista()
+    public function lista($codigoAporte)
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporteContrato::class, 'ac')
@@ -28,7 +28,8 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
             ->addSelect('ac.ibc')
             ->addSelect('e.nombreCorto as empleadoNombreCorto')
             ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
-            ->leftJoin('ac.empleadoRel', 'e');
+            ->leftJoin('ac.empleadoRel', 'e')
+        ->where('ac.codigoAporteFk = ' . $codigoAporte);
         return $queryBuilder;
     }
 
@@ -47,6 +48,17 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
             ->leftJoin('ac.contratoRel', 'c')
             ->leftJoin('c.pensionRel', 'pen')
             ->leftJoin('c.clasificacionRiesgoRel', 'arl')
+            ->where('ac.codigoAporteFk=' . $codigoAporte);
+        $arAporteContratos = $queryBuilder->getQuery()->getResult();
+        return $arAporteContratos;
+    }
+
+    public function listaGenerarDetalle($codigoAporte)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporteContrato::class, 'ac')
+            ->select('ac.codigoAporteContratoPk')
+            ->addSelect('ac.codigoContratoFk')
+            ->addSelect('ac.codigoEmpleadoFk')
             ->where('ac.codigoAporteFk=' . $codigoAporte);
         $arAporteContratos = $queryBuilder->getQuery()->getResult();
         return $arAporteContratos;

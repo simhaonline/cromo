@@ -28,6 +28,17 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
         return $arAporteSoportes;
     }
 
+    public function listaGenerarDetalle($codigoSoporteContrato)
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuAporteSoporte::class, 'asop')
+            ->select('asop.codigoAporteSoportePk')
+            ->addSelect('asop.dias')
+            ->where('asop.codigoAporteContratoFk =' . $codigoSoporteContrato);
+        $arAporteSoportes = $queryBuilder->getQuery()->getResult();
+        return $arAporteSoportes;
+    }
+
     public function generar($arAporte) {
         $em = $this->getEntityManager();
         $arAporteContratos = $em->getRepository(RhuAporteContrato::class)->listaGenerarSoporte($arAporte->getCodigoAportePk());

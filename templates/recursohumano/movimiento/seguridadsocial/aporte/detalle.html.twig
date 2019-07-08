@@ -42,53 +42,58 @@
                             <th>CON</th>
                             <th>DOC</th>
                             <th>NOMBRE</th>
-                            <th></th>
+                            <th>ING</th>
+                            <th>RET</th>
+                            <th>VST</th>
+                            <th>SLN</th>
+                            <th>IGE</th>
+                            <th>LMA</th>
+                            <th>VAC</th>
+                            <th>IRP</th>
+                            <th>S.I</th>
+                            <th>SALARIO</th>
+                            <th>IBC</th>
+                            <th>H</th>
+                            <th>D.P</th>
+                            <th>D.S</th>
+                            <th>D.R</th>
+                            <th>D.C</th>
+                            <th>IBC.P</th>
+                            <th>IBC.S</th>
+                            <th>IBC.R</th>
+                            <th>IBC.C</th>
+                            <th>T.P</th>
+                            <th>T.S</th>
+                            <th>T.R</th>
+                            <th>T.C</th>
+                            <th>T.SN</th>
+                            <th>T.I</th>
+                            <th>C.P</th>
+                            <th>C.FSSO</th>
+                            <th>C.FSSU
+                            <th>C.S</th>
+                            <th>C.R</th>
+                            <th>C.C</th>
+                            <th>C.SN</th>
+                            <th>C.I</th>
+                            <th>TOTAL</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for arAporteDetalle in arAporteDetalles %}
                             <tr>
-                                <td>{{ arAporteContrato.codigoAporteContratoPk }}</td>
-                                <td>{{ arAporteContrato.codigoContratoFk }}</td>
-                                <td>{{ arAporteContrato.empleadoNumeroIdentificacion }}</td>
-                                <td>{{ arAporteContrato.empleadoNombreCorto }}</td>
-                                <td>{{ arAporteContrato.dias }}</td>
-                                <td>{{ arAporteContrato.horas }}</td>
-                                <td class="numero">{{ arAporteContrato.vrSalario  | number_format(0, '.', ',')}}</td>
-                                <td>{{ arAporteContrato.Ibc }}</td>
-                                <td>{{ arAporteContrato.IbcCajaVacaciones }}</td>
-                                <td>{{ arAporteContrato.vrVacaciones }}</td>
-                                <td>{{ arAporteContrato.ingreso }}</td>
-                                <td>{{ arAporteContrato.retiro }}</td>
-                                <td>{{ arAporteContrato.salarioIntegral }}</td>
-                                <td>{{ arAporteContrato.diasLicencia }}</td>
-                                <td>{{ arAporteContrato.diasIncapacidadGeneral }}</td>
-                                <td>{{ arAporteContrato.diasLicenciaMaternidad }}</td>
-                                <td>{{ arAporteContrato.diasIncapacidadLaboral }}</td>
-                                <td>{{ arAporteContrato.diasVacaciones }}</td>
-                                <td>{{ arAporteContrato.tarifaPension }}</td>
-                                <td>{{ arAporteContrato.tarifaSalud }}</td>
-                                <td>{{ arAporteContrato.tarifaRiesgos }}</td>
-                                <td>{{ arAporteContrato.tarifaCaja }}</td>
-                                <td>{{ arAporteContrato.codigoEntidadPensionPertenece }}</td>
-                                <td>{{ arAporteContrato.codigoEntidadSaludPertenece }}</td>
-                                <td>{{ arAporteContrato.codigoEntidadCajaPertenece }}</td>
-                                <td>{{ arAporteContrato.incapacidadGeneral?"SI":"NO" }}</td>
-                                <td>{{ arAporteContrato.incapacidadLaboral?"SI":"NO"  }}</td>
-                                <td>{{ arAporteContrato.licencia?"SI":"NO"  }}</td>
-                                <td>{{ arAporteContrato.licenciaMaternidad?"SI":"NO"     }}</td>
-                                <td>{{ arAporteContrato.licenciaRemunerada?"SI":"NO"  }}</td>
-                                <td>{{ arAporteContrato.vacaciones?"SI":"NO"  }}</td>
-                                <td>{{ arAporteContrato.fechaDesde | date('Y-m-d') }}</td>
-                                <td>{{ arAporteContrato.fechaHasta | date('Y-m-d') }}</td>
-                                <td>{{ arAporteContrato.fechaRetiro | date('Y-m-d') }}</td>
-                                <td>{{ arAporteContrato.fechaIngreso | date('Y-m-d') }}</td>
-                                <td>{{ arAporteContrato.variacionTransitoriaSalario }}</td>
-                                <td>{{ arAporteContrato.codigoEntidadSaludTraslada }}</td>
-                                <td>{{ arAporteContrato.trasladoAOtraEps?"SI":"NO" }}</td>
-                                <td>{{ arAporteContrato.trasladoAOtraPension?"SI":"NO" }}</td>
-                                <td>{{ arAporteContrato.trasladoDesdeOtraEps?"SI":"NO" }}</td>
-                                <td>{{ arAporteContrato.trasladoDesdeOtraPension?"SI":"NO" }}</td>
+                                <td>{{ arAporteDetalle.codigoAporteDetallePk }}</td>
+                                <td>{{ arAporteDetalle.codigoContratoFk }}</td>
+                                <td>{{ arAporteDetalle.empleadoNumeroIdentificacion }}</td>
+                                <td>{{ arAporteDetalle.empleadoNombreCorto }}</td>
+                                <td>{{ arAporteDetalle.ingreso }}</td>
+                                <td>{{ arAporteDetalle.retiro }}</td>
+                                <td>{{ arAporteDetalle.variacionTransitoriaSalario }}</td>
+                                <td>{% if arAporteDetalle.suspensionTemporalContratoLicenciaServicios == 'X' %}{{ arAporteDetalle.suspensionTemporalContratoLicenciaServicios }}{{ arAporteDetalle.diasLicencia }} {% endif %}</td>
+                                <td>{% if arAporteDetalle.incapacidadGeneral == 'X' %}{{ arAporteDetalle.incapacidadGeneral }}{{ arAporteDetalle.diasIncapacidadGeneral }} {% endif %}</td>
+                                <td>{% if arAporteDetalle.licenciaMaternidad == 'X' %}{{ arAporteDetalle.licenciaMaternidad }}{{ arAporteDetalle.diasLicenciaMaternidad }} {% endif %}</td>
+                                <td>{% if arAporteDetalle.vacaciones == 'X' %}{{ arAporteDetalle.vacaciones }}{{ arAporteDetalle.diasVacaciones }} {% endif %}{% if arAporteDetalle.vacaciones == 'L' %}{{ arAporteDetalle.vacaciones }}{{ arAporteDetalle.diasLicencia }} {% endif %}</td>
+                                <td>{% if arAporteDetalle.incapacidadAccidenteTrabajoEnfermedadProfesional > 0 %}{{ arAporteDetalle.incapacidadAccidenteTrabajoEnfermedadProfesional }} {% endif %}</td>
                                 </td>
                             </tr>
                         {% endfor %}

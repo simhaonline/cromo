@@ -19,7 +19,7 @@ class RhuAporteDetalle
      * @ORM\Column(name="codigo_aporte_detalle_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $codigoAporteContratoPk;
+    private $codigoAporteDetallePk;
 
     /**
      * @ORM\Column(name="codigo_aporte_fk", type="integer")
@@ -629,17 +629,17 @@ class RhuAporteDetalle
     /**
      * @return mixed
      */
-    public function getCodigoAporteContratoPk()
+    public function getCodigoAporteDetallePk()
     {
-        return $this->codigoAporteContratoPk;
+        return $this->codigoAporteDetallePk;
     }
 
     /**
-     * @param mixed $codigoAporteContratoPk
+     * @param mixed $codigoAporteDetallePk
      */
-    public function setCodigoAporteContratoPk($codigoAporteContratoPk): void
+    public function setCodigoAporteDetallePk($codigoAporteDetallePk): void
     {
-        $this->codigoAporteContratoPk = $codigoAporteContratoPk;
+        $this->codigoAporteDetallePk = $codigoAporteDetallePk;
     }
 
     /**

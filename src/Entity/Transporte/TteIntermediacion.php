@@ -64,6 +64,16 @@ class TteIntermediacion
     private $estadoAprobado = false;
 
     /**
+     * @ORM\Column(name="estado_anulado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoAnulado = false;
+
+    /**
+     * @ORM\Column(name="estado_contabilizado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoContabilizado = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionVenta", mappedBy="intermediacionRel")
      */
     protected $intermediacionesVentasIntermediacionRel;
@@ -247,6 +257,38 @@ class TteIntermediacion
     public function setIntermediacionesComprasIntermediacionRel($intermediacionesComprasIntermediacionRel): void
     {
         $this->intermediacionesComprasIntermediacionRel = $intermediacionesComprasIntermediacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
     }
 
 

@@ -23,6 +23,13 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class IntermediacionController extends Controller
 {
+    protected $clase = TteIntermediacion::class;
+    protected $claseNombre = "TteIntermediacion";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Financiero";
+    protected $nombre = "Intermediacion";
+
    /**
     * @Route("/transporte/movimiento/financiero/intermediacion", name="transporte_movimiento_financiero_intermediacion_lista")
     */    
@@ -102,24 +109,28 @@ class IntermediacionController extends Controller
         $paginator  = $this->get('knp_paginator');
         $arIntermediacion = $em->getRepository(TteIntermediacion::class)->find($id);
 
-        $form = Estandares::botonera($arIntermediacion->getEstadoAutorizado(),$arIntermediacion->getEstadoAprobado(), false);
+        $form = Estandares::botonera($arIntermediacion->getEstadoAutorizado(),$arIntermediacion->getEstadoAprobado(), $arIntermediacion->getEstadoAnulado());
         $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
+        $form->add('btnExcelCompra', SubmitType::class, array('label' => 'Excel'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TteIntermediacion::class)->autorizar($arIntermediacion);
-                return $this->redirect($this->generateUrl('transporte_proceso_transporte_general_intermediacion_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_financiero_intermediacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(TteIntermediacion::class)->desAutorizar($arIntermediacion);
-                return $this->redirect($this->generateUrl('transporte_proceso_transporte_general_intermediacion_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_financiero_intermediacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TteIntermediacion::class)->aprobar($arIntermediacion);
-                return $this->redirect($this->generateUrl('transporte_proceso_transporte_general_intermediacion_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('transporte_movimiento_financiero_intermediacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteIntermediacionVenta::class)->detalle($id), "Intermediacion");
+                General::get()->setExportar($em->getRepository(TteIntermediacionVenta::class)->detalle($id), "IntermediacionVenta");
+            }
+            if ($form->get('btnExcelCompra')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TteIntermediacionCompra::class)->detalle($id), "IntermediacionCompra");
             }
         }
         $arIntermediacionVentas = $this->getDoctrine()->getRepository(TteIntermediacionVenta::class)->detalle($id);
@@ -128,6 +139,7 @@ class IntermediacionController extends Controller
             'arIntermediacion' => $arIntermediacion,
             'arIntermediacionVentas' => $arIntermediacionVentas,
             'arIntermediacionCompras' => $arIntermediacionCompras,
+            'clase' => array('clase' => 'TteIntermediacion', 'codigo' => $id),
             'form' => $form->createView()]);
     }
 

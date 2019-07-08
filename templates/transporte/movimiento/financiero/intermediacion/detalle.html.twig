@@ -6,11 +6,7 @@
             <a  class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_financiero_intermediacion_lista') }}">Volver</a>
         </div>
         <div class="btn-group">
-            {{ form_widget(form.btnAutorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnDesautorizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAprobar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
-            {{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}
+            {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
     <br /><br />
@@ -94,6 +90,7 @@
                         <tr>
                             <th>ID</th>
                             <th>POSEEDOR</th>
+                            <th>TIPO</th>
                             <th>FLETE</th>
                             <th>PAR</th>
                             <th>FLETE(PAR)</th>
@@ -106,6 +103,7 @@
                             <tr>
                                 <td><input type="hidden" name="arrCodigo[]" value="{{ arIntermediacionCompra.codigoIntermediacionCompraPk }}">{{ arIntermediacionCompra.codigoIntermediacionCompraPk }}</td>
                                 <td>{{ arIntermediacionCompra.poseedorNombreCorto }}</td>
+                                <td>{{ arIntermediacionCompra.despachoTipoNombre }}</td>
                                 <td class="numero">{{ arIntermediacionCompra.vrFlete | number_format(0, '.', ',')}}</td>
                                 <td class="numero">{{ arIntermediacionCompra.porcentajeParticipacion | number_format(5, '.', ',')}}</td>
                                 <td class="numero">{{ arIntermediacionCompra.vrFleteParticipacion | number_format(0, '.', ',')}}</td>
@@ -116,9 +114,15 @@
                     </table>
                 </div>
                 <div class="separador-1"></div>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {{ form_widget(form.btnExcelCompra, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
 
             </div>
         </div>
     </div>
+    <br/><br/><br/><br/>
     {{ form_end(form) }}
 {% endblock %}

@@ -3,6 +3,9 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Compra\ComCuentaPagar;
+use App\Entity\Compra\ComCuentaPagarTipo;
+use App\Entity\Compra\ComProveedor;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuConfiguracion;
@@ -10,6 +13,7 @@ use App\Entity\RecursoHumano\RhuConsecutivo;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
@@ -18,6 +22,7 @@ use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Seguridad\Usuario;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use PhpParser\Node\Expr\New_;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 
@@ -52,13 +57,15 @@ class RhuProgramacionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getNeto($id){
+    public function getNeto($id)
+    {
         return $this->_em->createQueryBuilder()
-            ->from(RhuProgramacion::class,'p')
+            ->from(RhuProgramacion::class, 'p')
             ->select('p.vrNeto')
             ->where("p.codigoProgramacionPk = {$id}")
             ->getQuery()->getSingleResult();
     }
+
     /**
      * @param $codigoProgramacion integer
      * @return mixed
@@ -156,8 +163,11 @@ class RhuProgramacionRepository extends ServiceEntityRepository
      */
     public function aprobar($arProgramacion)
     {
+        /**
+         * @var $arPago
+         */
         $em = $this->getEntityManager();
-        if($arProgramacion->getEstadoAutorizado() == 1 && $arProgramacion->getEstadoAprobado() == 0) {
+        if ($arProgramacion->getEstadoAutorizado() == 1 && $arProgramacion->getEstadoAprobado() == 0) {
             $arProgramacion->setEstadoAprobado(1);
             $em->persist($arProgramacion);
             $arConsecutivo = $em->getRepository(RhuConsecutivo::class)->find(1);
@@ -196,6 +206,42 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $arPagoCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual());
                 $em->persist($arPagoCredito);
                 $em->persist($arCredito);
+            }
+
+            //Verificar tercero en cuenta por pagar
+            if($arPago->getPagoTipoRel()->getGeneraTesoreria()){
+                foreach ($arPagos as $arPago) {
+                    $arTerceroCuentaPagar = $em->getRepository(ComProveedor::class)->findOneBy(array('codigoIdentificacionFk' => $arPago->getEmpleadoRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPago->getEmpleadoRel()->getNumeroIdentificacion()));
+                    if (!$arTerceroCuentaPagar) {
+                        $arTerceroCuentaPagar = new ComProveedor();
+                        $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arPago->getCodigoEmpleadoFk());
+                        $arTerceroCuentaPagar->setIdentificacionRel($arEmpleado->getIdentificacionRel());
+                        $arTerceroCuentaPagar->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
+                        $arTerceroCuentaPagar->setNombre1($arEmpleado->getNombre1());
+                        $arTerceroCuentaPagar->setNombre2($arEmpleado->getNombre2());
+                        $arTerceroCuentaPagar->setApellido1($arEmpleado->getApellido1());
+                        $arTerceroCuentaPagar->setApellido2($arEmpleado->getApellido2());
+                        $arTerceroCuentaPagar->setNombreCorto($arEmpleado->getNombreCorto());
+                        $arTerceroCuentaPagar->setCiudadRel($arEmpleado->getCiudadRel());
+                        $arTerceroCuentaPagar->setCelular($arEmpleado->getCelular());
+                        $em->persist($arTerceroCuentaPagar);
+                    }
+
+                    $arCuentaPagarTipo = $em->getRepository(ComCuentaPagarTipo::class)->find($arPago->getPagoTipoRel()->getCodigoCuentaPagarTipoFk());
+                    $arCuentaPagar = New ComCuentaPagar();
+                    $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+                    $arCuentaPagar->setProveedorRel($arTerceroCuentaPagar);
+                    $arCuentaPagar->setNumeroDocumento($arPago->getNumero());
+                    $arCuentaPagar->setFechaFactura($arPago->getFechaDesde());
+                    $arCuentaPagar->setFechaVence($arPago->getFechaHasta());
+                    $arCuentaPagar->setVrSubtotal($arPago->getVrDevengado());
+                    $arCuentaPagar->setVrTotal($arPago->getVrNeto());
+                    $arCuentaPagar->setVrSaldo($arPago->getVrNeto());
+                    $arCuentaPagar->setVrSaldoOperado($arPago->getVrNeto());
+                    $arCuentaPagar->setEstadoAutorizado(1);
+                    $arCuentaPagar->setEstadoAprobado(1);
+                    $em->persist($arCuentaPagar);
+                }
             }
             $em->flush();
         } else {
@@ -273,23 +319,25 @@ class RhuProgramacionRepository extends ServiceEntityRepository
     /**
      * @param $codigoProgramacion int
      */
-    private function setVrNeto($codigoProgramacion){
+    private function setVrNeto($codigoProgramacion)
+    {
         $this->_em->createQueryBuilder()
-            ->update(RhuProgramacionDetalle::class,'pd')
-            ->set('pd.vrNeto','?1')
+            ->update(RhuProgramacionDetalle::class, 'pd')
+            ->set('pd.vrNeto', '?1')
             ->where("pd.codigoProgramacionFk = {$codigoProgramacion}")
-            ->setParameter('1',0)
+            ->setParameter('1', 0)
             ->getQuery()->execute();
     }
 
-    public function generar($arProgramacion, $codigoProgramacionDetalle, $usuario) {
+    public function generar($arProgramacion, $codigoProgramacionDetalle, $usuario)
+    {
         $em = $this->getEntityManager();
         $douNetoTotal = 0;
         $numeroPagos = 0;
         $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
         $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
         $arConceptoFondoSolidaridadPension = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoFondoSolidaridadPensionFk']);
-        if($codigoProgramacionDetalle) {
+        if ($codigoProgramacionDetalle) {
             $arProgramacionDetalleActualizar = $em->getRepository(RhuProgramacionDetalle::class)->find($codigoProgramacionDetalle);
             $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalleActualizar, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoSolidaridadPension, $usuario);
             $arProgramacionDetalleActualizar->setVrNeto($vrNeto);

@@ -3,10 +3,19 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm"
-               href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_lista') }}">Volver</a> &nbsp;&nbsp;
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
+    <div style="float:right">
+        {% if arAporte.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arAporte.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arAporte.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arAporte.estadoContabilizado == true %}<span class="label label-danger">Contabilizado</span>{% endif %}
+    </div>
+    <br /><br />
     <br><br>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tbody>
@@ -131,6 +140,7 @@
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         {{ form_widget(form.btnExcelDetalle) }}
+                        {{ form_widget(form.btnExportarPlano) }}
                     </div>
                 </div>
             </div>

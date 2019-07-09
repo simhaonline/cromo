@@ -582,6 +582,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
 
             if ($diasOrdinarios > 0) {
                 $arAporteSoporte = new RhuAporteSoporte();
+                $arAporteSoporte->setAporteRel($arAporte);
                 $arAporteSoporte->setAporteContratoRel($arAporteContratoActualizar);
                 $arAporteSoporte->setDias($diasOrdinarios);
                 $arAporteSoporte->setHoras(intval($horasOrdinarias));

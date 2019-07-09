@@ -3,6 +3,8 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuAporte;
+use App\Entity\RecursoHumano\RhuAporteDetalle;
+use App\Entity\RecursoHumano\RhuAporteSoporte;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -35,4 +37,106 @@ class RhuAporteRepository extends ServiceEntityRepository
 //        }
         return $queryBuilder;
     }
+
+    public function autorizar($arAporte)
+    {
+        $em = $this->getEntityManager();
+        if(!$arAporte->getEstadoAutorizado()) {
+            $em->getRepository(RhuAporteSoporte::class)->generar($arAporte);
+            $em->getRepository(RhuAporteDetalle::class)->generar($arAporte);
+            $arAporte->setEstadoAutorizado(1);
+            $em->persist($arAporte);
+            $em->flush();
+        }
+    }
+
+    public function desAutorizar($arAporte)
+    {
+        $em = $this->getEntityManager();
+        if ($arAporte->getEstadoAutorizado() == 1 && $arAporte->getEstadoAprobado() == 0) {
+            $arAporte->setEstadoAutorizado(0);
+            $em->persist($arAporte);
+            $em->createQueryBuilder()->delete(RhuAporteDetalle::class,'ad')->andWhere("ad.codigoAporteFk = " . $arAporte->getCodigoAportePk())->getQuery()->execute();
+            $em->createQueryBuilder()->delete(RhuAporteSoporte::class,'aso')->andWhere("aso.codigoAporteFk = " . $arAporte->getCodigoAportePk())->getQuery()->execute();
+            $em->flush();
+        } else {
+            Mensajes::error('No se puede desautorizar, el registro ya se encuentra aprobado');
+        }
+    }
+
+    public function aprobar($arAporte): string
+    {
+        $respuesta = "";
+        $em = $this->getEntityManager();
+        if (!$arAporte->getEstadoAprobado() && $arAporte->getEstadoAutorizado()) {
+            $arAporte->setEstadoAprobado(1);
+            $em->persist($arAporte);
+            $em->flush();
+        } else {
+            $respuesta = "El documento no puede estar previamente aprobado y debe estar autorizado";
+        }
+
+        return $respuesta;
+    }
+
+    public function anular($arAporte): string
+    {
+        $respuesta = "";
+        $em = $this->getEntityManager();
+        if($arAporte->getEstadoContabilizado() == 0) {
+            if($arAporte->getEstadoAprobado() == 1) {
+                if($arAporte->getEstadoAnulado() == 0) {
+                    $arAporte->setEstadoAnulado(1);
+                    $em->persist($arAporte);
+                    $em->flush();
+                } else {
+                    Mensajes::error("La factura no puede estar previamente anulada");
+                }
+            } else {
+                Mensajes::error("La factura debe estar aprobada");
+            }
+        } else {
+            Mensajes::error("La factura ya esta contabilizada");
+        }
+
+        return $respuesta;
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(RhuAporte::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(RhuAporteDetalle::class)->findBy(['codigoAporteFk' => $arRegistro->getCodigoAportePk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if($respuesta != ''){
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
+    }
+
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        return true;
+    }
+
+
 }

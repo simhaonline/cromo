@@ -13,6 +13,7 @@ use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuPagoRepository extends ServiceEntityRepository
 {
@@ -376,5 +377,22 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $this->_em->createQueryBuilder()
             ->from(RhuPago::class, 'p')
             ->select("p.codigoProgramacionDetalleFk = {$id}")->getQuery()->execute();
+    }
+
+    public function informe()
+    {
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuPago::class, 'p')
+            ->select('p');
+        if ($session->get('filtroRhuInformePagoCodigoEmpleado') != null) {
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoCodigoEmpleado')}");
+        }
+        if ($session->get('filtroRhuInformePagoFechaDesde') != null) {
+            $queryBuilder->andWhere("p.fechaDesde >= '{$session->get('filtroRhuInformePagoFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroRhuInformePagoFechaHasta') != null) {
+            $queryBuilder->andWhere("p.fechaHasta <= '{$session->get('filtroRhuInformePagoFechaHasta')} 23:59:59'");
+        }
+        return $queryBuilder->getQuery()->getResult();
     }
 }

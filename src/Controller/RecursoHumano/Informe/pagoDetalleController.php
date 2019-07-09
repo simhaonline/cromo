@@ -33,8 +33,8 @@ class pagoDetalleController extends  Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtEmpleado', TextType::class, ['required' => false])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuInformePagoFechaDesde') ? date_create($session->get('filtroInvInformeAsesorVentasFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuInformePagoFechaHasta') ? date_create($session->get('filtroInvInformeAsesorVentasFechaHasta')): null])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuInformePagoDetalleFechaDesde') ? date_create($session->get('filtroRhuInformePagoDetalleFechaDesde')): null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuInformePagoDetalleFechaHasta') ? date_create($session->get('filtroRhuInformePagoDetalleFechaHasta')): null])
             ->add('concepto', EntityType::class, array(
                 'class' => RhuConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -56,12 +56,13 @@ class pagoDetalleController extends  Controller
             if ($form->get('btnFiltrar')->isClicked()) {
                 $arConcepto = $form->get('concepto')->getData();
                 if($arConcepto) {
-                    $session->set('filtroRhuInformePagoConcepto', $arConcepto->getCodigoConceptoPk());
+                    $session->set('filtroRhuInformePagoDetalleConcepto', $arConcepto->getCodigoConceptoPk());
                 } else {
-                    $session->set('filtroRhuInformePagoConcepto', null);
+                    $session->set('filtroRhuInformePagoDetalleConcepto', null);
                 }
-                $session->set('filtroRhuInformePagoFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-                $session->set('filtroRhuInformePagoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+                $session->set('filtroRhuInformePagoDetalleCodigoEmpleado',  $form->get('txtEmpleado')->getData());
+                $session->set('filtroRhuInformePagoDetalleFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
+                $session->set('filtroRhuInformePagoDetalleFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
             }
         }
         $arPagoDetalles = $paginator->paginate($em->getRepository(RhuPagoDetalle::class)->informe(), $request->query->getInt('page', 1), 30);

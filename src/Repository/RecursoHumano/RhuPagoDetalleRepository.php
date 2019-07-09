@@ -130,18 +130,19 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('pd.conceptoRel', 'c')
             ->leftJoin('pd.pagoRel', 'pa');
 
-        if ($session->get('filtroRhuInformePagoConcepto') != null) {
-            $queryBuilder->andWhere("pd.codigoConceptoFk = '{$session->get('filtroRhuInformePagoConcepto')}'");
+        if ($session->get('filtroRhuInformePagoDetalleConcepto') != null) {
+            $queryBuilder->andWhere("pd.codigoConceptoFk = '{$session->get('filtroRhuInformePagoDetalleConcepto')}'");
         }
-        if ($session->get('filtroRhuInformePagoCodigoEmpleado') != null) {
-            $queryBuilder->andWhere("pa.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoCodigoEmpleado')}");
+        if ($session->get('filtroRhuInformePagoDetalleCodigoEmpleado') != null) {
+            $queryBuilder->andWhere("pa.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoDetalleCodigoEmpleado')}");
         }
-        if ($session->get('filtroRhuInformePagoFechaDesde') != null) {
-            $queryBuilder->andWhere("pa.fechaDesde >= '{$session->get('filtroRhuInformePagoFechaDesde')} 00:00:00'");
+        if ($session->get('filtroRhuInformePagoDetalleFechaDesde') != null) {
+            $queryBuilder->andWhere("pa.fechaDesde >= '{$session->get('filtroRhuInformePagoDetalleFechaDesde')} 00:00:00'");
         }
-        if ($session->get('filtroRhuInformePagoFechaHasta') != null) {
-            $queryBuilder->andWhere("pa.fechaHasta <= '{$session->get('filtroRhuInformePagoFechaHasta')} 23:59:59'");
+        if ($session->get('filtroRhuInformePagoDetalleFechaHasta') != null) {
+            $queryBuilder->andWhere("pa.fechaHasta <= '{$session->get('filtroRhuInformePagoDetalleFechaHasta')} 23:59:59'");
         }
+
         return $queryBuilder->getQuery()->getResult();
 
     }

@@ -493,26 +493,6 @@ class RhuAporteDetalle
     private $totalCotizacion;
 
     /**
-     * @ORM\Column(name="codigo_entidad_pension_fk", type="integer", nullable=true)
-     */
-    private $codigoEntidadPensionFk;
-
-    /**
-     * @ORM\Column(name="codigo_entidad_salud_fk", type="integer", nullable=true)
-     */
-    private $codigoEntidadSaludFk;
-
-    /**
-     * @ORM\Column(name="codigo_entidad_riesgo_fk", type="integer", nullable=true)
-     */
-    private $codigoEntidadRiesgoFk;
-
-    /**
-     * @ORM\Column(name="codigo_entidad_caja_fk", type="integer", nullable=true)
-     */
-    private $codigoEntidadCajaFk;
-
-    /**
      * @ORM\Column(name="indicador_tarifa_especial_pensiones", type="string", length=1, nullable=true)
      */
     private $indicadorTarifaEspecialPensiones;
@@ -603,6 +583,26 @@ class RhuAporteDetalle
     private $numeroHorasLaboradas = 0;
 
     /**
+     * @ORM\Column(name="codigo_entidad_pension_fk", type="integer", nullable=true)
+     */
+    private $codigoEntidadPensionFk;
+
+    /**
+     * @ORM\Column(name="codigo_entidad_salud_fk", type="integer", nullable=true)
+     */
+    private $codigoEntidadSaludFk;
+
+    /**
+     * @ORM\Column(name="codigo_entidad_riesgo_fk", type="integer", nullable=true)
+     */
+    private $codigoEntidadRiesgoFk;
+
+    /**
+     * @ORM\Column(name="codigo_entidad_caja_fk", type="integer", nullable=true)
+     */
+    private $codigoEntidadCajaFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuAporte", inversedBy="aportesDetallesAporteRel")
      * @ORM\JoinColumn(name="codigo_aporte_fk",referencedColumnName="codigo_aporte_pk")
      */
@@ -625,6 +625,30 @@ class RhuAporteDetalle
      * @ORM\JoinColumn(name="codigo_sucursal_fk",referencedColumnName="codigo_sucursal_pk")
      */
     protected $sucursalRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="aportesDetallesEntidadPensionRel")
+     * @ORM\JoinColumn(name="codigo_entidad_pension_fk",referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadPensionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="aportesDetallesEntidadSaludRel")
+     * @ORM\JoinColumn(name="codigo_entidad_salud_fk",referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadSaludRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="aportesDetallesEntidadRiesgosRel")
+     * @ORM\JoinColumn(name="codigo_entidad_riesgos_fk",referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadRiesgosRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="aportesDetallesEntidadCajaRel")
+     * @ORM\JoinColumn(name="codigo_entidad_caja_fk",referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadCajaRel;
 
     /**
      * @return mixed
@@ -2560,6 +2584,70 @@ class RhuAporteDetalle
     public function setSucursalRel($sucursalRel): void
     {
         $this->sucursalRel = $sucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadPensionRel()
+    {
+        return $this->entidadPensionRel;
+    }
+
+    /**
+     * @param mixed $entidadPensionRel
+     */
+    public function setEntidadPensionRel($entidadPensionRel): void
+    {
+        $this->entidadPensionRel = $entidadPensionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadSaludRel()
+    {
+        return $this->entidadSaludRel;
+    }
+
+    /**
+     * @param mixed $entidadSaludRel
+     */
+    public function setEntidadSaludRel($entidadSaludRel): void
+    {
+        $this->entidadSaludRel = $entidadSaludRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadRiesgosRel()
+    {
+        return $this->entidadRiesgosRel;
+    }
+
+    /**
+     * @param mixed $entidadRiesgosRel
+     */
+    public function setEntidadRiesgosRel($entidadRiesgosRel): void
+    {
+        $this->entidadRiesgosRel = $entidadRiesgosRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadCajaRel()
+    {
+        return $this->entidadCajaRel;
+    }
+
+    /**
+     * @param mixed $entidadCajaRel
+     */
+    public function setEntidadCajaRel($entidadCajaRel): void
+    {
+        $this->entidadCajaRel = $entidadCajaRel;
     }
 
 

@@ -33,7 +33,6 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(RhuAporteSoporte::class, 'asop')
             ->select('asop.codigoAporteSoportePk')
-            ->addSelect('asop.dias')
             ->where('asop.codigoAporteContratoFk =' . $codigoSoporteContrato);
         $arAporteSoportes = $queryBuilder->getQuery()->getResult();
         return $arAporteSoportes;

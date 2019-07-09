@@ -60,4 +60,14 @@ class RhuConfiguracionRepository extends ServiceEntityRepository
         return $porcentaje;
     }
 
+    public function generarAporte(): array
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuConfiguracion::class, 'c')
+            ->select('c.vrSalarioMinimo')
+            ->addSelect('c.vrAuxilioTransporte')
+            ->where('c.codigoConfiguracionPk = 1');
+        return $queryBuilder->getQuery()->getSingleResult();
+
+    }
+
 }

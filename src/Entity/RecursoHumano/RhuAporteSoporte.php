@@ -44,12 +44,12 @@ class RhuAporteSoporte
     /**
      * @ORM\Column(name="ibc", type="float")
      */
-    private $Ibc = 0;
+    private $ibc = 0;
 
     /**
      * @ORM\Column(name="ibc_caja_vacaciones", type="float", nullable=true)
      */
-    private $IbcCajaVacaciones = 0;
+    private $ibcCajaVacaciones = 0;
 
     /**
      * @ORM\Column(name="vr_vacaciones", type="float")
@@ -241,6 +241,22 @@ class RhuAporteSoporte
     /**
      * @return mixed
      */
+    public function getCodigoAporteContratoFk()
+    {
+        return $this->codigoAporteContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoAporteContratoFk
+     */
+    public function setCodigoAporteContratoFk($codigoAporteContratoFk): void
+    {
+        $this->codigoAporteContratoFk = $codigoAporteContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDias()
     {
         return $this->dias;
@@ -291,15 +307,15 @@ class RhuAporteSoporte
      */
     public function getIbc()
     {
-        return $this->Ibc;
+        return $this->ibc;
     }
 
     /**
-     * @param mixed $Ibc
+     * @param mixed $ibc
      */
-    public function setIbc($Ibc): void
+    public function setIbc($ibc): void
     {
-        $this->Ibc = $Ibc;
+        $this->ibc = $ibc;
     }
 
     /**
@@ -307,15 +323,15 @@ class RhuAporteSoporte
      */
     public function getIbcCajaVacaciones()
     {
-        return $this->IbcCajaVacaciones;
+        return $this->ibcCajaVacaciones;
     }
 
     /**
-     * @param mixed $IbcCajaVacaciones
+     * @param mixed $ibcCajaVacaciones
      */
-    public function setIbcCajaVacaciones($IbcCajaVacaciones): void
+    public function setIbcCajaVacaciones($ibcCajaVacaciones): void
     {
-        $this->IbcCajaVacaciones = $IbcCajaVacaciones;
+        $this->ibcCajaVacaciones = $ibcCajaVacaciones;
     }
 
     /**
@@ -844,22 +860,6 @@ class RhuAporteSoporte
     public function setTrasladoDesdeOtraPension($trasladoDesdeOtraPension): void
     {
         $this->trasladoDesdeOtraPension = $trasladoDesdeOtraPension;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoAporteContratoFk()
-    {
-        return $this->codigoAporteContratoFk;
-    }
-
-    /**
-     * @param mixed $codigoAporteContratoFk
-     */
-    public function setCodigoAporteContratoFk($codigoAporteContratoFk): void
-    {
-        $this->codigoAporteContratoFk = $codigoAporteContratoFk;
     }
 
     /**

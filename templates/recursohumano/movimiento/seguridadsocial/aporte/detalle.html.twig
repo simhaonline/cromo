@@ -94,6 +94,33 @@
                                 <td>{% if arAporteDetalle.licenciaMaternidad == 'X' %}{{ arAporteDetalle.licenciaMaternidad }}{{ arAporteDetalle.diasLicenciaMaternidad }} {% endif %}</td>
                                 <td>{% if arAporteDetalle.vacaciones == 'X' %}{{ arAporteDetalle.vacaciones }}{{ arAporteDetalle.diasVacaciones }} {% endif %}{% if arAporteDetalle.vacaciones == 'L' %}{{ arAporteDetalle.vacaciones }}{{ arAporteDetalle.diasLicencia }} {% endif %}</td>
                                 <td>{% if arAporteDetalle.incapacidadAccidenteTrabajoEnfermedadProfesional > 0 %}{{ arAporteDetalle.incapacidadAccidenteTrabajoEnfermedadProfesional }} {% endif %}</td>
+                                <td>{{ arAporteDetalle.salarioIntegral }}</td>
+                                <td>{{ arAporteDetalle.salarioBasico | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.vrIngresoBaseCotizacion | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.numeroHorasLaboradas }}</td>
+                                <td>{{ arAporteDetalle.diasCotizadosPension }}</td>
+                                <td>{{ arAporteDetalle.diasCotizadosSalud }}</td>
+                                <td>{{ arAporteDetalle.diasCotizadosRiesgosProfesionales }}</td>
+                                <td>{{ arAporteDetalle.diasCotizadosCajaCompensacion }}</td>
+                                <td>{{ arAporteDetalle.ibcPension | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.ibcSalud | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.ibcRiesgosProfesionales | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.ibcCaja | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaPension | number_format(2, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaSalud | number_format(2, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaRiesgos | number_format(4, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaCaja | number_format(2, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaSena | number_format(2, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaIcbf | number_format(2, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionPension | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.aportesFondoSolidaridadPensionalSolidaridad | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.aportesFondoSolidaridadPensionalSubsistencia | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionSalud | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionRiesgos | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionCaja | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionSena | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionIcbf | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.totalCotizacion  | number_format(0, '.', ',') }}</td>
                                 </td>
                             </tr>
                         {% endfor %}

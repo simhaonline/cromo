@@ -145,7 +145,7 @@ class TteCiudadRepository extends ServiceEntityRepository
             ->addSelect('c.codigoRutaFk')
             ->addSelect('d.nombre as departamentoNombre')
             ->leftJoin('c.departamentoRel', 'd')
-            ->setMaxResults(10);
+            ->setMaxResults(20);
         if($nombre) {
             $queryBuilder->andWhere("c.nombre LIKE '%${nombre}%'");
         }

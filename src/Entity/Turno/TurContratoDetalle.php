@@ -206,6 +206,11 @@ class TurContratoDetalle
     protected $puestoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurPrototipo", mappedBy="contratoDetalleRel")
+     */
+    protected $prototiposContratoDetalleRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoDetallePk()
@@ -795,6 +800,22 @@ class TurContratoDetalle
     public function setPeriodo($periodo): void
     {
         $this->periodo = $periodo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrototiposContratoDetalleRel()
+    {
+        return $this->prototiposContratoDetalleRel;
+    }
+
+    /**
+     * @param mixed $prototiposContratoDetalleRel
+     */
+    public function setPrototiposContratoDetalleRel($prototiposContratoDetalleRel): void
+    {
+        $this->prototiposContratoDetalleRel = $prototiposContratoDetalleRel;
     }
 
 

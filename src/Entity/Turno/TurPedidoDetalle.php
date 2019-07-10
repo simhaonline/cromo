@@ -254,6 +254,11 @@ class TurPedidoDetalle
     private $estadoTerminado = false;
 
     /**
+     * @ORM\Column(name="estado_programado", type="boolean", options={"default":false})
+     */
+    private $estadoProgramado = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="pedidosDetallesPedidoRel")
      * @ORM\JoinColumn(name="codigo_pedido_fk", referencedColumnName="codigo_pedido_pk")
      */
@@ -1096,6 +1101,22 @@ class TurPedidoDetalle
     public function setProgramacionesPedidoDetalleRel($programacionesPedidoDetalleRel): void
     {
         $this->programacionesPedidoDetalleRel = $programacionesPedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoProgramado()
+    {
+        return $this->estadoProgramado;
+    }
+
+    /**
+     * @param mixed $estadoProgramado
+     */
+    public function setEstadoProgramado($estadoProgramado): void
+    {
+        $this->estadoProgramado = $estadoProgramado;
     }
 
 

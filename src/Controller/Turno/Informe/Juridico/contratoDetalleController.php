@@ -1,11 +1,10 @@
 <?php
 
 
-namespace App\Controller\RecursoHumano\Informe;
+namespace App\Controller\Turno\Informe\Juridico;
 
 
-use App\Entity\RecursoHumano\RhuPago;
-use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Entity\Turno\TurContrato;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -14,10 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class pagoController extends  Controller
+class contratoDetalleController extends  Controller
 {
     /**
-     * @Route("/recursohumano/informe/nomina/pago/lista", name="recursohumano_informe_nomina_pago_lista")
+     * @Route("/turno/informe/juridico/contratoDetalle/lista", name="turno_informe_juridico_contratodetalle_lista")
      */
     public function lista(Request $request)
     {
@@ -38,10 +37,12 @@ class pagoController extends  Controller
                 $session->set('filtroRhuInformePagoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
             }
         }
-        $arPagos = $paginator->paginate($em->getRepository(RhuPago::class)->informe(), $request->query->getInt('page', 1), 30);
-        return $this->render('recursohumano/informe/nomina/pago/lista.html.twig', [
-            'arPagos' => $arPagos,
-            'form' => $form->createView()
-        ]);
+        $arContratos = $paginator->paginate($em->getRepository(TurContrato::class)->informe(), $request->query->getInt('page', 1), 30);
+        return $this->render('turno/informe/juridico/contrato/lista.html.twig', [
+                'arContratos' => $arContratos,
+                'form' => $form->createView()
+            ]
+        );
     }
+
 }

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_lista') }}">Volver</a>
+        </div>
+    </div>
+    <br/><br/>
+        <table class="table tabla-datos">
+            <thead>
+            <th>ID</th>
+            <th>FECHA</th>
+            <th>CONCEPTO</th>
+            <th>DETALLE</th>
+            <th> PAGOGRUPO</th>
+            <th>CODIGO</th>
+            <th>DOCUMENTO</th>
+            <th>EMPLEADO</th>
+            <th>CANT</th>
+            <th>VALOR</th>
+            <th>HORAS</th>
+            <th>DL_SDADL	A
+            <th>A_P</th>
+            <th>A_C</th>
+            <th>ACT</th>
+            <th>ACTP</th>
+            <th>USUARIO</th>
+            <td></td>
+            <td></td>
+            <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+            </thead>
+        </table>
+    <br>
+    <br>
+{% endblock %}

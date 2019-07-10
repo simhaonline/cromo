@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller\RecursoHumano\Informe;
+namespace App\Controller\RecursoHumano\Informe\Nomina;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;

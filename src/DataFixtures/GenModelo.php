@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Crm\CrmContacto;
+use App\Entity\RecursoHumano\RhuAdicionalPeriodo;
 use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurPedidoTipo;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -148,6 +149,7 @@ class GenModelo extends Fixture
             )),
             array('modulo'=>'Recurso Humano','modelo'=>array(
                 'RhuAdicional',
+                'RhuAdicionalPeriodo',
                 'RhuAspirante',
                 'RhuBanco',
                 'RhuCargo',

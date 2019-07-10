@@ -500,4 +500,11 @@ class TurContratoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function informe()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContrato::class, 'c')
+            ->select('c');
+        return $queryBuilder;
+    }
 }

@@ -12,6 +12,7 @@ use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\ContratoDetalleType;
 use App\Form\Type\Turno\PedidoType;
 use App\Form\Type\Turno\PedidoDetalleType;
@@ -102,12 +103,14 @@ class ProgramacionController extends ControllerListenerGeneral
     }
 
     /**
-     *@Route("/turno/movimiento/operacion/programacion/masiva/{anio}/{mes}/{codigoPedido}", name="turno_movimiento_operacion_programacion_masiva")
+     *@Route("/turno/movimiento/operacion/programacion/recurso/{codigoPedidoDetalle}/{codigoEmpleado}", name="turno_movimiento_operacion_programacion_recurso")
      */
-    public function programacion_masiva(Request $request, $anio, $mes, $codigoPedido)
+    public function programacion_masiva(Request $request, $codigoPedidoDetalle, $codigoEmpleado)
     {
         $em = $this->getDoctrine()->getManager();
-        $strAnioMes = $anio . "/" . $mes;
+        /** @var $arPedidoDetalle TurPedidoDetalle */
+        $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
+        $strAnioMes = $arPedidoDetalle->getAnio() . "/" . $arPedidoDetalle->getMes();
         $arrDiaSemana = array();
         for ($i = 1; $i <= 31; $i++) {
             $strFecha = $strAnioMes . '/' . $i;
@@ -127,10 +130,10 @@ class ProgramacionController extends ControllerListenerGeneral
                 $resultado = $this->actualizarDetalle($arrControles);
             }
         }
-        $arTurProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(['codigoPedidoFk'=>$codigoPedido]);
-        return $this->render('turno/movimiento/operacion/programacion/programacionMasiva.html.twig', [
+        $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(['codigoEmpleadoFk'=>$codigoEmpleado]);
+        return $this->render('turno/movimiento/operacion/programacion/programacionRecurso.html.twig', [
             'arrDiaSemana' => $arrDiaSemana,
-            'arTurProgramaciones'=>$arTurProgramaciones,
+            'arProgramaciones'=>$arProgramaciones,
             'form' => $form->createView()
         ]);
     }
@@ -165,10 +168,131 @@ class ProgramacionController extends ControllerListenerGeneral
         return $strDia;
     }
 
-    public function actualizarDetalle($arrControles)
+    private function actualizarDetalle($arrControles)
     {
         $em = $this->getDoctrine()->getManager();
+        $error = false;
+        foreach ($arrControles['LblCodigo'] as $codigoProgramacion) {
+            $arProgramacion = $em->getRepository(TurProgramacion::class)->find($codigoProgramacion);
+            if ($arProgramacion) {
+                $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($arProgramacion->getCodigoPedidoDetalleFk());
+                $validar = $this->validarHoras($codigoProgramacion, $arrControles);
+                if ($validar['validado']) {
+                    $horasDiurnasPendientes = $arPedidoDetalle->getHorasDiurnas() - $arPedidoDetalle->getHorasDiurnasProgramadas();
+                    $horasNocturnasPendientes = $arPedidoDetalle->getHorasNocturnas() - $arPedidoDetalle->getHorasNocturnasProgramadas();
+                    $diffDiurnas = $validar['horasDiurnas'] - $validar['horasDiurnasLinea'];
+                    $diffNocturnas = $validar['horasNocturnas'] - $validar['horasNocturnasLinea'];
+                    if ($horasDiurnasPendientes >= $diffDiurnas) {
+                        if ($horasNocturnasPendientes >= $diffNocturnas) {
+                            $horasDiurnasProgramadas = ($arPedidoDetalle->getHorasDiurnasProgramadas() - $arProgramacion->getHorasDiurnas()) + $validar['horasDiurnas'];
+                            $horasNocturnasProgramadas = ($arPedidoDetalle->getHorasNocturnasProgramadas() - $arProgramacion->getHorasNocturnas()) + $validar['horasNocturnas'];
+                            $horasProgramadas = $horasDiurnasProgramadas + $horasNocturnasProgramadas;
+                            $arPedidoDetalle->setHorasDiurnasProgramadas($horasDiurnasProgramadas);
+                            $arPedidoDetalle->setHorasNocturnasProgramadas($horasNocturnasProgramadas);
+                            $arPedidoDetalle->setHorasProgramadas($horasProgramadas);
+                            $em->persist($arPedidoDetalle);
+                            for ($i = 1; $i <= 31; $i++) {
+                                $indice = "TxtDia" . ($i < 10 ? "0{$i}" : $i) . "D" . $codigoProgramacion;
+                                if (isset($arrControles[$indice])) {
+                                    call_user_func_array([$arProgramacion, "setDia{$i}"], [$arrControles[$indice]]);
+                                }
+                            }
+                            $arProgramacion->setHorasDiurnas($validar['horasDiurnas']);
+                            $arProgramacion->setHorasNocturnas($validar['horasNocturnas']);
+                            $arProgramacion->setHoras($validar['horasDiurnas'] + $validar['horasNocturnas']);
+                            $em->persist($arProgramacion);
+                            $em->flush();
+                        } else {
+                            $error = true;
+                            //$objMensaje->Mensaje("error", "Horas nocturnas superan las horas del pedido disponibles para programar detalle " . $intCodigo);
+                        }
+                    } else {
+                        $error = true;
+                        //$objMensaje->Mensaje("error", "Horas diurnas superan las horas del pedido disponibles para programar detalle " . $intCodigo);
+                    }
+                } else {
+                    $error = true;
+                    //$objMensaje->Mensaje("error", $validar['mensaje']);
+                }
 
+            } else {
+                $error = true;
+                //$objMensaje->Mensaje("error", "No se encontro un detalle de programacion con este codigo");
+            }
+            if ($error) {
+                break;
+            }
+        }
+        return $error;
+    }
+
+    private function validarTurno($strTurno)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arrTurno = array('turno' => null, 'horasDiurnas' => 0, 'horasNocturnas' => 0, 'errado' => false);
+        if ($strTurno != "") {
+            $arTurno = $em->getRepository(TurTurno::class)->find($strTurno);
+            if ($arTurno) {
+                $arrTurno['turno'] = $strTurno;
+                $arrTurno['horasDiurnas'] = $arTurno->getHorasDiurnas();
+                $arrTurno['horasNocturnas'] = $arTurno->getHorasNocturnas();
+            } else {
+                $arrTurno['errado'] = true;
+            }
+        }
+
+        return $arrTurno;
+    }
+
+    private function validarHoras($codigoProgramacion, $arrControles)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arrDetalle = [
+            'validado' => true,
+            'horasDiurnas' => 0,
+            'horasNocturnas' => 0,
+            'mensaje' => '',
+            'horasNocturnasLinea' => 0,
+            'horasDiurnasLinea' => 0
+        ];
+        $horasDiurnas = 0;
+        $horasNocturnas = 0;
+        # Horas que tiene la linea de programación actualmente.
+        $horasDiurnasLinea = 0;
+        $horasNocturnasLinea = 0;
+
+        $arProgramacion = $em->getRepository(TurProgramacion::class)->find($codigoProgramacion);
+        for ($i = 1; $i <= 31; $i++) {
+            # Obtenemos los turnos de la linea actual y sus respectivas horas.
+            $codigoTurnoActual = call_user_func_array([$arProgramacion, "getDia{$i}"], []);
+            if ($codigoTurnoActual && $turnoActual = $em->getRepository(TurTurno::class)->find($codigoTurnoActual)) {
+                $horasDiurnasLinea += $turnoActual->getHorasDiurnas();
+                $horasNocturnasLinea += $turnoActual->getHorasNocturnas();
+            }
+
+            $dia = $i;
+            if (strlen($dia) < 2) {
+                $dia = "0" . $i;
+            }
+            $indice = 'TxtDia' . $dia . 'D' . $codigoProgramacion;
+            if (isset($arrControles[$indice]) && $arrControles[$indice] != '') {
+                $arrTurno = $this->validarTurno($arrControles['TxtDia' . $dia . 'D' . $codigoProgramacion]);
+                if ($arrTurno['errado'] == true) {
+                    $arrDetalle['validado'] = false;
+                    $arrDetalle['mensaje'] = "Turno " . $arrControles['TxtDia' . $dia . 'D' . $codigoProgramacion] . " no esta creado";
+                    break;
+                }
+                $horasDiurnas += $arrTurno['horasDiurnas'];
+                $horasNocturnas += $arrTurno['horasNocturnas'];
+            }
+        }
+
+        $arrDetalle['horasDiurnas'] = $horasDiurnas;
+        $arrDetalle['horasNocturnas'] = $horasNocturnas;
+        $arrDetalle['horasDiurnasLinea'] = $horasDiurnasLinea;
+        $arrDetalle['horasNocturnasLinea'] = $horasNocturnasLinea;
+
+        return $arrDetalle;
     }
 
 }

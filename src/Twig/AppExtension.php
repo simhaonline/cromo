@@ -39,6 +39,7 @@ class AppExtension extends AbstractExtension
             new \Twig_Function('validarBooleano', [$this, "validarBooleano"]),
             new \Twig_Function('obtenerFormView', [$this, "obtenerFormView"]),
             new \Twig_Function('validarRuta', [$this, "validarRuta"]),
+            new \Twig_Function('componerDiaProgramacionEmpleado', [$this, "componerDiaProgramacionEmpleado"]),
         ];
     }
 
@@ -358,5 +359,16 @@ class AppExtension extends AbstractExtension
         } else {
             return false;
         }
+    }
+
+    public function componerDiaProgramacionEmpleado($arProgramacion, $dia)
+    {
+        $valorDia = null;
+        $nombreFuncion = "getDia{$dia}";
+        if (method_exists($arProgramacion, $nombreFuncion)) {
+            $valorDia = call_user_func_array([$arProgramacion, $nombreFuncion], []);
+        }
+
+        return $valorDia;
     }
 }

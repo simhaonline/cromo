@@ -194,12 +194,17 @@ class TurProgramacion
     private $dia31;
 
     /**
-     * @ORM\Column(name="horas_diurnas", type="float")
+     * @ORM\Column(name="horas", type="float", options={"default" : 0})
+     */
+    private $horas = 0;
+
+    /**
+     * @ORM\Column(name="horas_diurnas", type="float", options={"default" : 0})
      */
     private $horasDiurnas = 0;
 
     /**
-     * @ORM\Column(name="horas_nocturnas", type="float")
+     * @ORM\Column(name="horas_nocturnas", type="float", options={"default" : 0})
      */
     private $horasNocturnas = 0;
 
@@ -902,6 +907,24 @@ class TurProgramacion
     {
         $this->empleadoRel = $empleadoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getHoras()
+    {
+        return $this->horas;
+    }
+
+    /**
+     * @param mixed $horas
+     */
+    public function setHoras($horas): void
+    {
+        $this->horas = $horas;
+    }
+
+
 
 
 }

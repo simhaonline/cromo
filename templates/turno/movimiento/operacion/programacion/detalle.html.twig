@@ -47,8 +47,8 @@
                             {% for arProgramacion in arPedidoDetalle.arProgramaciones %}
                                     <td>{{ arProgramacion.codigoProgramacionPk }}</td>
                                     <td>
-                                        <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_masiva',
-                                            { 'anio': arProgramacion.anio , 'mes':arProgramacion.mes , 'codigoPedido': arPedido.codigoPedidoPk }) }}', 'VerProgramaciones', 600, 1300)">
+                                        <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_recurso',
+                                            { 'codigoPedidoDetalle': arPedidoDetalle.codigoPedidoDetallePk , 'codigoEmpleado': arProgramacion.codigoEmpleadoFk }) }}', 'VerProgramaciones', 600, 1300)">
                                             {{ arProgramacion.empleadoNombreCorto | default('') }}
                                         </a>
                                     </td>

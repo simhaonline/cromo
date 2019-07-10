@@ -32,11 +32,9 @@
             <th>NOMBRE</th>
             <th>CERRAR</th>
             <th></th>
-            <th></th>
             <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
         </tr>
         </thead>
-        <!--cromo-->
         <tbody>
         {% for arAdicionalPeriodo in arAdicionalPeriodos %}
             <tr>
@@ -45,11 +43,7 @@
                 <td>{{ arAdicionalPeriodo.nombre }}</td>
                 <td class="text-center"> <button TYPE="submit" class="btn btn-default" value="{{ arAdicionalPeriodo.nombre }}">CERRAR</button>  </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('crm_movimiento_comercial_negocio_nuevo',{'id': arAdicionalPeriodo.codigoAdicionalPeriodoPk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
-                <td style="text-align: center;">
-                    <a href="{{ path('crm_movimiento_comercial_negocio_detalle',{'id' : arAdicionalPeriodo.codigoAdicionalPeriodoPk}) }}">
+                    <a href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_detalle',{'id' : arAdicionalPeriodo.codigoAdicionalPeriodoPk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>

@@ -223,7 +223,7 @@ class RhuContrato
     private $codigoCentroTrabajoFk;
 
     /**
-     * @ORM\Column(name="codigo_sucursal_fk", type="string", length=10)
+     * @ORM\Column(name="codigo_sucursal_fk", type="string", length=10, nullable=true)
      */
     private $codigoSucursalFk;
 

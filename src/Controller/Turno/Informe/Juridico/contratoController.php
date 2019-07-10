@@ -32,7 +32,7 @@ class contratoController extends  Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTurInformeContratoCodigoEmpleado',  $form->get('txtEmpleado')->getData());
+                $session->set('filtroTurInformeContratoCodigoCliente',  $form->get('txtEmpleado')->getData());
                 $session->set('filtroTurInformeContratoFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
                 $session->set('filtroTurInformeContratoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
             }

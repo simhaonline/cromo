@@ -505,6 +505,15 @@ class TurContratoRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContrato::class, 'c')
             ->select('c');
+        if($session->get('filtroTurInformeContratoCodigoCliente') != ''){
+            $queryBuilder->andWhere("c.codigoClienteFk  = '{$session->get('filtroTurInformeContratoCodigoCliente')}'");
+        }
+        if ($session->get('filtroTurInformeContratoFechaDesde') != null) {
+            $queryBuilder->andWhere("c.fechaGeneracion >= '{$session->get('filtroTurInformeContratoFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroTurInformeContratoFechaHasta') != null) {
+            $queryBuilder->andWhere("c.fechaGeneracion <= '{$session->get('filtroTurInformeContratoFechaHasta')} 23:59:59'");
+        }
         return $queryBuilder;
     }
 }

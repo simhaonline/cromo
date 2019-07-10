@@ -22,7 +22,7 @@
                                     <div class="input-group">
                                         <input id="form_txtNombreCorto" class="form-control" readonly>
                                         <span class="input-group-btn">
-                                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'form_txtEmpleado', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEMpleado', 600, 900)">Buscar</a>
+                                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('turno_buscar_cliente', { 'campoCodigo': 'form_txtEmpleado', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEMpleado', 600, 900)">Buscar</a>
                                         </span>
                                     </div>
                                 </div>
@@ -53,34 +53,61 @@
     <table class="table table-striped table-bordered table-hover tabla-datos">
         <thead>
         <tr>
-{#            <th>ID</th>#}
-{#            <th>TIPO</th>#}
-{#            <th>EMPLEADO</th>#}
-{#            <th>IDENTIFICAICON</th>#}
-{#            <th>GRUPO</th>#}
-{#            <th>TIEMPO</th>#}
-{#            <th>SALARIO</th>#}
-{#            <th>VIGENTE</th>#}
-{#            <th>DESDE</th>#}
-{#            <th>HASTA</th>#}
-{#            <th></th>#}
-{#            <th></th>#}
+            <th>ID</th>
+            <th>CLIENTE</th>
+            <th>TIPO</th>
+            <th TITLE="FECHA GENERACIÓN">GENERADO</th>
+            <th>AUT</th>
+            <th>APR</th>
+            <th>ANU</th>
+            <th>CER</th>
+            <th>SECTOR</th>
+            <th>CANT</th>
+            <th>ESTRATO</th>
+            <th>HORAS</th>
+            <th TITLE="Horas diurnas">HD</th>
+            <th  TITLE="Horas nocturnas">HN</th>
+            <th>COSTO</th>
+            <th>CONTRATO</th>
+            <th>PRECIO AJUSTADO</th>
+            <th>PRECIO MINIMO</th>
+            <th>SUBTOTAL</th>
+            <th>IVA</th>
+            <td>BASE AIU</td>
+            <td>BASE</td>
+            <td>TOTAL</td>
+            <td>TOTAL SERVICIO</td>
+            <td>USUARIO</td>
         </tr>
         </thead>
         <tbody>
         {% for arContrato in arContratos %}
             <tr>
-{#                <td>{{ arContrato.codigoContratoPk }}</td>#}
-{#                <td>{{ arContrato.clienteRel.nombreCorto }}</td>#}
-{#                <td>{{ arContrato.contratoTipoRel.nombre }}</td>#}
-{#                <td>{{ arContrato.numeroIdentificacion }}</td>#}
-{#                <td>{{ arContrato.nombreGrupo }}</td>#}
-{#                <td>{{ arContrato.tiempo }}</td>#}
-{#                <td class="numero">{{ arContrato.vrSalario | number_format }}</td>#}
-{#                <td>{{ arContrato.estadoTerminado ? 'NO' : 'SI' }}</td>#}
-{#                <td>{{ arContrato.fechaGeneracion | date('Y-m-d') }}</td>#}
-{#                <td>{{ arContrato.fechaDesde | date('Y-m-d') }}</td>#}
-{#                <td>{{ arContrato.fechaHasta | date('Y-m-d') }}</td>#}
+                <td>{{ arContrato.codigoContratoPk }}</td>
+                <td>{{ arContrato.clienteRel.nombreCorto }}</td>
+                <td>{{ arContrato.contratoTipoRel.nombre | default('') }}</td>
+                <td>{{ arContrato.fechaGeneracion | date('Y-m-d') }}</td>
+                <td>{{ arContrato.estadoAutorizado?"SI":"NO" }}</td>
+                <td>{{ arContrato.estadoAprobado?"SI":"NO" }}</td>
+                <td>{{ arContrato.estadoAnulado?"SI":"NO" }}</td>
+                <td>{{ arContrato.estadoCerrado?"SI":"NO" }}</td>
+                <td>{{ arContrato.sectorRel.nombre | default('') }}</td>
+                <td>{{ arContrato.cantidad }}</td>
+                <td>{{ arContrato.estrato }}</td>
+                <td>{{ arContrato.horas }}</td>
+                <td>{{ arContrato.horasDiurnas }}</td>
+                <td>{{ arContrato.horasNocturnas }}</td>
+                <td CLASS="numero">{{ arContrato.vrTotalCosto | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContrato.vrTotalContrato | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContrato.vrTotalPrecioAjustado | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContrato.vrTotalPrecioMinimo | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContrato.vrSubtotal | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContrato.vrIva | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContrato.vrBaseAiu | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContrato.vrSalarioBase | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContrato.vrTotal | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContrato.vrTotalServicio | number_format(0, '.', ',') }}</td>
+                <td>{{ arContrato.usuario }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -93,14 +120,7 @@
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arContratos) }}
-    </div>
-    <div class="btn-toolbar" style="float: right">
-
-        <div class="btn-group">
-            <a class="btn btn-default btn-sm"
-               href="{{ path('recursohumano_administracion_recurso_contrato_nuevo', {'id': 0}) }}">Nuevo</a>
-        </div>
-    </div>
+    </div>>
     <br /><br />
     {{ form_end(form) }}
 {% endblock %}

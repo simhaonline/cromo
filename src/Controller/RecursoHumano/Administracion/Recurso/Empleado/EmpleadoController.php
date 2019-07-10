@@ -182,7 +182,7 @@ class EmpleadoController extends BaseController
                 $arContrato->setEmpleadoRel($arEmpleado);
                 $arContrato->setEstadoTerminado(false);
                 $arContrato->setContratoClaseRel($arContrato->getContratoTipoRel()->getContratoClaseRel());
-                $arContrato->setIndefinido($arContrato->getContratoTipoRel()->getContratoClaseRel()->getIndefinido());
+                $arContrato->setIndefinido($arContrato->getContratoClaseRel()->getIndefinido());
                 $arContrato->setFactorHorasDia($arContrato->getTiempoRel()->getFactorHorasDia());
                 if ($id == 0) {
                     if ($arContrato->getVrSalario() <= ($arConfiguracion->getVrSalarioMinimo() * 2)) {

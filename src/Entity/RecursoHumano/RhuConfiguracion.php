@@ -51,25 +51,9 @@ class RhuConfiguracion
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoFondoSolidaridadRel")
-     * @ORM\JoinColumn(name="codigo_concepto_fondo_solidaridad_fk", referencedColumnName="codigo_concepto_pk")
+     * @ORM\JoinColumn(name="codigo_concepto_fondo_solidaridad_pension_fk", referencedColumnName="codigo_concepto_pk")
      */
     protected $conceptoFondoSolidaridadRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -182,5 +166,6 @@ class RhuConfiguracion
     {
         $this->conceptoFondoSolidaridadRel = $conceptoFondoSolidaridadRel;
     }
+
 
 }

@@ -335,30 +335,35 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         $numeroPagos = 0;
         $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
         $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
-        $arConceptoFondoSolidaridadPension = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoFondoSolidaridadPensionFk']);
-        if ($codigoProgramacionDetalle) {
-            $arProgramacionDetalleActualizar = $em->getRepository(RhuProgramacionDetalle::class)->find($codigoProgramacionDetalle);
-            $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalleActualizar, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoSolidaridadPension, $usuario);
-            $arProgramacionDetalleActualizar->setVrNeto($vrNeto);
-            $em->persist($arProgramacionDetalleActualizar);
-            $arProgramacion->setVrNeto($arProgramacion->getVrNeto() + $vrNeto);
-            $em->persist($arProgramacion);
-            $em->flush();
-        } else {
-            $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
-            if ($arProgramacionDetalles) {
-                foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
-                    $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoSolidaridadPension, $usuario);
-                    $arProgramacionDetalle->setVrNeto($vrNeto);
-                    $em->persist($arProgramacionDetalle);
-                    $douNetoTotal += $vrNeto;
-                    $numeroPagos++;
-                }
-                $arProgramacion->setEstadoAutorizado(1);
-                $arProgramacion->setVrNeto($douNetoTotal);
+        if($arConfiguracion['codigoConceptoFondoSolidaridadPensionFk']) {
+            $arConceptoFondoSolidaridadPension = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoFondoSolidaridadPensionFk']);
+            if ($codigoProgramacionDetalle) {
+                $arProgramacionDetalleActualizar = $em->getRepository(RhuProgramacionDetalle::class)->find($codigoProgramacionDetalle);
+                $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalleActualizar, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoSolidaridadPension, $usuario);
+                $arProgramacionDetalleActualizar->setVrNeto($vrNeto);
+                $em->persist($arProgramacionDetalleActualizar);
+                $arProgramacion->setVrNeto($arProgramacion->getVrNeto() + $vrNeto);
                 $em->persist($arProgramacion);
                 $em->flush();
+            } else {
+                $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()]);
+                if ($arProgramacionDetalles) {
+                    foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
+                        $vrNeto = $em->getRepository(RhuPago::class)->generar($arProgramacionDetalle, $arProgramacion, $arConceptoHora, $arConfiguracion, $arConceptoFondoSolidaridadPension, $usuario);
+                        $arProgramacionDetalle->setVrNeto($vrNeto);
+                        $em->persist($arProgramacionDetalle);
+                        $douNetoTotal += $vrNeto;
+                        $numeroPagos++;
+                    }
+                    $arProgramacion->setEstadoAutorizado(1);
+                    $arProgramacion->setVrNeto($douNetoTotal);
+                    $em->persist($arProgramacion);
+                    $em->flush();
+                }
             }
+        } else {
+            Mensajes::error("No esta configurado el concepto de fondo de solidaridad, debe configurarlo para autorizar el documento");
         }
+
     }
 }

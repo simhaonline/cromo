@@ -48,14 +48,14 @@ class CarRecibo
     private $codigoReciboTipoFk;
 
     /**
-     * @ORM\Column(name="numero", type="string", length=30, nullable=true)
+     * @ORM\Column(name="numero", type="integer", nullable=true)
      */
     private $numero;
 
     /**
      * @ORM\Column(name="soporte", type="string", length=20, nullable=true)
      * @Assert\Length(
-     *     max=30,
+     *     max=20,
      *     maxMessage="El campo no puede tener mas de 20 caracteres"
      * )
      */

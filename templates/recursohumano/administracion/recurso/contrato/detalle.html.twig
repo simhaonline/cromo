@@ -13,42 +13,115 @@
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arContrato.codigoContratoPk }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="titulo"> TIPO</td>
+            <td class="td-in-well">{{ arContrato.contratoTipoRel.nombre }}</td>
+            <td class="titulo">CLASE</td>
+            <td class="td-in-well">{{ arContrato.contratoClaseRel.nombre|default('SIN CLASE') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA INICIO:</td>
+            <td class="td-in-well">{{ arContrato.fechaDesde | date('Y-m-d') }}</td>
+            <td class="titulo">TIEMPO</td>
+            <td class="td-in-well">{{ arContrato.tiempoRel.nombre|default('SIN TIEMPO') }}</td>
+            <td class="titulo">TIPO SALARIO:</td>
+            <td class="td-in-well">arContrato.salarioTipoRel.nombre|default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA TERMINA:</td>
+            <td class="td-in-well">{{ arContrato.fechaHasta | date('Y-m-d') }}</td>
+            <td class="titulo">GRUPO PAGO:</td>
+            <td class="td-in-well">{{ arContrato.grupoRel.nombre|default('SIN GRUPO PAGO') }}</td>
+            <td class="titulo">SALARIO</td>
+            <td class="td-in-well numero" >{{ arContrato.vrSalario |  number_format(0, '.', ',')  }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CLASIFICACIÓN RIESGO:</td>
+            <td class="td-in-well">{{ arContrato.clasificacionRiesgoRel.nombre|default('') }}</td>
+            <td class="titulo">FACTOR HORAS DÍA:</td>
+            <td class="td-in-well">{{ arContrato.factorHorasDia }}</td>
+            <td class="titulo">ADICIONAL</td>
+            <td class="td-in-well numero" >{{ arContrato.vrAdicional |  number_format(0, '.', ',')  }}</td>
+
+        </tr>
+        <tr>
+            <td class="titulo">ESTADO:</td>
+            <td class="td-in-well">{{ arContrato.estadoTerminado ? "SI" : "NO" }}</td>
+            <td class="titulo">CONTRATO INDEFINIDO:</td>
+            <td class="td-in-well">{{ arContrato.indefinido ? "SI" : "NO" }}</td>
+            <td class="titulo">ADICIONAL</td>
+            <td class="td-in-well numero" >{{ arContrato.vrAdicionalPrestacional |  number_format(0, '.', ',')  }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NÚMERO:</td>
+            <td class="td-in-well">{{ arContrato.numero }}</td>
+            <td class="titulo">comentarioTerminacion :</td>
+            <td class="td-in-well">{{ arContrato.comentarioTerminacion  | default('') }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arContrato.fecha | date('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">IDENTIFICACIÓN:</td>
+            <td class="td-in-well">{{ arContrato.empleadoRel.numeroIdentificacion }}</td>
+            <td class="titulo">MOTIVO:</td>
+            <td class="td-in-well">{{ arContrato.contratoMotivoRel.motivo }}</td>
+            <td class="titulo">TIPO COTIZANTE:</td>
+            <td class="td-in-well">{{ arContrato.TipoCotizanteRel.nombre|default('') }}</td>
         </tr>
         <tr>
             <td class="titulo">ULTIMO PAGO:</td>
             <td class="td-in-well">{{ arContrato.fechaUltimoPago | date('Y-m-d') }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="titulo">EMPLEADO:</td>
+            <td class="td-in-well">{{ arContrato.empleadoRel.nombreCorto }}</td>
+            <td class="titulo">TIPO SALUD:</td>
+            <td class="td-in-well">{{ arContrato.SaludRel.nombre }}</td>
         </tr>
         <tr>
             <td class="titulo">ULTIMA PRIMA:</td>
             <td class="td-in-well">{{ arContrato.fechaUltimoPagoPrimas | date('Y-m-d') }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="titulo">CENTRO TRABAJO:</td>
+            <td>{{  arContrato.centroTrabajoRel.nombre|default('SIN CENTRO TRABAJO') }}</td>
+            <td class="titulo">SUBTIPO COTIZANTE:</td>
+            <td class="td-in-well">{{ arContrato.subtipoCotizanteRel.nombre|default('') }}</td>
         </tr>
         <tr>
             <td class="titulo">ULTIMA CESANTIA:</td>
             <td class="td-in-well">{{ arContrato.fechaUltimoPagoCesantias | date('Y-m-d') }}</td>
+            <td class="titulo">ENTIDAD PENSIÓN:</td>
+            <td class="td-in-well">{{ arContrato.entidadPensionRel.nombre|default('SIN CONTRATO') }}</td>
             <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="td-in-well numero" ></td>
         </tr>
         <tr>
             <td class="titulo">ULTIMA VACACION:</td>
             <td class="td-in-well">{{ arContrato.fechaUltimoPagoVacaciones | date('Y-m-d')}}</td>
+            <td class="titulo">ENTIDAD SALUD:</td>
+            <td class="td-in-well">{{ arContrato.entidadSaludRel.nombre|default('SIN CONTRATO') }}</td>
             <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="td-in-well numero" ></td>
+        </tr>
+        <tr>
+            <td class="titulo">COSTO TIPO</td>
+            <td>{{ arContrato.codigoCostoTipoFk }}</td>
+            <td class="titulo">ENTIDAD CAJA:</td>
+            <td class="td-in-well">{{ arContrato.entidadCajaRel.nombre|default('SIN CONTRATO') }}</td>
             <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="td-in-well numero" ></td>
+        </tr>
+        <tr>
+            <td class="titulo">AUX. TRANSPORTE</td>
+            <td>{{ arContrato.auxilioTransporte? "SI" : "NO" }}</td>
+            <td class="titulo">ENTIDAD CESANTIA:</td>
+            <td class="td-in-well">{{ arContrato.entidadCesantiaRel.nombre|default('') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well numero" ></td>
+        </tr>
+        <tr>
+            <td class="titulo">CARGO:</td>
+            <td class="td-in-well">{{  arContrato.cargoRel.nombre|default('SIN CARGO') }}</td>
+            <td class="titulo">CARGO DESCRIPCIÓN:</td>
+            <td class="td-in-well">{{  arContrato.cargoDescripcion |default('SIN DESCRIPCIÓN') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well numero" ></td>
         </tr>
     </table>
     <ul class="nav nav-tabs">

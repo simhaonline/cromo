@@ -95,7 +95,6 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             ->andWhere("(c.fechaHasta >= '{$arProgramacion->getFechaDesde()->format('Y-m-d')}' OR c.indefinido=1)")
             ->getQuery()->execute();
 
-
         /** @var $arContrato RhuContrato */
         foreach ($arContratos as $arContrato) {
             $arProgramacionDetalle = new RhuProgramacionDetalle();

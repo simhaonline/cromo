@@ -6,6 +6,7 @@ namespace App\Controller\RecursoHumano\Administracion\Recurso\Contrato;
 use App\Controller\BaseController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuGrupo;
+use App\Form\Type\RecursoHumano\ContratoParametrosInicialesType;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\General\General;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -103,20 +104,10 @@ class ContratoController extends BaseController
     {
         $em = $this->getDoctrine()->getManager();
         $arContrato = $em->getRepository(RhuContrato::class)->find($id);
-        $form = $this->createFormBuilder()
-            ->add('fechaUltimoPagoCesantias', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',],'data' => $arContrato->getFechaUltimoPagoCesantias()])
-            ->add('fechaUltimoPagoVacaciones', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',],'data' => $arContrato->getFechaUltimoPagoVacaciones()])
-            ->add('fechaUltimoPagoPrimas', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',],'data' => $arContrato->getFechaUltimoPagoPrimas()])
-            ->add('fechaUltimoPago', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',],'data' => $arContrato->getFechaUltimoPago()])
-            ->add('btnGuardar',SubmitType::class,['label' => 'Guardar'])
-            ->getForm();
+        $form = $this->createForm(ContratoParametrosInicialesType::class, $arContrato);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            if($form->get('btnGuardar')->isClicked()){
-                $arContrato->setFechaUltimoPago($form->get('fechaUltimoPago')->getData());
-                $arContrato->setFechaUltimoPagoPrimas($form->get('fechaUltimoPagoPrimas')->getData());
-                $arContrato->setFechaUltimoPagoVacaciones($form->get('fechaUltimoPagoVacaciones')->getData());
-                $arContrato->setFechaUltimoPagoCesantias($form->get('fechaUltimoPagoCesantias')->getData());
+            if($form->get('guardar')->isClicked()){
                 $em->persist($arContrato);
                 $em->flush();
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

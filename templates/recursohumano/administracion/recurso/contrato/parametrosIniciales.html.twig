@@ -11,9 +11,19 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaUltimoPago) }}
                 </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Fecha ultimo periodo primas:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaUltimoPagoPrimas) }}
+                </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -21,16 +31,25 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaUltimoPagoCesantias) }}
                 </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Fecha ultimo periodo vacaciones:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaUltimoPagoVacaciones) }}
+                </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
                 </div>
             </div>
             <br/>
         </div>
     </div>
     <div class="modal-footer">
-        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-sm btn-primary'} }) }}
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-sm btn-primary'} }) }}
     </div>
     {{ form_end(form) }}
 {% endblock content %}

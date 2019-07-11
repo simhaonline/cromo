@@ -98,4 +98,16 @@ class InvTerceroRepository extends ServiceEntityRepository
 
         return $arTercero;
     }
+
+    public function informeBloqueados(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvTercero::class, 't')
+            ->select("t")
+            ->where('t.bloqueoCartera = true');
+        if ($session->get('filtroInvTerceroInformeCodigoTercero') != '') {
+            $queryBuilder->andWhere("t.codigoTerceroPk = {$session->get('filtroInvTerceroInformeCodigoTercero')}");
+        }
+
+        return $queryBuilder->getQuery();
+    }
 }

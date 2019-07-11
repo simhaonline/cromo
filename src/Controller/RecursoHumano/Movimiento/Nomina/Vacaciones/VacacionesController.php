@@ -12,6 +12,7 @@ use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuNovedad;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Form\Type\RecursoHumano\VacacionType;
+use App\Formato\RecursoHumano\Vacaciones;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -181,6 +182,13 @@ class VacacionesController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arVacacion = $em->getRepository($this->clase)->find($id);
         $form = Estandares::botonera($arVacacion->getEstadoAutorizado(), $arVacacion->getEstadoAprobado(), $arVacacion->getEstadoAnulado());
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formatoVacaciones = new Vacaciones();
+                $formatoVacaciones->Generar($em, $id);
+            }
+        }
         return $this->render('recursohumano/movimiento/nomina/vacacion/detalle.html.twig', [
             'arVacacion' => $arVacacion,
             'form' => $form->createView()

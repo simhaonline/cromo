@@ -60,7 +60,7 @@ class ProgramacionController extends ControllerListenerGeneral
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuProgramacion::class)->eliminar($arrSeleccionados);
+                $this->get("UtilidadesModelo")->eliminar( RhuProgramacion::class, $arrSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_lista'));
             }
         }

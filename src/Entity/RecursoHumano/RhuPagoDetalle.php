@@ -98,6 +98,11 @@ class RhuPagoDetalle
     private $vrIngresoBasePrestacion = 0;
 
     /**
+     * @ORM\Column(name="vr_ingreso_base_cotizacion_adicional", type="float")
+     */
+    private $vrIngresoBaseCotizacionAdicional = 0;
+
+    /**
      * @ORM\Column(name="codigo_novedad_fk", type="integer", nullable=true)
      */
     private $codigoNovedadFk;
@@ -480,6 +485,38 @@ class RhuPagoDetalle
     public function setCodigoVacacionFk($codigoVacacionFk): void
     {
         $this->codigoVacacionFk = $codigoVacacionFk;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoBaseCotizacionAdicional()
+    {
+        return $this->vrIngresoBaseCotizacionAdicional;
+    }
+
+    /**
+     * @param mixed $vrIngresoBaseCotizacionAdicional
+     */
+    public function setVrIngresoBaseCotizacionAdicional($vrIngresoBaseCotizacionAdicional): void
+    {
+        $this->vrIngresoBaseCotizacionAdicional = $vrIngresoBaseCotizacionAdicional;
     }
 
 

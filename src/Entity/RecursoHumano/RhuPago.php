@@ -109,6 +109,11 @@ class RhuPago
     private $vrNeto = 0;
 
     /**
+     * @ORM\Column(name="dias_ausentismo", type="integer")
+     */
+    private $diasAusentismo = 0;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoAutorizado = false;
@@ -717,4 +722,39 @@ class RhuPago
     {
         $this->egresosDetallesPagoRel = $egresosDetallesPagoRel;
     }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasAusentismo()
+    {
+        return $this->diasAusentismo;
+    }
+
+    /**
+     * @param mixed $diasAusentismo
+     */
+    public function setDiasAusentismo($diasAusentismo): void
+    {
+        $this->diasAusentismo = $diasAusentismo;
+    }
+
+
+
 }

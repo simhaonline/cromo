@@ -44,6 +44,31 @@ class RhuConfiguracion
     private $codigoConceptoFondoSolidaridadPensionFk;
 
     /**
+     * @ORM\Column(name="vacaciones_base_descuento_ley_ibc_mes_anterior", type="boolean", nullable=true)
+     */
+    private $vacacionesBaseDescuentoLeyIbcMesAnterior = false;
+
+    /**
+     * @ORM\Column(name="vacaciones_recargo_nocturno_ultimo_anio", type="boolean", nullable=true)
+     */
+    private $vacacionesRecargoNocturnoUltimoAnio = false;
+
+    /**
+     * @ORM\Column(name="vacaciones_liquidar_recargo_nocturno_porcentaje_concepto", type="boolean", nullable=true)
+     */
+    private $vacacionesLiquidarRecargoNocturnoPorcentajeConcepto = false;
+
+    /**
+     * @ORM\Column(name="liquidar_prestaciones_salario_suplementario", type="boolean", options={"default":false}, nullable=true)
+     */
+    private $liquidarPrestacionesSalarioSuplementario = false;
+
+    /**
+     * @ORM\Column(name="liquidar_vacaciones_promedio_ultimo_anio", type="boolean", options={"default":false}, nullable=true)
+     */
+    private $liquidarVacacionesPromedioUltimoAnio = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoAuxilioTransporteRel")
      * @ORM\JoinColumn(name="codigo_concepto_auxilio_transporte_fk", referencedColumnName="codigo_concepto_pk")
      */
@@ -166,6 +191,103 @@ class RhuConfiguracion
     {
         $this->conceptoFondoSolidaridadRel = $conceptoFondoSolidaridadRel;
     }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesBaseDescuentoLeyIbcMesAnterior()
+    {
+        return $this->vacacionesBaseDescuentoLeyIbcMesAnterior;
+    }
+
+    /**
+     * @param mixed $vacacionesBaseDescuentoLeyIbcMesAnterior
+     */
+    public function setVacacionesBaseDescuentoLeyIbcMesAnterior($vacacionesBaseDescuentoLeyIbcMesAnterior): void
+    {
+        $this->vacacionesBaseDescuentoLeyIbcMesAnterior = $vacacionesBaseDescuentoLeyIbcMesAnterior;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesRecargoNocturnoUltimoAnio()
+    {
+        return $this->vacacionesRecargoNocturnoUltimoAnio;
+    }
+
+    /**
+     * @param mixed $vacacionesRecargoNocturnoUltimoAnio
+     */
+    public function setVacacionesRecargoNocturnoUltimoAnio($vacacionesRecargoNocturnoUltimoAnio): void
+    {
+        $this->vacacionesRecargoNocturnoUltimoAnio = $vacacionesRecargoNocturnoUltimoAnio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesLiquidarRecargoNocturnoPorcentajeConcepto()
+    {
+        return $this->vacacionesLiquidarRecargoNocturnoPorcentajeConcepto;
+    }
+
+    /**
+     * @param mixed $vacacionesLiquidarRecargoNocturnoPorcentajeConcepto
+     */
+    public function setVacacionesLiquidarRecargoNocturnoPorcentajeConcepto($vacacionesLiquidarRecargoNocturnoPorcentajeConcepto): void
+    {
+        $this->vacacionesLiquidarRecargoNocturnoPorcentajeConcepto = $vacacionesLiquidarRecargoNocturnoPorcentajeConcepto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarPrestacionesSalarioSuplementario()
+    {
+        return $this->liquidarPrestacionesSalarioSuplementario;
+    }
+
+    /**
+     * @param mixed $liquidarPrestacionesSalarioSuplementario
+     */
+    public function setLiquidarPrestacionesSalarioSuplementario($liquidarPrestacionesSalarioSuplementario): void
+    {
+        $this->liquidarPrestacionesSalarioSuplementario = $liquidarPrestacionesSalarioSuplementario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarVacacionesPromedioUltimoAnio()
+    {
+        return $this->liquidarVacacionesPromedioUltimoAnio;
+    }
+
+    /**
+     * @param mixed $liquidarVacacionesPromedioUltimoAnio
+     */
+    public function setLiquidarVacacionesPromedioUltimoAnio($liquidarVacacionesPromedioUltimoAnio): void
+    {
+        $this->liquidarVacacionesPromedioUltimoAnio = $liquidarVacacionesPromedioUltimoAnio;
+    }
+
 
 
 }

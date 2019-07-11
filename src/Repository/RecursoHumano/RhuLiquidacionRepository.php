@@ -60,5 +60,37 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->execute();
     }
 
+    public function diasPrestacionesHasta($intDias, $dateFechaDesde)
+    {
+        $strFechaHasta = "";
+        $intAnio = $dateFechaDesde->format('Y');
+        $intMes = $dateFechaDesde->format('n');
+        $intDia = $dateFechaDesde->format('j');
+        $intDiasAcumulados = 1;
+        $i = $intDia;
+        while ($intDiasAcumulados <= $intDias) {
+            //echo $intDiasAcumulados . "(" . $i . ")" . "(" . $intMes . ")" . "(" . $intAnio . ")" . "<br />";
+            $fechaHastaPeriodo = $intAnio . "-" . $intMes . "-" . $i;
+            if ($i == 30 || $i == 31) {
+                $i = 1;
+                if ($intMes == 12) {
+                    $intMes = 1;
+                    $intAnio++;
+                } else {
+                    $intMes++;
+                }
+            } else {
+                $i++;
+            }
+            $intDiasAcumulados++;
+        }
+        $fechaHastaPeriodo = date_create_from_format('Y-n-j H:i', $fechaHastaPeriodo . " 00:00");
+        // validacion para los meses de 31 dias
+        if ($intDia == 31 && $intDias == 361) {
+            $fechaHastaPeriodo = date_create(date('Y-m-j', strtotime('+1 day', strtotime($fechaHastaPeriodo->format('Y-m-d')))));
+        }
+        return $fechaHastaPeriodo;
+    }
+
 
 }

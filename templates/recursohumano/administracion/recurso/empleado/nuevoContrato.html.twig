@@ -55,6 +55,11 @@
                         {{ form_widget(form.fechaDesde) }}
                         {{ form_errors(form.fechaDesde) }}
                     </div>
+                    <label class="col-sm-2 control-label">Salario tipo:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.salarioTipoRel) }}
+                        {{ form_errors(form.salarioTipoRel) }}
+                    </div>
                 </div>
                 <div class="form-group form-group-sm">
                     <label class="col-sm-2 control-label">Fecha Hasta:</label>
@@ -156,17 +161,6 @@
                     <div class="col-sm-4">
                         {{ form_widget(form.centroTrabajoRel, { 'attr': {'class': 'form-control'} }) }}
                         {{ form_errors(form.centroTrabajoRel) }}
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Sucursal:</label>
-                    <div class="col-sm-4">
-                        {{ form_widget(form.sucursalRel, { 'attr': {'class': 'form-control'} }) }}
-                        {{ form_errors(form.sucursalRel) }}
-                    </div>
-                    <label class="col-sm-2 control-label"></label>
-                    <div class="col-sm-4">
-
                     </div>
                 </div>
             </div>

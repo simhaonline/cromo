@@ -395,4 +395,28 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
         return $queryBuilder->getQuery()->getResult();
     }
+
+    /**
+     * @param $fechaDesde \DateTime | string
+     * @param $fechaHasta \DateTime | string
+     * @param $codigoContrato
+     * @return int
+     */
+    public function diasAusentismo($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $fechaDesde = $fechaDesde instanceof \DateTime ? $fechaDesde->format("Y-m-d") : $fechaDesde;
+        $fechaHasta = $fechaHasta instanceof \DateTime ? $fechaHasta->format("Y-m-d") : $fechaHasta;
+
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(p.diasAusentismo) as diasAusentismo FROM App\Entity\RecursoHumano\RhuPago p "
+            . "WHERE p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $intDiasAusentismo = $arrayResultado[0]['diasAusentismo'];
+        if ($intDiasAusentismo == null) {
+            $intDiasAusentismo = 0;
+        }
+        return $intDiasAusentismo;
+    }
 }

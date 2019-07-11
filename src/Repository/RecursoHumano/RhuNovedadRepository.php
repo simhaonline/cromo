@@ -59,5 +59,27 @@ class RhuNovedadRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->execute();
     }
 
+    public function validarFecha($fechaDesde, $fechaHasta, $codigoEmpleado)
+    {
+        $em = $this->getEntityManager();
+        $boolValidar = TRUE;
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+        $qb = $this->getEntityManager()->createQueryBuilder()->from(RhuNovedad::class, 'n')
+            ->select("count(n.codigoNovedadPk) AS novedades")
+            ->where("n.fechaDesde BETWEEN '{$strFechaDesde}' AND '{$strFechaHasta}'")
+            ->orWhere("n.fechaHasta BETWEEN '{$strFechaDesde}' AND '{$strFechaHasta}'")
+            ->orWhere("n.fechaDesde >= '{$strFechaDesde}' AND n.fechaDesde <= '{$strFechaHasta}'")
+            ->orWhere("n.fechaHasta >= '{$strFechaHasta}' AND n.fechaDesde <= '{$strFechaDesde}'")
+            ->andWhere("n.codigoEmpleadoFk = '{$codigoEmpleado}'");
+        $r = $qb->getQuery();
+        $arrNovedades = $r->getResult();
+        if ($arrNovedades[0]['novedades'] > 0) {
+            $boolValidar = FALSE;
+        }
+
+        return $boolValidar;
+    }
+
 
 }

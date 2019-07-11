@@ -559,6 +559,6 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
             $porcentaje = 2;
         }
         return $porcentaje;
-    }    
-    
+    }
+
 }

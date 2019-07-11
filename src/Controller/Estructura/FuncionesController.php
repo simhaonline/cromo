@@ -9,6 +9,7 @@ use App\Utilidades\BaseDatos;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 include_once(realpath(__DIR__ . "/../../../public/plugins/phpqrcode/phpqrcode/qrlib.php"));
 
 /**
@@ -116,10 +117,10 @@ final class FuncionesController
 
         $Nc = $NroCr - $Longitud; //5
         for ($i = 0; $i < $Nc; $i++) {
-            if($pos == 'L'){
+            if ($pos == 'L') {
                 $Nro = $Str . $Nro;
             } else {
-                $Nro =  $Nro . $Str;
+                $Nro = $Nro . $Str;
             }
         }
 
@@ -148,11 +149,11 @@ final class FuncionesController
         try {
             $em = BaseDatos::getEm();
             $arNotificacionTipo = $em->getRepository(GenNotificacionTipo::class)->find($id);
-            if($arNotificacionTipo) {
+            if ($arNotificacionTipo) {
                 if ($arNotificacionTipo->getEstadoActivo()) {
                     $usuarios = json_decode($arNotificacionTipo->getUsuarios(), true);
-                    if($arrUsuarios) {
-                        if($usuarios) {
+                    if ($arrUsuarios) {
+                        if ($usuarios) {
                             $usuarios = array_merge($usuarios, $arrUsuarios);
                         } else {
                             $usuarios = $arrUsuarios;
@@ -183,70 +184,69 @@ final class FuncionesController
         }
     }
 
-    public static function generarSession( $modulo, $nombre, $claseNombre, $formFiltro){
+    public static function generarSession($modulo, $nombre, $claseNombre, $formFiltro)
+    {
         $namespaceType = "\\App\\Form\\Type\\{$modulo}\\{$nombre}Type";
         $campos = json_decode($namespaceType::getEstructuraPropiedadesFiltro(), true);
-        $session=new Session();
-        foreach ($campos as $campo){
-            if(isset($campo['relacion'])){
-                $relacion=explode('.', $campo['child']);
-                $campo['child']=$relacion[0].$relacion[1];
+        $session = new Session();
+        foreach ($campos as $campo) {
+            if (isset($campo['relacion'])) {
+                $relacion = explode('.', $campo['child']);
+                $campo['child'] = $relacion[0] . $relacion[1];
             }
 
-            if(substr($campo['child'], -2)=="Fk" && $campo['tipo']=="EntityType"){
-                $funcion=isset($campo['pk'])?$campo['pk']:substr($campo['child'], 0,-2).'Pk';
-                $session->set($claseNombre . '_'.$campo['child'], $formFiltro->get($campo['child'])->getData() != "" ? call_user_func(array($formFiltro->get($campo['child'])->getData(), 'get'.$funcion)): "");
-            }
-            else if(strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha"){
-                $session->set($claseNombre . '_'.$campo['child'], $formFiltro->get($campo['child'])->getData()!=null?$formFiltro->get($campo['child'])->getData()->format('Y-m-d'):null);
-            }
-            else{
-                $session->set($claseNombre . '_'.$campo['child'], $formFiltro->get($campo['child'])->getData());
+            if (substr($campo['child'], -2) == "Fk" && $campo['tipo'] == "EntityType") {
+                $funcion = isset($campo['pk']) ? $campo['pk'] : substr($campo['child'], 0, -2) . 'Pk';
+                $session->set($claseNombre . '_' . $campo['child'], $formFiltro->get($campo['child'])->getData() != "" ? call_user_func(array($formFiltro->get($campo['child'])->getData(), 'get' . $funcion)) : "");
+            } else if (strlen($campo['child']) >= 5 && substr($campo['child'], 0, 5) == "fecha") {
+                $session->set($claseNombre . '_' . $campo['child'], $formFiltro->get($campo['child'])->getData() != null ? $formFiltro->get($campo['child'])->getData()->format('Y-m-d') : null);
+            } else {
+                $session->set($claseNombre . '_' . $campo['child'], $formFiltro->get($campo['child'])->getData());
             }
         }
     }
 
-    public static function solicitudesGet($ruta){
-        try{
+    public static function solicitudesGet($ruta)
+    {
+        try {
 
-        $em=BaseDatos::getEm();
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . $ruta);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        $respuesta = json_decode(curl_exec($curl), true);
-        curl_close($curl);
+            $em = BaseDatos::getEm();
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . $ruta);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            $respuesta = json_decode(curl_exec($curl), true);
+            curl_close($curl);
 
-        return $respuesta;
-        }
-        catch (\Exception $exception){
-            return[
-                'estado'=>false,
-                'error'=>$exception->getMessage(),
+            return $respuesta;
+        } catch (\Exception $exception) {
+            return [
+                'estado' => false,
+                'error' => $exception->getMessage(),
             ];
         }
     }
 
-    public static function solicitudesPost($datos=[], $ruta){
-        try{
-        $em=BaseDatos::getEm();
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_POST => 1,
-            CURLOPT_POSTFIELDS => $datos,
-            //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
-            CURLOPT_URL => $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . $ruta,
-        ));
-        $respuesta = json_decode(curl_exec($curl), true);
-        curl_close($curl);
+    public static function solicitudesPost($datos = [], $ruta)
+    {
+        try {
+            $em = BaseDatos::getEm();
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_POST => 1,
+                CURLOPT_POSTFIELDS => $datos,
+                //CURLOPT_URL => 'http://localhost/cromo/public/index.php/documental/api/masivo/masivo/1',
+                CURLOPT_URL => $em->getRepository('App:General\GenConfiguracion')->find(1)->getWebServiceCesioUrl() . $ruta,
+            ));
+            $respuesta = json_decode(curl_exec($curl), true);
+            curl_close($curl);
 
-        return $respuesta;
-        }
-        catch (\Exception $exception){
-            return[
-                'estado'=>false,
-                'error'=>$exception->getMessage(),
+            return $respuesta;
+        } catch (\Exception $exception) {
+            return [
+                'estado' => false,
+                'error' => $exception->getMessage(),
             ];
         }
     }
@@ -256,20 +256,20 @@ final class FuncionesController
      * @param
      * @return string
      */
-    public static function codigoQr($contenido){
-        $em=BaseDatos::getEm();
+    public static function codigoQr($contenido)
+    {
+        $em = BaseDatos::getEm();
 
         //Declaramos una carpeta temporal para guardar la imagenes generadas
         $dir = $em->getRepository('App\Entity\General\GenConfiguracion')->find(1)->getRutaTemporal();
 //        dump($dir);
         //Si no existe la carpeta la creamos
         if (!file_exists($dir))
-            mkdir($dir,0777);
-
+            mkdir($dir, 0777);
 
 
         //Declaramos la ruta y nombre del archivo a generar
-        $filename = $dir.'qrTest.png';
+        $filename = $dir . 'qrTest.png';
 
 
         //Parametros de Configuración
@@ -281,37 +281,145 @@ final class FuncionesController
         //Enviamos los parametros a la Función para generar código QR
         \QRcode::png($contenido, $filename, $level, $tamano, $framSize);
 //        dump($dir.basename($filename));
-        return $dir.basename($filename);
+        return $dir . basename($filename);
     }
 
-    public static function mesEspanol($mesNumero){
+    public static function mesEspanol($mesNumero)
+    {
         $mesTexto = '';
-        switch ($mesNumero){
-            case 1: $mesTexto = "Enero";
+        switch ($mesNumero) {
+            case 1:
+                $mesTexto = "Enero";
                 break;
-            case 2: $mesTexto = "Febrero";
+            case 2:
+                $mesTexto = "Febrero";
                 break;
-            case 3: $mesTexto = "Marzo";
+            case 3:
+                $mesTexto = "Marzo";
                 break;
-            case 4: $mesTexto = "Abril";
+            case 4:
+                $mesTexto = "Abril";
                 break;
-            case 5: $mesTexto = "Mayo";
+            case 5:
+                $mesTexto = "Mayo";
                 break;
-            case 6: $mesTexto = "Junio";
+            case 6:
+                $mesTexto = "Junio";
                 break;
-            case 7: $mesTexto = "Julio";
+            case 7:
+                $mesTexto = "Julio";
                 break;
-            case 8: $mesTexto = "Agosto";
+            case 8:
+                $mesTexto = "Agosto";
                 break;
-            case 9: $mesTexto = "Septiembre";
+            case 9:
+                $mesTexto = "Septiembre";
                 break;
-            case 10: $mesTexto = "Octubre";
+            case 10:
+                $mesTexto = "Octubre";
                 break;
-            case 11: $mesTexto = "Novimienbre";
+            case 11:
+                $mesTexto = "Novimienbre";
                 break;
-            case 12: $mesTexto = "Diciembre";
+            case 12:
+                $mesTexto = "Diciembre";
                 break;
         }
         return $mesTexto;
+    }
+
+    public function diasPrestaciones($dateFechaDesde, $dateFechaHasta)
+    {
+        $objFunciones = new FuncionesController();
+        $intDias = 0;
+        $intAnioInicio = $dateFechaDesde->format('Y');
+        $intAnioFin = $dateFechaHasta->format('Y');
+        $intAnios = 0;
+        $intMeses = 0;
+        if ($dateFechaHasta >= $dateFechaDesde) {
+            if ($dateFechaHasta->format('d') == '31' && ($dateFechaHasta == $dateFechaDesde)) {
+                $intDias = 0;
+            } else {
+                if ($intAnioInicio != $intAnioFin) {
+                    $intDiferenciaAnio = $intAnioFin - $intAnioInicio;
+                    if (($intDiferenciaAnio) > 1) {
+                        $intAnios = $intDiferenciaAnio - 1;
+                        $intAnios = $intAnios * 12 * 30;
+                    }
+
+                    $dateFechaTemporal = date_create_from_format('Y-m-d H:i', $intAnioInicio . '-12-30' . "00:00");
+                    if ($dateFechaDesde->format('n') != $dateFechaTemporal->format('n')) {
+                        $intMeses = $dateFechaTemporal->format('n') - $dateFechaDesde->format('n') - 1;
+                        $intDiasInicio = $objFunciones->diasPrestacionesMes($dateFechaDesde->format('j'), 1);
+                        $intDiasFinal = $objFunciones->diasPrestacionesMes($dateFechaTemporal->format('j'), 0);
+                        $intDias = $intDiasInicio + $intDiasFinal + ($intMeses * 30);
+                    } else {
+                        if ($dateFechaTemporal->format('j') == $dateFechaDesde->format('j')) {
+                            $intDias = 0;
+                        } else {
+                            $intDias = 1 + ($dateFechaTemporal->format('j') - $dateFechaDesde->format('j'));
+                        }
+                    }
+
+                    $dateFechaTemporal = date_create_from_format('Y-m-d H:i', $intAnioFin . '-01-01' . "00:00");
+                    if ($dateFechaTemporal->format('n') != $dateFechaHasta->format('n')) {
+                        $intMeses = $dateFechaHasta->format('n') - $dateFechaTemporal->format('n') - 1;
+                        $intDiasInicio = $objFunciones->diasPrestacionesMes($dateFechaTemporal->format('j'), 1);
+                        $intDiasFinal = $objFunciones->diasPrestacionesMes($dateFechaHasta->format('j'), 0);
+                        $intDias += $intDiasInicio + $intDiasFinal + ($intMeses * 30);
+                    } else {
+                        $intDias += 1 + ($dateFechaHasta->format('j') - $dateFechaTemporal->format('j'));
+                    }
+                    $intDias += $intAnios;
+
+                    //Se adiciona esta parte para cuando la fecha finaliza el 28/29 febrero sume 1 o 2 dias (09/03/2018-mario)
+                    $diaFinMes = cal_days_in_month(CAL_GREGORIAN, $dateFechaHasta->format("m"), $dateFechaHasta->format("Y"));
+
+                    $fecha_inicio = strtotime($dateFechaDesde->format('Y-m-d'));
+                    $fecha_fin = strtotime($dateFechaHasta->format('Y-m-d'));
+                    $fecha = strtotime($dateFechaHasta->format("Y") . "-02-{$diaFinMes}");
+                    if ($dateFechaHasta->format("m") == "02") {
+                        if (($fecha >= $fecha_inicio) && ($fecha < $fecha_fin) || $fecha == $fecha_fin) {
+                            if ($diaFinMes == 28) {
+                                $intDias += 2;
+                            } else {
+                                $intDias++;
+                            }
+                        }
+                    }
+                } else {
+                    if ($dateFechaDesde->format('n') != $dateFechaHasta->format('n')) {
+                        $intMeses = $dateFechaHasta->format('n') - $dateFechaDesde->format('n') - 1;
+                        $intDiasInicio = $objFunciones->diasPrestacionesMes($dateFechaDesde->format('j'), 1);
+                        $intDiasFinal = $objFunciones->diasPrestacionesMes($dateFechaHasta->format('j'), 0);
+                        $intDias = $intDiasInicio + $intDiasFinal + ($intMeses * 30);
+                    } else {
+                        if ($dateFechaHasta->format('j') == 31) {
+                            $intDias = ($dateFechaHasta->format('j') - $dateFechaDesde->format('j'));
+                        } else {
+                            $intDias = 1 + ($dateFechaHasta->format('j') - $dateFechaDesde->format('j'));
+                        }
+
+                    }
+                }
+            }
+        } else {
+            $intDias = 0;
+        }
+        return $intDias;
+    }
+
+    public static function diasPrestacionesMes($intDia, $intDesde)
+    {
+        $intDiasDevolver = 0;
+        if ($intDesde == 1) {
+            $intDiasDevolver = 31 - $intDia;
+        } else {
+            $intDiasDevolver = $intDia;
+            if ($intDia == 31) {
+                $intDiasDevolver = 30;
+            }
+        }
+        return $intDiasDevolver;
     }
 }

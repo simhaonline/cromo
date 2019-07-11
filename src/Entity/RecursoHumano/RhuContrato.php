@@ -13,7 +13,7 @@ class RhuContrato
 {
     public $infoLog = [
         "primaryKey" => "codigoContratoPk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id
@@ -51,6 +51,16 @@ class RhuContrato
      * @ORM\Column(name="codigo_tiempo_fk", type="string", length=10, nullable=true)
      */
     private $codigoTiempoFk;
+
+    /**
+     * @ORM\Column(name="codigo_salario_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoSalarioTipoFk;
+
+    /**
+     * @ORM\Column(name="ibp_recargo_nocturno_inicial", type="float")
+     */
+    private $ibpRecargoNocturnoInicial = 0;
 
     /**
      * @ORM\Column(name="factor_horas_dia", options={"default" : 0 }, type="integer", nullable=true)
@@ -117,7 +127,7 @@ class RhuContrato
      */
     private $estadoTerminado = false;
 
-     /**
+    /**
      * @ORM\Column(name="indefinido",options={"default": false}, type="boolean")
      */
     private $indefinido = false;
@@ -231,6 +241,12 @@ class RhuContrato
      * @ORM\Column(name="auxilio_transporte", type="boolean",options={"default":false})
      */
     private $auxilioTransporte = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuSalarioTipo", inversedBy="contratosSalarioTipoRel")
+     * @ORM\JoinColumn(name="codigo_salario_tipo_fk", referencedColumnName="codigo_salario_tipo_pk")
+     */
+    protected $salarioTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="contratosEmpleadoRel")
@@ -1612,6 +1628,70 @@ class RhuContrato
     public function setAportesDetallesContratoRel($aportesDetallesContratoRel): void
     {
         $this->aportesDetallesContratoRel = $aportesDetallesContratoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSalarioTipoFk()
+    {
+        return $this->codigoSalarioTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoSalarioTipoFk
+     */
+    public function setCodigoSalarioTipoFk($codigoSalarioTipoFk): void
+    {
+        $this->codigoSalarioTipoFk = $codigoSalarioTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIbpRecargoNocturnoInicial()
+    {
+        return $this->ibpRecargoNocturnoInicial;
+    }
+
+    /**
+     * @param mixed $ibpRecargoNocturnoInicial
+     */
+    public function setIbpRecargoNocturnoInicial($ibpRecargoNocturnoInicial): void
+    {
+        $this->ibpRecargoNocturnoInicial = $ibpRecargoNocturnoInicial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalarioTipoRel()
+    {
+        return $this->salarioTipoRel;
+    }
+
+    /**
+     * @param mixed $salarioTipoRel
+     */
+    public function setSalarioTipoRel($salarioTipoRel): void
+    {
+        $this->salarioTipoRel = $salarioTipoRel;
     }
 
 

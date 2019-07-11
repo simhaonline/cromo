@@ -1,31 +1,28 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <br>
-    <br>
     {{ form_start(form,{'attr':{'class':'form-horizontal'}}) }}
     <div class="panel panel-default">
-        <div class="panel-heading">
-            Información general
-        </div>
+        <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_txtNumeroIdentificacion" class="col-sm-2 control-label">Empleado:</label>
+                <label for="txtNit" class="col-sm-2 control-label">Empleado:</label>
                 <div class="col-sm-10">
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="input-group">
-                                {{ form_widget(form.codigoEmpleadoFk) }}
+                                <input id="txtCodigoEmpleado" name="txtCodigoEmpleado" type="number"
+                                       class="form-control"
+                                       value="{{ arVacacion.empleadoRel.codigoEmpleadoPk |default('') }}"/>
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <input id="form_txtNombreCorto" name="form_txtNombreCorto" type="text"
-                                       class="form-control"
+                                <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
                                        value="{{ arVacacion.empleadoRel.nombreCorto |default('') }}"
                                        readOnly="ReadOnly"/>
                                 <span class="input-group-btn">
                                         <a class="btn btn-default btn-sm"
-                                           href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'vacacion_codigoEmpleadoFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                           href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'txtCodigoEmpleado', 'campoNombre': 'txtNombreCorto'  }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -61,7 +58,8 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="vacacion_vrSalarioPromedioPropuesto" class="control-label col-sm-2">Salario promedio (propuesto-disfrute):</label>
+                <label for="vacacion_vrSalarioPromedioPropuesto" class="control-label col-sm-2">Salario promedio
+                    (propuesto-disfrute):</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.vrSalarioPromedioPropuesto) }}
                 </div>
@@ -71,7 +69,8 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="vacacion_vrSalarioPromedioPropuesto" class="control-label col-sm-2">Salario promedio (propuesto-dinero):</label>
+                <label for="vacacion_vrSalarioPromedioPropuesto" class="control-label col-sm-2">Salario promedio
+                    (propuesto-dinero):</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.vrSalarioPromedioPropuestoPagado) }}
                 </div>
@@ -81,7 +80,8 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="vacacion_vrDisfrutePropuesto" class="control-label col-sm-2">Valor disfrute (propuesto):</label>
+                <label for="vacacion_vrDisfrutePropuesto" class="control-label col-sm-2">Valor disfrute
+                    (propuesto):</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.vrDisfrutePropuesto) }}
                 </div>

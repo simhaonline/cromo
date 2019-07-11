@@ -138,5 +138,61 @@ class RhuAporteRepository extends ServiceEntityRepository
         return true;
     }
 
+    public function ibcMesAnterior($anio, $mes, $codigoEmpleado)
+    {
+        if ($mes == 1) {
+            $anio -= 1;
+            $mes = 12;
+        } else {
+            $mes -= 1;
+        }
+        $arrResultado = array('respuesta' => false, 'ibc' => 0, 'dias' => 0);
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(ssoa.ibcPension) as ibcPension, SUM(ssoa.ibcSalud) as ibcSalud, SUM(ssoa.diasCotizadosPension) as diasPension, SUM(ssoa.diasCotizadosSalud) as diasSalud FROM App\Entity\RecursoHumano\RhuAporte ssoa "
+            . "WHERE ssoa.anio = $anio AND ssoa.mes = $mes" . " "
+            . "AND ssoa.codigoEmpleadoFk = " . $codigoEmpleado;
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $resultados = $arrayResultado[0];
+        if ($resultados['ibcPension'] == null) {
+            if ($mes == 1) {
+                $anio -= 1;
+                $mes = 12;
+            } else {
+                $mes -= 1;
+            }
+            $arrResultado = array('respuesta' => false, 'ibc' => 0, 'dias' => 0);
+            $em = $this->getEntityManager();
+            $dql = "SELECT SUM(ssoa.ibcPension) as ibcPension, SUM(ssoa.diasCotizadosPension) as diasPension, SUM(ssoa.ibcSalud) as ibcSalud,SUM(ssoa.diasCotizadosSalud) as diasSalud FROM App\Entity\RecursoHumano\RhuAporte ssoa "
+                . "WHERE ssoa.anio = $anio AND ssoa.mes = $mes" . " "
+                . "AND ssoa.codigoEmpleadoFk = " . $codigoEmpleado;
+            $query = $em->createQuery($dql);
+            $arrayResultado = $query->getResult();
+            $resultados = $arrayResultado[0];
+            if ($resultados['ibcPension'] == null) {
+                $arrResultado['ibc'] = 0;
+                $arrResultado['dias'] = 0;
+                $arrResultado['respuesta'] = false;
+            } else {
+                $arrResultado['ibc'] = $resultados['ibcPension'];
+                $arrResultado['dias'] = $resultados['diasPension'];
+                if ($arrResultado['ibc'] == 0 && $arrResultado['dias'] == 0) {
+                    $arrResultado['ibc'] = $resultados['ibcSalud'];
+                    $arrResultado['dias'] = $resultados['diasSalud'];
+                }
+                $arrResultado['respuesta'] = true;
+            }
+        } else {
+            $arrResultado['ibc'] = $resultados['ibcPension'];
+            $arrResultado['dias'] = $resultados['diasPension'];
+            if ($arrResultado['ibc'] == 0 && $arrResultado['dias'] == 0) {
+                $arrResultado['ibc'] = $resultados['ibcSalud'];
+                $arrResultado['dias'] = $resultados['diasSalud'];
+            }
+            $arrResultado['respuesta'] = true;
+        }
+        return $arrResultado;
+    }
+
 
 }

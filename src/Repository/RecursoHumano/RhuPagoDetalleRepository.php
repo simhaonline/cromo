@@ -147,4 +147,39 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
 
     }
+
+    public function recargosNocturnos($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(pd.vrIngresoBaseCotizacionAdicional) as recagosNocturnos FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p JOIN pd.conceptoRel pc "
+            . "WHERE pc.recargoNocturno = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $recargosNocturnos = $arrayResultado[0]['recagosNocturnos'];
+        if ($recargosNocturnos == null) {
+            $recargosNocturnos = 0;
+        }
+        return $recargosNocturnos;
+    }
+
+    public function recargosNocturnosIbp($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQueryBuilder()
+            ->select("SUM(pd.vrIngresoBasePrestacion  * (pc.porcentajeVacaciones / 100)) as recargoNocturno")
+            ->from(RhuPagoDetalle::class, 'pd')
+            ->join('pd.pagoRel', 'p')
+            ->join('pd.pagoConceptoRel', 'pc')
+            ->where("pc.recargoNocturno = 1")
+            ->andWhere("p.codigoContratoFk = {$codigoContrato}")
+            ->andWhere("p.fechaDesde >= '{$fechaDesde}'")
+            ->andWhere("p.fechaHasta <= '{$fechaHasta}'");
+
+
+        $arrayResultado = $query->getQuery()->getResult();
+        $recargosNocturnos = $arrayResultado[0]['recargoNocturno'];
+        return $recargosNocturnos;
+
+    }
 }

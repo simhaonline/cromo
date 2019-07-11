@@ -13,6 +13,7 @@ use App\Entity\RecursoHumano\RhuCostoGrupo;
 use App\Entity\RecursoHumano\RhuEntidad;
 use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuPension;
+use App\Entity\RecursoHumano\RhuSalarioTipo;
 use App\Entity\RecursoHumano\RhuSalud;
 use App\Entity\RecursoHumano\RhuSubtipoCotizante;
 use App\Entity\RecursoHumano\RhuSucursal;
@@ -210,11 +211,11 @@ class ContratoType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => false
             ])
-            ->add('sucursalRel', EntityType::class, [
-                'class' => RhuSucursal::class,
+            ->add('salarioTipoRel', EntityType::class, [
+                'class' => RhuSalarioTipo::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('s')
-                        ->orderBy('s.nombre', 'ASC');
+                    return $er->createQueryBuilder('st')
+                        ->orderBy('st.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true

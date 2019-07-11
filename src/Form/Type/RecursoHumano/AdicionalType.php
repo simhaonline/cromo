@@ -33,14 +33,12 @@ class AdicionalType extends AbstractType
             ])
             ->add('codigoEmpleadoFk', TextType::class, ['required' => true])
             ->add('vrValor', NumberType::class, ['required' => true])
-            ->add('permanente',CheckboxType::class,['required' => false])
             ->add('aplicaDiaLaborado',CheckboxType::class,['required' => false])
             ->add('aplicaNomina',CheckboxType::class,['required' => false])
             ->add('aplicaPrima',CheckboxType::class,['required' => false])
             ->add('aplicaCesantia',CheckboxType::class,['required' => false])
             ->add('detalle',TextType::class,['required' => false,'attr' => ['placeholder' => 'Opcional']])
             ->add('estadoInactivoPeriodo',CheckboxType::class,['required' => false])
-            ->add('fecha', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
             ->add('guardar',SubmitType::class,['label' => 'guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
@@ -76,10 +74,8 @@ class AdicionalType extends AbstractType
             {"child":"codigoAdicionalPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
             {"child":"codigoConceptoFk",  "tipo":"EntityType", "propiedades":{"class":"RhuConcepto","choice_label":"nombre","label":"Concepto"}},
             {"child":"codigoEmpleadoFk",  "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
-            {"child":"fechaDesde",        "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta",        "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
-            {"child":"estadoInactivo",    "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"permanente",        "tipo":"ChoiceType", "propiedades":{"label":"permanente",     "choices":{"SI":true,"NO":false}}}
+            {"child":"estadoInactivo",    "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}}
+            
         ]';
 
         return $campos;

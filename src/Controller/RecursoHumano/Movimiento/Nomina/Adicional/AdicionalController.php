@@ -77,7 +77,7 @@ class AdicionalController extends ControllerListenerGeneral
             $arAdicional = $em->getRepository(RhuAdicional::class)->find($id);
         } else {
             $arAdicional->setFecha(new \DateTime('now'));
-            $arAdicional->setPermanente(true);
+            $arAdicional->setAplicaNomina(true);
         }
         $form = $this->createForm(AdicionalType::class, $arAdicional);
         $form->handleRequest($request);
@@ -89,9 +89,6 @@ class AdicionalController extends ControllerListenerGeneral
                     $arAdicional->setEmpleadoRel($arEmpleado);
                     $arAdicional->setContratoRel($arContrato);
                     $arAdicional->setPermanente(1);
-                    if($id == 0) {
-                        $arAdicional->setAplicaNomina(1);
-                    }
                     $em->persist($arAdicional);
                     $em->flush();
                     return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicional_lista'));

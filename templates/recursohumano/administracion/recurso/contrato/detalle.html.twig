@@ -7,6 +7,9 @@
         <div class="btn-group">
             <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Parámetros iniciales</a>
         </div>
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_terminar',{'id' : arContrato.codigoContratoPk }) }}','terminar',600,900)">Terminar</a>
+        </div>
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
@@ -16,7 +19,7 @@
             <td class="titulo"> TIPO</td>
             <td class="td-in-well">{{ arContrato.contratoTipoRel.nombre }}</td>
             <td class="titulo">CLASE</td>
-            <td class="td-in-well">{{ arContrato.contratoClaseRel.nombre|default('SIN CLASE') }}</td>
+            <td class="td-in-well">{{ arContrato.contratoClaseRel.nombre |default('SIN CLASE') }}</td>
         </tr>
         <tr>
             <td class="titulo">FECHA INICIO:</td>
@@ -24,7 +27,7 @@
             <td class="titulo">TIEMPO</td>
             <td class="td-in-well">{{ arContrato.tiempoRel.nombre|default('SIN TIEMPO') }}</td>
             <td class="titulo">TIPO SALARIO:</td>
-            <td class="td-in-well">arContrato.salarioTipoRel.nombre|default('') }}</td>
+            <td class="td-in-well">arContrato.salarioTipoRel.nombre |default('') }}</td>
         </tr>
         <tr>
             <td class="titulo">FECHA TERMINA:</td>
@@ -63,7 +66,7 @@
             <td class="titulo">IDENTIFICACIÓN:</td>
             <td class="td-in-well">{{ arContrato.empleadoRel.numeroIdentificacion }}</td>
             <td class="titulo">MOTIVO:</td>
-            <td class="td-in-well">{{ arContrato.contratoMotivoRel.motivo }}</td>
+            <td class="td-in-well">{{ arContrato.contratoMotivoRel.motivo |default('SIN TIEMPO') }}</td>
             <td class="titulo">TIPO COTIZANTE:</td>
             <td class="td-in-well">{{ arContrato.TipoCotizanteRel.nombre|default('') }}</td>
         </tr>

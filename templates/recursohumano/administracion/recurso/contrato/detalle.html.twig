@@ -7,9 +7,11 @@
         <div class="btn-group">
             <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Parámetros iniciales</a>
         </div>
+        {% if arContrato.estadoTerminado == false %}
         <div class="btn-group">
             <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_terminar',{'id' : arContrato.codigoContratoPk }) }}','terminar',600,900)">Terminar</a>
         </div>
+        {% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">

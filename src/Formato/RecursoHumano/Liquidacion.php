@@ -62,12 +62,12 @@ class Liquidacion extends \FPDF
         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoliquidacion);
         $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arLiquidacion->getCodigoEmpleadoFk());
         $arContrato = $em->getRepository(RhuContrato::class)->find($arLiquidacion->getCodigoContratoFk());
-        $intY = 42;
+        $posicionY = 42;
         //tabla vacaciones
         //linea 1
         $pdf->SetFont('Arial', 'B', 8);
         $pdf->SetFillColor(236, 236, 236);
-        $pdf->SetXY(10, $intY);
+        $pdf->SetXY(10, $posicionY);
         $pdf->Cell(195, 5, utf8_decode("INFORMACÍON LIQUIDACIÓN"), 1, 0, 'C', 1);
         $pdf->Ln(5);
         $pdf->SetFillColor(170, 170, 170);
@@ -183,7 +183,7 @@ class Liquidacion extends \FPDF
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-        $pdf->Cell(32.5, 5, $arLiquidacion->getCodigoGrupoFk(), 1, 0, 'L', 1);
+        $pdf->Cell(97.5, 5, $arLiquidacion->getCodigoGrupoFk(), 1, 0, 'L', 1);
         $pdf->SetFillColor(170, 170, 170);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
@@ -192,6 +192,20 @@ class Liquidacion extends \FPDF
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(32.5, 5, "", 1, 0, 'L', 1);
+        $pdf->SetFillColor(253, 254, 254);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Cell(32.5, 5, "", 0, '.', ',', 1, 0, 'R', 1);
+        $pdf->Ln();
+        //linea 8
+        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('arial', 'B', 7);
+        $pdf->Cell(32.5, 5, utf8_decode("MOTIVO RETIRO"), 1, 0, 'L', 1);
+        $pdf->SetFillColor(253, 254, 254);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Cell(97.5, 5, "", 1, 0, 'L', 1);
         $pdf->SetFillColor(170, 170, 170);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
@@ -199,18 +213,215 @@ class Liquidacion extends \FPDF
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-        $pdf->Cell(32.5, 5, "", 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(32.5, 5, "", 1, 0, 'L', 1);
+        $pdf->SetFillColor(253, 254, 254);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Cell(32.5, 5, "", 0, '.', ',', 1, 0, 'R', 1);
         $pdf->Ln();
 
+
+        $posicionY = 150;
+        $posicionX = 5;
+        //BLOQUE TOTALES
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(236, 236, 236);
+        $pdf->SetXY($posicionX + 93, 90);
+        $pdf->Cell(15, 5, utf8_decode("DIAS"), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + 113, 90);
+        $pdf->Cell(11, 5, utf8_decode("D.AUS"), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + 125, 90);
+        $pdf->Cell(25, 5, utf8_decode("BASE"), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + 150, 90);
+        $pdf->Cell(25, 5, utf8_decode("ULT.PAGO"), 1, 0, 'C', 1);
+        $pdf->SetXY($posicionX + 175, 90);
+        $pdf->Cell(25, 5, utf8_decode("TOTAL"), 1, 0, 'R', 1);
+
+        $posicionXlinea = 40;
+        $posicionY = 100;
+        $pdf->SetXY($posicionX+ $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, utf8_decode("CESANTÍAS:"), 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "INTERESES:", 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX+$posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, utf8_decode("CESANTÍAS (ANT):"), 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "INTERESES (ANT):", 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "PRIMA SEMESTRAL:", 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "VACACIONES:", 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "INDEMNIZACION:", 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "BONIFICACIONES:", 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "TOTAL DEVENGADO:", 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "DEDUCCIONES", 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "DEDUCCIONES PRIMAS:", 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "TOTAL DEDUCCIONES:", 1, 0, 'L', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, $posicionY);
+        $posicionY += 6;
+        $pdf->Cell(43, 5, "NETO A PAGAR:", 1, 0, 'L', 1);
+
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFillColor(272, 272, 272);
+        $posicionXlinea = 95;
+        $pdf->SetXY($posicionX + $posicionXlinea, 100);
+        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 106);
+        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 112);
+        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 118);
+        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 124);
+        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 130);
+        $pdf->Cell(15, 5, number_format($arLiquidacion->getDiasVacacion()   , 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 135);
+        $pdf->Cell(15, 5, "", 0, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 138);
+        $pdf->Cell(15, 5, "", 0, 0, 'R', 1);
+
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFillColor(272, 272, 272);
+        $posicionXlinea = 111;
+        $pdf->SetXY($posicionX + $posicionXlinea, 100);
+        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 106);
+        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 112);
+        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 118);
+        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 124);
+        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 130);
+        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 135);
+        $pdf->Cell(13, 5, "", 0, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 138);
+        $pdf->Cell(13, 5, "", 0, 0, 'R', 1);
+
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetFillColor(272, 272, 272);
+        $posicionXlinea = 125;
+        $pdf->SetXY($posicionX + $posicionXlinea, 100);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 106);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 112);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 118);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 124);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 130);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 135);
+        $pdf->Cell(25, 5, "", 0, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 137);
+        $pdf->Cell(25, 5, "", 0, 0, 'R', 1);
+
+        $this->SetFillColor(272, 272, 272);
+        $posicionXlinea = 150;
+        $pdf->SetXY($posicionX + $posicionXlinea, 100);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 106);
+        $pdf->Cell(25, 5, "", 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 112);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 118);
+        $pdf->Cell(25, 5, "", 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 124);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 130);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 135);
+        $pdf->Cell(25, 5, "", 0, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 137);
+        $pdf->Cell(25, 5, "", 0, 0, 'R', 1);
+
+        $this->SetFillColor(272, 272, 272);
+        $posicionXlinea = 175;
+        $pdf->SetXY($posicionX + $posicionXlinea, 100);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 106);
+        $pdf->Cell(25, 5, "", 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 112);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 118);
+        $pdf->Cell(25, 5, "", 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 124);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 130);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 136);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 142);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 148);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 154);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 160);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 166);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + $posicionXlinea, 172);
+        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Ln(15);
+
+
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->SetFillColor(236, 236, 236);
+        $pdf->Cell(195, 7, "DESCUENTOS - BONIFICACIONES", 1, 0, 'C', 1);
+        $pdf->Ln();
+        $pdf->SetTextColor(0);
+        $pdf->SetDrawColor(0, 0, 0);
+        $pdf->SetLineWidth(.2);
+        $pdf->SetFont('Arial', 'B', 7);
+        $header = array(utf8_decode('CÓDIGO'), 'CONCEPTO', 'BONIFICACION', 'DEDUCCION','OBSERVACIONES');
+        $w = array(12, 81, 19, 20,63);
+        for ($i = 0; $i < count($header); $i++)
+            if ($i == 0 || $i == 1)
+                $pdf->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
+            else
+                $pdf->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
+
+        //Restauraci�n de colores y fuentes
+        $pdf->SetFillColor(224, 235, 255);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Ln(4);
+        $pdf->Text(10, 240, "FIRMA: _____________________________________________");
+        $pdf->Text(10, 247, "");
+        $pdf->Text(10, 254, "C.C.:     ______________________ de ____________________");
+        $pdf->Text(105, 240, "FIRMA: _____________________________________________");
+        $pdf->Text(105, 247, "");
+        $pdf->Text(105, 254, "NIT: ".""." - ". "");
     }
 
     public function Footer()
     {
-        $this->SetFont('Arial', '', 8);
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(10, 200);
-
-        $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }
 

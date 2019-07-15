@@ -9,8 +9,10 @@ use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Form\Type\RecursoHumano\LiquidacionType;
 use App\Form\Type\RecursoHumano\PagoType;
+use App\Formato\RecursoHumano\Liquidacion;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -83,9 +85,21 @@ class LiquidacionController extends ControllerListenerGeneral
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+            ->add('btnImprimir', SubmitType::class, ['label' => 'Imprimir', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formatoLiquidacion = new Liquidacion();
+                $formatoLiquidacion->Generar($em, $id);
+            }
+        }
+
         $arRegistro = $em->getRepository($this->clase)->find($id);
         return $this->render('recursohumano/movimiento/nomina/liquidacion/detalle.html.twig',[
-            'arRegistro' => $arRegistro
+            'arRegistro' => $arRegistro,
+            'form' => $form->createView()
         ]);
     }
 }

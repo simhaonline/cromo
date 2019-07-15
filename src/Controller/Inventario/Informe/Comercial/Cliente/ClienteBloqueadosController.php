@@ -20,6 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class ClienteBloqueadosController extends Controller
 {
     /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/comercial/cliente/bloqueados", name="inventario_informe_comercial_cliente_bloqueados")
      */
     public function lista(Request $request)
@@ -28,7 +32,7 @@ class ClienteBloqueadosController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigoTercero', TextType::class, array('required' => false))
+            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -38,7 +42,7 @@ class ClienteBloqueadosController extends Controller
                 $session->set('filtroInvTerceroInformeCodigoTercero', $form->get('txtCodigoTercero')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvTercero::class)->informeBloqueados()->execute(), "Clientes bloqueados");
+                General::get()->setExportar($em->getRepository(InvTercero::class)->informeBloqueadosExcel()->execute(), "Clientes bloqueados");
             }
         }
         $arClienteBloqueados = $paginator->paginate($em->getRepository(InvTercero::class)->informeBloqueados(), $request->query->getInt('page', 1), 30);

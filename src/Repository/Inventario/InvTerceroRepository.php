@@ -104,6 +104,24 @@ class InvTerceroRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvTercero::class, 't')
             ->select("t")
             ->where('t.bloqueoCartera = true');
+        if($session->get('filtroInvTerceroInformeCodigoTercero')){
+            $queryBuilder->andWhere("t.codigoTerceroPk = {$session->get('filtroInvTerceroInformeCodigoTercero')}");
+        }
+
+        return $queryBuilder->getQuery();
+    }
+
+    public function informeBloqueadosExcel(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvTercero::class, 't')
+            ->select("t.codigoTerceroPk")
+            ->addSelect('i.nombre AS tipoIdentificacion')
+            ->addSelect('t.numeroIdentificacion')
+            ->addSelect('c.nombre AS ciudad')
+            ->addSelect('t.nombreCorto AS tercero')
+            ->leftJoin('t.identificacionRel', 'i')
+            ->leftJoin('t.ciudadRel', 'c')
+            ->where('t.bloqueoCartera = true');
         if ($session->get('filtroInvTerceroInformeCodigoTercero') != '') {
             $queryBuilder->andWhere("t.codigoTerceroPk = {$session->get('filtroInvTerceroInformeCodigoTercero')}");
         }

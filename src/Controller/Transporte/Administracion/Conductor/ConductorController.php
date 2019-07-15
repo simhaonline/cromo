@@ -82,31 +82,43 @@ class ConductorController extends ControllerListenerGeneral
         $form = $this->createForm(ConductorType::class, $arConductor);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $arConductor = $em->getRepository(TteConductor::class)->findBy(['numeroIdentificacion'=>(int)$form->get('numeroIdentificacion')->getData()]);
             if ($form->get('guardar')->isClicked()) {
-                if ( count($arConductor)> 1){
-                    Mensajes::error("El conductor ya existe");
-                    return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
+                if ($id === 0 ) {
+                    $arConductor = $em->getRepository(TteConductor::class)->findBy(['numeroIdentificacion'=>(int)$form->get('numeroIdentificacion')->getData()]);
+                    if (!$arConductor){
+                        $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
+                        $em->persist($arConductor);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_detalle', ['id' => $arConductor->getCodigoConductorPk()]));
+                    }else{
+                        Mensajes::error("El conductor ya existe");
+                        return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
+                    }
                 }else{
                     $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
                     $em->persist($arConductor);
                     $em->flush();
+                    return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_detalle', ['id' => $arConductor->getCodigoConductorPk()]));
                 }
-                return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
             }
             if($form->get('guardarnuevo')->isClicked()){
-                if ( count($arConductor)> 1){
-                    Mensajes::error("El conductor ya existe");
-                    return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
+                if ($id === 0 ) {
+                    $arConductor = $em->getRepository(TteConductor::class)->findBy(['numeroIdentificacion'=>(int)$form->get('numeroIdentificacion')->getData()]);
+                    if (!$arConductor){
+                        $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
+                        $em->persist($arConductor);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_detalle', ['id' => $arConductor->getCodigoConductorPk()]));
+                    }else{
+                        Mensajes::error("El conductor ya existe");
+                        return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
+                    }
                 }else{
                     $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
                     $em->persist($arConductor);
                     $em->flush();
+                    return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_nuevo',['id'=>0]));
                 }
-                $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
-                $em->persist($arConductor);
-                $em->flush();
-                return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_nuevo',['id'=>0]));
             }
 
         }

@@ -78,9 +78,21 @@ class ClienteController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $em->persist($arCliente);
-                $em->flush();
-                return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
+                if ($id === 0 ){
+                    $arCliente = $em->getRepository(TteCliente::class)->findBy(['numeroIdentificacion'=>(int)$form->get('numeroIdentificacion')->getData()]);
+                    if(!$arCliente){
+                        $em->persist($arCliente);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
+                    }else{
+                        Mensajes::error("El cliente ya existe");
+                        return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_lista'));
+                    }
+                }else{
+                    $em->persist($arCliente);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
+                }
             }
         }
         return $this->render('transporte/administracion/comercial/cliente/nuevo.html.twig', [

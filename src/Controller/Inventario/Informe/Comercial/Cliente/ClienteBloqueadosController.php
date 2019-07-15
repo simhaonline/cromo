@@ -29,12 +29,16 @@ class ClienteBloqueadosController extends Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, array('required' => true))
-             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvTerceroInformeCodigoTercero',  $form->get('txtCodigoTercero')->getData());
+                $session->set('filtroInvTerceroInformeCodigoTercero', $form->get('txtCodigoTercero')->getData());
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(InvTercero::class)->informeBloqueados()->execute(), "Clientes bloqueados");
             }
         }
         $arClienteBloqueados = $paginator->paginate($em->getRepository(InvTercero::class)->informeBloqueados(), $request->query->getInt('page', 1), 30);

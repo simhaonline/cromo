@@ -221,7 +221,7 @@ class ContratoType extends AbstractType
                 'required' => true
             ])
             ->add('sucursalRel', EntityType::class, [
-                'class' => RhuGrupo::class,
+                'class' => RhuSucursal::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('s')
                         ->orderBy('s.nombre', 'ASC');

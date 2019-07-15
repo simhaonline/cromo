@@ -220,6 +220,15 @@ class ContratoType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => true
             ])
+            ->add('sucursalRel', EntityType::class, [
+                'class' => RhuGrupo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('s')
+                        ->orderBy('s.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => true
+            ])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

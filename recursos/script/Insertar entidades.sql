@@ -69,6 +69,7 @@ INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'14-23','','860011153','Positiva Compañía de Seguros','',1,0,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'14-25','','800226175','Colmena Riesgos Profesionales','',1,0,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'14-28','','800256161','ARL Sura','',1,0,0,0,0);
+INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'14-11','','800256161','ARL Sura 14-11 (nuevo)','',1,0,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'14-29','','830008686','La Equidad Seguros de Vida','',1,0,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'14-30','','830054904','Mapfre Colombia Vida Seguros S.A','',1,0,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF02','','890900840','Camacol','',0,1,0,0,0);

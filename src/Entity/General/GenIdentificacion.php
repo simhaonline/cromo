@@ -97,6 +97,11 @@ class GenIdentificacion
     protected $crmClienteIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="GenConfiguracion", mappedBy="identificacionRel")
+     */
+    protected $configuracionesIdentificacionRel;
+
+    /**
      * @return mixed
      */
     public function getComProveedoresIdentificacionRel()
@@ -366,6 +371,22 @@ class GenIdentificacion
     public function setCrmClienteIdentificacionRel($crmClienteIdentificacionRel): void
     {
         $this->crmClienteIdentificacionRel = $crmClienteIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfiguracionesIdentificacionRel()
+    {
+        return $this->configuracionesIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $configuracionesIdentificacionRel
+     */
+    public function setConfiguracionesIdentificacionRel($configuracionesIdentificacionRel): void
+    {
+        $this->configuracionesIdentificacionRel = $configuracionesIdentificacionRel;
     }
 
 

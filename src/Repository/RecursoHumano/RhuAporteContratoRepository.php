@@ -45,9 +45,15 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
             ->addSelect('c.vrSalario')
             ->addSelect('pen.porcentajeEmpleador as pensionPorcentajeEmpleador')
             ->addSelect('arl.porcentaje as clasificacionRiesgoPorcentaje')
+            ->addSelect('es.codigoInterface as entidadSaludCodigo')
+            ->addSelect('ep.codigoInterface as entidadPensionCodigo')
+            ->addSelect('ec.codigoInterface as entidadCajaCodigo')
             ->leftJoin('ac.contratoRel', 'c')
             ->leftJoin('c.pensionRel', 'pen')
             ->leftJoin('c.clasificacionRiesgoRel', 'arl')
+            ->leftJoin('c.entidadSaludRel', 'es')
+            ->leftJoin('c.entidadPensionRel', 'ep')
+            ->leftJoin('c.entidadCajaRel', 'ec')
             ->where('ac.codigoAporteFk=' . $codigoAporte);
         $arAporteContratos = $queryBuilder->getQuery()->getResult();
         return $arAporteContratos;
@@ -66,18 +72,57 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
 
     public function cargar($arAporte) {
         $em = $this->getEntityManager();
-        $arContratos = $em->getRepository(RhuContrato::class)->contratosPeriodoAporte($arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
-        foreach ($arContratos as $arContrato) {
-            $arContratoProceso = $em->getRepository(RhuContrato::class)->find($arContrato['codigoContratoPk']);
-            $arAporteContrato = new RhuAporteContrato();
-            $arAporteContrato->setAporteRel($arAporte);
-            $arAporteContrato->setContratoRel($arContratoProceso);
-            $arAporteContrato->setEmpleadoRel($arContratoProceso->getEmpleadoRel());
-            $arAporteContrato->setSucursalRel($arAporte->getSucursalRel());
-            $em->persist($arAporteContrato);
+        if(!$arAporte->getEstadoAutorizado()) {
+            $arContratos = $em->getRepository(RhuContrato::class)->contratosPeriodoAporte($arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+            foreach ($arContratos as $arContrato) {
+                if($this->validarContratoCargar($arAporte->getCodigoAportePk(), $arContrato['codigoContratoPk'])) {
+                    $arContratoProceso = $em->getRepository(RhuContrato::class)->find($arContrato['codigoContratoPk']);
+                    $arAporteContrato = new RhuAporteContrato();
+                    $arAporteContrato->setAporteRel($arAporte);
+                    $arAporteContrato->setContratoRel($arContratoProceso);
+                    $arAporteContrato->setEmpleadoRel($arContratoProceso->getEmpleadoRel());
+                    $arAporteContrato->setSucursalRel($arAporte->getSucursalRel());
+                    $em->persist($arAporteContrato);
+                }
+            }
+            $em->flush();
+            $this->cantidadEmpleados($arAporte);
         }
-        $em->flush();
     }
 
+    private function validarContratoCargar($codigoAporte, $codigoContrato) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuAporteContrato::class, 'ac')
+            ->addSelect('ac.codigoAporteContratoPk')
+            ->where("ac.codigoAporteFk = {$codigoAporte}")
+            ->andWhere("ac.codigoContratoFk = {$codigoContrato}");
+        $arResultado = $queryBuilder->getQuery()->getResult();
+        $retornar = $arResultado ? false : true;
+        return $retornar;
+    }
+
+    private function cantidadEmpleados($arAporte) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuAporteContrato::class, 'ac')
+            ->select("count(ac.codigoEmpleadoFk)")
+            ->where("ac.codigoAporteFk = {$arAporte->getCodigoAportePk()}")
+            ->groupBy('ac.codigoEmpleadoFk');
+        $arrResultado = $queryBuilder->getQuery()->getResult();
+        if($arrResultado) {
+            $cantidadEmpleados = count($arrResultado);
+            $arAporte->setCantidadEmpleados($cantidadEmpleados);
+        }
+        $queryBuilder = $em->createQueryBuilder()->from(RhuAporteContrato::class, 'ac')
+            ->addSelect('COUNT(ac.codigoContratoFk) as numeroContratos')
+            ->where("ac.codigoAporteFk = {$arAporte->getCodigoAportePk()}")
+            ->groupBy('ac.codigoContratoFk');
+        $arrResultado = $queryBuilder->getQuery()->getResult();
+        if($arrResultado) {
+            $cantidadContratos = count($arrResultado);
+            $arAporte->setCantidadContratos($cantidadContratos);
+        }
+        $em->persist($arAporte);
+        $em->flush();
+    }
 
 }

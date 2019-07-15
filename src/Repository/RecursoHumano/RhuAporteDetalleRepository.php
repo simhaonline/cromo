@@ -10,6 +10,7 @@ use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuConfiguracionAporte;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuEntidad;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -82,7 +83,7 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arrConfiguracionNomina = $em->getRepository(RhuConfiguracion::class)->generarAporte();
-        $arConfiguracionAporte = $em->getRepository(RhuConfiguracionAporte::class)->find(1);
+        $arEntidadRiesgos = $em->getRepository(RhuEntidad::class)->find($arrConfiguracionNomina['codigoEntidadRiesgosProfesionalesFk']);
         $totalCotizacionGeneral = 0;
         $ibcCajaTotal = 0;
         $secuencia = 1 ;
@@ -206,7 +207,7 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
                 $arAporteDetalle->setEntidadPensionRel($arContrato->getEntidadPensionRel());
                 $arAporteDetalle->setEntidadSaludRel($arContrato->getEntidadSaludRel());
                 $arAporteDetalle->setEntidadCajaRel($arContrato->getEntidadCajaRel());
-                $arAporteDetalle->setEntidadRiesgosRel($arConfiguracionAporte->getEntidadRiesgosRel());
+                $arAporteDetalle->setEntidadRiesgosRel($arEntidadRiesgos);
 
                 $diasPension = $dias;
                 $diasRiesgos = $dias;
@@ -389,6 +390,9 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
                 }
             }
         }
+        $arAporte->setVrTotal($totalCotizacionGeneral);
+        $arAporte->setVrIngresoBaseCotizacion($ibcCajaTotal);
+        $em->persist($arAporte);
         $em->flush();
     }
 

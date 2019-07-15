@@ -32,6 +32,16 @@ class RhuAporte
     private $mes = 0;
 
     /**
+     * @ORM\Column(name="anioSalud", type="integer")
+     */
+    private $anioSalud = 0;
+
+    /**
+     * @ORM\Column(name="mesSalud", type="integer")
+     */
+    private $mesSalud = 0;
+
+    /**
      * @ORM\Column(name="fecha_desde", type="date")
      */
     private $fechaDesde = 0;
@@ -40,6 +50,12 @@ class RhuAporte
      * @ORM\Column(name="fecha_hasta", type="date")
      */
     private $fechaHasta = 0;
+
+    /**
+     * Tipo de planilla pago seguridad social s-sucursal u-unica
+     * @ORM\Column(name="aporte_forma_presentacion", type="string", length=1, nullable=true)
+     */
+    private $formaPresentacion;
 
     /**
      * @ORM\Column(name="codigo_sucursal_fk", type="string", length=10, nullable=true)
@@ -57,9 +73,14 @@ class RhuAporte
     private $cantidadEmpleados = 0;
 
     /**
-     * @ORM\Column(name="total_cotizacion", type="float" , nullable=true)
+     * @ORM\Column(name="vr_total", type="float" , nullable=true)
      */
-    private $totalCotizacion = 0;
+    private $vrTotal = 0;
+
+    /**
+     * @ORM\Column(name="vr_ingreso_base_cotizacion", type="float" , nullable=true)
+     */
+    private $vrIngresoBaseCotizacion = 0;
 
     /**
      * @ORM\Column(name="estado_autorizado", options={"default" : false}, type="boolean")
@@ -153,54 +174,6 @@ class RhuAporte
     /**
      * @return mixed
      */
-    public function getCodigoSucursalFk()
-    {
-        return $this->codigoSucursalFk;
-    }
-
-    /**
-     * @param mixed $codigoSucursalFk
-     */
-    public function setCodigoSucursalFk($codigoSucursalFk): void
-    {
-        $this->codigoSucursalFk = $codigoSucursalFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSucursalRel()
-    {
-        return $this->sucursalRel;
-    }
-
-    /**
-     * @param mixed $sucursalRel
-     */
-    public function setSucursalRel($sucursalRel): void
-    {
-        $this->sucursalRel = $sucursalRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAportesContratosAporteRel()
-    {
-        return $this->aportesContratosAporteRel;
-    }
-
-    /**
-     * @param mixed $aportesContratosAporteRel
-     */
-    public function setAportesContratosAporteRel($aportesContratosAporteRel): void
-    {
-        $this->aportesContratosAporteRel = $aportesContratosAporteRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getFechaDesde()
     {
         return $this->fechaDesde;
@@ -233,17 +206,33 @@ class RhuAporte
     /**
      * @return mixed
      */
-    public function getAportesDetallesAporteRel()
+    public function getFormaPresentacion()
     {
-        return $this->aportesDetallesAporteRel;
+        return $this->formaPresentacion;
     }
 
     /**
-     * @param mixed $aportesDetallesAporteRel
+     * @param mixed $formaPresentacion
      */
-    public function setAportesDetallesAporteRel($aportesDetallesAporteRel): void
+    public function setFormaPresentacion($formaPresentacion): void
     {
-        $this->aportesDetallesAporteRel = $aportesDetallesAporteRel;
+        $this->formaPresentacion = $formaPresentacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSucursalFk()
+    {
+        return $this->codigoSucursalFk;
+    }
+
+    /**
+     * @param mixed $codigoSucursalFk
+     */
+    public function setCodigoSucursalFk($codigoSucursalFk): void
+    {
+        $this->codigoSucursalFk = $codigoSucursalFk;
     }
 
     /**
@@ -281,17 +270,17 @@ class RhuAporte
     /**
      * @return mixed
      */
-    public function getTotalCotizacion()
+    public function getVrTotal()
     {
-        return $this->totalCotizacion;
+        return $this->vrTotal;
     }
 
     /**
-     * @param mixed $totalCotizacion
+     * @param mixed $vrTotal
      */
-    public function setTotalCotizacion($totalCotizacion): void
+    public function setVrTotal($vrTotal): void
     {
-        $this->totalCotizacion = $totalCotizacion;
+        $this->vrTotal = $vrTotal;
     }
 
     /**
@@ -361,6 +350,54 @@ class RhuAporte
     /**
      * @return mixed
      */
+    public function getSucursalRel()
+    {
+        return $this->sucursalRel;
+    }
+
+    /**
+     * @param mixed $sucursalRel
+     */
+    public function setSucursalRel($sucursalRel): void
+    {
+        $this->sucursalRel = $sucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosAporteRel()
+    {
+        return $this->aportesContratosAporteRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosAporteRel
+     */
+    public function setAportesContratosAporteRel($aportesContratosAporteRel): void
+    {
+        $this->aportesContratosAporteRel = $aportesContratosAporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesDetallesAporteRel()
+    {
+        return $this->aportesDetallesAporteRel;
+    }
+
+    /**
+     * @param mixed $aportesDetallesAporteRel
+     */
+    public function setAportesDetallesAporteRel($aportesDetallesAporteRel): void
+    {
+        $this->aportesDetallesAporteRel = $aportesDetallesAporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAportesSoportesAporteRel()
     {
         return $this->aportesSoportesAporteRel;
@@ -372,6 +409,54 @@ class RhuAporte
     public function setAportesSoportesAporteRel($aportesSoportesAporteRel): void
     {
         $this->aportesSoportesAporteRel = $aportesSoportesAporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnioSalud()
+    {
+        return $this->anioSalud;
+    }
+
+    /**
+     * @param mixed $anioSalud
+     */
+    public function setAnioSalud($anioSalud): void
+    {
+        $this->anioSalud = $anioSalud;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMesSalud()
+    {
+        return $this->mesSalud;
+    }
+
+    /**
+     * @param mixed $mesSalud
+     */
+    public function setMesSalud($mesSalud): void
+    {
+        $this->mesSalud = $mesSalud;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoBaseCotizacion()
+    {
+        return $this->vrIngresoBaseCotizacion;
+    }
+
+    /**
+     * @param mixed $vrIngresoBaseCotizacion
+     */
+    public function setVrIngresoBaseCotizacion($vrIngresoBaseCotizacion): void
+    {
+        $this->vrIngresoBaseCotizacion = $vrIngresoBaseCotizacion;
     }
 
 

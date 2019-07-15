@@ -69,6 +69,11 @@ class RhuConfiguracion
     private $liquidarVacacionesPromedioUltimoAnio = false;
 
     /**
+     * @ORM\Column(name="codigo_entidad_riesgos_profesionales_fk", type="integer", nullable=true)
+     */
+    private $codigoEntidadRiesgosProfesionalesFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoAuxilioTransporteRel")
      * @ORM\JoinColumn(name="codigo_concepto_auxilio_transporte_fk", referencedColumnName="codigo_concepto_pk")
      */
@@ -79,6 +84,12 @@ class RhuConfiguracion
      * @ORM\JoinColumn(name="codigo_concepto_fondo_solidaridad_pension_fk", referencedColumnName="codigo_concepto_pk")
      */
     protected $conceptoFondoSolidaridadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="configuracionesEntidadRiesgosRel")
+     * @ORM\JoinColumn(name="codigo_entidad_riesgos_profesionales_fk", referencedColumnName="codigo_entidad_pk")
+     */
+    protected $entidadRiesgosRel;
 
     /**
      * @return mixed
@@ -163,54 +174,6 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getConceptoAuxilioTransporteRel()
-    {
-        return $this->conceptoAuxilioTransporteRel;
-    }
-
-    /**
-     * @param mixed $conceptoAuxilioTransporteRel
-     */
-    public function setConceptoAuxilioTransporteRel($conceptoAuxilioTransporteRel): void
-    {
-        $this->conceptoAuxilioTransporteRel = $conceptoAuxilioTransporteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConceptoFondoSolidaridadRel()
-    {
-        return $this->conceptoFondoSolidaridadRel;
-    }
-
-    /**
-     * @param mixed $conceptoFondoSolidaridadRel
-     */
-    public function setConceptoFondoSolidaridadRel($conceptoFondoSolidaridadRel): void
-    {
-        $this->conceptoFondoSolidaridadRel = $conceptoFondoSolidaridadRel;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVacacionesBaseDescuentoLeyIbcMesAnterior()
     {
         return $this->vacacionesBaseDescuentoLeyIbcMesAnterior;
@@ -286,6 +249,70 @@ class RhuConfiguracion
     public function setLiquidarVacacionesPromedioUltimoAnio($liquidarVacacionesPromedioUltimoAnio): void
     {
         $this->liquidarVacacionesPromedioUltimoAnio = $liquidarVacacionesPromedioUltimoAnio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadRiesgosProfesionalesFk()
+    {
+        return $this->codigoEntidadRiesgosProfesionalesFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadRiesgosProfesionalesFk
+     */
+    public function setCodigoEntidadRiesgosProfesionalesFk($codigoEntidadRiesgosProfesionalesFk): void
+    {
+        $this->codigoEntidadRiesgosProfesionalesFk = $codigoEntidadRiesgosProfesionalesFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoAuxilioTransporteRel()
+    {
+        return $this->conceptoAuxilioTransporteRel;
+    }
+
+    /**
+     * @param mixed $conceptoAuxilioTransporteRel
+     */
+    public function setConceptoAuxilioTransporteRel($conceptoAuxilioTransporteRel): void
+    {
+        $this->conceptoAuxilioTransporteRel = $conceptoAuxilioTransporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoFondoSolidaridadRel()
+    {
+        return $this->conceptoFondoSolidaridadRel;
+    }
+
+    /**
+     * @param mixed $conceptoFondoSolidaridadRel
+     */
+    public function setConceptoFondoSolidaridadRel($conceptoFondoSolidaridadRel): void
+    {
+        $this->conceptoFondoSolidaridadRel = $conceptoFondoSolidaridadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadRiesgosRel()
+    {
+        return $this->entidadRiesgosRel;
+    }
+
+    /**
+     * @param mixed $entidadRiesgosRel
+     */
+    public function setEntidadRiesgosRel($entidadRiesgosRel): void
+    {
+        $this->entidadRiesgosRel = $entidadRiesgosRel;
     }
 
 

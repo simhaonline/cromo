@@ -24,6 +24,13 @@ class RhuAporteRepository extends ServiceEntityRepository
             ->addSelect('a.anio')
             ->addSelect('a.mes')
             ->addSelect('s.nombre as sucursalNombre')
+            ->addSelect('a.cantidadContratos')
+            ->addSelect('a.cantidadEmpleados')
+            ->addSelect('a.formaPresentacion')
+            ->addSelect('a.vrTotal')
+            ->addSelect('a.estadoAutorizado')
+            ->addSelect('a.estadoAprobado')
+            ->addSelect('a.estadoAnulado')
             ->leftJoin('a.sucursalRel', 's')
             ->orderBy('a.codigoAportePk', 'DESC');
         if ($session->get('filtroRhuAporteAnio') != '') {

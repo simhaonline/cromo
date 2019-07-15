@@ -38,6 +38,7 @@ class AporteType extends AbstractType
                 ),
                 'required'    => true,
             ])
+            ->add('formaPresentacion',ChoiceType::class,['choices' => ['SUCURSAL' => 'S','UNICA' => 'U']])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
 
     }

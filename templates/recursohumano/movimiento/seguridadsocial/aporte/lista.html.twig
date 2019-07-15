@@ -35,9 +35,16 @@
             <th>AÑO</th>
             <th>MES</th>
             <th>SUCURSAL</th>
+            <th title="Forma de presentacion">FP</th>
+            <th>CC</th>
+            <th>CE</th>
+            <th>TOTAL</th>
+            <th>AUT</th>
+            <th>APR</th>
+            <th>ANU</th>
             <th></th>
             <th></th>
-            <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+            <th class="text-center" title="seleccionar todo"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
         </tr>
         </thead>
         <!--cromo-->
@@ -48,6 +55,13 @@
                 <td>{{ arAporte.anio }}</td>
                 <td>{{ arAporte.mes }}</td>
                 <td>{{ arAporte.sucursalNombre }}</td>
+                <td>{{ arAporte.formaPresentacion }}</td>
+                <td class="numero">{{ arAporte.cantidadContratos }}</td>
+                <td class="numero">{{ arAporte.cantidadEmpleados }}</td>
+                <td class="numero">{{ arAporte.vrTotal | number_format(0, '.', ',') }}</td>
+                <td>{{ arAporte.estadoAutorizado ? 'SI':'NO' }}</td>
+                <td>{{ arAporte.estadoAprobado ? 'SI':'NO' }}</td>
+                <td>{{ arAporte.estadoAnulado ? 'SI':'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_nuevo',{'id': arAporte.codigoAportePk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
@@ -58,9 +72,7 @@
                         </i>
                     </a>
                 </td>
-                <td class="text-center">
-                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arAporte.codigoAportePk  }}"/>
-                </td>
+                <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arAporte.codigoAportePk  }}"/></td>
             </tr>
         {% endfor %}
         </tbody>

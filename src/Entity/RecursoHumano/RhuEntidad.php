@@ -133,9 +133,9 @@ class RhuEntidad
     protected $aportesDetallesEntidadRiesgosRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuConfiguracionAporte", mappedBy="entidadRiesgosRel")
+     * @ORM\OneToMany(targetEntity="RhuConfiguracion", mappedBy="entidadRiesgosRel")
      */
-    protected $configuracionesAportesEntidadRiesgosRel;
+    protected $configuracionesEntidadRiesgosRel;
 
     /**
      * @return mixed
@@ -492,17 +492,17 @@ class RhuEntidad
     /**
      * @return mixed
      */
-    public function getConfiguracionesAportesEntidadRiesgosRel()
+    public function getConfiguracionesEntidadRiesgosRel()
     {
-        return $this->configuracionesAportesEntidadRiesgosRel;
+        return $this->configuracionesEntidadRiesgosRel;
     }
 
     /**
-     * @param mixed $configuracionesAportesEntidadRiesgosRel
+     * @param mixed $configuracionesEntidadRiesgosRel
      */
-    public function setConfiguracionesAportesEntidadRiesgosRel($configuracionesAportesEntidadRiesgosRel): void
+    public function setConfiguracionesEntidadRiesgosRel($configuracionesEntidadRiesgosRel): void
     {
-        $this->configuracionesAportesEntidadRiesgosRel = $configuracionesAportesEntidadRiesgosRel;
+        $this->configuracionesEntidadRiesgosRel = $configuracionesEntidadRiesgosRel;
     }
 
 

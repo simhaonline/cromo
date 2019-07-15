@@ -650,9 +650,9 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                 }*/
                 $em->persist($arAporteSoporte);
             }
-            //$arAporteContratoActualizar->setCodigoEntidadSaludPertenece($arContrato->getEntidadSaludRel()->getCodigoInterface());
-            //$arAporteContratoActualizar->setCodigoEntidadPensionPertenece($arContrato->getEntidadPensionRel() ? $arContrato->getEntidadPensionRel()->getCodigoInterface() : null);
-            //$arAporteContratoActualizar->setCodigoEntidadCajaPertenece($arContrato->getEntidadCajaRel() ? $arContrato->getEntidadCajaRel()->getCodigoInterface() : null);
+            $arAporteContratoActualizar->setCodigoEntidadSaludPertenece($arAporteContrato['entidadSaludCodigo']);
+            $arAporteContratoActualizar->setCodigoEntidadPensionPertenece($arAporteContrato['entidadPensionCodigo']);
+            $arAporteContratoActualizar->setCodigoEntidadCajaPertenece($arAporteContrato['entidadCajaCodigo']);
             $arAporteContratoActualizar->setVrSalario($salario);
             $arAporteContratoActualizar->setDias($diasCotizar);
             $arAporteContratoActualizar->setIbc($ibc);

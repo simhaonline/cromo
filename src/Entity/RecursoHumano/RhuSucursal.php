@@ -33,6 +33,11 @@ class RhuSucursal {
     private $estadoActivo = false;
 
     /**
+     * @ORM\Column(name="codigo", type="string", length=50, nullable=true)
+     */
+    private $codigo;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="sucursalRel")
      */
     protected $contratosSucursalRel;
@@ -142,6 +147,23 @@ class RhuSucursal {
     {
         $this->aportesDetallesSucursalRel = $aportesDetallesSucursalRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigo()
+    {
+        return $this->codigo;
+    }
+
+    /**
+     * @param mixed $codigo
+     */
+    public function setCodigo($codigo): void
+    {
+        $this->codigo = $codigo;
+    }
+
 
 
 }

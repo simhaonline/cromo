@@ -23,6 +23,11 @@ class GenConfiguracion
     private $codigoConfiguracionPk;
 
     /**
+     * @ORM\Column(name="codigo_identificacion_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoIdentificacionFk;
+
+    /**
      * @ORM\Column(name="nit", type="string", length=20, nullable=true)
      */
     private $nit;
@@ -122,6 +127,12 @@ class GenConfiguracion
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GenIdentificacion", inversedBy="configuracionesIdentificacionRel")
+     * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
+     */
+    protected $identificacionRel;
 
     /**
      * @return mixed
@@ -457,6 +468,38 @@ class GenConfiguracion
     public function setVersionBaseDatos($versionBaseDatos): void
     {
         $this->versionBaseDatos = $versionBaseDatos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIdentificacionFk()
+    {
+        return $this->codigoIdentificacionFk;
+    }
+
+    /**
+     * @param mixed $codigoIdentificacionFk
+     */
+    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
+    {
+        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdentificacionRel()
+    {
+        return $this->identificacionRel;
+    }
+
+    /**
+     * @param mixed $identificacionRel
+     */
+    public function setIdentificacionRel($identificacionRel): void
+    {
+        $this->identificacionRel = $identificacionRel;
     }
 
 

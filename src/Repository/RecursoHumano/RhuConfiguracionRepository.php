@@ -65,6 +65,16 @@ class RhuConfiguracionRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuConfiguracion::class, 'c')
             ->select('c.vrSalarioMinimo')
             ->addSelect('c.vrAuxilioTransporte')
+            ->addSelect('c.codigoEntidadRiesgosProfesionalesFk')
+            ->where('c.codigoConfiguracionPk = 1');
+        return $queryBuilder->getQuery()->getSingleResult();
+
+    }
+
+    public function planoAporte(): array
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuConfiguracion::class, 'c')
+            ->addSelect('c.codigoEntidadRiesgosProfesionalesFk')
             ->where('c.codigoConfiguracionPk = 1');
         return $queryBuilder->getQuery()->getSingleResult();
 

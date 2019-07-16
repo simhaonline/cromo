@@ -24,6 +24,11 @@ class TteIntermediacion
     private $codigoIntermediacionPk;
 
     /**
+     * @ORM\Column(name="numero", type="float", nullable=true)
+     */
+    private $numero = 0;
+
+    /**
      * @ORM\Column(name="anio", type="integer", nullable=true)
      */
     private $anio;
@@ -352,6 +357,22 @@ class TteIntermediacion
     public function setIntermediacionesRecogidasIntermediacionRel($intermediacionesRecogidasIntermediacionRel): void
     {
         $this->intermediacionesRecogidasIntermediacionRel = $intermediacionesRecogidasIntermediacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
     }
 
 

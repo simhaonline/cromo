@@ -12,10 +12,10 @@
     <br /><br />
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
-            <td class="titulo">AÑO:</td>
-            <td class="td-in-well">{{ arIntermediacion.anio }}</td>
-            <td class="titulo">MES:</td>
-            <td class="td-in-well">{{ arIntermediacion.mes }}</td>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arIntermediacion.codigoIntermediacionPk }}</td>
+            <td class="titulo">NUMERO:</td>
+            <td class="td-in-well">{{ arIntermediacion.numero }}</td>
             <td class="titulo" >FLETE (COBRADO)</td>
             <td align="right">{{ arIntermediacion.vrFleteCobro | number_format(0, '.', ',')}}</td>
         </tr>
@@ -28,10 +28,10 @@
             <td align="right">{{ arIntermediacion.vrFletePago | number_format(0, '.', ',')}}</td>
         </tr>
         <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">AÑO:</td>
+            <td class="td-in-well">{{ arIntermediacion.anio }}</td>
+            <td class="titulo">MES:</td>
+            <td class="td-in-well">{{ arIntermediacion.mes }}</td>
             <td class="titulo" >FLETE (PAGO-REC)</td>
             <td align="right">{{ arIntermediacion.vrFletePagoRecogida | number_format(0, '.', ',')}}</td>
         </tr>

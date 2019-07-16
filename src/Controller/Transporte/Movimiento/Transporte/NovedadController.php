@@ -58,7 +58,6 @@ class NovedadController extends ControllerListenerGeneral
                 'required'=>false
             ])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -82,14 +81,6 @@ class NovedadController extends ControllerListenerGeneral
             'form' => $form->createView()
         ]);
     }
-
-    /**
-     * @Route("/transporte/movimiento/transporte/novedad/nuevo/{id}", name="transporte_movimiento_transporte_novedad_nuevo")
-     */
-    public function nuevo(){
-        return $this->redirect($this->generateUrl('transporte_movimiento_transporte_novedad_lista'));
-    }
-
 
     /**
      * @Route("/transporte/movimiento/transporte/novedad/detalle/{id}", name="transporte_movimiento_transporte_novedad_detalle")

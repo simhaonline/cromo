@@ -106,6 +106,7 @@ class CiudadType extends AbstractType
             {"campo":"nombreMunicipio",     "tipo":"texto",     "ayuda":"Nombre municipio",        "titulo":"NOMBRE MUNICIPIO"},
             {"campo":"codigoDepartamentoFk","tipo":"texto",     "ayuda":"Codigo departamento",     "titulo":"CODIGO DEPARTAMENTO"},
             {"campo":"codigoRutaFk",        "tipo":"texto",     "ayuda":"Codigo ruta",             "titulo":"CODIGO RUTA"},
+            {"campo":"rutaRel.nombre",          "tipo":"texto",     "ayuda":"Codigo ruta",             "titulo":"RUTA","relacion":""},
             {"campo":"ordenRuta",           "tipo":"numero",    "ayuda":"Orden ruta",              "titulo":"ORDEN RUTA"},
             {"campo":"codigoInterface",     "tipo":"texto",     "ayuda":"Codigo interface",        "titulo":"CODIGO INTERFACE"},
             {"campo":"reexpedicion",        "tipo":"bool",   "ayuda":"Reexpedicion",            "titulo":"REEXPEDICION"}

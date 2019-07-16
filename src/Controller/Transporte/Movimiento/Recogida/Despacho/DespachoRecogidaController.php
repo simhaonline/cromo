@@ -72,6 +72,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                             $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
                             if ($arVehiculo) {
                                 $arDespachoRecogida->setVehiculoRel($arVehiculo);
+                                $arDespachoRecogida->setPoseedorRel($arVehiculo->getPoseedorRel());
                                 $arDespachoRecogida->setConductorRel($arConductor);
                                 $arDespachoRecogida->setOperacionRel($this->getUser()->getOperacionRel());
                                 $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();

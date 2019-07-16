@@ -13,6 +13,7 @@ use App\Entity\Transporte\TteCosto;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDespachoRecogida;
+use App\Entity\Transporte\TteDespachoRecogidaTipo;
 use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
@@ -21,6 +22,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteIntermediacion;
 use App\Entity\Transporte\TteIntermediacionCompra;
 use App\Entity\Transporte\TteIntermediacionDetalle;
+use App\Entity\Transporte\TteIntermediacionRecogida;
 use App\Entity\Transporte\TteIntermediacionVenta;
 use App\Entity\Transporte\TtePoseedor;
 use App\Utilidades\Mensajes;
@@ -70,6 +72,8 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             $fechaDesde = $arIntermediacion->getAnio() . "-" . $arIntermediacion->getMes() . "-01 00:00:00";
             $fechaHasta = $arIntermediacion->getAnio() . "-" . $arIntermediacion->getMes() . "-" . $ultimoDia . " 23:59:00";
             $fletePago = $em->getRepository(TteDespacho::class)->fletePago($fechaDesde, $fechaHasta);
+            $fletePagoRecogida = $em->getRepository(TteDespachoRecogida::class)->fletePago($fechaDesde, $fechaHasta);
+            $fletePagoTotal = $fletePago + $fletePagoRecogida;
             $fleteCobro = $em->getRepository(TteFactura::class)->fleteCobro($fechaDesde, $fechaHasta);
             $arIntermediacion->setVrFleteCobro($fleteCobro);
             $ingresoTotal = 0;
@@ -79,7 +83,7 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                 $arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arrFleteCobroDetallado['codigoFacturaTipoFk']);
                 $fleteCobroFactura = $arrFleteCobroDetallado['flete'];
                 $participacion = ($fleteCobroFactura / $fleteCobro) * 100;
-                $fleteParticipacion = $fletePago * $participacion / 100;
+                $fleteParticipacion = $fletePagoTotal * $participacion / 100;
                 $fleteIngreso = $fleteCobroFactura - $fleteParticipacion;
                 $arIntermediacionVenta = new TteIntermediacionVenta();
                 $arIntermediacionVenta->setClienteRel($arCliente);
@@ -100,8 +104,8 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                 $arPoseedor = $em->getRepository(TtePoseedor::class)->find($arrFletePagoDetallado['codigoPoseedorFk']);
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arrFletePagoDetallado['codigoDespachoTipoFk']);
                 $fletePagoFactura = $arrFletePagoDetallado['fletePago'];
-                $participacion = ($fletePagoFactura / $fletePago) * 100;
-                $fleteParticipacion = $fletePago * $participacion / 100;
+                $participacion = ($fletePagoFactura / $fletePagoTotal) * 100;
+                $fleteParticipacion = $fletePagoTotal * $participacion / 100;
                 $arIntermediacionCompra = new TteIntermediacionCompra();
                 $arIntermediacionCompra->setIntermediacionRel($arIntermediacion);
                 $arIntermediacionCompra->setPoseedorRel($arPoseedor);
@@ -113,9 +117,31 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                 $arIntermediacionCompra->setVrFleteParticipacion($fleteParticipacion);
                 $em->persist($arIntermediacionCompra);
             }
+
+            $arrFletePagoRecogidaDetallados = $em->getRepository(TteDespachoRecogida::class)->fletePagoDetallado($fechaDesde, $fechaHasta);
+            foreach ($arrFletePagoRecogidaDetallados as $arrFletePagoRecogidaDetallado) {
+                $arPoseedor = $em->getRepository(TtePoseedor::class)->find($arrFletePagoRecogidaDetallado['codigoPoseedorFk']);
+                $arDespachoRecogidaTipo = $em->getRepository(TteDespachoRecogidaTipo::class)->find($arrFletePagoRecogidaDetallado['codigoDespachoRecogidaTipoFk']);
+                $fletePagoFactura = $arrFletePagoRecogidaDetallado['fletePago'];
+                $participacion = ($fletePagoFactura / $fletePagoTotal) * 100;
+                $fleteParticipacion = $fletePagoTotal * $participacion / 100;
+                $arIntermediacionRecogida = new TteIntermediacionRecogida();
+                $arIntermediacionRecogida->setIntermediacionRel($arIntermediacion);
+                $arIntermediacionRecogida->setPoseedorRel($arPoseedor);
+                $arIntermediacionRecogida->setDespachoRecogidaTipoRel($arDespachoRecogidaTipo);
+                $arIntermediacionRecogida->setAnio($arIntermediacion->getAnio());
+                $arIntermediacionRecogida->setMes($arIntermediacion->getMes());
+                $arIntermediacionRecogida->setPorcentajeParticipacion($participacion);
+                $arIntermediacionRecogida->setVrFlete($fletePagoFactura);
+                $arIntermediacionRecogida->setVrFleteParticipacion($fleteParticipacion);
+                $em->persist($arIntermediacionRecogida);
+            }
+
             $arIntermediacion->setEstadoAutorizado(1);
             $arIntermediacion->setVrFleteCobro($fleteCobro);
             $arIntermediacion->setVrFletePago($fletePago);
+            $arIntermediacion->setVrFletePagoRecogida($fletePagoRecogida);
+            $arIntermediacion->setVrFletePagoTotal($fletePagoTotal);
             $arIntermediacion->setVrIngreso($ingresoTotal);
             $em->flush();
         } else {
@@ -137,9 +163,13 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             $numDeleted = $query->execute();
             $query = $em->createQuery('DELETE FROM App\Entity\Transporte\TteIntermediacionCompra id WHERE id.codigoIntermediacionFk =' . $arIntermediacion->getCodigoIntermediacionPk());
             $numDeleted = $query->execute();
+            $query = $em->createQuery('DELETE FROM App\Entity\Transporte\TteIntermediacionRecogida id WHERE id.codigoIntermediacionFk =' . $arIntermediacion->getCodigoIntermediacionPk());
+            $numDeleted = $query->execute();
             $arIntermediacion->setEstadoAutorizado(0);
             $arIntermediacion->setVrFleteCobro(0);
             $arIntermediacion->setVrFletePago(0);
+            $arIntermediacion->setVrFletePagoRecogida(0);
+            $arIntermediacion->setVrFletePagoTotal(0);
             $arIntermediacion->setVrIngreso(0);
             $em->persist($arIntermediacion);
             $em->flush();
@@ -325,6 +355,36 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                                 $arRegistro->setCodigoDocumento($codigo);
 
                                 $arRegistro->setDescripcion('FLETE PAGO');
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "El tipo de despacho no tiene configurada la cuenta para el flete pagado";
+                                break;
+                            }
+
+                        }
+
+                        //Contabilizar intermediacion parte recogidas
+                        $arrIntermediacionesRecogidas = $em->getRepository(TteIntermediacionRecogida::class)->registroContabilizar($codigo);
+                        foreach ($arrIntermediacionesRecogidas as $arrIntermediacionesRecogida) {
+                            $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arrIntermediacionesRecogida['codigoPoseedorFk']);
+                            //Flete cobro
+                            if($arrIntermediacionesRecogida['codigoCuentaFleteFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrIntermediacionesRecogida['codigoCuentaFleteFk']);
+                                if(!$arCuenta) {
+                                    $error = "No se encuentra la cuenta del flete " . $arrIntermediacionesRecogida['codigoCuentaFleteFk'];
+                                    break;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                $arRegistro->setFecha($arIntermediacion['fecha']);
+                                $arRegistro->setVrCredito($arrIntermediacionesRecogida['vrFleteParticipacion']);
+                                $arRegistro->setNaturaleza('C');
+                                $arRegistro->setCodigoModeloFk('TteIntermediacion');
+                                $arRegistro->setCodigoDocumento($codigo);
+
+                                $arRegistro->setDescripcion('FLETE PAGO RECOGIDA');
                                 $em->persist($arRegistro);
                             } else {
                                 $error = "El tipo de despacho no tiene configurada la cuenta para el flete pagado";

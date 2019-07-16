@@ -121,9 +121,19 @@ class TtePoseedor
     protected $intermediacionesComprasPoseedorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionRecogida", mappedBy="poseedorRel")
+     */
+    protected $intermediacionesRecogidasPoseedorRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespacho", mappedBy="poseedorRel")
      */
     protected $despachosPoseedorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoRecogida", mappedBy="poseedorRel")
+     */
+    protected $despachosRecogidasPoseedorRel;
 
     /**
      * @return mixed
@@ -444,6 +454,39 @@ class TtePoseedor
     {
         $this->despachosPoseedorRel = $despachosPoseedorRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesRecogidasPoseedorRel()
+    {
+        return $this->intermediacionesRecogidasPoseedorRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesRecogidasPoseedorRel
+     */
+    public function setIntermediacionesRecogidasPoseedorRel($intermediacionesRecogidasPoseedorRel): void
+    {
+        $this->intermediacionesRecogidasPoseedorRel = $intermediacionesRecogidasPoseedorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosRecogidasPoseedorRel()
+    {
+        return $this->despachosRecogidasPoseedorRel;
+    }
+
+    /**
+     * @param mixed $despachosRecogidasPoseedorRel
+     */
+    public function setDespachosRecogidasPoseedorRel($despachosRecogidasPoseedorRel): void
+    {
+        $this->despachosRecogidasPoseedorRel = $despachosRecogidasPoseedorRel;
+    }
+
 
 
 }

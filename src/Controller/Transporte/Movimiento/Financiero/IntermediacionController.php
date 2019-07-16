@@ -7,6 +7,7 @@ use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteIntermediacion;
 use App\Entity\Transporte\TteIntermediacionCompra;
 use App\Entity\Transporte\TteIntermediacionDetalle;
+use App\Entity\Transporte\TteIntermediacionRecogida;
 use App\Entity\Transporte\TteIntermediacionVenta;
 use App\Entity\TteGuia;
 use App\Form\Type\Transporte\IntermediacionType;
@@ -135,10 +136,12 @@ class IntermediacionController extends Controller
         }
         $arIntermediacionVentas = $this->getDoctrine()->getRepository(TteIntermediacionVenta::class)->detalle($id);
         $arIntermediacionCompras = $this->getDoctrine()->getRepository(TteIntermediacionCompra::class)->detalle($id);
+        $arIntermediacionRecogidas = $this->getDoctrine()->getRepository(TteIntermediacionRecogida::class)->detalle($id);
         return $this->render('transporte/movimiento/financiero/intermediacion/detalle.html.twig', [
             'arIntermediacion' => $arIntermediacion,
             'arIntermediacionVentas' => $arIntermediacionVentas,
             'arIntermediacionCompras' => $arIntermediacionCompras,
+            'arIntermediacionRecogidas' => $arIntermediacionRecogidas,
             'clase' => array('clase' => 'TteIntermediacion', 'codigo' => $id),
             'form' => $form->createView()]);
     }

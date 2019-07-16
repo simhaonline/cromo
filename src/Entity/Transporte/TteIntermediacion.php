@@ -44,6 +44,16 @@ class TteIntermediacion
     private $vrFletePago = 0;
 
     /**
+     * @ORM\Column(name="vr_flete_pago_recogida", type="float", options={"default" : 0})
+     */
+    private $vrFletePagoRecogida = 0;
+
+    /**
+     * @ORM\Column(name="vr_flete_pago_total", type="float", options={"default" : 0})
+     */
+    private $vrFletePagoTotal = 0;
+
+    /**
      * @ORM\Column(name="vr_flete_cobro", type="float", options={"default" : 0})
      */
     private $vrFleteCobro = 0;
@@ -82,6 +92,11 @@ class TteIntermediacion
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionCompra", mappedBy="intermediacionRel")
      */
     protected $intermediacionesComprasIntermediacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionRecogida", mappedBy="intermediacionRel")
+     */
+    protected $intermediacionesRecogidasIntermediacionRel;
 
     /**
      * @return mixed
@@ -289,6 +304,54 @@ class TteIntermediacion
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrFletePagoRecogida()
+    {
+        return $this->vrFletePagoRecogida;
+    }
+
+    /**
+     * @param mixed $vrFletePagoRecogida
+     */
+    public function setVrFletePagoRecogida($vrFletePagoRecogida): void
+    {
+        $this->vrFletePagoRecogida = $vrFletePagoRecogida;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrFletePagoTotal()
+    {
+        return $this->vrFletePagoTotal;
+    }
+
+    /**
+     * @param mixed $vrFletePagoTotal
+     */
+    public function setVrFletePagoTotal($vrFletePagoTotal): void
+    {
+        $this->vrFletePagoTotal = $vrFletePagoTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesRecogidasIntermediacionRel()
+    {
+        return $this->intermediacionesRecogidasIntermediacionRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesRecogidasIntermediacionRel
+     */
+    public function setIntermediacionesRecogidasIntermediacionRel($intermediacionesRecogidasIntermediacionRel): void
+    {
+        $this->intermediacionesRecogidasIntermediacionRel = $intermediacionesRecogidasIntermediacionRel;
     }
 
 

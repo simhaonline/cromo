@@ -795,4 +795,33 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function fletePago($fechaDesde, $fechaHasta)
+    {
+        $valor = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'd')
+            ->select("SUM(d.vrFletePago) as fletePago")
+            ->where("d.fecha >='" . $fechaDesde . "' AND d.fecha <= '" . $fechaHasta . "'")
+            ->andWhere('d.estadoAprobado = 1');
+        $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+        if ($arrResultado['fletePago']) {
+            $valor = $arrResultado['fletePago'];
+        }
+        return $valor;
+    }
+
+    public function fletePagoDetallado($fechaDesde, $fechaHasta)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'd')
+            ->select("d.codigoPoseedorFk")
+            ->addSelect('d.codigoDespachoRecogidaTipoFk')
+            ->addSelect("SUM(d.vrFletePago) as fletePago")
+            ->leftJoin('d.despachoRecogidaTipoRel', 'dt')
+            ->where("d.fecha >='" . $fechaDesde . "' AND d.fecha <= '" . $fechaHasta . "'")
+            ->andWhere('d.estadoAprobado = 1')
+            ->groupBy('d.codigoPoseedorFk')
+            ->addGroupBy('d.codigoDespachoRecogidaTipoFk');
+        $arrResultado = $queryBuilder->getQuery()->getResult();
+        return $arrResultado;
+    }
+
 }

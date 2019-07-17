@@ -105,8 +105,22 @@ class DespachoRecogida extends \FPDF {
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(65, 6, number_format($arDespacho->getVrRetencionFuente()), 1, 0, 'R', 1);
-
+        //LINEA 4
         $this->SetXY(10, 64);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, 'CELULAR:', 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial','', 8);
+        $this->Cell(66, 6, utf8_decode($arDespacho->getConductorRel()->getMovil()) , 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "ESTAMPILLA:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 6, number_format($arDespacho->getVrDescuentoEstampilla()), 1, 0, 'R', 1);
+        //LIENA 5
+        $this->SetXY(10, 70);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(30, 6, 'AUXILIAR:', 1, 0, 'L', 1);
@@ -115,25 +129,12 @@ class DespachoRecogida extends \FPDF {
         $this->Cell(66, 6, $arAuxiliarDespacho ? $arAuxiliarDespacho->getAuxiliarRel()->getNombreCorto() : '' , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "ESTAMPILLA:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arDespacho->getVrDescuentoEstampilla()), 1, 0, 'R', 1);
-
-        $this->SetXY(10, 70);
-        $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, 'RUTA', 1, 0, 'L', 1);
-        $this->SetFillColor(272, 272, 272);
-        $this->SetFont('Arial','', 8);
-        $this->Cell(66, 6, $arDespacho->getRutaRecogidaRel()->getNombre() , 1, 0, 'L', 1);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "SALDO:", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 8);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arDespacho->getVrSaldo()), 1, 0, 'R', 1);
-
+        $this->Cell(65, 6, '', 1, 0, 'L', 1);
+//
+        //linea 6
         $this->SetXY(10, 76);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
@@ -147,8 +148,22 @@ class DespachoRecogida extends \FPDF {
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
         $this->Cell(65, 6, '', 1, 0, 'L', 1);
-
+        //linea 7
         $this->SetXY(10, 82);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, 'RUTA', 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial','', 8);
+        $this->Cell(66, 6, $arDespacho->getRutaRecogidaRel()->getNombre() , 1, 0, 'L', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(65, 6, '', 1, 0, 'L', 1);
+
+        $this->SetXY(10, 88);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(30, 6, 'COMENTARIOS:', 1, 0, 'L', 1);

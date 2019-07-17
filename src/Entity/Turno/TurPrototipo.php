@@ -32,6 +32,11 @@ class TurPrototipo
     private $codigoEmpleadoFk;
 
     /**
+     * @ORM\Column(name="codigo_secuencia_fk", type="string", length=5, nullable=true)
+     */
+    private $codigoSecuenciaFk;
+
+    /**
      * @ORM\Column(name="fecha_inicio_secuencia", type="date", nullable=true)
      */
     protected $fechaInicioSecuencia;
@@ -52,6 +57,12 @@ class TurPrototipo
      * @ORM\JoinColumn(name="codigo_empleado_fk",referencedColumnName="codigo_empleado_pk")
      */
     protected $empleadoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurSecuencia", inversedBy="prototiposSecuenciaRel")
+     * @ORM\JoinColumn(name="codigo_secuencia_fk",referencedColumnName="codigo_secuencia_pk")
+     */
+    protected $secuenciaRel;
 
     /**
      * @return mixed
@@ -163,6 +174,38 @@ class TurPrototipo
     public function setEmpleadoRel($empleadoRel): void
     {
         $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSecuenciaFk()
+    {
+        return $this->codigoSecuenciaFk;
+    }
+
+    /**
+     * @param mixed $codigoSecuenciaFk
+     */
+    public function setCodigoSecuenciaFk($codigoSecuenciaFk): void
+    {
+        $this->codigoSecuenciaFk = $codigoSecuenciaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSecuenciaRel()
+    {
+        return $this->secuenciaRel;
+    }
+
+    /**
+     * @param mixed $secuenciaRel
+     */
+    public function setSecuenciaRel($secuenciaRel): void
+    {
+        $this->secuenciaRel = $secuenciaRel;
     }
 
 

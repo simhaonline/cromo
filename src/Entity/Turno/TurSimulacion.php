@@ -4,29 +4,39 @@
 namespace App\Entity\Turno;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Turno\TurSecuenciaRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Turno\TurSimulacionRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
-class TurSecuencia
+class TurSimulacion
 {
     public $infoLog = [
-        "primaryKey" => "codigoSecuenciaPk",
+        "primaryKey" => "codigoSimulacionPk",
         "todos"     => true,
     ];
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_secuencia_pk", type="string", length=5)
+     * @ORM\Column(name="codigo_simulacion_pk", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $codigoSecuenciaPk;
+    private $codigoSimulacionPk;
 
     /**
-     * @ORM\Column(name="nombre", type="string", length=60, nullable=true)
+     * @ORM\Column(name="codigo_pedido_detalle_fk", type="integer")
      */
-    private $nombre;
+    private $codigoPedidoDetalleFk;
+
+    /**
+     * @ORM\Column(name="anio", type="integer")
+     */
+    private $anio = 0;
+
+    /**
+     * @ORM\Column(name="mes", type="integer")
+     */
+    private $mes = 0;
 
     /**
      * @ORM\Column(name="dia_1", type="string", length=5, nullable=true)
@@ -184,95 +194,88 @@ class TurSecuencia
     private $dia31;
 
     /**
-     * @ORM\Column(name="lunes", type="string", length=5, nullable=true)
-     */
-    private $lunes;
-
-    /**
-     * @ORM\Column(name="martes", type="string", length=5, nullable=true)
-     */
-    private $martes;
-
-    /**
-     * @ORM\Column(name="miercoles", type="string", length=5, nullable=true)
-     */
-    private $miercoles;
-
-    /**
-     * @ORM\Column(name="jueves", type="string", length=5, nullable=true)
-     */
-    private $jueves;
-
-    /**
-     * @ORM\Column(name="viernes", type="string", length=5, nullable=true)
-     */
-    private $viernes;
-
-    /**
-     * @ORM\Column(name="sabado", type="string", length=5, nullable=true)
-     */
-    private $sabado;
-
-    /**
-     * @ORM\Column(name="domingo", type="string", length=5, nullable=true)
-     */
-    private $domingo;
-
-    /**
-     * @ORM\Column(name="festivo", type="string", length=5, nullable=true)
-     */
-    private $festivo;
-
-    /**
-     * @ORM\Column(name="domingo_festivo", type="string", length=5, nullable=true)
-     */
-    private $domingoFestivo;
-
-    /**
-     * @ORM\Column(name="horas", type="integer", nullable=true)
+     * @ORM\Column(name="horas", type="float", options={"default" : 0})
      */
     private $horas = 0;
 
     /**
-     * @ORM\Column(name="dias", type="integer", nullable=true)
+     * @ORM\Column(name="horas_diurnas", type="float", options={"default" : 0})
      */
-    private $dias = 0;
+    private $horasDiurnas = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurPrototipo", mappedBy="secuenciaRel")
+     * @ORM\Column(name="horas_nocturnas", type="float", options={"default" : 0})
      */
-    protected $prototiposSecuenciaRel;
+    private $horasNocturnas = 0;
 
     /**
-     * @return mixed
+     * @ORM\ManyToOne(targetEntity="TurPedidoDetalle", inversedBy="simulacionesPedidoDetalleRel")
+     * @ORM\JoinColumn(name="codigo_pedido_detalle_fk", referencedColumnName="codigo_pedido_detalle_pk")
      */
-    public function getCodigoSecuenciaPk()
-    {
-        return $this->codigoSecuenciaPk;
-    }
-
-    /**
-     * @param mixed $codigoSecuenciaPk
-     */
-    public function setCodigoSecuenciaPk($codigoSecuenciaPk): void
-    {
-        $this->codigoSecuenciaPk = $codigoSecuenciaPk;
-    }
+    protected $pedidoDetalleRel;
 
     /**
      * @return mixed
      */
-    public function getNombre()
+    public function getCodigoSimulacionPk()
     {
-        return $this->nombre;
+        return $this->codigoSimulacionPk;
     }
 
     /**
-     * @param mixed $nombre
+     * @param mixed $codigoSimulacionPk
      */
-    public function setNombre($nombre): void
+    public function setCodigoSimulacionPk($codigoSimulacionPk): void
     {
-        $this->nombre = $nombre;
+        $this->codigoSimulacionPk = $codigoSimulacionPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPedidoDetalleFk()
+    {
+        return $this->codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoPedidoDetalleFk
+     */
+    public function setCodigoPedidoDetalleFk($codigoPedidoDetalleFk): void
+    {
+        $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnio()
+    {
+        return $this->anio;
+    }
+
+    /**
+     * @param mixed $anio
+     */
+    public function setAnio($anio): void
+    {
+        $this->anio = $anio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMes()
+    {
+        return $this->mes;
+    }
+
+    /**
+     * @param mixed $mes
+     */
+    public function setMes($mes): void
+    {
+        $this->mes = $mes;
     }
 
     /**
@@ -774,150 +777,6 @@ class TurSecuencia
     /**
      * @return mixed
      */
-    public function getLunes()
-    {
-        return $this->lunes;
-    }
-
-    /**
-     * @param mixed $lunes
-     */
-    public function setLunes($lunes): void
-    {
-        $this->lunes = $lunes;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMartes()
-    {
-        return $this->martes;
-    }
-
-    /**
-     * @param mixed $martes
-     */
-    public function setMartes($martes): void
-    {
-        $this->martes = $martes;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMiercoles()
-    {
-        return $this->miercoles;
-    }
-
-    /**
-     * @param mixed $miercoles
-     */
-    public function setMiercoles($miercoles): void
-    {
-        $this->miercoles = $miercoles;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getJueves()
-    {
-        return $this->jueves;
-    }
-
-    /**
-     * @param mixed $jueves
-     */
-    public function setJueves($jueves): void
-    {
-        $this->jueves = $jueves;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getViernes()
-    {
-        return $this->viernes;
-    }
-
-    /**
-     * @param mixed $viernes
-     */
-    public function setViernes($viernes): void
-    {
-        $this->viernes = $viernes;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSabado()
-    {
-        return $this->sabado;
-    }
-
-    /**
-     * @param mixed $sabado
-     */
-    public function setSabado($sabado): void
-    {
-        $this->sabado = $sabado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDomingo()
-    {
-        return $this->domingo;
-    }
-
-    /**
-     * @param mixed $domingo
-     */
-    public function setDomingo($domingo): void
-    {
-        $this->domingo = $domingo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFestivo()
-    {
-        return $this->festivo;
-    }
-
-    /**
-     * @param mixed $festivo
-     */
-    public function setFestivo($festivo): void
-    {
-        $this->festivo = $festivo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDomingoFestivo()
-    {
-        return $this->domingoFestivo;
-    }
-
-    /**
-     * @param mixed $domingoFestivo
-     */
-    public function setDomingoFestivo($domingoFestivo): void
-    {
-        $this->domingoFestivo = $domingoFestivo;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getHoras()
     {
         return $this->horas;
@@ -934,33 +793,49 @@ class TurSecuencia
     /**
      * @return mixed
      */
-    public function getDias()
+    public function getHorasDiurnas()
     {
-        return $this->dias;
+        return $this->horasDiurnas;
     }
 
     /**
-     * @param mixed $dias
+     * @param mixed $horasDiurnas
      */
-    public function setDias($dias): void
+    public function setHorasDiurnas($horasDiurnas): void
     {
-        $this->dias = $dias;
+        $this->horasDiurnas = $horasDiurnas;
     }
 
     /**
      * @return mixed
      */
-    public function getPrototiposSecuenciaRel()
+    public function getHorasNocturnas()
     {
-        return $this->prototiposSecuenciaRel;
+        return $this->horasNocturnas;
     }
 
     /**
-     * @param mixed $prototiposSecuenciaRel
+     * @param mixed $horasNocturnas
      */
-    public function setPrototiposSecuenciaRel($prototiposSecuenciaRel): void
+    public function setHorasNocturnas($horasNocturnas): void
     {
-        $this->prototiposSecuenciaRel = $prototiposSecuenciaRel;
+        $this->horasNocturnas = $horasNocturnas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidoDetalleRel()
+    {
+        return $this->pedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $pedidoDetalleRel
+     */
+    public function setPedidoDetalleRel($pedidoDetalleRel): void
+    {
+        $this->pedidoDetalleRel = $pedidoDetalleRel;
     }
 
 

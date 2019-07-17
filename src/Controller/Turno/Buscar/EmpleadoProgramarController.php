@@ -47,6 +47,8 @@ class EmpleadoProgramarController extends Controller
                         $arPrototipo = new TurPrototipo();
                         $arPrototipo->setEmpleadoRel($arEmpleado);
                         $arPrototipo->setContratoDetalleRel($arContratoDetalle);
+                        $arPrototipo->setFechaInicioSecuencia(new \DateTime('now'));
+                        $arPrototipo->setInicioSecuencia(0);
                         $em->persist($arPrototipo);
                     }
                     $em->flush();

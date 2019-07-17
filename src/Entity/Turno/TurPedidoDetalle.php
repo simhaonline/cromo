@@ -299,6 +299,11 @@ class TurPedidoDetalle
     protected $programacionesPedidoDetalleRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurSimulacion", mappedBy="pedidoDetalleRel")
+     */
+    protected $simulacionesPedidoDetalleRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPedidoDetallePk()
@@ -1160,6 +1165,22 @@ class TurPedidoDetalle
     public function setContratoDetalleRel($contratoDetalleRel): void
     {
         $this->contratoDetalleRel = $contratoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSimulacionesPedidoDetalleRel()
+    {
+        return $this->simulacionesPedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $simulacionesPedidoDetalleRel
+     */
+    public function setSimulacionesPedidoDetalleRel($simulacionesPedidoDetalleRel): void
+    {
+        $this->simulacionesPedidoDetalleRel = $simulacionesPedidoDetalleRel;
     }
 
 

@@ -13,6 +13,8 @@ use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurPrototipo;
+use App\Entity\Turno\TurSecuencia;
+use App\Entity\Turno\TurSimulacion;
 use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\ContratoDetalleType;
 use App\Form\Type\Turno\PedidoType;
@@ -31,25 +33,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProgramacionController extends Controller
 {
-
-    public function lista(Request $request)
-    {
-        $this->request = $request;
-        $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
-        $form = $this->createFormBuilder()
-
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
-        }
-        $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->lista(), $request->query->getInt('page', 1), 30);
-        return $this->render('turno/movimiento/operacion/programacion/lista.html.twig', [
-            'arPedidos' => $arPedidos,
-            'form' => $form->createView()
-        ]);
-    }
 
     /**
      * @Route("turno/utilidad/operacion/programacion", name="turno_utilidad_operacion_programacion")
@@ -78,17 +61,37 @@ class ProgramacionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($id);
-
+        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        $arrBtnSimular = ['label' => 'Simular', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-primary']];
+        $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $form = $this->createFormBuilder()
+            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
+            ->add('btnSimular', SubmitType::class, $arrBtnSimular)
+            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $arrControles = $request->request->all();
+            $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+            if($form->get('btnActualizar')->isClicked()) {
+                $em->getRepository(TurPrototipo::class)->actualizar($arrControles);
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $this->get("UtilidadesModelo")->eliminar(TurPrototipo::class, $arrDetallesSeleccionados);
+            }
+            if($form->get('btnSimular')->isClicked()) {
+                $em->getRepository(TurPrototipo::class)->generarSimulacion($arPedidoDetalle->getCodigoContratoDetalleFk());
+            }
+            return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
         }
         $arPrototipos = $em->getRepository(TurPrototipo::class)->listaProgramar($arPedidoDetalle->getCodigoContratoDetalleFk());
+        $arSimulaciones = $em->getRepository(TurSimulacion::class)->listaProgramar($id);
+        $arSecuencias = $em->getRepository(TurSecuencia::class)->findAll();
         return $this->render('turno/utilidad/operacion/programacion/prototipo.html.twig', [
             'arPrototipos' => $arPrototipos,
+            'arSimulaciones' => $arSimulaciones,
             'arPedidoDetalle' => $arPedidoDetalle,
+            'arSecuencias' => $arSecuencias,
             'form' => $form->createView()
         ]);
     }

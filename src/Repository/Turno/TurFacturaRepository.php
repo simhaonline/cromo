@@ -15,6 +15,7 @@ use App\Entity\Turno\TurPedidoDetalle;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TurFacturaRepository extends ServiceEntityRepository
 {
@@ -188,5 +189,35 @@ class TurFacturaRepository extends ServiceEntityRepository
                 }
             }
         }
+    }
+
+    public function informe()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFactura::class, 'f')
+            ->select('f')
+            ->leftJoin("f.clienteRel", "c");
+        if ($session->get('filtroTurInformeComercialFacturaClienteCodigo') != null) {
+            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTurInformeComercialFacturaClienteCodigo')}");
+        }
+        if ($session->get('filtroTurInformeComercialFacturaAutorizado') != null) {
+            $queryBuilder->andWhere("f.estadoAutorizado = {$session->get('filtroTurInformeComercialFacturaAutorizado')}");
+        }
+        if ($session->get('filtroTurInformeComercialFacturaAnulado') != null) {
+            $queryBuilder->andWhere("f.estadoAnulado = {$session->get('filtroTurInformeComercialFacturaAnulado ')}");
+        }
+        if ($session->get('filtroTurInformeComercialFacturaAprobado') != null) {
+            $queryBuilder->andWhere("f.estadoAprobado = {$session->get('filtroTurInformeComercialFacturaAprobado')}");
+        }
+        if ($session->get('filtroTurInformeComercialFacturaFechaDesde') != null) {
+            $queryBuilder->andWhere("f.fecha >= '{$session->get('filtroTurInformeComercialFacturaFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroTurInformeComercialFacturaFechaHasta') != null) {
+            $queryBuilder->andWhere("f.fecha <= '{$session->get('filtroTurInformeComercialFacturaFechaHasta')} 23:59:59'");
+        }
+        if ($session->get('filtroTurInformeComercialFacturaCiudad') != null) {
+            $queryBuilder->andWhere("c.codigoCiudadFk = {$session->get('filtroTurInformeComercialFacturaCiudad')}");
+        }
+        return $queryBuilder;
     }
 }

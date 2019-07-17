@@ -61,7 +61,7 @@ class Factura extends \FPDF {
         $this->SetXY(50, 28);
         $this->Cell(25, 4, utf8_decode("SOMOS REGIMEN COMUN NO RESPONSABLES DE IVA"), 0, 0, 'l', 1);
         $this->SetXY(45, 31.5);
-        $this->Cell(25, 4, utf8_decode("CODIGO CIIU 4923 TRANSPORTE DE CARGA POR CARRETERA"), 0, 0, 'l', 1);
+        $this->Cell(25, 4, utf8_decode("CODIGO CIIU 4923 TRANSPORTE DE CARGA POR CARRETERA EXCLUIDA DE IVA"), 0, 0, 'l', 1);
 
         $y = 20;
         $this->SetFont('Arial', 'B', 10);
@@ -206,19 +206,25 @@ class Factura extends \FPDF {
         $this->SetXY(10, 220);
         $this->SetFont('Arial','B', 9);
         $this->Cell(40, 10, 'TOTAL FLETE:', 0, 0, 'L');
-        $this->SetXY(40, 220);
+        $this->SetXY(23, 220);
         $this->SetFont('Arial','', 9);
         $this->Cell(40, 10, number_format($arFactura->getVrFlete(), 0, '.', '.'), 0, 0, 'C');
-        $this->SetXY(70, 220);
+        $this->SetXY(60, 220);
         $this->SetFont('Arial','B', 9);
         $this->Cell(40, 10, 'TOTAL MANEJO:', 0, 0, 'C');
-        $this->SetXY(100, 220);
+        $this->SetXY(80, 220);
         $this->SetFont('Arial','', 9);
         $this->Cell(40, 10, number_format($arFactura->getVrManejo(), 0, '.', '.'), 0, 0, 'C');
+        $this->SetXY(110, 220);
+        $this->SetFont('Arial','B', 9);
+        $this->Cell(40, 10, 'IVA:', 0, 0, 'C');
         $this->SetXY(130, 220);
+        $this->SetFont('Arial','', 9);
+        $this->Cell(10, 10, number_format($arFactura->getVrIva(), 0, '.', '.'), 0, 0, 'C');
+        $this->SetXY(140, 220);
         $this->SetFont('Arial','B', 9);
         $this->Cell(40, 10, 'TOTAL FACTURA:', 0, 0, 'C');
-        $this->SetXY(160, 220);
+        $this->SetXY(170, 220);
         $this->SetFont('Arial','', 9);
         $this->Cell(40, 10, number_format($arFactura->getVrTotal(), 0, '.', '.'), 0, 0, 'C');
         $this->SetXY(10, 220);

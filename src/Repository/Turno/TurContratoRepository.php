@@ -323,6 +323,19 @@ class TurContratoRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContrato::class, 'c')
             ->select('c.codigoContratoPk')
+            ->addSelect('c.vrTotal')
+            ->addSelect('c.horas')
+            ->addSelect('c.horasDiurnas')
+            ->addSelect('c.horasNocturnas')
+            ->addSelect('c.estadoAutorizado')
+            ->addSelect('c.estadoCerrado')
+            ->addSelect('cli.numeroIdentificacion as clienteNumeroIdentificacion')
+            ->addSelect('cli.nombreCorto as clienteNombreCorto')
+            ->addSelect('sec.nombre as sectorNombre')
+            ->addSelect('ct.nombre as contratoTipoNombre')
+            ->leftJoin('c.contratoTipoRel', 'ct')
+            ->leftJoin('c.clienteRel', 'cli')
+            ->leftJoin('c.sectorRel', 'sec')
             ->where("c.fechaGeneracion < '{$fecha}'");
         $arContratos = $queryBuilder->getQuery()->getResult();
         return $arContratos;
@@ -356,7 +369,7 @@ class TurContratoRepository extends ServiceEntityRepository
                     foreach ($arContratoDetalles as $arContratoDetalle) {
                         $arPedidoDetalle = new TurPedidoDetalle();
                         $arPedidoDetalle->setPedidoRel($arPedido);
-
+                        $arPedidoDetalle->setContratoDetalleRel($arContratoDetalle);
                         $diaInicial = 0;
                         $diaFinal = 0;
                         $fechaProceso = $fechaDesde;

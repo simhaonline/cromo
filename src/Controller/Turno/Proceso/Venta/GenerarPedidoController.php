@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Turno\Proceso\Comercial;
+namespace App\Controller\Turno\Proceso\Venta;
 
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteFactura;
@@ -24,7 +24,7 @@ class GenerarPedidoController extends Controller
      * @param Request $request
      * @return Response
      * @throws \Doctrine\ORM\ORMException
-     * @Route("/turno/proceso/comercial/generarpedido", name="turno_proceso_comercial_generarpedido")
+     * @Route("/turno/proceso/ventas/generarpedido", name="turno_proceso_venta_generarpedido")
      */
     public function lista(Request $request)
     {
@@ -67,7 +67,7 @@ class GenerarPedidoController extends Controller
             }
         }
 
-        return $this->render('turno/proceso/comercial/generarPedido.html.twig', array(
+        return $this->render('turno/proceso/venta/generarPedido.html.twig', array(
             'arContratos' => $arContratos,
             'form' => $form->createView()));
     }

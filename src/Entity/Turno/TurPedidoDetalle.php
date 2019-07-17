@@ -44,6 +44,11 @@ class TurPedidoDetalle
     private $codigoPuestoFk;
 
     /**
+     * @ORM\Column(name="codigo_contrato_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoContratoDetalleFk;
+
+    /**
      * @ORM\Column(name="periodo", type="string", length=1, nullable=true)
      */
     private $periodo;
@@ -281,6 +286,12 @@ class TurPedidoDetalle
      * @ORM\JoinColumn(name="codigo_puesto_fk", referencedColumnName="codigo_puesto_pk")
      */
     protected $puestoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurContratoDetalle", inversedBy="pedidosDetallesContratoDetalleRel")
+     * @ORM\JoinColumn(name="codigo_contrato_detalle_fk", referencedColumnName="codigo_contrato_detalle_pk")
+     */
+    protected $contratoDetalleRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="pedidoDetalleRel")
@@ -1117,6 +1128,38 @@ class TurPedidoDetalle
     public function setEstadoProgramado($estadoProgramado): void
     {
         $this->estadoProgramado = $estadoProgramado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoDetalleFk()
+    {
+        return $this->codigoContratoDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoDetalleFk
+     */
+    public function setCodigoContratoDetalleFk($codigoContratoDetalleFk): void
+    {
+        $this->codigoContratoDetalleFk = $codigoContratoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoDetalleRel()
+    {
+        return $this->contratoDetalleRel;
+    }
+
+    /**
+     * @param mixed $contratoDetalleRel
+     */
+    public function setContratoDetalleRel($contratoDetalleRel): void
+    {
+        $this->contratoDetalleRel = $contratoDetalleRel;
     }
 
 

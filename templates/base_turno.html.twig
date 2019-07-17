@@ -19,18 +19,18 @@
                     <a href="#">Juridico <span class="fa arrow"></span></a>
                     <ul>
                         <li>
-                            <a href="{{ path('turno_movimiento_comercial_contrato_lista') }}">Contrato</a>
+                            <a href="{{ path('turno_movimiento_juridico_contrato_lista') }}">Contrato</a>
                         </li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#">Facturacion <span class="fa arrow"></span></a>
+                    <a href="#">Ventas <span class="fa arrow"></span></a>
                     <ul>
                         <li>
-                            <a href="{{ path('turno_movimiento_comercial_pedido_lista') }}">Pedido</a>
+                            <a href="{{ path('turno_movimiento_venta_pedido_lista') }}">Pedido</a>
                         </li>
                         <li>
-                            <a href="{{ path('turno_movimiento_comercial_factura_lista') }}">Factura</a>
+                            <a href="{{ path('turno_movimiento_venta_factura_lista') }}">Factura</a>
                         </li>
                     </ul>
                 </li>
@@ -72,7 +72,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#">Facturacion<span class="fa arrow"></span></a>
+                    <a href="#">Ventas <span class="fa arrow"></span></a>
                     <ul>
                         <li><a href="{{ path('turno_administracion_comercial_item_lista') }}">Item</a></li>
                     </ul>
@@ -97,9 +97,9 @@
             </a>
             <ul {% if arrRuta.1 == 'proceso' %}style="display: block;"{% endif %} >
                 <li>
-                    <a href="#">Comercial <span class="fa arrow"></span></a>
+                    <a href="#">Ventas <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('turno_proceso_comercial_generarpedido') }}">Generar pedido</a></li>
+                        <li><a href="{{ path('turno_proceso_venta_generarpedido') }}">Generar pedido</a></li>
                     </ul>
                 </li>
             </ul>

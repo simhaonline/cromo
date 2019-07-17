@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Turno\Movimiento\Comercial;
+namespace App\Controller\Turno\Movimiento\Venta;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -30,7 +30,7 @@ class PedidoController extends ControllerListenerGeneral
     protected $claseNombre = "TurPedido";
     protected $modulo = "Turno";
     protected $funcion = "Movimiento";
-    protected $grupo = "Comercial";
+    protected $grupo = "Venta";
     protected $nombre = "Pedido";
 
     /**
@@ -39,7 +39,7 @@ class PedidoController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/turno/movimiento/comercial/pedido/lista", name="turno_movimiento_comercial_pedido_lista")
+     * @Route("/turno/movimiento/venta/pedido/lista", name="turno_movimiento_venta_pedido_lista")
      */
     public function lista(Request $request)
     {
@@ -64,10 +64,10 @@ class PedidoController extends ControllerListenerGeneral
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurPedido::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('turno_movimiento_comercial_pedido_lista'));
+                return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_lista'));
             }
         }
-        return $this->render('turno/movimiento/comercial/pedido/lista.html.twig', [
+        return $this->render('turno/movimiento/venta/pedido/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView(),
@@ -75,7 +75,7 @@ class PedidoController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/turno/movimiento/comercial/pedido/nuevo/{id}", name="turno_movimiento_comercial_pedido_nuevo")
+     * @Route("/turno/movimiento/comercial/pedido/nuevo/{id}", name="turno_movimiento_venta_pedido_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -84,7 +84,7 @@ class PedidoController extends ControllerListenerGeneral
         if ($id != '0') {
             $arPedido = $em->getRepository(TurPedido::class)->find($id);
             if (!$arPedido) {
-                return $this->redirect($this->generateUrl('turno_movimiento_comercial_pedido_lista'));
+                return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_lista'));
             }
         } else {
             $arrConfiguracion = $em->getRepository(TurConfiguracion::class)->comercialNuevo();
@@ -110,7 +110,7 @@ class PedidoController extends ControllerListenerGeneral
                         }
                         $em->persist($arPedido);
                         $em->flush();
-                        return $this->redirect($this->generateUrl('turno_movimiento_comercial_pedido_detalle', ['id' => $arPedido->getCodigoPedidoPk()]));
+                        return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_detalle', ['id' => $arPedido->getCodigoPedidoPk()]));
                     }
                 } else {
                     Mensajes::error('Debe seleccionar un cliente');
@@ -132,7 +132,7 @@ class PedidoController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @Route("/turno/movimiento/comercial/pedido/detalle/{id}", name="turno_movimiento_comercial_pedido_detalle")
+     * @Route("/turno/movimiento/venta/pedido/detalle/{id}", name="turno_movimiento_venta_pedido_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -180,10 +180,10 @@ class PedidoController extends ControllerListenerGeneral
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TurPedidoDetalle::class)->actualizarDetalles($arrControles, $form, $arPedido);
             }
-            return $this->redirect($this->generateUrl('turno_movimiento_comercial_pedido_detalle', ['id' => $id]));
+            return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_detalle', ['id' => $id]));
         }
         $arPedidoDetalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);
-        return $this->render('turno/movimiento/comercial/pedido/detalle.html.twig', [
+        return $this->render('turno/movimiento/venta/pedido/detalle.html.twig', [
             'form' => $form->createView(),
             'arPedidoDetalles' => $arPedidoDetalles,
             'arPedido' => $arPedido
@@ -196,7 +196,7 @@ class PedidoController extends ControllerListenerGeneral
      * @param $codigoPedidoDetalle
      * @return Response
      * @throws \Exception
-     * @Route("/turno/movimiento/comercial/pedido/detalle/nuevo/{codigoPedido}/{id}", name="turno_movimiento_comercial_pedido_detalle_nuevo")
+     * @Route("/turno/movimiento/venta/pedido/detalle/nuevo/{codigoPedido}/{id}", name="turno_movimiento_venta_pedido_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $codigoPedido, $id)
     {

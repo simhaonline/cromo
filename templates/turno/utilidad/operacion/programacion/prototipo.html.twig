@@ -1,0 +1,24 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <br>
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arPrototipo in arPrototipos %}
+            <tr>
+                <td>{{ arPrototipo.codigoPrototipoPk }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: right">
+        <a class="btn btn-default btn-sm"
+           href="javascript:abrirVentana3('{{ path('turno_buscar_empleadoprogramar', {'codigoContratoDetalle': arPedidoDetalle.codigoContratoDetalleFk }) }}', 'ProgramarEmpleado', 600, 1200)">Nuevo</a>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

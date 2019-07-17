@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Turno\Movimiento\Comercial;
+namespace App\Controller\Turno\Movimiento\Venta;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -26,7 +26,7 @@ class FacturaController extends ControllerListenerGeneral
     protected $claseNombre = "TurFactura";
     protected $modulo = "Turno";
     protected $funcion = "Movimiento";
-    protected $grupo = "Comercial";
+    protected $grupo = "Venta";
     protected $nombre = "Factura";
 
     /**
@@ -35,7 +35,7 @@ class FacturaController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/turno/movimiento/comercial/factura/lista", name="turno_movimiento_comercial_factura_lista")
+     * @Route("/turno/movimiento/comercial/factura/lista", name="turno_movimiento_venta_factura_lista")
      */
     public function lista(Request $request)
     {
@@ -59,7 +59,7 @@ class FacturaController extends ControllerListenerGeneral
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurFactura::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('turno_movimiento_comercial_factura_lista'));
+                return $this->redirect($this->generateUrl('turno_movimiento_venta_factura_lista'));
             }
         }
         return $this->render('turno/movimiento/comercial/factura/lista.html.twig', [
@@ -70,7 +70,7 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/turno/movimiento/comercial/factura/nuevo/{id}", name="turno_movimiento_comercial_factura_nuevo")
+     * @Route("/turno/movimiento/comercial/factura/nuevo/{id}", name="turno_movimiento_venta_factura_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -97,7 +97,7 @@ class FacturaController extends ControllerListenerGeneral
                         }
                         $em->persist($arFactura);
                         $em->flush();
-                        return $this->redirect($this->generateUrl('turno_movimiento_comercial_factura_detalle', ['id' => $arFactura->getCodigoFacturaPk()]));
+                        return $this->redirect($this->generateUrl('turno_movimiento_venta_factura_detalle', ['id' => $arFactura->getCodigoFacturaPk()]));
                     }
                 } else {
                     Mensajes::error('Debe seleccionar un cliente');
@@ -118,7 +118,7 @@ class FacturaController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @Route("/turno/movimiento/comercial/factura/detalle/{id}", name="turno_movimiento_comercial_factura_detalle")
+     * @Route("/turno/movimiento/comercial/factura/detalle/{id}", name="turno_movimiento_venta_factura_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -166,7 +166,7 @@ class FacturaController extends ControllerListenerGeneral
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TurFacturaDetalle::class)->actualizarDetalles($arrControles, $form, $arFactura);
             }
-            return $this->redirect($this->generateUrl('turno_movimiento_comercial_factura_detalle', ['id' => $id]));
+            return $this->redirect($this->generateUrl('turno_movimiento_venta_factura_detalle', ['id' => $id]));
         }
         $arImpuestosIva = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'I'));
         $arImpuestosRetencion = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'R'));
@@ -184,7 +184,7 @@ class FacturaController extends ControllerListenerGeneral
      * @param Request $request
      * @param $id
      * @return Response
-     * @Route("/turno/movimiento/comercial/factura/detalle/nuevo/{id}", name="turno_movimiento_comercial_factura_detalle_nuevo")
+     * @Route("/turno/movimiento/comercial/factura/detalle/nuevo/{id}", name="turno_movimiento_venta_factura_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id)
     {

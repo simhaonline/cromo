@@ -12,6 +12,7 @@ use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurPrototipo;
 use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\ContratoDetalleType;
 use App\Form\Type\Turno\PedidoType;
@@ -51,7 +52,7 @@ class ProgramacionController extends Controller
     }
 
     /**
-     * @Route("/turno/utilidad/operacion/programacion", name="turno_utilidad_operacion_programacion")
+     * @Route("turno/utilidad/operacion/programacion", name="turno_utilidad_operacion_programacion")
      */
     public function detalle(Request $request)
     {
@@ -70,5 +71,26 @@ class ProgramacionController extends Controller
         ]);
     }
 
+    /**
+     * @Route("turno/utilidad/operacion/programacion/detalle/{id}", name="turno_utilidad_operacion_programacion_detalle")
+     */
+    public function prototipo(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($id);
+
+        $form = $this->createFormBuilder()
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+        }
+        $arPrototipos = $em->getRepository(TurPrototipo::class)->listaProgramar($arPedidoDetalle->getCodigoContratoDetalleFk());
+        return $this->render('turno/utilidad/operacion/programacion/prototipo.html.twig', [
+            'arPrototipos' => $arPrototipos,
+            'arPedidoDetalle' => $arPedidoDetalle,
+            'form' => $form->createView()
+        ]);
+    }
 
 }

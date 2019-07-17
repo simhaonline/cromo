@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Turno\Movimiento\Comercial;
+namespace App\Controller\Turno\Movimiento\Juridico;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -27,7 +27,7 @@ class ContratoController extends ControllerListenerGeneral
     protected $claseNombre = "TurContrato";
     protected $modulo = "Turno";
     protected $funcion = "Movimiento";
-    protected $grupo = "Comercial";
+    protected $grupo = "Juridico";
     protected $nombre = "Contrato";
 
 
@@ -38,7 +38,7 @@ class ContratoController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/turno/movimiento/comercial/contrato/lista", name="turno_movimiento_comercial_contrato_lista")
+     * @Route("/turno/movimiento/juridico/contrato/lista", name="turno_movimiento_juridico_contrato_lista")
      */
     public function lista(Request $request)
     {
@@ -65,7 +65,7 @@ class ContratoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('turno_movimiento_comercial_contrato_lista'));
             }
         }
-        return $this->render('turno/movimiento/comercial/contrato/lista.html.twig', [
+        return $this->render('turno/movimiento/juridico/contrato/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),
             'formFiltro' => $formFiltro->createView()
@@ -77,7 +77,7 @@ class ContratoController extends ControllerListenerGeneral
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws \Exception
-     * @Route("/turno/movimiento/contrato/nuevo/{id}", name="turno_movimiento_comercial_contrato_nuevo")
+     * @Route("/turno/movimiento/juridico/contrato/nuevo/{id}", name="turno_movimiento_juridico_contrato_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -86,7 +86,7 @@ class ContratoController extends ControllerListenerGeneral
         if ($id != '0') {
             $arContrato = $em->getRepository(TurContrato::class)->find($id);
             if (!$arContrato) {
-                return $this->redirect($this->generateUrl('turno_movimiento_comercial_contrato_lista'));
+                return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_lista'));
             }
         } else {
             $arrConfiguracion = $em->getRepository(TurConfiguracion::class)->comercialNuevo();
@@ -113,7 +113,7 @@ class ContratoController extends ControllerListenerGeneral
                         }
                         $em->persist($arContrato);
                         $em->flush();
-                        return $this->redirect($this->generateUrl('turno_movimiento_comercial_contrato_detalle', ['id' => $arContrato->getCodigoContratoPk()]));
+                        return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle', ['id' => $arContrato->getCodigoContratoPk()]));
                     }
                 } else {
                     Mensajes::error('Debe seleccionar un cliente');
@@ -135,7 +135,7 @@ class ContratoController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @Route("/turno/movimiento/contrato/detalle/{id}", name="turno_movimiento_comercial_contrato_detalle")
+     * @Route("/turno/movimiento/juridico/contrato/detalle/{id}", name="turno_movimiento_juridico_contrato_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -200,10 +200,10 @@ class ContratoController extends ControllerListenerGeneral
                 $em->getRepository(TurContrato::class)->liquidar($arContrato);
             }
 
-            return $this->redirect($this->generateUrl('turno_movimiento_comercial_contrato_detalle', ['id' => $id]));
+            return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle', ['id' => $id]));
         }
         $arContratoDetalles = $paginator->paginate($em->getRepository(TurContratoDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);
-        return $this->render('turno/movimiento/comercial/contrato/detalle.html.twig', array(
+        return $this->render('turno/movimiento/juridico/contrato/detalle.html.twig', array(
             'form' => $form->createView(),
             'arContratoDetalles' => $arContratoDetalles,
             'arContrato' => $arContrato
@@ -217,7 +217,7 @@ class ContratoController extends ControllerListenerGeneral
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @Route("/turno/movimiento/comercial/contrato/detalle/nuevo/{codigoContrato}/{id}", name="turno_movimiento_comercial_contrato_detalle_nuevo")
+     * @Route("/turno/movimiento/juridico/contrato/detalle/nuevo/{codigoContrato}/{id}", name="turno_movimiento_juridico_contrato_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $codigoContrato, $id)
     {
@@ -257,7 +257,7 @@ class ContratoController extends ControllerListenerGeneral
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        return $this->render('turno/movimiento/comercial/contrato/detalleNuevo.html.twig', [
+        return $this->render('turno/movimiento/juridico/contrato/detalleNuevo.html.twig', [
             'arContrato' => $arContrato,
             'form' => $form->createView()
         ]);

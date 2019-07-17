@@ -5,7 +5,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('turno_movimiento_comercial_contrato_lista') }}">Volver</a>
+               href="{{ path('turno_movimiento_juridico_contrato_lista') }}">Volver</a>
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
@@ -17,7 +17,7 @@
         {% if arContrato.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    {% include 'turno/movimiento/comercial/contrato/informacion.html.twig' %}
+    {% include 'turno/movimiento/juridico/contrato/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
@@ -95,7 +95,7 @@
                             <td class="numero">{{ arContratoDetalle.vrIva | number_format(0, '.', ',') }}</td>
                             <td class="numero">{{ arContratoDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
                             <td style="text-align: center;">
-                                <a href="javascript:abrirVentana3('{{ path('turno_movimiento_comercial_contrato_detalle_nuevo', {'codigoContrato': arContrato.codigoContratoPk, 'id': arContratoDetalle.codigoContratoDetallePk }) }}', 'contratoDetalle', 600, 900)"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
+                                <a href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato': arContrato.codigoContratoPk, 'id': arContratoDetalle.codigoContratoDetallePk }) }}', 'contratoDetalle', 600, 900)"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
                             </td>
                             <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arContratoDetalle.codigoContratoDetallePk }}"/></td>
                             </tr>
@@ -110,7 +110,7 @@
                                    value="Nuevo"/>
                         {% else %}
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('turno_movimiento_comercial_contrato_detalle_nuevo', {'codigoContrato':arContrato.codigoContratoPk,'id': 0 }) }}', 'ContratoAdicionarDetalle', 600, 1200)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato':arContrato.codigoContratoPk,'id': 0 }) }}', 'ContratoAdicionarDetalle', 600, 1200)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">

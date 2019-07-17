@@ -16,5 +16,16 @@ class TurPrototipoRepository extends ServiceEntityRepository
         parent::__construct($registry, TurPrototipo::class);
     }
 
+    public function listaProgramar($codigoContratoDetalle){
+        $session = new Session();
+        $arPrototipos = null;
+        if($codigoContratoDetalle) {
+            $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPrototipo::class, 'p')
+                ->select('p.codigoPrototipoPk')
+                ->where("p.codigoContratoDetalleFk = {$codigoContratoDetalle}");
+            $arPrototipos = $queryBuilder->getQuery()->getResult();
+        }
+        return $arPrototipos;
+    }
 
 }

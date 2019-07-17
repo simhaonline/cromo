@@ -62,11 +62,11 @@ class ContratoType extends AbstractType
             {"campo":"clienteRel.nombreCorto" ,"tipo":"texto"   ,"ayuda":"Cliente del contrato"                     ,"titulo":"CLIENTE", "relacion":""},
             {"campo":"sectorRel.nombre",      "tipo":"texto"   ,"ayuda":"Sector al que pertenece el cliente"       ,"titulo":"SECTOR", "relacion":""},
             {"campo":"horas",               "tipo":"texto"   ,"ayuda":"Contrato horas"                     ,"titulo":"H"},
-            {"campo":"horasDiurnas",               "tipo":"texto"   ,"ayuda":"Contrato horas diurnas"                     ,"titulo":"H:D"},
-            {"campo":"horasNocturnas",               "tipo":"texto"   ,"ayuda":"Contrato horas nocturnas"                     ,"titulo":"H:N"},
-            {"campo":"vrTotal",               "tipo":"texto"   ,"ayuda":"Total del contrato"                     ,"titulo":"VALOR"},
-            {"campo":"estadoAutorizado",               "tipo":"texto"   ,"ayuda":"Autoriza contrato"                     ,"titulo":"AUT"},
-            {"campo":"estadoCerrado",               "tipo":"texto"   ,"ayuda":"Contrato cerrado"                     ,"titulo":"CER"}
+            {"campo":"horasDiurnas",               "tipo":"texto"   ,"ayuda":"Contrato horas diurnas"                     ,"titulo":"HD"},
+            {"campo":"horasNocturnas",               "tipo":"texto"   ,"ayuda":"Contrato horas nocturnas"                     ,"titulo":"HN"},
+            {"campo":"vrTotal",               "tipo":"moneda"   ,"ayuda":"Total del contrato"                     ,"titulo":"VALOR"},
+            {"campo":"estadoAutorizado",               "tipo":"bool"   ,"ayuda":"Autoriza contrato"                     ,"titulo":"AUT"},
+            {"campo":"estadoCerrado",               "tipo":"bool"   ,"ayuda":"Contrato cerrado"                     ,"titulo":"CER"}
             
             
         ]';

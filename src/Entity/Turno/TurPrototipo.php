@@ -19,7 +19,7 @@ class TurPrototipo
      * @ORM\Column(name="codigo_prototipo_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $codigoContratoDetallePk;
+    private $codigoPrototipoPk;
 
     /**
      * @ORM\Column(name="codigo_contrato_detalle_fk", type="integer", nullable=true)
@@ -56,17 +56,17 @@ class TurPrototipo
     /**
      * @return mixed
      */
-    public function getCodigoContratoDetallePk()
+    public function getCodigoPrototipoPk()
     {
-        return $this->codigoContratoDetallePk;
+        return $this->codigoPrototipoPk;
     }
 
     /**
-     * @param mixed $codigoContratoDetallePk
+     * @param mixed $codigoPrototipoPk
      */
-    public function setCodigoContratoDetallePk($codigoContratoDetallePk): void
+    public function setCodigoPrototipoPk($codigoPrototipoPk): void
     {
-        $this->codigoContratoDetallePk = $codigoContratoDetallePk;
+        $this->codigoPrototipoPk = $codigoPrototipoPk;
     }
 
     /**

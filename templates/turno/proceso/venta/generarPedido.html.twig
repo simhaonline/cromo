@@ -24,6 +24,16 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>TIPO</th>
+            <th>NIT</th>
+            <th>CLIENTE</th>
+            <th>SECTOR</th>
+            <th>H</th>
+            <th>HD</th>
+            <th>HN</th>
+            <th>TOTAL</th>
+            <th>AUT</th>
+            <th>CER</th>
             <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
@@ -31,6 +41,16 @@
         {% for arContrato in arContratos %}
             <tr>
                 <td>{{ arContrato.codigoContratoPk }}</td>
+                <td>{{ arContrato.contratoTipoNombre }}</td>
+                <td>{{ arContrato.clienteNumeroIdentificacion }}</td>
+                <td>{{ arContrato.clienteNombreCorto }}</td>
+                <td>{{ arContrato.sectorNombre }}</td>
+                <td>{{ arContrato.horas }}</td>
+                <td>{{ arContrato.horasDiurnas }}</td>
+                <td>{{ arContrato.horasNocturnas }}</td>
+                <td class="numero">{{ arContrato.vrTotal | number_format(0,'.',',') }}</td>
+                <td class="estado">{{ arContrato.estadoAutorizado?'SI':'NO' }}</td>
+                <td class="estado">{{ arContrato.estadoCerrado?'SI':'NO' }}</td>
                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arContrato.codigoContratoPk }}"/></td>
             </tr>
         {% endfor %}

@@ -370,4 +370,21 @@ class TurPedidoRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function listaSinAprobar(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedido::class, 'p')
+            ->select('p')
+           ->where('p.estadoAprobado = 0');
+        if($session->get('filtroTurInformeComercialPedidoSinAprobarClienteCodigo') != ''){
+            $queryBuilder->andWhere("p.codigoClienteFk  = '{$session->get('filtroTurInformeComercialPedidoSinAprobarClienteCodigo')}'");
+        }
+        if ($session->get('filtroTurInformeComercialPedidoClienteSinAprobarFechaDesde') != null) {
+            $queryBuilder->andWhere("p.fecha >= '{$session->get('filtroTurInformeComercialPedidoClienteCodigoFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroTurInformeComercialPedidoClienteCodigoFechaHasta') != null) {
+            $queryBuilder->andWhere("p.fecha <= '{$session->get('filtroTurInformeComercialPedidoClienteSinAprobarFechaHasta')} 23:59:59'");
+        }
+        return $queryBuilder;
+    }
 }

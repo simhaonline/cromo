@@ -73,4 +73,38 @@ class PedidoController extends  Controller
             'arPedido' => $arPedido
         ]);
     }
+
+    /**
+     * @Route("/turno/informe/comercial/pedidosSinAprobar/lista", name="turno_informe_comercial_pedidoSinAprobar_lista")
+     */
+    public function SinAprobar(Request $request)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoCliente', TextType::class,['required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurInformeComercialPedidoClienteSinAprobarFechaDesde') ? date_create($session->get('filtroInvInformeAsesorVentasFechaDesde')): null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurInformeComercialPedidoClienteSinAprobarFechaHasta') ? date_create($session->get('filtroInvInformeAsesorVentasFechaHasta')): null])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $arCliente = $em->getRepository(TurCliente::class)->find($form->get('txtCodigoCliente')->getData()??0);
+                if ($arCliente) {
+                    $session->set('filtroTurInformeComercialPedidoSinAprobarClienteCodigo',  $arCliente->getCodigoClientePk());
+                }
+                $session->set('filtroTurInformeComercialPedidoClienteSinAprobarFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
+                $session->set('filtroTurInformeComercialPedidoClienteSinAprobarFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+            }
+        }
+        $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->listaSinAprobar(), $request->query->getInt('page', 1), 30);
+        return $this->render('turno/informe/comercial/PedidosinAprobar.html.twig', [
+            'arPedidos' => $arPedidos,
+            'form' => $form->createView()
+        ]);
+    }
+
+
 }

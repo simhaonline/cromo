@@ -123,7 +123,7 @@ class PrecioController extends ControllerListenerGeneral
             }
         }
         $query = $em->getRepository(InvPrecioDetalle::class)->lista($id);
-        $arPrecioDetalles = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
+        $arPrecioDetalles = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         return $this->render('inventario/administracion/general/precio/detalle.html.twig', [
             'form' => $form->createView(),
             'arPrecioDetalles' => $arPrecioDetalles,

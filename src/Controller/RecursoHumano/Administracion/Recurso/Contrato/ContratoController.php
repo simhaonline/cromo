@@ -4,10 +4,13 @@ namespace App\Controller\RecursoHumano\Administracion\Recurso\Contrato;
 
 
 use App\Controller\BaseController;
+use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuContratoMotivo;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuGrupo;
+use App\Entity\RecursoHumano\RhuLiquidacion;
+use App\Entity\RecursoHumano\RhuParametroPrestacion;
 use App\Form\Type\RecursoHumano\ContratoParametrosInicialesType;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\General\General;
@@ -166,6 +169,50 @@ class ContratoController extends BaseController
                 $arEmpleado->setEstadoContrato(0);
                 $arEmpleado->setCodigoContratoFk(NULL);
                 $arEmpleado->setCodigoContratoUltimoFk($id);
+
+                //Generar liquidacion
+                if ($arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() != 'APR' && $arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() != 'PRA') {
+                    $arLiquidacion = new RhuLiquidacion();
+                    $arLiquidacion->setFecha(new \DateTime('now'));
+                    $arLiquidacion->setEmpleadoRel($arContrato->getEmpleadoRel());
+                    $arLiquidacion->setContratoRel($arContrato);
+                    $arLiquidacion->setMotivoTerminacionRel($codigoMotivoContrato);
+                    if ($arContrato->getFechaUltimoPagoCesantias() > $arContrato->getFechaDesde()) {
+                        $arLiquidacion->setFechaDesde($arContrato->getFechaUltimoPagoCesantias());
+                    } else {
+                        $arLiquidacion->setFechaDesde($arContrato->getFechaDesde());
+                    }
+                    $arLiquidacion->setFechaHasta($arContrato->getFechaHasta());
+                    $arLiquidacion->setLiquidarCesantias(1);
+                    $arLiquidacion->setLiquidarPrima(1);
+                    $arLiquidacion->setLiquidarVacaciones(1);
+                    if ($arContrato->getSalarioIntegral() == 1) {
+                        $arLiquidacion->setLiquidarCesantias(0);
+                        $arLiquidacion->setLiquidarPrima(0);
+                    }
+                    //Para clientes que manejan porcentajes en la liquidacion
+                    $arLiquidacion->setPorcentajeIbp(100);
+                    $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+                    if ($arConfiguracion->getGeneraPorcentajeLiquidacion()) {
+                        if ($arContrato->getCodigoSalarioTipoFk() == 2) {
+                            if ($arLiquidacion->getCodigoContratoMotivoFk() != 'SJC' && $arLiquidacion->getCodigoContratoMotivoFk() != 'CJC') {
+                                $intDiasLaborados = $em->getRepository(RhuLiquidacion::class)->diasPrestaciones($arContrato->getFechaDesde(), $arContrato->getFechaHasta());
+                                $arParametrosPrestacion = $em->getRepository(RhuParametroPrestacion::class)->findBy(array('tipo' => 'LIQ'));
+                                foreach ($arParametrosPrestacion as $arParametroPrestacion) {
+                                    if ($intDiasLaborados >= $arParametroPrestacion->getDiaDesde() && $intDiasLaborados <= $arParametroPrestacion->getDiaHasta()) {
+                                        if ($arParametroPrestacion->getOrigen() == 'SAL') {
+                                            $arLiquidacion->setLiquidarSalario(1);
+                                        } else {
+                                            $arLiquidacion->setPorcentajeIbp($arParametroPrestacion->getPorcentaje());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                     $em->persist($arLiquidacion);
+                }
+
                 $em->persist($arEmpleado);
                 $em->flush();
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

@@ -398,6 +398,11 @@ class RhuEmpleado
     protected $prototiposEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuLiquidacion", mappedBy="empleadoRel")
+     */
+    protected $liquidacionesEmpleadoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -1483,6 +1488,22 @@ class RhuEmpleado
     public function setPrototiposEmpleadoRel($prototiposEmpleadoRel): void
     {
         $this->prototiposEmpleadoRel = $prototiposEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidacionesEmpleadoRel()
+    {
+        return $this->liquidacionesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $liquidacionesEmpleadoRel
+     */
+    public function setLiquidacionesEmpleadoRel($liquidacionesEmpleadoRel): void
+    {
+        $this->liquidacionesEmpleadoRel = $liquidacionesEmpleadoRel;
     }
 
 

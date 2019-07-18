@@ -53,7 +53,7 @@ class LiquidacionType extends AbstractType
             {"campo":"codigoLiquidacionPk", "tipo":"pk"    ,"ayuda":"Codigo del registro" ,"titulo":"ID"},
             {"campo":"numero",            "tipo":"texto" ,"ayuda":"Numero"                ,"titulo":"NUMERO"},
             {"campo":"fecha",             "tipo":"fecha" ,"ayuda":"Fecha del registro"    ,"titulo":"TIPO"},
-            {"campo":"codigoEmpleadoFk",  "tipo":"texto" ,"ayuda":"Codigo del empleado"   ,"titulo":"EMPLEADO"},
+            {"campo":"empleadoRel.nombreCorto",  "tipo":"texto"   ,"ayuda":"Nombre del empleado"        ,"titulo":"EMPLEADO", "relacion":""},
             {"campo":"codigoGrupoFk",     "tipo":"texto" ,"ayuda":"Codigo del grupo"      ,"titulo":"GRUPO"},
             {"campo":"fechaDesde",        "tipo":"fecha" ,"ayuda":"Fecha desde"           ,"titulo":"DESDE"},                     
             {"campo":"fechaHasta",        "tipo":"fecha" ,"ayuda":"Fecha hasta"           ,"titulo":"HASTA"},                     

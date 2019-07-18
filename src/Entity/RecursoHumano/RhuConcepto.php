@@ -165,6 +165,11 @@ class RhuConcepto
     protected $configuracionConceptoFondoSolidaridadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuLiquidacionAdicional", mappedBy="conceptoRel")
+     */
+    protected $liquidacionesAdicionalesConceptoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array

@@ -331,6 +331,11 @@ class RhuEmbargo
     protected $embargoJuzgadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuLiquidacionAdicional", mappedBy="embargoRel")
+     */
+    protected $liquidacionesAdicionalesEmbargoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEmbargoPk()

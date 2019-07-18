@@ -58,6 +58,16 @@ class RhuContrato
     private $codigoSalarioTipoFk;
 
     /**
+     * @ORM\Column(name="ibp_cesantias_inicial", type="float", nullable=true)
+     */
+    private $ibpCesantiasInicial = 0;
+
+    /**
+     * @ORM\Column(name="ibp_primas_inicial", type="float", nullable=true)
+     */
+    private $ibpPrimasInicial = 0;
+
+    /**
      * @ORM\Column(name="ibp_recargo_nocturno_inicial", type="float")
      */
     private $ibpRecargoNocturnoInicial = 0;
@@ -429,6 +439,11 @@ class RhuContrato
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurSoporteContrato", mappedBy="contratoRel")
      */
     protected $soportesContratosContratoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuLiquidacion", mappedBy="contratoRel")
+     */
+    protected $liquidacionesContratoRel;
 
     /**
      * @return mixed
@@ -1692,6 +1707,54 @@ class RhuContrato
     public function setSalarioTipoRel($salarioTipoRel): void
     {
         $this->salarioTipoRel = $salarioTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidacionesContratoRel()
+    {
+        return $this->liquidacionesContratoRel;
+    }
+
+    /**
+     * @param mixed $liquidacionesContratoRel
+     */
+    public function setLiquidacionesContratoRel($liquidacionesContratoRel): void
+    {
+        $this->liquidacionesContratoRel = $liquidacionesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIbpCesantiasInicial()
+    {
+        return $this->ibpCesantiasInicial;
+    }
+
+    /**
+     * @param mixed $ibpCesantiasInicial
+     */
+    public function setIbpCesantiasInicial($ibpCesantiasInicial): void
+    {
+        $this->ibpCesantiasInicial = $ibpCesantiasInicial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIbpPrimasInicial()
+    {
+        return $this->ibpPrimasInicial;
+    }
+
+    /**
+     * @param mixed $ibpPrimasInicial
+     */
+    public function setIbpPrimasInicial($ibpPrimasInicial): void
+    {
+        $this->ibpPrimasInicial = $ibpPrimasInicial;
     }
 
 

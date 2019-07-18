@@ -25,7 +25,7 @@ class Liquidacion extends \FPDF
         ob_clean();
         self::$em = $em;
         self::$codigoLiquidacion = $codigoLiquidacion;
-        $pdf = new Vacaciones();
+        $pdf = new Liquidacion();
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
@@ -33,6 +33,9 @@ class Liquidacion extends \FPDF
         $pdf->Output("liquidacion.pdf", 'D');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function Header()
     {
         $this->SetFillColor(200, 200, 200);
@@ -40,7 +43,7 @@ class Liquidacion extends \FPDF
         //Logo
 
 
-        Estandares::generarEncabezado($this, 'Cliente', self::$em);
+        Estandares::generarEncabezado($this,'LIQUIDACION', self::$em);
 
         $this->SetXY(53, 34);
         $this->Cell(20, 4, 'FECHA:', 0, 0, 'L', 1);
@@ -226,10 +229,10 @@ class Liquidacion extends \FPDF
         //BLOQUE TOTALES
         $pdf->SetFont('Arial', 'B', 8);
         $pdf->SetFillColor(236, 236, 236);
-        $pdf->SetXY($posicionX + 93, 90);
+        $pdf->SetXY($posicionX + 95, 90);
         $pdf->Cell(15, 5, utf8_decode("DIAS"), 1, 0, 'R', 1);
-        $pdf->SetXY($posicionX + 113, 90);
-        $pdf->Cell(11, 5, utf8_decode("D.AUS"), 1, 0, 'R', 1);
+        $pdf->SetXY($posicionX + 111, 90);
+        $pdf->Cell(13, 5, utf8_decode("D.AUS"), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + 125, 90);
         $pdf->Cell(25, 5, utf8_decode("BASE"), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + 150, 90);
@@ -283,15 +286,15 @@ class Liquidacion extends \FPDF
         $pdf->SetFillColor(272, 272, 272);
         $posicionXlinea = 95;
         $pdf->SetXY($posicionX + $posicionXlinea, 100);
-        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(15, 5, number_format($arLiquidacion->getDiasCesantias(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 106);
-        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(15, 5, number_format($arLiquidacion->getDiasCesantias(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 112);
-        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(15, 5, number_format($arLiquidacion->getDiasCesantiasAnterior(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 118);
-        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(15, 5, number_format($arLiquidacion->getDiasCesantiasAnterior(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 124);
-        $pdf->Cell(15, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(15, 5, number_format($arLiquidacion->getDiasPrima(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 130);
         $pdf->Cell(15, 5, number_format($arLiquidacion->getDiasVacacion()   , 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 135);
@@ -303,17 +306,17 @@ class Liquidacion extends \FPDF
         $pdf->SetFillColor(272, 272, 272);
         $posicionXlinea = 111;
         $pdf->SetXY($posicionX + $posicionXlinea, 100);
-        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(13, 5, number_format($arLiquidacion->getDiasCesantiasAusentismo(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 106);
-        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(13, 5, number_format($arLiquidacion->getDiasCesantiasAusentismo(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 112);
-        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(13, 5, number_format($arLiquidacion->getDiasCesantiasAusentismoAnterior(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 118);
-        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(13, 5, number_format($arLiquidacion->getDiasCesantiasAusentismoAnterior(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 124);
-        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(13, 5, number_format($arLiquidacion->getDiasPrimaAusentismo(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 130);
-        $pdf->Cell(13, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(13, 5, number_format($arLiquidacion->getDiasVacacionAusentismo(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 135);
         $pdf->Cell(13, 5, "", 0, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 138);
@@ -323,17 +326,17 @@ class Liquidacion extends \FPDF
         $pdf->SetFillColor(272, 272, 272);
         $posicionXlinea = 125;
         $pdf->SetXY($posicionX + $posicionXlinea, 100);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrSalarioPromedioCesantias(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 106);
         $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 112);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrSalarioPromedioCesantiasAnterior(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 118);
         $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 124);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrSalarioPromedioPrimas(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 130);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrSalarioVacaciones(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 135);
         $pdf->Cell(25, 5, "", 0, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 137);
@@ -342,17 +345,25 @@ class Liquidacion extends \FPDF
         $this->SetFillColor(272, 272, 272);
         $posicionXlinea = 150;
         $pdf->SetXY($posicionX + $posicionXlinea, 100);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, $arLiquidacion->getFechaUltimoPagoCesantias()->format('Y-m-d'), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 106);
-        $pdf->Cell(25, 5, "", 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, $arLiquidacion->getFechaUltimoPagoCesantias()->format('Y-m-d'), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 112);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $fechaUltimoPagoCesantiasAnterior = '';
+        if ($arLiquidacion->getFechaUltimoPagoCesantiasAnterior() != NULL) {
+            $fechaUltimoPagoCesantiasAnterior = $arLiquidacion->getFechaUltimoPagoCesantiasAnterior()->format('Y-m-d');
+        }
+        $pdf->Cell(25, 5, $fechaUltimoPagoCesantiasAnterior, 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 118);
-        $pdf->Cell(25, 5, "", 1, 0, 'R', 1);
+        $fechaUltimoPagoCesantiasAnterior = '';
+        if ($arLiquidacion->getFechaUltimoPagoCesantiasAnterior() != NULL){
+            $fechaUltimoPagoCesantiasAnterior = $arLiquidacion->getFechaUltimoPagoCesantiasAnterior()->format('Y-m-d');
+        }
+        $pdf->Cell(25, 5, $fechaUltimoPagoCesantiasAnterior, 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 124);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, $arLiquidacion->getFechaUltimoPagoPrima()->format('Y-m-d'), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 130);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, $arLiquidacion->getFechaUltimoPagoVacacion() == ""?"":$arLiquidacion->getFechaUltimoPagoVacacion()->format('Y-m-d'), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 135);
         $pdf->Cell(25, 5, "", 0, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 137);
@@ -361,31 +372,31 @@ class Liquidacion extends \FPDF
         $this->SetFillColor(272, 272, 272);
         $posicionXlinea = 175;
         $pdf->SetXY($posicionX + $posicionXlinea, 100);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrCesantias(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 106);
-        $pdf->Cell(25, 5, "", 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrInteresesCesantias(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 112);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrCesantiasAnterior(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 118);
-        $pdf->Cell(25, 5, "", 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrInteresesCesantiasAnterior(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 124);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrPrima(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 130);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrVacacion(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 136);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrIndemnizacion(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 142);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrBonificaciones(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 148);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrCesantias()+$arLiquidacion->getVrInteresesCesantias()+$arLiquidacion->getVrCesantiasAnterior()+$arLiquidacion->getVrInteresesCesantiasAnterior()+$arLiquidacion->getVrPrima()+$arLiquidacion->getVrVacacion()+$arLiquidacion->getVrIndemnizacion()+$arLiquidacion->getVrBonificaciones(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 154);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrDeducciones(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 160);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrDeduccionPrima(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 166);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrDeducciones()+$arLiquidacion->getVrDeduccionPrima(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX + $posicionXlinea, 172);
-        $pdf->Cell(25, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(25, 5, number_format($arLiquidacion->getVrTotal(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->Ln(15);
 
 

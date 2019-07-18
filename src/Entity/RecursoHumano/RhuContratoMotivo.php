@@ -31,6 +31,11 @@ class RhuContratoMotivo
     protected $contratosContratoMotivoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuLiquidacion", mappedBy="motivoTerminacionRel")
+     */
+    protected $liquidacionesMotivoTerminacionContratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoMotivoPk()
@@ -77,4 +82,38 @@ class RhuContratoMotivo
     {
         $this->contratosContratoMotivoRel = $contratosContratoMotivoRel;
     }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidacionesMotivoTerminacionContratoRel()
+    {
+        return $this->liquidacionesMotivoTerminacionContratoRel;
+    }
+
+    /**
+     * @param mixed $liquidacionesMotivoTerminacionContratoRel
+     */
+    public function setLiquidacionesMotivoTerminacionContratoRel($liquidacionesMotivoTerminacionContratoRel): void
+    {
+        $this->liquidacionesMotivoTerminacionContratoRel = $liquidacionesMotivoTerminacionContratoRel;
+    }
+
+
 }

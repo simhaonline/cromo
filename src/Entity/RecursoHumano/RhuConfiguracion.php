@@ -44,6 +44,11 @@ class RhuConfiguracion
     private $codigoConceptoFondoSolidaridadPensionFk;
 
     /**
+     * @ORM\Column(name="descontar_ausentismos_de_licencias" , type="boolean" ,nullable=true)
+     */
+    private $descontarAusentismosDeLicencias = false;
+
+    /**
      * @ORM\Column(name="vacaciones_base_descuento_ley_ibc_mes_anterior", type="boolean", nullable=true)
      */
     private $vacacionesBaseDescuentoLeyIbcMesAnterior = false;
@@ -67,6 +72,51 @@ class RhuConfiguracion
      * @ORM\Column(name="liquidar_vacaciones_promedio_ultimo_anio", type="boolean", options={"default":false}, nullable=true)
      */
     private $liquidarVacacionesPromedioUltimoAnio = false;
+
+    /**
+     * @ORM\Column(name="validar_fecha_ultimo_pago_liquidacion", type="boolean", nullable=true)
+     */
+    private $validarFechaUltimoPagoLiquidacion = false;
+
+    /**
+     * @ORM\Column(name="liquidar_cesantia_anio_anterior", type="boolean", nullable=true)
+     */
+    private $liquidarCesantiaAnioAnterior = false;
+
+    /**
+     * @ORM\Column(name="eliminar_ausentismo", type="boolean")
+     */
+    private $eliminarAusentismo = false;
+
+    /**
+     * @ORM\Column(name="eliminar_ausentismo_cesantia", type="boolean", nullable=true)
+     */
+    private $eliminarAusentismoCesantia = false;
+
+    /**
+     * @ORM\Column(name="eliminar_ausentismo_primas", type="boolean", nullable=true)
+     */
+    private $eliminarAusentismoPrima = false;
+
+    /**
+     * @ORM\Column(name="eliminar_ausentismo_vacacion", type="boolean", nullable=true)
+     */
+    private $eliminarAusentismoVacacion = false;
+
+    /**
+     * @ORM\Column(name="liquidar_vacaciones_salario", type="boolean")
+     */
+    private $liquidarVacacionesSalario = false;
+
+    /**
+     * @ORM\Column(name="liquidar_vacaciones_salario_recargo_prestacion", type="boolean", nullable=true)
+     */
+    private $liquidarVacacionesSalarioRecargoPrestacion = false;
+
+    /**
+     * @ORM\Column(name="descontar_total_ausentismos_contrato_terminado_en_liquidacion" , type="boolean" ,nullable=true)
+     */
+    private $descontarTotalAusentismosContratoTerminadoEnLiquidacion = false;
 
     /**
      * @ORM\Column(name="codigo_entidad_riesgos_profesionales_fk", type="integer", nullable=true)
@@ -313,6 +363,182 @@ class RhuConfiguracion
     public function setEntidadRiesgosRel($entidadRiesgosRel): void
     {
         $this->entidadRiesgosRel = $entidadRiesgosRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValidarFechaUltimoPagoLiquidacion()
+    {
+        return $this->validarFechaUltimoPagoLiquidacion;
+    }
+
+    /**
+     * @param mixed $validarFechaUltimoPagoLiquidacion
+     */
+    public function setValidarFechaUltimoPagoLiquidacion($validarFechaUltimoPagoLiquidacion): void
+    {
+        $this->validarFechaUltimoPagoLiquidacion = $validarFechaUltimoPagoLiquidacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarCesantiaAnioAnterior()
+    {
+        return $this->liquidarCesantiaAnioAnterior;
+    }
+
+    /**
+     * @param mixed $liquidarCesantiaAnioAnterior
+     */
+    public function setLiquidarCesantiaAnioAnterior($liquidarCesantiaAnioAnterior): void
+    {
+        $this->liquidarCesantiaAnioAnterior = $liquidarCesantiaAnioAnterior;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescontarAusentismosDeLicencias()
+    {
+        return $this->descontarAusentismosDeLicencias;
+    }
+
+    /**
+     * @param mixed $descontarAusentismosDeLicencias
+     */
+    public function setDescontarAusentismosDeLicencias($descontarAusentismosDeLicencias): void
+    {
+        $this->descontarAusentismosDeLicencias = $descontarAusentismosDeLicencias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEliminarAusentismo()
+    {
+        return $this->eliminarAusentismo;
+    }
+
+    /**
+     * @param mixed $eliminarAusentismo
+     */
+    public function setEliminarAusentismo($eliminarAusentismo): void
+    {
+        $this->eliminarAusentismo = $eliminarAusentismo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEliminarAusentismoCesantia()
+    {
+        return $this->eliminarAusentismoCesantia;
+    }
+
+    /**
+     * @param mixed $eliminarAusentismoCesantia
+     */
+    public function setEliminarAusentismoCesantia($eliminarAusentismoCesantia): void
+    {
+        $this->eliminarAusentismoCesantia = $eliminarAusentismoCesantia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEliminarAusentismoPrima()
+    {
+        return $this->eliminarAusentismoPrima;
+    }
+
+    /**
+     * @param mixed $eliminarAusentismoPrima
+     */
+    public function setEliminarAusentismoPrima($eliminarAusentismoPrima): void
+    {
+        $this->eliminarAusentismoPrima = $eliminarAusentismoPrima;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEliminarAusentismoVacacion()
+    {
+        return $this->eliminarAusentismoVacacion;
+    }
+
+    /**
+     * @param mixed $eliminarAusentismoVacacion
+     */
+    public function setEliminarAusentismoVacacion($eliminarAusentismoVacacion): void
+    {
+        $this->eliminarAusentismoVacacion = $eliminarAusentismoVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarVacacionesSalario()
+    {
+        return $this->liquidarVacacionesSalario;
+    }
+
+    /**
+     * @param mixed $liquidarVacacionesSalario
+     */
+    public function setLiquidarVacacionesSalario($liquidarVacacionesSalario): void
+    {
+        $this->liquidarVacacionesSalario = $liquidarVacacionesSalario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarVacacionesSalarioRecargoPrestacion()
+    {
+        return $this->liquidarVacacionesSalarioRecargoPrestacion;
+    }
+
+    /**
+     * @param mixed $liquidarVacacionesSalarioRecargoPrestacion
+     */
+    public function setLiquidarVacacionesSalarioRecargoPrestacion($liquidarVacacionesSalarioRecargoPrestacion): void
+    {
+        $this->liquidarVacacionesSalarioRecargoPrestacion = $liquidarVacacionesSalarioRecargoPrestacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescontarTotalAusentismosContratoTerminadoEnLiquidacion()
+    {
+        return $this->descontarTotalAusentismosContratoTerminadoEnLiquidacion;
+    }
+
+    /**
+     * @param mixed $descontarTotalAusentismosContratoTerminadoEnLiquidacion
+     */
+    public function setDescontarTotalAusentismosContratoTerminadoEnLiquidacion($descontarTotalAusentismosContratoTerminadoEnLiquidacion): void
+    {
+        $this->descontarTotalAusentismosContratoTerminadoEnLiquidacion = $descontarTotalAusentismosContratoTerminadoEnLiquidacion;
     }
 
 

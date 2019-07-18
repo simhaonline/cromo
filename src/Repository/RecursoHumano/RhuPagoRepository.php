@@ -419,4 +419,19 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
         return $intDiasAusentismo;
     }
+
+    public function ibpSalario($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(p.vrSalario) as ibp FROM FROM App\Entity\RecursoHumano\RhuPago p "
+            . "WHERE p.estadoAprobado = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $ibp = $arrayResultado[0]['ibp'];
+        if ($ibp == null) {
+            $ibp = 0;
+        }
+        return $ibp;
+    }
 }

@@ -129,10 +129,10 @@ class DespachoRecogida extends \FPDF {
         $this->Cell(66, 6, $arAuxiliarDespacho ? $arAuxiliarDespacho->getAuxiliarRel()->getNombreCorto() : '' , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "SALDO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, '', 1, 0, 'L', 1);
+        $this->Cell(65, 6, number_format($arDespacho->getVrSaldo()), 1, 0, 'R', 1);
 //
         //linea 6
         $this->SetXY(10, 76);

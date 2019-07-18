@@ -61,6 +61,7 @@ class TteIntermediacionVentaRepository extends ServiceEntityRepository
             ->addSelect('ft.prefijo')
             ->addSelect('ft.codigoCuentaIngresoFleteFk')
             ->addSelect('ft.codigoCuentaIngresoFleteIntermediacionFk')
+            ->addSelect('ft.codigoFacturaClaseFk')
             ->leftJoin('iv.facturaTipoRel', 'ft')
             ->where('iv.codigoIntermediacionFk = ' . $codigo);
         $arIntermediacionVenta = $queryBuilder->getQuery()->getResult();

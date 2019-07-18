@@ -66,7 +66,7 @@ class Factura extends \FPDF
         $this->SetXY(88, 28);
         $this->Cell(25, 4, utf8_decode("RESPONSABLES DE IVA "), 0, 0, 'l', 1);
         $this->SetXY(45, 31);
-        $this->Cell(25, 4, utf8_decode("CODIGO CIIU 4923 TRANSPORTE DE CARGA POR CARRETERA EXCLUIDA DE IVA - EXCLUIDOS DE IVA"), 0, 0, 'l', 1);
+        $this->Cell(25, 4, utf8_decode("CODIGO CIIU 4923 TRANSPORTE DE CARGA POR CARRETERA EXCLUIDA DE IVA"), 0, 0, 'l', 1);
 
         $y = 20;
         $y2 = 15;
@@ -145,14 +145,14 @@ class Factura extends \FPDF
             $this->SetFont('');
             $this->Ln(4);
         } else {
-            $header = array('ID', 'CONCEPTO', 'CANTIDAD', 'PRECIO', '%IVA', 'IVA', 'RET', 'TOTAL');
+            $header = array('ID', 'CONCEPTO', 'CANT', 'PRECIO', '%IVA', 'IVA', 'TOTAL');
             $this->SetFillColor(170, 170, 170);
             $this->SetTextColor(0);
             $this->SetDrawColor(0, 0, 0);
             $this->SetLineWidth(.2);
             $this->SetFont('', 'B', 7);
             //creamos la cabecera de la tabla.
-            $w = array(17, 50, 15, 20, 20, 20, 20, 20);
+            $w = array(17, 70, 15, 20, 20, 20, 20);
             for ($i = 0; $i < count($header); $i++)
                 if ($i == 0 || $i == 1)
                     $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -196,12 +196,11 @@ class Factura extends \FPDF
         if ($arFacturaDetalleConceptos) {
             foreach ($arFacturaDetalleConceptos as $arFacturaDetalleConcepto) {
                 $pdf->Cell(17, 4, $arFacturaDetalleConcepto['codigoFacturaDetalleConceptoPk'], 1, 0, 'L');
-                $pdf->Cell(50, 4, $arFacturaDetalleConcepto['concepto'], 1, 0, 'L');
+                $pdf->Cell(70, 4, $arFacturaDetalleConcepto['concepto'], 1, 0, 'L');
                 $pdf->Cell(15, 4, $arFacturaDetalleConcepto['cantidad'], 1, 0, 'L');
                 $pdf->Cell(20, 4, number_format($arFacturaDetalleConcepto['vrPrecio'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, $arFacturaDetalleConcepto['codigoImpuestoIvaVentaFk'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arFacturaDetalleConcepto['porcentajeIva'], 1, 0, 'C');
                 $pdf->Cell(20, 4, number_format($arFacturaDetalleConcepto['vrIva'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(20, 4, $arFacturaDetalleConcepto['codigoImpuestoRetencionFk'], 1, 0, 'L');
                 $pdf->Cell(20, 4, number_format($arFacturaDetalleConcepto['vrTotal'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 85);

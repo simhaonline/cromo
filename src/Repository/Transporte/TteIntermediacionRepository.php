@@ -77,6 +77,9 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             $fleteCobro = $em->getRepository(TteFactura::class)->fleteCobro($fechaDesde, $fechaHasta);
             $arIntermediacion->setVrFleteCobro($fleteCobro);
             $ingresoTotal = 0;
+
+
+
             $arrFleteCobroDetallados = $em->getRepository(TteFactura::class)->fleteCobroDetallado($fechaDesde, $fechaHasta);
             foreach ($arrFleteCobroDetallados as $arrFleteCobroDetallado) {
                 $arCliente = $em->getRepository(TteCliente::class)->find($arrFleteCobroDetallado['codigoClienteFk']);
@@ -278,7 +281,7 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             $arComprobante = $em->getRepository(FinComprobante::class)->find($arrConfiguracion['codigoComprobanteIntermediacionFk']);
             foreach ($arr AS $codigo) {
                 $arIntermediacion = $em->getRepository(TteIntermediacion::class)->registroContabilizar($codigo);
-                if($arIntermediacion['estadoAprobado']) {
+                //if($arIntermediacion['estadoAprobado']) {
                     if(!$arIntermediacion['estadoContabilizado']) {
                         if($arIntermediacion) {
                             if($arIntermediacion['estadoContabilizado'] == 0) {
@@ -299,12 +302,20 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                                         $arRegistro->setComprobanteRel($arComprobante);
                                         $arRegistro->setNumero($arIntermediacion['numero']);
                                         $arRegistro->setFecha($arIntermediacion['fecha']);
-                                        $arRegistro->setVrDebito($arrIntermediacionVenta['vrFlete']);
-                                        $arRegistro->setNaturaleza('D');
+                                        if($arrIntermediacionVenta['codigoFacturaClaseFk'] == 'FA') {
+                                            $arRegistro->setVrDebito($arrIntermediacionVenta['vrFlete']);
+                                            $arRegistro->setNaturaleza('D');
+                                            $arRegistro->setDescripcion('INGRESO FLETE TERCERO DEV_FAC');
+                                        } else {
+                                            $arRegistro->setVrCredito($arrIntermediacionVenta['vrFlete']);
+                                            $arRegistro->setNaturaleza('C');
+                                            $arRegistro->setDescripcion('INGRESO FLETE TERCERO DEV_FAC NC');
+                                        }
+
                                         $arRegistro->setCodigoModeloFk('TteIntermediacion');
                                         $arRegistro->setCodigoDocumento($codigo);
 
-                                        $arRegistro->setDescripcion('INGRESO FLETE TERCERO DEV_FAC');
+
                                         $em->persist($arRegistro);
                                     } else {
                                         $error = "El tipo de factura no tiene configurada la cuenta para el ingreso por flete o flete intermediacion";
@@ -323,12 +334,19 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                                         $arRegistro->setComprobanteRel($arComprobante);
                                         $arRegistro->setNumero($arIntermediacion['numero']);
                                         $arRegistro->setFecha($arIntermediacion['fecha']);
-                                        $arRegistro->setVrCredito($arrIntermediacionVenta['vrFleteIngreso']);
-                                        $arRegistro->setNaturaleza('C');
+                                        if($arrIntermediacionVenta['codigoFacturaClaseFk'] == 'FA') {
+                                            $arRegistro->setVrCredito($arrIntermediacionVenta['vrFleteIngreso']);
+                                            $arRegistro->setNaturaleza('C');
+                                            $arRegistro->setDescripcion('INGRESO REAL');
+                                        } else {
+                                            $arRegistro->setVrDebito($arrIntermediacionVenta['vrFleteIngreso']);
+                                            $arRegistro->setNaturaleza('D');
+                                            $arRegistro->setDescripcion('INGRESO REAL NC');
+                                        }
                                         $arRegistro->setCodigoModeloFk('TteIntermediacion');
                                         $arRegistro->setCodigoDocumento($codigo);
 
-                                        $arRegistro->setDescripcion('INGRESO REAL');
+
                                         $em->persist($arRegistro);
                                     } else {
                                         $error = "El tipo de factura no tiene configurada la cuenta para el ingreso flete intermediacion";
@@ -406,9 +424,9 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                             $error = "El codigo " . $codigo . " no existe";
                             break;
                         }
-                    } else {
-                        Mensajes::error('El documento ya esta contabilizado');
-                    }
+                    //} else {
+                     //   Mensajes::error('El documento ya esta contabilizado');
+                    //}
                 } else {
                     Mensajes::error('El documento debe estar aprobado');
                 }

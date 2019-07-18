@@ -33,6 +33,7 @@ class TteFacturaDetalleConceptoRepository extends ServiceEntityRepository
             ->addSelect('fcd.nombre AS concepto')
             ->addSelect('fcd.codigoImpuestoIvaVentaFk')
             ->addSelect('fcd.codigoImpuestoRetencionFk')
+            ->addSelect('fdc.porcentajeIva')
             ->leftJoin('fdc.facturaConceptoDetalleRel', 'fcd')
             ->where('fdc.codigoFacturaFk = ' . $codigoFactura);
         return $queryBuilder;

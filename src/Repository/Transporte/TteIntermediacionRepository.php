@@ -281,7 +281,7 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             $arComprobante = $em->getRepository(FinComprobante::class)->find($arrConfiguracion['codigoComprobanteIntermediacionFk']);
             foreach ($arr AS $codigo) {
                 $arIntermediacion = $em->getRepository(TteIntermediacion::class)->registroContabilizar($codigo);
-                //if($arIntermediacion['estadoAprobado']) {
+                if($arIntermediacion['estadoAprobado']) {
                     if(!$arIntermediacion['estadoContabilizado']) {
                         if($arIntermediacion) {
                             if($arIntermediacion['estadoContabilizado'] == 0) {
@@ -424,9 +424,9 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                             $error = "El codigo " . $codigo . " no existe";
                             break;
                         }
-                    //} else {
-                     //   Mensajes::error('El documento ya esta contabilizado');
-                    //}
+                    } else {
+                        Mensajes::error('El documento ya esta contabilizado');
+                    }
                 } else {
                     Mensajes::error('El documento debe estar aprobado');
                 }

@@ -165,4 +165,11 @@ class RhuContratoRepository extends ServiceEntityRepository
         return $arContratos;
     }
 
+    public function informeContrato()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuContrato::class, 'c')
+            ->select('c');
+             return $queryBuilder;
+    }
 }

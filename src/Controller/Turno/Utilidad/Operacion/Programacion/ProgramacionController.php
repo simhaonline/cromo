@@ -65,12 +65,14 @@ class ProgramacionController extends Controller
         $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($id);
         $fechaProgramacion = FuncionesController::primerDia(new \DateTime('now'));
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        $arrBtnGenerar = ['label' => 'Generar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnSimular = ['label' => 'Simular', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnSimularLimpiar = ['label' => 'Limpiar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $form = $this->createFormBuilder()
             ->add('fechaSimulacion', DateType::class, array('data' => $fechaProgramacion, 'format' => 'yyyyMMdd'))
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
+            ->add('btnGenerar', SubmitType::class, $arrBtnGenerar)
             ->add('btnSimular', SubmitType::class, $arrBtnSimular)
             ->add('btnSimularLimpiar', SubmitType::class, $arrBtnSimularLimpiar)
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
@@ -88,6 +90,9 @@ class ProgramacionController extends Controller
             if($form->get('btnSimular')->isClicked()) {
                 $fechaProgramacion = $form->get('fechaSimulacion')->getData();
                 $em->getRepository(TurPrototipo::class)->generarSimulacion($arPedidoDetalle, $fechaProgramacion);
+            }
+            if($form->get('btnGenerar')->isClicked()) {
+                $em->getRepository(TurProgramacion::class)->generar($arPedidoDetalle);
             }
             if($form->get('btnSimularLimpiar')->isClicked()) {
                 $em->getRepository(TurSimulacion::class)->limpiar($id);

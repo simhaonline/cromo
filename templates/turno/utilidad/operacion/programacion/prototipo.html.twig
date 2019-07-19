@@ -50,6 +50,9 @@
                href="javascript:abrirVentana3('{{ path('turno_buscar_empleadoprogramar', {'codigoContratoDetalle': arPedidoDetalle.codigoContratoDetalleFk }) }}', 'ProgramarEmpleado', 600, 1200)">Nuevo</a>
         </div>
         <div class="btn-group">
+            {{ form_widget(form.btnGenerar) }}
+        </div>
+        <div class="btn-group">
             {{ form_widget(form.btnActualizar) }}
         </div>
         <div class="btn-group">
@@ -57,7 +60,7 @@
         </div>
     </div>
 
-    <br><br>
+    <br><br><br><br><br><br>
     <table width="100%" class="table table-condensed table-bordered tabla-datos">
         <thead>
         <tr>

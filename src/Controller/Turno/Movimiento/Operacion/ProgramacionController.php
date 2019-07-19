@@ -88,10 +88,9 @@ class ProgramacionController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-            /*if ($form->get('btnEliminar')->isClicked()) {
-                $em->getRepository(TurPedidoDetalle::class)->eliminar($arPedido, $arrDetallesSeleccionados);
-                $em->getRepository(TurPedido::class)->liquidar($arPedido);
-            }*/
+            if ($form->get('btnEliminar')->isClicked()) {
+                $em->getRepository(TurProgramacion::class)->eliminar($arrDetallesSeleccionados);
+            }
             return $this->redirect($this->generateUrl('turno_movimiento_operacion_programacion_detalle', ['id' => $id]));
         }
         $arPedidoDetalles = $em->getRepository(TurProgramacion::class)->detalleProgramacion($id);

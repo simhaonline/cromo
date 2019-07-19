@@ -16,7 +16,7 @@
         {% if arPedido.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    {% include 'turno/movimiento/comercial/pedido/informacion.html.twig' %}
+    {% include 'turno/movimiento/venta/pedido/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
@@ -34,6 +34,7 @@
                             {% endfor %}
                             <th>HD</th>
                             <th>HN</th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -85,6 +86,7 @@
                                     <td>{{ arProgramacion.dia31 }}</td>
                                     <td>{{ arProgramacion.horasDiurnas }}</td>
                                     <td>{{ arProgramacion.horasNocturnas }}</td>
+                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arProgramacion.codigoProgramacionPk }}"/></td>
                             {% endfor %}
                             </tr>
                         {% endfor %}

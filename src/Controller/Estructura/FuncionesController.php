@@ -19,6 +19,7 @@ include_once(realpath(__DIR__ . "/../../../public/plugins/phpqrcode/phpqrcode/qr
 final class FuncionesController
 {
 
+
     private static function getInstance()
     {
         static $instance = null;
@@ -429,4 +430,89 @@ final class FuncionesController
         }
         return $intDiasDevolver;
     }
+
+    public static function devuelvePosicionInicialSecuencia($posicionInicial, $intervalo, $strFechaDesde, $strFechaHasta)
+    {
+        if ($intervalo == 0) {
+            $intervalo = 1;
+        }
+        $posicion = $posicionInicial;
+
+        $dateFechaHasta = date_create($strFechaHasta);
+        $dateFechaDesde = date_create($strFechaDesde);
+        $strFecha = $dateFechaDesde->format('Y-m-d');
+        if ($dateFechaDesde < $dateFechaHasta) {
+            while ($strFecha != $strFechaHasta) {
+                $nuevafecha = strtotime('+1 day', strtotime($strFecha));
+                $strFecha = date('Y-m-d', $nuevafecha);
+                $posicion++;
+                if ($posicion > $intervalo) {
+                    $posicion = 1;
+                }
+            }
+            if ($posicion > $intervalo) {
+                $posicion = 1;
+            }
+        }
+        return $posicion;
+
+    }
+
+    public static function turnosSecuencia($arSecuencia)
+    {
+        if ($arSecuencia == null) {
+            return [];
+        }
+        $arrSecuencias = array();
+        $dias = $arSecuencia->getDias();
+        for ($i = 1; $i <= $dias; $i++) {
+            $dia = call_user_func_array([$arSecuencia, "getDia{$i}"], []);
+            $arrSecuencias[$i] = $dia;
+        }
+        $total = count($arrSecuencias);
+        if ($dias - $total > 0) {
+            for ($i = $total; $i < $dias; $i++) {
+                $arrSecuencias[$total] = null;
+            }
+        }
+        return $arrSecuencias;
+    }
+
+    public static function validacionDiaSemama($dia, $arSecuenciaTurno)
+    {
+        $diasSemana = [
+            'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo', 'festivo', 'domingoFestivo',
+        ];
+        $nombreDia = ucfirst($diasSemana[intval($dia) - 1]);
+        $turno = call_user_func_array([$arSecuenciaTurno, "get{$nombreDia}"], []);
+        return $turno != null ? $turno : false;
+    }
+
+    /**
+     * Esta función válida que un día sea festivo.
+     * @param string $fecha
+     * @param array $arrFestivos
+     * @param \Brasa\TurnoBundle\Entity\TurSecuencia $arSecuencia
+     * @return boolean
+     */
+    public static function validacionFestivo($fecha, $arrFestivos, $arSecuencia)
+    {
+        # Si no es festivo.
+        if (!in_array($fecha, $arrFestivos) || $arSecuencia->getFestivo() == null) {
+            return false;
+        }
+        return $arSecuencia->getFestivo();
+    }
+
+    public static function validacionDomingoFestivo($fecha, $arrFestivos, $arSecuencia)
+    {
+        $nroDia = intval($fecha->format('N'));
+        $diaActual = $fecha->format("Y-m-d");
+        $diaSiguiente = date("Y-m-d", strtotime($diaActual . " + 1 days"));
+        if ($nroDia != 7 && !in_array($diaSiguiente, $arrFestivos)) {
+            return false;
+        }
+        return $arSecuencia->getDomingoFestivo();
+    }
+
 }

@@ -357,7 +357,23 @@ class TurPedidoRepository extends ServiceEntityRepository
     public function lista(){
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedido::class, 'p')
-            ->select('p');
+            ->select('p.codigoPedidoPk')
+            ->addSelect('p.numero')
+            ->addSelect('p.fecha')
+            ->addSelect('p.horas')
+            ->addSelect('p.horasDiurnas')
+            ->addSelect('p.horasNocturnas')
+            ->addSelect('p.estadoAutorizado')
+            ->addSelect('p.estadoAprobado')
+            ->addSelect('p.estadoAnulado')
+            ->addSelect('p.vrTotal')
+            ->addSelect('p.usuario')
+            ->addSelect('pt.nombre as pedidoTipoNombre')
+            ->addSelect('c.nombreCorto as clienteNombreCorto')
+            ->addSelect('s.nombre as sectorNombre')
+        ->leftJoin('p.pedidoTipoRel', 'pt')
+        ->leftJoin('p.clienteRel', 'c')
+        ->leftJoin('p.sectorRel', 's');
 
         if($session->get('filtroTurInformeComercialPedidoClienteCodigo') != ''){
             $queryBuilder->andWhere("p.codigoClienteFk  = '{$session->get('filtroTurInformeComercialPedidoClienteCodigo')}'");

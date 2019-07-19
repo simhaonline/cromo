@@ -135,6 +135,13 @@ final class FuncionesController
         return $fechaHasta;
     }
 
+    public static function primerDia($fecha)
+    {
+        $fechaDesde = $fecha->format('Y-m') . '-01';
+        $fechaDesde = date_create($fechaDesde);
+        return $fechaDesde;
+    }
+
     public static function desdeHastaAnioMes($anio, $mes)
     {
         $fecha = date_create($anio . '-' . $mes . '-01');

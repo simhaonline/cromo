@@ -26,4 +26,12 @@ class TurFestivoRepository extends ServiceEntityRepository
         return $arFestivos;
     }
 
+    public function fechaArray($fechaDesde, $fechaHasta)
+    {
+        $festivos = $this->fecha($fechaDesde, $fechaHasta);
+        return array_map(function ($arFestivo) {
+            return $arFestivo['fecha']->format('Y-m-d');
+        }, $festivos);
+    }
+
 }

@@ -50,9 +50,6 @@
                href="javascript:abrirVentana3('{{ path('turno_buscar_empleadoprogramar', {'codigoContratoDetalle': arPedidoDetalle.codigoContratoDetalleFk }) }}', 'ProgramarEmpleado', 600, 1200)">Nuevo</a>
         </div>
         <div class="btn-group">
-            {{ form_widget(form.btnSimular) }}
-        </div>
-        <div class="btn-group">
             {{ form_widget(form.btnActualizar) }}
         </div>
         <div class="btn-group">
@@ -64,17 +61,61 @@
     <table width="100%" class="table table-condensed table-bordered tabla-datos">
         <thead>
         <tr>
-            <th>ID</th>
+            <th>AÑO</th>
+            <th>MES</th>
+            {% for arrDiaSemana in arrDiaSemana %}
+                <th {{ arrDiaSemana.festivo? 'class="dia-festivo"' : '' }}>{{ arrDiaSemana.dia }}{{ arrDiaSemana.diaSemana }}</th>
+            {% endfor %}
         </tr>
         </thead>
         <tbody>
         {% for arSimulacion in arSimulaciones %}
             <tr>
-                <td>{{ arSimulacion.codigoSimulacionPk }}</td>
+                <td>{{ arSimulacion.anio }}</td>
+                <td>{{ arSimulacion.mes }}</td>
+                <td>{{ arSimulacion.dia1 }}</td>
+                <td>{{ arSimulacion.dia2 }}</td>
+                <td>{{ arSimulacion.dia3 }}</td>
+                <td>{{ arSimulacion.dia4 }}</td>
+                <td>{{ arSimulacion.dia5 }}</td>
+                <td>{{ arSimulacion.dia6 }}</td>
+                <td>{{ arSimulacion.dia7 }}</td>
+                <td>{{ arSimulacion.dia8 }}</td>
+                <td>{{ arSimulacion.dia9 }}</td>
+                <td>{{ arSimulacion.dia10 }}</td>
+                <td>{{ arSimulacion.dia11 }}</td>
+                <td>{{ arSimulacion.dia12 }}</td>
+                <td>{{ arSimulacion.dia13 }}</td>
+                <td>{{ arSimulacion.dia14 }}</td>
+                <td>{{ arSimulacion.dia15 }}</td>
+                <td>{{ arSimulacion.dia16 }}</td>
+                <td>{{ arSimulacion.dia17 }}</td>
+                <td>{{ arSimulacion.dia18 }}</td>
+                <td>{{ arSimulacion.dia19 }}</td>
+                <td>{{ arSimulacion.dia20 }}</td>
+                <td>{{ arSimulacion.dia21 }}</td>
+                <td>{{ arSimulacion.dia22 }}</td>
+                <td>{{ arSimulacion.dia23 }}</td>
+                <td>{{ arSimulacion.dia24 }}</td>
+                <td>{{ arSimulacion.dia25 }}</td>
+                <td>{{ arSimulacion.dia26 }}</td>
+                <td>{{ arSimulacion.dia27 }}</td>
+                <td>{{ arSimulacion.dia28 }}</td>
+                <td>{{ arSimulacion.dia29 }}</td>
+                <td>{{ arSimulacion.dia30 }}</td>
+                <td>{{ arSimulacion.dia31 }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.fechaSimulacion) }}
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnSimularLimpiar) }}
+            {{ form_widget(form.btnSimular) }}
+        </div>
+    </div>
     {{ form_end(form) }}
 {% endblock %}

@@ -23,6 +23,8 @@ class TurSimulacionRepository extends ServiceEntityRepository
         if($codigoPedidoDetalle) {
             $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurSimulacion::class, 's')
                 ->select('s.codigoSimulacionPk')
+                ->addSelect('s.anio')
+                ->addSelect('s.mes')
                 ->addSelect('s.dia1')
                 ->addSelect('s.dia2')
                 ->addSelect('s.dia3')
@@ -58,6 +60,12 @@ class TurSimulacionRepository extends ServiceEntityRepository
             $arSimulaciones = $queryBuilder->getQuery()->getResult();
         }
         return $arSimulaciones;
+    }
+
+    public function limpiar($codigoPedidoDetalle) {
+        $em = $this->getEntityManager();
+        $em->createQueryBuilder()->delete(TurSimulacion::class,'s')->andWhere("s.codigoPedidoDetalleFk = " . $codigoPedidoDetalle)->getQuery()->execute();
+        $em->flush();
     }
 
 }

@@ -565,4 +565,64 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
         return $porcentaje;
     }
 
+    public function informe(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporteDetalle::class, 'ad')
+            ->select('ad.codigoAporteDetallePk')
+            ->addSelect('a.anio')
+            ->addSelect('a.mes')
+            ->addSelect('ad.fechaDesde')
+            ->addSelect('ad.fechaHasta')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('ad.codigoContratoFk')
+            ->addSelect('ad.ingreso')
+            ->addSelect('ad.retiro')
+            ->addSelect('ad.variacionTransitoriaSalario')
+            ->addSelect('ad.suspensionTemporalContratoLicenciaServicios')
+            ->addSelect('ad.incapacidadGeneral')
+            ->addSelect('ad.licenciaMaternidad')
+            ->addSelect('ad.incapacidadAccidenteTrabajoEnfermedadProfesional')
+            ->addSelect('ad.salarioBasico')
+            ->addSelect('ad.suplementario')
+            ->addSelect('ad.diasCotizadosPension')
+            ->addSelect('ad.diasCotizadosSalud')
+            ->addSelect('ad.diasCotizadosRiesgosProfesionales')
+            ->addSelect('ad.diasCotizadosCajaCompensacion')
+            ->addSelect('ad.ibcPension')
+            ->addSelect('ad.ibcSalud')
+            ->addSelect('ad.ibcRiesgosProfesionales')
+            ->addSelect('ad.ibcCaja')
+            ->addSelect('ad.tarifaPension')
+            ->addSelect('ad.tarifaSalud')
+            ->addSelect('ad.tarifaRiesgos')
+            ->addSelect('ad.tarifaCaja')
+            ->addSelect('ad.cotizacionPension')
+            ->addSelect('ad.cotizacionSalud')
+            ->addSelect('ad.cotizacionRiesgos')
+            ->addSelect('ad.cotizacionCaja')
+            ->addSelect('ad.aportesFondoSolidaridadPensionalSolidaridad')
+            ->addSelect('ad.aportesFondoSolidaridadPensionalSubsistencia')
+            ->addSelect('ad.diasLicencia')
+            ->leftJoin('ad.aporteRel', 'a')
+            ->leftJoin('ad.empleadoRel', 'e')
+            ->orderBy('a.codigoAportePk', 'DESC');
+        if ($session->get('filtroRhuAporteAnio') != '') {
+            $queryBuilder->andWhere("a.anio LIKE '%{$session->get('filtroRhuAporteAnio')}%' ");
+        }
+        if ($session->get('filtroRhuAporteMes') != '') {
+            $queryBuilder->andWhere("a.mes = {$session->get('filtroRhuAporteMes')} ");
+        }
+        if ($session->get('filtroRhuInformeAporteFechaDesde') != null) {
+            $queryBuilder->andWhere("ad.fechaDesde >= '{$session->get('filtroRhuInformeAporteFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroRhuInformeAporteFechaHasta') != null) {
+            $queryBuilder->andWhere("ad.fechaHasta <= '{$session->get('filtroRhuInformeAporteFechaHasta')} 23:59:59'");
+        }
+        if ($session->get('filtroRhuInformeAporteCodigoEmpleado') != null) {
+            $queryBuilder->andWhere("ad.codigoEmpleadoFk = {$session->get('filtroRhuInformeAporteCodigoEmpleado')}");
+        }
+        return $queryBuilder;
+    }
+
 }

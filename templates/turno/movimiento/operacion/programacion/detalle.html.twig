@@ -44,8 +44,9 @@
                                 <td>{{ arPedidoDetalle.conceptoNombre }}</td>
                                 <td colspan="33"></td>
                             </tr>
-                            <tr>
+
                             {% for arProgramacion in arPedidoDetalle.arProgramaciones %}
+                                <tr>
                                     <td>{{ arProgramacion.codigoProgramacionPk }}</td>
                                     <td>
                                         <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_recurso',
@@ -86,9 +87,10 @@
                                     <td>{{ arProgramacion.dia31 }}</td>
                                     <td>{{ arProgramacion.horasDiurnas }}</td>
                                     <td>{{ arProgramacion.horasNocturnas }}</td>
-                                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arProgramacion.codigoProgramacionPk }}"/></td>
+                                    <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arProgramacion.codigoProgramacionPk }}"/></td>
+                                </tr>
                             {% endfor %}
-                            </tr>
+
                         {% endfor %}
                         </tbody>
                     </table>

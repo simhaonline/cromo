@@ -36,7 +36,7 @@ class EmpleadoProgramarController extends Controller
             if ($formFiltro->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroTurEmpleadoCodigo', $formFiltro->get('txtCodigo')->getData());
                 $session->set('filtroTurEmpleadoNombre', $formFiltro->get('txtNombre')->getData());
-                $session->set('filtroTurEmpleadoIdentificacion', $formFiltro->get('txtNit')->getData());
+                $session->set('filtroTurEmpleadoIdentificacion', $formFiltro->get('txtIdentificacion')->getData());
             }
 
             if ($formFiltro->get('btnGuardar')->isClicked()) {

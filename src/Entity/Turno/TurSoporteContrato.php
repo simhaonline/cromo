@@ -38,6 +38,16 @@ class TurSoporteContrato
     private $mes = 0;
 
     /**
+     * @ORM\Column(name="fecha_desde", type="date", nullable=true)
+     */
+    private $fechaDesde;
+
+    /**
+     * @ORM\Column(name="fecha_hasta", type="date", nullable=true)
+     */
+    private $fechaHasta;
+
+    /**
      * @ORM\Column(name="codigo_contrato_fk", type="integer", nullable=true)
      */
     private $codigoContratoFk;
@@ -1064,6 +1074,38 @@ class TurSoporteContrato
     public function setEmpleadoRel($empleadoRel): void
     {
         $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDesde()
+    {
+        return $this->fechaDesde;
+    }
+
+    /**
+     * @param mixed $fechaDesde
+     */
+    public function setFechaDesde($fechaDesde): void
+    {
+        $this->fechaDesde = $fechaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHasta()
+    {
+        return $this->fechaHasta;
+    }
+
+    /**
+     * @param mixed $fechaHasta
+     */
+    public function setFechaHasta($fechaHasta): void
+    {
+        $this->fechaHasta = $fechaHasta;
     }
 
 

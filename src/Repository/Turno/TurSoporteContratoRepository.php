@@ -55,5 +55,17 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
 
         return $queryBuilder;
     }
+
+    public function listaTiempo($id)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurSoporteContrato::class, 'sc');
+        $queryBuilder
+            ->select('sc.codigoSoporteContratoPk')
+            ->where('sc.codigoSoporteFk = ' . $id);
+        $arSoporteContratos = $queryBuilder->getQuery()->getResult();
+
+        return $arSoporteContratos;
+    }
 }
 

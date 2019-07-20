@@ -11,6 +11,7 @@ use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
+use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurSoporte;
 use App\Entity\Turno\TurSoporteContrato;
 use App\Form\Type\Turno\ContratoDetalleType;
@@ -125,7 +126,7 @@ class SoporteController extends ControllerListenerGeneral
         $form = Estandares::botonera($arSoporte->getEstadoAutorizado(), $arSoporte->getEstadoAprobado(), $arSoporte->getEstadoAnulado());
 
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-        $arrBtnGenerar = ['label' => 'Generar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnCargarContratos = ['label' => 'Cargar contratos', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobado = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -133,16 +134,19 @@ class SoporteController extends ControllerListenerGeneral
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnAprobado['disabled'] = false;
-            $arrBtnGenerar['disabled'] = true;
+            $arrBtnCargarContratos['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
         }
         if ($arSoporte->getEstadoAprobado()) {
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnAprobado['disabled'] = true;
         }
-        $form->add('btnGenerar', SubmitType::class, $arrBtnGenerar);
+        $form->add('btnCargarContratos', SubmitType::class, $arrBtnCargarContratos);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('btnCargarContratos')->isClicked()) {
+                $em->getRepository(TurSoporte::class)->cargarContratos($arSoporte);
+            }
             return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
         }
         $arSoporteContratos = $paginator->paginate($em->getRepository(TurSoporteContrato::class)->lista($id), $request->query->getInt('page', 1), 100);

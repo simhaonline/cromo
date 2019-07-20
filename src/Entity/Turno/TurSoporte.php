@@ -38,6 +38,11 @@ class TurSoporte
     private $codigoGrupoFk;
 
     /**
+     * @ORM\Column(name="contrato_terminado", type="boolean", options={"default":false})
+     */
+    private $contratoTerminado = false;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=500, nullable=true)
      */
     private $comentario;
@@ -247,6 +252,22 @@ class TurSoporte
     public function setSoportesContratosSoporteRel($soportesContratosSoporteRel): void
     {
         $this->soportesContratosSoporteRel = $soportesContratosSoporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoTerminado()
+    {
+        return $this->contratoTerminado;
+    }
+
+    /**
+     * @param mixed $contratoTerminado
+     */
+    public function setContratoTerminado($contratoTerminado): void
+    {
+        $this->contratoTerminado = $contratoTerminado;
     }
 
 

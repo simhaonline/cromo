@@ -104,8 +104,8 @@ class TurProgramacionRepository extends ServiceEntityRepository
                 $arProgramacion = new TurProgramacion();
                 $arProgramacion->setPedidoDetalleRel($arPedidoDetalle);
                 $arProgramacion->setPedidoRel($arPedidoDetalle->getPedidoRel());
-                //$arProgramacion->setAnio($arProgramacion->getFecha()->format('Y'));
-                //$arProgramacion->setMes($arProgramacion->getFecha()->format('m'));
+                $arProgramacion->setAnio($arPedidoDetalle->getAnio());
+                $arProgramacion->setMes($arPedidoDetalle->getMes());
                 $arProgramacion->setEmpleadoRel($arPrototipo->getEmpleadoRel());
                 //$arProgramacion->setSecuenciaRel($arPrototipo->getSecuenciaRel());
                 $fechaInicial = $arPrototipo->getFechaInicioSecuencia()->format('Y-m-d'); # Por cada recurso capturamos cual es la fecha en que inicia su programacion
@@ -227,5 +227,17 @@ class TurProgramacionRepository extends ServiceEntityRepository
                 }
             }
         }
+    }
+
+    public function listaEmpleadoSoporte($anio, $mes)
+    {
+        $em = $this->getEntityManager();
+        $queryBuider = $em->createQueryBuilder()->from(TurProgramacion::class, "p")
+            ->select('p.codigoEmpleadoFk')
+            ->where("p.anio = '{$anio}'")
+            ->andWhere("p.mes = '{$mes}'")
+            ->groupBy("p.codigoEmpleadoFk");
+        $arProgramaciones = $queryBuider->getQuery()->getResult();
+        return $arProgramaciones;
     }
 }

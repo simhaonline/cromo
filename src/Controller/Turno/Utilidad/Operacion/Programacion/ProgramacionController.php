@@ -88,6 +88,7 @@ class ProgramacionController extends Controller
                 $this->get("UtilidadesModelo")->eliminar(TurPrototipo::class, $arrDetallesSeleccionados);
             }
             if($form->get('btnSimular')->isClicked()) {
+                $em->getRepository(TurPrototipo::class)->actualizar($arrControles);
                 $fechaProgramacion = $form->get('fechaSimulacion')->getData();
                 $em->getRepository(TurPrototipo::class)->generarSimulacion($arPedidoDetalle, $fechaProgramacion);
             }

@@ -434,4 +434,30 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
         return $ibp;
     }
+
+    public function listaImpresionDql($codigoProgramacionPago = "",  $porFecha = false, $fechaDesde = "", $fechaHasta = "", $codigoPagoTipo = "", $codigoGrupo = "")
+    {
+        $qb = $this->_em->createQueryBuilder()->from(RhuPago::class, 'p');
+        $qb->select('p,e')
+            ->addSelect('abs(e.numeroIdentificacion) AS HIDDEN ordered')
+            ->join('p.empleadoRel', 'e')
+            ->leftJoin('p.contratoRel', 'c')
+            ->where('p.codigoPagoPk <> 0');
+        if ($codigoPagoTipo != "") {
+            $qb->andWhere("p.codigoPagoTipoFk = {$codigoPagoTipo}");
+        }
+        if ($codigoGrupo != "") {
+            $qb->andWhere(" c.codigoGrupoFk = {$codigoGrupo}");
+        }
+        if ($codigoProgramacionPago != "") {
+            $qb->andWhere("p.codigoProgramacionFk = {$codigoProgramacionPago}");
+        }
+        if ($porFecha == true) {
+            if ($fechaDesde != "" && $fechaHasta != "") {
+                $qb->andWhere(" (p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "')");
+            }
+        }
+        $qb->orderBy('ordered', 'ASC');
+        return $qb->getDQL();
+    }
 }

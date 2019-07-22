@@ -39,6 +39,16 @@ class TurProgramacion
     private $codigoEmpleadoFk;
 
     /**
+     * @ORM\Column(name="anio", type="integer")
+     */
+    private $anio = 0;
+
+    /**
+     * @ORM\Column(name="mes", type="integer")
+     */
+    private $mes = 0;
+
+    /**
      * @ORM\Column(name="dia_1", type="string", length=5, nullable=true)
      */
     private $dia1;
@@ -209,14 +219,14 @@ class TurProgramacion
     private $horasNocturnas = 0;
 
     /**
-     * @ORM\Column(name="anio", type="integer")
+     * @ORM\Column(name="complementario", type="boolean", options={"default":false})
      */
-    private $anio = 0;
+    private $complementario = false;
 
     /**
-     * @ORM\Column(name="mes", type="integer")
+     * @ORM\Column(name="adicional", type="boolean", options={"default":false})
      */
-    private $mes = 0;
+    private $adicional = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="programacionesPedidoRel")
@@ -303,6 +313,38 @@ class TurProgramacion
     public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
     {
         $this->codigoEmpleadoFk = $codigoEmpleadoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnio()
+    {
+        return $this->anio;
+    }
+
+    /**
+     * @param mixed $anio
+     */
+    public function setAnio($anio): void
+    {
+        $this->anio = $anio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMes()
+    {
+        return $this->mes;
+    }
+
+    /**
+     * @param mixed $mes
+     */
+    public function setMes($mes): void
+    {
+        $this->mes = $mes;
     }
 
     /**
@@ -804,6 +846,22 @@ class TurProgramacion
     /**
      * @return mixed
      */
+    public function getHoras()
+    {
+        return $this->horas;
+    }
+
+    /**
+     * @param mixed $horas
+     */
+    public function setHoras($horas): void
+    {
+        $this->horas = $horas;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getHorasDiurnas()
     {
         return $this->horasDiurnas;
@@ -836,33 +894,33 @@ class TurProgramacion
     /**
      * @return mixed
      */
-    public function getAnio()
+    public function getComplementario()
     {
-        return $this->anio;
+        return $this->complementario;
     }
 
     /**
-     * @param mixed $anio
+     * @param mixed $complementario
      */
-    public function setAnio($anio): void
+    public function setComplementario($complementario): void
     {
-        $this->anio = $anio;
+        $this->complementario = $complementario;
     }
 
     /**
      * @return mixed
      */
-    public function getMes()
+    public function getAdicional()
     {
-        return $this->mes;
+        return $this->adicional;
     }
 
     /**
-     * @param mixed $mes
+     * @param mixed $adicional
      */
-    public function setMes($mes): void
+    public function setAdicional($adicional): void
     {
-        $this->mes = $mes;
+        $this->adicional = $adicional;
     }
 
     /**
@@ -916,22 +974,6 @@ class TurProgramacion
     /**
      * @return mixed
      */
-    public function getHoras()
-    {
-        return $this->horas;
-    }
-
-    /**
-     * @param mixed $horas
-     */
-    public function setHoras($horas): void
-    {
-        $this->horas = $horas;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getSoportesHorasProgramacionRel()
     {
         return $this->soportesHorasProgramacionRel;
@@ -944,6 +986,7 @@ class TurProgramacion
     {
         $this->soportesHorasProgramacionRel = $soportesHorasProgramacionRel;
     }
+
 
 }
 

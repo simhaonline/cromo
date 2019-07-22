@@ -231,6 +231,12 @@ class TurSoporteHora
     protected $programacionRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TurTurno", inversedBy="soportesHorasTurnoRel")
+     * @ORM\JoinColumn(name="codigo_turno_fk", referencedColumnName="codigo_turno_pk")
+     */
+    protected $turnoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoSoporteHoraPk()
@@ -900,6 +906,22 @@ class TurSoporteHora
     public function setProgramacionRel($programacionRel): void
     {
         $this->programacionRel = $programacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurnoRel()
+    {
+        return $this->turnoRel;
+    }
+
+    /**
+     * @param mixed $turnoRel
+     */
+    public function setTurnoRel($turnoRel): void
+    {
+        $this->turnoRel = $turnoRel;
     }
 
 

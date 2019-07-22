@@ -272,5 +272,34 @@ class TurProgramacionRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function periodoDias($anio, $mes, $codigoEmpleado = "")
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TurProgramacion::class, 'p')
+            ->select('p.codigoProgramacionPk')
+            ->addSelect('p.complementario')
+            ->addSelect('p.adicional')
+            ->where("p.codigoEmpleadoFk = {$codigoEmpleado}")
+            ->andWhere("p.anio={$anio}")
+            ->andWhere("p.mes={$mes}");
+        for($i = 1; $i<=31;$i++) {
+            $queryBuilder->addSelect('p.dia' . $i);
+        }
+
+        $arProgramaciones = $queryBuilder->getQuery()->getResult();
+        return $arProgramaciones;
+
+        /*$sql = "SELECT dia_1 , dia_2
+FROM tur_programacion
+LEFT JOIN tur_turno as tdia1
+ON tur_programacion.dia_1 =tdia1.codigo_turno_pk
+LEFT JOIN tur_turno as tdia2
+ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
+        $stmt = $em->getConnection()->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll();*/
+
+    }
 }
 

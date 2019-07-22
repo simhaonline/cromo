@@ -144,6 +144,9 @@ class SoporteController extends ControllerListenerGeneral
         $form->add('btnCargarContratos', SubmitType::class, $arrBtnCargarContratos);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(TurSoporte::class)->autorizar($arSoporte);
+            }
             if($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(TurSoporte::class)->cargarContratos($arSoporte);
             }

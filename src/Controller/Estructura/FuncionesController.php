@@ -556,4 +556,15 @@ final class FuncionesController
         return $arrDiaSemana;
     }
 
+    public static function verificarFestivoArray($arrFestivos, $fecha)
+    {
+        $festivo = false;
+        foreach ($arrFestivos as $arrFestivo) {
+            if ($arrFestivo['fecha'] == $fecha) {
+                $festivo = true;
+            }
+        }
+        return $festivo;
+    }
+
 }

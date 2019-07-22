@@ -277,6 +277,11 @@ class TurSoporteContrato
     protected $empleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurSoporteHora", mappedBy="soporteContratoRel")
+     */
+    protected $soportesHorasSoporteContratoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -1107,6 +1112,23 @@ class TurSoporteContrato
     {
         $this->fechaHasta = $fechaHasta;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSoportesHorasSoporteContratoRel()
+    {
+        return $this->soportesHorasSoporteContratoRel;
+    }
+
+    /**
+     * @param mixed $soportesHorasSoporteContratoRel
+     */
+    public function setSoportesHorasSoporteContratoRel($soportesHorasSoporteContratoRel): void
+    {
+        $this->soportesHorasSoporteContratoRel = $soportesHorasSoporteContratoRel;
+    }
+
 
 
 }

@@ -237,6 +237,11 @@ class TurProgramacion
     protected $empleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurSoporteHora", mappedBy="programacionRel")
+     */
+    protected $soportesHorasProgramacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoProgramacionPk()
@@ -924,8 +929,21 @@ class TurProgramacion
         $this->horas = $horas;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSoportesHorasProgramacionRel()
+    {
+        return $this->soportesHorasProgramacionRel;
+    }
 
-
+    /**
+     * @param mixed $soportesHorasProgramacionRel
+     */
+    public function setSoportesHorasProgramacionRel($soportesHorasProgramacionRel): void
+    {
+        $this->soportesHorasProgramacionRel = $soportesHorasProgramacionRel;
+    }
 
 }
 

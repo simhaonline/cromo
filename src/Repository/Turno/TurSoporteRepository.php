@@ -122,15 +122,15 @@ class TurSoporteRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         //$arTurConfiguracion = $em->getRepository('BrasaTurnoBundle:TurConfiguracion')->find(1);
 
-        $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->listaTiempo($arSoporte->getCodigoSoportePk());
+        $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->listaHoras($arSoporte->getCodigoSoportePk());
         foreach ($arSoportesContratos as $arSoportesContrato) {
-            //$em->getRepository('BrasaTurnoBundle:TurSoportePago')->generar($arSoportePago, $arFestivos, $arTurConfiguracion);
+            $em->getRepository(TurSoporteContrato::class)->generar($arSoportePago, $arFestivos, $arTurConfiguracion);
         }
         $em->flush();
         /*
         //Genera soporte pago "programacion"
         foreach ($arSoportesPago as $arSoportePago) {
-            $em->getRepository('BrasaTurnoBundle:TurSoportePago')->generarProgramacion($arSoportePago, $arSoportePagoPeriodo->getFechaDesde()->format('Y'), $arSoportePagoPeriodo->getFechaDesde()->format('m'));
+            $em->getRepository(TurSoporteContrato::class)->generarProgramacion($arSoportePago, $arSoportePagoPeriodo->getFechaDesde()->format('Y'), $arSoportePagoPeriodo->getFechaDesde()->format('m'));
         }
         $em->flush();
 

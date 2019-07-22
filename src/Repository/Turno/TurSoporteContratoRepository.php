@@ -56,7 +56,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function listaTiempo($id)
+    public function listaHoras($id)
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurSoporteContrato::class, 'sc');

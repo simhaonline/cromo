@@ -79,6 +79,11 @@ class TurSoporte
     protected $soportesContratosSoporteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurSoporteHora", mappedBy="soporteRel")
+     */
+    protected $soportesHorasSoporteRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoSoportePk()
@@ -268,6 +273,22 @@ class TurSoporte
     public function setContratoTerminado($contratoTerminado): void
     {
         $this->contratoTerminado = $contratoTerminado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoportesHorasSoporteRel()
+    {
+        return $this->soportesHorasSoporteRel;
+    }
+
+    /**
+     * @param mixed $soportesHorasSoporteRel
+     */
+    public function setSoportesHorasSoporteRel($soportesHorasSoporteRel): void
+    {
+        $this->soportesHorasSoporteRel = $soportesHorasSoporteRel;
     }
 
 

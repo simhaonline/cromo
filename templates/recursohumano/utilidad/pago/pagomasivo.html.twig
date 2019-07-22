@@ -9,7 +9,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Codigo programacion:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numero, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                    {{ form_widget(form.codigoProgramacion, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
                 </div>
                 <label class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
@@ -21,11 +21,21 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
+                <label class="col-sm-2 control-label">Grupo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.grupoRel) }}
+                </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Hasta:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.porFecha) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

@@ -33,7 +33,7 @@ class PagoMasivo extends \FPDF
     public static $codigoZonaPuesto;
     public static $codigoGrupoPago;
 
-    public function Generar($em, $codigoProgramacionPago = "", $strRuta = "", $codigoPago = "", $codigoZona = "", $codigoSubzona = "", $porFecha = false, $fechaDesde = "", $fechaHasta = "", $dato = "", $centroCosto = "", $pagoTipo = "", $identificacionEmpleado = "", $sucursal = "", $area = "", $proyecto = "", $codigoClienteTurno = "", $codigoZonaPuesto = "", $codigoGrupoPago = "")
+    public function Generar($em, $codigoProgramacionPago = "", $porFecha = false, $fechaDesde = "", $fechaHasta = "",  $pagoTipo = "", $codigoGrupoPago = "")
     {
         ob_clean();
         set_time_limit(0);
@@ -41,21 +41,10 @@ class PagoMasivo extends \FPDF
         //$em = $miThis->getDoctrine()->getManager();
         self::$em = $em;
         self::$codigoProgramacionPago = $codigoProgramacionPago;
-        self::$codigoPago = $codigoPago;
-        self::$codigoZona = $codigoZona;
-        self::$codigoSubzona = $codigoSubzona;
         self::$porFecha = $porFecha;
         self::$fechaDesde = $fechaDesde;
         self::$fechaHasta = $fechaHasta;
-        self::$dato = $dato;
-        self::$codigoCentroCosto = $centroCosto;
         self::$codigoPagoTipo = $pagoTipo;
-        self::$identificacionEmpleado = $identificacionEmpleado;
-        self::$codigoSucursal = $sucursal;
-        self::$codigoArea = $area;
-        self::$codigoProyecto = $proyecto;
-        self::$codigoClienteTurno = $codigoClienteTurno;
-        self::$codigoZonaPuesto = $codigoZonaPuesto;
         self::$codigoGrupoPago = $codigoGrupoPago;
 
         //$pdf = new FormatoPagoMasivo('P', 'mm', array(215, 147));
@@ -65,11 +54,7 @@ class PagoMasivo extends \FPDF
         $pdf->SetFont('Times', '', 12);
         $pdf->SetFillColor(200, 200, 200);
         $this->Body($pdf);
-        if ($strRuta == "") {
-            $pdf->Output("Pago$codigoProgramacionPago$codigoPago.pdf", 'D');
-        } else {
-            $pdf->Output($strRuta . "Pago$codigoProgramacionPago$codigoPago.pdf", 'F');
-        }
+        $pdf->Output("Pagos.pdf", 'D');
     }
 
     public function Header()
@@ -130,7 +115,7 @@ class PagoMasivo extends \FPDF
         $pdf->SetFont('Arial', '', 7);
         $pdf->SetFillColor(200, 200, 200);
         $arConfiguracion = self::$em->getRepository(RhuConfiguracion::class)->find(1);
-        $dql = self::$em->getRepository(RhuPago::class)->listaImpresionDql(self::$codigoPago, self::$codigoProgramacionPago, self::$codigoZona, self::$codigoSubzona, self::$porFecha, self::$fechaDesde, self::$fechaHasta, self::$dato, self::$codigoCentroCosto, self::$codigoPagoTipo, self::$identificacionEmpleado, self::$codigoSucursal, self::$codigoArea, self::$codigoProyecto, self::$codigoClienteTurno, self::$codigoZonaPuesto, self::$codigoGrupoPago);
+        $dql = self::$em->getRepository(RhuPago::class)->listaImpresionDql(self::$codigoProgramacionPago,  self::$porFecha, self::$fechaDesde, self::$fechaHasta, self::$codigoPagoTipo, self::$codigoGrupoPago);
         $query = self::$em->createQuery($dql);
         $arPagos = $query->getResult();
         $numeroPagos = count($arPagos);
@@ -185,7 +170,7 @@ class PagoMasivo extends \FPDF
             $pdf->Cell(25, 4, "CARGO:", 1, 0, 'L', 1);
             $pdf->SetFont('Arial', '', 7);
             $pdf->SetFillColor(272, 272, 272);
-            $pdf->Cell(50, 4, $arPago->getEmpleadoRel()->getCargoRel()->getNombre(), 1, 0, 'L', 1);
+            $pdf->Cell(50, 4, utf8_decode($arPago->getContratoRel()->getCargoRel()->getNombre()), 1, 0, 'L', 1);
             $pdf->SetFont('Arial', 'B', 7);
             $pdf->SetFillColor(200, 200, 200);
             $pdf->Cell(30, 4, "DESDE:", 1, 0, 'L', 1);
@@ -301,17 +286,17 @@ class PagoMasivo extends \FPDF
 //                $pdf->Ln(5);
 //            }
             $pdf->Ln(4);
-            $pdf->Cell(143, 4, "", 0, 0, 'R');
+            $pdf->Cell(140, 4, "", 0, 0, 'R');
             $pdf->SetFont('Arial', 'B', 7);
             $pdf->SetFillColor(200, 200, 200);
             $pdf->Cell(30, 4, "TOTAL DEVENGADO:", 1, 0, 'R', true);
             $pdf->Cell(20, 4, number_format($arPago->getVrDevengado(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
-            $pdf->Cell(143, 4, "", 0, 0, 'R');
+            $pdf->Cell(140, 4, "", 0, 0, 'R');
             $pdf->Cell(30, 4, "TOTAL DEDUCCIONES:", 1, 0, 'R', true);
             $pdf->Cell(20, 4, "-" . number_format($arPago->getVrDeduccion(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
-            $pdf->Cell(143, 4, "", 0, 0, 'R');
+            $pdf->Cell(140, 4, "", 0, 0, 'R');
             $pdf->Cell(30, 4, "NETO PAGAR", 1, 0, 'R', true);
             $pdf->Cell(20, 4, number_format($arPago->getVrNeto(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln(8);

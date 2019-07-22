@@ -4,6 +4,7 @@ namespace App\Controller\RecursoHumano\Utilidad\Pago;
 
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\RecursoHumano\RhuConfiguracion;
+use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Formato\RecursoHumano\PagoMasivo;
 use Doctrine\ORM\EntityRepository;
@@ -45,6 +46,21 @@ class FormatoPagoMasivoController extends Controller
         if ($session->get('filtroCodigoPagoTipo')) {
             $arrayPropiedadesTipo['data'] = $em->getReference(RhuPagoTipo::class, $session->get('filtroCodigoPagoTipo'));
         }
+        $arrayPropiedadesTipo = array(
+            'class' => RhuGrupo::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('g')
+                    ->orderBy('g.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""
+        );
+        if ($session->get('filtroCodigoGrupo')) {
+            $arrayPropiedadesTipo['data'] = $em->getReference(RhuGrupo::class, $session->get('filtroCodigoGrupo'));
+        }
         $dateFecha = new \DateTime('now');
         $strFechaDesde = $dateFecha->format('Y/m/') . "01";
         $intUltimoDia = $strUltimoDiaMes = date("d", (mktime(0, 0, 0, $dateFecha->format('m') + 1, 1, $dateFecha->format('Y')) - 1));
@@ -59,11 +75,12 @@ class FormatoPagoMasivoController extends Controller
         $dateFechaHasta = date_create($strFechaHasta);
         $form = $this->createFormBuilder()
             ->add('pagoTipoRel', EntityType::class, $arrayPropiedadesTipo)
-            ->add('numero', IntegerType::class, array('required' => false, 'data' => 0))
+            ->add('grupoRel', EntityType::class, $arrayPropiedadesTipo)
+            ->add('codigoProgramacion', IntegerType::class, array('required' => false, 'data' => 0))
             ->add('fechaDesde', DateType::class, array('format' => 'yyyyMMdd', 'data' => $dateFechaDesde))
             ->add('fechaHasta', DateType::class, array('format' => 'yyyyMMdd', 'data' => $dateFechaHasta))
             ->add('porFecha', CheckboxType::class, array('required' => false, 'data' => true))
-            ->add('btnGenerar', SubmitType::class, ['label' => 'Generar','attr' => ['class' => 'btn btn-default btn-default']])
+            ->add('btnGenerar', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-default btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -74,10 +91,16 @@ class FormatoPagoMasivoController extends Controller
                 } else {
                     $codigoPagoTipo = "";
                 }
+                $arGrupo = $form->get('grupoRel')->getData();
+                if ($arGrupo) {
+                    $codigoGrupo = $arGrupo->getCodigoGrupoPk();
+                } else {
+                    $codigoGrupo = "";
+                }
                 $fechaDesde = $form->get('fechaDesde')->getData();
                 $fechaHasta = $form->get('fechaHasta')->getData();
                 $objFormatoPago = new PagoMasivo();
-                $objFormatoPago->Generar($em, $form->get('numero')->getData(), "", "", $form->get('porFecha')->getData(), $fechaDesde->format('Y-m-d'), $fechaHasta->format('Y-m-d'),  $codigoPagoTipo);
+                $objFormatoPago->Generar($em, $form->get('codigoProgramacion')->getData(), $form->get('porFecha')->getData(), $fechaDesde->format('Y-m-d'), $fechaHasta->format('Y-m-d'), $codigoPagoTipo, $codigoGrupo);
             }
         }
         return $this->render('recursohumano/utilidad/pago/pagomasivo.html.twig', [

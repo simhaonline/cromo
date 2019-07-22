@@ -148,16 +148,19 @@
                         <li>
                             <a href="#">Pedido <span class="fa arrow"></span></a>
                             <ul>
-                                <li><a href="{{  path('turno_informe_comercial_pedido_lista') }}">Pedido</a></li>
-                                <li><a href="{{  path('turno_informe_comercial_pedidoDetalle_lista') }}">Pedido detalle</a></li>
-                                <li><a href="{{  path('turno_informe_comercial_pedidoSinAprobar_lista') }}">Pedido sin aprobar</a></li>
+                                <li><a href="{{ path('turno_informe_comercial_pedido_lista') }}">Pedido</a></li>
+                                <li><a href="{{ path('turno_informe_comercial_pedidoDetalle_lista') }}">Pedido
+                                        detalle</a></li>
+                                <li><a href="{{ path('turno_informe_comercial_pedidoSinAprobar_lista') }}">Pedido sin
+                                        aprobar</a></li>
                             </ul>
                         </li>
                         <li>
                             <a href="#">Factura <span class="fa arrow"></span></a>
                             <ul>
-                                <li><a href="{{  path('turno_informe_comercial_factura_lista') }}">Factura</a></li>
-                                <li><a href="{{  path('turno_informe_comercial_facturaDetalle_lista') }}">Factura detalle</a></li>
+                                <li><a href="{{ path('turno_informe_comercial_factura_lista') }}">Factura</a></li>
+                                <li><a href="{{ path('turno_informe_comercial_facturaDetalle_lista') }}">Factura
+                                        detalle</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -165,8 +168,15 @@
                 <li>
                     <a href="#">Juridico <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{  path('turno_informe_juridico_contrato_lista') }}">Contrato</a></li>
-                        <li><a href="{{  path('turno_informe_juridico_contratodetalle_lista') }}">Contrato detalle</a></li>
+                        <li><a href="{{ path('turno_informe_juridico_contrato_lista') }}">Contrato</a></li>
+                        <li><a href="{{ path('turno_informe_juridico_contratodetalle_lista') }}">Contrato detalle</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Operacion <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('turno_informe_operacion_programacion_lista') }}">Programacion</a></li>
                     </ul>
                 </li>
 

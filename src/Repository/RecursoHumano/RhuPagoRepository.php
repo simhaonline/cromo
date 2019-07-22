@@ -434,4 +434,46 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
         return $ibp;
     }
+
+    public function listaImpresionDql($codigoPago = "", $codigoProgramacionPago = "", $codigoZona = "", $codigoSubzona = "", $porFecha = false, $fechaDesde = "", $fechaHasta = "", $dato = "", $codigoCentroCosto = "", $codigoPagoTipo = "", $identificacionEmpleado = "", $codigoSucursal = "", $codigoArea = "", $codigoProyecto = "", $codigoClienteTurno = "", $codigoZonaPuesto = "", $codigoGrupoPago = "")
+    {
+        $qb = $this->_em->createQueryBuilder()->from(RhuPago::class, 'p');
+        $qb->select('p,e')
+            ->addSelect('abs(e.numeroIdentificacion) AS HIDDEN ordered')
+            ->join('p.empleadoRel', 'e')
+            ->where('p.codigoPagoPk <> 0');
+        if ($codigoPagoTipo != "") {
+            $qb->andWhere("p.codigoPagoTipoFk = {$codigoPagoTipo}");
+        }
+        if ($codigoPago != "") {
+            $qb->andWhere(" p.codigoPagoPk = {$codigoPago}");
+        }
+        if ($codigoProgramacionPago != "") {
+            $qb->andWhere("p.codigoProgramacionFk = {$codigoProgramacionPago}");
+        }
+        if ($codigoClienteTurno != "") {
+            $qb->andWhere(" e.codigoClienteTurnoFk =  {$codigoClienteTurno}");
+        }
+        if ($dato != "" && is_numeric($dato)) {
+            $qb->andWhere(" e.dato = {$dato}");
+        }
+        if ($identificacionEmpleado != "") {
+            preg_match_all("/([0-9]+(\n|\t\ )?)/", $identificacionEmpleado, $coincidencias);
+            if (count($coincidencias[0]) > 0) {
+                $identificaciones = implode(", ", array_map(function ($str) {
+                    return "'{$str}'";
+                }, $coincidencias[0]));
+                $qb->andWhere("e.numeroIdentificacion IN ({$identificaciones})");
+            } else {
+                $qb->andWhere("e.numeroIdentificacion = '{$identificacionEmpleado}'");
+            }
+        }
+        if ($porFecha == true) {
+            if ($fechaDesde != "" && $fechaHasta != "") {
+                $qb->andWhere(" (p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "')");
+            }
+        }
+        $qb->orderBy('ordered', 'ASC');
+        return $qb->getDQL();
+    }
 }

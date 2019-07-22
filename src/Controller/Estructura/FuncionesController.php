@@ -515,4 +515,45 @@ final class FuncionesController
         return $arSecuencia->getDomingoFestivo();
     }
 
+    public static function diasMes($fecha, $arFestivos)
+    {
+        $strAnioMes = $fecha->format('Y/m');
+        $arrDiaSemana = array();
+        for ($i = 1; $i <= 31; $i++) {
+            $strFecha = $strAnioMes . '/' . $i;
+            $dateFecha = date_create($strFecha);
+            $diaSemana = "";
+            switch ($dateFecha->format('N')) {
+                case 1:
+                    $diaSemana = "l";
+                    break;
+                case 2:
+                    $diaSemana = "m";
+                    break;
+                case 3:
+                    $diaSemana = "i";
+                    break;
+                case 4:
+                    $diaSemana = "j";
+                    break;
+                case 5:
+                    $diaSemana = "v";
+                    break;
+                case 6:
+                    $diaSemana = "s";
+                    break;
+                case 7:
+                    $diaSemana = "d";
+                    break;
+            }
+            $arrDiasFestivos = array_map(function ($arFestivo) {
+                return $arFestivo['fecha']->format('Y-m-d');
+            }, $arFestivos);
+            $fechaActual = $fecha->format("Y-m-" . ($i < 10 ? '0' . $i : $i));
+            $boolFestivo = ($diaSemana == 'd' || in_array($fechaActual, $arrDiasFestivos));
+            $arrDiaSemana[$i] = array('dia' => $i, 'diaSemana' => $diaSemana, 'festivo' => $boolFestivo);
+        }
+        return $arrDiaSemana;
+    }
+
 }

@@ -31,7 +31,8 @@ class TurProgramacionRepository extends ServiceEntityRepository
         parent::__construct($registry, TurProgramacion::class);
     }
 
-    public function detalleProgramacion(){
+    public function detalleProgramacion()
+    {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd')
             ->select('pd.codigoPedidoDetallePk')
@@ -50,7 +51,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
                 ->addSelect('e.nombreCorto as empleadoNombreCorto')
                 ->leftJoin('p.empleadoRel', 'e')
                 ->where('p.codigoPedidoDetalleFk = ' . $arrPedidoDetalle['codigoPedidoDetallePk']);
-            for ($i = 1;$i<=31;$i++) {
+            for ($i = 1; $i <= 31; $i++) {
                 $queryBuilder->addSelect("p.dia{$i}");
             }
             $arProgramaciones = $queryBuilder->getQuery()->getResult();
@@ -61,7 +62,8 @@ class TurProgramacionRepository extends ServiceEntityRepository
         return $arrPedidoDetalles;
     }
 
-    public function generar($arPedidoDetalle) {
+    public function generar($arPedidoDetalle)
+    {
         $em = $this->getEntityManager();
         $fechaProgramacion = new \DateTime('now');
         $arUsuario = null;
@@ -78,8 +80,6 @@ class TurProgramacionRepository extends ServiceEntityRepository
         //$arFestivos =  $em->getRepository('BrasaGeneralBundle:GenFestivo')->festivos($arProgramacion->getFecha()->format('Y-m-') . $intDiaInicial, $arProgramacion->getFecha()->format('Y-m-') . $intDiaFinal);
         $arrFestivos = $em->getRepository(TurFestivo::class)->fechaArray($fechaProgramacion->format('Y-m-') . $intDiaInicial, $fechaProgramacion->format('Y-m-') . $intDiaFinal);
         $strMesAnio = $fechaProgramacion->format('Y/m');
-
-
 
 
         $arPrototipos = $em->getRepository(TurPrototipo::class)->findBy(['codigoContratoDetalleFk' => $arPedidoDetalle->getCodigoContratoDetalleFk()]);
@@ -167,7 +167,6 @@ class TurProgramacionRepository extends ServiceEntityRepository
                     }
 
 
-
                     /*$tieneIngresos = $arEmpleado
                         ? $this->getTieneIngresos($arProgramacionDetalle->getAnio(), $arProgramacionDetalle->getMes(), $llenarIngresosHasta, $arEmpleado->getCodigoEmpleadoPk())
                         : false;
@@ -240,4 +239,38 @@ class TurProgramacionRepository extends ServiceEntityRepository
         $arProgramaciones = $queryBuider->getQuery()->getResult();
         return $arProgramaciones;
     }
+
+    public function programaciones()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurProgramacion::class, 'p')
+            ->select('p.codigoProgramacionPk')
+            ->addSelect('p.codigoPedidoDetalleFk')
+            ->addSelect('p.horasDiurnas')
+            ->addSelect('p.horasNocturnas')
+            ->addSelect('p.anio')
+            ->addSelect('p.mes')
+            ->addSelect('p.codigoEmpleadoFk')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('cl.nombreCorto as cliente')
+            ->addSelect('ped.codigoClienteFk')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('p.pedidoRel', 'ped')
+            ->leftJoin('ped.clienteRel', 'cl');
+        for ($i = 1; $i <= 31; $i++) {
+            $queryBuilder->addSelect("p.dia{$i}");
+        }
+        if ($session->get('filtroTurProgramacionAnio') != null) {
+            $queryBuilder->andWhere("p.anio = '{$session->get('filtroTurProgramacionAnio')}'");
+        }
+        if ($session->get('filtroTurProgramacionMes') != null) {
+            $queryBuilder->andWhere("p.mes = '{$session->get('filtroTurProgramacionMes')}'");
+        }
+        if ($session->get('filtroRhuEmpleadoCodigoEmpleado') != null) {
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = '{$session->get('filtroRhuEmpleadoCodigoEmpleado')}'");
+        }
+        return $queryBuilder;
+    }
 }
+

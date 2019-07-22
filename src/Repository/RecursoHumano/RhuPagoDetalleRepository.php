@@ -245,4 +245,19 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         }
         return $suplementario;
     }
+
+    public function listaDql($codigoPago = "", $codigoProgramacionPagoDetalle = "")
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT pd FROM App\Entity\RecursoHumano\RhuPagoDetalle pd WHERE pd.codigoPagoDetallePk <> 0";
+
+        if ($codigoPago != "") {
+            $dql .= " AND pd.codigoPagoFk = " . $codigoPago;
+        }
+        if ($codigoProgramacionPagoDetalle != "") {
+            $dql .= " AND pd.codigoProgramacionDetalleFk = " . $codigoProgramacionPagoDetalle;
+        }
+        $dql .= " ORDER BY pd.codigoConceptoFk";
+        return $dql;
+    }
 }

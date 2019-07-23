@@ -58,17 +58,17 @@ class RhuContrato
     private $codigoSalarioTipoFk;
 
     /**
-     * @ORM\Column(name="ibp_cesantias_inicial", type="float", nullable=true)
+     * @ORM\Column(name="ibp_cesantias_inicial", type="float", nullable=true, options={"default":0})
      */
     private $ibpCesantiasInicial = 0;
 
     /**
-     * @ORM\Column(name="ibp_primas_inicial", type="float", nullable=true)
+     * @ORM\Column(name="ibp_primas_inicial", type="float", nullable=true, options={"default":0})
      */
     private $ibpPrimasInicial = 0;
 
     /**
-     * @ORM\Column(name="ibp_recargo_nocturno_inicial", type="float")
+     * @ORM\Column(name="ibp_recargo_nocturno_inicial", type="float", nullable=true, options={"default":0})
      */
     private $ibpRecargoNocturnoInicial = 0;
 

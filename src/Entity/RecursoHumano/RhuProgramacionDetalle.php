@@ -123,6 +123,11 @@ class RhuProgramacionDetalle
     private $horasExtrasFestivasNocturnas = 0;
 
     /**
+     * @ORM\Column(name="horas_recargo", type="float")
+     */
+    private $horasRecargo = 0;
+
+    /**
      * @ORM\Column(name="horas_recargo_nocturno", type="float")
      */
     private $horasRecargoNocturno = 0;
@@ -711,6 +716,22 @@ class RhuProgramacionDetalle
     public function setDiasVacaciones($diasVacaciones): void
     {
         $this->diasVacaciones = $diasVacaciones;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasRecargo()
+    {
+        return $this->horasRecargo;
+    }
+
+    /**
+     * @param mixed $horasRecargo
+     */
+    public function setHorasRecargo($horasRecargo): void
+    {
+        $this->horasRecargo = $horasRecargo;
     }
 
 

@@ -34,7 +34,11 @@ class ConfiguracionType extends AbstractType
                 'query_builder' => function(EntityRepository $er){
                     return $er->createQueryBuilder('er')
                         ->orderBy('er.nombre','ASC');
-                },'choice_label' => 'nombre',
+                },
+                'choice_label' => function ($er) {
+                    $campo = $er->getCodigoConceptoPk() . " - " . $er->getNombre();
+                    return $campo;
+                },
                 'required' => true,
                 'attr' => ['class' => 'form-control to-select-2']
             ])
@@ -43,7 +47,11 @@ class ConfiguracionType extends AbstractType
                 'query_builder' => function(EntityRepository $er){
                     return $er->createQueryBuilder('er')
                         ->orderBy('er.nombre','ASC');
-                },'choice_label' => 'nombre',
+                },
+                'choice_label' => function ($er) {
+                    $campo = $er->getCodigoConceptoPk() . " - " . $er->getNombre();
+                    return $campo;
+                },
                 'required' => true,
                 'attr' => ['class' => 'form-control to-select-2']
             ])

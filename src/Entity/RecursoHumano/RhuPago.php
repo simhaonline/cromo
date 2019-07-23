@@ -109,7 +109,7 @@ class RhuPago
     private $vrNeto = 0;
 
     /**
-     * @ORM\Column(name="dias_ausentismo", type="integer")
+     * @ORM\Column(name="dias_ausentismo", type="integer", nullable=true, options={"default":0})
      */
     private $diasAusentismo = 0;
 

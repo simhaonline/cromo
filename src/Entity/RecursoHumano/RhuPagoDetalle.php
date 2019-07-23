@@ -98,7 +98,7 @@ class RhuPagoDetalle
     private $vrIngresoBasePrestacion = 0;
 
     /**
-     * @ORM\Column(name="vr_ingreso_base_cotizacion_adicional", type="float")
+     * @ORM\Column(name="vr_ingreso_base_cotizacion_adicional", type="float", nullable=true, options={"default":0})
      */
     private $vrIngresoBaseCotizacionAdicional = 0;
 

@@ -97,6 +97,7 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.horasExtrasOrdinariasNocturnas')
             ->addSelect('pd.horasExtrasFestivasDiurnas')
             ->addSelect('pd.horasExtrasFestivasNocturnas')
+            ->addSelect('pd.horasRecargo')
             ->addSelect('pd.horasRecargoNocturno')
             ->addSelect('pd.horasRecargoFestivoDiurno')
             ->addSelect('pd.horasRecargoFestivoNocturno')

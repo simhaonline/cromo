@@ -4,8 +4,10 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuCredito;
+use App\Entity\Turno\TurPedido;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuAdicionalRepository extends ServiceEntityRepository
 {
@@ -77,6 +79,25 @@ class RhuAdicionalRepository extends ServiceEntityRepository
 
         $arrResultado = $queryBuilder->getQuery()->getResult();
         return $arrResultado;
+    }
+
+    public function lista(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicional::class, 'a')
+            ->select('a.codigoAdicionalPk')
+            ->addSelect('a.vrValor')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('a.estadoInactivo')
+            ->addSelect('a.estadoInactivoPeriodo')
+            ->leftJoin('a.empleadoRel', 'e')
+            ->leftJoin('a.conceptoRel', 'c')
+        ->where('a.permanente = true');
+
+        if($session->get('filtroRhuEmpleadoCodigo') != ''){
+            $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$session->get('filtroRhuEmpleadoCodigo')}'");
+        }
+        return $queryBuilder;
     }
 
 }

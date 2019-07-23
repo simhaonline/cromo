@@ -2960,6 +2960,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('t.vrFlete')
             ->addSelect('t.vrManejo')
             ->addSelect('t.unidades')
+            ->addSelect('t.vrDeclara')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('t.estadoEntregado')
             ->addSelect('t.fechaEntrega')

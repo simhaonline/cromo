@@ -149,14 +149,14 @@ class Factura2 extends \FPDF
     public function EncabezadoDetalles()
     {
         $this->Ln(10);
-        $header = array('NUMERO', 'FECHA', 'DOCUMENTO', 'ORIGEN', 'DESTINO', 'UND', 'MANEJO', 'FLETE');
+        $header = array('NUMERO', 'FECHA', 'DOCUMENTO', 'ORIGEN', 'DESTINO', 'UND', 'MANEJO', 'FLETE', 'SUBTOTAL');
         $this->SetFillColor(170, 170, 170);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(20, 19, 35, 35, 35, 15, 15, 15);
+        $w = array(20, 19, 30, 30, 30, 15, 15, 15, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -202,12 +202,13 @@ class Factura2 extends \FPDF
             foreach ($arGuias as $arGuia) {
                 $pdf->Cell(20, 4, $arGuia['codigoGuiaFk'], 1, 0, 'L');
                 $pdf->Cell(19, 4, $arGuia['fechaIngreso']->format('Y-m-d'), 1, 0, 'L');
-                $pdf->Cell(35, 4, $arGuia['documentoCliente'], 1, 0, 'L');
-                $pdf->Cell(35, 4, substr(utf8_decode($arGuia['ciudadOrigen']), 0, 27), 1, 0, 'L');
-                $pdf->Cell(35, 4, substr(utf8_decode($arGuia['ciudadDestino']), 0, 15), 1, 0, 'L');
+                $pdf->Cell(30, 4, $arGuia['documentoCliente'], 1, 0, 'L');
+                $pdf->Cell(30, 4, substr(utf8_decode($arGuia['ciudadOrigen']), 0, 27), 1, 0, 'L');
+                $pdf->Cell(30, 4, substr(utf8_decode($arGuia['ciudadDestino']), 0, 15), 1, 0, 'L');
                 $pdf->Cell(15, 4, number_format($arGuia['unidades'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arGuia['vrManejo'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(15, 4, number_format($arGuia['vrFlete'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, number_format($arGuia['vrFlete'] + $arGuia['vrManejo'], 0, '.', ','), 1, 0, 'R');
                 $totalUnidades += $arGuia['unidades'];
                 $totalManejo += $arGuia['vrManejo'];
                 $totalFlete += $arGuia['vrFlete'];

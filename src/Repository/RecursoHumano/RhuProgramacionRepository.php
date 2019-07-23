@@ -20,6 +20,8 @@ use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Seguridad\Usuario;
+use App\Entity\Turno\TurSoporte;
+use App\Entity\Turno\TurSoporteContrato;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use PhpParser\Node\Expr\New_;
@@ -366,4 +368,150 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         }
 
     }
+
+    public function cargarContratosTurnos($codigoSoporte, $arProgramacion) {
+        $em = $this->getEntityManager();
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+
+        $arSoporte = $em->getRepository(TurSoporte::class)->find($codigoSoporte);
+        //if ($arSoportePagoPeriodo->getEstadoAprobadoPagoNomina() == 1) {
+        //$em->getRepository('BrasaRecursoHumanoBundle:RhuProgramacionPagoInconsistencia')->eliminarProgramacionPago($codigoProgramacionPago);
+        $arrInconsistencias = array();
+        $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->cargarNomina($codigoSoporte);
+        foreach ($arSoportesContratos as $arSoporteContrato) {
+
+            $salario = $arSoporteContrato['vrSalario'];
+            /*if ($arSoportePago->getVrSalarioCompensacion() > 0) {
+                $salario = $arSoportePago->getVrSalarioCompensacion();
+            }*/
+            $floVrDia = $salario / 30;
+            $floVrHora = $floVrDia / 8;
+            $arProgramacionDetalle = new RhuProgramacionDetalle();
+            $arProgramacionDetalle->setEmpleadoRel($em->getReference(RhuEmpleado::class, $arSoporteContrato['codigoEmpleadoFk']));
+            $arProgramacionDetalle->setProgramacionRel($arProgramacion);
+            $arProgramacionDetalle->setContratoRel($em->getReference(RhuContrato::class, $arSoporteContrato['codigoContratoFk']));
+            $arProgramacionDetalle->setVrSalario($salario);
+            //$arProgramacionDetalle->setSoporteTurno(TRUE);
+            //$arProgramacionDetalle->setCodigoSoportePagoFk($arSoportePago->getCodigoSoportePagoPk());
+            $arProgramacionDetalle->setFechaDesde($arSoporteContrato['fechaDesde']);
+            $arProgramacionDetalle->setFechaHasta($arSoporteContrato['fechaHasta']);
+            //$arProgramacionDetalle->setCodigoCompensacionTipoFk($arSoporteContrato->getCodigoCompensacionTipoFk());
+            //$arProgramacionDetalle->setCodigoSalarioFijoFk($arSoporteContrato->getCodigoSalarioFijoFk());
+            //$arProgramacionDetalle->setSalarioBasico($arSoportePago->getSalarioBasico());
+            if ($arSoporteContrato['contratoFechaDesde'] < $arProgramacion->getFechaDesde()) {
+                $arProgramacionDetalle->setFechaDesdeContrato($arSoporteContrato['fechaDesde']);
+            } else {
+                $arProgramacionDetalle->setFechaDesdeContrato($arSoporteContrato['contratoFechaDesde']);
+            }
+            $arProgramacionDetalle->setFechaHastaContrato($arSoporteContrato['fechaHasta']);
+            $intDias = $arSoporteContrato['dias'];
+            $intDiasTransporte = $arSoporteContrato['diasTransporte'];
+            $arProgramacionDetalle->setDias($intDias);
+            //$arProgramacionDetalle->setDiasReales($intDias);
+            $arProgramacionDetalle->setDiasTransporte($intDiasTransporte);
+            //$arProgramacionDetalle->setFactorDia($arContrato->getFactorHorasDia());
+            //$arProgramacionDetalle->setVrDia($floVrDia);
+            //$arProgramacionDetalle->setVrHora($floVrHora);
+            //Tiempo adicional
+            $horasNovedad = $arSoporteContrato['novedad'] * 8;
+            $intHoras = $arSoporteContrato['horasDescanso'] + $arSoporteContrato['horasDiurnas'] + $arSoporteContrato['horasNocturnas'] + $arSoporteContrato['horasFestivasDiurnas'] + $arSoporteContrato['horasFestivasNocturnas'];
+            $intHorasReales = $intHoras + $horasNovedad;
+            //$arProgramacionDetalle->setHorasPeriodo($intHoras);
+            //$arProgramacionDetalle->setHorasPeriodoReales($intHorasReales);
+            //$arProgramacionDetalle->setHorasNovedad($horasNovedad);
+            //$arProgramacionDetalle->setHorasDescanso($arSoporteContrato['horasDescanso']);
+            $arProgramacionDetalle->setHorasDiurnas($arSoporteContrato['horasDiurnas']);
+            //$arProgramacionDetalle->setHorasAdicionales($arSoporteContrato->getHorasAdicionales());
+            //$arProgramacionDetalle->setHorasDomingo($arSoporteContrato->getHorasDomingo());
+            $arProgramacionDetalle->setHorasNocturnas($arSoporteContrato['horasNocturnas']);
+            $arProgramacionDetalle->setHorasFestivasDiurnas($arSoporteContrato['horasFestivasDiurnas']);
+            $arProgramacionDetalle->setHorasFestivasNocturnas($arSoporteContrato['horasFestivasNocturnas']);
+            $arProgramacionDetalle->setHorasExtrasOrdinariasDiurnas($arSoporteContrato['horasExtrasOrdinariasDiurnas']);
+            $arProgramacionDetalle->setHorasExtrasOrdinariasNocturnas($arSoporteContrato['horasExtrasOrdinariasNocturnas']);
+            $arProgramacionDetalle->setHorasExtrasFestivasDiurnas($arSoporteContrato['horasExtrasFestivasDiurnas']);
+            $arProgramacionDetalle->setHorasExtrasFestivasNocturnas($arSoporteContrato['horasExtrasFestivasNocturnas']);
+            $arProgramacionDetalle->setHorasRecargo($arSoporteContrato['horasRecargo']);
+            $arProgramacionDetalle->setHorasRecargoNocturno($arSoporteContrato['horasRecargoNocturno']);
+            $arProgramacionDetalle->setHorasRecargoFestivoDiurno($arSoporteContrato['horasRecargoFestivoDiurno']);
+            $arProgramacionDetalle->setHorasRecargoFestivoNocturno($arSoporteContrato['horasRecargoFestivoNocturno']);
+
+
+            //Pregunta por el tipo de pension, si es pensionado no le retiene pension (PABLO ARANZAZU 27/04/2016)
+            /*if ($arContrato->getCodigoTipoPensionFk() == 5) {
+                $arProgramacionDetalle->setDescuentoPension(0);
+            }
+
+            //dias vacaciones
+            $arrVacaciones = $em->getRepository('BrasaRecursoHumanoBundle:RhuVacacion')->dias($arContrato->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacionPago->getFechaDesde(), $arProgramacionPago->getFechaHastaReal());
+            $intDiasVacaciones = $arrVacaciones['dias'];
+            if ($intDiasVacaciones > 0) {
+                $arProgramacionDetalle->setDiasVacaciones($intDiasVacaciones);
+                $arProgramacionDetalle->setIbcVacaciones($arrVacaciones['ibc']);
+            }
+
+            //dias licencia
+            $intDiasLicencia = $em->getRepository('BrasaRecursoHumanoBundle:RhuLicencia')->diasLicenciaPeriodo31($arProgramacionPago->getFechaDesde(), $arProgramacionPago->getFechaHastaReal(), $arContrato->getCodigoEmpleadoFk());
+            if ($intDiasLicencia > 0) {
+                $arProgramacionDetalle->setDiasLicencia($intDiasLicencia);
+            }
+
+            //dias incapacidad
+            $intDiasIncapacidad = $em->getRepository('BrasaRecursoHumanoBundle:RhuIncapacidad')->diasIncapacidadPeriodo31($arProgramacionPago->getFechaDesde(), $arProgramacionPago->getFechaHastaReal(), $arContrato->getCodigoEmpleadoFk());
+            if ($intDiasIncapacidad > 0) {
+                $arProgramacionDetalle->setDiasIncapacidad($intDiasIncapacidad);
+            }
+
+            if ($intDiasVacaciones != $arSoportePago->getVacacion()) {
+                $arrInconsistencias[] = array('inconsistencia' => "El empleado " . $arEmpleado->getNumeroIdentificacion() . "-" . $arEmpleado->getNombreCorto() . " tiene vacaciones de " . $arSoportePago->getVacacion() . " dias en turnos y de " . $intDiasVacaciones . " en recurso humano");
+            }
+            $intDiasLicenciaSoportePago = $arSoportePago->getLicencia() + $arSoportePago->getLicenciaNoRemunerada() + $arSoportePago->getAusentismo();
+            if ($intDiasLicencia != $intDiasLicenciaSoportePago) {
+                $arrInconsistencias[] = array('inconsistencia' => "El empleado " . $arEmpleado->getNumeroIdentificacion() . "-" . $arEmpleado->getNombreCorto() . " tiene licencias de " . $intDiasLicenciaSoportePago . " dias en turnos y de " . $intDiasLicencia . " en recurso humano");
+            }
+
+            if ($intDiasIncapacidad != $arSoportePago->getIncapacidad()) {
+                $arrInconsistencias[] = array('inconsistencia' => "El empleado " . $arEmpleado->getNumeroIdentificacion() . "-" . $arEmpleado->getNombreCorto() . " tiene incapacidades de " . $arSoportePago->getIncapacidad() . " dias en turnos y de " . $intDiasIncapacidad . " en recurso humano");
+            }
+            if ($arSoportePagoPeriodo->getAjusteDevengado()) {
+                if ($arSoportePago->getVrAjusteDevengadoPactado() > 0) {
+                    $arProgramacionDetalle->setVrAjusteDevengado($arSoportePago->getVrAjusteDevengadoPactado());
+                }
+            }
+            if ($arSoportePago->getVrDevengadoPactadoCompensacion() > 0) {
+                $arProgramacionDetalle->setVrDevengadoPactadoCompensacion($arSoportePago->getVrDevengadoPactadoCompensacion());
+            }
+            if ($arSoportePago->getVrAjusteCompensacion() > 0) {
+                $arProgramacionDetalle->setVrAjusteDevengado($arSoportePago->getVrAjusteCompensacion());
+            }
+            if ($arSoportePago->getVrRecargoCompensacion() > 0) {
+                $arProgramacionDetalle->setVrAjusteRecargo($arSoportePago->getVrRecargoCompensacion());
+            }
+            if ($arSoportePago->getVrComplementarioCompensacion() > 0) {
+                $arProgramacionDetalle->setVrAjusteComplementario($arSoportePago->getVrComplementarioCompensacion());
+            }*/
+            $em->persist($arProgramacionDetalle);
+        }
+
+        /*$arProgramacionPago->setInconsistencias(0);
+        if (count($arrInconsistencias) > 0) {
+            $arProgramacionPago->setInconsistencias(1);
+            foreach ($arrInconsistencias as $arrInconsistencia) {
+                $arProgramacionPagoInconsistencia = new \Brasa\RecursoHumanoBundle\Entity\RhuProgramacionPagoInconsistencia();
+                $arProgramacionPagoInconsistencia->setProgramacionPagoRel($arProgramacionPago);
+                $arProgramacionPagoInconsistencia->setInconsistencia($arrInconsistencia['inconsistencia']);
+                $em->persist($arProgramacionPagoInconsistencia);
+            }
+        }
+        $arProgramacionPago->setEmpleadosGenerados(1);
+        $arProgramacionPago->setNumeroEmpleados(count($arSoportesPago));
+        $arProgramacionPago->setCodigoSoportePagoPeriodoFk($codigoSoportePagoPeriodo);
+        */
+        $em->persist($arProgramacion);
+        //$arSoportePagoPeriodo->setEstadoBloqueoNomina(1);
+        $em->flush();
+        //}
+        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+    }
+
 }

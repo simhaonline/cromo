@@ -76,6 +76,43 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         return $arSoporteContratos;
     }
 
+    public function cargarNomina($id)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurSoporteContrato::class, 'sc')
+            ->select('sc.codigoSoporteContratoPk')
+            ->addSelect('sc.fechaDesde')
+            ->addSelect('sc.fechaHasta')
+            ->addSelect('sc.anio')
+            ->addSelect('sc.mes')
+            ->addSelect('sc.codigoEmpleadoFk')
+            ->addSelect('sc.codigoContratoFk')
+            ->addSelect('c.vrSalario')
+            ->addSelect('c.fechaDesde as contratoFechaDesde')
+            ->addSelect('c.fechaHasta as contratoFechaHasta')
+            ->addSelect('sc.dias')
+            ->addSelect('sc.diasTransporte')
+            ->addSelect('sc.horasDescanso')
+            ->addSelect('sc.horasDiurnas')
+            ->addSelect('sc.horasNocturnas')
+            ->addSelect('sc.horasFestivasDiurnas')
+            ->addSelect('sc.horasFestivasNocturnas')
+            ->addSelect('sc.horasExtrasOrdinariasDiurnas')
+            ->addSelect('sc.horasExtrasOrdinariasNocturnas')
+            ->addSelect('sc.horasExtrasFestivasDiurnas')
+            ->addSelect('sc.horasExtrasFestivasNocturnas')
+            ->addSelect('sc.horasRecargo')
+            ->addSelect('sc.horasRecargoNocturno')
+            ->addSelect('sc.horasRecargoFestivoDiurno')
+            ->addSelect('sc.horasRecargoFestivoNocturno')
+            ->addSelect('sc.novedad')
+            ->leftJoin('sc.contratoRel', 'c')
+            ->where('sc.codigoSoporteFk = ' . $id);
+        $arSoporteContratos = $queryBuilder->getQuery()->getResult();
+
+        return $arSoporteContratos;
+    }
+
     /**
      * @param $arSoporteContrato TurSoporteContrato
      */

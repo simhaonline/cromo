@@ -103,7 +103,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalle->setProgramacionRel($arProgramacion);
             $arProgramacionDetalle->setEmpleadoRel($arContrato->getEmpleadoRel());
             $arProgramacionDetalle->setContratoRel($arContrato);
-            $arProgramacionDetalle->setVrSalario($arContrato->getVrSalario());
+            $arProgramacionDetalle->setVrSalario($arContrato->getVrSalarioPago());
 
             if ($arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() == 'APR' || $arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() == 'PRA') {
                 $arProgramacionDetalle->setDescuentoPension(0);
@@ -131,8 +131,11 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalle->setDias($dias);
             $arProgramacionDetalle->setDiasTransporte($dias);
             $arProgramacionDetalle->setHorasDiurnas($horas);
-
-
+            $vrDia = $arContrato->getVrSalarioPago() / 30;
+            $vrHora = $vrDia / $arContrato->getFactorHorasDia();
+            $arProgramacionDetalle->setFactorHorasDia($arContrato->getFactorHorasDia());
+            $arProgramacionDetalle->setVrDia($vrDia);
+            $arProgramacionDetalle->setVrHora($vrHora);
             $em->persist($arProgramacionDetalle);
         }
         $cantidad = $em->getRepository(RhuProgramacion::class)->getCantidadRegistros($arProgramacion->getCodigoProgramacionPk());
@@ -385,8 +388,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             /*if ($arSoportePago->getVrSalarioCompensacion() > 0) {
                 $salario = $arSoportePago->getVrSalarioCompensacion();
             }*/
-            $floVrDia = $salario / 30;
-            $floVrHora = $floVrDia / 8;
+            $vrDia = $salario / 30;
+            $vrHora = $vrDia / $arSoporteContrato['factorHorasDia'];
             $arProgramacionDetalle = new RhuProgramacionDetalle();
             $arProgramacionDetalle->setEmpleadoRel($em->getReference(RhuEmpleado::class, $arSoporteContrato['codigoEmpleadoFk']));
             $arProgramacionDetalle->setProgramacionRel($arProgramacion);
@@ -411,8 +414,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             //$arProgramacionDetalle->setDiasReales($intDias);
             $arProgramacionDetalle->setDiasTransporte($intDiasTransporte);
             //$arProgramacionDetalle->setFactorDia($arContrato->getFactorHorasDia());
-            //$arProgramacionDetalle->setVrDia($floVrDia);
-            //$arProgramacionDetalle->setVrHora($floVrHora);
+            $arProgramacionDetalle->setVrDia($vrDia);
+            $arProgramacionDetalle->setVrHora($vrHora);
             //Tiempo adicional
             $horasNovedad = $arSoporteContrato['novedad'] * 8;
             $intHoras = $arSoporteContrato['horasDescanso'] + $arSoporteContrato['horasDiurnas'] + $arSoporteContrato['horasNocturnas'] + $arSoporteContrato['horasFestivasDiurnas'] + $arSoporteContrato['horasFestivasNocturnas'];

@@ -123,6 +123,11 @@ class RhuContrato
     private $vrSalario = 0;
 
     /**
+     * @ORM\Column(name="vr_salario_pago", options={"default":0},type="float", nullable=true)
+     */
+    private $vrSalarioPago = 0;
+
+    /**
      * @ORM\Column(name="vr_adicional", options={"default":0},type="float", nullable=true)
      */
     private $vrAdicional = 0;
@@ -1755,6 +1760,22 @@ class RhuContrato
     public function setIbpPrimasInicial($ibpPrimasInicial): void
     {
         $this->ibpPrimasInicial = $ibpPrimasInicial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSalarioPago()
+    {
+        return $this->vrSalarioPago;
+    }
+
+    /**
+     * @param mixed $vrSalarioPago
+     */
+    public function setVrSalarioPago($vrSalarioPago): void
+    {
+        $this->vrSalarioPago = $vrSalarioPago;
     }
 
 

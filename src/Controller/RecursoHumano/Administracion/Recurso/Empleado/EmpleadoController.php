@@ -184,15 +184,27 @@ class EmpleadoController extends BaseController
                 $arContrato->setContratoClaseRel($arContrato->getContratoTipoRel()->getContratoClaseRel());
                 $arContrato->setIndefinido($arContrato->getContratoClaseRel()->getIndefinido());
                 $arContrato->setFactorHorasDia($arContrato->getTiempoRel()->getFactorHorasDia());
+                if ($arContrato->getTiempoRel()->getFactorHorasDia() > 0) {
+                    $factorLocal = 8;
+                    $partes =  $arContrato->getTiempoRel()->getFactorHorasDia() / $factorLocal;
+                    $salario = $partes * $arContrato->getVrSalario();
+                    $arContrato->setVrSalarioPago($salario);
+                } else {
+                    $arContrato->setVrSalarioPago($arContrato->getVrSalario());
+                }
+
+                if ($arContrato->getVrSalario() <= ($arConfiguracion->getVrSalarioMinimo() * 2)) {
+                    $arContrato->setAuxilioTransporte(true);
+                } else {
+                    $arContrato->setAuxilioTransporte(false);
+                }
                 if ($id == 0) {
-                    if ($arContrato->getVrSalario() <= ($arConfiguracion->getVrSalarioMinimo() * 2)) {
-                        $arContrato->setAuxilioTransporte(true);
-                    }
                     $arContrato->setFechaUltimoPago($arContrato->getFechaDesde());
                     $arContrato->setFechaUltimoPagoCesantias($arContrato->getFechaDesde());
                     $arContrato->setFechaUltimoPagoPrimas($arContrato->getFechaDesde());
                     $arContrato->setFechaUltimoPagoVacaciones($arContrato->getFechaDesde());
                 }
+
                 $em->persist($arContrato);
                 $em->flush();
 

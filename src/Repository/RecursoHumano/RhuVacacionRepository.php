@@ -458,4 +458,29 @@ class RhuVacacionRepository extends ServiceEntityRepository
         }
     }
 
+    public function periodo($fechaDesde, $fechaHasta, $codigoEmpleado = "")
+    {
+        $em = $this->getEntityManager();
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+        $queryBuilder = $em->createQueryBuilder()->from(RhuVacacion::class, 'v')
+            ->addSelect('v.codigoVacacionPk')
+            ->addSelect('v.diasDisfrutadosReales')
+            ->addSelect('v.fechaDesdeDisfrute')
+            ->addSelect('v.vrIbcPromedio')
+            ->where("v.estadoAnulado = 0 AND (((v.fechaDesdeDisfrute BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (v.fechaHastaDisfrute BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
+                . "OR (v.fechaDesdeDisfrute >= '$strFechaDesde' AND v.fechaDesdeDisfrute <= '$strFechaHasta') "
+                . "OR (v.fechaHastaDisfrute >= '$strFechaHasta' AND v.fechaDesdeDisfrute <= '$strFechaDesde')) ");
+
+        /*$dql = "SELECT vacacion FROM BrasaRecursoHumanoBundle:RhuVacacion vacacion "
+            . "WHERE vacacion.estadoAnulado = 0 AND (((vacacion.fechaDesdeDisfrute BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (vacacion.fechaHastaDisfrute BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
+            . "OR (vacacion.fechaDesdeDisfrute >= '$strFechaDesde' AND vacacion.fechaDesdeDisfrute <= '$strFechaHasta') "
+            . "OR (vacacion.fechaHastaDisfrute >= '$strFechaHasta' AND vacacion.fechaDesdeDisfrute <= '$strFechaDesde')) ";*/
+        if ($codigoEmpleado != "") {
+            $queryBuilder->andWhere("v.codigoEmpleadoFk = {$codigoEmpleado}");
+        }
+        $arVacaciones = $queryBuilder->getQuery()->getResult();
+        return $arVacaciones;
+    }
+
 }

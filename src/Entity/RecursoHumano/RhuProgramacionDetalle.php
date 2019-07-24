@@ -63,6 +63,16 @@ class RhuProgramacionDetalle
     private $vrNeto = 0;
 
     /**
+     * @ORM\Column(name="vr_dia", type="float")
+     */
+    private $vrDia = 0;
+
+    /**
+     * @ORM\Column(name="vr_hora", type="float")
+     */
+    private $vrHora = 0;
+
+    /**
      * @ORM\Column(name="fecha_desde", type="date", nullable=true)
      */
     private $fechaDesde;
@@ -166,6 +176,11 @@ class RhuProgramacionDetalle
      * @ORM\Column(name="vr_deduccion_fondo_pension_anterior", type="float", options={"default": 0})
      */
     private $vrDeduccionFondoPensionAnterior = 0;
+
+    /**
+     * @ORM\Column(name="factor_horas_dia", type="integer", nullable=true, options={"default": 0})
+     */
+    private $factorHorasDia = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuProgramacion", inversedBy="programacionesDetallesProgramacionRel")
@@ -289,6 +304,22 @@ class RhuProgramacionDetalle
     /**
      * @return mixed
      */
+    public function getDiasVacaciones()
+    {
+        return $this->diasVacaciones;
+    }
+
+    /**
+     * @param mixed $diasVacaciones
+     */
+    public function setDiasVacaciones($diasVacaciones): void
+    {
+        $this->diasVacaciones = $diasVacaciones;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrSalario()
     {
         return $this->vrSalario;
@@ -316,6 +347,38 @@ class RhuProgramacionDetalle
     public function setVrNeto($vrNeto): void
     {
         $this->vrNeto = $vrNeto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDia()
+    {
+        return $this->vrDia;
+    }
+
+    /**
+     * @param mixed $vrDia
+     */
+    public function setVrDia($vrDia): void
+    {
+        $this->vrDia = $vrDia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrHora()
+    {
+        return $this->vrHora;
+    }
+
+    /**
+     * @param mixed $vrHora
+     */
+    public function setVrHora($vrHora): void
+    {
+        $this->vrHora = $vrHora;
     }
 
     /**
@@ -513,6 +576,22 @@ class RhuProgramacionDetalle
     /**
      * @return mixed
      */
+    public function getHorasRecargo()
+    {
+        return $this->horasRecargo;
+    }
+
+    /**
+     * @param mixed $horasRecargo
+     */
+    public function setHorasRecargo($horasRecargo): void
+    {
+        $this->horasRecargo = $horasRecargo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getHorasRecargoNocturno()
     {
         return $this->horasRecargoNocturno;
@@ -609,6 +688,54 @@ class RhuProgramacionDetalle
     /**
      * @return mixed
      */
+    public function getVrIbcAcumulado()
+    {
+        return $this->vrIbcAcumulado;
+    }
+
+    /**
+     * @param mixed $vrIbcAcumulado
+     */
+    public function setVrIbcAcumulado($vrIbcAcumulado): void
+    {
+        $this->vrIbcAcumulado = $vrIbcAcumulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDeduccionFondoPensionAnterior()
+    {
+        return $this->vrDeduccionFondoPensionAnterior;
+    }
+
+    /**
+     * @param mixed $vrDeduccionFondoPensionAnterior
+     */
+    public function setVrDeduccionFondoPensionAnterior($vrDeduccionFondoPensionAnterior): void
+    {
+        $this->vrDeduccionFondoPensionAnterior = $vrDeduccionFondoPensionAnterior;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFactorHorasDia()
+    {
+        return $this->factorHorasDia;
+    }
+
+    /**
+     * @param mixed $factorHorasDia
+     */
+    public function setFactorHorasDia($factorHorasDia): void
+    {
+        $this->factorHorasDia = $factorHorasDia;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getProgramacionRel()
     {
         return $this->programacionRel;
@@ -669,72 +796,6 @@ class RhuProgramacionDetalle
     {
         $this->pagosProgramacionDetalleRel = $pagosProgramacionDetalleRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getVrIbcAcumulado()
-    {
-        return $this->vrIbcAcumulado;
-    }
-
-    /**
-     * @param mixed $vrIbcAcumulado
-     */
-    public function setVrIbcAcumulado($vrIbcAcumulado): void
-    {
-        $this->vrIbcAcumulado = $vrIbcAcumulado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrDeduccionFondoPensionAnterior()
-    {
-        return $this->vrDeduccionFondoPensionAnterior;
-    }
-
-    /**
-     * @param mixed $vrDeduccionFondoPensionAnterior
-     */
-    public function setVrDeduccionFondoPensionAnterior($vrDeduccionFondoPensionAnterior): void
-    {
-        $this->vrDeduccionFondoPensionAnterior = $vrDeduccionFondoPensionAnterior;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDiasVacaciones()
-    {
-        return $this->diasVacaciones;
-    }
-
-    /**
-     * @param mixed $diasVacaciones
-     */
-    public function setDiasVacaciones($diasVacaciones): void
-    {
-        $this->diasVacaciones = $diasVacaciones;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHorasRecargo()
-    {
-        return $this->horasRecargo;
-    }
-
-    /**
-     * @param mixed $horasRecargo
-     */
-    public function setHorasRecargo($horasRecargo): void
-    {
-        $this->horasRecargo = $horasRecargo;
-    }
-
-
 
 
 

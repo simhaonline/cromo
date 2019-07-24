@@ -38,6 +38,11 @@ class RhuAdicionalPeriodo
     private $estadoCerrado = false;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAdicional", mappedBy="adicionalPeriodoRel")
+     */
+    protected $adicionalesPeriodoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoAdicionalPeriodoPk()
@@ -99,6 +104,38 @@ class RhuAdicionalPeriodo
     public function setEstadoCerrado($estadoCerrado): void
     {
         $this->estadoCerrado = $estadoCerrado;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionalesPeriodoRel()
+    {
+        return $this->adicionalesPeriodoRel;
+    }
+
+    /**
+     * @param mixed $adicionalesPeriodoRel
+     */
+    public function setAdicionalesPeriodoRel($adicionalesPeriodoRel): void
+    {
+        $this->adicionalesPeriodoRel = $adicionalesPeriodoRel;
     }
 
 

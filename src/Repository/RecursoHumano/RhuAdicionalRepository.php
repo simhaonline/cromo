@@ -102,4 +102,30 @@ class RhuAdicionalRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function adicionalesPorPeriodo($codigoPeriodo){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicional::class, 'a')
+            ->select('a.codigoAdicionalPk')
+            ->addSelect('a.fecha')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('a.detalle')
+            ->addSelect('g.nombre as grupo')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('a.vrValor')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('a.estadoInactivo')
+            ->addSelect('a.estadoInactivoPeriodo')
+            ->addSelect('a.aplicaDiaLaborado')
+            ->leftJoin('a.empleadoRel', 'e')
+            ->leftJoin('a.contratoRel', 'cont')
+            ->leftJoin('cont.grupoRel', 'g')
+            ->leftJoin('a.conceptoRel', 'c')
+            ->where("a.codigoAdicionalPeriodoFk = {$codigoPeriodo}");
+
+        if($session->get('filtroRhuEmpleadoCodigo') != ''){
+            $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$session->get('filtroRhuEmpleadoCodigo')}'");
+        }
+        return $queryBuilder;
+    }
+
 }

@@ -467,6 +467,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
             ->addSelect('v.codigoVacacionPk')
             ->addSelect('v.diasDisfrutadosReales')
             ->addSelect('v.fechaDesdeDisfrute')
+            ->addSelect('v.fechaHastaDisfrute')
             ->addSelect('v.vrIbcPromedio')
             ->where("v.estadoAnulado = 0 AND (((v.fechaDesdeDisfrute BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (v.fechaHastaDisfrute BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
                 . "OR (v.fechaDesdeDisfrute >= '$strFechaDesde' AND v.fechaDesdeDisfrute <= '$strFechaHasta') "

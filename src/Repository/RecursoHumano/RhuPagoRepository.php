@@ -100,8 +100,8 @@ class RhuPagoRepository extends ServiceEntityRepository
                 if ($arVacacion['fechaDesdeDisfrute'] > $fechaDesde) {
                     $fechaDesde = $arVacacion['fechaDesdeDisfrute'];
                 }
-                if ($arVacacion->getFechaHastaDisfrute() < $fechaHasta) {
-                    $fechaHasta = $arVacacion->getFechaHastaDisfrute();
+                if ($arVacacion['fechaHastaDisfrute'] < $fechaHasta) {
+                    $fechaHasta = $arVacacion['fechaHastaDisfrute'];
                 }
                 $diasVacaciones = $fechaDesde->diff($fechaHasta);
                 $diasVacaciones = $diasVacaciones->format('%a');

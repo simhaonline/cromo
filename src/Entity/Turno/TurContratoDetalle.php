@@ -97,7 +97,7 @@ class TurContratoDetalle
     private $vrPrecioMinimo = 0;
 
     /**
-     * @ORM\Column(name="vr_precio_ajustado", type="float")
+     * @ORM\Column(name="vr_precio_ajustado", type="float", options={"default":0})
      */
     private $vrPrecioAjustado = 0;
 
@@ -165,6 +165,11 @@ class TurContratoDetalle
      * @ORM\Column(name="estado_terminado", type="boolean", options={"default":false})
      */
     private $estadoTerminado = false;
+
+    /**
+     * @ORM\Column(name="liquidar_dias_reales", type="boolean", options={"default":false})
+     */
+    private $liquidarDiasReales = false;
 
     /**
      * @ORM\Column(name="vr_salario_base", type="float")
@@ -839,7 +844,21 @@ class TurContratoDetalle
         $this->pedidosDetallesContratoDetalleRel = $pedidosDetallesContratoDetalleRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLiquidarDiasReales()
+    {
+        return $this->liquidarDiasReales;
+    }
 
+    /**
+     * @param mixed $liquidarDiasReales
+     */
+    public function setLiquidarDiasReales($liquidarDiasReales): void
+    {
+        $this->liquidarDiasReales = $liquidarDiasReales;
+    }
 
 
 }

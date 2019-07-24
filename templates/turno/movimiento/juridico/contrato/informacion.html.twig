@@ -17,7 +17,7 @@
     </tr>
     <tr>
         <td class="titulo">TIPO:</td>
-        <td class="td-in-well">{{ arContrato.contratoTipoRel.nombre }}</td>
+        <td class="td-in-well">{{ arContrato.contratoTipoRel.nombre | default('') }}</td>
         <td class="titulo">ESTRATO:</td>
         <td class="td-in-well">{{ arContrato.estrato }}</td>
         <td class="titulo">TOTAL SERVICIOS:</td>

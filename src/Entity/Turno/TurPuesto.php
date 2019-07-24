@@ -86,6 +86,11 @@ class TurPuesto
     private $codigoCiudadFk;
 
     /**
+     * @ORM\Column(name="contacto", type="string", length=300, nullable=true)
+     */
+    private $contacto;
+
+    /**
      * @ORM\Column(name="comentario", type="text", nullable=true)
      */
     private $comentario;
@@ -479,6 +484,22 @@ class TurPuesto
     public function setPuestoTipoRel($puestoTipoRel): void
     {
         $this->puestoTipoRel = $puestoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContacto()
+    {
+        return $this->contacto;
+    }
+
+    /**
+     * @param mixed $contacto
+     */
+    public function setContacto($contacto): void
+    {
+        $this->contacto = $contacto;
     }
 
 

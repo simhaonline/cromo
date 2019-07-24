@@ -88,7 +88,7 @@ class TurCliente
     private $movil;
 
     /**
-     * @ORM\Column(name="plazo_pago", type="integer")
+     * @ORM\Column(name="plazo_pago", type="integer", nullable=true, options={"default":0})
      */
     private $plazoPago = 0;
 
@@ -116,6 +116,11 @@ class TurCliente
      * @ORM\Column(name="codigo_forma_pago_fk", type="string", length=10, nullable=true)
      */
     private $codigoFormaPagoFk;
+
+    /**
+     * @ORM\Column(name="estrato", type="string", length=5, nullable=true)
+     */
+    private $estrato;
 
     /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
@@ -617,6 +622,22 @@ class TurCliente
     public function setRetencionFuenteSinBase($retencionFuenteSinBase): void
     {
         $this->retencionFuenteSinBase = $retencionFuenteSinBase;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstrato()
+    {
+        return $this->estrato;
+    }
+
+    /**
+     * @param mixed $estrato
+     */
+    public function setEstrato($estrato): void
+    {
+        $this->estrato = $estrato;
     }
 
 

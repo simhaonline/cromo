@@ -33,6 +33,11 @@ class TurContrato
     private $codigoContratoTipoFk;
 
     /**
+     * @ORM\Column(name="soporte", type="string", length=100, nullable=true)
+     */
+    private $soporte;
+
+    /**
      * @ORM\Column(name="fecha_generacion", type="date", nullable=true)
      */
     private $fechaGeneracion;
@@ -648,6 +653,22 @@ class TurContrato
     public function setFechaGeneracion($fechaGeneracion): void
     {
         $this->fechaGeneracion = $fechaGeneracion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
+
+    /**
+     * @param mixed $soporte
+     */
+    public function setSoporte($soporte): void
+    {
+        $this->soporte = $soporte;
     }
 
 

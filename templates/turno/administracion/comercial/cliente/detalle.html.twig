@@ -14,7 +14,7 @@
             <td class="titulo"><b>CODIGO CLIENTE:</b></td>
             <td class="td-in-well">{{ arCliente.codigoClientePk }}</td>
             <td class="titulo"><b>TIPO IDENTIFICACION</b></td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arCliente.identificacionRel.nombre }}</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arCliente.identificacionRel.nombre |default('') }}</td>
         </tr>
         <tr>
             <td class="titulo"><b>IDENTIFICACION:</b></td>

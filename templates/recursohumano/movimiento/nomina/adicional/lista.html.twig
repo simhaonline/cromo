@@ -67,6 +67,7 @@
             <th>VALOR</th>
             <th title="Estado inactivo">INA</th>
             <th title="Estado inactivo periodo">INP</th>
+            <th title="Aplicar a dia laborado">ADL</th>
         </tr>
         </thead>
         <tbody>
@@ -78,6 +79,7 @@
                 <td class="numero">{{ arAdicional.vrValor | number_format() }}</td>
                 <td>{{ arAdicional.estadoInactivo ? 'SI':'NO' }}</td>
                 <td>{{ arAdicional.estadoInactivoPeriodo ? 'SI':'NO' }}</td>
+                <td>{{ arAdicional.aplicaDiaLaborado ? 'SI':'NO' }}</td>
             </tr>
         {% endfor %}
         </tbody>

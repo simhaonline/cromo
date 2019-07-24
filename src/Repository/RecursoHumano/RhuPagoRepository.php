@@ -92,13 +92,12 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arConcepto = $em->getRepository(RhuConcepto::class)->find($arAdicional['codigoConceptoFk']);
             $arPagoDetalle = new RhuPagoDetalle();
             $arPagoDetalle->setPagoRel($arPago);
-            $arPagoDetalle->setConceptoRel($arConcepto);
+            $arPagoDetalle->setConceptoRel($em->getReference(RhuConcepto::class, $arAdicional['codigoConceptoFk']));
             $pagoDetalle = $arAdicional['vrValor'];
-//            if ($arPagoAdicional->getAplicaDiaLaborado() == 1) {
-//                $diasPeriodo = $arCentroCosto->getPeriodoPagoRel()->getDias();
-//                $valorDia = $arPagoAdicional->getValor() / $diasPeriodo;
-//                $douPagoDetalle = $valorDia * $arProgramacionPagoDetalle->getDias();
-//            }
+            if ($arAdicional['aplicaDiaLaborado']) {
+                $valorDia = $arAdicional['vrValor'] / $arProgramacion->getDias();
+                $pagoDetalle = $valorDia * $arProgramacionDetalle->getDias();
+            }
 //            if ($arPagoAdicional->getAplicaDiaLaboradoSinDescanso() == 1) {
 //                $diasPeriodo = $arCentroCosto->getPeriodoPagoRel()->getDias();
 //                $valorDia = $arPagoAdicional->getValor() / $diasPeriodo;
@@ -111,7 +110,7 @@ class RhuPagoRepository extends ServiceEntityRepository
 //                    $devengadoPrestacional += $douPagoDetalle;
 //                }
 //            }
-//            $arPagoDetalle->setNumeroHoras($arPagoAdicional->getHoras());
+            //$arPagoDetalle->setNumeroHoras($arPagoAdicional->getHoras());
             $arPagoDetalle->setDetalle($arAdicional['detalle']);
             $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
             $em->persist($arPagoDetalle);

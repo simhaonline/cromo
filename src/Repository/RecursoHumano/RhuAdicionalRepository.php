@@ -69,6 +69,7 @@ class RhuAdicionalRepository extends ServiceEntityRepository
             ->addSelect('a.codigoConceptoFk')
             ->addSelect('a.vrValor')
             ->addSelect('a.detalle')
+            ->addSelect('a.aplicaDiaLaborado')
             ->where('a.estadoInactivo = 0 AND a.estadoInactivoPeriodo = 0')
             ->andWhere("a.codigoEmpleadoFk = {$codigoEmpleado} ")
         ->andWhere("(a.permanente = 1 or (a.fecha >= '" . $fechaDesde . "' AND a.fecha <= '" . $fechaHasta . "'))");
@@ -90,6 +91,7 @@ class RhuAdicionalRepository extends ServiceEntityRepository
             ->addSelect('c.nombre as conceptoNombre')
             ->addSelect('a.estadoInactivo')
             ->addSelect('a.estadoInactivoPeriodo')
+            ->addSelect('a.aplicaDiaLaborado')
             ->leftJoin('a.empleadoRel', 'e')
             ->leftJoin('a.conceptoRel', 'c')
         ->where('a.permanente = true');

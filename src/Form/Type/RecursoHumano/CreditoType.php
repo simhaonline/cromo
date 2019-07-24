@@ -81,7 +81,10 @@ class CreditoType extends AbstractType
             {"campo":"vrAbonos"                        ,"tipo":"moneda" ,"ayuda":"Total de abonos"                     ,"titulo":"ABONOS"},
             {"campo":"vrSaldo"                         ,"tipo":"moneda" ,"ayuda":"Saldo por pagar"                     ,"titulo":"SALDO"},
             {"campo":"estadoPagado"                    ,"tipo":"bool"   ,"ayuda":"Estado pagado"                         ,"titulo":"PAG"},
-            {"campo":"estadoSuspendido"                ,"tipo":"bool"   ,"ayuda":"Estado suspendido"                     ,"titulo":"SUS"}]';
+            {"campo":"estadoSuspendido"                ,"tipo":"bool"   ,"ayuda":"Estado suspendido"                     ,"titulo":"SUS"},
+            {"campo":"inactivoPeriodo"                ,"tipo":"bool"   ,"ayuda":"Inactivo por un periodo de nomina"     ,"titulo":"INP"}
+            
+            ]';
         return $campos;
     }
 

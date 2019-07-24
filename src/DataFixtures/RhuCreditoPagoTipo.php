@@ -31,6 +31,13 @@ class RhuCreditoPagoTipo extends Fixture
             $arCreditoPagoTipo->setNombre('VACACIONES');
             $manager->persist($arCreditoPagoTipo);
         }
+        $arCreditoPagoTipo = $manager->getRepository(\App\Entity\RecursoHumano\RhuCreditoPagoTipo::class)->find('PRS');
+        if(!$arCreditoPagoTipo){
+            $arCreditoPagoTipo = new \App\Entity\RecursoHumano\RhuCreditoPagoTipo();
+            $arCreditoPagoTipo->setCodigoCreditoPagoTipoPk('PRS');
+            $arCreditoPagoTipo->setNombre('PRESTACIONES');
+            $manager->persist($arCreditoPagoTipo);
+        }
         $manager->flush();
     }
 }

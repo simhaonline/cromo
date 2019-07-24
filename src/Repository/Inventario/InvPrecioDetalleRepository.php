@@ -46,8 +46,9 @@ class InvPrecioDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPrecioDetalle::class, 'pd');
         $queryBuilder
             ->select('pd.codigoPrecioDetallePk')
-            ->addSelect('m.nombre AS marca')
+            ->addSelect('pd.codigoItemFk')
             ->addSelect('i.nombre')
+            ->addSelect('m.nombre AS marca')
             ->addSelect('i.porcentajeIva')
             ->addSelect('pd.vrPrecio')
             ->addSelect('pd.diasPromedioEntrega')

@@ -9,7 +9,7 @@
         </div>
     </div>
     <br>
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arPrecio.codigoPrecioPk }}</td>
@@ -24,9 +24,9 @@
         </tr>
         <tr>
             <td class="titulo">VENTA:</td>
-            <td class="td-in-well numero">{{ arPrecio.venta }}</td>
-            <td class="titulo"></td>
-            <td></td>
+            <td class="td-in-well">{{ arPrecio.venta ? 'SI' : 'NO' }}</td>
+            <td class="titulo">COMPRA</td>
+            <td class="td-in-well">{{ arPrecio.compra ? 'SI' : 'NO' }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -45,6 +45,7 @@
                         <tr>
                             <th>ID</th>
                             <th>ITEM</th>
+                            <th>NOMBRE</th>
                             <th>MARCA</th>
                             <th title="DIAS PROMEDIO ENTREGA">DIAS PROM ENT</th>
                             <th>PRECIO</th>
@@ -57,6 +58,7 @@
                         {% for arPrecioDetalle in arPrecioDetalles %}
                             <tr>
                                 <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
+                                <td>{{ arPrecioDetalle.codigoItemFk }}</td>
                                 <td>{{ arPrecioDetalle.nombre }}</td>
                                 <td>{{ arPrecioDetalle.marca }}</td>
                                 <td style="width: 100px;">{{ arPrecioDetalle.diasPromedioEntrega }}</td>

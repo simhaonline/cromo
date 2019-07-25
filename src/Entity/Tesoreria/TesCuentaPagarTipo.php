@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Entity\Compra;
+namespace App\Entity\Tesoreria;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Compra\ComCuentaPagarTipoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\Tesoreria\TesCuentaPagarTipoRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  * @DoctrineAssert\UniqueEntity(fields={"codigoCuentaPagarTipoPk"},message="Ya existe un registro con el mismo codigo")
  */
-class ComCuentaPagarTipo
+class TesCuentaPagarTipo
 {
     public $infoLog = [
         "primaryKey" => "codigoCuentaPagarTipoPk",
@@ -69,14 +69,14 @@ class ComCuentaPagarTipo
     private $codigoCuentaDescuentoFk;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComCompraTipo" , mappedBy="cuentaPagarTipoRel")
-     */
-    private $comprasTipoCuentaPagarRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComCuentaPagar" , mappedBy="cuentaPagarTipoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCuentaPagar" , mappedBy="cuentaPagarTipoRel")
      */
     protected $cuentasPagarCuentaPagarTipoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuPagoTipo" , mappedBy="cuentaPagarTipoRel")
+     */
+    protected $pagosTipoCuentaPagarTipoRel;
 
     /**
      * @return array
@@ -257,22 +257,6 @@ class ComCuentaPagarTipo
     /**
      * @return mixed
      */
-    public function getComprasTipoCuentaPagarRel()
-    {
-        return $this->comprasTipoCuentaPagarRel;
-    }
-
-    /**
-     * @param mixed $comprasTipoCuentaPagarRel
-     */
-    public function setComprasTipoCuentaPagarRel($comprasTipoCuentaPagarRel): void
-    {
-        $this->comprasTipoCuentaPagarRel = $comprasTipoCuentaPagarRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCuentasPagarCuentaPagarTipoRel()
     {
         return $this->cuentasPagarCuentaPagarTipoRel;
@@ -286,21 +270,6 @@ class ComCuentaPagarTipo
         $this->cuentasPagarCuentaPagarTipoRel = $cuentasPagarCuentaPagarTipoRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPagosTipoCuentaPagarTipoRel()
-    {
-        return $this->pagosTipoCuentaPagarTipoRel;
-    }
-
-    /**
-     * @param mixed $pagosTipoCuentaPagarTipoRel
-     */
-    public function setPagosTipoCuentaPagarTipoRel($pagosTipoCuentaPagarTipoRel): void
-    {
-        $this->pagosTipoCuentaPagarTipoRel = $pagosTipoCuentaPagarTipoRel;
-    }
 
 
 }

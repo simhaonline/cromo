@@ -61,6 +61,12 @@
                                 Documental</a>
                         </li>
                     {% endif %}
+                    {% if licencia.documental%}
+                        <li>
+                            <a href="{{ path('tesoreria_general_general_inicio_ver') }}"><i class="fa fa-dollar fa-fw"></i>
+                                Tesoreria</a>
+                        </li>
+                    {% endif %}
                     {% if licencia.crm%}
                         <li>
                             <a href="{{ path('crm_general_general_inicio_ver') }}"><i class="fas fa-user-tie fa-fw"></i> Crm</a>

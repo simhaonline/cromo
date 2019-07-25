@@ -217,6 +217,11 @@ class GenModelo extends Fixture
                 'FinRegistro',
                 'FinTercero',
             )),
+            array('modulo'=>'Tesoreria','modelo'=>array(
+                'TesTercero',
+                'TesCuentaPagar',
+                'TesCuentaPagarTipo',
+            )),
             array('modulo'=>'Seguridad','modelo'=>array(
                 'SegUsuarioMOdelo',
                 'Usuario',

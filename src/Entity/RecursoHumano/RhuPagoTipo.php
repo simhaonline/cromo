@@ -44,7 +44,7 @@ class RhuPagoTipo
     private $generaTesoreria = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Compra\ComCuentaPagarTipo", inversedBy="pagosTipoCuentaPagarTipoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesCuentaPagarTipo", inversedBy="pagosTipoCuentaPagarTipoRel")
      * @ORM\JoinColumn(name="codigo_cuenta_pagar_tipo_fk",referencedColumnName="codigo_cuenta_pagar_tipo_pk")
      */
     protected $cuentaPagarTipoRel;

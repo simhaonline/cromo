@@ -114,6 +114,9 @@
         {% if arrRuta.0 == 'documentacion' %}
             {% include('base_menu_inicio.html.twig') %}
         {% endif %}
+        {% if arrRuta.0 == 'tesoreria' %}
+            {% include('base_tesoreria.html.twig') %}
+        {% endif %}
         {% if arrRuta.0 == 'crm' %}
             {% include('base_crm.html.twig') %}
         {% endif %}
@@ -151,6 +154,9 @@
         {% endif %}
         {% if modulo == 'documental' %}
             {% include('base_documental.html.twig') %}
+        {% endif %}
+        {% if modulo == 'tesoreria' %}
+            {% include('base_tesoreria.html.twig') %}
         {% endif %}
         {% if modulo == 'crm' %}
             {% include('base_crm.html.twig') %}

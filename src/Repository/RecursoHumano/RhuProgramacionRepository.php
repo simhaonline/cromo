@@ -20,6 +20,9 @@ use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Seguridad\Usuario;
+use App\Entity\Tesoreria\TesCuentaPagar;
+use App\Entity\Tesoreria\TesCuentaPagarTipo;
+use App\Entity\Tesoreria\TesTercero;
 use App\Entity\Turno\TurSoporte;
 use App\Entity\Turno\TurSoporteContrato;
 use App\Utilidades\Mensajes;
@@ -215,9 +218,9 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             //Verificar tercero en cuenta por pagar
             if($arPago->getPagoTipoRel()->getGeneraTesoreria()){
                 foreach ($arPagos as $arPago) {
-                    $arTerceroCuentaPagar = $em->getRepository(ComProveedor::class)->findOneBy(array('codigoIdentificacionFk' => $arPago->getEmpleadoRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPago->getEmpleadoRel()->getNumeroIdentificacion()));
+                    $arTerceroCuentaPagar = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPago->getEmpleadoRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPago->getEmpleadoRel()->getNumeroIdentificacion()));
                     if (!$arTerceroCuentaPagar) {
-                        $arTerceroCuentaPagar = new ComProveedor();
+                        $arTerceroCuentaPagar = new TesTercero();
                         $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arPago->getCodigoEmpleadoFk());
                         $arTerceroCuentaPagar->setIdentificacionRel($arEmpleado->getIdentificacionRel());
                         $arTerceroCuentaPagar->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
@@ -231,10 +234,10 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         $em->persist($arTerceroCuentaPagar);
                     }
 
-                    $arCuentaPagarTipo = $em->getRepository(ComCuentaPagarTipo::class)->find($arPago->getPagoTipoRel()->getCodigoCuentaPagarTipoFk());
-                    $arCuentaPagar = New ComCuentaPagar();
+                    $arCuentaPagarTipo = $em->getRepository(TesCuentaPagarTipo::class)->find($arPago->getPagoTipoRel()->getCodigoCuentaPagarTipoFk());
+                    $arCuentaPagar = New TesCuentaPagar();
                     $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
-                    $arCuentaPagar->setProveedorRel($arTerceroCuentaPagar);
+                    $arCuentaPagar->setTerceroRel($arTerceroCuentaPagar);
                     $arCuentaPagar->setNumeroDocumento($arPago->getNumero());
                     $arCuentaPagar->setFechaFactura($arPago->getFechaDesde());
                     $arCuentaPagar->setFechaVence($arPago->getFechaHasta());

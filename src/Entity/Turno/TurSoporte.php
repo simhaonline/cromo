@@ -43,6 +43,11 @@ class TurSoporte
     private $contratoTerminado = false;
 
     /**
+     * @ORM\Column(name="dias", type="integer", nullable=true)
+     */
+    private $dias;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=500, nullable=true)
      */
     private $comentario;
@@ -289,6 +294,22 @@ class TurSoporte
     public function setSoportesHorasSoporteRel($soportesHorasSoporteRel): void
     {
         $this->soportesHorasSoporteRel = $soportesHorasSoporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDias()
+    {
+        return $this->dias;
+    }
+
+    /**
+     * @param mixed $dias
+     */
+    public function setDias($dias): void
+    {
+        $this->dias = $dias;
     }
 
 

@@ -135,6 +135,12 @@ class TurPuesto
     protected $centroCostoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TurPuestoTipo", inversedBy="puestosPuestoTipoRel")
+     * @ORM\JoinColumn(name="codigo_puesto_tipo_fk", referencedColumnName="codigo_puesto_tipo_pk")
+     */
+    protected $puestoTipoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="puestoRel")
      */
     protected $pedidosDetallesPuestoRel;
@@ -145,10 +151,9 @@ class TurPuesto
     protected $contratosDetallesPuestoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TurPuestoTipo", inversedBy="puestosPuestoTipoRel")
-     * @ORM\JoinColumn(name="codigo_puesto_tipo_fk", referencedColumnName="codigo_puesto_tipo_pk")
+     * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="puestoRel")
      */
-    protected $puestoTipoRel;
+    protected $programacionesPuestoRel;
 
     /**
      * @return mixed
@@ -500,6 +505,22 @@ class TurPuesto
     public function setContacto($contacto): void
     {
         $this->contacto = $contacto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramacionesPuestoRel()
+    {
+        return $this->programacionesPuestoRel;
+    }
+
+    /**
+     * @param mixed $programacionesPuestoRel
+     */
+    public function setProgramacionesPuestoRel($programacionesPuestoRel): void
+    {
+        $this->programacionesPuestoRel = $programacionesPuestoRel;
     }
 
 

@@ -31,7 +31,7 @@
                             <th colspan="3"></th>
                             <th colspan="2"></th>
                             <th colspan="7" style="text-align: center">NOVEDADES</th>
-                            <th colspan="6" style="text-align: center">NOMINA</th>
+                            <th colspan="6" style="text-align: center">TIEMPO</th>
                             <th colspan="8" style="text-align: center">ADICIONAL</th>
                             <th colspan="3"></th>
                         </tr>
@@ -47,7 +47,7 @@
                             <th title="AUSENTISMO">AUS</th>
                             <th title="VACACIONES">VAC</th>
                             <th title="HORAS">H</th>
-                            <th title="HORAS DESCANSO">HDESC</th>
+                            <th title="HORAS DESCANSO">DS</th>
                             <th title="HORA DIRUNA">HD</th>
                             <th title="HORA NOCTURA">HN</th>
                             <th title="HORA FESTIVA DIRUNA">HFD</th>
@@ -70,8 +70,8 @@
                         {% for arSoporteContrato in arSoporteContratos %}
                             <tr>
                                 <td>{{ arSoporteContrato.codigoEmpleadoFk }}</td>
-                                <td>{{ arSoporteContrato.empleado }}</td>
                                 <td>{{ arSoporteContrato.numeroIdentificacion }}</td>
+                                <td>{{ arSoporteContrato.empleado }}</td>
                                 <td>{{ arSoporteContrato.dias }}</td>
                                 <td>{{ arSoporteContrato.diasTransporte }}</td>
                                 <td style="text-align: right" {% if arSoporteContrato.novedad > 0 %} class="danger" {% endif %}>{{ arSoporteContrato.novedad | number_format(0, '.', ',') }}</td>
@@ -122,4 +122,5 @@
         </div>
     </div>
     {{ form_end(form) }}
+    <br/><br/><br/><br/>
 {% endblock %}

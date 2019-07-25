@@ -41,6 +41,7 @@ class ControllerSession extends Controller
             ->addSelect('licencia.transporte')
             ->addSelect('licencia.turno')
             ->addSelect('licencia.crm')
+            ->addSelect('licencia.tesoreria')
             ->addSelect('licencia.fechaValidaHasta')
             ->addSelect('licencia.codigoLicenciaPk')
             ->getQuery()->getResult();

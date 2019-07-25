@@ -1,7 +1,7 @@
 <nav>
     <ul>
         {% if licencia |length <=0 %}
-
+            {{ dump(licencia) }}
             <li class="top-menu-invisible">
                 <a disabled href="#" style="    display: flex;flex-direction: row;align-items: center;justify-content: space-between;" class="cursor-not-allowed">
                     <div><i class="fa fa-sm fa-fw fa-cubes txt-color-white"></i>
@@ -61,7 +61,7 @@
                                 Documental</a>
                         </li>
                     {% endif %}
-                    {% if licencia.documental%}
+                    {% if licencia.tesoreria%}
                         <li>
                             <a href="{{ path('tesoreria_general_general_inicio_ver') }}"><i class="fa fa-dollar fa-fw"></i>
                                 Tesoreria</a>

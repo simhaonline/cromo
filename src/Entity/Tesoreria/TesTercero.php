@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 class TesTercero
 {
     public $infoLog = [
-        "primaryKey" => "codigoProveedorPk",
+        "primaryKey" => "codigoTerceroPk",
         "todos"     => true,
     ];
     /**
@@ -34,6 +34,16 @@ class TesTercero
      * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
      */
     private $codigoCiudadFk;
+
+    /**
+     * @ORM\Column(name="codigo_banco_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoBancoFk;
+
+    /**
+     * @ORM\Column(name="cuenta", type="string", length=80, nullable=true)
+     */
+    private $cuenta;
 
     /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=false)
@@ -101,18 +111,6 @@ class TesTercero
      */
     private $apellido2;
 
-//    /**
-//     * @ORM\Column(name="razon_social", type="string", length=300, nullable=true)
-//     * @Assert\NotBlank(message="Este campo no puede estar vacio")
-//     * @Assert\Length(
-//     *     min = "1",
-//     *     max = 300,
-//     *     minMessage = "El campo no puede contener mas de {{ limit }} caracteres",
-//     *     maxMessage = "El campo no puede contener mas de {{ limit }} caracteres"
-//     * )
-//     */
-//    private $razonSocial;
-
     /**
      * @ORM\Column(name="direccion", type="string", length=120, nullable=true)
      * @Assert\Length(
@@ -173,9 +171,21 @@ class TesTercero
     protected $identificacionRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenBanco", inversedBy="tercerosBancoRel")
+     * @ORM\JoinColumn(name="codigo_banco_fk",referencedColumnName="codigo_banco_pk")
+     */
+    protected $bancoRel;
+
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCuentaPagar" , mappedBy="terceroRel")
      */
     protected $cuentasPagarTerceroRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgreso" , mappedBy="terceroRel")
+     */
+    protected $egresosTerceroRel;
 
     /**
      * @return array
@@ -480,6 +490,72 @@ class TesTercero
     {
         $this->cuentasPagarTerceroRel = $cuentasPagarTerceroRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBancoFk()
+    {
+        return $this->codigoBancoFk;
+    }
+
+    /**
+     * @param mixed $codigoBancoFk
+     */
+    public function setCodigoBancoFk($codigoBancoFk): void
+    {
+        $this->codigoBancoFk = $codigoBancoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
+    }
+
+    /**
+     * @param mixed $cuenta
+     */
+    public function setCuenta($cuenta): void
+    {
+        $this->cuenta = $cuenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEgresosTerceroRel()
+    {
+        return $this->egresosTerceroRel;
+    }
+
+    /**
+     * @param mixed $egresosTerceroRel
+     */
+    public function setEgresosTerceroRel($egresosTerceroRel): void
+    {
+        $this->egresosTerceroRel = $egresosTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBancoRel()
+    {
+        return $this->bancoRel;
+    }
+
+    /**
+     * @param mixed $bancoRel
+     */
+    public function setBancoRel($bancoRel): void
+    {
+        $this->bancoRel = $bancoRel;
+    }
+
+
 
 }
 

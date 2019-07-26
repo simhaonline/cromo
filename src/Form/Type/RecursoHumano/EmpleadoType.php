@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\RecursoHumano;
 
+use App\Entity\General\GenBanco;
 use App\Entity\RecursoHumano\RhuBanco;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use Doctrine\ORM\EntityRepository;
@@ -32,7 +33,7 @@ class EmpleadoType extends AbstractType
                 'required' => true
             ])
             ->add('bancoRel', EntityType::class, [
-                'class' => RhuBanco::class,
+                'class' => GenBanco::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
                         ->orderBy('i.nombre', 'ASC');

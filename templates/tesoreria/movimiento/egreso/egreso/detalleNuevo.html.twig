@@ -1,0 +1,85 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br/>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4> Filtros de búsqueda</h4>
+        </div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Codigo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtCodigoCuentaPagar) }}
+                </div>
+                <label class="col-sm-2 control-label">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cboCuentaPagarTipo) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Fecha desde:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+                <label class="col-sm-2 control-label">Banco:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cboBanco) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Fecha hasta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            {{ form_widget(form.btnFiltrar,{'attr':{'style':'float: right;'}}) }}
+            <br/>
+            <br/>
+        </div>
+    </div>
+    <div>
+        <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NUMERO</th>
+                <th>TIPO</th>
+                <th>TERCERO</th>
+                <th>NIT</th>
+                <th>FECHA</th>
+                <th>VENCIMIENTO</th>
+                <th>ABONO</th>
+                <th>SALDO</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arCuentaPagar in arCuentasPagar %}
+                <tr>
+                    <td style="text-align: right;">{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
+                    <td style="text-align: left;">{{ arCuentaPagar.numeroDocumento }}</td>
+                    <td style="text-align: left;">{{ arCuentaPagar.tipo }}</td>
+                    <td style="text-align: left;">{{ arCuentaPagar.nombreCorto }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.numeroIdentificacion }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.fecha | date('d/m/Y') }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.fechaVence | date('d/m/Y') }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.vrAbono | number_format(0,'.',',') }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.vrSaldo | number_format }}</td>
+                    <td style="text-align: center;">
+                        <input type="checkbox" name="ChkSeleccionar[]"
+                               size="10" value="{{ arCuentaPagar.codigoCuentaPagarPk }}" style="width:70px">
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="btn-group btn-xs">
+            {{ knp_pagination_render(arCuentasPagar) }}
+        </div>
+    </div>
+    {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+    {{ form_end(form) }}
+{% endblock %}

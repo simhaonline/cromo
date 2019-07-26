@@ -216,12 +216,22 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             }
 
             //Verificar tercero en cuenta por pagar
-            if($arPago->getPagoTipoRel()->getGeneraTesoreria()){
+            if ($arPago->getPagoTipoRel()->getGeneraTesoreria()) {
                 foreach ($arPagos as $arPago) {
+                    $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arPago->getCodigoEmpleadoFk());
                     $arTerceroCuentaPagar = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPago->getEmpleadoRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPago->getEmpleadoRel()->getNumeroIdentificacion()));
+                    if ($arTerceroCuentaPagar) {
+                        $bancoActual = $arTerceroCuentaPagar->getCodigoBancoFk();
+                        $cuentaActual = $arTerceroCuentaPagar->getCuenta();
+                        if ($bancoActual != $arPago->getEmpleadoRel()->getCodigoBancoFk()) {
+                            $arTerceroCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
+                        }
+                        if ($cuentaActual != $arEmpleado->getCuenta()) {
+                            $arTerceroCuentaPagar->setCuenta($arEmpleado->getCuenta());
+                        }
+                    }
                     if (!$arTerceroCuentaPagar) {
                         $arTerceroCuentaPagar = new TesTercero();
-                        $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arPago->getCodigoEmpleadoFk());
                         $arTerceroCuentaPagar->setIdentificacionRel($arEmpleado->getIdentificacionRel());
                         $arTerceroCuentaPagar->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
                         $arTerceroCuentaPagar->setNombre1($arEmpleado->getNombre1());
@@ -231,16 +241,20 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         $arTerceroCuentaPagar->setNombreCorto($arEmpleado->getNombreCorto());
                         $arTerceroCuentaPagar->setCiudadRel($arEmpleado->getCiudadRel());
                         $arTerceroCuentaPagar->setCelular($arEmpleado->getCelular());
-                        $em->persist($arTerceroCuentaPagar);
+                        $arTerceroCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
+                        $arTerceroCuentaPagar->setCuenta($arEmpleado->getCuenta());
                     }
+                    $em->persist($arTerceroCuentaPagar);
 
                     $arCuentaPagarTipo = $em->getRepository(TesCuentaPagarTipo::class)->find($arPago->getPagoTipoRel()->getCodigoCuentaPagarTipoFk());
                     $arCuentaPagar = New TesCuentaPagar();
                     $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
                     $arCuentaPagar->setTerceroRel($arTerceroCuentaPagar);
+                    $arCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
+                    $arCuentaPagar->setCuenta($arEmpleado->getCuenta());
                     $arCuentaPagar->setNumeroDocumento($arPago->getNumero());
-                    $arCuentaPagar->setFechaFactura($arPago->getFechaDesde());
-                    $arCuentaPagar->setFechaVence($arPago->getFechaHasta());
+                    $arCuentaPagar->setFecha($arPago->getFechaDesde());
+                    $arCuentaPagar->setFechaVence($arPago->getFechaDesde());
                     $arCuentaPagar->setVrSubtotal($arPago->getVrDevengado());
                     $arCuentaPagar->setVrTotal($arPago->getVrNeto());
                     $arCuentaPagar->setVrSaldo($arPago->getVrNeto());
@@ -251,6 +265,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 }
             }
             $em->flush();
+
+
         } else {
             Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
         }
@@ -343,7 +359,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         $numeroPagos = 0;
         $arConceptoHora = $em->getRepository(RhuConceptoHora::class)->findAll();
         $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
-        if($arConfiguracion['codigoConceptoFondoSolidaridadPensionFk']) {
+        if ($arConfiguracion['codigoConceptoFondoSolidaridadPensionFk']) {
             $arConceptoFondoSolidaridadPension = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoFondoSolidaridadPensionFk']);
             if ($codigoProgramacionDetalle) {
                 $arProgramacionDetalleActualizar = $em->getRepository(RhuProgramacionDetalle::class)->find($codigoProgramacionDetalle);
@@ -375,7 +391,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
 
     }
 
-    public function cargarContratosTurnos($codigoSoporte, $arProgramacion) {
+    public function cargarContratosTurnos($codigoSoporte, $arProgramacion)
+    {
         $em = $this->getEntityManager();
         set_time_limit(0);
         ini_set("memory_limit", -1);

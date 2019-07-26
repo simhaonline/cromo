@@ -60,10 +60,10 @@ class RhuBanco {
      */
     private $telefono;
 
-    /**
-     * @ORM\OneToMany(targetEntity="RhuEmpleado", mappedBy="bancoRel")
-     */
-    protected $empleadosBancoRel;
+//    /**
+//     * @ORM\OneToMany(targetEntity="RhuEmpleado", mappedBy="bancoRel")
+//     */
+//    protected $empleadosBancoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuEgresoDetalle", mappedBy="bancoRel")

@@ -2,19 +2,13 @@
 
 namespace App\Repository\Tesoreria;
 
-use App\Entity\Compra\ComCuentaPagarTipo;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-/**
- * @method ComCuentaPagarTipo|null find($id, $lockMode = null, $lockVersion = null)
- * @method ComCuentaPagarTipo|null findOneBy(array $criteria, array $orderBy = null)
- * @method ComCuentaPagarTipo[]    findAll()
- * @method ComCuentaPagarTipo[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
+
 class TesCuentaPagarTipoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)

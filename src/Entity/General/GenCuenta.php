@@ -62,8 +62,13 @@ class GenCuenta
      */
     protected $anticiposCuentaRel;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComEgreso" , mappedBy="cuentaRel")
+//     */
+//    protected $egresosCuentaRel;
+
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComEgreso" , mappedBy="cuentaRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgreso" , mappedBy="cuentaRel")
      */
     protected $egresosCuentaRel;
 

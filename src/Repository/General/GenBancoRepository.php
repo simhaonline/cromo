@@ -4,7 +4,9 @@ namespace App\Repository\General;
 
 use App\Entity\General\GenBanco;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class GenBancoRepository extends ServiceEntityRepository
 {
@@ -12,12 +14,30 @@ class GenBancoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, GenBanco::class);
     }
-//    public function camposPredeterminados(){
-//        $qb = $this-> _em->createQueryBuilder()
-//            ->from('App:General\GenCiudad','c')
-//            ->select('c.codigoCiudadPk AS ID')
-//            ->addSelect('c.nombre');
-//        $query = $this->_em->createQuery($qb->getDQL());
-//        return $query->execute();
-//    }
+
+    /**
+     * @return array
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function llenarCombo()
+    {
+        $session = new Session();
+        $array = [
+            'class' => GenBanco::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('g')
+                    ->orderBy('g.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""
+        ];
+        if ($session->get('filtroGenBanco')) {
+            $array['data'] = $this->getEntityManager()->getReference(GenBanco::class, $session->get('filtroGenBanco'));
+        }
+        return $array;
+    }
+
 }

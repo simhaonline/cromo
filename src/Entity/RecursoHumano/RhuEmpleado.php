@@ -307,7 +307,7 @@ class RhuEmpleado
     protected $rhRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuBanco", inversedBy="empleadosBancoRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenBanco", inversedBy="empleadosBancoRel")
      * @ORM\JoinColumn(name="codigo_banco_fk",referencedColumnName="codigo_banco_pk")
      */
     protected $bancoRel;
@@ -565,22 +565,6 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getEstadoContrato()
-    {
-        return $this->estadoContrato;
-    }
-
-    /**
-     * @param mixed $estadoContrato
-     */
-    public function setEstadoContrato($estadoContrato): void
-    {
-        $this->estadoContrato = $estadoContrato;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCarro()
     {
         return $this->carro;
@@ -640,6 +624,118 @@ class RhuEmpleado
     public function setCabezaHogar($cabezaHogar): void
     {
         $this->cabezaHogar = $cabezaHogar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBarrio()
+    {
+        return $this->barrio;
+    }
+
+    /**
+     * @param mixed $barrio
+     */
+    public function setBarrio($barrio): void
+    {
+        $this->barrio = $barrio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTallaCamisa()
+    {
+        return $this->tallaCamisa;
+    }
+
+    /**
+     * @param mixed $tallaCamisa
+     */
+    public function setTallaCamisa($tallaCamisa): void
+    {
+        $this->tallaCamisa = $tallaCamisa;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTallaPantalon()
+    {
+        return $this->tallaPantalon;
+    }
+
+    /**
+     * @param mixed $tallaPantalon
+     */
+    public function setTallaPantalon($tallaPantalon): void
+    {
+        $this->tallaPantalon = $tallaPantalon;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTallaCalzado()
+    {
+        return $this->tallaCalzado;
+    }
+
+    /**
+     * @param mixed $tallaCalzado
+     */
+    public function setTallaCalzado($tallaCalzado): void
+    {
+        $this->tallaCalzado = $tallaCalzado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstatura()
+    {
+        return $this->estatura;
+    }
+
+    /**
+     * @param mixed $estatura
+     */
+    public function setEstatura($estatura): void
+    {
+        $this->estatura = $estatura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPeso()
+    {
+        return $this->peso;
+    }
+
+    /**
+     * @param mixed $peso
+     */
+    public function setPeso($peso): void
+    {
+        $this->peso = $peso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContrato()
+    {
+        return $this->estadoContrato;
+    }
+
+    /**
+     * @param mixed $estadoContrato
+     */
+    public function setEstadoContrato($estadoContrato): void
+    {
+        $this->estadoContrato = $estadoContrato;
     }
 
     /**
@@ -821,22 +917,6 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getBarrio()
-    {
-        return $this->barrio;
-    }
-
-    /**
-     * @param mixed $barrio
-     */
-    public function setBarrio($barrio): void
-    {
-        $this->barrio = $barrio;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoRhFk()
     {
         return $this->codigoRhFk;
@@ -976,86 +1056,6 @@ class RhuEmpleado
     public function setCodigoBancoFk($codigoBancoFk): void
     {
         $this->codigoBancoFk = $codigoBancoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTallaCamisa()
-    {
-        return $this->tallaCamisa;
-    }
-
-    /**
-     * @param mixed $tallaCamisa
-     */
-    public function setTallaCamisa($tallaCamisa): void
-    {
-        $this->tallaCamisa = $tallaCamisa;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTallaPantalon()
-    {
-        return $this->tallaPantalon;
-    }
-
-    /**
-     * @param mixed $tallaPantalon
-     */
-    public function setTallaPantalon($tallaPantalon): void
-    {
-        $this->tallaPantalon = $tallaPantalon;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTallaCalzado()
-    {
-        return $this->tallaCalzado;
-    }
-
-    /**
-     * @param mixed $tallaCalzado
-     */
-    public function setTallaCalzado($tallaCalzado): void
-    {
-        $this->tallaCalzado = $tallaCalzado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstatura()
-    {
-        return $this->estatura;
-    }
-
-    /**
-     * @param mixed $estatura
-     */
-    public function setEstatura($estatura): void
-    {
-        $this->estatura = $estatura;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPeso()
-    {
-        return $this->peso;
-    }
-
-    /**
-     * @param mixed $peso
-     */
-    public function setPeso($peso): void
-    {
-        $this->peso = $peso;
     }
 
     /**
@@ -1445,22 +1445,6 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getSoportesContratosEmpleadoRel()
-    {
-        return $this->soportesContratosEmpleadoRel;
-    }
-
-    /**
-     * @param mixed $soportesContratosEmpleadoRel
-     */
-    public function setSoportesContratosEmpleadoRel($soportesContratosEmpleadoRel): void
-    {
-        $this->soportesContratosEmpleadoRel = $soportesContratosEmpleadoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getAportesDetallesEmpleadoRel()
     {
         return $this->aportesDetallesEmpleadoRel;
@@ -1472,6 +1456,22 @@ class RhuEmpleado
     public function setAportesDetallesEmpleadoRel($aportesDetallesEmpleadoRel): void
     {
         $this->aportesDetallesEmpleadoRel = $aportesDetallesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoportesContratosEmpleadoRel()
+    {
+        return $this->soportesContratosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $soportesContratosEmpleadoRel
+     */
+    public function setSoportesContratosEmpleadoRel($soportesContratosEmpleadoRel): void
+    {
+        $this->soportesContratosEmpleadoRel = $soportesContratosEmpleadoRel;
     }
 
     /**
@@ -1505,7 +1505,6 @@ class RhuEmpleado
     {
         $this->liquidacionesEmpleadoRel = $liquidacionesEmpleadoRel;
     }
-
 
 
 }

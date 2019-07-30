@@ -93,6 +93,11 @@ class TteConfiguracion
     private $codigoFormato = 0;
 
     /**
+     * @ORM\Column(name="codigo_formato_guia", type="string", length=2, nullable=true)
+     */
+    private $codigoFormatoGuia = 0;
+
+    /**
      * @ORM\Column(name="numero_unico_guia", type="boolean", options={"default" : false})
      */
     private $numeroUnicoGuia = false;
@@ -368,5 +373,23 @@ class TteConfiguracion
     {
         $this->numeroUnicoGuia = $numeroUnicoGuia;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFormatoGuia()
+    {
+        return $this->codigoFormatoGuia;
+    }
+
+    /**
+     * @param mixed $codigoFormatoGuia
+     */
+    public function setCodigoFormatoGuia($codigoFormatoGuia): void
+    {
+        $this->codigoFormatoGuia = $codigoFormatoGuia;
+    }
+
+
 }
 

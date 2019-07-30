@@ -16,6 +16,10 @@
                         <div class="col-sm-3">
                             {{ form_widget(form.flArchivo, { 'attr': {'class': 'form-control'} }) }}
                         </div>
+
+                        <div class="col-sm-3">
+                            {{ form_widget(form.liquidar) }}
+                        </div>
                         <div class="col-sm-4">
                             <a href="{{ asset('ejemplo/ejemploGuias.xls') }}" download class="btn btn-sm btn-default">Descargar ejemplo</a>
                             <a href="{{ asset('estructura/estructuraGenerarGuia.xlsx') }}" download class="btn btn-sm btn-default">Descargar estructura</a>

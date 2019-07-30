@@ -7,6 +7,7 @@ use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteCondicion;
+use App\Entity\Transporte\TteConsecutivo;
 use App\Entity\Transporte\TteEmpaque;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
@@ -15,6 +16,7 @@ use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteServicio;
 use App\Utilidades\Mensajes;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,6 +36,7 @@ class GenerarGuiaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('liquidar', CheckboxType::class, ['required' => false,'label' => 'Liquidar'])
             ->add('btnGenerar', SubmitType::class, ['label' => 'Generar'])
             ->add('flArchivo', FileType::class, ['required' => false])
             ->getForm();
@@ -41,7 +44,8 @@ class GenerarGuiaController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGenerar')->isClicked()) {
                 if($form->get('flArchivo')->getData()){
-                    $this->generarGuias($form->get('flArchivo')->getData());
+                    $liquidar = $form->get('liquidar')->getData();
+                    $this->generarGuias($form->get('flArchivo')->getData(), $liquidar);
                 }
             }
         }
@@ -56,7 +60,7 @@ class GenerarGuiaController extends Controller
      * @param $archivo
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
-    private function generarGuias($archivo)
+    private function generarGuias($archivo, $liquidar)
     {
         $em = $this->getDoctrine()->getManager();
         $ruta = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
@@ -89,6 +93,11 @@ class GenerarGuiaController extends Controller
                     } else {
                         $arGuia->setGuiaTipoRel($arGuiaTipo);
                     }
+
+                    $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
+                    $arGuia->setCodigoGuiaPk($arConsecutivo->getGuia());
+                    $arConsecutivo->setGuia($arConsecutivo->getGuia() + 1);
+                    $em->persist($arConsecutivo);
 
                     // Operación ingreso
                     $cell = $worksheet->getCellByColumnAndRow(2, $row);
@@ -226,8 +235,10 @@ class GenerarGuiaController extends Controller
 
                     // Unidades
                     $cell = $worksheet->getCellByColumnAndRow(19, $row);
+                    $unidades = 0;
                     if (is_numeric($cell->getValue())) {
                         $arGuia->setUnidades($cell->getValue());
+                        $unidades = $cell->getValue();
                     } else {
                         $arrErrores[] = $respuesta . "existe un error con las unidades ingresadas";
                         $error = true;
@@ -253,8 +264,10 @@ class GenerarGuiaController extends Controller
 
                     // Peso facturado
                     $cell = $worksheet->getCellByColumnAndRow(22, $row);
+                    $pesoFacturar = 0;
                     if (is_numeric($cell->getValue())) {
                         $arGuia->setPesoFacturado($cell->getValue());
+                        $pesoFacturar = $cell->getValue();
                     } else {
                         $arrErrores[] = $respuesta . "existe un error con el 'peso facturado' ingresado";
                         $error = true;
@@ -262,30 +275,57 @@ class GenerarGuiaController extends Controller
 
                     // Valor declara
                     $cell = $worksheet->getCellByColumnAndRow(23, $row);
+                    $declarado = 0;
                     if (is_numeric($cell->getValue())) {
                         $arGuia->setVrDeclara($cell->getValue());
+                        $declarado = $cell->getValue();
                     } else {
                         $arrErrores[] = $respuesta . "existe un error con el 'valor declara' ingresado";
                         $error = true;
                     }
 
-                    // Valor flete
-                    $cell = $worksheet->getCellByColumnAndRow(24, $row);
-                    if (is_numeric($cell->getValue())) {
-                        $arGuia->setVrFlete($cell->getValue());
-                    } else {
-                        $arrErrores[] = $respuesta . "existe un error con el 'valor flete' ingresado";
-                        $error = true;
+                    $cell = $worksheet->getCellByColumnAndRow(30, $row);
+                    $tipoLiquidacion = $cell->getValue();
+
+                    $arGuia->setTipoLiquidacion($tipoLiquidacion);
+                    if($error == false ) {
+                        if($liquidar && $tipoLiquidacion) {
+                            $arrLiquidacion = $em->getRepository(TteGuia::class)->liquidar(
+                                $arCliente->getCodigoClientePk(),
+                                $arCondicion->getCodigoCondicionPk(),
+                                $arCondicion->getCodigoPrecioFk(),
+                                $arCiudadOrigen->getCodigoCiudadPk(),
+                                $arCiudadDestino->getCodigoCiudadPk(),
+                                $arProducto->getCodigoProductoPk(),
+                                $arCiudadDestino->getCodigoZonaFk(),
+                                $tipoLiquidacion,
+                                $unidades,
+                                $pesoFacturar,
+                                $declarado);
+                            $arGuia->setVrFlete($arrLiquidacion['flete']);
+                            $arGuia->setVrManejo($arrLiquidacion['manejo']);
+                        } else {
+                            // Valor flete
+                            $cell = $worksheet->getCellByColumnAndRow(24, $row);
+                            if (is_numeric($cell->getValue())) {
+                                $arGuia->setVrFlete($cell->getValue());
+                            } else {
+                                $arrErrores[] = $respuesta . "existe un error con el 'valor flete' ingresado";
+                                $error = true;
+                            }
+
+                            // Valor manejo
+                            $cell = $worksheet->getCellByColumnAndRow(25, $row);
+                            if (is_numeric($cell->getValue())) {
+                                $arGuia->setVrManejo($cell->getValue());
+                            } else {
+                                $arrErrores[] = $respuesta . "existe un error con el 'valor manejo' ingresado";
+                                $error = true;
+                            }
+                        }
                     }
 
-                    // Valor manejo
-                    $cell = $worksheet->getCellByColumnAndRow(25, $row);
-                    if (is_numeric($cell->getValue())) {
-                        $arGuia->setVrManejo($cell->getValue());
-                    } else {
-                        $arrErrores[] = $respuesta . "existe un error con el 'valor manejo' ingresado";
-                        $error = true;
-                    }
+
 
                     // Valor recaudo
                     $cell = $worksheet->getCellByColumnAndRow(26, $row);
@@ -330,7 +370,7 @@ class GenerarGuiaController extends Controller
                 if (count($arrErrores) == 0) {
                     try {
                         $em->flush();
-                        $em->getRepository(TteGuia::class)->actualizarNumeros($arrGuias);
+                        //$em->getRepository(TteGuia::class)->actualizarNumeros($arrGuias);
                         Mensajes::success('Guias creadas con éxito');
                     } catch (\Exception $exception) {
                         Mensajes::error('Ha ocurrido un problema al insertar las guias, por favor contacte con soporte y agregue en su reporte el siguiente error: '. $exception->getMessage());

@@ -12,6 +12,8 @@ use App\Entity\General\GenIdentificacion;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteCondicion;
+use App\Entity\Transporte\TteCondicionFlete;
+use App\Entity\Transporte\TteCondicionManejo;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteConsecutivo;
 use App\Entity\Transporte\TteCumplido;
@@ -28,6 +30,7 @@ use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TtePrecioDetalle;
 use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteRedespacho;
 use App\Entity\Transporte\TteRuta;
@@ -2868,7 +2871,6 @@ class TteGuiaRepository extends ServiceEntityRepository
                 c.nombreCorto as cliente
         FROM App\Entity\Transporte\TteGuia g 
         LEFT JOIN g.clienteRel c
-            {$filtro}
         GROUP BY g.codigoClienteFk");
         return $arGuiaEstado->execute();
     }
@@ -3387,6 +3389,69 @@ class TteGuiaRepository extends ServiceEntityRepository
 
         return $queryBuilder;
 
+    }
+
+    public function liquidar($cliente, $condicion, $precio, $origen, $destino, $producto, $zona, $tipoLiquidacion, $unidades, $peso, $declarado) {
+        $em = $this->getEntityManager();
+        $arrDevolver = ['flete' => 0, 'manejo' => 0];
+        $descuentoPeso = 0;
+        $descuentoUnidad = 0;
+        $porcentajeManejo = 0;
+        $manejoMinimoUnidad = 0;
+        $manejoMinimoDespacho = 0;
+        $flete = 0;
+        $manejo = 0;
+        $rawCondicion = ['codigo' => $condicion];
+        $arrCondicion = $em->getRepository(TteCondicion::class)->apiWindowsDetalle($rawCondicion);
+        if(!isset($arrCondicion['error'])) {
+            $descuentoPeso = $arrCondicion['descuentoPeso'];
+            $porcentajeManejo = $arrCondicion['porcentajeManejo'];
+            $manejoMinimoUnidad = $arrCondicion['manejoMinimoUnidad'];
+            $manejoMinimoDespacho = $arrCondicion['manejoMinimoDespacho'];
+        }
+        $raw = ['precio' => $precio, 'origen' => $origen, 'destino' => $destino, 'producto' => $producto, 'zona' => $zona];
+        $arrPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->apiWindowsDetalleProducto($raw);
+        if(!isset($arrPrecioDetalle['error'])) {
+            $rawCondicionFlete = ['codigoCliente' => $cliente, 'origen' => $origen, 'destino' => $destino, 'codigoZona' => $zona];
+            $arrCondicionFlete = $em->getRepository(TteCondicionFlete::class)->apiWindowsLiquidar($rawCondicionFlete);
+            if(!isset($arrCondicionFlete['error'])) {
+                $descuentoPeso = $arrCondicionFlete['descuentoPeso'];
+                $descuentoUnidad = $arrCondicionFlete['descuentoUnidad'];
+            }
+            switch ($tipoLiquidacion) {
+                case "K":
+                    $flete = $peso *  $arrPrecioDetalle['vrPeso'];
+                    if($descuentoPeso > 0) {
+                        $flete -= $flete * $descuentoPeso / 100;
+                    }
+                    break;
+                case "U":
+                    $flete = $unidades * $arrPrecioDetalle['vrUnidad'];
+                    break;
+                case "A":
+                    $flete = $peso *  $arrPrecioDetalle['vrPeso'];
+                    break;
+
+            }
+
+        }
+        $rawCondicionManejo = ['codigoCliente' => $cliente, 'origen' => $origen, 'destino' => $destino, 'codigoZona' => $zona];
+        $arrCondicionManejo = $em->getRepository(TteCondicionManejo::class)->apiWindowsLiquidar($rawCondicionManejo);
+        if(!isset($arrCondicionManejo['error'])) {
+            $porcentajeManejo = $arrCondicionManejo['porcentaje'];
+            $manejoMinimoUnidad = $arrCondicionFlete['minimoUnidad'];
+            $manejoMinimoDespacho = $arrCondicionFlete['minimoDespacho'];
+        }
+        $manejo = $declarado * $porcentajeManejo / 100;
+        if($manejoMinimoDespacho > $manejo) {
+            $manejo = $manejoMinimoDespacho;
+        }
+        if($manejoMinimoUnidad * $unidades > $manejo) {
+            $manejo = $manejoMinimoUnidad * $unidades;
+        }
+        $arrDevolver['flete'] = $flete;
+        $arrDevolver['manejo'] = $manejo;
+        return $arrDevolver;
     }
 
 }

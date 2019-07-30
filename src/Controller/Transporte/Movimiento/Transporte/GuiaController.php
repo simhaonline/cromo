@@ -102,20 +102,23 @@ class GuiaController extends ControllerListenerGeneral
         }
         $form = $this->createForm(GuiaType::class, $arGuia);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
+            $resultado = $em->getRepository(TteGuia::class)->liquidar();
             if ($form->get('guardar')->isClicked()) {
-                $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+
+
+                /*$txtCodigoCliente = $request->request->get('txtCodigoCliente');
                 if ($txtCodigoCliente != '') {
                     $arCliente = $em->getRepository(TteCliente::class)->find($txtCodigoCliente);
                     if ($arCliente) {
                         if ($id == 0) {
                             $arGuia->setFechaIngreso(new \DateTime('now'));
                         }
-                        /*$arGuia->setClienteRel($arCliente);
-                        $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
-                        $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
-                        $arGuia->setFactura($arGuia->getGuiaTipoRel()->getFactura());
-                        $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel() ? $this->getUser()->getOperacionRel()->getCiudadRel() : null);*/
+//                        $arGuia->setClienteRel($arCliente);
+//                        $arGuia->setOperacionIngresoRel($this->getUser()->getOperacionRel());
+//                        $arGuia->setOperacionCargoRel($this->getUser()->getOperacionRel());
+//                        $arGuia->setFactura($arGuia->getGuiaTipoRel()->getFactura());
+//                        $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel() ? $this->getUser()->getOperacionRel()->getCiudadRel() : null);
                         $em->persist($arGuia);
                         $em->flush();
                         return $this->redirect($this->generateUrl('transporte_movimiento_transporte_guia_lista'));
@@ -124,7 +127,8 @@ class GuiaController extends ControllerListenerGeneral
                     }
                 } else {
                     Mensajes::error('Debe de seleccionar un cliente');
-                }
+                }*/
+
             }
         }
         return $this->render('transporte/movimiento/transporte/guia/nuevo.html.twig', ['arGuia' => $arGuia, 'form' => $form->createView()]);

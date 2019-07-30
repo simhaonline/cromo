@@ -144,6 +144,7 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arAdicional->getCodigoEmpleadoFk());
                 if ($arEmpleado->getCodigoContratoFk()) {
                     $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
+                    $arAdicional->setFecha(new \DateTime('now'));
                     $arAdicional->setEmpleadoRel($arEmpleado);
                     $arAdicional->setContratoRel($arContrato);
                     $arAdicional->setAdicionalPeriodoRel($arAdicionalPerido);

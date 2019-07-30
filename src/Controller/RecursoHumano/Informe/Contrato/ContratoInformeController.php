@@ -11,10 +11,13 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Annotation\Route;
 
-class ContratoController extends  Controller
+class ContratoInformeController extends  Controller
 {
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/recursohumano/informe/nomina/contrato/lista", name="recursohumano_informe_nomina_contrato_lista")
      */
     public function lista(Request $request)

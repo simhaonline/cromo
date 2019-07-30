@@ -3189,15 +3189,22 @@ class TteGuiaRepository extends ServiceEntityRepository
                 ->addSelect('gt.mensajeFormato')
                 ->addSelect('gt.nombre as guiaTipoNombre')
                 ->addSelect('g.fechaIngreso')
+                ->addSelect('g.codigoCiudadOrigenFk')
                 ->addSelect('co.nombre as ciudadOrigenNombre')
+                ->addSelect('g.codigoCiudadDestinoFk')
                 ->addSelect('cd.nombre as ciudadDestinoNombre')
+                ->addSelect('g.codigoZonaFk')
+                ->addSelect('g.codigoEmpaqueFk')
                 ->addSelect('g.remitente')
                 ->addSelect('g.nombreDestinatario')
                 ->addSelect('g.telefonoDestinatario')
                 ->addSelect('g.direccionDestinatario')
+                ->addSelect('c.codigoIdentificacionFk as clienteIdentificacion')
+                ->addSelect('c.numeroIdentificacion as clienteNumeroIdentificacion')
                 ->addSelect('c.nombreCorto as clienteNombre')
                 ->addSelect('c.direccion as clienteDireccion')
                 ->addSelect('c.telefono as clienteTelefono')
+                ->addSelect('c.codigoFormaPagoFk as clienteFormaPago')
                 ->addSelect('g.documentoCliente')
                 ->addSelect('g.vrDeclara')
                 ->addSelect('g.vrFlete')
@@ -3205,6 +3212,8 @@ class TteGuiaRepository extends ServiceEntityRepository
                 ->addSelect('g.vrCobroEntrega')
                 ->addSelect('g.unidades')
                 ->addSelect('g.pesoReal')
+                ->addSelect('g.pesoVolumen')
+                ->addSelect('g.pesoFacturado')
                 ->addSelect('g.comentario')
             ->leftJoin('g.guiaTipoRel', 'gt')
             ->leftJoin('g.ciudadOrigenRel', 'co')
@@ -3250,15 +3259,22 @@ class TteGuiaRepository extends ServiceEntityRepository
                     "factura" => $arGuia['factura'],
                     "guiaTipoNombre" => $arGuia['guiaTipoNombre'],
                     "fechaIngreso" => $arGuia['fechaIngreso'],
+                    "codigoOrigen" => $arGuia['codigoCiudadOrigenFk'],
                     "ciudadOrigenNombre" => $arGuia['ciudadOrigenNombre'],
+                    "codigoDestino" => $arGuia['codigoCiudadDestinoFk'],
                     "ciudadDestinoNombre" => $arGuia['ciudadDestinoNombre'],
+                    "codigoZona" => $arGuia['codigoZonaFk'],
+                    "codigoEmpaque" => $arGuia['codigoEmpaqueFk'],
                     "remitente" => $arGuia['remitente'],
                     "nombreDestinatario" => $arGuia['nombreDestinatario'],
                     "telefonoDestinatario" => $arGuia['telefonoDestinatario'],
                     "direccionDestinatario" => $arGuia['direccionDestinatario'],
+                    "clienteIdentificacion" => $arGuia['clienteIdentificacion'],
+                    "clienteNumeroIdentificacion" => $arGuia['clienteNumeroIdentificacion'],
                     "clienteNombre" => $arGuia['clienteNombre'],
                     "clienteDireccion" => $arGuia['clienteDireccion'],
                     "clienteTelefono" => $arGuia['clienteTelefono'],
+                    "clienteFormaPago" => $arGuia['clienteFormaPago'],
                     "documentoCliente" => $arGuia['documentoCliente'],
                     "vrDeclara" => $arGuia['vrDeclara'],
                     "vrFlete" => $arGuia['vrFlete'],
@@ -3270,6 +3286,8 @@ class TteGuiaRepository extends ServiceEntityRepository
                     "vrTotalFactura" => $totalFactura,
                     "unidades" => $arGuia['unidades'],
                     "pesoReal" => $arGuia['pesoReal'],
+                    "pesoVolumen" => $arGuia['pesoVolumen'],
+                    "pesoFacturado" => $arGuia['pesoFacturado'],
                     "comentario" => $arGuia['comentario'],
                 ];
                 return $arrGuia;

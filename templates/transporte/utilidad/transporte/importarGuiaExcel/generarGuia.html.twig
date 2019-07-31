@@ -8,29 +8,35 @@
             <h2>Generar guia</h2>
         </header>
         <div>
-            <div class="widget-body no-padding">
-                <div class="panel-body">
-                    {% include ('estructura/buscarClienteTransporte.html.twig') %}
-                    <div class="form-group form-group-sm">
-                        <label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-3">
-                            {{ form_widget(formFiltro.flArchivo, { 'attr': {'class': 'form-control'} }) }}
-                        </div>
+            <div class="widget-body">
 
-                        <div class="col-sm-3">
-                            {{ form_widget(formFiltro.liquidar) }}
-                        </div>
-                        <div class="col-sm-4">
-                            <a href="{{ asset('ejemplo/ejemploGuias.xls') }}" download class="btn btn-sm btn-default">Descargar ejemplo</a>
-                            <a href="{{ asset('estructura/estructuraGenerarGuia.xlsx') }}" download class="btn btn-sm btn-default">Descargar estructura</a>
-                        </div>
+                {% include ('estructura/buscarClienteTransporte.html.twig') %}
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-4">
+                        {{ form_widget(formFiltro.flArchivo, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                    <label for="form_estadoAutorizado" class="col-sm-2 control-label">Tipo:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(formFiltro.guiaTipoRel) }}
                     </div>
                 </div>
-                <div class="modal-footer">
-                    {{ form_widget(formFiltro.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Ingreso:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(formFiltro.fechaIngreso) }}
+                    </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <a href="{{ asset('ejemplo/ejemploGuias.xls') }}" download class="btn btn-sm btn-default">Ejemplo
+                    estructura</a>
+                <a href="{{ asset('estructura/estructuraGenerarGuia.xlsx') }}" download class="btn btn-sm btn-default">Descripcion
+                    estructura</a>
+                {{ form_widget(formFiltro.btnImportar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            </div>
         </div>
+    </div>
     </div>
     {{ form_end(formFiltro) }}
     <br/>

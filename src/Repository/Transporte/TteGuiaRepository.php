@@ -3444,30 +3444,30 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         $raw = ['precio' => $precio, 'origen' => $origen, 'destino' => $destino, 'producto' => $producto, 'zona' => $zona];
         $arrPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->apiWindowsDetalleProducto($raw);
-//        if(!isset($arrPrecioDetalle['error'])) {
-//            switch ($tipoLiquidacion) {
-//                case "K":
-//                    $flete = $pesoFacturado *  $arrPrecioDetalle['vrPeso'];
-//                    if($descuentoPeso > 0) {
-//                        $flete -= $flete * $descuentoPeso / 100;
-//                    }
-//                    break;
-//                case "U":
-//                    $flete = $unidades * $arrPrecioDetalle['vrUnidad'];
-//                    break;
-//                case "A":
-//                    $flete = $pesoFacturado *  $arrPrecioDetalle['vrPeso'];
-//                    break;
-//
-//            }
-//
-//        }
+        if(!isset($arrPrecioDetalle['error'])) {
+            switch ($tipoLiquidacion) {
+                case "K":
+                    $flete = $pesoFacturado *  $arrPrecioDetalle['vrPeso'];
+                    if($descuentoPeso > 0) {
+                        $flete -= $flete * $descuentoPeso / 100;
+                    }
+                    break;
+               case "U":
+                   $flete = $unidades * $arrPrecioDetalle['vrUnidad'];
+                    break;
+                case "A":
+                    $flete = $pesoFacturado *  $arrPrecioDetalle['vrPeso'];
+                   break;
+
+            }
+
+       }
         $rawCondicionManejo = ['codigoCliente' => $cliente, 'origen' => $origen, 'destino' => $destino, 'codigoZona' => $zona];
         $arrCondicionManejo = $em->getRepository(TteCondicionManejo::class)->apiWindowsLiquidar($rawCondicionManejo);
         if(!isset($arrCondicionManejo['error'])) {
             $porcentajeManejo = $arrCondicionManejo['porcentaje'];
-            $manejoMinimoUnidad = $arrCondicionFlete['minimoUnidad'];
-            $manejoMinimoDespacho = $arrCondicionFlete['minimoDespacho'];
+            $manejoMinimoUnidad = $arrCondicionManejo['minimoUnidad'];
+            $manejoMinimoDespacho = $arrCondicionManejo['minimoDespacho'];
         }
         $manejo = $declarado * $porcentajeManejo / 100;
         if($manejoMinimoDespacho > $manejo) {

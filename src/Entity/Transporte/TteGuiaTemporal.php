@@ -18,6 +18,12 @@ class TteGuiaTemporal
     private $codigoGuiaPk;
 
     /**
+     * Si se origina por bufalo o desde excel
+     * @ORM\Column(name="origen", type="string", length=1, nullable=true)
+     */
+    private $origen;
+
+    /**
      * @ORM\Column(name="numero", type="float", nullable=true)
      */
     private $numero;
@@ -791,4 +797,22 @@ class TteGuiaTemporal
     {
         $this->clienteRel = $clienteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOrigen()
+    {
+        return $this->origen;
+    }
+
+    /**
+     * @param mixed $origen
+     */
+    public function setOrigen($origen): void
+    {
+        $this->origen = $origen;
+    }
+
+
 }

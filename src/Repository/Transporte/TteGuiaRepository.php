@@ -3417,8 +3417,12 @@ class TteGuiaRepository extends ServiceEntityRepository
         $porcentajeManejo = 0;
         $manejoMinimoUnidad = 0;
         $manejoMinimoDespacho = 0;
+        $pesoMinimoUnidad = 0;
+
         $flete = 0;
         $manejo = 0;
+        $pesoFacturado = $peso;
+
         $rawCondicion = ['codigo' => $condicion];
         $arrCondicion = $em->getRepository(TteCondicion::class)->apiWindowsDetalle($rawCondicion);
         if(!isset($arrCondicion['error'])) {
@@ -3426,19 +3430,24 @@ class TteGuiaRepository extends ServiceEntityRepository
             $porcentajeManejo = $arrCondicion['porcentajeManejo'];
             $manejoMinimoUnidad = $arrCondicion['manejoMinimoUnidad'];
             $manejoMinimoDespacho = $arrCondicion['manejoMinimoDespacho'];
+            $pesoMinimoUnidad = $arrCondicion['pesoMinimo'];
+        }
+        $rawCondicionFlete = ['codigoCliente' => $cliente, 'origen' => $origen, 'destino' => $destino, 'codigoZona' => $zona];
+        $arrCondicionFlete = $em->getRepository(TteCondicionFlete::class)->apiWindowsLiquidar($rawCondicionFlete);
+        if(!isset($arrCondicionFlete['error'])) {
+            $descuentoPeso = $arrCondicionFlete['descuentoPeso'];
+            $descuentoUnidad = $arrCondicionFlete['descuentoUnidad'];
+            $pesoMinimoUnidad = $arrCondicionFlete['pesoMinimo'];
+        }
+        if($pesoFacturado < $pesoMinimoUnidad * $unidades) {
+            $pesoFacturado = $pesoMinimoUnidad * $unidades;
         }
         $raw = ['precio' => $precio, 'origen' => $origen, 'destino' => $destino, 'producto' => $producto, 'zona' => $zona];
         $arrPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->apiWindowsDetalleProducto($raw);
         if(!isset($arrPrecioDetalle['error'])) {
-            $rawCondicionFlete = ['codigoCliente' => $cliente, 'origen' => $origen, 'destino' => $destino, 'codigoZona' => $zona];
-            $arrCondicionFlete = $em->getRepository(TteCondicionFlete::class)->apiWindowsLiquidar($rawCondicionFlete);
-            if(!isset($arrCondicionFlete['error'])) {
-                $descuentoPeso = $arrCondicionFlete['descuentoPeso'];
-                $descuentoUnidad = $arrCondicionFlete['descuentoUnidad'];
-            }
             switch ($tipoLiquidacion) {
                 case "K":
-                    $flete = $peso *  $arrPrecioDetalle['vrPeso'];
+                    $flete = $pesoFacturado *  $arrPrecioDetalle['vrPeso'];
                     if($descuentoPeso > 0) {
                         $flete -= $flete * $descuentoPeso / 100;
                     }
@@ -3447,7 +3456,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $flete = $unidades * $arrPrecioDetalle['vrUnidad'];
                     break;
                 case "A":
-                    $flete = $peso *  $arrPrecioDetalle['vrPeso'];
+                    $flete = $pesoFacturado *  $arrPrecioDetalle['vrPeso'];
                     break;
 
             }
@@ -3469,6 +3478,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         $arrDevolver['flete'] = $flete;
         $arrDevolver['manejo'] = $manejo;
+        $arrDevolver['pesoFacturado'] = $pesoFacturado;
         return $arrDevolver;
     }
 

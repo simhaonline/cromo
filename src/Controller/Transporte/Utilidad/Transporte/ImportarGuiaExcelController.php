@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Transporte\Proceso\Transporte\Guia;
+namespace App\Controller\Transporte\Utilidad\Transporte;
 
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Seguridad\Usuario;
@@ -10,6 +10,7 @@ use App\Entity\Transporte\TteCondicion;
 use App\Entity\Transporte\TteConsecutivo;
 use App\Entity\Transporte\TteEmpaque;
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteGuiaTemporal;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TteProducto;
@@ -18,12 +19,14 @@ use App\Utilidades\Mensajes;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class GenerarGuiaController extends Controller
+class ImportarGuiaExcelController extends Controller
 {
     /**
      * @param Request $request
@@ -33,17 +36,20 @@ class GenerarGuiaController extends Controller
      */
     public function lista(Request $request)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('liquidar', CheckboxType::class, ['required' => false,'label' => 'Liquidar'])
+            ->add('liquidar', CheckboxType::class, ['required' => false, 'label' => 'Liquidar'])
+            ->add('codigoClienteFk', TextType::class, ['required' => false, 'data' => $session->get('filtroGuiaCodigoCliente')])
             ->add('btnGenerar', SubmitType::class, ['label' => 'Generar'])
             ->add('flArchivo', FileType::class, ['required' => false])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGenerar')->isClicked()) {
-                if($form->get('flArchivo')->getData()){
+                if ($form->get('flArchivo')->getData()) {
+                    $session->set('filtroGuiaCodigoCliente', $form->get('codigoClienteFk')->getData() ?? '');
                     $liquidar = $form->get('liquidar')->getData();
                     $this->generarGuias($form->get('flArchivo')->getData(), $liquidar);
                 }
@@ -52,7 +58,7 @@ class GenerarGuiaController extends Controller
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaGenerarFactura(), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/utilidad/transporte/importarGuiaExcel/generarGuia.html.twig', [
             'arGuias' => $arGuias,
-            'form' => $form->createView()
+            'formFiltro' => $form->createView()
         ]);
     }
 
@@ -62,8 +68,11 @@ class GenerarGuiaController extends Controller
      */
     private function generarGuias($archivo, $liquidar)
     {
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $ruta = $em->getRepository(GenConfiguracion::class)->parametro('rutaTemporal');
+        $arCliente = $em->getRepository(TteCliente::class)->find($session->get('filtroGuiaCodigoCliente'));
+        $arCondicion = $em->getRepository(TteCondicion::class)->find($arCliente->getCodigoCondicionFk());
         if (!$ruta) {
             Mensajes::error('Debe de ingresar una ruta temporal en la configuracion general del sistema');
         }
@@ -81,9 +90,12 @@ class GenerarGuiaController extends Controller
                 $highestRow = $worksheet->getHighestRow();
                 for ($row = 2; $row <= $highestRow; ++$row) {
                     $error = false;
-                    $arGuia = new TteGuia();
+                    /**
+                     * @var $arGuia TteGuiaTemporal
+                     */
+                    $arGuia = new TteGuiaTemporal();
                     $respuesta = "La guia en la fila {$row} tiene un error, ";
-
+                    $arGuia->setOrigen('E');
                     // Guia tipo
                     $cell = $worksheet->getCellByColumnAndRow(1, $row);
                     $arGuiaTipo = $em->find(TteGuiaTipo::class, $cell->getValue());
@@ -91,7 +103,7 @@ class GenerarGuiaController extends Controller
                         $arrErrores[] = $respuesta . "el codigoGuiaTipo '{$cell->getValue()}' no existe";
                         $error = true;
                     } else {
-                        $arGuia->setGuiaTipoRel($arGuiaTipo);
+                        $arGuia->setCodigoGuiaTipoFk($arGuiaTipo);
                     }
 
                     $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
@@ -99,38 +111,28 @@ class GenerarGuiaController extends Controller
                     $arConsecutivo->setGuia($arConsecutivo->getGuia() + 1);
                     $em->persist($arConsecutivo);
 
-                    // Operación ingreso
-                    $cell = $worksheet->getCellByColumnAndRow(2, $row);
-                    $arOperacionIngreso = $em->find(TteOperacion::class, $cell->getValue());
-                    if (!$arOperacionIngreso) {
-                        $arrErrores[] = $respuesta . "la operación de ingreso '{$cell->getValue()}' no existe";
-                        $error = true;
-                    } else {
-                        $arGuia->setOperacionIngresoRel($arOperacionIngreso);
-                    }
-
-                    // Operación cargo
-                    $cell = $worksheet->getCellByColumnAndRow(3, $row);
-                    $arOperacionCargo = $em->find(TteOperacion::class, $cell->getValue());
-                    if (!$arOperacionCargo) {
-                        $arrErrores[] = $respuesta . "la operación de cargo '{$cell->getValue()}' no existe";
-                        $error = true;
-                    } else {
-                        $arGuia->setOperacionCargoRel($arOperacionCargo);
-                    }
-
+//                    // Operación ingreso
+////                    $cell = $worksheet->getCellByColumnAndRow(2, $row);
+//                    $arOperacionIngreso = $em->find(TteOperacion::class, $this->getUser()->getCodigoOperacionFk());
+//                    if ($arOperacionIngreso) {
+//                        $arGuia->setOperacionIngresoRel($arOperacionIngreso);
+//                    }
+//                    // Operación cargo
+////                    $cell = $worksheet->getCellByColumnAndRow(3, $row);
+//                    $arOperacionCargo = $em->find(TteOperacion::class, $this->getUser()->getCodigoOperacionCargoFk());
+//                    if ($arOperacionCargo) {
+//                        $arGuia->setOperacionCargoRel($arOperacionCargo);
+//                    }
                     // Cliente
-                    $cell = $worksheet->getCellByColumnAndRow(4, $row);
-                    $arCliente = $em->find(TteCliente::class, $cell->getValue());
-                    if (!$arCliente) {
-                        $arrErrores[] = $respuesta . "el cliente '{$cell->getValue()}' no existe";
-                        $error = true;
-                    } else {
+//                    $cell = $worksheet->getCellByColumnAndRow(4, $row);
+                    if ($arCliente) {
                         $arGuia->setClienteRel($arCliente);
+                    } else {
+                        Mensajes::error("Debe seleccionar un cliente");
                     }
 
                     // Ciudad origen
-                    $cell = $worksheet->getCellByColumnAndRow(5, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(2, $row);
                     $arCiudadOrigen = $em->find(TteCiudad::class, $cell->getValue());
                     if (!$arCiudadOrigen) {
                         $arrErrores[] = $respuesta . "la ciudad de origen '{$cell->getValue()}' no existe";
@@ -140,7 +142,7 @@ class GenerarGuiaController extends Controller
                     }
 
                     // Ciudad destino
-                    $cell = $worksheet->getCellByColumnAndRow(6, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(3, $row);
                     $arCiudadDestino = $em->find(TteCiudad::class, $cell->getValue());
                     if (!$arCiudadDestino) {
                         $arrErrores[] = $respuesta . "la ciudad de destino '{$cell->getValue()}' no existe";
@@ -150,47 +152,44 @@ class GenerarGuiaController extends Controller
                     }
 
                     // Servicio
-                    $cell = $worksheet->getCellByColumnAndRow(7, $row);
-                    $arServicio = $em->find(TteServicio::class, $cell->getValue());
-                    if (!$arServicio) {
-                        $arrErrores[] = $respuesta . "el servicio '{$cell->getValue()}' no existe";
-                        $error = true;
-                    } else {
-                        $arGuia->setServicioRel($arServicio);
-                    }
+//                    $cell = $worksheet->getCellByColumnAndRow(4, $row);
+//                    $arServicio = $em->find(TteServicio::class, $cell->getValue());
+//                    if (!$arServicio) {
+//                        $arrErrores[] = $respuesta . "el servicio '{$cell->getValue()}' no existe";
+//                        $error = true;
+//                    } else {
+//                        $arGuia->setServicioRel($arServicio);
+//                    }
 
                     // Producto
-                    $cell = $worksheet->getCellByColumnAndRow(8, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(4, $row);
                     $arProducto = $em->find(TteProducto::class, $cell->getValue());
                     if (!$arProducto) {
                         $arrErrores[] = $respuesta . "el producto '{$cell->getValue()}' no existe";
                         $error = true;
                     } else {
-                        $arGuia->setProductoRel($arProducto);
+                        $arGuia->setCodigoProductoFk($arProducto->getCodigoProductoPk());
                     }
 
-                    // Empaque
-                    $cell = $worksheet->getCellByColumnAndRow(9, $row);
-                    $arEmpaque = $em->find(TteEmpaque::class, $cell->getValue());
-                    if (!$arEmpaque) {
-                        $arrErrores[] = $respuesta . "el empaque '{$cell->getValue()}' no existe";
-                        $error = true;
-                    } else {
-                        $arGuia->setEmpaqueRel($arEmpaque);
-                    }
+//                    // Empaque
+//                    $cell = $worksheet->getCellByColumnAndRow(6, $row);
+//                    $arEmpaque = $em->find(TteEmpaque::class, $cell->getValue());
+//                    if (!$arEmpaque) {
+//                        $arrErrores[] = $respuesta . "el empaque '{$cell->getValue()}' no existe";
+//                        $error = true;
+//                    } else {
+//                        $arGuia->setEmpaqueRel($arEmpaque);
+//                    }
 
-                    // Condición
-                    $cell = $worksheet->getCellByColumnAndRow(10, $row);
-                    $arCondicion = $em->find(TteCondicion::class, $cell->getValue());
-                    if (!$arCondicion) {
-                        $arrErrores[] = $respuesta . "la condición '{$cell->getValue()}' no existe";
-                        $error = true;
-                    } else {
-                        $arGuia->setCondicionRel($arCondicion);
-                    }
+//                    // Condición
+//                    if ($arCliente) {
+//                        $arGuia->setCondicionRel($arCliente->getCondicionRel());
+//                    } else {
+//                        Mensajes::error("El cliente no tiene condicion");
+//                    }
 
                     // Numero
-                    $cell = $worksheet->getCellByColumnAndRow(11, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(5, $row);
                     if (is_numeric($cell->getValue())) {
                         $arGuia->setNumero((int)$cell->getValue());
                     } else {
@@ -199,32 +198,30 @@ class GenerarGuiaController extends Controller
                     }
 
                     // Documento cliente
-                    $cell = $worksheet->getCellByColumnAndRow(12, $row);
-                    $arGuia->setDocumentoCliente(substr($cell->getValue(), 0, 80));
+                    $cell = $worksheet->getCellByColumnAndRow(6, $row);
+                    $arGuia->setClienteDocumento(substr($cell->getValue(), 0, 80));
 
-                    // Relación cliente
-                    $cell = $worksheet->getCellByColumnAndRow(13, $row);
-                    $arGuia->setRelacionCliente(substr($cell->getValue(), 0, 50));
+//                    // Relación cliente
+//                    $arGuia->setRelacionCliente(Null);
 
                     // Remitente
-                    $cell = $worksheet->getCellByColumnAndRow(14, $row);
-                    $arGuia->setRemitente(substr($cell->getValue(), 0, 80));
+                    $arGuia->setRemitente($arCliente->getNombreCorto());
 
                     // Nombre destinatario
-                    $cell = $worksheet->getCellByColumnAndRow(15, $row);
-                    $arGuia->setNombreDestinatario(substr($cell->getValue(), 0, 150));
+                    $cell = $worksheet->getCellByColumnAndRow(7, $row);
+                    $arGuia->setDestinatarioNombre(substr($cell->getValue(), 0, 150));
 
                     // Dirección destinatario
-                    $cell = $worksheet->getCellByColumnAndRow(16, $row);
-                    $arGuia->setDireccionDestinatario(substr($cell->getValue(), 0, 150));
+                    $cell = $worksheet->getCellByColumnAndRow(8, $row);
+                    $arGuia->setDestinatarioDireccion(substr($cell->getValue(), 0, 150));
 
                     // Teléfono destinatario
-                    $cell = $worksheet->getCellByColumnAndRow(17, $row);
-                    $arGuia->setTelefonoDestinatario(substr($cell->getValue(), 0, 80));
+                    $cell = $worksheet->getCellByColumnAndRow(9, $row);
+                    $arGuia->setDestinatarioTelefono(substr($cell->getValue(), 0, 80));
 
                     // Fecha ingreso
-                    $cell = $worksheet->getCellByColumnAndRow(18, $row);
-                    $strFecha = str_replace(['"',"'",'”',"’"], '', $cell->getValue());
+                    $cell = $worksheet->getCellByColumnAndRow(10, $row);
+                    $strFecha = str_replace(['"', "'", '”', "’"], '', $cell->getValue());
                     $fecha = date_create($strFecha);
                     if (!is_bool($fecha) && $fecha) {
                         $arGuia->setFechaIngreso($fecha);
@@ -234,7 +231,7 @@ class GenerarGuiaController extends Controller
                     }
 
                     // Unidades
-                    $cell = $worksheet->getCellByColumnAndRow(19, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(11, $row);
                     $unidades = 0;
                     if (is_numeric($cell->getValue())) {
                         $arGuia->setUnidades($cell->getValue());
@@ -245,7 +242,7 @@ class GenerarGuiaController extends Controller
                     }
 
                     // Peso real
-                    $cell = $worksheet->getCellByColumnAndRow(20, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(12, $row);
                     if (is_numeric($cell->getValue())) {
                         $arGuia->setPesoReal($cell->getValue());
                     } else {
@@ -254,7 +251,7 @@ class GenerarGuiaController extends Controller
                     }
 
                     // Peso volumen
-                    $cell = $worksheet->getCellByColumnAndRow(21, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(13, $row);
                     if (is_numeric($cell->getValue())) {
                         $arGuia->setPesoVolumen($cell->getValue());
                     } else {
@@ -262,19 +259,19 @@ class GenerarGuiaController extends Controller
                         $error = true;
                     }
 
-                    // Peso facturado
-                    $cell = $worksheet->getCellByColumnAndRow(22, $row);
-                    $pesoFacturar = 0;
-                    if (is_numeric($cell->getValue())) {
-                        $arGuia->setPesoFacturado($cell->getValue());
-                        $pesoFacturar = $cell->getValue();
-                    } else {
-                        $arrErrores[] = $respuesta . "existe un error con el 'peso facturado' ingresado";
-                        $error = true;
-                    }
+//                    // Peso facturado
+//                    $cell = $worksheet->getCellByColumnAndRow(22, $row);
+//                    $pesoFacturar = 0;
+//                    if (is_numeric($cell->getValue())) {
+//                        $arGuia->setPesoFacturado($cell->getValue());
+//                        $pesoFacturar = $cell->getValue();
+//                    } else {
+//                        $arrErrores[] = $respuesta . "existe un error con el 'peso facturado' ingresado";
+//                        $error = true;
+//                    }
 
                     // Valor declara
-                    $cell = $worksheet->getCellByColumnAndRow(23, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(14, $row);
                     $declarado = 0;
                     if (is_numeric($cell->getValue())) {
                         $arGuia->setVrDeclara($cell->getValue());
@@ -284,12 +281,9 @@ class GenerarGuiaController extends Controller
                         $error = true;
                     }
 
-                    $cell = $worksheet->getCellByColumnAndRow(30, $row);
-                    $tipoLiquidacion = $cell->getValue();
 
-                    $arGuia->setTipoLiquidacion($tipoLiquidacion);
-                    if($error == false ) {
-                        if($liquidar && $tipoLiquidacion) {
+                    if ($error == false) {
+                        if ($liquidar) {
                             $arrLiquidacion = $em->getRepository(TteGuia::class)->liquidar(
                                 $arCliente->getCodigoClientePk(),
                                 $arCondicion->getCodigoCondicionPk(),
@@ -298,9 +292,7 @@ class GenerarGuiaController extends Controller
                                 $arCiudadDestino->getCodigoCiudadPk(),
                                 $arProducto->getCodigoProductoPk(),
                                 $arCiudadDestino->getCodigoZonaFk(),
-                                $tipoLiquidacion,
                                 $unidades,
-                                $pesoFacturar,
                                 $declarado);
                             $arGuia->setVrFlete($arrLiquidacion['flete']);
                             $arGuia->setVrManejo($arrLiquidacion['manejo']);
@@ -324,7 +316,6 @@ class GenerarGuiaController extends Controller
                             }
                         }
                     }
-
 
 
                     // Valor recaudo
@@ -373,10 +364,10 @@ class GenerarGuiaController extends Controller
                         //$em->getRepository(TteGuia::class)->actualizarNumeros($arrGuias);
                         Mensajes::success('Guias creadas con éxito');
                     } catch (\Exception $exception) {
-                        Mensajes::error('Ha ocurrido un problema al insertar las guias, por favor contacte con soporte y agregue en su reporte el siguiente error: '. $exception->getMessage());
+                        Mensajes::error('Ha ocurrido un problema al insertar las guias, por favor contacte con soporte y agregue en su reporte el siguiente error: ' . $exception->getMessage());
                     }
                 } else {
-                    Mensajes::error('Se han generado los siguientes errores: '.implode(", ",$arrErrores));
+                    Mensajes::error('Se han generado los siguientes errores: ' . implode(", ", $arrErrores));
                 }
             }
         }

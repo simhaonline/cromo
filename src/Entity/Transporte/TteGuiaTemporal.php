@@ -39,6 +39,11 @@ class TteGuiaTemporal
     private $codigoClienteFk;
 
     /**
+     * @ORM\Column(name="codigo_condicion_fk", type="integer", nullable=true)
+     */
+    private $codigoCondicionFk;
+
+    /**
      * @ORM\Column(name="codigo_operador_fk", type="string",length=20, nullable=true)
      */
     private $codigoOperadorFk;
@@ -813,6 +818,23 @@ class TteGuiaTemporal
     {
         $this->origen = $origen;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCondicionFk()
+    {
+        return $this->codigoCondicionFk;
+    }
+
+    /**
+     * @param mixed $codigoCondicionFk
+     */
+    public function setCodigoCondicionFk($codigoCondicionFk): void
+    {
+        $this->codigoCondicionFk = $codigoCondicionFk;
+    }
+
 
 
 }

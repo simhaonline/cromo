@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    {{ form_errors(form) }}
+    {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
          data-widget-fullscreenbutton="true">
         <header>
@@ -11,14 +10,15 @@
         <div>
             <div class="widget-body no-padding">
                 <div class="panel-body">
+                    {% include ('estructura/buscarClienteTransporte.html.twig') %}
                     <div class="form-group form-group-sm">
                         <label class="col-sm-2 control-label"></label>
                         <div class="col-sm-3">
-                            {{ form_widget(form.flArchivo, { 'attr': {'class': 'form-control'} }) }}
+                            {{ form_widget(formFiltro.flArchivo, { 'attr': {'class': 'form-control'} }) }}
                         </div>
 
                         <div class="col-sm-3">
-                            {{ form_widget(form.liquidar) }}
+                            {{ form_widget(formFiltro.liquidar) }}
                         </div>
                         <div class="col-sm-4">
                             <a href="{{ asset('ejemplo/ejemploGuias.xls') }}" download class="btn btn-sm btn-default">Descargar ejemplo</a>
@@ -27,12 +27,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                    {{ form_widget(formFiltro.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
                 </div>
             </div>
         </div>
     </div>
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
+    {{ form_end(formFiltro) }}
     <br/>
 {% endblock %}

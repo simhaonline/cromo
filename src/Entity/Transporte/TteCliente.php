@@ -149,6 +149,11 @@ class TteCliente
     private $guiaPagoRecogida = false;
 
     /**
+     * @ORM\Column(name="condicion_factura", type="boolean", nullable=true,options={"default":false})
+     */
+    private $condicionFactura = false;
+
+    /**
      * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
@@ -1009,6 +1014,38 @@ class TteCliente
     public function setCondicionesManejosClienteRel($condicionesManejosClienteRel): void
     {
         $this->condicionesManejosClienteRel = $condicionesManejosClienteRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCondicionFactura()
+    {
+        return $this->condicionFactura;
+    }
+
+    /**
+     * @param mixed $condicionFactura
+     */
+    public function setCondicionFactura($condicionFactura): void
+    {
+        $this->condicionFactura = $condicionFactura;
     }
 
 

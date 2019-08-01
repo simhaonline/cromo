@@ -79,19 +79,27 @@ class Despacho extends \FPDF {
         $this->SetFont('Arial', 'B', 7);
         //linea 3
         $this->SetXY(5, 50);
-        $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, utf8_decode("CANTIDAD:"), 1, 0, 'L', 1);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 5, utf8_decode("RUTA:"), 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(30, 6, $arDespacho->getCantidad(), 1, 0, 'L', 1);
+        $this->Cell(30, 5, $arDespacho->getRutaRel()->getNombre(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "", 1, 0, 'L', 1);
+        $this->Cell(30, 5, "CANTIDAD:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(103, 6, "", 1, 0, 'R', 1);
+        $this->Cell(103, 5,$arDespacho->getCantidad(), 1, 0, 'R', 1);
         $this->SetFont('Arial', 'B', 7);
+        //linea 4
+        $this->SetXY(5, 55);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, utf8_decode("COMENTARIO:"), 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(163, 6, $arDespacho->getComentario(), 1, 0, 'L', 1);
 
         $this->EncabezadoDetalles();
     }

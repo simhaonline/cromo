@@ -185,7 +185,7 @@ class Factura3 extends \FPDF {
                 $kilosFacturadosTotal += $arGuia['pesoFacturado'];
                 $declaraTotal += $arGuia['vrDeclara'];
                 $pdf->Ln();
-                $pdf->SetAutoPageBreak(true, 85);
+                $pdf->SetAutoPageBreak(true, 50);
             }
             $pdf->Ln();
             $pdf->SetFont('Arial', 'b', 8);
@@ -277,6 +277,11 @@ class Factura3 extends \FPDF {
         $this->SetXY(160,196);
         $this->SetFont('Arial', 'b', 9);
         $this->Cell(10, 5, utf8_decode("ACEPTANTE REMITENTE"), 0, 0, 'C', 1);
+
+        $this->SetFillColor(272, 272, 272);
+        $this->SetXY(135,202);
+        $this->SetFont('Arial', 'b', 9);
+        $this->Cell(10, 5, utf8_decode("ORIGINAL"), 0, 0, 'C', 1);
 
     }
 

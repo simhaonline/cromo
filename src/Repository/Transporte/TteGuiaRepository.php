@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Mensajes;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\OptimisticLockException;
+
 class TteGuiaRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -888,6 +889,8 @@ class TteGuiaRepository extends ServiceEntityRepository
      */
     public function facturaPendiente($codigoCliente)
     {
+        $em = $this->getEntityManager();
+        $arCliente = $em->getRepository(TteCliente::class)->find($codigoCliente);
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
             ->select('g.codigoGuiaPk')
@@ -914,6 +917,10 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('g.factura = 0')
             ->andWhere('g.cortesia = 0')
             ->andWhere('g.codigoClienteFk =' . $codigoCliente);
+        if ($arCliente->getCondicionFactura() == 1) {
+            $queryBuilder
+                ->andWhere('g.estadoCumplido = 1');
+        }
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -2973,27 +2980,28 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->where("t.codigoClienteFk={$codigoCliente}")
             ->andWhere("t.fechaIngreso >='{$fechaDesde} 00:00:00'")
             ->andWhere("t.fechaIngreso <='{$fechaHasta} 23:59:59'")
-        ->setMaxResults(3000);
-        if($numero) {
+            ->setMaxResults(3000);
+        if ($numero) {
             $queryBuilder->andWhere("t.numero = '{$numero}'");
         }
-        if($documento) {
+        if ($documento) {
             $queryBuilder->andWhere("t.documentoCliente = '{$documento}'");
         }
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function apiWindowsNuevo($raw) {
+    public function apiWindowsNuevo($raw)
+    {
         $em = $this->getEntityManager();
-        $numeroUnicoGuia = $raw['numeroUnicoGuia']?? null;
-        $flete = $raw['vrFlete']?? 0;
-        $manejo = $raw['vrManejo']?? 0;
-        $numero = $raw['numero']?? null;
+        $numeroUnicoGuia = $raw['numeroUnicoGuia'] ?? null;
+        $flete = $raw['vrFlete'] ?? 0;
+        $manejo = $raw['vrManejo'] ?? 0;
+        $numero = $raw['numero'] ?? null;
         $em->getConnection()->beginTransaction();
         try {
             $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($raw['codigoGuiaTipoFk'], LockMode::PESSIMISTIC_READ);
             $validarNumero = $this->apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia);
-            if($validarNumero['mensaje'] == "") {
+            if ($validarNumero['mensaje'] == "") {
                 $numero = $validarNumero['numero'];
                 $arOperacion = $em->getRepository(TteOperacion::class)->find($raw['codigoOperacionIngresoFk']);
                 $arCliente = $em->getRepository(TteCliente::class)->find($raw['codigoClienteFk']);
@@ -3007,19 +3015,19 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $arZona = $em->getRepository(TteZona::class)->find($raw['codigoZonaFk']);
                 $arGuia = new TteGuia();
                 $numeroFactura = null;
-                if($arGuiaTipo->getCortesia()) {
+                if ($arGuiaTipo->getCortesia()) {
                     $flete = 0;
                     $manejo = 0;
                     $arGuia->setCortesia(1);
                 }
-                if($arGuiaTipo->getFactura()) {
+                if ($arGuiaTipo->getFactura()) {
                     $numeroFactura = $arGuiaTipo->getConsecutivoFactura();
-                    $arGuiaTipo->setConsecutivoFactura($arGuiaTipo->getConsecutivoFactura()+1);
+                    $arGuiaTipo->setConsecutivoFactura($arGuiaTipo->getConsecutivoFactura() + 1);
                     $em->persist($arGuiaTipo);
                     $arGuia->setFactura(1);
                 }
 
-                if($numeroUnicoGuia == "S") {
+                if ($numeroUnicoGuia == "S") {
                     $arGuia->setCodigoGuiaPk($numero);
                 } else {
                     $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
@@ -3027,11 +3035,11 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $arConsecutivo->setGuia($arConsecutivo->getGuia() + 1);
                     $em->persist($arConsecutivo);
                 }
-                if(!$arGuiaTipo->getExigeNumero()) {
+                if (!$arGuiaTipo->getExigeNumero()) {
                     $arGuiaTipo->setConsecutivo($arGuiaTipo->getConsecutivo() + 1);
                     $em->persist($arGuiaTipo);
                 }
-                if($arCiudadDestino->getReexpedicion()) {
+                if ($arCiudadDestino->getReexpedicion()) {
                     $arGuia->setReexpedicion(1);
                 }
                 $arGuia->setGuiaTipoRel($arGuiaTipo);
@@ -3095,11 +3103,12 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     }
 
-    public function apiWindowsDetalle($raw) {
+    public function apiWindowsDetalle($raw)
+    {
         $em = $this->getEntityManager();
-        $codigo = $raw['codigoGuiaPk']?? null;
-        $documentoCliente = $raw['documentoCliente']?? null;
-        if($codigo || $documentoCliente) {
+        $codigo = $raw['codigoGuiaPk'] ?? null;
+        $documentoCliente = $raw['documentoCliente'] ?? null;
+        if ($codigo || $documentoCliente) {
             $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g')
                 ->select('g.codigoGuiaPk')
                 ->addSelect('g.codigoGuiaTipoFk')
@@ -3158,13 +3167,13 @@ class TteGuiaRepository extends ServiceEntityRepository
                 ->leftJoin('g.ciudadOrigenRel', 'co')
                 ->leftJoin('g.ciudadDestinoRel', 'cd')
                 ->leftJoin('g.condicionRel', 'con');
-            if($codigo) {
+            if ($codigo) {
                 $queryBuilder->where("g.codigoGuiaPk=" . $codigo);
             } else {
                 $queryBuilder->where("g.documentoCliente = '" . $documentoCliente . "'");
             }
             $arGuias = $queryBuilder->getQuery()->getResult();
-            if($arGuias) {
+            if ($arGuias) {
                 return $arGuias[0];
             } else {
                 return [
@@ -3176,10 +3185,11 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
     }
 
-    public function apiWindowsImprimir($raw) {
+    public function apiWindowsImprimir($raw)
+    {
         $em = $this->getEntityManager();
-        $codigo = $raw['codigoGuiaPk']?? null;
-        if($codigo) {
+        $codigo = $raw['codigoGuiaPk'] ?? null;
+        if ($codigo) {
             $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g')
                 ->select('g.codigoGuiaPk')
                 ->addSelect('g.numero')
@@ -3215,13 +3225,13 @@ class TteGuiaRepository extends ServiceEntityRepository
                 ->addSelect('g.pesoVolumen')
                 ->addSelect('g.pesoFacturado')
                 ->addSelect('g.comentario')
-            ->leftJoin('g.guiaTipoRel', 'gt')
-            ->leftJoin('g.ciudadOrigenRel', 'co')
-            ->leftJoin('g.ciudadDestinoRel', 'cd')
-            ->leftJoin('g.clienteRel', 'c');
+                ->leftJoin('g.guiaTipoRel', 'gt')
+                ->leftJoin('g.ciudadOrigenRel', 'co')
+                ->leftJoin('g.ciudadDestinoRel', 'cd')
+                ->leftJoin('g.clienteRel', 'c');
             $queryBuilder->where("g.codigoGuiaPk=" . $codigo);
             $arGuias = $queryBuilder->getQuery()->getResult();
-            if($arGuias) {
+            if ($arGuias) {
                 $arGuia = $arGuias[0];
                 $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
                 $numeroFactura = "";
@@ -3230,10 +3240,10 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $totalFactura = 0;
                 $tituloFactura = "";
                 $resolucionFactura = "";
-                if($arGuia['factura']) {
-                    if($arGuia['codigoFacturaTipoFk']) {
+                if ($arGuia['factura']) {
+                    if ($arGuia['codigoFacturaTipoFk']) {
                         $arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arGuia['codigoFacturaTipoFk']);
-                        if($arFacturaTipo) {
+                        if ($arFacturaTipo) {
                             $numeroFactura = $arFacturaTipo->getPrefijo() . $arGuia['numeroFactura'];
                             $tituloFactura = $arFacturaTipo->getNombre();
                         }
@@ -3301,18 +3311,19 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
     }
 
-    private function apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia) {
+    private function apiWindowsNuevoValidarNumero($arGuiaTipo, $numero, $numeroUnicoGuia)
+    {
         $em = $this->getEntityManager();
         $mensaje = "";
-        if($arGuiaTipo->getExigeNumero()) {
-            if($numero != 0 && $numero != null) {
-                if($numeroUnicoGuia == "S") {
+        if ($arGuiaTipo->getExigeNumero()) {
+            if ($numero != 0 && $numero != null) {
+                if ($numeroUnicoGuia == "S") {
                     $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g')
                         ->select("COUNT(g.codigoGuiaPk)")
                         ->where("g.numero = {$numero}");
                     $resultado = $queryBuilder->getQuery()->getSingleResult();
                     $registros = $resultado[1];
-                    if($registros > 0) {
+                    if ($registros > 0) {
                         $mensaje = "El cliente maneja numero unico de guia y el numero ya existe";
                     }
                 } else {
@@ -3322,7 +3333,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         ->andWhere("g.numero = {$numero}");
                     $resultado = $queryBuilder->getQuery()->getSingleResult();
                     $registros = $resultado[1];
-                    if($registros > 0) {
+                    if ($registros > 0) {
                         $mensaje = "Ya existe una guia con este tipo y este numero";
                     }
                 }
@@ -3346,9 +3357,9 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->where("g.fechaIngreso >= '" . $fechaDesde . "' AND g.fechaIngreso <= '" . $fechaHasta . "'");
         $arrayResultados = $queryBuilder->getQuery()->getResult();
         $primero = true;
-        foreach ($arrayResultados AS $arrayResultado ){
-            if($arrayResultado['fleteTotal'] >= 30000000){
-                if($primero) {
+        foreach ($arrayResultados AS $arrayResultado) {
+            if ($arrayResultado['fleteTotal'] >= 30000000) {
+                if ($primero) {
                     $strClientes .= $arrayResultado['codigoClienteFk'];
                     $primero = false;
                 } else {
@@ -3357,7 +3368,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             }
         }
         $queryBuilder = null;
-        if($strClientes) {
+        if ($strClientes) {
             $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
                 ->select('g.codigoGuiaPk')
                 ->addSelect('g.fechaIngreso')
@@ -3389,7 +3400,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 ->addSelect('d.comentario AS observaciones')
                 ->addSelect('cd.codigoDivision AS codigoCiudadDestino')
                 ->leftJoin('g.despachoRel', 'd')
-                ->leftJoin('g.clienteRel' , 'cl')
+                ->leftJoin('g.clienteRel', 'cl')
                 ->leftJoin('cl.identificacionRel', 'icl')
                 ->leftJoin('d.ciudadOrigenRel', 'co')
                 ->leftJoin('d.ciudadDestinoRel', 'cd')
@@ -3409,7 +3420,8 @@ class TteGuiaRepository extends ServiceEntityRepository
 
     }
 
-    public function liquidar($cliente, $condicion, $precio, $origen, $destino, $producto, $zona, $tipoLiquidacion, $unidades, $peso, $declarado) {
+    public function liquidar($cliente, $condicion, $precio, $origen, $destino, $producto, $zona, $tipoLiquidacion, $unidades, $peso, $declarado)
+    {
         $em = $this->getEntityManager();
         $arrDevolver = ['flete' => 0, 'manejo' => 0];
         $descuentoPeso = 0;
@@ -3425,7 +3437,7 @@ class TteGuiaRepository extends ServiceEntityRepository
 
         $rawCondicion = ['codigo' => $condicion];
         $arrCondicion = $em->getRepository(TteCondicion::class)->apiWindowsDetalle($rawCondicion);
-        if(!isset($arrCondicion['error'])) {
+        if (!isset($arrCondicion['error'])) {
             $descuentoPeso = $arrCondicion['descuentoPeso'];
             $porcentajeManejo = $arrCondicion['porcentajeManejo'];
             $manejoMinimoUnidad = $arrCondicion['manejoMinimoUnidad'];
@@ -3434,46 +3446,46 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         $rawCondicionFlete = ['codigoCliente' => $cliente, 'origen' => $origen, 'destino' => $destino, 'codigoZona' => $zona];
         $arrCondicionFlete = $em->getRepository(TteCondicionFlete::class)->apiWindowsLiquidar($rawCondicionFlete);
-        if(!isset($arrCondicionFlete['error'])) {
+        if (!isset($arrCondicionFlete['error'])) {
             $descuentoPeso = $arrCondicionFlete['descuentoPeso'];
             $descuentoUnidad = $arrCondicionFlete['descuentoUnidad'];
             $pesoMinimoUnidad = $arrCondicionFlete['pesoMinimo'];
         }
-        if($pesoFacturado < $pesoMinimoUnidad * $unidades) {
+        if ($pesoFacturado < $pesoMinimoUnidad * $unidades) {
             $pesoFacturado = $pesoMinimoUnidad * $unidades;
         }
         $raw = ['precio' => $precio, 'origen' => $origen, 'destino' => $destino, 'producto' => $producto, 'zona' => $zona];
         $arrPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->apiWindowsDetalleProducto($raw);
-        if(!isset($arrPrecioDetalle['error'])) {
+        if (!isset($arrPrecioDetalle['error'])) {
             switch ($tipoLiquidacion) {
                 case "K":
-                    $flete = $pesoFacturado *  $arrPrecioDetalle['vrPeso'];
-                    if($descuentoPeso > 0) {
+                    $flete = $pesoFacturado * $arrPrecioDetalle['vrPeso'];
+                    if ($descuentoPeso > 0) {
                         $flete -= $flete * $descuentoPeso / 100;
                     }
                     break;
-               case "U":
-                   $flete = $unidades * $arrPrecioDetalle['vrUnidad'];
+                case "U":
+                    $flete = $unidades * $arrPrecioDetalle['vrUnidad'];
                     break;
                 case "A":
-                    $flete = $pesoFacturado *  $arrPrecioDetalle['vrPeso'];
-                   break;
+                    $flete = $pesoFacturado * $arrPrecioDetalle['vrPeso'];
+                    break;
 
             }
 
-       }
+        }
         $rawCondicionManejo = ['codigoCliente' => $cliente, 'origen' => $origen, 'destino' => $destino, 'codigoZona' => $zona];
         $arrCondicionManejo = $em->getRepository(TteCondicionManejo::class)->apiWindowsLiquidar($rawCondicionManejo);
-        if(!isset($arrCondicionManejo['error'])) {
+        if (!isset($arrCondicionManejo['error'])) {
             $porcentajeManejo = $arrCondicionManejo['porcentaje'];
             $manejoMinimoUnidad = $arrCondicionManejo['minimoUnidad'];
             $manejoMinimoDespacho = $arrCondicionManejo['minimoDespacho'];
         }
         $manejo = $declarado * $porcentajeManejo / 100;
-        if($manejoMinimoDespacho > $manejo) {
+        if ($manejoMinimoDespacho > $manejo) {
             $manejo = $manejoMinimoDespacho;
         }
-        if($manejoMinimoUnidad * $unidades > $manejo) {
+        if ($manejoMinimoUnidad * $unidades > $manejo) {
             $manejo = $manejoMinimoUnidad * $unidades;
         }
         $arrDevolver['flete'] = $flete;

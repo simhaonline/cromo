@@ -77,7 +77,7 @@ class ImportarGuiaExcelController extends Controller
                 }
             }
         }
-        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->listaGenerarFactura(), $request->query->getInt('page', 1), 500);
+        $arGuias = $paginator->paginate($em->getRepository(TteGuiaTemporal::class)->importarExcel(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/utilidad/transporte/importarGuiaExcel/generarGuia.html.twig', [
             'arGuias' => $arGuias,
             'formFiltro' => $form->createView()
@@ -117,29 +117,29 @@ class ImportarGuiaExcelController extends Controller
                     /**
                      * @var $arGuia TteGuiaTemporal
                      */
-                    $arGuia = new TteGuiaTemporal();
+                    $arGuiaTemporal = new TteGuiaTemporal();
                     $respuesta = "La guia en la fila {$row} tiene un error, ";
-                    $arGuia->setOrigen('E');
-                    $arGuia->setFechaIngreso($arFechaIngreso);
-                    $arGuia->setUsuario($this->getUser()->getUsername());
-                    $arGuia->setOperacion($this->getUser()->getCodigoOperacionFk());
-                    $arGuia->setCodigoCondicionFk($arCondicion->getCodigoCondicionPk());
+                    $arGuiaTemporal->setOrigen('E');
+                    $arGuiaTemporal->setFechaIngreso($arFechaIngreso);
+                    $arGuiaTemporal->setUsuario($this->getUser()->getUsername());
+                    $arGuiaTemporal->setOperacion($this->getUser()->getCodigoOperacionFk());
+                    $arGuiaTemporal->setCodigoCondicionFk($arCondicion->getCodigoCondicionPk());
 
                     // Guia tipo
-                    $arGuia->setCodigoGuiaTipoFk($arGuiaTipo->getCodigoGuiaTipoPk());
+                    $arGuiaTemporal->setCodigoGuiaTipoFk($arGuiaTipo->getCodigoGuiaTipoPk());
 
                     //$arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
                     //$arGuia->setCodigoGuiaPk($arConsecutivo->getGuia());
                     //$arConsecutivo->setGuia($arConsecutivo->getGuia() + 1);
                     //$em->persist($arConsecutivo);
                     if ($arCliente) {
-                        $arGuia->setClienteRel($arCliente);
+                        $arGuiaTemporal->setClienteRel($arCliente);
                     } else {
                         Mensajes::error("Debe seleccionar un cliente");
                     }
 
                     // Ciudad origen
-                    $arGuia->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
+                    $arGuiaTemporal->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
 
                     // Ciudad destino
                     $cell = $worksheet->getCellByColumnAndRow(1, $row);
@@ -148,7 +148,7 @@ class ImportarGuiaExcelController extends Controller
                         $arrErrores[] = $respuesta . "la ciudad de destino '{$cell->getValue()}' no existe";
                         $error = true;
                     } else {
-                        $arGuia->setCiudadDestinoRel($arCiudadDestino);
+                        $arGuiaTemporal->setCiudadDestinoRel($arCiudadDestino);
                     }
                     // Producto
                     $cell = $worksheet->getCellByColumnAndRow(2, $row);
@@ -157,32 +157,32 @@ class ImportarGuiaExcelController extends Controller
                         $arrErrores[] = $respuesta . "el producto '{$cell->getValue()}' no existe";
                         $error = true;
                     } else {
-                        $arGuia->setCodigoProductoFk($arProducto->getCodigoProductoPk());
+                        $arGuiaTemporal->setCodigoProductoFk($arProducto->getCodigoProductoPk());
                     }
                     // Documento cliente
                     $cell = $worksheet->getCellByColumnAndRow(3, $row);
-                    $arGuia->setClienteDocumento(substr($cell->getValue(), 0, 80));
+                    $arGuiaTemporal->setClienteDocumento(substr($cell->getValue(), 0, 80));
 
                     // Remitente
-                    $arGuia->setRemitente($arCliente->getNombreCorto());
+                    $arGuiaTemporal->setRemitente($arCliente->getNombreCorto());
 
                     // Nombre destinatario
                     $cell = $worksheet->getCellByColumnAndRow(4, $row);
-                    $arGuia->setDestinatarioNombre(substr($cell->getValue(), 0, 150));
+                    $arGuiaTemporal->setDestinatarioNombre(substr($cell->getValue(), 0, 150));
 
                     // Dirección destinatario
                     $cell = $worksheet->getCellByColumnAndRow(5, $row);
-                    $arGuia->setDestinatarioDireccion(substr($cell->getValue(), 0, 150));
+                    $arGuiaTemporal->setDestinatarioDireccion(substr($cell->getValue(), 0, 150));
 
                     // Teléfono destinatario
                     $cell = $worksheet->getCellByColumnAndRow(6, $row);
-                    $arGuia->setDestinatarioTelefono(substr($cell->getValue(), 0, 80));
+                    $arGuiaTemporal->setDestinatarioTelefono(substr($cell->getValue(), 0, 80));
 
                     // Unidades
                     $cell = $worksheet->getCellByColumnAndRow(7, $row);
                     $unidades = 0;
                     if (is_numeric($cell->getValue())) {
-                        $arGuia->setUnidades($cell->getValue());
+                        $arGuiaTemporal->setUnidades($cell->getValue());
                         $unidades = $cell->getValue();
                     } else {
                         $arrErrores[] = $respuesta . "existe un error con las unidades ingresadas";
@@ -193,7 +193,7 @@ class ImportarGuiaExcelController extends Controller
                     $cell = $worksheet->getCellByColumnAndRow(8, $row);
                     $peso = 0;
                     if (is_numeric($cell->getValue())) {
-                        $arGuia->setPesoReal($cell->getValue());
+                        $arGuiaTemporal->setPesoReal($cell->getValue());
                         $peso = $cell->getValue();
                     } else {
                         $arrErrores[] = $respuesta . "existe un error con el 'peso real' ingresado";
@@ -203,7 +203,7 @@ class ImportarGuiaExcelController extends Controller
                     // Peso volumen
                     $cell = $worksheet->getCellByColumnAndRow(9, $row);
                     if (is_numeric($cell->getValue())) {
-                        $arGuia->setPesoVolumen($cell->getValue());
+                        $arGuiaTemporal->setPesoVolumen($cell->getValue());
                     } else {
                         $arrErrores[] = $respuesta . "existe un error con el 'peso volumen' ingresado";
                         $error = true;
@@ -212,7 +212,7 @@ class ImportarGuiaExcelController extends Controller
                     $cell = $worksheet->getCellByColumnAndRow(10, $row);
                     $declarado = 0;
                     if (is_numeric($cell->getValue())) {
-                        $arGuia->setVrDeclara($cell->getValue());
+                        $arGuiaTemporal->setVrDeclara($cell->getValue());
                         $declarado = $cell->getValue();
                     } else {
                         $arrErrores[] = $respuesta . "existe un error con el 'valor declara' ingresado";
@@ -231,7 +231,7 @@ class ImportarGuiaExcelController extends Controller
                             $arCliente->getCodigoClientePk(),
                             $arCondicion->getCodigoCondicionPk(),
                             $arCondicion->getCodigoPrecioFk(),
-                            $arGuia->getCiudadOrigenRel()->getCodigoCiudadPk(),
+                            $arGuiaTemporal->getCiudadOrigenRel()->getCodigoCiudadPk(),
                             $arCiudadDestino->getCodigoCiudadPk(),
                             $arProducto->getCodigoProductoPk(),
                             $arCiudadDestino->getCodigoZonaFk(),
@@ -239,14 +239,14 @@ class ImportarGuiaExcelController extends Controller
                             $unidades,
                             $peso,
                             $declarado);
-                        $arGuia->setVrFlete($arrLiquidacion['flete']);
-                        $arGuia->setVrManejo($arrLiquidacion['manejo']);
-                        $arGuia->setPesoFacturado($arrLiquidacion['pesoFacturado']);
+                        $arGuiaTemporal->setVrFlete($arrLiquidacion['flete']);
+                        $arGuiaTemporal->setVrManejo($arrLiquidacion['manejo']);
+                        $arGuiaTemporal->setPesoFacturado($arrLiquidacion['pesoFacturado']);
                     }
                     // Valor recaudo
                     $cell = $worksheet->getCellByColumnAndRow(11, $row);
                     if (is_numeric($cell->getValue())) {
-                        $arGuia->setVrRecaudo($cell->getValue());
+                        $arGuiaTemporal->setVrRecaudo($cell->getValue());
                     } else {
                         $arrErrores[] = $respuesta . "existe un error con el 'valor recaudo' ingresado";
                         $error = true;
@@ -254,12 +254,12 @@ class ImportarGuiaExcelController extends Controller
 
                     //Comentario
                     $cell = $worksheet->getCellByColumnAndRow(12, $row);
-                    $arGuia->setComentario(substr($cell->getValue(), 0, 2000));
+                    $arGuiaTemporal->setComentario(substr($cell->getValue(), 0, 2000));
 
                     if (!$error) {
-                        $em->persist($arGuia);
-                        if ($arGuia->getNumero() == 0) {
-                            $arrGuias[] = $arGuia;
+                        $em->persist($arGuiaTemporal);
+                        if ($arGuiaTemporal->getNumero() == 0) {
+                            $arrGuias[] = $arGuiaTemporal;
                         }
                     }
                     $i++;

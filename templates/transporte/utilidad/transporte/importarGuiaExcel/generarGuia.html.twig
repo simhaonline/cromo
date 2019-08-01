@@ -37,7 +37,46 @@
             </div>
         </div>
     </div>
-    </div>
+    <table class="table table-bordered tabla-datos">
+        <thead>
+        <tr>
+            <th scope="col" class="th">ID</th>
+            <th scope="col" class="th">GUÍA</th>
+            <th scope="col" class="th">FECHA</th>
+            <th scope="col" class="th">CLIENTE</th>
+            <th scope="col" class="th">DOCUMENTO</th>
+            <th scope="col" class="th">DESTINATARIO</th>
+            <th scope="col" class="th">ORIGEN</th>
+            <th scope="col" class="th">DESTINO</th>
+            <th scope="col" class="th">CANT</th>
+            <th scope="col" class="th">PESO</th>
+            <th scope="col" class="th">DECLARADO</th>
+            <th scope="col" class="th">FLETE</th>
+            <th scope="col" class="th">MANEJO</th>
+            <th scope="col" class="th"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arGuia in arGuias %}
+            <tr>
+                <th scope="row">{{ arGuia.codigoGuiaPk }}</th>
+                <td>{{ arGuia.numero }}</td>
+                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arGuia.cliente }}</td>
+                <td>{{ arGuia.clienteDocumento }}</td>
+                <td>{{ arGuia.destinatarioNombre }}</td>
+                <td>{{ arGuia.ciudadOrigen }}</td>
+                <td>{{ arGuia.ciudadDestino }}</td>
+                <td class="numero">{{ arGuia.unidades | number_format(0,'.',',') }}</td>
+                <td class="numero">{{ arGuia.pesoFacturado | number_format(0,'.',',') }}</td>
+                <td class="numero">{{ arGuia.vrDeclara | number_format(0,'.',',') }}</td>
+                <td class="numero">{{ arGuia.vrFlete | number_format(0,'.',',') }}</td>
+                <td class="numero">{{ arGuia.vrManejo | number_format(0,'.',',') }}</td>
+                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     {{ form_end(formFiltro) }}
     <br/>
 {% endblock %}

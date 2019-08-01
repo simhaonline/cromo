@@ -156,9 +156,30 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
                 if($arPrecios) {
                     return $arPrecios[0];
                 } else {
-                    return [
-                        "error" => "No se encontraron resultados"
-                    ];
+                    $queryBuilder = $em->createQueryBuilder()->from(TtePrecioDetalle::class, 'pd')
+                        ->select('pd.codigoPrecioDetallePk')
+                        ->addSelect('pd.minimo')
+                        ->addSelect('pd.vrPeso')
+                        ->addSelect('pd.vrUnidad')
+                        ->addSelect('pd.vrPesoTope')
+                        ->addSelect('pd.vrPesoTopeAdicional')
+                        ->addSelect('pd.pesoTope')
+                        ->addSelect('p.nombre as productoNombre')
+                        ->addSelect('pro.omitirDescuento')
+                        ->leftJoin('pd.productoRel', 'p')
+                        ->leftJoin('pd.precioRel', 'pro')
+                        ->where("pd.codigoPrecioFk='" . $precio . "'")
+                        ->andWhere("pd.codigoCiudadOrigenFk='" . $origen . "'")
+                        ->andWhere("pd.codigoZonaFk IS NULL")
+                        ->andWhere("pd.codigoProductoFk='" . $producto . "'");
+                    $arPrecios = $queryBuilder->getQuery()->getResult();
+                    if($arPrecios) {
+                        return $arPrecios[0];
+                    } else {
+                        return [
+                            "error" => "No se encontraron resultados"
+                        ];
+                    }
                 }
             }
         } else {

@@ -919,7 +919,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('g.codigoClienteFk =' . $codigoCliente);
         if ($arCliente->getCondicionFactura() == 1) {
             $queryBuilder
-                ->andWhere('g.estadoCumplido = 1');
+                ->andWhere('g.estadoSoporte = 1');
         }
 
         return $queryBuilder->getQuery()->getResult();

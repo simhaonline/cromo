@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteCondicion;
 use App\Entity\Transporte\TteConsecutivo;
+use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteEmpaque;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTemporal;
@@ -58,12 +59,13 @@ class ImportarGuiaExcelController extends Controller
                 'label' => 'Guia tipo:'
             ])
             ->add('fechaIngreso', DateType::class, ['label' => 'Fecha ingreso: ', 'required' => false, 'data' => date_create($session->get('filtroFechaIngreso'))])
-            ->add('btnImportar', SubmitType::class, ['label' => 'Importar'])
+            ->add('btnCargar', SubmitType::class, ['label' => 'Cargar'])
+            ->add('btnGenerar', SubmitType::class, ['label' => 'Generar'])
             ->add('flArchivo', FileType::class, ['required' => false])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnImportar')->isClicked()) {
+            if ($form->get('btnCargar')->isClicked()) {
                 if ($form->get('flArchivo')->getData()) {
                     $arGuiaTipo = $form->get('guiaTipoRel')->getData();
                     if ($arGuiaTipo) {
@@ -73,8 +75,15 @@ class ImportarGuiaExcelController extends Controller
                     }
                     $session->set('filtroGuiaCodigoCliente', $form->get('codigoClienteFk')->getData() ?? '');
                     $session->set('filtroFechaIngreso', $form->get('fechaIngreso')->getData()->format('Y-m-d'));
-                    $this->generarGuias($form->get('flArchivo')->getData());
+                    $this->cargarGuias($form->get('flArchivo')->getData());
                 }
+            }
+            if ($form->get('btnGenerar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    $this->generarGuias($arrSeleccionados);
+                }
+                $em->getRepository(TteGuiaTemporal::class)->eliminar($arrSeleccionados);
             }
         }
         $arGuias = $paginator->paginate($em->getRepository(TteGuiaTemporal::class)->importarExcel(), $request->query->getInt('page', 1), 30);
@@ -88,7 +97,7 @@ class ImportarGuiaExcelController extends Controller
      * @param $archivo
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
-    private function generarGuias($archivo)
+    private function cargarGuias($archivo)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
@@ -96,14 +105,15 @@ class ImportarGuiaExcelController extends Controller
         $arCliente = $em->getRepository(TteCliente::class)->find($session->get('filtroGuiaCodigoCliente'));
         $arCondicion = $em->getRepository(TteCondicion::class)->find($arCliente->getCodigoCondicionFk());
         $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($session->get('filtroTteGuiaCodigoGuiaTipo'));
-        $arFechaIngreso = $em->getRepository(TteCliente::class)->find($session->get('filtroFechaIngreso'));
+        $arFecha = $session->get('filtroFechaIngreso');
+        $fechaIngreso = date_create($arFecha);
         if (!$ruta) {
             Mensajes::error('Debe de ingresar una ruta temporal en la configuracion general del sistema');
         }
         $archivo->move($ruta, "archivo.xls");
         $rutaArchivo = $ruta . "archivo.xls";
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::load($rutaArchivo);
-        $arrCargas = [];
+        $arrGuias = [];
         $arrErrores = [];
         $i = 0;
         if ($reader->getSheetCount() > 1) {
@@ -120,7 +130,8 @@ class ImportarGuiaExcelController extends Controller
                     $arGuiaTemporal = new TteGuiaTemporal();
                     $respuesta = "La guia en la fila {$row} tiene un error, ";
                     $arGuiaTemporal->setOrigen('E');
-                    $arGuiaTemporal->setFechaIngreso($arFechaIngreso);
+                    $arGuiaTemporal->setFechaIngreso($fechaIngreso);
+                    $arGuiaTemporal->setFecha(new \DateTime('now'));
                     $arGuiaTemporal->setUsuario($this->getUser()->getUsername());
                     $arGuiaTemporal->setOperacion($this->getUser()->getCodigoOperacionFk());
                     $arGuiaTemporal->setCodigoCondicionFk($arCondicion->getCodigoCondicionPk());
@@ -267,7 +278,7 @@ class ImportarGuiaExcelController extends Controller
                 if (count($arrErrores) == 0) {
                     try {
                         $em->flush();
-                        Mensajes::success('Guias creadas con éxito');
+                        Mensajes::success('Guias cargadas con éxito');
                     } catch (\Exception $exception) {
                         Mensajes::error('Ha ocurrido un problema al insertar las guias, por favor contacte con soporte y agregue en su reporte el siguiente error: ' . $exception->getMessage());
                     }
@@ -276,6 +287,67 @@ class ImportarGuiaExcelController extends Controller
                 }
             }
         }
+    }
+
+    private function generarGuias($arrSeleccionados)
+    {
+        $em = $this->getDoctrine()->getManager();
+        foreach ($arrSeleccionados as $codigoGuiaTemporal) {
+            $arGuiaTemporal = $em->find(TteGuiaTemporal::class, $codigoGuiaTemporal);
+            $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($arGuiaTemporal->getCodigoGuiaTipoFk());
+            $arOperacion = $em->find(TteOperacion::class, $arGuiaTemporal->getOperacion());
+            $arProducto = $em->getRepository(TteProducto::class)->find($arGuiaTemporal->getCodigoProductoFk());
+            $arEmpaque = $em->getRepository(TteEmpaque::class)->find(1);
+            $arServicio = $em->find(TteServicio::class, 'PAQ');
+            if ($arGuiaTemporal) {
+                if ($arOperacion) {
+                    $arGuia = new TteGuia();
+                    $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
+                    $arGuia->setCodigoGuiaPk($arConsecutivo->getGuia());
+                    $arGuia->setNumero($arConsecutivo->getGuia());
+                    $arConsecutivo->setGuia($arConsecutivo->getGuia() + 1);
+                    $em->persist($arConsecutivo);
+                    $arGuia->setCiudadOrigenRel($arGuiaTemporal->getCiudadOrigenRel());
+                    $arGuia->setGuiaTipoRel($arGuiaTipo);
+                    $arGuia->setCiudadDestinoRel($arGuiaTemporal->getCiudadDestinoRel());
+                    $arGuia->setClienteRel($arGuiaTemporal->getClienteRel());
+                    $arGuia->setServicioRel($arServicio);
+                    $arGuia->setRutaRel($arGuiaTemporal->getCiudadDestinoRel()->getRutaRel());
+                    $arGuia->setProductoRel($arProducto);
+                    $arGuia->setEmpaqueRel($arEmpaque);
+                    $arGuia->setCondicionRel($arGuiaTemporal->getClienteRel()->getCondicionRel());
+                    $arGuia->setOperacionCargoRel($arOperacion);
+                    $arGuia->setOperacionIngresoRel($arOperacion);
+                    $arGuia->setTelefonoDestinatario($arGuiaTemporal->getDestinatarioTelefono());
+                    $arGuia->setFechaIngreso($arGuiaTemporal->getFechaIngreso());
+                    $arGuia->setDocumentoCliente($arGuiaTemporal->getClienteDocumento());
+                    $arGuia->setRemitente($arGuiaTemporal->getClienteRel()->getNombreCorto());
+                    $arGuia->setNombreDestinatario($arGuiaTemporal->getDestinatarioNombre());
+                    $arGuia->setDireccionDestinatario($arGuiaTemporal->getDestinatarioDireccion());
+                    $arGuia->setTelefonoDestinatario($arGuiaTemporal->getDestinatarioTelefono());
+                    $arGuia->setUnidades($arGuiaTemporal->getUnidades());
+                    $arGuia->setPesoFacturado($arGuiaTemporal->getPesoFacturado());
+                    $arGuia->setPesoReal($arGuiaTemporal->getPesoReal());
+                    $arGuia->setPesoVolumen($arGuiaTemporal->getPesoVolumen());
+                    $arGuia->setVrDeclara($arGuiaTemporal->getVrDeclara());
+                    $arGuia->setVrFlete($arGuiaTemporal->getVrFlete());
+                    $arGuia->setVrManejo($arGuiaTemporal->getVrManejo());
+                    $arGuia->setComentario($arGuiaTemporal->getComentario());
+                    $arGuia->setEstadoAutorizado(1);
+                    $arGuia->setEstadoAprobado(1);
+                    $arGuia->setEstadoImpreso(1);
+                    $arGuia->setUsuario($this->getUser()->getUsername());
+                    $arGuia->setZonaRel($arGuiaTemporal->getCiudadDestinoRel()->getZonaRel());
+                    $arGuia->setImportado('E');
+                    $em->persist($arGuia);
+                } else {
+                    Mensajes::error("El consecutivo '{$arGuiaTemporal->getNumero()}' no tiene una operacion valida");
+                    return $this->redirect($this->generateUrl('transporte_utilidad_transporte_importar_guia'));
+                }
+            }
+        }
+        $em->flush();
+        Mensajes::success('Guias creadas con éxito');
     }
 }
 

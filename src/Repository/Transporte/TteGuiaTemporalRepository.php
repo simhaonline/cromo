@@ -34,7 +34,8 @@ class TteGuiaTemporalRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    public function importarExcel(){
+    public function importarExcel()
+    {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuiaTemporal::class, 'g')
             ->select('g.codigoGuiaPk')
@@ -54,7 +55,20 @@ class TteGuiaTemporalRepository extends ServiceEntityRepository
             ->leftJoin('g.ciudadOrigenRel', 'co')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->where('g.codigoGuiaPk <> 0')
-        ->andWhere("g.origen = 'E'");
+            ->andWhere("g.origen = 'E'");
         return $queryBuilder;
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        foreach ($arrSeleccionados as $arrSeleccionado) {
+            $arGuiaTemporal = $this->getEntityManager()->getRepository(TteGuiaTemporal::class)->find($arrSeleccionado);
+            if ($arGuiaTemporal) {
+                if ($arGuiaTemporal->getOrigen() == "E") {
+                    $this->getEntityManager()->remove($arGuiaTemporal);
+                }
+            }
+        }
+        $this->getEntityManager()->flush();
     }
 }

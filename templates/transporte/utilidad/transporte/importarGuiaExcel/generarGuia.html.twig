@@ -33,7 +33,7 @@
                     estructura</a>
                 <a href="{{ asset('estructura/estructuraGenerarGuia.xlsx') }}" download class="btn btn-sm btn-default">Descripcion
                     estructura</a>
-                {{ form_widget(formFiltro.btnImportar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                {{ form_widget(formFiltro.btnCargar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             </div>
         </div>
     </div>
@@ -53,7 +53,8 @@
             <th scope="col" class="th">DECLARADO</th>
             <th scope="col" class="th">FLETE</th>
             <th scope="col" class="th">MANEJO</th>
-            <th scope="col" class="th"></th>
+            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
+                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
@@ -72,11 +73,15 @@
                 <td class="numero">{{ arGuia.vrDeclara | number_format(0,'.',',') }}</td>
                 <td class="numero">{{ arGuia.vrFlete | number_format(0,'.',',') }}</td>
                 <td class="numero">{{ arGuia.vrManejo | number_format(0,'.',',') }}</td>
-                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}"></td>
+                <td align="center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}">
+                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <div class="btn-group" style="float: right">
+        {{ form_widget(formFiltro.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
     {{ form_end(formFiltro) }}
     <br/>
 {% endblock %}

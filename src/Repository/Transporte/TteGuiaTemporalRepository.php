@@ -42,6 +42,7 @@ class TteGuiaTemporalRepository extends ServiceEntityRepository
             ->addSelect('g.numero')
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.clienteDocumento')
+            ->addSelect('g.clienteRelacion')
             ->addSelect('g.destinatarioNombre')
             ->addSelect('co.nombre as ciudadOrigen')
             ->addSelect('cd.nombre as ciudadDestino')

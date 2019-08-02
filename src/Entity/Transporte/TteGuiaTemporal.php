@@ -109,6 +109,11 @@ class TteGuiaTemporal
     private $clienteDocumento;
 
     /**
+     * @ORM\Column(name="cliente_relacion", type="string", length=150, nullable=true)
+     */
+    private $clienteRelacion;
+
+    /**
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
@@ -833,6 +838,22 @@ class TteGuiaTemporal
     public function setCodigoCondicionFk($codigoCondicionFk): void
     {
         $this->codigoCondicionFk = $codigoCondicionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRelacion()
+    {
+        return $this->clienteRelacion;
+    }
+
+    /**
+     * @param mixed $clienteRelacion
+     */
+    public function setClienteRelacion($clienteRelacion): void
+    {
+        $this->clienteRelacion = $clienteRelacion;
     }
 
 

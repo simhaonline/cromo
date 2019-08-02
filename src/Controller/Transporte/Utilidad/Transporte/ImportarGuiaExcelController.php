@@ -174,23 +174,27 @@ class ImportarGuiaExcelController extends Controller
                     $cell = $worksheet->getCellByColumnAndRow(3, $row);
                     $arGuiaTemporal->setClienteDocumento(substr($cell->getValue(), 0, 80));
 
+                    // Relacion cliente
+                    $cell = $worksheet->getCellByColumnAndRow(4, $row);
+                    $arGuiaTemporal->setClienteRelacion(substr($cell->getValue(), 0, 80));
+
                     // Remitente
                     $arGuiaTemporal->setRemitente($arCliente->getNombreCorto());
 
                     // Nombre destinatario
-                    $cell = $worksheet->getCellByColumnAndRow(4, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(5, $row);
                     $arGuiaTemporal->setDestinatarioNombre(substr($cell->getValue(), 0, 150));
 
                     // Dirección destinatario
-                    $cell = $worksheet->getCellByColumnAndRow(5, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(6, $row);
                     $arGuiaTemporal->setDestinatarioDireccion(substr($cell->getValue(), 0, 150));
 
                     // Teléfono destinatario
-                    $cell = $worksheet->getCellByColumnAndRow(6, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(7, $row);
                     $arGuiaTemporal->setDestinatarioTelefono(substr($cell->getValue(), 0, 80));
 
                     // Unidades
-                    $cell = $worksheet->getCellByColumnAndRow(7, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(8, $row);
                     $unidades = 0;
                     if (is_numeric($cell->getValue())) {
                         $arGuiaTemporal->setUnidades($cell->getValue());
@@ -201,7 +205,7 @@ class ImportarGuiaExcelController extends Controller
                     }
 
                     // Peso real
-                    $cell = $worksheet->getCellByColumnAndRow(8, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(9, $row);
                     $peso = 0;
                     if (is_numeric($cell->getValue())) {
                         $arGuiaTemporal->setPesoReal($cell->getValue());
@@ -212,7 +216,7 @@ class ImportarGuiaExcelController extends Controller
                     }
 
                     // Peso volumen
-                    $cell = $worksheet->getCellByColumnAndRow(9, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(10, $row);
                     if (is_numeric($cell->getValue())) {
                         $arGuiaTemporal->setPesoVolumen($cell->getValue());
                     } else {
@@ -220,7 +224,7 @@ class ImportarGuiaExcelController extends Controller
                         $error = true;
                     }
                     // Valor declara
-                    $cell = $worksheet->getCellByColumnAndRow(10, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(11, $row);
                     $declarado = 0;
                     if (is_numeric($cell->getValue())) {
                         $arGuiaTemporal->setVrDeclara($cell->getValue());
@@ -255,7 +259,7 @@ class ImportarGuiaExcelController extends Controller
                         $arGuiaTemporal->setPesoFacturado($arrLiquidacion['pesoFacturado']);
                     }
                     // Valor recaudo
-                    $cell = $worksheet->getCellByColumnAndRow(11, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(12, $row);
                     if (is_numeric($cell->getValue())) {
                         $arGuiaTemporal->setVrRecaudo($cell->getValue());
                     } else {
@@ -264,7 +268,7 @@ class ImportarGuiaExcelController extends Controller
                     }
 
                     //Comentario
-                    $cell = $worksheet->getCellByColumnAndRow(12, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(13, $row);
                     $arGuiaTemporal->setComentario(substr($cell->getValue(), 0, 2000));
 
                     if (!$error) {
@@ -321,6 +325,7 @@ class ImportarGuiaExcelController extends Controller
                     $arGuia->setTelefonoDestinatario($arGuiaTemporal->getDestinatarioTelefono());
                     $arGuia->setFechaIngreso($arGuiaTemporal->getFechaIngreso());
                     $arGuia->setDocumentoCliente($arGuiaTemporal->getClienteDocumento());
+                    $arGuia->setRelacionCliente($arGuiaTemporal->getClienteRelacion());
                     $arGuia->setRemitente($arGuiaTemporal->getClienteRel()->getNombreCorto());
                     $arGuia->setNombreDestinatario($arGuiaTemporal->getDestinatarioNombre());
                     $arGuia->setDireccionDestinatario($arGuiaTemporal->getDestinatarioDireccion());

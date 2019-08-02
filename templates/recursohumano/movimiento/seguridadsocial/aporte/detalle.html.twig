@@ -1,0 +1,218 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <div style="float:right">
+        {% if arAporte.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arAporte.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arAporte.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arAporte.estadoContabilizado == true %}<span class="label label-danger">Contabilizado</span>{% endif %}
+    </div>
+    <br /><br />
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arAporte.codigoAportePk }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">EMPLEADOS:</td>
+            <td class="numero">{{ arAporte.cantidadEmpleados }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">SUCURSAL:</td>
+            <td class="td-in-well">{{ arAporte.sucursalRel.nombre }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">CONTRATOS:</td>
+            <td class="numero">{{ arAporte.cantidadContratos }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">AÑO:</td>
+            <td class="td-in-well">{{ arAporte.anio }}</td>
+            <td class="titulo">MES:</td>
+            <td class="numero">{{ arAporte.mes}}</td>
+            <td class="titulo">IBC TOTAL:</td>
+            <td class="numero">{{ arAporte.vrIngresoBaseCotizacion | number_format(0,".",",") }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">AÑO(Salud):</td>
+            <td class="td-in-well">{{ arAporte.anioSalud }}</td>
+            <td class="titulo">MES SALUD:</td>
+            <td class="numero">{{ arAporte.mesSalud}}</td>
+            <td class="titulo">TOTAL:</td>
+            <td class="numero">{{ arAporte.vrTotal | number_format(0,".",",") }}</td>
+        </tr>
+    </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#contrato" data-toggle="tab">Contrato</a></li>
+        <li><a href="#detalle" data-toggle="tab">Detalle</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="contrato">
+            <div id="contrato" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>DOC</th>
+                            <th>NOMBRE</th>
+                            <th>CON</th>
+                            <th>D</th>
+                            <th>SALARIO</th>
+                            <th>IBC</th>
+                            <th></th>
+                            <th class="text-center" title="seleccionar todo"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arAporteContrato in arAporteContratos %}
+                            <tr>
+                                <td>{{ arAporteContrato.codigoAporteContratoPk }}</td>
+                                <td>{{ arAporteContrato.empleadoNumeroIdentificacion }}</td>
+                                <td>{{ arAporteContrato.empleadoNombreCorto }}</td>
+                                <td>{{ arAporteContrato.codigoContratoFk }}</td>
+                                <td>{{ arAporteContrato.dias }}</td>
+                                <td class="numero">{{ arAporteContrato.vrSalario  | number_format(0, '.', ',')}}</td>
+                                <td class="numero">{{ arAporteContrato.ibc  | number_format(0, '.', ',')}}</td>
+                                <td style="text-align: center;"><a
+                                            href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seguridadsocial_soporte_aporte_detalle',{ 'id': arAporteContrato.codigoAporteContratoPk }) }}','resumen',600,1000)"><i
+                                                class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
+                                <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arAporteContrato.codigoAporteContratoPk }}"/></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="separador-1"></div>
+                <div class="btn-group" style="float: left">
+                    {{ form_widget(form.btnCargarContratos) }}
+                </div>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {{ form_widget(form.btnExcelContrato) }}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminarContratos) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="detalle">
+            <div id="detalle" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>CON</th>
+                            <th>DOC</th>
+                            <th>NOMBRE</th>
+                            <th>ING</th>
+                            <th>RET</th>
+                            <th>VST</th>
+                            <th>SLN</th>
+                            <th>IGE</th>
+                            <th>LMA</th>
+                            <th>VAC</th>
+                            <th>IRP</th>
+                            <th>S.I</th>
+                            <th>SALARIO</th>
+                            <th>IBC</th>
+                            <th>H</th>
+                            <th>D.P</th>
+                            <th>D.S</th>
+                            <th>D.R</th>
+                            <th>D.C</th>
+                            <th>IBC.P</th>
+                            <th>IBC.S</th>
+                            <th>IBC.R</th>
+                            <th>IBC.C</th>
+                            <th>T.P</th>
+                            <th>T.S</th>
+                            <th>T.R</th>
+                            <th>T.C</th>
+                            <th>T.SN</th>
+                            <th>T.I</th>
+                            <th>C.P</th>
+                            <th>C.FSSO</th>
+                            <th>C.FSSU
+                            <th>C.S</th>
+                            <th>C.R</th>
+                            <th>C.C</th>
+                            <th>C.SN</th>
+                            <th>C.I</th>
+                            <th>TOTAL</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arAporteDetalle in arAporteDetalles %}
+                            <tr>
+                                <td>{{ arAporteDetalle.codigoAporteDetallePk }}</td>
+                                <td>{{ arAporteDetalle.codigoContratoFk }}</td>
+                                <td>{{ arAporteDetalle.empleadoNumeroIdentificacion }}</td>
+                                <td>{{ arAporteDetalle.empleadoNombreCorto }}</td>
+                                <td>{{ arAporteDetalle.ingreso }}</td>
+                                <td>{{ arAporteDetalle.retiro }}</td>
+                                <td>{{ arAporteDetalle.variacionTransitoriaSalario }}</td>
+                                <td>{% if arAporteDetalle.suspensionTemporalContratoLicenciaServicios == 'X' %}{{ arAporteDetalle.suspensionTemporalContratoLicenciaServicios }}{{ arAporteDetalle.diasLicencia }} {% endif %}</td>
+                                <td>{% if arAporteDetalle.incapacidadGeneral == 'X' %}{{ arAporteDetalle.incapacidadGeneral }}{{ arAporteDetalle.diasIncapacidadGeneral }} {% endif %}</td>
+                                <td>{% if arAporteDetalle.licenciaMaternidad == 'X' %}{{ arAporteDetalle.licenciaMaternidad }}{{ arAporteDetalle.diasLicenciaMaternidad }} {% endif %}</td>
+                                <td>{% if arAporteDetalle.vacaciones == 'X' %}{{ arAporteDetalle.vacaciones }}{{ arAporteDetalle.diasVacaciones }} {% endif %}{% if arAporteDetalle.vacaciones == 'L' %}{{ arAporteDetalle.vacaciones }}{{ arAporteDetalle.diasLicencia }} {% endif %}</td>
+                                <td>{% if arAporteDetalle.incapacidadAccidenteTrabajoEnfermedadProfesional > 0 %}{{ arAporteDetalle.incapacidadAccidenteTrabajoEnfermedadProfesional }} {% endif %}</td>
+                                <td>{{ arAporteDetalle.salarioIntegral }}</td>
+                                <td>{{ arAporteDetalle.salarioBasico | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.vrIngresoBaseCotizacion | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.numeroHorasLaboradas }}</td>
+                                <td>{{ arAporteDetalle.diasCotizadosPension }}</td>
+                                <td>{{ arAporteDetalle.diasCotizadosSalud }}</td>
+                                <td>{{ arAporteDetalle.diasCotizadosRiesgosProfesionales }}</td>
+                                <td>{{ arAporteDetalle.diasCotizadosCajaCompensacion }}</td>
+                                <td>{{ arAporteDetalle.ibcPension | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.ibcSalud | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.ibcRiesgosProfesionales | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.ibcCaja | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaPension | number_format(2, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaSalud | number_format(2, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaRiesgos | number_format(4, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaCaja | number_format(2, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaSena | number_format(2, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.tarifaIcbf | number_format(2, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionPension | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.aportesFondoSolidaridadPensionalSolidaridad | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.aportesFondoSolidaridadPensionalSubsistencia | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionSalud | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionRiesgos | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionCaja | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionSena | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.cotizacionIcbf | number_format(0, '.', ',') }}</td>
+                                <td>{{ arAporteDetalle.totalCotizacion  | number_format(0, '.', ',') }}</td>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="separador-1"></div>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {{ form_widget(form.btnExcelDetalle) }}
+                        {{ form_widget(form.btnExportarPlano) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -44,6 +44,11 @@ class TurPedidoDetalle
     private $codigoPuestoFk;
 
     /**
+     * @ORM\Column(name="codigo_contrato_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoContratoDetalleFk;
+
+    /**
      * @ORM\Column(name="periodo", type="string", length=1, nullable=true)
      */
     private $periodo;
@@ -254,6 +259,11 @@ class TurPedidoDetalle
     private $estadoTerminado = false;
 
     /**
+     * @ORM\Column(name="estado_programado", type="boolean", options={"default":false})
+     */
+    private $estadoProgramado = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="pedidosDetallesPedidoRel")
      * @ORM\JoinColumn(name="codigo_pedido_fk", referencedColumnName="codigo_pedido_pk")
      */
@@ -278,9 +288,20 @@ class TurPedidoDetalle
     protected $puestoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TurContratoDetalle", inversedBy="pedidosDetallesContratoDetalleRel")
+     * @ORM\JoinColumn(name="codigo_contrato_detalle_fk", referencedColumnName="codigo_contrato_detalle_pk")
+     */
+    protected $contratoDetalleRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="pedidoDetalleRel")
      */
     protected $programacionesPedidoDetalleRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurSimulacion", mappedBy="pedidoDetalleRel")
+     */
+    protected $simulacionesPedidoDetalleRel;
 
     /**
      * @return mixed
@@ -1096,6 +1117,70 @@ class TurPedidoDetalle
     public function setProgramacionesPedidoDetalleRel($programacionesPedidoDetalleRel): void
     {
         $this->programacionesPedidoDetalleRel = $programacionesPedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoProgramado()
+    {
+        return $this->estadoProgramado;
+    }
+
+    /**
+     * @param mixed $estadoProgramado
+     */
+    public function setEstadoProgramado($estadoProgramado): void
+    {
+        $this->estadoProgramado = $estadoProgramado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoDetalleFk()
+    {
+        return $this->codigoContratoDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoDetalleFk
+     */
+    public function setCodigoContratoDetalleFk($codigoContratoDetalleFk): void
+    {
+        $this->codigoContratoDetalleFk = $codigoContratoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoDetalleRel()
+    {
+        return $this->contratoDetalleRel;
+    }
+
+    /**
+     * @param mixed $contratoDetalleRel
+     */
+    public function setContratoDetalleRel($contratoDetalleRel): void
+    {
+        $this->contratoDetalleRel = $contratoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSimulacionesPedidoDetalleRel()
+    {
+        return $this->simulacionesPedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $simulacionesPedidoDetalleRel
+     */
+    public function setSimulacionesPedidoDetalleRel($simulacionesPedidoDetalleRel): void
+    {
+        $this->simulacionesPedidoDetalleRel = $simulacionesPedidoDetalleRel;
     }
 
 

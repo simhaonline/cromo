@@ -97,6 +97,7 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.horasExtrasOrdinariasNocturnas')
             ->addSelect('pd.horasExtrasFestivasDiurnas')
             ->addSelect('pd.horasExtrasFestivasNocturnas')
+            ->addSelect('pd.horasRecargo')
             ->addSelect('pd.horasRecargoNocturno')
             ->addSelect('pd.horasRecargoFestivoDiurno')
             ->addSelect('pd.horasRecargoFestivoNocturno')
@@ -133,14 +134,14 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuProgramacionDetalle::class, 'pd')
             ->select('pd.codigoProgramacionDetallePk')
-            ->addSelect('pd.codigoEmpleadoFk as CODEMP')
-            ->addSelect('e.numeroIdentificacion')
-            ->addSelect('e.nombreCorto')
-            ->addSelect('pd.codigoContratoFk')
-            ->addSelect('pd.fechaDesdeContrato as desde')
-            ->addSelect('pd.fechaHastaContrato as hasta')
-            ->addSelect('pd.vrSalario')
-            ->addSelect('pd.vrNeto')
+            ->addSelect('pd.codigoEmpleadoFk as COD')
+            ->addSelect('e.numeroIdentificacion as DOC')
+            ->addSelect('e.nombreCorto as NOMBRE')
+            ->addSelect('pd.codigoContratoFk AS CON')
+            ->addSelect('pd.fechaDesdeContrato as DESDE')
+            ->addSelect('pd.fechaHastaContrato as HASTA')
+            ->addSelect('pd.vrSalario AS SALARIO')
+            ->addSelect('pd.vrNeto AS NETO')
             ->addSelect('pd.horasDiurnas as HD')
             ->addSelect('pd.horasNocturnas as HN')
             ->addSelect('pd.horasFestivasDiurnas as HFD')
@@ -156,5 +157,20 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->where("pd.codigoProgramacionFk = {$id}");
 
         return $queryBuilder;
+    }
+
+    public
+    function pagoPrimaDeduccion($codigoEmpleado, $tipoPago)
+    {
+        $em = $this->getEntityManager();
+        $strSql = "SELECT ppd.codigoProgramacionDetallePk, ppd.vrNetoPagar, ppd.diasAusentismo, ppd.diasReales, ppd.fechaHasta, ppd.fechaHastaPago FROM App\Entity\RecursoHumano\RhuProgramacionDetalle ppd JOIN ppd.programacionRel pp" .
+            " WHERE ppd.codigoEmpleadoFk = {$codigoEmpleado} AND pp.codigoPagoTipoFk={$tipoPago} ORDER BY ppd.fechaHasta DESC";
+        $query = $em->createQuery($strSql);
+        //$query->getMaxResults(1);
+        $arRegistros = $query->getResult();
+        if ($arRegistros) {
+            $arRegistros = $arRegistros[0];
+        }
+        return $arRegistros;
     }
 }

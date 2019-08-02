@@ -66,7 +66,10 @@ class ProgramacionType extends AbstractType
             {"campo":"fechaDesde",            "tipo":"fecha"   ,"ayuda":"Fecha en que inicia el periodo"            ,"titulo":"DESDE"},
             {"campo":"fechaHasta",            "tipo":"fecha"   ,"ayuda":"Fecha en que termina el periodo"           ,"titulo":"HASTA"},
             {"campo":"dias",                  "tipo":"moneda"   ,"ayuda":"Numero de dias que compone el perdiodo"   ,"titulo":"DIAS"},
-            {"campo":"cantidad",              "tipo":"moneda"   ,"ayuda":"Cantidad de registros en la programacion" ,"titulo":"#"}
+            {"campo":"cantidad",              "tipo":"moneda"   ,"ayuda":"Cantidad de registros en la programacion" ,"titulo":"#"},
+            {"campo":"estadoAutorizado"                 ,"tipo":"bool"  ,"ayuda":"Estado autorizado"                            ,"titulo":"AUT"},
+            {"campo":"estadoAprobado"                 ,"tipo":"bool"  ,"ayuda":"Estado aprobado"                            ,"titulo":"APR"},
+            {"campo":"estadoContabilizado"                 ,"tipo":"bool"  ,"ayuda":"Estado contabilizado"                            ,"titulo":"CON"}
         ]';
         return $campos;
     }

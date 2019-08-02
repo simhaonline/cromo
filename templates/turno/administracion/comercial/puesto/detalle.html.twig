@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <div class="row">
+        <!-- /.col-lg-12 -->
+    </div>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo"><b>CODIGO PUESTO:</b></td>
+            <td class="td-in-well">{{ arPuesto.codigoPuestoPk }}</td>
+            <td class="titulo"><b>NOMBRE CORTO</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arPuesto.clienteRel.nombreCorto }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>CODIGO PUESTO TIPO:</b></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"><b>CODIGO CLIENTE:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arPuesto.codigoClienteFk }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>NOMBRE:</b></td>
+            <td class="td-in-well">{{ arPuesto.nombre }}</td>
+            <td class="titulo"><b>DIRECCIÓN:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arPuesto.direccion }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>TELEFONO:</b></td>
+            <td class="td-in-well">{{ arPuesto.telefono }}</td>
+            <td class="titulo"><b>CELULAR:</b></td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arPuesto.celular }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>UBICACIÓN GPS:</b></td>
+            <td class="td-in-well">{{ arPuesto.ubicacionGps }}</td>
+            <td class="titulo"><b>ESTADO INACTIVO: </b></td>
+            <td class="td-in-well">{{ arPuesto.estadoInactivo ?"INACTIVO": "ACTIVO" }}</td>
+        </tr>
+
+    </table>
+
+{% endblock %}

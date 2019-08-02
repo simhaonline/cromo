@@ -202,6 +202,11 @@ class RhuCredito
     protected $pagosDetallesCreditoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuLiquidacionAdicional", mappedBy="creditoRel")
+     */
+    protected $liquidacionesAdicionalesCreditoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCreditoPk()

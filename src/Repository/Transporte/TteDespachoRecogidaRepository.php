@@ -9,6 +9,7 @@ use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
+use App\Entity\Transporte\TteDespachoRecogidaAuxiliar;
 use App\Entity\Transporte\TteDespachoRecogidaTipo;
 use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TtePoseedor;
@@ -96,7 +97,11 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                     if ($arRegistro->getEstadoAprobado() == 0) {
                         if ($arRegistro->getEstadoAutorizado() == 0) {
                             if (count($this->getEntityManager()->getRepository(TteRecogida::class)->findBy(['codigoDespachoRecogidaFk' => $arRegistro->getCodigoDespachoRecogidaPk()])) <= 0) {
-                                $this->getEntityManager()->remove($arRegistro);
+                                if (count($this->getEntityManager()->getRepository(TteDespachoRecogidaAuxiliar::class)->findBy(['codigoDespachoRecogidaFk' => $arRegistro->getCodigoDespachoRecogidaPk()])) <= 0) {
+                                    $this->getEntityManager()->remove($arRegistro);
+                                } else {
+                                    $respuesta = 'No se puede eliminar, el registro tiene auxiliares asignados';
+                                }
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';
                             }
@@ -785,9 +790,38 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->where("r.codigoRecogidaPk = {$codigoRecogida}")
             ->leftJoin('dr.recogidasDespachoRecogidaRel', 'r')
             ->leftJoin('dr.conductorRel', 'c')
-        ->leftJoin('dr.rutaRecogidaRel', 'rc');
+            ->leftJoin('dr.rutaRecogidaRel', 'rc');
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function fletePago($fechaDesde, $fechaHasta)
+    {
+        $valor = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'd')
+            ->select("SUM(d.vrFletePago) as fletePago")
+            ->where("d.fecha >='" . $fechaDesde . "' AND d.fecha <= '" . $fechaHasta . "'")
+            ->andWhere('d.estadoAprobado = 1');
+        $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+        if ($arrResultado['fletePago']) {
+            $valor = $arrResultado['fletePago'];
+        }
+        return $valor;
+    }
+
+    public function fletePagoDetallado($fechaDesde, $fechaHasta)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'd')
+            ->select("d.codigoPoseedorFk")
+            ->addSelect('d.codigoDespachoRecogidaTipoFk')
+            ->addSelect("SUM(d.vrFletePago) as fletePago")
+            ->leftJoin('d.despachoRecogidaTipoRel', 'dt')
+            ->where("d.fecha >='" . $fechaDesde . "' AND d.fecha <= '" . $fechaHasta . "'")
+            ->andWhere('d.estadoAprobado = 1')
+            ->groupBy('d.codigoPoseedorFk')
+            ->addGroupBy('d.codigoDespachoRecogidaTipoFk');
+        $arrResultado = $queryBuilder->getQuery()->getResult();
+        return $arrResultado;
     }
 
 }

@@ -113,25 +113,27 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
     public function actualizarDetalles($arrControles, $form, $arMovimiento)
     {
         $em = $this->getEntityManager();
-        $arrDocumentoCliente = $arrControles['arrDocumentoCliente'];
-        $arrDeclara = $arrControles['arrDeclara'];
-        $arrFlete = $arrControles['arrFlete'];
-        $arrManejo = $arrControles['arrManejo'];
-        $arrCodigo = $arrControles['arrCodigo'];
-        foreach ($arrCodigo as $codigoFacturaDetalle) {
-            $arFacturaDetalle = $em->getRepository(TteFacturaDetalle::class)->find($codigoFacturaDetalle);
-            $arFacturaDetalle->setVrDeclara($arrDeclara[$codigoFacturaDetalle]);
-            $arFacturaDetalle->setVrFlete($arrFlete[$codigoFacturaDetalle]);
-            $arFacturaDetalle->setVrManejo($arrManejo[$codigoFacturaDetalle]);
-            $em->persist($arFacturaDetalle);
-            $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalle->getCodigoGuiaFk());
-            $arGuia->setDocumentoCliente($arrDocumentoCliente[$codigoFacturaDetalle]);
-            $arGuia->setVrDeclara($arrDeclara[$codigoFacturaDetalle]);
-            $arGuia->setVrFlete($arrFlete[$codigoFacturaDetalle]);
-            $arGuia->setVrManejo($arrManejo[$codigoFacturaDetalle]);
-            $em->persist($arGuia);
+        if(isset($arrControles['arrCodigo'])) {
+            $arrDocumentoCliente = $arrControles['arrDocumentoCliente'];
+            $arrDeclara = $arrControles['arrDeclara'];
+            $arrFlete = $arrControles['arrFlete'];
+            $arrManejo = $arrControles['arrManejo'];
+            $arrCodigo = $arrControles['arrCodigo'];
+            foreach ($arrCodigo as $codigoFacturaDetalle) {
+                $arFacturaDetalle = $em->getRepository(TteFacturaDetalle::class)->find($codigoFacturaDetalle);
+                $arFacturaDetalle->setVrDeclara($arrDeclara[$codigoFacturaDetalle]);
+                $arFacturaDetalle->setVrFlete($arrFlete[$codigoFacturaDetalle]);
+                $arFacturaDetalle->setVrManejo($arrManejo[$codigoFacturaDetalle]);
+                $em->persist($arFacturaDetalle);
+                $arGuia = $em->getRepository(TteGuia::class)->find($arFacturaDetalle->getCodigoGuiaFk());
+                $arGuia->setDocumentoCliente($arrDocumentoCliente[$codigoFacturaDetalle]);
+                $arGuia->setVrDeclara($arrDeclara[$codigoFacturaDetalle]);
+                $arGuia->setVrFlete($arrFlete[$codigoFacturaDetalle]);
+                $arGuia->setVrManejo($arrManejo[$codigoFacturaDetalle]);
+                $em->persist($arGuia);
+            }
+            $em->flush();
         }
-        $em->flush();
     }
 
     public function formatoFactura($codigoFactura): array
@@ -147,6 +149,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         fd.unidades,
         p.nombre AS producto,
         g.pesoReal,
+        ep.nombre AS empaque,
         g.pesoFacturado,                
         fd.vrFlete,
         fd.vrManejo,
@@ -160,6 +163,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         LEFT JOIN g.ciudadDestinoRel cd
         LEFT JOIN g.ciudadOrigenRel co
         LEFT JOIN g.productoRel p
+        LEFT JOIN g.empaqueRel ep
         WHERE fd.codigoFacturaFk = :codigoFactura and fd.codigoFacturaPlanillaFk IS NULL ORDER BY g.numero ASC'
         )->setParameter('codigoFactura', $codigoFactura);
 

@@ -26,4 +26,26 @@ class TurFestivoRepository extends ServiceEntityRepository
         return $arFestivos;
     }
 
+    public function fechaArray($fechaDesde, $fechaHasta)
+    {
+        $festivos = $this->fecha($fechaDesde, $fechaHasta);
+        return array_map(function ($arFestivo) {
+            return $arFestivo['fecha']->format('Y-m-d');
+        }, $festivos);
+    }
+
+    public function festivos($fechaDesde, $fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $fecha = $fechaHasta;
+        $nuevafecha = strtotime('+1 month', strtotime($fecha));
+        $nuevafecha = date('Y-m-j', $nuevafecha);
+
+        $dql = "SELECT f.fecha FROM App:Turno\TurFestivo f "
+            . "WHERE f.fecha >= '{$fechaDesde}' AND f.fecha <= '{$nuevafecha}'";
+        $query = $em->createQuery($dql);
+        $arFestivo = $query->getResult();
+        return $arFestivo;
+    }
+
 }

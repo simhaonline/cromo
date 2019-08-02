@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>CONCEPTO</th>
+            <th>MOD</th>
+            <th>DES</th>
+            <th>HAS</th>
+            <th>CANT</th>
+            <th>L</th>
+            <th>M</th>
+            <th>M</th>
+            <th>J</th>
+            <th>V</th>
+            <th>S</th>
+            <th>D</th>
+            <th>F</th>
+            <th>H</th>
+            <th>HD</th>
+            <th>HN</th>
+            <th title="Contrato detalle">CD</th>
+            <th></th>
+            <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arPedidoDetalle in arPedidoDetalles %}
+            <tr>
+                <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
+                <td>{{ arPedidoDetalle.conceptoNombre }}</td>
+                <td>{{ arPedidoDetalle.modalidadNombre }}</td>
+                <td>{{ arPedidoDetalle.diaDesde }}</td>
+                <td>{{ arPedidoDetalle.diaHasta }}</td>
+                <td>{{ arPedidoDetalle.cantidad }}</td>
+                <td>{{ arPedidoDetalle.lunes ? 'S':'N' }}</td>
+                <td>{{ arPedidoDetalle.martes ? 'S':'N' }}</td>
+                <td>{{ arPedidoDetalle.miercoles ? 'S':'N' }}</td>
+                <td>{{ arPedidoDetalle.jueves  ? 'S':'N' }}</td>
+                <td>{{ arPedidoDetalle.viernes ? 'S':'N' }}</td>
+                <td>{{ arPedidoDetalle.sabado  ? 'S':'N' }}</td>
+                <td>{{ arPedidoDetalle.domingo ? 'S':'N' }}</td>
+                <td>{{ arPedidoDetalle.festivo ? 'S':'N' }}</td>
+                <td>{{ arPedidoDetalle.horas }}({{ arPedidoDetalle.horasProgramadas }})</td>
+                <td>{{ arPedidoDetalle.horasDiurnas }}({{ arPedidoDetalle.horasDiurnasProgramadas }})</td>
+                <td>{{ arPedidoDetalle.horasNocturnas }}({{ arPedidoDetalle.horasNocturnasProgramadas }})</td>
+                <td class="numero">{{ arPedidoDetalle.codigoContratoDetalleFk }}</td>
+                <td style="text-align: center;"><a
+                            href="javascript:abrirVentana3('{{ path('turno_utilidad_operacion_programacion_detalle',{ 'id': arPedidoDetalle.codigoPedidoDetallePk }) }}','resumen',800,1200)"><i
+                                class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk  }}"/>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br/><br/>
+    {{ form_end(form) }}
+{% endblock %}

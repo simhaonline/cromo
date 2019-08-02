@@ -34,8 +34,7 @@
             <tr>
                 <th>ID</th>
                 <th>NOMBRE</th>
-                <th>HORAS</th>
-                <th>Dias</th>
+                <th title="Dias que tiene la secuencia">D</th>
                 <th>1</th>
                 <th>2</th>
                 <th>3</th>
@@ -67,15 +66,15 @@
                 <th>29</th>
                 <th>30</th>
                 <th>31</th>
-                <th title="LUNES">Lun</th>
-                <th title="MARTES">Mar</th>
-                <th title="MIERCOLES">Mier</th>
-                <th title="JUEVES">Jue</th>
-                <th title="VIERNES">Vie</th>
-                <th title="SÁBADO">Sáb</th>
-                <th title="DOMINGO">Dom</th>
-                <th title="FESTIVO">Fes</th>
-                <th title="DOMINGO FESTIVO">Dom. fes.</th>
+                <th title="LUNES">L</th>
+                <th title="MARTES">M</th>
+                <th title="MIERCOLES">M</th>
+                <th title="JUEVES">J</th>
+                <th title="VIERNES">V</th>
+                <th title="SÁBADO">S</th>
+                <th title="DOMINGO">D</th>
+                <th title="FESTIVO">F</th>
+                <th title="DOMINGO FESTIVO">DF</th>
                 <th></th>
                 <th></th>
                 <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
@@ -86,7 +85,6 @@
                 <tr>
                     <td>{{ arSecuencia.codigoSecuenciaPk }}</td>
                     <td>{{ arSecuencia.nombre }}</td>
-                    <td>{{ arSecuencia.horas }}</td>
                     <td>{{ arSecuencia.dias }}</td>
                     <td>{{ arSecuencia.dia1 }}</td>
                     <td>{{ arSecuencia.dia2 }}</td>

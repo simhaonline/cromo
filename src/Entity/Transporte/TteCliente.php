@@ -149,6 +149,11 @@ class TteCliente
     private $guiaPagoRecogida = false;
 
     /**
+     * @ORM\Column(name="condicion_factura", type="boolean", nullable=true,options={"default":false})
+     */
+    private $condicionFactura = false;
+
+    /**
      * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
@@ -240,9 +245,9 @@ class TteCliente
     protected $clientesCondicionesClienteRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionDetalle", mappedBy="clienteRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionVenta", mappedBy="clienteRel")
      */
-    protected $intermediacionesDetallesClienteRel;
+    protected $intermediacionesVentasClienteRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteGuiaTemporal", mappedBy="clienteRel")
@@ -950,17 +955,17 @@ class TteCliente
     /**
      * @return mixed
      */
-    public function getIntermediacionesDetallesClienteRel()
+    public function getIntermediacionesVentasClienteRel()
     {
-        return $this->intermediacionesDetallesClienteRel;
+        return $this->intermediacionesVentasClienteRel;
     }
 
     /**
-     * @param mixed $intermediacionesDetallesClienteRel
+     * @param mixed $intermediacionesVentasClienteRel
      */
-    public function setIntermediacionesDetallesClienteRel($intermediacionesDetallesClienteRel): void
+    public function setIntermediacionesVentasClienteRel($intermediacionesVentasClienteRel): void
     {
-        $this->intermediacionesDetallesClienteRel = $intermediacionesDetallesClienteRel;
+        $this->intermediacionesVentasClienteRel = $intermediacionesVentasClienteRel;
     }
 
     /**
@@ -1009,6 +1014,38 @@ class TteCliente
     public function setCondicionesManejosClienteRel($condicionesManejosClienteRel): void
     {
         $this->condicionesManejosClienteRel = $condicionesManejosClienteRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCondicionFactura()
+    {
+        return $this->condicionFactura;
+    }
+
+    /**
+     * @param mixed $condicionFactura
+     */
+    public function setCondicionFactura($condicionFactura): void
+    {
+        $this->condicionFactura = $condicionFactura;
     }
 
 

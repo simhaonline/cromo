@@ -119,4 +119,22 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
         }
     }
 
+    public function informe()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd')
+            ->select('cd')
+            ->leftJoin('cd.contratoRel', 'c');
+        if($session->get('filtroRhuInformeContratoDetalleCodigoCliente') != ''){
+            $queryBuilder->andWhere("c.codigoClienteFk  = '{$session->get('filtroRhuInformeContratoDetalleCodigoCliente')}'");
+        }
+        if ($session->get('filtroRhuInformeContratoDetalleFechaDesde') != null) {
+            $queryBuilder->andWhere("cd.fechaDesde >= '{$session->get('filtroRhuInformeContratoDetalleFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroRhuInformeContratoDetalleFechaHasta') != null) {
+            $queryBuilder->andWhere("cd.fechaHasta <= '{$session->get('filtroRhuInformeContratoDetalleFechaHasta')} 23:59:59'");
+        }
+        return $queryBuilder;
+    }
+
 }

@@ -38,6 +38,11 @@ class RhuPagoDetalle
     private $codigoCreditoFk;
 
     /**
+     * @ORM\Column(name="codigo_vacacion_fk", type="integer", nullable=true)
+     */
+    private $codigoVacacionFk;
+
+    /**
      * @ORM\Column(name="vr_pago", type="float", nullable=true)
      */
     private $vrPago = 0;
@@ -98,6 +103,16 @@ class RhuPagoDetalle
     private $vrIngresoBasePrestacion = 0;
 
     /**
+     * @ORM\Column(name="vr_ingreso_base_cotizacion_adicional", type="float", nullable=true, options={"default":0})
+     */
+    private $vrIngresoBaseCotizacionAdicional = 0;
+
+    /**
+     * @ORM\Column(name="codigo_novedad_fk", type="integer", nullable=true)
+     */
+    private $codigoNovedadFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuPago", inversedBy="pagosDetallesPagoRel")
      * @ORM\JoinColumn(name="codigo_pago_fk", referencedColumnName="codigo_pago_pk")
      */
@@ -114,6 +129,12 @@ class RhuPagoDetalle
      * @ORM\JoinColumn(name="codigo_credito_fk", referencedColumnName="codigo_credito_pk")
      */
     protected $creditoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuVacacion", inversedBy="pagosDetallesVacacionRel")
+     * @ORM\JoinColumn(name="codigo_vacacion_fk", referencedColumnName="codigo_vacacion_pk")
+     */
+    protected $vacacionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCreditoPago", mappedBy="pagoDetalleRel")
@@ -438,6 +459,86 @@ class RhuPagoDetalle
     public function setCreditosPagosPagoDetalleRel( $creditosPagosPagoDetalleRel ): void
     {
         $this->creditosPagosPagoDetalleRel = $creditosPagosPagoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoNovedadFk()
+    {
+        return $this->codigoNovedadFk;
+    }
+
+    /**
+     * @param mixed $codigoNovedadFk
+     */
+    public function setCodigoNovedadFk($codigoNovedadFk): void
+    {
+        $this->codigoNovedadFk = $codigoNovedadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVacacionFk()
+    {
+        return $this->codigoVacacionFk;
+    }
+
+    /**
+     * @param mixed $codigoVacacionFk
+     */
+    public function setCodigoVacacionFk($codigoVacacionFk): void
+    {
+        $this->codigoVacacionFk = $codigoVacacionFk;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoBaseCotizacionAdicional()
+    {
+        return $this->vrIngresoBaseCotizacionAdicional;
+    }
+
+    /**
+     * @param mixed $vrIngresoBaseCotizacionAdicional
+     */
+    public function setVrIngresoBaseCotizacionAdicional($vrIngresoBaseCotizacionAdicional): void
+    {
+        $this->vrIngresoBaseCotizacionAdicional = $vrIngresoBaseCotizacionAdicional;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionRel()
+    {
+        return $this->vacacionRel;
+    }
+
+    /**
+     * @param mixed $vacacionRel
+     */
+    public function setVacacionRel($vacacionRel): void
+    {
+        $this->vacacionRel = $vacacionRel;
     }
 
 

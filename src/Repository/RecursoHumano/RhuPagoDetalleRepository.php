@@ -6,6 +6,7 @@ use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuPagoDetalleRepository extends ServiceEntityRepository
 {
@@ -93,7 +94,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->where("p.estadoEgreso = 1")
             ->andWhere('p.codigoContratoFk = ' . $codigoContrato)
             ->andWhere("p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaHasta <= '" . $fechaHasta . "'")
-        ->andWhere("c.fondoSolidaridadPensional = 1");
+            ->andWhere("c.fondoSolidaridadPensional = 1");
         $arrayResultado = $query->getQuery()->getSingleResult();
         if ($arrayResultado) {
             if($arrayResultado['deduccionFondo']) {
@@ -101,5 +102,162 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             }
         }
         return $arrIbc;
+    }
+
+    public function ibcOrdinario($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $arrIbc = array('ibc' => 0, 'horas' => 0);
+        $query = $em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('SUM(pd.vrIngresoBaseCotizacion) as ibc')
+            ->addSelect('SUM(pd.horas) as horas')
+            ->leftJoin('pd.pagoRel', 'p')
+            ->where("p.fechaDesdeContrato >= '" . $fechaDesde . "' AND p.fechaDesdeContrato <= '" . $fechaHasta . "' AND pd.codigoNovedadFk IS NULL AND pd.codigoVacacionFk IS NULL")
+            ->andWhere('p.codigoContratoFk=' . $codigoContrato);
+        $arrayResultado = $query->getQuery()->getResult();
+        if ($arrayResultado) {
+            $arrIbc['ibc'] = $arrayResultado[0]['ibc'];
+            $arrIbc['horas'] = $arrayResultado[0]['horas'];
+        }
+
+        return $arrIbc;
+    }
+
+    public function informe()
+    {
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->addSelect('pd')
+            ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.pagoRel', 'pa');
+
+        if ($session->get('filtroRhuInformePagoDetalleConcepto') != null) {
+            $queryBuilder->andWhere("pd.codigoConceptoFk = '{$session->get('filtroRhuInformePagoDetalleConcepto')}'");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleCodigoEmpleado') != null) {
+            $queryBuilder->andWhere("pa.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoDetalleCodigoEmpleado')}");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleFechaDesde') != null) {
+            $queryBuilder->andWhere("pa.fechaDesde >= '{$session->get('filtroRhuInformePagoDetalleFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleFechaHasta') != null) {
+            $queryBuilder->andWhere("pa.fechaHasta <= '{$session->get('filtroRhuInformePagoDetalleFechaHasta')} 23:59:59'");
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+
+    }
+
+    public function recargosNocturnos($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(pd.vrIngresoBaseCotizacionAdicional) as recagosNocturnos FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p JOIN pd.conceptoRel pc "
+            . "WHERE pc.recargoNocturno = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $recargosNocturnos = $arrayResultado[0]['recagosNocturnos'];
+        if ($recargosNocturnos == null) {
+            $recargosNocturnos = 0;
+        }
+        return $recargosNocturnos;
+    }
+
+    public function recargosNocturnosIbp($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQueryBuilder()
+            ->select("SUM(pd.vrIngresoBasePrestacion  * (pc.porcentajeVacaciones / 100)) as recargoNocturno")
+            ->from(RhuPagoDetalle::class, 'pd')
+            ->join('pd.pagoRel', 'p')
+            ->join('pd.pagoConceptoRel', 'pc')
+            ->where("pc.recargoNocturno = 1")
+            ->andWhere("p.codigoContratoFk = {$codigoContrato}")
+            ->andWhere("p.fechaDesde >= '{$fechaDesde}'")
+            ->andWhere("p.fechaHasta <= '{$fechaHasta}'");
+
+
+        $arrayResultado = $query->getQuery()->getResult();
+        $recargosNocturnos = $arrayResultado[0]['recargoNocturno'];
+        return $recargosNocturnos;
+
+    }
+
+    public function ibp($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(pd.vrIngresoBasePrestacion) as ibp FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p "
+            . "WHERE p.estadoAprobado = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $ibp = $arrayResultado[0]['ibp'];
+        if ($ibp == null) {
+            $ibp = 0;
+        }
+        return $ibp;
+    }
+
+    public function recargosNocturnosFecha($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+
+        $fechaDesdeAnio = $fechaHasta->format('Y-m-d');
+        $nuevafecha = strtotime('-365 day', strtotime($fechaDesdeAnio));
+        $nuevafecha = date('Y-m-d', $nuevafecha);
+        $fechaDesdeAnio = date_create($nuevafecha);
+        if ($fechaDesde < $fechaDesdeAnio) {
+            $fechaDesde = $fechaDesdeAnio;
+            $meses = 12;
+        } else {
+            $interval = date_diff($fechaDesde, $fechaHasta);
+            $meses = $interval->format('%m');
+            if ($meses == 0) {
+                $meses = 1;
+            }
+        }
+
+        $dql = "SELECT SUM(pd.vrIngresoBaseCotizacionAdicional) as recagosNocturnos FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p JOIN pd.conceptoRel pc "
+            . "WHERE pc.recargoNocturno = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesde >= '" . $fechaDesde->format('Y/m/d') . "' AND p.fechaDesde <= '" . $fechaHasta->format('Y/m/d') . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $recargosNocturnos = $arrayResultado[0]['recagosNocturnos'];
+        if ($recargosNocturnos == null) {
+            $recargosNocturnos = 0;
+        }
+        $recargosNocturnos = $recargosNocturnos / $meses;
+        //$recargosNocturnos =  $recargosNocturnos + $arContrato->getPromedioRecargoNocturnoInicial();
+        return $recargosNocturnos;
+    }
+
+    public function ibpSuplementario($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(pd.vrSuplementario) as suplementario FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p "
+            . "WHERE p.estadoAprobado = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $suplementario = $arrayResultado[0]['suplementario'];
+        if ($suplementario == null) {
+            $suplementario = 0;
+        }
+        return $suplementario;
+    }
+
+    public function listaDql($codigoPago = "", $codigoProgramacionPagoDetalle = "")
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT pd FROM App\Entity\RecursoHumano\RhuPagoDetalle pd WHERE pd.codigoPagoDetallePk <> 0";
+
+        if ($codigoPago != "") {
+            $dql .= " AND pd.codigoPagoFk = " . $codigoPago;
+        }
+        if ($codigoProgramacionPagoDetalle != "") {
+            $dql .= " AND pd.codigoProgramacionDetalleFk = " . $codigoProgramacionPagoDetalle;
+        }
+        $dql .= " ORDER BY pd.codigoConceptoFk";
+        return $dql;
     }
 }

@@ -79,6 +79,22 @@ class ComCuentaPagarTipo
     protected $cuentasPagarCuentaPagarTipoRel;
 
     /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPagarTipoPk()
@@ -252,6 +268,38 @@ class ComCuentaPagarTipo
     public function setComprasTipoCuentaPagarRel($comprasTipoCuentaPagarRel): void
     {
         $this->comprasTipoCuentaPagarRel = $comprasTipoCuentaPagarRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentasPagarCuentaPagarTipoRel()
+    {
+        return $this->cuentasPagarCuentaPagarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentasPagarCuentaPagarTipoRel
+     */
+    public function setCuentasPagarCuentaPagarTipoRel($cuentasPagarCuentaPagarTipoRel): void
+    {
+        $this->cuentasPagarCuentaPagarTipoRel = $cuentasPagarCuentaPagarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosTipoCuentaPagarTipoRel()
+    {
+        return $this->pagosTipoCuentaPagarTipoRel;
+    }
+
+    /**
+     * @param mixed $pagosTipoCuentaPagarTipoRel
+     */
+    public function setPagosTipoCuentaPagarTipoRel($pagosTipoCuentaPagarTipoRel): void
+    {
+        $this->pagosTipoCuentaPagarTipoRel = $pagosTipoCuentaPagarTipoRel;
     }
 
 

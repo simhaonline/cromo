@@ -122,4 +122,46 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->where('re.codigoContratoPk <> 0');
         return $queryBuilder->getQuery()->execute();
     }
+
+    public function contratosPeriodoAporte($fechaDesde = "", $fechaHasta = "")
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuContrato::class, 'c')
+            ->select('c.codigoContratoPk')
+            ->leftJoin('c.empleadoRel', 'e')
+            ->where("(c.fechaHasta >= '" . $fechaDesde . "' OR c.indefinido = 1) "
+                . "AND c.fechaDesde <= '" . $fechaHasta . "' ");
+        $arContratos = $queryBuilder->getQuery()->getResult();
+        return $arContratos;
+    }
+
+    public function soportePago($codigoEmpleado, $fechaDesde, $fechaHasta, $contratoTerminado, $codigoGrupo)
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuContrato::class, "c")
+            ->select("c.codigoContratoPk")
+            ->addSelect('c.vrSalario')
+            ->addSelect('c.estadoTerminado')
+            ->addSelect('c.fechaDesde')
+            ->addSelect('c.fechaHasta')
+            ->where("c.codigoEmpleadoFk = {$codigoEmpleado}")
+            ->andWhere("c.fechaUltimoPago < '{$fechaHasta}'")
+            ->andWhere("c.fechaDesde <= '{$fechaHasta}'")
+            ->andWhere("c.fechaHasta >= '{$fechaDesde}' OR c.indefinido = 1")
+            ->andWhere("c.codigoGrupoFk = '{$codigoGrupo}'");
+        if ($contratoTerminado) {
+            $queryBuilder->andWhere("c.estadoActivo = 0");
+        }
+        $arContratos = $queryBuilder->getQuery()->getResult();
+
+        return $arContratos;
+    }
+
+    public function informeContrato()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuContrato::class, 'c')
+            ->select('c');
+             return $queryBuilder;
+    }
 }

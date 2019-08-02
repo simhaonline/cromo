@@ -3,6 +3,8 @@
 namespace App\Form\Type\General;
 
 use App\Entity\General\GenConfiguracion;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -17,6 +19,26 @@ class ConfiguracionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('identificacionRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenIdentificacion',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->orderBy('i.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Identificacion:'
+            ])
+            ->add('ciudadRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenCiudad',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Ciudad:'
+            ])
             ->add('nit', TextType::class, ['required' => true])
             ->add('digitoVerificacion', NumberType::class, ['required' => true])
             ->add('contabilidadAutomatica', CheckboxType::class, ['required' => false,'label' => ' '])

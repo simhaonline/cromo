@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label for="form_txtCodigoEmpleado" class="col-sm-offset-1 col-sm-1 control-label">Cliente:</label>
+                        <div class="col-sm-10">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.txtCliente) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input id="form_txtNombreCorto" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('turno_buscar_cliente', { 'campoCodigo': 'form_txtCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEMpleado', 600, 900)">Buscar</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class=" col-sm-2 control-label">Fecha desde:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaDesde) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class=" col-sm-2 control-label">Fecha desde:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaHasta) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>CONTRATO</th>
+            <th>CONCEPTO</th>
+            <th>MODALIDAD</th>
+            <th>PUESTO</th>
+            <th>PERIODO</th>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>COMPUESTO</th>
+            <th>DIAS</th>
+            <th>HORAS</th>
+            <th TITLE="Horas diurnas">HD</th>
+            <th  TITLE="Horas nocturnas">HN</th>
+            <th>CANT</th>
+            <th>PRECIO</th>
+            <th>PRECIO MINIMO</th>
+            <th>SUBTOTAL</th>
+            <th>IVA</th>
+            <td>BASE AIU</td>
+            <td>SALARIO BASE</td>
+            <td>TOTAL DETALLE</td>
+            <td>LUNES</td>
+            <td>MARTES</td>
+            <td>MIERCOLES</td>
+            <td>JUEVES</td>
+            <td>VIERNES</td>
+            <td>SABADO</td>
+            <td>DOMINGO</td>
+            <td>FESTIVO</td>
+            <td>TER</td>
+            <td>% IVA</td>
+            <td>% IVA BASE</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arContratoDetalle in arContratoDetalles %}
+            <tr>
+                <td>{{ arContratoDetalle.codigoContratoDetallePk }}</td>
+                <td>{{ arContratoDetalle.codigoContratoFk }}</td>
+                <td>{{ arContratoDetalle.conceptoRel.nombre | default('') }}</td>
+                <td>{{ arContratoDetalle.modalidadRel.nombre | default('') }}</td>
+                <td>{{ arContratoDetalle.puestoRel.nombre | default('') }}</td>
+                <td>{{ arContratoDetalle.periodo }}</td>
+                <td>{{ arContratoDetalle.fechaDesde | date('Y-m-d') }}</td>
+                <td>{{ arContratoDetalle.fechaHasta | date('Y-m-d') }}</td>
+                <td>{{ arContratoDetalle.compuesto?"SI":"NO" }}</td>
+                <td>{{ arContratoDetalle.dias }}</td>
+                <td>{{ arContratoDetalle.horas }}</td>
+                <td>{{ arContratoDetalle.horasDiurnas }}</td>
+                <td>{{ arContratoDetalle.horasNocturnas }}</td>
+                <td>{{ arContratoDetalle.cantidad }}</td>
+                <td CLASS="numero">{{ arContratoDetalle.vrPrecio | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContratoDetalle.vrPrecioMinimo | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContratoDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContratoDetalle.vrIva | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContratoDetalle.vrBaseAiu | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContratoDetalle.vrSalarioBase | number_format(0, '.', ',') }}</td>
+                <td CLASS="numero">{{ arContratoDetalle.vrTotalDetalle | number_format(0, '.', ',') }}</td>
+                <td>{{ arContratoDetalle.lunes?"SI":"NO" }}</td>
+                <td>{{ arContratoDetalle.martes?"SI":"NO" }}</td>
+                <td>{{ arContratoDetalle.miercoles?"SI":"NO" }}</td>
+                <td>{{ arContratoDetalle.jueves?"SI":"NO" }}</td>
+                <td>{{ arContratoDetalle.viernes?"SI":"NO" }}</td>
+                <td>{{ arContratoDetalle.sabado?"SI":"NO" }}</td>
+                <td>{{ arContratoDetalle.domingo?"SI":"NO" }}</td>
+                <td>{{ arContratoDetalle.festivo?"SI":"NO" }}</td>
+                <td>{{ arContratoDetalle.estadoTerminado?"SI":"NO" }}</td>
+                <td CLASS="numero">{{ arContratoDetalle.porcentajeIva }}</td>
+                <td CLASS="numero">{{ arContratoDetalle.porcentajeBaseIva }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arContratoDetalles.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arContratoDetalles) }}
+    </div>
+    <br /><br />
+    {{ form_end(form) }}
+{% endblock %}
+

@@ -97,6 +97,7 @@
                         <tr>
                             <th>ID</th>
                             <th>COD</th>
+                            <th>TPO</th>
                             <th>NUMERO</th>
                             <th>FECHA</th>
                             <th>PLACA</th>
@@ -110,6 +111,7 @@
                             <tr>
                                 <td>{{ arDespachoDetalle.codigoDespachoDetallePk }}</td>
                                 <td>{{ arDespachoDetalle.codigoDespachoFk }}</td>
+                                <td>{{ arDespachoDetalle.tipoDespacho }}</td>
                                 <td>{{ arDespachoDetalle.numero }}</td>
                                 <td>{{ arDespachoDetalle.fechaSalida | date('Y-m-d H:i') }}</td>
                                 <td>{{ arDespachoDetalle.placa }}</td>

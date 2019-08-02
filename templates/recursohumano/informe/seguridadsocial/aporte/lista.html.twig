@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label for="form_txtCodigoEmpleado"
+                               class="col-sm-offset-1 col-sm-1 control-label">Empleado:</label>
+                        <div class="col-sm-10">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.txtEmpleado) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input id="form_txtNombreCorto" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'form_txtEmpleado', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEMpleado', 600, 900)">Buscar</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">Año</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.txtAnio) }}
+                        </div>
+                        <label class="col-sm-2 control-label">Mes</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.txtMes) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class=" col-sm-2 control-label">Fecha desde:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaDesde) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class=" col-sm-2 control-label">Fecha desde:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaHasta) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>CÓDIGO</th>
+            <th>AÑO</th>
+            <th>MES</th>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>IDENTIFICACION</th>
+            <th>EMPLEADO</th>
+            <th>CONTRATO</th>
+            <th>ING</th>
+            <th>RET</th>
+            <th>VST</th>
+            <th>SLN</th>
+            <th>IGE</th>
+            <th>LMA</th>
+            <th>IRP</th>
+            <th style="text-align: right">SALARIO</th>
+            <th style="text-align: right">SUPLE</th>
+            <th>D.P</th>
+            <th>D.S</th>
+            <th>D.R</th>
+            <th>D.C</th>
+            <th style="text-align: right">IBC.P</th>
+            <th style="text-align: right">IBC.S</th>
+            <th style="text-align: right">IBC.R</th>
+            <th style="text-align: right">IBC.C</th>
+            <th style="text-align: right">T.P</th>
+            <th style="text-align: right">T.S</th>
+            <th style="text-align: right">T.R</th>
+            <th style="text-align: right">T.C</th>
+            <th style="text-align: right">C.P</th>
+            <th style="text-align: right">C.S</th>
+            <th style="text-align: right">C.R</th>
+            <th style="text-align: right">C.C</th>
+            <th style="text-align: right">C.FSSO</th>
+            <th style="text-align: right">C.FSSU</th>
+        </tr>
+        </thead>
+        <!--cromo-->
+        <tbody>
+        {% for arAporte in arAportes %}
+            <tr>
+                <td>{{ arAporte.codigoAporteDetallePk }}</td>
+                <td>{{ arAporte.anio }}</td>
+                <td>{{ arAporte.mes }}</td>
+                <td>{{ arAporte.fechaDesde | date('Y-m-d') }}</td>
+                <td>{{ arAporte.fechaHasta | date('Y-m-d')  }}</td>
+                <td>{{ arAporte.numeroIdentificacion }}</td>
+                <td>{{ arAporte.nombreCorto }}</td>
+                <td>{{ arAporte.codigoContratoFk }}</td>
+                <td>{{ arAporte.ingreso  }}</td>
+                <td>{{ arAporte.retiro  }}</td>
+                <td>{{ arAporte.variacionTransitoriaSalario }}</td>
+                <td>{% if arAporte.suspensionTemporalContratoLicenciaServicios == 'X' %}{{ arAporte.suspensionTemporalContratoLicenciaServicios }}{{ arAporte.diasLicencia }} {% endif %}</td>
+                <td>{% if arAporte.incapacidadGeneral == 'X' %}{{ arAporte.incapacidadGeneral }}{{ arAporte.diasIncapacidadGeneral }} {% endif %}</td>
+                <td>{% if arAporte.licenciaMaternidad == 'X' %}{{ arAporte.licenciaMaternidad }}{{ arAporte.diasLicenciaMaternidad }} {% endif %}</td>
+                <td>{% if arAporte.incapacidadAccidenteTrabajoEnfermedadProfesional > 0 %}{{ arAporte.incapacidadAccidenteTrabajoEnfermedadProfesional }} {% endif %}</td>
+                <td style="text-align: right">{{ arAporte.salarioBasico | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.suplementario | number_format(0, '.', ',') }}</td>
+                <td>{{ arAporte.diasCotizadosPension  }}</td>
+                <td>{{ arAporte.diasCotizadosSalud  }}</td>
+                <td>{{ arAporte.diasCotizadosRiesgosProfesionales  }}</td>
+                <td>{{ arAporte.diasCotizadosCajaCompensacion  }}</td>
+                <td style="text-align: right">{{ arAporte.ibcPension | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.ibcSalud | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.ibcRiesgosProfesionales | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.ibcCaja | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.tarifaPension | number_format(2, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.tarifaSalud | number_format(2, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.tarifaRiesgos | number_format(4, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.tarifaCaja | number_format(2, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.cotizacionPension | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.cotizacionSalud | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.cotizacionRiesgos | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.cotizacionCaja | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.aportesFondoSolidaridadPensionalSolidaridad | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.aportesFondoSolidaridadPensionalSubsistencia | number_format(0, '.', ',') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arAportes.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arAportes) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+    </div>
+    <br/><br/>
+    {{ form_end(form) }}
+{% endblock %}

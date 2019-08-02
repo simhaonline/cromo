@@ -109,6 +109,11 @@ class RhuPago
     private $vrNeto = 0;
 
     /**
+     * @ORM\Column(name="dias_ausentismo", type="integer", nullable=true, options={"default":0})
+     */
+    private $diasAusentismo = 0;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoAutorizado = false;
@@ -191,6 +196,22 @@ class RhuPago
     protected $egresosDetallesPagoRel;
 
     /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoPagoPk()
@@ -268,22 +289,6 @@ class RhuPago
     public function setCodigoPeriodoFk($codigoPeriodoFk): void
     {
         $this->codigoPeriodoFk = $codigoPeriodoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoEgreso()
-    {
-        return $this->estadoEgreso;
-    }
-
-    /**
-     * @param mixed $estadoEgreso
-     */
-    public function setEstadoEgreso($estadoEgreso): void
-    {
-        $this->estadoEgreso = $estadoEgreso;
     }
 
     /**
@@ -497,6 +502,22 @@ class RhuPago
     /**
      * @return mixed
      */
+    public function getDiasAusentismo()
+    {
+        return $this->diasAusentismo;
+    }
+
+    /**
+     * @param mixed $diasAusentismo
+     */
+    public function setDiasAusentismo($diasAusentismo): void
+    {
+        $this->diasAusentismo = $diasAusentismo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -540,6 +561,22 @@ class RhuPago
     public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoEgreso()
+    {
+        return $this->estadoEgreso;
+    }
+
+    /**
+     * @param mixed $estadoEgreso
+     */
+    public function setEstadoEgreso($estadoEgreso): void
+    {
+        $this->estadoEgreso = $estadoEgreso;
     }
 
     /**
@@ -717,4 +754,7 @@ class RhuPago
     {
         $this->egresosDetallesPagoRel = $egresosDetallesPagoRel;
     }
+
+
+
 }

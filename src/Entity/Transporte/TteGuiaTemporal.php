@@ -18,6 +18,12 @@ class TteGuiaTemporal
     private $codigoGuiaPk;
 
     /**
+     * Si se origina por bufalo o desde excel
+     * @ORM\Column(name="origen", type="string", length=1, nullable=true)
+     */
+    private $origen;
+
+    /**
      * @ORM\Column(name="numero", type="float", nullable=true)
      */
     private $numero;
@@ -31,6 +37,11 @@ class TteGuiaTemporal
      * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
      */
     private $codigoClienteFk;
+
+    /**
+     * @ORM\Column(name="codigo_condicion_fk", type="integer", nullable=true)
+     */
+    private $codigoCondicionFk;
 
     /**
      * @ORM\Column(name="codigo_operador_fk", type="string",length=20, nullable=true)
@@ -96,6 +107,11 @@ class TteGuiaTemporal
      * @ORM\Column(name="cliente_documento", type="string", length=150, nullable=true)
      */
     private $clienteDocumento;
+
+    /**
+     * @ORM\Column(name="cliente_relacion", type="string", length=150, nullable=true)
+     */
+    private $clienteRelacion;
 
     /**
      * @ORM\Column(name="fecha", type="datetime", nullable=true)
@@ -791,4 +807,55 @@ class TteGuiaTemporal
     {
         $this->clienteRel = $clienteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOrigen()
+    {
+        return $this->origen;
+    }
+
+    /**
+     * @param mixed $origen
+     */
+    public function setOrigen($origen): void
+    {
+        $this->origen = $origen;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCondicionFk()
+    {
+        return $this->codigoCondicionFk;
+    }
+
+    /**
+     * @param mixed $codigoCondicionFk
+     */
+    public function setCodigoCondicionFk($codigoCondicionFk): void
+    {
+        $this->codigoCondicionFk = $codigoCondicionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRelacion()
+    {
+        return $this->clienteRelacion;
+    }
+
+    /**
+     * @param mixed $clienteRelacion
+     */
+    public function setClienteRelacion($clienteRelacion): void
+    {
+        $this->clienteRelacion = $clienteRelacion;
+    }
+
+
+
 }

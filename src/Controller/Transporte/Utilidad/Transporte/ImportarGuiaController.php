@@ -220,9 +220,9 @@ class ImportarGuiaController extends Controller
         curl_close($ch);
         if ($respuesta) {
             $em->flush();
-            Mensajes::success('Guias exportadas correctamente');
+            Mensajes::success('Guias importadas correctamente');
         } else {
-            Mensajes::error('Ha ocurrido un error al momento de exportar las guias');
+            Mensajes::error('Ha ocurrido un error al momento de importar las guias');
         }
     }
 

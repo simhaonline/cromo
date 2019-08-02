@@ -239,6 +239,11 @@ class TurSecuencia
     private $dias = 0;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurPrototipo", mappedBy="secuenciaRel")
+     */
+    protected $prototiposSecuenciaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoSecuenciaPk()
@@ -940,6 +945,22 @@ class TurSecuencia
     public function setDias($dias): void
     {
         $this->dias = $dias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrototiposSecuenciaRel()
+    {
+        return $this->prototiposSecuenciaRel;
+    }
+
+    /**
+     * @param mixed $prototiposSecuenciaRel
+     */
+    public function setPrototiposSecuenciaRel($prototiposSecuenciaRel): void
+    {
+        $this->prototiposSecuenciaRel = $prototiposSecuenciaRel;
     }
 
 

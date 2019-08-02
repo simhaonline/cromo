@@ -87,14 +87,19 @@ class TteDespachoRecogidaTipo
     private $codigoCuentaPagarFk;
 
     /**
+     * @ORM\Column(name="contabilizar", type="boolean", nullable=true,options={"default":false})
+     */
+    private $contabilizar = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoRecogida", mappedBy="despachoRecogidaTipoRel")
      */
     protected $despachosRecogidasDespachoRecogidaTipoRel;
 
     /**
-     * @ORM\Column(name="contabilizar", type="boolean", nullable=true,options={"default":false})
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionRecogida", mappedBy="despachoRecogidaTipoRel")
      */
-    private $contabilizar = false;
+    protected $intermediacionesRecogidasDespachoRecogidaTipoRel;
 
     /**
      * @return mixed
@@ -350,6 +355,22 @@ class TteDespachoRecogidaTipo
     public function setContabilizar( $contabilizar ): void
     {
         $this->contabilizar = $contabilizar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesRecogidasDespachoRecogidaTipoRel()
+    {
+        return $this->intermediacionesRecogidasDespachoRecogidaTipoRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesRecogidasDespachoRecogidaTipoRel
+     */
+    public function setIntermediacionesRecogidasDespachoRecogidaTipoRel($intermediacionesRecogidasDespachoRecogidaTipoRel): void
+    {
+        $this->intermediacionesRecogidasDespachoRecogidaTipoRel = $intermediacionesRecogidasDespachoRecogidaTipoRel;
     }
 
 

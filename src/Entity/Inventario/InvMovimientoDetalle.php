@@ -58,12 +58,12 @@ class InvMovimientoDetalle
     private $fechaVencimiento;
 
     /**
-     * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=3, nullable=true)
+     * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=5, nullable=true)
      */
     private $codigoImpuestoRetencionFk;
 
     /**
-     * @ORM\Column(name="codigo_impuesto_iva_fk", type="string", length=3, nullable=true)
+     * @ORM\Column(name="codigo_impuesto_iva_fk", type="string", length=5, nullable=true)
      */
     private $codigoImpuestoIvaFk;
 

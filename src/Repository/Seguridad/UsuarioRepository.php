@@ -75,7 +75,8 @@ class UsuarioRepository extends ServiceEntityRepository
                     "nombreCorto" => $arUsuario->getNombreCorto(),
                     "versionBaseDatos" => $arConfiguracion->getVersionBaseDatos(),
                     "numeroUnicoGuia" => $arConfiguracionTransporte->getNumeroUnicoGuia(),
-                    "codigoPrecioGeneral" => $arConfiguracionTransporte->getCodigoPrecioGeneralFk()
+                    "codigoPrecioGeneral" => $arConfiguracionTransporte->getCodigoPrecioGeneralFk(),
+                    "codigoFormatoGuia" => $arConfiguracionTransporte->getCodigoFormatoGuia(),
                 ];
             } else {
                 return ["error" => "Usuario o clave invalidos"];

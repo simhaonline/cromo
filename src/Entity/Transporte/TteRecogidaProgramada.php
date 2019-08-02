@@ -38,6 +38,11 @@ class TteRecogidaProgramada
     private $codigoRutaRecogidaFk;
 
     /**
+     * @ORM\Column(name="fecha_ultima_generada", type="date", nullable=true)
+     */
+    private $fechaUltimaGenerada;
+
+    /**
      * @ORM\Column(name="hora", type="time", nullable=true)
      */
     private $hora;
@@ -330,6 +335,22 @@ class TteRecogidaProgramada
     public function setRutaRecogidaRel($rutaRecogidaRel): void
     {
         $this->rutaRecogidaRel = $rutaRecogidaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimaGenerada()
+    {
+        return $this->fechaUltimaGenerada;
+    }
+
+    /**
+     * @param mixed $fechaUltimaGenerada
+     */
+    public function setFechaUltimaGenerada($fechaUltimaGenerada): void
+    {
+        $this->fechaUltimaGenerada = $fechaUltimaGenerada;
     }
 
 

@@ -68,7 +68,7 @@ class ItemController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arItem = new InvItem();
         if ($id != 0) {
-            $arItem = $em->getRepository('App:Inventario\InvItem')->find($id);
+            $arItem = $em->getRepository(InvItem::class)->find($id);
             if (!$arItem) {
                 return $this->redirect($this->generateUrl('inventario_administracion_inventario_item_lista'));
             }

@@ -53,4 +53,38 @@ class ApiCesioController extends FOSRestController
             ];
         }
     }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/cesio/guia/liquidar")
+     */
+    public function guiaLiquidar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            $cliente = $raw['cliente']?? null;
+            $condicion = $raw['condicion']?? null;
+            $precio = $raw['precio']?? null;
+            $origen = $raw['origen']?? null;
+            $destino = $raw['destino']?? null;
+            $producto = $raw['producto']?? null;
+            $zona = $raw['zona']?? null;
+            $tipoLiquidacion = $raw['tipoLiquidacion']?? null;
+            $unidades = $raw['unidades']?? null;
+            $peso = $raw['peso']?? null;
+            $declarado = $raw['declarado']?? null;
+            if($cliente && $condicion && $precio && $origen && $destino && $producto && $tipoLiquidacion && $unidades && $peso && $declarado) {
+                return $em->getRepository(TteGuia::class)->liquidar($cliente, $condicion, $precio, $origen, $destino, $producto, $zona, $tipoLiquidacion, $unidades, $peso, $declarado);
+            } else {
+                return [
+                    'error' => "faltan datos para la api cromo ",
+                ];
+            }
+
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
 }

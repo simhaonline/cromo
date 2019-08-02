@@ -16,12 +16,10 @@
         {% if arPedido.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    {% include 'turno/movimiento/comercial/pedido/informacion.html.twig' %}
+    {% include 'turno/movimiento/venta/pedido/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
-
-
     <div class="tab-content">
         <div class="tab-pane active" id="detalles">
             <div id="detalles" style="width: 100%"><br>
@@ -30,21 +28,32 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th>EMPLEADO</th>
                             {% for i in 1..31 %}
                                 <th>{{ i }}</th>
                             {% endfor %}
                             <th>HD</th>
                             <th>HN</th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for arPedidoDetalle in arPedidoDetalles %}
                             <tr>
-                                <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
+                                <td></td>
+                                <td>{{ arPedidoDetalle.conceptoNombre }}</td>
+                                <td colspan="34"></td>
                             </tr>
-                            <tr>
+
                             {% for arProgramacion in arPedidoDetalle.arProgramaciones %}
+                                <tr>
                                     <td>{{ arProgramacion.codigoProgramacionPk }}</td>
+                                    <td>
+                                        <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_recurso',
+                                            { 'codigoPedidoDetalle': arPedidoDetalle.codigoPedidoDetallePk , 'codigoEmpleado': arProgramacion.codigoEmpleadoFk }) }}', 'VerProgramaciones', 600, 1300)">
+                                            {{ arProgramacion.empleadoNombreCorto | default('') }}
+                                        </a>
+                                    </td>
                                     <td>{{ arProgramacion.dia1 }}</td>
                                     <td>{{ arProgramacion.dia2 }}</td>
                                     <td>{{ arProgramacion.dia3 }}</td>
@@ -78,8 +87,10 @@
                                     <td>{{ arProgramacion.dia31 }}</td>
                                     <td>{{ arProgramacion.horasDiurnas }}</td>
                                     <td>{{ arProgramacion.horasNocturnas }}</td>
+                                    <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arProgramacion.codigoProgramacionPk }}"/></td>
+                                </tr>
                             {% endfor %}
-                            </tr>
+
                         {% endfor %}
                         </tbody>
                     </table>

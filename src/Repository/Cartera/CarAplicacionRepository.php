@@ -61,34 +61,36 @@ class CarAplicacionRepository extends ServiceEntityRepository
 
     public function aplicar($arCuentaCobrarAplicar, $modulo, $codigoDocumento) {
         $em = $this->getEntityManager();
-        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->findOneBy(array('modulo' => $modulo, 'codigoDocumento' => $codigoDocumento));
-        if($arCuentaCobrar && $arCuentaCobrarAplicar) {
-            $vrAplicar = $arCuentaCobrarAplicar->getVrSaldo();
-            if ($arCuentaCobrar->getVrSaldo() >= $vrAplicar) {
-                $saldo = $arCuentaCobrar->getVrSaldo() - $vrAplicar;
-                $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
-                $arCuentaCobrar->setVrSaldo($saldo);
-                $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
-                $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $vrAplicar);
-                $em->persist($arCuentaCobrar);
+        if($codigoDocumento && $modulo) {
+            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->findOneBy(array('modulo' => $modulo, 'codigoDocumento' => $codigoDocumento));
+            if($arCuentaCobrar && $arCuentaCobrarAplicar) {
+                $vrAplicar = $arCuentaCobrarAplicar->getVrSaldo();
+                if ($arCuentaCobrar->getVrSaldo() >= $vrAplicar) {
+                    $saldo = $arCuentaCobrar->getVrSaldo() - $vrAplicar;
+                    $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+                    $arCuentaCobrar->setVrSaldo($saldo);
+                    $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                    $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $vrAplicar);
+                    $em->persist($arCuentaCobrar);
 
-                $saldo = $arCuentaCobrarAplicar->getVrSaldo() - $vrAplicar;
-                $saldoOperado = $saldo * $arCuentaCobrarAplicar->getOperacion();
-                $arCuentaCobrarAplicar->setVrSaldo($saldo);
-                $arCuentaCobrarAplicar->setVrSaldoOperado($saldoOperado);
-                $arCuentaCobrarAplicar->setVrAbono($arCuentaCobrarAplicar->getVrAbono() + $vrAplicar);
-                $em->persist($arCuentaCobrarAplicar);
+                    $saldo = $arCuentaCobrarAplicar->getVrSaldo() - $vrAplicar;
+                    $saldoOperado = $saldo * $arCuentaCobrarAplicar->getOperacion();
+                    $arCuentaCobrarAplicar->setVrSaldo($saldo);
+                    $arCuentaCobrarAplicar->setVrSaldoOperado($saldoOperado);
+                    $arCuentaCobrarAplicar->setVrAbono($arCuentaCobrarAplicar->getVrAbono() + $vrAplicar);
+                    $em->persist($arCuentaCobrarAplicar);
 
-                $arAplicacion = new CarAplicacion();
-                $arAplicacion->setCuentaCobrarRel($arCuentaCobrar);
-                $arAplicacion->setCuentaCobrarAplicacionRel($arCuentaCobrarAplicar);
-                $arAplicacion->setVrAplicacion($vrAplicar);
-                $arAplicacion->setFecha(new \DateTime('now'));
-                $arAplicacion->setNumeroDocumento($arCuentaCobrar->getNumeroDocumento());
-                $arAplicacion->setNumeroDocumentoAplicacion($arCuentaCobrarAplicar->getNumeroDocumento());
-                $arAplicacion->setAutomatica(1);
-                $em->persist($arAplicacion);
-                $em->flush();
+                    $arAplicacion = new CarAplicacion();
+                    $arAplicacion->setCuentaCobrarRel($arCuentaCobrar);
+                    $arAplicacion->setCuentaCobrarAplicacionRel($arCuentaCobrarAplicar);
+                    $arAplicacion->setVrAplicacion($vrAplicar);
+                    $arAplicacion->setFecha(new \DateTime('now'));
+                    $arAplicacion->setNumeroDocumento($arCuentaCobrar->getNumeroDocumento());
+                    $arAplicacion->setNumeroDocumentoAplicacion($arCuentaCobrarAplicar->getNumeroDocumento());
+                    $arAplicacion->setAutomatica(1);
+                    $em->persist($arAplicacion);
+                    $em->flush();
+                }
             }
         }
     }

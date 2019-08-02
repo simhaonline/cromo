@@ -2,15 +2,19 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
-        <div class="panel-heading">Configuracion general</div>
+        <div class="panel-heading">Informacion general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_nit" class="col-sm-2 control-label">Nit:</label>
+                <label for="form_nit" class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.nit, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_widget(form.identificacionRel) }}
                 </div>
-                <label for="form_digitoVerificacion" class="col-sm-2 control-label">Digito verificacion:</label>
-                <div class="col-sm-4">
+                <label for="form_digitoVerificacion" class="col-sm-2 control-label">Numero identificacion:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.nit) }}
+                </div>
+                <label for="form_digitoVerificacion" class="col-sm-1 control-label">Digito verificacion:</label>
+                <div class="col-sm-1">
                     {{ form_widget(form.digitoVerificacion) }}
                 </div>
             </div>
@@ -28,6 +32,22 @@
                 <label for="form_telefono" class="col-sm-2 control-label">Telefono:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.telefono) }}
+                </div>
+                <label for="form_rutaTemporal" class="col-sm-2 control-label">Ciudad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadRel) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Configuracion general</div>
+        <div class="panel-body">
+
+            <div class="form-group form-group-sm">
+                <label for="form_telefono" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
                 </div>
                 <label for="form_rutaTemporal" class="col-sm-2 control-label">Ruta temporal:</label>
                 <div class="col-sm-4">

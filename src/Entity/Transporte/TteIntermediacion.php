@@ -24,6 +24,11 @@ class TteIntermediacion
     private $codigoIntermediacionPk;
 
     /**
+     * @ORM\Column(name="numero", type="float", nullable=true)
+     */
+    private $numero = 0;
+
+    /**
      * @ORM\Column(name="anio", type="integer", nullable=true)
      */
     private $anio;
@@ -42,6 +47,16 @@ class TteIntermediacion
      * @ORM\Column(name="vr_flete_pago", type="float", options={"default" : 0})
      */
     private $vrFletePago = 0;
+
+    /**
+     * @ORM\Column(name="vr_flete_pago_recogida", type="float", options={"default" : 0})
+     */
+    private $vrFletePagoRecogida = 0;
+
+    /**
+     * @ORM\Column(name="vr_flete_pago_total", type="float", options={"default" : 0})
+     */
+    private $vrFletePagoTotal = 0;
 
     /**
      * @ORM\Column(name="vr_flete_cobro", type="float", options={"default" : 0})
@@ -64,9 +79,29 @@ class TteIntermediacion
     private $estadoAprobado = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionDetalle", mappedBy="intermediacionRel")
+     * @ORM\Column(name="estado_anulado", type="boolean",options={"default" : false}, nullable=true)
      */
-    protected $intermediacionesDetallesIntermediacionRel;
+    private $estadoAnulado = false;
+
+    /**
+     * @ORM\Column(name="estado_contabilizado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoContabilizado = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionVenta", mappedBy="intermediacionRel")
+     */
+    protected $intermediacionesVentasIntermediacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionCompra", mappedBy="intermediacionRel")
+     */
+    protected $intermediacionesComprasIntermediacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionRecogida", mappedBy="intermediacionRel")
+     */
+    protected $intermediacionesRecogidasIntermediacionRel;
 
     /**
      * @return mixed
@@ -79,7 +114,7 @@ class TteIntermediacion
     /**
      * @param mixed $codigoIntermediacionPk
      */
-    public function setCodigoIntermediacionPk( $codigoIntermediacionPk ): void
+    public function setCodigoIntermediacionPk($codigoIntermediacionPk): void
     {
         $this->codigoIntermediacionPk = $codigoIntermediacionPk;
     }
@@ -95,7 +130,7 @@ class TteIntermediacion
     /**
      * @param mixed $anio
      */
-    public function setAnio( $anio ): void
+    public function setAnio($anio): void
     {
         $this->anio = $anio;
     }
@@ -111,7 +146,7 @@ class TteIntermediacion
     /**
      * @param mixed $mes
      */
-    public function setMes( $mes ): void
+    public function setMes($mes): void
     {
         $this->mes = $mes;
     }
@@ -127,7 +162,7 @@ class TteIntermediacion
     /**
      * @param mixed $fecha
      */
-    public function setFecha( $fecha ): void
+    public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
     }
@@ -143,7 +178,7 @@ class TteIntermediacion
     /**
      * @param mixed $vrFletePago
      */
-    public function setVrFletePago( $vrFletePago ): void
+    public function setVrFletePago($vrFletePago): void
     {
         $this->vrFletePago = $vrFletePago;
     }
@@ -159,7 +194,7 @@ class TteIntermediacion
     /**
      * @param mixed $vrFleteCobro
      */
-    public function setVrFleteCobro( $vrFleteCobro ): void
+    public function setVrFleteCobro($vrFleteCobro): void
     {
         $this->vrFleteCobro = $vrFleteCobro;
     }
@@ -175,7 +210,7 @@ class TteIntermediacion
     /**
      * @param mixed $vrIngreso
      */
-    public function setVrIngreso( $vrIngreso ): void
+    public function setVrIngreso($vrIngreso): void
     {
         $this->vrIngreso = $vrIngreso;
     }
@@ -191,7 +226,7 @@ class TteIntermediacion
     /**
      * @param mixed $estadoAutorizado
      */
-    public function setEstadoAutorizado( $estadoAutorizado ): void
+    public function setEstadoAutorizado($estadoAutorizado): void
     {
         $this->estadoAutorizado = $estadoAutorizado;
     }
@@ -207,7 +242,7 @@ class TteIntermediacion
     /**
      * @param mixed $estadoAprobado
      */
-    public function setEstadoAprobado( $estadoAprobado ): void
+    public function setEstadoAprobado($estadoAprobado): void
     {
         $this->estadoAprobado = $estadoAprobado;
     }
@@ -215,18 +250,131 @@ class TteIntermediacion
     /**
      * @return mixed
      */
-    public function getIntermediacionesDetallesIntermediacionRel()
+    public function getIntermediacionesVentasIntermediacionRel()
     {
-        return $this->intermediacionesDetallesIntermediacionRel;
+        return $this->intermediacionesVentasIntermediacionRel;
     }
 
     /**
-     * @param mixed $intermediacionesDetallesIntermediacionRel
+     * @param mixed $intermediacionesVentasIntermediacionRel
      */
-    public function setIntermediacionesDetallesIntermediacionRel( $intermediacionesDetallesIntermediacionRel ): void
+    public function setIntermediacionesVentasIntermediacionRel($intermediacionesVentasIntermediacionRel): void
     {
-        $this->intermediacionesDetallesIntermediacionRel = $intermediacionesDetallesIntermediacionRel;
+        $this->intermediacionesVentasIntermediacionRel = $intermediacionesVentasIntermediacionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesComprasIntermediacionRel()
+    {
+        return $this->intermediacionesComprasIntermediacionRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesComprasIntermediacionRel
+     */
+    public function setIntermediacionesComprasIntermediacionRel($intermediacionesComprasIntermediacionRel): void
+    {
+        $this->intermediacionesComprasIntermediacionRel = $intermediacionesComprasIntermediacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrFletePagoRecogida()
+    {
+        return $this->vrFletePagoRecogida;
+    }
+
+    /**
+     * @param mixed $vrFletePagoRecogida
+     */
+    public function setVrFletePagoRecogida($vrFletePagoRecogida): void
+    {
+        $this->vrFletePagoRecogida = $vrFletePagoRecogida;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrFletePagoTotal()
+    {
+        return $this->vrFletePagoTotal;
+    }
+
+    /**
+     * @param mixed $vrFletePagoTotal
+     */
+    public function setVrFletePagoTotal($vrFletePagoTotal): void
+    {
+        $this->vrFletePagoTotal = $vrFletePagoTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesRecogidasIntermediacionRel()
+    {
+        return $this->intermediacionesRecogidasIntermediacionRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesRecogidasIntermediacionRel
+     */
+    public function setIntermediacionesRecogidasIntermediacionRel($intermediacionesRecogidasIntermediacionRel): void
+    {
+        $this->intermediacionesRecogidasIntermediacionRel = $intermediacionesRecogidasIntermediacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero): void
+    {
+        $this->numero = $numero;
+    }
+
 
 
 

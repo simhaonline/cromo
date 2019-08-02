@@ -119,11 +119,11 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
 
     public function cuentaCompra($codigo){
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvImportacionDetalle::class, 'id')
-            ->select('i.codigoCuentaCompraFk')
+            ->select('i.codigoCuentaCompraImportacionFk')
             ->addSelect('SUM(id.vrSubtotalLocal) as vrSubtotalLocal')
             ->leftJoin('id.itemRel', 'i')
             ->where('id.codigoImportacionFk = ' . $codigo)
-            ->groupBy('i.codigoCuentaCompraFk');
+            ->groupBy('i.codigoCuentaCompraImportacionFk');
         $arrCuentas = $queryBuilder->getQuery()->getResult();
         return $arrCuentas;
     }

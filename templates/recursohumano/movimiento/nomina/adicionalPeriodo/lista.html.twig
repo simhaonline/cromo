@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-offset-6 col-sm-2 control-label">Estado:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.estado) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>FECHA</th>
+            <th>NOMBRE</th>
+            <th>CERRADO</th>
+            <th></th>
+            <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arAdicionalPeriodo in arAdicionalPeriodos %}
+            <tr>
+                <td>{{ arAdicionalPeriodo.codigoAdicionalPeriodoPk }}</td>
+                <td>{{ arAdicionalPeriodo.fecha | date('Y-m-d') }}</td>
+                <td>{{ arAdicionalPeriodo.nombre }}</td>
+                <td class="estado">{{ arAdicionalPeriodo.estadoCerrado?'SI':'NO' }}</td>
+                <td style="text-align: center;">
+                    <a href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_detalle',{'id' : arAdicionalPeriodo.codigoAdicionalPeriodoPk}) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arAdicionalPeriodo.codigoAdicionalPeriodoPk  }}"/>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arAdicionalPeriodos.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arAdicionalPeriodos) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.btnEliminar) }}
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_nuevo', {'id': 0}) }}">Nuevo</a>
+        </div>
+    </div>
+    <br/><br/>
+    {{ form_end(form) }}
+{% endblock %}

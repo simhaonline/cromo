@@ -86,6 +86,11 @@ class GenLicencia
     private $crm=false;
 
     /**
+     * @ORM\Column(name="tesoreria",type="boolean", options={"default":false}, nullable=true)
+     */
+    private $tesoreria=false;
+
+    /**
      * @return mixed
      */
     public function getCodigoLicenciaPk()
@@ -96,7 +101,7 @@ class GenLicencia
     /**
      * @param mixed $codigoLicenciaPk
      */
-    public function setCodigoLicenciaPk( $codigoLicenciaPk ): void
+    public function setCodigoLicenciaPk($codigoLicenciaPk): void
     {
         $this->codigoLicenciaPk = $codigoLicenciaPk;
     }
@@ -112,7 +117,7 @@ class GenLicencia
     /**
      * @param mixed $fechaActivacion
      */
-    public function setFechaActivacion( $fechaActivacion ): void
+    public function setFechaActivacion($fechaActivacion): void
     {
         $this->fechaActivacion = $fechaActivacion;
     }
@@ -128,7 +133,7 @@ class GenLicencia
     /**
      * @param mixed $fechaValidaHasta
      */
-    public function setFechaValidaHasta( $fechaValidaHasta ): void
+    public function setFechaValidaHasta($fechaValidaHasta): void
     {
         $this->fechaValidaHasta = $fechaValidaHasta;
     }
@@ -144,7 +149,7 @@ class GenLicencia
     /**
      * @param mixed $numeroUsuarios
      */
-    public function setNumeroUsuarios( $numeroUsuarios ): void
+    public function setNumeroUsuarios($numeroUsuarios): void
     {
         $this->numeroUsuarios = $numeroUsuarios;
     }
@@ -160,7 +165,7 @@ class GenLicencia
     /**
      * @param mixed $cartera
      */
-    public function setCartera( $cartera ): void
+    public function setCartera($cartera): void
     {
         $this->cartera = $cartera;
     }
@@ -176,7 +181,7 @@ class GenLicencia
     /**
      * @param mixed $compra
      */
-    public function setCompra( $compra ): void
+    public function setCompra($compra): void
     {
         $this->compra = $compra;
     }
@@ -192,7 +197,7 @@ class GenLicencia
     /**
      * @param mixed $documental
      */
-    public function setDocumental( $documental ): void
+    public function setDocumental($documental): void
     {
         $this->documental = $documental;
     }
@@ -208,7 +213,7 @@ class GenLicencia
     /**
      * @param mixed $financiero
      */
-    public function setFinanciero( $financiero ): void
+    public function setFinanciero($financiero): void
     {
         $this->financiero = $financiero;
     }
@@ -224,7 +229,7 @@ class GenLicencia
     /**
      * @param mixed $general
      */
-    public function setGeneral( $general ): void
+    public function setGeneral($general): void
     {
         $this->general = $general;
     }
@@ -240,7 +245,7 @@ class GenLicencia
     /**
      * @param mixed $inventario
      */
-    public function setInventario( $inventario ): void
+    public function setInventario($inventario): void
     {
         $this->inventario = $inventario;
     }
@@ -256,7 +261,7 @@ class GenLicencia
     /**
      * @param mixed $recursoHumano
      */
-    public function setRecursoHumano( $recursoHumano ): void
+    public function setRecursoHumano($recursoHumano): void
     {
         $this->recursoHumano = $recursoHumano;
     }
@@ -272,7 +277,7 @@ class GenLicencia
     /**
      * @param mixed $seguridad
      */
-    public function setSeguridad( $seguridad ): void
+    public function setSeguridad($seguridad): void
     {
         $this->seguridad = $seguridad;
     }
@@ -288,7 +293,7 @@ class GenLicencia
     /**
      * @param mixed $transporte
      */
-    public function setTransporte( $transporte ): void
+    public function setTransporte($transporte): void
     {
         $this->transporte = $transporte;
     }
@@ -304,7 +309,7 @@ class GenLicencia
     /**
      * @param mixed $turno
      */
-    public function setTurno( $turno ): void
+    public function setTurno($turno): void
     {
         $this->turno = $turno;
     }
@@ -320,11 +325,26 @@ class GenLicencia
     /**
      * @param mixed $crm
      */
-    public function setCrm( $crm ): void
+    public function setCrm($crm): void
     {
         $this->crm = $crm;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTesoreria()
+    {
+        return $this->tesoreria;
+    }
+
+    /**
+     * @param mixed $tesoreria
+     */
+    public function setTesoreria($tesoreria): void
+    {
+        $this->tesoreria = $tesoreria;
+    }
 
 
 }

@@ -11,6 +11,7 @@ use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
+use App\Entity\Turno\TurSoporte;
 use App\Form\Type\RecursoHumano\ProgramacionType;
 use App\Formato\RecursoHumano\Programacion;
 use App\Formato\RecursoHumano\ResumenConceptos;
@@ -60,7 +61,7 @@ class ProgramacionController extends ControllerListenerGeneral
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuProgramacion::class)->eliminar($arrSeleccionados);
+                $this->get("UtilidadesModelo")->eliminar( RhuProgramacion::class, $arrSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_lista'));
             }
         }
@@ -237,6 +238,35 @@ class ProgramacionController extends ControllerListenerGeneral
             'arProgramacionDetalle' => $arProgramacionDetalle,
             'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("recursohumano/movimiento/nomina/programacion/cargar/soporte/{id}", name="recursohumano_movimiento_nomina_programacion_cargar_soporte")
+     */
+    public function cargarSoporte(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arProgramacion = $em->getRepository(RhuProgramacion::class)->find($id);
+        //$arrBtnActualizar = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar'];
+        $form = $this->createFormBuilder()
+            //->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            //if ($form->get('btnActualizar')->isClicked()) {
+            //}
+            if ($request->request->get('OpCargar')) {
+                $codigoSoporte = $request->request->get('OpCargar');
+                $em->getRepository(RhuProgramacion::class)->cargarContratosTurnos($codigoSoporte, $arProgramacion);
+            }
+        }
+
+        $arSoportes = $em->getRepository(TurSoporte::class)->cargarSoporte();
+        return $this->render('recursohumano/movimiento/nomina/programacion/cargarSoporte.html.twig', [
+            'arProgramacion' => $arProgramacion,
+            'arSoportes' => $arSoportes,
             'form' => $form->createView()
         ]);
     }

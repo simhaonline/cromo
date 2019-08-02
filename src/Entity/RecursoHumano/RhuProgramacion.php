@@ -102,6 +102,11 @@ class RhuProgramacion
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="estado_contabilizado", options={"default": false}, type="boolean", nullable=true)
+     */
+    private $estadoContabilizado = false;
+
+    /**
      * @ORM\Column(name="mensaje_pago", type="text", nullable=true)
      */
     private $mensajePago;
@@ -484,4 +489,23 @@ class RhuProgramacion
     {
         $this->pagosProgramacionRel = $pagosProgramacionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+
+
 }

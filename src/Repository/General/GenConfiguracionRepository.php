@@ -81,4 +81,17 @@ class GenConfiguracionRepository extends ServiceEntityRepository
         }
     }
 
+    public function planoAporte()
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenConfiguracion::class, 'c')
+            ->select('c.rutaTemporal')
+            ->addSelect('c.nombre')
+            ->addSelect('c.codigoIdentificacionFk')
+            ->addSelect('c.nit')
+            ->addSelect('c.digitoVerificacion')
+            ->where('c.codigoConfiguracionPk = 1');
+
+        return $queryBuilder->getQuery()->getSingleResult();
+    }
+
 }

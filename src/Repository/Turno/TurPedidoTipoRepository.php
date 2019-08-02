@@ -15,22 +15,15 @@ class TurPedidoTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, TurPedidoTipo::class);
     }
 
-//    public function lista()
-//    {
-//        $session = new Session();
-//        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoTipo::class, 'c')
-//            ->select('c.codigoContratoPk');
-////        if ($session->get('filtroTurNombreCliente') != '') {
-////            $queryBuilder->andWhere("tc.nombreCorto LIKE '%{$session->get('filtroTurNombreCliente')}%' ");
-////        }
-////        if ($session->get('filtroTurNitCliente') != '') {
-////            $queryBuilder->andWhere("tc.numeroIdentificacion = {$session->get('filtroTurNitCliente')} ");
-////        }
-////        if ($session->get('filtroTurCodigoCliente') != '') {
-////            $queryBuilder->andWhere("tc.codigoClientePk = {$session->get('filtroTurCodigoCliente')} ");
-////        }
-//
-//        return $queryBuilder;
-//    }
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoTipo::class, 'pt')
+            ->select('pt');
+        if ($session->get('filtroTurnoPedidoTipoNombre') != '') {
+            $queryBuilder->andWhere("pt.nombre LIKE '%{$session->get('filtroTurnoPedidoTipoNombre')}%' ");
+        }
+        return $queryBuilder;
+    }
 
 }

@@ -3,7 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\Crm\CrmContacto;
+use App\Entity\RecursoHumano\RhuAdicionalPeriodo;
 use App\Entity\Turno\TurItem;
+use App\Entity\Turno\TurPedidoTipo;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
@@ -12,18 +14,22 @@ class GenModelo extends Fixture
 {
     public function load(ObjectManager $manager )
     {
+        //$manager->createQueryBuilder()->delete(\App\Entity\General\GenModelo::class,'g')->getQuery()->execute();
         $arrayGenModulo= array(
             array('modulo'=>'Turno','modelo'=>array(
                 'TurCliente',
                 'TurContrato',
                 'TurCotizacion',
                 'TurPuesto',
+                'TurSoporte',
+                'TurSoporteDetalle',
                 'TurPedido',
                 'TurItem',
                 'TurTurno',
                 'TurFactura',
                 'TurFacturaDetalle',
-                'TurSecuencia'
+                'TurSecuencia',
+                'TurPedidoTipo',
             )),
             array('modulo'=>'Cartera','modelo'=>array(
                 'CarCliente',
@@ -143,6 +149,7 @@ class GenModelo extends Fixture
             )),
             array('modulo'=>'Recurso Humano','modelo'=>array(
                 'RhuAdicional',
+                'RhuAdicionalPeriodo',
                 'RhuAspirante',
                 'RhuBanco',
                 'RhuCargo',
@@ -193,12 +200,13 @@ class GenModelo extends Fixture
                 'RhuSolicitud',
                 'RhuSolicitudExperiencia',
                 'RhuSolicitudMotivo',
-                'RhuSsPeriodo',
+                'RhuAportePeriodo',
                 'RhuSubtipoCotizante',
                 'RhuSucursal',
                 'RhuTiempo',
                 'RhuTipoCotizacion',
                 'RhuVacacion',
+                'RhuAporte',
             )),
             array('modulo'=>'Financiero','modelo'=>array(
                 'FinAsiento',
@@ -208,6 +216,11 @@ class GenModelo extends Fixture
                 'FinCuenta',
                 'FinRegistro',
                 'FinTercero',
+            )),
+            array('modulo'=>'Tesoreria','modelo'=>array(
+                'TesTercero',
+                'TesCuentaPagar',
+                'TesCuentaPagarTipo',
             )),
             array('modulo'=>'Seguridad','modelo'=>array(
                 'SegUsuarioMOdelo',
@@ -276,18 +289,18 @@ class GenModelo extends Fixture
                 'TteTipoCombustible',
                 'TteVehiculo',
                 'TteZona',
+                'TteIntermediacion',
             )),
             array('modulo'=>'Crm','modelo'=>array(
                'CrmVisita',
                'CrmVisitaTipo',
                'CrmFase',
                'CrmNegocio',
-                'CrmContacto'
+               'CrmContacto'
             )),
         );
         foreach ($arrayGenModulo as $arrGenModulo){
             foreach ($arrGenModulo['modelo'] as $arrGenModelo){
-
                 $arModelo = $manager->getRepository(\App\Entity\General\GenModelo::class)->find($arrGenModelo);
                 if(!$arModelo) {
                     $arModelo = new \App\Entity\General\GenModelo();
@@ -300,3 +313,4 @@ class GenModelo extends Fixture
         $manager->flush();
     }
 }
+

@@ -17,6 +17,7 @@ class RhuTiempo extends Fixture
             $arTiempo->setNombre('TIEMPO COMPLETO');
             $arTiempo->setAbreviatura('C');
             $arTiempo->setOrden(1);
+            $arTiempo->setFactorHorasDia(8);
             $manager->persist($arTiempo);
         }
         $arTiempo = $manager->getRepository(\App\Entity\RecursoHumano\RhuTiempo::class)->find('TMED');
@@ -26,6 +27,7 @@ class RhuTiempo extends Fixture
             $arTiempo->setNombre('MEDIO TIEMPO');
             $arTiempo->setOrden(2);
             $arTiempo->setAbreviatura('M');
+            $arTiempo->setFactorHorasDia(4);
             $manager->persist($arTiempo);
         }
         $arTiempo = $manager->getRepository(\App\Entity\RecursoHumano\RhuTiempo::class)->find('TSAB');
@@ -35,6 +37,7 @@ class RhuTiempo extends Fixture
             $arTiempo->setNombre('SABATINO');
             $arTiempo->setOrden(3);
             $arTiempo->setAbreviatura('S');
+            $arTiempo->setFactorHorasDia(8);
             $manager->persist($arTiempo);
         }
         $manager->flush();

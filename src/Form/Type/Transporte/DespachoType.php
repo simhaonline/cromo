@@ -26,35 +26,43 @@ class DespachoType extends AbstractType {
         $builder
             ->add('despachoTipoRel', EntityType::class, array(
                 'class' => TteDespachoTipo::class,
+                'required' => true,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('dt')
                         ->orderBy('dt.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
+                'placeholder' => ''
             ))
             ->add('ciudadOrigenRel', EntityType::class, array(
                 'class' => TteCiudad::class,
+                'required' => true,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
+                'placeholder' => ''
             ))
             ->add('ciudadDestinoRel', EntityType::class, array(
                 'class' => TteCiudad::class,
+                'required' => true,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
+                'placeholder' => ''
             ))
             ->add('rutaRel', EntityType::class, array(
                 'class' => TteRuta::class,
+                'required' => true,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('rr')
                         ->orderBy('rr.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
+                'placeholder' => ''
             ))
             ->add('vrFletePago', NumberType::class)
             ->add('vrAnticipo', NumberType::class)

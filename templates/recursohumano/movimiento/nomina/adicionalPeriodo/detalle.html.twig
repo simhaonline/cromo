@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class=" form-group form-group-sm">
+                        <label for="form_txtCodigoCliente"
+                               class="col-sm-offset-1 col-sm-1 control-label">Empleado:</label>
+                        <div class="col-sm-10">
+                            <div class="row">
+                                <div class=" col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.txtCodigoEmpleado) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input id="form_txtNombreCorto" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'form_txtCodigoEmpleado', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>FECHA</th>
+            <th>CONCEPTO</th>
+            <th>DETALLE</th>
+            <th>GRUPO</th>
+            <th>IDENTIFICACION</th>
+            <th>EMPLEADO</th>
+            <th>VALOR</th>
+            <th title="Aplica dia laborado">APL</th>
+            <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox"
+                                                                                name="ChkSeleccionarTodos"
+                                                                                onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')">
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arAdicional in arAdicionales %}
+            <tr>
+                <td>{{ arAdicional.codigoAdicionalPk }}</td>
+                <td>{{ arAdicional.fecha | date('Y-m-d') }}</td>
+                <td>{{ arAdicional.conceptoNombre }}</td>
+                <td>{{ arAdicional.detalle }}</td>
+                <td>{{ arAdicional.grupo }}</td>
+                <td>{{ arAdicional.numeroIdentificacion }}</td>
+                <td>{{ arAdicional.empleadoNombreCorto }}</td>
+                <td class="numero">{{ arAdicional.vrValor | number_format() }}</td>
+                <td>{{ arAdicional.aplicaDiaLaborado ? 'SI':'NO' }}</td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                       value="{{ arAdicional.codigoAdicionalPk }}"/>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arAdicionales.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arAdicionales) }}
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-sm btn-default"
+           href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_lista') }}">Volver</a>
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_detalle_nuevo', {'codigoAdicionalPeriodo': arAdicionalPeriodo.codigoAdicionalPeriodoPk}) }}">Nuevo</a>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

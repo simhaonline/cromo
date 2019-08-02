@@ -13,7 +13,7 @@ class RhuContrato
 {
     public $infoLog = [
         "primaryKey" => "codigoContratoPk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id
@@ -51,6 +51,26 @@ class RhuContrato
      * @ORM\Column(name="codigo_tiempo_fk", type="string", length=10, nullable=true)
      */
     private $codigoTiempoFk;
+
+    /**
+     * @ORM\Column(name="codigo_salario_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoSalarioTipoFk;
+
+    /**
+     * @ORM\Column(name="ibp_cesantias_inicial", type="float", nullable=true, options={"default":0})
+     */
+    private $ibpCesantiasInicial = 0;
+
+    /**
+     * @ORM\Column(name="ibp_primas_inicial", type="float", nullable=true, options={"default":0})
+     */
+    private $ibpPrimasInicial = 0;
+
+    /**
+     * @ORM\Column(name="ibp_recargo_nocturno_inicial", type="float", nullable=true, options={"default":0})
+     */
+    private $ibpRecargoNocturnoInicial = 0;
 
     /**
      * @ORM\Column(name="factor_horas_dia", options={"default" : 0 }, type="integer", nullable=true)
@@ -103,6 +123,11 @@ class RhuContrato
     private $vrSalario = 0;
 
     /**
+     * @ORM\Column(name="vr_salario_pago", options={"default":0},type="float", nullable=true)
+     */
+    private $vrSalarioPago = 0;
+
+    /**
      * @ORM\Column(name="vr_adicional", options={"default":0},type="float", nullable=true)
      */
     private $vrAdicional = 0;
@@ -117,7 +142,7 @@ class RhuContrato
      */
     private $estadoTerminado = false;
 
-     /**
+    /**
      * @ORM\Column(name="indefinido",options={"default": false}, type="boolean")
      */
     private $indefinido = false;
@@ -231,6 +256,12 @@ class RhuContrato
      * @ORM\Column(name="auxilio_transporte", type="boolean",options={"default":false})
      */
     private $auxilioTransporte = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuSalarioTipo", inversedBy="contratosSalarioTipoRel")
+     * @ORM\JoinColumn(name="codigo_salario_tipo_fk", referencedColumnName="codigo_salario_tipo_pk")
+     */
+    protected $salarioTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="contratosEmpleadoRel")
@@ -398,6 +429,26 @@ class RhuContrato
      * @ORM\OneToMany(targetEntity="RhuRequisito", mappedBy="contratoRel")
      */
     protected $requisitosContratoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="contratoRel")
+     */
+    protected $aportesContratosContratoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteDetalle", mappedBy="contratoRel")
+     */
+    protected $aportesDetallesContratoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurSoporteContrato", mappedBy="contratoRel")
+     */
+    protected $soportesContratosContratoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuLiquidacion", mappedBy="contratoRel")
+     */
+    protected $liquidacionesContratoRel;
 
     /**
      * @return mixed
@@ -1534,4 +1585,199 @@ class RhuContrato
     {
         $this->pagosContratoRel = $pagosContratoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRequisitosContratoRel()
+    {
+        return $this->requisitosContratoRel;
+    }
+
+    /**
+     * @param mixed $requisitosContratoRel
+     */
+    public function setRequisitosContratoRel($requisitosContratoRel): void
+    {
+        $this->requisitosContratoRel = $requisitosContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosContratoRel()
+    {
+        return $this->aportesContratosContratoRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosContratoRel
+     */
+    public function setAportesContratosContratoRel($aportesContratosContratoRel): void
+    {
+        $this->aportesContratosContratoRel = $aportesContratosContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoportesContratosContratoRel()
+    {
+        return $this->soportesContratosContratoRel;
+    }
+
+    /**
+     * @param mixed $soportesContratosContratoRel
+     */
+    public function setSoportesContratosContratoRel($soportesContratosContratoRel): void
+    {
+        $this->soportesContratosContratoRel = $soportesContratosContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesDetallesContratoRel()
+    {
+        return $this->aportesDetallesContratoRel;
+    }
+
+    /**
+     * @param mixed $aportesDetallesContratoRel
+     */
+    public function setAportesDetallesContratoRel($aportesDetallesContratoRel): void
+    {
+        $this->aportesDetallesContratoRel = $aportesDetallesContratoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSalarioTipoFk()
+    {
+        return $this->codigoSalarioTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoSalarioTipoFk
+     */
+    public function setCodigoSalarioTipoFk($codigoSalarioTipoFk): void
+    {
+        $this->codigoSalarioTipoFk = $codigoSalarioTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIbpRecargoNocturnoInicial()
+    {
+        return $this->ibpRecargoNocturnoInicial;
+    }
+
+    /**
+     * @param mixed $ibpRecargoNocturnoInicial
+     */
+    public function setIbpRecargoNocturnoInicial($ibpRecargoNocturnoInicial): void
+    {
+        $this->ibpRecargoNocturnoInicial = $ibpRecargoNocturnoInicial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalarioTipoRel()
+    {
+        return $this->salarioTipoRel;
+    }
+
+    /**
+     * @param mixed $salarioTipoRel
+     */
+    public function setSalarioTipoRel($salarioTipoRel): void
+    {
+        $this->salarioTipoRel = $salarioTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidacionesContratoRel()
+    {
+        return $this->liquidacionesContratoRel;
+    }
+
+    /**
+     * @param mixed $liquidacionesContratoRel
+     */
+    public function setLiquidacionesContratoRel($liquidacionesContratoRel): void
+    {
+        $this->liquidacionesContratoRel = $liquidacionesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIbpCesantiasInicial()
+    {
+        return $this->ibpCesantiasInicial;
+    }
+
+    /**
+     * @param mixed $ibpCesantiasInicial
+     */
+    public function setIbpCesantiasInicial($ibpCesantiasInicial): void
+    {
+        $this->ibpCesantiasInicial = $ibpCesantiasInicial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIbpPrimasInicial()
+    {
+        return $this->ibpPrimasInicial;
+    }
+
+    /**
+     * @param mixed $ibpPrimasInicial
+     */
+    public function setIbpPrimasInicial($ibpPrimasInicial): void
+    {
+        $this->ibpPrimasInicial = $ibpPrimasInicial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSalarioPago()
+    {
+        return $this->vrSalarioPago;
+    }
+
+    /**
+     * @param mixed $vrSalarioPago
+     */
+    public function setVrSalarioPago($vrSalarioPago): void
+    {
+        $this->vrSalarioPago = $vrSalarioPago;
+    }
+
+
+
 }

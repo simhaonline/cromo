@@ -93,6 +93,11 @@ class TurTurno
     private $licencia = false;
 
     /**
+     * @ORM\Column(name="licencia_no_remunerada", type="boolean", options={"default":false})
+     */
+    private $licenciaNoRemunerada = false;
+
+    /**
      * @ORM\Column(name="vacacion", type="boolean", options={"default":false})
      */
     private $vacacion = false;
@@ -126,6 +131,26 @@ class TurTurno
      * @ORM\Column(name="noche", type="boolean", nullable=true, options={"default":false})
      */
     private $noche = false;
+
+    /**
+     * @ORM\Column(name="complementario", type="boolean", options={"default":false})
+     */
+    private $complementario = false;
+
+    /**
+     * @ORM\Column(name="adicional", type="boolean", options={"default":false})
+     */
+    private $adicional = false;
+
+    /**
+     * @ORM\Column(name="completo", type="boolean", options={"default":false})
+     */
+    private $completo = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurSoporteHora", mappedBy="turnoRel")
+     */
+    protected $soportesHorasTurnoRel;
 
     /**
      * @return mixed
@@ -413,6 +438,86 @@ class TurTurno
     public function setNoche($noche): void
     {
         $this->noche = $noche;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComplementario()
+    {
+        return $this->complementario;
+    }
+
+    /**
+     * @param mixed $complementario
+     */
+    public function setComplementario($complementario): void
+    {
+        $this->complementario = $complementario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicional()
+    {
+        return $this->adicional;
+    }
+
+    /**
+     * @param mixed $adicional
+     */
+    public function setAdicional($adicional): void
+    {
+        $this->adicional = $adicional;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompleto()
+    {
+        return $this->completo;
+    }
+
+    /**
+     * @param mixed $completo
+     */
+    public function setCompleto($completo): void
+    {
+        $this->completo = $completo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoportesHorasTurnoRel()
+    {
+        return $this->soportesHorasTurnoRel;
+    }
+
+    /**
+     * @param mixed $soportesHorasTurnoRel
+     */
+    public function setSoportesHorasTurnoRel($soportesHorasTurnoRel): void
+    {
+        $this->soportesHorasTurnoRel = $soportesHorasTurnoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLicenciaNoRemunerada()
+    {
+        return $this->licenciaNoRemunerada;
+    }
+
+    /**
+     * @param mixed $licenciaNoRemunerada
+     */
+    public function setLicenciaNoRemunerada($licenciaNoRemunerada): void
+    {
+        $this->licenciaNoRemunerada = $licenciaNoRemunerada;
     }
 
 

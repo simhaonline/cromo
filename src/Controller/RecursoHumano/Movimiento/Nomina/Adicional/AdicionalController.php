@@ -11,6 +11,11 @@ use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\AdicionalType;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -33,33 +38,35 @@ class AdicionalController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $this->request = $request;
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoEmpleado', TextType::class,['required' => false])
+            ->add('estadoInactivo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroRhuAdicionalEstadoInactivo'), 'required' => false])
+            ->add('estadoInactivoPeriodo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroRhuAdicionalEstadoInactivo'), 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add( 'btnExcel', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroRhuEmpleadoCodigo',  $form->get('txtCodigoEmpleado')->getData());
 
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Adicionales");
+            if ($form->get('btnExcel')->isClicked()) {
+
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            /*if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(RhuAdicional::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicional_lista'));
-            }
+            }*/
         }
+        $arAdicionales = $paginator->paginate($em->getRepository(RhuAdicional::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/nomina/adicional/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arAdicionales' => $arAdicionales,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -77,7 +84,7 @@ class AdicionalController extends ControllerListenerGeneral
             $arAdicional = $em->getRepository(RhuAdicional::class)->find($id);
         } else {
             $arAdicional->setFecha(new \DateTime('now'));
-            $arAdicional->setPermanente(true);
+            $arAdicional->setAplicaNomina(true);
         }
         $form = $this->createForm(AdicionalType::class, $arAdicional);
         $form->handleRequest($request);
@@ -89,9 +96,6 @@ class AdicionalController extends ControllerListenerGeneral
                     $arAdicional->setEmpleadoRel($arEmpleado);
                     $arAdicional->setContratoRel($arContrato);
                     $arAdicional->setPermanente(1);
-                    if($id == 0) {
-                        $arAdicional->setAplicaNomina(1);
-                    }
                     $em->persist($arAdicional);
                     $em->flush();
                     return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicional_lista'));

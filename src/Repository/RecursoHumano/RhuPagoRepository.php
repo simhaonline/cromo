@@ -11,8 +11,10 @@ use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
+use App\Entity\RecursoHumano\RhuVacacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuPagoRepository extends ServiceEntityRepository
 {
@@ -73,31 +75,61 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaHastaContrato());
 
         $arrDatosGenerales = array(
+            'pago' => $arPago,
             'devengado' => 0,
             'deduccion' => 0,
             'ingresoBaseCotizacion' => 0,
             'ingresoBasePrestacion' => 0,
             'neto' => 0);
-        $valorDia = $arContrato->getVrSalario() / 30;
-        $valorHora = $valorDia / $arContrato->getFactorHorasDia();
+        $valorDia = $arProgramacionDetalle->getVrDia();
+        $valorHora = $arProgramacionDetalle->getVrHora();
+        $factorHorasDia = $arProgramacionDetalle->getFactorHorasDia();
         $auxilioTransporte = $arConfiguracion['vrAuxilioTransporte'];
         $diaAuxilioTransporte = $auxilioTransporte / 30;
         $salarioMinimo = $arConfiguracion['vrSalarioMinimo'];
         $ibcVacaciones = 0;
+
+        //Vacaciones
+        $arVacaciones = $em->getRepository(RhuVacacion::class)->periodo($arProgramacionDetalle->getFechaDesdeContrato(), $arProgramacionDetalle->getFechaHastaContrato(), $arProgramacionDetalle->getCodigoEmpleadoFk());
+        foreach ($arVacaciones as $arVacacion) {
+            if ($arVacacion['diasDisfrutadosReales'] > 0) {
+                $arConcepto = $em->getRepository(RhuConcepto::class)->find('51');
+                $arPagoDetalle = new RhuPagoDetalle();
+                $fechaDesde = $arProgramacionDetalle->getFechaDesdeContrato();
+                $fechaHasta = $arProgramacionDetalle->getFechaHasta();
+                if ($arVacacion['fechaDesdeDisfrute'] > $fechaDesde) {
+                    $fechaDesde = $arVacacion['fechaDesdeDisfrute'];
+                }
+                if ($arVacacion['fechaHastaDisfrute'] < $fechaHasta) {
+                    $fechaHasta = $arVacacion['fechaHastaDisfrute'];
+                }
+                $diasVacaciones = $fechaDesde->diff($fechaHasta);
+                $diasVacaciones = $diasVacaciones->format('%a');
+                $diasVacaciones += 1;
+                $horas = $diasVacaciones * $factorHorasDia;
+                $ibcVacaciones = $diasVacaciones * $arVacacion['vrIbcPromedio'];
+                $arPagoDetalle->setDias($diasVacaciones);
+                $arPagoDetalle->setHoras($horas);
+                $arPagoDetalle->setVacacionRel($em->getReference(RhuVacacion::class, $arVacacion['codigoVacacionPk']));
+                //$arPagoDetalle->setFechaDesdeNovedad($fechaDesde);
+                //$arPagoDetalle->setFechaHastaNovedad($fechaHasta);
+                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, 0);
+                $arPagoDetalle->setVrIngresoBaseCotizacion($ibcVacaciones);
+                $em->persist($arPagoDetalle);
+            }
+        }
+
 
         //Adicionales
         $arAdicionales = $em->getRepository(RhuAdicional::class)->programacionPago($arProgramacionDetalle->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getCodigoPagoTipoFk(), $arProgramacion->getFechaDesde()->format('Y/m/d'), $arProgramacion->getFechaHasta()->format('Y/m/d'));
         foreach ($arAdicionales as $arAdicional) {
             $arConcepto = $em->getRepository(RhuConcepto::class)->find($arAdicional['codigoConceptoFk']);
             $arPagoDetalle = new RhuPagoDetalle();
-            $arPagoDetalle->setPagoRel($arPago);
-            $arPagoDetalle->setConceptoRel($arConcepto);
             $pagoDetalle = $arAdicional['vrValor'];
-//            if ($arPagoAdicional->getAplicaDiaLaborado() == 1) {
-//                $diasPeriodo = $arCentroCosto->getPeriodoPagoRel()->getDias();
-//                $valorDia = $arPagoAdicional->getValor() / $diasPeriodo;
-//                $douPagoDetalle = $valorDia * $arProgramacionPagoDetalle->getDias();
-//            }
+            if ($arAdicional['aplicaDiaLaborado']) {
+                $valorDia = $arAdicional['vrValor'] / $arProgramacion->getDias();
+                $pagoDetalle = $valorDia * $arProgramacionDetalle->getDias();
+            }
 //            if ($arPagoAdicional->getAplicaDiaLaboradoSinDescanso() == 1) {
 //                $diasPeriodo = $arCentroCosto->getPeriodoPagoRel()->getDias();
 //                $valorDia = $arPagoAdicional->getValor() / $diasPeriodo;
@@ -110,7 +142,7 @@ class RhuPagoRepository extends ServiceEntityRepository
 //                    $devengadoPrestacional += $douPagoDetalle;
 //                }
 //            }
-//            $arPagoDetalle->setNumeroHoras($arPagoAdicional->getHoras());
+            //$arPagoDetalle->setNumeroHoras($arPagoAdicional->getHoras());
             $arPagoDetalle->setDetalle($arAdicional['detalle']);
             $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
             $em->persist($arPagoDetalle);
@@ -123,12 +155,10 @@ class RhuPagoRepository extends ServiceEntityRepository
                 /** @var  $arConcepto RhuConcepto */
                 $arConcepto = $arConceptoHora[$arrHora['clave']]->getConceptoRel();
                 $arPagoDetalle = new RhuPagoDetalle();
-                $arPagoDetalle->setPagoRel($arPago);
                 $valorHoraDetalle = ($valorHora * $arConcepto->getPorcentaje()) / 100;
                 $pagoDetalle = $valorHoraDetalle * $arrHora['cantidad'];
                 $arPagoDetalle->setVrHora($valorHoraDetalle);
                 $arPagoDetalle->setPorcentaje($arConcepto->getPorcentaje());
-                $arPagoDetalle->setConceptoRel($arConcepto);
                 $arPagoDetalle->setHoras($arrHora['cantidad']);
                 $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
                 $em->persist($arPagoDetalle);
@@ -162,8 +192,6 @@ class RhuPagoRepository extends ServiceEntityRepository
                     }
                     $pagoDetalle = $cuota;
                     $arPagoDetalle = new RhuPagoDetalle();
-                    $arPagoDetalle->setPagoRel($arPago);
-                    $arPagoDetalle->setConceptoRel($arConcepto);
                     $arPagoDetalle->setDetalle($arCredito->getCreditoTipoRel()->getNombre());
                     $arPagoDetalle->setCreditoRel($arCredito);
                     $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
@@ -193,8 +221,6 @@ class RhuPagoRepository extends ServiceEntityRepository
                     $pagoDetalle = round($pagoDetalle);
 
                     $arPagoDetalle = new RhuPagoDetalle();
-                    $arPagoDetalle->setPagoRel($arPago);
-                    $arPagoDetalle->setConceptoRel($arConcepto);
                     $arPagoDetalle->setPorcentaje($porcentajeSalud);
                     $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
                     $em->persist($arPagoDetalle);
@@ -221,10 +247,7 @@ class RhuPagoRepository extends ServiceEntityRepository
 
                     $pagoDetalle = ($ingresoBaseCotizacionPension * $porcentajePension) / 100;
                     $pagoDetalle = round($pagoDetalle);
-
                     $arPagoDetalle = new RhuPagoDetalle();
-                    $arPagoDetalle->setPagoRel($arPago);
-                    $arPagoDetalle->setConceptoRel($arConcepto);
                     $arPagoDetalle->setPorcentaje($porcentajePension);
                     $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
                     $em->persist($arPagoDetalle);
@@ -241,8 +264,6 @@ class RhuPagoRepository extends ServiceEntityRepository
                             $pagoDetalle = round($pagoDetalle);
                             //Se guarda el concepto deduccion de fondo solidaridad pensional
                             $arPagoDetalle = new RhuPagoDetalle();
-                            $arPagoDetalle->setPagoRel($arPago);
-                            $arPagoDetalle->setConceptoRel($arConceptoFondoSolidaridadPension);
                             $arPagoDetalle->setPorcentaje($porcentajeFondo);
                             $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConceptoFondoSolidaridadPension, $pagoDetalle);
                             $em->persist($arPagoDetalle);
@@ -259,8 +280,6 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAuxilioTransporteFk']);
                 $pagoDetalle = round($diaAuxilioTransporte * $arProgramacionDetalle->getDiasTransporte());
                 $arPagoDetalle = new RhuPagoDetalle();
-                $arPagoDetalle->setPagoRel($arPago);
-                $arPagoDetalle->setConceptoRel($arConcepto);
                 $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
                 $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
                 $em->persist($arPagoDetalle);
@@ -326,7 +345,11 @@ class RhuPagoRepository extends ServiceEntityRepository
 
     private function getValoresPagoDetalle(&$arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle)
     {
+        $arPagoDetalle->setPagoRel($arrDatosGenerales['pago']);
         $arPagoDetalle->setVrPago($pagoDetalle);
+        if($arConcepto) {
+            $arPagoDetalle->setConceptoRel($arConcepto);
+        }
         $pagoDetalleOperado = $pagoDetalle * $arConcepto->getOperacion();
         $arPagoDetalle->setVrPagoOperado($pagoDetalleOperado);
         $arPagoDetalle->setOperacion($arConcepto->getOperacion());
@@ -376,5 +399,87 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $this->_em->createQueryBuilder()
             ->from(RhuPago::class, 'p')
             ->select("p.codigoProgramacionDetalleFk = {$id}")->getQuery()->execute();
+    }
+
+    public function informe()
+    {
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuPago::class, 'p')
+            ->select('p');
+        if ($session->get('filtroRhuInformePagoCodigoEmpleado') != null) {
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoCodigoEmpleado')}");
+        }
+        if ($session->get('filtroRhuInformePagoFechaDesde') != null) {
+            $queryBuilder->andWhere("p.fechaDesde >= '{$session->get('filtroRhuInformePagoFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroRhuInformePagoFechaHasta') != null) {
+            $queryBuilder->andWhere("p.fechaHasta <= '{$session->get('filtroRhuInformePagoFechaHasta')} 23:59:59'");
+        }
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param $fechaDesde \DateTime | string
+     * @param $fechaHasta \DateTime | string
+     * @param $codigoContrato
+     * @return int
+     */
+    public function diasAusentismo($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $fechaDesde = $fechaDesde instanceof \DateTime ? $fechaDesde->format("Y-m-d") : $fechaDesde;
+        $fechaHasta = $fechaHasta instanceof \DateTime ? $fechaHasta->format("Y-m-d") : $fechaHasta;
+
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(p.diasAusentismo) as diasAusentismo FROM App\Entity\RecursoHumano\RhuPago p "
+            . "WHERE p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $intDiasAusentismo = $arrayResultado[0]['diasAusentismo'];
+        if ($intDiasAusentismo == null) {
+            $intDiasAusentismo = 0;
+        }
+        return $intDiasAusentismo;
+    }
+
+    public function ibpSalario($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(p.vrSalario) as ibp FROM FROM App\Entity\RecursoHumano\RhuPago p "
+            . "WHERE p.estadoAprobado = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $ibp = $arrayResultado[0]['ibp'];
+        if ($ibp == null) {
+            $ibp = 0;
+        }
+        return $ibp;
+    }
+
+    public function listaImpresionDql($codigoProgramacionPago = "",  $porFecha = false, $fechaDesde = "", $fechaHasta = "", $codigoPagoTipo = "", $codigoGrupo = "")
+    {
+        $qb = $this->_em->createQueryBuilder()->from(RhuPago::class, 'p');
+        $qb->select('p,e')
+            ->addSelect('abs(e.numeroIdentificacion) AS HIDDEN ordered')
+            ->join('p.empleadoRel', 'e')
+            ->leftJoin('p.contratoRel', 'c')
+            ->where('p.codigoPagoPk <> 0');
+        if ($codigoPagoTipo != "") {
+            $qb->andWhere("p.codigoPagoTipoFk = {$codigoPagoTipo}");
+        }
+        if ($codigoGrupo != "") {
+            $qb->andWhere(" c.codigoGrupoFk = {$codigoGrupo}");
+        }
+        if ($codigoProgramacionPago != "") {
+            $qb->andWhere("p.codigoProgramacionFk = {$codigoProgramacionPago}");
+        }
+        if ($porFecha == true) {
+            if ($fechaDesde != "" && $fechaHasta != "") {
+                $qb->andWhere(" (p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "')");
+            }
+        }
+        $qb->orderBy('ordered', 'ASC');
+        return $qb->getDQL();
     }
 }

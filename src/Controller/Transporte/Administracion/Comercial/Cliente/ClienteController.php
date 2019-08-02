@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteCondicionManejo;
 use App\Form\Type\Transporte\CondicionFleteType;
 use App\Form\Type\Transporte\CondicionManejoType;
 use App\Formato\Transporte\Cliente;
+use App\General\General;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteClienteCondicion;
@@ -47,6 +48,7 @@ class ClienteController extends ControllerListenerGeneral
             ->add('txtCodigoCliente', TextType::class, ['label' => 'Codigo cliente: ', 'required' => false, 'data' => $session->get('filtroTteCodigoCliente')])
             ->add('txtNombreCorto', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNombreCliente')])
             ->add('txtNumeroIdentificacion', NumberType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNumeroIdentificacionCliente')])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn-sm btn btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -54,6 +56,9 @@ class ClienteController extends ControllerListenerGeneral
             $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
             $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
             $session->set('filtroTteNitCliente', $form->get('txtNumeroIdentificacion')->getData());
+        }
+        if ($form->get('btnExcel')->isClicked()) {
+            General::get()->setExportar($em->getRepository(TteCliente::class)->lista()->getQuery()->getResult(), "Informe clientes");
         }
         $arClientes = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('transporte/administracion/comercial/cliente/lista.html.twig',
@@ -78,9 +83,21 @@ class ClienteController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $em->persist($arCliente);
-                $em->flush();
-                return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
+                if ($id === 0 ){
+                    $arCliente = $em->getRepository(TteCliente::class)->findBy(['numeroIdentificacion'=>(int)$form->get('numeroIdentificacion')->getData()]);
+                    if(!$arCliente){
+                        $em->persist($arCliente);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
+                    }else{
+                        Mensajes::error("El cliente ya existe");
+                        return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_lista'));
+                    }
+                }else{
+                    $em->persist($arCliente);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_detalle', ['id' => $arCliente->getCodigoClientePk()]));
+                }
             }
         }
         return $this->render('transporte/administracion/comercial/cliente/nuevo.html.twig', [

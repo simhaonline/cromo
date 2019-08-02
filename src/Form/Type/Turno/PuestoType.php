@@ -7,6 +7,7 @@ namespace App\Form\Type\Turno;
 use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Turno\TurProgramador;
 use App\Entity\Turno\TurPuesto;
+use App\Entity\Turno\TurPuestoTipo;
 use Doctrine\ORM\EntityRepository;
 
 use Proxies\__CG__\App\Entity\General\GenCiudad;
@@ -47,6 +48,14 @@ class PuestoType  extends AbstractType
                 'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('cc')
                         ->orderBy('cc.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+            ])
+            ->add('puestoTipoRel',EntityType::class,[
+                'class' => TurPuestoTipo::class,
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('pt')
+                        ->orderBy('pt.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
             ])

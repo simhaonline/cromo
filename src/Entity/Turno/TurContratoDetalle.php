@@ -97,7 +97,7 @@ class TurContratoDetalle
     private $vrPrecioMinimo = 0;
 
     /**
-     * @ORM\Column(name="vr_precio_ajustado", type="float")
+     * @ORM\Column(name="vr_precio_ajustado", type="float", options={"default":0})
      */
     private $vrPrecioAjustado = 0;
 
@@ -167,6 +167,11 @@ class TurContratoDetalle
     private $estadoTerminado = false;
 
     /**
+     * @ORM\Column(name="liquidar_dias_reales", type="boolean", options={"default":false})
+     */
+    private $liquidarDiasReales = false;
+
+    /**
      * @ORM\Column(name="vr_salario_base", type="float")
      */
     private $vrSalarioBase = 0;
@@ -204,6 +209,16 @@ class TurContratoDetalle
      * @ORM\JoinColumn(name="codigo_puesto_fk", referencedColumnName="codigo_puesto_pk")
      */
     protected $puestoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurPrototipo", mappedBy="contratoDetalleRel")
+     */
+    protected $prototiposContratoDetalleRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="contratoDetalleRel")
+     */
+    protected $pedidosDetallesContratoDetalleRel;
 
     /**
      * @return mixed
@@ -797,7 +812,53 @@ class TurContratoDetalle
         $this->periodo = $periodo;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPrototiposContratoDetalleRel()
+    {
+        return $this->prototiposContratoDetalleRel;
+    }
 
+    /**
+     * @param mixed $prototiposContratoDetalleRel
+     */
+    public function setPrototiposContratoDetalleRel($prototiposContratoDetalleRel): void
+    {
+        $this->prototiposContratoDetalleRel = $prototiposContratoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesContratoDetalleRel()
+    {
+        return $this->pedidosDetallesContratoDetalleRel;
+    }
+
+    /**
+     * @param mixed $pedidosDetallesContratoDetalleRel
+     */
+    public function setPedidosDetallesContratoDetalleRel($pedidosDetallesContratoDetalleRel): void
+    {
+        $this->pedidosDetallesContratoDetalleRel = $pedidosDetallesContratoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarDiasReales()
+    {
+        return $this->liquidarDiasReales;
+    }
+
+    /**
+     * @param mixed $liquidarDiasReales
+     */
+    public function setLiquidarDiasReales($liquidarDiasReales): void
+    {
+        $this->liquidarDiasReales = $liquidarDiasReales;
+    }
 
 
 }

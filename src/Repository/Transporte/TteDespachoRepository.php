@@ -462,7 +462,7 @@ class TteDespachoRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function anular($arDespacho): string
+    public function anular($arDespacho)
     {
         $respuesta = "";
         $em = $this->getEntityManager();
@@ -498,10 +498,8 @@ class TteDespachoRepository extends ServiceEntityRepository
             $em->persist($arDespacho);
             $em->flush();
         } else {
-            $respuesta = "El despacho ya esta anulado";
+            Mensajes::error("El despacho no puede estar anulado ni contabilizado y debe estar previamente aprobado");
         }
-
-        return $respuesta;
     }
 
     /**
@@ -1787,13 +1785,15 @@ class TteDespachoRepository extends ServiceEntityRepository
     public function fletePagoDetallado($fechaDesde, $fechaHasta)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
-            ->select("d.codigoDespachoTipoFk")
+            ->select("d.codigoPoseedorFk")
+            ->addSelect('d.codigoDespachoTipoFk')
             ->addSelect("SUM(d.vrFletePago) as fletePago")
             ->leftJoin('d.despachoTipoRel', 'dt')
             ->where("d.fechaSalida >='" . $fechaDesde . "' AND d.fechaSalida <= '" . $fechaHasta . "'")
             ->andWhere('dt.viaje = 1')
             ->andWhere('d.estadoAprobado = 1')
-            ->groupBy('d.codigoDespachoTipoFk');
+            ->groupBy('d.codigoPoseedorFk')
+            ->addGroupBy('d.codigoDespachoTipoFk');
         $arrResultado = $queryBuilder->getQuery()->getResult();
         return $arrResultado;
     }

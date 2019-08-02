@@ -108,9 +108,25 @@ class TteFacturaTipo
     protected $guiasTiposFacturaTipoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionDetalle", mappedBy="facturaTipoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteIntermediacionVenta", mappedBy="facturaTipoRel")
      */
-    protected $intermediacionesDetallesFacturaTipoRel;
+    protected $intermediacionesVentasFacturaTipoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -123,7 +139,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoFacturaTipoPk
      */
-    public function setCodigoFacturaTipoPk( $codigoFacturaTipoPk ): void
+    public function setCodigoFacturaTipoPk($codigoFacturaTipoPk): void
     {
         $this->codigoFacturaTipoPk = $codigoFacturaTipoPk;
     }
@@ -139,7 +155,7 @@ class TteFacturaTipo
     /**
      * @param mixed $nombre
      */
-    public function setNombre( $nombre ): void
+    public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
     }
@@ -155,7 +171,7 @@ class TteFacturaTipo
     /**
      * @param mixed $consecutivo
      */
-    public function setConsecutivo( $consecutivo ): void
+    public function setConsecutivo($consecutivo): void
     {
         $this->consecutivo = $consecutivo;
     }
@@ -171,7 +187,7 @@ class TteFacturaTipo
     /**
      * @param mixed $resolucionFacturacion
      */
-    public function setResolucionFacturacion( $resolucionFacturacion ): void
+    public function setResolucionFacturacion($resolucionFacturacion): void
     {
         $this->resolucionFacturacion = $resolucionFacturacion;
     }
@@ -187,7 +203,7 @@ class TteFacturaTipo
     /**
      * @param mixed $guiaFactura
      */
-    public function setGuiaFactura( $guiaFactura ): void
+    public function setGuiaFactura($guiaFactura): void
     {
         $this->guiaFactura = $guiaFactura;
     }
@@ -203,7 +219,7 @@ class TteFacturaTipo
     /**
      * @param mixed $prefijo
      */
-    public function setPrefijo( $prefijo ): void
+    public function setPrefijo($prefijo): void
     {
         $this->prefijo = $prefijo;
     }
@@ -219,7 +235,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoFacturaClaseFk
      */
-    public function setCodigoFacturaClaseFk( $codigoFacturaClaseFk ): void
+    public function setCodigoFacturaClaseFk($codigoFacturaClaseFk): void
     {
         $this->codigoFacturaClaseFk = $codigoFacturaClaseFk;
     }
@@ -235,7 +251,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoCuentaCobrarTipoFk
      */
-    public function setCodigoCuentaCobrarTipoFk( $codigoCuentaCobrarTipoFk ): void
+    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
     {
         $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
     }
@@ -251,7 +267,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoCuentaIngresoFleteFk
      */
-    public function setCodigoCuentaIngresoFleteFk( $codigoCuentaIngresoFleteFk ): void
+    public function setCodigoCuentaIngresoFleteFk($codigoCuentaIngresoFleteFk): void
     {
         $this->codigoCuentaIngresoFleteFk = $codigoCuentaIngresoFleteFk;
     }
@@ -267,7 +283,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoCuentaClienteFk
      */
-    public function setCodigoCuentaClienteFk( $codigoCuentaClienteFk ): void
+    public function setCodigoCuentaClienteFk($codigoCuentaClienteFk): void
     {
         $this->codigoCuentaClienteFk = $codigoCuentaClienteFk;
     }
@@ -283,7 +299,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoComprobanteFk
      */
-    public function setCodigoComprobanteFk( $codigoComprobanteFk ): void
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
     {
         $this->codigoComprobanteFk = $codigoComprobanteFk;
     }
@@ -299,7 +315,7 @@ class TteFacturaTipo
     /**
      * @param mixed $codigoCuentaIngresoFleteIntermediacionFk
      */
-    public function setCodigoCuentaIngresoFleteIntermediacionFk( $codigoCuentaIngresoFleteIntermediacionFk ): void
+    public function setCodigoCuentaIngresoFleteIntermediacionFk($codigoCuentaIngresoFleteIntermediacionFk): void
     {
         $this->codigoCuentaIngresoFleteIntermediacionFk = $codigoCuentaIngresoFleteIntermediacionFk;
     }
@@ -315,57 +331,9 @@ class TteFacturaTipo
     /**
      * @param mixed $operacionComercial
      */
-    public function setOperacionComercial( $operacionComercial ): void
+    public function setOperacionComercial($operacionComercial): void
     {
         $this->operacionComercial = $operacionComercial;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturasFacturaTipoRel()
-    {
-        return $this->facturasFacturaTipoRel;
-    }
-
-    /**
-     * @param mixed $facturasFacturaTipoRel
-     */
-    public function setFacturasFacturaTipoRel( $facturasFacturaTipoRel ): void
-    {
-        $this->facturasFacturaTipoRel = $facturasFacturaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiasTiposFacturaTipoRel()
-    {
-        return $this->guiasTiposFacturaTipoRel;
-    }
-
-    /**
-     * @param mixed $guiasTiposFacturaTipoRel
-     */
-    public function setGuiasTiposFacturaTipoRel( $guiasTiposFacturaTipoRel ): void
-    {
-        $this->guiasTiposFacturaTipoRel = $guiasTiposFacturaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIntermediacionesDetallesFacturaTipoRel()
-    {
-        return $this->intermediacionesDetallesFacturaTipoRel;
-    }
-
-    /**
-     * @param mixed $intermediacionesDetallesFacturaTipoRel
-     */
-    public function setIntermediacionesDetallesFacturaTipoRel( $intermediacionesDetallesFacturaTipoRel ): void
-    {
-        $this->intermediacionesDetallesFacturaTipoRel = $intermediacionesDetallesFacturaTipoRel;
     }
 
     /**
@@ -414,6 +382,54 @@ class TteFacturaTipo
     public function setCodigoCuentaIngresoInicialFijoManejoFk($codigoCuentaIngresoInicialFijoManejoFk): void
     {
         $this->codigoCuentaIngresoInicialFijoManejoFk = $codigoCuentaIngresoInicialFijoManejoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasFacturaTipoRel()
+    {
+        return $this->facturasFacturaTipoRel;
+    }
+
+    /**
+     * @param mixed $facturasFacturaTipoRel
+     */
+    public function setFacturasFacturaTipoRel($facturasFacturaTipoRel): void
+    {
+        $this->facturasFacturaTipoRel = $facturasFacturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasTiposFacturaTipoRel()
+    {
+        return $this->guiasTiposFacturaTipoRel;
+    }
+
+    /**
+     * @param mixed $guiasTiposFacturaTipoRel
+     */
+    public function setGuiasTiposFacturaTipoRel($guiasTiposFacturaTipoRel): void
+    {
+        $this->guiasTiposFacturaTipoRel = $guiasTiposFacturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacionesVentasFacturaTipoRel()
+    {
+        return $this->intermediacionesVentasFacturaTipoRel;
+    }
+
+    /**
+     * @param mixed $intermediacionesVentasFacturaTipoRel
+     */
+    public function setIntermediacionesVentasFacturaTipoRel($intermediacionesVentasFacturaTipoRel): void
+    {
+        $this->intermediacionesVentasFacturaTipoRel = $intermediacionesVentasFacturaTipoRel;
     }
 
 

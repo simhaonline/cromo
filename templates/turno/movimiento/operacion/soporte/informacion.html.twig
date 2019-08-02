@@ -1,0 +1,30 @@
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
+    <tr>
+        <td class="titulo">CODIGO:</td>
+        <td class="td-in-well">{{ arSoporte.codigoSoportePk }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+    </tr>
+    <tr>
+        <td class="titulo">DESDE:</td>
+        <td class="td-in-well">{{ arSoporte.fechaDesde | date('Y-m-d') }}</td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+    </tr>
+    <tr>
+        <td class="titulo">HASTA:</td>
+        <td class="td-in-well">{{ arSoporte.fechaHasta | date('Y-m-d') }}</td>
+        <td class="titulo"></td>
+        <td class="td-in-well"></td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+    </tr>
+    <tr>
+        <td class="titulo">COMENTARIO:</td>
+        <td class="td-in-well" colspan="5" colspan="5">{{ arSoporte.comentario }}</td>
+    </tr>
+</table>

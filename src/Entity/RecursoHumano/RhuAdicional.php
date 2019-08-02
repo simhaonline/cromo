@@ -33,6 +33,11 @@ class RhuAdicional
     private $codigoEmpleadoFk;
 
     /**
+     * @ORM\Column(name="codigo_adicional_periodo_fk", type="integer", nullable=true)
+     */
+    private $codigoAdicionalPeriodoFk;
+
+    /**
      * @ORM\Column(name="codigo_contrato_fk", type="integer", nullable=true)
      */
     private $codigoContratoFk;
@@ -125,6 +130,28 @@ class RhuAdicional
     protected $contratoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RhuAdicionalPeriodo", inversedBy="adicionalesPeriodoRel")
+     * @ORM\JoinColumn(name="codigo_adicional_periodo_fk", referencedColumnName="codigo_adicional_periodo_pk")
+     */
+    protected $adicionalPeriodoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoAdicionalPk()
@@ -170,6 +197,22 @@ class RhuAdicional
     public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
     {
         $this->codigoEmpleadoFk = $codigoEmpleadoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAdicionalPeriodoFk()
+    {
+        return $this->codigoAdicionalPeriodoFk;
+    }
+
+    /**
+     * @param mixed $codigoAdicionalPeriodoFk
+     */
+    public function setCodigoAdicionalPeriodoFk($codigoAdicionalPeriodoFk): void
+    {
+        $this->codigoAdicionalPeriodoFk = $codigoAdicionalPeriodoFk;
     }
 
     /**
@@ -250,6 +293,22 @@ class RhuAdicional
     public function setAplicaDiaLaborado($aplicaDiaLaborado): void
     {
         $this->aplicaDiaLaborado = $aplicaDiaLaborado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAplicaNomina()
+    {
+        return $this->aplicaNomina;
+    }
+
+    /**
+     * @param mixed $aplicaNomina
+     */
+    public function setAplicaNomina($aplicaNomina): void
+    {
+        $this->aplicaNomina = $aplicaNomina;
     }
 
     /**
@@ -431,18 +490,19 @@ class RhuAdicional
     /**
      * @return mixed
      */
-    public function getAplicaNomina()
+    public function getAdicionalPeriodoRel()
     {
-        return $this->aplicaNomina;
+        return $this->adicionalPeriodoRel;
     }
 
     /**
-     * @param mixed $aplicaNomina
+     * @param mixed $adicionalPeriodoRel
      */
-    public function setAplicaNomina( $aplicaNomina ): void
+    public function setAdicionalPeriodoRel($adicionalPeriodoRel): void
     {
-        $this->aplicaNomina = $aplicaNomina;
+        $this->adicionalPeriodoRel = $adicionalPeriodoRel;
     }
+
 
 
 }

@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Proceso\Contabilidad;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteIntermediacionDetalle;
+use App\Entity\Transporte\TteIntermediacionVenta;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,12 +44,12 @@ class IntermediacionController extends Controller
             }
             if ($form->get('btnContabilizar')->isClicked()) {
                 $arr = $request->request->get('ChkSeleccionar');
-                $respuesta = $this->getDoctrine()->getRepository(TteIntermediacionDetalle::class)->contabilizar($arr);
+                $respuesta = $this->getDoctrine()->getRepository(TteIntermediacionVenta::class)->contabilizar($arr);
             }
         }
-        $arIntermediacionDetalles = $paginator->paginate($em->getRepository(TteIntermediacionDetalle::class)->listaContabilizar(), $request->query->getInt('page', 1),100);
+        $arIntermediacionVentas = $paginator->paginate($em->getRepository(TteIntermediacionVenta::class)->listaContabilizar(), $request->query->getInt('page', 1),100);
         return $this->render('transporte/proceso/contabilidad/intermediacion/lista.html.twig',
-            ['arIntermediacionDetalles' => $arIntermediacionDetalles,
+            ['arIntermediacionVentas' => $arIntermediacionVentas,
             'form' => $form->createView()]);
     }
 

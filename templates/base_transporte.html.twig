@@ -72,6 +72,15 @@
                     </ul>
                     <!-- /.nav-third-level -->
                 </li>
+                <li>
+                    <a href="#">Financiero<span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('transporte_movimiento_financiero_intermediacion_lista') }}">Intermediación</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
             </ul>
             <!-- /.nav-second-level -->
         </li>
@@ -260,7 +269,6 @@
                     <a href="#">General <span class="fa arrow"></span></a>
                     <ul>
                         <li>
-                            <a href="{{ path('transporte_proceso_transporte_general_intermediacion') }}">Intermediacion</a>
                             <a href="{{ path('transporte_proceso_transporte_general_cierre') }}">Cierre</a>
                             <a href="{{ path('transporte_proceso_general_cliente_unificar') }}">Unificar cliente</a>
                         </li>

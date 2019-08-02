@@ -78,4 +78,25 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->where('e.codigoEmpleadoPk <> 0');
         return $queryBuilder->getQuery()->execute();
     }
+
+    public function listaBuscarTurno(){
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class,'e')
+            ->select('e.codigoContratoFk')
+            ->addSelect('e.codigoEmpleadoPk')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.estadoContrato')
+            ->where('e.codigoEmpleadoPk <> 0');
+        if($session->get('filtroTurEmpleadoCodigo')){
+            $queryBuilder->andWhere("e.codigoEmpleadoPk = {$session->get('filtroTurEmpleadoCodigo')}");
+        }
+        if($session->get('filtroTurEmpleadoNombre')){
+            $queryBuilder->andWhere("e.nombreCorto LIKE '%{$session->get('filtroTurEmpleadoNombre')}%'");
+        }
+        if($session->get('filtroTurEmpleadoIdentificacion')){
+            $queryBuilder->andWhere("e.numeroIdentificacion = '{$session->get('filtroTurEmpleadoIdentificacion')}' ");
+        }
+        return $queryBuilder;
+    }
 }

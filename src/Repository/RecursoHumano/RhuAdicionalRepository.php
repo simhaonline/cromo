@@ -4,8 +4,10 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuCredito;
+use App\Entity\Turno\TurPedido;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuAdicionalRepository extends ServiceEntityRepository
 {
@@ -67,6 +69,7 @@ class RhuAdicionalRepository extends ServiceEntityRepository
             ->addSelect('a.codigoConceptoFk')
             ->addSelect('a.vrValor')
             ->addSelect('a.detalle')
+            ->addSelect('a.aplicaDiaLaborado')
             ->where('a.estadoInactivo = 0 AND a.estadoInactivoPeriodo = 0')
             ->andWhere("a.codigoEmpleadoFk = {$codigoEmpleado} ")
         ->andWhere("(a.permanente = 1 or (a.fecha >= '" . $fechaDesde . "' AND a.fecha <= '" . $fechaHasta . "'))");
@@ -77,6 +80,52 @@ class RhuAdicionalRepository extends ServiceEntityRepository
 
         $arrResultado = $queryBuilder->getQuery()->getResult();
         return $arrResultado;
+    }
+
+    public function lista(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicional::class, 'a')
+            ->select('a.codigoAdicionalPk')
+            ->addSelect('a.vrValor')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('a.estadoInactivo')
+            ->addSelect('a.estadoInactivoPeriodo')
+            ->addSelect('a.aplicaDiaLaborado')
+            ->leftJoin('a.empleadoRel', 'e')
+            ->leftJoin('a.conceptoRel', 'c')
+        ->where('a.permanente = true');
+
+        if($session->get('filtroRhuEmpleadoCodigo') != ''){
+            $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$session->get('filtroRhuEmpleadoCodigo')}'");
+        }
+        return $queryBuilder;
+    }
+
+    public function adicionalesPorPeriodo($codigoPeriodo){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicional::class, 'a')
+            ->select('a.codigoAdicionalPk')
+            ->addSelect('a.fecha')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('a.detalle')
+            ->addSelect('g.nombre as grupo')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('a.vrValor')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('a.estadoInactivo')
+            ->addSelect('a.estadoInactivoPeriodo')
+            ->addSelect('a.aplicaDiaLaborado')
+            ->leftJoin('a.empleadoRel', 'e')
+            ->leftJoin('a.contratoRel', 'cont')
+            ->leftJoin('cont.grupoRel', 'g')
+            ->leftJoin('a.conceptoRel', 'c')
+            ->where("a.codigoAdicionalPeriodoFk = {$codigoPeriodo}");
+
+        if($session->get('filtroRhuEmpleadoCodigo') != ''){
+            $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$session->get('filtroRhuEmpleadoCodigo')}'");
+        }
+        return $queryBuilder;
     }
 
 }

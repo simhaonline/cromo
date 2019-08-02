@@ -9,7 +9,7 @@
         </div>
     </div>
     <br>
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arPrecio.codigoPrecioPk }}</td>
@@ -24,9 +24,9 @@
         </tr>
         <tr>
             <td class="titulo">VENTA:</td>
-            <td class="td-in-well numero">{{ arPrecio.venta }}</td>
-            <td class="titulo"></td>
-            <td></td>
+            <td class="td-in-well">{{ arPrecio.venta ? 'SI' : 'NO' }}</td>
+            <td class="titulo">COMPRA</td>
+            <td class="td-in-well">{{ arPrecio.compra ? 'SI' : 'NO' }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -45,6 +45,7 @@
                         <tr>
                             <th>ID</th>
                             <th>ITEM</th>
+                            <th>NOMBRE</th>
                             <th>MARCA</th>
                             <th title="DIAS PROMEDIO ENTREGA">DIAS PROM ENT</th>
                             <th>PRECIO</th>
@@ -57,6 +58,7 @@
                         {% for arPrecioDetalle in arPrecioDetalles %}
                             <tr>
                                 <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
+                                <td>{{ arPrecioDetalle.codigoItemFk }}</td>
                                 <td>{{ arPrecioDetalle.nombre }}</td>
                                 <td>{{ arPrecioDetalle.marca }}</td>
                                 <td style="width: 100px;">{{ arPrecioDetalle.diasPromedioEntrega }}</td>
@@ -73,6 +75,15 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                </div>
+                <div class="btn-group" style="float: left">
+                    <div class="btn btn-default btn-sm">Registros
+                        <span class="badge">{{ arPrecioDetalles.getTotalItemCount }}
+            </span>
+                    </div>
+                </div>
+                <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+                    {{ knp_pagination_render(arPrecioDetalles) }}
                 </div>
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
@@ -91,5 +102,6 @@
     </div>
     </div>
     {{ form_end(form) }}
-    <a class="btn btn-default btn-sm" href="{{ path('inventario_movimiento_comercial_pedido_lista') }}">Volver</a>
+    <br />
+    <br />
 {% endblock %}

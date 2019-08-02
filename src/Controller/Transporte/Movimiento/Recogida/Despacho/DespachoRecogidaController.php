@@ -72,6 +72,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                             $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
                             if ($arVehiculo) {
                                 $arDespachoRecogida->setVehiculoRel($arVehiculo);
+                                $arDespachoRecogida->setPoseedorRel($arVehiculo->getPoseedorRel());
                                 $arDespachoRecogida->setConductorRel($arConductor);
                                 $arDespachoRecogida->setOperacionRel($this->getUser()->getOperacionRel());
                                 $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();
@@ -200,6 +201,11 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                     $em->flush();
                     $em->getRepository(TteDespachoRecogida::class)->liquidar($id);
                 }
+                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', array('id' => $id)));
+            }
+            if ($form->get('btnEliminarAuxiliar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionarAuxiliar');
+                $em->getRepository(TteDespachoRecogidaAuxiliar::class)->eliminar($arrSeleccionados, $id);
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', array('id' => $id)));
             }
             if ($form->get('btnAutorizar')->isClicked()) {

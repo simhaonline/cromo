@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_vacacion_lista') }}">Volver</a>
+            <a class="btn btn-sm btn-default"
+               href="{{ path('recursohumano_movimiento_nomina_vacacion_lista') }}">Volver</a>
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
@@ -10,7 +12,7 @@
     </div>
     <br/><br/>
 
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arVacacion.numero }}</td>
@@ -142,7 +144,7 @@
             <td></td>
             <td class="titulo">A PAGAR:</td>
             <td class="td-in-well"
-                align="right">{{ arVacacion.vrValor | number_format(0, '.', ',') }}</td>
+                align="right">{{ arVacacion.vrTotal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIOS:</td>
@@ -157,6 +159,7 @@
             <br/>
         </div>
     </div>
-    <br>
-    <br>
+    <br/>
+    <br/>
+    {{ form_end(form) }}
 {% endblock %}

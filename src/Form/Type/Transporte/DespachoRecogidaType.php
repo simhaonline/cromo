@@ -36,6 +36,8 @@ class DespachoRecogidaType extends AbstractType {
                         ->where("rr.codigoOperacionFk = '". $options['data']->getOperacionRel()->getCodigoOperacionPk() ."'");
                 },
                 'choice_label' => 'nombre',
+                'required' => true,
+                'placeholder' => ''
             ))
             ->add('vrFletePago', NumberType::class)
             ->add('vrAnticipo', NumberType::class)

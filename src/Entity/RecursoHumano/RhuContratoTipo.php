@@ -32,6 +32,11 @@ class RhuContratoTipo
     private $nombre;
 
     /**
+     * @ORM\Column(name="nombre_corto", type="string", length=200, nullable=true)
+     */
+    private $nombreCorto;
+
+    /**
      * @ORM\Column(name="orden", type="integer", nullable=true)
      */
     private $orden;
@@ -142,4 +147,22 @@ class RhuContratoTipo
     {
         $this->contratoClaseRel = $contratoClaseRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreCorto()
+    {
+        return $this->nombreCorto;
+    }
+
+    /**
+     * @param mixed $nombreCorto
+     */
+    public function setNombreCorto($nombreCorto): void
+    {
+        $this->nombreCorto = $nombreCorto;
+    }
+
+
 }

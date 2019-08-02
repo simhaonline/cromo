@@ -42,14 +42,14 @@ class GuiaType extends AbstractType {
                 },
                 'choice_label' => 'nombre',
             ))
-            ->add('ciudadDestinoRel', EntityType::class, array(
+            /*->add('ciudadDestinoRel', EntityType::class, array(
                 'class' => TteCiudad::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-            ))
+            ))*/
             ->add('documentoCliente', TextType::class)
             ->add('remitente', TextType::class)
             ->add('nombreDestinatario', TextType::class)

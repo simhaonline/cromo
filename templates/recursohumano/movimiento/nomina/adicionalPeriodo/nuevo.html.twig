@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form,{'attr': {'class' :'form-horizontal'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="credito_creditoTipoRel" class="control-label col-sm-2">fecha:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fecha) }}
+                </div>
+                <label for="credito_creditoPagoRel" class="control-label col-sm-2">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div></div>
+    <div class="modal-footer">
+        <div class="btn-group" style="float: left;">
+            <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_lista') }}">Cancelar</a>
+        </div>
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.guardar) }}
+        </div>
+    </div>
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    <br>
+    <br>
+{% endblock %}

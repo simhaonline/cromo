@@ -110,8 +110,8 @@ class RegistroController extends Controller
             fputs($ar, $arRegistro['codigoCuentaFk'] . "\t");
             fputs($ar, FuncionesController::RellenarNr($arRegistro['codigoComprobanteFk'], "0", 5) . "\t");
             fputs($ar, $arRegistro['fecha']->format('m/d/Y') . "\t");
-            fputs($ar, FuncionesController::RellenarNr($numero, "0", 9) . "\t");
-            fputs($ar, FuncionesController::RellenarNr($numeroReferencia, "0", 9) . "\t");
+            fputs($ar, FuncionesController::RellenarNr($numero, "0", 9, "I") . "\t");
+            fputs($ar, FuncionesController::RellenarNr($numeroReferencia, "0", 9, "I") . "\t");
             fputs($ar, $srtNit . "\t");
             fputs($ar, $arRegistro['descripcion'] . "\t");
             fputs($ar, $naturaleza . "\t");

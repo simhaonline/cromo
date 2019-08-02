@@ -1,0 +1,31 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <br>
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>GRUPO</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arSoporte in arSoportes %}
+            <tr>
+                <td>{{ arSoporte.codigoSoportePk }}</td>
+                <td>{{ arSoporte.fechaDesde | date('Y-m-d') }}</td>
+                <td>{{ arSoporte.fechaHasta | date('Y-m-d') }}</td>
+                <td>{{ arSoporte.grupoNombre }}</td>
+                <td><button class="btn btn-default btn-xs" type="submit" name="OpCargar" value="{{ arSoporte.codigoSoportePk }}">Cargar</button></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: right">
+
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

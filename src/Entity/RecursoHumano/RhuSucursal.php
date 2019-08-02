@@ -18,7 +18,7 @@ class RhuSucursal {
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_sucursal_pk", type="string", length=10, )
+     * @ORM\Column(name="codigo_sucursal_pk", type="string", length=10 )
      */
     private $codigoSucursalPk;
 
@@ -30,12 +30,27 @@ class RhuSucursal {
     /**
      * @ORM\Column(name="estado_activo",type="boolean", nullable=true,options={"default":false})
      */
-    private $estadoActivo = 0;
+    private $estadoActivo = false;
+
+    /**
+     * @ORM\Column(name="codigo", type="string", length=50, nullable=true)
+     */
+    private $codigo;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="sucursalRel")
      */
     protected $contratosSucursalRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="sucursalRel")
+     */
+    protected $aportesContratosSucursalRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteDetalle", mappedBy="sucursalRel")
+     */
+    protected $aportesDetallesSucursalRel;
 
     /**
      * @return mixed
@@ -100,5 +115,56 @@ class RhuSucursal {
     {
         $this->contratosSucursalRel = $contratosSucursalRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosSucursalRel()
+    {
+        return $this->aportesContratosSucursalRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosSucursalRel
+     */
+    public function setAportesContratosSucursalRel($aportesContratosSucursalRel): void
+    {
+        $this->aportesContratosSucursalRel = $aportesContratosSucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesDetallesSucursalRel()
+    {
+        return $this->aportesDetallesSucursalRel;
+    }
+
+    /**
+     * @param mixed $aportesDetallesSucursalRel
+     */
+    public function setAportesDetallesSucursalRel($aportesDetallesSucursalRel): void
+    {
+        $this->aportesDetallesSucursalRel = $aportesDetallesSucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigo()
+    {
+        return $this->codigo;
+    }
+
+    /**
+     * @param mixed $codigo
+     */
+    public function setCodigo($codigo): void
+    {
+        $this->codigo = $codigo;
+    }
+
+
+
 }
 

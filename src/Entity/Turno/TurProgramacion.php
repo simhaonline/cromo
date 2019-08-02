@@ -24,14 +24,34 @@ class TurProgramacion
     private $codigoProgramacionPk;
 
     /**
-     * @ORM\Column(name="codigo_pedido_fk", type="integer")
+     * @ORM\Column(name="codigo_pedido_fk", nullable=true, type="integer")
      */
     private $codigoPedidoFk;
 
     /**
-     * @ORM\Column(name="codigo_pedido_detalle_fk", type="integer")
+     * @ORM\Column(name="codigo_pedido_detalle_fk", type="integer", nullable=true)
      */
     private $codigoPedidoDetalleFk;
+
+    /**
+     * @ORM\Column(name="codigo_puesto_fk", type="integer", nullable=true)
+     */
+    private $codigoPuestoFk;
+
+    /**
+     * @ORM\Column(name="codigo_empleado_fk", type="integer", nullable=true)
+     */
+    private $codigoEmpleadoFk;
+
+    /**
+     * @ORM\Column(name="anio", type="integer")
+     */
+    private $anio = 0;
+
+    /**
+     * @ORM\Column(name="mes", type="integer")
+     */
+    private $mes = 0;
 
     /**
      * @ORM\Column(name="dia_1", type="string", length=5, nullable=true)
@@ -189,14 +209,29 @@ class TurProgramacion
     private $dia31;
 
     /**
-     * @ORM\Column(name="horas_diurnas", type="float")
+     * @ORM\Column(name="horas", type="float", options={"default" : 0})
+     */
+    private $horas = 0;
+
+    /**
+     * @ORM\Column(name="horas_diurnas", type="float", options={"default" : 0})
      */
     private $horasDiurnas = 0;
 
     /**
-     * @ORM\Column(name="horas_nocturnas", type="float")
+     * @ORM\Column(name="horas_nocturnas", type="float", options={"default" : 0})
      */
     private $horasNocturnas = 0;
+
+    /**
+     * @ORM\Column(name="complementario", type="boolean", nullable=true, options={"default":false})
+     */
+    private $complementario = false;
+
+    /**
+     * @ORM\Column(name="adicional", type="boolean", nullable=true, options={"default":false})
+     */
+    private $adicional = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="programacionesPedidoRel")
@@ -209,6 +244,23 @@ class TurProgramacion
      * @ORM\JoinColumn(name="codigo_pedido_detalle_fk", referencedColumnName="codigo_pedido_detalle_pk")
      */
     protected $pedidoDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurPuesto", inversedBy="programacionesPuestoRel")
+     * @ORM\JoinColumn(name="codigo_pedido_fk", referencedColumnName="codigo_puesto_pk")
+     */
+    protected $puestoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuEmpleado", inversedBy="programacionesEmpleadoRel")
+     * @ORM\JoinColumn(name="codigo_empleado_fk",referencedColumnName="codigo_empleado_pk")
+     */
+    protected $empleadoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurSoporteHora", mappedBy="programacionRel")
+     */
+    protected $soportesHorasProgramacionRel;
 
     /**
      * @return mixed
@@ -256,6 +308,54 @@ class TurProgramacion
     public function setCodigoPedidoDetalleFk($codigoPedidoDetalleFk): void
     {
         $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpleadoFk()
+    {
+        return $this->codigoEmpleadoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpleadoFk
+     */
+    public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
+    {
+        $this->codigoEmpleadoFk = $codigoEmpleadoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnio()
+    {
+        return $this->anio;
+    }
+
+    /**
+     * @param mixed $anio
+     */
+    public function setAnio($anio): void
+    {
+        $this->anio = $anio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMes()
+    {
+        return $this->mes;
+    }
+
+    /**
+     * @param mixed $mes
+     */
+    public function setMes($mes): void
+    {
+        $this->mes = $mes;
     }
 
     /**
@@ -757,33 +857,17 @@ class TurProgramacion
     /**
      * @return mixed
      */
-    public function getPedidoRel()
+    public function getHoras()
     {
-        return $this->pedidoRel;
+        return $this->horas;
     }
 
     /**
-     * @param mixed $pedidoRel
+     * @param mixed $horas
      */
-    public function setPedidoRel($pedidoRel): void
+    public function setHoras($horas): void
     {
-        $this->pedidoRel = $pedidoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPedidoDetalleRel()
-    {
-        return $this->pedidoDetalleRel;
-    }
-
-    /**
-     * @param mixed $pedidoDetalleRel
-     */
-    public function setPedidoDetalleRel($pedidoDetalleRel): void
-    {
-        $this->pedidoDetalleRel = $pedidoDetalleRel;
+        $this->horas = $horas;
     }
 
     /**
@@ -818,6 +902,133 @@ class TurProgramacion
         $this->horasNocturnas = $horasNocturnas;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getComplementario()
+    {
+        return $this->complementario;
+    }
+
+    /**
+     * @param mixed $complementario
+     */
+    public function setComplementario($complementario): void
+    {
+        $this->complementario = $complementario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicional()
+    {
+        return $this->adicional;
+    }
+
+    /**
+     * @param mixed $adicional
+     */
+    public function setAdicional($adicional): void
+    {
+        $this->adicional = $adicional;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidoRel()
+    {
+        return $this->pedidoRel;
+    }
+
+    /**
+     * @param mixed $pedidoRel
+     */
+    public function setPedidoRel($pedidoRel): void
+    {
+        $this->pedidoRel = $pedidoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidoDetalleRel()
+    {
+        return $this->pedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $pedidoDetalleRel
+     */
+    public function setPedidoDetalleRel($pedidoDetalleRel): void
+    {
+        $this->pedidoDetalleRel = $pedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoRel()
+    {
+        return $this->empleadoRel;
+    }
+
+    /**
+     * @param mixed $empleadoRel
+     */
+    public function setEmpleadoRel($empleadoRel): void
+    {
+        $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoportesHorasProgramacionRel()
+    {
+        return $this->soportesHorasProgramacionRel;
+    }
+
+    /**
+     * @param mixed $soportesHorasProgramacionRel
+     */
+    public function setSoportesHorasProgramacionRel($soportesHorasProgramacionRel): void
+    {
+        $this->soportesHorasProgramacionRel = $soportesHorasProgramacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPuestoFk()
+    {
+        return $this->codigoPuestoFk;
+    }
+
+    /**
+     * @param mixed $codigoPuestoFk
+     */
+    public function setCodigoPuestoFk($codigoPuestoFk): void
+    {
+        $this->codigoPuestoFk = $codigoPuestoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPuestoRel()
+    {
+        return $this->puestoRel;
+    }
+
+    /**
+     * @param mixed $puestoRel
+     */
+    public function setPuestoRel($puestoRel): void
+    {
+        $this->puestoRel = $puestoRel;
+    }
 
 
 }

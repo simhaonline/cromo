@@ -22,6 +22,11 @@ class RhuPagoTipo
      * @ORM\Column(name="codigo_pago_tipo_pk", type="string", length=10)
      */
     private $codigoPagoTipoPk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_pagar_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaPagarTipoFk;
     
     /**
      * @ORM\Column(name="nombre", type="string", length=50, nullable=true)
@@ -32,6 +37,17 @@ class RhuPagoTipo
      * @ORM\Column(name="orden", type="integer", nullable=true)
      */
     private $orden;
+
+    /**
+     * @ORM\Column(name="genera_tesoreria", type="boolean", options={"default":false})
+     */
+    private $generaTesoreria = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesCuentaPagarTipo", inversedBy="pagosTipoCuentaPagarTipoRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_pagar_tipo_fk",referencedColumnName="codigo_cuenta_pagar_tipo_pk")
+     */
+    protected $cuentaPagarTipoRel;
     
     /**
      * @ORM\OneToMany(targetEntity="RhuProgramacion", mappedBy="pagoTipoRel")
@@ -42,6 +58,22 @@ class RhuPagoTipo
      * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="pagoTipoRel")
      */
     protected $pagosPagoTipoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -57,6 +89,22 @@ class RhuPagoTipo
     public function setCodigoPagoTipoPk($codigoPagoTipoPk): void
     {
         $this->codigoPagoTipoPk = $codigoPagoTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaPagarTipoFk()
+    {
+        return $this->codigoCuentaPagarTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaPagarTipoFk
+     */
+    public function setCodigoCuentaPagarTipoFk($codigoCuentaPagarTipoFk): void
+    {
+        $this->codigoCuentaPagarTipoFk = $codigoCuentaPagarTipoFk;
     }
 
     /**
@@ -94,6 +142,22 @@ class RhuPagoTipo
     /**
      * @return mixed
      */
+    public function getCuentaPagarTipoRel()
+    {
+        return $this->cuentaPagarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaPagarTipoRel
+     */
+    public function setCuentaPagarTipoRel($cuentaPagarTipoRel): void
+    {
+        $this->cuentaPagarTipoRel = $cuentaPagarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getProgramacionesPagoTipoRel()
     {
         return $this->programacionesPagoTipoRel;
@@ -122,4 +186,21 @@ class RhuPagoTipo
     {
         $this->pagosPagoTipoRel = $pagosPagoTipoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraTesoreria()
+    {
+        return $this->generaTesoreria;
+    }
+
+    /**
+     * @param mixed $generaTesoreria
+     */
+    public function setGeneraTesoreria($generaTesoreria): void
+    {
+        $this->generaTesoreria = $generaTesoreria;
+    }
+
 }

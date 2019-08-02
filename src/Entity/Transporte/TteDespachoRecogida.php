@@ -63,6 +63,11 @@ class TteDespachoRecogida
     private $codigoConductorFk;
 
     /**
+     * @ORM\Column(name="codigo_poseedor_fk", type="integer", nullable=true)
+     */
+    private $codigoPoseedorFk;
+
+    /**
      * @ORM\Column(name="cantidad", type="float")
      */
     private $cantidad = 0;
@@ -217,6 +222,12 @@ class TteDespachoRecogida
      * @ORM\JoinColumn(name="codigo_conductor_fk", referencedColumnName="codigo_conductor_pk")
      */
     private $conductorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TtePoseedor", inversedBy="despachosRecogidasPoseedorRel")
+     * @ORM\JoinColumn(name="codigo_poseedor_fk", referencedColumnName="codigo_poseedor_pk")
+     */
+    private $poseedorRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TteRecogida", mappedBy="despachoRecogidaRel")
@@ -919,6 +930,38 @@ class TteDespachoRecogida
     public function setMonitoreosDespachoRecogidaRel($monitoreosDespachoRecogidaRel): void
     {
         $this->monitoreosDespachoRecogidaRel = $monitoreosDespachoRecogidaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPoseedorFk()
+    {
+        return $this->codigoPoseedorFk;
+    }
+
+    /**
+     * @param mixed $codigoPoseedorFk
+     */
+    public function setCodigoPoseedorFk($codigoPoseedorFk): void
+    {
+        $this->codigoPoseedorFk = $codigoPoseedorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPoseedorRel()
+    {
+        return $this->poseedorRel;
+    }
+
+    /**
+     * @param mixed $poseedorRel
+     */
+    public function setPoseedorRel($poseedorRel): void
+    {
+        $this->poseedorRel = $poseedorRel;
     }
 
 

@@ -357,7 +357,50 @@ class TurPedidoRepository extends ServiceEntityRepository
     public function lista(){
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedido::class, 'p')
-            ->select('p.codigoPedidoPk');
+            ->select('p.codigoPedidoPk')
+            ->addSelect('p.numero')
+            ->addSelect('p.fecha')
+            ->addSelect('p.horas')
+            ->addSelect('p.horasDiurnas')
+            ->addSelect('p.horasNocturnas')
+            ->addSelect('p.estadoAutorizado')
+            ->addSelect('p.estadoAprobado')
+            ->addSelect('p.estadoAnulado')
+            ->addSelect('p.vrTotal')
+            ->addSelect('p.usuario')
+            ->addSelect('pt.nombre as pedidoTipoNombre')
+            ->addSelect('c.nombreCorto as clienteNombreCorto')
+            ->addSelect('s.nombre as sectorNombre')
+        ->leftJoin('p.pedidoTipoRel', 'pt')
+        ->leftJoin('p.clienteRel', 'c')
+        ->leftJoin('p.sectorRel', 's');
+
+        if($session->get('filtroTurInformeComercialPedidoClienteCodigo') != ''){
+            $queryBuilder->andWhere("p.codigoClienteFk  = '{$session->get('filtroTurInformeComercialPedidoClienteCodigo')}'");
+        }
+        if ($session->get('filtroTurInformeComercialPedidoClienteCodigoFechaDesde') != null) {
+            $queryBuilder->andWhere("p.fecha >= '{$session->get('filtroTurInformeComercialPedidoClienteCodigoFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroTurInformeComercialPedidoClienteCodigoFechaHasta') != null) {
+            $queryBuilder->andWhere("p.fecha <= '{$session->get('filtroTurInformeComercialPedidoClienteCodigoFechaHasta')} 23:59:59'");
+        }
+        return $queryBuilder;
+    }
+
+    public function listaSinAprobar(){
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedido::class, 'p')
+            ->select('p')
+           ->where('p.estadoAprobado = 0');
+        if($session->get('filtroTurInformeComercialPedidoSinAprobarClienteCodigo') != ''){
+            $queryBuilder->andWhere("p.codigoClienteFk  = '{$session->get('filtroTurInformeComercialPedidoSinAprobarClienteCodigo')}'");
+        }
+        if ($session->get('filtroTurInformeComercialPedidoClienteSinAprobarFechaDesde') != null) {
+            $queryBuilder->andWhere("p.fecha >= '{$session->get('filtroTurInformeComercialPedidoClienteCodigoFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroTurInformeComercialPedidoClienteCodigoFechaHasta') != null) {
+            $queryBuilder->andWhere("p.fecha <= '{$session->get('filtroTurInformeComercialPedidoClienteSinAprobarFechaHasta')} 23:59:59'");
+        }
         return $queryBuilder;
     }
 }

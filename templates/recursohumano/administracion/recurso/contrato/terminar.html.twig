@@ -1,0 +1,56 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        Parámetros iniciales
+    </div>
+    <div class="panel-body">
+        <table width="100%" class="table table-condensed table-bordered">
+            <tr>
+                <td class="titulo">ULTIMO PAGO:</td>
+                <td>{{ arContrato.fechaUltimoPago|date("Y/m/d") }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">ULT. PAGO VACACION:</td>
+                <td>{{ arContrato.fechaUltimoPagoVacaciones|date("Y/m/d") }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">ULT. PAGO PRIMA:</td>
+                <td>{{ arContrato.fechaUltimoPagoPrimas|date("Y/m/d") }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">ULT. PAGO CESANTIAS:</td>
+                <td>{{ arContrato.fechaUltimoPagoCesantias|date("Y/m/d") }}</td>
+            </tr>
+        </table>
+        <div class="form-group form-group-sm">
+            <label for="form_fechaTerminacion" class="col-sm-4 control-label">Fecha terminacion:</label>
+            <div class="col-sm-8">
+                {{ form_widget(form.fechaTerminacion) }}
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label for="form_motivoRetiro" class="col-sm-4 control-label">Motivo retiro:</label>
+            <div class="col-sm-8">
+                {{ form_widget(form.terminacionContratoRel, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Comentario:</label>
+            <div class="col-sm-8">
+                {{ form_widget(form.comentarioTerminacion, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+        </div>
+        <br/>
+        <blockquote>
+            <p>Recuerde que no puede terminar un contrato antes de la fecha del ultimo pago.</p>
+            <footer>Requiere <cite title="Source Title">permiso especial</cite></footer>
+        </blockquote>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock content %}

@@ -1,0 +1,42 @@
+{% include('base_menu_inicio.html.twig') %}
+<nav>
+    <ul>
+                <li>
+                    <a href="#"><i class="fa fa-book fa-fw"></i>
+                        <span class="menu-item-parent">Movimiento</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="#">Cuentas por Pagar <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_lista') }}">Cuentas por pagar</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Egreso <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('tesoreria_movimiento_egreso_egreso_lista') }}">Egreso</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+        <li>
+            <a href="#"><i class="fa fa-bars fa-fw"></i>
+                <span class="menu-item-parent">Administración</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul>
+                <li>
+                    <a href="#">General <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'tesoreria','entidad':'tercero'}) }}">Tercero</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>

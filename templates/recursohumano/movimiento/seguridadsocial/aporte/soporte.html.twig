@@ -1,0 +1,35 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table width="100%" class="table table-condensed table-bordered tabla-informacion" style="margin-bottom: 0 !important;">
+                <tr>
+                    <td class="titulo">CODIGO:</td>
+                    <td class="td-in-well">{{ arAporteContrato.codigoAporteContratoPk | default('')}}</td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well numero" style="text-transform: uppercase;"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arAporteSoporte in arAporteSoportes %}
+            <tr>
+                <td>{{ arAporteSoporte.codigoAporteSoportePk }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: right">
+{#        {{ form_widget(form.btnActualizar) }}#}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

@@ -240,6 +240,8 @@ class ImportarGuiaExcelController extends Controller
                         $tipoLiquidacion = "U";
                     } else if ($arCondicion->getPrecioAdicional()) {
                         $tipoLiquidacion = "A";
+                    } else{
+                        $tipoLiquidacion = "K";
                     }
                     if ($error == false) {
                         $arrLiquidacion = $em->getRepository(TteGuia::class)->liquidar(
@@ -250,7 +252,7 @@ class ImportarGuiaExcelController extends Controller
                             $arCiudadDestino->getCodigoCiudadPk(),
                             $arProducto->getCodigoProductoPk(),
                             $arCiudadDestino->getCodigoZonaFk(),
-                            $tipoLiquidacion = "K",
+                            $tipoLiquidacion,
                             $unidades,
                             $peso,
                             $declarado);

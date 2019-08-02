@@ -340,6 +340,7 @@ class DespachoController extends ControllerListenerGeneral
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar'])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoGuiaNumero')])
+            ->add('cboCiudadDestinoRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo("destino"))
             ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->add('cboRutaRel', EntityType::class, $em->getRepository(TteRuta::class)->llenarCombo())
             ->getForm();
@@ -387,6 +388,11 @@ class DespachoController extends ControllerListenerGeneral
                     $session->set('filtroTteDespachoGuiaCodigoRuta', $form->get('cboRutaRel')->getData()->getCodigoRutaPk());
                 } else {
                     $session->set('filtroTteDespachoGuiaCodigoRuta', null);
+                }
+                if ($form->get('cboCiudadDestinoRel')->getData() != '') {
+                    $session->set('filtroTteDespachoCodigoCiudadDestino', $form->get('cboCiudadDestinoRel')->getData()->getCodigoCiudadPk());
+                } else {
+                    $session->set('filtroTteDespachoCodigoCiudadDestino', null);
                 }
                 if ($form->get('cboGuiaTipoRel')->getData() != '') {
                     $session->set('filtroTteDespachoGuiaCodigoGuiaTipo', $form->get('cboGuiaTipoRel')->getData()->getCodigoGuiaTipoPk());

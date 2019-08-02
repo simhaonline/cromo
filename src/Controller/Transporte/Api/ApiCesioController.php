@@ -73,7 +73,7 @@ class ApiCesioController extends FOSRestController
             $unidades = $raw['unidades']?? null;
             $peso = $raw['peso']?? null;
             $declarado = $raw['declarado']?? null;
-            if($cliente && $condicion && $precio && $origen && $destino && $producto && $tipoLiquidacion && $unidades && $peso && $declarado) {
+            if($cliente && $condicion && $precio && $origen && $destino && $producto && $tipoLiquidacion && $unidades) {
                 return $em->getRepository(TteGuia::class)->liquidar($cliente, $condicion, $precio, $origen, $destino, $producto, $zona, $tipoLiquidacion, $unidades, $peso, $declarado);
             } else {
                 return [

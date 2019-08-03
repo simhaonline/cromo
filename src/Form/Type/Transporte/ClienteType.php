@@ -90,7 +90,7 @@ class ClienteType extends AbstractType
             ->add('guiaPagoDestino', CheckboxType::class, array('required'  => false, 'label' => 'Pago destino'))
             ->add('guiaPagoCortesia', CheckboxType::class, array('required'  => false, 'label' => 'Pago cortesia'))
             ->add('guiaPagoRecogida', CheckboxType::class, array('required'  => false, 'label' => 'Pago recogida'))
-
+            ->add('condicionFactura', CheckboxType::class, array('required'  => false, 'label' => 'Condicion factura'))
             ->add('comentario',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);

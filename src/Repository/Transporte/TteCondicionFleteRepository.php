@@ -131,7 +131,10 @@ class TteCondicionFleteRepository extends ServiceEntityRepository
                         ->addSelect('cf.pesoMinimoGuia')
                         ->addSelect('cf.fleteMinimo')
                         ->addSelect('cf.fleteMinimoGuia')
-                        ->where("cf.codigoClienteFk = {$codigoCliente}");
+                        ->where("cf.codigoClienteFk = {$codigoCliente}")
+                        ->andWhere("cf.codigoCiudadOrigenFk = {$codigoCiudadOrigen}")
+                        ->andWhere("cf.codigoCiudadDestinoFk IS NULL")
+                        ->andWhere("cf.codigoZonaFk IS NULL");
                     $arCondicionFlete = $queryBuilder->getQuery()->getResult();
                     if($arCondicionFlete) {
                         return $arCondicionFlete[0];

@@ -95,7 +95,7 @@ class TteCondicionManejoRepository extends ServiceEntityRepository
                         ->where("cm.codigoClienteFk = {$codigoCliente}")
                         ->andWhere("cm.codigoCiudadOrigenFk = {$codigoCiudadOrigen}")
                         ->andWhere("cm.codigoCiudadDestinoFk IS NULL")
-                    ->andWhere("cm.codigoZonaFk IS NULL");
+                        ->andWhere("cm.codigoZonaFk IS NULL");
                     $arCondicionManejo = $queryBuilder->getQuery()->getResult();
                     if($arCondicionManejo) {
                         return $arCondicionManejo[0];

@@ -67,6 +67,7 @@ class ImportarGuiaExcelController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnCargar')->isClicked()) {
                 if ($form->get('flArchivo')->getData()) {
+                    $em->getRepository(TteGuiaTemporal::class)->createQueryBuilder('t')->delete(TteGuiaTemporal::class)->getQuery()->execute();
                     $arGuiaTipo = $form->get('guiaTipoRel')->getData();
                     if ($arGuiaTipo) {
                         $session->set('filtroTteGuiaCodigoGuiaTipo', $arGuiaTipo->getCodigoGuiaTipoPk());

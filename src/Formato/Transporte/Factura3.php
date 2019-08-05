@@ -159,17 +159,17 @@ class Factura3 extends \FPDF {
 
         $arGuias = self::$em->getRepository(TteFacturaDetalle::class)->formatoFactura(self::$codigoFactura);
         $pdf->SetX(10);
-        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetFont('Arial', '', 6.5);
         if($arGuias) {
             $unidadesTotal = 0;
             $kilosFacturadosTotal = 0;
             $declaraTotal = 0;
             foreach ($arGuias as $arGuia) {
                 $pdf->Cell(17, 5, $arGuia['numero'], 0, 0, 'L');
-                $pdf->Cell(20, 5, $arGuia['documentoCliente'], 0, 0, 'L');
+                $pdf->Cell(20, 5, substr($arGuia['documentoCliente'], 0 ,10), 0, 0, 'L');
                 $pdf->Cell(20, 5, substr(utf8_decode($arGuia['ciudadOrigen']),0,27), 0, 0, 'L');
-                $pdf->Cell(20, 5, substr(utf8_decode($arGuia['ciudadDestino']),0,15), 0, 0, 'L');
-                $pdf->Cell(25, 5, substr(utf8_decode($arGuia['nombreDestinatario']),0,15), 0, 0, 'L');
+                $pdf->Cell(20, 5, substr(utf8_decode($arGuia['ciudadDestino']),0,13), 0, 0, 'L');
+                $pdf->Cell(25, 5, substr(utf8_decode($arGuia['nombreDestinatario']),0,16), 0, 0, 'L');
                 $pdf->Cell(15, 5, substr(utf8_decode($arGuia['producto']),0,15), 0, 0, 'L');
                 $pdf->Cell(9, 5, substr(utf8_decode(substr($arGuia['empaque'], 0, 3)),0,15), 0, 0, 'L');
                 $pdf->Cell(18, 5, substr(utf8_decode($arGuia['fechaIngreso']->format('Y-m-d')),0,15), 0, 0, 'L');

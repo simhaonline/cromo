@@ -63,6 +63,11 @@ class TteConfiguracion
     private $codigoPrecioGeneralFk;
 
     /**
+     * @ORM\Column(name="codigo_condicion_general_fk", type="integer", nullable=true)
+     */
+    private $codigoCondicionGeneralFk;
+
+    /**
      * @ORM\Column(name="vr_base_retencion_fuente", type="float", options={"default" : 0})
      */
     private $vrBaseRetencionFuente = 0;
@@ -389,6 +394,25 @@ class TteConfiguracion
     {
         $this->codigoFormatoGuia = $codigoFormatoGuia;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCondicionGeneralFk()
+    {
+        return $this->codigoCondicionGeneralFk;
+    }
+
+    /**
+     * @param mixed $codigoCondicionGeneralFk
+     */
+    public function setCodigoCondicionGeneralFk($codigoCondicionGeneralFk): void
+    {
+        $this->codigoCondicionGeneralFk = $codigoCondicionGeneralFk;
+    }
+
+
+
 
 
 }

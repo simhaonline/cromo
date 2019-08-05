@@ -76,6 +76,7 @@ class UsuarioRepository extends ServiceEntityRepository
                     "versionBaseDatos" => $arConfiguracion->getVersionBaseDatos(),
                     "numeroUnicoGuia" => $arConfiguracionTransporte->getNumeroUnicoGuia(),
                     "codigoPrecioGeneral" => $arConfiguracionTransporte->getCodigoPrecioGeneralFk(),
+                    "codigoCondicionGeneral" => $arConfiguracionTransporte->getCodigoCondicionGeneralFk(),
                     "codigoFormatoGuia" => $arConfiguracionTransporte->getCodigoFormatoGuia(),
                 ];
             } else {

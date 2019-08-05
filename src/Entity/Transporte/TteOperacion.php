@@ -27,6 +27,11 @@ class TteOperacion
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_operacion_cargo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoOperacionCargoFk;
+
+    /**
      * @ORM\Column(name="codigo_ciudad_fk", type="string", length=20, nullable=true)
      */
     private $codigoCiudadFk;
@@ -103,6 +108,12 @@ class TteOperacion
     private $ciudadRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TteOperacion", inversedBy="operacionesOperacionCargoRel")
+     * @ORM\JoinColumn(name="codigo_operacion_cargo_fk", referencedColumnName="codigo_operacion_pk")
+     */
+    private $operacionCargoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="operacionIngresoRel")
      */
     protected $guiasOperacionIngresoRel;
@@ -156,6 +167,11 @@ class TteOperacion
      * @ORM\OneToMany(targetEntity="TteCliente", mappedBy="operacionRel")
      */
     protected $clientesOperacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteOperacion", mappedBy="operacionCargoRel")
+     */
+    protected $operacionesOperacionCargoRel;
 
     /**
      * @return mixed
@@ -603,6 +619,54 @@ class TteOperacion
     public function setRetencionIndustriaComercio($retencionIndustriaComercio): void
     {
         $this->retencionIndustriaComercio = $retencionIndustriaComercio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionCargoFk()
+    {
+        return $this->codigoOperacionCargoFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionCargoFk
+     */
+    public function setCodigoOperacionCargoFk($codigoOperacionCargoFk): void
+    {
+        $this->codigoOperacionCargoFk = $codigoOperacionCargoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionCargoRel()
+    {
+        return $this->operacionCargoRel;
+    }
+
+    /**
+     * @param mixed $operacionCargoRel
+     */
+    public function setOperacionCargoRel($operacionCargoRel): void
+    {
+        $this->operacionCargoRel = $operacionCargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionesOperacionCargoRel()
+    {
+        return $this->operacionesOperacionCargoRel;
+    }
+
+    /**
+     * @param mixed $operacionesOperacionCargoRel
+     */
+    public function setOperacionesOperacionCargoRel($operacionesOperacionCargoRel): void
+    {
+        $this->operacionesOperacionCargoRel = $operacionesOperacionCargoRel;
     }
 
 

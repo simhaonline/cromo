@@ -21,4 +21,13 @@ class GenCiudadRepository extends ServiceEntityRepository
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }
+
+    public function apiWindowsLista($raw) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(GenCiudad::class, 'c')
+            ->select('c.codigoCiudadPk')
+            ->addSelect('c.nombre');
+        $ar = $queryBuilder->getQuery()->getResult();
+        return $ar;
+    }
 }

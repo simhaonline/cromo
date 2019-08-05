@@ -12,4 +12,13 @@ class GenIdentificacionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, GenIdentificacion::class);
     }
+
+    public function apiWindowsLista($raw) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(GenIdentificacion::class, 'i')
+            ->select('i.codigoIdentificacionPk')
+            ->addSelect('i.nombre');
+        $ar = $queryBuilder->getQuery()->getResult();
+        return $ar;
+    }
 }

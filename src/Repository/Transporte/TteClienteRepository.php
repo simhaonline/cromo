@@ -3,7 +3,11 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Financiero\FinTercero;
+use App\Entity\General\GenIdentificacion;
+use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
+use App\Entity\Transporte\TteCondicion;
+use App\Entity\Transporte\TteOperacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -132,5 +136,49 @@ class TteClienteRepository extends ServiceEntityRepository
         }
     }
 
+    public function apiWindowsNuevo($raw)
+    {
+        $em = $this->getEntityManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            $codigoIdentificacion = $raw['codigoIdentificacionFk']?? null;
+            $numeroIdentificacion = $raw['numeroIdentificacion']?? null;
+            if($codigoIdentificacion && $numeroIdentificacion) {
+                $arCliente = $em->getRepository(TteCliente::class)->findOneBy(['codigoIdentificacionFk' => $raw['codigoIdentificacionFk'], 'numeroIdentificacion' => $raw['numeroIdentificacion']]);
+                if(!$arCliente) {
+                    $arCliente = new TteCliente();
+                    $arCliente->setIdentificacionRel($em->getReference(GenIdentificacion::class, $raw['codigoIdentificacionFk']));
+                    $arCliente->setNumeroIdentificacion($raw['numeroIdentificacion']);
+                    $arCliente->setNombreCorto($raw['nombreCorto']);
+                    $arCliente->setNombreExtendido($raw['nombreCorto']);
+                    $arCliente->setNombre1($raw['nombre1']);
+                    $arCliente->setNombre2($raw['nombre2']);
+                    $arCliente->setApellido1($raw['apellido1']);
+                    $arCliente->setApellido2($raw['apellido2']);
+                    $arCliente->setTelefono($raw['telefono']);
+                    $arCliente->setDireccion($raw['direccion']);
+                    $arCliente->setCorreo($raw['correo']);
+                    $arCliente->setCiudadRel($em->getReference(TteCiudad::class, $raw['codigoCiudadFk']));
+                    $arCliente->setCondicionRel($em->getReference(TteCondicion::class, $raw['codigoCondicionFk']));
+                    $arCliente->setOperacionRel($em->getReference(TteOperacion::class, $raw['codigoOperacionFk']));
+                    $arCliente->setGuiaPagoContado(1);
+                    $em->persist($arCliente);
+                    $em->flush();
+                    $em->getConnection()->commit();
+                    return [
+                        "codigoClientePk" => $arCliente->getCodigoClientePk()
+                    ];
+                } else {
+                    return ["error" => 'El cliente con esta identificacion ya existe'];
+                }
+            } else {
+                return ["error" => 'Faltan datos para la api'];
+            }
+        } catch (Exception $e) {
+            $em->getConnection()->rollBack();
+            return ["error" => $e->getMessage()];
+        }
+
+    }
 
 }

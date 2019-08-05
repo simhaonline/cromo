@@ -64,4 +64,26 @@ class TteOperacionRepository extends ServiceEntityRepository
         return $queryBuilder;
 
     }
+
+    public function apiWindowsValidar($raw) {
+        $em = $this->getEntityManager();
+        $codigo = $raw['codigoOperacion']?? null;
+        if($codigo) {
+            /** @var $arOperacion TteOperacion */
+            $arOperacion = $em->getRepository(TteOperacion::class)->find($codigo);
+            if($arOperacion) {
+                $codigoOperacionCargo = $arOperacion->getCodigoOperacionCargoFk()?? $arOperacion->getCodigoOperacionPk();
+                $arrOperacion = [
+                    'codigoOperacionPk' => $arOperacion->getCodigoOperacionPk(),
+                    'codigoOperacionCargoFk' => $codigoOperacionCargo,
+                    'codigoCiudadFk' => $arOperacion->getCodigoCiudadFk()
+                ];
+                return $arrOperacion;
+            } else {
+                return ["error" => "No se encontro la operacion " . $codigo];
+            }
+        } else {
+            return ["error" => "Faltan datos para la api"];
+        }
+    }
 }

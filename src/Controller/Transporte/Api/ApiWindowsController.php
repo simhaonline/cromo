@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Api;
 
 use App\Entity\General\GenConfiguracion;
+use App\Entity\General\GenIdentificacion;
 use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
@@ -17,6 +18,7 @@ use App\Entity\Transporte\TteGuiaCarga;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteNovedadTipo;
+use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TtePrecioDetalle;
 use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteRecibo;
@@ -182,6 +184,22 @@ class ApiWindowsController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(TteCliente::class)->apiWindowsDetalle($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/windows/cliente/nuevo")
+     */
+    public function clienteNuevo(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteCliente::class)->apiWindowsNuevo($raw);
         } catch (\Exception $e) {
             return [
                 'error' => "Ocurrio un error en la api " . $e->getMessage(),
@@ -469,6 +487,22 @@ class ApiWindowsController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(TteCondicionManejo::class)->apiWindowsLiquidar($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/windows/operacion/validar")
+     */
+    public function operacionValidar(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteOperacion::class)->apiWindowsValidar($raw);
         } catch (\Exception $e) {
             return [
                 'error' => "Ocurrio un error en la api " . $e->getMessage(),

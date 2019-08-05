@@ -82,6 +82,12 @@ class PendienteDespachoRutaController extends Controller
             $session->set('filtroTteCodigoCliente', null);
             $session->set('filtroTteNombreCliente', null);
         }
+        if ($form->get('txtCodigoCiudadDestino')->getData() != '') {
+            $session->set('filtroTteCodigoCiudadDestino', $form->get('txtCodigoCiudadDestino')->getData());
+        } else {
+            $session->set('filtroTteCodigoCiudadDestino', null);
+        }
+
     }
 
     private function formularioFiltro()
@@ -143,6 +149,7 @@ class PendienteDespachoRutaController extends Controller
             ->add('rutaRel', EntityType::class, $arrayPropiedadesRuta)
             ->add('servicioRel', EntityType::class, $arrayPropiedadesServicio)
             ->add('operacionCargoRel', EntityType::class, $arrayPropiedadesOperacionCargo)
+            ->add('txtCodigoCiudadDestino', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCiudadDestino'), 'attr' => ['class' => 'form-control']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))

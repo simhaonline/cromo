@@ -412,7 +412,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->orderBy('g.codigoCiudadDestinoFk')
-            ->addOrderBy('g.ordenRuta')
+            ->addOrderBy('g.codigoClienteFk')
             ->where('g.codigoDespachoFk = ' . $codigoDespacho);
 
         return $queryBuilder->getQuery()->execute();
@@ -1312,6 +1312,9 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("g.codigoClienteFk = '{$session->get('filtroTteCodigoCliente')}'");
+        }
+        if ($session->get('filtroTteCodigoCiudadDestino')) {
+            $queryBuilder->andWhere("g.codigoCiudadDestinoFk = '{$session->get('filtroTteCodigoCiudadDestino')}'");
         }
         switch ($session->get('filtroTteNovedadGuia')) {
             case '0':

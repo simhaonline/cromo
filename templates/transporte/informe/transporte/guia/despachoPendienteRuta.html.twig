@@ -29,34 +29,57 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Destino:</label>
+                <div class="col-sm-5">
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.txtCodigoCiudadDestino) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input id="form_txtNombreCiudad" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_ciudad', {'campoNombre': 'form_txtNombreCiudad','campoCodigo':'form_txtCodigoCiudadDestino' }) }}', 'buscarCiudadOrigen', 600, 900)">Buscar</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <label for="form_TxtCodigo" class="col-sm-1 control-label">Operacion (cargo):</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.operacionCargoRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label for="form_TxtCodigo" class="col-sm-1 control-label">Ruta:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.rutaRel, { 'attr': {'class': 'form-control'} }) }}
-                </div>
                 <label for="form_TxtCodigo" class="col-sm-1 control-label">Servicio:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.servicioRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Mostar devoluciones</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.ChkMostrarDevoluciones) }}
+                </div>
+                <label for="form_TxtCodigo" class="col-sm-1 control-label"></label>
+                <div class="col-sm-2">
+
+                </div>
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Ruta:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.rutaRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label for="form_TxtCodigo" class="col-sm-1 control-label">Novedad:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.chkEstadoGuiaNovedad, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
-            <div class="form-group form-group-sm">
-                <label for="form_estadoAutorizado" class="col-sm-1 control-label">Mostar devoluciones</label>
-                <div class="col-sm-5">
-                    {{ form_widget(form.ChkMostrarDevoluciones) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_estadoAutorizado" class="col-sm-1 control-label"></label>
-                <div class="col-sm-5">
-                </div>
-            </div>
+
+
             <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-10">
                     {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}

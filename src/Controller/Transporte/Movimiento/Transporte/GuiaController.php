@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Transporte;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Centro;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteDesembarco;
 use App\Entity\Transporte\TteDespachoDetalle;
@@ -22,6 +23,7 @@ use App\Formato\Transporte\Guia;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,36 +56,112 @@ class GuiaController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $this->request = $request;
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
 
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoGuiaTipoFk', EntityType::class, [
+                'class' => TteGuiaTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('gt')
+                        ->orderBy('gt.codigoGuiaTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('codigoOperacionCargoFk', EntityType::class, [
+                'class' => TteOperacion::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.codigoOperacionPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('codigoClienteFk', TextType::class, array('required' => false, 'data' => $session->get('filtroCrmNombreCliente')))
+            ->add('codigoServicioFk', EntityType::class, [
+                'class' => TteServicio::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.codigoServicioPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('codigoGuiaPk', TextType::class, array('required' => false))
+            ->add('codigoDespachoFk', TextType::class, array('required' => false))
+            ->add('codigoFacturaFk', TextType::class, array('required' => false))
+            ->add('numeroFactura', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('remitente', TextType::class, array('required' => false))
+            ->add('documentoCliente', TextType::class, array('required' => false))
+            ->add('nombreDestinatario', TextType::class, array('required' => false))
+            ->add('fechaIngresoDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTteGuiaFechaIngresoDesde') ? date_create($session->get('filtroTteGuiaFechaIngresoDesde')): null])
+            ->add('fechaIngresoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTteGuiaFechaIngresoHasta') ? date_create($session->get('filtroTteGuiaFechaIngresoHasta')): null])
+            ->add('estadoDespachado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoFacturado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoNovedad', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoNovedadSolucion', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $arGuiaTipo = $form->get('codigoGuiaTipoFk')->getData();
+                $arOperacionCargo = $form->get('codigoOperacionCargoFk')->getData();
+                $arServicio = $form->get('codigoServicioFk')->getData();
+                $session->set('filtroTteGuiaCodigo', $form->get('codigoGuiaPk')->getData());
+                $session->set('filtroTteGuiaDespacho', $form->get('codigoDespachoFk')->getData());
+                $session->set('filtroTteGuiaNumero', $form->get('numero')->getData());
+                $session->set('filtroTteGuiaNumeroFactura', $form->get('numeroFactura')->getData());
+                $session->set('filtroTteGuiaEstadoDespachado', $form->get('estadoDespachado')->getData());
+                $session->set('filtroTteGuiaClienteNombre', $form->get('codigoClienteFk')->getData());
+                $session->set('filtroTteGuiaDocumentoCliente', $form->get('documentoCliente')->getData());
+                $session->set('filtroTteGuiaFechaIngresoDesde',  $form->get('fechaIngresoDesde')->getData() ?$form->get('fechaIngresoDesde')->getData()->format('Y-m-d'): null);
+                $session->set('filtroTteGuiaFechaIngresoHasta', $form->get('fechaIngresoHasta')->getData() ? $form->get('fechaIngresoHasta')->getData()->format('Y-m-d'): null);
+                $session->set('filtroTteGuiaDocumentocodigoFactura', $form->get('codigoFacturaFk')->getData());
+                $session->set('filtroTteGuiaDocumentoEstadoFacturado', $form->get('estadoFacturado')->getData());
+                $session->set('filtroTteGuiaDocumentoEstadoNovedad', $form->get('estadoNovedad')->getData());
+                $session->set('filtroTteGuiaDocumentoEstadoNovedadSolucion', $form->get('estadoNovedadSolucion')->getData());
+                $session->set('filtroTteGuiaDocumentoEstadoAnulado', $form->get('estadoAnulado')->getData());
+                $session->set('filtroTteGuiaRemitente', $form->get('remitente')->getData());
+                $session->set('filtroTteGuiaNombreDestinatario', $form->get('nombreDestinatario')->getData());
+
+                if ($arGuiaTipo != '') {
+                    $session->set('filtroTteGuiaGuiaTipoCodigo', $arGuiaTipo->getCodigoGuiaTipoPk());
+                } else {
+                    $session->set('filtroTteGuiaGuiaTipoCodigo', null);
+                }
+                if ($arOperacionCargo != '') {
+                    $session->set('filtroTteGuiaOperacionCargoCodigo', $arOperacionCargo->getCodigoOperacionPk());
+                } else {
+                    $session->set('filtroTteGuiaOperacionCargoCodigo', null);
+                }
+                if ($arServicio != '') {
+                    $session->set('filtroTteGuiaServicioCodigo', $arServicio->getCodigoServicioPk());
+                } else {
+                    $session->set('filtroTteGuiaServicioCodigo', null);
+                }
             }
-        }
-        $datos = $this->getDatosLista(true, false);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
+            if ($form->get('btnExcel')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                $this->exportarExcel($datos['queryBuilder']);
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-
+                $session->set('filtroTteGuiaTopRegistros', 15000);
+                General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->lista())->execute(), "Guias");
             }
         }
-        return $this->render('transporte/movimiento/transporte/guia/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
-        ]);
 
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->lista(), $request->query->getInt('page', 1), 30);
+        return $this->render('transporte/movimiento/transporte/guia/lista.html.twig', [
+            'arGuias' => $arGuias,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**

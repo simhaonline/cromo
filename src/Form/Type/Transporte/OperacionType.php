@@ -27,6 +27,16 @@ class OperacionType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad:'
             ])
+            ->add('operacionCargoRel',EntityType::class,[
+                'required' => true,
+                'class' => TteOperacion::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Operacion:'
+            ])
             ->add('codigoOperacionPk',TextType::class,['required' => true,'label' => 'Codigo operacion:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('codigoCuentaIngresoFleteFk',TextType::class,['required' => false,'label' => 'Cuenta flete (Ing):'])

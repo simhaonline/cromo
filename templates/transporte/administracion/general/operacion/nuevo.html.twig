@@ -15,13 +15,14 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Ciudad:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.ciudadRel, { 'attr': {'class': 'form-control'} }) }}
-                </div>
                 <label class="col-sm-2 control-label">Centro costo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCentroCostoFk) }}
+
+                </div>
+                <label class="col-sm-2 control-label">Ciudad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -29,9 +30,9 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.retencionIndustriaComercio) }}
                 </div>
-                <label class="col-sm-2 control-label"></label>
+                <label class="col-sm-2 control-label">Operacion cargo:</label>
                 <div class="col-sm-4">
-
+                    {{ form_widget(form.operacionCargoRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>

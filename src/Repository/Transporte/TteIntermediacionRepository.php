@@ -339,6 +339,7 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                                         $arRegistro->setComprobanteRel($arComprobante);
                                         $arRegistro->setNumero($arIntermediacion['numero']);
                                         $arRegistro->setFecha($arIntermediacion['fecha']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
                                         if($arrIntermediacionVenta['codigoFacturaClaseFk'] == 'FA') {
                                             $arRegistro->setVrCredito($arrIntermediacionVenta['vrFleteIngreso']);
                                             $arRegistro->setNaturaleza('C');

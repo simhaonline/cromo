@@ -114,6 +114,9 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('tg.nombreDestinatario')
+            ->addSelect('tg.telefonoDestinatario')
+            ->addSelect('tg.direccionDestinatario')
             ->addSelect('tg.codigoDespachoFk')
             ->addSelect('tg.cortesia')
             ->addSelect('tg.remitente')
@@ -124,6 +127,14 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.vrManejo')
             ->addSelect('tg.vrRecaudo')
             ->addSelect('tg.vrDeclara')
+            ->addSelect('tg.fechaIngreso')
+            ->addSelect('tg.fechaDesembarco')
+            ->addSelect('tg.fechaDespacho')
+            ->addSelect('tg.fechaEntrega')
+            ->addSelect('tg.fechaSoporte')
+            ->addSelect('tg.fechaCumplido')
+            ->addSelect('tg.fechaFactura')
+            ->addSelect('tg.fechaDocumental')
             ->addSelect('tg.estadoImpreso')
             ->addSelect('tg.estadoAutorizado')
             ->addSelect('tg.estadoAnulado')
@@ -2966,6 +2977,30 @@ class TteGuiaRepository extends ServiceEntityRepository
         LEFT JOIN g.clienteRel c
         GROUP BY g.codigoClienteFk");
         return $arGuiaEstado->execute();
+    }
+
+    public function estadoGuia(){
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoClienteFk')
+            ->addSelect('c.nombreCorto AS cliente')
+            ->addSelect('g.estadoNovedad')
+            ->addSelect('g.estadoDespachado')
+            ->addSelect('g.estadoEntregado')
+            ->addSelect('g.estadoCumplido')
+            ->leftJoin('g.clienteRel', 'c')
+            ->orderBy('g.fechaIngreso', 'DESC');
+        if ($session->get('filtroTteGuiaClienteNombre')) {
+            $queryBuilder->andWhere("tg.codigoClienteFk = {$session->get('filtroTteGuiaClienteNombre')}");
+        }
+        if ($session->get('filtroTteGuiaFechaIngresoDesde')) {
+            $queryBuilder->andWhere('g.fechaIngreso >= ' . "'{$session->get('filtroTteGuiaFechaIngresoDesde')}'");
+        }
+        if ($session->get('filtroTteGuiaFechaIngresoHasta')) {
+            $queryBuilder->andWhere('g.fechaIngreso <= ' . "'{$session->get('filtroTteGuiaFechaIngresoHasta')}'");
+        }
+        return $queryBuilder;
     }
 
     public function pendienteFacturarCliente()

@@ -162,6 +162,7 @@ class TteClienteRepository extends ServiceEntityRepository
                     $arCliente->setCondicionRel($em->getReference(TteCondicion::class, $raw['codigoCondicionFk']));
                     $arCliente->setOperacionRel($em->getReference(TteOperacion::class, $raw['codigoOperacionFk']));
                     $arCliente->setGuiaPagoContado(1);
+                    $arCliente->setGuiaPagoDestino(1);
                     $em->persist($arCliente);
                     $em->flush();
                     $em->getConnection()->commit();

@@ -5,6 +5,7 @@ namespace App\Form\Type\Transporte;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteOperacion;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,7 +23,7 @@ class GuiaCorreccionType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
             ->add('codigoClienteFk', TextType::class)
-            ->add('documentoCliente', TextType::class)
+            ->add('documentoCliente', TextType::class, array('required' => false))
             ->add('fechaIngreso', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('ciudadOrigenRel',EntityType::class,[
                 'class' => TteCiudad::class,
@@ -56,6 +57,8 @@ class GuiaCorreccionType extends AbstractType {
                 },'choice_label' => 'nombre',
                 'required' => true
             ])
+            ->add('estadoEntregado', CheckboxType::class, array('required'  => false))
+            ->add('estadoSoporte', CheckboxType::class, array('required'  => false))
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

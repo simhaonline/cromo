@@ -34,7 +34,8 @@ class PrecioDetalleType extends AbstractType
                     $ciudad = $er->getNombre();
                     return $ciudad.' - '.$er->getDepartamentoRel()->getNombre();
                 },
-                'label' => 'Ciudad origen:'
+                'label' => 'Ciudad origen:',
+                'placeholder' => ''
             ])
             ->add('ciudadDestinoRel',EntityType::class,[
                 'required' => false,
@@ -47,7 +48,8 @@ class PrecioDetalleType extends AbstractType
                     $ciudad = $er->getNombre();
                     return $ciudad. '-' . $er->getDepartamentoRel()->getNombre();
                 },
-                'label' => 'Ciudad destino:'
+                'label' => 'Ciudad destino:',
+                'placeholder' => ''
             ])
             ->add('zonaRel',EntityType::class,[
                 'required' => false,
@@ -67,7 +69,8 @@ class PrecioDetalleType extends AbstractType
                         ->orderBy('st.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Producto:'
+                'label' => 'Producto:',
+                'placeholder' => ''
             ])
             ->add('vrPeso', IntegerType::class,['required' => true,'label' => 'Valor peso:'])
             ->add('vrUnidad', IntegerType::class,['required' => true,'label' => 'Valor unidad:'])

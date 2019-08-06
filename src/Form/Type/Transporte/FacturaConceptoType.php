@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteFacturaConcepto;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,6 +20,7 @@ class FacturaConceptoType extends AbstractType
 
             ->add('codigoFacturaConceptoPk',TextType::class,['required' => true,'label' => 'Codigo factura concepto:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
+            ->add('liberarGuias', CheckboxType::class, array('required' => false))
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }

@@ -27,6 +27,11 @@ class TteFacturaConcepto
     private $nombre;
 
     /**
+     * @ORM\Column(name="liberar_guias", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $liberarGuias = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaConceptoRel")
      */
     protected $facturasFacturaConceptoRel;
@@ -77,6 +82,22 @@ class TteFacturaConcepto
     public function setFacturasFacturaConceptoRel( $facturasFacturaConceptoRel ): void
     {
         $this->facturasFacturaConceptoRel = $facturasFacturaConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiberarGuias()
+    {
+        return $this->liberarGuias;
+    }
+
+    /**
+     * @param mixed $liberarGuias
+     */
+    public function setLiberarGuias($liberarGuias): void
+    {
+        $this->liberarGuias = $liberarGuias;
     }
 
 

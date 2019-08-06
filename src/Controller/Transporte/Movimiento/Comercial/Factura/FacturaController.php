@@ -579,7 +579,7 @@ class FacturaController extends ControllerListenerGeneral
         $paginator = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $form = $this->createFormBuilder()
-            ->add('txtNumero', TextType::class, ['data' => $session->get('filtroTteFacturaNumero')])
+            ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNumero')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);

@@ -451,10 +451,12 @@ class TteFacturaRepository extends ServiceEntityRepository
                     $query->execute();
                 }
                 if($arFactura->getCodigoFacturaClaseFk() == 'NC') {
-                    $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.codigoFacturaFk = null, g.codigoFacturaPlanillaFk = null  
-                      WHERE g.codigoFacturaFk = :codigoFactura')
-                        ->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
-                    $query->execute();
+                    if($arFactura->getFacturaConceptoRel()->getLiberarGuias()) {
+                        $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoFacturado = 0, g.estadoFacturaGenerada = 0, g.codigoFacturaFk = null, g.codigoFacturaPlanillaFk = null  
+                        WHERE g.codigoFacturaFk = :codigoFactura')
+                            ->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
+                        $query->execute();
+                    }
                 }
                 $arFactura->setEstadoAprobado(1);
                 $fecha = new \DateTime('now');

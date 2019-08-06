@@ -25,7 +25,13 @@
     </tr>
     <tr>
         <td class="titulo">COD REFERENCIA:</td>
-        <td class="td-in-well">{{ arFactura.codigoFacturaReferenciaFk }}</td>
+        <td class="td-in-well">
+            {% if arFactura.codigoFacturaClaseFk == 'NC' %}
+                {{ arFactura.codigoFacturaReferenciaFk }}
+                {% if arFactura.codigoFacturaReferenciaFk == null and arFactura.estadoAutorizado == 0 %}
+                    <a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_referencia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Agregar</a>
+                {% endif %}
+            {% endif %}  </td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
         <td class="titulo" >IVA:</td>

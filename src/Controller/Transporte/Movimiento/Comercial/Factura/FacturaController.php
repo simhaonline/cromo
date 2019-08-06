@@ -798,6 +798,39 @@ class FacturaController extends ControllerListenerGeneral
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/transporte/movimiento/comercial/factura/referencia/{codigoFactura}", name="transporte_movimiento_comercial_factura_referencia")
+     */
+    public function referencia(Request $request, $codigoFactura)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $paginator = $this->get('knp_paginator');
+        $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        $form = $this->createFormBuilder()
+            ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNumero')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($request->request->get('OpSeleccionar')) {
+                $codigo = $request->request->get('OpSeleccionar');
+                $arFactura->setCodigoFacturaReferenciaFk($codigo);
+                $em->persist($arFactura);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTteFacturaNumero', $form->get('txtNumero')->getData());
+            }
+        }
+        $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->notaCredito($arFactura->getCodigoClienteFk()), $request->query->getInt('page', 1), 50);
+        return $this->render('transporte/movimiento/comercial/factura/referencia.html.twig', [
+            'arFacturas' => $arFacturas,
+            'form' => $form->createView()]);
+    }
 }
 
 

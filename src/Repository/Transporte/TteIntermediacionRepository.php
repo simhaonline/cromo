@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
@@ -285,6 +286,8 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                     if(!$arIntermediacion['estadoContabilizado']) {
                         if($arIntermediacion) {
                             if($arIntermediacion['estadoContabilizado'] == 0) {
+                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find(112);
+
                                 //Contabilizar intermediacion parte ventas
                                 $arrIntermediacionesVenta = $em->getRepository(TteIntermediacionVenta::class)->registroContabilizar($codigo);
                                 foreach ($arrIntermediacionesVenta as $arrIntermediacionVenta) {
@@ -302,6 +305,7 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                                         $arRegistro->setComprobanteRel($arComprobante);
                                         $arRegistro->setNumero($arIntermediacion['numero']);
                                         $arRegistro->setNumeroReferencia($arIntermediacion['numero']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
                                         $arRegistro->setFecha($arIntermediacion['fecha']);
                                         if($arrIntermediacionVenta['codigoFacturaClaseFk'] == 'FA') {
                                             $arRegistro->setVrDebito($arrIntermediacionVenta['vrFlete']);
@@ -371,6 +375,8 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                                         $arRegistro->setCuentaRel($arCuenta);
                                         $arRegistro->setComprobanteRel($arComprobante);
                                         $arRegistro->setNumero($arIntermediacion['numero']);
+                                        $arRegistro->setNumeroReferencia($arIntermediacion['numero']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
                                         $arRegistro->setFecha($arIntermediacion['fecha']);
                                         $arRegistro->setVrCredito($arrIntermediacionCompra['vrFleteParticipacion']);
                                         $arRegistro->setNaturaleza('C');
@@ -402,6 +408,8 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                                         $arRegistro->setCuentaRel($arCuenta);
                                         $arRegistro->setComprobanteRel($arComprobante);
                                         $arRegistro->setNumero($arIntermediacion['numero']);
+                                        $arRegistro->setNumeroReferencia($arIntermediacion['numero']);
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
                                         $arRegistro->setFecha($arIntermediacion['fecha']);
                                         $arRegistro->setVrCredito($arrIntermediacionesRecogida['vrFleteParticipacion']);
                                         $arRegistro->setNaturaleza('C');

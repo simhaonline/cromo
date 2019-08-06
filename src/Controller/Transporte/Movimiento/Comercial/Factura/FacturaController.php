@@ -800,7 +800,7 @@ class FacturaController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/transporte/movimiento/comercial/factura/referencia/{codigoFactura}", name="transporte_movimiento_comercial_factura_referencia")
+     * @Route("/transporte/movimiento/comercial/factura/referencia/nc/{codigoFactura}", name="transporte_movimiento_comercial_factura_referencia_nc")
      */
     public function referencia(Request $request, $codigoFactura)
     {

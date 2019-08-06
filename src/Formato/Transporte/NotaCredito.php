@@ -4,6 +4,7 @@ namespace App\Formato\Transporte;
 
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
+use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaDetalleConcepto;
 use App\Entity\Transporte\TteRelacionCaja;
@@ -33,8 +34,17 @@ class NotaCredito extends \FPDF {
         $this->SetFont('Arial', 'B', 10);
 
         Estandares::generarEncabezado($this,'NOTA CREDITO', self::$em);
-
+        /** @var $arNotaCredito TteFactura */
         $arNotaCredito = self::$em->getRepository('App:Transporte\TteFactura')->find(self::$codigoNotaCredito);
+        $numeroReferencia = "";
+        if($arNotaCredito->getCodigoFacturaReferenciaFk()) {
+            $arFactura = self::$em->getRepository('App:Transporte\TteFactura')->find($arNotaCredito->getCodigoFacturaReferenciaFk());
+            if($arFactura) {
+                $numeroReferencia = $arFactura->getNumero();
+            }
+        }
+
+
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial','B',10);
         $this->SetFillColor(200, 200, 200);
@@ -78,10 +88,10 @@ class NotaCredito extends \FPDF {
         $this->Cell(65, 4, $arNotaCredito->getGuias(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 4, '', 1, 0, 'L', 1);
+        $this->Cell(30, 4, 'REFERENCIA', 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 4, '', 1, 0, 'L', 1);
+        $this->Cell(65, 4, $numeroReferencia, 1, 0, 'L', 1);
         //
         $this->SetXY(10, $intY + 12);
         $this->SetFont('Arial', 'B', 8);

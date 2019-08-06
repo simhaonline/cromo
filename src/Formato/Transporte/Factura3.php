@@ -136,6 +136,28 @@ class Factura3 extends \FPDF {
     }
 
     public function Body($pdf) {
+        /** @var $arFactura TteFactura */
+        $arFactura = self::$em->getRepository('App:Transporte\TteFactura')->find(self::$codigoFactura);
+//        $arFacturaPlanillas = self::$em->getRepository(TteFacturaPlanilla::class)->formatoFactura(self::$codigoFactura);
+//        $pdf->SetX(10);
+//        $pdf->SetFont('Arial', '', 7);
+//        if($arFacturaPlanillas) {
+//            foreach ($arFacturaPlanillas as $arFacturaPlanilla) {
+//                $pdf->Cell(17, 4, "Planilla:", 1, 0, 'L');
+//                $pdf->Cell(24, 4, $arFacturaPlanilla['numero'], 1, 0, 'L');
+//                $pdf->Cell(43, 4, "", 1, 0, 'L');
+//                $pdf->Cell(26, 4, "Numero guias:", 1, 0, 'L');
+//                $pdf->Cell(10, 4, number_format($arFacturaPlanilla['guias'], 0, '.', ','), 1, 0, 'R');
+//                $pdf->Cell(25, 4, "", 1, 0, 'L');
+//                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrFlete'], 0, '.', ','), 1, 0, 'R');
+//                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrManejo'], 0, '.', ','), 1, 0, 'R');
+//                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrTotal'], 0, '.', ','), 1, 0, 'R');
+//
+//                $pdf->Ln();
+//                $pdf->SetAutoPageBreak(true, 85);
+//            }
+//        }
+//
 
 //        $arFacturaPlanillas = self::$em->getRepository(TteFacturaPlanilla::class)->formatoFactura(self::$codigoFactura);
 //        $pdf->SetX(10);
@@ -156,53 +178,97 @@ class Factura3 extends \FPDF {
 //                $pdf->SetAutoPageBreak(true, 85);
 //            }
 //        }
-
-        $arGuias = self::$em->getRepository(TteFacturaDetalle::class)->formatoFactura(self::$codigoFactura);
-        $pdf->SetX(10);
-        $pdf->SetFont('Arial', '', 6.5);
-        if($arGuias) {
-            $unidadesTotal = 0;
-            $kilosFacturadosTotal = 0;
-            $declaraTotal = 0;
-            foreach ($arGuias as $arGuia) {
-                $pdf->Cell(17, 5, $arGuia['numero'], 0, 0, 'L');
-                $pdf->Cell(20, 5, substr($arGuia['documentoCliente'], 0 ,10), 0, 0, 'L');
-                $pdf->Cell(20, 5, substr(utf8_decode($arGuia['ciudadOrigen']),0,27), 0, 0, 'L');
-                $pdf->Cell(20, 5, substr(utf8_decode($arGuia['ciudadDestino']),0,13), 0, 0, 'L');
-                $pdf->Cell(25, 5, substr(utf8_decode($arGuia['nombreDestinatario']),0,16), 0, 0, 'L');
-                $pdf->Cell(15, 5, substr(utf8_decode($arGuia['producto']),0,15), 0, 0, 'L');
-                $pdf->Cell(9, 5, substr(utf8_decode(substr($arGuia['empaque'], 0, 3)),0,15), 0, 0, 'L');
-                $pdf->Cell(18, 5, substr(utf8_decode($arGuia['fechaIngreso']->format('Y-m-d')),0,15), 0, 0, 'L');
-                $pdf->Cell(18, 5, substr(utf8_decode($arGuia['fechaIngreso']->format('Y-m-d')),0,15), 0, 0, 'L');
-                $pdf->Cell(10, 5, number_format($arGuia['unidades'], 0, '.', ','), 0, 0, 'C');
-                $pdf->Cell(15, 5, number_format($arGuia['pesoReal'], 0, '.', ','), 0, 0, 'R');
-                $pdf->Cell(15, 5, number_format($arGuia['pesoFacturado'], 0, '.', ','), 0, 0, 'R');
-                $pdf->Cell(15, 5, number_format($arGuia['vrDeclara'], 0, '.', ','), 0, 0, 'R');
-                $pdf->Cell(15, 5, number_format($arGuia['vrFlete'], 0, '.', ','), 0, 0, 'R');
-                $pdf->Cell(15, 5, number_format($arGuia['vrManejo'], 0, '.', ','), 0, 0, 'R');
-                $pdf->Cell(15, 5, '', 0, 0, 'R');
-                $pdf->Cell(15, 5, number_format($arGuia['vrTotal'], 0, '.', ','), 0, 0, 'R');
-                $unidadesTotal += $arGuia['unidades'];
-                $kilosFacturadosTotal += $arGuia['pesoFacturado'];
-                $declaraTotal += $arGuia['vrDeclara'];
+        $agrupadaCiudad = $arFactura->getClienteRel()->getFacturaAgrupadaDestino();
+        if($agrupadaCiudad) {
+            $arGuias = self::$em->getRepository(TteFacturaDetalle::class)->formatoFacturaDestino(self::$codigoFactura);
+            $pdf->SetX(10);
+            $pdf->SetFont('Arial', '', 6.5);
+            if($arGuias) {
+                $guias = 0;
+                $unidadesTotal = 0;
+                $kilosFacturadosTotal = 0;
+                $declaraTotal = 0;
+                foreach ($arGuias as $arGuia) {
+                    $pdf->Cell(57, 5, "", 0, 0, 'C');
+                    $pdf->Cell(60, 5, substr(utf8_decode($arGuia['ciudadDestino']),0,13), 0, 0, 'L');
+                    $pdf->Cell(45, 5, "", 0, 0, 'C');
+                    $pdf->Cell(10, 5, number_format($arGuia['unidades'], 0, '.', ','), 0, 0, 'C');
+                    $pdf->Cell(45, 5, "", 0, 0, 'C');
+                    $pdf->Cell(15, 5, number_format($arGuia['vrFlete'], 0, '.', ','), 0, 0, 'R');
+                    $pdf->Cell(15, 5, number_format($arGuia['vrManejo'], 0, '.', ','), 0, 0, 'R');
+                    $unidadesTotal += $arGuia['unidades'];
+                    $kilosFacturadosTotal += $arGuia['pesoFacturado'];
+                    $declaraTotal += $arGuia['vrDeclara'];
+                    $guias += $arGuia['guias'];
+                    $pdf->Ln();
+                    $pdf->SetAutoPageBreak(true, 50);
+                }
                 $pdf->Ln();
-                $pdf->SetAutoPageBreak(true, 50);
+                $pdf->SetFont('Arial', 'b', 8);
+                $pdf->Cell(80, 4, 'TOTAL:', 'T', 0, 'R');
+                $pdf->Cell(20, 4, 'Remesas:', 'T', 0, 'R');
+                $pdf->Cell(10, 4,  $guias, 'T', 0,'R');
+                $pdf->Cell(30, 4, 'Unidades:', 'T', 0, 'R');
+                $pdf->Cell(10, 4,  $unidadesTotal, 'T', 0,'R');
+                $pdf->Cell(30, 4, 'Peso cobrado:', 'T', 0, 'R');
+                $pdf->Cell(10, 4,  $kilosFacturadosTotal, 'T', 0,'R');
+                $pdf->Cell(50, 4, 'Valor declarado total:', 'T', 0, 'R');
+                $pdf->Cell(20, 4,  number_format($declaraTotal), 'T', 0,'R');
+                $pdf->Cell(17, 4, '', 'T', 0, 'R');
+                $pdf->SetAutoPageBreak(true, 15);
+                $pdf->Ln();
             }
-            $pdf->Ln();
-            $pdf->SetFont('Arial', 'b', 8);
-            $pdf->Cell(80, 4, 'TOTAL:', 'T', 0, 'R');
-            $pdf->Cell(20, 4, 'Remesas:', 'T', 0, 'R');
-            $pdf->Cell(10, 4,  $unidadesTotal, 'T', 0,'R');
-            $pdf->Cell(30, 4, 'Unidades:', 'T', 0, 'R');
-            $pdf->Cell(10, 4,  $unidadesTotal, 'T', 0,'R');
-            $pdf->Cell(30, 4, 'Peso cobrado:', 'T', 0, 'R');
-            $pdf->Cell(10, 4,  $kilosFacturadosTotal, 'T', 0,'R');
-            $pdf->Cell(50, 4, 'Valor declarado total:', 'T', 0, 'R');
-            $pdf->Cell(20, 4,  number_format($declaraTotal), 'T', 0,'R');
-            $pdf->Cell(17, 4, '', 'T', 0, 'R');
-            $pdf->SetAutoPageBreak(true, 15);
-            $pdf->Ln();
+        } else {
+            $arGuias = self::$em->getRepository(TteFacturaDetalle::class)->formatoFactura(self::$codigoFactura);
+            $pdf->SetX(10);
+            $pdf->SetFont('Arial', '', 6.5);
+            if($arGuias) {
+                $guias = 0;
+                $unidadesTotal = 0;
+                $kilosFacturadosTotal = 0;
+                $declaraTotal = 0;
+                foreach ($arGuias as $arGuia) {
+                    $pdf->Cell(17, 5, $arGuia['numero'], 0, 0, 'L');
+                    $pdf->Cell(20, 5, substr($arGuia['documentoCliente'], 0 ,10), 0, 0, 'L');
+                    $pdf->Cell(20, 5, substr(utf8_decode($arGuia['ciudadOrigen']),0,27), 0, 0, 'L');
+                    $pdf->Cell(20, 5, substr(utf8_decode($arGuia['ciudadDestino']),0,13), 0, 0, 'L');
+                    $pdf->Cell(25, 5, substr(utf8_decode($arGuia['nombreDestinatario']),0,16), 0, 0, 'L');
+                    $pdf->Cell(15, 5, substr(utf8_decode($arGuia['producto']),0,15), 0, 0, 'L');
+                    $pdf->Cell(9, 5, substr(utf8_decode(substr($arGuia['empaque'], 0, 3)),0,15), 0, 0, 'L');
+                    $pdf->Cell(18, 5, substr(utf8_decode($arGuia['fechaIngreso']->format('Y-m-d')),0,15), 0, 0, 'L');
+                    $pdf->Cell(18, 5, substr(utf8_decode($arGuia['fechaIngreso']->format('Y-m-d')),0,15), 0, 0, 'L');
+                    $pdf->Cell(10, 5, number_format($arGuia['unidades'], 0, '.', ','), 0, 0, 'C');
+                    $pdf->Cell(15, 5, number_format($arGuia['pesoReal'], 0, '.', ','), 0, 0, 'R');
+                    $pdf->Cell(15, 5, number_format($arGuia['pesoFacturado'], 0, '.', ','), 0, 0, 'R');
+                    $pdf->Cell(15, 5, number_format($arGuia['vrDeclara'], 0, '.', ','), 0, 0, 'R');
+                    $pdf->Cell(15, 5, number_format($arGuia['vrFlete'], 0, '.', ','), 0, 0, 'R');
+                    $pdf->Cell(15, 5, number_format($arGuia['vrManejo'], 0, '.', ','), 0, 0, 'R');
+                    $pdf->Cell(15, 5, '', 0, 0, 'R');
+                    $pdf->Cell(15, 5, number_format($arGuia['vrTotal'], 0, '.', ','), 0, 0, 'R');
+                    $unidadesTotal += $arGuia['unidades'];
+                    $kilosFacturadosTotal += $arGuia['pesoFacturado'];
+                    $declaraTotal += $arGuia['vrDeclara'];
+                    $guias++;
+                    $pdf->Ln();
+                    $pdf->SetAutoPageBreak(true, 50);
+                }
+                $pdf->Ln();
+                $pdf->SetFont('Arial', 'b', 8);
+                $pdf->Cell(80, 4, 'TOTAL:', 'T', 0, 'R');
+                $pdf->Cell(20, 4, 'Remesas:', 'T', 0, 'R');
+                $pdf->Cell(10, 4,  $guias, 'T', 0,'R');
+                $pdf->Cell(30, 4, 'Unidades:', 'T', 0, 'R');
+                $pdf->Cell(10, 4,  $unidadesTotal, 'T', 0,'R');
+                $pdf->Cell(30, 4, 'Peso cobrado:', 'T', 0, 'R');
+                $pdf->Cell(10, 4,  $kilosFacturadosTotal, 'T', 0,'R');
+                $pdf->Cell(50, 4, 'Valor declarado total:', 'T', 0, 'R');
+                $pdf->Cell(20, 4,  number_format($declaraTotal), 'T', 0,'R');
+                $pdf->Cell(17, 4, '', 'T', 0, 'R');
+                $pdf->SetAutoPageBreak(true, 15);
+                $pdf->Ln();
+            }
         }
+
     }
 
     public function Footer() {

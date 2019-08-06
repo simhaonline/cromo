@@ -85,6 +85,7 @@ class ClienteType extends AbstractType
             ->add('correo',TextType::class,['required' => false,'label' => 'Correo:'])
             ->add('estadoInactivo', CheckboxType::class, array('required'  => false, 'label' => 'Inactivo'))
             ->add('retencionFuenteSinBase', CheckboxType::class, array('required'  => false, 'label' => 'Retencion fuente sin base'))
+            ->add('facturaAgrupadaDestino', CheckboxType::class, array('required'  => false, 'label' => 'Factura agrupada destino'))
             ->add('guiaPagoCredito', CheckboxType::class, array('required'  => false, 'label' => 'Pago credito'))
             ->add('guiaPagoContado', CheckboxType::class, array('required'  => false, 'label' => 'Pago contado'))
             ->add('guiaPagoDestino', CheckboxType::class, array('required'  => false, 'label' => 'Pago destino'))

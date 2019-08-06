@@ -170,6 +170,27 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
 
     }
 
+    public function formatoFacturaDestino($codigoFactura): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT 
+        cd.nombre AS ciudadDestino,
+        count(fd.codigoFacturaDetallePk) as guias,
+        sum(fd.unidades) as unidades,     
+        sum(fd.vrFlete) as vrFlete,
+        sum(fd.vrManejo) as vrManejo,
+        sum(g.pesoFacturado) as pesoFacturado,
+        sum(fd.vrDeclara) as vrDeclara
+        FROM App\Entity\Transporte\TteFacturaDetalle fd 
+        LEFT JOIN fd.guiaRel g 
+        LEFT JOIN g.ciudadDestinoRel cd
+        WHERE fd.codigoFacturaFk = :codigoFactura and fd.codigoFacturaPlanillaFk IS NULL GROUP BY g.codigoCiudadDestinoFk ORDER BY g.codigoCiudadDestinoFk ASC'
+        )->setParameter('codigoFactura', $codigoFactura);
+        return $query->execute();
+
+    }
+
     public function detalle()
     {
 

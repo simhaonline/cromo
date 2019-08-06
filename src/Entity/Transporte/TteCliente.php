@@ -164,6 +164,11 @@ class TteCliente
     private $comentario;
 
     /**
+     * @ORM\Column(name="factura_agrupada_destino", type="boolean", nullable=true,options={"default":false})
+     */
+    private $facturaAgrupadaDestino = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="tteClientesIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
      */
@@ -1046,6 +1051,22 @@ class TteCliente
     public function setCondicionFactura($condicionFactura): void
     {
         $this->condicionFactura = $condicionFactura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaAgrupadaDestino()
+    {
+        return $this->facturaAgrupadaDestino;
+    }
+
+    /**
+     * @param mixed $facturaAgrupadaDestino
+     */
+    public function setFacturaAgrupadaDestino($facturaAgrupadaDestino): void
+    {
+        $this->facturaAgrupadaDestino = $facturaAgrupadaDestino;
     }
 
 

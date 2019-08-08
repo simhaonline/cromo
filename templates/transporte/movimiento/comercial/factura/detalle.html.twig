@@ -101,7 +101,7 @@
                         {% if arFactura.codigoFacturaClaseFk == 'FA' %}
                             <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia_archivo', {'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': 0 }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo (archivo)</a>
                             <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia_cumplido', {'codigoFactura': arFactura.codigoFacturaPk, 'codigoFacturaPlanilla': 0 }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo (cumplido)</a>
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 1200)">Nuevo</a>
                         {% endif %}
                         {% if arFactura.codigoFacturaClaseFk == 'NC' %}
                             <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_adicionar_nc_guia', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Nuevo</a>

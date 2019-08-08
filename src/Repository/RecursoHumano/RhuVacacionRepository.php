@@ -5,14 +5,21 @@ namespace App\Repository\RecursoHumano;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
+use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
+use App\Entity\RecursoHumano\RhuConsecutivo;
+use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
+use App\Entity\RecursoHumano\RhuCreditoPago;
 use App\Entity\RecursoHumano\RhuEmbargo;
+use App\Entity\RecursoHumano\RhuEmbargoPago;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\RecursoHumano\RhuVacacionAdicional;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -30,6 +37,79 @@ class RhuVacacionRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, RhuVacacion::class);
+    }
+
+    /**
+     * @param $arVacacion RhuVacacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function autorizar($arVacacion)
+    {
+        $em = $this->getEntityManager();
+        if (!$arVacacion->getEstadoAutorizado()) {
+            $arVacacion->setEstadoAutorizado(1);
+            $em->persist($arVacacion);
+            $em->flush();
+
+        } else {
+            Mensajes::error('El despacho ya esta autorizado');
+        }
+    }
+
+    /**
+     * @param $arVacacion RhuVacacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function desautorizar($arVacacion)
+    {
+        if ($arVacacion->getEstadoAutorizado()  && !$arVacacion->getEstadoAprobado()) {
+            $arVacacion->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arVacacion);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('El registro esta impreso y no se puede desautorizar');
+        }
+    }
+
+    /**
+     * @param $arVacacion RhuVacacion
+     * @return string
+     */
+    public function aprobar($arVacacion)
+    {
+        $em = $this->getEntityManager();
+        if($arVacacion->getEstadoAutorizado() && !$arVacacion->getEstadoAprobado()) {
+            $arVacacion->setEstadoAprobado(1);
+            $em->persist($arVacacion);
+
+
+            $arContrato = $em->getRepository(RhuContrato::class)->find($arVacacion->getCodigoContratoFk());
+            $numero = $em->getRepository(RhuConsecutivo::class)->consecutivo(4);
+            $respuesta = $em->getRepository(RhuVacacion::class)->pagar($arVacacion->getCodigoVacacionPk(), $numero);
+            /*if ($respuesta == '') {
+                $arVacacion->setNumero($numero);
+                $arVacacion->setFecha(new \DateTime('now'));
+                $arVacacion->setFechaContabilidad($arVacacion->getFechaDesdeDisfrute());
+                $arVacacion->setEstadoPagoGenerado(1);
+                $em->persist($arVacacion);
+                $arContrato->setFechaUltimoPagoVacaciones($arVacacion->getFechaHastaPeriodo());
+                $em->persist($arContrato);
+                $arUsuario = $this->get('security.token_storage')->getToken()->getUser();
+                $em->getRepository('BrasaRecursoHumanoBundle:RhuVacacion')->generarNovedadTurnos($codigoVacacion, $arUsuario->getUserName());
+                $em->flush();
+                return $this->redirect($this->generateUrl('brs_rhu_movimiento_vacacion_detalle', array('codigoVacacion' => $codigoVacacion)));
+            } else {
+                $objMensaje->Mensaje("error", $respuesta);
+                return $this->redirect($this->generateUrl('brs_rhu_movimiento_vacacion_detalle', array('codigoVacacion' => $codigoVacacion)));
+            }*/
+
+
+            $em->flush();
+        } else {
+            Mensajes::error("El documento debe estar autorizado y no puede estar previamente aprobado");
+        }
     }
 
     /**
@@ -482,6 +562,220 @@ class RhuVacacionRepository extends ServiceEntityRepository
         }
         $arVacaciones = $queryBuilder->getQuery()->getResult();
         return $arVacaciones;
+    }
+
+    public function pagar($codigoVacacion, $numero)
+    {
+        $em = $this->getEntityManager();
+
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arVacacion = $em->getRepository(RhuVacacion::class)->find($codigoVacacion);
+        /** @var $arContrato RhuContrato */
+        $arContrato = $arVacacion->getContratoRel();
+        $validar = "";
+        // Calcular los creditos
+        $arrCreditos = $em->getRepository(RhuVacacionAdicional::class)->resumenCredito($codigoVacacion);
+        foreach ($arrCreditos as $arrCredito) {
+            /** @var $arCredito RhuCredito */
+            $arCredito = $em->getRepository(RhuCredito::class)->find($arrCredito['codigoCreditoFk']);
+            if ($arCredito->getVrSaldo() < $arrCredito['total']) {
+                $validar = "El credito " . $arrCredito['codigoCreditoFk'] . " tiene un saldo de " . $arCredito->getSaldo() . " y la deduccion de " . $arrCredito['total'] . " lo supera";
+            }
+        }
+        if ($validar == "") {
+            $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(array('codigoVacacionFk' => $codigoVacacion));
+            foreach ($arVacacionAdicionales as $arVacacionAdicional) {
+                if ($arVacacionAdicional->getCodigoCreditoFk() != null) {
+                    $arCredito = $em->getRepository(RhuCredito::class)->find($arVacacionAdicional->getCodigoCreditoFk());
+                    $arCredito->setVrSaldo($arCredito->getVrSaldo() - $arVacacionAdicional->getVrDeduccion());
+                    $arCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual() + 1);
+                    $arCredito->setTotalPagos($arCredito->getTotalPagos() + $arVacacionAdicional->getVrDeduccion());
+
+                    $arPagoCredito = new RhuCreditoPago();
+                    $arPagoCredito->setCreditoRel($arCredito);
+                    $arPagoCredito->setfechaPago(new \ DateTime("now"));
+                    $arCreditoTipoPago = $em->getRepository('BrasaRecursoHumanoBundle:RhuCreditoTipoPago')->find(3);
+                    $arPagoCredito->setCreditoTipoPagoRel($arCreditoTipoPago);
+                    $arPagoCredito->setVrCuota($arVacacionAdicional->getVrDeduccion());
+                    $arPagoCredito->setSaldo($arCredito->getVrSaldo());
+                    $arPagoCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual());
+                    $em->persist($arPagoCredito);
+                    if ($arCredito->getSaldo() <= 0) {
+                        $arCredito->setEstadoPagado(1);
+                    }
+                    $em->persist($arCredito);
+                }
+            }
+        }
+
+        //Generar el pago en RhuPago
+        if ($arVacacion->getEstadoAutorizado() == 1 && $arVacacion->getEstadoPagoGenerado() == 0) {
+            $arPagoTipo = $em->getRepository(RhuPagoTipo::class)->find('VAC');
+            $arPago = new RhuPago();
+            $arPago->setPagoTipoRel($arPagoTipo);
+            $arPago->setVacacionRel($arVacacion);
+            $arPago->setCentroCostoRel($arVacacion->getContratoRel()->getCentroCostoRel());
+            $arPago->setEmpleadoRel($arVacacion->getEmpleadoRel());
+            $arPago->setVrSalarioEmpleado($arVacacion->getContratoRel()->getVrSalario());
+            $arPago->setVrSalarioPeriodo($arVacacion->getVrSalarioActual());
+            $arPago->setVrSalario($arVacacion->getContratoRel()->getVrSalario());
+            $arPago->setFechaDesde($arVacacion->getFechaDesdeDisfrute());
+            $arPago->setFechaHasta($arVacacion->getFechaDesdeDisfrute());
+            $arPago->setFechaDesdePago($arVacacion->getFechaDesdeDisfrute());
+            $arPago->setFechaHastaPago($arVacacion->getFechaDesdeDisfrute());
+            $arPago->setContratoRel($arVacacion->getContratoRel());
+            $arPago->setEntidadPensionRel($arVacacion->getContratoRel()->getEntidadPensionRel());
+            $arPago->setEntidadSaludRel($arVacacion->getContratoRel()->getEntidadSaludRel());
+            $arPago->setDiasPeriodo($arVacacion->getDiasPagados());
+            $arPago->setCodigoUsuario($arVacacion->getCodigoUsuario());
+            $arPago->setComentarios($arVacacion->getComentarios());
+            $arPago->setEstadoPagado(1);
+            $arPago->setNumero($numero);
+            $em->persist($arPago);
+
+            //Estos van en el detalle del pago
+            /** @var $arConfiguracion RhuConfiguracion */
+            $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+
+            //Total de pago de vacacion por concepto de vacacion , se consulta el parametro en vacacionParametrizacion
+            if ($arVacacion->getDiasPagados() > 0) {
+                if ($arConfiguracion->getCodigoConceptoVacacionFk()) {
+                    $arPagoConceptoVacacion = $em->getRepository(RhuConcepto::class)->find($arConfiguracion->getCodigoConceptoVacacionFk());
+                    $arPagoDetalleVacacion = new RhuPagoDetalle();
+                    $vrvacacionDinero = $arVacacion->getVrVacacionDinero();
+                    $arPagoDetalleVacacion->setPagoRel($arPago);
+                    $arPagoDetalleVacacion->setPagoConceptoRel($arPagoConceptoVacacion);
+                    $arPagoDetalleVacacion->setDetalle('');
+                    $arPagoDetalleVacacion->setVrPago($vrvacacionDinero);
+                    $arPagoDetalleVacacion->setOperacion($arPagoConceptoVacacion->getOperacion());
+                    $arPagoDetalleVacacion->setNumeroDias($arVacacion->getDiasPagados());
+                    $arPagoDetalleVacacion->setVrPagoOperado($vrvacacionDinero * $arPagoConceptoVacacion->getOperacion());
+                    $em->persist($arPagoDetalleVacacion);
+                } else {
+                    $validar = "El parametro de vacacion pagas no esta configurado correctamente";
+                }
+            }
+
+            if ($arVacacion->getDiasDisfrutados() > 0) {
+                if ($arConfiguracion->getCodigoConceptoVacacionDisfruteFk()) {
+                    $arPagoConceptoVacacion = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoConcepto')->find($arConfiguracion->getCodigoConceptoVacacionDisfruteFk());
+                    $arPagoDetalleVacacion = new RhuPagoDetalle();
+                    $vrVacacionDisfrute = round($arVacacion->getVrVacacionDisfrute());
+                    $arPagoDetalleVacacion->setPagoRel($arPago);
+                    $arPagoDetalleVacacion->setPagoConceptoRel($arPagoConceptoVacacion);
+                    $arPagoDetalleVacacion->setDetalle('');
+                    $arPagoDetalleVacacion->setVrPago($vrVacacionDisfrute);
+                    $arPagoDetalleVacacion->setOperacion($arPagoConceptoVacacion->getOperacion());
+                    $arPagoDetalleVacacion->setNumeroDias($arVacacion->getDiasDisfrutados());
+                    $arPagoDetalleVacacion->setVrPagoOperado($vrVacacionDisfrute * $arPagoConceptoVacacion->getOperacion());
+                    $em->persist($arPagoDetalleVacacion);
+                } else {
+                    $validar = "El parametro de vacacion disfrute no esta configurado correctamente";
+                }
+            }
+
+            $codigoPension = $arContrato->getPensionRel()->getCodigoConceptoFk();
+            if ($codigoPension) {
+                //Total de pago de vacacion por concepto de pension, se consulta el parametro en vacacionParametrizacion
+                $arPagoConceptoPension = $em->getRepository(RhuConcepto::class)->find($codigoPension);
+                $arPagoDetallePension = new RhuPagoDetalle();
+                $arPagoDetallePension->setPagoRel($arPago);
+                $arPagoDetallePension->setPagoConceptoRel($arPagoConceptoPension);
+                $arPagoDetallePension->setDetalle('');
+                $arPagoDetallePension->setVrPago($arVacacion->getVrPension());
+                $arPagoDetallePension->setPorcentajeAplicado($arPagoConceptoPension->getPorPorcentaje());
+                $arPagoDetallePension->setOperacion($arPagoConceptoPension->getOperacion());
+                $arPagoDetallePension->setVrPagoOperado($arVacacion->getVrPension() * $arPagoConceptoPension->getOperacion());
+                $em->persist($arPagoDetallePension);
+            } else {
+                $validar = "El parametro de vacacion no esta configurado correctamente";
+            }
+
+            $codigoSalud = $arContrato->getSaludRel()->getCodigoConceptoFk();
+            if ($codigoSalud) {
+                $arPagoConceptoSalud = $em->getRepository(RhuConcepto::class)->find($codigoSalud);
+                $arPagoDetalleSalud = new RhuPagoDetalle();
+                $arPagoDetalleSalud->setPagoRel($arPago);
+                $arPagoDetalleSalud->setPagoConceptoRel($arPagoConceptoSalud);
+                $arPagoDetalleSalud->setDetalle('');
+                $arPagoDetalleSalud->setVrPago($arVacacion->getVrSalud());
+                $arPagoDetalleSalud->setPorcentajeAplicado($arPagoConceptoSalud->getPorPorcentaje());
+                $arPagoDetalleSalud->setOperacion($arPagoConceptoSalud->getOperacion());
+                $arPagoDetalleSalud->setVrPagoOperado($arVacacion->getVrSalud() * $arPagoConceptoSalud->getOperacion());
+                $em->persist($arPagoDetalleSalud);
+            } else {
+                $validar = "El parametro de vacacion no esta configurado correctamente";
+            }
+
+            //Total de pago de vacacion por concepto de fondo de solidaridad pensional, se consulta el parametro en vacacionParametrizacion
+
+            if ($arVacacion->getVrFondoSolidaridad() > 0) {
+                $codigoSolidaridad = $arConfiguracion->getCodigoConceptoFondoSolidaridadPensionFk();
+                if ($codigoSolidaridad) {
+                    $arPagoConceptoFondo = $em->getRepository(RhuConcepto::class)->find($codigoSolidaridad);
+                    $arPagoDetalleFondoSolidaridad = new RhuPagoDetalle();
+                    $arPagoDetalleFondoSolidaridad->setPagoRel($arPago);
+                    $arPagoDetalleFondoSolidaridad->setPagoConceptoRel($arPagoConceptoFondo);
+                    $arPagoDetalleFondoSolidaridad->setDetalle('');
+                    $arPagoDetalleFondoSolidaridad->setVrPago($arVacacion->getVrFondoSolidaridad());
+                    $arPagoDetalleFondoSolidaridad->setPorcentajeAplicado($arPagoConceptoFondo->getPorPorcentaje());
+                    $arPagoDetalleFondoSolidaridad->setOperacion($arPagoConceptoFondo->getOperacion());
+                    $arPagoDetalleFondoSolidaridad->setVrPagoOperado($arVacacion->getVrFondoSolidaridad() * $arPagoConceptoFondo->getOperacion());
+                    $em->persist($arPagoDetalleFondoSolidaridad);
+                } else {
+                    $validar = "El parametro de vacacion no esta configurado correctamente";
+                }
+            }
+
+            //Se recorren los adicionales de las vacaciones
+            $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(array('codigoVacacionFk' => $arVacacion->getCodigoVacacionPk()));
+            foreach ($arVacacionAdicionales as $arVacacionAdicional) {
+                $vrPagoAdicional = 0;
+                if ($arVacacionAdicional->getVrBonificacion() > 0) {
+                    $vrPagoAdicional = $arVacacionAdicional->getVrBonificacion();
+                } else {
+                    $vrPagoAdicional = $arVacacionAdicional->getVrDeduccion();
+                }
+                $arPagoDetalle = new RhuPagoDetalle();
+                $arPagoDetalle->setPagoRel($arPago);
+                $arPagoDetalle->setPagoConceptoRel($arVacacionAdicional->getPagoConceptoRel());
+                $arPagoDetalle->setDetalle('');
+                $arPagoDetalle->setVrPago($vrPagoAdicional);
+                $arPagoDetalle->setOperacion($arVacacionAdicional->getPagoConceptoRel()->getOperacion());
+                $arPagoDetalle->setVrPagoOperado($vrPagoAdicional * $arVacacionAdicional->getPagoConceptoRel()->getOperacion());
+                if ($arVacacionAdicional->getPagoConceptoRel()->getGeneraIngresoBaseCotizacion()) {
+                    $arPagoDetalle->setVrIngresoBaseCotizacion($vrPagoAdicional);
+                }
+                if ($arVacacionAdicional->getPagoConceptoRel()->getGeneraIngresoBasePrestacion()) {
+                    $arPagoDetalle->setVrIngresoBasePrestacion($vrPagoAdicional);
+                }
+                $em->persist($arPagoDetalle);
+                //Validar si algun adicional corresponde a un embargo para generar el pago en RhuEmbargoPago.
+                if ($arVacacionAdicional->getCodigoEmbargoFk() != "") {
+                    $arEmbargo = $arVacacionAdicional->getEmbargoRel();
+                    //Crear embargo pago, se guarda el pago en al tabla rhu_embargo_pago
+                    $arEmbargoPago = new RhuEmbargoPago();
+                    $arEmbargoPago->setEmbargoRel($arEmbargo);
+                    $arEmbargoPago->setPagoRel($arPago);
+                    $arEmbargoPago->setFechaPago(new \ DateTime('now'));
+                    $arEmbargoPago->setVrCuota($arVacacionAdicional->getVrDeduccion());
+                    $arEmbargo->setDescuento($arEmbargo->getDescuento() + $arVacacionAdicional->getVrDeduccion());
+                    $em->persist($arEmbargoPago);
+                    $em->persist($arEmbargo);
+                }
+            }
+            if ($validar == "") {
+                $em->flush();
+                if ($arPago->getCodigoPagoPk() > 0) {
+                    $em->getRepository('BrasaRecursoHumanoBundle:RhuPago')->liquidar($arPago->getCodigoPagoPk(), $arConfiguracion);
+                }
+            }
+
+        } else {
+            $validar = "La vacacion debe estar autorizada y no puede estar pagada";
+        }
+
+        return $validar;
     }
 
 }

@@ -33,4 +33,15 @@ class RhuVacacionAdicionalRepository extends ServiceEntityRepository
             }
         }
     }
+
+    public function resumenCredito($codigoVacacion)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT va.codigoCreditoFk, SUM(va.vrDeduccion) as total FROM App\Entity\RecursoHumano\RhuVacacionAdicional va "
+            . "WHERE va.codigoVacacionFk = " . $codigoVacacion . " "
+            . "AND va.codigoCreditoFk IS NOT NULL GROUP BY va.codigoCreditoFk";
+        $query = $em->createQuery($dql);
+        $arrCredito = $query->getResult();
+        return $arrCredito;
+    }
 }

@@ -988,6 +988,7 @@ class TteGuiaRepository extends ServiceEntityRepository
     public function facturaPendiente($codigoCliente)
     {
         $em = $this->getEntityManager();
+        /** @var $arCliente TteCliente */
         $arCliente = $em->getRepository(TteCliente::class)->find($codigoCliente);
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
@@ -1006,6 +1007,11 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.vrManejo')
             ->addSelect('g.codigoGuiaTipoFk')
             ->addSelect('g.codigoServicioFk')
+            ->addSelect('g.estadoDespachado')
+            ->addSelect('g.estadoSoporte')
+            ->addSelect('g.estadoCumplido')
+            ->addSelect('g.estadoEntregado')
+            ->addSelect('g.estadoNovedad')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->leftJoin('g.clienteRel', 'c')
@@ -1015,9 +1021,9 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->andWhere('g.factura = 0')
             ->andWhere('g.cortesia = 0')
             ->andWhere('g.codigoClienteFk =' . $codigoCliente);
-        if ($arCliente->getCondicionFactura() == 1) {
-            $queryBuilder
-                ->andWhere('g.estadoSoporte = 1');
+
+        if ($arCliente->getRequiereEstadoSoporteFactura()) {
+            $queryBuilder->andWhere('g.estadoSoporte = 1');
         }
 
         return $queryBuilder->getQuery()->getResult();
@@ -2653,6 +2659,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.estadoEntregado')
             ->addSelect('g.estadoCumplido')
             ->addSelect('g.estadoNovedad')
+            ->addSelect('g.estadoSoporte')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->where('g.estadoFacturaGenerada = 0')

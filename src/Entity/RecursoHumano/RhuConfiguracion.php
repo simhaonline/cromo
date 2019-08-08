@@ -44,6 +44,16 @@ class RhuConfiguracion
     private $codigoConceptoFondoSolidaridadPensionFk;
 
     /**
+     * @ORM\Column(name="codigo_concepto_vacacion_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoVacacionFk;
+
+    /**
+     * @ORM\Column(name="codigo_concepto_vacacion_disfrute_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoVacacionDisfruteFk;
+
+    /**
      * @ORM\Column(name="descontar_ausentismos_de_licencias" , type="boolean" ,nullable=true)
      */
     private $descontarAusentismosDeLicencias = false;
@@ -539,6 +549,38 @@ class RhuConfiguracion
     public function setDescontarTotalAusentismosContratoTerminadoEnLiquidacion($descontarTotalAusentismosContratoTerminadoEnLiquidacion): void
     {
         $this->descontarTotalAusentismosContratoTerminadoEnLiquidacion = $descontarTotalAusentismosContratoTerminadoEnLiquidacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoVacacionFk()
+    {
+        return $this->codigoConceptoVacacionFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoVacacionFk
+     */
+    public function setCodigoConceptoVacacionFk($codigoConceptoVacacionFk): void
+    {
+        $this->codigoConceptoVacacionFk = $codigoConceptoVacacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoVacacionDisfruteFk()
+    {
+        return $this->codigoConceptoVacacionDisfruteFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoVacacionDisfruteFk
+     */
+    public function setCodigoConceptoVacacionDisfruteFk($codigoConceptoVacacionDisfruteFk): void
+    {
+        $this->codigoConceptoVacacionDisfruteFk = $codigoConceptoVacacionDisfruteFk;
     }
 
 

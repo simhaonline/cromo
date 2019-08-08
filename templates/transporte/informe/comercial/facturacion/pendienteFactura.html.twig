@@ -73,26 +73,36 @@
             <th>DECLARADO</th>
             <th>FLETE</th>
             <th>MANEJO</th>
+            <th title="Despachada">D</th>
+            <th title="Entregada">E</th>
+            <th title="Soporte de entrega">S</th>
+            <th title="Cumplido entregado al cliente">C</th>
+            <th title="Con novedad">N</th>
         </thead>
         <tbody>
-        {% for arGuiaPendiente in arGuiasPendientes %}
+        {% for arGuia in arGuiasPendientes %}
             <tr>
-                <td>{{ arGuiaPendiente.codigoGuiaTipoFk }}</td>
-                <td>{{ arGuiaPendiente.clienteNombreCorto }}</td>
-                <td>{{ arGuiaPendiente.codigoGuiaPk }}</td>
-                <td>{{ arGuiaPendiente.fechaIngreso | date('Y-m-d') }}</td>
-                <td>{{ arGuiaPendiente.codigoServicioFk }}</td>
-                <td>{{ arGuiaPendiente.codigoOperacionIngresoFk }}</td>
-                <td>{{ arGuiaPendiente.codigoOperacionCargoFk }}</td>
-                <td>{{ arGuiaPendiente.numero }}</td>
-                <td>{{ arGuiaPendiente.documentoCliente }}</td>
-                <td>{{ arGuiaPendiente.ciudadDestino }}</td>
-                <td class="numero">{{ arGuiaPendiente.unidades }}</td>
-                <td class="numero">{{ arGuiaPendiente.pesoReal }}</td>
-                <td class="numero">{{ arGuiaPendiente.pesoVolumen }}</td>
-                <td class="numero">{{ arGuiaPendiente.vrDeclara | number_format }}</td>
-                <td class="numero">{{ arGuiaPendiente.vrFlete | number_format }}</td>
-                <td class="numero">{{ arGuiaPendiente.vrManejo | number_format }}</td>
+                <td>{{ arGuia.codigoGuiaTipoFk }}</td>
+                <td>{{ arGuia.clienteNombreCorto }}</td>
+                <td>{{ arGuia.codigoGuiaPk }}</td>
+                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arGuia.codigoServicioFk }}</td>
+                <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
+                <td>{{ arGuia.codigoOperacionCargoFk }}</td>
+                <td>{{ arGuia.numero }}</td>
+                <td>{{ arGuia.documentoCliente }}</td>
+                <td>{{ arGuia.ciudadDestino }}</td>
+                <td class="numero">{{ arGuia.unidades }}</td>
+                <td class="numero">{{ arGuia.pesoReal }}</td>
+                <td class="numero">{{ arGuia.pesoVolumen }}</td>
+                <td class="numero">{{ arGuia.vrDeclara | number_format }}</td>
+                <td class="numero">{{ arGuia.vrFlete | number_format }}</td>
+                <td class="numero">{{ arGuia.vrManejo | number_format }}</td>
+                <td>{{ arGuia.estadoDespachado? "SI":"NO" }}</td>
+                <td>{{ arGuia.estadoEntregado? "SI":"NO" }}</td>
+                <td>{{ arGuia.estadoSoporte? "SI":"NO" }}</td>
+                <td>{{ arGuia.estadoCumplido? "SI":"NO" }}</td>
+                <td>{{ arGuia.estadoNovedad? "SI":"NO" }}</td>
             </tr>
         {% endfor %}
     </table>

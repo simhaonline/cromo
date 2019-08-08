@@ -149,9 +149,9 @@ class TteCliente
     private $guiaPagoRecogida = false;
 
     /**
-     * @ORM\Column(name="condicion_factura", type="boolean", nullable=true,options={"default":false})
+     * @ORM\Column(name="requiere_estado_soporte_factura", type="boolean", nullable=true,options={"default":false})
      */
-    private $condicionFactura = false;
+    private $requiereEstadoSoporteFactura = false;
 
     /**
      * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
@@ -688,6 +688,22 @@ class TteCliente
     /**
      * @return mixed
      */
+    public function getRequiereEstadoSoporteFactura()
+    {
+        return $this->requiereEstadoSoporteFactura;
+    }
+
+    /**
+     * @param mixed $requiereEstadoSoporteFactura
+     */
+    public function setRequiereEstadoSoporteFactura($requiereEstadoSoporteFactura): void
+    {
+        $this->requiereEstadoSoporteFactura = $requiereEstadoSoporteFactura;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoOperacionFk()
     {
         return $this->codigoOperacionFk;
@@ -715,6 +731,22 @@ class TteCliente
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaAgrupadaDestino()
+    {
+        return $this->facturaAgrupadaDestino;
+    }
+
+    /**
+     * @param mixed $facturaAgrupadaDestino
+     */
+    public function setFacturaAgrupadaDestino($facturaAgrupadaDestino): void
+    {
+        $this->facturaAgrupadaDestino = $facturaAgrupadaDestino;
     }
 
     /**
@@ -1019,54 +1051,6 @@ class TteCliente
     public function setCondicionesManejosClienteRel($condicionesManejosClienteRel): void
     {
         $this->condicionesManejosClienteRel = $condicionesManejosClienteRel;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCondicionFactura()
-    {
-        return $this->condicionFactura;
-    }
-
-    /**
-     * @param mixed $condicionFactura
-     */
-    public function setCondicionFactura($condicionFactura): void
-    {
-        $this->condicionFactura = $condicionFactura;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturaAgrupadaDestino()
-    {
-        return $this->facturaAgrupadaDestino;
-    }
-
-    /**
-     * @param mixed $facturaAgrupadaDestino
-     */
-    public function setFacturaAgrupadaDestino($facturaAgrupadaDestino): void
-    {
-        $this->facturaAgrupadaDestino = $facturaAgrupadaDestino;
     }
 
 

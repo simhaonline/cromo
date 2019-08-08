@@ -150,6 +150,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.estadoEmbarcado')
             ->addSelect('tg.estadoCumplido')
             ->addSelect('tg.estadoAnulado')
+            ->addSelect('tg.comentario')
+            ->addSelect('tg.usuario')
             ->leftJoin('tg.ciudadOrigenRel', 'co')
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')

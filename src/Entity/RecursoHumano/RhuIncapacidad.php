@@ -280,6 +280,21 @@ class RhuIncapacidad
     private $vrSalario = 0;
 
     /**
+     * @ORM\Column(name="estado_autorizado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoAprobado = false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoAnulado = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuIncapacidadTipo", inversedBy="incapacidadesIncapacidadTipoRel")
      * @ORM\JoinColumn(name="codigo_incapacidad_tipo_fk", referencedColumnName="codigo_incapacidad_tipo_pk")
      */
@@ -304,6 +319,12 @@ class RhuIncapacidad
     protected $contratoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RhuIncapacidad", inversedBy="incapacidadesIncapacidadProrrogaRel")
+     * @ORM\JoinColumn(name="codigo_incapacidad_prorroga_fk", referencedColumnName="codigo_incapacidad_pk")
+     */
+    protected $incapacidadProrrogaRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuIncapacidadDiagnostico", inversedBy="incapacidadesIncapacidadDiagnosticoRel")
      * @ORM\JoinColumn(name="codigo_incapacidad_diagnostico_fk", referencedColumnName="codigo_incapacidad_diagnostico_pk")
      */
@@ -313,6 +334,11 @@ class RhuIncapacidad
      * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="incapacidadRel")
      */
     protected $pagosDetallesIncapacidadRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuIncapacidad", mappedBy="incapacidadProrrogaRel")
+     */
+    protected $incapacidadesIncapacidadProrrogaRel;
 
     /**
      * @return array
@@ -1224,6 +1250,86 @@ class RhuIncapacidad
     public function setPagosDetallesIncapacidadRel($pagosDetallesIncapacidadRel): void
     {
         $this->pagosDetallesIncapacidadRel = $pagosDetallesIncapacidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadProrrogaRel()
+    {
+        return $this->incapacidadProrrogaRel;
+    }
+
+    /**
+     * @param mixed $incapacidadProrrogaRel
+     */
+    public function setIncapacidadProrrogaRel($incapacidadProrrogaRel): void
+    {
+        $this->incapacidadProrrogaRel = $incapacidadProrrogaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadesIncapacidadProrrogaRel()
+    {
+        return $this->incapacidadesIncapacidadProrrogaRel;
+    }
+
+    /**
+     * @param mixed $incapacidadesIncapacidadProrrogaRel
+     */
+    public function setIncapacidadesIncapacidadProrrogaRel($incapacidadesIncapacidadProrrogaRel): void
+    {
+        $this->incapacidadesIncapacidadProrrogaRel = $incapacidadesIncapacidadProrrogaRel;
     }
 
 

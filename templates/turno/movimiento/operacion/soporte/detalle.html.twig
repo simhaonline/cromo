@@ -33,7 +33,7 @@
                             <th colspan="7" style="text-align: center">NOVEDADES</th>
                             <th colspan="6" style="text-align: center">TIEMPO</th>
                             <th colspan="8" style="text-align: center">ADICIONAL</th>
-                            <th colspan="3"></th>
+                            <th colspan="4"></th>
                         </tr>
                         <tr>
                             <th colspan="3">RECURSO</th>
@@ -60,6 +60,7 @@
                             <th title="RECARGO FESTIVO DIRUNA">RFD</th>
                             <th title="RECARGO FESTIVO NOCTURNO">RFN</th>
                             <th title="RECARGO">R</th>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
@@ -97,6 +98,9 @@
                                 <td>{{ arSoporteContrato.horasRecargo | number_format(2, '.', ',') }}</td>
                                 <td></td>
                                 <td></td>
+                                <td style="text-align: center;"><a
+                                            href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_soportecontrato_resumen',{ 'id': arSoporteContrato.codigoSoporteContratoPk }) }}','resumen',600,1000)"><i
+                                                class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
                                 <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
                                                           value="{{ arSoporteContrato.codigoSoporteContratoPk }}"/></td>
                             </tr>
@@ -116,6 +120,9 @@
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
                         {{ form_widget(form.btnCargarContratos) }}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminarDetalle, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                     </div>
                 </div>
             </div>

@@ -11,6 +11,7 @@ use App\Entity\Turno\TurSector;
 use App\Entity\Turno\TurSoporte;
 use App\Entity\Turno\TurSoporteContrato;
 use App\Entity\Turno\TurSoporteHora;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -136,25 +137,14 @@ class TurSoporteRepository extends ServiceEntityRepository
      */
     public function autorizar($arSoporte) {
         $em = $this->getEntityManager();
-        //$arTurConfiguracion = $em->getRepository('BrasaTurnoBundle:TurConfiguracion')->find(1);
 
         $arrFestivos = $em->getRepository(TurFestivo::class)->fecha($arSoporte->getFechaDesde()->format('Y-m-') . '01', $arSoporte->getFechaHasta()->format('Y-m-t'));
         $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->listaHoras($arSoporte->getCodigoSoportePk());
         foreach ($arSoportesContratos as $arSoportesContrato) {
             $em->getRepository(TurSoporteContrato::class)->generarHoras($arSoporte, $arSoportesContrato, $arrFestivos);
         }
+        $arSoporte->setEstadoAutorizado(1);
         $em->flush();
-
-        //Genera soporte pago "programacion"
-        /*foreach ($arSoportesPago as $arSoportePago) {
-            $em->getRepository(TurSoporteContrato::class)->generarProgramacion($arSoportePago, $arSoportePagoPeriodo->getFechaDesde()->format('Y'), $arSoportePagoPeriodo->getFechaDesde()->format('m'));
-        }
-        $em->flush();*/
-
-        //$arSoporte->setEstadoGenerado(1);
-        //$arSoportePagoPeriodo->setFechaGenerado(new \DateTime('now'));
-        //$em->persist($arSoporte);
-        //$em->flush();
 
         $em->getRepository(TurSoporte::class)->resumen($arSoporte);
 
@@ -164,6 +154,21 @@ class TurSoporteRepository extends ServiceEntityRepository
         /*if (!$arSoportePagoPeriodo->getHorasRecargoAgrupadas()) {
             $em->getRepository('BrasaTurnoBundle:TurSoportePagoPeriodo')->desagregarHoras(null, $codigoSoportePagoPeriodo);
         }*/
+    }
+
+    public function desAutorizar($arSoporte)
+    {
+        $em = $this->getEntityManager();
+        if ($arSoporte->getEstadoAutorizado() == 1 && $arSoporte->getEstadoAprobado() == 0) {
+            $arSoporte->setEstadoAutorizado(0);
+            $em->persist($arSoporte);
+            $q = $em->createQuery('delete from App\Entity\Turno\TurSoporteHora sh where sh.codigoSoporteFk = ' . $arSoporte->getCodigoSoportePk());
+            $numeroRegistros = $q->execute();
+            $em->flush();
+            $em->getRepository(TurSoporte::class)->resumen($arSoporte);
+        } else {
+            Mensajes::error('No se puede desautorizar, el registro ya se encuentra aprobado');
+        }
     }
 
     public function resumen($arSoporte) {
@@ -257,48 +262,48 @@ class TurSoporteRepository extends ServiceEntityRepository
                 }
 
                 $intHoras = $arrayResultado[$i]['horasDescanso'] + $arrayResultado[$i]['horasNovedad'] + $arrayResultado[$i]['horasDiurnas'] + $arrayResultado[$i]['horasNocturnas'] + $arrayResultado[$i]['horasFestivasDiurnas'] + $arrayResultado[$i]['horasFestivasNocturnas'];
-                $arSoporteContrato->setDias($arrayResultado[$i]['dias']);
+                $arSoporteContrato->setDias($arrayResultado[$i]['dias']?? 0);
                 //$arSoporteContrato->setDiasTransporte($diasTransporte);
                 //$arSoporteContrato->setDiasTransporteReal($diasTransporte);
-                $arSoporteContrato->setDescanso($arrayResultado[$i]['descanso']);
-                $arSoporteContrato->setNovedad($arrayResultado[$i]['novedad']);
-                $arSoporteContrato->setIncapacidad($arrayResultado[$i]['incapacidad']);
+                $arSoporteContrato->setDescanso($arrayResultado[$i]['descanso']?? 0);
+                $arSoporteContrato->setNovedad($arrayResultado[$i]['novedad']?? 0);
+                $arSoporteContrato->setIncapacidad($arrayResultado[$i]['incapacidad']?? 0);
                 //$arSoporteContrato->setIncapacidadNoLegalizada($arrayResultado[$i]['incapacidadNoLegalizada']);
-                $arSoporteContrato->setLicencia($arrayResultado[$i]['licencia']);
+                $arSoporteContrato->setLicencia($arrayResultado[$i]['licencia'] ?? 0);
                 //$arSoporteContrato->setLicenciaNoRemunerada($arrayResultado[$i]['licenciaNoRemunerada']);
-                $arSoporteContrato->setVacacion($arrayResultado[$i]['vacacion']);
-                $arSoporteContrato->setInduccion($arrayResultado[$i]['induccion']);
-                $arSoporteContrato->setIngreso($arrayResultado[$i]['ingreso']);
-                $arSoporteContrato->setRetiro($arrayResultado[$i]['retiro']);
-                $arSoporteContrato->setAusentismo($arrayResultado[$i]['ausentismo']);
+                $arSoporteContrato->setVacacion($arrayResultado[$i]['vacacion']?? 0);
+                $arSoporteContrato->setInduccion($arrayResultado[$i]['induccion']?? 0);
+                $arSoporteContrato->setIngreso($arrayResultado[$i]['ingreso']?? 0);
+                $arSoporteContrato->setRetiro($arrayResultado[$i]['retiro']?? 0);
+                $arSoporteContrato->setAusentismo($arrayResultado[$i]['ausentismo']?? 0);
                 //$arSoporteContrato->setHorasPago($intHorasPago);
                 $arSoporteContrato->setHoras($intHoras);
                 //$arSoporteContrato->setHorasAdicionales($arrayResultado[$i]['horasAdicionalesFebrero']);
-                $arSoporteContrato->setHorasDescanso($arrayResultado[$i]['horasDescanso']);
-                $arSoporteContrato->setHorasNovedad($arrayResultado[$i]['horasNovedad']);
-                $arSoporteContrato->setHorasDiurnas($arrayResultado[$i]['horasDiurnas']);
-                $arSoporteContrato->setHorasNocturnas($arrayResultado[$i]['horasNocturnas']);
-                $arSoporteContrato->setHorasFestivasDiurnas($arrayResultado[$i]['horasFestivasDiurnas']);
-                $arSoporteContrato->setHorasFestivasNocturnas($arrayResultado[$i]['horasFestivasNocturnas']);
-                $arSoporteContrato->setHorasExtrasOrdinariasDiurnas($arrayResultado[$i]['horasExtrasOrdinariasDiurnas']);
-                $arSoporteContrato->setHorasExtrasOrdinariasNocturnas($arrayResultado[$i]['horasExtrasOrdinariasNocturnas']);
-                $arSoporteContrato->setHorasExtrasFestivasDiurnas($arrayResultado[$i]['horasExtrasFestivasDiurnas']);
-                $arSoporteContrato->setHorasExtrasFestivasNocturnas($arrayResultado[$i]['horasExtrasFestivasNocturnas']);
-                $arSoporteContrato->setHorasRecargoNocturno($arrayResultado[$i]['horasRecargoNocturno']);
-                $arSoporteContrato->setHorasRecargoFestivoDiurno($arrayResultado[$i]['horasRecargoFestivoDiurno']);
-                $arSoporteContrato->setHorasRecargoFestivoNocturno($arrayResultado[$i]['horasRecargoFestivoNocturno']);
-                $arSoporteContrato->setHorasDescansoReales($arrayResultado[$i]['horasDescanso']);
-                $arSoporteContrato->setHorasDiurnasReales($arrayResultado[$i]['horasDiurnas']);
-                $arSoporteContrato->setHorasNocturnasReales($arrayResultado[$i]['horasNocturnas']);
-                $arSoporteContrato->setHorasFestivasDiurnasReales($arrayResultado[$i]['horasFestivasDiurnas']);
-                $arSoporteContrato->setHorasFestivasNocturnasReales($arrayResultado[$i]['horasFestivasNocturnas']);
-                $arSoporteContrato->setHorasExtrasOrdinariasDiurnasReales($arrayResultado[$i]['horasExtrasOrdinariasDiurnas']);
-                $arSoporteContrato->setHorasExtrasOrdinariasNocturnasReales($arrayResultado[$i]['horasExtrasOrdinariasNocturnas']);
-                $arSoporteContrato->setHorasExtrasFestivasDiurnasReales($arrayResultado[$i]['horasExtrasFestivasDiurnas']);
-                $arSoporteContrato->setHorasExtrasFestivasNocturnasReales($arrayResultado[$i]['horasExtrasFestivasNocturnas']);
-                $arSoporteContrato->setHorasRecargoNocturnoReales($arrayResultado[$i]['horasRecargoNocturno']);
-                $arSoporteContrato->setHorasRecargoFestivoDiurnoReales($arrayResultado[$i]['horasRecargoFestivoDiurno']);
-                $arSoporteContrato->setHorasRecargoFestivoNocturnoReales($arrayResultado[$i]['horasRecargoFestivoNocturno']);
+                $arSoporteContrato->setHorasDescanso($arrayResultado[$i]['horasDescanso']?? 0);
+                $arSoporteContrato->setHorasNovedad($arrayResultado[$i]['horasNovedad']?? 0);
+                $arSoporteContrato->setHorasDiurnas($arrayResultado[$i]['horasDiurnas']?? 0);
+                $arSoporteContrato->setHorasNocturnas($arrayResultado[$i]['horasNocturnas']?? 0);
+                $arSoporteContrato->setHorasFestivasDiurnas($arrayResultado[$i]['horasFestivasDiurnas']?? 0);
+                $arSoporteContrato->setHorasFestivasNocturnas($arrayResultado[$i]['horasFestivasNocturnas']?? 0);
+                $arSoporteContrato->setHorasExtrasOrdinariasDiurnas($arrayResultado[$i]['horasExtrasOrdinariasDiurnas']?? 0);
+                $arSoporteContrato->setHorasExtrasOrdinariasNocturnas($arrayResultado[$i]['horasExtrasOrdinariasNocturnas']?? 0);
+                $arSoporteContrato->setHorasExtrasFestivasDiurnas($arrayResultado[$i]['horasExtrasFestivasDiurnas']?? 0);
+                $arSoporteContrato->setHorasExtrasFestivasNocturnas($arrayResultado[$i]['horasExtrasFestivasNocturnas']?? 0);
+                $arSoporteContrato->setHorasRecargoNocturno($arrayResultado[$i]['horasRecargoNocturno']?? 0);
+                $arSoporteContrato->setHorasRecargoFestivoDiurno($arrayResultado[$i]['horasRecargoFestivoDiurno']?? 0);
+                $arSoporteContrato->setHorasRecargoFestivoNocturno($arrayResultado[$i]['horasRecargoFestivoNocturno']?? 0);
+                $arSoporteContrato->setHorasDescansoReales($arrayResultado[$i]['horasDescanso']?? 0);
+                $arSoporteContrato->setHorasDiurnasReales($arrayResultado[$i]['horasDiurnas']?? 0);
+                $arSoporteContrato->setHorasNocturnasReales($arrayResultado[$i]['horasNocturnas']?? 0);
+                $arSoporteContrato->setHorasFestivasDiurnasReales($arrayResultado[$i]['horasFestivasDiurnas']?? 0);
+                $arSoporteContrato->setHorasFestivasNocturnasReales($arrayResultado[$i]['horasFestivasNocturnas']?? 0);
+                $arSoporteContrato->setHorasExtrasOrdinariasDiurnasReales($arrayResultado[$i]['horasExtrasOrdinariasDiurnas']?? 0);
+                $arSoporteContrato->setHorasExtrasOrdinariasNocturnasReales($arrayResultado[$i]['horasExtrasOrdinariasNocturnas']?? 0);
+                $arSoporteContrato->setHorasExtrasFestivasDiurnasReales($arrayResultado[$i]['horasExtrasFestivasDiurnas']?? 0);
+                $arSoporteContrato->setHorasExtrasFestivasNocturnasReales($arrayResultado[$i]['horasExtrasFestivasNocturnas']?? 0);
+                $arSoporteContrato->setHorasRecargoNocturnoReales($arrayResultado[$i]['horasRecargoNocturno']?? 0);
+                $arSoporteContrato->setHorasRecargoFestivoDiurnoReales($arrayResultado[$i]['horasRecargoFestivoDiurno']?? 0);
+                $arSoporteContrato->setHorasRecargoFestivoNocturnoReales($arrayResultado[$i]['horasRecargoFestivoNocturno']?? 0);
                 $em->persist($arSoporteContrato);
             }
 

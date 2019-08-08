@@ -60,7 +60,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function listaHoras($id)
+    public function listaHoras($codigoSoporte, $codigoSoporteContrato)
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurSoporteContrato::class, 'sc')
@@ -69,8 +69,12 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->addSelect('sc.fechaHasta')
             ->addSelect('sc.anio')
             ->addSelect('sc.mes')
-            ->addSelect('sc.codigoEmpleadoFk')
-            ->where('sc.codigoSoporteFk = ' . $id);
+            ->addSelect('sc.codigoEmpleadoFk');
+        if($codigoSoporteContrato) {
+            $queryBuilder->where('sc.codigoSoporteContratoPk = ' . $codigoSoporteContrato);
+        } else {
+            $queryBuilder->where('sc.codigoSoporteFk = ' . $codigoSoporte);
+        }
         $arSoporteContratos = $queryBuilder->getQuery()->getResult();
 
         return $arSoporteContratos;
@@ -116,7 +120,8 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
     /**
      * @param $arSoporteContrato TurSoporteContrato
      */
-    public function generarHoras($arSoporte, $arSoporteContrato, $arFestivos) {
+    public function generarHoras($arSoporte, $arSoporteContrato, $arFestivos)
+    {
         $em = $this->getEntityManager();
         $intDiaInicial = $arSoporteContrato['fechaDesde']->format('j');
         $intDiaFinal = $arSoporteContrato['fechaHasta']->format('j');
@@ -140,7 +145,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                     $arTurno = $em->getRepository(TurTurno::class)->find($arProgramacion['dia' . $i]);
                     if ($arTurno) {
                         $complementario = $arTurno->getComplementario();
-                        if(!$complementario && $arProgramacion['complementario']) {
+                        if (!$complementario && $arProgramacion['complementario']) {
                             $complementario = true;
                         }
                         $arrTurnos[] = [
@@ -182,7 +187,6 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                 if ($arSoportePago->getRecursoRel()->getCodigoTurnoFijoDescansoFk()) {
                     $strTurnoFijoDescanso = $arSoportePago->getRecursoRel()->getCodigoTurnoFijoDescansoFk();
                 }*/
-
 
 
                 if ($arrTurno['descanso'] && $arrTurno['novedad']) {
@@ -582,5 +586,19 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         return $intHoras;
     }
 
+    public function retirarDetalle($arrDetalles): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arrDetalles) {
+            if (count($arrDetalles) > 0) {
+                foreach ($arrDetalles AS $codigo) {
+                    $arSoporteContrato = $em->getRepository(TurSoporteContrato::class)->find($codigo);
+                    $em->remove($arSoporteContrato);
+                }
+                $em->flush();
+            }
+        }
+        return true;
+    }
 }
 

@@ -9,11 +9,13 @@ use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
+use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurSoporte;
 use App\Entity\Turno\TurSoporteContrato;
+use App\Entity\Turno\TurSoporteHora;
 use App\Form\Type\Turno\ContratoDetalleType;
 use App\Form\Type\Turno\PedidoType;
 use App\Form\Type\Turno\PedidoDetalleType;
@@ -142,13 +144,21 @@ class SoporteController extends ControllerListenerGeneral
             $arrBtnAprobado['disabled'] = true;
         }
         $form->add('btnCargarContratos', SubmitType::class, $arrBtnCargarContratos);
+        $form->add('btnEliminarDetalle', SubmitType::class, $arrBtnEliminar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TurSoporte::class)->autorizar($arSoporte);
             }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(TurSoporte::class)->desAutorizar($arSoporte);
+            }
             if($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(TurSoporte::class)->cargarContratos($arSoporte);
+            }
+            if ($form->get('btnEliminarDetalle')->isClicked()) {
+                $arrDetalles = $request->request->get('ChkSeleccionar');
+                $respuesta = $this->getDoctrine()->getRepository(TurSoporteContrato::class)->retirarDetalle($arrDetalles);
             }
             return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
         }
@@ -160,5 +170,38 @@ class SoporteController extends ControllerListenerGeneral
         ]);
     }
 
+    /**
+     * @Route("/turno/movimiento/operacion/soportecontrato/resumen/{id}", name="turno_movimiento_operacion_soportecontrato_resumen")
+     */
+    public function resumen(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arSoporteContrato = $em->getRepository(TurSoporteContrato::class)->find($id);
+        $arrBtnActualizar = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar'];
+        $form = $this->createFormBuilder()
+            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnActualizar')->isClicked()) {
+                $em->getRepository(TurSoporteHora::class)->retirarSoporteContrato($id);
+                $arrFestivos = $em->getRepository(TurFestivo::class)->fecha($arSoporteContrato->getFechaDesde()->format('Y-m-') . '01', $arSoporteContrato->getFechaHasta()->format('Y-m-t'));
+                $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->listaHoras(null, $id);
+                foreach ($arSoportesContratos as $arSoportesContratoProcesar) {
+                    $em->getRepository(TurSoporteContrato::class)->generarHoras($arSoporteContrato->getSoporteRel(), $arSoportesContratoProcesar, $arrFestivos);
+                }
+                $em->flush();
+                $em->getRepository(TurSoporte::class)->resumen($arSoporteContrato->getSoporteRel());
+            }
+            return $this->redirect($this->generateUrl('turno_movimiento_operacion_soportecontrato_resumen', ['id' => $id]));
+        }
+
+        $arSoporteHoras = $em->getRepository(TurSoporteHora::class)->soporteContrato($id);
+        return $this->render('turno/movimiento/operacion/soporte/resumen.html.twig', [
+            'arSoporteHoras' => $arSoporteHoras,
+            'arSoporteContrato' => $arSoporteContrato,
+            'form' => $form->createView()
+        ]);
+    }
 
 }

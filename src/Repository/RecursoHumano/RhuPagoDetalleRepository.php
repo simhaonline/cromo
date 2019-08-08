@@ -133,6 +133,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->addSelect('p.codigoEmpleadoFk as pagoCodigoEmpleadoFk')
             ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
             ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('g.nombre as grupoNombre')
             ->addSelect('pd.codigoConceptoFk')
             ->addSelect('c.nombre as conceptoNombre')
             ->addSelect('p.fechaDesde as pagoFechaDesde')
@@ -148,19 +149,21 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('pd.pagoRel', 'p')
             ->leftJoin('p.empleadoRel', 'e')
             ->leftJoin('p.pagoTipoRel', 'pt')
-            ->orderBy('p.fechaDesde', 'DESC' );
+            ->leftJoin('p.grupoRel', 'g')
+            ->orderBy('p.fechaDesde', 'DESC' )
+        ->setMaxResults(10000);
 
         if ($session->get('filtroRhuInformePagoDetalleConcepto') != null) {
             $queryBuilder->andWhere("pd.codigoConceptoFk = '{$session->get('filtroRhuInformePagoDetalleConcepto')}'");
         }
         if ($session->get('filtroRhuInformePagoDetalleCodigoEmpleado') != null) {
-            $queryBuilder->andWhere("pa.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoDetalleCodigoEmpleado')}");
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoDetalleCodigoEmpleado')}");
         }
         if ($session->get('filtroRhuInformePagoDetalleFechaDesde') != null) {
-            $queryBuilder->andWhere("pa.fechaDesde >= '{$session->get('filtroRhuInformePagoDetalleFechaDesde')} 00:00:00'");
+            $queryBuilder->andWhere("p.fechaDesde >= '{$session->get('filtroRhuInformePagoDetalleFechaDesde')} 00:00:00'");
         }
         if ($session->get('filtroRhuInformePagoDetalleFechaHasta') != null) {
-            $queryBuilder->andWhere("pa.fechaHasta <= '{$session->get('filtroRhuInformePagoDetalleFechaHasta')} 23:59:59'");
+            $queryBuilder->andWhere("p.fechaHasta <= '{$session->get('filtroRhuInformePagoDetalleFechaHasta')} 23:59:59'");
         }
 
         return $queryBuilder->getQuery()->getResult();

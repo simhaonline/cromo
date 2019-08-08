@@ -57,7 +57,7 @@ class VacacionType extends AbstractType
             {"campo":"diasDisfrutadosReales", "tipo":"texto"  ,"ayuda":"Dias disfrutados reales",    "titulo":"D.D.R"},                                        
             {"campo":"vrTotal",               "tipo":"moneda" ,"ayuda":"Valor total de la vacacion", "titulo":"TOTAL"},                                        
             {"campo":"estadoAutorizado",      "tipo":"bool"   ,"ayuda":"Estado autorizado", "titulo":"AUT"},                                        
-            {"campo":"estadoPagado",          "tipo":"bool"   ,"ayuda":"Estado pagado",     "titulo":"PAG"},                                        
+            {"campo":"estadoAprobado",          "tipo":"bool"   ,"ayuda":"Estado aprobado",     "titulo":"APR"},                                        
             {"campo":"estadoAnulado",         "tipo":"bool"   ,"ayuda":"Estado anulado",    "titulo":"ANU"}                                        
         ]';
         return $campos;

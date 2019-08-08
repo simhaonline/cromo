@@ -188,6 +188,7 @@ class VacacionesController extends ControllerListenerGeneral
                 $formatoVacaciones = new Vacaciones();
                 $formatoVacaciones->Generar($em, $id);
             }
+
         }
         return $this->render('recursohumano/movimiento/nomina/vacacion/detalle.html.twig', [
             'arVacacion' => $arVacacion,

@@ -59,42 +59,44 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>PAGO</th>
+            <th>TIPO</th>
+            <th>NUMERO</th>
+            <th>COD</th>
+            <th>IDENTIFICACION</th>
+            <th>EMPLEADO</th>
+            <th>COD</th>
             <th>CONCEPTO</th>
-            <th>CREDITO</th>
-            <th>PAGO</th>
-            <th>OPERACIÓN</th>
-            <th>PAGO OPERADO</th>
-            <th>HORAS</th>
-            <th>VALOR HORA</th>
-            <th>PORCENTAJE</th>
-            <th>DIAS</th>
-            <th>DETALLE</th>
-            <th>DEDUCCIÓN</th>
-            <th>DEVENGADO</th>
-            <th>BASE COTIZACIÓN</th>
-            <th>BASE PRESTACIÓN</th>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>VR_PAGO</th>
+            <th title="Horas">H</th>
+            <th title="Dias">D</th>
+            <th>%</th>
+            <th>IBC</th>
+            <th>IBP</th>
+            <th title="Codigo del credito">CRE</th>
         </tr>
         </thead>
         <tbody>
         {% for arPagoDetalle in arPagoDetalles %}
             <tr>
                 <td>{{ arPagoDetalle.codigoPagoDetallePk }}</td>
-                <td>{{ arPagoDetalle.codigoPagoFk }}</td>
-                <td>{{ arPagoDetalle.conceptoRel.nombre }}</td>
-                <td>{{ arPagoDetalle.codigoCreditoFk }}</td>
-                <td class="numero">{{ arPagoDetalle.vrPago | number_format(0, '.', ',') }}</td>
-                <td>{{ arPagoDetalle.operacion }}</td>
-                <td class="numero">{{ arPagoDetalle.vrPagoOperado | number_format(0, '.', ',')}}</td>
+                <td>{{ arPagoDetalle.pagoTipoNombre }}</td>
+                <td>{{ arPagoDetalle.pagoNumero }}</td>
+                <td>{{ arPagoDetalle.pagoCodigoEmpleadoFk }}</td>
+                <td>{{ arPagoDetalle.empleadoNumeroIdentificacion }}</td>
+                <td>{{ arPagoDetalle.empleadoNombreCorto }}</td>
+                <td>{{ arPagoDetalle.codigoConceptoFk }}</td>
+                <td>{{ arPagoDetalle.conceptoNombre }}</td>
+                <td>{{ arPagoDetalle.pagoFechaDesde | date('Y-m-d') }}</td>
+                <td>{{ arPagoDetalle.pagoFechaHasta | date('Y-m-d') }}</td>
+                <td class="numero">{{ arPagoDetalle.vrPagoOperado | number_format(0, '.', ',') }}</td>
                 <td>{{ arPagoDetalle.horas }}</td>
-                <td class="numero">{{ arPagoDetalle.vrHora | number_format(0, '.', ',')}}</td>
-                <td>{{ arPagoDetalle.porcentaje }}</td>
                 <td>{{ arPagoDetalle.dias }}</td>
-                <td>{{ arPagoDetalle.detalle }}</td>
-                <td class="numero">{{ arPagoDetalle.vrDeduccion | number_format(0, '.', ',')}}</td>
-                <td class="numero" >{{ arPagoDetalle.vrDevengado | number_format(0, '.', ',')}}</td>
+                <td>{{ arPagoDetalle.porcentaje }}</td>
                 <td class="numero">{{ arPagoDetalle.vrIngresoBaseCotizacion | number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arPagoDetalle.vrIngresoBasePrestacion | number_format(0, '.', ',')}}</td>
+                <td>{{ arPagoDetalle.codigoCreditoFk }}</td>
         {% endfor %}
         </tbody>
     </table>

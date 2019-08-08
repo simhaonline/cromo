@@ -66,7 +66,6 @@ class pagoDetalleController extends  Controller
             }
         }
         $arPagoDetalles = $paginator->paginate($em->getRepository(RhuPagoDetalle::class)->informe(), $request->query->getInt('page', 1), 30);
-
         return $this->render('recursohumano/informe/nomina/pagodetalle/lista.html.twig', [
             'arPagoDetalles' => $arPagoDetalles,
             'form' => $form->createView()

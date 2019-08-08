@@ -127,9 +127,28 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
-            ->addSelect('pd')
+            ->addSelect('pd.codigoPagoDetallePk')
+            ->addSelect('pt.nombre as pagoTipoNombre')
+            ->addSelect('p.numero as pagoNumero')
+            ->addSelect('p.codigoEmpleadoFk as pagoCodigoEmpleadoFk')
+            ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('pd.codigoConceptoFk')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('p.fechaDesde as pagoFechaDesde')
+            ->addSelect('p.fechaHasta as pagoFechaHasta')
+            ->addSelect('pd.vrPagoOperado')
+            ->addSelect('pd.horas')
+            ->addSelect('pd.dias')
+            ->addSelect('pd.porcentaje')
+            ->addSelect('pd.vrIngresoBaseCotizacion')
+            ->addSelect('pd.vrIngresoBasePrestacion')
+            ->addSelect('pd.codigoCreditoFk')
             ->leftJoin('pd.conceptoRel', 'c')
-            ->leftJoin('pd.pagoRel', 'pa');
+            ->leftJoin('pd.pagoRel', 'p')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('p.pagoTipoRel', 'pt')
+            ->orderBy('p.fechaDesde', 'DESC' );
 
         if ($session->get('filtroRhuInformePagoDetalleConcepto') != null) {
             $queryBuilder->andWhere("pd.codigoConceptoFk = '{$session->get('filtroRhuInformePagoDetalleConcepto')}'");

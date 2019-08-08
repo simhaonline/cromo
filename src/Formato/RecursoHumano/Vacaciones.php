@@ -203,7 +203,7 @@ class Vacaciones extends \FPDF
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-        $pdf->Cell(48.75, 5, utf8_decode($arVacaciones->getEmpleadoRel()->getBancoRel()->getNombre()), 1, 0, 'L', 1);
+        $pdf->Cell(48.75, 5, utf8_decode($arVacaciones->getEmpleadoRel()->getBancoRel() ? $arVacaciones->getEmpleadoRel()->getBancoRel()->getNombre() : ''), 1, 0, 'L', 1);
         $pdf->SetFillColor(170, 170, 170);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);

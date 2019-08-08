@@ -97,9 +97,9 @@ class RhuIncapacidad
     private $vrCobro = 0;
 
     /**
-     * @ORM\Column(name="codigo_centro_costo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_grupo_fk", type="string", length=10, nullable=true)
      */
-    private $codigoCentroCostoFk;
+    private $codigoGrupoFk;
 
     /**
      * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
@@ -299,6 +299,12 @@ class RhuIncapacidad
      * @ORM\JoinColumn(name="codigo_incapacidad_tipo_fk", referencedColumnName="codigo_incapacidad_tipo_pk")
      */
     protected $incapacidadTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuGrupo", inversedBy="incapacidadesGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk", referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="incapacidadesEntidadSaludRel")
@@ -1330,6 +1336,38 @@ class RhuIncapacidad
     public function setIncapacidadesIncapacidadProrrogaRel($incapacidadesIncapacidadProrrogaRel): void
     {
         $this->incapacidadesIncapacidadProrrogaRel = $incapacidadesIncapacidadProrrogaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
     }
 
 

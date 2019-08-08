@@ -68,6 +68,11 @@ class RhuGrupo
     protected $pagosGrupoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuIncapacidad", mappedBy="grupoRel")
+     */
+    protected $incapacidadesGrupoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -241,6 +246,22 @@ class RhuGrupo
     public function setPagosGrupoRel($pagosGrupoRel): void
     {
         $this->pagosGrupoRel = $pagosGrupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadesGrupoRel()
+    {
+        return $this->incapacidadesGrupoRel;
+    }
+
+    /**
+     * @param mixed $incapacidadesGrupoRel
+     */
+    public function setIncapacidadesGrupoRel($incapacidadesGrupoRel): void
+    {
+        $this->incapacidadesGrupoRel = $incapacidadesGrupoRel;
     }
 
 

@@ -207,6 +207,11 @@ class RhuCredito
     protected $liquidacionesAdicionalesCreditoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuVacacionAdicional", mappedBy="creditoRel")
+     */
+    protected $vacacionesAdicionalesCreditoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCreditoPk()
@@ -764,6 +769,38 @@ class RhuCredito
     public function setCreditosPagosCreditoRel( $creditosPagosCreditoRel ): void
     {
         $this->creditosPagosCreditoRel = $creditosPagosCreditoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidacionesAdicionalesCreditoRel()
+    {
+        return $this->liquidacionesAdicionalesCreditoRel;
+    }
+
+    /**
+     * @param mixed $liquidacionesAdicionalesCreditoRel
+     */
+    public function setLiquidacionesAdicionalesCreditoRel($liquidacionesAdicionalesCreditoRel): void
+    {
+        $this->liquidacionesAdicionalesCreditoRel = $liquidacionesAdicionalesCreditoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesAdicionalesCreditoRel()
+    {
+        return $this->vacacionesAdicionalesCreditoRel;
+    }
+
+    /**
+     * @param mixed $vacacionesAdicionalesCreditoRel
+     */
+    public function setVacacionesAdicionalesCreditoRel($vacacionesAdicionalesCreditoRel): void
+    {
+        $this->vacacionesAdicionalesCreditoRel = $vacacionesAdicionalesCreditoRel;
     }
 
 

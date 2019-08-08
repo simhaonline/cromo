@@ -22,9 +22,14 @@ class RhuConsecutivo
     private $codigoConsecutivoPk;
 
     /**
-     * @ORM\Column(name="pago", type="integer", nullable=true, options={"default":0})
+     * @ORM\Column(name="nombre", type="string", length=80, nullable=true)
      */
-    private $pago = 0;
+    private $nombre;
+
+    /**
+     * @ORM\Column(name="consecutivo", type="integer", nullable=true, options={"default":0})
+     */
+    private $consecutivo = 0;
 
     /**
      * @return mixed
@@ -37,7 +42,7 @@ class RhuConsecutivo
     /**
      * @param mixed $codigoConsecutivoPk
      */
-    public function setCodigoConsecutivoPk( $codigoConsecutivoPk ): void
+    public function setCodigoConsecutivoPk($codigoConsecutivoPk): void
     {
         $this->codigoConsecutivoPk = $codigoConsecutivoPk;
     }
@@ -45,17 +50,33 @@ class RhuConsecutivo
     /**
      * @return mixed
      */
-    public function getPago()
+    public function getNombre()
     {
-        return $this->pago;
+        return $this->nombre;
     }
 
     /**
-     * @param mixed $pago
+     * @param mixed $nombre
      */
-    public function setPago( $pago ): void
+    public function setNombre($nombre): void
     {
-        $this->pago = $pago;
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConsecutivo()
+    {
+        return $this->consecutivo;
+    }
+
+    /**
+     * @param mixed $consecutivo
+     */
+    public function setConsecutivo($consecutivo): void
+    {
+        $this->consecutivo = $consecutivo;
     }
 
 

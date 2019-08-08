@@ -38,9 +38,9 @@ class RhuVacacionAdicional
     private $codigoEmbargoFk;
 
     /**
-     * @ORM\Column(name="codigo_pago_concepto_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_concepto_fk", type="string", length=10, nullable=true)
      */
-    private $codigoPagoConceptoFk;
+    private $codigoConceptoFk;
 
     /**
      * @ORM\Column(name="vr_deduccion", type="float")
@@ -58,20 +58,28 @@ class RhuVacacionAdicional
     private $detalle;
 
     /**
-     * @return array
+     * @ORM\ManyToOne(targetEntity="RhuVacacion", inversedBy="vacacionesAdicionalesVacacionRel")
+     * @ORM\JoinColumn(name="codigo_vacacion_fk", referencedColumnName="codigo_vacacion_pk")
      */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
+    protected $vacacionRel;
 
     /**
-     * @param array $infoLog
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="vacacionesAdicionalesConceptoRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
      */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    protected $conceptoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuCredito", inversedBy="vacacionesAdicionalesCreditoRel")
+     * @ORM\JoinColumn(name="codigo_credito_fk", referencedColumnName="codigo_credito_pk")
+     */
+    protected $creditoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEmbargo", inversedBy="vacacionesAdicionalesEmbargoRel")
+     * @ORM\JoinColumn(name="codigo_embargo_fk", referencedColumnName="codigo_embargo_pk")
+     */
+    protected $embargoRel;
 
     /**
      * @return mixed
@@ -140,17 +148,17 @@ class RhuVacacionAdicional
     /**
      * @return mixed
      */
-    public function getCodigoPagoConceptoFk()
+    public function getCodigoConceptoFk()
     {
-        return $this->codigoPagoConceptoFk;
+        return $this->codigoConceptoFk;
     }
 
     /**
-     * @param mixed $codigoPagoConceptoFk
+     * @param mixed $codigoConceptoFk
      */
-    public function setCodigoPagoConceptoFk($codigoPagoConceptoFk): void
+    public function setCodigoConceptoFk($codigoConceptoFk): void
     {
-        $this->codigoPagoConceptoFk = $codigoPagoConceptoFk;
+        $this->codigoConceptoFk = $codigoConceptoFk;
     }
 
     /**
@@ -201,29 +209,71 @@ class RhuVacacionAdicional
         $this->detalle = $detalle;
     }
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="RhuVacacion", inversedBy="vacacionesAdicionalesVacacionRel")
-//     * @ORM\JoinColumn(name="codigo_vacacion_fk", referencedColumnName="codigo_vacacion_pk")
-//     */
-//    protected $vacacionRel;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="RhuCredito", inversedBy="vacacionesAdicionalesCreditoRel")
-//     * @ORM\JoinColumn(name="codigo_credito_fk", referencedColumnName="codigo_credito_pk")
-//     */
-//    protected $creditoRel;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="RhuEmbargo", inversedBy="vacacionesAdicionalesEmbargoRel")
-//     * @ORM\JoinColumn(name="codigo_embargo_fk", referencedColumnName="codigo_embargo_pk")
-//     */
-//    protected $embargoRel;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="RhuPagoConcepto", inversedBy="vacacionesAdicionalesPagoConceptoRel")
-//     * @ORM\JoinColumn(name="codigo_pago_concepto_fk", referencedColumnName="codigo_pago_concepto_pk")
-//     */
-//    protected $pagoConceptoRel;
+    /**
+     * @return mixed
+     */
+    public function getConceptoRel()
+    {
+        return $this->conceptoRel;
+    }
+
+    /**
+     * @param mixed $conceptoRel
+     */
+    public function setConceptoRel($conceptoRel): void
+    {
+        $this->conceptoRel = $conceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreditoRel()
+    {
+        return $this->creditoRel;
+    }
+
+    /**
+     * @param mixed $creditoRel
+     */
+    public function setCreditoRel($creditoRel): void
+    {
+        $this->creditoRel = $creditoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmbargoRel()
+    {
+        return $this->embargoRel;
+    }
+
+    /**
+     * @param mixed $embargoRel
+     */
+    public function setEmbargoRel($embargoRel): void
+    {
+        $this->embargoRel = $embargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionRel()
+    {
+        return $this->vacacionRel;
+    }
+
+    /**
+     * @param mixed $vacacionRel
+     */
+    public function setVacacionRel($vacacionRel): void
+    {
+        $this->vacacionRel = $vacacionRel;
+    }
+
+
 
 
 }

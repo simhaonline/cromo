@@ -336,6 +336,11 @@ class RhuEmbargo
     protected $liquidacionesAdicionalesEmbargoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuVacacionAdicional", mappedBy="embargoRel")
+     */
+    protected $vacacionesAdicionalesEmbargoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEmbargoPk()
@@ -1246,4 +1251,39 @@ class RhuEmbargo
     {
         $this->embargoJuzgadoRel = $embargoJuzgadoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidacionesAdicionalesEmbargoRel()
+    {
+        return $this->liquidacionesAdicionalesEmbargoRel;
+    }
+
+    /**
+     * @param mixed $liquidacionesAdicionalesEmbargoRel
+     */
+    public function setLiquidacionesAdicionalesEmbargoRel($liquidacionesAdicionalesEmbargoRel): void
+    {
+        $this->liquidacionesAdicionalesEmbargoRel = $liquidacionesAdicionalesEmbargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesAdicionalesEmbargoRel()
+    {
+        return $this->vacacionesAdicionalesEmbargoRel;
+    }
+
+    /**
+     * @param mixed $vacacionesAdicionalesEmbargoRel
+     */
+    public function setVacacionesAdicionalesEmbargoRel($vacacionesAdicionalesEmbargoRel): void
+    {
+        $this->vacacionesAdicionalesEmbargoRel = $vacacionesAdicionalesEmbargoRel;
+    }
+
+
+
 }

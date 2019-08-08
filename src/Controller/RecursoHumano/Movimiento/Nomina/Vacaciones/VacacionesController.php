@@ -5,12 +5,15 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina\Vacaciones;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuNovedad;
 use App\Entity\RecursoHumano\RhuVacacion;
+use App\Entity\RecursoHumano\RhuVacacionAdicional;
 use App\Form\Type\RecursoHumano\VacacionType;
 use App\Formato\RecursoHumano\Vacaciones;
 use App\General\General;
@@ -134,17 +137,33 @@ class VacacionesController extends ControllerListenerGeneral
                                     $arVacacion->setEmpleadoRel($arEmpleado);
                                     $arVacacion->setGrupoRel($arContrato->getGrupoRel());
                                     $em->persist($arVacacion);
+
+                                    //Calcular deducciones credito
+                                    if ($id == 0) {
+                                        $floVrDeducciones = 0;
+                                        $arCreditos = $em->getRepository(RhuCredito::class)->findBy(array('codigoEmpleadoFk' => $arEmpleado->getCodigoEmpleadoPk(), 'codigoCreditoPagoTipoFk' => 'NOM', 'estadoPagado' => 0, 'estadoSuspendido' => 0));
+                                        foreach ($arCreditos as $arCredito) {
+                                            $arVacacionAdicional = new RhuVacacionAdicional();
+                                            $arVacacionAdicional->setCreditoRel($arCredito);
+                                            $arVacacionAdicional->setVacacionRel($arVacacion);
+                                            $arVacacionAdicional->setVrDeduccion($arCredito->getVrCuota());
+                                            $arVacacionAdicional->setConceptoRel($arCredito->getCreditoTipoRel()->getConceptoRel());
+                                            $em->persist($arVacacionAdicional);
+                                            $floVrDeducciones += $arCredito->getVrCuota();
+                                        }
+                                    }
+
                                     // calcular adicionales al pago permanentes
-//                                if ($id == 0) {
-//                                    $arAdicionales = $em->getRepository(RhuAdicional::class)->findBy(['codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'tipoAdicional' => 2, 'permanente' => 1, 'estadoInactivo' => 0]);
-//                                    foreach ($arAdicionales as $arAdicional) {
-//                                        $arVacacionAdicional = new \Brasa\RecursoHumanoBundle\Entity\RhuVacacionAdicional();
-//                                        $arVacacionAdicional->setVacacionRel($arVacacion);
-//                                        $arVacacionAdicional->setPagoConceptoRel($arAdicional->getPagoConceptoRel());
-//                                        $arVacacionAdicional->setVrDeduccion($arAdicional->getValor());
-//                                        $em->persist($arVacacionAdicional);
-//                                    }
-//                                }
+                                    if ($id == 0) {
+                                        $arAdicionales = $em->getRepository(RhuAdicional::class)->findBy(['codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'permanente' => 1, 'estadoInactivo' => 0]);
+                                        foreach ($arAdicionales as $arAdicional) {
+                                            $arVacacionAdicional = new RhuVacacionAdicional();
+                                            $arVacacionAdicional->setVacacionRel($arVacacion);
+                                            $arVacacionAdicional->setPagoConceptoRel($arAdicional->getPagoConceptoRel());
+                                            $arVacacionAdicional->setVrDeduccion($arAdicional->getValor());
+                                            $em->persist($arVacacionAdicional);
+                                        }
+                                    }
 
                                     $em->flush();
                                     $em->getRepository(RhuVacacion::class)->liquidar($arVacacion->getCodigoVacacionPk());

@@ -382,7 +382,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
         $douVrSalarioMinimo = $arConfiguracion->getVrSalarioMinimo();
         $em->getRepository(RhuVacacionAdicional::class)->eliminarEmbargosVacacion($arVacacion->getCodigoVacacionPk());
         /** @var  $arEmbargo RhuEmbargo */
-        $arEmbargos = $em->getRepository(RhuEmbargo::class)->listaEmbargo($arVacacion->getCodigoEmpleadoFk(), 0, 1, 0, 0);
+        $arEmbargos = $em->getRepository(RhuEmbargo::class)->listaEmbargo($arVacacion->getEmpleadoRel()->getCodigoEmpleadoPk(), 0, 1, 0, 0);
         foreach ($arEmbargos as $arEmbargo) {
             $vrDeduccionEmbargo = 0;
             $detalle = "";

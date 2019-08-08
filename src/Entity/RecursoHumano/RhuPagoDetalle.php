@@ -32,7 +32,6 @@ class RhuPagoDetalle
      */
     private $codigoConceptoFk;
 
-
     /**
      * @ORM\Column(name="codigo_licencia_fk", type="integer", nullable=true)
      */

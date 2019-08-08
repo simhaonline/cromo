@@ -180,6 +180,11 @@ class RhuConcepto
     protected $incapacidadesTiposConceptoEmpresaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuVacacionAdicional", mappedBy="conceptoRel")
+     */
+    protected $vacacionesAdicionalesConceptoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -705,6 +710,22 @@ class RhuConcepto
     public function setIncapacidadesTiposConceptoEmpresaRel($incapacidadesTiposConceptoEmpresaRel): void
     {
         $this->incapacidadesTiposConceptoEmpresaRel = $incapacidadesTiposConceptoEmpresaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesAdicionalesConceptoRel()
+    {
+        return $this->vacacionesAdicionalesConceptoRel;
+    }
+
+    /**
+     * @param mixed $vacacionesAdicionalesConceptoRel
+     */
+    public function setVacacionesAdicionalesConceptoRel($vacacionesAdicionalesConceptoRel): void
+    {
+        $this->vacacionesAdicionalesConceptoRel = $vacacionesAdicionalesConceptoRel;
     }
 
 

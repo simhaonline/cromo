@@ -138,6 +138,16 @@ class RhuEntidad
     protected $configuracionesEntidadRiesgosRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuIncapacidad", mappedBy="entidadSaludRel")
+     */
+    protected $incapacidadesEntidadSaludRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuLicencia", mappedBy="entidadSaludRel")
+     */
+    protected $licenciasEntidadSaludRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEntidadPk()
@@ -503,6 +513,54 @@ class RhuEntidad
     public function setConfiguracionesEntidadRiesgosRel($configuracionesEntidadRiesgosRel): void
     {
         $this->configuracionesEntidadRiesgosRel = $configuracionesEntidadRiesgosRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadesEntidadSaludRel()
+    {
+        return $this->incapacidadesEntidadSaludRel;
+    }
+
+    /**
+     * @param mixed $incapacidadesEntidadSaludRel
+     */
+    public function setIncapacidadesEntidadSaludRel($incapacidadesEntidadSaludRel): void
+    {
+        $this->incapacidadesEntidadSaludRel = $incapacidadesEntidadSaludRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLicenciasEntidadSaludRel()
+    {
+        return $this->licenciasEntidadSaludRel;
+    }
+
+    /**
+     * @param mixed $licenciasEntidadSaludRel
+     */
+    public function setLicenciasEntidadSaludRel($licenciasEntidadSaludRel): void
+    {
+        $this->licenciasEntidadSaludRel = $licenciasEntidadSaludRel;
     }
 
 

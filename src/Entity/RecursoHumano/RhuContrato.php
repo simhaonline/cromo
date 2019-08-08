@@ -451,6 +451,11 @@ class RhuContrato
     protected $liquidacionesContratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuLicencia", mappedBy="contratoRel")
+     */
+    protected $licenciasContratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoPk()
@@ -1776,6 +1781,22 @@ class RhuContrato
     public function setVrSalarioPago($vrSalarioPago): void
     {
         $this->vrSalarioPago = $vrSalarioPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLicenciasContratoRel()
+    {
+        return $this->licenciasContratoRel;
+    }
+
+    /**
+     * @param mixed $licenciasContratoRel
+     */
+    public function setLicenciasContratoRel($licenciasContratoRel): void
+    {
+        $this->licenciasContratoRel = $licenciasContratoRel;
     }
 
 

@@ -17,7 +17,7 @@ class RhuIncapacidad
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_adicional_pk", type="integer")
+     * @ORM\Column(name="codigo_incapacidad_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoIncapacidadPk;
@@ -308,6 +308,11 @@ class RhuIncapacidad
      * @ORM\JoinColumn(name="codigo_incapacidad_diagnostico_fk", referencedColumnName="codigo_incapacidad_diagnostico_pk")
      */
     protected $incapacidadDiagnosticoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="incapacidadRel")
+     */
+    protected $pagosDetallesIncapacidadRel;
 
     /**
      * @return array
@@ -1140,6 +1145,87 @@ class RhuIncapacidad
     {
         $this->incapacidadTipoRel = $incapacidadTipoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadSaludRel()
+    {
+        return $this->entidadSaludRel;
+    }
+
+    /**
+     * @param mixed $entidadSaludRel
+     */
+    public function setEntidadSaludRel($entidadSaludRel): void
+    {
+        $this->entidadSaludRel = $entidadSaludRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoRel()
+    {
+        return $this->empleadoRel;
+    }
+
+    /**
+     * @param mixed $empleadoRel
+     */
+    public function setEmpleadoRel($empleadoRel): void
+    {
+        $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoRel()
+    {
+        return $this->contratoRel;
+    }
+
+    /**
+     * @param mixed $contratoRel
+     */
+    public function setContratoRel($contratoRel): void
+    {
+        $this->contratoRel = $contratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadDiagnosticoRel()
+    {
+        return $this->incapacidadDiagnosticoRel;
+    }
+
+    /**
+     * @param mixed $incapacidadDiagnosticoRel
+     */
+    public function setIncapacidadDiagnosticoRel($incapacidadDiagnosticoRel): void
+    {
+        $this->incapacidadDiagnosticoRel = $incapacidadDiagnosticoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosDetallesIncapacidadRel()
+    {
+        return $this->pagosDetallesIncapacidadRel;
+    }
+
+    /**
+     * @param mixed $pagosDetallesIncapacidadRel
+     */
+    public function setPagosDetallesIncapacidadRel($pagosDetallesIncapacidadRel): void
+    {
+        $this->pagosDetallesIncapacidadRel = $pagosDetallesIncapacidadRel;
+    }
+
 
 
 }

@@ -32,6 +32,17 @@ class RhuPagoDetalle
      */
     private $codigoConceptoFk;
 
+
+    /**
+     * @ORM\Column(name="codigo_licencia_fk", type="integer", nullable=true)
+     */
+    private $codigoLicenciaFk;
+
+    /**
+     * @ORM\Column(name="codigo_incapacidad_fk", type="integer", nullable=true)
+     */
+    private $codigoIncapacidadFk;
+
     /**
      * @ORM\Column(name="codigo_credito_fk", type="integer", nullable=true)
      */
@@ -140,6 +151,18 @@ class RhuPagoDetalle
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCreditoPago", mappedBy="pagoDetalleRel")
      */
     protected $creditosPagosPagoDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuLicencia", inversedBy="pagosDetallesLicenciaRel")
+     * @ORM\JoinColumn(name="codigo_licencia_fk", referencedColumnName="codigo_licencia_pk")
+     */
+    protected $licenciaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuIncapacidad", inversedBy="pagosDetallesIncapacidadRel")
+     * @ORM\JoinColumn(name="codigo_incapacidad_fk", referencedColumnName="codigo_incapacidad_pk")
+     */
+    protected $incapacidadRel;
 
     /**
      * @return mixed
@@ -539,6 +562,70 @@ class RhuPagoDetalle
     public function setVacacionRel($vacacionRel): void
     {
         $this->vacacionRel = $vacacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoLicenciaFk()
+    {
+        return $this->codigoLicenciaFk;
+    }
+
+    /**
+     * @param mixed $codigoLicenciaFk
+     */
+    public function setCodigoLicenciaFk($codigoLicenciaFk): void
+    {
+        $this->codigoLicenciaFk = $codigoLicenciaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIncapacidadFk()
+    {
+        return $this->codigoIncapacidadFk;
+    }
+
+    /**
+     * @param mixed $codigoIncapacidadFk
+     */
+    public function setCodigoIncapacidadFk($codigoIncapacidadFk): void
+    {
+        $this->codigoIncapacidadFk = $codigoIncapacidadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLicenciaRel()
+    {
+        return $this->licenciaRel;
+    }
+
+    /**
+     * @param mixed $licenciaRel
+     */
+    public function setLicenciaRel($licenciaRel): void
+    {
+        $this->licenciaRel = $licenciaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadRel()
+    {
+        return $this->incapacidadRel;
+    }
+
+    /**
+     * @param mixed $incapacidadRel
+     */
+    public function setIncapacidadRel($incapacidadRel): void
+    {
+        $this->incapacidadRel = $incapacidadRel;
     }
 
 

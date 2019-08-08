@@ -403,6 +403,11 @@ class RhuEmpleado
     protected $liquidacionesEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuLicencia", mappedBy="empleadoRel")
+     */
+    protected $licenciasEmpleadoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array

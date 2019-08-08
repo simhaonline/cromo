@@ -152,8 +152,10 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.estadoAnulado')
             ->addSelect('tg.comentario')
             ->addSelect('tg.usuario')
+            ->addSelect('ase.nombre')
             ->leftJoin('tg.ciudadOrigenRel', 'co')
             ->leftJoin('tg.clienteRel', 'c')
+            ->leftJoin('c.asesorRel', 'ase')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->where('tg.codigoGuiaPk <> 0');
         $fecha = new \DateTime('now');

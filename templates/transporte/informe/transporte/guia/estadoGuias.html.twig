@@ -52,35 +52,23 @@
             <th>CLIENTE</th>
             <th>DOCUMENTO</th>
             <th>DESTINATARIO</th>
-            <th>CUMPLIDO</th>
-            <th>DIRECCION</th>
-            <th>DESTINO</th>
-            <th>UNIDADES</th>
-            <th>PESO</th>
-            <th>FLETE</th>
-            <th>MANEJO</th>
-            <th>TOTAL</th>
-            <th>DECLARADO</th>
-            <th>INGRESO</th>
+            <th>ESTADO NOVEDAD</th>
+            <th>ESTADO DESPACHADO</th>
+            <th>ESTADO CUMPLIDO</th>
+            <th>ESTADO ENTREGADO</th>
         </tr>
         </thead>
         <tbody>
         {% for arGuia in arGuias %}
             <tr>
-                <td>{{ arGuia.guia }}</td>
+                <td>{{ arGuia.codigoGuiaPk }}</td>
                 <td>{{ arGuia.cliente }}</td>
-                <td>{{ arGuia.docCliente }}</td>
+                <td>{{ arGuia.documentoCliente }}</td>
                 <td>{{ arGuia.nombreDestinatario }}</td>
-                <td>{{ arGuia.codigoCumplidoFk }}</td>
-                <td>{{ arGuia.direccionDestinatario }}</td>
-                <td>{{ arGuia.ciudad }}</td>
-                <td class="numero">{{ arGuia.unidades }}</td>
-                <td class="numero">{{ arGuia.peso }}</td>
-                <td class="numero">{{ arGuia.vrFlete }}</td>
-                <td class="numero">{{ arGuia.vrManejo }}</td>
-                <td class="numero">{{ arGuia.vrTotal }}</td>
-                <td class="numero">{{ arGuia.vrDeclara }}</td>
-                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+                <td class="estado">{{ arGuia.estadoNovedad ?'SI':'NO'}}</td>
+                <td class="estado">{{ arGuia.estadoDespachado?'SI':'NO' }}</td>
+                <td class="estado">{{ arGuia.estadoCumplido?'SI':'NO' }}</td>
+                <td class="estado">{{ arGuia.estadoEntregado ?'SI':'NO'}}</td>
             </tr>
         {% endfor %}
         </tbody>

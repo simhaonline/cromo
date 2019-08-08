@@ -23,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class GuiasClienteController extends Controller
 {
    /**
-    * @Route("/transporte/informe/transporte/guia/guias/estado", name="transporte_informe_transporte_guia_guias_estado")
+    * @Route("/transporte/informe/transporte/guia/guias/cliente", name="transporte_informe_transporte_guia_guias_cliente")
     */    
     public function lista(Request $request,  \Swift_Mailer $mailer)
     {

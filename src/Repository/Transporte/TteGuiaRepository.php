@@ -2989,20 +2989,22 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->select('g.codigoGuiaPk')
             ->addSelect('g.codigoClienteFk')
             ->addSelect('c.nombreCorto AS cliente')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.nombreDestinatario')
             ->addSelect('g.estadoNovedad')
             ->addSelect('g.estadoDespachado')
             ->addSelect('g.estadoEntregado')
             ->addSelect('g.estadoCumplido')
             ->leftJoin('g.clienteRel', 'c')
             ->orderBy('g.fechaIngreso', 'DESC');
-        if ($session->get('filtroTteGuiaClienteNombre')) {
-            $queryBuilder->andWhere("tg.codigoClienteFk = {$session->get('filtroTteGuiaClienteNombre')}");
+        if ($session->get('filtroTteCodigoCliente')) {
+            $queryBuilder->andWhere("g.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
-        if ($session->get('filtroTteGuiaFechaIngresoDesde')) {
-            $queryBuilder->andWhere('g.fechaIngreso >= ' . "'{$session->get('filtroTteGuiaFechaIngresoDesde')}'");
+        if ($session->get('filtroTteFechaDesde')) {
+            $queryBuilder->andWhere('g.fechaIngreso >= ' . "'{$session->get('filtroTteFechaDesde')}'");
         }
-        if ($session->get('filtroTteGuiaFechaIngresoHasta')) {
-            $queryBuilder->andWhere('g.fechaIngreso <= ' . "'{$session->get('filtroTteGuiaFechaIngresoHasta')}'");
+        if ($session->get('filtroTteFechaHasta')) {
+            $queryBuilder->andWhere('g.fechaIngreso <= ' . "'{$session->get('filtroTteFechaHasta')}'");
         }
         return $queryBuilder;
     }

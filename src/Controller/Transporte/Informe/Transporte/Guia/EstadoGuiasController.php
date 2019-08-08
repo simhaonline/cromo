@@ -23,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class EstadoGuiasController extends Controller
 {
    /**
-    * @Route("/transporte/informe/transporte/guia/guias/cliente", name="transporte_informe_transporte_guia_guias_cliente")
+    * @Route("/transporte/informe/transporte/guia/guias/estado", name="transporte_informe_transporte_guia_guias_estado")
     */    
     public function lista(Request $request,  \Swift_Mailer $mailer)
     {
@@ -58,11 +58,11 @@ class EstadoGuiasController extends Controller
                     $session->set('filtroTteCodigoCliente', $form->get('txtCodigoCliente')->getData());
                     $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
                     if($form->get('txtCodigoCliente')->getData() != ''){
-                        $arGuias = $em->getRepository(TteGuia::class)->guiasCliente()->getQuery()->getResult();
+                        $arGuias = $em->getRepository(TteGuia::class)->estadoGuia()->getQuery()->getResult();
                     }
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->guiasCliente())->execute(), "Guias cliente");
+                    General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->estadoGuia())->execute(), "Guias cliente");
                 }
                 if ($form->get('btnEnviar')->isClicked()) {
                         $codigoCliente = $form->get('txtCodigoCliente')->getData();
@@ -74,7 +74,7 @@ class EstadoGuiasController extends Controller
                                     $pos = strpos($correo, ",");
                                     if ($pos === false) {
                                         $destinatario = explode(';', $correo);
-                                        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->guiasCliente($codigoCliente)->getQuery()->getResult();
+                                        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->estadoGuia($codigoCliente)->getQuery()->getResult();
                                         $cuerpo = $this->render('transporte/informe/transporte/guia/correo.html.twig', [
                                             'arGuias' => $arGuias,
                                             'form' => $form->createView()]);
@@ -93,13 +93,13 @@ class EstadoGuiasController extends Controller
                                     Mensajes::error("El cliente no tiene correo asignado");
                                 }
                             }
-                            $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->guiasCliente($codigoCliente);
+                            $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->estadoGuia($codigoCliente);
                         }
                 }
             }
         }
 
-        return $this->render('transporte/informe/transporte/guia/guiasCliente.html.twig', [
+        return $this->render('transporte/informe/transporte/guia/estadoGuias.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()]);
     }

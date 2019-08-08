@@ -80,10 +80,10 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->andWhere("p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaHasta <= '" . $fechaHasta . "'");
         $arrayResultado = $query->getQuery()->getSingleResult();
         if ($arrayResultado) {
-            if($arrayResultado['ibc']) {
+            if ($arrayResultado['ibc']) {
                 $arrIbc['ibc'] = $arrayResultado['ibc'];
             }
-            if($arrayResultado['horas']) {
+            if ($arrayResultado['horas']) {
                 $arrIbc['horas'] = $arrayResultado['horas'];
             }
         }
@@ -97,7 +97,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->andWhere("c.fondoSolidaridadPensional = 1");
         $arrayResultado = $query->getQuery()->getSingleResult();
         if ($arrayResultado) {
-            if($arrayResultado['deduccionFondo']) {
+            if ($arrayResultado['deduccionFondo']) {
                 $arrIbc['deduccionAnterior'] = $arrayResultado['deduccionFondo'];
             }
         }
@@ -150,9 +150,11 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('p.empleadoRel', 'e')
             ->leftJoin('p.pagoTipoRel', 'pt')
             ->leftJoin('p.grupoRel', 'g')
-            ->orderBy('p.fechaDesde', 'DESC' )
-        ->setMaxResults(10000);
-
+            ->orderBy('p.fechaDesde', 'DESC')
+            ->setMaxResults(10000);
+        if ($session->get('filtroRhuInformePagoDetalleTipo') != null) {
+            $queryBuilder->andWhere("p.codigoPagoTipoFk = '{$session->get('filtroRhuInformePagoDetalleTipo')}'");
+        }
         if ($session->get('filtroRhuInformePagoDetalleConcepto') != null) {
             $queryBuilder->andWhere("pd.codigoConceptoFk = '{$session->get('filtroRhuInformePagoDetalleConcepto')}'");
         }
@@ -166,7 +168,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("p.fechaHasta <= '{$session->get('filtroRhuInformePagoDetalleFechaHasta')} 23:59:59'");
         }
 
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder;
 
     }
 
@@ -281,5 +283,45 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         }
         $dql .= " ORDER BY pd.codigoConceptoFk";
         return $dql;
+    }
+
+    public function excelResumen()
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('pd.codigoPagoDetallePk')
+            ->addSelect('e.codigoEmpleadoPk')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('pd.codigoConceptoFk')
+            ->addSelect('c.nombre AS concepto')
+            ->addSelect('SUM(pd.vrPago) AS valor')
+            ->addSelect('SUM(pd.horas) AS horas')
+            ->addSelect('pt.nombre AS tipo')
+            ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.pagoRel', 'p')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('p.pagoTipoRel', 'pt')
+            ->leftJoin('p.grupoRel', 'g')
+            ->groupBy('pd.codigoConceptoFk')
+            ->addGroupBy('pd.codigoPagoDetallePk')
+            ->setMaxResults(10000);
+        if ($session->get('filtroRhuInformePagoDetalleCodigoEmpleado') != null) {
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoDetalleCodigoEmpleado')}");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleTipo') != null) {
+            $queryBuilder->andWhere("p.codigoPagoTipoFk = '{$session->get('filtroRhuInformePagoDetalleTipo')}'");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleConcepto') != null) {
+            $queryBuilder->andWhere("pd.codigoConceptoFk = '{$session->get('filtroRhuInformePagoDetalleConcepto')}'");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleFechaDesde') != null) {
+            $queryBuilder->andWhere("p.fechaDesde >= '{$session->get('filtroRhuInformePagoDetalleFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleFechaHasta') != null) {
+            $queryBuilder->andWhere("p.fechaHasta <= '{$session->get('filtroRhuInformePagoDetalleFechaHasta')} 23:59:59'");
+        }
+        return $queryBuilder;
     }
 }

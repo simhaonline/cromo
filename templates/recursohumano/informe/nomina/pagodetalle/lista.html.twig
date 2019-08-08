@@ -10,7 +10,7 @@
             <div>
                 <div class="widget-body">
                     <div class="form-group form-group-sm">
-                        <label for="form_txtCodigoEmpleado" class="col-sm-offset-1 col-sm-1 control-label">Cliente:</label>
+                        <label for="form_txtCodigoEmpleado" class="col-sm-offset-1 col-sm-1 control-label">Empleado:</label>
                         <div class="col-sm-10">
                             <div class="row">
                                 <div class="col-lg-2">
@@ -44,6 +44,10 @@
                         <label class=" col-sm-2 control-label">Fecha desde:</label>
                         <div class="col-sm-4">
                             {{ form_widget(form.fechaHasta) }}
+                        </div>
+                        <label class=" col-sm-2 control-label">Tipo:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.pagoTipo) }}
                         </div>
                     </div>
                 </div>
@@ -112,6 +116,9 @@
         {{ knp_pagination_render(arPagoDetalles) }}
     </div>
     <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.btnExcelResumen, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
         <div class="btn-group">
             {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
         </div>

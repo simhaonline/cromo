@@ -8,8 +8,11 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\General\GenModulo;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuRequisito;
+use App\General\General;
 use Doctrine\ORM\EntityRepository;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -24,6 +27,10 @@ class pagoDetalleController extends  Controller
 {
 
     /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/recursohumano/informe/nomina/pagodetalle/lista", name="recursohumano_informe_nomina_pagodetalle_lista")
      */
     public function lista(Request $request)
@@ -48,21 +55,47 @@ class pagoDetalleController extends  Controller
                 'attr' => ['class' => 'form-control to-select-2'],
                 'data' => $session->get('arSeguridadUsuarioProcesofiltroModulo')||""
             ))
+            ->add('pagoTipo', EntityType::class, array(
+                'class' => RhuPagoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('pt')
+                        ->orderBy('pt.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => false,
+                'empty_data' => "",
+                'placeholder' => "TODOS",
+                'attr' => ['class' => 'form-control to-select-2'],
+                'data' => $session->get('arSeguridadUsuarioProcesofiltroModulo')||""
+            ))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add( 'btnExcel', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
+            ->add( 'btnExcelResumen', SubmitType::class, ['label'=>'Excel resumen', 'attr'=>['class'=> 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked() || $form->get('btnExcelResumen')->isClicked()) {
                 $arConcepto = $form->get('concepto')->getData();
                 if($arConcepto) {
                     $session->set('filtroRhuInformePagoDetalleConcepto', $arConcepto->getCodigoConceptoPk());
                 } else {
                     $session->set('filtroRhuInformePagoDetalleConcepto', null);
                 }
+                $arPagoTipo = $form->get('pagoTipo')->getData();
+                if($arPagoTipo) {
+                    $session->set('filtroRhuInformePagoDetalleTipo', $arPagoTipo->getCodigoPagoTipoPk());
+                } else {
+                    $session->set('filtroRhuInformePagoDetalleTipo', null);
+                }
                 $session->set('filtroRhuInformePagoDetalleCodigoEmpleado',  $form->get('txtEmpleado')->getData());
                 $session->set('filtroRhuInformePagoDetalleFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
                 $session->set('filtroRhuInformePagoDetalleFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(RhuPagoDetalle::class)->informe()->getQuery()->getResult(), "Pagos detalle");
+            }
+            if ($form->get('btnExcelResumen')->isClicked()) {
+                General::get()->setExportar($em->getRepository(RhuPagoDetalle::class)->excelResumen()->getQuery()->getArrayResult(), "Pagos detalle resumen");
             }
         }
         $arPagoDetalles = $paginator->paginate($em->getRepository(RhuPagoDetalle::class)->informe(), $request->query->getInt('page', 1), 30);

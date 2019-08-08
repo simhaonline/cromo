@@ -170,6 +170,16 @@ class RhuConcepto
     protected $liquidacionesAdicionalesConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuIncapacidadTipo", mappedBy="conceptoRel")
+     */
+    protected $incapacidadesTiposConceptoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuIncapacidadTipo", mappedBy="conceptoRel")
+     */
+    protected $incapacidadesTiposConceptoEmpresaRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -647,6 +657,54 @@ class RhuConcepto
     public function setConfiguracionConceptoFondoSolidaridadRel($configuracionConceptoFondoSolidaridadRel): void
     {
         $this->configuracionConceptoFondoSolidaridadRel = $configuracionConceptoFondoSolidaridadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidacionesAdicionalesConceptoRel()
+    {
+        return $this->liquidacionesAdicionalesConceptoRel;
+    }
+
+    /**
+     * @param mixed $liquidacionesAdicionalesConceptoRel
+     */
+    public function setLiquidacionesAdicionalesConceptoRel($liquidacionesAdicionalesConceptoRel): void
+    {
+        $this->liquidacionesAdicionalesConceptoRel = $liquidacionesAdicionalesConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadesTiposConceptoRel()
+    {
+        return $this->incapacidadesTiposConceptoRel;
+    }
+
+    /**
+     * @param mixed $incapacidadesTiposConceptoRel
+     */
+    public function setIncapacidadesTiposConceptoRel($incapacidadesTiposConceptoRel): void
+    {
+        $this->incapacidadesTiposConceptoRel = $incapacidadesTiposConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadesTiposConceptoEmpresaRel()
+    {
+        return $this->incapacidadesTiposConceptoEmpresaRel;
+    }
+
+    /**
+     * @param mixed $incapacidadesTiposConceptoEmpresaRel
+     */
+    public function setIncapacidadesTiposConceptoEmpresaRel($incapacidadesTiposConceptoEmpresaRel): void
+    {
+        $this->incapacidadesTiposConceptoEmpresaRel = $incapacidadesTiposConceptoEmpresaRel;
     }
 
 

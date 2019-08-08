@@ -48,14 +48,14 @@ class RhuIncapacidadTipo
     private $generaIbc = false;
 
     /**
-     * @ORM\Column(name="codigo_pago_concepto_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_concepto_fk", type="string", length=10, nullable=true)
      */
-    private $codigoPagoConceptoFk;
+    private $codigoConceptoFk;
 
     /**
-     * @ORM\Column(name="codigo_pago_concepto_empresa_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_concepto_empresa_fk", type="string", length=10, nullable=true)
      */
-    private $codigoPagoConceptoEmpresaFk;
+    private $codigoConceptoEmpresaFk;
 
     /**
      * @ORM\Column(name="tipo_novedad_turno", type="string", length=5, nullable=true)
@@ -66,6 +66,18 @@ class RhuIncapacidadTipo
      * @ORM\OneToMany(targetEntity="RhuIncapacidad", mappedBy="incapacidadTipoRel")
      */
     protected $incapacidadesIncapacidadTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="incapacidadesTiposConceptoRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
+     */
+
+    protected $conceptoRel;
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="incapacidadesTiposConceptoEmpresaRel")
+     * @ORM\JoinColumn(name="codigo_concepto_empresa_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoEmpresaRel;
 
     /**
      * @return array
@@ -241,6 +253,70 @@ class RhuIncapacidadTipo
     public function setIncapacidadesIncapacidadTipoRel($incapacidadesIncapacidadTipoRel): void
     {
         $this->incapacidadesIncapacidadTipoRel = $incapacidadesIncapacidadTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoFk()
+    {
+        return $this->codigoConceptoFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoFk
+     */
+    public function setCodigoConceptoFk($codigoConceptoFk): void
+    {
+        $this->codigoConceptoFk = $codigoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoEmpresaFk()
+    {
+        return $this->codigoConceptoEmpresaFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoEmpresaFk
+     */
+    public function setCodigoConceptoEmpresaFk($codigoConceptoEmpresaFk): void
+    {
+        $this->codigoConceptoEmpresaFk = $codigoConceptoEmpresaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoRel()
+    {
+        return $this->conceptoRel;
+    }
+
+    /**
+     * @param mixed $conceptoRel
+     */
+    public function setConceptoRel($conceptoRel): void
+    {
+        $this->conceptoRel = $conceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoEmpresaRel()
+    {
+        return $this->conceptoEmpresaRel;
+    }
+
+    /**
+     * @param mixed $conceptoEmpresaRel
+     */
+    public function setConceptoEmpresaRel($conceptoEmpresaRel): void
+    {
+        $this->conceptoEmpresaRel = $conceptoEmpresaRel;
     }
 
 

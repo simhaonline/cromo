@@ -52,9 +52,11 @@
             <th>CLIENTE</th>
             <th>DOCUMENTO</th>
             <th>DESTINATARIO</th>
+            <th>FECHA DESPACHO</th>
+            <th>FECHA ENTREGA</th>
+            <th>FECHA SOPORTE</th>
             <th>ESTADO NOVEDAD</th>
             <th>ESTADO DESPACHADO</th>
-            <th>ESTADO CUMPLIDO</th>
             <th>ESTADO ENTREGADO</th>
         </tr>
         </thead>
@@ -65,9 +67,11 @@
                 <td>{{ arGuia.cliente }}</td>
                 <td>{{ arGuia.documentoCliente }}</td>
                 <td>{{ arGuia.nombreDestinatario }}</td>
+                <td>{{ arGuia.fechaDespacho | date('Y-m-d') }}</td>
+                <td>{{ arGuia.fechaEntrega | date('Y-m-d') }}</td>
+                <td>{{ arGuia.fechaSoporte | date('Y-m-d') }}</td>
                 <td class="estado">{{ arGuia.estadoNovedad ?'SI':'NO'}}</td>
                 <td class="estado">{{ arGuia.estadoDespachado?'SI':'NO' }}</td>
-                <td class="estado">{{ arGuia.estadoCumplido?'SI':'NO' }}</td>
                 <td class="estado">{{ arGuia.estadoEntregado ?'SI':'NO'}}</td>
             </tr>
         {% endfor %}

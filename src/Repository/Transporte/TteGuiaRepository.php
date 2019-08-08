@@ -2991,10 +2991,12 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('c.nombreCorto AS cliente')
             ->addSelect('g.documentoCliente')
             ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.fechaDespacho')
+            ->addSelect('g.fechaEntrega')
+            ->addSelect('g.fechaSoporte')
             ->addSelect('g.estadoNovedad')
             ->addSelect('g.estadoDespachado')
             ->addSelect('g.estadoEntregado')
-            ->addSelect('g.estadoCumplido')
             ->leftJoin('g.clienteRel', 'c')
             ->orderBy('g.fechaIngreso', 'DESC');
         if ($session->get('filtroTteCodigoCliente')) {

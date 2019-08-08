@@ -20,10 +20,10 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class GuiasClienteController extends Controller
+class EstadoGuiasController extends Controller
 {
    /**
-    * @Route("/transporte/informe/transporte/guia/guias/estado", name="transporte_informe_transporte_guia_guias_estado")
+    * @Route("/transporte/informe/transporte/guia/guias/cliente", name="transporte_informe_transporte_guia_guias_cliente")
     */    
     public function lista(Request $request,  \Swift_Mailer $mailer)
     {
@@ -93,13 +93,13 @@ class GuiasClienteController extends Controller
                                     Mensajes::error("El cliente no tiene correo asignado");
                                 }
                             }
-                            $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->estadoGuia();
+                            $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->guiasCliente($codigoCliente);
                         }
                 }
             }
         }
 
-        return $this->render('transporte/informe/transporte/guia/estadoGuias.html.twig', [
+        return $this->render('transporte/informe/transporte/guia/guiasCliente.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()]);
     }

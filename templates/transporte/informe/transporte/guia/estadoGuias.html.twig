@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoCliente) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                {{ form_widget(form.txtNombreCorto) }}
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>CLIENTE</th>
+            <th>DOCUMENTO</th>
+            <th>DESTINATARIO</th>
+            <th>CUMPLIDO</th>
+            <th>DIRECCION</th>
+            <th>DESTINO</th>
+            <th>UNIDADES</th>
+            <th>PESO</th>
+            <th>FLETE</th>
+            <th>MANEJO</th>
+            <th>TOTAL</th>
+            <th>DECLARADO</th>
+            <th>INGRESO</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arGuia in arGuias %}
+            <tr>
+                <td>{{ arGuia.guia }}</td>
+                <td>{{ arGuia.cliente }}</td>
+                <td>{{ arGuia.docCliente }}</td>
+                <td>{{ arGuia.nombreDestinatario }}</td>
+                <td>{{ arGuia.codigoCumplidoFk }}</td>
+                <td>{{ arGuia.direccionDestinatario }}</td>
+                <td>{{ arGuia.ciudad }}</td>
+                <td class="numero">{{ arGuia.unidades }}</td>
+                <td class="numero">{{ arGuia.peso }}</td>
+                <td class="numero">{{ arGuia.vrFlete }}</td>
+                <td class="numero">{{ arGuia.vrManejo }}</td>
+                <td class="numero">{{ arGuia.vrTotal }}</td>
+                <td class="numero">{{ arGuia.vrDeclara }}</td>
+                <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right;">
+            {{ form_widget(form.btnEnviar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    <br/><br/><br/>
+{% endblock %}
+

@@ -221,8 +221,13 @@ class FacturaController extends ControllerListenerGeneral
         $query = $this->getDoctrine()->getRepository(TteFacturaDetalleConcepto::class)->listaFacturaDetalle($id);
         $arFacturaDetallesConceptos = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->factura($id);
+        $arFacturaRefencia = null;
+        if($arFactura->getCodigoFacturaReferenciaFk()) {
+            $arFacturaRefencia = $em->getRepository(TteFactura::class)->find($arFactura->getCodigoFacturaReferenciaFk());
+        }
         return $this->render('transporte/movimiento/comercial/factura/detalle.html.twig', [
             'arFactura' => $arFactura,
+            'arFacturaReferencia' => $arFacturaRefencia,
             'arFacturaDetalles' => $arFacturaDetalles,
             'arFacturaPlanillas' => $arFacturaPlanillas,
             'arFacturaDetallesConceptos' => $arFacturaDetallesConceptos,

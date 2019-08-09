@@ -52,9 +52,11 @@ class TteGuiaTemporalRepository extends ServiceEntityRepository
             ->addSelect('g.vrDeclara')
             ->addSelect('g.vrFlete')
             ->addSelect('g.vrManejo')
+            ->addSelect('p.nombre as productoNombre')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadOrigenRel', 'co')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.productoRel', 'p')
             ->where('g.codigoGuiaPk <> 0')
             ->andWhere("g.origen = 'E'");
         return $queryBuilder;

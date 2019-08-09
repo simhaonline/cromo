@@ -169,7 +169,7 @@ class ImportarGuiaExcelController extends Controller
                         $arrErrores[] = $respuesta . "el producto '{$cell->getValue()}' no existe";
                         $error = true;
                     } else {
-                        $arGuiaTemporal->setCodigoProductoFk($arProducto->getCodigoProductoPk());
+                        $arGuiaTemporal->setProductoRel($arProducto);
                     }
                     // Documento cliente
                     $cell = $worksheet->getCellByColumnAndRow(3, $row);
@@ -303,7 +303,6 @@ class ImportarGuiaExcelController extends Controller
             $arGuiaTemporal = $em->find(TteGuiaTemporal::class, $codigoGuiaTemporal);
             $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find($arGuiaTemporal->getCodigoGuiaTipoFk());
             $arOperacion = $em->find(TteOperacion::class, $arGuiaTemporal->getOperacion());
-            $arProducto = $em->getRepository(TteProducto::class)->find($arGuiaTemporal->getCodigoProductoFk());
             $arEmpaque = $em->getRepository(TteEmpaque::class)->find(1);
             $arServicio = $em->find(TteServicio::class, 'PAQ');
             if ($arGuiaTemporal) {
@@ -320,7 +319,7 @@ class ImportarGuiaExcelController extends Controller
                     $arGuia->setClienteRel($arGuiaTemporal->getClienteRel());
                     $arGuia->setServicioRel($arServicio);
                     $arGuia->setRutaRel($arGuiaTemporal->getCiudadDestinoRel()->getRutaRel());
-                    $arGuia->setProductoRel($arProducto);
+                    $arGuia->setProductoRel($arGuiaTemporal->getProductoRel());
                     $arGuia->setEmpaqueRel($arEmpaque);
                     $arGuia->setCondicionRel($arGuiaTemporal->getClienteRel()->getCondicionRel());
                     $arGuia->setOperacionCargoRel($arOperacion);

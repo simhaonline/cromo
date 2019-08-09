@@ -49,6 +49,7 @@
             <th scope="col" class="th">DESTINATARIO</th>
             <th scope="col" class="th">ORIGEN</th>
             <th scope="col" class="th">DESTINO</th>
+            <th scope="col" class="th">PRODUCTO</th>
             <th scope="col" class="th">CANT</th>
             <th scope="col" class="th">PESO</th>
             <th scope="col" class="th">DECLARADO</th>
@@ -70,6 +71,7 @@
                 <td>{{ arGuia.destinatarioNombre }}</td>
                 <td>{{ arGuia.ciudadOrigen }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
+                <td>{{ arGuia.productoNombre }}</td>
                 <td class="numero">{{ arGuia.unidades | number_format(0,'.',',') }}</td>
                 <td class="numero">{{ arGuia.pesoFacturado | number_format(0,'.',',') }}</td>
                 <td class="numero">{{ arGuia.vrDeclara | number_format(0,'.',',') }}</td>

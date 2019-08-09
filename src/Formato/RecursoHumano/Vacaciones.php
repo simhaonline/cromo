@@ -6,6 +6,7 @@ namespace App\Formato\RecursoHumano;
 
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\RecursoHumano\RhuVacacion;
+use App\Entity\RecursoHumano\RhuVacacionAdicional;
 use App\Utilidades\BaseDatos;
 use App\Utilidades\Estandares;
 use function Complex\ln;
@@ -14,6 +15,7 @@ class Vacaciones extends \FPDF
 {
     public static $em;
     public static $codigoVacaciones;
+
     /**
      * @param $em ObjectManager
      * @param $codigoVacaciones integer
@@ -62,9 +64,9 @@ class Vacaciones extends \FPDF
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
         $pdf->SetFont('Arial', 'b', 9);
-        $pdf->Cell(20, 4,"", 0, 0, 'L', 1);
+        $pdf->Cell(20, 4, "", 0, 0, 'L', 1);
         $pdf->SetXY(10, 50);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
         $pdf->SetLineWidth(.2);
@@ -73,10 +75,7 @@ class Vacaciones extends \FPDF
         $arVacaciones = $em->getRepository(RhuVacacion::class)->find($codigoVacaciones);
         $arEmpleado = $arVacaciones->getEmpleadoRel();
         //tabla vacaciones
-        $pdf->SetFillColor(200, 200, 200);
-        $pdf->Cell(195, 5, utf8_decode("INFORMACÍON VACACIONES"), 1, 0, 'C', 1);
-        $pdf->Ln(5);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, "ID", 1, 0, 'L', 1);
@@ -84,7 +83,7 @@ class Vacaciones extends \FPDF
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, utf8_decode($arVacaciones->getCodigoVacacionPk()), 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("FECHA"), 1, 0, 'L', 1);
@@ -93,7 +92,7 @@ class Vacaciones extends \FPDF
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, date_format($arVacaciones->getFecha(), "Y/m/d"), 1, 0, 'L', 1);
         $pdf->ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, "EMPLEADO", 1, 0, 'L', 1);
@@ -101,7 +100,7 @@ class Vacaciones extends \FPDF
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, utf8_decode($arEmpleado->getNombreCorto()), 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("IDENTIFICACIÓN"), 1, 0, 'L', 1);
@@ -110,33 +109,32 @@ class Vacaciones extends \FPDF
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, $arEmpleado->getNumeroIdentificacion(), 1, 0, 'L', 1);
         $pdf->Ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
-        $pdf->Cell(48.75, 5, utf8_decode("DESDE"), 1, 0, 'L', 1);
+        $pdf->Cell(48.75, 5, utf8_decode("PERIODO DESDE"), 1, 0, 'L', 1);
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, date_format($arVacaciones->getFechaDesdePeriodo(), "Y/m/d"), 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
-        $pdf->Cell(48.75, 5, utf8_decode("CENTRO COSTOS"), 1, 0, 'L', 1);
+        $pdf->Cell(48.75, 5, utf8_decode("GRUPO"), 1, 0, 'L', 1);
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-//        $pdf->Cell(48.75, 5, utf8_decode($arVacaciones->getCentroCostoRel() != null ? $arVacaciones->getCentroCostoRel()->getNombre():""), 1, 0, 'L', 1);
-        $pdf->Cell(48.75, 5, utf8_decode(""), 1, 0, 'L', 1);
+        $pdf->Cell(48.75, 5, utf8_decode($arVacaciones->getGrupoRel() != null ? $arVacaciones->getGrupoRel()->getNombre() : ""), 1, 0, 'L', 1);
         $pdf->Ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
-        $pdf->Cell(48.75, 5, utf8_decode("HASTA"), 1, 0, 'L', 1);
+        $pdf->Cell(48.75, 5, utf8_decode("PERIODO HASTA"), 1, 0, 'L', 1);
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, date_format($arVacaciones->getFechahastaPeriodo(), "Y/m/d"), 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("DÍAS VACACIONES"), 1, 0, 'L', 1);
@@ -145,58 +143,58 @@ class Vacaciones extends \FPDF
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, $arVacaciones->getDias(), 1, 0, 'R', 1);
         $pdf->Ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("DISFRUTE DESDE"), 1, 0, 'L', 1);
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-        $pdf->Cell(48.75, 5, date_format($arVacaciones->getFechaDesdEDisfrute(), "Y/m/d"), 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('arial', 'B', 7);
-        $pdf->Cell(48.75, 5, utf8_decode("DÍAS DISFRUTADOS"), 1, 0, 'L', 1);
-        $pdf->SetFillColor(253, 254, 254);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('');
-        $pdf->Cell(48.75, 5, $arVacaciones->getDiasDisfrutados(), 1, 0, 'R', 1);
-        $pdf->Ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->Cell(48.75, 5, date_format($arVacaciones->getFechaDesdeDisfrute(), "Y/m/d"), 1, 0, 'L', 1);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("DISFRUTE HASTA"), 1, 0, 'L', 1);
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-        $pdf->Cell(48.75, 5, date_format($arVacaciones->getFechaHastaDisfrute(), "Y/m/d"), 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->Cell(48.75, 5, $arVacaciones->getFechaHastaDisfrute()->format('Y-m-d'), 1, 0, 'R', 1);
+        $pdf->Ln();
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
-        $pdf->Cell(48.75, 5, utf8_decode("DÍAS PAGADOS"), 1, 0, 'L', 1);
+        $pdf->Cell(48.75, 5, utf8_decode("DIAS DISFRUTE"), 1, 0, 'L', 1);
+        $pdf->SetFillColor(253, 254, 254);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Cell(48.75, 5, $arVacaciones->getDiasDisfrutados(), 1, 0, 'L', 1);
+        $pdf->SetFillColor(217, 217, 217);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('arial', 'B', 7);
+        $pdf->Cell(48.75, 5, utf8_decode("DIAS PAGADOS"), 1, 0, 'L', 1);
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, $arVacaciones->getDiasPagados(), 1, 0, 'R', 1);
         $pdf->Ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("TOTAL DISFRUTADAS"), 1, 0, 'L', 1);
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-        $pdf->Cell(48.75, 5, $arVacaciones->getDiasDisfrutados(), 1, 0, 'R', 1);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->Cell(48.75, 5, number_format($arVacaciones->getVrDisfrute()), 1, 0, 'R', 1);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("TOTAL PAGADAS"), 1, 0, 'L', 1);
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-        $pdf->Cell(48.75, 5, $arVacaciones->getDiasPagados(), 1, 0, 'R', 1);
+        $pdf->Cell(48.75, 5, number_format($arVacaciones->getVrDinero()), 1, 0, 'R', 1);
         $pdf->Ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("BANCO"), 1, 0, 'L', 1);
@@ -204,7 +202,7 @@ class Vacaciones extends \FPDF
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, utf8_decode($arVacaciones->getEmpleadoRel()->getBancoRel() ? $arVacaciones->getEmpleadoRel()->getBancoRel()->getNombre() : ''), 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("SALARIO"), 1, 0, 'L', 1);
@@ -213,7 +211,7 @@ class Vacaciones extends \FPDF
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, number_format($arVacaciones->getVrSalarioActual(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->Ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("CUENTA"), 1, 0, 'L', 1);
@@ -221,7 +219,7 @@ class Vacaciones extends \FPDF
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, $arEmpleado->getCuenta(), 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("SALARIO VACACIONES"), 1, 0, 'L', 1);
@@ -230,7 +228,7 @@ class Vacaciones extends \FPDF
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, number_format($arVacaciones->getVrSalarioPromedio(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->Ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("DÍAS AUSENTISMO"), 1, 0, 'L', 1);
@@ -238,7 +236,7 @@ class Vacaciones extends \FPDF
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, $arVacaciones->getDiasAusentismo(), 1, 0, 'R', 1);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("INICIO LABORES"), 1, 0, 'L', 1);
@@ -247,7 +245,7 @@ class Vacaciones extends \FPDF
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, date_format($arVacaciones->getFechaInicioLabor(), "Y/m/d"), 1, 0, 'R', 1);
         $pdf->Ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("TIEMPO TIEMPO:"), 1, 0, 'L', 1);
@@ -255,7 +253,7 @@ class Vacaciones extends \FPDF
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, $arVacaciones->getContratoRel()->getTiempoRel()->getNombre(), 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode(""), 1, 0, 'L', 1);
@@ -264,7 +262,7 @@ class Vacaciones extends \FPDF
         $pdf->SetFont('');
         $pdf->Cell(48.75, 5, "", 1, 0, 'L', 1);
         $pdf->Ln();
-        $pdf->SetFillColor(170, 170, 170);
+        $pdf->SetFillColor(217, 217, 217);
         $pdf->SetTextColor(0);
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(48.75, 5, utf8_decode("COMENTARIO:"), 1, 0, 'L', 1);
@@ -276,7 +274,7 @@ class Vacaciones extends \FPDF
 
         $posicionX = 128;
         $posicionY = 128;
-        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFont('Arial', 'B', 7.5);
         $pdf->SetFillColor(217, 217, 217);
         $pdf->SetXY($posicionX, $posicionY);
         $pdf->Cell(48.75, 5, "TOTAL VACACIONES:", 1, 0, 'L', 1);
@@ -315,15 +313,46 @@ class Vacaciones extends \FPDF
         $pdf->Cell(40, 5, number_format($arVacaciones->getVrBonificacion(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX, $posicionY + 42);
         $pdf->Cell(40, 5, number_format($arVacaciones->getVrTotal(), 0, '.', ','), 1, 0, 'R', 1);
-
+        //ADICIONALES
+        $arVacacionAdicionales = self::$em->getRepository(RhuVacacionAdicional::class)->findBy(array('codigoVacacionFk' => $arVacaciones->getCodigoVacacionPk()));
+        if ($arVacacionAdicionales) {
+            $intX = 10;
+            $intY = 190;
+            $pdf->SetXY($intX, $intY);
+            $pdf->SetFillColor(217, 217, 217);
+            $pdf->SetFont('Arial', 'B', 9);
+            $pdf->Cell(185, 5, utf8_decode("ADICIONALES"), 1, 0, 'C', 1);
+            $intX = 10;
+            $incremento = 4;
+            $pdf->SetXY($intX, $intY += $incremento);
+            $pdf->SetFont('Arial', 'B', 8);
+            $pdf->Cell(20, 4, utf8_decode("CREDITO"), 1, 0, 'C', 1);
+            $pdf->Cell(20, 4, utf8_decode("CODIGO"), 1, 0, 'L', 1);
+            $pdf->Cell(80, 4, utf8_decode("CONCEPTO"), 1, 0, 'L', 1);
+            $pdf->Cell(32, 4, utf8_decode("BONIFICACION"), 1, 0, 'R', 1);
+            $pdf->Cell(33, 4, utf8_decode("DEDUCCION"), 1, 0, 'R', 1);
+            foreach ($arVacacionAdicionales as $arVacacionAdicional) {
+                $intY = $intY + $incremento;
+                $pdf->SetXY($intX, $intY);
+                $pdf->SetFillColor(255, 255, 255);
+                $pdf->SetFont('Arial', '', 8);
+                $pdf->Cell(20, 4, $arVacacionAdicional->getCodigoCreditoFk(), 1, 0, 'L', 1);
+                $pdf->Cell(20, 4, $arVacacionAdicional->getCodigoConceptoFk(), 1, 0, 'L', 1);
+                $pdf->Cell(80, 4, utf8_decode($arVacacionAdicional->getConceptoRel()->getNombre()), 1, 0, 'L', 1);
+                $pdf->Cell(32, 4, number_format($arVacacionAdicional->getVrBonificacion(), 0, '.', ','), 1, 0, 'R', 1);
+                $pdf->Cell(33, 4, number_format($arVacacionAdicional->getVrDeduccion(), 0, '.', ','), 1, 0, 'R', 1);
+                //$incremento = $incremento + 4;
+            }
+        }
     }
 
     public function Footer()
     {
-        $this->SetFont('Arial', '', 8);
         $this->SetFont('Arial', 'B', 9);
-        $this->SetXY(10, 200);
-
+        $this->Text(10, 230, "FIRMA: _____________________________________________");
+        $this->Text(10, 237, "C.C.:     ______________________ de ____________________");
+        $this->Text(10, 260, "ELABORADO POR: __________________________________ ");
+        $this->Text(105, 260, "REVISADO POR: ___________________________________ ");
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }

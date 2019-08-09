@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="btn-toolbar" style="float:left">
+        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_nomina_incapacidad_lista') }}">Volver</a>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">CÓDIGO:</td>
+            <td class="td-in-well">{{ arIncapacidad.codigoIncapacidadPk }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arIncapacidad.fecha|date("Y/m/d") }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">IDENTIFICACION:</td>
+            <td class="td-in-well">{{ arIncapacidad.empleadoRel.numeroIdentificacion }}</td>
+            <td class="titulo">DESDE:</td>
+            <td class="td-in-well">{{ arIncapacidad.fechaDesde|date("Y/m/d") }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arIncapacidad.empleadoRel.nombreCorto }}</td>
+            <td class="titulo">HASTA:</td>
+            <td class="td-in-well">{{ arIncapacidad.fechaHasta|date("Y/m/d") }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TIPO:</td>
+            <td class="td-in-well"> {{  arIncapacidad.incapacidadTipoRel.nombre }}</td>
+            <td class="titulo">FECHA DOCUMENTO FISICO:</td>
+            <td class="td-in-well">{{ arIncapacidad.fechaDocumentoFisico? arIncapacidad.fechaDocumentoFisico|date("Y/m/d") : "" }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DIAGNOSTICO:</td>
+            <td align="">{{ arIncapacidad.incapacidadDiagnosticoRel.nombre }}</td>
+            <td class="titulo">ENTIDAD SALUD:</td>
+            <td class="td-in-well">{{ arIncapacidad.entidadSaludRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NUMERO EPS:</td>
+            <td align="right">{{ arIncapacidad.numeroEps }}</td>
+            <td class="titulo">TRANSCRIPCION:</td>
+            <td class="td-in-well">{{ arIncapacidad.estadoTranscripcion ? "SI" : "NO" }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COBRAR:</td>
+            <td class="td-in-well">{{ arIncapacidad.estadoCobrar ? "SI" : "NO" }}</td>
+            <td class="titulo">LEGALIZADO:</td>
+            <td class="td-in-well">{{ arIncapacidad.estadoLegalizado ? "SI" : "NO" }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">PAGAR AL EMPLEADO:</td>
+            <td class="td-in-well">{{ arIncapacidad.pagarEmpleado ? "SI" : "NO" }}</td>
+            <td class="titulo">SALDO</td>
+            <td align="right">{{ arIncapacidad.vrSaldo|number_format(0,'.',',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIOS:</td>
+            <td colspan="3">{{  arIncapacidad.comentarios }}</td>
+        </tr>
+        </tbody>
+    </table>
+    {{ form_end(form) }}
+{% endblock %}

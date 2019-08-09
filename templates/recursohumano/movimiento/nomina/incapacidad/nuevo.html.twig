@@ -1,0 +1,159 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <section class="content">
+        {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+        <div class="panel panel-default">
+            <div class="panel-heading">Informacion incapacidad</div>
+            <div class="panel-body">
+                <div class="form-group form-group-sm">
+                    <label for="form_incapacidadTipoRel" class="col-sm-2 control-label">Tipo:</label>
+                    <div class="col-sm-10">
+                        {{ form_widget(form.incapacidadTipoRel, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                        {{ form_errors(form.incapacidadTipoRel) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="form_txtNumeroIdentificacion" class="col-sm-2 control-label">Empleado:</label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="input-group">
+                                    <input id="form_txtNumeroIdentificacion"  name="form_txtNumeroIdentificacion"  type="text" class="form-control" value="{{ arIncapacidad.empleadoRel.numeroIdentificacion |default('') }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-10">
+                                <div class="input-group">
+                                    <input id="form_txtNombreCorto"  name="form_txtNombreCorto"  type="text" class="form-control" value="{{ arIncapacidad.empleadoRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
+                                    <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado',
+                                                   { 'campoCodigo': 'form_txtNumeroIdentificacion', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Diagnostico:</label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="input-group">
+                                    <input id="form_txtCodigoIncapacidadDiagnostico"  name="form_txtCodigoIncapacidadDiagnostico"  type="text" class="form-control" value="{{ arIncapacidad.incapacidadDiagnosticoRel.codigo |default('') }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-10">
+                                <div class="input-group">
+                                    <input id="form_txtNombreIncapacidadDiagnostico"  name="form_txtNombreIncapacidadDiagnostico"  type="text" class="form-control" value="{{ arIncapacidad.incapacidadDiagnosticoRel.nombre |default('') }}" readOnly="ReadOnly" />
+                                    <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_buscar_incapacidad_diagnostico',
+                                            { 'campoCodigo': 'form_txtCodigoIncapacidadDiagnostico', 'campoNombre': 'form_txtNombreIncapacidadDiagnostico' }) }}', 'buscarDiagnostico', 600, 900)">Buscar</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="form_numeroEps" class="col-sm-2 control-label">Médico:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.medico, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Prorroga:</label>
+                    <div class="col-sm-3">
+                        {{ form_widget(form.codigoIncapacidadProrrogaFk, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                    <div class="col-sm-1">
+                        <span class="input-group-btn">
+{#                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('brs_rhu_buscar_incapacidad') }}', 'buscarEmpleado', 600, 900)">Buscar</a>#}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    <label for="form_numeroEps" class="col-sm-2 control-label">Numero eps:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.numeroEps, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                    <label for="form_vrPropuesto" class="col-sm-2 control-label">Valor propuesto</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.vrPropuesto) }}
+                    </div>
+
+                </div>
+                <div class="form-group form-group-sm">
+
+                    <label for="form_fechaDesde" class="col-sm-2 control-label">Desde:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.fechaDesde) }}
+                    </div>
+                    <label for="form_cobrar" class="col-sm-2 control-label">Ibc propuesto:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.vrIbcPropuesto) }}
+                    </div>
+
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="form_fechaHasta" class="col-sm-2 control-label">Hasta:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.fechaHasta) }}
+                    </div>
+                    <label for="form_fechaDesde" class="col-sm-2 control-label">Fecha aplicacion:</label>
+                    <div class="col-sm-3">
+                        {{ form_widget(form.fechaAplicacion) }}
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    <label for="form_fechaDesde" class="col-sm-2 control-label">Fecha documento fisico:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.fechaDocumentoFisico) }}
+                    </div>
+                    <label for="form_aplicarAdicional" class="col-sm-2 control-label"></label>
+                    <div class="col-sm-1">
+                        {{ form_widget(form.aplicarAdicional) }}
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    <label for="form_transcripcion" class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.estadoTranscripcion) }}
+                    </div>
+                    <label for="form_prorroga" class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.estadoProrroga) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-1">
+                        {{ form_widget(form.estadoCobrar) }}
+                    </div>
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.pagarEmpleado) }}
+                    </div>
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.estadoCobrarCliente) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="form_comentarios" class="col-sm-2 control-label">Comentarios:</label>
+                    <div class="col-sm-10">
+                        {{ form_widget(form.comentarios, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_nomina_incapacidad_lista') }}">Cancelar</a>
+            {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-sm btn-primary'} }) }}
+        </div>
+        {{ form_end(form) }}
+        <br/><br/><br/><br/>
+    </section>
+{% endblock %}

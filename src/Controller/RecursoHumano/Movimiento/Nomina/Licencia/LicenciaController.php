@@ -8,6 +8,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuGrupo;
+use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuLicencia;
 use App\Entity\RecursoHumano\RhuLicenciaTipo;
 use App\Form\Type\RecursoHumano\LicenciaType;
@@ -124,19 +125,43 @@ class LicenciaController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $codigoEmpleado = $request->request->get('form_txtNumeroIdentificacion');
+                $codigoEmpleado = $form->get('codigoEmpleadoFk')->getData();
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->findOneBy(['codigoEmpleadoPk'=>$codigoEmpleado]);
-                $arContrato = $em->getRepository(RhuContrato::class)->findOneBy(['codigoEmpleadoFk'=>$arEmpleado->getCodigoEmpleadoPk()]);
+                $arContrato = $em->getRepository(RhuContrato::class)->findOneBy(['codigoEmpleadoFk'=>$arEmpleado->getCodigoEmpleadoPk()??0]);
+                $arLicencia = $form->getData();
                 if ($arEmpleado){
-                    $arLicencia = $form->getData();
-                    $arLicencia->setFecha(new \DateTime('now'));
-                    $arLicencia->setEmpleadoRel($arEmpleado);
-                    $arLicencia->setGrupoRel($arContrato->getGrupoRel());
-                    $arLicencia->setEntidadSaludRel($arContrato->getEntidadSaludRel());
-                    $arLicencia->setCodigoUsuario($this->getUser()->getUserName());
-                    $em->persist($arLicencia);
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_licencia_lista', ['id' => $arLicencia->getCodigoLicenciaPk()]));
+                    if ($arContrato){
+                        if ($arLicencia->getFechaDesde() <= $arLicencia->getFechaHasta()) {
+                            if ($em->getRepository(RhuIncapacidad::class)->validarFecha($arLicencia->getFechaDesde(), $arLicencia->getFechaHasta(), $arEmpleado->getCodigoEmpleadoPk(), "")) {
+                                if ($em->getRepository(RhuLicencia::class)->validarFecha($arLicencia->getFechaDesde(), $arLicencia->getFechaHasta(), $arEmpleado->getCodigoEmpleadoPk(), $arLicencia->getCodigoLicenciaPk())) {
+                                    dd("acá vamos");
+                                    if ($fechaInicioContrato <= $arLicencia->getFechaDesde()) {
+
+                                    }else{
+
+                                    }
+                                else{
+                                    Mensaje::error("Existe otra licencia en este rango de fechas");
+                                }
+                            }else{
+                                Mensajes::error("Hay incapacidades que se cruzan con la fecha de la licencia");
+
+                            }
+                        }else{
+                            Mensajes::error("La fecha desde debe ser inferior o igual a la fecha hasta");
+                        }
+//                        $arLicencia->setFecha(new \DateTime('now'));
+//                        $arLicencia->setEmpleadoRel($arEmpleado);
+//                        $arLicencia->setGrupoRel($arContrato->getGrupoRel());
+//                        $arLicencia->setEntidadSaludRel($arContrato->getEntidadSaludRel());
+//                        $arLicencia->setCodigoUsuario($this->getUser()->getUserName());
+//                        $em->persist($arLicencia);
+//                        $em->flush();
+                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_licencia_lista', ['id' => $arLicencia->getCodigoLicenciaPk()]));
+                    }else{
+                        Mensajes::error("El contrato no existe");
+                    }
+
                 }else{
                     Mensajes::error("El empleado no existe");
                 }

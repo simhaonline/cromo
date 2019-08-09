@@ -64,4 +64,26 @@ class RhuLicenciaRepository extends ServiceEntityRepository
         return $queryBuilder;
 
     }
+
+    public function validarFecha($fechaDesde, $fechaHasta, $codigoEmpleado, $codigoLicencia = ""):bool
+    {
+        $em = $this->getEntityManager();
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+        $dql = "SELECT licencia FROM App\Entity\RecursoHumano\RhuIncapacidad licencia "
+            . "WHERE (((licencia.fechaDesde BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (licencia.fechaHasta BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
+            . "OR (licencia.fechaDesde >= '$strFechaDesde' AND licencia.fechaDesde <= '$strFechaHasta') "
+            . "OR (licencia.fechaHasta >= '$strFechaHasta' AND licencia.fechaDesde <= '$strFechaDesde')) "
+            . "AND licencia.codigoEmpleadoFk = '" . $codigoEmpleado . "' ";
+        if ($codigoLicencia != "") {
+            $dql = $dql . "AND licencia.codigoLicenciaPk <> " . $codigoLicencia;
+        }
+        $objQuery = $em->createQuery($dql);
+        $arLicencias = $objQuery->getResult();
+        if (count($arLicencias) > 0) {
+            return  FALSE;
+        } else {
+            return  TRUE;
+        }
+    }
 }

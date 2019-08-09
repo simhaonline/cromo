@@ -82,4 +82,29 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
 
         return $queryBuilder;
     }
+
+    public function validarFecha($fechaDesde, $fechaHasta, $codigoEmpleado, $codigoIncapacidad = ""):bool
+    {
+        $em = $this->getEntityManager();
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuIncapacidad::class, 'i');
+        $dql = "SELECT incapacidad FROM App\Entity\RecursoHumano\RhuIncapacidad incapacidad "
+            . "WHERE (((incapacidad.fechaDesde BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (incapacidad.fechaHasta BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
+            . "OR (incapacidad.fechaDesde >= '$strFechaDesde' AND incapacidad.fechaDesde <= '$strFechaHasta') "
+            . "OR (incapacidad.fechaHasta >= '$strFechaHasta' AND incapacidad.fechaDesde <= '$strFechaDesde')) "
+            . "AND incapacidad.codigoEmpleadoFk = '" . $codigoEmpleado . "' ";
+        if ($codigoIncapacidad != "") {
+            $dql = $dql . "AND incapacidad.codigoIncapacidadPk <> " . $codigoIncapacidad;
+        }
+        $objQuery = $em->createQuery($dql);
+        $arIncapacidades = $objQuery->getResult();
+
+        if (count($arIncapacidades) > 0) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+
+    }
 }

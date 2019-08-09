@@ -30,4 +30,17 @@ class RhuCreditoRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+
+    public function pendientes($codigoEmpleado){
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'c')
+            ->select('c.codigoCreditoPk')
+            ->addSelect('ct.nombre AS tipo')
+            ->addSelect('c.vrSaldo')
+            ->addSelect('c.vrCuota')
+            ->where('c.vrSaldo > 0')
+            ->andWhere("c.codigoEmpleadoFk = {$codigoEmpleado}")
+        ->leftJoin('c.creditoTipoRel' ,'ct');
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
 }

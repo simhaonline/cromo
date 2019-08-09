@@ -93,7 +93,7 @@ class Pago extends \FPDF
         $this->Cell(25, 4, "CARGO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(50, 4, $arPago->getEmpleadoRel()->getCargoRel()->getNombre(), 1, 0, 'L', 1);
+        $this->Cell(50, 4, $arPago->getEmpleadoRel()->getCargoRel() ? $arPago->getEmpleadoRel()->getCargoRel()->getNombre() : '', 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 7);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, "DESDE:", 1, 0, 'L', 1);

@@ -1,0 +1,43 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br/>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4> Filtros de búsqueda</h4>
+        </div>
+        <div class="panel-footer">
+            <br/>
+            <br/>
+        </div>
+    </div>
+    <div>
+        <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+            <tr>
+                <th>CÓDIGO</th>
+                <th>NOMBRE</th>
+                <th>CUOTA</th>
+                <th>SALDO</th>
+                <th>VALOR</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {%for arCreditos in arCreditos %}
+                <tr>
+                    <td>{{arCreditos.codigoCreditoPk}}</td>
+                    <td>{{arCreditos.tipo}}</td>
+                    <td>{{arCreditos.vrCuota | number_format(2, '.', ',') }}</td>
+                    <td>{{arCreditos.vrSaldo | number_format(2, '.', ',') }}</td>
+                    <td style="text-align: right"><input class="input-grid" type="text" name="TxtValor{{ arCreditos.codigoCreditoPk }}" value="{{ arCreditos.vrCuota  }}" size="10" style="text-align: right; width:80px" onkeypress="return validarNumeros(event)" onclick="this.select()"/></td>
+                    <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arCreditos.codigoCreditoPk }}" /></td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+    {{ form_end(form) }}
+{% endblock %}

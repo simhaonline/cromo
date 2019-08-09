@@ -299,7 +299,7 @@ class Vacaciones extends \FPDF
         $pdf->SetFont('Arial', '', 8);
         $pdf->SetFillColor(272, 272, 272);
         $pdf->SetXY($posicionX, $posicionY);
-        $pdf->Cell(40, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(40, 5, number_format($arVacaciones->getVrBruto(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX, $posicionY + 6);
         $pdf->Cell(40, 5, "(" . number_format($arVacaciones->getVrSalud(), 0, '.', ',') . ")", 1, 0, 'R', 1);
         $pdf->SetXY($posicionX, $posicionY + 12);
@@ -314,7 +314,7 @@ class Vacaciones extends \FPDF
         $pdf->SetXY($posicionX, $posicionY + 36);
         $pdf->Cell(40, 5, number_format($arVacaciones->getVrBonificacion(), 0, '.', ','), 1, 0, 'R', 1);
         $pdf->SetXY($posicionX, $posicionY + 42);
-        $pdf->Cell(40, 5, number_format(0, 0, '.', ','), 1, 0, 'R', 1);
+        $pdf->Cell(40, 5, number_format($arVacaciones->getVrTotal(), 0, '.', ','), 1, 0, 'R', 1);
 
     }
 

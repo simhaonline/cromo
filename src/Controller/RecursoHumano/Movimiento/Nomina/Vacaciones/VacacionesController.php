@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuAdicional;
+use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
@@ -19,6 +20,11 @@ use App\Formato\RecursoHumano\Vacaciones;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use function Complex\add;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -194,6 +200,8 @@ class VacacionesController extends ControllerListenerGeneral
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("recursohumano/movimiento/nomina/vacacion/detalle/{id}", name="recursohumano_movimiento_nomina_vacacion_detalle")
      */
     public function detalle(Request $request, $id)
@@ -201,6 +209,7 @@ class VacacionesController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arVacacion = $em->getRepository($this->clase)->find($id);
         $form = Estandares::botonera($arVacacion->getEstadoAutorizado(), $arVacacion->getEstadoAprobado(), $arVacacion->getEstadoAnulado());
+        $form->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -219,6 +228,20 @@ class VacacionesController extends ControllerListenerGeneral
                 $em->getRepository(RhuVacacion::class)->aprobar($arVacacion);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle', ['id' => $id]));
             }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados AS $codigo) {
+                        $arVacacionAdicional = $em->getRepository(RhuVacacionAdicional::class)->find($codigo);
+                        if ($arVacacionAdicional) {
+                            $em->remove($arVacacionAdicional);
+                        }
+                    }
+                    $em->flush();
+                }
+                $em->getRepository(RhuVacacion::class)->liquidar($id);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle', ['id' => $id]));
+            }
 
 
         }
@@ -228,6 +251,135 @@ class VacacionesController extends ControllerListenerGeneral
             'arVacacionAdicionales' => $arVacacionAdicionales,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/recursohumano/movimiento/nomina/vacacion/detalle/credito/{codigoVacacion}", name="recursohumano_movimiento_nomina_vacacion_detalle_credito")
+     */
+    public function detalleCreditoAction(Request $request, $codigoVacacion)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $arVacacion = $em->getRepository(RhuVacacion::class)->find($codigoVacacion);
+        $arCreditos = $em->getRepository(RhuCredito::class)->pendientes($arVacacion->getCodigoEmpleadoFk());
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrControles = $request->request->All();
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $floVrDeducciones = 0;
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados AS $codigoCredito) {
+                        $arCredito = $em->getRepository(RhuCredito::class)->find($codigoCredito);
+                        $valor = 0;
+                        if ($arrControles['TxtValor' . $codigoCredito] != '') {
+                            $valor = $arrControles['TxtValor' . $codigoCredito];
+                        }
+                        $arVacacionAdicional = new RhuVacacionAdicional();
+                        $arVacacionAdicional->setCreditoRel($arCredito);
+                        $arVacacionAdicional->setVacacionRel($arVacacion);
+                        $arVacacionAdicional->setVrDeduccion($valor);
+                        $arVacacionAdicional->setConceptoRel($arCredito->getCreditoTipoRel()->getConceptoRel());
+                        $em->persist($arVacacionAdicional);
+                        $floVrDeducciones += $valor;
+                    }
+                    $em->flush();
+                    $em->getRepository(RhuVacacion::class)->liquidar($arVacacion->getCodigoVacacionPk());
+                }
+            }
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('recursohumano/movimiento/nomina/vacacion/detalleNuevo.html.twig', array(
+            'arCreditos' => $arCreditos,
+            'arVacacion' => $arVacacion,
+            'form' => $form->createView()));
+    }
+
+    /**
+     * @Route("/recursohumano/movimiento/nomina/vacacion/detalle/descuento/{codigoVacacion}", name="recursohumano_movimiento_nomina_vacacion_detalle_descuento")
+     */
+    public function detalleDescuentoAction(Request $request, $codigoVacacion)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $arVacacion = $em->getRepository(RhuVacacion::class)->find($codigoVacacion);
+        $form = $this->createFormBuilder()
+            ->add('conceptoRel', EntityType::class, array(
+                'class' => RhuConcepto::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('pc')
+                        ->where('pc.adicionalTipo = :adicionalTipo')
+                        ->setParameter('adicionalTipo', 2)
+                        ->orderBy('pc.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => true))
+            ->add('txtValor', NumberType::class, array('required' => true))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arPagoConcepto = new RhuConcepto();
+                $arPagoConcepto = $form->get('conceptoRel')->getData();
+                $arVacacionAdicional = new RhuVacacionAdicional();
+                $arVacacionAdicional->setVacacionRel($arVacacion);
+                $arVacacionAdicional->setConceptoRel($arPagoConcepto);
+                $arVacacionAdicional->setVrDeduccion($form->get('txtValor')->getData());
+                $em->persist($arVacacionAdicional);
+                $em->flush();
+                $em->getRepository(RhuVacacion::class)->liquidar($arVacacion->getCodigoVacacionPk());
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('recursohumano/movimiento/nomina/vacacion/detalleDescuentoNuevo.html.twig', array(
+            'arVacacion' => $arVacacion,
+            'form' => $form->createView()));
+    }
+
+    /**
+     * @Route("/recursohumano/movimiento/nomina/vacacion/detalle/bonificacion/{codigoVacacion}", name="recursohumano_movimiento_nomina_vacacion_detalle_bonificacion")
+     */
+    public function detalleBonificacionAction(Request $request, $codigoVacacion)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $arVacacion = $em->getRepository(RhuVacacion::class)->find($codigoVacacion);
+        $form = $this->createFormBuilder()
+            ->add('conceptoRel', EntityType::class, array(
+                'class' => RhuConcepto::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('pc')
+                        ->where('pc.adicionalTipo = :adicionalTipo')
+                        ->setParameter('adicionalTipo', 1)
+                        ->orderBy('pc.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => true))
+            ->add('txtValor', NumberType::class, array('required' => true))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arPagoConcepto = new RhuConcepto();
+                $arPagoConcepto = $form->get('conceptoRel')->getData();
+                $arVacacionAdicional = new RhuVacacionAdicional();
+                $arVacacionAdicional->setVacacionRel($arVacacion);
+                $arVacacionAdicional->setConceptoRel($arPagoConcepto);
+                $arVacacionAdicional->setVrBonificacion($form->get('txtValor')->getData());
+                $em->persist($arVacacionAdicional);
+                $em->flush();
+                $em->getRepository(RhuVacacion::class)->liquidar($arVacacion->getCodigoVacacionPk());
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('recursohumano/movimiento/nomina/vacacion/detalleBonificacionNuevo.html.twig', array(
+            'arVacacion' => $arVacacion,
+            'form' => $form->createView()));
     }
 }
 

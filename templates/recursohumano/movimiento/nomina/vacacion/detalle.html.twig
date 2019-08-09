@@ -190,6 +190,22 @@
                     </table>
                 </div>
             </div>
+            <div class="btn-toolbar" style="float: right">
+                {% if arVacacion.estadoAutorizado == 0 %}
+                    <a class="btn btn-default btn-sm"
+                       href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_vacacion_detalle_credito', {'codigoVacacion': arVacacion.codigoVacacionPk}) }}', 'AgregarNuevo', 600, 900)">Nuevo
+                        credito</a>
+                    <a class="btn btn-default btn-sm"
+                       href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_vacacion_detalle_descuento', {'codigoVacacion': arVacacion.codigoVacacionPk}) }}', 'AgregarNuevo', 600, 900)">Nuevo
+                        Descuento</a>
+                    <a class="btn btn-default btn-sm"
+                       href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_vacacion_detalle_bonificacion', {'codigoVacacion': arVacacion.codigoVacacionPk}) }}', 'AgregarNuevo', 600, 900)">Nuevo
+                        Bonificacion</a>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminar,  { 'attr': {'class': 'btn btn-danger'}}) }}
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
     <br/>

@@ -217,6 +217,12 @@ class TteGuiaTemporal
     protected $clienteRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TteProducto", inversedBy="guiasTemporalesProductoRel")
+     * @ORM\JoinColumn(name="codigo_producto_fk", referencedColumnName="codigo_producto_pk")
+     */
+    private $productoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoGuiaPk()
@@ -854,6 +860,22 @@ class TteGuiaTemporal
     public function setClienteRelacion($clienteRelacion): void
     {
         $this->clienteRelacion = $clienteRelacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductoRel()
+    {
+        return $this->productoRel;
+    }
+
+    /**
+     * @param mixed $productoRel
+     */
+    public function setProductoRel($productoRel): void
+    {
+        $this->productoRel = $productoRel;
     }
 
 

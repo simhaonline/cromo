@@ -102,7 +102,7 @@
     </tr>
     <tr>
         <td class="titulo">EMPAQUE:</td>
-        <td class="td-in-well">{{ arGuia.empaqueRel.nombre }}</td>
+        <td class="td-in-well">{{ arGuia.empaqueRel.nombre | default('') }}</td>
         <td class="titulo">REEXPEDICION:</td>
         <td class="td-in-well">{% if arGuia.reexpedicion == 1 %}SI{% else %}NO{% endif %}</td>
         <td class="titulo"></td>

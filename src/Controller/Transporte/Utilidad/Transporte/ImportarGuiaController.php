@@ -81,8 +81,8 @@ class ImportarGuiaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $arConfiguracion = $em->find(GenConfiguracion::class, 1);
         $arConfiguracionTransporte = $em->find(TteConfiguracion::class, 1);
-        $url = 'http://159.65.52.53/galio/public/index.php/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
-//        $url = $arConfiguracion->getWebServiceGalioUrl() . '/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
+        //$url = 'http://159.65.52.53/galio/public/index.php/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
+        $url = $arConfiguracion->getWebServiceGalioUrl() . '/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
         $arCliente = $em->getRepository(TteCliente::class)->find($session->get('filtroGuiaCodigoCliente'));
         if($arCliente) {
             $arrDatos['nit'] = $arCliente->getNumeroIdentificacion();
@@ -104,7 +104,7 @@ class ImportarGuiaController extends Controller
                     $arCiudadOrigen = $em->find(TteCiudad::class, $arrGuia->codigoCiudadOrigenFk);
                     $arCiudadDestino = $em->find(TteCiudad::class, $arrGuia->codigoCiudadDestinoFk);
                     $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find('COR');
-
+                    $arProducto = $em->getRepository(TteProducto::class)->find($arrGuia->codigoProductoOperadorFk);
                     $arGuiaTemporal = new TteGuiaTemporal();
                     $arGuiaTemporal->setCodigoGuiaTipoFk($arGuiaTipo);
                     $arGuiaTemporal->setNumero($arrGuia->numero);
@@ -118,6 +118,7 @@ class ImportarGuiaController extends Controller
                     $arGuiaTemporal->setDestinatarioDireccion($arrGuia->destinatarioDireccion);
                     $arGuiaTemporal->setCiudadOrigenRel($arCiudadOrigen);
                     $arGuiaTemporal->setCiudadDestinoRel($arCiudadDestino);
+                    $arGuiaTemporal->setProductoRel($arProducto);
                     $arGuiaTemporal->setUnidades($arrGuia->unidades);
                     $arGuiaTemporal->setPesoReal($arrGuia->pesoReal);
                     $arGuiaTemporal->setPesoFacturado($arrGuia->pesoFacturado);
@@ -148,7 +149,6 @@ class ImportarGuiaController extends Controller
             $arGuiaTemporal = $em->find(TteGuiaTemporal::class, $codigoGuiaTemporal);
             $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find("COR");
             $arOperacion = $em->find(TteOperacion::class,$arGuiaTemporal->getOperacion());
-            $arRuta = $em->getRepository(TteRuta::class)->find('1');
             $arProducto = $em->getRepository(TteProducto::class)->find('1');
             $arEmpaque = $em->getRepository(TteEmpaque::class)->find('VAR');
             $arServicio = $em->find(TteServicio::class, 'PAQ');
@@ -162,7 +162,8 @@ class ImportarGuiaController extends Controller
                         $arGuia->setCiudadDestinoRel($arGuiaTemporal->getCiudadDestinoRel());
                         $arGuia->setClienteRel($arGuiaTemporal->getClienteRel());
                         $arGuia->setServicioRel($arServicio);
-                        $arGuia->setRutaRel($arRuta);
+                        $arGuia->setRutaRel($arGuiaTemporal->getCiudadDestinoRel()->getRutaRel());
+                        $arGuia->setZonaRel($arGuiaTemporal->getCiudadDestinoRel()->getZonaRel());
                         $arGuia->setProductoRel($arProducto);
                         $arGuia->setEmpaqueRel($arEmpaque);
                         $arGuia->setCondicionRel($arGuiaTemporal->getClienteRel()->getCondicionRel());

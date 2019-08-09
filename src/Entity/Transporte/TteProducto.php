@@ -52,6 +52,11 @@ class TteProducto
     protected $guiasDetallesProductoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteGuiaTemporal", mappedBy="productoRel")
+     */
+    protected $guiasTemporalesProductoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoProductoPk()
@@ -161,6 +166,22 @@ class TteProducto
     public function setGuiasDetallesProductoRel($guiasDetallesProductoRel): void
     {
         $this->guiasDetallesProductoRel = $guiasDetallesProductoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasTemporalesProductoRel()
+    {
+        return $this->guiasTemporalesProductoRel;
+    }
+
+    /**
+     * @param mixed $guiasTemporalesProductoRel
+     */
+    public function setGuiasTemporalesProductoRel($guiasTemporalesProductoRel): void
+    {
+        $this->guiasTemporalesProductoRel = $guiasTemporalesProductoRel;
     }
 
 

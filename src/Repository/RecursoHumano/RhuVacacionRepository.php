@@ -127,7 +127,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                         $em->persist($arCredito);
                     }
                 }
-
+                $numeroPago = $em->getRepository(RhuConsecutivo::class)->consecutivo(1);
                 $arPagoTipo = $em->getRepository(RhuPagoTipo::class)->find('VAC');
                 $arPago = new RhuPago();
                 $arPago->setPagoTipoRel($arPagoTipo);
@@ -148,7 +148,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                 $arPago->setComentario($arVacacion->getComentarios());
                 $arPago->setEstadoAutorizado(1);
                 $arPago->setEstadoAprobado(1);
-                $arPago->setNumero($numero);
+                $arPago->setNumero($numeroPago);
                 $em->persist($arPago);
 
                 $neto = 0;

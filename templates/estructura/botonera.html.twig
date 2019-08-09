@@ -7,4 +7,7 @@
     <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('documental_general_general_lista', { 'tipo': clase.clase,  'codigo': clase.codigo }) }}', 'Archivos', 500, 800)">Archivos</a>
     <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('financiero_utilidad_general_vermovimiento', { 'clase': clase.clase,  'id': clase.codigo }) }}', 'Financiero', 400, 1200)">Financiero</a>
     <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('general_utilidad_general_comentario_lista', { 'codigoModelo': clase.clase,  'codigo': clase.codigo }) }}', 'Comentario', 600, 900)">Comentario</a>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('general_utilidad_seguridad_log_ver', { 'entidad': clase.clase,  'codigo': clase.codigo }) }}', 'Log', 500, 800)">Log</a>
+    {% endif %}
 {% endif %}

@@ -285,28 +285,56 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         return $dql;
     }
 
-    public function excelResumen()
+    public function excelResumenEmpleado()
     {
         $session = new Session();
         $em = $this->getEntityManager();
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
-            ->select('pd.codigoPagoDetallePk')
-            ->addSelect('e.codigoEmpleadoPk')
-            ->addSelect('e.numeroIdentificacion')
-            ->addSelect('e.nombreCorto')
-            ->addSelect('pd.codigoConceptoFk')
-            ->addSelect('c.nombre AS concepto')
+            ->select('p.codigoEmpleadoFk as COD')
+            ->addSelect('e.nombreCorto as EMPLEADO')
             ->addSelect('SUM(pd.vrPago) AS valor')
-            ->addSelect('SUM(pd.horas) AS horas')
-            ->addSelect('pt.nombre AS tipo')
+            ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.pagoRel', 'p')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('p.pagoTipoRel', 'pt')
+            ->leftJoin('p.grupoRel', 'g')
+            ->groupBy('p.codigoEmpleadoFk')
+            ->setMaxResults(10000);
+
+        if ($session->get('filtroRhuInformePagoDetalleCodigoEmpleado') != null) {
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoDetalleCodigoEmpleado')}");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleTipo') != null) {
+            $queryBuilder->andWhere("p.codigoPagoTipoFk = '{$session->get('filtroRhuInformePagoDetalleTipo')}'");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleConcepto') != null) {
+            $queryBuilder->andWhere("pd.codigoConceptoFk = '{$session->get('filtroRhuInformePagoDetalleConcepto')}'");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleFechaDesde') != null) {
+            $queryBuilder->andWhere("p.fechaDesde >= '{$session->get('filtroRhuInformePagoDetalleFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleFechaHasta') != null) {
+            $queryBuilder->andWhere("p.fechaHasta <= '{$session->get('filtroRhuInformePagoDetalleFechaHasta')} 23:59:59'");
+        }
+        return $queryBuilder;
+    }
+
+    public function excelResumenConcepto()
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('pd.codigoConceptoFk as COD')
+            ->addSelect('c.nombre as CONCEPTO')
+            ->addSelect('SUM(pd.vrPago) AS valor')
             ->leftJoin('pd.conceptoRel', 'c')
             ->leftJoin('pd.pagoRel', 'p')
             ->leftJoin('p.empleadoRel', 'e')
             ->leftJoin('p.pagoTipoRel', 'pt')
             ->leftJoin('p.grupoRel', 'g')
             ->groupBy('pd.codigoConceptoFk')
-            ->addGroupBy('pd.codigoPagoDetallePk')
             ->setMaxResults(10000);
+
         if ($session->get('filtroRhuInformePagoDetalleCodigoEmpleado') != null) {
             $queryBuilder->andWhere("p.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoDetalleCodigoEmpleado')}");
         }

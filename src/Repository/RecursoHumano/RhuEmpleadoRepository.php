@@ -4,6 +4,7 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\Tesoreria\TesTercero;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -98,5 +99,26 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("e.numeroIdentificacion = '{$session->get('filtroTurEmpleadoIdentificacion')}' ");
         }
         return $queryBuilder;
+    }
+
+    public function terceroTesoreria($arEmpleado)
+    {
+        $em = $this->getEntityManager();
+        $arTercero = null;
+        if($arEmpleado) {
+            $arTercero = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arEmpleado->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()));
+            if(!$arTercero) {
+                $arTercero = new TesTercero();
+                $arTercero->setIdentificacionRel($arEmpleado->getIdentificacionRel());
+                $arTercero->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
+                $arTercero->setNombreCorto($arEmpleado->getNombreCorto());
+                $arTercero->setDireccion($arEmpleado->getDireccion());
+                $arTercero->setTelefono($arEmpleado->getTelefono());
+                //$arTercero->setEmail($arCliente->getCorreo());
+                $em->persist($arTercero);
+            }
+        }
+
+        return $arTercero;
     }
 }

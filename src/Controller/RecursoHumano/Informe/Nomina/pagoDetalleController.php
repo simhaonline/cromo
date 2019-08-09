@@ -70,11 +70,12 @@ class pagoDetalleController extends  Controller
             ))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add( 'btnExcel', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
-            ->add( 'btnExcelResumen', SubmitType::class, ['label'=>'Excel resumen', 'attr'=>['class'=> 'btn btn-sm btn-default']])
+            ->add( 'btnExcelEmpleado', SubmitType::class, ['label'=>'Excel empleado', 'attr'=>['class'=> 'btn btn-sm btn-default']])
+            ->add( 'btnExcelConcepto', SubmitType::class, ['label'=>'Excel concepto', 'attr'=>['class'=> 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked() || $form->get('btnExcelResumen')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked() || $form->get('btnExcelEmpleado')->isClicked() || $form->get('btnExcelConcepto')->isClicked()) {
                 $arConcepto = $form->get('concepto')->getData();
                 if($arConcepto) {
                     $session->set('filtroRhuInformePagoDetalleConcepto', $arConcepto->getCodigoConceptoPk());
@@ -94,8 +95,11 @@ class pagoDetalleController extends  Controller
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(RhuPagoDetalle::class)->informe()->getQuery()->getResult(), "Pagos detalle");
             }
-            if ($form->get('btnExcelResumen')->isClicked()) {
-                General::get()->setExportar($em->getRepository(RhuPagoDetalle::class)->excelResumen()->getQuery()->getArrayResult(), "Pagos detalle resumen");
+            if ($form->get('btnExcelEmpleado')->isClicked()) {
+                General::get()->setExportar($em->getRepository(RhuPagoDetalle::class)->excelResumenEmpleado()->getQuery()->getArrayResult(), "pagoDetalleEmpleado");
+            }
+            if ($form->get('btnExcelConcepto')->isClicked()) {
+                General::get()->setExportar($em->getRepository(RhuPagoDetalle::class)->excelResumenConcepto()->getQuery()->getArrayResult(), "pagoDetalleEmpleado");
             }
         }
         $arPagoDetalles = $paginator->paginate($em->getRepository(RhuPagoDetalle::class)->informe(), $request->query->getInt('page', 1), 30);

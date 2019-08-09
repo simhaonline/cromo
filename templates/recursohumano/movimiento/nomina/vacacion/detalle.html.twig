@@ -156,7 +156,40 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="detalles">
-            <br/>
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-condensed tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>CREDITO</th>
+                            <th>EMBARGO</th>
+                            <th>COD</th>
+                            <th>CONCEPTO</th>
+                            <th>BONIFICACION</th>
+                            <th>DEDUCCION</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arVacacionAdicional in arVacacionAdicionales %}
+                            <tr>
+                                <td>{{ arVacacionAdicional.codigoVacacionAdicionalPk }}</td>
+                                <td>{{ arVacacionAdicional.codigoCreditoFk }}</td>
+                                <td>{{ arVacacionAdicional.codigoEmbargoFk }}</td>
+                                <td>{{ arVacacionAdicional.codigoConceptoFk }}</td>
+                                <td>{{ arVacacionAdicional.conceptoRel.nombre | default('') }}</td>
+                                <td class="numero">{{ arVacacionAdicional.vrBonificacion | number_format() }}</td>
+                                <td class="numero">{{ arVacacionAdicional.vrDeduccion | number_format() }}</td>
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                                       value="{{ arVacacionAdicional.codigoVacacionAdicionalPk }}">
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     <br/>

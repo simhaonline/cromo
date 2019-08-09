@@ -144,6 +144,11 @@ class RhuPago
     private $comentario;
 
     /**
+     * @ORM\Column(name="codigo_vacacion_fk", type="integer", nullable=true)
+     */
+    private $codigoVacacionFk;
+
+    /**
      * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
      */
     private $usuario;
@@ -195,6 +200,12 @@ class RhuPago
      * @ORM\JoinColumn(name="codigo_grupo_fk",referencedColumnName="codigo_grupo_pk")
      */
     protected $grupoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuVacacion", inversedBy="pagosVacacionRel")
+     * @ORM\JoinColumn(name="codigo_vacacion_fk",referencedColumnName="codigo_vacacion_pk")
+     */
+    protected $vacacionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="pagoRel" )
@@ -796,6 +807,38 @@ class RhuPago
     public function setGrupoRel($grupoRel): void
     {
         $this->grupoRel = $grupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVacacionFk()
+    {
+        return $this->codigoVacacionFk;
+    }
+
+    /**
+     * @param mixed $codigoVacacionFk
+     */
+    public function setCodigoVacacionFk($codigoVacacionFk): void
+    {
+        $this->codigoVacacionFk = $codigoVacacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionRel()
+    {
+        return $this->vacacionRel;
+    }
+
+    /**
+     * @param mixed $vacacionRel
+     */
+    public function setVacacionRel($vacacionRel): void
+    {
+        $this->vacacionRel = $vacacionRel;
     }
 
 

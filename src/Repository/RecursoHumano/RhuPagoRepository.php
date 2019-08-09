@@ -7,11 +7,14 @@ use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\RecursoHumano\RhuVacacion;
+use App\Entity\Tesoreria\TesCuentaPagar;
+use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -481,5 +484,29 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
         $qb->orderBy('ordered', 'ASC');
         return $qb->getDQL();
+    }
+
+    public function generarCuentaPagar($arPago) {
+        $em = $this->getEntityManager();
+        $arTercero = $em->getRepository(RhuEmpleado::class)->terceroTesoreria($arPago->getEmpleadoRel());
+        $arCuentaPagarTipo = $em->getRepository(TesCuentaPagarTipo::class)->find($arPago->getPagoTipoRel()->getCodigoCuentaPagarTipoFk());
+        $arCuentaPagar = New TesCuentaPagar();
+        $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+        $arCuentaPagar->setTerceroRel($arTercero);
+        $arCuentaPagar->setBancoRel($arPago->getEmpleadoRel()->getBancoRel());
+        $arCuentaPagar->setCuenta($arPago->getEmpleadoRel()->getCuenta());
+        $arCuentaPagar->setModulo('rhu');
+        $arCuentaPagar->setCodigoDocumento($arPago->getCodigoPagoPk());
+        $arCuentaPagar->setNumeroDocumento($arPago->getNumero());
+        $arCuentaPagar->setFecha($arPago->getFechaDesde());
+        $arCuentaPagar->setFechaVence($arPago->getFechaDesde());
+        $arCuentaPagar->setVrSubtotal($arPago->getVrDevengado());
+        $arCuentaPagar->setVrTotal($arPago->getVrNeto());
+        $arCuentaPagar->setVrSaldo($arPago->getVrNeto());
+        $arCuentaPagar->setVrSaldoOperado($arPago->getVrNeto() * $arCuentaPagarTipo->getOperacion());
+        $arCuentaPagar->setEstadoAutorizado(1);
+        $arCuentaPagar->setEstadoAprobado(1);
+        $em->persist($arCuentaPagar);
+
     }
 }

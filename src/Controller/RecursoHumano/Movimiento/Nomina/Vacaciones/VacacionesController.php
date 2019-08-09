@@ -209,14 +209,17 @@ class VacacionesController extends ControllerListenerGeneral
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(RhuVacacion::class)->autorizar($arVacacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(RhuVacacion::class)->desautorizar($arVacacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(RhuVacacion::class)->aprobar($arVacacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle', ['id' => $id]));
             }
-            return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle', ['id' => $id]));
+
 
         }
         $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(['codigoVacacionFk' => $id]);

@@ -10,7 +10,6 @@
                     <label for="form_incapacidadTipoRel" class="col-sm-2 control-label">Tipo:</label>
                     <div class="col-sm-10">
                         {{ form_widget(form.incapacidadTipoRel, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
-                        {{ form_errors(form.incapacidadTipoRel) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
@@ -19,7 +18,7 @@
                         <div class="row">
                             <div class="col-lg-2">
                                 <div class="input-group">
-                                    <input id="form_txtNumeroIdentificacion"  name="form_txtNumeroIdentificacion"  type="text" class="form-control" value="{{ arIncapacidad.empleadoRel.numeroIdentificacion |default('') }}"/>
+                                    <input id="form_txtNumeroIdentificacion"  name="form_txtNumeroIdentificacion"  type="text" class="form-control" value="{{ arIncapacidad.empleadoRel.codigoEmpleadoPk |default('') }}"/>
                                 </div>
                             </div>
                             <div class="col-lg-10">

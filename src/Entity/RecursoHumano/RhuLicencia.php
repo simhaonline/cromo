@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuAdicionalRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuLicenciaRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class RhuLicencia
@@ -66,6 +66,11 @@ class RhuLicencia
      * @ORM\Column(name="codigo_entidad_salud_fk", type="integer", nullable=true)
      */
     private $codigoEntidadSaludFk;
+
+    /**
+     * @ORM\Column(name="codigo_grupo_fk", type="string", nullable=true)
+     */
+    private $codigoGrupoFk;
 
     /**
      * @ORM\Column(name="comentarios", type="text", nullable=true)
@@ -217,6 +222,18 @@ class RhuLicencia
      * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="licenciaRel")
      */
     protected $pagosDetallesLicenciaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuLicenciaTipo", inversedBy="licenciasLicenciaTipoRel")
+     * @ORM\JoinColumn(name="codigo_licencia_tipo_fk", referencedColumnName="codigo_licencia_tipo_pk")
+     */
+    protected $licenciaTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuGrupo", inversedBy="licenciasGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk", referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
 
     /**
      * @return array
@@ -873,6 +890,55 @@ class RhuLicencia
     {
         $this->pagosDetallesLicenciaRel = $pagosDetallesLicenciaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLicenciaTipoRel()
+    {
+        return $this->licenciaTipoRel;
+    }
+
+    /**
+     * @param mixed $licenciaTipoRel
+     */
+    public function setLicenciaTipoRel($licenciaTipoRel): void
+    {
+        $this->licenciaTipoRel = $licenciaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
+
 
 
 }

@@ -1,5 +1,149 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">Empleado:</label>
+                        <div class="col-sm-10">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.codigoEmpleadoPk) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input id="form_txtNombreCorto" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado',
+                                                   { 'campoCodigo': 'form_codigoEmpleadoPk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="form_cboGuiaTipoRel" class="col-sm-2 control-label">Grupo:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.grupoRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                        </div>
+                        <label for="form_cboOperacionRel" class="col-sm-2 control-label">Tipo:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.licenciaTipo, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="form_cboGuiaTipoRel" class="col-sm-2 control-label">Desde:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.licenciaFechaDesde, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="form_cboGuiaTipoRel" class="col-sm-2 control-label">Hasta:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.licenciafechaHasta, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnFiltro, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+            <tr>
+                <th title="CÓDIGO">CÓDIGO</th>
+                <th>FECHA</th>
+                <th>NOMBRE</th>
+                <th>ENTIDAD</th>
+                <th>IDENTIFICACIÓN</th>
+                <th>EMPLEADO</th>
+                <th>GRUPO</th>
+                <th>DESDE</th>
+                <th>HASTA</th>
+                <th>VALOR</th>
+                <th>COBRO</th>
+                <th title="Dias ibc mes anterior">D_IBC </th>
+                <th>IBC</th>
+                <th title="Afectar auxilio transporte">A_T </th>
+                <th title="Cobrar a la entidad">COB </th>
+                <th title="Pagar al empleado">PAG </th>
+                <th title="Prorroga">PRO </th>
+                <th title="En tramite de transcripcion">TRA </th>
+                <th>USUARIO</th>
+                <th style="text-align: right">DÍAS</th>
+                <th style="text-align: center"></th>
+                <th style="text-align: center"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for arLicencia in arLicencias %}
+            <tr>
+                <td>{{ arLicencia.codigoLicenciaPk }} </td>
+                <td>{%  if arLicencia.fecha != ''%}{{ arLicencia.fecha |date("Y-m-d")  }}{% endif %}</td>
+                <td>{{ arLicencia.licenciaTipo }}</td>
+                <td>{{ arLicencia.entidadSalud }}</td>
+                <td>{{ arLicencia.numeroIdentificacion  }}</td>
+                <td>{{ arLicencia.empleado  }}</td>
+                <td>{{ arLicencia.grupo  }}</td>
+                <td>{{ arLicencia.fechaDesde |date("Y-m-d")  }}</td>
+                <td>{{ arLicencia.fechaHasta |date("Y-m-d")  }}</td>
+                <td class="numero">{{ arLicencia.vrLicencia | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arLicencia.vrCobro | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arLicencia.diasIbcMesAnterior | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arLicencia.vrIbcPropuesto | number_format(0, '.', ',') }}</td>
+                <td>{% if arLicencia.afectaTransporte == 1 %}SI{% else %}NO{% endif %}</td>
+                <td>{% if arLicencia.estadoCobrar == 1 %}SI{% else %}NO{% endif %}</td>
+                <td>{% if arLicencia.pagarEmpleado == 1 %}SI{% else %}NO{% endif %}</td>
+                <td>{% if arLicencia.estadoProrroga == 1 %}SI{% else %}NO{% endif %}</td>
+                <td>{% if arLicencia.estadoTranscripcion == 1 %}SI{% else %}NO{% endif %}</td>
+                <td>{{ arLicencia.codigoUsuario  }}</td>
+                <td class="numero">{{ arLicencia.cantidad | number_format(0, '.', ',') }}</td>
+                <td style="text-align: center;">
+                    <a href="{{ path('recursohumano_movimiento_nomina_licencia_nuevo',{'id': arLicencia.codigoLicenciaPk }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
+                <td style="text-align: center;">
+                    <a href="{{ path('recursohumano_movimiento_nomina_licencia_detalle',{'id' : arLicencia.codigoLicenciaPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arLicencia.codigoLicenciaPk }}" /></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arLicencias.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arLicencias) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('recursohumano_movimiento_nomina_licencia_nuevo', {'id': 0}) }}">Nuevo</a>
+            {{ form_widget(form.btnEliminar) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
     <br /><br /><br />
 {% endblock %}

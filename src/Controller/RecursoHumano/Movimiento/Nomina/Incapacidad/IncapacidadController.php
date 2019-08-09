@@ -76,9 +76,33 @@ class IncapacidadController extends ControllerListenerGeneral
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add( 'btnEliminar', SubmitType::class, ['label'=>'Eliminar', 'attr'=>['class'=> 'btn btn-sm btn-danger']])
           ->getForm();
+        $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
+        if ($form->isSubmitted())
+            if ($form->get('btnFiltro')->isClicked()) {
+                $codigoEmpleado =$form->get('codigoEmpleadoPk')->getData();
+                $arEntidadSalud =$form->get('entidadSaludRel')->getData();
+                $arGrupoRel =$form->get('grupoRel')->getData();
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigoEmpleado??0);
+                if ($arEmpleado){
+                    $session->set('filtroRhuIncapacidadCodigoEmpleado',  $arEmpleado->getCodigoEmpleadoPk());
+                }else{
+                    $session->set('filtroRhuIncapacidadCodigoEmpleado',  null);
+                }
+                if ($arEntidadSalud){
+                    $session->set('filtroRhuIncapacidadCodigoEntidadSalud',  $arEntidadSalud->getCodigoEntidadPk());
+                }else{
+                    $session->set('filtroRhuIncapacidadCodigoEntidadSalud',  null);
+                }
+                if ($arGrupoRel){
+                    $session->set('filtroRhuIncapacidadCodigoGrupo',  $arGrupoRel->getCodigoGrupoPk());
+                }else{
+                    $session->set('filtroRhuIncapacidadCodigoGrupo',  null);
+                }
+                $session->set('filtroRhuIncapacidadNumeroEps',  $form->get('numeroEps')->getData());
+                $session->set('filtroRhuIncapacidadLegalizada',  $form->get('tipoLegalizada')->getData());
+                $session->set('filtroRhuIncapacidadEstadoTranscripcion',  $form->get('estadoTranscripcion')->getData());
+                $session->set('filtroRhuIncapacidadTipoIncapacidad',  $form->get('tipoIncapacidad')->getData());
                 $session->set('filtroRhuIncapacidadFechaDesde',  $form->get('fechaIncapacidadDesde')->getData() ?$form->get('fechaIncapacidadDesde')->getData()->format('Y-m-d'): null);
                 $session->set('filtroRhuIncapacidadFechaHasta', $form->get('fechaIncapacidadHasta')->getData() ? $form->get('fechaIncapacidadHasta')->getData()->format('Y-m-d'): null);
             }
@@ -87,7 +111,7 @@ class IncapacidadController extends ControllerListenerGeneral
                 $this->get("UtilidadesModelo")->eliminar(RhuIncapacidad::class, $arClienterSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_incapacidad_lista'));
             }
-        }
+
 
         $arIncapacidades = $paginator->paginate($em->getRepository(RhuIncapacidad::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/nomina/incapacidad/lista.html.twig', [
@@ -115,7 +139,7 @@ class IncapacidadController extends ControllerListenerGeneral
             if ($form->get('guardar')->isClicked()) {
                 $codigoEmpleado = $request->request->get('form_txtNumeroIdentificacion');
                 $codigoIncapacidadDiagnostico = $request->request->get('form_txtCodigoIncapacidadDiagnostico');
-                $arEmpleado = $em->getRepository(RhuEmpleado::class)->findOneBy(['codigoEmpleadoPk'=>$id]);
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigoEmpleado);
                 $arContrato = $em->getRepository(RhuContrato::class)->findOneBy(['codigoEmpleadoFk'=>$arEmpleado->getCodigoEmpleadoPk()]);
                 $arIncapacidadDiagnostico = $em->getRepository(RhuIncapacidadDiagnostico::class)->find($codigoIncapacidadDiagnostico);
                 if ($arEmpleado){
@@ -123,8 +147,10 @@ class IncapacidadController extends ControllerListenerGeneral
                         if ($arIncapacidadDiagnostico){
                             $arIncapacidad = $form->getData();
                             $arIncapacidad->setFecha(new \DateTime('now'));
+                            $arIncapacidad->setCodigoUsuario($this->getUser()->getUserName());
                             $arIncapacidad->setEmpleadoRel($arEmpleado);
                             $arIncapacidad->setEntidadSaludRel($arContrato->getEntidadSaludRel());
+                            $arIncapacidad->setGrupoRel($arContrato->getGrupoRel());
                             $arIncapacidad->setIncapacidadDiagnosticoRel($arIncapacidadDiagnostico);
                             $em->persist($arIncapacidad);
                             $em->flush();

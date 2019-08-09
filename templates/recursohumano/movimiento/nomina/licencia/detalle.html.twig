@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_nomina_licencia_lista') }}" style="float:left">Volver</a>
+        </div>
+    </div>
+    <br>
+    <table widtd="100%" class="table table-condensed table-bordered tabla-datos">
+        <tr>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arLicencia.fecha | date("Y/m/d") }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arLicencia.licenciaTipoRel.nombre }}</td>
+            <td class="titulo">ENTIDAD:</td>
+            <td class="td-label"
+                align="right">{{ arLicencia.entidadSaludRel.nombre | default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">IDENTIFICACIÓN:</td>
+            <td class="td-in-well">{{ arLicencia.empleadoRel.numeroIdentificacion }}</td>
+            <td class="titulo">EMPLEADO:</td>
+            <td class="td-in-well">{{ arLicencia.empleadoRel.nombreCorto }}</td>
+            <td class="titulo">DIAS:</td>
+            <td class="td-in-well"
+                align="right">{{ arLicencia.cantidad }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIOS:</td>
+            <td class="td-in-well" colspan="5">{{ arLicencia.comentarios }}</td>
+
+        </tr>
+
+
+    </table>
+    <br /><br /><br />
+{% endblock %}

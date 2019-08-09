@@ -10,7 +10,7 @@
             <div>
                 <div class="widget-body">
                     <div class="form-group form-group-sm">
-                        <label for="txtCodigoConductor" class="col-sm-2 control-label">Cliente:</label>
+                        <label for="txtCodigoConductor" class="col-sm-2 control-label">Empleado:</label>
                         <div class="col-sm-10">
                             <div class="row">
                                 <div class="col-lg-2">
@@ -24,7 +24,7 @@
                                         <span class="input-group-btn">
                                             <a class="btn btn-default btn-sm"
                                                href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado',
-                                                   { 'campoCodigo': 'form_codigoEmpleadoFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                                   { 'campoCodigo': 'form_codigoEmpleadoPk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                         </span>
                                     </div>
                                 </div>
@@ -46,7 +46,7 @@
                         <div class="col-sm-4">
                             {{ form_widget(form.tipoIncapacidad, { 'attr': {'class': 'form-control'} }) }}
                         </div>
-                        <label for="form_cboOperacionRel" class="col-sm-2 control-label">Grupo pago:</label>
+                        <label for="form_cboOperacionRel" class="col-sm-2 control-label">Grupo:</label>
                         <div class="col-sm-4">
                             {{ form_widget(form.grupoRel, { 'attr': {'class': 'form-control'} }) }}
                         </div>

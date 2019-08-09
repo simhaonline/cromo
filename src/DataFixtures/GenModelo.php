@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Crm\CrmContacto;
 use App\Entity\RecursoHumano\RhuAdicionalPeriodo;
 use App\Entity\RecursoHumano\RhuIncapacidad;
+use App\Entity\RecursoHumano\RhuLicencia;
 use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurPedidoTipo;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -208,7 +209,8 @@ class GenModelo extends Fixture
                 'RhuTipoCotizacion',
                 'RhuVacacion',
                 'RhuAporte',
-                'RhuIncapacidad'
+                'RhuIncapacidad',
+                'RhuLicencia'
             )),
             array('modulo'=>'Financiero','modelo'=>array(
                 'FinAsiento',

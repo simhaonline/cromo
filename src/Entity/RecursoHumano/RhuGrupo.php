@@ -73,6 +73,11 @@ class RhuGrupo
     protected $incapacidadesGrupoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuLicencia", mappedBy="grupoRel")
+     */
+    protected $licenciasGrupoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array

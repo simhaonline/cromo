@@ -52,6 +52,27 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             ->leftJoin('i.entidadSaludRel', 'es')
             ->leftJoin('i.empleadoRel', 'e');
 
+        if ($session->get('filtroRhuIncapacidadCodigoEmpleado') != null) {
+            $queryBuilder->andWhere("i.codigoEmpleadoFk = '{$session->get('filtroRhuIncapacidadCodigoEmpleado')}'");
+        }
+        if ($session->get('filtroRhuIncapacidadCodigoEntidadSalud') != null) {
+            $queryBuilder->andWhere("i.codigoEntidadSaludFk = '{$session->get('filtroRhuIncapacidadCodigoEntidadSalud')}'");
+        }
+        if ($session->get('filtroRhuIncapacidadCodigoGrupo') != null) {
+            $queryBuilder->andWhere("i.codigoGrupoFk = '{$session->get('filtroRhuIncapacidadCodigoGrupo')}'");
+        }
+        if ($session->get('filtroRhuIncapacidadNumeroEps') != null) {
+            $queryBuilder->andWhere("i.numeroEps = '{$session->get('filtroRhuIncapacidadNumeroEps')}'");
+        }
+        if ($session->get('filtroRhuIncapacidadLegalizada') != null) {
+            $queryBuilder->andWhere("i.estadoLegalizado = '{$session->get('filtroRhuIncapacidadLegalizada')}'");
+        }
+        if ($session->get('filtroRhuIncapacidadEstadoTranscripcion') != null) {
+            $queryBuilder->andWhere("i.estadoTranscripcion = '{$session->get('filtroRhuIncapacidadEstadoTranscripcion')}'");
+        }
+        if ($session->get('filtroRhuIncapacidadTipoIncapacidad') != null) {
+            $queryBuilder->andWhere("i.codigoIncapacidadTipoFk = '{$session->get('filtroRhuIncapacidadTipoIncapacidad')}'");
+        }
         if ($session->get('filtroRhuIncapacidadFechaDesde') != null) {
             $queryBuilder->andWhere("i.fechaDesde >= '{$session->get('filtroRhuIncapacidadFechaDesde')} 00:00:00'");
         }

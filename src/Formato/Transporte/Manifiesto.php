@@ -303,7 +303,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(160, $yt, "FECHA:");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $pdf->Cell(25, 4, $arDespacho['vrFletePago'], 0, 0, 'R');
+        $pdf->Cell(25, 4,  number_format($arDespacho['vrFletePago']) , 0, 0, 'R');
 
 
         $y += 5;
@@ -314,7 +314,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(20, $yt, "RETENCION EN LA FUENTE:");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $pdf->Cell(25, 4, $arDespacho['vrRetencionFuente'], 0, 0, 'R');
+        $pdf->Cell(25, 4, number_format($arDespacho['vrRetencionFuente']), 0, 0, 'R');
 
         $y += 5;
         $pdf->Rect($x, $y, 50, $alto2);
@@ -328,7 +328,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(120, $yt+5, utf8_decode($arConfiguracion->getNombre()));
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $pdf->Cell(25, 4, $arDespacho['vrIndustriaComercio'], 0, 0, 'R');
+        $pdf->Cell(25, 4, number_format($arDespacho['vrIndustriaComercio']), 0, 0, 'R');
 
         $y += 5;
         $pdf->Rect($x, $y, 50, $alto2);
@@ -340,7 +340,7 @@ class Manifiesto extends \FPDF {
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
         $neto = $arDespacho['vrFletePago']-($arDespacho['vrRetencionFuente'] - $arDespacho['vrIndustriaComercio']);
-        $pdf->Cell(25, 4, $neto, 0, 0, 'R');
+        $pdf->Cell(25, 4, number_format($neto), 0, 0, 'R');
 
         $y += 5;
         $pdf->Rect($x, $y, 50, $alto2);
@@ -354,7 +354,7 @@ class Manifiesto extends \FPDF {
         $pdf->Text(120, $yt+5, utf8_decode($arConfiguracion->getNombre()));
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $pdf->Cell(25, 4, $arDespacho['vrAnticipo'], 0, 0, 'R');
+        $pdf->Cell(25, 4, number_format($arDespacho['vrAnticipo']), 0, 0, 'R');
 
         $y += 5;
         $pdf->Rect($x, $y, 50, $alto2);
@@ -365,8 +365,8 @@ class Manifiesto extends \FPDF {
         $pdf->Text(20, $yt, "SALDO A PAGAR:");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(80, $yt-3);
-        $saldo = $arDespacho['vrSaldo'];
-        $pdf->Cell(25, 4, $saldo, 0, 0, 'R');
+        $saldo = $arDespacho['vrTotal'];
+        $pdf->Cell(25, 4, number_format($saldo), 0, 0, 'R');
 
         $y += 8;
         $pdf->Rect($x, $y, 260, $alto2);

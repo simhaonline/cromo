@@ -180,6 +180,7 @@
                                             <th>DESTINO</th>
                                             <th>FLETE</th>
                                             <th>MANEJO</th>
+                                            <th>DECLARA</th>
                                             <th title="Cobro entrega">COB_ENT</th>
                                             <th title="Precio reexpedicion">PRE_REE</th>
                                             <th title="Unidades">UND</th>
@@ -206,6 +207,7 @@
                                                 <td>{{ arDespachoDetalle.ciudadDestino }}</td>
                                                 <td style="text-align: right">{{ arDespachoDetalle.vrFlete | number_format(0, '.', ',') }}</td>
                                                 <td style="text-align: right">{{ arDespachoDetalle.vrManejo | number_format(0, '.', ',') }}</td>
+                                                <td style="text-align: right">{{ arDespachoDetalle.vrDeclara | number_format(0, '.', ',') }}</td>
                                                 <td style="text-align: right">{{ arDespachoDetalle.vrCobroEntrega | number_format(0, '.', ',') }}</td>
                                                 <td style="text-align: right">{{ arDespachoDetalle.vrPrecioReexpedicion | number_format(0, '.', ',') }}</td>
                                                 <td style="text-align: right">{{ arDespachoDetalle.unidades | number_format(0, '.', ',') }}</td>

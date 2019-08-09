@@ -35,7 +35,8 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
         dd.vrFlete,
         dd.vrManejo,
         dd.vrCobroEntrega,      
-        dd.vrPrecioReexpedicion,       
+        dd.vrPrecioReexpedicion,  
+        dd.vrDeclara,
         c.nombreCorto AS clienteNombreCorto, 
         cd.nombre AS ciudadDestino
         FROM App\Entity\Transporte\TteDespachoDetalle dd 

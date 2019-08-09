@@ -101,6 +101,7 @@ class DespachoType extends AbstractType {
             {"campo":"cantidad",                                "tipo":"moneda",    "ayuda":"Cantidad",                                 "titulo":"CANT"},
             {"campo":"unidades",                                "tipo":"moneda",    "ayuda":"Unidades",                                 "titulo":"UND"},
             {"campo":"pesoReal",                                "tipo":"moneda",    "ayuda":"Peso real",                                "titulo":"PES"},
+            {"campo":"vrDeclara",                              "tipo":"moneda",    "ayuda":"Valor declarado",                         "titulo":"DECLARADO"},
             {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
             {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
             {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"},

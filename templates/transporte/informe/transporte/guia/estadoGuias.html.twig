@@ -52,12 +52,16 @@
             <th>CLIENTE</th>
             <th>DOCUMENTO</th>
             <th>DESTINATARIO</th>
-            <th>FECHA DESPACHO</th>
-            <th>FECHA ENTREGA</th>
-            <th>FECHA SOPORTE</th>
-            <th>ESTADO NOVEDAD</th>
-            <th>ESTADO DESPACHADO</th>
-            <th>ESTADO ENTREGADO</th>
+            <th>DESTINO</th>
+            <th>F_DESPACHO</th>
+            <th>F_ENTREGA</th>
+            <th>F_SOPORTE</th>
+            <th>FLETE</th>
+            <th>MANEJO</th>
+            <th>UNIDADES</th>
+            <th>NOVEDAD</th>
+            <th>DESPACHADO</th>
+            <th>ENTREGADO</th>
         </tr>
         </thead>
         <tbody>
@@ -67,9 +71,13 @@
                 <td>{{ arGuia.cliente }}</td>
                 <td>{{ arGuia.documentoCliente }}</td>
                 <td>{{ arGuia.nombreDestinatario }}</td>
+                <td>{{ arGuia.ciudadDestinoNombre }}</td>
                 <td>{{ arGuia.fechaDespacho | date('Y-m-d') }}</td>
                 <td>{{ arGuia.fechaEntrega | date('Y-m-d') }}</td>
                 <td>{{ arGuia.fechaSoporte | date('Y-m-d') }}</td>
+                <td>{{ arGuia.unidades | number_format() }}</td>
+                <td>{{ arGuia.vrFlete | number_format() }}</td>
+                <td>{{ arGuia.vrManejo | number_format() }}</td>
                 <td class="estado">{{ arGuia.estadoNovedad ?'SI':'NO'}}</td>
                 <td class="estado">{{ arGuia.estadoDespachado?'SI':'NO' }}</td>
                 <td class="estado">{{ arGuia.estadoEntregado ?'SI':'NO'}}</td>

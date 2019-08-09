@@ -3004,7 +3004,12 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('g.estadoNovedad')
             ->addSelect('g.estadoDespachado')
             ->addSelect('g.estadoEntregado')
+            ->addSelect('g.vrFlete')
+            ->addSelect('g.vrManejo')
+            ->addSelect('g.unidades')
+            ->addSelect('cd.nombre as ciudadDestinoNombre')
             ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->orderBy('g.fechaIngreso', 'DESC');
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("g.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");

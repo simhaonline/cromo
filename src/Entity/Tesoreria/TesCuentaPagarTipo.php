@@ -34,6 +34,11 @@ class TesCuentaPagarTipo
     private $operacion = 0;
 
     /**
+     * @ORM\Column(name="saldo_inicial", type="boolean", options={"default":false})
+     */
+    private $saldoInicial;
+
+    /**
      * @ORM\Column(name="prefijo", type="string", length=5, nullable=true)
      */
     private $prefijo;
@@ -268,6 +273,38 @@ class TesCuentaPagarTipo
     public function setCuentasPagarCuentaPagarTipoRel($cuentasPagarCuentaPagarTipoRel): void
     {
         $this->cuentasPagarCuentaPagarTipoRel = $cuentasPagarCuentaPagarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSaldoInicial()
+    {
+        return $this->saldoInicial;
+    }
+
+    /**
+     * @param mixed $saldoInicial
+     */
+    public function setSaldoInicial($saldoInicial): void
+    {
+        $this->saldoInicial = $saldoInicial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosTipoCuentaPagarTipoRel()
+    {
+        return $this->pagosTipoCuentaPagarTipoRel;
+    }
+
+    /**
+     * @param mixed $pagosTipoCuentaPagarTipoRel
+     */
+    public function setPagosTipoCuentaPagarTipoRel($pagosTipoCuentaPagarTipoRel): void
+    {
+        $this->pagosTipoCuentaPagarTipoRel = $pagosTipoCuentaPagarTipoRel;
     }
 
 

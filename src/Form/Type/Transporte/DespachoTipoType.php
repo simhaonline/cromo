@@ -3,6 +3,8 @@
 namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteDespachoTipo;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -16,13 +18,25 @@ class DespachoTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+
             ->add('codigoDespachoTipoPk',TextType::class,['required' => true,'label' => 'Codigo despacho tipo pk:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
+            ->add('cuentaPagarTipoRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Tesoreria\TesCuentaPagarTipo',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('cpt')
+                        ->orderBy('cpt.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Tipo cuenta por pagar:'
+            ])
             ->add('consecutivo',NumberType::class,['required' => true,'label' => 'Consecutivo:'])
             ->add('exigeNumero', CheckboxType::class, array('required'  => false))
             ->add('generaMonitoreo', CheckboxType::class, array('required'  => false))
             ->add('viaje', CheckboxType::class, array('required'  => false))
             ->add('contabilizar', CheckboxType::class, array('required'  => false))
+            ->add('generaCuentaPagar', CheckboxType::class, array('required'  => false))
             ->add('codigoComprobanteFk',TextType::class,['required' => false,'label' => 'Codigo comprobante:'])
             ->add('codigoCuentaFleteFk',TextType::class,['required' => false,'label' => 'Codigo cuenta flete:'])
             ->add('codigoCuentaRetencionFuenteFk',TextType::class,['required' => false,'label' => 'Codigo cuenta retencion fuente:'])

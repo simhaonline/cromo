@@ -122,6 +122,12 @@ class TteDespachoTipo
     private $contabilizar = false;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesCuentaPagarTipo", inversedBy="tteDespachosTiposCuentaPagarTipoRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_pagar_tipo_fk", referencedColumnName="codigo_cuenta_pagar_tipo_pk")
+     */
+    private $cuentaPagarTipoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespacho", mappedBy="despachoTipoRel")
      */
     protected $despachosDespachoTipoRel;
@@ -497,6 +503,22 @@ class TteDespachoTipo
     public function setIntermediacionesComprasDespachoTipoRel($intermediacionesComprasDespachoTipoRel): void
     {
         $this->intermediacionesComprasDespachoTipoRel = $intermediacionesComprasDespachoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaPagarTipoRel()
+    {
+        return $this->cuentaPagarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaPagarTipoRel
+     */
+    public function setCuentaPagarTipoRel($cuentaPagarTipoRel): void
+    {
+        $this->cuentaPagarTipoRel = $cuentaPagarTipoRel;
     }
 
 

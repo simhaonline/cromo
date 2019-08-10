@@ -241,6 +241,22 @@ class ApiWindowsController extends FOSRestController
 
     /**
      * @return array
+     * @Rest\Get("/transporte/api/windows/ciudad/lista")
+     */
+    public function ciudadLista(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteCiudad::class)->apiWindowsLista();
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
      * @Rest\Post("/transporte/api/windows/destinatario/buscar")
      */
     public function destinatarioBuscar(Request $request) {
@@ -264,6 +280,22 @@ class ApiWindowsController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
             return $em->getRepository(TteDestinatario::class)->apiWindowsDetalle($raw);
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @return array
+     * @Rest\Post("/transporte/api/windows/destinatario/nuevo")
+     */
+    public function destinatarioNuevo(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            return $em->getRepository(TteDestinatario::class)->apiWindowsNuevo($raw);
         } catch (\Exception $e) {
             return [
                 'error' => "Ocurrio un error en la api " . $e->getMessage(),

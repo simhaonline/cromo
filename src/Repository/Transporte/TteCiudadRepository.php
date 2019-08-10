@@ -181,4 +181,13 @@ class TteCiudadRepository extends ServiceEntityRepository
         }
     }
 
+    public function apiWindowsLista() {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TteCiudad::class, 'c')
+            ->select('c.codigoCiudadPk')
+            ->addSelect('c.nombre');
+        $ar = $queryBuilder->getQuery()->getResult();
+        return $ar;
+    }
+
 }

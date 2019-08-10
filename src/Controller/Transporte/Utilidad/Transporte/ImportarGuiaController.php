@@ -167,8 +167,12 @@ class ImportarGuiaController extends Controller
                         $arGuia->setProductoRel($arProducto);
                         $arGuia->setEmpaqueRel($arEmpaque);
                         $arGuia->setCondicionRel($arGuiaTemporal->getClienteRel()->getCondicionRel());
-                        $arGuia->setOperacionCargoRel($arOperacion);
                         $arGuia->setOperacionIngresoRel($arOperacion);
+                        if($arOperacion->getCodigoOperacionCargoFk()) {
+                            $arGuia->setOperacionCargoRel($arOperacion->getOperacionCargoRel());
+                        } else {
+                            $arGuia->setOperacionCargoRel($arOperacion);
+                        }
                         $arGuia->setTelefonoDestinatario($arGuiaTemporal->getDestinatarioTelefono());
                         $arGuia->setFechaIngreso($arGuiaTemporal->getFechaIngreso());
                         $arGuia->setDocumentoCliente($arGuiaTemporal->getClienteDocumento());

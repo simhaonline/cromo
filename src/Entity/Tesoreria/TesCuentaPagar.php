@@ -102,6 +102,11 @@ class TesCuentaPagar
     private $vrAbono = 0;
 
     /**
+     * @ORM\Column(name="vr_saldo_original", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrSaldoOriginal = 0;
+
+    /**
      * @ORM\Column(name="vr_saldo", type="float", nullable=true, options={"default" : 0})
      */
     private $vrSaldo = 0;
@@ -147,6 +152,11 @@ class TesCuentaPagar
     private $diasVencimiento = 0;
 
     /**
+     * @ORM\Column(name="rango", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $rango = 0;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -173,22 +183,6 @@ class TesCuentaPagar
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgresoDetalle" , mappedBy="cuentaPagarRel")
      */
     private $egresosDetalleCuentasPagarRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -236,6 +230,38 @@ class TesCuentaPagar
     public function setCodigoCuentaPagarTipoFk($codigoCuentaPagarTipoFk): void
     {
         $this->codigoCuentaPagarTipoFk = $codigoCuentaPagarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBancoFk()
+    {
+        return $this->codigoBancoFk;
+    }
+
+    /**
+     * @param mixed $codigoBancoFk
+     */
+    public function setCodigoBancoFk($codigoBancoFk): void
+    {
+        $this->codigoBancoFk = $codigoBancoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
+    }
+
+    /**
+     * @param mixed $cuenta
+     */
+    public function setCuenta($cuenta): void
+    {
+        $this->cuenta = $cuenta;
     }
 
     /**
@@ -433,6 +459,22 @@ class TesCuentaPagar
     /**
      * @return mixed
      */
+    public function getVrSaldoOriginal()
+    {
+        return $this->vrSaldoOriginal;
+    }
+
+    /**
+     * @param mixed $vrSaldoOriginal
+     */
+    public function setVrSaldoOriginal($vrSaldoOriginal): void
+    {
+        $this->vrSaldoOriginal = $vrSaldoOriginal;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrSaldo()
     {
         return $this->vrSaldo;
@@ -577,6 +619,22 @@ class TesCuentaPagar
     /**
      * @return mixed
      */
+    public function getRango()
+    {
+        return $this->rango;
+    }
+
+    /**
+     * @param mixed $rango
+     */
+    public function setRango($rango): void
+    {
+        $this->rango = $rango;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getComentario()
     {
         return $this->comentario;
@@ -625,54 +683,6 @@ class TesCuentaPagar
     /**
      * @return mixed
      */
-    public function getEgresosDetalleCuentasPagarRel()
-    {
-        return $this->egresosDetalleCuentasPagarRel;
-    }
-
-    /**
-     * @param mixed $egresosDetalleCuentasPagarRel
-     */
-    public function setEgresosDetalleCuentasPagarRel($egresosDetalleCuentasPagarRel): void
-    {
-        $this->egresosDetalleCuentasPagarRel = $egresosDetalleCuentasPagarRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoBancoFk()
-    {
-        return $this->codigoBancoFk;
-    }
-
-    /**
-     * @param mixed $codigoBancoFk
-     */
-    public function setCodigoBancoFk($codigoBancoFk): void
-    {
-        $this->codigoBancoFk = $codigoBancoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuenta()
-    {
-        return $this->cuenta;
-    }
-
-    /**
-     * @param mixed $cuenta
-     */
-    public function setCuenta($cuenta): void
-    {
-        $this->cuenta = $cuenta;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getBancoRel()
     {
         return $this->bancoRel;
@@ -684,6 +694,22 @@ class TesCuentaPagar
     public function setBancoRel($bancoRel): void
     {
         $this->bancoRel = $bancoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEgresosDetalleCuentasPagarRel()
+    {
+        return $this->egresosDetalleCuentasPagarRel;
+    }
+
+    /**
+     * @param mixed $egresosDetalleCuentasPagarRel
+     */
+    public function setEgresosDetalleCuentasPagarRel($egresosDetalleCuentasPagarRel): void
+    {
+        $this->egresosDetalleCuentasPagarRel = $egresosDetalleCuentasPagarRel;
     }
 
 

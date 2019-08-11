@@ -11,7 +11,10 @@ use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
+use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesEgreso;
+use App\Entity\Tesoreria\TesEgresoDetalle;
+use App\Entity\Tesoreria\TesEgresoTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -123,11 +126,11 @@ class TesEgresoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arEgreso->getEstadoAutorizado() == 0) {
             $error = false;
-            $arEgresosDetalles = $em->getRepository(ComEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $arEgreso->getCodigoEgresoPk()));
+            $arEgresosDetalles = $em->getRepository(TesEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $arEgreso->getCodigoEgresoPk()));
             if ($arEgresosDetalles) {
                 foreach ($arEgresosDetalles AS $arEgresoDetalle) {
                     if ($arEgresoDetalle->getCodigoCuentaPagarFk()) {
-                        $arCuentaPagarAplicacion = $em->getRepository(ComCuentaPagar::class)->find($arEgresoDetalle->getCodigoCuentaPagarFk());
+                        $arCuentaPagarAplicacion = $em->getRepository(TesCuentaPagar::class)->find($arEgresoDetalle->getCodigoCuentaPagarFk());
                         if ($arCuentaPagarAplicacion->getVrSaldo() >= $arEgresoDetalle->getVrPagoAfectar()) {
                             $saldo = $arCuentaPagarAplicacion->getVrSaldo() - $arEgresoDetalle->getVrPagoAfectar();
                             $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();
@@ -179,9 +182,9 @@ class TesEgresoRepository extends ServiceEntityRepository
     public function desAutorizar($arEgreso)
     {
         $em = $this->getEntityManager();
-        $arEgresoDetalles = $em->getRepository(ComEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $arEgreso->getCodigoEgresoPk()));
+        $arEgresoDetalles = $em->getRepository(TesEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $arEgreso->getCodigoEgresoPk()));
         foreach ($arEgresoDetalles AS $arEgresoDetalle) {
-            $arCuentaPagar = $em->getRepository(ComCuentaPagar::class)->find($arEgresoDetalle->getCodigoCuentaPagarFk());
+            $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($arEgresoDetalle->getCodigoCuentaPagarFk());
             $saldo = $arCuentaPagar->getVrSaldo() + $arEgresoDetalle->getVrPagoAfectar();
             $saldoOperado = $saldo * $arCuentaPagar->getOperacion();
             $arCuentaPagar->setVrSaldo($saldo);
@@ -207,7 +210,7 @@ class TesEgresoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arEgreso->getEstadoAutorizado()) {
-            $arEgresoTipo = $em->getRepository(ComEgresoTipo::class)->find($arEgreso->getCodigoEgresoTipoFk());
+            $arEgresoTipo = $em->getRepository(TesEgresoTipo::class)->find($arEgreso->getCodigoEgresoTipoFk());
             if ($arEgreso->getNumero() == 0 || $arEgreso->getNumero() == NULL) {
                 $arEgreso->setNumero($arEgresoTipo->getConsecutivo());
                 $arEgresoTipo->setConsecutivo($arEgresoTipo->getConsecutivo() + 1);

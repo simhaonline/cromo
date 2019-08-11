@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Financiero\FinTercero;
+use App\Entity\Tesoreria\TesTercero;
 use App\Entity\Transporte\TtePoseedor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -75,6 +76,26 @@ class TtePoseedorRepository extends ServiceEntityRepository
             $arTercero = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPoseedor->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPoseedor->getNumeroIdentificacion()));
             if(!$arTercero) {
                 $arTercero = new FinTercero();
+                $arTercero->setIdentificacionRel($arPoseedor->getIdentificacionRel());
+                $arTercero->setNumeroIdentificacion($arPoseedor->getNumeroIdentificacion());
+                $arTercero->setNombreCorto($arPoseedor->getNombreCorto());
+                $arTercero->setDireccion($arPoseedor->getDireccion());
+                $arTercero->setTelefono($arPoseedor->getTelefono());
+                $em->persist($arTercero);
+            }
+        }
+
+        return $arTercero;
+    }
+
+    public function terceroTesoreria($arPoseedor)
+    {
+        $em = $this->getEntityManager();
+        $arTercero = null;
+        if($arPoseedor) {
+            $arTercero = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPoseedor->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPoseedor->getNumeroIdentificacion()));
+            if(!$arTercero) {
+                $arTercero = new TesTercero();
                 $arTercero->setIdentificacionRel($arPoseedor->getIdentificacionRel());
                 $arTercero->setNumeroIdentificacion($arPoseedor->getNumeroIdentificacion());
                 $arTercero->setNombreCorto($arPoseedor->getNombreCorto());

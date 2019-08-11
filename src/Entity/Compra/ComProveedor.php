@@ -183,16 +183,6 @@ class ComProveedor
     protected $comprasProveedorRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComEgreso" , mappedBy="proveedorRel")
-     */
-    protected $egresosProveedorRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComCuentaPagar" , mappedBy="proveedorRel")
-     */
-    protected $cuentasPagarProveedorRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoProveedorPk()
@@ -496,37 +486,9 @@ class ComProveedor
         $this->comprasProveedorRel = $comprasProveedorRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEgresosProveedorRel()
-    {
-        return $this->egresosProveedorRel;
-    }
 
-    /**
-     * @param mixed $egresosProveedorRel
-     */
-    public function setEgresosProveedorRel($egresosProveedorRel): void
-    {
-        $this->egresosProveedorRel = $egresosProveedorRel;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getCuentasPagarProveedorRel()
-    {
-        return $this->cuentasPagarProveedorRel;
-    }
 
-    /**
-     * @param mixed $cuentasPagarProveedorRel
-     */
-    public function setCuentasPagarProveedorRel($cuentasPagarProveedorRel): void
-    {
-        $this->cuentasPagarProveedorRel = $cuentasPagarProveedorRel;
-    }
 
 
 }

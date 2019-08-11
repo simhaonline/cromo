@@ -2,8 +2,8 @@
 
 namespace App\Repository\Tesoreria;
 
-use App\Entity\Compra\ComEgreso;
-use App\Entity\Compra\ComEgresoDetalle;
+
+use App\Entity\Tesoreria\TesEgreso;
 use App\Entity\Tesoreria\TesEgresoDetalle;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -28,6 +28,7 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
             ->addSelect('cp.vrSaldo')
             ->addSelect('ed.vrPagoAfectar')
             ->addSelect('ed.vrPagoAfectar')
+            ->addSelect('ed.vrPago')
             ->leftJoin('ed.cuentaPagarRel', 'cp')
             ->leftJoin('cp.terceroRel', 't')
             ->where("ed.codigoEgresoFk = '{$codigoEgreso}'");
@@ -45,15 +46,15 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
         $floRetencionIca = 0;
         $floRetencionIva = 0;
         $floRetencionFuente = 0;
-        $arEgreso = $em->getRepository(ComEgreso::class)->find($id);
-        $arEgresosDetalle = $em->getRepository(ComEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $id));
+        $arEgreso = $em->getRepository(TesEgreso::class)->find($id);
+        $arEgresosDetalle = $em->getRepository(TesEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $id));
         foreach ($arEgresosDetalle as $arEgresoDetalle) {
-            $floDescuento += $arEgresoDetalle->getVrDescuento();
-            $floAjustePeso += $arEgresoDetalle->getVrAjustePeso();
-            $floRetencionIca += $arEgresoDetalle->getVrRetencionIca();
-            $floRetencionIva += $arEgresoDetalle->getVrRetencionIva();
-            $floRetencionFuente += $arEgresoDetalle->getVrRetencionFuente();
-            $pago += $arEgresoDetalle->getVrPago() * $arEgresoDetalle->getOperacion();
+            //$floDescuento += $arEgresoDetalle->getVrDescuento();
+            //$floAjustePeso += $arEgresoDetalle->getVrAjustePeso();
+            //$floRetencionIca += $arEgresoDetalle->getVrRetencionIca();
+            //$floRetencionIva += $arEgresoDetalle->getVrRetencionIva();
+            //$floRetencionFuente += $arEgresoDetalle->getVrRetencionFuente();
+            $pago += $arEgresoDetalle->getVrPago();
             $pagoTotal += $arEgresoDetalle->getVrPagoAfectar();
         }
         $arEgreso->setVrPago($pago);
@@ -101,7 +102,7 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
     {
 
         $em = $this->getEntityManager();
-        $arEgresosDetalle = $em->getRepository('App:Compra\ComEgresoDetalle')->findBy(['codigoEgresoFk' => $idEgreso]);
+        $arEgresosDetalle = $em->getRepository(TesEgresoDetalle::class)->findBy(['codigoEgresoFk' => $idEgreso]);
         foreach ($arEgresosDetalle as $arEgresoDetalle) {
             $intCodigo = $arEgresoDetalle->getCodigoEgresoDetallePk();
             $valorPago = isset($arrControles['TxtVrPago' . $intCodigo]) && $arrControles['TxtVrPago' . $intCodigo] != '' ? $arrControles['TxtVrPago' . $intCodigo] : 0;
@@ -117,11 +118,11 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
                 - $valorRetencionIva
                 - $valorRetencionIca
                 - $valorRetencionFte;
-            $arEgresoDetalle->setVrDescuento($valorDescuento);
-            $arEgresoDetalle->setVrAjustePeso($valorAjustePeso);
-            $arEgresoDetalle->setVrRetencionIca($valorRetencionIca);
-            $arEgresoDetalle->setVrRetencionIva($valorRetencionIva);
-            $arEgresoDetalle->setVrRetencionFuente($valorRetencionFte);
+            //$arEgresoDetalle->setVrDescuento($valorDescuento);
+            //$arEgresoDetalle->setVrAjustePeso($valorAjustePeso);
+            //$arEgresoDetalle->setVrRetencionIca($valorRetencionIca);
+            //$arEgresoDetalle->setVrRetencionIva($valorRetencionIva);
+            //$arEgresoDetalle->setVrRetencionFuente($valorRetencionFte);
             $arEgresoDetalle->setVrPago($valorPagoAfectar);
             $arEgresoDetalle->setVrPagoAfectar($valorPago);
             $em->persist($arEgresoDetalle);

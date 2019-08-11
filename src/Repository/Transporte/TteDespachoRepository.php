@@ -11,6 +11,9 @@ use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
+use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\Tesoreria\TesCuentaPagar;
+use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Entity\Transporte\TteCosto;
 use App\Entity\Transporte\TteVehiculoDisponible;
 use App\Utilidades\Mensajes;
@@ -292,6 +295,7 @@ class TteDespachoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $respuesta = "";
+        /** @var $arDespacho TteDespacho */
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if (!$arDespacho->getEstadoAprobado()) {
             if ($arDespacho->getCantidad() > 0) {
@@ -327,6 +331,8 @@ class TteDespachoRepository extends ServiceEntityRepository
                     } else {
                         Mensajes::error('El conductor tiene la licencia de conducción vencida');
                     }
+                } else {
+                    Mensajes::error("El despacho ya tiene numero, ya fue aprobado enteriormente, por favor notifique el caso al administrador del sistema");
                 }
 
                 //Costos
@@ -371,38 +377,7 @@ class TteDespachoRepository extends ServiceEntityRepository
 
                 //Generar cuenta por pagar
                 if ($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
-                    $arPoseedor = $arDespacho->getVehiculoRel()->getPoseedorRel();
-                    $arProveedor = $em->getRepository(ComProveedor::class)->findOneBy(['codigoIdentificacionFk' => $arPoseedor->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPoseedor->getNumeroIdentificacion()]);
-                    if (!$arProveedor) {
-                        $arProveedor = new ComProveedor();
-                        //$arProveedor->setFormaPagoRel($arFactura->getClienteRel()->getFormaPagoRel());
-                        $arProveedor->setIdentificacionRel($arPoseedor->getIdentificacionRel());
-                        $arProveedor->setNumeroIdentificacion($arPoseedor->getNumeroIdentificacion());
-                        $arProveedor->setDigitoVerificacion($arPoseedor->getDigitoVerificacion());
-                        $arProveedor->setNombreCorto($arPoseedor->getNombreCorto());
-                        //$arProveedor->setPlazoPago($arPoseedor->getPlazoPago());
-                        $arProveedor->setDireccion($arPoseedor->getDireccion());
-                        $arProveedor->setTelefono($arPoseedor->getTelefono());
-                        $arProveedor->setEmail($arPoseedor->getCorreo());
-                        $em->persist($arProveedor);
-                    }
-
-
-                    $arCuentaPagarTipo = $em->getRepository(ComCuentaPagarTipo::class)->find($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk());
-                    $arCuentaPagar = new ComCuentaPagar();
-                    $arCuentaPagar->setProveedorRel($arProveedor);
-                    $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
-                    $arCuentaPagar->setFechaFactura($arDespacho->getFechaSalida());
-                    $arCuentaPagar->setFechaVence($arDespacho->getFechaSalida());
-                    $arCuentaPagar->setModulo("TTE");
-                    $arCuentaPagar->setCodigoDocumento($arDespacho->getCodigoDespachoPk());
-                    $arCuentaPagar->setNumeroDocumento($arDespacho->getNumero());
-                    $arCuentaPagar->setVrTotal($arDespacho->getVrTotalNeto());
-                    $arCuentaPagar->setVrSaldo($arDespacho->getVrTotalNeto());
-                    $arCuentaPagar->setVrSaldoOperado($arDespacho->getVrTotalNeto() * $arCuentaPagarTipo->getOperacion());
-                    $arCuentaPagar->setPlazo(0);
-                    $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
-                    $em->persist($arCuentaPagar);
+                    $this->generarCuentaPagar($arDespacho);
                 }
 
                 $em->flush();
@@ -1808,6 +1783,37 @@ class TteDespachoRepository extends ServiceEntityRepository
         $arrResultado = $queryBuilder->getQuery()->getSingleResult();
 
         return $arrResultado['cantidad'];
+    }
+
+    /**
+     * @param $arDespacho TteDespacho
+     */
+    public function generarCuentaPagar($arDespacho) {
+        $em = $this->getEntityManager();
+        if($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk()) {
+            $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
+            $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoRel();
+            $arCuentaPagar = New TesCuentaPagar();
+            $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+            $arCuentaPagar->setTerceroRel($arTercero);
+            //$arCuentaPagar->setBancoRel($arPago->getEmpleadoRel()->getBancoRel());
+            //$arCuentaPagar->setCuenta($arPago->getEmpleadoRel()->getCuenta());
+            $arCuentaPagar->setModulo('tte');
+            $arCuentaPagar->setCodigoDocumento($arDespacho->getCodigoDespachoPk());
+            $arCuentaPagar->setNumeroDocumento($arDespacho->getNumero());
+            $arCuentaPagar->setFecha($arDespacho->getFechaSalida());
+            $arCuentaPagar->setFechaVence($arDespacho->getFechaSalida());
+            $arCuentaPagar->setVrSubtotal($arDespacho->getVrTotalNeto());
+            $arCuentaPagar->setVrTotal($arDespacho->getVrTotalNeto());
+            $arCuentaPagar->setVrSaldoOriginal($arDespacho->getVrTotalNeto());
+            $arCuentaPagar->setVrSaldo($arDespacho->getVrTotalNeto());
+            $arCuentaPagar->setVrSaldoOperado($arDespacho->getVrTotalNeto() * $arCuentaPagarTipo->getOperacion());
+            $arCuentaPagar->setEstadoAutorizado(1);
+            $arCuentaPagar->setEstadoAprobado(1);
+            $em->persist($arCuentaPagar);
+        } else {
+            Mensajes::error("El despacho genera cuenta por pagar pero no se pudo crear porque el despacho tipo " . $arDespacho->getDespachoTipoRel()->getNombre() . " no tiene configurado un tipo de cuenta por pagar");
+        }
     }
 
 }

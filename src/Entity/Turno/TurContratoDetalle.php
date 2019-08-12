@@ -162,9 +162,9 @@ class TurContratoDetalle
     private $festivo = false;
 
     /**
-     * @ORM\Column(name="estado_terminado", type="boolean", options={"default":false})
+     * @ORM\Column(name="estado_cerrado", type="boolean", options={"default":false})
      */
-    private $estadoTerminado = false;
+    private $estadoCerrado = false;
 
     /**
      * @ORM\Column(name="liquidar_dias_reales", type="boolean", options={"default":false})
@@ -219,6 +219,22 @@ class TurContratoDetalle
      * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="contratoDetalleRel")
      */
     protected $pedidosDetallesContratoDetalleRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -298,6 +314,22 @@ class TurContratoDetalle
     public function setCodigoPuestoFk($codigoPuestoFk): void
     {
         $this->codigoPuestoFk = $codigoPuestoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPeriodo()
+    {
+        return $this->periodo;
+    }
+
+    /**
+     * @param mixed $periodo
+     */
+    public function setPeriodo($periodo): void
+    {
+        $this->periodo = $periodo;
     }
 
     /**
@@ -671,17 +703,33 @@ class TurContratoDetalle
     /**
      * @return mixed
      */
-    public function getEstadoTerminado()
+    public function getEstadoCerrado()
     {
-        return $this->estadoTerminado;
+        return $this->estadoCerrado;
     }
 
     /**
-     * @param mixed $estadoTerminado
+     * @param mixed $estadoCerrado
      */
-    public function setEstadoTerminado($estadoTerminado): void
+    public function setEstadoCerrado($estadoCerrado): void
     {
-        $this->estadoTerminado = $estadoTerminado;
+        $this->estadoCerrado = $estadoCerrado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarDiasReales()
+    {
+        return $this->liquidarDiasReales;
+    }
+
+    /**
+     * @param mixed $liquidarDiasReales
+     */
+    public function setLiquidarDiasReales($liquidarDiasReales): void
+    {
+        $this->liquidarDiasReales = $liquidarDiasReales;
     }
 
     /**
@@ -799,22 +847,6 @@ class TurContratoDetalle
     /**
      * @return mixed
      */
-    public function getPeriodo()
-    {
-        return $this->periodo;
-    }
-
-    /**
-     * @param mixed $periodo
-     */
-    public function setPeriodo($periodo): void
-    {
-        $this->periodo = $periodo;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getPrototiposContratoDetalleRel()
     {
         return $this->prototiposContratoDetalleRel;
@@ -844,21 +876,6 @@ class TurContratoDetalle
         $this->pedidosDetallesContratoDetalleRel = $pedidosDetallesContratoDetalleRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLiquidarDiasReales()
-    {
-        return $this->liquidarDiasReales;
-    }
-
-    /**
-     * @param mixed $liquidarDiasReales
-     */
-    public function setLiquidarDiasReales($liquidarDiasReales): void
-    {
-        $this->liquidarDiasReales = $liquidarDiasReales;
-    }
 
 
 }

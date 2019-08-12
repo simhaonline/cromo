@@ -62,7 +62,7 @@ class ContratoController extends ControllerListenerGeneral
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurContrato::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('turno_movimiento_comercial_contrato_lista'));
+                return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_lista'));
             }
         }
         return $this->render('turno/movimiento/juridico/contrato/lista.html.twig', [
@@ -149,6 +149,7 @@ class ContratoController extends ControllerListenerGeneral
         $arrBtnLiquidar = ['label' => 'Liquidar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobado = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnCerrar = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if ($arContrato->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;

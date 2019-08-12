@@ -29,6 +29,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
+                            <th title="Concepto">PUESTO</th>
                             <th title="Concepto">CONCEPTO</th>
                             <th title="Modalidad">MOD</th>
                             <th title="Fecha desde">DES</th>
@@ -52,12 +53,16 @@
                             <th title="Iva">IVA</th>
                             <th>SUBTOTAL</th>
                             <td></td>
-                            <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodos"
+                                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for arContratoDetalle in arContratoDetalles %}
-                            <td> {{ arContratoDetalle.codigoContratoDetallePk }}</td> <input type="hidden" name="arrCodigo[]" value="{{ arContratoDetalle.codigoContratoDetallePk }}">
+                            <td> {{ arContratoDetalle.codigoContratoDetallePk }}</td> <input type="hidden"
+                                                                                             name="arrCodigo[]"
+                                                                                             value="{{ arContratoDetalle.codigoContratoDetallePk }}">
+                            <td>{{ arContratoDetalle.puesto }}</td>
                             <td>{{ arContratoDetalle.conceptoNombre }}</td>
                             <td>{{ arContratoDetalle.modalidadNombre }}</td>
                             <td>{{ arContratoDetalle.fechaDesde | date('Y-m-d') }}</td>
@@ -74,7 +79,7 @@
                             <td>{{ arContratoDetalle.horas }}</td>
                             <td>{{ arContratoDetalle.horasDiurnas }}</td>
                             <td>{{ arContratoDetalle.horasNocturnas }}</td>
-                            <td class="numero">{{ arContratoDetalle.vrSalarioBase | number_format(0, '.', ',')}}</td>
+                            <td class="numero">{{ arContratoDetalle.vrSalarioBase | number_format(0, '.', ',') }}</td>
                             <td class="numero">{{ arContratoDetalle.vrPrecioMinimo | number_format(0, '.', ',') }}</td>
                             {% if arContrato.estadoAutorizado %}
                                 <td class="numero">{{ arContratoDetalle.vrPrecioAjustado | number_format(0, '.', ',') }}</td>
@@ -90,14 +95,21 @@
                                                                        value="{{ arContratoDetalle.porcentajeIva }}"
                                                                        style="text-align: right; width:60px"
                                                                        size="10"></td>
-                            {% endif  %}
+                            {% endif %}
 
                             <td class="numero">{{ arContratoDetalle.vrIva | number_format(0, '.', ',') }}</td>
                             <td class="numero">{{ arContratoDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
-                            <td style="text-align: center;">
-                                <a href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato': arContrato.codigoContratoPk, 'id': arContratoDetalle.codigoContratoDetallePk }) }}', 'contratoDetalle', 600, 900)"><i title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>
-                            </td>
-                            <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arContratoDetalle.codigoContratoDetallePk }}"/></td>
+                            {% if arContrato.estadoAutorizado == 0 %}
+                                <td style="text-align: center;">
+                                    <a href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato': arContrato.codigoContratoPk, 'id': arContratoDetalle.codigoContratoDetallePk }) }}', 'contratoDetalle', 600, 900)"><i
+                                                title="Editar el registro" class="fa fa-edit"
+                                                style="font-size: large;color: black;"></i></a>
+                                </td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                            <td><input type="checkbox" name="ChkSeleccionar[]"
+                                       value="{{ arContratoDetalle.codigoContratoDetallePk }}"/></td>
                             </tr>
                         {% endfor %}
                         </tbody>

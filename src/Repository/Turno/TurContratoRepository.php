@@ -538,4 +538,15 @@ class TurContratoRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function festivo($arFestivos, $dateFecha)
+    {
+        $boolFestivo = 0;
+        foreach ($arFestivos as $arFestivo) {
+            if ($arFestivo['fecha'] == $dateFecha) {
+                $boolFestivo = 1;
+            }
+        }
+        return $boolFestivo;
+    }
 }

@@ -29,7 +29,6 @@ class TurClienteRepository extends ServiceEntityRepository
             ->addSelect('c.movil')
             ->addSelect('c.direccion')
             ->where('c.codigoClientePk <> 0');
-//            ->orderBy('c.codigoClientePk', 'ASC');
         if ($session->get('filtroTurClienteNombre') != '') {
             $queryBuilder->andWhere("c.nombreCorto LIKE '%{$session->get('filtroTurClienteNombre')}%' ");
         }

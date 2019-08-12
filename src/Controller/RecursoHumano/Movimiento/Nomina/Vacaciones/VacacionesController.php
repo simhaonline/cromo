@@ -165,8 +165,8 @@ class VacacionesController extends ControllerListenerGeneral
                                         foreach ($arAdicionales as $arAdicional) {
                                             $arVacacionAdicional = new RhuVacacionAdicional();
                                             $arVacacionAdicional->setVacacionRel($arVacacion);
-                                            $arVacacionAdicional->setPagoConceptoRel($arAdicional->getPagoConceptoRel());
-                                            $arVacacionAdicional->setVrDeduccion($arAdicional->getValor());
+                                            $arVacacionAdicional->setConceptoRel($arAdicional->getConceptoRel());
+                                            $arVacacionAdicional->setVrDeduccion($arAdicional->getVrValor());
                                             $em->persist($arVacacionAdicional);
                                         }
                                     }

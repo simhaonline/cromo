@@ -77,7 +77,8 @@ class ContratoType extends AbstractType
     {
 
         $campos = '[
-            {"child":"codigoContratoPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},            
+            {"child":"codigoContratoPk",   "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
+            {"child":"codigoClienteFk",    "tipo":"TextType",   "propiedades":{"label":"Cliente"}},            
             {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
             {"child":"estadoCerrado",      "tipo":"ChoiceType","propiedades":{"label":"Cerrado",       "choices":{"SIN CERRAR":true,"CERRADO":false}}}
         ]';

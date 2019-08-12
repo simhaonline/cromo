@@ -22,6 +22,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd');
         $queryBuilder
             ->select('cd.codigoContratoDetallePk')
+            ->addSelect('p.nombre AS puesto')
             ->addSelect('cd.cantidad')
             ->addSelect('cd.lunes')
             ->addSelect('cd.martes')
@@ -47,7 +48,9 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->addSelect('mod.nombre as modalidadNombre')
             ->leftJoin('cd.conceptoRel', 'con')
             ->leftJoin('cd.modalidadRel', 'mod')
-            ->where("cd.codigoContratoFk = {$id}");
+            ->leftJoin('cd.puestoRel', 'p')
+            ->where("cd.codigoContratoFk = {$id}")
+            ->andWhere('cd.estadoCerrado = 0');
 
         return $queryBuilder;
     }
@@ -93,7 +96,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
      * @param $arrDetallesSeleccionados
      * @throws \Doctrine\ORM\ORMException
      */
-    public function eliminar($arrDetallesSeleccionados,$id)
+    public function eliminar($arrDetallesSeleccionados, $id)
     {
         $em = $this->getEntityManager();
         $arRegistro = $em->getRepository(TurContrato::class)->find($id);
@@ -125,7 +128,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd')
             ->select('cd')
             ->leftJoin('cd.contratoRel', 'c');
-        if($session->get('filtroRhuInformeContratoDetalleCodigoCliente') != ''){
+        if ($session->get('filtroRhuInformeContratoDetalleCodigoCliente') != '') {
             $queryBuilder->andWhere("c.codigoClienteFk  = '{$session->get('filtroRhuInformeContratoDetalleCodigoCliente')}'");
         }
         if ($session->get('filtroRhuInformeContratoDetalleFechaDesde') != null) {

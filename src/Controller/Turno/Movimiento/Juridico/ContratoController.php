@@ -121,7 +121,7 @@ class ContratoController extends ControllerListenerGeneral
 
             }
         }
-        return $this->render('turno/movimiento/comercial/contrato/nuevo.html.twig', [
+        return $this->render('turno/movimiento/juridico/contrato/nuevo.html.twig', [
             'arContrato' => $arContrato,
             'form' => $form->createView()
         ]);

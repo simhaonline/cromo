@@ -31,7 +31,8 @@ class ContratoDetalleType extends AbstractType
                         ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'nombre:'
+                'label' => 'nombre:',
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('modalidadRel', EntityType::class, [
                 'required' => true,
@@ -41,7 +42,8 @@ class ContratoDetalleType extends AbstractType
                         ->orderBy('m.nombre', 'DESC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'nombre:'
+                'label' => 'nombre:',
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('puestoRel', EntityType::class, [
                 'required' => true,
@@ -51,7 +53,8 @@ class ContratoDetalleType extends AbstractType
                         ->orderBy('p.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'nombre:'
+                'label' => 'nombre:',
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('cantidad', NumberType::class)
             ->add('vrPrecioAjustado', NumberType::class, array('required' => false))

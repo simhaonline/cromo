@@ -110,7 +110,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         $arCuentasPagar = $queryBuilder->getQuery()->getResult();
         $fecha = new \DateTime('now');
         foreach ($arCuentasPagar AS $arCuentaPagar) {
-            $arCuentaPagarAct = $em->getRepository(TesCuentaPagar::class)->find($arCuentaPagar['codigoCuentaCobrarPk']);
+            $arCuentaPagarAct = $em->getRepository(TesCuentaPagar::class)->find($arCuentaPagar['codigoCuentaPagarPk']);
             $interval = date_diff($arCuentaPagar['fechaVence'], $fecha);
             $dias = $interval->format('%r%a');
             $arCuentaPagarAct->setDiasVencimiento($dias);

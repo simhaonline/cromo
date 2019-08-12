@@ -1792,6 +1792,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk()) {
             $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
+            /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
             $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoRel();
             $arCuentaPagar = New TesCuentaPagar();
             $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
@@ -1810,6 +1811,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             $arCuentaPagar->setVrSaldoOperado($arDespacho->getVrTotalNeto() * $arCuentaPagarTipo->getOperacion());
             $arCuentaPagar->setEstadoAutorizado(1);
             $arCuentaPagar->setEstadoAprobado(1);
+            $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
             $em->persist($arCuentaPagar);
         } else {
             Mensajes::error("El despacho genera cuenta por pagar pero no se pudo crear porque el despacho tipo " . $arDespacho->getDespachoTipoRel()->getNombre() . " no tiene configurado un tipo de cuenta por pagar");

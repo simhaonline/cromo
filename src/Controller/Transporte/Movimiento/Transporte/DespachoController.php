@@ -20,6 +20,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TtePoseedor;
 use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoLiquidarType;
@@ -89,6 +90,13 @@ class DespachoController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
+                /*$arDespachos = $em->getRepository(TteDespacho::class)->findAll();
+                foreach ($arDespachos as $arDespacho) {
+                    if($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
+                        $em->getRepository(TteDespacho::class)->generarCuentaPagar($arDespacho);
+                    }
+                }
+                $em->flush();*/
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteDespacho::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_lista'));

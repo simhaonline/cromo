@@ -1802,6 +1802,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             $arCuentaPagar->setModulo('tte');
             $arCuentaPagar->setCodigoDocumento($arDespacho->getCodigoDespachoPk());
             $arCuentaPagar->setNumeroDocumento($arDespacho->getNumero());
+            $arCuentaPagar->setSoporte($arDespacho->getCodigoVehiculoFk());
             $arCuentaPagar->setFecha($arDespacho->getFechaSalida());
             $arCuentaPagar->setFechaVence($arDespacho->getFechaSalida());
             $arCuentaPagar->setVrSubtotal($arDespacho->getVrTotalNeto());

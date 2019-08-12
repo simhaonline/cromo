@@ -138,6 +138,12 @@ class RhuContrato
     private $vrAdicionalPrestacional = 0;
 
     /**
+     * @ORM\Column(name="vr_devengado_pactado", type="float", nullable=true)
+     */
+    private $vrDevengadoPactado = 0;
+
+
+    /**
      * @ORM\Column(name="estado_terminado", type="boolean",options={"default":false})
      */
     private $estadoTerminado = false;
@@ -1798,6 +1804,24 @@ class RhuContrato
     {
         $this->licenciasContratoRel = $licenciasContratoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDevengadoPactado()
+    {
+        return $this->vrDevengadoPactado;
+    }
+
+    /**
+     * @param mixed $vrDevengadoPactado
+     */
+    public function setVrDevengadoPactado($vrDevengadoPactado): void
+    {
+        $this->vrDevengadoPactado = $vrDevengadoPactado;
+    }
+
+
 
 
 

@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina\Incapacidad;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuEntidad;
@@ -12,8 +13,10 @@ use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuIncapacidadDiagnostico;
 use App\Entity\RecursoHumano\RhuIncapacidadTipo;
+use App\Entity\RecursoHumano\RhuLicencia;
 use App\Entity\RecursoHumano\RhuPago;
-use App\Form\Type\RecursoHumano\incapacionType;
+use App\Entity\RecursoHumano\RhuVacacion;
+use App\Form\Type\RecursoHumano\IncapacidadType;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
@@ -133,27 +136,107 @@ class IncapacidadController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_incapacidad_lista'));
             }
         }
-        $form = $this->createForm(incapacionType::class, $arIncapacidad);
+        $form = $this->createForm(IncapacidadType::class, $arIncapacidad);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
+                $arIncapacidad = $form->getData();
                 $codigoEmpleado = $request->request->get('form_txtNumeroIdentificacion');
                 $codigoIncapacidadDiagnostico = $request->request->get('form_txtCodigoIncapacidadDiagnostico');
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigoEmpleado);
-                $arContrato = $em->getRepository(RhuContrato::class)->findOneBy(['codigoEmpleadoFk'=>$arEmpleado->getCodigoEmpleadoPk()]);
                 $arIncapacidadDiagnostico = $em->getRepository(RhuIncapacidadDiagnostico::class)->find($codigoIncapacidadDiagnostico);
+                $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+                $arConfiguracionAporte = $em->getRepository(RhuConfiguracion::class)->find(1);
                 if ($arEmpleado){
-                    if ($arContrato){
-                        if ($arIncapacidadDiagnostico){
-                            $arIncapacidad = $form->getData();
-                            $arIncapacidad->setFecha(new \DateTime('now'));
-                            $arIncapacidad->setCodigoUsuario($this->getUser()->getUserName());
-                            $arIncapacidad->setEmpleadoRel($arEmpleado);
-                            $arIncapacidad->setEntidadSaludRel($arContrato->getEntidadSaludRel());
-                            $arIncapacidad->setGrupoRel($arContrato->getGrupoRel());
-                            $arIncapacidad->setIncapacidadDiagnosticoRel($arIncapacidadDiagnostico);
-                            $em->persist($arIncapacidad);
-                            $em->flush();
+                    if ( is_null($arEmpleado->getcodigoContratoUltimoFk()) ) {
+                        $codigoContrato = $arEmpleado->getCodigoContratoFk();
+                    } else {
+                        $codigoContrato = $arEmpleado->getCodigoContratoUltimoFk();
+                    }
+                    if ($codigoContrato != "") {
+                        $arContrato = $em->getRepository(RhuContrato::class)->findOneBy(['codigoEmpleadoFk'=>$arEmpleado->getCodigoEmpleadoPk()]);
+                        if ($arContrato){
+                            if (($arIncapacidad->getFechaHasta() > $arContrato->getFechaHasta()) && ($arContrato->getEstadoTerminado() == 1)) {
+                                $strRespuesta = "El empleado tiene contrato terminado y la fecha de terminacion es inferior o igual a la fecha hasta de la incapacidad.";
+                                $boolRespuesta = FALSE;
+                            }else{
+                                $boolRespuesta = true;
+                            }
+                            if ($boolRespuesta) {
+                                $arIncapacidad->setEmpleadoRel($arEmpleado);
+                                if ($arIncapacidadDiagnostico){
+                                    $arIncapacidad->setIncapacidadDiagnosticoRel($arIncapacidadDiagnostico);
+                                    if ($arIncapacidad->getFechaDesde() <= $arIncapacidad->getFechaHasta()) {
+                                        $diasIncapacidad = $arIncapacidad->getFechaDesde()->diff($arIncapacidad->getFechaHasta());
+                                        $diasIncapacidad = $diasIncapacidad->format('%a');
+                                        $diasIncapacidad = $diasIncapacidad + 1;
+                                        if ($diasIncapacidad < 180) {
+                                            $boolLicencia = $em->getRepository(RhuLicencia::class)->validarFecha($arIncapacidad->getFechaDesde(), $arIncapacidad->getFechaHasta(), $arEmpleado->getCodigoEmpleadoPk(), "");
+                                            if ($em->getRepository(RhuIncapacidad::class)->validarFecha($arIncapacidad->getFechaDesde(), $arIncapacidad->getFechaHasta(), $arEmpleado->getCodigoEmpleadoPk(), $arIncapacidad->getCodigoIncapacidadPk())) {
+                                                $boolVacacion = $em->getRepository(RhuVacacion::class)->validarVacacion($arIncapacidad->getFechaDesde(), $arIncapacidad->getFechaHasta(), $arEmpleado->getCodigoEmpleadoPk());
+                                                if ($boolVacacion){
+                                                    if ($boolLicencia) {
+                                                        if ($arIncapacidad->getFechaDesde() >= $arContrato->getFechaDesde()) {
+                                                            $arEntidad = null;
+                                                            if ($arIncapacidad->getIncapacidadTipoRel()->getTipo() == 1) {
+                                                                $arEntidad = $arContrato->getEntidadSaludRel();
+                                                            } else {
+                                                                if ($arConfiguracionAporte->getCodigoEntidadRiesgosProfesionalesFk()) {
+                                                                    $arEntidad = $em->getRepository(RhuEntidad::class)->find($arConfiguracionAporte->getCodigoEntidadRiesgosProfesionalesFk());
+                                                                }
+                                                            }
+                                                            if ($arEntidad) {
+                                                                $arIncapacidad->setEntidadSaludRel($arEntidad);
+                                                                $arIncapacidad->setCodigoUsuario($this->getUser()->getUserName());
+                                                                $arIncapacidad->setContratoRel($arContrato);
+                                                                $arIncapacidad->setGrupoRel($arContrato->getGrupoRel());
+                                                                $arIncapacidad->setFecha(new \DateTime('now'));
+//                                                                $arIncapacidad->setClienteRel($arIncapacidad->getGrupoRel()->getClienteRel());
+                                                                //validar prologar
+                                                                $respuesta = $em->getRepository(RhuIncapacidad::class)->liquidar($arIncapacidad, $this->getUser());
+                                                                if ($respuesta == "") {
+                                                                    $em->persist($arIncapacidad);
+//                                                                    if ($arConfiguracion->getGenerarNovedadIncapacidadTurnos()) {
+//                                                                        $em->getRepository(RhuIncapacidad::class)->generarNovedadTurnos($arIncapacidad,  $this->getUser()->getUserName(), $arEmpleado->getCodigoEmpleadoPk());
+//                                                                    }
+                                                                    try {
+                                                                        $em->flush();
+                                                                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_incapacidad_detalle', array('id' => $arIncapacidad->getCodigoIncapacidadPk())));
+                                                                    } catch (\Exception $exception) {
+                                                                        Mensajes::error("El registro no puede ser actualizada por que ya esta siendo usado en el sistema");
+                                                                    }
+                                                                }else{
+                                                                    Mensajes::error($respuesta);
+                                                                }
+                                                            }else{
+                                                                Mensajes::error("El empleado no tiene una entidad asociada o en configuracion aportes no esta configurada una entidad de riesgos");
+                                                            }
+                                                        }else{
+                                                            Mensajes::error("No puede ingresar novedades antes de la fecha de inicio del contrato");
+                                                        }
+                                                    }else{
+                                                        Mensajes::error("Existe una licencia en este periodo de fechas");
+                                                    }
+                                                }else {
+                                                    Mensajes::error("Existe una vacación para este periodo de fechas");
+                                                }
+                                            }else{
+                                                Mensajes::error("Existe otra incapaciad del empleado en esta fecha");
+                                            }
+                                        }else{
+                                            Mensajes::error("La incapacidad no debe ser mayor 180 dias");
+                                        }
+                                    }else{
+                                        Mensajes::error("La fecha desde debe ser inferior o igual a la fecha hasta de la incapacidad");
+                                    }
+                                }else{
+                                    Mensajes::error("El diagnostico no existe");
+                                }
+                            }else{
+                                Mensajes::error($strRespuesta);
+                            }
+                        }else{
+                            Mensajes::error("No se encontro un contrato con ID {$codigoContrato}.");
                         }
                     }else{
                         Mensajes::error("El empleado no tiene contrato");
@@ -161,10 +244,6 @@ class IncapacidadController extends ControllerListenerGeneral
                 }else{
                     Mensajes::error("El empleado no existe");
                 }
-
-
-
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_incapacidad_detalle', ['id' => $arIncapacidad->getCodigoIncapacidadPk()]));
             }
         }
         return $this->render('recursohumano/movimiento/nomina/incapacidad/nuevo.html.twig', [

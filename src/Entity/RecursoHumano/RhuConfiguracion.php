@@ -129,6 +129,28 @@ class RhuConfiguracion
     private $descontarTotalAusentismosContratoTerminadoEnLiquidacion = false;
 
     /**
+     * @ORM\Column(name="pagar_incapacidad_salario_pactado", type="boolean")
+     */
+    private $pagarIncapacidadSalarioPactado = false;
+
+    /**
+     * @ORM\Column(name="liquidar_incapacidades_ibc_mes_anterior", type="boolean")
+     */
+    private $liquidarIncapacidadesIbcMesAnterior = false;
+
+    /**
+     * @ORM\Column(name="pagar_incapacidad_completa", type="boolean")
+     */
+    private $pagarIncapacidadCompleta = false;
+
+    /**
+     * @ORM\Column(name="liquidar_incapacidad_sin_base", type="boolean")
+     */
+    private $liquidarIncapacidadSinBase = false;
+
+
+
+    /**
      * @ORM\Column(name="codigo_entidad_riesgos_profesionales_fk", type="integer", nullable=true)
      */
     private $codigoEntidadRiesgosProfesionalesFk;
@@ -583,6 +605,68 @@ class RhuConfiguracion
         $this->codigoConceptoVacacionDisfruteFk = $codigoConceptoVacacionDisfruteFk;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPagarIncapacidadSalarioPactado()
+    {
+        return $this->pagarIncapacidadSalarioPactado;
+    }
 
+    /**
+     * @param mixed $pagarIncapacidadSalarioPactado
+     */
+    public function setPagarIncapacidadSalarioPactado($pagarIncapacidadSalarioPactado): void
+    {
+        $this->pagarIncapacidadSalarioPactado = $pagarIncapacidadSalarioPactado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarIncapacidadesIbcMesAnterior()
+    {
+        return $this->liquidarIncapacidadesIbcMesAnterior;
+    }
+
+    /**
+     * @param mixed $liquidarIncapacidadesIbcMesAnterior
+     */
+    public function setLiquidarIncapacidadesIbcMesAnterior($liquidarIncapacidadesIbcMesAnterior): void
+    {
+        $this->liquidarIncapacidadesIbcMesAnterior = $liquidarIncapacidadesIbcMesAnterior;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagarIncapacidadCompleta()
+    {
+        return $this->pagarIncapacidadCompleta;
+    }
+
+    /**
+     * @param mixed $pagarIncapacidadCompleta
+     */
+    public function setPagarIncapacidadCompleta($pagarIncapacidadCompleta): void
+    {
+        $this->pagarIncapacidadCompleta = $pagarIncapacidadCompleta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarIncapacidadSinBase()
+    {
+        return $this->liquidarIncapacidadSinBase;
+    }
+
+    /**
+     * @param mixed $iquidarIncapacidadSinBase
+     */
+    public function setLiquidarIncapacidadSinBase($iquidarIncapacidadSinBase): void
+    {
+        $this->liquidarIncapacidadSinBase = $iquidarIncapacidadSinBase;
+    }
 
 }

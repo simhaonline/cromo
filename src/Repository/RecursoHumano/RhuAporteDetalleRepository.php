@@ -635,7 +635,7 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
         }
         $arrResultado = array('respuesta' => false, 'ibc' => 0, 'dias' => 0);
         $em = $this->getEntityManager();
-        $dql = "SELECT SUM(ssoa.ibcPension) as ibcPension, SUM(ssoa.ibcSalud) as ibcSalud, SUM(ssoa.diasCotizadosPension) as diasPension, SUM(ssoa.diasCotizadosSalud) as diasSalud FROM BrasaRecursoHumanoBundle:RhuSsoAporte ssoa "
+        $dql = "SELECT SUM(ssoa.ibcPension) as ibcPension, SUM(ssoa.ibcSalud) as ibcSalud, SUM(ssoa.diasCotizadosPension) as diasPension, SUM(ssoa.diasCotizadosSalud) as diasSalud FROM App\Entity\RecursoHumano\RhuAporteDetalle ssoa "
             . "WHERE ssoa.anio = $anio AND ssoa.mes = $mes" . " "
             . "AND ssoa.codigoEmpleadoFk = " . $codigoEmpleado;
         $query = $em->createQuery($dql);

@@ -4,6 +4,8 @@
 namespace App\Repository\RecursoHumano;
 
 
+use App\Entity\RecursoHumano\RhuAporteDetalle;
+use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -106,5 +108,234 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             return TRUE;
         }
 
+    }
+
+    /**
+     * @param $arIncapacidad RhuIncapacidad
+     * @param $arUsuario
+     * @return string
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function liquidar($arIncapacidad, $arUsuario)
+    {
+        $em = $this->getEntityManager();
+        $respuesta = "";
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arEmpleado = $arIncapacidad->getEmpleadoRel();
+        $arContrato = $arIncapacidad->getContratoRel();
+        $anioActual = (new \DateTime('now'))->format("Y");
+        $anioIncapacidad = $arIncapacidad->getFecha()->format("Y");
+        $salario = $arConfiguracion->getVrSalarioMinimo();
+        if($arIncapacidad->getVrSalario()){
+            $salario = $arIncapacidad->getVrSalario();
+        }
+
+        //Se empieza a liquidar las incapacidad
+        $intVrSalarioEmpleado = $arContrato->getVrSalario();
+        if ($arConfiguracion->getPagarIncapacidadSalarioPactado()) {
+            if ($arContrato->getVrDevengadoPactado() != 0) {
+                $intVrSalarioEmpleado = $arContrato->getVrDevengadoPactado();
+            }
+        }
+        if ($arConfiguracion->getLiquidarIncapacidadesIbcMesAnterior()) {
+            $anioIncapacidad = $arIncapacidad->getFechaDesde()->format('Y');
+            $mesIncapacidad = $arIncapacidad->getFechaDesde()->format('m');
+            if ($arIncapacidad->getEstadoProrroga()) {
+                $arIncapacidadMesAnterior = $em->getRepository(RhuIncapacidad::class)->findOneBy(array('codigoEmpleadoFk' => $arEmpleado->getCodigoEmpleadoPk(), 'estadoProrroga' => 0), array('fechaDesde' => 'DESC'));
+                if ($arIncapacidadMesAnterior) {
+                    $anioIncapacidad = $arIncapacidadMesAnterior->getFechaDesde()->format('Y');
+                    $mesIncapacidad = $arIncapacidadMesAnterior->getFechaDesde()->format('m');
+                }
+            }
+            $arrIbc = $em->getRepository( RhuAporteDetalle::class)->ibcMesAnterior($anioIncapacidad, $mesIncapacidad, $arEmpleado->getCodigoEmpleadoPk());
+            if ($arrIbc['respuesta'] == false) {
+                if($arIncapacidad->getVrSalario()) {
+                    $arrIbc = array('respuesta' => true, 'ibc' => $arIncapacidad->getVrSalario(), 'dias' => 30);
+                }else{
+                    $arrIbc = array('respuesta' => true, 'ibc' => $intVrSalarioEmpleado, 'dias' => 30);
+                }
+            }
+            if ($arContrato->getCodigoContratoClaseFk() == 4 || $arContrato->getCodigoContratoClaseFk() == 5) {
+                $arrIbc = array('respuesta' => true, 'ibc' => $salario, 'dias' => 30);
+            }
+        } else {
+            $arrIbc = array('respuesta' => true, 'ibc' => $intVrSalarioEmpleado, 'dias' => 30);
+        }
+        if ($arIncapacidad->getVrIbcPropuesto()) {
+            $arrIbc = array('respuesta' => true, 'ibc' => $arIncapacidad->getVrIbcPropuesto(), 'dias' => 30);
+        }
+        if ($arrIbc['respuesta']) {
+            $diasProrroga = 0;
+            if ($arIncapacidad->getCodigoIncapacidadProrrogaFk()) {
+                $arIncapacidadProrroga = $em->getRepository(RhuIncapacidad::class)->find($arIncapacidad->getCodigoIncapacidadProrrogaFk());
+                if ($arIncapacidadProrroga) {
+                    $arIncapacidad->setIncapacidadProrrogaRel($arIncapacidadProrroga);
+                    $arIncapacidad->setEstadoProrroga(true);
+                    $diasProrroga = $arIncapacidadProrroga->getDiasAcumulados();
+                }
+            }
+            $intDias = $arIncapacidad->getFechaDesde()->diff($arIncapacidad->getFechaHasta());
+            $intDias = $intDias->format('%a');
+            $intDias = $intDias + 1;
+            $intDiasLicencia = $this->diasReconocimiento($intDias, $arIncapacidad->getEstadoProrroga(), $arIncapacidad->getIncapacidadTipoRel()->getTipo(), $diasProrroga);
+            if ($intDiasLicencia['intDiasEmpresa'] > 0) {
+                $fechaDesdeCalculo = $arIncapacidad->getFechaDesde();
+                $intDiasTemporal = $intDiasLicencia['intDiasEmpresa'] - 1;
+                $fechaTemporal = $fechaDesdeCalculo->format('y-m-d');
+                $fechaDesdeCalculo = date('y-m-d', strtotime($fechaTemporal . "+$intDiasTemporal days"));
+                $arIncapacidad->setFechaDesdeEmpresa($arIncapacidad->getFechaDesde());
+                $fechaDesdeCalculo = date_create($fechaDesdeCalculo);
+                $arIncapacidad->setFechaHastaEmpresa($fechaDesdeCalculo);
+                $fechaTemporal = $fechaDesdeCalculo->format('y-m-d');
+                $fechaDesdeCalculo = date('y-m-d', strtotime($fechaTemporal . "+1 days"));
+                $fechaDesdeCalculo = date_create($fechaDesdeCalculo);
+            } else {
+                $arIncapacidad->setFechaDesdeEmpresa(null);
+                $arIncapacidad->setFechaHastaEmpresa(null);
+            }
+            if ($intDiasLicencia['intDiasEntidad'] > 0) {
+                $intDiasTemporal = $intDiasLicencia['intDiasEntidad'] - 1;
+                $arIncapacidad->setFechaDesdeEntidad($fechaDesdeCalculo??0);
+                $fechaTemporal = $fechaDesdeCalculo->format('y-m-d')??null;
+                $fechaDesdeCalculo = date('y-m-d', strtotime($fechaTemporal . "+$intDiasTemporal days"));
+                $fechaDesdeCalculo = date_create($fechaDesdeCalculo);
+                $arIncapacidad->setFechaHastaEntidad($fechaDesdeCalculo);
+            } else {
+                $arIncapacidad->setFechaDesdeEntidad(null);
+                $arIncapacidad->setFechaHastaEntidad(null);
+            }
+            $intDiasCobro = $intDiasLicencia['intDiasEntidad'];
+            $arIncapacidad->setDiasEntidad($intDiasLicencia['intDiasEntidad']);
+            $arIncapacidad->setDiasEmpresa($intDiasLicencia['intDiasEmpresa']);
+            $arIncapacidad->setDiasCobro($intDiasCobro);
+            $arIncapacidad->setCantidad($intDias);
+            $arIncapacidad->setVrIbcMesAnterior($arrIbc['ibc']);
+            $arIncapacidad->setDiasIbcMesAnterior($arrIbc['dias']);
+            $floVrIncapacidad = 0;
+            $floVrIncapacidadEmpleado = 0;
+            $douVrDia = $arrIbc['ibc'] / $arrIbc['dias'];
+            $douVrDiaSalarioMinimo = $salario / 30;
+            $salarioEmpleado = $douVrDia * 30;
+            $douPorcentajePago = $arIncapacidad->getIncapacidadTipoRel()->getConceptoRel()->getPorcentaje();
+            $arIncapacidad->setPorcentajePago($douPorcentajePago);
+            if ($arIncapacidad->getIncapacidadTipoRel()->getTipo() == 1) {
+                if ($salarioEmpleado <= $salario) {
+                    if ($intDiasCobro > 0) {
+                        $floVrIncapacidad = $intDiasCobro * $douVrDiaSalarioMinimo;
+                    }
+                    $floVrIncapacidadEmpleado = $intDias * $douVrDiaSalarioMinimo;
+                    $douVrDia = $salario / $arrIbc['dias'];
+                }
+                if ($salarioEmpleado > $salario && $salarioEmpleado <= $salario * 1.5) {
+                    if($arConfiguracion->getPagarIncapacidadCompleta()) {
+                        if ($intDiasCobro > 0) {
+                            $floVrIncapacidad = $intDiasCobro * $douVrDia;
+                        }
+                        $floVrIncapacidadEmpleado = $intDias * $douVrDia;
+                    } else {
+                        if ($intDiasCobro > 0) {
+                            $floVrIncapacidad = $intDiasCobro * $douVrDiaSalarioMinimo;
+                        }
+                        $floVrIncapacidadEmpleado = $intDias * $douVrDiaSalarioMinimo;
+                        $douVrDia = $douVrDiaSalarioMinimo;
+                    }
+                }
+                if ($salarioEmpleado > ($salario * 1.5) || $arConfiguracion->getLiquidarIncapacidadSinBase()) {
+                    $floVrIncapacidad = $intDiasCobro * $douVrDia;
+                    $floVrIncapacidad = ($floVrIncapacidad * $douPorcentajePago) / 100;
+                    $floVrIncapacidadEmpleado = $intDias * $douVrDia;
+                    $floVrIncapacidadEmpleado = ($floVrIncapacidadEmpleado * $douPorcentajePago) / 100;
+                }
+            } else {
+                $floVrIncapacidad = $intDiasCobro * $douVrDia;
+                $floVrIncapacidad = ($floVrIncapacidad * $douPorcentajePago) / 100;
+                $floVrIncapacidadEmpleado = $intDias * $douVrDia;
+                $floVrIncapacidadEmpleado = ($floVrIncapacidadEmpleado * $douPorcentajePago) / 100;
+            }
+            if ($arIncapacidad->getVrPropuesto() > 0) {
+                $floVrIncapacidadEmpleado = $arIncapacidad->getVrPropuesto();
+            }
+            $floVrIncapacidadEmpleado = round($floVrIncapacidadEmpleado);
+            $douVrHora = ($floVrIncapacidadEmpleado / $intDias) / 8;
+            $douVrHoraEmpresa = (($intDias * $douVrDia) / $intDias) / 8;
+            $arIncapacidad->setVrHora($douVrHora);
+            $arIncapacidad->setVrHoraEmpresa($douVrHoraEmpresa);
+            $arIncapacidad->setVrCobro($floVrIncapacidad);
+            $arIncapacidad->setVrIncapacidad($floVrIncapacidadEmpleado);
+            if($arIncapacidad->getVrPagado()){
+                $floVrIncapacidadSaldo = $floVrIncapacidad - $arIncapacidad->getVrPagado();
+                if($floVrIncapacidadSaldo < 0){
+                    $floVrIncapacidadSaldo = 0;
+                }
+                $arIncapacidad->setVrSaldo($floVrIncapacidadSaldo);
+            }else {
+                $arIncapacidad->setVrSaldo($floVrIncapacidad);
+            }
+            if ($arIncapacidad->getCodigoIncapacidadProrrogaFk()) {
+                if ($arIncapacidadProrroga) {
+                    $diasAcumulados = $arIncapacidadProrroga->getDiasAcumulados() + $intDias;
+                    $arIncapacidad->setDiasAcumulados($diasAcumulados);
+                }
+            } else {
+                $arIncapacidad->setDiasAcumulados($intDias);
+            }
+            if (!$arIncapacidad->getEstadoCobrar()) {
+                $arIncapacidad->setVrCobro(0);
+            }
+            if (!$arIncapacidad->getPagarEmpleado()) {
+                $arIncapacidad->setVrIncapacidad(0);
+            }
+            $em->persist($arIncapacidad);
+        } else {
+            $respuesta = "No existe ibc mes anterior para liquidar la incapacidad debe generar seguridad social";
+        }
+
+        return $respuesta;
+    }
+
+    private function diasReconocimiento($diasIncapacidad, $prorroga = false, $tipo = 1, $diasProrroga):array
+    {
+        $intDiasEntidad = 0;
+        $intDiasEmpresa = 0;
+        if ($tipo == 1) {//si la incapacidad es general
+            if ($diasIncapacidad > 2) {
+                if ($prorroga) {
+                    $intDiasEntidad = $diasIncapacidad;
+                    $intDiasEmpresa = 0;
+                } else {
+                    $intDiasEntidad = $diasIncapacidad - 2;
+                    $intDiasEmpresa = 2;
+                }
+            } else {
+                if ($prorroga) {
+                    if ($diasProrroga < 2) {
+                        $intDiasEntidad = $diasProrroga + $diasIncapacidad - 2;
+                        $intDiasEmpresa = 1;
+                    } else {
+                        $intDiasEntidad = $diasIncapacidad;
+                        $intDiasEmpresa = 0;
+                    }
+                } else {
+                    $intDiasEntidad = 0;
+                    $intDiasEmpresa = $diasIncapacidad;
+                }
+            }
+        }
+        if ($tipo == 2) {
+            if ($diasIncapacidad > 1) {
+                if ($prorroga) {
+                    $intDiasEntidad = $diasIncapacidad;
+                    $intDiasEmpresa = 0;
+                } else {
+                    $intDiasEntidad = $diasIncapacidad - 1;
+                    $intDiasEmpresa = 1;
+                }
+            } else {
+                $intDiasEntidad = 0;
+                $intDiasEmpresa = $diasIncapacidad;
+            }
+        }
+        return array('intDiasEntidad' => $intDiasEntidad, 'intDiasEmpresa' => $intDiasEmpresa);
     }
 }

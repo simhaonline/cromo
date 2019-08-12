@@ -258,7 +258,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
 
                 //Generar cuenta por pagar
                 if ($arDespachoRecogida->getDespachoRecogidaTipoRel()->getGeneraCuentaPagar()) {
-                    $this->generarCuentaPagar($arDespacho);
+                    $this->generarCuentaPagar($arDespachoRecogida);
                 }
 
                 $em->flush();

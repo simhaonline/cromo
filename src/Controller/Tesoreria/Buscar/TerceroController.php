@@ -31,7 +31,7 @@ class TerceroController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('BtnFiltrar')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroTesTerceroCodigo', $form->get('txtCodigo')->getData());
                 $session->set('filtroTesTerceroNombre', $form->get('txtNombre')->getData());
                 $session->set('filtroTesTerceroIdentificacion', $form->get('txtIdentificacion')->getData());

@@ -53,19 +53,29 @@ class ConceptoType extends AbstractType
             {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre del registro", "titulo":"NOMBRE"},
             {"campo":"porcentaje",                  "tipo":"texto"  ,"ayuda":"Porcentaje",          "titulo":"%"},
             {"campo":"operacion",                   "tipo":"texto"  ,"ayuda":"Operación",           "titulo":"OP"},
-            {"campo":"adicional",                   "tipo":"texto"  ,"ayuda":"Adicional",           "titulo":"ADI"},
-            {"campo":"auxilioTransporte",          "tipo":"texto"  ,"ayuda":"Auxilio de transporte",           "titulo":"AUXT"},
-            {"campo":"cesantia",                    "tipo":"texto"  ,"ayuda":"Cesantia",           "titulo":"CES"},
-            {"campo":"comision",                    "tipo":"texto"  ,"ayuda":"Comision",           "titulo":"COM"},
-            {"campo":"fondoSolidaridadPensional",   "tipo":"texto"  ,"ayuda":"Fondo solidaridad pensional",           "titulo":"FSP"},
-            {"campo":"vacacion",                    "tipo":"texto"  ,"ayuda":"Vacación",           "titulo":"VAC"},
-            {"campo":"salud",                       "tipo":"texto"  ,"ayuda":"Salud",           "titulo":"SAL"},
-            {"campo":"recargoNocturno",             "tipo":"texto"  ,"ayuda":"Recargo nocturno",           "titulo":"REN"},
-            {"campo":"pension",                     "tipo":"texto"  ,"ayuda":"Pensión",           "titulo":"PEN"},
-            {"campo":"incapacidadEntidad",          "tipo":"texto"  ,"ayuda":"Incapacidad entidad",           "titulo":"IES"},
-            {"campo":"generaIngresoBasePrestacion", "tipo":"texto"  ,"ayuda":"Ingreso base prestación",           "titulo":"IBP"},
-            {"campo":"generaIngresoBaseCotizacion", "tipo":"texto"  ,"ayuda":"Ingreso base cotización",           "titulo":"IBC"}
+            {"campo":"adicional",                   "tipo":"bool"  ,"ayuda":"Adicional",           "titulo":"ADI"},
+            {"campo":"auxilioTransporte",          "tipo":"bool"  ,"ayuda":"Auxilio de transporte",           "titulo":"AUXT"},
+            {"campo":"cesantia",                    "tipo":"bool"  ,"ayuda":"Cesantia",           "titulo":"CES"},
+            {"campo":"comision",                    "tipo":"bool"  ,"ayuda":"Comision",           "titulo":"COM"},
+            {"campo":"fondoSolidaridadPensional",   "tipo":"bool"  ,"ayuda":"Fondo solidaridad pensional",           "titulo":"FSP"},
+            {"campo":"vacacion",                    "tipo":"bool"  ,"ayuda":"Vacación",           "titulo":"VAC"},
+            {"campo":"salud",                       "tipo":"bool"  ,"ayuda":"Salud",           "titulo":"SAL"},
+            {"campo":"recargoNocturno",             "tipo":"bool"  ,"ayuda":"Recargo nocturno",           "titulo":"REN"},
+            {"campo":"pension",                     "tipo":"bool"  ,"ayuda":"Pensión",           "titulo":"PEN"},
+            {"campo":"incapacidadEntidad",          "tipo":"bool"  ,"ayuda":"Incapacidad entidad",           "titulo":"IES"},
+            {"campo":"generaIngresoBasePrestacion", "tipo":"bool"  ,"ayuda":"Ingreso base prestación",           "titulo":"IBP"},
+            {"campo":"generaIngresoBaseCotizacion", "tipo":"bool"  ,"ayuda":"Ingreso base cotización",           "titulo":"IBC"}
         ]';
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[
+            {"child":"codigoConceptoPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
+            {"child":"nombre",            "tipo":"TextType",   "propiedades":{"label":"Nombre"}}
+
+        ]';
+        return $campos;
     }
 
     public function getEstructuraPropiedadesExportar()

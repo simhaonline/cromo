@@ -44,6 +44,11 @@ class RhuCostoClase
     protected $contratosCostoClaseRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuConceptoCuenta",mappedBy="costoClaseRel")
+     */
+    protected $conceptosCuentasCostoClaseRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCostoClasePk()
@@ -122,4 +127,23 @@ class RhuCostoClase
     {
         $this->contratosCostoClaseRel = $contratosCostoClaseRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptosCuentasCostoClaseRel()
+    {
+        return $this->conceptosCuentasCostoClaseRel;
+    }
+
+    /**
+     * @param mixed $conceptosCuentasCostoClaseRel
+     */
+    public function setConceptosCuentasCostoClaseRel($conceptosCuentasCostoClaseRel): void
+    {
+        $this->conceptosCuentasCostoClaseRel = $conceptosCuentasCostoClaseRel;
+    }
+
+
+
 }

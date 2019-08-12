@@ -185,6 +185,11 @@ class RhuConcepto
     protected $vacacionesAdicionalesConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuConceptoCuenta", mappedBy="conceptoRel")
+     */
+    protected $conceptosCuentasConceptoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -726,6 +731,22 @@ class RhuConcepto
     public function setVacacionesAdicionalesConceptoRel($vacacionesAdicionalesConceptoRel): void
     {
         $this->vacacionesAdicionalesConceptoRel = $vacacionesAdicionalesConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptosCuentasConceptoRel()
+    {
+        return $this->conceptosCuentasConceptoRel;
+    }
+
+    /**
+     * @param mixed $conceptosCuentasConceptoRel
+     */
+    public function setConceptosCuentasConceptoRel($conceptosCuentasConceptoRel): void
+    {
+        $this->conceptosCuentasConceptoRel = $conceptosCuentasConceptoRel;
     }
 
 

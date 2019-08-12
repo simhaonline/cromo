@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Código:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoConceptoPk) }}
+                    {{ form_errors(form.codigoConceptoPk) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre) }}
+                    {{ form_errors(form.nombre) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Porcentaje:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.porcentaje) }}
+                    {{ form_errors(form.porcentaje) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Operacion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.operacion) }}
+                    {{ form_errors(form.operacion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Numero Dian (Cert. Ing):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroDian) }}
+                    {{ form_errors(form.numeroDian) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Adicional tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.adicionalTipo) }}
+                    {{ form_errors(form.adicionalTipo) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.auxilioTransporte) }}
+                    {{ form_widget(form.incapacidad) }}
+                    {{ form_widget(form.incapacidadEntidad) }}
+                    {{ form_widget(form.pension) }}
+                    {{ form_widget(form.salud) }}
+                    {{ form_widget(form.vacacion) }}
+                    {{ form_widget(form.comision) }}
+                    {{ form_widget(form.cesantia) }}
+                    {{ form_widget(form.adicional) }}
+                    {{ form_widget(form.recargoNocturno) }}
+                    {{ form_widget(form.fondoSolidaridadPensional) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.generaIngresoBasePrestacion) }}
+                    {{ form_widget(form.generaIngresoBaseCotizacion) }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_administracion_nomina_concepto_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -32,8 +32,10 @@
                 <li>
                     <a href="#">General <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('administracion_lista',{'modulo':'tesoreria','entidad':'tercero'}) }}">Tercero</a>
-                        </li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'tesoreria','entidad':'tercero'}) }}">Tercero</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'tesoreria','entidad':'egresoTipo'}) }}">Tipo egreso</a></li>
+                        <li>
                     </ul>
                 </li>
                 <li>
@@ -41,6 +43,23 @@
                     <ul>
                         <li>
                             <a href="{{ path('administracion_lista',{'modulo':'tesoreria','entidad':'cuentaPagarTipo'}) }}">Tipo cuenta pagar</a></li>
+                    </ul>
+                    <!-- /.nav-third-level -->
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-clipboard"></i>
+                <span class="menu-item-parent">Informe</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul>
+                <li>
+                    <a href="#">Cuenta pagar <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('tesoreria_informe_cuentapagar_cuentapagar_pendiente') }}">Pendientes</a>
+                        </li>
                     </ul>
                     <!-- /.nav-third-level -->
                 </li>

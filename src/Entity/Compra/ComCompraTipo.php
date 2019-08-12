@@ -54,12 +54,6 @@ class ComCompraTipo
     private $comprasCompraTipoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Compra\ComCuentaPagarTipo" , inversedBy="comprasTipoCuentaPagarRel")
-     * @ORM\JoinColumn(name="codigo_cuenta_pagar_tipo_fk" , referencedColumnName="codigo_cuenta_pagar_tipo_pk")
-     */
-    private $cuentaPagarTipoRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoCompraTipoPk()
@@ -155,21 +149,7 @@ class ComCompraTipo
         $this->comprasCompraTipoRel = $comprasCompraTipoRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCuentaPagarTipoRel()
-    {
-        return $this->cuentaPagarTipoRel;
-    }
 
-    /**
-     * @param mixed $cuentaPagarTipoRel
-     */
-    public function setCuentaPagarTipoRel($cuentaPagarTipoRel): void
-    {
-        $this->cuentaPagarTipoRel = $cuentaPagarTipoRel;
-    }
 
 }
 

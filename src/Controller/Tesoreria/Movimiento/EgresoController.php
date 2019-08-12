@@ -143,12 +143,12 @@ class EgresoController extends BaseController
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TesEgresoDetalle::class)->actualizar($arrControles, $id);
                 $em->getRepository(TesEgreso::class)->autorizar($arEgreso);
-                return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 if ($arEgreso->getEstadoAutorizado() == 1 && $arEgreso->getEstadoImpreso() == 0) {
                     $em->getRepository(TesEgreso::class)->desAutorizar($arEgreso);
-                    return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
+                    return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_detalle', ['id' => $id]));
                 } else {
                     Mensajes::error("El egreso debe estar autorizado y no puede estar impreso");
                 }
@@ -173,7 +173,7 @@ class EgresoController extends BaseController
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TesEgresoDetalle::class)->actualizar($arrControles, $id);
-                return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
@@ -201,6 +201,7 @@ class EgresoController extends BaseController
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
+        $arEgreso = $em->getRepository(TesEgreso::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('cboCuentaPagarTipo', EntityType::class, $em->getRepository(TesCuentaPagarTipo::class)->llenarCombo())
@@ -248,7 +249,7 @@ class EgresoController extends BaseController
                 }
             }
         }
-        $arCuentasPagar = $paginator->paginate($em->getRepository(TesCuentaPagar::class)->pendiente(), $request->query->getInt('page', 1), 10);
+        $arCuentasPagar = $paginator->paginate($em->getRepository(TesCuentaPagar::class)->cuentasPagar(), $request->query->getInt('page', 1), 10);
         return $this->render('tesoreria/movimiento/egreso/egreso/detalleNuevo.html.twig', [
             'arCuentasPagar' => $arCuentasPagar,
             'form' => $form->createView()

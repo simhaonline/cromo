@@ -47,47 +47,47 @@ class TesEgreso
     private $numero = 0;
 
     /**
-     * @ORM\Column(name="comentarios" , type="string" ,nullable=true)
+     * @ORM\Column(name="comentarios" , type="string", nullable=true)
      */
     private $comentarios;
 
     /**
-     * @ORM\Column(name="vr_pago" , type="float")
+     * @ORM\Column(name="vr_pago" , type="float", nullable=true)
      */
     private $vrPago = 0;
 
     /**
-     * @ORM\Column(name="vr_descuento", type="float")
+     * @ORM\Column(name="vr_descuento", type="float", nullable=true)
      */
     private $vrDescuento = 0;
 
     /**
-     * @ORM\Column(name="vr_pago_total" ,type="float")
+     * @ORM\Column(name="vr_pago_total" ,type="float", nullable=true)
      */
     private $vrPagoTotal = 0;
 
     /**
-     * @ORM\Column(name="vr_total_descuento" ,type="float")
+     * @ORM\Column(name="vr_total_descuento" ,type="float", nullable=true)
      */
     private $vrTotalDescuento = 0;
 
     /**
-     * @ORM\Column(name="vr_total_ajuste_peso" ,type="float")
+     * @ORM\Column(name="vr_total_ajuste_peso" ,type="float", nullable=true)
      */
     private $vrTotalAjustePeso = 0;
 
     /**
-     * @ORM\Column(name="vr_total_retencion_ica" ,type="float")
+     * @ORM\Column(name="vr_total_retencion_ica" ,type="float", nullable=true)
      */
     private $vrTotalRetencionIca = 0;
 
     /**
-     * @ORM\Column(name="vr_total_retencion_iva" ,type="float")
+     * @ORM\Column(name="vr_total_retencion_iva" ,type="float", nullable=true)
      */
     private $vrTotalRetencionIva = 0;
 
     /**
-     * @ORM\Column(name="vr_total_retencion_fuente" ,type="float")
+     * @ORM\Column(name="vr_total_retencion_fuente" ,type="float", nullable=true)
      */
     private $vrTotalRetencionFuente = 0;
 
@@ -138,22 +138,6 @@ class TesEgreso
      * @ORM\JoinColumn(name="codigo_cuenta_fk" , referencedColumnName="codigo_cuenta_pk")
      */
     private $cuentaRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed

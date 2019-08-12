@@ -39,4 +39,14 @@ class TesCuentaPagarTipoRepository extends ServiceEntityRepository
         }
         return $array;
     }
+
+    public function selectCodigoNombre()
+    {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from(TesCuentaPagarTipo::class, 'cpt');
+        $qb->select('cpt.codigoCuentaPagarTipoPk')
+            ->addSelect('cpt.nombre');
+        return $qb->getQuery()->getResult();
+    }
+
 }

@@ -40,7 +40,7 @@ class Vacaciones extends \FPDF
         //Logo
 
 
-        Estandares::generarEncabezado($this, 'Cliente', self::$em);
+        Estandares::generarEncabezado($this, 'PAGO DE VACACIONES', self::$em);
 
         $this->SetXY(53, 34);
         $this->Cell(20, 4, 'FECHA:', 0, 0, 'L', 1);

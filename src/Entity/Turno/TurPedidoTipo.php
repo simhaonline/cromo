@@ -28,25 +28,14 @@ class TurPedidoTipo
     private $nombre;
 
     /**
+     * @ORM\Column(name="consecutivo", type="integer", nullable=true, options={"default":0})
+     */
+    private $consecutivo = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurPedido", mappedBy="pedidoTipoRel")
      */
     protected $pedidosPedidoTipoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -83,6 +72,22 @@ class TurPedidoTipo
     /**
      * @return mixed
      */
+    public function getConsecutivo()
+    {
+        return $this->consecutivo;
+    }
+
+    /**
+     * @param mixed $consecutivo
+     */
+    public function setConsecutivo($consecutivo): void
+    {
+        $this->consecutivo = $consecutivo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPedidosPedidoTipoRel()
     {
         return $this->pedidosPedidoTipoRel;
@@ -95,5 +100,8 @@ class TurPedidoTipo
     {
         $this->pedidosPedidoTipoRel = $pedidosPedidoTipoRel;
     }
+
+
+
 }
 

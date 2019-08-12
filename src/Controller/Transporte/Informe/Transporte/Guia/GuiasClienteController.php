@@ -99,7 +99,7 @@ class GuiasClienteController extends Controller
             }
         }
 
-        return $this->render('transporte/informe/transporte/guia/estadoGuias.html.twig', [
+        return $this->render('transporte/informe/transporte/guia/guiasCliente.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView()]);
     }

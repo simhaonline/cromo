@@ -31,13 +31,14 @@ class TurProgramacionRepository extends ServiceEntityRepository
         parent::__construct($registry, TurProgramacion::class);
     }
 
-    public function detalleProgramacion()
+    public function detalleProgramacion($codigoPedido)
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd')
             ->select('pd.codigoPedidoDetallePk')
             ->addSelect('c.nombre as conceptoNombre')
-            ->leftJoin('pd.conceptoRel', 'c');
+            ->leftJoin('pd.conceptoRel', 'c')
+        ->where('pd.codigoPedidoFk=' . $codigoPedido);
         $arrPedidoDetalles = $queryBuilder->getQuery()->getResult();
         $c = 0;
         foreach ($arrPedidoDetalles as $arrPedidoDetalle) {

@@ -69,6 +69,10 @@
                     <div class="col-sm-5">
                         {{ form_widget(formFiltro.fechaSalidaHasta) }}
                     </div>
+                    <label class="col-sm-1 control-label">Soporte:</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.estadoSoporte, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
                 </div>
                 {{ form_end(formFiltro) }}
             </div>

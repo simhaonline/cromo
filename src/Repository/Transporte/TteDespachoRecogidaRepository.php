@@ -7,6 +7,8 @@ use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
+use App\Entity\Tesoreria\TesCuentaPagar;
+use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteDespachoRecogidaAuxiliar;
@@ -253,6 +255,12 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                     $arMonitoreo->setFechaFin(new \DateTime('now'));
                     $em->persist($arMonitoreo);
                 }
+
+                //Generar cuenta por pagar
+                if ($arDespachoRecogida->getDespachoRecogidaTipoRel()->getGeneraCuentaPagar()) {
+                    $this->generarCuentaPagar($arDespacho);
+                }
+
                 $em->flush();
                 $em->persist($arDespachoRecogida);
             } else {
@@ -822,6 +830,40 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->addGroupBy('d.codigoDespachoRecogidaTipoFk');
         $arrResultado = $queryBuilder->getQuery()->getResult();
         return $arrResultado;
+    }
+
+    /**
+     * @param $arDespachoRecogida TteDespachoRecogidaTipo
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function generarCuentaPagar($arDespachoRecogida) {
+        $em = $this->getEntityManager();
+        if($arDespachoRecogida->getDespachoRecogidaTipoRel()->getCodigoCuentaPagarTipoFk()) {
+            $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespachoRecogida->getVehiculoRel()->getPoseedorRel());
+            /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
+            $arCuentaPagarTipo = $arDespachoRecogida->getDespachoRecogidaTipoRel()->getCuentaPagarTipoRel();
+            $arCuentaPagar = New TesCuentaPagar();
+            $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+            $arCuentaPagar->setTerceroRel($arTercero);
+            //$arCuentaPagar->setBancoRel($arPago->getEmpleadoRel()->getBancoRel());
+            //$arCuentaPagar->setCuenta($arPago->getEmpleadoRel()->getCuenta());
+            $arCuentaPagar->setModulo('tte');
+            $arCuentaPagar->setCodigoDocumento($arDespachoRecogida->getCodigoDespachoRecogidaPk());
+            $arCuentaPagar->setNumeroDocumento($arDespachoRecogida->getNumero());
+            $arCuentaPagar->setFecha($arDespachoRecogida->getFecha());
+            $arCuentaPagar->setFechaVence($arDespachoRecogida->getFecha());
+            $arCuentaPagar->setVrSubtotal($arDespachoRecogida->getVrTotal());
+            $arCuentaPagar->setVrTotal($arDespachoRecogida->getVrTotal());
+            $arCuentaPagar->setVrSaldoOriginal($arDespachoRecogida->getVrTotal());
+            $arCuentaPagar->setVrSaldo($arDespachoRecogida->getVrTotal());
+            $arCuentaPagar->setVrSaldoOperado($arDespachoRecogida->getVrTotal() * $arCuentaPagarTipo->getOperacion());
+            $arCuentaPagar->setEstadoAutorizado(1);
+            $arCuentaPagar->setEstadoAprobado(1);
+            $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
+            $em->persist($arCuentaPagar);
+        } else {
+            Mensajes::error("El despacho genera cuenta por pagar pero no se pudo crear porque el despacho tipo " . $arDespachoRecogida->getDespachoTipoRel()->getNombre() . " no tiene configurado un tipo de cuenta por pagar");
+        }
     }
 
 }

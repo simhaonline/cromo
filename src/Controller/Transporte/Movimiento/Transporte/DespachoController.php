@@ -90,15 +90,17 @@ class DespachoController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-                /*$arDespachos = $em->getRepository(TteDespacho::class)->findAll();
+                /*$arDespachos = $em->getRepository(TteDespacho::class)->findBy(['estadoAprobado']);
                 foreach ($arDespachos as $arDespacho) {
                     if($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
                         $em->getRepository(TteDespacho::class)->generarCuentaPagar($arDespacho);
                     }
                 }
                 $em->flush();*/
+
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteDespacho::class)->eliminar($arrSeleccionados);
+
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_lista'));
             }
         }

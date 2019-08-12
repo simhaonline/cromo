@@ -104,6 +104,7 @@ class DespachoType extends AbstractType {
             {"campo":"vrDeclara",                              "tipo":"moneda",    "ayuda":"Valor declarado",                         "titulo":"DECLARADO"},
             {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
             {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
+            {"campo":"estadoSoporte",                          "tipo":"bool",      "ayuda":"Soporte",                                 "titulo":"SOP"},
             {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"},
             {"campo":"usuario",                                 "tipo":"texto",     "ayuda":"Usuario",                                  "titulo":"USUARIO"}
         ]';
@@ -128,6 +129,7 @@ class DespachoType extends AbstractType {
             {"child":"fechaSalidaHasta",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
             {"child":"estadoAutorizado",                "tipo":"ChoiceType",   "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAprobado",                  "tipo":"ChoiceType",   "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoSoporte",                  "tipo":"ChoiceType",   "propiedades":{"label":"Soporte",       "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAnulado",                   "tipo":"ChoiceType",   "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
         ]';
 

@@ -10,6 +10,7 @@ use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TtePoseedor;
 use App\Entity\Transporte\TteRutaRecogida;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoRecogidaType;
@@ -142,8 +143,25 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho recogidas");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);
+
+                /*$arDespachosRecogidas = $em->getRepository(TteDespachoRecogida::class)->findAll();
+                foreach ($arDespachosRecogidas as $arDespachoRecogida) {
+                    if($arDespachoRecogida->getDespachoRecogidaTipoRel()->getGeneraCuentaPagar()) {
+                        $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespachoRecogida->getVehiculoRel()->getPoseedorRel());
+                        $em->flush();
+                    }
+                }
+
+                foreach ($arDespachosRecogidas as $arDespachoRecogida) {
+                    if($arDespachoRecogida->getDespachoRecogidaTipoRel()->getGeneraCuentaPagar()) {
+                        $em->getRepository(TteDespachoRecogida::class)->generarCuentaPagar($arDespachoRecogida);
+                    }
+                }
+                $em->flush();*/
+
+
+                /*$arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);*/
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_lista'));
             }
         }

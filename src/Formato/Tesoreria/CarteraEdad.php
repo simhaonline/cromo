@@ -79,8 +79,8 @@ class CarteraEdad extends \FPDF {
                 $pdf->Cell(18, 4, number_format($arrTotalesCliente[5]), 'LRB', 0, 'R');
                 $pdf->Cell(18, 4, number_format($arrTotalesCliente[6]), 'LRB', 0, 'R');
                 $pdf->Ln(4);
-                $pdf->Cell(187,4,$arCuentaPagar['clienteNombre'],1,0,'L');
-                $cliente = $arCuentaPagar['codigoClienteFk'];
+                $pdf->Cell(187,4,$arCuentaPagar['terceroNombre'],1,0,'L');
+                $cliente = $arCuentaPagar['codigoTerceroFk'];
                 $arrTotalesCliente = array('0' => 0, '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0);
                 $pdf->Ln(4);
             }

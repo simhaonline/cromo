@@ -11,6 +11,7 @@ use App\Entity\Tesoreria\TesEgreso;
 use App\Entity\Tesoreria\TesEgresoDetalle;
 use App\Entity\Tesoreria\TesTercero;
 use App\Form\Type\Tesoreria\EgresoType;
+use App\Formato\Tesoreria\Egreso;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;

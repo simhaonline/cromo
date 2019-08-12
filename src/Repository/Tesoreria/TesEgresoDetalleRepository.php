@@ -135,21 +135,17 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
     public function listaFormato($codigoEgreso)
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(ComEgresoDetalle::class, 'ed');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesEgresoDetalle::class, 'ed');
         $queryBuilder
             ->select('ed.codigoEgresoDetallePk')
-            ->addSelect('pr.nombreCorto AS clienteNombreCorto')
-            ->addSelect('cpt.nombre AS cuentaPagarTipo')
-            ->addSelect('ed.numeroCompra')
-            ->addSelect('cp.fechaFactura')
-            ->addSelect('ed.vrDescuento')
-            ->addSelect('ed.vrAjustePeso')
-            ->addSelect('ed.vrRetencionFuente')
-            ->addSelect('ed.vrRetencionIca')
+            ->addSelect('ed.codigoCuentaPagarFk')
+            ->addSelect('ter.nombreCorto AS tercero')
+            ->addSelect('ter.numeroIdentificacion')
+            ->addSelect('cp.fecha')
             ->addSelect('ed.vrPagoAfectar')
             ->leftJoin('ed.egresoRel', 'r')
-            ->leftJoin('r.proveedorRel', 'pr')
             ->leftJoin('ed.cuentaPagarRel', 'cp')
+            ->leftJoin('cp.terceroRel','ter')
             ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
             ->where('ed.codigoEgresoFk = ' . $codigoEgreso);
         $queryBuilder->orderBy('ed.codigoEgresoDetallePk', 'ASC');
@@ -159,7 +155,7 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
 
     public function listaContabilizar($codigoEgreso)
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(ComEgresoDetalle::class, 'ed');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesEgresoDetalle::class, 'ed');
         $queryBuilder
             ->select('ed.codigoEgresoDetallePk')
             ->addSelect('e.numero')

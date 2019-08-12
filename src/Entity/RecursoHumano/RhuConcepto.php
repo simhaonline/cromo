@@ -190,6 +190,11 @@ class RhuConcepto
     protected $conceptosCuentasConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuLicenciaTipo", mappedBy="conceptoReloRel")
+     */
+    protected $conceptosLicenciasTiposRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array

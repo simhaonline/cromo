@@ -55,9 +55,9 @@ class RhuLicenciaTipo
     private $suspensionContratoTrabajo = false;
 
     /**
-     * @ORM\Column(name="codigo_pago_concepto_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_concepto_fk", type="string",  length=80, nullable=true)
      */
-    private $codigoPagoConceptoFk;
+    private $codigoConceptoFk;
 
     /**
      * @ORM\Column(name="tipo_novedad_turno", type="string", length=5, nullable=true)
@@ -68,6 +68,12 @@ class RhuLicenciaTipo
      * @ORM\OneToMany(targetEntity="RhuLicencia", mappedBy="licenciaTipoRel")
      */
     protected $licenciasLicenciaTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="conceptosLicenciasTiposRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoRel;
 
     /**
      * @return array
@@ -216,17 +222,17 @@ class RhuLicenciaTipo
     /**
      * @return mixed
      */
-    public function getCodigoPagoConceptoFk()
+    public function getCodigoConceptoFk()
     {
-        return $this->codigoPagoConceptoFk;
+        return $this->codigoConceptoFk;
     }
 
     /**
-     * @param mixed $codigoPagoConceptoFk
+     * @param mixed $codigoConceptoFk
      */
-    public function setCodigoPagoConceptoFk($codigoPagoConceptoFk): void
+    public function setCodigoConceptoFk($codigoConceptoFk): void
     {
-        $this->codigoPagoConceptoFk = $codigoPagoConceptoFk;
+        $this->codigoConceptoFk = $codigoConceptoFk;
     }
 
     /**
@@ -259,6 +265,22 @@ class RhuLicenciaTipo
     public function setLicenciasLicenciaTipoRel($licenciasLicenciaTipoRel): void
     {
         $this->licenciasLicenciaTipoRel = $licenciasLicenciaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoRel()
+    {
+        return $this->conceptoRel;
+    }
+
+    /**
+     * @param mixed $conceptoRel
+     */
+    public function setConceptoRel($conceptoRel): void
+    {
+        $this->conceptoRel = $conceptoRel;
     }
 
 

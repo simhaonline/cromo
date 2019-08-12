@@ -6,6 +6,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina\Licencia;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
+use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuGrupo;
@@ -129,6 +130,7 @@ class LicenciaController extends ControllerListenerGeneral
                 $codigoEmpleado = $form->get('codigoEmpleadoFk')->getData();
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->findOneBy(['codigoEmpleadoPk' => $codigoEmpleado]);
                 $arContrato = $em->getRepository(RhuContrato::class)->findOneBy(['codigoEmpleadoFk' => $arEmpleado->getCodigoEmpleadoPk() ?? 0]);
+                $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
                 $arLicencia = $form->getData();
                 if ($arEmpleado) {
                     if ($arContrato) {
@@ -140,9 +142,8 @@ class LicenciaController extends ControllerListenerGeneral
                                         $intDias = $intDias->format('%a');
                                         $intDias = $intDias + 1;
                                         $intDiasCobro = $intDias;
-//                                        $douPorcentajePago = $arLicencia->getLicenciaTipoRel()->getPagoConceptoRel()->getPorPorcentaje();
-//                                        $arLicencia->setPorcentajePago($douPorcentajePago);
-
+                                        $douPorcentajePago = $arLicencia->getLicenciaTipoRel()->getConceptoRel()->getPorcentaje();
+                                        $arLicencia->setPorcentajePago($douPorcentajePago);
                                         $arLicencia->setFecha(new \DateTime('now'));
                                         $arLicencia->setEmpleadoRel($arEmpleado);
                                         $arLicencia->setGrupoRel($arContrato->getGrupoRel());
@@ -156,7 +157,7 @@ class LicenciaController extends ControllerListenerGeneral
                                         $douVrDia = $arContrato->getVrSalario() / 30;
                                         $salarioEmpleado = $douVrDia * 30;
                                         $douVrDiaSalarioMinimo = $arContrato->getVrSalario() / 30;
-//                                        $arLicencia->setPorcentajePago($douPorcentajePago);
+                                        $arLicencia->setPorcentajePago($douPorcentajePago);
                                         if ($arLicencia->getVrIbcPropuesto() > 0) {
                                             $arrIbc = array('respuesta' => true, 'ibc' => $arLicencia->getVrIbcPropuesto(), 'dias' => 30);
                                         } else {
@@ -165,10 +166,9 @@ class LicenciaController extends ControllerListenerGeneral
                                         if ($arLicencia->getLicenciaTipoRel()->getMaternidad() ||
                                             $arLicencia->getLicenciaTipoRel()->getPaternidad() ||
                                             $arLicencia->getLicenciaTipoRel()->getRemunerada()) {
-                                            //$arConfiguracion->getLiquidarLicenciasIbcMesAnterior() &&
-                                            if ((($arLicencia->getLicenciaTipoRel()->getMaternidad() || $arLicencia->getLicenciaTipoRel()->getPaternidad()))) {
-                                                $arrIbc = $em->getRepository(RhuAporteDetalle::class
-                                                )->ibcMesAnterior($arLicencia->getFechaDesde()->format('Y'), $arLicencia->getFechaDesde()->format('m'), $arEmpleado->getCodigoEmpleadoPk());
+
+                                            if ($arConfiguracion->getLiquidarLicenciasIbcMesAnterior() && (($arLicencia->getLicenciaTipoRel()->getMaternidad() || $arLicencia->getLicenciaTipoRel()->getPaternidad()))) {
+                                                $arrIbc = $em->getRepository(RhuAporteDetalle::class)->ibcMesAnterior($arLicencia->getFechaDesde()->format('Y'), $arLicencia->getFechaDesde()->format('m'), $arEmpleado->getCodigoEmpleadoPk());
                                                 if ($arLicencia->getVrIbcPropuesto() > 0) {
                                                     $arrIbc = array('respuesta' => true, 'ibc' => $arLicencia->getVrIbcPropuesto(), 'dias' => 30);
                                                 }
@@ -206,11 +206,11 @@ class LicenciaController extends ControllerListenerGeneral
                                         $arLicencia->setVrCobro(0);
                                         $arLicencia->setVrLicencia(round($floVrLicencia));
                                         $arLicencia->setVrSaldo(round($floVrLicencia));
-//                                        if ($arEmpleado->getCodigoContratoActivoFk() != '') {
-//                                            $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoActivoFk());
-//                                        } else {
-//                                            $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoUltimoFk());
-//                                        }
+                                        if ($arEmpleado->getCodigoContratoFk() != '') {
+                                            $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
+                                        } else {
+                                            $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoUltimoFk());
+                                        }
                                         $arLicencia->setContratoRel($arContrato);
                                         $em->persist($arLicencia);
                                         $em->flush();

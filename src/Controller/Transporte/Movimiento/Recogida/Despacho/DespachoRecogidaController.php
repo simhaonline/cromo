@@ -143,8 +143,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho recogidas");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-
-                /*$arDespachosRecogidas = $em->getRepository(TteDespachoRecogida::class)->findAll();
+                /*$arDespachosRecogidas = $em->getRepository(TteDespachoRecogida::class)->findBy(['estadoAprobado' => 1]);
                 foreach ($arDespachosRecogidas as $arDespachoRecogida) {
                     if($arDespachoRecogida->getDespachoRecogidaTipoRel()->getGeneraCuentaPagar()) {
                         $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespachoRecogida->getVehiculoRel()->getPoseedorRel());
@@ -159,9 +158,8 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                 }
                 $em->flush();*/
 
-
-                /*$arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);*/
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_lista'));
             }
         }

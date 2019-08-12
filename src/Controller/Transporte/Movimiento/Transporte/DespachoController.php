@@ -90,7 +90,14 @@ class DespachoController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-                /*$arDespachos = $em->getRepository(TteDespacho::class)->findBy(['estadoAprobado']);
+                /*$arDespachos = $em->getRepository(TteDespacho::class)->findBy(['estadoAprobado' => 1]);
+                foreach ($arDespachos as $arDespacho) {
+                    if($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
+                        $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
+                        $em->flush();
+                    }
+                }
+
                 foreach ($arDespachos as $arDespacho) {
                     if($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
                         $em->getRepository(TteDespacho::class)->generarCuentaPagar($arDespacho);

@@ -100,7 +100,8 @@ class TurContratoRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd')
             ->select("COUNT(cd.codigoContratoDetallePk)")
-            ->where("cd.codigoContratoFk = {$codigoContrato} ");
+            ->where("cd.codigoContratoFk = {$codigoContrato} ")
+        ->andWhere("cd.estadoCerrado = 0");
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
     }
@@ -129,7 +130,7 @@ class TurContratoRepository extends ServiceEntityRepository
         $arContratoDetalles = $this->getEntityManager()->getRepository(TurContratoDetalle::class)->findBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk()));
         /** @var $arContratoDetalle TurContratoDetalle */
         foreach ($arContratoDetalles as $arContratoDetalle) {
-            if ($arContratoDetalle->getEstadoTerminado() == 0) {
+            if ($arContratoDetalle->getEstadoCerrado() == 0) {
                 /** @var $arConcepto TurConcepto */
                 $arConcepto = $arContratoDetalle->getConceptoRel();
                 if ($arContratoDetalle->getPeriodo() == "D") {

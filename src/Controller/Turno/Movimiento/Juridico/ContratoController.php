@@ -149,7 +149,9 @@ class ContratoController extends ControllerListenerGeneral
         $arrBtnLiquidar = ['label' => 'Liquidar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobado = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnCerrar = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnCerrar = ['label' => 'Cerrar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnCerrarDetalle = ['label' => 'Cerrar detalle', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnAbrirDetalle = ['label' => 'Abrir detalle', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if ($arContrato->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
@@ -157,15 +159,27 @@ class ContratoController extends ControllerListenerGeneral
             $arrBtnActualizar['disabled'] = true;
             $arrBtnLiquidar['disabled'] = true;
             $arrBtnAprobado['disabled'] = true;
+            $arrBtnCerrar['disabled'] = false;
+            $arrBtnCerrarDetalle['disabled'] = true;
+            $arrBtnAbrirDetalle['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
         }
         if ($arContrato->getEstadoAprobado()) {
-            $arrBtnDesautorizar['disable'] = true;
-            $arrBtnAprobado['disable'] = true;
+            $arrBtnDesautorizar['disabled'] = true;
+            $arrBtnAprobado['disabled'] = true;
+            $arrBtnCerrarDetalle['disabled'] = true;
+            $arrBtnAbrirDetalle['disabled'] = true;
         }
-
+        if ($arContrato->getEstadoCerrado()) {
+            $arrBtnCerrar['disabled'] = true;
+            $arrBtnDesautorizar['disabled'] = true;
+            $arrBtnAprobado['disabled'] = true;
+        }
+        $form->add('btnCerrar', SubmitType::class, $arrBtnCerrar);
+        $form->add('btnCerrarDetalle', SubmitType::class, $arrBtnCerrarDetalle);
+        $form->add('btnAbrirDetalle', SubmitType::class, $arrBtnAbrirDetalle);
         $form->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
-        $form->add('btnLiquidar', SubmitType::class, $arrBtnLiquidar);
+        //$form->add('btnLiquidar', SubmitType::class, $arrBtnLiquidar);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -200,13 +214,39 @@ class ContratoController extends ControllerListenerGeneral
                 $em->getRepository(TurContratoDetalle::class)->actualizarDetalles($arrControles, $form, $arContrato);
                 $em->getRepository(TurContrato::class)->liquidar($arContrato);
             }
+            if ($form->get('btnCerrarDetalle')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TurContratoDetalle::class)->cerrarSeleccionados($arrSeleccionados);
+                $em->getRepository(TurContrato::class)->liquidar($arContrato);
+                return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnAbrirDetalle')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TurContratoDetalle::class)->abrirSeleccionados($arrSeleccionados);
+                $em->getRepository(TurContrato::class)->liquidar($arContrato);
+                return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnCerrar')->isClicked()) {
+                if ($arContrato->getEstadoAutorizado() == 1) {
+                    $arContrato->setEstadoAprobado(1);
+                    $arContrato->setEstadoCerrado(1);
+                    $arContrato->setCodigoUsuarioCierre($this->getUser()->getUsername());
+                    $arContrato->setFechaCierre(new \DateTime('now'));
+
+                    $em->persist($arContrato);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle', ['id' => $id]));
+                }
+            }
 
             return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle', ['id' => $id]));
         }
         $arContratoDetalles = $paginator->paginate($em->getRepository(TurContratoDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);
+        $arContratoDetallesCerrados = $paginator->paginate($em->getRepository(TurContratoDetalle::class)->cerrado($id), $request->query->getInt('page', 1), 10);
         return $this->render('turno/movimiento/juridico/contrato/detalle.html.twig', array(
             'form' => $form->createView(),
             'arContratoDetalles' => $arContratoDetalles,
+            'arContratoDetallesCerrados' => $arContratoDetallesCerrados,
             'arContrato' => $arContrato
         ));
     }
@@ -248,7 +288,7 @@ class ContratoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if($id == 0) {
+                if ($id == 0) {
                     $arContratoDetalle->setPorcentajeIva($arContratoDetalle->getConceptoRel()->getPorcentajeIva());
                     $arContratoDetalle->setPorcentajeBaseIva(100);
                 }

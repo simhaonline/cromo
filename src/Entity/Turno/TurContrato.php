@@ -63,6 +63,16 @@ class TurContrato
     private $estadoCerrado = false;
 
     /**
+     * @ORM\Column(name="fecha_cierre", type="date", nullable=true)
+     */
+    private $fechaCierre;
+
+    /**
+     * @ORM\Column(name="codigo_usuario_cierre", type="string", length=50, nullable=true)
+     */
+    private $codigoUsuarioCierre;
+
+    /**
      * @ORM\Column(name="codigo_sector_fk", type="string", length=10, nullable=true)
      */
     private $codigoSectorFk;
@@ -669,6 +679,54 @@ class TurContrato
     public function setSoporte($soporte): void
     {
         $this->soporte = $soporte;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaCierre()
+    {
+        return $this->fechaCierre;
+    }
+
+    /**
+     * @param mixed $fechaCierre
+     */
+    public function setFechaCierre($fechaCierre): void
+    {
+        $this->fechaCierre = $fechaCierre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoUsuarioCierre()
+    {
+        return $this->codigoUsuarioCierre;
+    }
+
+    /**
+     * @param mixed $codigoUsuarioCierre
+     */
+    public function setCodigoUsuarioCierre($codigoUsuarioCierre): void
+    {
+        $this->codigoUsuarioCierre = $codigoUsuarioCierre;
     }
 
 

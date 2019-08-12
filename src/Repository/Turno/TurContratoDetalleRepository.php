@@ -55,6 +55,45 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function cerrado($id)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd');
+        $queryBuilder
+            ->select('cd.codigoContratoDetallePk')
+            ->addSelect('p.nombre AS puesto')
+            ->addSelect('cd.cantidad')
+            ->addSelect('cd.lunes')
+            ->addSelect('cd.martes')
+            ->addSelect('cd.miercoles')
+            ->addSelect('cd.jueves')
+            ->addSelect('cd.viernes')
+            ->addSelect('cd.sabado')
+            ->addSelect('cd.domingo')
+            ->addSelect('cd.festivo')
+            ->addSelect('cd.vrSalarioBase')
+            ->addSelect('cd.vrPrecioMinimo')
+            ->addSelect('cd.vrPrecioAjustado')
+            ->addSelect('cd.porcentajeBaseIva')
+            ->addSelect('cd.porcentajeIva')
+            ->addSelect('cd.vrIva')
+            ->addSelect('cd.vrSubtotal')
+            ->addSelect('cd.fechaDesde')
+            ->addSelect('cd.fechaHasta')
+            ->addSelect('cd.horas')
+            ->addSelect('cd.horasDiurnas')
+            ->addSelect('cd.horasNocturnas')
+            ->addSelect('con.nombre as conceptoNombre')
+            ->addSelect('mod.nombre as modalidadNombre')
+            ->leftJoin('cd.conceptoRel', 'con')
+            ->leftJoin('cd.modalidadRel', 'mod')
+            ->leftJoin('cd.puestoRel', 'p')
+            ->where("cd.codigoContratoFk = {$id}")
+            ->andWhere('cd.estadoCerrado = 1');
+
+        return $queryBuilder;
+    }
+
     /**
      * @param $arrControles
      * @param $form
@@ -138,6 +177,34 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("cd.fechaHasta <= '{$session->get('filtroRhuInformeContratoDetalleFechaHasta')} 23:59:59'");
         }
         return $queryBuilder;
+    }
+
+    public function cerrarSeleccionados($arrSeleccionados)
+    {
+        if ($arrSeleccionados) {
+            $em = $this->getEntityManager();
+            foreach ($arrSeleccionados AS $codigo) {
+                $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($codigo);
+                if ($arContratoDetalle->getEstadoCerrado() == 0) {
+                    $arContratoDetalle->setEstadoCerrado(1);
+                }
+            }
+            $em->flush();
+        }
+    }
+
+    public function abrirSeleccionados($arrSeleccionados)
+    {
+        if ($arrSeleccionados) {
+            $em = $this->getEntityManager();
+            foreach ($arrSeleccionados AS $codigo) {
+                $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($codigo);
+                if ($arContratoDetalle->getEstadoCerrado() == 1) {
+                    $arContratoDetalle->setEstadoCerrado(0);
+                }
+            }
+            $em->flush();
+        }
     }
 
 }

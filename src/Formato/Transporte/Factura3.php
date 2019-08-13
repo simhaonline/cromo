@@ -6,6 +6,7 @@ use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
+use App\Entity\Transporte\TteFacturaDetalleConcepto;
 use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
@@ -115,69 +116,71 @@ class Factura3 extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(6);
-        $header = array('REMESA', 'DOCUMENTO','ORIGEN', 'DESTINO', 'DESTINATARIO', 'PRODUCTO', 'EMP', 'INGRESO', 'ENTR', 'UND', 'PESO DECL', 'PESO COBR', 'DECLADO', 'FLETE', 'MANEJO', 'OTROS', 'TOTAL');
-        $this->SetFillColor(170, 170, 170);
-        $this->SetTextColor(0);
-        $this->SetDrawColor(0, 0, 0);
-        $this->SetLineWidth(.2);
-        $this->SetFont('', 'B', 6);
-        //creamos la cabecera de la tabla.
-        $w = array(17, 20, 20, 20, 25, 15, 9, 18, 18, 10, 15, 15, 15, 15 , 15, 15, 15);
-        for ($i = 0; $i < count($header); $i++)
-            if ($i == 0 || $i == 1)
-                $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
-            else
-                $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
-        //Restauración de colores y fuentes
-        $this->SetFillColor(224, 235, 255);
-        $this->SetTextColor(0);
-        $this->SetFont('');
-        $this->Ln(4);
+        $arFacturaDetalleConceptos = self::$em->getRepository(TteFacturaDetalleConcepto::class)->listaFacturaDetalle(self::$codigoFactura)->getQuery()->getResult();
+        if (!$arFacturaDetalleConceptos) {
+            $header = array('REMESA', 'DOCUMENTO','ORIGEN', 'DESTINO', 'DESTINATARIO', 'PRODUCTO', 'EMP', 'INGRESO', 'ENTR', 'UND', 'PESO DECL', 'PESO COBR', 'DECLADO', 'FLETE', 'MANEJO', 'OTROS', 'TOTAL');
+            $this->SetFillColor(170, 170, 170);
+            $this->SetTextColor(0);
+            $this->SetDrawColor(0, 0, 0);
+            $this->SetLineWidth(.2);
+            $this->SetFont('', 'B', 6);
+            //creamos la cabecera de la tabla.
+            $w = array(17, 20, 20, 20, 25, 15, 9, 18, 18, 10, 15, 15, 15, 15 , 15, 15, 15);
+            for ($i = 0; $i < count($header); $i++)
+                if ($i == 0 || $i == 1)
+                    $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
+                else
+                    $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
+            //Restauración de colores y fuentes
+            $this->SetFillColor(224, 235, 255);
+            $this->SetTextColor(0);
+            $this->SetFont('');
+            $this->Ln(4);
+        } else {
+            $header = array('ID', 'CONCEPTO', 'CANT', 'PRECIO', '%IVA', 'IVA', 'TOTAL');
+            $this->SetFillColor(170, 170, 170);
+            $this->SetTextColor(0);
+            $this->SetDrawColor(0, 0, 0);
+            $this->SetLineWidth(.2);
+            $this->SetFont('', 'B', 7);
+            //creamos la cabecera de la tabla.
+            $w = array(17, 70, 15, 20, 20, 20, 20);
+            for ($i = 0; $i < count($header); $i++)
+                if ($i == 0 || $i == 1)
+                    $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
+                else
+                    $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
+            //Restauración de colores y fuentes
+            $this->SetFillColor(224, 235, 255);
+            $this->SetTextColor(0);
+            $this->SetFont('');
+            $this->Ln(4);
+        }
+
+
     }
 
     public function Body($pdf) {
         /** @var $arFactura TteFactura */
         $arFactura = self::$em->getRepository('App:Transporte\TteFactura')->find(self::$codigoFactura);
-//        $arFacturaPlanillas = self::$em->getRepository(TteFacturaPlanilla::class)->formatoFactura(self::$codigoFactura);
-//        $pdf->SetX(10);
-//        $pdf->SetFont('Arial', '', 7);
-//        if($arFacturaPlanillas) {
-//            foreach ($arFacturaPlanillas as $arFacturaPlanilla) {
-//                $pdf->Cell(17, 4, "Planilla:", 1, 0, 'L');
-//                $pdf->Cell(24, 4, $arFacturaPlanilla['numero'], 1, 0, 'L');
-//                $pdf->Cell(43, 4, "", 1, 0, 'L');
-//                $pdf->Cell(26, 4, "Numero guias:", 1, 0, 'L');
-//                $pdf->Cell(10, 4, number_format($arFacturaPlanilla['guias'], 0, '.', ','), 1, 0, 'R');
-//                $pdf->Cell(25, 4, "", 1, 0, 'L');
-//                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrFlete'], 0, '.', ','), 1, 0, 'R');
-//                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrManejo'], 0, '.', ','), 1, 0, 'R');
-//                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrTotal'], 0, '.', ','), 1, 0, 'R');
-//
-//                $pdf->Ln();
-//                $pdf->SetAutoPageBreak(true, 85);
-//            }
-//        }
-//
 
-//        $arFacturaPlanillas = self::$em->getRepository(TteFacturaPlanilla::class)->formatoFactura(self::$codigoFactura);
-//        $pdf->SetX(10);
-//        $pdf->SetFont('Arial', '', 7);
-//        if($arFacturaPlanillas) {
-//            foreach ($arFacturaPlanillas as $arFacturaPlanilla) {
-//                $pdf->Cell(17, 4, "Planilla:", 1, 0, 'L');
-//                $pdf->Cell(24, 4, $arFacturaPlanilla['numero'], 1, 0, 'L');
-//                $pdf->Cell(43, 4, "", 1, 0, 'L');
-//                $pdf->Cell(26, 4, "Numero guias:", 1, 0, 'L');
-//                $pdf->Cell(10, 4, number_format($arFacturaPlanilla['guias'], 0, '.', ','), 1, 0, 'R');
-//                $pdf->Cell(25, 4, "", 1, 0, 'L');
-//                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrFlete'], 0, '.', ','), 1, 0, 'R');
-//                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrManejo'], 0, '.', ','), 1, 0, 'R');
-//                $pdf->Cell(15, 4, number_format($arFacturaPlanilla['vrTotal'], 0, '.', ','), 1, 0, 'R');
-//
-//                $pdf->Ln();
-//                $pdf->SetAutoPageBreak(true, 85);
-//            }
-//        }
+        $arFacturaDetalleConceptos = self::$em->getRepository(TteFacturaDetalleConcepto::class)->listaFacturaDetalle(self::$codigoFactura)->getQuery()->getResult();
+        $pdf->SetX(10);
+        $pdf->SetFont('Arial', '', 7);
+        if ($arFacturaDetalleConceptos) {
+            foreach ($arFacturaDetalleConceptos as $arFacturaDetalleConcepto) {
+                $pdf->Cell(17, 4, $arFacturaDetalleConcepto['codigoFacturaDetalleConceptoPk'], 1, 0, 'L');
+                $pdf->Cell(70, 4, $arFacturaDetalleConcepto['concepto'], 1, 0, 'L');
+                $pdf->Cell(15, 4, $arFacturaDetalleConcepto['cantidad'], 1, 0, 'L');
+                $pdf->Cell(20, 4, number_format($arFacturaDetalleConcepto['vrPrecio'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, $arFacturaDetalleConcepto['porcentajeIva'], 1, 0, 'C');
+                $pdf->Cell(20, 4, number_format($arFacturaDetalleConcepto['vrIva'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arFacturaDetalleConcepto['vrTotal'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Ln();
+                $pdf->SetAutoPageBreak(true, 85);
+            }
+        }
+
         $agrupadaCiudad = $arFactura->getClienteRel()->getFacturaAgrupadaDestino();
         if($agrupadaCiudad) {
             $arGuias = self::$em->getRepository(TteFacturaDetalle::class)->formatoFacturaDestino(self::$codigoFactura);
@@ -304,7 +307,7 @@ class Factura3 extends \FPDF {
         $this->SetFont('Arial', 'b', 8);
         $this->Cell(40, 5, utf8_decode("OTROS"), 1, 0, 'C', 1);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(40, 5, number_format('0', 0, '.', ','), 1, 0, 'R', 1);
+        $this->Cell(40, 5, number_format($arFactura->getVrOtros(), 0, '.', ','), 1, 0, 'R', 1);
         $this->SetFillColor(236, 236, 236);
         $this->SetXY(205,180);
         $this->SetFont('Arial', 'b', 8);

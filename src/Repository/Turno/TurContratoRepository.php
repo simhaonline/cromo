@@ -375,7 +375,7 @@ class TurContratoRepository extends ServiceEntityRepository
                     $arContrato->setFechaGeneracion($fechaDesde);
                     $em->persist($arContrato);
 
-                    $arContratoDetalles = $em->getRepository(TurContratoDetalle::class)->findBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoTerminado' => 0));
+                    $arContratoDetalles = $em->getRepository(TurContratoDetalle::class)->findBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoCerrado' => 0));
                     foreach ($arContratoDetalles as $arContratoDetalle) {
                         $arPedidoDetalle = new TurPedidoDetalle();
                         $arPedidoDetalle->setPedidoRel($arPedido);

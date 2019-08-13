@@ -85,6 +85,35 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function buscar()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuIncapacidad::class, 'i');
+        $queryBuilder
+            ->select('i.codigoIncapacidadPk')
+            ->addSelect('e.nombreCorto as empleado')
+            ->addSelect('es.nombre as entidad')
+            ->addSelect('i.numero as numeroEps')
+            ->addSelect('i.fechaDesde')
+            ->addSelect('i.fechaHasta')
+            ->leftJoin('i.entidadSaludRel', 'es')
+            ->leftJoin('i.empleadoRel', 'e');
+
+        if ($session->get('filtroRhuIncapacidadBuscarNombre') != null) {
+            $queryBuilder->andWhere("e.nombreCorto LIKE '%{$session->get('filtroRhuIncapacidadBuscarNombre')}%' ");
+        }
+
+        if ($session->get('filtroRhuIncapacidadBuscarCodigo') != null) {
+            $queryBuilder->andWhere("i.codigoIncapacidadPk = '{$session->get('filtroRhuIncapacidadBuscarCodigo')}'");
+        }
+
+        if ($session->get('filtroRhuIncapacidadBuscarIdentificacion') != null) {
+            $queryBuilder->andWhere("e.numeroIdentificacion = '{$session->get('filtroRhuIncapacidadBuscarIdentificacion')}'");
+        }
+
+        return $queryBuilder;
+    }
+
     public function validarFecha($fechaDesde, $fechaHasta, $codigoEmpleado, $codigoIncapacidad = ""):bool
     {
         $em = $this->getEntityManager();

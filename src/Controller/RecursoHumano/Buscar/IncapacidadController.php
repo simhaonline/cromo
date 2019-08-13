@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Buscar;
 
 
 use App\Entity\RecursoHumano\RhuIncapacidad;
+use App\Entity\RecursoHumano\RhuIncapacidadBuscar;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -28,22 +29,20 @@ class IncapacidadController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroRhuEmpleadoNombre')])
-            ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroRhuEmpleadoCodigo')])
-            ->add('txtIdentificacion', TextType::class, ['required'  => false,'data' => $session->get('filtroRhuEmpleadoIdentificacion')])
-            ->add('chkEstadoContrato', CheckboxType::class, ['label' => ' ','required'  => false,'data' => $session->get('filtroRhuEmpleadoEstadoContrato')])
+            ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroRhuIncapacidadBuscarNombre')])
+            ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroRhuIncapacidadBuscarCodigo')])
+            ->add('txtIdentificacion', TextType::class, ['required'  => false,'data' => $session->get('filtroRhuIncapacidadBuscarIdentificacion')])
             ->add('btnFiltrar', SubmitType::class, ['label'  => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroRhuEmpleadoCodigo',$form->get('txtCodigo')->getData());
-                $session->set('filtroRhuEmpleadoNombre',$form->get('txtNombre')->getData());
-                $session->set('filtroRhuEmpleadoIdentificacion',$form->get('txtIdentificacion')->getData());
-                $session->set('filtroRhuEmpleadoEstadoContrato',$form->get('chkEstadoContrato')->getData());
+                $session->set('filtroRhuIncapacidadBuscarCodigo',$form->get('txtCodigo')->getData());
+                $session->set('filtroRhuIncapacidadBuscarNombre',$form->get('txtNombre')->getData());
+                $session->set('filtroRhuIncapacidadBuscarIdentificacion',$form->get('txtIdentificacion')->getData());
             }
         }
-        $arIncapacidades = $paginator->paginate($em->getRepository(RhuIncapacidad::class)->lista(), $request->query->get('page', 1), 20);
+        $arIncapacidades = $paginator->paginate($em->getRepository(RhuIncapacidad::class)->buscar(), $request->query->get('page', 1), 20);
         return $this->render('recursohumano/buscar/incapacidad.html.twig', array(
             'arIncapacidades' => $arIncapacidades,
             'campoCodigo' => $campoCodigo,

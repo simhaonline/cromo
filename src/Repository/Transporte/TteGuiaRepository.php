@@ -2186,6 +2186,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFacturaDetalle->setUnidades($arGuia->getUnidades());
                         $arFacturaDetalle->setPesoReal($arGuia->getPesoReal());
                         $arFacturaDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        $arFacturaDetalle->setPesoFacturado($arGuia->getPesoFacturado());
                         $arFacturaDetalle->setCodigoImpuestoRetencionFk($arrConfiguracion['codigoImpuestoRetencionTransporteFk']);
                         $em->persist($arFacturaDetalle);
 
@@ -3581,7 +3582,7 @@ class TteGuiaRepository extends ServiceEntityRepository
     public function liquidar($cliente, $condicion, $precio, $origen, $destino, $producto, $zona, $tipoLiquidacion, $unidades, $peso, $declarado)
     {
         $em = $this->getEntityManager();
-        $arrDevolver = ['flete' => 0, 'manejo' => 0];
+        $arrDevolver = ['flete' => 0, 'manejo' => 0, 'pesoFacturado' => 0];
         $descuentoPeso = 0;
         $descuentoUnidad = 0;
         $porcentajeManejo = 0;

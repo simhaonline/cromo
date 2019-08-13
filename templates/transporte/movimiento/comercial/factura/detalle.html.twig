@@ -8,7 +8,7 @@
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
             {% if arFactura.estadoAutorizado == 0 %}
-                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_reliquidar', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'Reliquidar', 600, 900)">Reliquidar</a>
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_reliquidar', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'Reliquidar', 600, 1200)">Reliquidar</a>
             {% endif %}
         </div>
     </div>
@@ -45,8 +45,8 @@
                             <th>DOCUMENTO</th>
                             <th>UND</th>
                             <th>PES</th>
-                            <th>PES FAC</th>
                             <th>VOL</th>
+                            <th>P_FAC</th>
                             <th>DECLARADO</th>
                             <th>FLETE</th>
                             <th>MANEJO</th>

@@ -43,9 +43,9 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.tipoLiquidacion) }}
                 </div>
-                <label for="" class="control-label col-sm-1">Condicion:</label>
+                <label for="" class="control-label col-sm-1"></label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.cboCondicion, { 'attr': {'class': 'form-control to-select-2'} }) }}
+
                 </div>
             </div>
         </div>
@@ -66,13 +66,14 @@
             <th>PRODUCTO</th>
             <th>UND</th>
             <th>PESO</th>
-            <th>PESO FAC</th>
             <th>VOL</th>
-            <th>DECLARA</th>
+            <th title="Peso facturado">PF</th>
+            <th title="Peso facturado">PF(N)</th>
             <th>FLETE</th>
             <th>FLETE(N)</th>
             <th>MANEJO</th>
             <th>MANEJO(N)</th>
+            <th>DECLARA</th>
         </tr>
         </thead>
         <tbody>
@@ -88,13 +89,14 @@
                 <td>{{ arFacturaDetalleReliquidar.productoNombre }}</td>
                 <td>{{ arFacturaDetalleReliquidar.unidades }}</td>
                 <td>{{ arFacturaDetalleReliquidar.pesoReal }}</td>
-                <td>{{ arFacturaDetalleReliquidar.pesoFacturado }}</td>
                 <td>{{ arFacturaDetalleReliquidar.pesoVolumen }}</td>
-                <td class="numero">{{ arFacturaDetalleReliquidar.vrDeclara | number_format }}</td>
+                <td>{{ arFacturaDetalleReliquidar.pesoFacturado }}</td>
+                <td {% if arFacturaDetalleReliquidar.pesoFacturado != arFacturaDetalleReliquidar.pesoFacturadoNuevo %} class="danger" {% endif %}>{{ arFacturaDetalleReliquidar.pesoFacturadoNuevo }}</td>
                 <td class="numero">{{ arFacturaDetalleReliquidar.vrFlete | number_format }}</td>
-                <td class="numero">{{ arFacturaDetalleReliquidar.vrFleteNuevo | number_format }}</td>
+                <td {% if arFacturaDetalleReliquidar.vrFlete != arFacturaDetalleReliquidar.vrFleteNuevo %} class="numero danger" {% else %} class="numero" {% endif %}>{{ arFacturaDetalleReliquidar.vrFleteNuevo | number_format }}</td>
                 <td class="numero">{{ arFacturaDetalleReliquidar.vrManejo | number_format }}</td>
-                <td class="numero">{{ arFacturaDetalleReliquidar.vrManejoNuevo | number_format }}</td>
+                <td  {% if arFacturaDetalleReliquidar.vrManejo != arFacturaDetalleReliquidar.vrManejoNuevo %} class="numero danger" {% else %} class="numero" {% endif %}>{{ arFacturaDetalleReliquidar.vrManejoNuevo | number_format }}</td>
+                <td class="numero">{{ arFacturaDetalleReliquidar.vrDeclara | number_format }}</td>
             </tr>
         {% endfor %}
         </tbody>

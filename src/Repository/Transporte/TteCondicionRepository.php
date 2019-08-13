@@ -68,6 +68,19 @@ class TteCondicionRepository extends ServiceEntityRepository
         return $array;
     }
 
+    public function tipoLiquidacion($arCondicion) {
+        if ($arCondicion->getPrecioPeso()) {
+            $tipoLiquidacion = "K";
+        } else if ($arCondicion->getPrecioUnidad()) {
+            $tipoLiquidacion = "U";
+        } else if ($arCondicion->getPrecioAdicional()) {
+            $tipoLiquidacion = "A";
+        } else{
+            $tipoLiquidacion = "K";
+        }
+        return $tipoLiquidacion;
+    }
+
     public function apiWindowsBuscar($raw) {
         $em = $this->getEntityManager();
         $nombre = $raw['nombre']?? null;

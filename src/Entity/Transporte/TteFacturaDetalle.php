@@ -58,6 +58,11 @@ class TteFacturaDetalle
     private $pesoVolumen = 0;
 
     /**
+     * @ORM\Column(name="peso_facturado", type="float", options={"default" : 0})
+     */
+    private $pesoFacturado = 0;
+
+    /**
      * @ORM\Column(name="vr_declara", type="float", options={"default" : 0})
      */
     private $vrDeclara = 0;
@@ -107,25 +112,9 @@ class TteFacturaDetalle
     protected $facturasDetallesFacturaDetalleRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaDetalleReliquidar", mappedBy="facturaDetalle")
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteFacturaDetalleReliquidar", mappedBy="facturaDetalleRel")
      */
-    protected $facturaDetallesReliquidarRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    protected $facturasDetallesReliquidarFacturaDetalleRel;
 
     /**
      * @return mixed
@@ -402,17 +391,33 @@ class TteFacturaDetalle
     /**
      * @return mixed
      */
-    public function getFacturaDetallesReliquidarRel()
+    public function getFacturasDetallesReliquidarFacturaDetalleRel()
     {
-        return $this->facturaDetallesReliquidarRel;
+        return $this->facturasDetallesReliquidarFacturaDetalleRel;
     }
 
     /**
-     * @param mixed $facturaDetallesReliquidarRel
+     * @param mixed $facturasDetallesReliquidarFacturaDetalleRel
      */
-    public function setFacturaDetallesReliquidarRel($facturaDetallesReliquidarRel): void
+    public function setFacturasDetallesReliquidarFacturaDetalleRel($facturasDetallesReliquidarFacturaDetalleRel): void
     {
-        $this->facturaDetallesReliquidarRel = $facturaDetallesReliquidarRel;
+        $this->facturasDetallesReliquidarFacturaDetalleRel = $facturasDetallesReliquidarFacturaDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPesoFacturado()
+    {
+        return $this->pesoFacturado;
+    }
+
+    /**
+     * @param mixed $pesoFacturado
+     */
+    public function setPesoFacturado($pesoFacturado): void
+    {
+        $this->pesoFacturado = $pesoFacturado;
     }
 
 

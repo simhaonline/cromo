@@ -234,16 +234,8 @@ class ImportarGuiaExcelController extends Controller
                         $arrErrores[] = $respuesta . "existe un error con el 'valor declara' ingresado";
                         $error = true;
                     }
-                    $tipoLiquidacion = "K";
-                    if ($arCondicion->getPrecioPeso()) {
-                        $tipoLiquidacion = "K";
-                    } else if ($arCondicion->getPrecioUnidad()) {
-                        $tipoLiquidacion = "U";
-                    } else if ($arCondicion->getPrecioAdicional()) {
-                        $tipoLiquidacion = "A";
-                    } else{
-                        $tipoLiquidacion = "K";
-                    }
+                    $tipoLiquidacion = $em->getRepository(TteCondicion::class)->tipoLiquidacion($arCondicion);
+
                     if ($error == false) {
                         $arrLiquidacion = $em->getRepository(TteGuia::class)->liquidar(
                             $arCliente->getCodigoClientePk(),

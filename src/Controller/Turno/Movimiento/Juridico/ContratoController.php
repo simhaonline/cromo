@@ -290,7 +290,6 @@ class ContratoController extends ControllerListenerGeneral
             if ($form->get('guardar')->isClicked()) {
                 if ($id == 0) {
                     $arContratoDetalle->setPorcentajeIva($arContratoDetalle->getConceptoRel()->getPorcentajeIva());
-                    $arContratoDetalle->setPorcentajeBaseIva(100);
                 }
                 $em->persist($arContratoDetalle);
                 $em->flush();

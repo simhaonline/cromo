@@ -58,6 +58,7 @@ class ContratoDetalleType extends AbstractType
             ])
             ->add('cantidad', NumberType::class)
             ->add('vrPrecioAjustado', NumberType::class, array('required' => false))
+            ->add('porcentajeBaseIva', NumberType::class, array('required' => false))
             ->add('lunes', CheckboxType::class, array('required' => false))
             ->add('martes', CheckboxType::class, array('required' => false))
             ->add('miercoles', CheckboxType::class, array('required' => false))

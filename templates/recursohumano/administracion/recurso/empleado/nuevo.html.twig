@@ -14,7 +14,7 @@
                 </div>
                 <label for="form_numeroIdentificacion" class="col-sm-2 control-label">Identificación:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroIdentificacion, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.numeroIdentificacion, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.numeroIdentificacion) }}
                 </div>
             </div>
@@ -33,24 +33,24 @@
             <div class="form-group form-group-sm">
                 <label for="form_primerNombre" class="col-sm-2 control-label">Primer nombre:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.nombre1, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.nombre1, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.nombre1) }}
                 </div>
                 <label for="form_segundoNombre" class="col-sm-2 control-label">Segundo nombre:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.nombre2, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.nombre2, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.nombre2) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_apellido1" class="col-sm-2 control-label">Primer apellido:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.apellido1, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.apellido1, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.apellido1) }}
                 </div>
                 <label for="form_apellido2" class="col-sm-2 control-label">Segundo apellido:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.apellido2, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.apellido2, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.apellido2) }}
                 </div>
             </div>
@@ -110,21 +110,21 @@
                 </div>
                 <label for="form_barrio" class="col-sm-2 control-label">Barrio:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.barrio, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.barrio, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.barrio) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_direccion" class="col-sm-2 control-label">Dirección:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.direccion, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.direccion, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.direccion) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_telefono" class="col-sm-2 control-label">Teléfono:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.telefono, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.telefono, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.telefono) }}
                 </div>
                 <label for="form_celular" class="col-sm-2 control-label">Celular:</label>
@@ -136,19 +136,19 @@
             <div class="form-group form-group-sm">
                 <label for="form_tallaCamisa" class="col-sm-2 control-label">Talla camisa:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.tallaCamisa, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.tallaCamisa, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.tallaCamisa) }}
                 </div>
                 <label for="form_tallaPantalon" class="col-sm-2 control-label">Talla pantalón:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.tallaPantalon, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.tallaPantalon, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.tallaPantalon) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_tallaCalzado" class="col-sm-2 control-label">Talla calzado:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.tallaCalzado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.tallaCalzado, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.tallaCalzado) }}
                 </div>
             </div>
@@ -191,7 +191,7 @@
             <div class="form-group form-group-sm">
                 <label for="form_cuenta" class="control-label col-sm-2">Cuenta:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.cuenta, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.cuenta, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.cuenta) }}
                 </div>
                 <label for="form_cuenta" class="control-label col-sm-2">Cuenta tipo:</label>

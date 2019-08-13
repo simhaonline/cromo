@@ -21,7 +21,7 @@
                     <input type="hidden" name="LblCodigo[]" value="{{ arProgramacion.codigoProgramacionPk }}">
                     {% for i in range(1,31) %}
                         {% set valorDia = componerDiaProgramacionEmpleado(arProgramacion, i) %}
-                        <td> <input name="TxtDia{{ i < 10? '0' ~ i : i }}D{{ arProgramacion.codigoProgramacionPk }}" value="{{ valorDia }}" style="text-transform: uppercase; width:25px"/></td>
+                        <td> <input name="TxtDia{{ i < 10? '0' ~ i : i }}D{{ arProgramacion.codigoProgramacionPk }}" value="{{ valorDia }}" style="text-transform: uppercase; width:25px" class="input-paste input-grid"/></td>
                     {% endfor %}
                     <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arProgramacion.codigoProgramacionPk  }}"/></td>
                 {% endfor %}
@@ -34,6 +34,34 @@
             {{ form_widget(form.btnGuardar) }}
         </div>
     </div>
-
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascriptsPersonales %}
+    <script>
+        var escucharCopyAndPaste = function () {
+            $(".input-paste").bind('paste', function (event) {
+                var contenido = event.originalEvent.clipboardData.getData('text').replace(/\n/g, '');
+                var fila = $(this).closest("tr");
+                var inputs = fila.find("input.input-grid");
+                var celdas = contenido.split('\t');
+                var inicial = $(this).parent().index() - 1;
+
+                var primerValor = celdas[0];
+                for (var i = 1; i < celdas.length; i++) {
+                    if (i + inicial > 31) break;
+                    var input = $(inputs[i + inicial]);
+                    input.val(celdas[i]);
+                }
+                setTimeout(function () {
+                    $(inputs[inicial]).val(primerValor);
+                    var indice = inicial + (celdas.length - 1);
+                    if (indice > 30) indice = 30;
+                    $(inputs[indice]).focus();
+                }, 10);
+        })};
+        $(()=>{
+            escucharCopyAndPaste();
+        });
+    </script>
 {% endblock %}

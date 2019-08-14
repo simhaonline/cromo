@@ -58,6 +58,16 @@ class ImportarGuiaExcelController extends Controller
                 'choice_label' => 'nombre',
                 'label' => 'Guia tipo:'
             ])
+            ->add('ciudadOrigenRel', EntityType::class, [
+                'required' => false,
+                'class' => 'App\Entity\Transporte\TteCiudad',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Origen:'
+            ])
             ->add('fechaIngreso', DateType::class, ['label' => 'Fecha ingreso: ', 'required' => false, 'data' => date_create($session->get('filtroFechaIngreso'))])
             ->add('btnCargar', SubmitType::class, ['label' => 'Cargar'])
             ->add('btnGenerar', SubmitType::class, ['label' => 'Generar'])
@@ -76,7 +86,8 @@ class ImportarGuiaExcelController extends Controller
                     }
                     $session->set('filtroGuiaCodigoCliente', $form->get('codigoClienteFk')->getData() ?? '');
                     $session->set('filtroFechaIngreso', $form->get('fechaIngreso')->getData()->format('Y-m-d'));
-                    $this->cargarGuias($form->get('flArchivo')->getData());
+                    $arCiudadOrigen = $form->get('ciudadOrigenRel')->getData();
+                    $this->cargarGuias($form->get('flArchivo')->getData(), $arCiudadOrigen);
                 }
             }
             if ($form->get('btnGenerar')->isClicked()) {
@@ -87,7 +98,7 @@ class ImportarGuiaExcelController extends Controller
                 $em->getRepository(TteGuiaTemporal::class)->eliminar($arrSeleccionados);
             }
         }
-        $arGuias = $paginator->paginate($em->getRepository(TteGuiaTemporal::class)->importarExcel(), $request->query->getInt('page', 1), 30);
+        $arGuias = $paginator->paginate($em->getRepository(TteGuiaTemporal::class)->importarExcel(), $request->query->getInt('page', 1), 1000);
         return $this->render('transporte/utilidad/transporte/importarGuiaExcel/generarGuia.html.twig', [
             'arGuias' => $arGuias,
             'formFiltro' => $form->createView()
@@ -98,7 +109,7 @@ class ImportarGuiaExcelController extends Controller
      * @param $archivo
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
-    private function cargarGuias($archivo)
+    private function cargarGuias($archivo, $arCiudadOrigen)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
@@ -151,7 +162,12 @@ class ImportarGuiaExcelController extends Controller
                     }
 
                     // Ciudad origen
-                    $arGuiaTemporal->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
+                    if($arCiudadOrigen) {
+                        $arGuiaTemporal->setCiudadOrigenRel($arCiudadOrigen);
+                    } else {
+                        $arGuiaTemporal->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
+                    }
+
 
                     // Ciudad destino
                     $cell = $worksheet->getCellByColumnAndRow(1, $row);

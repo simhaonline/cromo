@@ -62,11 +62,13 @@
                                 <td class="text-center" colspan="4">
                                     <a href="{{ path('turno_movimiento_venta_pedido_detalle', {"id": arPedidoDetalle.codigoPedidoDetallePk}) }}" >PEDIDO DETALLE:  {{arPedidoDetalle.codigoPedidoDetallePk }}</a>
                                 </td>
-
                                 <td style="text-align: center;">
-                                    <a href=" path('crm_administracion_comercial_cliente_nuevo',{'id': arClientes.codigoClientePk }) }}"><i
-                                                class="fa fa-user" style="color: black;font-size: large;"></i></a>
+                                    <a href="javascript:abrirVentana3('{{ path('turno_buscar_empleadopedido',
+                                        { 'codigoPedidoDestelle': arPedidoDetalle.codigoPedidoDetallePk }) }}', 'VerProgramaciones', 600, 1300)">
+                                        <i class="fa fa-user" style="color: black;font-size: large;"></i>
+                                    </a>
                                 </td>
+
                             </tr>
 
                             {% for arProgramacion in arPedidoDetalle.arProgramaciones %}

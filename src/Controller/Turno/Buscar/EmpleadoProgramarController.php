@@ -98,7 +98,7 @@ class EmpleadoProgramarController extends Controller
                     foreach ($arrSeleccionados as $codigo) {
                         $fechaActual = new \DateTime('now');
                         $mesActual =$fechaActual->format('m');
-                        $anioActual =$fechaActual->format('y');
+                        $anioActual =$fechaActual->format('Y');
                         $arTurProgramacion = new TurProgramacion();
                         $arTurProgramacion->setPedidoRel($arPedidoDetalle->getPedidoRel());
                         $arTurProgramacion->setPedidoDetalleRel($arPedidoDetalle);

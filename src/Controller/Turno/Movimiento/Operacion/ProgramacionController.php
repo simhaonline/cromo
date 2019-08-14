@@ -135,9 +135,10 @@ class ProgramacionController extends ControllerListenerGeneral
                 ini_set("memory_limit", -1);
                 $arrControles = $request->request->All();
                 $resultado = $this->actualizarDetalle($arrControles);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(['codigoEmpleadoFk' => $codigoEmpleado]);
+        $arProgramaciones = $em->getRepository(TurProgramacion::class)->programacionPorMes($arPedidoDetalle->getAnio() , $arPedidoDetalle->getMes(), $codigoEmpleado);
         return $this->render('turno/movimiento/operacion/programacion/programacionRecurso.html.twig', [
             'arrDiaSemana' => $arrDiaSemana,
             'arProgramaciones' => $arProgramaciones,
@@ -189,7 +190,7 @@ class ProgramacionController extends ControllerListenerGeneral
                     $horasNocturnasPendientes = $arPedidoDetalle->getHorasNocturnas() - $arPedidoDetalle->getHorasNocturnasProgramadas();
                     $diffDiurnas = $validar['horasDiurnas'] - $validar['horasDiurnasLinea'];
                     $diffNocturnas = $validar['horasNocturnas'] - $validar['horasNocturnasLinea'];
-                    if ($horasDiurnasPendientes >= $diffDiurnas) {
+                    if ($horasDiurnasPendientes >= $diffDiurnas || $validar = false) {
                         if ($horasNocturnasPendientes >= $diffNocturnas) {
                             $horasDiurnasProgramadas = ($arPedidoDetalle->getHorasDiurnasProgramadas() - $arProgramacion->getHorasDiurnas()) + $validar['horasDiurnas'];
                             $horasNocturnasProgramadas = ($arPedidoDetalle->getHorasNocturnasProgramadas() - $arProgramacion->getHorasNocturnas()) + $validar['horasNocturnas'];
@@ -211,20 +212,20 @@ class ProgramacionController extends ControllerListenerGeneral
                             $em->flush();
                         } else {
                             $error = true;
-                            //$objMensaje->Mensaje("error", "Horas nocturnas superan las horas del pedido disponibles para programar detalle " . $intCodigo);
+                            Mensajes::error("error", "Horas nocturnas superan las horas del pedido disponibles para programar detalle " );
                         }
                     } else {
                         $error = true;
-                        //$objMensaje->Mensaje("error", "Horas diurnas superan las horas del pedido disponibles para programar detalle " . $intCodigo);
+                        Mensajes::error("error", "Horas nocturnas superan las horas del pedido disponibles para programar detalle " );
                     }
                 } else {
                     $error = true;
-                    //$objMensaje->Mensaje("error", $validar['mensaje']);
+                   Mensajes::error("error", $validar['mensaje']);
                 }
 
             } else {
                 $error = true;
-                //$objMensaje->Mensaje("error", "No se encontro un detalle de programacion con este codigo");
+                Mensajes::error("error", "No se encontro un detalle de programacion con este codigo");
             }
             if ($error) {
                 break;

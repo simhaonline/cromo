@@ -247,8 +247,9 @@ class TurContratoRepository extends ServiceEntityRepository
                     }
                 }
 
-
-                $horas = ($horasRealesDiurnas + $horasRealesNocturnas) * $arContratoDetalle->getCantidad();
+                $horasRealesDiurnas =  $horasRealesDiurnas * $arContratoDetalle->getCantidad();
+                $horasRealesNocturnas = $horasRealesNocturnas * $arContratoDetalle->getCantidad();
+                $horas = $horasRealesDiurnas + $horasRealesNocturnas;
                 $valorBaseServicio = $arContratoDetalle->getVrSalarioBase() * $arContrato->getSectorRel()->getPorcentaje();
                 if ($arContrato->getCodigoSectorFk() == "D" && $arContrato->getEstrato() >= 4) {
                     //Cambiar porcentaje para residencial mayor a estrato 4
@@ -271,7 +272,7 @@ class TurContratoRepository extends ServiceEntityRepository
                     $valorServicio = $arContratoDetalle->getVrPrecioAjustado() * $arContratoDetalle->getCantidad();
                     $precio = $arContratoDetalle->getVrPrecioAjustado();
                 } else {
-                    $valorServicio = $valorMinimoServicio * $arContratoDetalle->getCantidad();
+                    $valorServicio = $valorMinimoServicio;
                 }
 
 

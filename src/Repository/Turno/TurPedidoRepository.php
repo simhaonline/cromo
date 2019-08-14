@@ -215,8 +215,9 @@ class TurPedidoRepository extends ServiceEntityRepository
                     }
                 }
 
-
-                $horas = ($horasRealesDiurnas + $horasRealesNocturnas) * $arPedidoDetalle->getCantidad();
+                $horasRealesDiurnas =  $horasRealesDiurnas * $arPedidoDetalle->getCantidad();
+                $horasRealesNocturnas = $horasRealesNocturnas * $arPedidoDetalle->getCantidad();
+                $horas = $horasRealesDiurnas + $horasRealesNocturnas;
                 $valorBaseServicio = $arPedidoDetalle->getVrSalarioBase() * $arPedido->getSectorRel()->getPorcentaje();
                 if ($arPedido->getCodigoSectorFk() == "D" && $arPedido->getEstrato() >= 4) {
                     //Cambiar porcentaje para residencial mayor a estrato 4
@@ -239,7 +240,7 @@ class TurPedidoRepository extends ServiceEntityRepository
                     $valorServicio = $arPedidoDetalle->getVrPrecioAjustado() * $arPedidoDetalle->getCantidad();
                     $precio = $arPedidoDetalle->getVrPrecioAjustado();
                 } else {
-                    $valorServicio = $valorMinimoServicio * $arPedidoDetalle->getCantidad();
+                    $valorServicio = $valorMinimoServicio;
                 }
 
 

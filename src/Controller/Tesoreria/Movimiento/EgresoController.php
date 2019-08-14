@@ -5,6 +5,9 @@ namespace App\Controller\Tesoreria\Movimiento;
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenBanco;
+use App\Entity\General\GenConfiguracion;
+use App\Entity\RecursoHumano\RhuConfiguracion;
+use App\Entity\RecursoHumano\RhuEgresoDetalle;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Entity\Tesoreria\TesEgreso;
@@ -137,7 +140,8 @@ class EgresoController extends BaseController
         }
         $form
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
-            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
+            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
+            ->add('btnArchivoPlanoBbva', SubmitType::class, ['label' => 'Generar archivo bbva']);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->All();
@@ -179,6 +183,11 @@ class EgresoController extends BaseController
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TesEgresoDetalle::class)->eliminar($arEgreso, $arrDetallesSeleccionados);
+            }
+            if ($form->get('btnArchivoPlanoBbva')->isClicked()) {
+                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+                $numero = $arEgreso->getNumero();
+                $this->generarArchivoBBVA($arEgreso, $numero,$arrDetallesSeleccionados);
             }
             return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
         }
@@ -258,4 +267,170 @@ class EgresoController extends BaseController
     }
 
 
+    private function generarArchivoBBVA($arEgreso, $numero, $arrSeleccionados)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arConfiguracionGeneral = $em->getRepository(GenConfiguracion::class)->find(1);
+        $arRhuConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $dateNow = new \DateTime('now');
+        $dateNow = $dateNow->format('YmdHis');
+        $strNombreArchivo = "pagoBBVA{$numero}_{$dateNow}.txt";
+        $strArchivo = $arConfiguracionGeneral->getRutaTemporal() . $strNombreArchivo;
+        ob_clean();
+        $ar = fopen($strArchivo, "a") or die("Problemas en la creacion del archivo plano");
+        $strValorTotal = 0;
+        $arEgresoDetalles = $em->getRepository(TesEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $arEgreso->getCodigoEgresoPk()));
+        foreach ($arEgresoDetalles AS $arEgresoDetalle) {
+            $strValorTotal += round($arEgresoDetalle->getVrPago());
+        }
+        if ($arrSeleccionados != null) {
+            $strValorTotal = 0;
+            $arEgresoDetalles = [];
+            foreach ($arrSeleccionados as $codigo) {
+                $arEgresoDetalle = $em->getRepository(TesEgresoDetalle::class)->find($codigo);
+                $arEgresoDetalle[] = $arEgresoDetalle;
+                $strValorTotal += round($arEgresoDetalle->getVrPago());
+            }
+        }
+        //Inicio cuerpo
+        foreach ($arEgresoDetalles AS $arEgresoDetalle) {
+            if ($arEgresoDetalle->getVrPago() > 0) {
+                $varTipoDocumento =$arEgreso->getTerceroRel()->getCodigoIdentificacionFk();
+                //$varTipoDocumento = $arEgresoDetalle->getEmpleadoRel()->getTipoIdentificacionRel()->getCodigoInterface();
+                switch ($varTipoDocumento) {
+                    //'01' - Cédula de ciudadanía
+                    case 'CC':
+                        $strTipoDocumento = '01';
+                        break;
+                    //'02' - Cédula de extranjería
+                    case 'CE':
+                        $strTipoDocumento = '02';
+                        break;
+                    //'03' - N.I.T.
+                    case 'NI':
+                        $strTipoDocumento = '03';
+                        break;
+                    //'04' - Tarjeta de Identidad
+                    case 'TI':
+                        $strTipoDocumento = '04';
+                        break;
+                    //'05' - Pasaporte
+                    case 'PA':
+                        $strTipoDocumento = '05';
+                        break;
+                    // '06' - Sociedad extranjera sin N.I.T. En Colombia
+                    case 'TDE':
+                        $strTipoDocumento = '06';
+                        break;
+                }
+
+                //Tipo de identificacion del empleado
+                fputs($ar, $strTipoDocumento);
+
+                //Numero de identificacion del empleado
+                //fputs($ar, $this->RellenarNr($arEgresoDetalle->getEmpleadoRel()->getNumeroIdentificacion(), "0", 15));
+                fputs($ar, $this->RellenarNr($arEgreso->getTerceroRel()->getNumeroIdentificacion(), "0", 15));
+
+                //Forma de pago
+                fputs($ar, '01');
+
+                //Codigo general del banco
+                fputs($ar, $this->RellenarNr($arEgreso->getTerceroRel()->getBancoRel()->getCodigoInterface(), "0", 4));
+
+                //Numero de cuenta del empleado y se valida si al cuenta es de BBVA o pertenece a un banco diferente
+                if ($arEgreso->getTerceroRel()->getBancoRel()->getCodigoInterface() != 13) {
+                    fputs($ar, '0000000000000000');
+                    switch ($arEgresoDetalles->getEmpleadoRel()->getTipoCuenta()) {
+                        case 'S':
+                            $tipoCuenta = '02';
+                            break;
+                        case 'D':
+                            $tipoCuenta = '01';
+                            break;
+                    }
+                    fputs($ar, $this->RellenarNr2($tipoCuenta . $arEgresoDetalle->getEmpleadoRel()->getCuenta(), ' ', 19, 'D'));
+                } else {
+                    if ($arRhuConfiguracion->getConcatenarOfinaCuentaBbva()) {
+                        $oficina = substr($arEgresoDetalle->getEmpleadoRel()->getCuenta(), 0, 3);
+                        $cuenta = substr($arEgresoDetalle->getEmpleadoRel()->getCuenta(), 3);
+                        $strRellenar = "";
+                        if ($arEgresoDetalle->getEmpleadoRel()->getTipoCuenta() == "S") {
+                            $strRellenar = '000200';
+                        } elseif ($arEgresoDetalle->getEmpleadoRel()->getTipoCuenta() == "D") {
+                            $strRellenar = '000100';
+                        }
+                        fputs($ar, $this->RellenarNr2('0' . $oficina . '' . $strRellenar . '' . $cuenta, ' ', 16, 'D'));
+                    } else {
+                        fputs($ar, $this->RellenarNr2($arEgresoDetalle->getEmpleadoRel()->getCuenta(), ' ', 16, 'D'));
+                    }
+                    fputs($ar, '0000000000000000000');
+                }
+
+                //Valor entero del pago
+                fputs($ar, $this->RellenarNr($arEgresoDetalle->getVrPago(), '0', 13));
+
+                //Valor decimal del pago
+                fputs($ar, $this->RellenarNr('0', '0', 2));
+
+                //Fecha limite de pago, no aplica
+                fputs($ar, '000000000000');
+
+                //Nombre del empleado
+                fputs($ar, $this->RellenarNr2(substr($arEgresoDetalle->getEmpleadoRel()->getNombreCorto(), 0, 36), " ", 36, 'D'));
+
+                //Direccion del empleado
+                fputs($ar, $this->RellenarNr2('BOGOTA', " ", 36, 'D'));
+
+                //2da direccion del empleado
+                fputs($ar, $this->RellenarNr2(" ", " ", 36, 'D'));
+
+                //Email del empleado
+                fputs($ar, $this->RellenarNr2(" ", " ", 48, 'D'));
+
+                //Concepto del pago
+                fputs($ar, $this->RellenarNr2($arEgresoDetalle->getDescripcion(), " ", 40, 'D'));
+                fputs($ar, "\n");
+            }
+        }
+        fclose($ar);
+        $em->flush();
+        //Fin cuerpo
+        header('Content-Description: File Transfer');
+        header('Content-Type: text/csv; charset=ISO-8859-15');
+        header('Content-Disposition: attachment; filename=' . basename($strArchivo));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($strArchivo));
+        readfile($strArchivo);
+        exit;
+    }
+
+    //Rellenar numeros
+    public static function RellenarNr($Nro, $Str, $NroCr):string
+    {
+        $Longitud = strlen($Nro);
+
+        $Nc = $NroCr - $Longitud;
+        for ($i = 0; $i < $Nc; $i++)
+            $Nro = $Str . $Nro;
+
+        return (string)$Nro;
+    }
+
+    public static function RellenarNr2($Nro, $Str, $NroCr, $strPosicion):string
+    {
+        $Nro = utf8_decode($Nro);
+        $Longitud = strlen($Nro);
+        $Nc = $NroCr - $Longitud;
+        for ($i = 0; $i < $Nc; $i++) {
+            if ($strPosicion == "I") {
+                $Nro = $Str . $Nro;
+            } else {
+                $Nro = $Nro . $Str;
+            }
+        }
+
+        return (string)$Nro;
+    }
 }

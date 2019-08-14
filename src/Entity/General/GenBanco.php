@@ -27,6 +27,16 @@ class GenBanco
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_interface", type="string", length=10, nullable=true)
+     */
+    private $codigoInterface;
+
+    /**
+     * @ORM\Column(name="codigo_dian", type="string", length=10, nullable=true)
+     */
+    private $codigoDian;
+
+    /**
      * @ORM\OneToMany(targetEntity="GenCuenta", mappedBy="bancoRel")
      */
     protected $cuentasBancoRel;
@@ -92,6 +102,38 @@ class GenBanco
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoInterface()
+    {
+        return $this->codigoInterface;
+    }
+
+    /**
+     * @param mixed $codigoInterface
+     */
+    public function setCodigoInterface($codigoInterface): void
+    {
+        $this->codigoInterface = $codigoInterface;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDian()
+    {
+        return $this->codigoDian;
+    }
+
+    /**
+     * @param mixed $codigoDian
+     */
+    public function setCodigoDian($codigoDian): void
+    {
+        $this->codigoDian = $codigoDian;
     }
 
     /**

@@ -43,10 +43,21 @@
                         </thead>
                         <tbody>
                         {% for arPedidoDetalle in arPedidoDetalles %}
-                            <tr>
+                            <tr style="background-color: #c8c8c8">
                                 <td></td>
                                 <td>{{ arPedidoDetalle.conceptoNombre }}</td>
-                                <td colspan="34"></td>
+                                <td colspan="19">
+
+                                </td>
+                                <td colspan="4">H.DIURNAS:124 (379 )</td>
+                                <td colspan="4">H.NOCTURNAS:</td>
+                                <td colspan="2">planear</td>
+                                <td colspan="2">pet</td>
+                                <td colspan="2">det</td>
+                                <td style="text-align: center;">
+                                    <a href=" path('crm_administracion_comercial_cliente_nuevo',{'id': arClientes.codigoClientePk }) }}"><i
+                                                class="fa fa-user" style="color: black;font-size: large;"></i></a>
+                                </td>
                             </tr>
 
                             {% for arProgramacion in arPedidoDetalle.arProgramaciones %}

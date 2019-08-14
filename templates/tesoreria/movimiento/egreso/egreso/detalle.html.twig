@@ -12,6 +12,7 @@
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
         </div>
+        {{ form_widget(form.btnArchivoPlanoBbva) }}
     </div>
     <div style="float:right">
         {% if arEgreso.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}

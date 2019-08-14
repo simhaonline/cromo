@@ -101,6 +101,27 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function listaBuscarProgramacion(){
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class,'e')
+            ->select('e.codigoContratoFk')
+            ->addSelect('e.codigoEmpleadoPk')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.estadoContrato')
+            ->where('e.codigoEmpleadoPk <> 0');
+        if($session->get('filtroTurPedidoDetalleCodigo')){
+            $queryBuilder->andWhere("e.codigoEmpleadoPk = {$session->get('filtroTurPedidoDetalleCodigo')}");
+        }
+        if($session->get('filtroTurPedidoDetalleNombre')){
+            $queryBuilder->andWhere("e.nombreCorto LIKE '%{$session->get('filtroTurPedidoDetalleNombre')}%'");
+        }
+        if($session->get('filtroTurPedidoDetalleIdentificacion')){
+            $queryBuilder->andWhere("e.numeroIdentificacion = '{$session->get('filtroTurPedidoDetalleIdentificacion')}' ");
+        }
+        return $queryBuilder;
+    }
+
     public function terceroTesoreria($arEmpleado)
     {
         $em = $this->getEntityManager();

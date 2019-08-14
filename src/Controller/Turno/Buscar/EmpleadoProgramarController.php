@@ -85,9 +85,9 @@ class EmpleadoProgramarController extends Controller
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTurEmpleadoCodigo', $formFiltro->get('txtCodigo')->getData());
-                $session->set('filtroTurEmpleadoNombre', $formFiltro->get('txtNombre')->getData());
-                $session->set('filtroTurEmpleadoIdentificacion', $formFiltro->get('txtIdentificacion')->getData());
+                $session->set('filtroTurPedidoDetalleCodigo', $formFiltro->get('txtCodigo')->getData());
+                $session->set('filtroTurPedidoDetalleNombre', $formFiltro->get('txtNombre')->getData());
+                $session->set('filtroTurPedidoDetalleIdentificacion', $formFiltro->get('txtIdentificacion')->getData());
             }
 
             if ($formFiltro->get('btnGuardar')->isClicked()) {
@@ -115,7 +115,7 @@ class EmpleadoProgramarController extends Controller
         }
         //        $arEmpleados = $em->getRepository(RhuEmpleado::class)->findBy(['codigoEmpleadoTipoFk'=>2]);
 
-        $arEmpleados = $paginator->paginate($em->getRepository(RhuEmpleado::class)->findAll(), $request->query->get('page', 1), 20);
+        $arEmpleados = $paginator->paginate($em->getRepository(RhuEmpleado::class)->listaBuscarProgramacion(), $request->query->get('page', 1), 20);
 
         return $this->render('turno/buscar/empleadoProgramacion.html.twig', [
             'arEmpleados' => $arEmpleados,

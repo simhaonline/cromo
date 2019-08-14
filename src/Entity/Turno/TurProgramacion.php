@@ -247,7 +247,7 @@ class TurProgramacion
 
     /**
      * @ORM\ManyToOne(targetEntity="TurPuesto", inversedBy="programacionesPuestoRel")
-     * @ORM\JoinColumn(name="codigo_pedido_fk", referencedColumnName="codigo_puesto_pk")
+     * @ORM\JoinColumn(name="codigo_puesto_fk", referencedColumnName="codigo_puesto_pk")
      */
     protected $puestoRel;
 

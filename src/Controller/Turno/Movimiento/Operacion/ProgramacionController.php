@@ -5,10 +5,13 @@ namespace App\Controller\Turno\Movimiento\Operacion;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
+use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurProgramacion;
@@ -20,6 +23,7 @@ use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,7 +54,6 @@ class ProgramacionController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -78,8 +81,9 @@ class ProgramacionController extends ControllerListenerGeneral
         $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arPedido = $em->getRepository(TurPedido::class)->find($id);
+        $dateFecha = (new \DateTime('now'));
+        $arrDiaSemana = "";
         $form = $this->createFormBuilder()
-
             ->getForm();
 
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
@@ -93,16 +97,18 @@ class ProgramacionController extends ControllerListenerGeneral
             }
             return $this->redirect($this->generateUrl('turno_movimiento_operacion_programacion_detalle', ['id' => $id]));
         }
+        $arrDiaSemana = FuncionesController::diasMes($dateFecha, $em->getRepository(TurFestivo::class)->festivos($dateFecha->format('Y-m-') . '01', $dateFecha->format('Y-m-t')));
         $arPedidoDetalles = $em->getRepository(TurProgramacion::class)->detalleProgramacion($id);
         return $this->render('turno/movimiento/operacion/programacion/detalle.html.twig', [
             'form' => $form->createView(),
+            'arrDiaSemana' => $arrDiaSemana,
             'arPedidoDetalles' => $arPedidoDetalles,
             'arPedido' => $arPedido
         ]);
     }
 
     /**
-     *@Route("/turno/movimiento/operacion/programacion/recurso/{codigoPedidoDetalle}/{codigoEmpleado}", name="turno_movimiento_operacion_programacion_recurso")
+     * @Route("/turno/movimiento/operacion/programacion/recurso/{codigoPedidoDetalle}/{codigoEmpleado}", name="turno_movimiento_operacion_programacion_recurso")
      */
     public function programacion_masiva(Request $request, $codigoPedidoDetalle, $codigoEmpleado)
     {
@@ -115,7 +121,7 @@ class ProgramacionController extends ControllerListenerGeneral
             $strFecha = $strAnioMes . '/' . $i;
             $dateFecha = date_create($strFecha);
             $diaSemana = $this->devuelveDiaSemanaEspaniol($dateFecha);
-            $arrDiaSemana[$i] = ['dia' => $i, 'diaSemana'=> $diaSemana];
+            $arrDiaSemana[$i] = ['dia' => $i, 'diaSemana' => $diaSemana];
         }
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
@@ -129,10 +135,10 @@ class ProgramacionController extends ControllerListenerGeneral
                 $resultado = $this->actualizarDetalle($arrControles);
             }
         }
-        $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(['codigoEmpleadoFk'=>$codigoEmpleado]);
+        $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(['codigoEmpleadoFk' => $codigoEmpleado]);
         return $this->render('turno/movimiento/operacion/programacion/programacionRecurso.html.twig', [
             'arrDiaSemana' => $arrDiaSemana,
-            'arProgramaciones'=>$arProgramaciones,
+            'arProgramaciones' => $arProgramaciones,
             'form' => $form->createView()
         ]);
     }

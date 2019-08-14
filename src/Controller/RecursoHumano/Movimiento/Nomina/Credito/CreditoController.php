@@ -7,11 +7,13 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
+use App\Entity\RecursoHumano\RhuCreditoPago;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\CreditoType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -129,12 +131,21 @@ class CreditoController extends ControllerListenerGeneral
      */
     public function detalle(Request $request, $id)
     {
+        $session = new Session();
+        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->clase)->find($id);
         $form = Estandares::botonera($arRegistro->getEstadoAutorizado(), $arRegistro->getEstadoAprobado(), $arRegistro->getEstadoAnulado());
         $form->handleRequest($request);
+        $arCreditoPagos = $paginator->paginate($em->getRepository(RhuCreditoPago::class)->listaPorCredito($id), $request->query->getInt('PageCreditoPago', 1), 30,
+            array(
+                'pageParameterName' => 'PageCreditoPago',
+                'sortFieldParameterName' => 'sortPageCreditoPago',
+                'sortDirectionParameterName' => 'directionPageCreditoPago',
+            ));
         return $this->render('recursohumano/movimiento/nomina/credito/detalle.html.twig', [
             'arRegistro' => $arRegistro,
+            'arCreditoPagos'=>$arCreditoPagos,
             'form' => $form->createView()
         ]);
     }

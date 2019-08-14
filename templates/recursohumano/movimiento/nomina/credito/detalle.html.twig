@@ -10,7 +10,7 @@
         </div>
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arRegistro.codigoCreditoPk }}</td>
@@ -75,6 +75,44 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
+    <br/><br/>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="detalles">
+            <table class="table table-bordered table-striped tabla-datos">
+                <thead>
+                    <tr>
+                        <th>CODIGO PAGO	</th>
+                        <th>FECHA</th>
+                        <th>TIPO</th>
+                        <th>COUTA</th>
+                        <th>SALDO</th>
+                        <th>PAGO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for arCreditoPago in arCreditoPagos %}
+                    <tr>
+                        <td>{{ arCreditoPago.codigoCreditoPagoPk }}</td>
+                        <td>{{ arCreditoPago.fechaPago |date("Y-m-d") }}</td>
+                        <td>{{ arCreditoPago.codigoCreditoPagoTipoFk }}</td>
+                        <td>{{ arCreditoPago.numeroCuotaActual }}</td>
+                        <td class="numero">{{ arCreditoPago.vrSaldo |  number_format(0, '.', ',')}}</td>
+                        <td class="numero">{{ arCreditoPago.vrPago  |  number_format(0, '.', ',')}}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="btn-group" style="float: left">
+                <div class="btn btn-default btn-sm">Registros
+                    <span class="badge">{{ arCreditoPagos.getTotalItemCount }}
+            </span>
+                </div>
+            </div>
+            <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+                {{ knp_pagination_render(arCreditoPagos) }}
+            </div>
+        </div>
+    </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
     <br>

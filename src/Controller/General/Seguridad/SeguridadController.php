@@ -29,8 +29,8 @@ class SeguridadController extends Controller
      */
     public function lista(Request $request)
     {
+        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
-        $arUsuarios = $em->getRepository('App:Seguridad\Usuario')->findAll();
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcelPermiso', SubmitType::class, ['label' => 'Excel permiso', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -56,6 +56,7 @@ class SeguridadController extends Controller
                 General::get()->setExportar($arUsuariosPermisos,'ExcelPermiso');
             }
         }
+        $arUsuarios = $paginator->paginate($em->getRepository('App:Seguridad\Usuario')->findAll(), $request->query->getInt('page', 1), 500);
         return $this->render('general/seguridad/lista.html.twig', [
             'arUsuarios' => $arUsuarios,
             'form' => $form->createView()

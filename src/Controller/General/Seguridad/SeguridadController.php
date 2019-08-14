@@ -56,7 +56,7 @@ class SeguridadController extends Controller
                 General::get()->setExportar($arUsuariosPermisos,'ExcelPermiso');
             }
         }
-        $arUsuarios = $paginator->paginate($em->getRepository('App:Seguridad\Usuario')->findAll(), $request->query->getInt('page', 1), 500);
+        $arUsuarios = $paginator->paginate($em->getRepository('App:Seguridad\Usuario')->findAll(), $request->query->getInt('page', 1), 30);
         return $this->render('general/seguridad/lista.html.twig', [
             'arUsuarios' => $arUsuarios,
             'form' => $form->createView()

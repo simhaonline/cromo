@@ -37,7 +37,18 @@ class TurProgramacionRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd')
             ->select('pd.codigoPedidoDetallePk')
             ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('m.nombre as modalidad')
+            ->addSelect('pu.codigoPuestoPk as puestoCodigo')
+            ->addSelect('pu.nombre as puestoNombre')
+            ->addSelect('c.nombre as concepto')
+            ->addSelect('pet.nombre as pedidoTipo')
+            ->addSelect('cl.nombreCorto as cliente')
+            ->leftJoin('pd.modalidadRel', 'm')
+            ->leftJoin('pd.puestoRel', 'pu')
             ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.pedidoRel', 'p')
+            ->leftJoin('p.clienteRel', 'cl')
+            ->leftJoin('p.pedidoTipoRel', 'pet')
         ->where('pd.codigoPedidoFk=' . $codigoPedido);
         $arrPedidoDetalles = $queryBuilder->getQuery()->getResult();
         $c = 0;
@@ -48,11 +59,11 @@ class TurProgramacionRepository extends ServiceEntityRepository
                 ->addSelect('p.horasNocturnas')
                 ->addSelect('p.anio')
                 ->addSelect('p.mes')
-                ->addSelect('pu.codigoPuestoPk as puesto')
                 ->addSelect('p.codigoEmpleadoFk')
                 ->addSelect('e.nombreCorto as empleadoNombreCorto')
                 ->leftJoin('p.empleadoRel', 'e')
-                ->leftJoin('p.puestoRel', 'pu')
+
+                ->leftJoin('p.pedidoDetalleRel', 'pd')
                 ->where('p.codigoPedidoDetalleFk = ' . $arrPedidoDetalle['codigoPedidoDetallePk']);
             for ($i = 1; $i <= 31; $i++) {
                 $queryBuilder->addSelect("p.dia{$i}");

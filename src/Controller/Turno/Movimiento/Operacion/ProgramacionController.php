@@ -99,6 +99,8 @@ class ProgramacionController extends ControllerListenerGeneral
         }
         $arrDiaSemana = FuncionesController::diasMes($dateFecha, $em->getRepository(TurFestivo::class)->festivos($dateFecha->format('Y-m-') . '01', $dateFecha->format('Y-m-t')));
         $arPedidoDetalles = $em->getRepository(TurProgramacion::class)->detalleProgramacion($id);
+
+//        dd($arPedidoDetalles);
         return $this->render('turno/movimiento/operacion/programacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arrDiaSemana' => $arrDiaSemana,

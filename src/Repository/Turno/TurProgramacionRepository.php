@@ -49,7 +49,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
             ->leftJoin('pd.pedidoRel', 'p')
             ->leftJoin('p.clienteRel', 'cl')
             ->leftJoin('p.pedidoTipoRel', 'pet')
-        ->where('pd.codigoPedidoFk=' . $codigoPedido);
+            ->where('pd.codigoPedidoFk=' . $codigoPedido);
         $arrPedidoDetalles = $queryBuilder->getQuery()->getResult();
         $c = 0;
         foreach ($arrPedidoDetalles as $arrPedidoDetalle) {
@@ -62,7 +62,6 @@ class TurProgramacionRepository extends ServiceEntityRepository
                 ->addSelect('p.codigoEmpleadoFk')
                 ->addSelect('e.nombreCorto as empleadoNombreCorto')
                 ->leftJoin('p.empleadoRel', 'e')
-
                 ->leftJoin('p.pedidoDetalleRel', 'pd')
                 ->where('p.codigoPedidoDetalleFk = ' . $arrPedidoDetalle['codigoPedidoDetallePk']);
             for ($i = 1; $i <= 31; $i++) {
@@ -297,7 +296,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
             ->where("p.codigoEmpleadoFk = {$codigoEmpleado}")
             ->andWhere("p.anio={$anio}")
             ->andWhere("p.mes={$mes}");
-        for($i = 1; $i<=31;$i++) {
+        for ($i = 1; $i <= 31; $i++) {
             $queryBuilder->addSelect('p.dia' . $i);
         }
 
@@ -314,6 +313,30 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
         $stmt->execute();
         $result = $stmt->fetchAll();*/
 
+    }
+
+    public function programacionPorMes($anio, $mes, $codigoEmpleado)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurProgramacion::class, 'p')
+            ->select('p.codigoProgramacionPk')
+            ->addSelect('p.codigoPedidoDetalleFk')
+            ->addSelect('p.horasDiurnas')
+            ->addSelect('p.horasNocturnas')
+            ->addSelect('p.anio')
+            ->addSelect('p.mes')
+            ->addSelect('p.codigoEmpleadoFk')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('cl.nombreCorto as cliente')
+            ->addSelect('ped.codigoClienteFk')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('p.pedidoRel', 'ped')
+            ->leftJoin('ped.clienteRel', 'cl')
+            ->where("p.codigoEmpleadoFk = '$codigoEmpleado'")
+            ->andWhere("p.anio = '$anio'")
+            ->andWhere("p.mes = '$mes'");
+        return $queryBuilder->getQuery()->getResult();
     }
 }
 

@@ -27,7 +27,7 @@
                     <table class="table table-striped table-bordered table-condensed tabla-datos">
                         <thead>
                         <tr>
-                            <th colspan="3">RECURSO</th>
+                            <th colspan="2">RECURSO</th>
                             {% if arrDiaSemana != "" %}
                                 {% for arrDiaSemana in arrDiaSemana %}
                                     <th {{ arrDiaSemana.festivo? 'class="dia-festivo"' : '' }}>{{ arrDiaSemana.dia }}{{ arrDiaSemana.diaSemana|upper }}</th>
@@ -39,6 +39,7 @@
                             {% endif %}
                             <th>H</th>
                             <th>P.D</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>

@@ -190,7 +190,7 @@ class ProgramacionController extends ControllerListenerGeneral
                     $horasNocturnasPendientes = $arPedidoDetalle->getHorasNocturnas() - $arPedidoDetalle->getHorasNocturnasProgramadas();
                     $diffDiurnas = $validar['horasDiurnas'] - $validar['horasDiurnasLinea'];
                     $diffNocturnas = $validar['horasNocturnas'] - $validar['horasNocturnasLinea'];
-                    if ($horasDiurnasPendientes >= $diffDiurnas || $validar = false) {
+                    if ($horasDiurnasPendientes >= $diffDiurnas) {
                         if ($horasNocturnasPendientes >= $diffNocturnas) {
                             $horasDiurnasProgramadas = ($arPedidoDetalle->getHorasDiurnasProgramadas() - $arProgramacion->getHorasDiurnas()) + $validar['horasDiurnas'];
                             $horasNocturnasProgramadas = ($arPedidoDetalle->getHorasNocturnasProgramadas() - $arProgramacion->getHorasNocturnas()) + $validar['horasNocturnas'];

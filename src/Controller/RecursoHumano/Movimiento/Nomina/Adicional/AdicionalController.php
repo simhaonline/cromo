@@ -105,7 +105,8 @@ class AdicionalController extends ControllerListenerGeneral
             }
         }
         return $this->render('recursohumano/movimiento/nomina/adicional/nuevo.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'arAdicional'=>$arAdicional
         ]);
     }
 

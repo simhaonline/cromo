@@ -68,9 +68,9 @@ class EmpleadoProgramarController extends Controller
     }
 
     /**
-     * @Route("/turno/buscar/{codigoPedidoDestelle}", name="turno_buscar_empleadopedido")
+     * @Route("/turno/buscar/{codigoPedidoDetalle}", name="turno_buscar_empleadopedido")
      */
-    public function pedidoLista(Request $request, $codigoPedidoDestelle)
+    public function pedidoLista(Request $request, $codigoPedidoDetalle)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
@@ -92,7 +92,7 @@ class EmpleadoProgramarController extends Controller
 
             if ($formFiltro->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $arPedidoDetalle = $em->getRepository( TurPedidoDetalle::class)->find($codigoPedidoDestelle);
+                $arPedidoDetalle = $em->getRepository( TurPedidoDetalle::class)->find($codigoPedidoDetalle);
 
                 if(is_array($arrSeleccionados)) {
                     foreach ($arrSeleccionados as $codigo) {

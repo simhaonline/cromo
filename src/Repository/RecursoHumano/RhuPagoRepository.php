@@ -343,7 +343,16 @@ class RhuPagoRepository extends ServiceEntityRepository
     {
         $arrHoras['D'] = array('tipo' => 'D', 'cantidad' => $arProgramacionDetalle->getHorasDiurnas(), 'clave' => 0);
         $arrHoras['DS'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasDescanso(), 'clave' => 1);
-        $arrHoras['N'] = array('tipo' => 'N', 'cantidad' => $arProgramacionDetalle->getHorasNocturnas(), 'clave' => 8);
+        $arrHoras['EFD'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasExtrasFestivasDiurnas(), 'clave' => 2);
+        $arrHoras['EFN'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasExtrasFestivasNocturnas(), 'clave' => 3);
+        $arrHoras['EOD'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasExtrasOrdinariasDiurnas(), 'clave' => 4);
+        $arrHoras['EON'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasExtrasOrdinariasNocturnas(), 'clave' => 5);
+        $arrHoras['FD'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasFestivasDiurnas(), 'clave' => 6);
+        $arrHoras['FN'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasFestivasNocturnas(), 'clave' => 7);
+        $arrHoras['N'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasNocturnas(), 'clave' => 8);
+        $arrHoras['RFD'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasRecargoFestivoDiurno(), 'clave' => 9);
+        $arrHoras['RFN'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasRecargoFestivoNocturno(), 'clave' => 10);
+        $arrHoras['RN'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasRecargoNocturno(), 'clave' => 11);
         return $arrHoras;
     }
 

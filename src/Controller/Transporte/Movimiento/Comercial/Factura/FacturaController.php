@@ -692,6 +692,7 @@ class FacturaController extends ControllerListenerGeneral
             ->add('tipoLiquidacion', ChoiceType::class, [
                 'choices' => [
                     'PREDEFINIDA' => '0',
+                    'TIPO INGRESO' => '1',
                     'PESO' => 'K',
                     'UNIDAD' => 'U',
                     'ADICIONAL' => 'A',
@@ -701,14 +702,21 @@ class FacturaController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnReliquidar')->isClicked()) {
                 $em->getRepository(TteFacturaDetalleReliquidar::class)->limpiarTabla($codigoFactura);
-                $tipoLiquidacion = $form->get('tipoLiquidacion')->getData();
-                if($tipoLiquidacion == "0") {
-                    $tipoLiquidacion = $em->getRepository(TteCondicion::class)->tipoLiquidacion($arFactura->getClienteRel()->getCondicionRel());
-                }
 
+                $tipoLiquidacionParametro = $form->get('tipoLiquidacion')->getData();
+                if($tipoLiquidacionParametro == "0") {
+                    $tipoLiquidacionParametro = $em->getRepository(TteCondicion::class)->tipoLiquidacion($arFactura->getClienteRel()->getCondicionRel());
+                }
 
                 $arFacturaDetalles = $em->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $codigoFactura]);
                 foreach ($arFacturaDetalles as $arFacturaDetalle){
+                    $tipoLiquidacion = $tipoLiquidacionParametro;
+                    if($tipoLiquidacionParametro == "1") {
+                        $tipoLiquidacion = "K";
+                        if($arFacturaDetalle->getGuiaRel()->getTipoLiquidacion()) {
+                            $tipoLiquidacion = $arFacturaDetalle->getGuiaRel()->getTipoLiquidacion();
+                        }
+                    }
                     $arrResultado = $em->getRepository(TteGuia::class)->liquidar(
                         $arFactura->getCodigoClienteFk(),
                         $arFactura->getClienteRel()->getCodigoCondicionFk(),

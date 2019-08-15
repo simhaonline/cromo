@@ -62,6 +62,7 @@
             <th>OC</th>
             <th>ORIGEN</th>
             <th>DESTINO</th>
+            <th>ZONA</th>
             <th>DOCUMENTO</th>
             <th>PRODUCTO</th>
             <th>UND</th>
@@ -74,6 +75,7 @@
             <th>MANEJO</th>
             <th>MANEJO(N)</th>
             <th>DECLARA</th>
+            <th title="Tipo de liquidacion"></th>
         </tr>
         </thead>
         <tbody>
@@ -85,6 +87,7 @@
                 <td>{{ arFacturaDetalleReliquidar.codigoOperacionCargoFk }}</td>
                 <td>{{ arFacturaDetalleReliquidar.ciudadOrigen}}</td>
                 <td>{{ arFacturaDetalleReliquidar.ciudadDestino }}</td>
+                <td>{{ arFacturaDetalleReliquidar.codigoZonaFk }}</td>
                 <td>{{ arFacturaDetalleReliquidar.documentoCliente }}</td>
                 <td>{{ arFacturaDetalleReliquidar.productoNombre }}</td>
                 <td>{{ arFacturaDetalleReliquidar.unidades }}</td>
@@ -97,6 +100,7 @@
                 <td class="numero">{{ arFacturaDetalleReliquidar.vrManejo | number_format }}</td>
                 <td  {% if arFacturaDetalleReliquidar.vrManejo != arFacturaDetalleReliquidar.vrManejoNuevo %} class="numero danger" {% else %} class="numero" {% endif %}>{{ arFacturaDetalleReliquidar.vrManejoNuevo | number_format }}</td>
                 <td class="numero">{{ arFacturaDetalleReliquidar.vrDeclara | number_format }}</td>
+                <td>{{ arFacturaDetalleReliquidar.tipoLiquidacion }}</td>
             </tr>
         {% endfor %}
         </tbody>

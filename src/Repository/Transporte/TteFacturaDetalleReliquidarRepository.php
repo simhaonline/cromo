@@ -34,6 +34,8 @@ class TteFacturaDetalleReliquidarRepository extends ServiceEntityRepository
             ->addSelect('g.codigoOperacionCargoFk')
             ->addSelect('co.nombre AS ciudadOrigen')
             ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.codigoZonaFk')
+            ->addSelect('g.tipoLiquidacion')
             ->addSelect('g.documentoCliente')
             ->addSelect('g.documentoCliente')
             ->addSelect('fd.unidades')

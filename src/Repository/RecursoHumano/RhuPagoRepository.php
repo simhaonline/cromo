@@ -342,7 +342,8 @@ class RhuPagoRepository extends ServiceEntityRepository
     private function getHoras($arProgramacionDetalle)
     {
         $arrHoras['D'] = array('tipo' => 'D', 'cantidad' => $arProgramacionDetalle->getHorasDiurnas(), 'clave' => 0);
-        $arrHoras['N'] = array('tipo' => 'N', 'cantidad' => $arProgramacionDetalle->getHorasNocturnas(), 'clave' => 7);
+        $arrHoras['DS'] = array('tipo' => 'DS', 'cantidad' => $arProgramacionDetalle->getHorasDescanso(), 'clave' => 1);
+        $arrHoras['N'] = array('tipo' => 'N', 'cantidad' => $arProgramacionDetalle->getHorasNocturnas(), 'clave' => 8);
         return $arrHoras;
     }
 

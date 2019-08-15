@@ -33,6 +33,7 @@ class ConfiguracionController extends Controller
             $arConfiguracion->setCodigoConfiguracionPk(1);
         }
         $arrConceptoRelDiurna = $this->generarConceptoRel('D');
+        $arrConceptoRelDescanso = $this->generarConceptoRel('DS');
         $arrConceptoRelNocturna = $this->generarConceptoRel('N');
         $arrConceptoRelFestivaDiurna = $this->generarConceptoRel('FD');
         $arrConceptoRelFestivaNocturna = $this->generarConceptoRel('FN');
@@ -45,6 +46,7 @@ class ConfiguracionController extends Controller
         $arrConceptoRelRecargoFestivoNocturno = $this->generarConceptoRel('RFN');
         $formConceptoHora = $this->get('form.factory')->createNamedBuilder('conceptoHora')
             ->add('DConceptoRel', EntityType::class, $arrConceptoRelDiurna)
+            ->add('DSConceptoRel', EntityType::class, $arrConceptoRelDescanso)
             ->add('NConceptoRel', EntityType::class, $arrConceptoRelNocturna)
             ->add('FDConceptoRel', EntityType::class, $arrConceptoRelFestivaDiurna)
             ->add('FNConceptoRel', EntityType::class, $arrConceptoRelFestivaNocturna)

@@ -29,6 +29,7 @@ class TurnoType extends   AbstractType
             ->add('horasNocturnas', NumberType::class, ['required' => false])
             ->add('novedad', CheckboxType::class, ['required' => false,'label' => 'Novedad'])
             ->add('descanso', CheckboxType::class, ['required' => false,'label' => 'Descanso'])
+            ->add('descansoOrdinario', CheckboxType::class, ['required' => false,'label' => 'Descanso ordinario'])
             ->add('incapacidad', CheckboxType::class, ['required' => false,'label' => 'Incapacidad'])
             ->add('licencia', CheckboxType::class, ['required' => false,'label' => 'Licencia'])
             ->add('vacacion', CheckboxType::class, ['required' => false,'label' => 'Vacacion'])
@@ -38,7 +39,8 @@ class TurnoType extends   AbstractType
             ->add('dia', CheckboxType::class, ['required' => false,'label' => 'Dia'])
             ->add('noche', CheckboxType::class, ['required' => false,'label' => 'Noche'])
             ->add('guardar', SubmitType::class, array('label' => 'Guardar',))
-            ->getForm();    }
+            ->getForm();
+    }
 
     public function configureOptions(OptionsResolver $resolver)
     {

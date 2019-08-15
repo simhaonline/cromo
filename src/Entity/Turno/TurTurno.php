@@ -83,6 +83,11 @@ class TurTurno
     private $descanso = false;
 
     /**
+     * @ORM\Column(name="descanso_ordinario", type="boolean", options={"default":false})
+     */
+    private $descansoOrdinario = false;
+
+    /**
      * @ORM\Column(name="incapacidad", type="boolean", options={"default":false})
      */
     private $incapacidad = false;
@@ -518,6 +523,22 @@ class TurTurno
     public function setLicenciaNoRemunerada($licenciaNoRemunerada): void
     {
         $this->licenciaNoRemunerada = $licenciaNoRemunerada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescansoOrdinario()
+    {
+        return $this->descansoOrdinario;
+    }
+
+    /**
+     * @param mixed $descansoOrdinario
+     */
+    public function setDescansoOrdinario($descansoOrdinario): void
+    {
+        $this->descansoOrdinario = $descansoOrdinario;
     }
 
 

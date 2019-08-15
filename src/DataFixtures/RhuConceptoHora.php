@@ -17,6 +17,14 @@ class RhuConceptoHora extends Fixture
             $arConceptoHora->setConceptoRel(null);
             $manager->persist($arConceptoHora);
         }
+        $arConceptoHora = $manager->getRepository(\App\Entity\RecursoHumano\RhuConceptoHora::class)->find('DS');
+        if(!$arConceptoHora){
+            $arConceptoHora = new \App\Entity\RecursoHumano\RhuConceptoHora();
+            $arConceptoHora->setCodigoConceptoHoraPk('DS');
+            $arConceptoHora->setNombre('Horas descanso');
+            $arConceptoHora->setConceptoRel(null);
+            $manager->persist($arConceptoHora);
+        }
         $arConceptoHora = $manager->getRepository(\App\Entity\RecursoHumano\RhuConceptoHora::class)->find('N');
         if(!$arConceptoHora){
             $arConceptoHora = new \App\Entity\RecursoHumano\RhuConceptoHora();

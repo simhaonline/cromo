@@ -25,4 +25,6 @@ class RhuConceptoHoraRepository extends ServiceEntityRepository
             ->where("ch.codigoConceptoHoraPk = {$codigoConceptoHora}")
             ->setParameter('1', $codigoConceptoFk)->getQuery()->execute();
     }
+
+
 }

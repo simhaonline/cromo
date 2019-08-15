@@ -65,6 +65,7 @@
                             <th>HASTA</th>
                             <th>SALARIO</th>
                             <th title="Horas diurnas">D</th>
+                            <th title="Horas descanso">DS</th>
                             <th title="Horas nocturnas">N</th>
                             <th title="Horas festivas diurnas">FD</th>
                             <th title="Horas festivas nocturnas">FN</th>
@@ -76,7 +77,7 @@
                             <th title="Recargos nocturnos">RN</th>
                             <th title="Recargo festivo diurno">RFD</th>
                             <th title="Recargo festivo nocturno">RFN</th>
-                            <th>VR.NETO</th>
+                            <th>NETO</th>
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -94,6 +95,7 @@
                                 <td>{{ arProgramacionDetalle.fechaHastaContrato | date('Y-m-d') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasDiurnas | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: right">{{ arProgramacionDetalle.horasDescanso | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasNocturnas | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasFestivasDiurnas | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasFestivasNocturnas | number_format(0, '.', ',') }}</td>

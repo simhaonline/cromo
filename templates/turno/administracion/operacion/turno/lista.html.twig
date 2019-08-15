@@ -64,17 +64,17 @@
                 <td>{{ arTurno.horaHasta | date('h:m') }}</td>
                 <td>{{ arTurno.horasDiurnas | date('h:m') }}</td>
                 <td>{{ arTurno.horaHasta | date('h:m') }}</td>
-                <td>{{ arTurno.novedad?"si":"no" }}</td>
-                <td>{{ arTurno.descanso?"si":"no" }}</td>
-                <td>{{ arTurno.incapacidad?"si":"no" }}</td>
-                <td>{{ arTurno.licencia?"si":"no" }}</td>
-                <td>{{ arTurno.vacacion?"si":"no" }}</td>
-                <td>{{ arTurno.ingreso?"si":"no" }}</td>
-                <td>{{ arTurno.retiro?"si":"no" }}</td>
-                <td>{{ arTurno.induccion?"si":"no" }}</td>
-                <td>{{ arTurno.ausentismo?"si":"no" }}</td>
-                <td>{{ arTurno.dia?"si":"no" }}</td>
-                <td>{{ arTurno.noche?"si":"no" }}</td>
+                <td>{{ arTurno.novedad?"SI":"NO" }}</td>
+                <td>{{ arTurno.descanso?"SI":"NO" }}</td>
+                <td>{{ arTurno.incapacidad?"SI":"NO" }}</td>
+                <td>{{ arTurno.licencia?"SI":"NO" }}</td>
+                <td>{{ arTurno.vacacion?"SI":"NO" }}</td>
+                <td>{{ arTurno.ingreso?"SI":"NO" }}</td>
+                <td>{{ arTurno.retiro?"SI":"NO" }}</td>
+                <td>{{ arTurno.induccion?"SI":"NO" }}</td>
+                <td>{{ arTurno.ausentismo?"SI":"NO" }}</td>
+                <td>{{ arTurno.dia?"SI":"NO" }}</td>
+                <td>{{ arTurno.noche?"SI":"NO" }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('turno_administracion_operacion_turno_nuevo',{'id': arTurno.codigoTurnoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

@@ -98,6 +98,11 @@ class RhuProgramacionDetalle
     private $horasDiurnas = 0;
 
     /**
+     * @ORM\Column(name="horas_descanso", type="float")
+     */
+    private $horasDescanso = 0;
+
+    /**
      * @ORM\Column(name="horas_nocturnas", type="float")
      */
     private $horasNocturnas = 0;
@@ -795,6 +800,22 @@ class RhuProgramacionDetalle
     public function setPagosProgramacionDetalleRel($pagosProgramacionDetalleRel): void
     {
         $this->pagosProgramacionDetalleRel = $pagosProgramacionDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasDescanso()
+    {
+        return $this->horasDescanso;
+    }
+
+    /**
+     * @param mixed $horasDescanso
+     */
+    public function setHorasDescanso($horasDescanso): void
+    {
+        $this->horasDescanso = $horasDescanso;
     }
 
 

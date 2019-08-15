@@ -255,8 +255,6 @@ class ProgramacionController extends ControllerListenerGeneral
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            //if ($form->get('btnActualizar')->isClicked()) {
-            //}
             if ($request->request->get('OpCargar')) {
                 $codigoSoporte = $request->request->get('OpCargar');
                 $em->getRepository(RhuProgramacion::class)->cargarContratosTurnos($codigoSoporte, $arProgramacion);

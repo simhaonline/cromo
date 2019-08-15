@@ -34,6 +34,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->addSelect('sc.diasTransporte')
             ->addSelect('sc.novedad')
             ->addSelect('sc.induccion')
+            ->addSelect('sc.ingreso')
             ->addSelect('sc.retiro')
             ->addSelect('sc.incapacidad')
             ->addSelect('sc.licencia')
@@ -94,6 +95,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->addSelect('c.vrSalario')
             ->addSelect('c.fechaDesde as contratoFechaDesde')
             ->addSelect('c.fechaHasta as contratoFechaHasta')
+            ->addSelect('c.factorHorasDia')
             ->addSelect('sc.dias')
             ->addSelect('sc.diasTransporte')
             ->addSelect('sc.horasDescanso')
@@ -154,6 +156,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                             'horaHasta' => $arTurno->getHoraHasta(),
                             'novedad' => $arTurno->getNovedad(),
                             'descanso' => $arTurno->getDescanso(),
+                            'descansoOrdinario' => $arTurno->getDescansoOrdinario(),
                             'completo' => $arTurno->getCompleto(),
                             'vacacion' => $arTurno->getVacacion(),
                             'licencia' => $arTurno->getLicencia(),
@@ -237,11 +240,11 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                     $arrHoras1 = $this->turnoHoras(0, 0, $intHoraFinal, $boolFestivo2, $arrHoras['horas'], $dateFecha, $arrTurno);
                     $horasTotales = $arrHoras1['horas'];
                 }
-                /*if ($arrTurno->getDescanso() == 1) {
-                    if ($arSoportePago->getDescansoOrdinario()) {
-                        $arrHoras['horasDescanso'] = 8;
-                    }
-                }*/
+
+                if ($arrTurno['descanso'] == 1 && $arrTurno['descansoOrdinario']) {
+                    $arrHoras['horasDescanso'] = 8;
+                }
+
                 /*if ($arrTurno->getNovedad() == 0 && $arSoportePago->getTurnoFijo()) {
                     $arrHoras = $this->horasOrdinarias();
                     $arrHoras1 = $this->horasAnuladas();

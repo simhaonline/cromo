@@ -50,7 +50,7 @@ class TurnoController extends ControllerListenerGeneral
 				return $this->redirect($this->generateUrl('turno_administracion_operacion_turno_lista'));
 			}
         }
-        $arTurnos = $paginator->paginate($em->getRepository(TurTurno::class)->lista(), $request->query->getInt('page', 1), 30);
+        $arTurnos = $paginator->paginate($em->getRepository(TurTurno::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('turno/administracion/operacion/turno/lista.html.twig', [
             'arTurnos' => $arTurnos,
             'form' => $form->createView()

@@ -19,7 +19,15 @@
                 <td>{{ arSoporte.fechaDesde | date('Y-m-d') }}</td>
                 <td>{{ arSoporte.fechaHasta | date('Y-m-d') }}</td>
                 <td>{{ arSoporte.grupoNombre }}</td>
-                <td><button class="btn btn-default btn-xs" type="submit" name="OpCargar" value="{{ arSoporte.codigoSoportePk }}">Cargar</button></td>
+
+                <td>
+                    {% if arSoporte.estadoAprobado %}
+                        <button class="btn btn-default btn-xs" type="submit" name="OpCargar" value="{{ arSoporte.codigoSoportePk }}">Cargar</button>
+                    {% else %}
+                        <p>El soporte no esta aprobado</p>
+                    {% endif %}
+
+                </td>
             </tr>
         {% endfor %}
         </tbody>

@@ -32,6 +32,8 @@ class TurSoporteRepository extends ServiceEntityRepository
             ->addSelect('s.fechaDesde')
             ->addSelect('s.fechaHasta')
             ->addSelect('g.nombre as grupoNombre')
+            ->addSelect('s.estadoAutorizado')
+            ->addSelect('s.estadoAprobado')
             ->leftJoin('s.grupoRel', 'g');
         $arSoportes = $queryBuilder->getQuery()->getResult();
         return $arSoportes;
@@ -139,7 +141,7 @@ class TurSoporteRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
 
         $arrFestivos = $em->getRepository(TurFestivo::class)->fecha($arSoporte->getFechaDesde()->format('Y-m-') . '01', $arSoporte->getFechaHasta()->format('Y-m-t'));
-        $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->listaHoras($arSoporte->getCodigoSoportePk());
+        $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->listaHoras($arSoporte->getCodigoSoportePk(), null);
         foreach ($arSoportesContratos as $arSoportesContrato) {
             $em->getRepository(TurSoporteContrato::class)->generarHoras($arSoporte, $arSoportesContrato, $arrFestivos);
         }
@@ -168,6 +170,18 @@ class TurSoporteRepository extends ServiceEntityRepository
             $em->getRepository(TurSoporte::class)->resumen($arSoporte);
         } else {
             Mensajes::error('No se puede desautorizar, el registro ya se encuentra aprobado');
+        }
+    }
+
+    public function aprobar($arSoporte)
+    {
+        $em = $this->getEntityManager();
+        if ($arSoporte->getEstadoAutorizado() == 1 && $arSoporte->getEstadoAprobado() == 0) {
+            $arSoporte->setEstadoAprobado(1);
+            $em->persist($arSoporte);
+            $em->flush();
+        } else {
+            Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
         }
     }
 

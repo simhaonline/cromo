@@ -39,39 +39,20 @@ class RhuIncapacidadDiagnostico
      */
     private $codigoGrupoEnfermedadFk;
 
-
-
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
     /**
      * @return mixed
      */
-    public function getCodigoIcapacidadDiagnosticoPk()
+    public function getCodigoIncapacidadDiagnosticoPk()
     {
-        return $this->codigoIcapacidadDiagnosticoPk;
+        return $this->codigoIncapacidadDiagnosticoPk;
     }
 
     /**
-     * @param mixed $codigoIcapacidadDiagnosticoPk
+     * @param mixed $codigoIncapacidadDiagnosticoPk
      */
-    public function setCodigoIcapacidadDiagnosticoPk($codigoIcapacidadDiagnosticoPk): void
+    public function setCodigoIncapacidadDiagnosticoPk($codigoIncapacidadDiagnosticoPk): void
     {
-        $this->codigoIcapacidadDiagnosticoPk = $codigoIcapacidadDiagnosticoPk;
+        $this->codigoIncapacidadDiagnosticoPk = $codigoIncapacidadDiagnosticoPk;
     }
 
     /**
@@ -122,21 +103,6 @@ class RhuIncapacidadDiagnostico
         $this->codigoGrupoEnfermedadFk = $codigoGrupoEnfermedadFk;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getIncapacidadesIncapacidadDiagnosticoRel()
-    {
-        return $this->incapacidadesIncapacidadDiagnosticoRel;
-    }
-
-    /**
-     * @param mixed $incapacidadesIncapacidadDiagnosticoRel
-     */
-    public function setIncapacidadesIncapacidadDiagnosticoRel($incapacidadesIncapacidadDiagnosticoRel): void
-    {
-        $this->incapacidadesIncapacidadDiagnosticoRel = $incapacidadesIncapacidadDiagnosticoRel;
-    }
 
 
 

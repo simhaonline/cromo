@@ -121,7 +121,7 @@ class RhuIncapacidad
     private $comentarios;
 
     /**
-     * @ORM\Column(name="codigo_incapacidad_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_incapacidad_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoIncapacidadTipoFk;
 
@@ -345,22 +345,6 @@ class RhuIncapacidad
      * @ORM\OneToMany(targetEntity="RhuIncapacidad", mappedBy="incapacidadProrrogaRel")
      */
     protected $incapacidadesIncapacidadProrrogaRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -605,17 +589,17 @@ class RhuIncapacidad
     /**
      * @return mixed
      */
-    public function getCodigoCentroCostoFk()
+    public function getCodigoGrupoFk()
     {
-        return $this->codigoCentroCostoFk;
+        return $this->codigoGrupoFk;
     }
 
     /**
-     * @param mixed $codigoCentroCostoFk
+     * @param mixed $codigoGrupoFk
      */
-    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
+    public function setCodigoGrupoFk($codigoGrupoFk): void
     {
-        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
+        $this->codigoGrupoFk = $codigoGrupoFk;
     }
 
     /**
@@ -1165,6 +1149,54 @@ class RhuIncapacidad
     /**
      * @return mixed
      */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getIncapacidadTipoRel()
     {
         return $this->incapacidadTipoRel;
@@ -1176,6 +1208,22 @@ class RhuIncapacidad
     public function setIncapacidadTipoRel($incapacidadTipoRel): void
     {
         $this->incapacidadTipoRel = $incapacidadTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
     }
 
     /**
@@ -1229,6 +1277,22 @@ class RhuIncapacidad
     /**
      * @return mixed
      */
+    public function getIncapacidadProrrogaRel()
+    {
+        return $this->incapacidadProrrogaRel;
+    }
+
+    /**
+     * @param mixed $incapacidadProrrogaRel
+     */
+    public function setIncapacidadProrrogaRel($incapacidadProrrogaRel): void
+    {
+        $this->incapacidadProrrogaRel = $incapacidadProrrogaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getIncapacidadDiagnosticoRel()
     {
         return $this->incapacidadDiagnosticoRel;
@@ -1261,70 +1325,6 @@ class RhuIncapacidad
     /**
      * @return mixed
      */
-    public function getEstadoAutorizado()
-    {
-        return $this->estadoAutorizado;
-    }
-
-    /**
-     * @param mixed $estadoAutorizado
-     */
-    public function setEstadoAutorizado($estadoAutorizado): void
-    {
-        $this->estadoAutorizado = $estadoAutorizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAprobado()
-    {
-        return $this->estadoAprobado;
-    }
-
-    /**
-     * @param mixed $estadoAprobado
-     */
-    public function setEstadoAprobado($estadoAprobado): void
-    {
-        $this->estadoAprobado = $estadoAprobado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAnulado()
-    {
-        return $this->estadoAnulado;
-    }
-
-    /**
-     * @param mixed $estadoAnulado
-     */
-    public function setEstadoAnulado($estadoAnulado): void
-    {
-        $this->estadoAnulado = $estadoAnulado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIncapacidadProrrogaRel()
-    {
-        return $this->incapacidadProrrogaRel;
-    }
-
-    /**
-     * @param mixed $incapacidadProrrogaRel
-     */
-    public function setIncapacidadProrrogaRel($incapacidadProrrogaRel): void
-    {
-        $this->incapacidadProrrogaRel = $incapacidadProrrogaRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getIncapacidadesIncapacidadProrrogaRel()
     {
         return $this->incapacidadesIncapacidadProrrogaRel;
@@ -1336,38 +1336,6 @@ class RhuIncapacidad
     public function setIncapacidadesIncapacidadProrrogaRel($incapacidadesIncapacidadProrrogaRel): void
     {
         $this->incapacidadesIncapacidadProrrogaRel = $incapacidadesIncapacidadProrrogaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoGrupoFk()
-    {
-        return $this->codigoGrupoFk;
-    }
-
-    /**
-     * @param mixed $codigoGrupoFk
-     */
-    public function setCodigoGrupoFk($codigoGrupoFk): void
-    {
-        $this->codigoGrupoFk = $codigoGrupoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGrupoRel()
-    {
-        return $this->grupoRel;
-    }
-
-    /**
-     * @param mixed $grupoRel
-     */
-    public function setGrupoRel($grupoRel): void
-    {
-        $this->grupoRel = $grupoRel;
     }
 
 

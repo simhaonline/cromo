@@ -17,8 +17,7 @@ class RhuIncapacidadTipo
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_incapacidad_tipo_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_incapacidad_tipo_pk", type="string", length=10)
      */
     private $codigoIncapacidadTipoPk;
 
@@ -26,16 +25,6 @@ class RhuIncapacidadTipo
      * @ORM\Column(name="nombre", type="string", length=80, nullable=true)
      */
     private $nombre;
-
-    /**
-     * @ORM\Column(name="abreviatura", type="string", length=20, nullable=true)
-     */
-    private $abreviatura;
-
-    /**
-     * @ORM\Column(name="tipo", type="integer")
-     */
-    private $tipo = 0;
 
     /**
      * @ORM\Column(name="genera_pago", type="boolean")
@@ -63,11 +52,6 @@ class RhuIncapacidadTipo
     private $tipoNovedadTurno;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuIncapacidad", mappedBy="incapacidadTipoRel")
-     */
-    protected $incapacidadesIncapacidadTipoRel;
-
-    /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="incapacidadesTiposConceptoRel")
      * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
      */
@@ -80,20 +64,9 @@ class RhuIncapacidadTipo
     protected $conceptoEmpresaRel;
 
     /**
-     * @return array
+     * @ORM\OneToMany(targetEntity="RhuIncapacidad", mappedBy="incapacidadTipoRel")
      */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    protected $incapacidadesIncapacidadTipoRel;
 
     /**
      * @return mixed
@@ -125,38 +98,6 @@ class RhuIncapacidadTipo
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAbreviatura()
-    {
-        return $this->abreviatura;
-    }
-
-    /**
-     * @param mixed $abreviatura
-     */
-    public function setAbreviatura($abreviatura): void
-    {
-        $this->abreviatura = $abreviatura;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipo()
-    {
-        return $this->tipo;
-    }
-
-    /**
-     * @param mixed $tipo
-     */
-    public function setTipo($tipo): void
-    {
-        $this->tipo = $tipo;
     }
 
     /**
@@ -194,70 +135,6 @@ class RhuIncapacidadTipo
     /**
      * @return mixed
      */
-    public function getCodigoPagoConceptoFk()
-    {
-        return $this->codigoPagoConceptoFk;
-    }
-
-    /**
-     * @param mixed $codigoPagoConceptoFk
-     */
-    public function setCodigoPagoConceptoFk($codigoPagoConceptoFk): void
-    {
-        $this->codigoPagoConceptoFk = $codigoPagoConceptoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoPagoConceptoEmpresaFk()
-    {
-        return $this->codigoPagoConceptoEmpresaFk;
-    }
-
-    /**
-     * @param mixed $codigoPagoConceptoEmpresaFk
-     */
-    public function setCodigoPagoConceptoEmpresaFk($codigoPagoConceptoEmpresaFk): void
-    {
-        $this->codigoPagoConceptoEmpresaFk = $codigoPagoConceptoEmpresaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipoNovedadTurno()
-    {
-        return $this->tipoNovedadTurno;
-    }
-
-    /**
-     * @param mixed $tipoNovedadTurno
-     */
-    public function setTipoNovedadTurno($tipoNovedadTurno): void
-    {
-        $this->tipoNovedadTurno = $tipoNovedadTurno;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIncapacidadesIncapacidadTipoRel()
-    {
-        return $this->incapacidadesIncapacidadTipoRel;
-    }
-
-    /**
-     * @param mixed $incapacidadesIncapacidadTipoRel
-     */
-    public function setIncapacidadesIncapacidadTipoRel($incapacidadesIncapacidadTipoRel): void
-    {
-        $this->incapacidadesIncapacidadTipoRel = $incapacidadesIncapacidadTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoConceptoFk()
     {
         return $this->codigoConceptoFk;
@@ -290,6 +167,22 @@ class RhuIncapacidadTipo
     /**
      * @return mixed
      */
+    public function getTipoNovedadTurno()
+    {
+        return $this->tipoNovedadTurno;
+    }
+
+    /**
+     * @param mixed $tipoNovedadTurno
+     */
+    public function setTipoNovedadTurno($tipoNovedadTurno): void
+    {
+        $this->tipoNovedadTurno = $tipoNovedadTurno;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getConceptoRel()
     {
         return $this->conceptoRel;
@@ -317,6 +210,22 @@ class RhuIncapacidadTipo
     public function setConceptoEmpresaRel($conceptoEmpresaRel): void
     {
         $this->conceptoEmpresaRel = $conceptoEmpresaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadesIncapacidadTipoRel()
+    {
+        return $this->incapacidadesIncapacidadTipoRel;
+    }
+
+    /**
+     * @param mixed $incapacidadesIncapacidadTipoRel
+     */
+    public function setIncapacidadesIncapacidadTipoRel($incapacidadesIncapacidadTipoRel): void
+    {
+        $this->incapacidadesIncapacidadTipoRel = $incapacidadesIncapacidadTipoRel;
     }
 
 

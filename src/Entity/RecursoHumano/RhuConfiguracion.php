@@ -148,7 +148,10 @@ class RhuConfiguracion
      */
     private $liquidarIncapacidadSinBase = false;
 
-
+    /**
+     * @ORM\Column(name="concatenar_ofina_cuenta_bbva", type="boolean", nullable=true)
+     */
+    private $concatenarOfinaCuentaBbva = false;
 
     /**
      * @ORM\Column(name="codigo_entidad_riesgos_profesionales_fk", type="integer", nullable=true)
@@ -669,4 +672,20 @@ class RhuConfiguracion
         $this->liquidarIncapacidadSinBase = $iquidarIncapacidadSinBase;
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getConcatenarOfinaCuentaBbva()
+    {
+        return $this->concatenarOfinaCuentaBbva;
+    }
+
+    /**
+     * @param mixed $concatenarOfinaCuentaBbva
+     */
+    public function setConcatenarOfinaCuentaBbva($concatenarOfinaCuentaBbva): void
+    {
+        $this->concatenarOfinaCuentaBbva = $concatenarOfinaCuentaBbva;
+    }
 }

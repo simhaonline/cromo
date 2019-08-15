@@ -328,7 +328,6 @@ class EgresoController extends BaseController
                 fputs($ar, $strTipoDocumento);
 
                 //Numero de identificacion del empleado
-                //fputs($ar, $this->RellenarNr($arEgresoDetalle->getEmpleadoRel()->getNumeroIdentificacion(), "0", 15));
                 fputs($ar, $this->RellenarNr($arEgreso->getTerceroRel()->getNumeroIdentificacion(), "0", 15));
 
                 //Forma de pago
@@ -340,7 +339,7 @@ class EgresoController extends BaseController
                 //Numero de cuenta del empleado y se valida si al cuenta es de BBVA o pertenece a un banco diferente
                 if ($arEgreso->getTerceroRel()->getBancoRel()->getCodigoInterface() != 13) {
                     fputs($ar, '0000000000000000');
-                    switch ($arEgresoDetalles->getEmpleadoRel()->getTipoCuenta()) {
+                    switch ($arEgreso->getTerceroRel()->getCodigoCuentaTipoFk()) {
                         case 'S':
                             $tipoCuenta = '02';
                             break;
@@ -348,15 +347,15 @@ class EgresoController extends BaseController
                             $tipoCuenta = '01';
                             break;
                     }
-                    fputs($ar, $this->RellenarNr2($tipoCuenta . $arEgresoDetalle->getEmpleadoRel()->getCuenta(), ' ', 19, 'D'));
+                    fputs($ar, $this->RellenarNr2($tipoCuenta . $arEgresoDetalle->getCuentaPagarRel()->getCuenta(), ' ', 19, 'D'));
                 } else {
                     if ($arRhuConfiguracion->getConcatenarOfinaCuentaBbva()) {
-                        $oficina = substr($arEgresoDetalle->getEmpleadoRel()->getCuenta(), 0, 3);
-                        $cuenta = substr($arEgresoDetalle->getEmpleadoRel()->getCuenta(), 3);
+                        $oficina = substr($arEgresoDetalle->getCuentaPagarRel()->getCuenta(), 0, 3);
+                        $cuenta = substr($arEgresoDetalle->getCuentaPagarRel()->getCuenta(), 3);
                         $strRellenar = "";
-                        if ($arEgresoDetalle->getEmpleadoRel()->getTipoCuenta() == "S") {
+                        if ($$arEgreso->getTerceroRel()->getCodigoCuentaTipoFk() == "S") {
                             $strRellenar = '000200';
-                        } elseif ($arEgresoDetalle->getEmpleadoRel()->getTipoCuenta() == "D") {
+                        } elseif ($arEgreso->getTerceroRel()->getCodigoCuentaTipoFk() == "D") {
                             $strRellenar = '000100';
                         }
                         fputs($ar, $this->RellenarNr2('0' . $oficina . '' . $strRellenar . '' . $cuenta, ' ', 16, 'D'));
@@ -376,7 +375,7 @@ class EgresoController extends BaseController
                 fputs($ar, '000000000000');
 
                 //Nombre del empleado
-                fputs($ar, $this->RellenarNr2(substr($arEgresoDetalle->getEmpleadoRel()->getNombreCorto(), 0, 36), " ", 36, 'D'));
+                fputs($ar, $this->RellenarNr2(substr($arEgreso->getTerceroRel()->getNombreCorto(), 0, 36), " ", 36, 'D'));
 
                 //Direccion del empleado
                 fputs($ar, $this->RellenarNr2('BOGOTA', " ", 36, 'D'));
@@ -388,7 +387,7 @@ class EgresoController extends BaseController
                 fputs($ar, $this->RellenarNr2(" ", " ", 48, 'D'));
 
                 //Concepto del pago
-                fputs($ar, $this->RellenarNr2($arEgresoDetalle->getDescripcion(), " ", 40, 'D'));
+                fputs($ar, $this->RellenarNr2($arEgreso->getComentarios(), " ", 40, 'D'));
                 fputs($ar, "\n");
             }
         }

@@ -178,6 +178,11 @@ class TesTercero
 
 
     /**
+     * @ORM\Column(name="codigo_cuenta_tipo_fk", type="string", length=10)
+     */
+    private $codigoCuentaTipoFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCuentaPagar" , mappedBy="terceroRel")
      */
     protected $cuentasPagarTerceroRel;
@@ -555,6 +560,21 @@ class TesTercero
         $this->bancoRel = $bancoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaTipoFk()
+    {
+        return $this->codigoCuentaTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaTipoFk
+     */
+    public function setCodigoCuentaTipoFk($codigoCuentaTipoFk): void
+    {
+        $this->codigoCuentaTipoFk = $codigoCuentaTipoFk;
+    }
 
 
 }

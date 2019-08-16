@@ -251,6 +251,7 @@ class EgresoController extends BaseController
                         $arEgresoDetalle->setNumero($arCuentaPagar->getNumeroDocumento());
                         $arEgresoDetalle->setCuentaPagarRel($arCuentaPagar);
                         $arEgresoDetalle->setVrPagoAfectar($arCuentaPagar->getVrSaldo());
+                        $arEgresoDetalle->setUsuario($this->getUser()->getUserName());
                         $em->persist($arEgresoDetalle);
 
                     }
@@ -277,7 +278,7 @@ class EgresoController extends BaseController
         $strNombreArchivo = "pagoBBVA{$numero}_{$dateNow}.txt";
         $strArchivo = $arConfiguracionGeneral->getRutaTemporal() . $strNombreArchivo;
         ob_clean();
-        $ar = fopen($strArchivo, "a") or die("Problemas en la creacion del archivo plano");
+        $archivo = fopen($strArchivo, "a") or die("Problemas en la creacion del archivo plano");
         $strValorTotal = 0;
         $arEgresoDetalles = $em->getRepository(TesEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $arEgreso->getCodigoEgresoPk()));
         foreach ($arEgresoDetalles AS $arEgresoDetalle) {
@@ -288,15 +289,14 @@ class EgresoController extends BaseController
             $arEgresoDetalles = [];
             foreach ($arrSeleccionados as $codigo) {
                 $arEgresoDetalle = $em->getRepository(TesEgresoDetalle::class)->find($codigo);
-                $arEgresoDetalle[] = $arEgresoDetalle;
-                $strValorTotal += round($arEgresoDetalle->getVrPago());
+                $arEgresoDetalles[] = $arEgresoDetalle;
+                $strValorTotal += round($arEgresoDetalle->getVrPagoAfectar());
             }
         }
         //Inicio cuerpo
         foreach ($arEgresoDetalles AS $arEgresoDetalle) {
-            if ($arEgresoDetalle->getVrPago() > 0) {
+            if ($arEgresoDetalle->getVrPagoAfectar() > 0) {
                 $varTipoDocumento =$arEgreso->getTerceroRel()->getCodigoIdentificacionFk();
-                //$varTipoDocumento = $arEgresoDetalle->getEmpleadoRel()->getTipoIdentificacionRel()->getCodigoInterface();
                 switch ($varTipoDocumento) {
                     //'01' - Cédula de ciudadanía
                     case 'CC':
@@ -325,20 +325,21 @@ class EgresoController extends BaseController
                 }
 
                 //Tipo de identificacion del empleado
-                fputs($ar, $strTipoDocumento);
+                fputs($archivo, $strTipoDocumento);
 
                 //Numero de identificacion del empleado
-                fputs($ar, $this->RellenarNr($arEgreso->getTerceroRel()->getNumeroIdentificacion(), "0", 15));
+                fputs($archivo, $this->RellenarNr($arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getNumeroIdentificacion(), "0", 15));
 
+                fputs($archivo, '0');
                 //Forma de pago
-                fputs($ar, '01');
+                fputs($archivo, '1');
 
-                //Codigo general del banco
-                fputs($ar, $this->RellenarNr($arEgreso->getTerceroRel()->getBancoRel()->getCodigoInterface(), "0", 4));
+                //Codigo general del banco o codigo interface
+                fputs($archivo, $this->RellenarNr($arEgreso->getTerceroRel()->getBancoRel()->getCodigoInterface(), "0", 4));
 
                 //Numero de cuenta del empleado y se valida si al cuenta es de BBVA o pertenece a un banco diferente
                 if ($arEgreso->getTerceroRel()->getBancoRel()->getCodigoInterface() != 13) {
-                    fputs($ar, '0000000000000000');
+                    fputs($archivo, '0000000000000000');
                     switch ($arEgreso->getTerceroRel()->getCodigoCuentaTipoFk()) {
                         case 'S':
                             $tipoCuenta = '02';
@@ -347,7 +348,8 @@ class EgresoController extends BaseController
                             $tipoCuenta = '01';
                             break;
                     }
-                    fputs($ar, $this->RellenarNr2($tipoCuenta . $arEgresoDetalle->getCuentaPagarRel()->getCuenta(), ' ', 19, 'D'));
+//                    fputs($archivo, $this->RellenarNr2($tipoCuenta . $arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getCuenta(), ' ', 19, 'D'));
+                    fputs($archivo, $this->RellenarNr2($tipoCuenta . $arEgresoDetalle->getCuentaPagarRel()->getCuenta(), ' ', 19, 'D'));
                 } else {
                     if ($arRhuConfiguracion->getConcatenarOfinaCuentaBbva()) {
                         $oficina = substr($arEgresoDetalle->getCuentaPagarRel()->getCuenta(), 0, 3);
@@ -358,40 +360,40 @@ class EgresoController extends BaseController
                         } elseif ($arEgreso->getTerceroRel()->getCodigoCuentaTipoFk() == "D") {
                             $strRellenar = '000100';
                         }
-                        fputs($ar, $this->RellenarNr2('0' . $oficina . '' . $strRellenar . '' . $cuenta, ' ', 16, 'D'));
+                        fputs($archivo, $this->RellenarNr2('0' . $oficina . '' . $strRellenar . '' . $cuenta, ' ', 16, 'D'));
                     } else {
-                        fputs($ar, $this->RellenarNr2($arEgresoDetalle->getEmpleadoRel()->getCuenta(), ' ', 16, 'D'));
+                        fputs($archivo, $this->RellenarNr2($arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getCuenta(), ' ', 16, 'D'));
                     }
-                    fputs($ar, '0000000000000000000');
+                    fputs($archivo, '0000000000000000000');
                 }
 
                 //Valor entero del pago
-                fputs($ar, $this->RellenarNr($arEgresoDetalle->getVrPago(), '0', 13));
+                fputs($archivo, $this->RellenarNr($arEgresoDetalle->getVrPagoAfectar(), '0', 13));
 
                 //Valor decimal del pago
-                fputs($ar, $this->RellenarNr('0', '0', 2));
+                fputs($archivo, $this->RellenarNr('0', '0', 2));
 
                 //Fecha limite de pago, no aplica
-                fputs($ar, '000000000000');
+                fputs($archivo, '000000000000');
 
                 //Nombre del empleado
-                fputs($ar, $this->RellenarNr2(substr($arEgreso->getTerceroRel()->getNombreCorto(), 0, 36), " ", 36, 'D'));
+                fputs($archivo, $this->RellenarNr2(substr($arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getNombreCorto(), 0, 36), " ", 36, 'D'));
 
                 //Direccion del empleado
-                fputs($ar, $this->RellenarNr2('BOGOTA', " ", 36, 'D'));
+                fputs($archivo, $this->RellenarNr2('MEDELLIN', " ", 36, 'D'));
 
                 //2da direccion del empleado
-                fputs($ar, $this->RellenarNr2(" ", " ", 36, 'D'));
+                fputs($archivo, $this->RellenarNr2(" ", " ", 36, 'D'));
 
                 //Email del empleado
-                fputs($ar, $this->RellenarNr2(" ", " ", 48, 'D'));
+                fputs($archivo, $this->RellenarNr2($arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getEmail()??"", " ", 48, 'D'));
 
                 //Concepto del pago
-                fputs($ar, $this->RellenarNr2($arEgreso->getComentarios(), " ", 40, 'D'));
-                fputs($ar, "\n");
+                fputs($archivo, $this->RellenarNr2($arEgreso->getComentarios(), " ", 40, 'D'));
+                fputs($archivo, "\n");
             }
         }
-        fclose($ar);
+        fclose($archivo);
         $em->flush();
         //Fin cuerpo
         header('Content-Description: File Transfer');
@@ -432,4 +434,5 @@ class EgresoController extends BaseController
 
         return (string)$Nro;
     }
+
 }

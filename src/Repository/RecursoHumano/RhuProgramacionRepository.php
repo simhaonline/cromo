@@ -180,11 +180,11 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arConsecutivo = $em->getRepository(RhuConsecutivo::class)->find(1);
             $arPagos = $em->getRepository(RhuPago::class)->findBy(array('codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()));
             foreach ($arPagos as $arPago) {
-                $arPago->setNumero($arConsecutivo->getPago());
+                $arPago->setNumero($arConsecutivo->getConsecutivo());
                 $arPago->setEstadoAutorizado(1);
                 $arPago->setEstadoAprobado(1);
                 $em->persist($arPago);
-                $arConsecutivo->setPago($arConsecutivo->getPago() + 1);
+                $arConsecutivo->setConsecutivo($arConsecutivo->getConsecutivo() + 1);
             }
             $em->persist($arConsecutivo);
 
@@ -243,6 +243,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         $arTerceroCuentaPagar->setCelular($arEmpleado->getCelular());
                         $arTerceroCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
                         $arTerceroCuentaPagar->setCuenta($arEmpleado->getCuenta());
+                        $arTerceroCuentaPagar->setCodigoCuentaTipoFk($arEmpleado->getCodigoCuentaTipoFk());
                     }
                     $em->persist($arTerceroCuentaPagar);
 
@@ -261,6 +262,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     $arCuentaPagar->setVrSaldoOperado($arPago->getVrNeto());
                     $arCuentaPagar->setEstadoAutorizado(1);
                     $arCuentaPagar->setEstadoAprobado(1);
+                    $arCuentaPagar->setOperacion(1);
                     $em->persist($arCuentaPagar);
                 }
             }

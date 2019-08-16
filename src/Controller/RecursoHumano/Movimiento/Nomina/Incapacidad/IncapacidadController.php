@@ -135,6 +135,14 @@ class IncapacidadController extends ControllerListenerGeneral
             if (!$arIncapacidad) {
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_incapacidad_lista'));
             }
+        } else {
+            $arIncapacidad->setEstadoCobrar(true);
+            $arIncapacidad->setPagarEmpleado(true);
+            $arIncapacidad->setFecha(new \DateTime('now'));
+            $arIncapacidad->setFechaDesde(new \DateTime('now'));
+            $arIncapacidad->setFechaHasta(new \DateTime('now'));
+            $arIncapacidad->setFechaAplicacion(new \DateTime('now'));
+            $arIncapacidad->setFechaDocumentoFisico(new \DateTime('now'));
         }
         $form = $this->createForm(IncapacidadType::class, $arIncapacidad);
         $form->handleRequest($request);
@@ -154,7 +162,7 @@ class IncapacidadController extends ControllerListenerGeneral
                         $codigoContrato = $arEmpleado->getCodigoContratoUltimoFk();
                     }
                     if ($codigoContrato != "") {
-                        $arContrato = $em->getRepository(RhuContrato::class)->findOneBy(['codigoEmpleadoFk'=>$arEmpleado->getCodigoEmpleadoPk()]);
+                        $arContrato = $em->getRepository(RhuContrato::class)->find($codigoContrato);
                         if ($arContrato){
                             if (($arIncapacidad->getFechaHasta() > $arContrato->getFechaHasta()) && ($arContrato->getEstadoTerminado() == 1)) {
                                 $strRespuesta = "El empleado tiene contrato terminado y la fecha de terminacion es inferior o igual a la fecha hasta de la incapacidad.";

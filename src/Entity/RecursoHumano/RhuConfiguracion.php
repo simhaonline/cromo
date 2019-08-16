@@ -99,9 +99,9 @@ class RhuConfiguracion
     private $eliminarAusentismo = false;
 
     /**
-     * @ORM\Column(name="genera_porcetnaje_liquidacion", type="boolean", nullable=true)
+     * @ORM\Column(name="genera_porcentaje_liquidacion", type="boolean", nullable=true)
      */
-    private $generaPorcetnajeLiquidacion = false;
+    private $generaPorcentajeLiquidacion = false;
 
     /**
      * @ORM\Column(name="eliminar_ausentismo_cesantia", type="boolean", nullable=true)
@@ -697,18 +697,20 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getGeneraPorcetnajeLiquidacion()
+    public function getGeneraPorcentajeLiquidacion()
     {
-        return $this->generaPorcetnajeLiquidacion;
+        return $this->generaPorcentajeLiquidacion;
     }
 
     /**
-     * @param mixed $generaPorcetnajeLiquidacion
+     * @param mixed $generaPorcentajeLiquidacion
      */
-    public function setGeneraPorcetnajeLiquidacion($generaPorcetnajeLiquidacion): void
+    public function setGeneraPorcentajeLiquidacion($generaPorcentajeLiquidacion): void
     {
-        $this->generaPorcetnajeLiquidacion = $generaPorcetnajeLiquidacion;
+        $this->generaPorcentajeLiquidacion = $generaPorcentajeLiquidacion;
     }
+
+
 
 
 }

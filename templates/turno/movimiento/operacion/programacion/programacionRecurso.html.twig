@@ -8,20 +8,30 @@
                 {% for arrDiaSemana in arrDiaSemana %}
                     <th>{{ arrDiaSemana.dia }}{{ arrDiaSemana.diaSemana }}</th>
                 {% endfor %}
-                <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+                <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox"
+                                                                                    name="ChkSeleccionarTodos"
+                                                                                    onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')">
+                </th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                {% for arProgramacion in arProgramaciones %}
+            {% for arProgramacion in arProgramaciones %}
+                <tr>
+                    <td colspan="32">{{ arProgramacion.puestoRel.clienteRel.nombreCorto }}| {{ arProgramacion.puestoRel.nombre }}</td>
+                </tr>
+                <tr>
                     <input type="hidden" name="LblCodigo[]" value="{{ arProgramacion.codigoProgramacionPk }}">
                     {% for i in range(1,31) %}
                         {% set valorDia = componerDiaProgramacionEmpleado(arProgramacion, i) %}
-                        <td> <input name="TxtDia{{ i < 10? '0' ~ i : i }}D{{ arProgramacion.codigoProgramacionPk }}" value="{{ valorDia }}" style="text-transform: uppercase; width:25px" class="input-paste input-grid"/></td>
+                        <td><input name="TxtDia{{ i < 10? '0' ~ i : i }}D{{ arProgramacion.codigoProgramacionPk }}"
+                                   value="{{ valorDia }}" style="text-transform: uppercase; width:25px"
+                                   class="input-paste input-grid"/></td>
                     {% endfor %}
-                    <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arProgramacion.codigoProgramacionPk  }}"/></td>
-                {% endfor %}
-            </tr>
+                    <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                   value="{{ arProgramacion.codigoProgramacionPk }}"/></td>
+                </tr>
+            {% endfor %}
+
             </tbody>
         </table>
     </div>
@@ -55,8 +65,9 @@
                     if (indice > 30) indice = 30;
                     $(inputs[indice]).focus();
                 }, 10);
-        })};
-        $(()=>{
+            })
+        };
+        $(() => {
             escucharCopyAndPaste();
         });
     </script>

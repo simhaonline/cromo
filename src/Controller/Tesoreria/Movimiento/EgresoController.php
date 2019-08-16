@@ -330,9 +330,7 @@ class EgresoController extends BaseController
                 //Numero de identificacion del empleado
                 fputs($archivo, $this->RellenarNr($arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getNumeroIdentificacion(), "0", 15));
 
-                fputs($archivo, '0');
-                //Forma de pago
-                fputs($archivo, '1');
+                fputs($archivo, '01');
 
                 //Codigo general del banco o codigo interface
                 fputs($archivo, $this->RellenarNr($arEgreso->getTerceroRel()->getBancoRel()->getCodigoInterface(), "0", 4));
@@ -362,7 +360,7 @@ class EgresoController extends BaseController
                         }
                         fputs($archivo, $this->RellenarNr2('0' . $oficina . '' . $strRellenar . '' . $cuenta, ' ', 16, 'D'));
                     } else {
-                        fputs($archivo, $this->RellenarNr2($arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getCuenta(), ' ', 16, 'D'));
+                        fputs($archivo, "0".$this->RellenarNr2($arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getCuenta(), ' ', 16, 'D'));
                     }
                     fputs($archivo, '0000000000000000000');
                 }

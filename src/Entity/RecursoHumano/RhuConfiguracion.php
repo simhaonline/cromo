@@ -99,6 +99,11 @@ class RhuConfiguracion
     private $eliminarAusentismo = false;
 
     /**
+     * @ORM\Column(name="genera_porcetnaje_liquidacion", type="boolean", nullable=true)
+     */
+    private $generaPorcetnajeLiquidacion = false;
+
+    /**
      * @ORM\Column(name="eliminar_ausentismo_cesantia", type="boolean", nullable=true)
      */
     private $eliminarAusentismoCesantia = false;
@@ -688,4 +693,22 @@ class RhuConfiguracion
     {
         $this->concatenarOfinaCuentaBbva = $concatenarOfinaCuentaBbva;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraPorcetnajeLiquidacion()
+    {
+        return $this->generaPorcetnajeLiquidacion;
+    }
+
+    /**
+     * @param mixed $generaPorcetnajeLiquidacion
+     */
+    public function setGeneraPorcetnajeLiquidacion($generaPorcetnajeLiquidacion): void
+    {
+        $this->generaPorcetnajeLiquidacion = $generaPorcetnajeLiquidacion;
+    }
+
+
 }

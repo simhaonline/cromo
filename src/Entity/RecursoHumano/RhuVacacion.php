@@ -315,6 +315,11 @@ class RhuVacacion
     protected $pagosVacacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuVacacionCambio", mappedBy="vacacionRel")
+     */
+    protected $vacacionesCambiosVacacionRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoVacacionPk()
@@ -1240,6 +1245,22 @@ class RhuVacacion
     public function setPagosVacacionRel($pagosVacacionRel): void
     {
         $this->pagosVacacionRel = $pagosVacacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesCambiosVacacionRel()
+    {
+        return $this->vacacionesCambiosVacacionRel;
+    }
+
+    /**
+     * @param mixed $vacacionesCambiosVacacionRel
+     */
+    public function setVacacionesCambiosVacacionRel($vacacionesCambiosVacacionRel): void
+    {
+        $this->vacacionesCambiosVacacionRel = $vacacionesCambiosVacacionRel;
     }
 
 

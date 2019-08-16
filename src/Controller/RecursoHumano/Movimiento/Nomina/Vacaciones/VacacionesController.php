@@ -11,15 +11,19 @@ use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuNovedad;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\RecursoHumano\RhuVacacionAdicional;
+use App\Entity\RecursoHumano\RhuVacacionCambio;
+use App\Form\Type\RecursoHumano\VacacionCambiosType;
 use App\Form\Type\RecursoHumano\VacacionType;
 use App\Formato\RecursoHumano\Vacaciones;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Brasa\RecursoHumanoBundle\Entity\RhuVacacionDisfrute;
 use function Complex\add;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -246,9 +250,12 @@ class VacacionesController extends ControllerListenerGeneral
 
         }
         $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(['codigoVacacionFk' => $id]);
+        $arVacacionCambios=$em->getRepository(RhuVacacionCambio::class)->findBy(['codigoVacacionFk' => $id]);
+//        dd($arVacacionCambios);
         return $this->render('recursohumano/movimiento/nomina/vacacion/detalle.html.twig', [
             'arVacacion' => $arVacacion,
             'arVacacionAdicionales' => $arVacacionAdicionales,
+            'arVacacionCambios'=>$arVacacionCambios,
             'form' => $form->createView()
         ]);
     }
@@ -256,7 +263,7 @@ class VacacionesController extends ControllerListenerGeneral
     /**
      * @Route("/recursohumano/movimiento/nomina/vacacion/detalle/credito/{codigoVacacion}", name="recursohumano_movimiento_nomina_vacacion_detalle_credito")
      */
-    public function detalleCreditoAction(Request $request, $codigoVacacion)
+    public function detalleCredito(Request $request, $codigoVacacion)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -301,7 +308,7 @@ class VacacionesController extends ControllerListenerGeneral
     /**
      * @Route("/recursohumano/movimiento/nomina/vacacion/detalle/descuento/{codigoVacacion}", name="recursohumano_movimiento_nomina_vacacion_detalle_descuento")
      */
-    public function detalleDescuentoAction(Request $request, $codigoVacacion)
+    public function detalleDescuento(Request $request, $codigoVacacion)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -343,9 +350,8 @@ class VacacionesController extends ControllerListenerGeneral
     /**
      * @Route("/recursohumano/movimiento/nomina/vacacion/detalle/bonificacion/{codigoVacacion}", name="recursohumano_movimiento_nomina_vacacion_detalle_bonificacion")
      */
-    public function detalleBonificacionAction(Request $request, $codigoVacacion)
+    public function detalleBonificacion(Request $request, $codigoVacacion)
     {
-
         $em = $this->getDoctrine()->getManager();
         $arVacacion = $em->getRepository(RhuVacacion::class)->find($codigoVacacion);
         $form = $this->createFormBuilder()
@@ -381,5 +387,53 @@ class VacacionesController extends ControllerListenerGeneral
             'arVacacion' => $arVacacion,
             'form' => $form->createView()));
     }
+
+    /**
+     * @Route("/recursohumano/movimiento/nomina/vacacion/detalle/cambio/{id}/{codigoVacacion}", name="recursohumano_movimiento_nomina_vacacion_detalle_vacacion_cambio")
+     */
+    public function detalleVacacionesCambio(Request $request, $id, $codigoVacacion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arVacacion = $em->getRepository(RhuVacacion::class)->find($codigoVacacion);
+
+        $arVacacionesCambio = new RhuVacacionCambio();
+
+        if ($id != 0) {
+            $arVacacionesCambio = $em->getRepository(RhuVacacionCambio::class)->find($id);
+        }else{
+            $arVacacionesCambio->setFechaDesdeDisfrute($arVacacion->getFechaDesdeDisfrute());
+            $arVacacionesCambio->setFechaHastaDisfrute($arVacacion->getFechaHastaDisfrute());
+            $arVacacionesCambio->setFechaInicioLabor($arVacacion->getFechaInicioLabor());
+            $arVacacionesCambio->setCodigoUsuario($this->getUser()->getUsername());
+            $arVacacionesCambio->setVacacionRel($arVacacion);
+        }
+        $form = $this->createForm(VacacionCambiosType::class, $arVacacionesCambio);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $boolIncapacidad= $em->getRepository(RhuIncapacidad::class)->validarFecha($arVacacionesCambio->getFechaDesdeDisfrute(), $arVacacionesCambio->getFechaHastaDisfrute(), $arVacacion->getCodigoEmpleadoFk());
+                if ($boolIncapacidad){
+                    $arUltimaVacacionDisfrute = $em->getRepository(RhuVacacionCambio::class)->validarUltimaVacacion($codigoVacacion);
+                    if ($arUltimaVacacionDisfrute){
+                        $arVacacion->setFechaDesdeDisfrute($arVacacionesCambio->getFechaDesdeDisfrute());
+                        $arVacacion->setFechaHastaDisfrute($arVacacionesCambio->getFechaHastaDisfrute());
+                        $arVacacion->setFechaInicioLabor($arVacacionesCambio->getFechaInicioLabor());
+                    }
+                    $arVacacionesCambio = $form->getData();
+                    $em->persist($arVacacionesCambio);
+                    $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }else{
+                    Mensajes::error("El empleado tiene una incapacidad registrada en este periodo.");
+                }
+            }
+        }
+        return $this->render('recursohumano/movimiento/nomina/vacacion/vacacionesCambio.html.twig', [
+            'form' => $form->createView(),
+            'arVacacion' => $arVacacion
+        ]);
+    }
+
 }
 

@@ -144,6 +144,11 @@ class RhuConfiguracion
     private $liquidarIncapacidadesIbcMesAnterior = false;
 
     /**
+     * @ORM\Column(name="liquidar_vacaciones_salario_promedio_cesantias", type="boolean", nullable=true)
+     */
+    private $liquidarVacacionesSalarioPromedioCesantias = false;
+
+    /**
      * @ORM\Column(name="pagar_incapacidad_completa", type="boolean")
      */
     private $pagarIncapacidadCompleta = false;
@@ -708,6 +713,22 @@ class RhuConfiguracion
     public function setGeneraPorcentajeLiquidacion($generaPorcentajeLiquidacion): void
     {
         $this->generaPorcentajeLiquidacion = $generaPorcentajeLiquidacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarVacacionesSalarioPromedioCesantias()
+    {
+        return $this->liquidarVacacionesSalarioPromedioCesantias;
+    }
+
+    /**
+     * @param mixed $liquidarVacacionesSalarioPromedioCesantias
+     */
+    public function setLiquidarVacacionesSalarioPromedioCesantias($liquidarVacacionesSalarioPromedioCesantias): void
+    {
+        $this->liquidarVacacionesSalarioPromedioCesantias = $liquidarVacacionesSalarioPromedioCesantias;
     }
 
 

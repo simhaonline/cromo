@@ -118,7 +118,7 @@
         </tr>
         <tr>
             <td class="titulo">TIPO SALARIO:</td>
-            <td>{{ arLiquidacion.contratoRel.salarioTipoRel.nombre }}</td>
+            <td>{{ arLiquidacion.contratoRel.salarioTipoRel.nombre | default ('') }}</td>
             <td class="titulo"></td>
             <td class="numero"></td>
             <td class="titulo">IBP PRIMAS:</td>

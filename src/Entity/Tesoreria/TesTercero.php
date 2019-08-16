@@ -157,6 +157,11 @@ class TesTercero
     private $email;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaTipoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="comProveedoresCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      * @Assert\NotNull(message="Este campo no puede estar vacio")
@@ -178,11 +183,6 @@ class TesTercero
 
 
     /**
-     * @ORM\Column(name="codigo_cuenta_tipo_fk", type="string", length=10)
-     */
-    private $codigoCuentaTipoFk;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCuentaPagar" , mappedBy="terceroRel")
      */
     protected $cuentasPagarTerceroRel;
@@ -191,22 +191,6 @@ class TesTercero
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgreso" , mappedBy="terceroRel")
      */
     protected $egresosTerceroRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -254,6 +238,38 @@ class TesTercero
     public function setCodigoCiudadFk($codigoCiudadFk): void
     {
         $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBancoFk()
+    {
+        return $this->codigoBancoFk;
+    }
+
+    /**
+     * @param mixed $codigoBancoFk
+     */
+    public function setCodigoBancoFk($codigoBancoFk): void
+    {
+        $this->codigoBancoFk = $codigoBancoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
+    }
+
+    /**
+     * @param mixed $cuenta
+     */
+    public function setCuenta($cuenta): void
+    {
+        $this->cuenta = $cuenta;
     }
 
     /**
@@ -451,6 +467,22 @@ class TesTercero
     /**
      * @return mixed
      */
+    public function getCodigoCuentaTipoFk()
+    {
+        return $this->codigoCuentaTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaTipoFk
+     */
+    public function setCodigoCuentaTipoFk($codigoCuentaTipoFk): void
+    {
+        $this->codigoCuentaTipoFk = $codigoCuentaTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCiudadRel()
     {
         return $this->ciudadRel;
@@ -483,6 +515,22 @@ class TesTercero
     /**
      * @return mixed
      */
+    public function getBancoRel()
+    {
+        return $this->bancoRel;
+    }
+
+    /**
+     * @param mixed $bancoRel
+     */
+    public function setBancoRel($bancoRel): void
+    {
+        $this->bancoRel = $bancoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCuentasPagarTerceroRel()
     {
         return $this->cuentasPagarTerceroRel;
@@ -494,38 +542,6 @@ class TesTercero
     public function setCuentasPagarTerceroRel($cuentasPagarTerceroRel): void
     {
         $this->cuentasPagarTerceroRel = $cuentasPagarTerceroRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoBancoFk()
-    {
-        return $this->codigoBancoFk;
-    }
-
-    /**
-     * @param mixed $codigoBancoFk
-     */
-    public function setCodigoBancoFk($codigoBancoFk): void
-    {
-        $this->codigoBancoFk = $codigoBancoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuenta()
-    {
-        return $this->cuenta;
-    }
-
-    /**
-     * @param mixed $cuenta
-     */
-    public function setCuenta($cuenta): void
-    {
-        $this->cuenta = $cuenta;
     }
 
     /**
@@ -544,37 +560,6 @@ class TesTercero
         $this->egresosTerceroRel = $egresosTerceroRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBancoRel()
-    {
-        return $this->bancoRel;
-    }
-
-    /**
-     * @param mixed $bancoRel
-     */
-    public function setBancoRel($bancoRel): void
-    {
-        $this->bancoRel = $bancoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaTipoFk()
-    {
-        return $this->codigoCuentaTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaTipoFk
-     */
-    public function setCodigoCuentaTipoFk($codigoCuentaTipoFk): void
-    {
-        $this->codigoCuentaTipoFk = $codigoCuentaTipoFk;
-    }
 
 
 }

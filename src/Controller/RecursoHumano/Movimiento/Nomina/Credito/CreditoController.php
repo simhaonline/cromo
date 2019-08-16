@@ -9,10 +9,14 @@ use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Form\Type\RecursoHumano\CreditoPagoType;
 use App\Form\Type\RecursoHumano\CreditoType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +51,7 @@ class CreditoController extends ControllerListenerGeneral
 
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
@@ -145,7 +149,51 @@ class CreditoController extends ControllerListenerGeneral
             ));
         return $this->render('recursohumano/movimiento/nomina/credito/detalle.html.twig', [
             'arRegistro' => $arRegistro,
-            'arCreditoPagos'=>$arCreditoPagos,
+            'arCreditoPagos' => $arCreditoPagos,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("recursohumano/movimiento/nomina/credito/detalle/nuevo/{id}", name="recursohumano_movimiento_nomina_credito_detalle_nuevo")
+     */
+    public function detalleNuevo(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arCredito = $em->getRepository(RhuCredito::class)->find($id);
+        $arCreditoPago = New RhuCreditoPago();
+        $form = $this->createForm(CreditoPagoType::class, $arCreditoPago);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($arCredito->getEstadoPagado() == 0) {
+                $saldoActual = $arCredito->getVrSaldo();
+                $abono = $form->get('vrPago')->getData();
+                if ($abono > $arCredito->getVrSaldo()) {
+                    Mensajes::error("El valor del pago no puede ser superior al saldo");
+                } else {
+                    $arCredito->setVrSaldo($saldoActual - $abono);
+                    if ($arCredito->getVrSaldo() == 0) {
+                        $arCredito->setEstadoPagado(1);
+                    }
+                    $cuotasActuales = $arCredito->getNumeroCuotaActual();
+                    $arCredito->setNumeroCuotaActual($cuotasActuales + 1);
+                    $arCreditoPago->setCreditoRel($arCredito);
+                    $arCreditoPago->setfechaPago(new \ DateTime("now"));
+                    $em->persist($arCreditoPago);
+                    $em->persist($arCredito);
+                    $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }
+            } else {
+                Mensajes::error("El credito ya se encuentra pagado");
+            }
+        }
+        return $this->render('recursohumano/movimiento/nomina/credito/detalleNuevo.html.twig', [
+            'arCredito' => $arCredito,
+            'arCreditoPago' => $arCreditoPago,
             'form' => $form->createView()
         ]);
     }

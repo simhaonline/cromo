@@ -1,0 +1,26 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br/>
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_TxtCodigo" class="col-sm-1 control-label">Valor abono:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.vrPago) }}
+                </div>
+                <label for="form_estadoAutorizado" class="col-sm-1 control-label">Tipo pago:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.creditoPagoTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-toolbar" style="float: right;">
+        <div class="btn-group btn-group-sm">
+            {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

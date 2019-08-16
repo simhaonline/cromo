@@ -207,7 +207,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             $intDias = $arIncapacidad->getFechaDesde()->diff($arIncapacidad->getFechaHasta());
             $intDias = $intDias->format('%a');
             $intDias = $intDias + 1;
-            $intDiasLicencia = $this->diasReconocimiento($intDias, $arIncapacidad->getEstadoProrroga(), $arIncapacidad->getIncapacidadTipoRel()->getTipo(), $diasProrroga);
+            $intDiasLicencia = $this->diasReconocimiento($intDias, $arIncapacidad->getEstadoProrroga(), $arIncapacidad->getIncapacidadTipoRel()->getCodigoIncapacidadTipoPk(), $diasProrroga);
             if ($intDiasLicencia['intDiasEmpresa'] > 0) {
                 $fechaDesdeCalculo = $arIncapacidad->getFechaDesde();
                 $intDiasTemporal = $intDiasLicencia['intDiasEmpresa'] - 1;
@@ -248,7 +248,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             $salarioEmpleado = $douVrDia * 30;
             $douPorcentajePago = $arIncapacidad->getIncapacidadTipoRel()->getConceptoRel()->getPorcentaje();
             $arIncapacidad->setPorcentajePago($douPorcentajePago);
-            if ($arIncapacidad->getIncapacidadTipoRel()->getTipo() == 1) {
+            if ($arIncapacidad->getIncapacidadTipoRel()->getCodigoIncapacidadTipoPk() == "GEN") {
                 if ($salarioEmpleado <= $salario) {
                     if ($intDiasCobro > 0) {
                         $floVrIncapacidad = $intDiasCobro * $douVrDiaSalarioMinimo;
@@ -327,7 +327,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
     {
         $intDiasEntidad = 0;
         $intDiasEmpresa = 0;
-        if ($tipo == 1) {//si la incapacidad es general
+        if ($tipo == "GEN") {//si la incapacidad es general
             if ($diasIncapacidad > 2) {
                 if ($prorroga) {
                     $intDiasEntidad = $diasIncapacidad;
@@ -351,7 +351,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
                 }
             }
         }
-        if ($tipo == 2) {
+        if ($tipo == "LAB") {
             if ($diasIncapacidad > 1) {
                 if ($prorroga) {
                     $intDiasEntidad = $diasIncapacidad;

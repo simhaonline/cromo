@@ -178,7 +178,7 @@ class IncapacidadController extends ControllerListenerGeneral
                                                     if ($boolLicencia) {
                                                         if ($arIncapacidad->getFechaDesde() >= $arContrato->getFechaDesde()) {
                                                             $arEntidad = null;
-                                                            if ($arIncapacidad->getIncapacidadTipoRel()->getTipo() == 1) {
+                                                            if ($arIncapacidad->getIncapacidadTipoRel()->getCodigoIncapacidadTipoPk() == 'GEN') {
                                                                 $arEntidad = $arContrato->getEntidadSaludRel();
                                                             } else {
                                                                 if ($arConfiguracionAporte->getCodigoEntidadRiesgosProfesionalesFk()) {
@@ -191,7 +191,7 @@ class IncapacidadController extends ControllerListenerGeneral
                                                                 $arIncapacidad->setContratoRel($arContrato);
                                                                 $arIncapacidad->setGrupoRel($arContrato->getGrupoRel());
                                                                 $arIncapacidad->setFecha(new \DateTime('now'));
-//                                                                $arIncapacidad->setClienteRel($arIncapacidad->getGrupoRel()->getClienteRel());
+                                                                // $arIncapacidad->setClienteRel($arIncapacidad->getGrupoRel()->getClienteRel());
                                                                 //validar prologar
                                                                 $respuesta = $em->getRepository(RhuIncapacidad::class)->liquidar($arIncapacidad, $this->getUser());
                                                                 if ($respuesta == "") {

@@ -225,6 +225,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
                 $arIncapacidad->setFechaHastaEmpresa(null);
             }
             if ($intDiasLicencia['intDiasEntidad'] > 0) {
+                $fechaDesdeCalculo = $arIncapacidad->getFechaDesde();
                 $intDiasTemporal = $intDiasLicencia['intDiasEntidad'] - 1;
                 $arIncapacidad->setFechaDesdeEntidad($fechaDesdeCalculo??0);
                 $fechaTemporal = $fechaDesdeCalculo->format('y-m-d')??null;

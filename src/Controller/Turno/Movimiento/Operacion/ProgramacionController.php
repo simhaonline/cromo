@@ -138,7 +138,8 @@ class ProgramacionController extends ControllerListenerGeneral
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        $arProgramaciones = $em->getRepository(TurProgramacion::class)->periodoDias($arPedidoDetalle->getAnio() , $arPedidoDetalle->getMes(), $codigoEmpleado);
+        $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(array('anio' => $arPedidoDetalle->getAnio(), 'mes' => $arPedidoDetalle->getMes(), 'codigoEmpleadoFk' => $codigoEmpleado));
+        //$arProgramaciones = $em->getRepository(TurProgramacion::class)->periodoDias($arPedidoDetalle->getAnio() , $arPedidoDetalle->getMes(), $codigoEmpleado);
         return $this->render('turno/movimiento/operacion/programacion/programacionRecurso.html.twig', [
             'arrDiaSemana' => $arrDiaSemana,
             'arProgramaciones' => $arProgramaciones,

@@ -13,7 +13,6 @@
     <div class="panel panel-default">
         <div class="panel-heading">Filtros</div>
         <div class="panel-body">
-
             <div class="form-group form-group-sm">
                 <label for="form_txtNombre" class="col-sm-2 control-label">CÓDIGO:</label>
                 <div class="col-sm-4">
@@ -25,6 +24,16 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_txtNombre" class="col-sm-2 control-label">CÓDIGO EPS:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtCodigoEps, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_txtCodigo" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-10">
                     {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                 </div>
@@ -33,7 +42,8 @@
     </div>
     <table class="table table-striped table-bordered table-condensed table-hover tabla-datos">
         <tr>
-            <th>CÓDIGO</th>
+            <th>ID</th>
+            <th title="Codigo eps">CODIGO</th>
             <th>NOMBRE</th>
             <th></th>
         </tr>
@@ -41,6 +51,7 @@
             <tr>
                 <td><input type="hidden" name="LblCodigo[]"
                            value="{{ arIncapacidadDiagnostico.codigoIncapacidadDiagnosticoPk }}">{{ arIncapacidadDiagnostico.codigoIncapacidadDiagnosticoPk }} </td>
+                <td>{{ arIncapacidadDiagnostico.codigo }}</td>
                 <td>{{ arIncapacidadDiagnostico.nombre }}</td>
                 <td style="text-align: center"><a
                             href="javascript:selEmpleado('{{ arIncapacidadDiagnostico.codigoIncapacidadDiagnosticoPk }}','{{ arIncapacidadDiagnostico.nombre }}','{{ campoCodigo }}','{{ campoNombre }}')"><i

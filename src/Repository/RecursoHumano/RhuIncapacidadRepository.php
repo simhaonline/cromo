@@ -52,7 +52,8 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             ->addSelect('i.codigoUsuario')
             ->leftJoin('i.incapacidadTipoRel', 'it')
             ->leftJoin('i.entidadSaludRel', 'es')
-            ->leftJoin('i.empleadoRel', 'e');
+            ->leftJoin('i.empleadoRel', 'e')
+        ->orderBy('i.codigoIncapacidadPk', 'DESC');
 
         if ($session->get('filtroRhuIncapacidadCodigoEmpleado') != null) {
             $queryBuilder->andWhere("i.codigoEmpleadoFk = '{$session->get('filtroRhuIncapacidadCodigoEmpleado')}'");

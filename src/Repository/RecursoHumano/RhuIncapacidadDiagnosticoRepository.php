@@ -26,12 +26,16 @@ class RhuIncapacidadDiagnosticoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuIncapacidadDiagnostico::class, 'id');
         $queryBuilder
             ->select('id.codigoIncapacidadDiagnosticoPk')
-            ->addSelect('id.nombre');
+            ->addSelect('id.nombre')
+        ->addSelect('id.codigo');
         if($session->get('RhuIncapacidadDiagnosticoNombre') != ""){
             $queryBuilder->andWhere("id.nombre LIKE '%{$session->get('RhuIncapacidadDiagnosticoNombre')}%'");
         }
         if($session->get('RhuIncapacidadDiagnosticoCodigo') != ""){
             $queryBuilder->andWhere("id.codigoIncapacidadDiagnosticoPk = '{$session->get('RhuIncapacidadDiagnosticoCodigo')}' ");
+        }
+        if($session->get('RhuIncapacidadDiagnosticoCodigoEps') != ""){
+            $queryBuilder->andWhere("id.codigo LIKE '%{$session->get('RhuIncapacidadDiagnosticoCodigoEps')}%'");
         }
         return $queryBuilder;
     }

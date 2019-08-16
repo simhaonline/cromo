@@ -29,6 +29,7 @@ class IncapacidadDiagnosticoController extends Controller
         $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('RhuIncapacidadDiagnosticoCodigo')])
+            ->add('txtCodigoEps', TextType::class, ['required'  => false,'data' => $session->get('RhuIncapacidadDiagnosticoCodigoEps')])
             ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('RhuIncapacidadDiagnosticoNombre')])
             ->add('btnFiltrar', SubmitType::class, ['label'  => 'Filtrar'])
             ->getForm();
@@ -36,6 +37,7 @@ class IncapacidadDiagnosticoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnFiltrar')->isClicked()) {
                 $session->set('RhuIncapacidadDiagnosticoCodigo',$form->get('txtCodigo')->getData());
+                $session->set('RhuIncapacidadDiagnosticoCodigoEps',$form->get('txtCodigoEps')->getData());
                 $session->set('RhuIncapacidadDiagnosticoNombre',$form->get('txtNombre')->getData());
             }
         }

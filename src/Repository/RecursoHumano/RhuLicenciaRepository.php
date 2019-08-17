@@ -61,6 +61,7 @@ class RhuLicenciaRepository extends ServiceEntityRepository
         if ($session->get('filtroRhuLicenciaFechaHasta') != null) {
             $queryBuilder->andWhere("l.fechaHasta <= '{$session->get('filtroRhuLicenciaFechaHasta')} 23:59:59'");
         }
+        $queryBuilder->orderBy('l.codigoLicenciaPk', 'DESC');
         return $queryBuilder;
 
     }

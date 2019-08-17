@@ -108,7 +108,6 @@ class LicenciaController extends ControllerListenerGeneral
         ]);
     }
 
-
     /**
      * @Route("recursohumano/moviento/nomina/licencia/nuevo/{id}", name="recursohumano_movimiento_nomina_licencia_nuevo")
      */
@@ -243,10 +242,6 @@ class LicenciaController extends ControllerListenerGeneral
             'arIncapacidad' => $arLicencia,
         ]);
     }
-
-
-
-
 
     /**
      * @Route("recursohumano/moviento/nomina/licencia/detalle/{id}", name="recursohumano_movimiento_nomina_licencia_detalle")

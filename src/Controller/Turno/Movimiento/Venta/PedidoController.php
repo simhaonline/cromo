@@ -228,6 +228,8 @@ class PedidoController extends ControllerListenerGeneral
                     $arPedidoDetalle->setPorcentajeIva($arPedidoDetalle->getConceptoRel()->getPorcentajeIva());
                     $arPedidoDetalle->setPorcentajeBaseIva(100);
                 }
+                $arPedidoDetalle->setAnio($arPedido->getFecha()->format('Y'));
+                $arPedidoDetalle->setMes($arPedido->getFecha()->format('n'));
                 $em->persist($arPedidoDetalle);
                 $em->flush();
                 $em->getRepository(TurPedido::class)->liquidar($arPedido);

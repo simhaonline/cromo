@@ -140,6 +140,8 @@ class TurSoporteRepository extends ServiceEntityRepository
      * @param $arSoporte TurSoporte
      */
     public function autorizar($arSoporte) {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
         $em = $this->getEntityManager();
 
         $arrFestivos = $em->getRepository(TurFestivo::class)->fecha($arSoporte->getFechaDesde()->format('Y-m-') . '01', $arSoporte->getFechaHasta()->format('Y-m-t'));
@@ -177,6 +179,8 @@ class TurSoporteRepository extends ServiceEntityRepository
 
     public function aprobar($arSoporte)
     {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
         $em = $this->getEntityManager();
         if ($arSoporte->getEstadoAutorizado() == 1 && $arSoporte->getEstadoAprobado() == 0) {
             $validar = $em->getRepository(TurSoporte::class)->validarAprobado($arSoporte);
@@ -346,7 +350,7 @@ class TurSoporteRepository extends ServiceEntityRepository
         $arrInconsistencias = array();
 
         $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->findBy(array('codigoSoporteFk' => $arSoporte->getCodigoSoportePk()));
-        /*foreach ($arSoportesContratos as $arSoporteContrato) {
+        foreach ($arSoportesContratos as $arSoporteContrato) {
             if ($arSoporteContrato->getCodigoContratoFk()) {
                 $arrVacaciones = $em->getRepository(RhuVacacion::class)->diasValidarTurnos($arSoporteContrato->getCodigoEmpleadoFk(), $arSoporteContrato->getCodigoContratoFk(), $arSoporte->getFechaDesde(), $arSoporte->getFechaHasta());
 
@@ -367,7 +371,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                         'codigo' => $arSoporteContrato->getCodigoEmpleadoFk()
                     ];
                 }
-
+                /*
                 if ($arrLicencias) {
                     foreach ($arrLicencias as $arrLicencia) {
                         // ausentismo o licencia no remunerada
@@ -406,9 +410,10 @@ class TurSoporteRepository extends ServiceEntityRepository
                         'codigo' => $arSoportePago->getRecursoRel()->getCodigoEmpleadoFk()
                     ];
                 }
+                */
             }
         }
-        */
+
 
         $fechaHastaSoportePagoPeriodo = $arSoporte->getFechaHasta()->format('Y-m-d');
         if ($arSoporte->getFechaHasta()->format('d') == 31) {

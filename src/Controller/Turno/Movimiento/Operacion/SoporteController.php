@@ -154,8 +154,7 @@ class SoporteController extends ControllerListenerGeneral
                 $em->getRepository(TurSoporte::class)->desAutorizar($arSoporte);
             }
             if($form->get('btnAprobar')->isClicked()) {
-                //$em->getRepository(TurSoporte::class)->aprobar($arSoporte);
-                $em->getRepository(TurSoporte::class)->validarAprobado($arSoporte);
+                $em->getRepository(TurSoporte::class)->aprobar($arSoporte);
             }
             if($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(TurSoporte::class)->cargarContratos($arSoporte);

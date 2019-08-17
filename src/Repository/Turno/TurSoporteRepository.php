@@ -179,10 +179,14 @@ class TurSoporteRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arSoporte->getEstadoAutorizado() == 1 && $arSoporte->getEstadoAprobado() == 0) {
-            $respuesta = $em->getRepository(TurSoporte::class)->validarAprobado($arSoporte);
-            $arSoporte->setEstadoAprobado(1);
-            $em->persist($arSoporte);
-            $em->flush();
+            $validar = $em->getRepository(TurSoporte::class)->validarAprobado($arSoporte);
+            if($validar) {
+                $arSoporte->setEstadoAprobado(1);
+                $em->persist($arSoporte);
+                $em->flush();
+            } else {
+                Mensajes::error("No se puede aprobar el documento porque tiene inconsistencias");
+            }
         } else {
             Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
         }
@@ -509,12 +513,11 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $arInconsistencia->setDescripcion($arrInconsistencia['descripcion']);
                 $em->persist($arInconsistencia);
             }
+            $em->flush();
+            return false;
+        } else {
+            return true;
         }
-
-        //$em->persist($arSoportePagoPeriodo);
-        $em->flush();
-
-        return true;
     }
 
 

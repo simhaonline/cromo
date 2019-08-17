@@ -105,21 +105,25 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
         $session = new Session();
         $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
-        if ($id != 0) {
-            $arAdicionalPeriodo = $em->getRepository(RhuAdicionalPeriodo::class)->find($id);
-            if (!$arAdicionalPeriodo) {
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_lista'));
-            }
-        }
+        $arAdicionalPeriodo = $em->getRepository(RhuAdicionalPeriodo::class)->find($id);
+
+        $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
         $form = $this->createFormBuilder()
             ->add('txtCodigoEmpleado', TextType::class,['required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroRhuEmpleadoCodigo',  $form->get('txtCodigoEmpleado')->getData());
             }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $em->getRepository(RhuAdicional::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_detalle', ['id' => $id]));
+            }
+
         }
         $arAdicionalPeriodo = $em->getRepository(RhuAdicionalPeriodo::class)->find($id);
         $arAdicionales = $paginator->paginate($em->getRepository(RhuAdicional::class)->adicionalesPorPeriodo($id), $request->query->getInt('page', 1), 30);

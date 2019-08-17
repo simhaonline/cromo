@@ -1,6 +1,16 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default" href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+
+        </div>
+    </div>
+    <br/><br/>
+
     <div id="content sortable-grid ui-sortable">
         <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
             <header role="heading" class="ui-sortable-handle">
@@ -85,14 +95,14 @@
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arAdicionales) }}
     </div>
-    <div class="btn-group">
-        <a class="btn btn-sm btn-default"
-           href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_lista') }}">Volver</a>
-    </div>
+
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
                href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_detalle_nuevo', {'codigoAdicionalPeriodo': arAdicionalPeriodo.codigoAdicionalPeriodoPk}) }}">Nuevo</a>
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnEliminar) }}
         </div>
     </div>
     {{ form_end(form) }}

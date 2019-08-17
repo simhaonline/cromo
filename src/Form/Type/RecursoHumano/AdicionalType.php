@@ -39,6 +39,7 @@ class AdicionalType extends AbstractType
             ->add('aplicaCesantia',CheckboxType::class,['required' => false])
             ->add('detalle',TextType::class,['required' => false,'attr' => ['placeholder' => 'Opcional']])
             ->add('estadoInactivoPeriodo',CheckboxType::class,['required' => false])
+            ->add('estadoInactivo',CheckboxType::class,['required' => false])
             ->add('guardar',SubmitType::class,['label' => 'guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

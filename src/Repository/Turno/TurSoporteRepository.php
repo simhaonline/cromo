@@ -350,7 +350,7 @@ class TurSoporteRepository extends ServiceEntityRepository
         $arrInconsistencias = array();
 
         $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->findBy(array('codigoSoporteFk' => $arSoporte->getCodigoSoportePk()));
-        foreach ($arSoportesContratos as $arSoporteContrato) {
+        /*foreach ($arSoportesContratos as $arSoporteContrato) {
             if ($arSoporteContrato->getCodigoContratoFk()) {
                 $arrVacaciones = $em->getRepository(RhuVacacion::class)->diasValidarTurnos($arSoporteContrato->getCodigoEmpleadoFk(), $arSoporteContrato->getCodigoContratoFk(), $arSoporte->getFechaDesde(), $arSoporte->getFechaHasta());
 
@@ -410,9 +410,9 @@ class TurSoporteRepository extends ServiceEntityRepository
                         'codigo' => $arSoportePago->getRecursoRel()->getCodigoEmpleadoFk()
                     ];
                 }
-                */
+
             }
-        }
+        }*/
 
 
         $fechaHastaSoportePagoPeriodo = $arSoporte->getFechaHasta()->format('Y-m-d');

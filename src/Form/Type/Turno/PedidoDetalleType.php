@@ -46,9 +46,10 @@ class PedidoDetalleType extends AbstractType
             ->add('puestoRel', EntityType::class, [
                 'required' => true,
                 'class' => 'App\Entity\Turno\TurPuesto',
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('p')
-                        ->orderBy('p.nombre', 'ASC');
+                        ->orderBy('p.nombre', 'ASC')
+                        ->andWhere("p.codigoClienteFk = " . $options['data']->getPedidoRel()->getCodigoClienteFk());
                 },
                 'choice_label' => 'nombre',
                 'label' => 'nombre:'

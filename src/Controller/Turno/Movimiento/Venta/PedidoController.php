@@ -234,7 +234,7 @@ class PedidoController extends ControllerListenerGeneral
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        return $this->render('turno/movimiento/comercial/pedido/detalleNuevo.html.twig', [
+        return $this->render('turno/movimiento/venta/pedido/detalleNuevo.html.twig', [
             'arPedido' => $arPedido,
             'form' => $form->createView()
         ]);

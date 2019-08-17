@@ -72,7 +72,7 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect('c.fechaDesde')
             ->addSelect('c.numero')
             ->addSelect('c.codigoGrupoFk')
-            ->addSelect('c.codigoCostoTipoFk')
+            ->addSelect('c.codigoCostoClaseFk')
             ->addSelect('c.codigoClasificacionRiesgoFk')
             ->addSelect('c.fechaHasta')
             ->addSelect('c.vrSalario')

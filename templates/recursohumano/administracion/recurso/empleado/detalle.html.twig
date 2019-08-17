@@ -91,7 +91,7 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>TIPO</th>
+
                             <th>NUMERO</th>
                             <th>GRUPO</th>
                             <th>CARGO</th>
@@ -99,6 +99,7 @@
                             <th>DESDE</th>
                             <th>HASTA</th>
                             <th>SALARIO</th>
+                            <th title="Tipo de costo administrativo, operativo, ventas">TCOSTO</th>
                             <th title="Auxilio de transporte">AT</th>
                             <th title="Terminado">TER</th>
                             <th></th>
@@ -110,7 +111,7 @@
                         {% for arContrato in arContratos %}
                             <tr>
                                 <td>{{ arContrato.codigoContratoPk }}</td>
-                                <td>{{ arContrato.codigoCostoTipoFk }}</td>
+
                                 <td>{{ arContrato.numero }}</td>
                                 <td>{{ arContrato.nombreGrupo }}</td>
                                 <td>{{ arContrato.nombreCargo }}</td>
@@ -118,6 +119,7 @@
                                 <td>{{ arContrato.fechaDesde | date('Y-m-d') }}</td>
                                 <td>{{ arContrato.fechaHasta | date('Y-m-d') }}</td>
                                 <td class="numero">{{ arContrato.vrSalario | number_format(0, '.', ',') }}</td>
+                                <td>{{ arContrato.codigoCostoClaseFk }}</td>
                                 <td>{{ arContrato.auxilioTransporte ? 'SI' : 'NO' }}</td>
                                 <td>{{ arContrato.estadoTerminado ? 'SI' : 'NO' }}</td>
                                 <td style="text-align: center;">

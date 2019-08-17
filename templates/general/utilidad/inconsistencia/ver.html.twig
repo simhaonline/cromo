@@ -1,0 +1,36 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-heading">Archivos</div>
+            <div class="panel-body">
+                <div>
+                    <table  class="table table-striped table-bordered table-condensed table-hover tabla-datos">
+                        <tr>
+                            <th>COD</th>
+                            <th>REF</th>
+                            <th>DESCRIPCION</th>
+                        </tr>
+                        {% for arInconsistencia in arInconsistencias %}
+                            <tr>
+                                <td>{{ arInconsistencia.codigoReferencia  }}</td>
+                                <td>{{ arInconsistencia.referencia }}</td>
+                                <td>{{ arInconsistencia.descripcion  }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {{ knp_pagination_render(arInconsistencias) }}
+                </div>
+                <div class="btn-group" style="float: left">
+                    <div class="btn btn-default btn-sm">Registros
+                        <span class="badge">{{ arInconsistencias.getTotalItemCount }}
+            </span>
+                    </div>
+                </div>
+                <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+                    {{ knp_pagination_render(arInconsistencias) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

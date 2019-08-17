@@ -20,8 +20,20 @@ class GenInconsistenciaRepository extends ServiceEntityRepository
         $em->createQueryBuilder()
             ->delete(GenInconsistencia::class,'i')
             ->andWhere("i.codigoModeloFk = '" . $modigoModelo . "'")
-            ->andWhere("i.codigo = " . $codigo)
+            ->andWhere("i.codigoModelo = " . $codigo)
             ->getQuery()->execute();
+    }
+
+    public function lista($modelo, $codigoModelo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenInconsistencia::class, 'i')
+            ->select('i.codigoInconsistenciaPk')
+            ->addSelect('i.codigoReferencia')
+            ->addSelect('i.referencia')
+            ->addSelect('i.descripcion')
+            ->where("i.codigoModeloFk = '" . $modelo . "'")
+            ->andWhere('i.codigoModelo = ' . $codigoModelo);
+        return $queryBuilder;
     }
 
 }

@@ -28,9 +28,19 @@ class GenInconsistencia
     private $codigoModeloFk;
 
     /**
-     * @ORM\Column(name="codigo", type="integer")
+     * @ORM\Column(name="codigo_modelo", type="integer")
      */
-    private $codigo;
+    private $codigoModelo;
+
+    /**
+     * @ORM\Column(name="codigo_referencia", type="string", length=100, nullable=true)
+     */
+    private $codigoReferencia;
+
+    /**
+     * @ORM\Column(name="referencia", type="string", length=100, nullable=true)
+     */
+    private $referencia;
 
     /**
      * @ORM\Column(name="descripcion", type="string", length=200, nullable=true)
@@ -72,17 +82,49 @@ class GenInconsistencia
     /**
      * @return mixed
      */
-    public function getCodigo()
+    public function getCodigoModelo()
     {
-        return $this->codigo;
+        return $this->codigoModelo;
     }
 
     /**
-     * @param mixed $codigo
+     * @param mixed $codigoModelo
      */
-    public function setCodigo($codigo): void
+    public function setCodigoModelo($codigoModelo): void
     {
-        $this->codigo = $codigo;
+        $this->codigoModelo = $codigoModelo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoReferencia()
+    {
+        return $this->codigoReferencia;
+    }
+
+    /**
+     * @param mixed $codigoReferencia
+     */
+    public function setCodigoReferencia($codigoReferencia): void
+    {
+        $this->codigoReferencia = $codigoReferencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferencia()
+    {
+        return $this->referencia;
+    }
+
+    /**
+     * @param mixed $referencia
+     */
+    public function setReferencia($referencia): void
+    {
+        $this->referencia = $referencia;
     }
 
     /**
@@ -100,7 +142,6 @@ class GenInconsistencia
     {
         $this->descripcion = $descripcion;
     }
-
 
 
 }

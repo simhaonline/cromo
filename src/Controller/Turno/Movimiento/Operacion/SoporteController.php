@@ -154,7 +154,8 @@ class SoporteController extends ControllerListenerGeneral
                 $em->getRepository(TurSoporte::class)->desAutorizar($arSoporte);
             }
             if($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository(TurSoporte::class)->aprobar($arSoporte);
+                //$em->getRepository(TurSoporte::class)->aprobar($arSoporte);
+                $em->getRepository(TurSoporte::class)->validarAprobado($arSoporte);
             }
             if($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(TurSoporte::class)->cargarContratos($arSoporte);
@@ -169,7 +170,8 @@ class SoporteController extends ControllerListenerGeneral
         return $this->render('turno/movimiento/operacion/soporte/detalle.html.twig', [
             'form' => $form->createView(),
             'arSoporte' => $arSoporte,
-            'arSoporteContratos' => $arSoporteContratos
+            'arSoporteContratos' => $arSoporteContratos,
+            'clase' => array('clase' => 'TurSoporte', 'codigo' => $id),
         ]);
     }
 

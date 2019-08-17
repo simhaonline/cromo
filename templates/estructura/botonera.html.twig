@@ -10,4 +10,5 @@
     {% if is_granted('ROLE_ADMIN') %}
         <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('general_utilidad_seguridad_log_ver', { 'entidad': clase.clase,  'codigo': clase.codigo }) }}', 'Log', 500, 800)">Log</a>
     {% endif %}
+    <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('general_utilidad_control_inconsistencia_ver', { 'entidad': clase.clase,  'codigo': clase.codigo }) }}', 'Inconsistencias', 500, 800)">Inconsistencias</a>
 {% endif %}

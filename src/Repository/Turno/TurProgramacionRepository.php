@@ -338,5 +338,85 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
             ->andWhere("p.mes = '$mes'");
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function validarDiasRetiro($strFechaHasta, $strFechaDesde, $codigoEmpleado)
+    {
+        $em = $this->getEntityManager();
+        $i = 1;
+        $mesFin = intval($strFechaHasta->format('m'));
+        $diaFin = intval($strFechaHasta->format('d')) + 1;
+        $itnDiasRetiro = 0;
+        $conteo = 0;
+        while ($i <= 1) {
+            if ($conteo > 30) {
+                break;
+            }
+            $ultimoDiaMesFin = cal_days_in_month(CAL_GREGORIAN, $mesFin, $strFechaHasta->format('Y'));
+            $strDia = "dia{$diaFin}";
+            $conteo++;
+            if ($mesFin <= intval($strFechaDesde->format('m')) && $diaFin < intval($strFechaDesde->format('d'))) {
+                $arProgramacionDetalle = $em->getRepository(TurProgramacion::class)->findBy(array('codigoEmpleadoFk' => $codigoEmpleado, 'anio' => intval($strFechaHasta->format('Y')), 'mes' => $mesFin, $strDia => 'RET'));
+                if ($arProgramacionDetalle) {
+                    $itnDiasRetiro++;
+                    if ($ultimoDiaMesFin == $diaFin) {
+                        $mesFin++;
+                        $diaFin = 1;
+                    } else {
+                        $diaFin++;
+                    }
+                } else {
+                    $i++;
+                }
+            } else {
+                $i++;
+            }
+        }
+        return $itnDiasRetiro;
+
+    }
+
+    public function validacionTurnos($codigoEmpleado, $anio, $mes) {
+        $em = $this->getEntityManager();
+        $arrValidacionTurnos = [
+                'faltantes' => "",
+                'dobles' => "",
+            ];
+        $queryBuilder = $em->createQueryBuilder()->from(TurProgramacion::class, 'p')
+            ->select('p.codigoProgramacionPk')
+            ->where('p.codigoEmpleadoFk= ' . $codigoEmpleado)
+            ->andWhere('p.anio = ' . $anio)
+            ->andWhere('p.mes = ' . $mes);
+        for ($i = 1; $i <= 31; $i++) {
+            $queryBuilder->addSelect('p.dia' . $i);
+        }
+
+        $arrProgramaciones = $queryBuilder->getQuery()->getResult();
+        if($arrProgramaciones) {
+            $numeroProgramaciones = count($arrProgramaciones);
+            for ($j=1; $j<=31; $j++) {
+                $turnoFaltante = true;
+                $turnoDoble = false;
+                $arrTurnos = [];
+                for($i = 0; $i < $numeroProgramaciones; $i++) {
+                    $turno = $arrProgramaciones[$i]['dia'.$j];
+                    if($turno) {
+                        if (in_array($turno, $arrTurnos)) {
+                            $turnoDoble = true;
+                        }
+                        $arrTurnos[] = $turno;
+                        $turnoFaltante = false;
+                    }
+                }
+                if($turnoFaltante) {
+                    $arrValidacionTurnos['faltantes'] .= $j . " ";
+                }
+                if($turnoDoble) {
+                    $arrValidacionTurnos['dobles'] .= $j . " ";
+                }
+
+            }
+        }
+        return $arrValidacionTurnos;
+    }
 }
 

@@ -87,4 +87,54 @@ class RhuLicenciaRepository extends ServiceEntityRepository
             return  TRUE;
         }
     }
+
+    public function licenciasPerido($fechaDesde, $fechaHasta, $codigoEmpleado)
+    {
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from(RhuLicencia::class, "lc")
+            ->select("lc")
+            ->join("lc.licenciaTipoRel", "lt")
+            ->where("lc.fechaDesde <= '{$strFechaHasta}' AND  lc.fechaHasta >= '{$strFechaHasta}'")
+            ->orWhere("lc.fechaDesde <= '{$strFechaDesde}' AND  lc.fechaHasta >='{$strFechaDesde}' AND lc.codigoEmpleadoFk = '{$codigoEmpleado}'")
+            ->orWhere("lc.fechaDesde >= '{$strFechaDesde}' AND  lc.fechaHasta <='{$strFechaHasta}' AND lc.codigoEmpleadoFk = '{$codigoEmpleado}'")
+            ->andWhere("lc.codigoEmpleadoFk = '{$codigoEmpleado}'");
+
+        $arLicencias = $qb->getQuery()->getResult();
+        $arrLicencias = [0 => ["licenciaNoRemunerada" => 0], 1 => ["licencia" => 0]];
+        $intDiasLicenciaNoRemunerada = 0;
+        $intDiasLicenciaRemunerada = 0;
+        foreach ($arLicencias as $arLicencia) {
+            $intDiaInicio = 1;
+            $intDiaFin = 30;
+            if ($arLicencia->getFechaDesde() < $fechaDesde) {
+                $intDiaInicio = $fechaDesde->format('j');
+                $dateFechaDesde = $fechaDesde;
+            } else {
+                $intDiaInicio = $arLicencia->getFechaDesde()->format('j');
+                $dateFechaDesde = $arLicencia->getFechaDesde();
+            }
+            if ($arLicencia->getFechaHasta() > $fechaHasta) {
+                $intDiaFin = $fechaHasta->format('j');
+                $dateFechaHasta = $fechaHasta;
+            } else {
+                $intDiaFin = $arLicencia->getFechaHasta()->format('j');
+                $dateFechaHasta = $arLicencia->getFechaHasta();
+            }
+            if ($arLicencia->getLicenciaTipoRel()->getSuspensionContratoTrabajo() || $arLicencia->getLicenciaTipoRel()->getAusentismo()) {
+                $tipo = "licenciaNoRemunerada";
+                $arrLicencias[0] = [$tipo => $intDiasLicenciaNoRemunerada += (($intDiaFin - $intDiaInicio) + 1)];
+            }
+            if ($arLicencia->getLicenciaTipoRel()->getRemunerada() || $arLicencia->getLicenciaTipoRel()->getPaternidad() || $arLicencia->getLicenciaTipoRel()->getMaternidad()) {
+                $tipo = "licencia";
+                $arrLicencias[1] = [$tipo => $intDiasLicenciaRemunerada += (($intDiaFin - $intDiaInicio) + 1)];
+            }
+
+        }
+        return $arrLicencias;
+
+
+    }
+
 }

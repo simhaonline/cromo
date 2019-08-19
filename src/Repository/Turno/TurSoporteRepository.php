@@ -5,6 +5,8 @@ namespace App\Repository\Turno;
 use App\Entity\General\GenInconsistencia;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuIncapacidad;
+use App\Entity\RecursoHumano\RhuLicencia;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Turno\TurContratoTipo;
 use App\Entity\Turno\TurFestivo;
@@ -252,11 +254,10 @@ class TurSoporteRepository extends ServiceEntityRepository
                     $arrayResultado[$i]['dias'] = $arSoportePagoPeriodoActualizar->getDiasPeriodo();
                 }*/
                 //Quite esta validacion porque en estelar cuando tenia induccion le pagaba mas dias
-                //$diasTransporte = $arrayResultado[$i]['dias'] + $arrayResultado[$i]['induccion'];
-                $diasTransporte = $arrayResultado[$i]['dias'];
-                /*if ($diasTransporte > $arSoportePagoPeriodoActualizar->getDiasPeriodo()) {
-                    $diasTransporte = $arSoportePagoPeriodoActualizar->getDiasPeriodo();
-                }*/
+                $diasTransporte = $arrayResultado[$i]['dias'] + $arrayResultado[$i]['induccion'];
+                if ($diasTransporte > $arSoporte->getDias()) {
+                    $diasTransporte = $arSoporte->getDias();
+                }
                 //Adiciones mes de febrero
                 $arrayResultado[$i]['horasAdicionalesFebrero'] = 0;
                 /*if ($arSoportePago->getSoportePagoPeriodoRel()->getDiasAdicionalesFebrero() > 0) {
@@ -288,7 +289,7 @@ class TurSoporteRepository extends ServiceEntityRepository
 
                 $intHoras = $arrayResultado[$i]['horasDescanso'] + $arrayResultado[$i]['horasNovedad'] + $arrayResultado[$i]['horasDiurnas'] + $arrayResultado[$i]['horasNocturnas'] + $arrayResultado[$i]['horasFestivasDiurnas'] + $arrayResultado[$i]['horasFestivasNocturnas'];
                 $arSoporteContrato->setDias($arrayResultado[$i]['dias']?? 0);
-                //$arSoporteContrato->setDiasTransporte($diasTransporte);
+                $arSoporteContrato->setDiasTransporte($diasTransporte);
                 //$arSoporteContrato->setDiasTransporteReal($diasTransporte);
                 $arSoporteContrato->setDescanso($arrayResultado[$i]['descanso']?? 0);
                 $arSoporteContrato->setNovedad($arrayResultado[$i]['novedad']?? 0);
@@ -350,13 +351,13 @@ class TurSoporteRepository extends ServiceEntityRepository
         $arrInconsistencias = array();
 
         $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->findBy(array('codigoSoporteFk' => $arSoporte->getCodigoSoportePk()));
-        /*foreach ($arSoportesContratos as $arSoporteContrato) {
+        foreach ($arSoportesContratos as $arSoporteContrato) {
             if ($arSoporteContrato->getCodigoContratoFk()) {
                 $arrVacaciones = $em->getRepository(RhuVacacion::class)->diasValidarTurnos($arSoporteContrato->getCodigoEmpleadoFk(), $arSoporteContrato->getCodigoContratoFk(), $arSoporte->getFechaDesde(), $arSoporte->getFechaHasta());
 
-                $arrLicencias = $em->getRepository('BrasaRecursoHumanoBundle:RhuLicencia')->licenciasPerido($arSoportePagoPeriodo->getFechaDesde(), $arSoportePagoPeriodo->getFechaHasta(), $arSoportePago->getRecursoRel()->getCodigoEmpleadoFk());
-                $intDiasIncapacidadSoportePagoPeriodo = $em->getRepository('BrasaTurnoBundle:TurSoportePagoPeriodo')->diasIncapacidad($codigoSoportePagoPeriodo, $arSoportePago->getRecursoRel()->getCodigoRecursoPk());
-                $intDiasIncapacidad = $em->getRepository('BrasaRecursoHumanoBundle:RhuIncapacidad')->diasIncapacidadPeriodo31($arSoportePagoPeriodo->getFechaDesde(), $arSoportePagoPeriodo->getFechaHasta(), $arSoportePago->getRecursoRel()->getCodigoEmpleadoFk());
+                $arrLicencias = $em->getRepository(RhuLicencia::class)->licenciasPerido($arSoporte->getFechaDesde(), $arSoporte->getFechaHasta(), $arSoporteContrato->getCodigoEmpleadoFk());
+                $intDiasIncapacidadSoportePagoPeriodo = $em->getRepository(TurSoporte::class)->diasIncapacidad($arSoporte->getCodigoSoportePk(), $arSoporteContrato->getCodigoEmpleadoFk());
+                $intDiasIncapacidad = $em->getRepository(RhuIncapacidad::class)->diasIncapacidadPeriodo31($arSoporte->getFechaDesde(), $arSoporte->getFechaHasta(), $arSoporteContrato->getCodigoEmpleadoFk());
                 $intDiasVacaciones = $arrVacaciones['dias'];
 
                 if($intDiasVacaciones > 0){
@@ -365,36 +366,31 @@ class TurSoporteRepository extends ServiceEntityRepository
 
                 if ($arrVacaciones['dias'] != $arSoporteContrato->getVacacion()) {
                     $arrInconsistencias[] = [
-                        'inconsistencia' => "Vacaciones de " . $arSoporteContrato->getVacacion() . " dias en turnos y de " . $arrVacaciones['dias'] . " en recurso humano",
-                        'empleado' => $arSoporteContrato->getEmpleadoRel()->getNombreCorto(),
-                        'numeroIdentificacion' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
-                        'codigo' => $arSoporteContrato->getCodigoEmpleadoFk()
+                        'descripcion' => "Vacaciones de " . $arSoporteContrato->getVacacion() . " dias en turnos y de " . $arrVacaciones['dias'] . " en recurso humano",
+                        'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                        'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
                     ];
                 }
-                /*
+
                 if ($arrLicencias) {
                     foreach ($arrLicencias as $arrLicencia) {
                         // ausentismo o licencia no remunerada
-                        if (array_key_exists('licenciaNoRemunerada', $arrLicencia)) {
-                            if ($arrLicencia['licenciaNoRemunerada'] != ($arSoportePago->getAusentismo() + $arSoportePago->getLicenciaNoRemunerada())) {
+                        /*if (array_key_exists('licenciaNoRemunerada', $arrLicencia)) {
+                            if ($arrLicencia['licenciaNoRemunerada'] != ($arSoporteContrato->getAusentismo() + $arSoporteContrato->getLicenciaNoRemunerada())) {
                                 $arrInconsistencias[] = [
-                                    'inconsistencia' => "Licencia no remunerada o ausentismo de " . ($arSoportePago->getAusentismo() + $arSoportePago->getLicenciaNoRemunerada()) . " dias en turnos y de " . $arrLicencia['licenciaNoRemunerada'] . " en recurso humano",
-                                    'recurso' => $arSoportePago->getRecursoRel()->getNombreCorto(),
-                                    'segmento' => $arSoportePago->getRecursoRel()->getCodigoSegmentoFk(),
-                                    'numeroIdentificacion' => $arSoportePago->getRecursoRel()->getNumeroIdentificacion(),
-                                    'codigo' => $arSoportePago->getRecursoRel()->getCodigoEmpleadoFk()
+                                    'descripcion' => "Licencia no remunerada o ausentismo de " . ($arSoporteContrato->getAusentismo() + $arSoporteContrato->getLicenciaNoRemunerada()) . " dias en turnos y de " . $arrLicencia['licenciaNoRemunerada'] . " en recurso humano",
+                                    'referencia' => $arSoporteContrato->getRecursoRel()->getNumeroIdentificacion(),
+                                    'codigoReferencia' => $arSoporteContrato->getRecursoRel()->getCodigoEmpleadoFk()
                                 ];
                             }
-                        }
+                        }*/
                         // licencias
                         if (array_key_exists('licencia', $arrLicencia)) {
-                            if ($arrLicencia['licencia'] != ($arSoportePago->getLicencia())) {
+                            if ($arrLicencia['licencia'] != ($arSoporteContrato->getLicencia())) {
                                 $arrInconsistencias[] = [
-                                    'inconsistencia' => "Licencia remunerada de " . $arSoportePago->getLicencia() . " dias en turnos y de " . $arrLicencia['licencia'] . " en recurso humano",
-                                    'recurso' => $arSoportePago->getRecursoRel()->getNombreCorto(),
-                                    'segmento' => $arSoportePago->getRecursoRel()->getCodigoSegmentoFk(),
-                                    'numeroIdentificacion' => $arSoportePago->getRecursoRel()->getNumeroIdentificacion(),
-                                    'codigo' => $arSoportePago->getRecursoRel()->getCodigoEmpleadoFk()
+                                    'descripcion' => "Licencia remunerada de " . $arSoporteContrato->getLicencia() . " dias en turnos y de " . $arrLicencia['licencia'] . " en recurso humano",
+                                    'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                                    'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
                                 ];
                             }
                         }
@@ -403,16 +399,14 @@ class TurSoporteRepository extends ServiceEntityRepository
 
                 if ($intDiasIncapacidad != $intDiasIncapacidadSoportePagoPeriodo) {
                     $arrInconsistencias[] = [
-                        'inconsistencia' => "Incapacidades de " . $intDiasIncapacidadSoportePagoPeriodo . " dias en turnos y de " . $intDiasIncapacidad . " en recurso humano",
-                        'recurso' => $arSoportePago->getRecursoRel()->getNombreCorto(),
-                        'segmento' => $arSoportePago->getRecursoRel()->getCodigoSegmentoFk(),
-                        'numeroIdentificacion' => $arSoportePago->getRecursoRel()->getNumeroIdentificacion(),
-                        'codigo' => $arSoportePago->getRecursoRel()->getCodigoEmpleadoFk()
+                        'descripcion' => "Incapacidades de " . $intDiasIncapacidadSoportePagoPeriodo . " dias en turnos y de " . $intDiasIncapacidad . " en recurso humano",
+                        'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                        'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
                     ];
                 }
 
             }
-        }*/
+        }
 
 
         $fechaHastaSoportePagoPeriodo = $arSoporte->getFechaHasta()->format('Y-m-d');
@@ -525,6 +519,21 @@ class TurSoporteRepository extends ServiceEntityRepository
         }
     }
 
+    public function diasIncapacidad($codigoSoporte, $codigoEmpleado)
+    {
+        $em = $this->getEntityManager();
+        $diasIncapacidad = 0;
+        $dql = "SELECT SUM(sp.incapacidad) as diasIncapacidad "
+            . "FROM App\Entity\Turno\TurSoporteContrato sp "
+            . "WHERE sp.codigoSoporteFk =  " . $codigoSoporte . " AND sp.codigoEmpleadoFk = " . $codigoEmpleado;
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        if ($arrayResultado) {
+            $diasIncapacidad = $arrayResultado[0]['diasIncapacidad'];
+        }
 
+
+        return $diasIncapacidad;
+    }
 
 }

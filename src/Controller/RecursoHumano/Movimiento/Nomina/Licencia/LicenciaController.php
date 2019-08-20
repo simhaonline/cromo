@@ -185,7 +185,7 @@ class LicenciaController extends ControllerListenerGeneral
                                                 }
                                                 $salarioEmpleado = $douVrDia * 30;
                                             }
-                                            if ($arContrato->getLiquidarLicenciasIbcMesAnterior() && (($arLicencia->getLicenciaTipoRel()->getRemunerada()))) {
+                                            if ($arConfiguracion->getLiquidarLicenciasIbcMesAnterior() && (($arLicencia->getLicenciaTipoRel()->getRemunerada()))) {
                                                 $arrIbc = $em->getRepository(RhuAporteDetalle::class)->ibcMesAnterior($arLicencia->getFechaDesde()->format('Y'), $arLicencia->getFechaDesde()->format('m'), $arEmpleado->getCodigoEmpleadoPk());
                                                 $arLicencia->setVrIbcMesAnterior($arrIbc['ibc']);
                                                 $arLicencia->setDiasIbcMesAnterior($arrIbc['dias']);

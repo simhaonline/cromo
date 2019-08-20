@@ -11,6 +11,7 @@ use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
+use App\Entity\Turno\TurPedidoTipo;
 use App\Form\Type\Turno\ContratoDetalleType;
 use App\Form\Type\Turno\PedidoType;
 use App\Form\Type\Turno\PedidoDetalleType;
@@ -18,7 +19,12 @@ use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -43,33 +49,52 @@ class PedidoController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $this->request = $request;
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoPedidoPk', TextType::class, array('required' => false))
+            ->add('codigoPedidoTipoFk', EntityType::class, [
+                'class' => TurPedidoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.codigoPedidoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurPedidoFechaDesde') ? date_create($session->get('filtroTurPedidoFechaDesde')): null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurPedidoFechaHasta') ? date_create($session->get('filtroTurPedidoFechaHasta')): null])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arPedidoTipo = $form->get('codigoPedidoTipoFk')->getData();
+            $session->set('filtroTurPedidoCodigoCliente', $form->get('codigoClienteFk')->getData());
+            $session->set('filtroTurPedidoNumero', $form->get('numero')->getData());
+            $session->set('filtroTurPedidoCodigoPedido', $form->get('codigoPedidoPk')->getData());
+            if ($arPedidoTipo != '') {
+                $session->set('filtroTurPedidoCodigoPedidoTipo', $arPedidoTipo->getCodigoPedidoTipoPk());
+            } else {
+                $session->set('filtroTurPedidoCodigoPedidoTipo', null);
             }
+            $session->set('filtroTurPedidoEstadoAutorizado', $form->get('estadoAutorizado')->getData());
+            $session->set('filtroTurPedidoEstadoAprobado', $form->get('estadoAprobado')->getData());
+            $session->set('filtroTurPedidoEstadoAnulado', $form->get('estadoAnulado')->getData());
+            $session->set('filtroTurPedidoFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
+            $session->set('filtroTurPedidoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Pedidos");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TurPedido::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_lista'));
-            }
-        }
+        $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('turno/movimiento/venta/pedido/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arPedidos' => $arPedidos,
+            'form' => $form->createView()
         ]);
     }
 

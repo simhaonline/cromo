@@ -14,6 +14,7 @@ use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
+use App\Entity\Turno\TurPedidoTipo;
 use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\ContratoDetalleType;
@@ -23,7 +24,11 @@ use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,13 +55,50 @@ class ProgramacionController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
+        $session = new Session();
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoPedidoPk', TextType::class, array('required' => false))
+            ->add('codigoPedidoTipoFk', EntityType::class, [
+                'class' => TurPedidoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.codigoPedidoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurPedidoProgramacionFechaDesde') ? date_create($session->get('filtroTurPedidoProgramacionFechaDesde')): null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurPedidoProgramacionFechaHasta') ? date_create($session->get('filtroTurPedidoProgramacionFechaHasta')): null])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $arPedidoTipo = $form->get('codigoPedidoTipoFk')->getData();
+                $session->set('filtroTurPedidoProgramacionCodigoCliente', $form->get('codigoClienteFk')->getData());
+                $session->set('filtroTurPedidoProgramacionNumero', $form->get('numero')->getData());
+                $session->set('filtroTurPedidoProgramacionCodigoPedido', $form->get('codigoPedidoPk')->getData());
+                if ($arPedidoTipo != '') {
+                    $session->set('filtroTurPedidoProgramacionCodigoPedidoTipo', $arPedidoTipo->getCodigoPedidoTipoPk());
+                } else {
+                    $session->set('filtroTurPedidoProgramacionCodigoPedidoTipo', null);
+                }
+                $session->set('filtroTurPedidoProgramacionEstadoAutorizado', $form->get('estadoAutorizado')->getData());
+                $session->set('filtroTurPedidoProgramacionEstadoAprobado', $form->get('estadoAprobado')->getData());
+                $session->set('filtroTurPedidoProgramacionEstadoAnulado', $form->get('estadoAnulado')->getData());
+                $session->set('filtroTurPedidoProgramacionFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
+                $session->set('filtroTurPedidoProgramacionFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+            }
 
         }
         $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->lista(), $request->query->getInt('page', 1), 30);

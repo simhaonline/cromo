@@ -385,6 +385,65 @@ class TurPedidoRepository extends ServiceEntityRepository
         if ($session->get('filtroTurInformeComercialPedidoClienteCodigoFechaHasta') != null) {
             $queryBuilder->andWhere("p.fecha <= '{$session->get('filtroTurInformeComercialPedidoClienteCodigoFechaHasta')} 23:59:59'");
         }
+
+        if($session->get('filtroTurPedidoCodigoCliente') != ''){
+            $queryBuilder->andWhere("p.codigoClienteFk  = '{$session->get('filtroTurPedidoCodigoCliente')}'");
+        }
+        if($session->get('filtroTurPedidoNumero') != ''){
+            $queryBuilder->andWhere("p.numero  = '{$session->get('filtroTurPedidoNumero')}'");
+        }
+        if($session->get('filtroTurPedidoCodigoPedido') != ''){
+            $queryBuilder->andWhere("p.codigoPedidoPk  = '{$session->get('filtroTurPedidoCodigoPedido')}'");
+        }
+        if($session->get('filtroTurPedidoCodigoPedidoTipo') != ''){
+            $queryBuilder->andWhere("p.codigoPedidoTipoFk  = '{$session->get('filtroTurPedidoCodigoPedidoTipo')}'");
+        }
+        if ($session->get('filtroTurPedidoFechaDesde') != null) {
+            $queryBuilder->andWhere("p.fecha >= '{$session->get('filtroTurPedidoFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroTurPedidoFechaHasta') != null) {
+            $queryBuilder->andWhere("p.fecha <= '{$session->get('filtroTurPedidoFechaHasta')} 23:59:59'");
+        }
+        if($session->get('filtroTurPedidoEstadoAutorizado') != ''){
+            $queryBuilder->andWhere("p.estadoAutorizado  = '{$session->get('filtroTurPedidoEstadoAutorizado')}'");
+        }
+        if($session->get('filtroTurPedidoEstadoAprobado') != ''){
+            $queryBuilder->andWhere("p.estadoAprobado  = '{$session->get('filtroTurPedidoEstadoAprobado')}'");
+        }
+        if($session->get('filtroTurPedidoEstadoAnulado') != ''){
+            $queryBuilder->andWhere("p.estadoAnulado  = '{$session->get('filtroTurPedidoEstadoAnulado')}'");
+        }
+
+
+        if($session->get('filtroTurPedidoProgramacionCodigoCliente') != ''){
+            $queryBuilder->andWhere("p.codigoClienteFk  = '{$session->get('filtroTurPedidoProgramacionCodigoCliente')}'");
+        }
+        if($session->get('filtroTurPedidoProgramacionNumero') != ''){
+            $queryBuilder->andWhere("p.numero  = '{$session->get('filtroTurPedidoProgramacionNumero')}'");
+        }
+        if($session->get('filtroTurPedidoProgramacionCodigoPedido') != ''){
+            $queryBuilder->andWhere("p.codigoPedidoPk  = '{$session->get('filtroTurPedidoProgramacionCodigoPedido')}'");
+        }
+        if($session->get('filtroTurPedidoProgramacionCodigoPedidoTipo') != ''){
+            $queryBuilder->andWhere("p.codigoPedidoTipoFk  = '{$session->get('filtroTurPedidoProgramacionCodigoPedidoTipo')}'");
+        }
+        if ($session->get('filtroTurPedidoProgramacionFechaDesde') != null) {
+            $queryBuilder->andWhere("p.fecha >= '{$session->get('filtroTurPedidoProgramacionFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroTurPedidoProgramacionFechaHasta') != null) {
+            $queryBuilder->andWhere("p.fecha <= '{$session->get('filtroTurPedidoProgramacionFechaHasta')} 23:59:59'");
+        }
+        if($session->get('filtroTurPedidoProgramacionEstadoAutorizado') != ''){
+            $queryBuilder->andWhere("p.estadoAutorizado  = '{$session->get('filtroTurPedidoProgramacionEstadoAutorizado')}'");
+        }
+        if($session->get('filtroTurPedidoProgramacionEstadoAprobado') != ''){
+            $queryBuilder->andWhere("p.estadoAprobado  = '{$session->get('filtroTurPedidoProgramacionEstadoAprobado')}'");
+        }
+        if($session->get('filtroTurPedidoProgramacionEstadoAnulado') != ''){
+            $queryBuilder->andWhere("p.estadoAnulado  = '{$session->get('filtroTurPedidoProgramacionEstadoAnulado')}'");
+        }
+
+
         return $queryBuilder;
     }
 

@@ -84,6 +84,11 @@ class RhuConfiguracion
     private $liquidarVacacionesPromedioUltimoAnio = false;
 
     /**
+     * @ORM\Column(name="liquidar_licencias_ibc_mes_anterior", type="boolean", options={"default":false}, nullable=true)
+     */
+    private $liquidarLicenciasIbcMesAnterior = false;
+
+    /**
      * @ORM\Column(name="validar_fecha_ultimo_pago_liquidacion", type="boolean", nullable=true)
      */
     private $validarFechaUltimoPagoLiquidacion = false;
@@ -729,6 +734,22 @@ class RhuConfiguracion
     public function setLiquidarVacacionesSalarioPromedioCesantias($liquidarVacacionesSalarioPromedioCesantias): void
     {
         $this->liquidarVacacionesSalarioPromedioCesantias = $liquidarVacacionesSalarioPromedioCesantias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarLicenciasIbcMesAnterior()
+    {
+        return $this->liquidarLicenciasIbcMesAnterior;
+    }
+
+    /**
+     * @param mixed $liquidarLicenciasIbcMesAnterior
+     */
+    public function setLiquidarLicenciasIbcMesAnterior($liquidarLicenciasIbcMesAnterior): void
+    {
+        $this->liquidarLicenciasIbcMesAnterior = $liquidarLicenciasIbcMesAnterior;
     }
 
 

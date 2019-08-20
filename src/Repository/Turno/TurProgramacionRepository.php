@@ -286,6 +286,34 @@ class TurProgramacionRepository extends ServiceEntityRepository
         return $queryBuilder->setMaxResults(5000)->getQuery();
     }
 
+    public function programacionEmpleado($codigoEmpleado, $anio, $mes)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurProgramacion::class, 'p')
+            ->select('p.codigoProgramacionPk')
+            ->addSelect('p.codigoPedidoDetalleFk')
+            ->addSelect('p.horasDiurnas')
+            ->addSelect('p.horasNocturnas')
+            ->addSelect('p.anio')
+            ->addSelect('p.mes')
+            ->addSelect('p.codigoEmpleadoFk')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('cl.nombreCorto as cliente')
+            ->addSelect('ped.codigoClienteFk')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('p.pedidoRel', 'ped')
+            ->leftJoin('ped.clienteRel', 'cl');
+        for ($i = 1; $i <= 31; $i++) {
+            $queryBuilder->addSelect("p.dia{$i}");
+        }
+        $queryBuilder->where('p.codigoEmpleadoFk=' . $codigoEmpleado)
+            ->andWhere('p.anio = ' . $anio)
+            ->andWhere('p.mes = ' . $mes);
+        $arProgramaciones = $queryBuilder->getQuery()->getResult();
+        return $arProgramaciones;
+    }
+
     public function periodoDias($anio, $mes, $codigoEmpleado = "")
     {
         $em = $this->getEntityManager();

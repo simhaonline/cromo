@@ -7,6 +7,8 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Entity\Turno\TurFestivo;
+use App\Entity\Turno\TurProgramacion;
 use App\Form\Type\RecursoHumano\PagoType;
 use App\Formato\RecursoHumano\Pago;
 use App\General\General;
@@ -99,6 +101,30 @@ class PagoController extends ControllerListenerGeneral
         return $this->render('recursohumano/movimiento/nomina/pago/detalle.html.twig', [
             'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("recursohumano/movimiento/nomina/pago/programacion/{id}", name="recursohumano_movimiento_nomina_pago_programacion")
+     */
+    public function verProgramacion(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arPago = $em->getRepository(RhuPago::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /*if ($form->get('btnActualizar')->isClicked()) {
+                $em->getRepository(RhuProgramacionDetalle::class)->actualizar($arProgramacionDetalle, $this->getUser()->getUsername());
+            }*/
+        }
+
+        $arProgramaciones = $em->getRepository(TurProgramacion::class)->programacionEmpleado($arPago->getCodigoEmpleadoFk(), $arPago->getFechaDesde()->format('Y'), $arPago->getFechaHasta()->format('n'));
+        return $this->render('recursohumano/movimiento/nomina/pago/verTurnos.html.twig', [
+            'arPago' => $arPago,
+            'arProgramaciones' => $arProgramaciones,
             'form' => $form->createView()
         ]);
     }

@@ -7,6 +7,7 @@
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
+            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_pago_programacion', { 'id': arPago.codigoPagoPk }) }}', 'VerTurnos', 500, 1200)">Turnos</a>
         </div>
     </div>
     <br/><br/>
@@ -72,9 +73,9 @@
                             <th title="Codigo del concepto">CODIGO</th>
                             <th title="Nombre del concepto">CONCEPTO</th>
                             <th>DETALLE</th>
-                            <th>PORCENTAJE</th>
-                            <th>HORAS</th>
-                            <th>DIAS</th>
+                            <th>%</th>
+                            <th>H</th>
+                            <th>D</th>
                             <th title="Valor de la hora">VR.HORA</th>
                             <th title="Operacion">OP</th>
                             <th>VR.PAGO</th>

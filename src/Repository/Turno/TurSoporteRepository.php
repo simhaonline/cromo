@@ -296,7 +296,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $arSoporteContrato->setIncapacidad($arrayResultado[$i]['incapacidad']?? 0);
                 //$arSoporteContrato->setIncapacidadNoLegalizada($arrayResultado[$i]['incapacidadNoLegalizada']);
                 $arSoporteContrato->setLicencia($arrayResultado[$i]['licencia'] ?? 0);
-                //$arSoporteContrato->setLicenciaNoRemunerada($arrayResultado[$i]['licenciaNoRemunerada']);
+                $arSoporteContrato->setLicenciaNoRemunerada($arrayResultado[$i]['licenciaNoRemunerada']);
                 $arSoporteContrato->setVacacion($arrayResultado[$i]['vacacion']?? 0);
                 $arSoporteContrato->setInduccion($arrayResultado[$i]['induccion']?? 0);
                 $arSoporteContrato->setIngreso($arrayResultado[$i]['ingreso']?? 0);
@@ -368,6 +368,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                     $arrInconsistencias[] = [
                         'descripcion' => "Vacaciones de " . $arSoporteContrato->getVacacion() . " dias en turnos y de " . $arrVacaciones['dias'] . " en recurso humano",
                         'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                        'nombreReferencia' => $arSoporteContrato->getEmpleadoRel()->getNombreCorto(),
                         'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
                     ];
                 }
@@ -375,21 +376,24 @@ class TurSoporteRepository extends ServiceEntityRepository
                 if ($arrLicencias) {
                     foreach ($arrLicencias as $arrLicencia) {
                         // ausentismo o licencia no remunerada
-                        /*if (array_key_exists('licenciaNoRemunerada', $arrLicencia)) {
+                        if (array_key_exists('licenciaNoRemunerada', $arrLicencia)) {
                             if ($arrLicencia['licenciaNoRemunerada'] != ($arSoporteContrato->getAusentismo() + $arSoporteContrato->getLicenciaNoRemunerada())) {
                                 $arrInconsistencias[] = [
                                     'descripcion' => "Licencia no remunerada o ausentismo de " . ($arSoporteContrato->getAusentismo() + $arSoporteContrato->getLicenciaNoRemunerada()) . " dias en turnos y de " . $arrLicencia['licenciaNoRemunerada'] . " en recurso humano",
-                                    'referencia' => $arSoporteContrato->getRecursoRel()->getNumeroIdentificacion(),
-                                    'codigoReferencia' => $arSoporteContrato->getRecursoRel()->getCodigoEmpleadoFk()
+                                    'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                                    'nombreReferencia' => $arSoporteContrato->getEmpleadoRel()->getNombreCorto(),
+                                    'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
                                 ];
                             }
-                        }*/
+                        }
+
                         // licencias
                         if (array_key_exists('licencia', $arrLicencia)) {
                             if ($arrLicencia['licencia'] != ($arSoporteContrato->getLicencia())) {
                                 $arrInconsistencias[] = [
                                     'descripcion' => "Licencia remunerada de " . $arSoporteContrato->getLicencia() . " dias en turnos y de " . $arrLicencia['licencia'] . " en recurso humano",
                                     'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                                    'nombreReferencia' => $arSoporteContrato->getEmpleadoRel()->getNombreCorto(),
                                     'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
                                 ];
                             }
@@ -401,6 +405,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                     $arrInconsistencias[] = [
                         'descripcion' => "Incapacidades de " . $intDiasIncapacidadSoportePagoPeriodo . " dias en turnos y de " . $intDiasIncapacidad . " en recurso humano",
                         'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                        'nombreReferencia' => $arSoporteContrato->getEmpleadoRel()->getNombreCorto(),
                         'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
                     ];
                 }
@@ -428,6 +433,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $arrInconsistencias[] = [
                     'codigoReferencia' => $arContrato['codigoEmpleadoFk'],
                     'referencia' => $arContrato['numeroIdentificacion'],
+                    'nombreReferencia' => $arContrato['nombreCorto'],
                     'descripcion' => "El empleado tiene un contrato para este periodo y no registra turnos en programacion, verifique la ultima fecha de pago del contrato"
                 ];
             }
@@ -449,6 +455,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                                 $arrInconsistencias[] = [
                                     'referencia' => $arContrato['numeroIdentificacion'],
                                     'codigoReferencia' => $arContrato['codigoEmpleadoFk'],
+                                    'nombreReferencia' => $arContrato['nombreCorto'],
                                     'descripcion' => "El empleado tiene '{$intervaloDias}' dias de retiro en recurso humano y no tiene turnos de retiro"
 
                                 ];
@@ -457,6 +464,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                             $arrInconsistencias[] = [
                                 'descripcion' => "El empleado se encuentra retirado en recurso humano y no tiene turnos de retiro",
                                 'referencia' => $arContrato['numeroIdentificacion'],
+                                'nombreReferencia' => $arContrato['nombreCorto'],
                                 'codigoReferencia' => $arContrato['codigoEmpleadoFk']
                             ];
                         }
@@ -473,6 +481,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $arrInconsistencias[] = [
                     'descripcion' => "El empleado no tiene turnos asignados dias: " . $arrValidacionTurnos['faltantes'],
                     'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                    'nombreReferencia' => $arSoporteContrato->getEmpleadoRel()->getNombreCorto(),
                     'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
                 ];
             }
@@ -480,6 +489,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $arrInconsistencias[] = [
                     'descripcion' => "El empleado tiene turnos duplicados dias: " . $arrValidacionTurnos['dobles'],
                     'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                    'nombreReferencia' => $arSoporteContrato->getEmpleadoRel()->getNombreCorto(),
                     'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
                 ];
             }
@@ -494,6 +504,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                         $arrInconsistencias[] = [
                             'descripcion' => "El contrato del empleado esta activo y tiene turnos de retiro (" . $arSoporteContrato->getRetiro() . ") en el soporte de pago",
                             'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                            'nombreReferencia' => $arSoporteContrato->getEmpleadoRel()->getNombreCorto(),
                             'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
                         ];
                     }
@@ -508,6 +519,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $arInconsistencia->setCodigoModeloFk('TurSoporte');
                 $arInconsistencia->setCodigoModelo($arSoporte->getCodigoSoportePk());
                 $arInconsistencia->setCodigoReferencia($arrInconsistencia['codigoReferencia']);
+                $arInconsistencia->setNombreReferencia($arrInconsistencia['nombreReferencia']);
                 $arInconsistencia->setReferencia($arrInconsistencia['referencia']);
                 $arInconsistencia->setDescripcion($arrInconsistencia['descripcion']);
                 $em->persist($arInconsistencia);

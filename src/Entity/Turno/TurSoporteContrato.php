@@ -83,6 +83,11 @@ class TurSoporteContrato
     private $licencia = 0;
 
     /**
+     * @ORM\Column(name="licencia_no_remunerada", type="integer")
+     */
+    private $licenciaNoRemunerada = 0;
+
+    /**
      * @ORM\Column(name="vacacion", type="integer")
      */
     private $vacacion = 0;
@@ -1128,6 +1133,23 @@ class TurSoporteContrato
     {
         $this->soportesHorasSoporteContratoRel = $soportesHorasSoporteContratoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLicenciaNoRemunerada()
+    {
+        return $this->licenciaNoRemunerada;
+    }
+
+    /**
+     * @param mixed $licenciaNoRemunerada
+     */
+    public function setLicenciaNoRemunerada($licenciaNoRemunerada): void
+    {
+        $this->licenciaNoRemunerada = $licenciaNoRemunerada;
+    }
+
 
 
 

@@ -38,6 +38,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->addSelect('sc.retiro')
             ->addSelect('sc.incapacidad')
             ->addSelect('sc.licencia')
+            ->addSelect('sc.licenciaNoRemunerada')
             ->addSelect('sc.ausentismo')
             ->addSelect('sc.vacacion')
             ->addSelect('sc.horas')

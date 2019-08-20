@@ -30,7 +30,7 @@
                         <tr>
                             <th colspan="3"></th>
                             <th colspan="2"></th>
-                            <th colspan="8" style="text-align: center">NOVEDADES</th>
+                            <th colspan="9" style="text-align: center">NOVEDADES</th>
                             <th colspan="6" style="text-align: center">TIEMPO</th>
                             <th colspan="8" style="text-align: center">ADICIONAL</th>
                             <th colspan="4"></th>
@@ -45,6 +45,7 @@
                             <th title="RETIRO">RET</th>
                             <th title="INCAPACIDAD">INC</th>
                             <th title="LICENCIA">LIC</th>
+                            <th title="LICENCIA NO REMUNERADA">LNR</th>
                             <th title="AUSENTISMO">AUS</th>
                             <th title="VACACIONES">VAC</th>
                             <th title="HORAS">H</th>
@@ -82,6 +83,7 @@
                                 <td>{{ arSoporteContrato.retiro | number_format(0, '.', ',') }}</td>
                                 <td>{{ arSoporteContrato.incapacidad | number_format(0, '.', ',') }}</td>
                                 <td>{{ arSoporteContrato.licencia | number_format(0, '.', ',') }}</td>
+                                <td>{{ arSoporteContrato.licenciaNoRemunerada | number_format(0, '.', ',') }}</td>
                                 <td>{{ arSoporteContrato.ausentismo | number_format(0, '.', ',') }}</td>
                                 <td>{{ arSoporteContrato.vacacion | number_format(0, '.', ',') }}</td>
                                 <td>{{ arSoporteContrato.horas | number_format(2, '.', ',') }}</td>

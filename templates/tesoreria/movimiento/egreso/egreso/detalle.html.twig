@@ -70,7 +70,7 @@
                             <th>NUMERO</th>
                             <th>TERCERO</th>
                             <th>IDENTIFICAICON</th>
-                            <th>SALDO</th>
+                            <th>CUENTA</th>
                             <th style="width: 12%;">PAGO</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -83,7 +83,7 @@
                                 <td>{{ arEgresoDetalle.numero }}</td>
                                 <td>{{ arEgresoDetalle.nombreCorto }}</td>
                                 <td>{{ arEgresoDetalle.numeroIdentificacion }}</td>
-                                <td style="text-align: right">{{ arEgresoDetalle.vrSaldo |number_format(0,'.',',') }}</td>
+                                <td>{{ arEgresoDetalle.cuenta }}</td>
                                 {% if arEgreso.estadoAutorizado == false %}
                                     <td style="text-align: center">
                                         <input class="input-valor" type="number" placeholder="% DESCUENTO"

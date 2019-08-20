@@ -9,12 +9,14 @@
                         <tr>
                             <th>COD</th>
                             <th>REF</th>
+                            <th>NOMBRE</th>
                             <th>DESCRIPCION</th>
                         </tr>
                         {% for arInconsistencia in arInconsistencias %}
                             <tr>
                                 <td>{{ arInconsistencia.codigoReferencia  }}</td>
                                 <td>{{ arInconsistencia.referencia }}</td>
+                                <td>{{ arInconsistencia.nombreReferencia }}</td>
                                 <td>{{ arInconsistencia.descripcion  }}</td>
                             </tr>
                         {% endfor %}

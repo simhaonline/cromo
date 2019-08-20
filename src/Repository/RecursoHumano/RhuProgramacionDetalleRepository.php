@@ -157,7 +157,7 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->leftJoin('pd.empleadoRel','e')
             ->where("pd.codigoProgramacionFk = {$id}");
 
-        return $queryBuilder;
+        return $queryBuilder->getQuery();
     }
 
     public

@@ -196,7 +196,7 @@ class ProgramacionController extends ControllerListenerGeneral
                 }
             }
             if ($form->get('btnExcelDetalle')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(RhuProgramacionDetalle::class)->exportar($id))->execute(), "ProgramacionDetalle");
+                General::get()->setExportar(($em->getRepository(RhuProgramacionDetalle::class)->exportar($id))->execute(), "ProgramacionDetalle");
             }
             if ($form->get('btnExcelPagoDetalles')->isClicked()) {
                 $this->generarExcelDetalle($arProgramacion->getCodigoProgramacionPk());

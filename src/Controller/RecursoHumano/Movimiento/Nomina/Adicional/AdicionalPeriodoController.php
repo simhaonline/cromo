@@ -135,12 +135,15 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("recursohumano/movimiento/nomina/adicionalperiodo/detalle/nuevo/{codigoAdicionalPeriodo}", name="recursohumano_movimiento_nomina_adicionalperiodo_detalle_nuevo")
+     * @Route("recursohumano/movimiento/nomina/adicionalperiodo/detalle/nuevo/{codigoAdicional}/{codigoAdicionalPeriodo}", name="recursohumano_movimiento_nomina_adicionalperiodo_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $codigoAdicionalPeriodo){
+    public function detalleNuevo(Request $request, $codigoAdicional, $codigoAdicionalPeriodo){
         $em = $this->getDoctrine()->getManager();
         $arAdicionalPerido =  $em->getRepository(RhuAdicionalPeriodo::class)->find($codigoAdicionalPeriodo);
         $arAdicional = new RhuAdicional();
+        if ($codigoAdicional != 0) {
+            $arAdicional = $em->getRepository(RhuAdicional::class)->find($codigoAdicional);
+        }
         $form = $this->createForm(AdicionalType::class, $arAdicional);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

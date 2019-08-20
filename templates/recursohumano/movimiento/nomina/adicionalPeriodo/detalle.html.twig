@@ -62,6 +62,7 @@
             <th>EMPLEADO</th>
             <th>VALOR</th>
             <th title="Aplica dia laborado">APL</th>
+            <th></th>
             <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox"
                                                                                 name="ChkSeleccionarTodos"
                                                                                 onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')">
@@ -80,6 +81,10 @@
                 <td>{{ arAdicional.empleadoNombreCorto }}</td>
                 <td class="numero">{{ arAdicional.vrValor | number_format() }}</td>
                 <td>{{ arAdicional.aplicaDiaLaborado ? 'SI':'NO' }}</td>
+                <td style="text-align: center;">
+                    <a href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_detalle_nuevo',{'codigoAdicional': arAdicional.codigoAdicionalPk,'codigoAdicionalPeriodo':0 }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                        value="{{ arAdicional.codigoAdicionalPk }}"/>
             </tr>
@@ -99,7 +104,7 @@
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_detalle_nuevo', {'codigoAdicionalPeriodo': arAdicionalPeriodo.codigoAdicionalPeriodoPk}) }}">Nuevo</a>
+               href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_detalle_nuevo', { 'codigoAdicional': 0,'codigoAdicionalPeriodo': arAdicionalPeriodo.codigoAdicionalPeriodoPk}) }}">Nuevo</a>
         </div>
         <div class="btn-group">
             {{ form_widget(form.btnEliminar) }}

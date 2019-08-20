@@ -259,6 +259,12 @@ class RhuEmpleado
     private $codigoCargoFk;
 
     /**
+     * Empleado pagado por la entidad de externa
+     * @ORM\Column(name="pagado_entidad", type="boolean", nullable=true, options={"default":false})
+     */
+    private $pagadoEntidad = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadosIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
@@ -406,22 +412,6 @@ class RhuEmpleado
      * @ORM\OneToMany(targetEntity="RhuLicencia", mappedBy="empleadoRel")
      */
     protected $licenciasEmpleadoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -1082,6 +1072,22 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getPagadoEntidad()
+    {
+        return $this->pagadoEntidad;
+    }
+
+    /**
+     * @param mixed $pagadoEntidad
+     */
+    public function setPagadoEntidad($pagadoEntidad): void
+    {
+        $this->pagadoEntidad = $pagadoEntidad;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getIdentificacionRel()
     {
         return $this->identificacionRel;
@@ -1510,6 +1516,23 @@ class RhuEmpleado
     {
         $this->liquidacionesEmpleadoRel = $liquidacionesEmpleadoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLicenciasEmpleadoRel()
+    {
+        return $this->licenciasEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $licenciasEmpleadoRel
+     */
+    public function setLicenciasEmpleadoRel($licenciasEmpleadoRel): void
+    {
+        $this->licenciasEmpleadoRel = $licenciasEmpleadoRel;
+    }
+
 
 
 }

@@ -217,6 +217,7 @@ class EgresoController extends BaseController
             ->add('cboCuentaPagarTipo', EntityType::class, $em->getRepository(TesCuentaPagarTipo::class)->llenarCombo())
             ->add('cboBanco', EntityType::class, $em->getRepository(GenBanco::class)->llenarCombo())
             ->add('txtCodigoCuentaPagar', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('')])
+            ->add('txtNumeroReferencia', TextType::class, ['label' => 'Numero referecia: ', 'required' => false, 'data' => $session->get('')])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTesFechaDesde') ? date_create($session->get('filtroTesFechaDesde')) : null])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTesFechaHasta') ? date_create($session->get('filtroTesFechaHasta')) : null])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
@@ -237,6 +238,7 @@ class EgresoController extends BaseController
                     $session->set('filtroGenBanco', null);
                 }
                 $session->set('filtroTesCuentaPagarCodigoPendiente', $form->get('txtCodigoCuentaPagar')->getData());
+                $session->set('filtroTesCuentaPagaNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
                 $session->set('filtroTesFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
                 $session->set('filtroTesFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
             }
@@ -260,7 +262,7 @@ class EgresoController extends BaseController
                 }
             }
         }
-        $arCuentasPagar = $paginator->paginate($em->getRepository(TesCuentaPagar::class)->cuentasPagar(), $request->query->getInt('page', 1), 10);
+        $arCuentasPagar = $paginator->paginate($em->getRepository(TesCuentaPagar::class)->cuentasPagar(), $request->query->getInt('page', 1), 500);
         return $this->render('tesoreria/movimiento/egreso/egreso/detalleNuevo.html.twig', [
             'arCuentasPagar' => $arCuentasPagar,
             'form' => $form->createView()

@@ -32,6 +32,12 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaHasta) }}
                 </div>
+                <label class="col-sm-2 control-label">Número referencia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNumeroReferencia) }}
+                </div>
+
+
             </div>
         </div>
         <div class="panel-footer">
@@ -45,10 +51,10 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>NUMERO</th>
+                <th>NUM DOC</th>
                 <th>TIPO</th>
+                <th>IDENTIFICACIÓN</th>
                 <th>TERCERO</th>
-                <th>NIT</th>
                 <th>FECHA</th>
                 <th>VENCIMIENTO</th>
                 <th>ABONO</th>
@@ -62,8 +68,8 @@
                     <td style="text-align: right;">{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
                     <td style="text-align: left;">{{ arCuentaPagar.numeroDocumento }}</td>
                     <td style="text-align: left;">{{ arCuentaPagar.cuentaPagarTipoNombre }}</td>
+                    <td>{{ arCuentaPagar.terceroNumeroIdentificacion }}</td>
                     <td style="text-align: left;">{{ arCuentaPagar.terceroNombreCorto }}</td>
-                    <td style="text-align: right;">{{ arCuentaPagar.terceroNumeroIdentificacion }}</td>
                     <td style="text-align: right;">{{ arCuentaPagar.fecha | date('d/m/Y') }}</td>
                     <td style="text-align: right;">{{ arCuentaPagar.fechaVence | date('d/m/Y') }}</td>
                     <td style="text-align: right;">{{ arCuentaPagar.vrAbono | number_format(0,'.',',') }}</td>

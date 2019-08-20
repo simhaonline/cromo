@@ -85,7 +85,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
             ->addSelect('cp.fechaVence')
             ->addSelect('cpt.nombre as cuentaPagarTipoNombre')
             ->addSelect('t.nombreCorto as terceroNombreCorto')
-            ->addSelect('t.nombreCorto as terceroNumeroIdentificacion')
+            ->addSelect('t.numeroIdentificacion as terceroNumeroIdentificacion')
             ->join('cp.terceroRel', 't')
             ->join('cp.cuentaPagarTipoRel', 'cpt')
             ->where('cp.vrSaldo <> 0')
@@ -95,6 +95,11 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         if($codigoTercero) {
             $queryBuilder->andWhere('cp.codigoClienteFk = ' . $codigoTercero);
         }
+
+        if ($session->get('filtroTesCuentaPagaNumeroReferencia') != "") {
+            $queryBuilder->andWhere("cp.numeroReferencia = {$session->get('filtroTesCuentaPagaNumeroReferencia')}");
+        }
+
         return $queryBuilder;
     }
 

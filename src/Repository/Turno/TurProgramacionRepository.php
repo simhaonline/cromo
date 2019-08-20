@@ -283,7 +283,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
         if ($session->get('filtroRhuEmpleadoCodigoEmpleado') != null) {
             $queryBuilder->andWhere("p.codigoEmpleadoFk = '{$session->get('filtroRhuEmpleadoCodigoEmpleado')}'");
         }
-        return $queryBuilder;
+        return $queryBuilder->setMaxResults(5000)->getQuery();
     }
 
     public function periodoDias($anio, $mes, $codigoEmpleado = "")

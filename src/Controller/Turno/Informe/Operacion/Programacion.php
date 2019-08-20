@@ -32,9 +32,11 @@ class Programacion extends Controller
         $paginator = $this->get('knp_paginator');
         $dateFecha = (new \DateTime('now'));
         $arrDiaSemana = "";
+        $session->set('filtroTurProgramacionAnio', $dateFecha->format("Y"));
+        $session->set('filtroTurProgramacionMes', $dateFecha->format("m"));
         $form = $this->createFormBuilder()
-            ->add('txtAnio', TextType::class, ['required' => false, 'data' => $session->get('filtroTteAnio'), 'attr' => ['class' => 'form-control']])
-            ->add('txtMes', TextType::class, ['required' => false, 'data' => $session->get('filtroTteMes'), 'attr' => ['class' => 'form-control']])
+            ->add('txtAnio', TextType::class, ['required' => false, 'data' => $session->get('filtroTurProgramacionAnio'), 'attr' => ['class' => 'form-control']])
+            ->add('txtMes', TextType::class, ['required' => false, 'data' => $session->get('filtroTurProgramacionMes'), 'attr' => ['class' => 'form-control']])
             ->add('txtEmpleado', TextType::class, ['required' => false, 'data' => $session->get('filtroRhuEmpleadoCodigoEmpleado'), 'attr' => ['class' => 'form-control']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn-sm btn btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -47,7 +49,7 @@ class Programacion extends Controller
                 $session->set('filtroRhuEmpleadoCodigoEmpleado', $form->get('txtEmpleado')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TurProgramacion::class)->programaciones())->execute(), "programaciones");
+                General::get()->setExportar($em->getRepository(TurProgramacion::class)->programaciones()->execute(), "programaciones");
             }
         }
         $arrDiaSemana = FuncionesController::diasMes($dateFecha, $em->getRepository(TurFestivo::class)->festivos($dateFecha->format('Y-m-') . '01', $dateFecha->format('Y-m-t')));

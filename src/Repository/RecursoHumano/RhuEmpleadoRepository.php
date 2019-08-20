@@ -68,6 +68,7 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->addSelect('e.barrio')
             ->addSelect('e.correo')
             ->addSelect('b.nombre AS banco')
+            ->addSelect('e.codigoCuentaTipoFk')
             ->addSelect('e.cuenta')
             ->addSelect('e.codigoRhFk')
             ->addSelect('e.codigoSexoFk')

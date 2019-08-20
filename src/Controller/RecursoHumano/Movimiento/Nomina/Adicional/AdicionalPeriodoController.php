@@ -158,6 +158,7 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
                     $arAdicional->setAdicionalPeriodoRel($arAdicionalPerido);
                     $em->persist($arAdicional);
                     $em->flush();
+
                     return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_detalle', ['id' => $arAdicionalPerido->getCodigoAdicionalPeriodoPk()]));
                 } else {
                     Mensajes::error('El empleado no tiene un contrato activo en el sistema');

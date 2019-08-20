@@ -82,7 +82,7 @@
                 <td class="numero">{{ arAdicional.vrValor | number_format() }}</td>
                 <td>{{ arAdicional.aplicaDiaLaborado ? 'SI':'NO' }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_detalle_nuevo',{'codigoAdicional': arAdicional.codigoAdicionalPk,'codigoAdicionalPeriodo':0 }) }}"><i
+                    <a href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_detalle_nuevo',{'codigoAdicional': arAdicional.codigoAdicionalPk,'codigoAdicionalPeriodo':arAdicionalPeriodo.codigoAdicionalPeriodoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"

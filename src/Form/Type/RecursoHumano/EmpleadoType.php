@@ -160,7 +160,8 @@ class EmpleadoType extends AbstractType
         $campos = '[
             {"child":"codigoEmpleadoPk",          "tipo":"TextType",   "propiedades":{"label":"Codigo"},   "operador":"="},
             {"child":"nombreCorto",               "tipo":"TextType",   "propiedades":{"label":"Nombre"},   "operador":"like"},
-            {"child":"numeroIdentificacion",      "tipo":"TextType",   "propiedades":{"label":"Identificacion"},   "operador":"="}
+            {"child":"numeroIdentificacion",      "tipo":"TextType",   "propiedades":{"label":"Identificacion"},   "operador":"="},
+            {"child":"estadoContrato",                   "tipo":"ChoiceType",   "propiedades":{"label":"Contratado",        "choices":{"SI":true,"NO":false}}}
         ]';
 
         return $campos;

@@ -144,6 +144,7 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
         if ($codigoAdicional != 0) {
             $arAdicional = $em->getRepository(RhuAdicional::class)->find($codigoAdicional);
         }
+        $arAdicional->setAplicaNomina(true);
         $form = $this->createForm(AdicionalType::class, $arAdicional);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

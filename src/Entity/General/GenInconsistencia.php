@@ -43,7 +43,12 @@ class GenInconsistencia
     private $referencia;
 
     /**
-     * @ORM\Column(name="descripcion", type="string", length=200, nullable=true)
+     * @ORM\Column(name="nombre_referencia", type="string", length=500, nullable=true)
+     */
+    private $nombreReferencia;
+
+    /**
+     * @ORM\Column(name="descripcion", type="string", length=500, nullable=true)
      */
     private $descripcion;
 
@@ -130,6 +135,22 @@ class GenInconsistencia
     /**
      * @return mixed
      */
+    public function getNombreReferencia()
+    {
+        return $this->nombreReferencia;
+    }
+
+    /**
+     * @param mixed $nombreReferencia
+     */
+    public function setNombreReferencia($nombreReferencia): void
+    {
+        $this->nombreReferencia = $nombreReferencia;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDescripcion()
     {
         return $this->descripcion;
@@ -142,6 +163,8 @@ class GenInconsistencia
     {
         $this->descripcion = $descripcion;
     }
+
+
 
 
 }

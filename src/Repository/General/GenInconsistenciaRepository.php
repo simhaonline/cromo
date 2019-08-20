@@ -30,6 +30,7 @@ class GenInconsistenciaRepository extends ServiceEntityRepository
             ->select('i.codigoInconsistenciaPk')
             ->addSelect('i.codigoReferencia')
             ->addSelect('i.referencia')
+            ->addSelect('i.nombreReferencia')
             ->addSelect('i.descripcion')
             ->where("i.codigoModeloFk = '" . $modelo . "'")
             ->andWhere('i.codigoModelo = ' . $codigoModelo);

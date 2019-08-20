@@ -296,7 +296,7 @@ class EgresoController extends BaseController
         //Inicio cuerpo
         foreach ($arEgresoDetalles AS $arEgresoDetalle) {
             if ($arEgresoDetalle->getVrPagoAfectar() > 0) {
-                $varTipoDocumento =$arEgreso->getTerceroRel()->getCodigoIdentificacionFk();
+                $varTipoDocumento = $arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getCodigoIdentificacionFk();
                 switch ($varTipoDocumento) {
                     //'01' - Cédula de ciudadanía
                     case 'CC':

@@ -22,35 +22,28 @@
                         {{ form_widget(formFiltro.codigoPedidoTipoFk) }}
                     </div>
                 </div>
-{#                <div class="form-group form-group-sm">#}
-{#                    <label class="col-sm-1 control-label">Desde:</label>#}
-{#                    <div class="col-sm-2">#}
-{#                        {{ form_widget(formFiltro.fechaDesde) }}#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="form-group form-group-sm">#}
-{#                    <label class="col-sm-1 control-label">Hasta:</label>#}
-{#                    <div class="col-sm-2">#}
-{#                        {{ form_widget(formFiltro.fechaHasta) }}#}
-{#                    </div>#}
-{#                </div>#}
                 <div class="form-group form-group-sm">
-                    <label for="" class="control-label col-sm-9"></label>
-                    <label for="" class="control-label col-sm-1">Autorizado:</label>
+                    <label class="col-sm-1 control-label">Desde:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.fechaDesde) }}
+                    </div>
+                    <label for="" class="control-label col-sm-offset-6 col-sm-1">Autorizado:</label>
                     <div class="col-sm-2">
                         {{ form_widget((formFiltro.estadoAutorizado)) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label for="" class="control-label col-sm-9"></label>
-                    <label for="" class="control-label col-sm-1">Aprobado:</label>
+                    <label class="col-sm-1 control-label">Hasta:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.fechaHasta) }}
+                    </div>
+                    <label for="" class="control-label  col-sm-offset-6 col-sm-1">Aprobado:</label>
                     <div class="col-sm-2">
                         {{ form_widget((formFiltro.estadoAprobado)) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label for="" class="control-label col-sm-9"></label>
-                    <label for="" class="control-label col-sm-1">Anulado:</label>
+                    <label for="" class="control-label  col-sm-offset-9 col-sm-1">Anulado:</label>
                     <div class="col-sm-2">
                         {{ form_widget((formFiltro.estadoAnulado)) }}
                     </div>

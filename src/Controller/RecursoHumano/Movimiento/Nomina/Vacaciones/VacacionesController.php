@@ -251,7 +251,6 @@ class VacacionesController extends ControllerListenerGeneral
         }
         $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(['codigoVacacionFk' => $id]);
         $arVacacionCambios=$em->getRepository(RhuVacacionCambio::class)->findBy(['codigoVacacionFk' => $id]);
-//        dd($arVacacionCambios);
         return $this->render('recursohumano/movimiento/nomina/vacacion/detalle.html.twig', [
             'arVacacion' => $arVacacion,
             'arVacacionAdicionales' => $arVacacionAdicionales,

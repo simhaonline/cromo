@@ -56,7 +56,6 @@ class PedidoController extends ControllerListenerGeneral
             }
         }
         $datos = $this->getDatosLista(true);
-//        dd($datos);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Pedidos");
@@ -118,7 +117,7 @@ class PedidoController extends ControllerListenerGeneral
 
             }
         }
-        return $this->render('turno/movimiento/comercial/pedido/nuevo.html.twig', [
+        return $this->render('turno/movimiento/venta/pedido/nuevo.html.twig', [
             'arPedido' => $arPedido,
             'form' => $form->createView()
         ]);

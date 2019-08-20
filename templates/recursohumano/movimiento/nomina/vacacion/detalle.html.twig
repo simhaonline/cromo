@@ -214,25 +214,25 @@
                     <table class="table table-striped table-bordered table-condensed tabla-datos">
                         <thead>
                             <tr>
-                                <th>CÓDIGO</th>
-                                <th>CREDITO</th>
-                                <th>EMBARGO</th>
-                                <th>COD</th>
-                                <th>CONCEPTO</th>
-                                <th>BONIFICACIÓN</th>
-                                <th>DEDUCCIÓN</th>
+                                <th>ID</th>
+                                <th>FECHA DESDE DISFRUTE</th>
+                                <th>FECHA HASTA DISFRUTE</th>
+                                <th>FECHA INICIO LABOR </th>
+                                <th>DIAS</th>
+                                <th>COMENTARIOS</th>
+                                <th>USUARIO</th>
                             </tr>
                         </thead>
                         <tbody>
                         {% for arVacacionCambio in  arVacacionCambios %}
                            <tr>
                                 <td>{{ arVacacionCambio.codigoVacacionCambioPk }}</td>
-                                <td>{{ arVacacionCambio.vacacionRel.vacacionesAdicionalesVacacionRel.codigoVacacionAdicionalPk| default('') }}</td>
-                                <td>{{ arVacacionCambio.vacacionRel.codigoEmbargoFk | default('') }}</td>
-                               <td>{{ arVacacionCambio.codigoConceptoFk | default('')  }}</td>
-                               <td>{{ arVacacionCambio.ConceptoRel.nombre | default('') }}</td>
-                               <td class="numero">{{ arVacacionCambio.vacacionRel.vrBonificacion | number_format(0, '.', ',') }}</td>
-                               <td class="numero">{{ arVacacionCambio.vacacionRel.vrDeduccion | number_format(0, '.', ',') }}</td>
+                                <td>{{ arVacacionCambio.fechaDesdeDisfrute | date('Y-m-d') }}</td>
+                               <td>{{ arVacacionCambio.fechaHastaDisfrute | date('Y-m-d') }}</td>
+                               <td>{{ arVacacionCambio.fechaInicioLabor | date('Y-m-d') }}</td>
+                               <td>{{ arVacacionCambio.dias }}</td>
+                               <td>{{ arVacacionCambio.comentarios }}</td>
+                               <td>{{ arVacacionCambio.codigoUsuario }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

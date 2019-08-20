@@ -83,7 +83,9 @@ class PedidoType extends AbstractType
             {"child":"codigoPedidoTipoFk", "tipo":"EntityType","propiedades":{"class":"TurPedidoTipo","choice_label":"nombre", "label":"TODOS"}},
             {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAprobado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}}
+            {"child":"estadoAnulado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
+            {"child":"fechaDesde",  "tipo":"DateType",           "propiedades":{"label":"Fecha desde"}},
+            {"child":"fechaHasta",  "tipo":"DateType",           "propiedades":{"label":"Fecha hasta"}}
         ]';
 
         return $campos;

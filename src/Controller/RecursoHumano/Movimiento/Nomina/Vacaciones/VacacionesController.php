@@ -246,8 +246,6 @@ class VacacionesController extends ControllerListenerGeneral
                 $em->getRepository(RhuVacacion::class)->liquidar($id);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle', ['id' => $id]));
             }
-
-
         }
         $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(['codigoVacacionFk' => $id]);
         $arVacacionCambios=$em->getRepository(RhuVacacionCambio::class)->findBy(['codigoVacacionFk' => $id]);

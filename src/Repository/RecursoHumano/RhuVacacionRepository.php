@@ -819,6 +819,19 @@ class RhuVacacionRepository extends ServiceEntityRepository
         return $arrDevolver;
     }
 
-
+    public function eliminar($arrSeleccionados)
+    {
+        foreach ($arrSeleccionados as $arrSeleccionado) {
+            $arVacacion = $this->getEntityManager()->getRepository(RhuVacacion::class)->find($arrSeleccionado);
+            try{
+                if ($arVacacion) {
+                    $this->getEntityManager()->remove($arVacacion);
+                }
+                $this->getEntityManager()->flush();
+            } catch (\Exception $ex) {
+                Mensajes::error("El registro tiene registros relacionados");
+            }
+        }
+    }
 
 }

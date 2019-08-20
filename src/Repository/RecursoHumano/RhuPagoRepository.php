@@ -256,20 +256,6 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $intDias = $intDias->format('%a');
                 $intDias += 1;
 
-                //Se valida si el mes es de febrero y si la incapacidad es mayor a la fecha de pago de la nomina. para pagar 29 y 30
-                if (!$arConfiguracion->getNoPagarFebreroCompleto()) {
-                    if ($arLicencia->getFechaDesde() < $arProgramacionPagoDetalle->getFechaHasta() && $arLicencia->getFechaHasta() > $arProgramacionPagoDetalle->getFechaHasta() && $arProgramacionPagoDetalle->getFechaDesdePago()->format("m") == 02) {
-                        //Se valida si el mes es Febrero y si
-                        $numero = cal_days_in_month(CAL_GREGORIAN, 2, $arLicencia->getFechaDesde()->format('Y'));
-                        if ($arLicencia->getFechaHasta()->format('m') > 2 && ($arProgramacionPagoDetalle->getFechaHasta()->format('d') == 28 || $arProgramacionPagoDetalle->getFechaHasta()->format('d') == 29)) {
-                            if ($numero == 29) {
-                                $intDias += 1;
-                            } elseif ($numero == 28) {
-                                $intDias += 2;
-                            }
-                        }
-                    }
-                }
 
                 if ($arConfiguracion->getLiquidarLicenciasIbcMesAnterior() && ($arLicencia->getPaternidad() || $arLicencia->getMaternidad())) {
                     $douVrHora = ($arLicencia->getVrLicencia() / $arLicencia->getCantidad()) / $intFactorDia;
@@ -562,6 +548,7 @@ class RhuPagoRepository extends ServiceEntityRepository
 
     private function getValoresPagoDetalle(&$arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle)
     {
+        $pagoDetalle = round($pagoDetalle);
         $arPagoDetalle->setPagoRel($arrDatosGenerales['pago']);
         $arPagoDetalle->setVrPago($pagoDetalle);
         if($arConcepto) {

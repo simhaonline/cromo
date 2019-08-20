@@ -11,6 +11,7 @@ use App\Entity\RecursoHumano\RhuCreditoPago;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\CreditoPagoType;
 use App\Form\Type\RecursoHumano\CreditoType;
+use App\Formato\RecursoHumano\Credito;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -141,6 +142,12 @@ class CreditoController extends ControllerListenerGeneral
         $arRegistro = $em->getRepository($this->clase)->find($id);
         $form = Estandares::botonera($arRegistro->getEstadoAutorizado(), $arRegistro->getEstadoAprobado(), $arRegistro->getEstadoAnulado());
         $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($form->get('btnImprimir')->isClicked()){
+                $objFormato = new Credito();
+                $objFormato->Generar($em, $id);
+            }
+        }
         $arCreditoPagos = $paginator->paginate($em->getRepository(RhuCreditoPago::class)->listaPorCredito($id), $request->query->getInt('PageCreditoPago', 1), 30,
             array(
                 'pageParameterName' => 'PageCreditoPago',

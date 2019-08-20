@@ -400,4 +400,24 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         }
         return $intDiasIncapacidad;
     }
+
+    public function periodo($fechaDesde, $fechaHasta, $codigoEmpleado = "", $codigoCentroCosto = "")
+    {
+        $em = $this->getEntityManager();
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+        $dql = "SELECT incapacidad FROM App\Entity\RecursoHumano\RhuIncapacidad incapacidad "
+            . "WHERE (((incapacidad.fechaDesde BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (incapacidad.fechaHasta BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
+            . "OR (incapacidad.fechaDesde >= '$strFechaDesde' AND incapacidad.fechaDesde <= '$strFechaHasta') "
+            . "OR (incapacidad.fechaHasta >= '$strFechaHasta' AND incapacidad.fechaDesde <= '$strFechaDesde')) ";
+        if ($codigoEmpleado != "") {
+            $dql = $dql . "AND incapacidad.codigoEmpleadoFk = " . $codigoEmpleado . " ";
+        }
+        if ($codigoCentroCosto != "") {
+            $dql = $dql . "AND incapacidad.codigoGrupoFk = " . $codigoCentroCosto . " ";
+        }
+        $objQuery = $em->createQuery($dql);
+        $arIncapacidades = $objQuery->getResult();
+        return $arIncapacidades;
+    }
 }

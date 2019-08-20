@@ -129,6 +129,9 @@
                             {{ form_widget(form.btnExcelDetalle) }}
                         </div>
                         <div class="btn-group">
+                            {{ form_widget(form.btnExcelPagoDetalles) }}
+                        </div>
+                        <div class="btn-group">
                             {{ form_widget(form.btnCargarContratos) }}
                             {% if arProgramacion.estadoAutorizado == 0 %}
                                 <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_cargar_soporte', {'id': arProgramacion.codigoProgramacionPk}) }}', 'CargarSoporte', 600, 900)">Cargar de turnos</a>

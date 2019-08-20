@@ -216,10 +216,10 @@ class LicenciaController extends ControllerListenerGeneral
                                         return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_licencia_detalle', array("id"=>$arLicencia->getCodigoLicenciaPk())));
                                     }
                                 } else {
-                                    Mensaje::error("La fecha de inicio del contrato es mayor a la licencia");
+                                    Mensajes::error("La fecha de inicio del contrato es mayor a la licencia");
                                 }
                             } else {
-                                Mensaje::error("Existe otra licencia en este rango de fechas");
+                                Mensajes::error("Existe otra licencia en este rango de fechas");
                             }
                         } else {
                             Mensajes::error("Hay incapacidades que se cruzan con la fecha de la licencia");

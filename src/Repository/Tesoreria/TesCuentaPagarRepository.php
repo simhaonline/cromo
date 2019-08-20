@@ -100,6 +100,18 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("cp.numeroReferencia = {$session->get('filtroTesCuentaPagaNumeroReferencia')}");
         }
 
+        if ($session->get('filtroGenBanco') != "") {
+            $queryBuilder->andWhere("cp.codigoBancoFk = {$session->get('filtroGenBanco')}");
+        }
+
+        if ($session->get('filtroTesFechaDesde') != null) {
+            $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroTesFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroTesFechaHasta') != null) {
+            $queryBuilder->andWhere("m.fecha <= '{$session->get('filtroTesFechaHasta')} 23:59:59'");
+        }
+
+
         return $queryBuilder;
     }
 

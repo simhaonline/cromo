@@ -687,6 +687,10 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $qb->getDQL();
     }
 
+    /**
+     * @param $arPago RhuPago
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function generarCuentaPagar($arPago) {
         $em = $this->getEntityManager();
         $arTercero = $em->getRepository(RhuEmpleado::class)->terceroTesoreria($arPago->getEmpleadoRel());

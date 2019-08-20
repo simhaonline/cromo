@@ -254,6 +254,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     $arCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
                     $arCuentaPagar->setCuenta($arEmpleado->getCuenta());
                     $arCuentaPagar->setNumeroDocumento($arPago->getNumero());
+                    $arCuentaPagar->setNumeroReferencia($arPago->getCodigoProgramacionFk());
                     $arCuentaPagar->setFecha($arPago->getFechaDesde());
                     $arCuentaPagar->setFechaVence($arPago->getFechaDesde());
                     $arCuentaPagar->setVrSubtotal($arPago->getVrDevengado());

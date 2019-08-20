@@ -296,7 +296,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $arSoporteContrato->setIncapacidad($arrayResultado[$i]['incapacidad']?? 0);
                 //$arSoporteContrato->setIncapacidadNoLegalizada($arrayResultado[$i]['incapacidadNoLegalizada']);
                 $arSoporteContrato->setLicencia($arrayResultado[$i]['licencia'] ?? 0);
-                $arSoporteContrato->setLicenciaNoRemunerada($arrayResultado[$i]['licenciaNoRemunerada']);
+                $arSoporteContrato->setLicenciaNoRemunerada($arrayResultado[$i]['licenciaNoRemunerada']??0);
                 $arSoporteContrato->setVacacion($arrayResultado[$i]['vacacion']?? 0);
                 $arSoporteContrato->setInduccion($arrayResultado[$i]['induccion']?? 0);
                 $arSoporteContrato->setIngreso($arrayResultado[$i]['ingreso']?? 0);

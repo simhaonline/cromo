@@ -225,10 +225,9 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
                 $arIncapacidad->setFechaHastaEmpresa(null);
             }
             if ($intDiasLicencia['intDiasEntidad'] > 0) {
-                $fechaDesdeCalculo = $arIncapacidad->getFechaDesde();
                 $intDiasTemporal = $intDiasLicencia['intDiasEntidad'] - 1;
-                $arIncapacidad->setFechaDesdeEntidad($fechaDesdeCalculo??0);
-                $fechaTemporal = $fechaDesdeCalculo->format('y-m-d')??null;
+                $arIncapacidad->setFechaDesdeEntidad($fechaDesdeCalculo);
+                $fechaTemporal = $fechaDesdeCalculo->format('y-m-d');
                 $fechaDesdeCalculo = date('y-m-d', strtotime($fechaTemporal . "+$intDiasTemporal days"));
                 $fechaDesdeCalculo = date_create($fechaDesdeCalculo);
                 $arIncapacidad->setFechaHastaEntidad($fechaDesdeCalculo);
@@ -415,6 +414,46 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         }
         if ($codigoCentroCosto != "") {
             $dql = $dql . "AND incapacidad.codigoGrupoFk = " . $codigoCentroCosto . " ";
+        }
+        $objQuery = $em->createQuery($dql);
+        $arIncapacidades = $objQuery->getResult();
+        return $arIncapacidades;
+    }
+
+    public function periodoEmpresa($fechaDesde, $fechaHasta, $codigoEmpleado = "", $codigoGrupo = "")
+    {
+        $em = $this->getEntityManager();
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+        $dql = "SELECT incapacidad FROM App\Entity\RecursoHumano\RhuIncapacidad incapacidad "
+            . "WHERE incapacidad.pagarEmpleado = 1 AND (((incapacidad.fechaDesdeEmpresa BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (incapacidad.fechaHastaEmpresa BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
+            . "OR (incapacidad.fechaDesdeEmpresa >= '$strFechaDesde' AND incapacidad.fechaDesdeEmpresa <= '$strFechaHasta') "
+            . "OR (incapacidad.fechaHastaEmpresa >= '$strFechaHasta' AND incapacidad.fechaDesdeEmpresa <= '$strFechaDesde')) ";
+        if ($codigoEmpleado != "") {
+            $dql = $dql . "AND incapacidad.codigoEmpleadoFk = " . $codigoEmpleado . " ";
+        }
+        if ($codigoGrupo != "") {
+            $dql = $dql . "AND incapacidad.codigoGrupoFk = " . $codigoGrupo . " ";
+        }
+        $objQuery = $em->createQuery($dql);
+        $arIncapacidades = $objQuery->getResult();
+        return $arIncapacidades;
+    }
+
+    public function periodoEntidad($fechaDesde, $fechaHasta, $codigoEmpleado = "", $codigoGrupo = "")
+    {
+        $em = $this->getEntityManager();
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+        $dql = "SELECT incapacidad FROM App\Entity\RecursoHumano\RhuIncapacidad incapacidad "
+            . "WHERE incapacidad.pagarEmpleado = 1 AND (((incapacidad.fechaDesdeEntidad BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (incapacidad.fechaHastaEntidad BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
+            . "OR (incapacidad.fechaDesdeEntidad >= '$strFechaDesde' AND incapacidad.fechaDesdeEntidad <= '$strFechaHasta') "
+            . "OR (incapacidad.fechaHastaEntidad >= '$strFechaHasta' AND incapacidad.fechaDesdeEntidad <= '$strFechaDesde')) ";
+        if ($codigoEmpleado != "") {
+            $dql = $dql . "AND incapacidad.codigoEmpleadoFk = " . $codigoEmpleado . " ";
+        }
+        if ($codigoGrupo != "") {
+            $dql = $dql . "AND incapacidad.codigoGrupoFk = " . $codigoGrupo . " ";
         }
         $objQuery = $em->createQuery($dql);
         $arIncapacidades = $objQuery->getResult();

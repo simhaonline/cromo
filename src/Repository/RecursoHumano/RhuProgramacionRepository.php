@@ -436,7 +436,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $arProgramacionDetalle->setDias($intDias);
                 //$arProgramacionDetalle->setDiasReales($intDias);
                 $arProgramacionDetalle->setDiasTransporte($intDiasTransporte);
-                //$arProgramacionDetalle->setFactorDia($arContrato->getFactorHorasDia());
+                $arProgramacionDetalle->setFactorHorasDia($arSoporteContrato['factorHorasDia']);
                 $arProgramacionDetalle->setVrDia($vrDia);
                 $arProgramacionDetalle->setVrHora($vrHora);
                 //Tiempo adicional

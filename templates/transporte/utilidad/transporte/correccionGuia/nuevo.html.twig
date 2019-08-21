@@ -75,6 +75,17 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Producto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.productoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.productoRel) }}
+                </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
                     {{ form_widget(form.estadoEntregado) }}

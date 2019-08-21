@@ -4,6 +4,7 @@ namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteZona;
 use Symfony\Component\Form\AbstractType;
@@ -72,6 +73,14 @@ class GuiaCorreccionType extends AbstractType {
                 'query_builder' => function(EntityRepository $er){
                     return $er->createQueryBuilder('z')
                         ->orderBy('z.nombre');
+                },'choice_label' => 'nombre',
+                'required' => true
+            ])
+            ->add('productoRel',EntityType::class,[
+                'class' => TteProducto::class,
+                'query_builder' => function(EntityRepository $er){
+                    return $er->createQueryBuilder('p')
+                        ->orderBy('p.nombre');
                 },'choice_label' => 'nombre',
                 'required' => true
             ])

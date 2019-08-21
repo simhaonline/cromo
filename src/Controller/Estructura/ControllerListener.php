@@ -105,8 +105,14 @@ class ControllerListener extends Controller{
      * @param $url
      */
     public function getPermisosProcesos($em, $controller, $event, $url){
+        $codigoProceso = $controller[0]->getProceso();
+        $codigoUsuario = $this->user->getToken()->getUserName();
         $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"ROLE_USER";
-        $arSegUsuarioProceso=$em->getRepository('App:Seguridad\SegUsuarioProceso')->findOneBy(['codigoProcesoFk'=>$controller[0]->getProceso()]);
+        $arSegUsuarioProceso=$em->getRepository('App:Seguridad\SegUsuarioProceso')->findOneBy(
+            [
+                'codigoProcesoFk'=> $codigoProceso,
+                'codigoUsuarioFk' => $codigoUsuario
+            ]);
         $arProceso=$em->getRepository('App:General\GenProceso')->find($controller[0]->getProceso());
         if($arSegUsuarioProceso && $arUsuarioRol!="ROLE_ADMIN"){
             if(!$arSegUsuarioProceso->getIngreso()){

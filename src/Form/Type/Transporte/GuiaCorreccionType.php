@@ -4,6 +4,8 @@ namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TteRuta;
+use App\Entity\Transporte\TteZona;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -54,6 +56,22 @@ class GuiaCorreccionType extends AbstractType {
                 'query_builder' => function(EntityRepository $er){
                     return $er->createQueryBuilder('o')
                         ->orderBy('o.nombre');
+                },'choice_label' => 'nombre',
+                'required' => true
+            ])
+            ->add('rutaRel',EntityType::class,[
+                'class' => TteRuta::class,
+                'query_builder' => function(EntityRepository $er){
+                    return $er->createQueryBuilder('r')
+                        ->orderBy('r.nombre');
+                },'choice_label' => 'nombre',
+                'required' => true
+            ])
+            ->add('zonaRel',EntityType::class,[
+                'class' => TteZona::class,
+                'query_builder' => function(EntityRepository $er){
+                    return $er->createQueryBuilder('z')
+                        ->orderBy('z.nombre');
                 },'choice_label' => 'nombre',
                 'required' => true
             ])

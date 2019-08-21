@@ -379,7 +379,7 @@ class EgresoController extends BaseController
                 fputs($archivo, '000000000000');
 
                 //Nombre del empleado
-                fputs($archivo, $this->RellenarNr2(substr($arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getNombreCorto(), 0, 36), " ", 36, 'D'));
+                fputs($archivo, $this->RellenarNr2(substr(utf8_decode($arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getNombreCorto()), 0, 36), " ", 36, 'D'));
 
                 //Direccion del empleado
                 fputs($archivo, $this->RellenarNr2('MEDELLIN', " ", 36, 'D'));
@@ -388,10 +388,10 @@ class EgresoController extends BaseController
                 fputs($archivo, $this->RellenarNr2(" ", " ", 36, 'D'));
 
                 //Email del empleado
-                fputs($archivo, $this->RellenarNr2($arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getEmail()??"", " ", 48, 'D'));
+                fputs($archivo, $this->RellenarNr2("", " ", 48, 'D'));
 
                 //Concepto del pago
-                fputs($archivo, $this->RellenarNr2($arEgreso->getComentarios(), " ", 40, 'D'));
+                fputs($archivo, $this->RellenarNr2("NOMINA", " ", 40, 'D'));
                 fputs($archivo, "\n");
             }
         }

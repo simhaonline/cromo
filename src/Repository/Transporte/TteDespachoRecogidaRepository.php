@@ -849,6 +849,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             //$arCuentaPagar->setCuenta($arPago->getEmpleadoRel()->getCuenta());
             $arCuentaPagar->setModulo('tte');
             $arCuentaPagar->setCodigoDocumento($arDespachoRecogida->getCodigoDespachoRecogidaPk());
+            $arCuentaPagar->setModelo('TteDespachoRecogida');
             $arCuentaPagar->setNumeroDocumento($arDespachoRecogida->getNumero());
             $arCuentaPagar->setSoporte($arDespachoRecogida->getCodigoVehiculoFk());
             $arCuentaPagar->setFecha($arDespachoRecogida->getFecha());

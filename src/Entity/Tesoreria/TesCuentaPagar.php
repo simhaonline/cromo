@@ -52,9 +52,14 @@ class TesCuentaPagar
     private $numeroDocumento;
 
     /**
-     * @ORM\Column(name="modulo" ,type="string" , nullable=true)
+     * @ORM\Column(name="modulo" ,type="string", length=3, nullable=true)
      */
     private $modulo;
+
+    /**
+     * @ORM\Column(name="modelo" ,type="string", length=80, nullable=true)
+     */
+    private $modelo;
 
     /**
      * @ORM\Column(name="numero_referencia", type="string", length=30, nullable=true)
@@ -710,6 +715,22 @@ class TesCuentaPagar
     public function setEgresosDetalleCuentasPagarRel($egresosDetalleCuentasPagarRel): void
     {
         $this->egresosDetalleCuentasPagarRel = $egresosDetalleCuentasPagarRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModelo()
+    {
+        return $this->modelo;
+    }
+
+    /**
+     * @param mixed $modelo
+     */
+    public function setModelo($modelo): void
+    {
+        $this->modelo = $modelo;
     }
 
 

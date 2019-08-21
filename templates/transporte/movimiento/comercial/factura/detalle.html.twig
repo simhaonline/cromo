@@ -7,6 +7,7 @@
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
+            {{ form_widget(form.btnImprimirCopia, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             {% if arFactura.estadoAutorizado == 0 %}
                 <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_detalle_reliquidar', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'Reliquidar', 600, 1200)">Reliquidar</a>
             {% endif %}

@@ -14,12 +14,14 @@ use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
 class Factura3 extends \FPDF {
     public static $em;
     public static $codigoFactura;
+    public static $trafico;
 
-    public function Generar($em, $codigoFactura) {
+    public function Generar($em, $codigoFactura, $trafico = "ORIGINAL") {
         ob_clean();
         //$em = $miThis->getDoctrine()->getManager();
         self::$em = $em;
         self::$codigoFactura = $codigoFactura;
+        self::$trafico = $trafico;
         $pdf = new Factura3();
         $pdf->AliasNbPages();
         $pdf->AddPage('L');
@@ -351,7 +353,7 @@ class Factura3 extends \FPDF {
         $this->SetFillColor(272, 272, 272);
         $this->SetXY(135,202);
         $this->SetFont('Arial', 'b', 9);
-        $this->Cell(10, 5, utf8_decode("ORIGINAL"), 0, 0, 'C', 1);
+        $this->Cell(10, 5, utf8_decode(self::$trafico), 0, 0, 'C', 1);
 
     }
 

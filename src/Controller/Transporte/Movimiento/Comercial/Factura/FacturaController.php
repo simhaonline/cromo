@@ -125,6 +125,7 @@ class FacturaController extends ControllerListenerGeneral
         $arrBtnRetirarPlanilla = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnRetirarConcepto = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBotonActualizar = array('label' => 'Actualizar', 'disabled' => false);
+        $arrBtnImprimirCopia = ['label' => 'Imprimir copia', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
         if ($arFactura->getEstadoAutorizado()) {
             $arrBtnRetirar['disabled'] = true;
@@ -138,7 +139,8 @@ class FacturaController extends ControllerListenerGeneral
         $form->add('btnRetirarGuia', SubmitType::class, $arrBtnRetirar)
             ->add('btnRetirarPlanilla', SubmitType::class, $arrBtnRetirarPlanilla)
             ->add('btnActualizar', SubmitType::class, $arrBotonActualizar)
-            ->add('btnRetirarConcepto', SubmitType::class, $arrBtnRetirarConcepto);
+            ->add('btnRetirarConcepto', SubmitType::class, $arrBtnRetirarConcepto)
+            ->add('btnImprimirCopia', SubmitType::class, $arrBtnImprimirCopia);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -159,6 +161,25 @@ class FacturaController extends ControllerListenerGeneral
                     }
                 }
             }
+            if ($form->get('btnImprimirCopia')->isClicked()) {
+                $codigoFactura = $em->getRepository(TteConfiguracion::class)->find(1)->getCodigoFormato();
+                if ($arFactura->getCodigoFacturaTipoFk() == 'NC') {
+                    $formato = new NotaCredito();
+                    $formato->Generar($em, $id);
+                } else {
+                    if ($codigoFactura == 1) {
+                        $formato = new Factura();
+                        $formato->Generar($em, $id);
+                    } if($codigoFactura == 2) {
+                        $formato = new Factura2();
+                        $formato->Generar($em, $id);
+                    } if($codigoFactura == 3){
+                        $formato = new Factura3();
+                        $formato->Generar($em, $id, "COPIA");
+                    }
+                }
+            }
+
             if ($form->get('btnAutorizar')->isClicked()) {
                 $arrControles = $request->request->all();
                 $em->getRepository(TteFacturaDetalle::class)->actualizarDetalles($arrControles, $form, $arFactura);

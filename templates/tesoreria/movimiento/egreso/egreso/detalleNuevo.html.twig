@@ -36,8 +36,6 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.txtNumeroReferencia) }}
                 </div>
-
-
             </div>
         </div>
         <div class="panel-footer">
@@ -59,7 +57,8 @@
                 <th>VENCIMIENTO</th>
                 <th>ABONO</th>
                 <th>SALDO</th>
-                <th class="text-center" ><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+                <th class="text-center"><input type="checkbox" name="ChkSeleccionarTodos"
+                                               onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"></th>
             </tr>
             </thead>
             <tbody>
@@ -91,7 +90,11 @@
         <div class="btn-group btn-xs">
             {{ knp_pagination_render(arCuentasPagar) }}
         </div>
+        <div class="btn-toolbar" style="float: right;">
+            <div class="btn-group btn-group-sm">
+                {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+            </div>
+        </div>
     </div>
-    {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
     {{ form_end(form) }}
 {% endblock %}

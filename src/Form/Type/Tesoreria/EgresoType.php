@@ -51,11 +51,14 @@ class EgresoType extends AbstractType
         $campos = '[
             {"campo":"codigoEgresoPk",      "tipo":"pk",    "ayuda":"Codigo del registro",                 "titulo":"ID"},
             {"campo":"numero",              "tipo":"entero","ayuda":"Numero del consecutivo de aprobación","titulo":"NUMERO"},
+            {"campo":"terceroRel.nombreCorto","tipo":"texto", "ayuda":"Tercero del registro",                    "titulo":"TERCERO","relacion":""},
             {"campo":"egresoTipoRel.nombre","tipo":"texto", "ayuda":"Tipo de registro",                    "titulo":"TIPO","relacion":""},
-            {"campo":"fecha",               "tipo":"fecha", "ayuda":"Fecha de registro",                   "titulo":"FECHA"},
+            {"campo":"fecha",               "tipo":"fecha", "ayuda":"Fecha de registro",                   "titulo":"FECA"},
+            {"campo":"comentarios",         "tipo":"texto", "ayuda":"Comentarios",                         "titulo":"COMENTARIOS"},   
             {"campo":"estadoAutorizado",    "tipo":"bool",  "ayuda":"Estado autorizado",                   "titulo":"AUT"},
             {"campo":"estadoAprobado",      "tipo":"bool",  "ayuda":"Estado aprobado",                     "titulo":"APR"},
-            {"campo":"estadoAnulado",       "tipo":"bool",  "ayuda":"Estado anulado",                      "titulo":"ANU"}                                
+            {"campo":"estadoAnulado",       "tipo":"bool",  "ayuda":"Estado anulado",                      "titulo":"ANU"}
+                                         
         ]';
         return $campos;
     }
@@ -66,7 +69,7 @@ class EgresoType extends AbstractType
             {"child":"codigoEgresoPk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
             {"child":"codigoTerceroFk",  "tipo":"TextType",    "propiedades":{"label":"Codigo proveedor"}},
             {"child":"numero",             "tipo":"TextType",          "propiedades":{"label":"Numero"}},
-            {"child":"codigoEgresoTipoFk", "tipo":"TextType",      "propiedades":{"label":"Codigo egreso tipo"}},
+           
             {"child":"fechaDesde",  "tipo":"DateType",           "propiedades":{"label":"Fecha desde"}},
             {"child":"fechaHasta",  "tipo":"DateType",           "propiedades":{"label":"Fecha hasta"}},
             {"child":"estadoAutorizado",   "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},

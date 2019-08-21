@@ -96,11 +96,11 @@ class TesEgresoRepository extends ServiceEntityRepository
         $respuesta = '';
         if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigo) {
-                $arRegistro = $this->getEntityManager()->getRepository(ComEgreso::class)->find($codigo);
+                $arRegistro = $this->getEntityManager()->getRepository(TesEgreso::class)->find($codigo);
                 if ($arRegistro) {
                     if ($arRegistro->getEstadoAprobado() == 0) {
                         if ($arRegistro->getEstadoAutorizado() == 0) {
-                            if (count($this->getEntityManager()->getRepository(ComEgresoDetalle::class)->findBy(['codigoEgresoFk' => $arRegistro->getCodigoEgresoPk()])) <= 0) {
+                            if (count($this->getEntityManager()->getRepository(TesEgresoDetalle::class)->findBy(['codigoEgresoFk' => $arRegistro->getCodigoEgresoPk()])) <= 0) {
                                 $this->getEntityManager()->remove($arRegistro);
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';

@@ -42,29 +42,14 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $pago = 0;
         $pagoTotal = 0;
-        $floDescuento = 0;
-        $floAjustePeso = 0;
-        $floRetencionIca = 0;
-        $floRetencionIva = 0;
-        $floRetencionFuente = 0;
         $arEgreso = $em->getRepository(TesEgreso::class)->find($id);
         $arEgresosDetalle = $em->getRepository(TesEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $id));
         foreach ($arEgresosDetalle as $arEgresoDetalle) {
-            //$floDescuento += $arEgresoDetalle->getVrDescuento();
-            //$floAjustePeso += $arEgresoDetalle->getVrAjustePeso();
-            //$floRetencionIca += $arEgresoDetalle->getVrRetencionIca();
-            //$floRetencionIva += $arEgresoDetalle->getVrRetencionIva();
-            //$floRetencionFuente += $arEgresoDetalle->getVrRetencionFuente();
             $pago += $arEgresoDetalle->getVrPago();
             $pagoTotal += $arEgresoDetalle->getVrPagoAfectar();
         }
         $arEgreso->setVrPago($pago);
         $arEgreso->setVrPagoTotal($pagoTotal);
-        $arEgreso->setVrTotalDescuento($floDescuento);
-        $arEgreso->setVrTotalAjustePeso($floAjustePeso);
-        $arEgreso->setVrTotalRetencionIca($floRetencionIca);
-        $arEgreso->setVrTotalRetencionIva($floRetencionIva);
-        $arEgreso->setVrTotalRetencionFuente($floRetencionFuente);
         $em->persist($arEgreso);
         $em->flush();
         return true;
@@ -146,7 +131,7 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
             ->addSelect('ed.vrPagoAfectar')
             ->leftJoin('ed.egresoRel', 'r')
             ->leftJoin('ed.cuentaPagarRel', 'cp')
-            ->leftJoin('cp.terceroRel','ter')
+            ->leftJoin('cp.terceroRel', 'ter')
             ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
             ->where('ed.codigoEgresoFk = ' . $codigoEgreso);
         $queryBuilder->orderBy('ed.codigoEgresoDetallePk', 'ASC');

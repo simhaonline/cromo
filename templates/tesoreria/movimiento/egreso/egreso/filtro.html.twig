@@ -18,9 +18,9 @@
                     <div class="col-sm-2">
                         {{ form_widget(formFiltro.codigoEgresoPk) }}
                     </div>
-                    <label for="" class="control-label col-sm-1">Tipo</label>
+                    <label for="" class="control-label col-sm-1">Autorizado</label>
                     <div class="col-sm-5">
-                        {{ form_widget(formFiltro.codigoEgresoTipoFk) }}
+                        {{ form_widget(formFiltro.estadoAutorizado) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
@@ -28,9 +28,9 @@
                     <div class="col-sm-5">
                         {{ form_widget(formFiltro.fechaDesde) }}
                     </div>
-                    <label for="" class="control-label col-sm-1">Autorizado</label>
+                    <label for="" class="control-label col-sm-1">Aprobado</label>
                     <div class="col-sm-5">
-                        {{ form_widget(formFiltro.estadoAutorizado) }}
+                        {{ form_widget(formFiltro.estadoAprobado) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
@@ -38,12 +38,6 @@
                     <div class="col-sm-5">
                         {{ form_widget(formFiltro.fechaHasta) }}
                     </div>
-                    <label for="" class="control-label col-sm-1">Aprobado</label>
-                    <div class="col-sm-5">
-                        {{ form_widget(formFiltro.estadoAprobado) }}
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
                     <label for="" class="control-label col-sm-offset-6 col-sm-1">Anulado</label>
                     <div class="col-sm-5">
                         {{ form_widget(formFiltro.estadoAnulado) }}

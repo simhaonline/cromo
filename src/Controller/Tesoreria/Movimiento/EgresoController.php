@@ -183,6 +183,7 @@ class EgresoController extends BaseController
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TesEgresoDetalle::class)->eliminar($arEgreso, $arrDetallesSeleccionados);
+                $em->getRepository(TesEgresoDetalle::class)->liquidar($id);
             }
             if ($form->get('btnArchivoPlanoBbva')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');

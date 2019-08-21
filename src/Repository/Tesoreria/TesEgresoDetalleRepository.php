@@ -81,7 +81,7 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
             if ($arrDetallesSeleccionados) {
                 if (count($arrDetallesSeleccionados)) {
                     foreach ($arrDetallesSeleccionados as $codigo) {
-                        $ar = $this->getEntityManager()->getRepository(ComEgresoDetalle::class)->find($codigo);
+                        $ar = $this->getEntityManager()->getRepository(TesEgresoDetalle::class)->find($codigo);
                         if ($ar) {
                             $this->getEntityManager()->remove($ar);
                         }

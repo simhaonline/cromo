@@ -151,11 +151,11 @@ class EgresoController extends BaseController
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                if ($arEgreso->getEstadoAutorizado() == 1 && $arEgreso->getEstadoImpreso() == 0) {
+                if ($arEgreso->getEstadoAutorizado() == 1 && $arEgreso->getEstadoAprobado() == 0) {
                     $em->getRepository(TesEgreso::class)->desAutorizar($arEgreso);
                     return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_detalle', ['id' => $id]));
                 } else {
-                    Mensajes::error("El egreso debe estar autorizado y no puede estar impreso");
+                    Mensajes::error("El egreso debe estar autorizado y no puede estar aprobado");
                 }
             }
             if ($form->get('btnAprobar')->isClicked()) {
@@ -189,9 +189,9 @@ class EgresoController extends BaseController
                 $numero = $arEgreso->getNumero();
                 $this->generarArchivoBBVA($arEgreso, $numero,$arrDetallesSeleccionados);
             }
-            return $this->redirect($this->generateUrl('compra_movimiento_egreso_egreso_detalle', ['id' => $id]));
+            return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_detalle', ['id' => $id]));
         }
-        $arEgresoDetalles = $paginator->paginate($em->getRepository(TesEgresoDetalle::class)->lista($arEgreso->getCodigoEgresoPk()), $request->query->getInt('page', 1), 30);
+        $arEgresoDetalles = $paginator->paginate($em->getRepository(TesEgresoDetalle::class)->lista($arEgreso->getCodigoEgresoPk()), $request->query->getInt('page', 1), 500);
         return $this->render('tesoreria/movimiento/egreso/egreso/detalle.html.twig', [
             'arEgresoDetalles' => $arEgresoDetalles,
             'arEgreso' => $arEgreso,
@@ -246,18 +246,20 @@ class EgresoController extends BaseController
                 $arrCuentasPagar = $request->request->get('ChkSeleccionar');
                 if ($arrCuentasPagar) {
                     foreach ($arrCuentasPagar as $codigoCuentaPagar) {
+                        /** @var $arCuentaPagar  TesCuentaPagar */
                         $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($codigoCuentaPagar);
                         $arEgreso = $em->getRepository(TesEgreso::class)->find($id);
                         $arEgresoDetalle = new TesEgresoDetalle();
                         $arEgresoDetalle->setEgresoRel($arEgreso);
                         $arEgresoDetalle->setNumero($arCuentaPagar->getNumeroDocumento());
                         $arEgresoDetalle->setCuentaPagarRel($arCuentaPagar);
-                        $arEgresoDetalle->setVrPagoAfectar($arCuentaPagar->getVrSaldo());
+                        $arEgresoDetalle->setVrPagoAfectar($arCuentaPagar->getVrTotal());
                         $arEgresoDetalle->setUsuario($this->getUser()->getUserName());
                         $em->persist($arEgresoDetalle);
 
                     }
                     $em->flush();
+                    $em->getRepository(TesEgresoDetalle::class)->liquidar($id);
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
             }

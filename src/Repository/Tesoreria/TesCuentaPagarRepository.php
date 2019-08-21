@@ -99,16 +99,23 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         if ($session->get('filtroTesCuentaPagaNumeroReferencia') != "") {
             $queryBuilder->andWhere("cp.numeroReferencia = {$session->get('filtroTesCuentaPagaNumeroReferencia')}");
         }
+        if ($session->get('filtroTesCuentaPagarCodigoPendiente') != "") {
+            $queryBuilder->andWhere("cp.codigoCuentaPagarPk = {$session->get('filtroTesCuentaPagarCodigoPendiente')}");
+        }
+
+        if ($session->get('filtroTesCuentaPagarTipo') != "") {
+            $queryBuilder->andWhere("cp.codigoCuentaPagarTipoFk = '{$session->get('filtroTesCuentaPagarTipo')}'");
+        }
 
         if ($session->get('filtroGenBanco') != "") {
             $queryBuilder->andWhere("cp.codigoBancoFk = {$session->get('filtroGenBanco')}");
         }
 
         if ($session->get('filtroTesFechaDesde') != null) {
-            $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroTesFechaDesde')} 00:00:00'");
+            $queryBuilder->andWhere("cp.fecha >= '{$session->get('filtroTesFechaDesde')} 00:00:00'");
         }
         if ($session->get('filtroTesFechaHasta') != null) {
-            $queryBuilder->andWhere("m.fecha <= '{$session->get('filtroTesFechaHasta')} 23:59:59'");
+            $queryBuilder->andWhere("cp.fecha <= '{$session->get('filtroTesFechaHasta')} 23:59:59'");
         }
 
 

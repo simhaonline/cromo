@@ -166,6 +166,7 @@ class SoporteController extends ControllerListenerGeneral
             return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
         }
         $arSoporteContratos = $paginator->paginate($em->getRepository(TurSoporteContrato::class)->lista($id), $request->query->getInt('page', 1), 1000);
+
         return $this->render('turno/movimiento/operacion/soporte/detalle.html.twig', [
             'form' => $form->createView(),
             'arSoporte' => $arSoporte,
@@ -201,9 +202,15 @@ class SoporteController extends ControllerListenerGeneral
         }
 
         $arSoporteHoras = $em->getRepository(TurSoporteHora::class)->soporteContrato($id);
+
+        $dateFecha = (new \DateTime('now'));
+        $arrDiaSemana = FuncionesController::diasMes($dateFecha,  $em->getRepository(TurFestivo::class)->festivos($dateFecha->format('Y-m-') . '01', $dateFecha->format('Y-m-t')));
+        $arProgramacionDetalle = $em->getRepository(TurProgramacion::class)->findBy(array('anio' => $arSoporteContrato->getAnio(), 'mes' => $arSoporteContrato->getMes(), 'codigoEmpleadoFk'=>$arSoporteContrato->getEmpleadoRel()->getCodigoEmpleadoPK()));
         return $this->render('turno/movimiento/operacion/soporte/resumen.html.twig', [
             'arSoporteHoras' => $arSoporteHoras,
             'arSoporteContrato' => $arSoporteContrato,
+            'arProgramacionDetalles'=>$arProgramacionDetalle,
+            'arrDiaSemana'=>$arrDiaSemana,
             'form' => $form->createView()
         ]);
     }

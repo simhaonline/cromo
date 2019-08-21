@@ -2,8 +2,12 @@
 
 namespace App\Formato\RecursoHumano;
 
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Entity\Turno\TurFestivo;
+use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurSoporteContrato;
 use App\Utilidades\Estandares;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -180,7 +184,12 @@ class Pago extends \FPDF
     {
         /** @var  $arPago RhuPago */
         $arPago = self::$em->getRepository(RhuPago::class)->find(self::$codigoPago);
+        $dateFecha = (new \DateTime('now'));
+        $arrDiaSemana = FuncionesController::diasMes($dateFecha,  self::$em->getRepository(TurFestivo::class)->festivos($dateFecha->format('Y-m-') . '01', $dateFecha->format('Y-m-t')));
+
         $arPagoDetalles = self::$em->getRepository(RhuPagoDetalle::class)->findBy(['codigoPagoFk' => self::$codigoPago]);
+        $arProgramaciones = self::$em->getRepository(TurProgramacion::class)->programacionEmpleado($arPago->getCodigoEmpleadoFk(), $arPago->getFechaDesde()->format('Y'), $arPago->getFechaHasta()->format('n'));
+
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         /** @var  $arPagoDetalle RhuPagoDetalle */
@@ -212,8 +221,65 @@ class Pago extends \FPDF
         $pdf->Cell(130, 4, "", 0, 0, 'R');
         $pdf->Cell(35, 4, "NETO PAGAR", 1, 0, 'R', true);
         $pdf->Cell(25, 4, number_format($arPago->getVrNeto(), 0, '.', ','), 1, 0, 'R');
-        $pdf->Ln(-8);
+//        $pdf->Ln(-8);
+        $pdf->Ln(8);
 
+
+        $strDiaPago = $arPago->getFechaDesde()->format("d");
+        //primera quicena del mes 1 al 15
+        foreach ($arrDiaSemana as $arrDia) {
+            if ($strDiaPago <= 15 && $arrDia["dia"] <= 15){
+                $pdf->Cell(7, 4, $arrDia["dia"].$arrDia['diaSemana'], 1, 0, 'L');
+            }
+        }
+        //segunda quicena del mes 1 al 16
+        foreach ($arrDiaSemana as $arrDia) {
+            //dias menores a 15 primera quicena del mes
+            if ($strDiaPago > 15 && $arrDia["dia"] > 15){
+                $pdf->Cell(7, 4, $arrDia["dia"].$arrDia['diaSemana'], 1, 0, 'L');
+            }
+        }
+        $pdf->Ln();
+        if ($strDiaPago <= 15 ){
+            foreach ($arProgramaciones as $programacion)
+            {
+                $pdf->Cell(7, 4, $programacion["dia1"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia2"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia3"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia4"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia5"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia6"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia7"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia8"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia9"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia10"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia11"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia12"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia13"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia14"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia15"], 1, 0, 'L');
+            }
+        }else{
+            foreach ($arProgramaciones as $programacion)
+            {
+                $pdf->Cell(7, 4, $programacion["dia16"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia17"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia18"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia19"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia20"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia21"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia22"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia23"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia24"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia25"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia26"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia27"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia28"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia29"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia30"], 1, 0, 'L');
+                $pdf->Cell(7, 4, $programacion["dia31"]??"", 1, 0, 'L'); //validad si el 31 tiene datos
+            }
+        }
     }
 
     public function Footer()

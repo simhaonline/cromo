@@ -22,6 +22,25 @@ class TurSoporteHoraRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurSoporteHora::class, 'sh')
             ->select('sh.codigoSoporteHoraPk')
+            ->addSelect('sh.fecha')
+            ->addSelect('sh.fechaReal')
+            ->addSelect('t.nombre as turno')
+            ->addSelect('sh.dias')
+            ->addSelect('sh.descanso')
+            ->addSelect('sh.horasDiurnas')
+            ->addSelect('sh.horasNocturnas')
+            ->addSelect('sh.horasFestivasDiurnas')
+            ->addSelect('sh.horasFestivasNocturnas')
+            ->addSelect('sh.horasExtrasOrdinariasDiurnas')
+            ->addSelect('sh.horasExtrasOrdinariasNocturnas')
+            ->addSelect('sh.horasExtrasFestivasDiurnas')
+            ->addSelect('sh.horasExtrasFestivasNocturnas')
+            ->addSelect('sh.horasRecargoNocturno')
+            ->addSelect('sh.horasRecargoFestivoDiurno')
+            ->addSelect('sh.horasRecargoFestivoNocturno')
+            ->addSelect('sh.horas')
+            ->addSelect('sh.complementario')
+            ->leftJoin('sh.turnoRel', 't')
             ->where('sh.codigoSoporteContratoFk = ' . $id);
         $arSoporteHoras = $queryBuilder->getQuery()->getResult();
 

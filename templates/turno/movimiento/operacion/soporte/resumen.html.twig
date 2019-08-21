@@ -11,7 +11,6 @@
                     <td class="titulo"></td>
                     <td class="td-in-well numero" style="text-transform: uppercase;"></td>
                 </tr>
-
             </table>
         </div>
     </div>
@@ -19,12 +18,49 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>FECHA</th>
+            <th>F_REAL</th>
+            <th>TURNO</th>
+            <th>DIAS</th>
+            <th>DESCANSO</th>
+            <th>HD</th>
+            <th>HN</th>
+            <th>HFD</th>
+            <th>HFN</th>
+            <th>HEOD</th>
+            <th>HEON</th>
+            <th>HEFD</th>
+            <th>HEFN</th>
+            <th>HRN</th>
+            <th>HRFD</th>
+            <th>HRFN</th>
+            <th>H</th>
+            <th>C</th>
         </tr>
         </thead>
         <tbody>
         {% for arSoporteHora in arSoporteHoras %}
             <tr>
                 <td>{{ arSoporteHora.codigoSoporteHoraPk }}</td>
+                <td>{{ arSoporteHora.fecha | date("Y-m-d") }}</td>
+                <td>{{ arSoporteHora.fechaReal | date("Y-m-d") }}</td>
+                <td>{{ arSoporteHora.turno }}</td>
+                <td>{{ arSoporteHora.dias }}</td>
+                <td>{{ arSoporteHora.descanso }}</td>
+                <td>{{ arSoporteHora.horasDiurnas }}</td>
+                <td>{{ arSoporteHora.horasNocturnas }}</td>
+                <td>{{ arSoporteHora.horasFestivasDiurnas }}</td>
+                <td>{{ arSoporteHora.horasFestivasNocturnas }}</td>
+                <td>{{ arSoporteHora.horasExtrasOrdinariasDiurnas }}</td>
+                <td>{{ arSoporteHora.horasExtrasOrdinariasNocturnas }}</td>
+                <td>{{ arSoporteHora.horasExtrasFestivasDiurnas }}</td>
+                <td>{{ arSoporteHora.horasExtrasFestivasNocturnas }}</td>
+                <td>{{ arSoporteHora.horasRecargoNocturno }}</td>
+                <td>{{ arSoporteHora.horasRecargoFestivoDiurno }}</td>
+                <td>{{ arSoporteHora.horasRecargoFestivoNocturno }}</td>
+                <td>{{ arSoporteHora.horas }}</td>
+                <td>{{ arSoporteHora.complementario }}</td>
+            </tr>
             </tr>
         {% endfor %}
         </tbody>

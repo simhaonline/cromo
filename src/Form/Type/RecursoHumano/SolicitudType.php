@@ -7,6 +7,7 @@ use App\Entity\RecursoHumano\RhuSolicitud;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -168,7 +169,7 @@ class SolicitudType extends AbstractType
     {
         $campos = '[
             {"child":"codigoSolicitudPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"nombre",            "tipo":"TextType",   "propiedades":{"label":"Nombre corto"}}
+            {"child":"nombre",            "tipo":"TextType",   "propiedades":{"label":"Nombre corto"}, "operador":"like"}
         ]';
         return $campos;
     }

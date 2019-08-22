@@ -48,8 +48,8 @@ class SeleccionController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Selecciones");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuSeleccion::class)->eliminar($arrSeleccionados);
+                $arSeleccionados = $request->request->get('ChkSeleccionar');
+                $this->get("UtilidadesModelo")->eliminar(RhuSeleccion::class, $arSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_seleccion_lista'));
             }
         }
@@ -81,7 +81,7 @@ class SeleccionController extends ControllerListenerGeneral
                 $arSeleccion->setFecha(new \DateTime('now'));
                 $em->persist($arSeleccion);
                 $em->flush();
-                //return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'recursoHumano','entidad' => 'seleccion']));
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_seleccion_detalle', ['id' => $arSeleccion->getCodigoSeleccionPk()]));
             }
             /*if ($form->get('guardarnuevo')->isClicked()) {
                 $em->persist($arSeleccion);
@@ -102,6 +102,7 @@ class SeleccionController extends ControllerListenerGeneral
      */
     public function detalle(Request $request, $id)
     {
+        return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_seleccion_lista'));
 
     }
 

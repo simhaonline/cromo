@@ -51,9 +51,9 @@ class SolicitudController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Solicitudes");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuSolicitud::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
+                $arSeleccionados = $request->request->get('ChkSeleccionar');
+                $this->get("UtilidadesModelo")->eliminar(RhuSolicitud::class, $arSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));
             }
         }
         return $this->render('recursohumano/movimiento/seleccion/solicitud/lista.html.twig', [
@@ -89,5 +89,12 @@ class SolicitudController extends ControllerListenerGeneral
         return $this->render('recursohumano/movimiento/seleccion/solicitud/nuevo.html.twig', [
             'form' => $form->createView(), 'arSolicitud' => $arSolicitud
         ]);
+    }
+
+    /**
+     * @Route("recursohumano/movimiento/seleccion/solicitud/detalle/{id}", name="recursohumano_movimiento_seleccion_solicitud_detalle")
+     */
+    public  function  detalle(Request $request, $id ){
+        return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));
     }
 }

@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Centro;
+use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteDesembarco;
 use App\Entity\Transporte\TteDespachoDetalle;
@@ -81,7 +82,27 @@ class GuiaController extends ControllerListenerGeneral
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
+            ->add('codigoCiudadDestinoFk', EntityType::class, [
+                'class' => TteCiudad::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.codigoCiudadPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
             ->add('codigoClienteFk', TextType::class, array('required' => false, 'data' => $session->get('filtroCrmNombreCliente')))
+            ->add('codigoServicioFk', EntityType::class, [
+                'class' => TteServicio::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.codigoServicioPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
             ->add('codigoServicioFk', EntityType::class, [
                 'class' => TteServicio::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -116,6 +137,7 @@ class GuiaController extends ControllerListenerGeneral
                 $arGuiaTipo = $form->get('codigoGuiaTipoFk')->getData();
                 $arOperacionCargo = $form->get('codigoOperacionCargoFk')->getData();
                 $arServicio = $form->get('codigoServicioFk')->getData();
+                $arCiudadDestino = $form->get('codigoCiudadDestinoFk')->getData();
                 $session->set('filtroTteGuiaCodigo', $form->get('codigoGuiaPk')->getData());
                 $session->set('filtroTteGuiaDespacho', $form->get('codigoDespachoFk')->getData());
                 $session->set('filtroTteGuiaNumero', $form->get('numero')->getData());
@@ -147,6 +169,11 @@ class GuiaController extends ControllerListenerGeneral
                     $session->set('filtroTteGuiaServicioCodigo', $arServicio->getCodigoServicioPk());
                 } else {
                     $session->set('filtroTteGuiaServicioCodigo', null);
+                }
+                if ($arCiudadDestino != '') {
+                    $session->set('filtroTteGuiaCiudadDestino', $arCiudadDestino->getCodigoCiudadPk());
+                } else {
+                    $session->set('filtroTteGuiaCiudadDestino', null);
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {

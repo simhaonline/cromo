@@ -234,6 +234,10 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("tg.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
         }
+
+        if ($session->get('filtroTteGuiaCiudadDestino')) {
+            $queryBuilder->andWhere("tg.codigoCiudadDestinoFk = '" . $session->get('filtroTteGuiaCiudadDestino') . "'");
+        }
         switch ($session->get('filtroTteGuiaEstadoDespachado')) {
             case '0':
                 $queryBuilder->andWhere("tg.estadoDespachado = 0");

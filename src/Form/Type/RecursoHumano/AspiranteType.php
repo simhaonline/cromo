@@ -134,7 +134,7 @@ class AspiranteType extends AbstractType
     {
         $campos = '[
             {"child":"codigoAspirantePk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"nombreCorto",       "tipo":"TextType",   "propiedades":{"label":"Nombre corto"}},
+            {"child":"nombreCorto",       "tipo":"TextType",   "propiedades":{"label":"Nombre corto"}, "operador":"like"},
             {"child":"estadoAutorizado",  "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
             {"child":"estadoAprobado",    "tipo":"ChoiceType", "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
             {"child":"estadoCerrado",     "tipo":"ChoiceType", "propiedades":{"label":"Cerrado",        "choices":{"SI":true,"NO":false}}}

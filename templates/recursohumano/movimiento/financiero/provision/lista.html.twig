@@ -64,13 +64,12 @@
                     <a href="{{ path('recursohumano_movimiento_financiero_provision_nuevo',{'id': arProvision.codigoProvisionPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
-                <td></td>
-                {#<td style="text-align: center;">#}
-                    {#<a href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_detalle',{'id' : arAporte.codigoAportePk}) }}">#}
-                        {#<i class="fa fa-share-square-o" style="font-size: large;color: black;">#}
-                        {#</i>#}
-                    {#</a>#}
-                {#</td>#}
+                <td style="text-align: center;">
+                    <a href="{{ path('recursohumano_movimiento_financierto_provision_detalle',{'id' : arProvision.codigoProvisionPk}) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
                 <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arProvision.codigoProvisionPk  }}"/></td>
             </tr>
         {% endfor %}

@@ -49,8 +49,8 @@ class AspiranteController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Aspirantes");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuAspirante::class)->eliminar($arrSeleccionados);
+                $arSeleccionados = $request->request->get('ChkSeleccionar');
+                $this->get("UtilidadesModelo")->eliminar(RhuAspirante::class, $arSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
             }
         }

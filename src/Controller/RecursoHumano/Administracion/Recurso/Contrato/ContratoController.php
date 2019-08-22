@@ -4,12 +4,16 @@ namespace App\Controller\RecursoHumano\Administracion\Recurso\Contrato;
 
 
 use App\Controller\BaseController;
+use App\Entity\RecursoHumano\RhuAdicional;
+use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuContratoMotivo;
+use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuLiquidacion;
+use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
 use App\Entity\RecursoHumano\RhuParametroPrestacion;
 use App\Form\Type\RecursoHumano\ContratoParametrosInicialesType;
 use App\Form\Type\RecursoHumano\ContratoType;
@@ -210,7 +214,33 @@ class ContratoController extends BaseController
                             }
                         }
                     }
-                     $em->persist($arLiquidacion);
+
+                    //Calcular deducciones credito
+
+                    $arCreditos = $em->getRepository(RhuCredito::class)->findBy(array('codigoEmpleadoFk' => $arEmpleado->getCodigoEmpleadoPk(), 'codigoCreditoPagoTipoFk' => 'NOM', 'estadoPagado' => 0, 'estadoSuspendido' => 0));
+                    foreach ($arCreditos as $arCredito) {
+                        $arLiquidacionAdicional = new RhuLiquidacionAdicional();
+                        $arLiquidacionAdicional->setCreditoRel($arCredito);
+                        $arLiquidacionAdicional->setLiquidacionRel($arLiquidacion);
+                        $arLiquidacionAdicional->setVrDeduccion($arCredito->getVrSaldo());
+                        $arLiquidacionAdicional->setConceptoRel($arCredito->getCreditoTipoRel()->getConceptoRel());
+                        $em->persist($arLiquidacionAdicional);
+
+                    }
+
+                    // calcular adicionales al pago permanentes
+                    //$arAdicionales = $em->getRepository(RhuAdicional::class)->findBy(['codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'permanente' => 1, 'estadoInactivo' => 0]);
+                    $arAdicionales = $em->getRepository(RhuAdicional::class)->deduccionLiquidacion($arContrato->getCodigoContratoPk());
+                    foreach ($arAdicionales as $arAdicional) {
+                        $arConcepto = $em->getRepository(RhuConcepto::class)->find($arAdicional['codigoConceptoFk']);
+                        $arLiquidacionAdicional = new RhuLiquidacionAdicional();
+                        $arLiquidacionAdicional->setLiquidacionRel($arLiquidacion);
+                        $arLiquidacionAdicional->setConceptoRel($arConcepto);
+                        $arLiquidacionAdicional->setVrDeduccion($arAdicional['vrValor']);
+                        $em->persist($arLiquidacionAdicional);
+                    }
+
+                    $em->persist($arLiquidacion);
                 }
 
                 $em->persist($arEmpleado);

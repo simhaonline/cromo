@@ -6,7 +6,9 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuConfiguracion;
+use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuLiquidacion;
+use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Form\Type\RecursoHumano\LiquidacionType;
 use App\Form\Type\RecursoHumano\PagoType;
@@ -91,6 +93,7 @@ class LiquidacionController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($id);
         $form = Estandares::botonera($arLiquidacion->getEstadoAutorizado(), $arLiquidacion->getEstadoAprobado(), $arLiquidacion->getEstadoAnulado());
+        $form->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -121,6 +124,20 @@ class LiquidacionController extends ControllerListenerGeneral
                     Mensajes::error("No puede reliquidar una liquidacion autorizada");
                 }
             }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados AS $codigo) {
+                        $arLiquidacionAdicional = $em->getRepository(RhuLiquidacionAdicional::class)->find($codigo);
+                        if ($arLiquidacionAdicional) {
+                            $em->remove($arLiquidacionAdicional);
+                        }
+                    }
+                    $em->flush();
+                }
+                $em->getRepository(RhuLiquidacion::class)->liquidar($id);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_detalle', ['id' => $id]));
+            }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(RhuLiquidacion::class)->desautorizar($arLiquidacion);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_detalle', array('id' => $id)));
@@ -130,11 +147,57 @@ class LiquidacionController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_detalle', array('id' => $id)));
             }
         }
-
+        $arLiquidacionAdicionales = $em->getRepository(RhuLiquidacionAdicional::class)->findBy(['codigoLiquidacionFk' => $id]);
         return $this->render('recursohumano/movimiento/nomina/liquidacion/detalle.html.twig', [
             'arLiquidacion' => $arLiquidacion,
+            'arLiquidacionAdicionales' => $arLiquidacionAdicionales,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/recursohumano/movimiento/nomina/liquidacion/detalle/credito/{codigoLiquidacion}", name="recursohumano_movimiento_nomina_liquidacion_detalle_credito")
+     */
+    public function detalleCredito(Request $request, $codigoLiquidacion)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoLiquidacion);
+        $arCreditos = $em->getRepository(RhuCredito::class)->pendientes($arLiquidacion->getCodigoEmpleadoFk());
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrControles = $request->request->All();
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $floVrDeducciones = 0;
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados AS $codigoCredito) {
+                        $arCredito = $em->getRepository(RhuCredito::class)->find($codigoCredito);
+                        $valor = 0;
+                        if ($arrControles['TxtValor' . $codigoCredito] != '') {
+                            $valor = $arrControles['TxtValor' . $codigoCredito];
+                        }
+                        $arLiquidacionAdicional = new RhuLiquidacionAdicional();
+                        $arLiquidacionAdicional->setCreditoRel($arCredito);
+                        $arLiquidacionAdicional->setLiquidacionRel($arLiquidacion);
+                        $arLiquidacionAdicional->setVrDeduccion($valor);
+                        $arLiquidacionAdicional->setConceptoRel($arCredito->getCreditoTipoRel()->getConceptoRel());
+                        $em->persist($arLiquidacionAdicional);
+                        $floVrDeducciones += $valor;
+                    }
+                    $em->flush();
+                    $em->getRepository(RhuLiquidacion::class)->liquidar($arLiquidacion->getCodigoLiquidacionPk());
+                }
+            }
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('recursohumano/movimiento/nomina/liquidacion/detalleNuevo.html.twig', array(
+            'arCreditos' => $arCreditos,
+            'arLiquidacion' => $arLiquidacion,
+            'form' => $form->createView()));
     }
 }
 

@@ -62,7 +62,8 @@ class RhuAdicionalRepository extends ServiceEntityRepository
         return $arPagosAdicionales;
     }
 
-    public function programacionPago ($codigoEmpleado = "", $codigoContrato = "", $pagoTipo, $fechaDesde, $fechaHasta) {
+    public function programacionPago($codigoEmpleado = "", $codigoContrato = "", $pagoTipo, $fechaDesde, $fechaHasta)
+    {
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(RhuAdicional::class, 'a')
             ->select('a.codigoAdicionalPk')
@@ -72,9 +73,9 @@ class RhuAdicionalRepository extends ServiceEntityRepository
             ->addSelect('a.aplicaDiaLaborado')
             ->where('a.estadoInactivo = 0 AND a.estadoInactivoPeriodo = 0')
             ->andWhere("a.codigoEmpleadoFk = {$codigoEmpleado} ")
-        ->andWhere("(a.permanente = 1 or (a.fecha >= '" . $fechaDesde . "' AND a.fecha <= '" . $fechaHasta . "'))");
+            ->andWhere("(a.permanente = 1 or (a.fecha >= '" . $fechaDesde . "' AND a.fecha <= '" . $fechaHasta . "'))");
 
-        if($pagoTipo == 'NOM') {
+        if ($pagoTipo == 'NOM') {
             $queryBuilder->andWhere('a.aplicaNomina = 1');
         }
 
@@ -82,7 +83,8 @@ class RhuAdicionalRepository extends ServiceEntityRepository
         return $arrResultado;
     }
 
-    public function lista(){
+    public function lista()
+    {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicional::class, 'a')
             ->select('a.codigoAdicionalPk')
@@ -94,15 +96,16 @@ class RhuAdicionalRepository extends ServiceEntityRepository
             ->addSelect('a.aplicaDiaLaborado')
             ->leftJoin('a.empleadoRel', 'e')
             ->leftJoin('a.conceptoRel', 'c')
-        ->where('a.permanente = true');
+            ->where('a.permanente = true');
 
-        if($session->get('filtroRhuEmpleadoCodigo') != ''){
+        if ($session->get('filtroRhuEmpleadoCodigo') != '') {
             $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$session->get('filtroRhuEmpleadoCodigo')}'");
         }
         return $queryBuilder;
     }
 
-    public function adicionalesPorPeriodo($codigoPeriodo){
+    public function adicionalesPorPeriodo($codigoPeriodo)
+    {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicional::class, 'a')
             ->select('a.codigoAdicionalPk')
@@ -122,10 +125,38 @@ class RhuAdicionalRepository extends ServiceEntityRepository
             ->leftJoin('a.conceptoRel', 'c')
             ->where("a.codigoAdicionalPeriodoFk = {$codigoPeriodo}");
 
-        if($session->get('filtroRhuEmpleadoCodigo') != ''){
+        if ($session->get('filtroRhuEmpleadoCodigo') != '') {
             $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$session->get('filtroRhuEmpleadoCodigo')}'");
         }
         return $queryBuilder;
+    }
+
+    public function deduccionLiquidacion($codigoContrato)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicional::class, 'a')
+            ->select('a.codigoAdicionalPk')
+            ->addSelect('a.fecha')
+            ->addSelect('a.codigoConceptoFk')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('a.detalle')
+            ->addSelect('g.nombre as grupo')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('a.vrValor')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('a.estadoInactivo')
+            ->addSelect('a.estadoInactivoPeriodo')
+            ->addSelect('a.aplicaDiaLaborado')
+            ->leftJoin('a.empleadoRel', 'e')
+            ->leftJoin('a.contratoRel', 'cont')
+            ->leftJoin('cont.grupoRel', 'g')
+            ->leftJoin('a.conceptoRel', 'c')
+            ->where('a.permanente = 1')
+            ->andWhere('c.operacion = -1')
+            ->andWhere("a.codigoContratoFk = {$codigoContrato}");
+        $result = $queryBuilder->getQuery()->getResult();
+
+        return $result;
     }
 
 }

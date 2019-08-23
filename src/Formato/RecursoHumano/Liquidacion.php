@@ -7,6 +7,7 @@ namespace App\Formato\RecursoHumano;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuLiquidacion;
+use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Utilidades\BaseDatos;
 use App\Utilidades\Estandares;
@@ -416,21 +417,44 @@ class Liquidacion extends \FPDF
             else
                 $pdf->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
 
-        //Restauraci�n de colores y fuentes
-        $pdf->SetFillColor(224, 235, 255);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('');
-        $pdf->Ln(4);
-        $pdf->Text(10, 240, "FIRMA: _____________________________________________");
-        $pdf->Text(10, 247, "");
-        $pdf->Text(10, 254, "C.C.:     ______________________ de ____________________");
-        $pdf->Text(105, 240, "FIRMA: _____________________________________________");
-        $pdf->Text(105, 247, "");
-        $pdf->Text(105, 254, "NIT: ".""." - ". "");
+        $arLiquidacionAdicionales = self::$em->getRepository(RhuLiquidacionAdicional::class)->findBy(array('codigoLiquidacionFk' => self::$codigoLiquidacion));
+        $pdf->SetXY(10,198);//167
+        $pdf->SetFont('Arial', '', 7);
+        foreach ($arLiquidacionAdicionales as $arLiquidacionAdicional) {
+            $pdf->Cell(12, 4, $arLiquidacionAdicional->getCodigoConceptoFk(), 1, 0, 'L');
+            $concepto = '';
+            if ($arLiquidacionAdicional->getCodigoConceptoFk() != null){
+                $concepto = $arLiquidacionAdicional->getConceptoRel()->getNombre();
+            }
+            $pdf->Cell(81, 4, $concepto, 1, 0, 'L');
+            $pdf->Cell(19, 4, number_format($arLiquidacionAdicional->getVrBonificacion(), 0,'.',','), 1, 0, 'R');
+            $pdf->Cell(20, 4, number_format($arLiquidacionAdicional->getVrDeduccion(), 0,'.',','), 1, 0, 'R');
+
+            $pdf->SetFont('Arial', '', 6.5);
+            $pdf->Cell(63, 4, utf8_decode($arLiquidacionAdicional->getDetalle()), 1, 0, 'L');
+            $pdf->Ln();
+            $pdf->SetAutoPageBreak(true, 15);
+        }
+        $pdf->SetY(218);
+        $pdf->SetFont('Arial', '', 9);
+        $pdf->Cell(24, 4,utf8_decode(""), 0, 0, 'L');
+        $pdf->SetAutoPageBreak(1, 15);
     }
 
     public function Footer()
     {
+        //Restauraci�n de colores y fuentes
+        $this->SetFillColor(224, 235, 255);
+        $this->SetTextColor(0);
+        $this->SetFont('');
+        $this->Ln(4);
+        $this->Text(10, 240, "FIRMA: _____________________________________________");
+        $this->Text(10, 247, "");
+        $this->Text(10, 254, "C.C.:     ______________________ de ____________________");
+        $this->Text(105, 240, "FIRMA: _____________________________________________");
+        $this->Text(105, 247, "");
+        $this->Text(105, 254, "NIT: ".""." - ". "");
+
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(10, 200);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');

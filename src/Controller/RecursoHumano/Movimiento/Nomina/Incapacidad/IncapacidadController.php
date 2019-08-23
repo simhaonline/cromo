@@ -50,7 +50,7 @@ class IncapacidadController extends ControllerListenerGeneral
         $form = $this->createFormBuilder()
             ->add('codigoEmpleadoPk', TextType::class, array('required' => false))
             ->add('numeroEps', TextType::class, array('required' => false))
-            ->add('tipoIncapacidad', ChoiceType::class, ['choices' => ['TODOS' => '', 'GENERAL' => '1', 'LABORAL' => '0'], 'required' => false])
+            ->add('tipoIncapacidad', ChoiceType::class, ['choices' => ['TODOS' => '', 'GENERAL' => 'GEN', 'LABORAL' => 'LAB'], 'required' => false])
             ->add('entidadSaludRel', EntityType::class, [
                 'class' => RhuEntidad::class,
                 'query_builder' => function (EntityRepository $er) {

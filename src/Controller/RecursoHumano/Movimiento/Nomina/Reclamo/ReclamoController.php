@@ -51,7 +51,8 @@ class ReclamoController extends ControllerListenerGeneral
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuReclamo::class)->eliminar($arrSeleccionados);
+                $this->get("UtilidadesModelo")->eliminar(RhuReclamo::class, $arrSeleccionados);
+
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_reclamo_lista'));
             }
         }
@@ -92,7 +93,7 @@ class ReclamoController extends ControllerListenerGeneral
                         $arReclamo->setEmpleadoRel($arEmpleado);
                         $em->persist($arReclamo);
                         $em->flush();
-                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_reclamo_detalle'));
+                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_reclamo_detalle', ['id'=>$arReclamo->getCodigoReclamoPk()]));
                     }
                 } else {
                     Mensajes::error('Debe seleccionar un empleado');

@@ -51,7 +51,7 @@ class ConceptoController extends ControllerListenerGeneral
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(RhuConcepto::class, $arrSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_administracion_seguridadsocial_concepto_lista'));
+                return $this->redirect($this->generateUrl('recursohumano_administracion_nomina_concepto_lista'));
             }
         }
         return $this->render('recursohumano/administracion/nomina/concepto/lista.html.twig', [

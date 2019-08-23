@@ -21,6 +21,7 @@ class pagoController extends  Controller
      */
     public function lista(Request $request)
     {
+        ini_set('memory_limit', '256M');
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');

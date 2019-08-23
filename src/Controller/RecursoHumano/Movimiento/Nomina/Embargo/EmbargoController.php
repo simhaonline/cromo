@@ -92,7 +92,7 @@ class EmbargoController extends ControllerListenerGeneral
                 $arEmbargo->setEmbargoJuzgadoRel($arJuzgado);
                 $em->persist($arEmbargo);
                 $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_lista'));
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_embargo_detalle', ['id'=>$arEmbargo->getCodigoEmbargoPK()]));
             }
         }
         return $this->render('recursohumano/movimiento/nomina/embargo/nuevo.html.twig', [

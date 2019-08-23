@@ -3,8 +3,10 @@
     {{ form_start(form,{'attr': {'class' :'form-horizontal'}}) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            {{ form_widget(form.btnAutorizar) }}
             <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_dotacion_dotacion_lista') }}">Volver</a>&nbsp;&nbsp;
+        </div>
+        <div class="btn-group">
+            {{ form_widget(form.btnAutorizar) }}
         </div>
     </div>
     <br/><br/>

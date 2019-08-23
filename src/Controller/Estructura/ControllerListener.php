@@ -117,7 +117,7 @@ class ControllerListener extends Controller{
         if($arSegUsuarioProceso && $arUsuarioRol!="ROLE_ADMIN"){
             if(!$arSegUsuarioProceso->getIngreso()){
                 $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$arProceso->getNombre()}'");
-        }
+            }
             return;
 
         }
@@ -125,7 +125,9 @@ class ControllerListener extends Controller{
             return;
         }
         else{
-            $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$arProceso->getNombre()}'");
+            //se valida los permisos del usuario
+            $this->getPermisoModelo($em, $controller, $event, $url );
+//            $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$arProceso->getNombre()}'");
         }
     }
 

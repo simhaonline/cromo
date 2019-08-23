@@ -362,4 +362,131 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function adicionalPrestacional($codigoPago, $codigoContrato = "")
+    {
+        $em = $this->getEntityManager();
+        $arContrato = $em->getRepository("App\Entity\RecursoHumano\RhuContrato")->find($codigoContrato);
+        $qb = $em->createQueryBuilder()->from("App\Entity\RecursoHumano\RhuPagoDetalle", "pd")
+            ->join("pd.pagoRel", "p")
+            ->leftJoin("pd.conceptoRel", "c")
+            ->select("SUM(pd.vrPago) AS Pago")
+            ->where("c.adicional = 1")
+            ->andWhere("c.generaIngresoBasePrestacion = 1");
+        if ($codigoContrato != "") {
+            if ($arContrato->getFechaUltimoPagoVacaciones()) {
+                $qb->andWhere("p.fechaDesde > '{$arContrato->getFechaUltimoPagoVacaciones()->format('Y-m-d')}'");
+            }
+        }
+        if ($codigoPago != "") {
+            $qb->andWhere("pd.codigoPagoFk = {$codigoPago}");
+        }
+        if ($codigoContrato != "") {
+            $qb->andWhere("p.codigoContratoFk = {$codigoContrato}");
+        }
+        $arrayResultado = $qb->getQuery()->getResult();
+        $adicionalPrestacional = $arrayResultado[0]['Pago'];
+        if ($adicionalPrestacional == null) {
+            $adicionalPrestacional = 0;
+        }
+        return $adicionalPrestacional;
+    }
+
+    public function valorLicenciaPago($codigoPago, $codigoContrato = "")
+    {
+        $em = $this->getEntityManager();
+        $arContrato = $em->getRepository("App\Entity\RecursoHumano\RhuContrato")->find($codigoContrato);
+
+
+        $qb = $em->createQueryBuilder()->from("App\Entity\RecursoHumano\RhuPagoDetalle", "pd")
+            ->select("SUM(pd.vrIngresoBasePrestacion) AS pago")
+            ->join("pd.pagoRel", "p")
+            ->where("pd.codigoLicenciaFk IS NOT NULL");
+        if ($codigoContrato != "") {
+            if ($arContrato->getFechaUltimoPagoVacaciones()) {
+                $qb->andWhere("p.fechaDesde > '{$arContrato->getFechaUltimoPagoVacaciones()->format('Y-m-d')}'");
+            }
+        }
+        if ($codigoPago != "") {
+            $qb->andWhere("pd.codigoPagoFk = {$codigoPago}");
+        }
+        if ($codigoContrato != "") {
+            $qb->andWhere("p.codigoContratoFk = {$codigoContrato}");
+        }
+
+//        $dql = "SELECT SUM(pd.vrIngresoBasePrestacion) as pago FROM BrasaRecursoHumanoBundle:RhuPagoDetalle pd "
+//            . "WHERE pd.codigoPagoFk = " . $codigoPago . " AND pd.codigoLicenciaFk IS NOT NULL";
+//        $query = $em->createQuery($dql);
+        $arrayResultado = $qb->getQuery()->getResult();
+        $pago = $arrayResultado[0]['pago'];
+        if ($pago == null) {
+            $pago = 0;
+        }
+        return $pago;
+    }
+
+    public function valorIncapacidadPago($codigoPago, $codigoContrato = "")
+    {
+        $em = $this->getEntityManager();
+        $arContrato = $em->getRepository("App\Entity\RecursoHumano\RhuContrato")->find($codigoContrato);
+
+        $qb = $em->createQueryBuilder()->from("App\Entity\RecursoHumano\RhuPagoDetalle", "pd")
+            ->select("SUM(pd.vrIngresoBasePrestacion) AS pago")
+            ->join("pd.pagoRel", "p")
+            ->where("pd.codigoIncapacidadFk IS NOT NULL");
+        if ($codigoContrato != "") {
+            if ($arContrato->getFechaUltimoPagoVacaciones()) {
+                $qb->andWhere("p.fechaDesde > '{$arContrato->getFechaUltimoPagoVacaciones()->format('Y-m-d')}'");
+            }
+        }
+
+        if ($codigoPago != "") {
+            $qb->andWhere("pd.codigoPagoFk = {$codigoPago}");
+        }
+        if ($codigoContrato != "") {
+            $qb->andWhere("p.codigoContratoFk = {$codigoContrato}");
+        }
+//        $dql = "SELECT SUM(pd.vrIngresoBasePrestacion) as pago FROM BrasaRecursoHumanoBundle:RhuPagoDetalle pd "
+//            . "WHERE pd.codigoPagoFk = " . $codigoPago . " AND pd.codigoIncapacidadFk IS NOT NULL";
+//        $query = $em->createQuery($dql);
+        $arrayResultado = $qb->getQuery()->getResult();
+        $pago = $arrayResultado[0]['pago'];
+        if ($pago == null) {
+            $pago = 0;
+        }
+        return $pago;
+    }
+
+    public function valorSalarioPago($codigoPago, $codigoContrato = "")
+    {
+        $em = $this->getEntityManager();
+        $arContrato = $em->getRepository("App\Entity\RecursoHumano\RhuContrato")->find($codigoContrato);
+
+        $qb = $em->createQueryBuilder()->from("App\Entity\RecursoHumano\RhuPagoDetalle", "pd")
+            ->select("SUM(pd.vrPagoOperado) AS pago")
+            ->join("pd.pagoRel", "p")
+            ->where("pd.codigoConceptoFk = 1");
+        if ($codigoContrato != "") {
+            if ($arContrato->getFechaUltimoPagoVacaciones()) {
+                $qb->andWhere("p.fechaDesde > '{$arContrato->getFechaUltimoPagoVacaciones()->format('Y-m-d')}'");
+            }
+        }
+
+        if ($codigoPago != "") {
+            $qb->andWhere("pd.codigoPagoFk = {$codigoPago}");
+        }
+        if ($codigoContrato != "") {
+            $qb->andWhere("p.codigoContratoFk = {$codigoContrato}");
+        }
+
+//        $dql = "SELECT SUM(pd.vrPagoOperado) as pago FROM BrasaRecursoHumanoBundle:RhuPagoDetalle pd "
+//            . "WHERE pd.codigoPagoFk = " . $codigoPago . " AND pd.codigoPagoConceptoFk = 1";
+//        $query = $em->createQuery($dql);
+        $arrayResultado = $qb->getQuery()->getResult();
+        $pago = $arrayResultado[0]['pago'];
+        if ($pago == null) {
+            $pago = 0;
+        }
+        return $pago;
+    }
 }

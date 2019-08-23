@@ -388,13 +388,13 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                         }
                         $fechaUltimoPago = $arLiquidacion->getContratoRel()->getFechaUltimoPagoCesantias();
                         if ($arConfiguracion->getLiquidarCesantiaAnioAnterior()) {
-                            $arLiquidacion->setCodigoPagoFk(null);
-                            $arLiquidacion->setCodigoPagoInteresFk(null);
-                            $arLiquidacion->setCodigoProgramacionPagoDetalleFk(null);
-                            $arLiquidacion->setCodigoProgramacionPagoDetalleInteresFk(null);
+                            //$arLiquidacion->setCodigoPagoFk(null);
+                            //$arLiquidacion->setCodigoPagoInteresFk(null);
+                            //$arLiquidacion->setCodigoProgramacionPagoDetalleFk(null);
+                            //$arLiquidacion->setCodigoProgramacionPagoDetalleInteresFk(null);
                             // validacion y liquidacion de cesantias año anterior
                             if ($arLiquidacion->getOmitirCesantiasAnterior() == false) { // validacion y liquidacion de cesantias año anterior
-                                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 3, 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoPagadoBanco' => 0));
+                                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 3, 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoAprobado' => 0));
                                 if ($arPago) {
                                     $arProgramacionPagoDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($arPago->getCodigoProgramacionDetalleFk());
                                     if ($arProgramacionPagoDetalle) {
@@ -412,7 +412,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             }
                             // validacion y liquidacion de intereses cesantias año anterior
                             if ($arLiquidacion->getOmitirInteresCesantiasAnterior() == false) {
-                                $arPago = $em->getRepository('BrasaRecursoHumanoBundle:RhuPago')->findOneBy(array('codigoPagoTipoFk' => 6, 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoPagadoBanco' => 0));
+                                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 6, 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoAprobado' => 0));
                                 if ($arPago) {
                                     $arProgramacionPagoDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($arPago->getCodigoProgramacionDetalleFk());
                                     if ($arProgramacionPagoDetalle) {
@@ -541,7 +541,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                                 $salarioPromedioMinimo += $auxilioTransporte;
                             }
                             if ($salarioPromedioCesantias < $salarioPromedioMinimo) {
-                                if ($arContrato->getCodigoTipoTiempoFk() == 1) {
+                                if ($arContrato->getCodigoTiempoFk() == 'TCOMP') {
                                     $salarioPromedioCesantias = $salarioPromedioMinimo;
                                 }
                             }
@@ -644,7 +644,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                         $ibpPrimas = $em->getRepository(RhuPagoDetalle::class)->ibp($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
                         $ibpPrimas += $ibpPrimasInicial + $douIBPAdicional;
                         $ibpPrimas = round($ibpPrimas);
-                        if ($arContrato->getCodigoSalarioTipoFk() == 2) {
+                        if ($arContrato->getCodigoSalarioTipoFk() == 'VAR') {
                             if ($intDiasPrimaLiquidar > 0) {
                                 $salarioPromedioPrimas = ($ibpPrimas / $intDiasPrimaLiquidar) * 30;
                                 //Configuracion especifica para grtemporales
@@ -719,7 +719,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             $salarioPromedioMinimo += $auxilioTransporte;
                         }
                         if ($salarioPromedioPrimas < $salarioPromedioMinimo) {
-                            if ($arContrato->getCodigoTipoTiempoFk() == 1) {
+                            if ($arContrato->getCodigoTiempoFk() == 'TCOMP') {
                                 $salarioPromedioPrimas = $salarioPromedioMinimo;
                             }
                         }

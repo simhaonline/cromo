@@ -383,6 +383,16 @@ class RhuLiquidacion
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="omitir_cesantias_anterior", type="boolean", nullable=true)
+     */
+    private $omitirCesantiasAnterior = false;
+
+    /**
+     * @ORM\Column(name="omitir_interes_cesantias_anterior", type="boolean", nullable=true)
+     */
+    private $omitirInteresCesantiasAnterior = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="liquidacionesEmpleadoRel")
      * @ORM\JoinColumn(name="codigo_empleado_fk", referencedColumnName="codigo_empleado_pk")
      */
@@ -1651,6 +1661,38 @@ class RhuLiquidacion
     public function setFechaInicioContrato($fechaInicioContrato): void
     {
         $this->fechaInicioContrato = $fechaInicioContrato;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOmitirCesantiasAnterior()
+    {
+        return $this->omitirCesantiasAnterior;
+    }
+
+    /**
+     * @param mixed $omitirCesantiasAnterior
+     */
+    public function setOmitirCesantiasAnterior($omitirCesantiasAnterior): void
+    {
+        $this->omitirCesantiasAnterior = $omitirCesantiasAnterior;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOmitirInteresCesantiasAnterior()
+    {
+        return $this->omitirInteresCesantiasAnterior;
+    }
+
+    /**
+     * @param mixed $omitirInteresCesantiasAnterior
+     */
+    public function setOmitirInteresCesantiasAnterior($omitirInteresCesantiasAnterior): void
+    {
+        $this->omitirInteresCesantiasAnterior = $omitirInteresCesantiasAnterior;
     }
 
 

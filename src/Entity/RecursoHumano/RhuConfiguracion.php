@@ -44,6 +44,11 @@ class RhuConfiguracion
     private $codigoConceptoFondoSolidaridadPensionFk;
 
     /**
+     * @ORM\Column(name="auxilio_transporte_no_prestacional", type="boolean", nullable=true)
+     */
+    private $auxilioTransporteNoPrestacional = false;
+
+    /**
      * @ORM\Column(name="codigo_concepto_vacacion_fk", type="string", length=10, nullable=true)
      */
     private $codigoConceptoVacacionFk;
@@ -750,6 +755,22 @@ class RhuConfiguracion
     public function setLiquidarLicenciasIbcMesAnterior($liquidarLicenciasIbcMesAnterior): void
     {
         $this->liquidarLicenciasIbcMesAnterior = $liquidarLicenciasIbcMesAnterior;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuxilioTransporteNoPrestacional()
+    {
+        return $this->auxilioTransporteNoPrestacional;
+    }
+
+    /**
+     * @param mixed $auxilioTransporteNoPrestacional
+     */
+    public function setAuxilioTransporteNoPrestacional($auxilioTransporteNoPrestacional): void
+    {
+        $this->auxilioTransporteNoPrestacional = $auxilioTransporteNoPrestacional;
     }
 
 

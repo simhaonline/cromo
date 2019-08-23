@@ -4,6 +4,7 @@
 namespace App\Formato\RecursoHumano;
 
 
+use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuLiquidacion;
@@ -66,6 +67,7 @@ class Liquidacion extends \FPDF
         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoliquidacion);
         $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arLiquidacion->getCodigoEmpleadoFk());
         $arContrato = $em->getRepository(RhuContrato::class)->find($arLiquidacion->getCodigoContratoFk());
+        $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
         $posicionY = 42;
         //tabla vacaciones
         //linea 1
@@ -439,22 +441,22 @@ class Liquidacion extends \FPDF
         $pdf->SetFont('Arial', '', 9);
         $pdf->Cell(24, 4,utf8_decode(""), 0, 0, 'L');
         $pdf->SetAutoPageBreak(1, 15);
+
+        //Restauraci�n de colores y fuentes
+        $pdf->SetFillColor(224, 235, 255);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('');
+        $pdf->Ln(4);
+        $pdf->Text(10, 240, "FIRMA: _____________________________________________");
+        $pdf->Text(10, 247, utf8_decode($arLiquidacion->getEmpleadoRel()->getNombreCorto()));
+        $pdf->Text(10, 254, "C.C.:     ______________________ de ____________________");
+        $pdf->Text(105, 240, "FIRMA: _____________________________________________");
+        $pdf->Text(105, 247, $arConfiguracion->getNombre());
+        $pdf->Text(105, 254, "NIT: ." . $arConfiguracion->getNit());
     }
 
     public function Footer()
     {
-        //Restauraci�n de colores y fuentes
-        $this->SetFillColor(224, 235, 255);
-        $this->SetTextColor(0);
-        $this->SetFont('');
-        $this->Ln(4);
-        $this->Text(10, 240, "FIRMA: _____________________________________________");
-        $this->Text(10, 247, "");
-        $this->Text(10, 254, "C.C.:     ______________________ de ____________________");
-        $this->Text(105, 240, "FIRMA: _____________________________________________");
-        $this->Text(105, 247, "");
-        $this->Text(105, 254, "NIT: ".""." - ". "");
-
         $this->SetFont('Arial', 'B', 9);
         $this->SetXY(10, 200);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');

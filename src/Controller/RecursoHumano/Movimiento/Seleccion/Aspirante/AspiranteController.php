@@ -99,8 +99,17 @@ class AspiranteController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route("recursohumano/movimiento/seleccion/aspirante/detalle/{id}", name="recursohumano_movimiento_seleccion_aspirante_detalle")
      */
-    public function detalle(){
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
+    public function detalle(Request $request, $id){
+        $em = $this->getDoctrine()->getManager();
+        if ($id != 0) {
+            $arAspirante = $em->getRepository(RhuAspirante::class)->find($id);
+            if (!$arAspirante) {
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
+            }
+        }
+        return $this->render('recursohumano/movimiento/seleccion/aspirante/detalle.html.twig', [
+            'arAspirante' => $arAspirante
+        ]);
     }
 }
 

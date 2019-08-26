@@ -20,7 +20,7 @@ class AspiranteType extends AbstractType
     {
         $builder
             ->add('identificacionRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenIdentificacion',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
@@ -30,7 +30,7 @@ class AspiranteType extends AbstractType
                 'label' => 'Identificacion tipo:'
             ])
             ->add('ciudadExpedicionRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenCiudad',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('ce')
@@ -40,7 +40,7 @@ class AspiranteType extends AbstractType
                 'label' => 'Ciudad residencia:'
             ])
             ->add('sexoRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenSexo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('g')
@@ -60,7 +60,7 @@ class AspiranteType extends AbstractType
                 'label' => 'Rh:'
             ])
             ->add('ciudadNacimientoRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenCiudad',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('ce')
@@ -70,7 +70,7 @@ class AspiranteType extends AbstractType
                 'label' => 'Ciudad residencia:'
             ])
             ->add('estadoCivilRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenEstadoCivil',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('ec')
@@ -90,21 +90,21 @@ class AspiranteType extends AbstractType
                 'label' => 'Cargo interno:'
             ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'numero identificacion:'])
-            ->add('libretaMilitar',TextType::class,['required' => true,'label' => 'Libreta militar:'])
+            ->add('libretaMilitar',TextType::class,['required' => false,'label' => 'Libreta militar:'])
             ->add('nombre1',TextType::class,['required' => true,'label' => 'Primer nombre:'])
-            ->add('nombre2',TextType::class,['required' => true,'label' => 'Segundo nombre:'])
+            ->add('nombre2',TextType::class,['required' => false,'label' => 'Segundo nombre:'])
             ->add('apellido1',TextType::class,['required' => true,'label' => 'Primer apellido:'])
-            ->add('apellido2',TextType::class,['required' => true,'label' => 'Segundo apellido:'])
+            ->add('apellido2',TextType::class,['required' => false,'label' => 'Segundo apellido:'])
             ->add('telefono',NumberType::class,['required' => true,'label' => 'Telefono:'])
             ->add('celular',NumberType::class,['required' => true,'label' => 'Celular:'])
             ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
             ->add('barrio',TextType::class,['required' => true,'label' => 'Barrio:'])
             ->add('correo',TextType::class,['required' => true,'label' => 'Correo:'])
             ->add('fechaNacimiento', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
-            ->add('peso',TextType::class,['required' => true,'label' => 'Peso:'])
-            ->add('estatura',TextType::class,['required' => true,'label' => 'Estatura:'])
-            ->add('cargoAspira',TextType::class,['required' => true,'label' => 'Cargo aspira:'])
-            ->add('recomendado',TextType::class,['required' => true,'label' => 'Recomendado:'])
+            ->add('peso',TextType::class,['required' => false,'label' => 'Peso:'])
+            ->add('estatura',TextType::class,['required' => false,'label' => 'Estatura:'])
+            ->add('cargoAspira',TextType::class,['required' => false,'label' => 'Cargo aspira:'])
+            ->add('recomendado',TextType::class,['required' => false,'label' => 'Recomendado:'])
             ->add('reintegro', CheckboxType::class, array('required'  => false))
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

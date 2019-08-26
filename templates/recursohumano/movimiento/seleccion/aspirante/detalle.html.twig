@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seleccion_aspirante_lista') }}"
+               style="float:left">Volver</a>
+        </div>
+    </div>
+    <br/><br/>
+    <table widtd="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arAspirante.codigoAspirantePk }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arAspirante.fecha | date("Y-m-d") }}</td>
+            <td class="titulo">CIUDAD:</td>
+            <td class="td-label" align="right">{{ arAspirante.ciudadRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arAspirante.nombreCorto }}</td>
+            <td class="titulo">CELULAR:</td>
+            <td class="td-in-well">{{ arAspirante.celular }}</td>
+            <td class="titulo">DIRECCION:</td>
+            <td class="td-label" align="right">{{ arAspirante.direccion }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">IDENTIFICACION:</td>
+            <td class="td-in-well">{{ arAspirante.numeroIdentificacion }}</td>
+            <td class="titulo">TELEFONO:</td>
+            <td class="td-in-well">{{ arAspirante.telefono }}</td>
+            <td class="titulo">BARRIO:</td>
+            <td class="td-label" align="right">{{ arAspirante.barrio }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">LIBRETA MILITAR:</td>
+            <td class="td-in-well">{{ arAspirante.libretaMilitar }}</td>
+            <td class="titulo">CIUDAD EXPEDICION:</td>
+            <td class="td-in-well">{{ arAspirante.ciudadExpedicionRel.nombre }}</td>
+            <td class="titulo">RH:</td>
+            <td class="td-label" align="right">{{ arAspirante.rhRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA NACIMIENTO:</td>
+            <td class="td-in-well">{{ arAspirante.fechaNacimiento | date('Y-m-d') }}</td>
+            <td class="titulo">CIUDAD NACIMIENTO:</td>
+            <td class="td-in-well">{{ arAspirante.ciudadNacimientoRel.nombre }}</td>
+            <td class="titulo">CORREO:</td>
+            <td class="td-label" align="right">{{ arAspirante.correo }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">ESTADO CIVIL:</td>
+            <td class="td-in-well">{{ arAspirante.fechaNacimiento | date('Y-m-d') }}</td>
+            <td class="titulo">SEXO:</td>
+            <td class="td-in-well">{{ arAspirante.sexoRel.nombre }}</td>
+            <td class="titulo">CARGO QUE ASPIRA:</td>
+            <td class="td-label" align="right">{{ arAspirante.cargoAspira }}</td>
+        </tr>
+    </table>
+    <br/><br/><br/>
+{% endblock %}

@@ -25,7 +25,7 @@ class SolicitudType extends AbstractType
     {
         $builder
             ->add('grupoRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\RecursoHumano\RhuGrupo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('gp')
@@ -35,7 +35,7 @@ class SolicitudType extends AbstractType
                 'label' => 'Grupo pago:'
             ])
             ->add('solicitudMotivoRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\RecursoHumano\RhuSolicitudMotivo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('sm')
@@ -45,7 +45,7 @@ class SolicitudType extends AbstractType
                 'label' => 'Solicitud motivo:'
             ])
             ->add('cargoRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\RecursoHumano\RhuCargo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
@@ -55,7 +55,7 @@ class SolicitudType extends AbstractType
                 'label' => 'Cargo:'
             ])
             ->add('clasificacionRiesgoRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\RecursoHumano\RhuClasificacionRiesgo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('cr')
@@ -65,7 +65,7 @@ class SolicitudType extends AbstractType
                 'label' => 'Clasificacion riesgo:'
             ])
             ->add('ciudadRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenCiudad',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('cs')
@@ -75,7 +75,7 @@ class SolicitudType extends AbstractType
                 'label' => 'Ciudad residencia:'
             ])
             ->add('estudioTipoRel',EntityType::class,[
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\General\GenEstudioTipo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('et')
@@ -127,7 +127,7 @@ class SolicitudType extends AbstractType
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('cantidadSolicitada',IntegerType::class,['required' => true,'label' => 'Cantidad:'])
             ->add('vrSalario', NumberType::class,['required' => true,'label' => 'Salario:'])
-            ->add('vrNoSalarial',NumberType::class,['required' => true,'label' => 'No salarial:'])
+            ->add('vrNoSalarial',NumberType::class,['required' => false,'label' => 'No salarial:'])
             ->add('fechaContratacion', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('fechaVencimiento', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('edadMinima', TextType::class, ['required' => false,'label' => 'Edad minima:'])

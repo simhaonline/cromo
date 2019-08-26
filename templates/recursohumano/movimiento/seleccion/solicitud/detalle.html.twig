@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seleccion_aspirante_lista') }}"
+               style="float:left">Volver</a>
+        </div>
+    </div>
+    <br/><br/>
+    <table widtd="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arSolicitud.codigoSolicitudPk }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arSolicitud.fecha | date("Y-m-d") }}</td>
+            <td class="titulo">CERRADO:</td>
+            <td class="td-label" align="right">{{ arSolicitud.estadoCerrado }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arSolicitud.nombre }}</td>
+            <td class="titulo">GRUPO:</td>
+            <td class="td-in-well">{{ arSolicitud.grupoRel.nombre }}</td>
+            <td class="titulo">FECHA CIERRE:</td>
+            <td class="td-label" align="right">{{ arSolicitud.fechaVencimiento | date('Y-m-d') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CANTIDAD:</td>
+            <td class="td-in-well">{{ arSolicitud.cantidadSolicitada }}</td>
+            <td class="titulo">ESTADO CIVIL:</td>
+            <td class="td-in-well">{{ arSolicitud.estadoCivilRel.nombre | default('') }}</td>
+            <td class="titulo">NO SALARIAL:</td>
+            <td class="td-label" align="right">{{ arSolicitud.vrNoSalarial }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NIVEL ESTUDIO:</td>
+            <td class="td-in-well">{{ arSolicitud.estudioTipoRel.nombre | default('') }}</td>
+            <td class="titulo">EDAD MINIMA:</td>
+            <td class="td-in-well">{{ arSolicitud.edadMinima }}</td>
+            <td class="titulo">EDAD MAXIMA:</td>
+            <td class="td-label" align="right">{{ arSolicitud.edadMaxima }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">SEXO:</td>
+            <td class="td-in-well">{{ arSolicitud.sexoRel.nombre | default('') }}</td>
+            <td class="titulo">CIUDAD RESIDENCIA:</td>
+            <td class="td-in-well">{{ arSolicitud.ciudadRel.nombre }}</td>
+            <td class="titulo">NRO HIJOS:</td>
+            <td class="td-label" align="right">{{ arSolicitud.numeroHijos }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">EXPERIENCIA:</td>
+            <td class="td-in-well">{{ arSolicitud.solicitudExperienciaRel.nombre | default('') }}</td>
+            <td class="titulo">TIPO VEHICULO:</td>
+            <td class="td-in-well">{{ arSolicitud.codigoTipoVehiculoFk }}</td>
+            <td class="titulo">RELIGION:</td>
+            <td class="td-label" align="right">{{ arSolicitud.religionRel.nombre | default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">MOTIVO:</td>
+            <td class="td-in-well">{{ arSolicitud.solicitudMotivoRel.nombre | default('') }}</td>
+            <td class="titulo">DISPONIBILIDAD:</td>
+            <td class="td-in-well">{{ arSolicitud.disponbilidad }}</td>
+            <td class="titulo">LICENCIA CARRO:</td>
+            <td class="td-label" align="right">{{ arSolicitud.codigoLicenciaCarroFk ? 'SI':'NO' }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA CONTRATACION:</td>
+            <td class="td-in-well">{{ arSolicitud.fechaContratacion | date('') }}</td>
+            <td class="titulo">FECHA PRUEBAS:</td>
+            <td class="td-in-well">{{ arSolicitud.fechaPruebas | date ('') }}</td>
+            <td class="titulo">LICENCIA MOTO:</td>
+            <td class="td-label" align="right">{{ arSolicitud.codigoLicenciaMotoFk ? 'SI' :'NO' }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"><b>COMENTARIOS:</b></td>
+            <td class="td-in-well" colspan="5">{{ arSolicitud.comentarios }}</td>
+        </tr>
+    </table>
+    <br/><br/><br/>
+{% endblock %}

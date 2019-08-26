@@ -95,6 +95,15 @@ class SolicitudController extends ControllerListenerGeneral
      * @Route("recursohumano/movimiento/seleccion/solicitud/detalle/{id}", name="recursohumano_movimiento_seleccion_solicitud_detalle")
      */
     public  function  detalle(Request $request, $id ){
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));
+        $em = $this->getDoctrine()->getManager();
+        if ($id != 0) {
+            $arSolicitud = $em->getRepository(RhuSolicitud::class)->find($id);
+            if (!$arSolicitud) {
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));
+            }
+        }
+        return $this->render('recursohumano/movimiento/seleccion/solicitud/detalle.html.twig', [
+            'arSolicitud' => $arSolicitud
+        ]);
     }
 }

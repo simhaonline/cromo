@@ -258,6 +258,7 @@ class Pago extends \FPDF
                 $pdf->Cell(7, 4, $programacion["dia13"], 1, 0, 'L');
                 $pdf->Cell(7, 4, $programacion["dia14"], 1, 0, 'L');
                 $pdf->Cell(7, 4, $programacion["dia15"], 1, 0, 'L');
+                $pdf->Ln();
             }
         }else{
             foreach ($arProgramaciones as $programacion)
@@ -278,6 +279,7 @@ class Pago extends \FPDF
                 $pdf->Cell(7, 4, $programacion["dia29"], 1, 0, 'L');
                 $pdf->Cell(7, 4, $programacion["dia30"], 1, 0, 'L');
                 $pdf->Cell(7, 4, $programacion["dia31"]??"", 1, 0, 'L'); //validad si el 31 tiene datos
+                $pdf->Ln();
             }
         }
     }

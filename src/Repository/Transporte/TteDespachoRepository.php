@@ -442,36 +442,38 @@ class TteDespachoRepository extends ServiceEntityRepository
         $respuesta = "";
         $em = $this->getEntityManager();
         if ($arDespacho->getEstadoAnulado() == 0 && $arDespacho->getEstadoAprobado() == 1 && $arDespacho->getEstadoContabilizado() == 0) {
-            $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 0, 
-                  g.estadoEmbarcado = 0, g.codigoDespachoFk = NULL
-                  WHERE g.codigoDespachoFk = :codigoDespacho')
-                ->setParameter('codigoDespacho', $arDespacho->getCodigoDespachoPk());
-            $query->execute();
+            if($em->getRepository(TesCuentaPagar::class)->anularExterno('TteDespacho', $arDespacho->getCodigoDespachoPk())) {
+                $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 0, 
+                            g.estadoEmbarcado = 0, g.codigoDespachoFk = NULL
+                            WHERE g.codigoDespachoFk = :codigoDespacho')
+                    ->setParameter('codigoDespacho', $arDespacho->getCodigoDespachoPk());
+                $query->execute();
 
-            $arDespacho->setVrFletePago(0);
-            $arDespacho->setVrAnticipo(0);
-            $arDespacho->setVrIndustriaComercio(0);
-            $arDespacho->setVrRetencionFuente(0);
-            $arDespacho->setVrTotal(0);
-            $arDespacho->setVrTotalNeto(0);
-            $arDespacho->setVrDescuentoCargue(0);
-            $arDespacho->setVrDescuentoEstampilla(0);
-            $arDespacho->setVrDescuentoPapeleria(0);
-            $arDespacho->setVrDescuentoSeguridad(0);
-            $arDespacho->setVrCobroEntrega(0);
-            $arDespacho->setVrCobroEntregaRechazado(0);
-            $arDespacho->setVrSaldo(0);
-            $arDespacho->setEstadoAnulado(1);
-            $arDespacho->setUnidades(0);
-            $arDespacho->setCantidad(0);
-            $arDespacho->setPesoVolumen(0);
-            $arDespacho->setPesoCosto(0);
-            $arDespacho->setPesoReal(0);
-            $arDespacho->setVrFlete(0);
-            $arDespacho->setVrManejo(0);
-            $arDespacho->setVrDeclara(0);
-            $em->persist($arDespacho);
-            $em->flush();
+                $arDespacho->setVrFletePago(0);
+                $arDespacho->setVrAnticipo(0);
+                $arDespacho->setVrIndustriaComercio(0);
+                $arDespacho->setVrRetencionFuente(0);
+                $arDespacho->setVrTotal(0);
+                $arDespacho->setVrTotalNeto(0);
+                $arDespacho->setVrDescuentoCargue(0);
+                $arDespacho->setVrDescuentoEstampilla(0);
+                $arDespacho->setVrDescuentoPapeleria(0);
+                $arDespacho->setVrDescuentoSeguridad(0);
+                $arDespacho->setVrCobroEntrega(0);
+                $arDespacho->setVrCobroEntregaRechazado(0);
+                $arDespacho->setVrSaldo(0);
+                $arDespacho->setEstadoAnulado(1);
+                $arDespacho->setUnidades(0);
+                $arDespacho->setCantidad(0);
+                $arDespacho->setPesoVolumen(0);
+                $arDespacho->setPesoCosto(0);
+                $arDespacho->setPesoReal(0);
+                $arDespacho->setVrFlete(0);
+                $arDespacho->setVrManejo(0);
+                $arDespacho->setVrDeclara(0);
+                $em->persist($arDespacho);
+                $em->flush();
+            }
         } else {
             Mensajes::error("El despacho no puede estar anulado ni contabilizado y debe estar previamente aprobado");
         }
@@ -1800,8 +1802,8 @@ class TteDespachoRepository extends ServiceEntityRepository
             //$arCuentaPagar->setBancoRel($arPago->getEmpleadoRel()->getBancoRel());
             //$arCuentaPagar->setCuenta($arPago->getEmpleadoRel()->getCuenta());
             $arCuentaPagar->setModulo('tte');
-            $arCuentaPagar->setCodigoDocumento($arDespacho->getCodigoDespachoPk());
             $arCuentaPagar->setModelo('TteDespacho');
+            $arCuentaPagar->setCodigoDocumento($arDespacho->getCodigoDespachoPk());
             $arCuentaPagar->setNumeroDocumento($arDespacho->getNumero());
             $arCuentaPagar->setSoporte($arDespacho->getCodigoVehiculoFk());
             $arCuentaPagar->setFecha($arDespacho->getFechaSalida());

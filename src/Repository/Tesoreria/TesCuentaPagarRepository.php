@@ -3,6 +3,7 @@
 namespace App\Repository\Tesoreria;
 
 use App\Entity\Tesoreria\TesCuentaPagar;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -270,6 +271,46 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         }
 
         return $queryBuilder;
+    }
+
+    /**
+     * @param $arCuentaPagar TesCuentaPagar
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function anular($arCuentaPagar)
+    {
+        $em = $this->getEntityManager();
+        if ($arCuentaPagar->getEstadoAprobado() == 1 && $arCuentaPagar->getEstadoAnulado() == 0) {
+            if($arCuentaPagar->getVrAbono() <= 0) {
+                $arCuentaPagar->setEstadoAnulado(1);
+                $arCuentaPagar->setVrSubtotal(0);
+                $arCuentaPagar->setVrIva(0);
+                $arCuentaPagar->setVrRetencionFuente(0);
+                $arCuentaPagar->setVrRetencionIva(0);
+                $arCuentaPagar->setVrTotal(0);
+                $arCuentaPagar->setVrSaldo(0);
+                $arCuentaPagar->setVrSaldoOriginal(0);
+                $arCuentaPagar->setVrSaldoOperado(0);
+                $em->persist($arCuentaPagar);
+                $em->flush();
+                return true;
+            } else {
+                Mensajes::error("La cuenta por pagar tiene abonos y no se puede anular");
+                return false;
+            }
+        }
+    }
+
+    public function anularExterno($codigoModelo, $codigoDocumento)
+    {
+        $em = $this->getEntityManager();
+        $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->findOneBy(['modelo' => $codigoModelo, 'codigoDocumento' => $codigoDocumento]);
+        if($arCuentaPagar) {
+            return $em->getRepository(TesCuentaPagar::class)->anular($arCuentaPagar);
+        } else {
+            return true;
+        }
     }
 
 }

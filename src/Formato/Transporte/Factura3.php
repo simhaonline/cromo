@@ -280,6 +280,8 @@ class Factura3 extends \FPDF {
         $arFactura = self::$em->getRepository('App:Transporte\TteFactura')->find(self::$codigoFactura);
         $this->SetFont('Arial', 'b', 8);
         $this->SetFillColor(272, 272, 272);
+        $this->SetXY(10,155);
+        $this->Cell(200, 5, "COMENTARIOS: " . utf8_decode($arFactura->getComentario()), 0, 0, 'L', 1);
         $this->SetXY(35,160);
         $this->Cell(200, 5, utf8_decode("ENERGY LOGISTICA S.A.S NO SOMOS RESPONSABLES DE IVA, EL TRANSPORTE ES UN SERVICIO EXCLUIDO DE IVA ART.25 LEY 6 DE 1992"), 0, 0, 'C', 1);
         $this->SetXY(10,165);

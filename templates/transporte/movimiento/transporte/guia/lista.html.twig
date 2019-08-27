@@ -151,7 +151,6 @@
             <th title="Tipo de pago cortesia">COR</th>
             <th title="Autorizado">AUT</th>
             <th title="Aprobado">APR</th>
-            <th title="Impresa">I</th>
             <th title="Embarcada sin despachar">B</th>
             <th title="Despachada">D</th>
             <th title="Entregada">E</th>
@@ -187,11 +186,10 @@
                 <td>{{ arGuia.cortesia? "SI":"NO" }}</td>
                 <td>{{ arGuia.estadoAutorizado? "SI":"NO" }}</td>
                 <td>{{ arGuia.estadoAprobado? "SI":"NO" }}</td>
-                <td>{{ arGuia.estadoImpreso? "SI":"NO" }}</td>
-                <td>{{ arGuia.estadoDespachado? "SI":"NO" }}</td>
                 <td>{{ arGuia.estadoEmbarcado? "SI":"NO" }}</td>
-                <td>{{ arGuia.estadoSoporte? "SI":"NO" }}</td>
+                <td>{{ arGuia.estadoDespachado? "SI":"NO" }}</td>
                 <td>{{ arGuia.estadoEntregado? "SI":"NO" }}</td>
+                <td>{{ arGuia.estadoSoporte? "SI":"NO" }}</td>
                 <td>{{ arGuia.estadoCumplido? "SI":"NO" }}</td>
                 <td>{{ arGuia.estadoFacturado? "SI":"NO" }}</td>
                 <td>{{ arGuia.estadoNovedad? "SI":"NO" }}</td>

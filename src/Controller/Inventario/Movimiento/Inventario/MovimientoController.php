@@ -735,6 +735,7 @@ class MovimientoController extends ControllerListenerGeneral
                                     $arMovimientoDetalle->setCodigoImpuestoIvaFk($arRemisionDetalle->getItemRel()->getCodigoImpuestoIvaVentaFk());
                                     $arMovimientoDetalle->setRemisionDetalleRel($arRemisionDetalle);
                                     $arMovimientoDetalle->setLoteFk($arRemisionDetalle->getLoteFk());
+                                    $arMovimientoDetalle->setFechaVencimiento($arRemisionDetalle->getFechaVencimiento());
                                     $arMovimientoDetalle->setCodigoBodegaFk($arRemisionDetalle->getCodigoBodegaFk());
                                     $em->persist($arMovimientoDetalle);
                                 } else {

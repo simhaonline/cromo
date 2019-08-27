@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Comercial\Remision;
 
+use App\Entity\General\GenAsesor;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvRemisionTipo;
@@ -34,6 +35,7 @@ class RemisionPendienteController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('remisionTipoRel', EntityType::class, $em->getRepository(InvRemisionTipo::class)->llenarCombo())
+            ->add('asesorRel', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
             ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
             ->add('txtLote', TextType::class, array('required' => false))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvRemisionPendienteFechaDesde') ? date_create($session->get('filtroInvRemisionPendienteFechaDesde')): null])
@@ -53,6 +55,13 @@ class RemisionPendienteController extends Controller
                     $arRemisionTipo = $arRemisionTipo->getCodigoRemisionTipoPk();
                 }
                 $session->set('filtroInvRemisionTipo', $arRemisionTipo);
+                $arAsesor = $form->get('asesorRel')->getData();
+                if ($arAsesor) {
+                    $session->set('filtroInvCodigoAsesor', $arAsesor->getCodigoAsesorPk());
+                } else {
+                    $session->set('filtroInvCodigoAsesor', null);
+                }
+
                 $arBodega = $form->get('cboBodega')->getData();
                 if ($arBodega != '') {
                     $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());

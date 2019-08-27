@@ -173,10 +173,12 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->addSelect('r.fecha as fechaPedido')
             ->addSelect('rt.nombre as pedidoTipo')
             ->addSelect('t.nombreCorto as terceroNombreCorto')
+            ->addSelect('a.nombre as asesorNombre')
             ->leftJoin('rd.itemRel','i')
             ->leftJoin('rd.remisionRel','r')
             ->leftJoin('r.remisionTipoRel','rt')
             ->leftJoin('r.terceroRel', 't')
+            ->leftJoin('r.asesorRel', 'a')
             ->where('r.estadoAprobado = 1')
             ->andWhere('r.estadoAnulado = 0')
             ->andWhere('rd.cantidadPendiente > 0')
@@ -198,6 +200,9 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         }
         if($session->get('filtroInvRemisionDetalleLote')){
             $queryBuilder->andWhere("rd.loteFk = '{$session->get('filtroInvRemisionDetalleLote')}'");
+        }
+        if($session->get('filtroInvCodigoAsesor')){
+            $queryBuilder->andWhere("r.codigoAsesorFk = '{$session->get('filtroInvCodigoAsesor')}'");
         }
         return $queryBuilder->getQuery();
     }

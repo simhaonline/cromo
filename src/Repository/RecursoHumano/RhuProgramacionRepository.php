@@ -545,4 +545,19 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         }
     }
 
+    public function Trasferencia()
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuProgramacion::class, 'p')
+            ->select('p.codigoProgramacionPk')
+            ->addSelect('pt.nombre as pagoTipo')
+            ->addSelect('g.nombre as grupo')
+            ->addSelect('p.fechaDesde')
+            ->addSelect('p.fechaHasta')
+            ->addSelect('p.dias')
+            ->addSelect('p.vrNeto')
+            ->leftJoin('p.pagoTipoRel', "pt")
+            ->leftJoin('p.grupoRel', "g")
+            ->where("p.estadoTransferido = false");
+        return $queryBuilder;
+    }
 }

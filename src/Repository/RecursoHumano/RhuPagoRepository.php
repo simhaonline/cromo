@@ -715,4 +715,13 @@ class RhuPagoRepository extends ServiceEntityRepository
         $em->persist($arCuentaPagar);
 
     }
+
+    public function  getPago($codigoProgramacion){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPago::class, 'p')
+            ->select('p.codigoPagoPk')
+            ->select('p.codigoPagoTipoFk')
+            ->where("p.codigoProgramacionFk = {$codigoProgramacion}");
+
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
 }

@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>TIPO</th>
+            <th>GRUPO PAGO</th>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>DIAS</th>
+            <th>NETO</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arProgrmacion in arProgrmaciones %}
+            <tr>
+                <td>{{ arProgrmacion.codigoProgramacionPk }}</td>
+                <td>{{ arProgrmacion.pagoTipo }}</td>
+                <td>{{ arProgrmacion.grupo }}</td>
+                <td>{{ arProgrmacion.fechaDesde | date("Y-m-d") }}</td>
+                <td>{{ arProgrmacion.fechaHasta | date("Y-m-d") }}</td>
+                <td>{{ arProgrmacion.dias }}</td>
+                <td class="numero">{{ arProgrmacion.vrNeto | number_format(0, '.', ',') }}</td>
+                <td class="text-center" > <button name="btnTransferir" class="btn btn-sm btn-default" value="{{ arProgrmacion.codigoProgramacionPk }}">Transferir</button></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ form_end(form) }}
+{% endblock %}

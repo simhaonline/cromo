@@ -107,6 +107,11 @@ class RhuProgramacion
     private $estadoContabilizado = false;
 
     /**
+     * @ORM\Column(name="estado_Transferido", options={"default": false}, type="boolean", nullable=true)
+     */
+    private $estadoTransferido = false;
+
+    /**
      * @ORM\Column(name="mensaje_pago", type="text", nullable=true)
      */
     private $mensajePago;
@@ -504,6 +509,22 @@ class RhuProgramacion
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoTransferido()
+    {
+        return $this->estadoTransferido;
+    }
+
+    /**
+     * @param mixed $estadoTransferido
+     */
+    public function setEstadoTransferido($estadoTransferido): void
+    {
+        $this->estadoTransferido = $estadoTransferido;
     }
 
 

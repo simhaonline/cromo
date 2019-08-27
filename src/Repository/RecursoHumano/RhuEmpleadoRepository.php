@@ -147,4 +147,17 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
 
         return $arTercero;
     }
+
+    public function empleadoIntercambio($codigoEmpleado){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuEmpleado::class, 'e')
+            ->select('e.codigoEmpleadoPk')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.nombre1')
+            ->addSelect('e.nombre2')
+            ->addSelect('e.apellido1')
+            ->addSelect('e.apellido2')
+            ->where("e.codigoEmpleadoPk = {$codigoEmpleado}");
+
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
 }

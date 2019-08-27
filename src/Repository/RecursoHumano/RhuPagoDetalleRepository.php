@@ -489,4 +489,34 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         }
         return $pago;
     }
+
+    public function PagoDetalleIntercambio($codigoPago)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('pd.codigoPagoDetallePk')
+            ->addSelect('pd.codigoPagoFk')
+            ->addSelect('pd.codigoConceptoFk')
+            ->addSelect('pd.codigoCreditoFk')
+            ->addSelect('pd.codigoVacacionFk')
+            ->addSelect('pd.codigoLicenciaFk')
+            ->addSelect('pd.codigoNovedadFk')
+            ->addSelect('pd.codigoIncapacidadFk')
+            ->addSelect('pd.detalle')
+            ->addSelect('pd.porcentaje')
+            ->addSelect('pd.horas')
+            ->addSelect('pd.dias')
+            ->addSelect('pd.operacion')
+            ->addSelect('pd.vrHora')
+            ->addSelect('pd.vrPago')
+            ->addSelect('pd.vrDevengado')
+            ->addSelect('pd.vrDeduccion')
+            ->addSelect('pd.vrPagoOperado')
+            ->addSelect('pd.vrIngresoBasePrestacion')
+            ->addSelect('pd.vrIngresoBaseCotizacion')
+            ->addSelect('pd.vrIngresoBaseCotizacionAdicional')
+            ->where("pd.codigoPagoFk = {$codigoPago}");
+
+       return $queryBuilder->getQuery()->getArrayResult();
+
+    }
 }

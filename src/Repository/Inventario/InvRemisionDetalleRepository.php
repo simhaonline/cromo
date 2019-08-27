@@ -349,6 +349,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->addSelect('rd.vrPrecio')
             ->addSelect('rd.loteFk')
             ->addSelect('rd.codigoBodegaFk')
+            ->addSelect('rd.fechaVencimiento')
             ->addSelect('r.fecha')
             ->addSelect('r.numero AS numeroRemision')
             ->addSelect('rt.nombre AS remisionTipo')
@@ -371,6 +372,12 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroInvCodigoRemisionTipo')) {
             $queryBuilder->andWhere("r.codigoRemisionTipoFk = '{$session->get('filtroInvCodigoRemisionTipo')}'");
+        }
+        if ($session->get('filtroInvKardexFechaDesde') != null) {
+            $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroInvKardexFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroInvKardexFechaHasta') != null) {
+            $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroInvKardexFechaHasta')} 23:59:59'");
         }
         return $queryBuilder;
     }

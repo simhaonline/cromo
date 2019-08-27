@@ -25,13 +25,13 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaDesde) }}
+                </div>
                 <label class="col-sm-1 control-label">Lote:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.txtLote, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label class="col-sm-1 control-label">Bodega:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.txtBodega, { 'attr': {'class': 'form-control'} }) }}
                 </div>
                 <label class="col-sm-1 control-label">Documento:</label>
                 <div class="col-sm-2">
@@ -43,15 +43,13 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Desde:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.fechaDesde) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Hasta:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.fechaHasta) }}
+                </div>
+                <label class="col-sm-1 control-label">Bodega:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.txtBodega, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>

@@ -900,7 +900,6 @@ class CarReciboRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
             ->select('r.codigoReciboPk')
             ->addSelect('r.numero')
-            ->addSelect('rd.numeroFactura')
             ->addSelect('rt.nombre AS tipo')
             ->addSelect('r.fecha')
             ->addSelect('r.fechaPago')
@@ -909,19 +908,16 @@ class CarReciboRepository extends ServiceEntityRepository
             ->addSelect('cta.nombre AS cuenta')
             ->addSelect('r.codigoAsesorFk')
             ->addSelect('r.usuario')
-            ->addSelect('rd.vrPago')
+            ->addSelect('r.vrPago')
             ->addSelect('a.nombre as asesor')
-            ->leftJoin('r.recibosDetallesRecibosRel', 'rd')
             ->leftJoin('r.clienteRel', 'cr')
             ->leftJoin('r.reciboTipoRel', 'rt')
             ->leftJoin('r.cuentaRel', 'cta')
             ->leftJoin('r.asesorRel', 'a')
             ->where('r.codigoReciboPk <> 0')
             ->andWhere('r.estadoAprobado = 1')
-            ->groupBy('r.codigoAsesorFk')
-            ->addGroupBy('r.codigoReciboPk')
-            ->addGroupBy('rd.numeroFactura')
-            ->addGroupBy('rd.vrPago');
+            ->orderBy('r.codigoAsesorFk');
+
         $fecha = new \DateTime('now');
         if ($session->get('filtroGenAsesor')) {
             $queryBuilder->andWhere("r.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");

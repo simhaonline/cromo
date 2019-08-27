@@ -71,6 +71,7 @@
         <tr>
             <th>ID</th>
             <th>NUM</th>
+            <th>NUM FAC</th>
             <th>TIPO</th>
             <th>FECHA</th>
             <th>FECHA PAGO</th>
@@ -88,19 +89,20 @@
             {% if codigoAsesor != arRecibo.codigoAsesorFk %}
                 {% if contador > 0 %}
                     <tr>
-                        <td id="suptipo" colspan="9"></td>
+                        <td id="suptipo" colspan="10"></td>
                         <td class="numero">{{ totalPago | number_format() }}</td>
                     </tr>
                     {% set totalPago = 0 %}
                 {% endif %}
                 <tr>
-                    <td id="suptipo" colspan="10">{{ arRecibo.asesor }}</td>
+                    <td id="suptipo" colspan="11">{{ arRecibo.asesor }}</td>
                 </tr>
                 {% set codigoAsesor = arRecibo.codigoAsesorFk %}
             {% endif %}
             <tr>
-                <td>{{ arRecibo.codigoReciboPk }}</td>
+                <td>{{ arRecibo.codigoReciboFk }}</td>
                 <td>{{ arRecibo.numero }}</td>
+                <td>{{ arRecibo.numeroFactura }}</td>
                 <td>{{ arRecibo.tipo }}</td>
                 <td>{{ arRecibo.fecha | date('Y-m-d') }}</td>
                 <td>{{ arRecibo.fechaPago | date('Y-m-d') }}</td>

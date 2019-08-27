@@ -3,11 +3,12 @@
 namespace App\Formato\Cartera;
 
 use App\Entity\Cartera\CarRecibo;
+use App\Entity\Cartera\CarReciboDetalle;
 use App\Utilidades\BaseDatos;
 use App\Utilidades\Estandares;
 
 
-class Recaudo extends \FPDF {
+class RecaudoDetalleAsesor extends \FPDF {
     public static $em;
 
 
@@ -15,12 +16,12 @@ class Recaudo extends \FPDF {
         ob_clean();
         //$em = $miThis->getDoctrine()->getManager();
         self::$em = $em;
-        $pdf = new Recaudo();
+        $pdf = new RecaudoDetalleAsesor();
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("RecaudoPorAsesor.pdf", 'D');
+        $pdf->Output("RecaudoPorAsesorDetalle.pdf", 'D');
     }
 
     public function Header() {
@@ -33,7 +34,7 @@ class Recaudo extends \FPDF {
 
     public function EncabezadoDetalles() {
         $this->Ln(12);
-        $header = array('ID', 'RC', 'TIPO', 'FECHA', 'FECHA PAGO', 'NIT', 'NOMBRE', 'PAGO');
+        $header = array('ID', 'RC', 'FAC', 'TIPO', 'FECHA', 'FECHA PAGO', 'NIT', 'NOMBRE', 'PAGO');
         $this->SetFillColor(170, 170, 170);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -41,7 +42,7 @@ class Recaudo extends \FPDF {
         $this->SetFont('arial', 'B', 7);
         $this->SetX(10);
         //creamos la cabecera de la tabla.
-        $w = array(10, 10, 23, 18, 18, 18, 50, 15);
+        $w = array(10, 10, 10, 23, 18, 18, 18, 50, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -56,7 +57,7 @@ class Recaudo extends \FPDF {
 
     public function Body($pdf) {
         $em = BaseDatos::getEm();
-        $arRecaudos = $em->getRepository(CarRecibo::class)->recaudo()->getQuery()->getResult();
+        $arRecaudos = $em->getRepository(CarReciboDetalle::class)->recaudo()->getQuery()->getResult();
         $vrTotalPago = 0;
         $primerAsesor = true;
         $pdf->SetX(10);
@@ -66,14 +67,14 @@ class Recaudo extends \FPDF {
                 if($primerAsesor){
                     $pdf->SetX(10);
                     $pdf->SetFont('Arial', 'b', 7);
-                    $pdf->Cell(162,4,utf8_decode($arRecaudo['asesor']),1,0,'L');
+                    $pdf->Cell(172,4,utf8_decode($arRecaudo['asesor']),1,0,'L');
                     $pdf->SetFont('Arial', '', 7);
                     $primerAsesor = false;
                     $asesor = $arRecaudo['codigoAsesorFk'];
                     $pdf->Ln(4);
                 }
                 if($arRecaudo['codigoAsesorFk'] != $asesor){
-                    $pdf->SetX(157);
+                    $pdf->SetX(167);
                     $pdf->SetFont('Arial', 'b', 7);
                     $pdf->Cell(15,4,number_format($vrTotalPago) ,1,0,'R');
                     $vrTotalPago = 0;
@@ -81,14 +82,15 @@ class Recaudo extends \FPDF {
                     $pdf->Ln(4);
                     $pdf->SetX(10);
                     $pdf->SetFont('Arial', 'b', 7);
-                    $pdf->Cell(162,4,utf8_decode($arRecaudo['asesor']),1,0,'L');
+                    $pdf->Cell(172,4,utf8_decode($arRecaudo['asesor']),1,0,'L');
                     $pdf->SetFont('Arial', '', 7);
                     $asesor = $arRecaudo['codigoAsesorFk'];
                     $pdf->Ln(4);
                 }
                 $pdf->SetX(10);
-                $pdf->Cell(10, 4, $arRecaudo['codigoReciboPk'], 1, 0, 'L');
+                $pdf->Cell(10, 4, $arRecaudo['codigoReciboFk'], 1, 0, 'L');
                 $pdf->Cell(10, 4, $arRecaudo['numero'], 1, 0, 'L');
+                $pdf->Cell(10, 4, $arRecaudo['numeroFactura'], 1, 0, 'L');
                 $pdf->Cell(23, 4, $arRecaudo['tipo'], 1, 0, 'L');
                 $pdf->Cell(18, 4, $arRecaudo['fecha']->format('Y-m-d'), 1, 0, 'L');
                 $pdf->Cell(18, 4, $arRecaudo['fechaPago']->format('Y-m-d'), 1, 0, 'L');

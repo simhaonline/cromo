@@ -3,9 +3,11 @@
 namespace App\Controller\Cartera\Informe\Recibo;
 
 use App\Entity\Cartera\CarRecibo;
+use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\General\GenAsesor;
 use App\Formato\Cartera\Recaudo;
+use App\Formato\Cartera\RecaudoDetalleAsesor;
 use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +21,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class RecaudoController extends Controller
+class RecaudoDetalleAsesorController extends Controller
 {
 
     /**
@@ -28,7 +30,7 @@ class RecaudoController extends Controller
      * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/cartera/informe/recibo/recaudo", name="cartera_informe_recibo_recaudo")
+     * @Route("/cartera/informe/recibo/recaudo/detalle", name="cartera_informe_recibo_recaudo_detalle")
      */
     public function lista(Request $request)
     {
@@ -77,14 +79,14 @@ class RecaudoController extends Controller
             }
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(CarRecibo::class)->recaudo())->execute(), "Recaudo");
+            General::get()->setExportar($em->createQuery($em->getRepository(CarReciboDetalle::class)->recaudo())->execute(), "Recaudo");
         }
         if ($form->get('btnPdf')->isClicked()) {
-            $formato = new Recaudo();
+            $formato = new RecaudoDetalleAsesor();
             $formato->Generar($em);
         }
-        $arRecibos = $paginator->paginate($em->getRepository(CarRecibo::class)->recaudo(), $request->query->getInt('page', 1), 500);
-        return $this->render('cartera/informe/recibo/recaudo.html.twig', [
+        $arRecibos = $paginator->paginate($em->getRepository(CarReciboDetalle::class)->recaudo(), $request->query->getInt('page', 1), 500);
+        return $this->render('cartera/informe/recibo/recaudoDetalle.html.twig', [
             'arRecibos' => $arRecibos,
             'form' => $form->createView()
         ]);

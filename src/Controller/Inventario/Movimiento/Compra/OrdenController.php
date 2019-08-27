@@ -212,6 +212,7 @@ class OrdenController extends ControllerListenerGeneral
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
+            ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemReferencia')])
             ->add('cboMarcaItem', EntityType::class, $em->getRepository(InvMarca::class)->llenarCombo())
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
@@ -226,6 +227,7 @@ class OrdenController extends ControllerListenerGeneral
                 } else {
                     $session->set('filtroInvMarcaItem', null);
                 }
+                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');

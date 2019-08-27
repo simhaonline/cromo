@@ -162,7 +162,7 @@ class FormatoMovimientoTraslado extends \FPDF
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $pdf->SetX(10);
             $pdf->Cell(10, 6, $arMovimientoDetalle['codigoItemFk'], 1, 0, 'L');
-            $pdf->Cell(50, 6, utf8_decode($arMovimientoDetalle['itemNombre']), 1, 0, 'L');
+            $pdf->Cell(50, 6, substr(utf8_decode($arMovimientoDetalle['itemNombre']),1, 38 ), 1, 0, 'L');
             $pdf->Cell(15, 6, substr($arMovimientoDetalle['itemReferencia'], 0, 10), 1, 0, 'R');
             $pdf->Cell(15, 6, substr($arMovimientoDetalle['loteFk'], 0, 10), 1, 0, 'R');
             $pdf->Cell(15, 6, $arMovimientoDetalle['fechaVencimiento']->format('Y-m-d'), 1, 0, 'R');

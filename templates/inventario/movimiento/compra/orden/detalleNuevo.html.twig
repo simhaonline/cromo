@@ -20,6 +20,10 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.cboMarcaItem, { 'attr': {'class': 'form-control to-select-2'} }) }}
                 </div>
+                <label class="col-sm-2 control-label">Referencia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtReferenciaItem) }}
+                </div>
             </div>
             <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-10">
@@ -35,6 +39,7 @@
                 <th>ITEM</th>
                 <th>NOMBRE</th>
                 <th>MARCA</th>
+                <th>REFERENCIA</th>
                 <th>EXI</th>
                 <th>REM</th>
                 <th>DIS</th>
@@ -49,6 +54,7 @@
                     <td style="text-align: right;">{{ arItem.codigoItemPk }}</td>
                     <td style="text-align: left;">{{ arItem.nombre }}</td>
                     <td style="text-align: left;">{{ arItem.marcaNombre }}</td>
+                    <td style="text-align: left;">{{ arItem.referencia }}</td>
                     <td style="text-align: right;">{{ arItem.cantidadExistencia }}</td>
                     <td style="text-align: right;">{{ arItem.cantidadRemisionada }}</td>
                     <td style="text-align: right;">{{ arItem.cantidadDisponible }}</td>

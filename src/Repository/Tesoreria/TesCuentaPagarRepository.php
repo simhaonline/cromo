@@ -72,12 +72,13 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function cuentasPagar($codigoTercero = NULL)
+    public function cuentasPagar()
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesCuentaPagar::class, 'cp')
             ->select('cp.codigoCuentaPagarPk')
             ->addSelect('cp.numeroDocumento')
+            ->addSelect('cp.numeroReferencia')
             ->addSelect('cp.vrTotal')
             ->addSelect('cp.vrSaldo')
             ->addSelect('cp.vrAbono')
@@ -93,17 +94,18 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
             ->andWhere('cp.operacion = 1')
             ->orderBy('cp.codigoCuentaPagarPk', 'ASC');
 
-        if($codigoTercero) {
-            $queryBuilder->andWhere('cp.codigoClienteFk = ' . $codigoTercero);
+        if ($session->get('filtroTesCodigoTercero') != "") {
+            $queryBuilder->andWhere("cp.codigoTerceroFk = {$session->get('filtroTesCodigoTercero')}");
         }
-
-        if ($session->get('filtroTesCuentaPagaNumeroReferencia') != "") {
-            $queryBuilder->andWhere("cp.numeroReferencia = {$session->get('filtroTesCuentaPagaNumeroReferencia')}");
+        if ($session->get('filtroTesCuentaPagarNumero') != "") {
+            $queryBuilder->andWhere("cp.numeroDocumento = {$session->get('filtroTesCuentaPagarNumero')}");
         }
-        if ($session->get('filtroTesCuentaPagarCodigoPendiente') != "") {
-            $queryBuilder->andWhere("cp.codigoCuentaPagarPk = {$session->get('filtroTesCuentaPagarCodigoPendiente')}");
+        if ($session->get('filtroTesCuentaPagarNumeroReferencia') != "") {
+            $queryBuilder->andWhere("cp.numeroReferencia = {$session->get('filtroTesCuentaPagarNumeroReferencia')}");
         }
-
+        if ($session->get('filtroTesCuentaPagarCodigo') != "") {
+            $queryBuilder->andWhere("cp.codigoCuentaPagarPk = {$session->get('filtroTesCuentaPagarCodigo')}");
+        }
         if ($session->get('filtroTesCuentaPagarTipo') != "") {
             $queryBuilder->andWhere("cp.codigoCuentaPagarTipoFk = '{$session->get('filtroTesCuentaPagarTipo')}'");
         }

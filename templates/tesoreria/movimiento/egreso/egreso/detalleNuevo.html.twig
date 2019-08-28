@@ -8,34 +8,60 @@
         </div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Codigo:</label>
-                <div class="col-sm-4">
+                <label for="txtCodigoTercero" class="col-sm-1 control-label">Tercero:</label>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.txtCodigoTercero) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="form_txtNombreCorto" class="form-control" readonly>
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('tesoreria_buscar_tercero', { 'campoCodigo': 'form_txtCodigoTercero', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label">Codigo:</label>
+                <div class="col-sm-2">
                     {{ form_widget(form.txtCodigoCuentaPagar) }}
                 </div>
-                <label class="col-sm-2 control-label">Tipo:</label>
-                <div class="col-sm-4">
+                <label class="col-sm-1 control-label">Numero:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.txtNumero) }}
+                </div>
+                <label class="col-sm-1 control-label">Tipo:</label>
+                <div class="col-sm-5">
                     {{ form_widget(form.cboCuentaPagarTipo) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Fecha desde:</label>
-                <div class="col-sm-4">
+                <label class="col-sm-1 control-label">Desde:</label>
+                <div class="col-sm-2">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
-                <label class="col-sm-2 control-label">Banco:</label>
-                <div class="col-sm-4">
+                <label class="col-sm-1 control-label">Referencia:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.txtNumeroReferencia) }}
+                </div>
+                <label class="col-sm-1 control-label">Banco:</label>
+                <div class="col-sm-5">
                     {{ form_widget(form.cboBanco) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Fecha hasta:</label>
-                <div class="col-sm-4">
+                <label class="col-sm-1 control-label">Hasta:</label>
+                <div class="col-sm-2">
                     {{ form_widget(form.fechaHasta) }}
                 </div>
-                <label class="col-sm-2 control-label">Número referencia:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtNumeroReferencia) }}
-                </div>
+
             </div>
         </div>
         <div class="panel-footer">
@@ -49,12 +75,12 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>NUM DOC</th>
+                <th>NUM</th>
                 <th>TIPO</th>
                 <th>IDENTIFICACIÓN</th>
                 <th>TERCERO</th>
                 <th>FECHA</th>
-                <th>VENCIMIENTO</th>
+                <th>VENCE</th>
                 <th>ABONO</th>
                 <th>SALDO</th>
                 <th class="text-center"><input type="checkbox" name="ChkSeleccionarTodos"

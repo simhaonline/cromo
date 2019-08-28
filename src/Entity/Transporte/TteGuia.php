@@ -351,7 +351,7 @@ class TteGuia
     /**
      * @ORM\Column(name="codigo_empaque_fk", type="string", length=20, nullable=true)
      */
-    private $codigoEmpaqueFk;
+    private $codigoEmpaqueFk = null;
 
     /**
      * @ORM\Column(name="codigo_condicion_fk", type="integer", nullable=true)

@@ -84,8 +84,9 @@ class CorreccionGuiaValoresController extends ControllerListenerGeneral
                     $em->persist($arGuia);
                     $em->flush();
                 }
+                return $this->redirect($this->generateUrl('transporte_utilidad_transporte_correccion_guia_valores_lista'));
             }
-            return $this->redirect($this->generateUrl('transporte_utilidad_transporte_correccion_guia_valores_lista'));
+
         }
         return $this->render('transporte/utilidad/transporte/correccionGuiaValores/nuevo.html.twig', array(
             'arGuia' => $arGuia,

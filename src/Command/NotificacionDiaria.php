@@ -2,6 +2,7 @@
 namespace App\Command;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Cartera\CarCompromiso;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvPedido;
@@ -75,6 +76,12 @@ class NotificacionDiaria extends Command{
         $cantidad = $em->getRepository(TteDespacho::class)->sinAprobar();
         if($cantidad > 0) {
             FuncionesController::crearNotificacion(9, $cantidad . " registros");
+        }
+
+        //---------Cartera---------------------------------------------
+        $arrCompromisos = $em->getRepository(CarCompromiso::class)->compromisosDia();
+        foreach ($arrCompromisos as $arrCompromiso) {
+            FuncionesController::crearNotificacion(11, "Cliente " . $arrCompromiso['clienteNombre']);
         }
 
         echo "Se generaron las notificaciones";

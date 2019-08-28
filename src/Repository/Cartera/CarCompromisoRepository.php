@@ -89,79 +89,6 @@ class CarCompromisoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-//    public function autorizar($arRecibo)
-//    {
-//        $em = $this->getEntityManager();
-//        if ($arRecibo->getEstadoAutorizado() == 0) {
-//            $error = false;
-//            $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $arRecibo->getCodigoReciboPk()));
-//            if (count($em->getRepository(CarReciboDetalle::class)->findBy(['codigoReciboFk' => $arRecibo->getCodigoReciboPk()])) > 0) {
-//                foreach ($arReciboDetalles AS $arReciboDetalle) {
-//                    if ($arReciboDetalle->getVrOtroDescuento() > 0 && $arReciboDetalle->getCodigoDescuentoConceptoFk() == null) {
-//                        Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . " ingreso un valor para otros descuento pero no selecciono un concepto");
-//                        $error = true;
-//                        break;
-//                    }
-//                    if ($arReciboDetalle->getVrOtroIngreso() > 0 && $arReciboDetalle->getCodigoIngresoConceptoFk() == null) {
-//                        Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . " ingreso un valor para otros ingresos pero no selecciono un concepto");
-//                        $error = true;
-//                        break;
-//                    }
-//                    if ($arReciboDetalle->getVrPagoAfectar() < 0) {
-//                        Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . " el pago a afectar es menor que cero");
-//                        $error = true;
-//                        break;
-//                    }
-//                    if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
-//                        $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
-//                        if ($arCuentaCobrarAplicacion->getVrSaldo() >= $arReciboDetalle->getVrPago()) {
-//                            $saldo = $arCuentaCobrarAplicacion->getVrSaldo() - $arReciboDetalle->getVrPago();
-//                            $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
-//                            $arCuentaCobrarAplicacion->setVrSaldo($saldo);
-//                            $arCuentaCobrarAplicacion->setVrSaldoOperado($saldoOperado);
-//                            $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() + $arReciboDetalle->getVrPago());
-//                            $em->persist($arCuentaCobrarAplicacion);
-//
-//                            //Cuenta por cobrar
-//                            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
-//                            $saldo = $arCuentaCobrar->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
-//                            $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
-//                            $arCuentaCobrar->setVrSaldo($saldo);
-//                            $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
-//                            $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
-//                            $em->persist($arCuentaCobrar);
-//                        } else {
-//                            Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . ' el valor a afectar del documento aplicacion ' . $arCuentaCobrarAplicacion->getNumeroDocumento() . " supera el saldo desponible: " . $arCuentaCobrarAplicacion->getVrSaldo());
-//                            $error = true;
-//                            break;
-//                        }
-//                    } else {
-//                        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
-//                        if ($arCuentaCobrar->getVrSaldo() >= $arReciboDetalle->getVrPagoAfectar()) {
-//                            $saldo = $arCuentaCobrar->getVrSaldo() - $arReciboDetalle->getVrPagoAfectar();
-//                            $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
-//                            $arCuentaCobrar->setVrSaldo($saldo);
-//                            $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
-//                            $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() + $arReciboDetalle->getVrPagoAfectar());
-//                            $em->persist($arCuentaCobrar);
-//                        } else {
-//                            Mensajes::error("Error detalle ID: " . $arReciboDetalle->getCodigoReciboDetallePk() . "el saldo " . $arCuentaCobrar->getVrSaldo() . " de la cuenta por cobrar numero: " . $arCuentaCobrar->getNumeroDocumento() . " es menor al ingresado " . $arReciboDetalle->getVrPagoAfectar());
-//                            $error = true;
-//                            break;
-//                        }
-//                    }
-//                }
-//                if ($error == false) {
-//                    $arRecibo->setEstadoAutorizado(1);
-//                    $em->persist($arRecibo);
-//                    $em->flush();
-//                }
-//            } else {
-//                Mensajes::error("No se puede autorizar un recibo sin detalles");
-//            }
-//        }
-//    }
-
     /**
      * @param $arCompromiso CarCompromiso
      */
@@ -943,6 +870,19 @@ class CarCompromisoRepository extends ServiceEntityRepository
             }
         }
         return $queryBuilder;
+    }
+
+    public function compromisosDia()
+    {
+        $fecha = new \DateTime('now');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCompromiso::class, 'c')
+            ->select('c.codigoCompromisoPk')
+            ->addSelect('cli.nombreCorto as clienteNombre')
+            ->leftJoin('c.clienteRel', 'cli')
+            ->where("c.fecha >= '" . $fecha->format('Y-m-d') . " 00:00:00'")
+            ->andWhere("c.fecha <= '" . $fecha->format('Y-m-d') . " 23:00:00'");
+        $arCompromisos = $queryBuilder->getQuery()->getResult();
+        return $arCompromisos;
     }
 
 }

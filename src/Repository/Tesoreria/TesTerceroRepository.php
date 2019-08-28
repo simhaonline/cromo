@@ -3,6 +3,7 @@
 namespace App\Repository\Tesoreria;
 
 use App\Entity\Compra\ComProveedor;
+use App\Entity\Financiero\FinTercero;
 use App\Entity\Tesoreria\TesTercero;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -78,5 +79,26 @@ class TesTerceroRepository extends ServiceEntityRepository
 
     }
 
+    public function terceroFinanciero($codigo)
+    {
+        $em = $this->getEntityManager();
+        $arTercero = null;
+        $arCliente = $em->getRepository(TesTercero::class)->find($codigo);
+        if($arCliente) {
+            $arTercero = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arCliente->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arCliente->getNumeroIdentificacion()));
+            if(!$arTercero) {
+                $arTercero = new FinTercero();
+                $arTercero->setIdentificacionRel($arCliente->getIdentificacionRel());
+                $arTercero->setNumeroIdentificacion($arCliente->getNumeroIdentificacion());
+                $arTercero->setNombreCorto($arCliente->getNombreCorto());
+                $arTercero->setDireccion($arCliente->getDireccion());
+                $arTercero->setTelefono($arTercero->getTelefono());
+                //$arTercero->setEmail($arCliente->getCorreo());
+                $em->persist($arTercero);
+            }
+        }
+
+        return $arTercero;
+    }
 
 }

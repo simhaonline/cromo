@@ -23,6 +23,7 @@ class CuentaPagarTipoType extends AbstractType {
             ->add('codigoCuentaPagarTipoPk', TextType::class, ['label'=> 'Codigo cuenta pagar tipo pk:', 'required' => true])
             ->add('nombre', TextType::class, ['label' => 'Nombre:', 'required' => true])
             ->add('operacion', IntegerType::class, ['label' => 'Operacion:', 'required' => false])
+            ->add('codigoCuentaProveedorFk', TextType::class, ['label' => 'Cuenta proveedor:', 'required' => false])
             ->add('saldoInicial', CheckboxType::class, ['required' => false])
             ->add('prefijo', TextType::class, ['label' => 'Prefijo:', 'required' => false])
             ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
@@ -50,6 +51,7 @@ class CuentaPagarTipoType extends AbstractType {
             {"campo":"codigoCuentaPagarTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
             {"campo":"prefijo",            "tipo":"texto"  ,"ayuda":"prefijo",     "titulo":"PREFIJO"},
             {"campo":"nombre",                           "tipo":"texto"  ,"ayuda":"Nombre del tipo de anticipo",   "titulo":"NOMBRE"},
+            {"campo":"codigoCuentaProveedorFk",                           "tipo":"texto"  ,"ayuda":"Cuenta proveedor",   "titulo":"CTA PRO"},
             {"campo":"saldoInicial",            "tipo":"bool"  ,"ayuda":"Saldo inicial",     "titulo":"SI"}      
                                                                           
         ]';

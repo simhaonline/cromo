@@ -196,6 +196,7 @@ class EgresoController extends BaseController
         return $this->render('tesoreria/movimiento/egreso/egreso/detalle.html.twig', [
             'arEgresoDetalles' => $arEgresoDetalles,
             'arEgreso' => $arEgreso,
+            'clase' => array('clase' => 'TesEgreso', 'codigo' => $id),
             'form' => $form->createView()
         ]);
     }

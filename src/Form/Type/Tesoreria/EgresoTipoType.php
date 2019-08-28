@@ -21,6 +21,7 @@ class EgresoTipoType extends AbstractType
 
             ->add('codigoEgresoTipoPk',TextType::class,['required' => true,'label' => 'Codigo egreso tipo:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
+            ->add('codigoComprobanteFk',TextType::class,['required' => true,'label' => 'Comprobante:'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
@@ -35,7 +36,8 @@ class EgresoTipoType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoEgresoTipoPk",            "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                          "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}                             
+            {"campo":"nombre",                          "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
+            {"campo":"codigoComprobanteFk",                          "tipo":"texto",     "ayuda":"Comprobante contable",     "titulo":"COMP"}                             
         ]';
         return $campos;
     }

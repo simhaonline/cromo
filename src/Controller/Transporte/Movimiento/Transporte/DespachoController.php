@@ -90,7 +90,7 @@ class DespachoController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-                set_time_limit(0);
+                /*set_time_limit(0);
                 ini_set("memory_limit", -1);
                 $arDespachos = $em->getRepository(TteDespacho::class)->findBy(['estadoAprobado' => 1]);
                 foreach ($arDespachos as $arDespacho) {
@@ -105,7 +105,7 @@ class DespachoController extends ControllerListenerGeneral
                         $em->getRepository(TteDespacho::class)->generarCuentaPagar($arDespacho);
                     }
                 }
-                $em->flush();
+                $em->flush();*/
 
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteDespacho::class)->eliminar($arrSeleccionados);

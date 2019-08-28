@@ -155,6 +155,7 @@ class LiquidacionController extends ControllerListenerGeneral
         return $this->render('recursohumano/movimiento/nomina/liquidacion/detalle.html.twig', [
             'arLiquidacion' => $arLiquidacion,
             'arLiquidacionAdicionales' => $arLiquidacionAdicionales,
+            'clase' => array('clase' => 'RhuLiquidacion', 'codigo' => $id),
             'form' => $form->createView()
         ]);
     }

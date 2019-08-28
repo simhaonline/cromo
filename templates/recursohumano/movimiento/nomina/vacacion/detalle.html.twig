@@ -10,6 +10,12 @@
             {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
+    <div style="float:right">
+        {% if arVacacion.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arVacacion.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arVacacion.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arVacacion.estadoContabilizado == true %}<span class="label label-success">Contabilizado</span>{% endif %}
+    </div>
     <br/><br/>
 
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
@@ -152,7 +158,7 @@
     </table>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles </a></li>
-        <li ><a href="#vacacionesFechas" data-toggle="tab">Cambios fechas </a></li>
+        <li><a href="#vacacionesFechas" data-toggle="tab">Cambios fechas </a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="detalles">
@@ -190,20 +196,21 @@
                     </table>
                 </div>
             </div>
-            <div class="btn-group" style="margin-left: 5px; float: right; {% if  arVacacion.estadoAutorizado != 0 %}  display: none {% endif %}">
+            <div class="btn-group"
+                 style="margin-left: 5px; float: right; {% if  arVacacion.estadoAutorizado != 0 %}  display: none {% endif %}">
                 {{ form_widget(form.btnEliminar,  { 'attr': {'class': 'btn btn-danger', 'style':'inherit'}}) }}
             </div>
             {% if arVacacion.estadoAutorizado == 0 %}
                 <div class="btn-toolbar" style="float: right">
-                        <a class="btn btn-default btn-sm"
-                           href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_vacacion_detalle_credito', {'codigoVacacion': arVacacion.codigoVacacionPk}) }}', 'AgregarNuevo', 600, 900)">Nuevo
-                            credito</a>
-                        <a class="btn btn-default btn-sm"
-                           href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_vacacion_detalle_descuento', {'codigoVacacion': arVacacion.codigoVacacionPk}) }}', 'AgregarNuevo', 600, 900)">Nuevo
-                            Descuento</a>
-                        <a class="btn btn-default btn-sm"
-                           href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_vacacion_detalle_bonificacion', {'codigoVacacion': arVacacion.codigoVacacionPk}) }}', 'AgregarNuevo', 600, 900)">Nuevo
-                            Bonificacion</a>
+                    <a class="btn btn-default btn-sm"
+                       href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_vacacion_detalle_credito', {'codigoVacacion': arVacacion.codigoVacacionPk}) }}', 'AgregarNuevo', 600, 900)">Nuevo
+                        credito</a>
+                    <a class="btn btn-default btn-sm"
+                       href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_vacacion_detalle_descuento', {'codigoVacacion': arVacacion.codigoVacacionPk}) }}', 'AgregarNuevo', 600, 900)">Nuevo
+                        Descuento</a>
+                    <a class="btn btn-default btn-sm"
+                       href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_vacacion_detalle_bonificacion', {'codigoVacacion': arVacacion.codigoVacacionPk}) }}', 'AgregarNuevo', 600, 900)">Nuevo
+                        Bonificacion</a>
                 </div>
             {% endif %}
 
@@ -213,26 +220,26 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-condensed tabla-datos">
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>FECHA DESDE DISFRUTE</th>
-                                <th>FECHA HASTA DISFRUTE</th>
-                                <th>FECHA INICIO LABOR </th>
-                                <th>DIAS</th>
-                                <th>COMENTARIOS</th>
-                                <th>USUARIO</th>
-                            </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>FECHA DESDE DISFRUTE</th>
+                            <th>FECHA HASTA DISFRUTE</th>
+                            <th>FECHA INICIO LABOR</th>
+                            <th>DIAS</th>
+                            <th>COMENTARIOS</th>
+                            <th>USUARIO</th>
+                        </tr>
                         </thead>
                         <tbody>
                         {% for arVacacionCambio in  arVacacionCambios %}
-                           <tr>
+                            <tr>
                                 <td>{{ arVacacionCambio.codigoVacacionCambioPk }}</td>
                                 <td>{{ arVacacionCambio.fechaDesdeDisfrute | date('Y-m-d') }}</td>
-                               <td>{{ arVacacionCambio.fechaHastaDisfrute | date('Y-m-d') }}</td>
-                               <td>{{ arVacacionCambio.fechaInicioLabor | date('Y-m-d') }}</td>
-                               <td>{{ arVacacionCambio.dias }}</td>
-                               <td>{{ arVacacionCambio.comentarios }}</td>
-                               <td>{{ arVacacionCambio.codigoUsuario }}</td>
+                                <td>{{ arVacacionCambio.fechaHastaDisfrute | date('Y-m-d') }}</td>
+                                <td>{{ arVacacionCambio.fechaInicioLabor | date('Y-m-d') }}</td>
+                                <td>{{ arVacacionCambio.dias }}</td>
+                                <td>{{ arVacacionCambio.comentarios }}</td>
+                                <td>{{ arVacacionCambio.codigoUsuario }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

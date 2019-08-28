@@ -3,9 +3,16 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
+use App\Entity\Financiero\FinTercero;
+use App\Entity\RecursoHumano\RhuConceptoCuenta;
 use App\Entity\RecursoHumano\RhuConfiguracion;
+use App\Entity\RecursoHumano\RhuConfiguracionCuenta;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmbargo;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
 use App\Entity\RecursoHumano\RhuNovedad;
@@ -559,8 +566,8 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                                 $douInteresesCesantias = $salarioPromedioCesantias * $floPorcentajeIntereses;
                             }
                             $douInteresesCesantias = round($douInteresesCesantias);
-                            if($arLiquidacion->getVrInteresesPropuesto()){
-                                if($arLiquidacion->getVrInteresesPropuesto() > 0){
+                            if ($arLiquidacion->getVrInteresesPropuesto()) {
+                                if ($arLiquidacion->getVrInteresesPropuesto() > 0) {
                                     $douInteresesCesantias = $arLiquidacion->getVrInteresesPropuesto();
                                 }
                             }
@@ -996,14 +1003,15 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function aprobar($arLiquiracion){
+    public function aprobar($arLiquiracion)
+    {
         $em = $this->getEntityManager();
-        if($arLiquiracion->getEstadoAutorizado() == 1 ) {
-            if($arLiquiracion->getEstadoAprobado() == 0){
+        if ($arLiquiracion->getEstadoAutorizado() == 1) {
+            if ($arLiquiracion->getEstadoAprobado() == 0) {
                 $arLiquiracion->setEstadoAprobado(1);
                 $em->persist($arLiquiracion);
                 $em->flush();
-            }else{
+            } else {
                 Mensajes::error('La visita ya esta aprobada');
             }
 
@@ -1062,8 +1070,8 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
             }
             //Aqui se registra la deduccion del embargo en la liquidacion adicionales
             if ($vrDeduccionEmbargo > 0) {
-                $arLiquidacionAdicionales = new \Brasa\RecursoHumanoBundle\Entity\RhuLiquidacionAdicionales();
-                $arLiquidacionAdicionales->setPagoConceptoRel($arEmbargo->getEmbargoTipoRel()->getPagoConceptoRel());
+                $arLiquidacionAdicionales = new RhuLiquidacionAdicional();
+                $arLiquidacionAdicionales->setConceptoRel($arEmbargo->getEmbargoTipoRel()->getConceptoRel());
                 $arLiquidacionAdicionales->setEmbargoRel($arEmbargo);
                 $arLiquidacionAdicionales->setLiquidacionRel($arLiquidacion);
                 $arLiquidacionAdicionales->setVrDeduccion($vrDeduccionEmbargo);
@@ -1071,5 +1079,361 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
             }
         }
     }
+
+    /**
+     * @param $arr
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function contabilizar($arr): bool
+    {
+        /**
+         * @var $arLiquidacion RhuLiquidacion
+         */
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            $arCentroCosto = null;
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(1);
+            $codigoCuentaCesantias = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(2);
+            $codigoCuentaInteresesCesantias = $arCuenta->getCodigoCuentaFk();
+            //Cesantias año anterior
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(17);
+            $codigoCuentaCesantiasAnterior = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(18);
+            $codigoCuentaInteresesCesantiasAnterior = $arCuenta->getCodigoCuentaFk();
+
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(3);
+            $codigoCuentaPrimas = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(4);
+            $codigoCuentaVacaciones = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(6);
+            $codigoCuentaIndemnizacion = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(5);
+            $codigoCuentaLiquidacion = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(19);
+            $codigoCuentaDeduccionPrima = $arCuenta->getCodigoCuentaFk();
+            $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+            $arComprobanteContable = $em->getRepository(FinComprobante::class)->find($arConfiguracion->getCodigoComprobanteLiquidacion());
+            foreach ($arr AS $codigo) {
+                $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigo);
+                if ($arLiquidacion) {
+                    if ($arLiquidacion->getEstadoAprobado() == 1 && $arLiquidacion->getEstadoContabilizado() == 0) {
+                        $arTercero = $em->getRepository(RhuEmpleado::class)->terceroFinanciero($arLiquidacion->getCodigoEmpleadoFk());
+
+                        //Cesantias
+                        if ($arLiquidacion->getVrCesantias() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaCesantias);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arLiquidacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setFecha($arLiquidacion->getFecha());
+                                $arRegistro->setVrDebito($arLiquidacion->getVrCesantias());
+                                $arRegistro->setNaturaleza("D");
+                                $arRegistro->setDescripcion('CESANTIAS');
+                                $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+                                $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //Intereses cesantias
+                        if ($arLiquidacion->getVrInteresesCesantias() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaInteresesCesantias);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arLiquidacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setFecha($arLiquidacion->getFecha());
+                                $arRegistro->setVrDebito($arLiquidacion->getVrInteresesCesantias());
+                                $arRegistro->setNaturaleza("D");
+                                $arRegistro->setDescripcion('INTERESES CESANTIAS');
+                                $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+                                $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //Cesantias anteriores
+                        if ($arLiquidacion->getVrCesantiasAnterior() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaCesantiasAnterior);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arLiquidacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setFecha($arLiquidacion->getFecha());
+                                $arRegistro->setVrDebito($arLiquidacion->getVrCesantiasAnterior());
+                                $arRegistro->setNaturaleza("D");
+                                $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+                                $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setDescripcion('CESANTIAS AÑO ANTERIOR');
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //Intereses cesantias anteriores
+                        if ($arLiquidacion->getVrInteresesCesantiasAnterior() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaInteresesCesantiasAnterior);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arLiquidacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setFecha($arLiquidacion->getFecha());
+                                $arRegistro->setVrDebito($arLiquidacion->getVrInteresesCesantiasAnterior());
+                                $arRegistro->setNaturaleza("D");
+                                $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+                                $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setDescripcion('INTERESES CESANTIAS AÑO ANTERIOR');
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //Primas
+                        if ($arLiquidacion->getVrPrima() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaPrimas);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arLiquidacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setFecha($arLiquidacion->getFecha());
+                                $arRegistro->setVrDebito($arLiquidacion->getVrPrima());
+                                $arRegistro->setNaturaleza("D");
+                                $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+                                $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setDescripcion('PRIMAS');
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //Vacaciones
+                        if ($arLiquidacion->getVrVacacion() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaVacaciones);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arLiquidacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setFecha($arLiquidacion->getFecha());
+                                $arRegistro->setVrDebito($arLiquidacion->getVrVacacion());
+                                $arRegistro->setNaturaleza("D");
+                                $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+                                $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setDescripcion('VACACIONES');
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //Indemnizacion
+                        if ($arLiquidacion->getVrIndemnizacion() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaIndemnizacion);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arLiquidacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setFecha($arLiquidacion->getFecha());
+                                $arRegistro->setVrDebito($arLiquidacion->getVrIndemnizacion());
+                                $arRegistro->setNaturaleza("D");
+                                $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+                                $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setDescripcion('INDEMNIZACION');
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //Deduccion prima
+                        if ($arLiquidacion->getVrDeduccionPrima() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaDeduccionPrima);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                //$arRegistro->setCentroCostoRel($arCentroCosto);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arLiquidacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setFecha($arLiquidacion->getFecha());
+                                $arRegistro->setVrCredito($arLiquidacion->getVrDeduccionPrima());
+                                $arRegistro->setNaturaleza("C");
+                                $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+                                $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setDescripcion('DEDUDUCCION PRIMA');
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+//                        //Adicionales Se deja comentado inicialmente para refactorizacion
+//                        $arLiquidacionAdicionales = $em->getRepository(RhuLiquidacionAdicional::class)->findBy(array('codigoLiquidacionFk' => $codigo));
+//                        foreach ($arLiquidacionAdicionales as $arLiquidacionAdicional) {
+//                            $arConceptoCuenta = $em->getRepository(RhuConceptoCuenta::class)->findOneBy(array('codigoConceptoFk' => $arLiquidacionAdicional->getCodigoConceptoFk(), 'codigoEmpleadoTipoFk' => $arLiquidacion->getEmpleadoRel()->getCodigoEmpleadoTipoFk()));
+//                            if ($arConceptoCuenta) {
+//                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arConceptoCuenta->getCodigoCuentaFk());
+//                                if ($arCuenta) {
+//                                    $arRegistro = new FinRegistro();
+//                                    $arRegistro->setTerceroRel($arTercero);
+//                                    // Cuando el detalle es de salud y pension se lleva al nit de la entidad
+//                                    if ($arCuenta->getExigeNit() == 1) {
+//                                        if ($arLiquidacionAdicional->getConceptoRel()->getConceptoSalud() || $arLiquidacionAdicional->getConceptoRel()->getConceptoIncapacidadEntidad()) {
+//                                            $arTerceroSalud = $em->getRepository(FinCuenta::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacion->getContratoRel()->getEntidadSaludRel()->getNit()));
+//                                            if ($arTerceroSalud) {
+//                                                $arRegistro->setTerceroRel($arTerceroSalud);
+//                                            } else {
+//                                                $error = "La entidad de salud " . $arLiquidacion->getContratoRel()->getEntidadSaludRel()->getNit() . "-" . $arLiquidacion->getContratoRel()->getEntidadSaludRel()->getNombre() . " de la liquidacion " . $arLiquidacion->getNumero() . " no existe en contabilidad";
+//                                                break;
+//                                            }
+//                                        }
+//                                        if ($arLiquidacionAdicional->getConceptoRel()->getConceptoPension() || $arLiquidacionAdicional->getConceptoRel()->getConceptoFondoSolidaridadPensional()) {
+//                                            $arTerceroPension = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacion->getContratoRel()->getEntidadPensionRel()->getNit()));
+//                                            if ($arTerceroPension) {
+//                                                $arRegistro->setTerceroRel($arTerceroPension);
+//                                            } else {
+//                                                $error = "La entidad de pension " . $arLiquidacion->getContratoRel()->getEntidadPensionRel()->getNombre() . " de la liquidacion " . $arLiquidacion->getNumero() . " no existe en contabilidad";
+//                                                break;
+//                                            }
+//                                        }
+//                                    }
+//
+//                                    if ($arCuenta->getCodigoTerceroFijoFk()) {
+//                                        $arTerceroDetalle = $em->getRepository(FinTercero::class)->find($arCuenta->getCodigoTerceroFijoFk());
+//                                        $arRegistro->setTerceroRel($arTerceroDetalle);
+//                                    }
+//                                    //Para contabilizar al nit de la entidad del credito
+//                                    if ($arLiquidacionAdicional->getCodigoCreditoFk() != null) {
+//                                        if ($arConfiguracion->getContabilizarCreditoNitEntidad()) {
+//                                            if ($arLiquidacionAdicional->getCreditoRel()->getCreditoTipoRel()->getNumeroIdentificacionTerceroContabilidad() != "") {
+//                                                $arTerceroCredito = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacionAdicional->getCreditoRel()->getCreditoTipoRel()->getNumeroIdentificacionTerceroContabilidad()));
+//                                                $arRegistro->setTerceroRel($arTerceroCredito);
+//                                            }
+//                                        }
+//                                    }
+//                                    //Para contabilizar al nit fijo el concepto
+//                                    if ($arLiquidacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad() != null) {
+//                                        $arTerceroConcepto = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad()));
+//                                        $arRegistro->setTerceroRel($arTerceroConcepto);
+//                                    }
+//                                    //Contabilizar concepto si es a el empleado.
+//                                    if ($arLiquidacionAdicional->getConceptoRel()->getContabilizarEmpleado()) {
+//                                        $arRegistro->setTerceroRel($arTercero);
+//                                    }
+//                                    $arRegistro->setComprobanteRel($arComprobanteContable);
+//                                    $arRegistro->setCuentaRel($arCuenta);
+//                                    $arRegistro->setNumero($arLiquidacion->getNumero());
+//                                    $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+//                                    $arRegistro->setFecha($arLiquidacion->getFecha());
+//                                    if ($arLiquidacionAdicional->getVrBonificacion() > 0) {
+//                                        $arRegistro->setVrDebito($arLiquidacionAdicional->getVrBonificacion());
+//                                        $arRegistro->setNaturaleza("D");
+//                                    } else {
+//                                        $arRegistro->setVrCredito($arLiquidacionAdicional->getVrDeduccion());
+//                                        $arRegistro->setNaturaleza("C");
+//                                    }
+//                                    if ($arCuenta->getExigeCentroCostos()) {
+//                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+//                                    }
+//                                    $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+//                                    $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+//                                    $arRegistro->setDescripcion($arLiquidacionAdicional->getConceptoRel()->getNombre());
+//                                    $em->persist($arRegistro);
+//                                } else {
+//                                    $error = "La cuenta " . $arConceptoCuenta->getCodigoCuentaFk() . " no existe en el plan de cuentas";
+//                                    break;
+//                                }
+//                            } else {
+//                                $error = "El concepto adicional de la liquidacion " . $arLiquidacionAdicional->getConceptoRel()->getNombre() . " no tiene cuenta configurada";
+//                                break;
+//                            }
+//                        }
+
+                        //Liquidacion
+                        if ($arLiquidacion->getVrTotal() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaLiquidacion);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arLiquidacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setFecha($arLiquidacion->getFecha());
+                                $arRegistro->setVrCredito($arLiquidacion->getVrTotal());
+                                $arRegistro->setNaturaleza("C");
+                                $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+                                $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+                                $arRegistro->setDescripcion('LIQUIDACION POR PAGAR');
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+
+                    } else {
+                        $error = "La liquidacion con codigo . $codigo  se encuentra sin aprobar o ya se encuentra contabilizada";
+                    }
+
+                } else {
+                    $error = "La liquidacion con codigo . $codigo. no existe";
+                }
+
+                $arLiquidacionAct = $em->getRepository(RhuLiquidacion::class)->find($arLiquidacion->getCodigoLiquidacionPk());
+                $arLiquidacionAct->setEstadoContabilizado(1);
+                $em->persist($arLiquidacionAct);
+            }
+            if ($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+        }
+        return true;
+    }
+
 
 }

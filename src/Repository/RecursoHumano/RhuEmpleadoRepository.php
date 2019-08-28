@@ -2,6 +2,7 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Entity\Financiero\FinTercero;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\Tesoreria\TesTercero;
@@ -167,7 +168,7 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         $arTercero = null;
         $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigo);
         if($arEmpleado) {
-            $arEmpleado = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arEmpleado->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()));
+            $arTercero = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arEmpleado->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()));
             if(!$arTercero) {
                 $arTercero = new FinTercero();
                 $arTercero->setIdentificacionRel($arEmpleado->getIdentificacionRel());
@@ -175,7 +176,6 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
                 $arTercero->setNombreCorto($arEmpleado->getNombreCorto());
                 $arTercero->setDireccion($arEmpleado->getDireccion());
                 $arTercero->setTelefono($arEmpleado->getTelefono());
-                //$arTercero->setEmail($arCliente->getCorreo());
                 $em->persist($arTercero);
             }
         }

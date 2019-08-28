@@ -4,9 +4,13 @@ namespace App\Repository\RecursoHumano;
 
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
+use App\Entity\Financiero\FinTercero;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
 use App\Entity\RecursoHumano\RhuConcepto;
+use App\Entity\RecursoHumano\RhuConceptoCuenta;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuConfiguracionCuenta;
 use App\Entity\RecursoHumano\RhuConsecutivo;
@@ -71,7 +75,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
      */
     public function desautorizar($arVacacion)
     {
-        if ($arVacacion->getEstadoAutorizado()  && !$arVacacion->getEstadoAprobado()) {
+        if ($arVacacion->getEstadoAutorizado() && !$arVacacion->getEstadoAprobado()) {
             $arVacacion->setEstadoAutorizado(0);
             $this->getEntityManager()->persist($arVacacion);
             $this->getEntityManager()->flush();
@@ -87,7 +91,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
     public function aprobar($arVacacion)
     {
         $em = $this->getEntityManager();
-        if($arVacacion->getEstadoAutorizado() && !$arVacacion->getEstadoAprobado()) {
+        if ($arVacacion->getEstadoAutorizado() && !$arVacacion->getEstadoAprobado()) {
 
             $arContrato = $em->getRepository(RhuContrato::class)->find($arVacacion->getCodigoContratoFk());
             $numero = $em->getRepository(RhuConsecutivo::class)->consecutivo(4);
@@ -740,8 +744,8 @@ class RhuVacacionRepository extends ServiceEntityRepository
             }
             //Aqui se registra la deduccion del embargo en la liquidacion adicionales
             if ($vrDeduccionEmbargo > 0) {
-                $arVacacionAdicional = new \Brasa\RecursoHumanoBundle\Entity\RhuVacacionAdicional();
-                $arVacacionAdicional->setPagoConceptoRel($arEmbargo->getEmbargoTipoRel()->getPagoConceptoRel());
+                $arVacacionAdicional = new RhuVacacionAdicional();
+                $arVacacionAdicional->setConceptoRel($arEmbargo->getEmbargoTipoRel()->getPagoConceptoRel());
                 $arVacacionAdicional->setEmbargoRel($arEmbargo);
                 $arVacacionAdicional->setVacacionRel($arVacacion);
                 $arVacacionAdicional->setVrDeduccion($vrDeduccionEmbargo);
@@ -826,7 +830,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
     {
         foreach ($arrSeleccionados as $arrSeleccionado) {
             $arVacacion = $this->getEntityManager()->getRepository(RhuVacacion::class)->find($arrSeleccionado);
-            try{
+            try {
                 if ($arVacacion) {
                     $this->getEntityManager()->remove($arVacacion);
                 }
@@ -837,11 +841,21 @@ class RhuVacacionRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $arr
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function contabilizar($arr): bool
     {
+        /**
+         * @var $arVacacion RhuVacacion
+         */
         $em = $this->getEntityManager();
         if ($arr) {
             $error = "";
+            $arCentroCosto = null;
             $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(7);
             $codigoCuentaPagadas = $arCuenta->getCodigoCuentaFk();
             $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(8);
@@ -854,49 +868,213 @@ class RhuVacacionRepository extends ServiceEntityRepository
             $codigoCuentaFondo = $arCuenta->getCodigoCuentaFk();
             $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(12);
             $codigoCuentaVacacion = $arCuenta->getCodigoCuentaFk();
+            $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+            $arComprobanteContable = $em->getRepository(FinComprobante::class)->find($arConfiguracion->getCodigoComprobanteVacacion());
             foreach ($arr AS $codigo) {
-                $arVacacion = $em->getRepository(RhuVacacion::class)->registroContabilizar($codigo);
-                if($arVacacion) {
-                    if($arVacacion['estadoAprobado'] == 1 && $arVacacion['estadoContabilizado'] == 0) {
-                        $arTercero = $em->getRepository(RhuEmpleado::class)->terceroFinanciero($arVacacion['codigoEmpleadoFk']);
+                $arVacacion = $em->getRepository(RhuVacacion::class)->find($codigo);
+                if ($arVacacion) {
+                    if ($arVacacion->getEstadoAprobado() == 1 && $arVacacion->getEstadoContabilizado() == 0) {
+                        $arTercero = $em->getRepository(RhuEmpleado::class)->terceroFinanciero($arVacacion->getCodigoEmpleadoFk());
                         //Vacaciones
-                        if ($arVacacion->getVrVacacionBruto() > 0) {
-                            $arCuenta = $em->getRepository('BrasaContabilidadBundle:CtbCuenta')->find($codigoCuentaDisfrutadas);
+                        if ($arVacacion->getVrBruto() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaDisfrutadas);
                             if ($arCuenta) {
-                                $arRegistro = new \Brasa\ContabilidadBundle\Entity\CtbRegistro();
+                                $arRegistro = new FinRegistro();
                                 $arRegistro->setComprobanteRel($arComprobanteContable);
-                                //$arRegistro->setCentroCostoRel($arCentroCosto);
                                 $arRegistro->setCuentaRel($arCuenta);
                                 $arRegistro->setTerceroRel($arTercero);
                                 $arRegistro->setNumero($arVacacion->getNumero());
                                 $arRegistro->setNumeroReferencia($arVacacion->getCodigoVacacionPk());
                                 $arRegistro->setFecha($arVacacion->getFechaContabilidad());
-                                $arRegistro->setDebito($arVacacion->getVrVacacionBruto());
-                                $arRegistro->setNaturaleza(1);
-                                $arRegistro->setDescripcionContable('VACACIONES');
-                                if ($arCuenta->getExigeCentroCostos()) {
+                                $arRegistro->setVrDebito($arVacacion->getVrBruto());
+                                $arRegistro->setNaturaleza("D");
+                                $arRegistro->setDescripcion('VACACIONES');
+                                $arRegistro->setCodigoModeloFk('RhuVacacion');
+                                $arRegistro->setCodigoDocumento($arVacacion->getCodigoVacacionPk());
+                                if ($arCuenta->getExigeCentroCosto()) {
                                     $arRegistro->setCentroCostoRel($arCentroCosto);
-                                }
-                                if ($arCuenta->getExigeSucursal()) {
-                                    $arRegistro->setSucursalRel($arSucursal);
-                                }
-                                if ($arCuenta->getExigeArea()) {
-                                    $arRegistro->setAreaRel($arArea);
-                                }
-                                if ($arCuenta->getExigeProyecto()) {
-                                    $arRegistro->setProyectoRel($arProyecto);
                                 }
                                 $em->persist($arRegistro);
                             }
                         }
 
+                        //Pension
+                        if ($arVacacion->getVrPension() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaPension);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setTerceroRel($arTercero);
+                                // Cuando el detalle es de salud y pension se lleva al nit de la entidad
+                                if ($arCuenta->getExigeTercero() == 1) {
+                                    $arTerceroPension = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arVacacion->getContratoRel()->getEntidadPensionRel()->getNit()));
+                                    if ($arTerceroPension) {
+                                        $arRegistro->setTerceroRel($arTerceroPension);
+                                    } else {
+                                        $error = "La entidad de pension " . $arVacacion->getContratoRel()->getEntidadPensionRel()->getNombre() . " de la vacacion " . $arVacacion->getNumero() . " no existe en contabilidad";
+                                        break;
+                                    }
+                                }
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setNumero($arVacacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arVacacion->getCodigoVacacionPk());
+                                $arRegistro->setFecha($arVacacion->getFechaContabilidad());
+                                $arRegistro->setVrCredito($arVacacion->getVrPension());
+                                $arRegistro->setNaturaleza("C");
+                                $arRegistro->setDescripcion('PENSION');
+                                $arRegistro->setCodigoModeloFk('RhuVacacion');
+                                $arRegistro->setCodigoDocumento($arVacacion->getCodigoVacacionPk());
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //Salud
+                        if ($arVacacion->getVrSalud() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaSalud);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                if ($arCuenta->getExigeTercero() == 1) {
+                                    $arTerceroSalud = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arVacacion->getContratoRel()->getEntidadSaludRel()->getNit()));
+                                    if ($arTerceroSalud) {
+                                        $arRegistro->setTerceroRel($arTerceroSalud);
+                                    } else {
+                                        $error = "La entidad de salud " . $arVacacion->getContratoRel()->getEntidadSaludRel()->getNombre() . " de la vacacion " . $arVacacion->getNumero() . " no existe en contabilidad";
+                                        break;
+                                    }
+                                }
+                                $arRegistro->setNumero($arVacacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arVacacion->getCodigoVacacionPk());
+                                $arRegistro->setFecha($arVacacion->getFechaContabilidad());
+                                $arRegistro->setVrCredito($arVacacion->getVrSalud());
+                                $arRegistro->setNaturaleza("C");
+                                $arRegistro->setDescripcion('SALUD');
+                                $arRegistro->setCodigoModeloFk('RhuVacacion');
+                                $arRegistro->setCodigoDocumento($arVacacion->getCodigoVacacionPk());
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //FONDO SOLIDARIDAD PENSIONAL
+                        if ($arVacacion->getVrFondoSolidaridad() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaFondo);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                //$arRegistro->setCentroCostoRel($arCentroCosto);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                if ($arCuenta->getExigeNit() == 1) {
+                                    $arTerceroFondo = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arVacacion->getContratoRel()->getEntidadPensionRel()->getNit()));
+                                    if ($arTerceroFondo) {
+                                        $arRegistro->setTerceroRel($arTerceroFondo);
+                                    } else {
+                                        $error = "La entidad de pension " . $arVacacion->getContratoRel()->getEntidadPensionRel()->getNombre() . " de la vacacion " . $arVacacion->getNumero() . " no existe en contabilidad";
+                                        break;
+                                    }
+                                }
+                                $arRegistro->setNumero($arVacacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arVacacion->getCodigoVacacionPk());
+                                $arRegistro->setFecha($arVacacion->getFechaContabilidad());
+                                $arRegistro->setVrCredito($arVacacion->getVrFondoSolidaridad());
+                                $arRegistro->setNaturaleza("C");
+                                $arRegistro->setDescripcion('FONDO SOLIDARIDAD');
+                                $arRegistro->setCodigoModeloFk('RhuVacacion');
+                                $arRegistro->setCodigoDocumento($arVacacion->getCodigoVacacionPk());
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //Vacaciones por pagar
+                        if ($arVacacion->getVrTotal() > 0) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($codigoCuentaVacacion);
+                            if ($arCuenta) {
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arVacacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arVacacion->getCodigoVacacionPk());
+                                $arRegistro->setFecha($arVacacion->getFechaContabilidad());
+                                $arRegistro->setVrCredito($arVacacion->getVrTotal());
+                                $arRegistro->setNaturaleza("C");
+                                $arRegistro->setDescripcion('VACACIONES POR PAGAR');
+                                $arRegistro->setCodigoModeloFk('RhuVacacion');
+                                $arRegistro->setCodigoDocumento($arVacacion->getCodigoVacacionPk());
+                                if ($arCuenta->getExigeCentroCosto()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                        //Adicionales
+                        $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(array('codigoVacacionFk' => $codigo));
+                        foreach ($arVacacionAdicionales as $arVacacionAdicional) {
+                            $arConceptoCuenta = $em->getRepository(RhuConceptoCuenta::class)->findOneBy(array('codigoConceptoFk' => $arVacacionAdicional->getCodigoConceptoFk(), 'codigoEmpleadoTipoFk' => $arVacacion->getEmpleadoRel()->getCodigoEmpleadoTipoFk()));
+                            if ($arConceptoCuenta) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arConceptoCuenta->getCodigoCuentaFk());
+                                if ($arCuenta) {
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setComprobanteRel($arComprobanteContable);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setNumero($arVacacion->getNumero());
+                                    $arRegistro->setNumeroReferencia($arVacacion->getCodigoVacacionPk());
+                                    $arRegistro->setFecha($arVacacion->getFechaContabilidad());
+                                    if ($arVacacionAdicional->getVrBonificacion() > 0) {
+                                        $arRegistro->setVrCredito($arVacacionAdicional->getVrBonificacion());
+                                        $arRegistro->setNaturaleza("C");
+                                    } else {
+                                        $arRegistro->setVrDebito($arVacacionAdicional->getVrDeduccion());
+                                        $arRegistro->setNaturaleza("D");
+                                    }
+                                    //Para contabilizar al nit fijo el concepto
+                                    if ($arVacacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad() != null) {
+                                        $arTerceroConcepto = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arVacacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad()));
+                                        $arRegistro->setTerceroRel($arTerceroConcepto);
+                                    }
+                                    if ($arCuenta->getCodigoTerceroFijoFk()) {
+                                        $arTerceroDetalle = $em->getRepository(FinTercero::class)->find($arCuenta->getCodigoTerceroFijoFk());
+                                        $arRegistro->setTerceroRel($arTerceroDetalle);
+                                    }
+
+                                    $arRegistro->setDescripcion($arVacacionAdicional->getConceptoRel()->getNombre());
+                                    $arRegistro->setCodigoModeloFk('RhuVacacion');
+                                    $arRegistro->setCodigoDocumento($arVacacion->getCodigoVacacionPk());
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "La cuenta " . $arConceptoCuenta->getCodigoCuentaFk() . " no existe en el plan de cuentas";
+                                    break;
+                                }
+                            } else {
+                                $error = "El concepto adicional de la liquidacion " . $arVacacionAdicional->getConceptoRel()->getNombre() . " no tiene cuenta configurada";
+                                break;
+                            }
+                        }
+                    } else {
+                        $error = "La vacacion con codigo " . $codigo . " Se encuentra sin aprobar o ya esta contabilizada ";
                     }
                 } else {
                     $error = "La vacacion codigo " . $codigo . " no existe";
                     break;
                 }
+                $arVacacionAct = $em->getRepository(RhuVacacion::class)->find($arVacacion->getCodigoVacacionPk());
+                $arVacacionAct->setEstadoContabilizado(1);
+                $em->persist($arVacacionAct);
             }
-            if($error == "") {
+            if ($error == "") {
                 $em->flush();
             } else {
                 Mensajes::error($error);
@@ -906,6 +1084,9 @@ class RhuVacacionRepository extends ServiceEntityRepository
         return true;
     }
 
+    /*
+     * Verificar la influencia de traer en un array los campos especificos o instanciar todo el objeto
+     */
     public function registroContabilizar($codigo)
     {
         $session = new Session();
@@ -915,6 +1096,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
             ->addSelect('v.codigoContratoFk')
             ->addSelect('v.codigoGrupoFk')
             ->addSelect('v.fecha')
+            ->addSelect('v.fechaContabilidad')
             ->addSelect('v.numero')
             ->addSelect('v.fechaDesdePeriodo')
             ->addSelect('v.fechaHastaPeriodo')
@@ -930,7 +1112,10 @@ class RhuVacacionRepository extends ServiceEntityRepository
             ->addSelect('v.vrValor')
             ->addSelect('v.vrDisfrute')
             ->addSelect('v.vrDinero')
+            ->addSelect('v.vrBruto')
             ->addSelect('v.vrTotal')
+            ->addSelect('v.estadoAprobado')
+            ->addSelect('v.estadoContabilizado')
             ->leftJoin('v.empleadoRel', 'e')
             ->leftJoin('v.contratoRel', 'c')
             ->leftJoin('v.grupoRel', 'g')

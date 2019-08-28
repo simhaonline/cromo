@@ -10,6 +10,12 @@
             {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
+    <div style="float:right">
+        {% if arLiquidacion.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arLiquidacion.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arLiquidacion.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arLiquidacion.estadoContabilizado == true %}<span class="label label-success">Contabilizado</span>{% endif %}
+    </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>

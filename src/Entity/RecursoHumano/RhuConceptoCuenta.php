@@ -38,6 +38,11 @@ class RhuConceptoCuenta
     private $codigoCuentaFk;
 
     /**
+     * @ORM\Column(name="codigo_empleado_tipo_fk", type="integer", nullable=true)
+     */
+    private $codigoEmpleadoTipoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="conceptosCuentasConceptoRel")
      * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
      */
@@ -143,6 +148,38 @@ class RhuConceptoCuenta
     public function setCostoClaseRel($costoClaseRel): void
     {
         $this->costoClaseRel = $costoClaseRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpleadoTipoFk()
+    {
+        return $this->codigoEmpleadoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpleadoTipoFk
+     */
+    public function setCodigoEmpleadoTipoFk($codigoEmpleadoTipoFk): void
+    {
+        $this->codigoEmpleadoTipoFk = $codigoEmpleadoTipoFk;
     }
 
 

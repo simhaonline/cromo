@@ -179,6 +179,16 @@ class RhuConfiguracion
     private $codigoEntidadRiesgosProfesionalesFk;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_vacacion", type="integer", nullable=true)
+     */
+    private $codigoComprobanteVacacion;
+
+    /**
+     * @ORM\Column(name="codigo_comprobante_liquidacion", type="integer", nullable=true)
+     */
+    private $codigoComprobanteLiquidacion;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoAuxilioTransporteRel")
      * @ORM\JoinColumn(name="codigo_concepto_auxilio_transporte_fk", referencedColumnName="codigo_concepto_pk")
      */
@@ -773,7 +783,37 @@ class RhuConfiguracion
         $this->auxilioTransporteNoPrestacional = $auxilioTransporteNoPrestacional;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteVacacion()
+    {
+        return $this->codigoComprobanteVacacion;
+    }
 
+    /**
+     * @param mixed $codigoComprobanteVacacion
+     */
+    public function setCodigoComprobanteVacacion($codigoComprobanteVacacion): void
+    {
+        $this->codigoComprobanteVacacion = $codigoComprobanteVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteLiquidacion()
+    {
+        return $this->codigoComprobanteLiquidacion;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteLiquidacion
+     */
+    public function setCodigoComprobanteLiquidacion($codigoComprobanteLiquidacion): void
+    {
+        $this->codigoComprobanteLiquidacion = $codigoComprobanteLiquidacion;
+    }
 
 
 }

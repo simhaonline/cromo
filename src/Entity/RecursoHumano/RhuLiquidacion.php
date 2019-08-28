@@ -383,6 +383,11 @@ class RhuLiquidacion
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="estado_contabilizado", options={"default" : false}, type="boolean", nullable=true)
+     */
+    private $estadoContabilizado = false;
+
+    /**
      * @ORM\Column(name="omitir_cesantias_anterior", type="boolean", nullable=true)
      */
     private $omitirCesantiasAnterior = false;
@@ -1693,6 +1698,22 @@ class RhuLiquidacion
     public function setOmitirInteresCesantiasAnterior($omitirInteresCesantiasAnterior): void
     {
         $this->omitirInteresCesantiasAnterior = $omitirInteresCesantiasAnterior;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
     }
 
 

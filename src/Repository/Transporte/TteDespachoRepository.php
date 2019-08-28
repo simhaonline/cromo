@@ -309,59 +309,31 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $arDespacho->setFechaSalida($fechaActual);
                 $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
                 if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
-                    if ($arDespacho->getConductorRel()->getFechaVenceLicencia() > $fechaActual) {
-                        if ($arDespacho->getVehiculoRel()->getFechaVencePoliza() > $fechaActual) {
-                            if ($arDespacho->getVehiculoRel()->getFechaVenceTecnicomecanica() > $fechaActual) {
-                                $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
-                                $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
-                                $arDespacho->setEstadoAprobado(1);
-                                $em->persist($arDespachoTipo);
-
-                                $vehiculoDisponible = $em->getRepository(TteVehiculoDisponible::class)->findOneBy([('codigoVehiculoFk') => $arDespacho->getCodigoVehiculoFk(), 'estadoDespachado' => 0, 'estadoDescartado' => 0]);
-                                if($vehiculoDisponible){
-                                    $vehiculoDisponible->setEstadoDespachado(1);
-                                    $vehiculoDisponible->setFechaDespacho($fechaActual);
-                                    $em->persist($vehiculoDisponible);
-                                }
-                            } else {
-                                Mensajes::error('El vehículo tiene la revisión tecnicomecanica vencida');
+                    $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
+                    $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
+                    $em->persist($arDespachoTipo);
+                } else {
+                    Mensajes::error("El despacho ya tenia numero, por favor notifique el caso al administrador del sistema");
+                }
+                $arDespacho->setEstadoAprobado(1);
+                if ($arDespacho->getConductorRel()->getFechaVenceLicencia() > $fechaActual) {
+                    if ($arDespacho->getVehiculoRel()->getFechaVencePoliza() > $fechaActual) {
+                        if ($arDespacho->getVehiculoRel()->getFechaVenceTecnicomecanica() > $fechaActual) {
+                            $vehiculoDisponible = $em->getRepository(TteVehiculoDisponible::class)->findOneBy([('codigoVehiculoFk') => $arDespacho->getCodigoVehiculoFk(), 'estadoDespachado' => 0, 'estadoDescartado' => 0]);
+                            if($vehiculoDisponible){
+                                $vehiculoDisponible->setEstadoDespachado(1);
+                                $vehiculoDisponible->setFechaDespacho($fechaActual);
+                                $em->persist($vehiculoDisponible);
                             }
                         } else {
-                            Mensajes::error('El vehículo tiene la póliza vencida');
+                            Mensajes::error('El vehículo tiene la revisión tecnicomecanica vencida');
                         }
                     } else {
-                        Mensajes::error('El conductor tiene la licencia de conducción vencida');
+                        Mensajes::error('El vehículo tiene la póliza vencida');
                     }
                 } else {
-                    Mensajes::error("El despacho ya tiene numero, ya fue aprobado enteriormente, por favor notifique el caso al administrador del sistema");
+                    Mensajes::error('El conductor tiene la licencia de conducción vencida');
                 }
-
-                //Costos
-                /*$query = $em->createQuery(
-                    'SELECT dd.codigoDespachoDetallePk,
-                  dd.unidades,
-                  dd.pesoReal,
-                  dd.pesoVolumen      
-                FROM App\Entity\Transporte\TteDespachoDetalle dd
-                WHERE dd.codigoDespachoFk = :despacho  
-                ORDER BY dd.codigoDespachoFk DESC '
-                )->setParameter('despacho', $codigoDespacho);
-                $arDespachoDetalles = $query->execute();
-                foreach ($arDespachoDetalles as $arDespachoDetalle) {
-                    $arDespachoDetalleActualizar = $em->getRepository(TteDespachoDetalle::class)->find($arDespachoDetalle['codigoDespachoDetallePk']);
-                    $costoUnidadTotal = $arDespacho->getVrFletePago() / $arDespacho->getUnidades();
-                    $costoPesoTotal = $arDespacho->getVrFletePago() / $arDespacho->getPesoReal();
-                    $costoVolumenTotal = $arDespacho->getVrFletePago() / $arDespacho->getPesoVolumen();
-                    $costoUnidad = $costoUnidadTotal * $arDespachoDetalle['unidades'];
-                    $costoPeso = $costoPesoTotal * $arDespachoDetalle['pesoReal'];
-                    $costoVolumen = $costoVolumenTotal * $arDespachoDetalle['pesoVolumen'];
-                    $costo = ($costoPeso + $costoVolumen + $costoUnidad) / 3;
-                    $arDespachoDetalleActualizar->setVrCostoUnidad($costoUnidad);
-                    $arDespachoDetalleActualizar->setVrCostoPeso($costoPeso);
-                    $arDespachoDetalleActualizar->setVrCostoVolumen($costoVolumen);
-                    $arDespachoDetalleActualizar->setVrCosto($costo);
-                    $em->persist($arDespachoDetalleActualizar);
-                }*/
 
                 //Generar monitoreo
                 if ($arDespachoTipo->getGeneraMonitoreo()) {
@@ -1793,15 +1765,13 @@ class TteDespachoRepository extends ServiceEntityRepository
      */
     public function generarCuentaPagar($arDespacho) {
         $em = $this->getEntityManager();
+        $arTercero = $em->getRepository(InvTercero::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
         if($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk()) {
-            $arTercero = $em->getRepository(InvTercero::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
             /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
             $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoRel();
             $arCuentaPagar = New TesCuentaPagar();
             $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
             $arCuentaPagar->setTerceroRel($arTercero);
-            //$arCuentaPagar->setBancoRel($arPago->getEmpleadoRel()->getBancoRel());
-            //$arCuentaPagar->setCuenta($arPago->getEmpleadoRel()->getCuenta());
             $arCuentaPagar->setModulo('tte');
             $arCuentaPagar->setModelo('TteDespacho');
             $arCuentaPagar->setCodigoDocumento($arDespacho->getCodigoDespachoPk());
@@ -1821,6 +1791,34 @@ class TteDespachoRepository extends ServiceEntityRepository
         } else {
             Mensajes::error("El despacho genera cuenta por pagar pero no se pudo crear porque el despacho tipo " . $arDespacho->getDespachoTipoRel()->getNombre() . " no tiene configurado un tipo de cuenta por pagar");
         }
+        if($arDespacho->getVrAnticipo() > 0) {
+            if($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoAnticipoFk()) {
+                /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
+                $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoAnticipoRel();
+                $arCuentaPagar = New TesCuentaPagar();
+                $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+                $arCuentaPagar->setTerceroRel($arTercero);
+                $arCuentaPagar->setModulo('tte');
+                $arCuentaPagar->setModelo('TteDespacho');
+                $arCuentaPagar->setCodigoDocumento($arDespacho->getCodigoDespachoPk());
+                $arCuentaPagar->setNumeroDocumento($arDespacho->getNumero());
+                $arCuentaPagar->setSoporte($arDespacho->getCodigoVehiculoFk());
+                $arCuentaPagar->setFecha($arDespacho->getFechaSalida());
+                $arCuentaPagar->setFechaVence($arDespacho->getFechaSalida());
+                $arCuentaPagar->setVrSubtotal($arDespacho->getVrAnticipo());
+                $arCuentaPagar->setVrTotal($arDespacho->getVrAnticipo());
+                $arCuentaPagar->setVrSaldoOriginal($arDespacho->getVrAnticipo());
+                $arCuentaPagar->setVrSaldo($arDespacho->getVrAnticipo());
+                $arCuentaPagar->setVrSaldoOperado($arDespacho->getVrAnticipo() * $arCuentaPagarTipo->getOperacion());
+                $arCuentaPagar->setEstadoAutorizado(1);
+                $arCuentaPagar->setEstadoAprobado(1);
+                $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
+                $em->persist($arCuentaPagar);
+            } else {
+                Mensajes::error("El despacho genera cuenta por pagar para (ANTICIPO) pero no se pudo crear porque el despacho tipo " . $arDespacho->getDespachoTipoRel()->getNombre() . " no tiene configurado un tipo de cuenta por pagar para los anticipos");
+            }
+        }
+
     }
 
 }

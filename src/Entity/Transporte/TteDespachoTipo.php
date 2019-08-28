@@ -117,6 +117,11 @@ class TteDespachoTipo
     private $codigoCuentaPagarTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_pagar_tipo_anticipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaPagarTipoAnticipoFk;
+
+    /**
      * @ORM\Column(name="contabilizar", type="boolean", nullable=true,options={"default":false})
      */
     private $contabilizar = false;
@@ -126,6 +131,12 @@ class TteDespachoTipo
      * @ORM\JoinColumn(name="codigo_cuenta_pagar_tipo_fk", referencedColumnName="codigo_cuenta_pagar_tipo_pk")
      */
     private $cuentaPagarTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesCuentaPagarTipo", inversedBy="tteDespachosTiposCuentaPagarTipoAnticipoRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_pagar_tipo_anticipo_fk", referencedColumnName="codigo_cuenta_pagar_tipo_pk")
+     */
+    private $cuentaPagarTipoAnticipoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespacho", mappedBy="despachoTipoRel")
@@ -519,6 +530,38 @@ class TteDespachoTipo
     public function setCuentaPagarTipoRel($cuentaPagarTipoRel): void
     {
         $this->cuentaPagarTipoRel = $cuentaPagarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaPagarTipoAnticipoFk()
+    {
+        return $this->codigoCuentaPagarTipoAnticipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaPagarTipoAnticipoFk
+     */
+    public function setCodigoCuentaPagarTipoAnticipoFk($codigoCuentaPagarTipoAnticipoFk): void
+    {
+        $this->codigoCuentaPagarTipoAnticipoFk = $codigoCuentaPagarTipoAnticipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaPagarTipoAnticipoRel()
+    {
+        return $this->cuentaPagarTipoAnticipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaPagarTipoAnticipoRel
+     */
+    public function setCuentaPagarTipoAnticipoRel($cuentaPagarTipoAnticipoRel): void
+    {
+        $this->cuentaPagarTipoAnticipoRel = $cuentaPagarTipoAnticipoRel;
     }
 
 

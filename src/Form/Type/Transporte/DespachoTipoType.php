@@ -31,6 +31,16 @@ class DespachoTipoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Tipo cuenta por pagar:'
             ])
+            ->add('cuentaPagarTipoAnticipoRel',EntityType::class,[
+                'required' => false,
+                'class' => 'App\Entity\Tesoreria\TesCuentaPagarTipo',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('cpt')
+                        ->orderBy('cpt.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Tipo cuenta por pagar anticipo:'
+            ])
             ->add('consecutivo',NumberType::class,['required' => true,'label' => 'Consecutivo:'])
             ->add('exigeNumero', CheckboxType::class, array('required'  => false))
             ->add('generaMonitoreo', CheckboxType::class, array('required'  => false))
@@ -64,7 +74,8 @@ class DespachoTipoType extends AbstractType
             {"campo":"consecutivo",                     "tipo":"numero",     "ayuda":"Consecutivo",             "titulo":"CONSECUTIVO"},
             {"campo":"viaje",                           "tipo":"bool",     "ayuda":"Viaje",                     "titulo":"VIAJE"},            
             {"campo":"generaCuentaPagar",               "tipo":"bool",     "ayuda":"Genera cuenta pagar",       "titulo":"GEN(CXP)"},
-            {"campo":"codigoCuentaPagarTipoFk",         "tipo":"text",     "ayuda":"Codigo cuenta pagar tipo",    "titulo":"TIPO(CXP)"},
+            {"campo":"codigoCuentaPagarTipoFk",         "tipo":"text",     "ayuda":"Codigo cuenta pagar tipo",    "titulo":"CXP"},
+            {"campo":"codigoCuentaPagarTipoAnticipoFk",         "tipo":"text",     "ayuda":"Codigo cuenta pagar tipo anticipo",    "titulo":"CXP_ANT"},
             {"campo":"codigoComprobanteFk",             "tipo":"text",     "ayuda":"Codigo comprobante",        "titulo":"COMP"},
             {"campo":"codigoCuentaFleteFk",             "tipo":"text",     "ayuda":"Codigo cuenta flete",        "titulo":"CTA FLETE"},
             {"campo":"codigoCuentaRetencionFuenteFk",   "tipo":"text",     "ayuda":"Codigo cuenta retencion fuente","titulo":"CTA RTE FTE"},

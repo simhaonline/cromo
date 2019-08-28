@@ -143,7 +143,9 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho recogidas");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-                /*$arDespachosRecogidas = $em->getRepository(TteDespachoRecogida::class)->findBy(['estadoAprobado' => 1]);
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $arDespachosRecogidas = $em->getRepository(TteDespachoRecogida::class)->findBy(['estadoAprobado' => 1]);
                 foreach ($arDespachosRecogidas as $arDespachoRecogida) {
                     if($arDespachoRecogida->getDespachoRecogidaTipoRel()->getGeneraCuentaPagar()) {
                         $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespachoRecogida->getVehiculoRel()->getPoseedorRel());
@@ -156,7 +158,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
                         $em->getRepository(TteDespachoRecogida::class)->generarCuentaPagar($arDespachoRecogida);
                     }
                 }
-                $em->flush();*/
+                $em->flush();
 
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);

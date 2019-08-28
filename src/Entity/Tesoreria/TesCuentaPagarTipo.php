@@ -89,9 +89,19 @@ class TesCuentaPagarTipo
     protected $tteDespachosTiposCuentaPagarTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoTipo" , mappedBy="cuentaPagarTipoAnticipoRel")
+     */
+    protected $tteDespachosTiposCuentaPagarTipoAnticipoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoRecogidaTipo" , mappedBy="cuentaPagarTipoRel")
      */
     protected $tteDespachosRecogidasTiposCuentaPagarTipoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoRecogidaTipo" , mappedBy="cuentaPagarTipoAnticipoRel")
+     */
+    protected $tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel;
 
     /**
      * @return mixed
@@ -331,6 +341,38 @@ class TesCuentaPagarTipo
     public function setTteDespachosRecogidasTiposCuentaPagarTipoRel($tteDespachosRecogidasTiposCuentaPagarTipoRel): void
     {
         $this->tteDespachosRecogidasTiposCuentaPagarTipoRel = $tteDespachosRecogidasTiposCuentaPagarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTteDespachosTiposCuentaPagarTipoAnticipoRel()
+    {
+        return $this->tteDespachosTiposCuentaPagarTipoAnticipoRel;
+    }
+
+    /**
+     * @param mixed $tteDespachosTiposCuentaPagarTipoAnticipoRel
+     */
+    public function setTteDespachosTiposCuentaPagarTipoAnticipoRel($tteDespachosTiposCuentaPagarTipoAnticipoRel): void
+    {
+        $this->tteDespachosTiposCuentaPagarTipoAnticipoRel = $tteDespachosTiposCuentaPagarTipoAnticipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel()
+    {
+        return $this->tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel;
+    }
+
+    /**
+     * @param mixed $tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel
+     */
+    public function setTteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel($tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel): void
+    {
+        $this->tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel = $tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel;
     }
 
 

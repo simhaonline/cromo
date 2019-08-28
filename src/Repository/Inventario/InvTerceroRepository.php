@@ -5,6 +5,7 @@ namespace App\Repository\Inventario;
 
 use App\Entity\Financiero\FinTercero;
 use App\Entity\Inventario\InvTercero;
+use App\Entity\Tesoreria\TesTercero;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -128,4 +129,25 @@ class InvTerceroRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery();
     }
+
+    public function terceroTesoreria($arTerceroInventario)
+    {
+        $em = $this->getEntityManager();
+        $arTercero = null;
+        if($arTerceroInventario) {
+            $arTercero = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arTerceroInventario->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arTerceroInventario->getNumeroIdentificacion()));
+            if(!$arTercero) {
+                $arTercero = new TesTercero();
+                $arTercero->setIdentificacionRel($arTerceroInventario->getIdentificacionRel());
+                $arTercero->setNumeroIdentificacion($arTerceroInventario->getNumeroIdentificacion());
+                $arTercero->setNombreCorto($arTerceroInventario->getNombreCorto());
+                $arTercero->setDireccion($arTerceroInventario->getDireccion());
+                $arTercero->setTelefono($arTerceroInventario->getTelefono());
+                $em->persist($arTercero);
+            }
+        }
+
+        return $arTercero;
+    }
+
 }

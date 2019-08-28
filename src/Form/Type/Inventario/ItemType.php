@@ -47,8 +47,8 @@ class ItemType extends AbstractType
                         ->orderBy('e.nombre', 'DESC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Subgrupo:'
-                , 'required' => false])
+                'label' => 'Subgrupo:',
+                'required' => false])
             ->add('marcaRel', EntityType::class, [
                 'class' => 'App\Entity\Inventario\InvMarca',
                 'query_builder' => function (EntityRepository $er) {
@@ -56,8 +56,8 @@ class ItemType extends AbstractType
                         ->orderBy('e.nombre', 'DESC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Marca:'
-                , 'required' => true])
+                'label' => 'Marca:',
+                'required' => false])
             ->add('impuestoRetencionRel', EntityType::class, [
                 'class' => 'App\Entity\General\GenImpuesto',
                 'query_builder' => function (EntityRepository $er) {

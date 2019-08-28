@@ -23,6 +23,8 @@ use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvTercero;
+use App\Entity\Tesoreria\TesCuentaPagar;
+use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
@@ -659,10 +661,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         } else {
                             $arMovimiento->setNumero($arDocumento->getConsecutivo());
                         }
-                        $arMovimiento->setEstadoAprobado(1);
                         $arMovimiento->setFecha(new \DateTime('now'));
-                        $this->getEntityManager()->persist($arMovimiento);
-
                         if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
                             $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
                         } else {
@@ -670,7 +669,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         }
                         $em->persist($arDocumento);
                     }
-
+                    $arMovimiento->setEstadoAprobado(1);
+                    $em->persist($arMovimiento);
                     //Si el documento genera cartera
                     if ($arMovimiento->getDocumentoRel()->getGeneraCartera()) {
                         $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arMovimiento->getTerceroRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arMovimiento->getTerceroRel()->getNumeroIdentificacion()]);
@@ -718,6 +718,12 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         $arCuentaCobrar->setAsesorRel($arMovimiento->getAsesorRel());
                         $em->persist($arCuentaCobrar);
                     }
+
+                    //Si el documento genera tesoreria
+                    if ($arMovimiento->getDocumentoRel()->getGeneraTesoreria()) {
+                        $this->generarCuentaPagar($arMovimiento);
+                    }
+
                     $em->flush();
 
                     //Proceso de contabilizacion automatica
@@ -1499,5 +1505,39 @@ class InvMovimientoRepository extends ServiceEntityRepository
         }
 
         return $queryBuilder;
+    }
+
+    /**
+     * @param $arMovimiento InvMovimiento
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function generarCuentaPagar($arMovimiento) {
+        $em = $this->getEntityManager();
+        if($arMovimiento->getDocumentoRel()->getCodigoCuentaPagarTipoFk()) {
+            $arTercero = $em->getRepository(InvTercero::class)->terceroTesoreria($arMovimiento->getTerceroRel());
+            /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
+            $arCuentaPagarTipo = $em->getRepository(TesCuentaPagarTipo::class)->find($arMovimiento->getDocumentoRel()->getCodigoCuentaPagarTipoFk());
+            $arCuentaPagar = New TesCuentaPagar();
+            $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+            $arCuentaPagar->setTerceroRel($arTercero);
+            $arCuentaPagar->setModulo('Inv');
+            $arCuentaPagar->setModelo('InvMovimiento');
+            $arCuentaPagar->setCodigoDocumento($arMovimiento->getCodigoMovimientoPk());
+            $arCuentaPagar->setNumeroDocumento($arMovimiento->getNumero());
+            $arCuentaPagar->setSoporte($arMovimiento->getSoporte());
+            $arCuentaPagar->setFecha($arMovimiento->getFecha());
+            $arCuentaPagar->setFechaVence($arMovimiento->getFechaVence());
+            $arCuentaPagar->setVrSubtotal($arMovimiento->getVrSubtotal());
+            $arCuentaPagar->setVrTotal($arMovimiento->getVrTotal());
+            $arCuentaPagar->setVrSaldoOriginal($arMovimiento->getVrNeto());
+            $arCuentaPagar->setVrSaldo($arMovimiento->getVrNeto());
+            $arCuentaPagar->setVrSaldoOperado($arMovimiento->getVrNeto() * $arCuentaPagarTipo->getOperacion());
+            $arCuentaPagar->setEstadoAutorizado(1);
+            $arCuentaPagar->setEstadoAprobado(1);
+            $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
+            $em->persist($arCuentaPagar);
+        } else {
+            Mensajes::error("El movimiento genera cuenta por pagar pero no se pudo crear porque el documento no tiene configurado el tipo de cuenta por pagar ");
+        }
     }
 }

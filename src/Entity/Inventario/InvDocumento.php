@@ -75,6 +75,11 @@ class InvDocumento
     private $codigoCuentaCobrarTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_pagar_tipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaPagarTipoFk;
+
+    /**
      * @ORM\Column(name="adicionar", type="boolean",options={"default" : false}, nullable=true)
      */
     private $adicionar = false;
@@ -543,6 +548,22 @@ class InvDocumento
     public function setPrefijo( $prefijo ): void
     {
         $this->prefijo = $prefijo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaPagarTipoFk()
+    {
+        return $this->codigoCuentaPagarTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaPagarTipoFk
+     */
+    public function setCodigoCuentaPagarTipoFk($codigoCuentaPagarTipoFk): void
+    {
+        $this->codigoCuentaPagarTipoFk = $codigoCuentaPagarTipoFk;
     }
 
 

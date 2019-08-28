@@ -11,6 +11,7 @@ use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
+use App\Entity\Inventario\InvTercero;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
@@ -1793,7 +1794,7 @@ class TteDespachoRepository extends ServiceEntityRepository
     public function generarCuentaPagar($arDespacho) {
         $em = $this->getEntityManager();
         if($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk()) {
-            $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
+            $arTercero = $em->getRepository(InvTercero::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
             /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
             $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoRel();
             $arCuentaPagar = New TesCuentaPagar();

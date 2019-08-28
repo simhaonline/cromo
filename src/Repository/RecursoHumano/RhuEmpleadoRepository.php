@@ -160,4 +160,26 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getArrayResult();
     }
+
+    public function terceroFinanciero($codigo)
+    {
+        $em = $this->getEntityManager();
+        $arTercero = null;
+        $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigo);
+        if($arEmpleado) {
+            $arEmpleado = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arEmpleado->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()));
+            if(!$arTercero) {
+                $arTercero = new FinTercero();
+                $arTercero->setIdentificacionRel($arEmpleado->getIdentificacionRel());
+                $arTercero->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
+                $arTercero->setNombreCorto($arEmpleado->getNombreCorto());
+                $arTercero->setDireccion($arEmpleado->getDireccion());
+                $arTercero->setTelefono($arEmpleado->getTelefono());
+                //$arTercero->setEmail($arCliente->getCorreo());
+                $em->persist($arTercero);
+            }
+        }
+
+        return $arTercero;
+    }
 }

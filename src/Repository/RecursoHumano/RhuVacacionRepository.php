@@ -3,10 +3,12 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Financiero\FinComprobante;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
+use App\Entity\RecursoHumano\RhuConfiguracionCuenta;
 use App\Entity\RecursoHumano\RhuConsecutivo;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
@@ -26,6 +28,7 @@ use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuVacacionRepository extends ServiceEntityRepository
 {
@@ -832,6 +835,108 @@ class RhuVacacionRepository extends ServiceEntityRepository
                 Mensajes::error("El registro tiene registros relacionados");
             }
         }
+    }
+
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(7);
+            $codigoCuentaPagadas = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(8);
+            $codigoCuentaDisfrutadas = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(9);
+            $codigoCuentaSalud = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(10);
+            $codigoCuentaPension = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(11);
+            $codigoCuentaFondo = $arCuenta->getCodigoCuentaFk();
+            $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(12);
+            $codigoCuentaVacacion = $arCuenta->getCodigoCuentaFk();
+            foreach ($arr AS $codigo) {
+                $arVacacion = $em->getRepository(RhuVacacion::class)->registroContabilizar($codigo);
+                if($arVacacion) {
+                    if($arVacacion['estadoAprobado'] == 1 && $arVacacion['estadoContabilizado'] == 0) {
+                        $arTercero = $em->getRepository(RhuEmpleado::class)->terceroFinanciero($arVacacion['codigoEmpleadoFk']);
+                        //Vacaciones
+                        if ($arVacacion->getVrVacacionBruto() > 0) {
+                            $arCuenta = $em->getRepository('BrasaContabilidadBundle:CtbCuenta')->find($codigoCuentaDisfrutadas);
+                            if ($arCuenta) {
+                                $arRegistro = new \Brasa\ContabilidadBundle\Entity\CtbRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                //$arRegistro->setCentroCostoRel($arCentroCosto);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setNumero($arVacacion->getNumero());
+                                $arRegistro->setNumeroReferencia($arVacacion->getCodigoVacacionPk());
+                                $arRegistro->setFecha($arVacacion->getFechaContabilidad());
+                                $arRegistro->setDebito($arVacacion->getVrVacacionBruto());
+                                $arRegistro->setNaturaleza(1);
+                                $arRegistro->setDescripcionContable('VACACIONES');
+                                if ($arCuenta->getExigeCentroCostos()) {
+                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                }
+                                if ($arCuenta->getExigeSucursal()) {
+                                    $arRegistro->setSucursalRel($arSucursal);
+                                }
+                                if ($arCuenta->getExigeArea()) {
+                                    $arRegistro->setAreaRel($arArea);
+                                }
+                                if ($arCuenta->getExigeProyecto()) {
+                                    $arRegistro->setProyectoRel($arProyecto);
+                                }
+                                $em->persist($arRegistro);
+                            }
+                        }
+
+                    }
+                } else {
+                    $error = "La vacacion codigo " . $codigo . " no existe";
+                    break;
+                }
+            }
+            if($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
+    }
+
+    public function registroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuVacacion::class, 'v')
+            ->select('v.codigoVacacionPk')
+            ->addSelect('v.codigoEmpleadoFk')
+            ->addSelect('v.codigoContratoFk')
+            ->addSelect('v.codigoGrupoFk')
+            ->addSelect('v.fecha')
+            ->addSelect('v.numero')
+            ->addSelect('v.fechaDesdePeriodo')
+            ->addSelect('v.fechaHastaPeriodo')
+            ->addSelect('v.fechaDesdeDisfrute')
+            ->addSelect('v.fechaHastaDisfrute')
+            ->addSelect('v.fechaInicioLabor')
+            ->addSelect('v.vrSalud')
+            ->addSelect('v.vrPension')
+            ->addSelect('v.vrFondoSolidaridad')
+            ->addSelect('v.vrIbc')
+            ->addSelect('v.vrDeduccion')
+            ->addSelect('v.vrBonificacion')
+            ->addSelect('v.vrValor')
+            ->addSelect('v.vrDisfrute')
+            ->addSelect('v.vrDinero')
+            ->addSelect('v.vrTotal')
+            ->leftJoin('v.empleadoRel', 'e')
+            ->leftJoin('v.contratoRel', 'c')
+            ->leftJoin('v.grupoRel', 'g')
+            ->where('v.codigoVacacionPk = ' . $codigo);
+        $arFactura = $queryBuilder->getQuery()->getSingleResult();
+        return $arFactura;
     }
 
 }

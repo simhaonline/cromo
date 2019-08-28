@@ -253,6 +253,7 @@ class VacacionesController extends ControllerListenerGeneral
             'arVacacion' => $arVacacion,
             'arVacacionAdicionales' => $arVacacionAdicionales,
             'arVacacionCambios'=>$arVacacionCambios,
+            'clase' => array('clase' => 'RhuVacacion', 'codigo' => $id),
             'form' => $form->createView()
         ]);
     }

@@ -149,7 +149,7 @@ class GenModelo extends Fixture
                 'InvCosto',
                 'InvContacto',
             )),
-            array('modulo'=>'Recurso Humano','modelo'=>array(
+            array('modulo'=>'RecursoHumano','modelo'=>array(
                 'RhuAdicional',
                 'RhuAdicionalPeriodo',
                 'RhuAspirante',

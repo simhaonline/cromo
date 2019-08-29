@@ -1308,51 +1308,52 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             }
                         }
 
-//                        //Adicionales Se deja comentado inicialmente para refactorizacion
-//                        $arLiquidacionAdicionales = $em->getRepository(RhuLiquidacionAdicional::class)->findBy(array('codigoLiquidacionFk' => $codigo));
-//                        foreach ($arLiquidacionAdicionales as $arLiquidacionAdicional) {
-//                            $arConceptoCuenta = $em->getRepository(RhuConceptoCuenta::class)->findOneBy(array('codigoConceptoFk' => $arLiquidacionAdicional->getCodigoConceptoFk(), 'codigoEmpleadoTipoFk' => $arLiquidacion->getEmpleadoRel()->getCodigoEmpleadoTipoFk()));
-//                            if ($arConceptoCuenta) {
-//                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arConceptoCuenta->getCodigoCuentaFk());
-//                                if ($arCuenta) {
-//                                    $arRegistro = new FinRegistro();
-//                                    $arRegistro->setTerceroRel($arTercero);
-//                                    // Cuando el detalle es de salud y pension se lleva al nit de la entidad
-//                                    if ($arCuenta->getExigeNit() == 1) {
-//                                        if ($arLiquidacionAdicional->getConceptoRel()->getConceptoSalud() || $arLiquidacionAdicional->getConceptoRel()->getConceptoIncapacidadEntidad()) {
-//                                            $arTerceroSalud = $em->getRepository(FinCuenta::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacion->getContratoRel()->getEntidadSaludRel()->getNit()));
-//                                            if ($arTerceroSalud) {
-//                                                $arRegistro->setTerceroRel($arTerceroSalud);
-//                                            } else {
-//                                                $error = "La entidad de salud " . $arLiquidacion->getContratoRel()->getEntidadSaludRel()->getNit() . "-" . $arLiquidacion->getContratoRel()->getEntidadSaludRel()->getNombre() . " de la liquidacion " . $arLiquidacion->getNumero() . " no existe en contabilidad";
-//                                                break;
-//                                            }
-//                                        }
-//                                        if ($arLiquidacionAdicional->getConceptoRel()->getConceptoPension() || $arLiquidacionAdicional->getConceptoRel()->getConceptoFondoSolidaridadPensional()) {
-//                                            $arTerceroPension = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacion->getContratoRel()->getEntidadPensionRel()->getNit()));
-//                                            if ($arTerceroPension) {
-//                                                $arRegistro->setTerceroRel($arTerceroPension);
-//                                            } else {
-//                                                $error = "La entidad de pension " . $arLiquidacion->getContratoRel()->getEntidadPensionRel()->getNombre() . " de la liquidacion " . $arLiquidacion->getNumero() . " no existe en contabilidad";
-//                                                break;
-//                                            }
-//                                        }
-//                                    }
-//
+                        //Adicionales Se deja comentado inicialmente para refactorizacion
+                        $arLiquidacionAdicionales = $em->getRepository(RhuLiquidacionAdicional::class)->findBy(array('codigoLiquidacionFk' => $codigo));
+                        foreach ($arLiquidacionAdicionales as $arLiquidacionAdicional) {
+                            $arConceptoCuenta = $em->getRepository(RhuConceptoCuenta::class)->findOneBy(array('codigoConceptoFk' => $arLiquidacionAdicional->getCodigoConceptoFk()));
+                            if ($arConceptoCuenta) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arConceptoCuenta->getCodigoCuentaFk());
+                                if ($arCuenta) {
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    // Cuando el detalle es de salud y pension se lleva al nit de la entidad
+                                    if ($arCuenta->getExigeTercero() == 1) {
+                                        if ($arLiquidacionAdicional->getConceptoRel()->getSalud() || $arLiquidacionAdicional->getConceptoRel()->getIncapacidadEntidad()) {
+                                            $arTerceroSalud = $em->getRepository(FinCuenta::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacion->getContratoRel()->getEntidadSaludRel()->getNit()));
+                                            if ($arTerceroSalud) {
+                                                $arRegistro->setTerceroRel($arTerceroSalud);
+                                            } else {
+                                                $error = "La entidad de salud " . $arLiquidacion->getContratoRel()->getEntidadSaludRel()->getNit() . "-" . $arLiquidacion->getContratoRel()->getEntidadSaludRel()->getNombre() . " de la liquidacion " . $arLiquidacion->getNumero() . " no existe en contabilidad";
+                                                break;
+                                            }
+                                        }
+                                        if ($arLiquidacionAdicional->getConceptoRel()->getPension() || $arLiquidacionAdicional->getConceptoRel()->getFondoSolidaridadPensional()) {
+                                            $arTerceroPension = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacion->getContratoRel()->getEntidadPensionRel()->getNit()));
+                                            if ($arTerceroPension) {
+                                                $arRegistro->setTerceroRel($arTerceroPension);
+                                            } else {
+                                                $error = "La entidad de pension " . $arLiquidacion->getContratoRel()->getEntidadPensionRel()->getNombre() . " de la liquidacion " . $arLiquidacion->getNumero() . " no existe en contabilidad";
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    //Esta propiedad no se encuentra en la entidad finCuenta
 //                                    if ($arCuenta->getCodigoTerceroFijoFk()) {
 //                                        $arTerceroDetalle = $em->getRepository(FinTercero::class)->find($arCuenta->getCodigoTerceroFijoFk());
 //                                        $arRegistro->setTerceroRel($arTerceroDetalle);
 //                                    }
-//                                    //Para contabilizar al nit de la entidad del credito
-//                                    if ($arLiquidacionAdicional->getCodigoCreditoFk() != null) {
-//                                        if ($arConfiguracion->getContabilizarCreditoNitEntidad()) {
-//                                            if ($arLiquidacionAdicional->getCreditoRel()->getCreditoTipoRel()->getNumeroIdentificacionTerceroContabilidad() != "") {
-//                                                $arTerceroCredito = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacionAdicional->getCreditoRel()->getCreditoTipoRel()->getNumeroIdentificacionTerceroContabilidad()));
-//                                                $arRegistro->setTerceroRel($arTerceroCredito);
-//                                            }
-//                                        }
-//                                    }
-//                                    //Para contabilizar al nit fijo el concepto
+                                    //Para contabilizar al nit de la entidad del credito
+                                    if ($arLiquidacionAdicional->getCodigoCreditoFk() != null) {
+                                        if ($arConfiguracion->getContabilizarCreditoNitEntidad()) {
+                                            if ($arLiquidacionAdicional->getCreditoRel()->getCreditoTipoRel()->getNumeroIdentificacionTerceroContabilidad() != "") {
+                                                $arTerceroCredito = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacionAdicional->getCreditoRel()->getCreditoTipoRel()->getNumeroIdentificacionTerceroContabilidad()));
+                                                $arRegistro->setTerceroRel($arTerceroCredito);
+                                            }
+                                        }
+                                    }
+                                    //Para contabilizar al nit fijo el concepto:: Estas dos funciones se comentan para anilisis de casos de uso
 //                                    if ($arLiquidacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad() != null) {
 //                                        $arTerceroConcepto = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arLiquidacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad()));
 //                                        $arRegistro->setTerceroRel($arTerceroConcepto);
@@ -1361,34 +1362,34 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
 //                                    if ($arLiquidacionAdicional->getConceptoRel()->getContabilizarEmpleado()) {
 //                                        $arRegistro->setTerceroRel($arTercero);
 //                                    }
-//                                    $arRegistro->setComprobanteRel($arComprobanteContable);
-//                                    $arRegistro->setCuentaRel($arCuenta);
-//                                    $arRegistro->setNumero($arLiquidacion->getNumero());
-//                                    $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
-//                                    $arRegistro->setFecha($arLiquidacion->getFecha());
-//                                    if ($arLiquidacionAdicional->getVrBonificacion() > 0) {
-//                                        $arRegistro->setVrDebito($arLiquidacionAdicional->getVrBonificacion());
-//                                        $arRegistro->setNaturaleza("D");
-//                                    } else {
-//                                        $arRegistro->setVrCredito($arLiquidacionAdicional->getVrDeduccion());
-//                                        $arRegistro->setNaturaleza("C");
-//                                    }
-//                                    if ($arCuenta->getExigeCentroCostos()) {
-//                                        $arRegistro->setCentroCostoRel($arCentroCosto);
-//                                    }
-//                                    $arRegistro->setCodigoModeloFk('RhuLiquidacion');
-//                                    $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
-//                                    $arRegistro->setDescripcion($arLiquidacionAdicional->getConceptoRel()->getNombre());
-//                                    $em->persist($arRegistro);
-//                                } else {
-//                                    $error = "La cuenta " . $arConceptoCuenta->getCodigoCuentaFk() . " no existe en el plan de cuentas";
-//                                    break;
-//                                }
-//                            } else {
-//                                $error = "El concepto adicional de la liquidacion " . $arLiquidacionAdicional->getConceptoRel()->getNombre() . " no tiene cuenta configurada";
-//                                break;
-//                            }
-//                        }
+                                    $arRegistro->setComprobanteRel($arComprobanteContable);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setNumero($arLiquidacion->getNumero());
+                                    $arRegistro->setNumeroReferencia($arLiquidacion->getCodigoLiquidacionPk());
+                                    $arRegistro->setFecha($arLiquidacion->getFecha());
+                                    if ($arLiquidacionAdicional->getVrBonificacion() > 0) {
+                                        $arRegistro->setVrDebito($arLiquidacionAdicional->getVrBonificacion());
+                                        $arRegistro->setNaturaleza("D");
+                                    } else {
+                                        $arRegistro->setVrCredito($arLiquidacionAdicional->getVrDeduccion());
+                                        $arRegistro->setNaturaleza("C");
+                                    }
+                                    if ($arCuenta->getExigeCentroCosto()) {
+                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                    }
+                                    $arRegistro->setCodigoModeloFk('RhuLiquidacion');
+                                    $arRegistro->setCodigoDocumento($arLiquidacion->getCodigoLiquidacionPk());
+                                    $arRegistro->setDescripcion($arLiquidacionAdicional->getConceptoRel()->getNombre());
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "La cuenta " . $arConceptoCuenta->getCodigoCuentaFk() . " no existe en el plan de cuentas";
+                                    break;
+                                }
+                            } else {
+                                $error = "El concepto adicional de la liquidacion " . $arLiquidacionAdicional->getConceptoRel()->getNombre() . " no tiene cuenta configurada";
+                                break;
+                            }
+                        }
 
                         //Liquidacion
                         if ($arLiquidacion->getVrTotal() > 0) {

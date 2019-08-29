@@ -495,7 +495,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
             ->select('pd.codigoPagoDetallePk')
             ->addSelect('pd.codigoPagoFk')
-            ->addSelect('pd.codigoConceptoFk')
+            ->addSelect('c.nombre as ConceptoNombre')
             ->addSelect('pd.codigoCreditoFk')
             ->addSelect('pd.codigoVacacionFk')
             ->addSelect('pd.codigoLicenciaFk')
@@ -514,6 +514,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.vrIngresoBasePrestacion')
             ->addSelect('pd.vrIngresoBaseCotizacion')
             ->addSelect('pd.vrIngresoBaseCotizacionAdicional')
+            ->leftJoin('pd.conceptoRel', 'c')
             ->where("pd.codigoPagoFk = {$codigoPago}");
 
        return $queryBuilder->getQuery()->getArrayResult();

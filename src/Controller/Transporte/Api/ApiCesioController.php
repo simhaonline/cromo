@@ -93,7 +93,7 @@ class ApiCesioController extends FOSRestController
     /**
      * @Rest\Post("/transporte/api/cesio/guia/entrega", name="transporte_api_cesio_guia_entrega")
      */
-    public function cumplido(Request $request) {
+    public function entrega(Request $request) {
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
@@ -107,65 +107,66 @@ class ApiCesioController extends FOSRestController
                         $arGuia->setEstadoEntregado(1);
                         $em->persist($arGuia);
                         $em->flush();
-                    }
-                }
-            }
-            if($imagen) {
-                $tipo = "TteGuia";
-                $arMasivoTipo = $em->getRepository(DocMasivoTipo::class)->find($tipo);
-                $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
-                $directorioDestino = $arrConfiguracion['rutaAlmacenamiento'] . "/masivo/";
-                if(file_exists($directorioDestino)) {
-                    $arDirectorio = $em->getRepository(DocDirectorio::class)->findOneBy(array('tipo' => 'M', 'codigoMasivoTipoFk' => $tipo));
-                    if(!$arDirectorio) {
-                        $arDirectorio = new DocDirectorio();
-                        $arDirectorio->setCodigoMasivoTipoFk($tipo);
-                        $arDirectorio->setDirectorio(1);
-                        $arDirectorio->setNumeroArchivos(0);
-                        $arDirectorio->setTipo('M');
-                        $em->persist($arDirectorio);
-                        $em->flush();
-                    }
-                    if($arDirectorio) {
-                        $arDirectorio = $em->getRepository(DocDirectorio::class)->find($arDirectorio->getCodigoDirectorioPk());
-                        if($arDirectorio->getNumeroArchivos() >= 50000) {
-                            $arDirectorio->setNumeroArchivos(0);
-                            $arDirectorio->setDirectorio($arDirectorio->getDirectorio()+1);
-                            $em->persist($arDirectorio);
-                            $em->flush();
-                        }
-                        $directorio = $directorioDestino . $tipo . "/" . $arDirectorio->getDirectorio() . "/";
-                        if(!file_exists($directorio)) {
-                            if(!mkdir($directorio, 0777, true)) {
+
+                        if($imagen) {
+                            $tipo = "TteGuia";
+                            $arMasivoTipo = $em->getRepository(DocMasivoTipo::class)->find($tipo);
+                            $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+                            $directorioDestino = $arrConfiguracion['rutaAlmacenamiento'] . "/masivo/";
+                            if(file_exists($directorioDestino)) {
+                                $arDirectorio = $em->getRepository(DocDirectorio::class)->findOneBy(array('tipo' => 'M', 'codigoMasivoTipoFk' => $tipo));
+                                if(!$arDirectorio) {
+                                    $arDirectorio = new DocDirectorio();
+                                    $arDirectorio->setCodigoMasivoTipoFk($tipo);
+                                    $arDirectorio->setDirectorio(1);
+                                    $arDirectorio->setNumeroArchivos(0);
+                                    $arDirectorio->setTipo('M');
+                                    $em->persist($arDirectorio);
+                                    $em->flush();
+                                }
+                                if($arDirectorio) {
+                                    $arDirectorio = $em->getRepository(DocDirectorio::class)->find($arDirectorio->getCodigoDirectorioPk());
+                                    if($arDirectorio->getNumeroArchivos() >= 50000) {
+                                        $arDirectorio->setNumeroArchivos(0);
+                                        $arDirectorio->setDirectorio($arDirectorio->getDirectorio()+1);
+                                        $em->persist($arDirectorio);
+                                        $em->flush();
+                                    }
+                                    $directorio = $directorioDestino . $tipo . "/" . $arDirectorio->getDirectorio() . "/";
+                                    if(!file_exists($directorio)) {
+                                        if(!mkdir($directorio, 0777, true)) {
+                                            return [
+                                                'error' => "Fallo al crear directorio... " . $directorio,
+                                            ];
+                                        }
+                                    }
+
+                                    $archivoDestino = rand(100000, 999999) . "_" . $guia . ".jpg";
+                                    $destino = $directorio . $archivoDestino;
+                                    $Base64Img = base64_decode($imagen);
+                                    file_put_contents($destino, $Base64Img);
+                                    $tamano = filesize ( $destino );
+                                    $arMasivo = new DocMasivo();
+                                    $arMasivo->setIdentificador($guia);
+                                    $arMasivo->setMasivoTipoRel($arMasivoTipo);
+                                    $arMasivo->setArchivo($guia . ".jpg");
+                                    $arMasivo->setExtension('image/jpeg');
+                                    $arMasivo->setDirectorio($arDirectorio->getDirectorio());
+                                    $arMasivo->setTamano($tamano);
+                                    $arMasivo->setArchivoDestino($archivoDestino);
+                                    $em->persist($arMasivo);
+                                    $arDirectorio->setNumeroArchivos($arDirectorio->getNumeroArchivos()+1);
+                                    $em->persist($arDirectorio);
+                                    $em->flush();
+                                }
+                            } else {
                                 return [
-                                    'error' => "Fallo al crear directorio... " . $directorio,
+                                    'error' => "No existe el directorio " . $directorioDestino,
                                 ];
+
                             }
                         }
-
-                        $archivoDestino = rand(100000, 999999) . "_" . $guia . ".jpg";
-                        $destino = $directorio . $archivoDestino;
-                        $Base64Img = base64_decode($imagen);
-                        file_put_contents($destino, $Base64Img);
-                        $tamano = filesize ( $destino );
-                        $arMasivo = new DocMasivo();
-                        $arMasivo->setIdentificador($guia);
-                        $arMasivo->setMasivoTipoRel($arMasivoTipo);
-                        $arMasivo->setArchivo($guia . ".jpg");
-                        $arMasivo->setExtension('image/jpeg');
-                        $arMasivo->setDirectorio($arDirectorio->getDirectorio());
-                        $arMasivo->setTamano($tamano);
-                        $arMasivo->setArchivoDestino($archivoDestino);
-                        $em->persist($arMasivo);
-                        $arDirectorio->setNumeroArchivos($arDirectorio->getNumeroArchivos()+1);
-                        $em->persist($arDirectorio);
-                        $em->flush();
                     }
-                } else {
-                    return [
-                        'error' => "No existe el directorio " . $directorioDestino,
-                    ];
-
                 }
             }
             return ['estado' => 'ok'];

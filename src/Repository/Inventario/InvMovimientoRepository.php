@@ -953,7 +953,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setFecha($arMovimiento['fecha']);
                                 $arRegistro->setVrCredito($arMovimiento['vrNeto']);
                                 $arRegistro->setNaturaleza('C');
-                                $arRegistro->setDescripcion('PROVEEDORES EXTRANJEROS');
+                                $arRegistro->setDescripcion('PROVEEDORES');
                                 $arRegistro->setCodigoModeloFk('InvMovimiento');
                                 $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
                                 $em->persist($arRegistro);
@@ -1106,7 +1106,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                         $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
                                         $em->persist($arRegistro);
                                     } else {
-                                        $error = "No tiene configurada la cuenta de venta en item";
+                                        $error = "No tiene configurada la cuenta de compra en item";
                                         break;
                                     }
                                 }

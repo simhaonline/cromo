@@ -137,4 +137,44 @@ class RhuLicenciaRepository extends ServiceEntityRepository
 
     }
 
+    public function diasProgramacion($codigoEmpleado, $codigoContrato, $fechaDesde, $fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQueryBuilder()->from(RhuLicencia::class, 'l')
+            ->select('l.codigoLicenciaPk')
+            ->addSelect('l.fechaDesde')
+            ->addSelect('l.fechaHasta')
+            ->andWhere("(((l.fechaDesde BETWEEN '$fechaDesde' AND '$fechaHasta') OR (l.fechaHasta BETWEEN '$fechaDesde' AND '$fechaHasta')) "
+                . "OR (l.fechaDesde >= '$fechaDesde' AND l.fechaDesde <= '$fechaHasta') "
+                . "OR (l.fechaHasta >= '$fechaHasta' AND l.fechaDesde <= '$fechaDesde')) "
+                . "AND l.codigoEmpleadoFk = '" . $codigoEmpleado . "' AND l.cantidad > 0")
+            ->andWhere('l.pagarEmpleado = 1');
+        if ($codigoContrato) {
+            $query->andWhere("l.codigoContratoFk = " . $codigoContrato);
+        }
+        $arLicencias = $query->getQuery()->getResult();
+        $intDiasLicencia = 0;
+        foreach ($arLicencias as $arLicencia) {
+            $dateFechaDesde = date_create($fechaDesde);
+            $dateFechaHasta = date_create($fechaHasta);
+            if ($arLicencia['fechaDesde'] < $dateFechaDesde) {
+                $dateFechaDesde = $dateFechaDesde;
+            } else {
+                $dateFechaDesde = $arLicencia['fechaDesde'];
+            }
+
+            if ($arLicencia['fechaHasta'] > $dateFechaHasta) {
+                $dateFechaHasta = $dateFechaHasta;
+            } else {
+                $dateFechaHasta = $arLicencia['fechaHasta'];
+            }
+            $intDias = $dateFechaDesde->diff($dateFechaHasta);
+            $intDias = $intDias->format('%a');
+            $intDias += 1;
+            $intDiasLicencia += $intDias;
+        }
+        $arrDevolver = array('dias' => $intDiasLicencia);
+        return $arrDevolver;
+    }
+
 }

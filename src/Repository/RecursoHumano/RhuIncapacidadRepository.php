@@ -53,7 +53,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             ->leftJoin('i.incapacidadTipoRel', 'it')
             ->leftJoin('i.entidadSaludRel', 'es')
             ->leftJoin('i.empleadoRel', 'e')
-        ->orderBy('i.codigoIncapacidadPk', 'DESC');
+            ->orderBy('i.codigoIncapacidadPk', 'DESC');
 
         if ($session->get('filtroRhuIncapacidadCodigoEmpleado') != null) {
             $queryBuilder->andWhere("i.codigoEmpleadoFk = '{$session->get('filtroRhuIncapacidadCodigoEmpleado')}'");
@@ -115,7 +115,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function validarFecha($fechaDesde, $fechaHasta, $codigoEmpleado, $codigoIncapacidad = ""):bool
+    public function validarFecha($fechaDesde, $fechaHasta, $codigoEmpleado, $codigoIncapacidad = ""): bool
     {
         $em = $this->getEntityManager();
         $strFechaDesde = $fechaDesde->format('Y-m-d');
@@ -157,7 +157,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         $anioActual = (new \DateTime('now'))->format("Y");
         $anioIncapacidad = $arIncapacidad->getFecha()->format("Y");
         $salario = $arConfiguracion->getVrSalarioMinimo();
-        if($arIncapacidad->getVrSalario()){
+        if ($arIncapacidad->getVrSalario()) {
             $salario = $arIncapacidad->getVrSalario();
         }
 
@@ -178,11 +178,11 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
                     $mesIncapacidad = $arIncapacidadMesAnterior->getFechaDesde()->format('m');
                 }
             }
-            $arrIbc = $em->getRepository( RhuAporteDetalle::class)->ibcMesAnterior($anioIncapacidad, $mesIncapacidad, $arEmpleado->getCodigoEmpleadoPk());
+            $arrIbc = $em->getRepository(RhuAporteDetalle::class)->ibcMesAnterior($anioIncapacidad, $mesIncapacidad, $arEmpleado->getCodigoEmpleadoPk());
             if ($arrIbc['respuesta'] == false) {
-                if($arIncapacidad->getVrSalario()) {
+                if ($arIncapacidad->getVrSalario()) {
                     $arrIbc = array('respuesta' => true, 'ibc' => $arIncapacidad->getVrSalario(), 'dias' => 30);
-                }else{
+                } else {
                     $arrIbc = array('respuesta' => true, 'ibc' => $intVrSalarioEmpleado, 'dias' => 30);
                 }
             }
@@ -258,7 +258,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
                     $douVrDia = $salario / $arrIbc['dias'];
                 }
                 if ($salarioEmpleado > $salario && $salarioEmpleado <= $salario * 1.5) {
-                    if($arConfiguracion->getPagarIncapacidadCompleta()) {
+                    if ($arConfiguracion->getPagarIncapacidadCompleta()) {
                         if ($intDiasCobro > 0) {
                             $floVrIncapacidad = $intDiasCobro * $douVrDia;
                         }
@@ -293,13 +293,13 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             $arIncapacidad->setVrHoraEmpresa($douVrHoraEmpresa);
             $arIncapacidad->setVrCobro($floVrIncapacidad);
             $arIncapacidad->setVrIncapacidad($floVrIncapacidadEmpleado);
-            if($arIncapacidad->getVrPagado()){
+            if ($arIncapacidad->getVrPagado()) {
                 $floVrIncapacidadSaldo = $floVrIncapacidad - $arIncapacidad->getVrPagado();
-                if($floVrIncapacidadSaldo < 0){
+                if ($floVrIncapacidadSaldo < 0) {
                     $floVrIncapacidadSaldo = 0;
                 }
                 $arIncapacidad->setVrSaldo($floVrIncapacidadSaldo);
-            }else {
+            } else {
                 $arIncapacidad->setVrSaldo($floVrIncapacidad);
             }
             if ($arIncapacidad->getCodigoIncapacidadProrrogaFk()) {
@@ -324,7 +324,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
-    private function diasReconocimiento($diasIncapacidad, $prorroga = false, $tipo = 1, $diasProrroga):array
+    private function diasReconocimiento($diasIncapacidad, $prorroga = false, $tipo = 1, $diasProrroga): array
     {
         $intDiasEntidad = 0;
         $intDiasEmpresa = 0;
@@ -458,5 +458,45 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         $objQuery = $em->createQuery($dql);
         $arIncapacidades = $objQuery->getResult();
         return $arIncapacidades;
+    }
+
+    public function diasProgramacion($codigoEmpleado, $codigoContrato, $fechaDesde, $fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQueryBuilder()->from(RhuIncapacidad::class, 'i')
+            ->select('i.codigoIncapacidadPk')
+            ->addSelect('i.fechaDesde')
+            ->addSelect('i.fechaHasta')
+            ->andWhere("(((i.fechaDesde BETWEEN '$fechaDesde' AND '$fechaHasta') OR (i.fechaHasta BETWEEN '$fechaDesde' AND '$fechaHasta')) "
+                . "OR (i.fechaDesde >= '$fechaDesde' AND i.fechaDesde <= '$fechaHasta') "
+                . "OR (i.fechaHasta >= '$fechaHasta' AND i.fechaDesde <= '$fechaDesde')) "
+                . "AND i.codigoEmpleadoFk = '" . $codigoEmpleado . "' AND i.cantidad > 0 AND i.estadoAnulado = 0")
+            ->andWhere('i.pagarEmpleado = 1');
+        if ($codigoContrato) {
+            $query->andWhere("i.codigoContratoFk = " . $codigoContrato);
+        }
+        $arIncapacidades = $query->getQuery()->getResult();
+        $intDiasIncapacidad = 0;
+        foreach ($arIncapacidades as $arIncapacidad) {
+            $dateFechaDesde = date_create($fechaDesde);
+            $dateFechaHasta = date_create($fechaHasta);
+            if ($arIncapacidad['fechaDesde'] < $dateFechaDesde) {
+                $dateFechaDesde = $dateFechaDesde;
+            } else {
+                $dateFechaDesde = $arIncapacidad['fechaDesde'];
+            }
+
+            if ($arIncapacidad['fechaHasta'] > $dateFechaHasta) {
+                $dateFechaHasta = $dateFechaHasta;
+            } else {
+                $dateFechaHasta = $arIncapacidad['fechaHasta'];
+            }
+            $intDias = $dateFechaDesde->diff($dateFechaHasta);
+            $intDias = $intDias->format('%a');
+            $intDias += 1;
+            $intDiasIncapacidad += $intDias;
+        }
+        $arrDevolver = array('dias' => $intDiasIncapacidad);
+        return $arrDevolver;
     }
 }

@@ -324,8 +324,8 @@ class TesEgresoRepository extends ServiceEntityRepository
                                             $arRegistro->setNumeroReferencia($arEgresoDetalle['numeroDocumento']);
                                             $arRegistro->setFecha($arEgreso['fecha']);
                                             $arRegistro->setFechaVence($arEgreso['fecha']);
-                                            $arRegistro->setVrCredito($arEgresoDetalle['vrPago']);
-                                            $arRegistro->setNaturaleza('C');
+                                            $arRegistro->setVrDebito($arEgresoDetalle['vrPago']);
+                                            $arRegistro->setNaturaleza('D');
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('TesEgreso');
                                             $arRegistro->setCodigoDocumento($arEgreso['codigoEgresoPk']);
@@ -351,8 +351,8 @@ class TesEgresoRepository extends ServiceEntityRepository
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arEgreso['numero']);
                                     $arRegistro->setFecha($arEgreso['fecha']);
-                                    $arRegistro->setVrDebito($arEgreso['vrPago']);
-                                    $arRegistro->setNaturaleza('D');
+                                    $arRegistro->setVrCredito($arEgreso['vrPago']);
+                                    $arRegistro->setNaturaleza('C');
                                     $arRegistro->setDescripcion("Egreso");
                                     $arRegistro->setCodigoModeloFk('TesEgreso');
                                     $arRegistro->setCodigoDocumento($arEgreso['codigoEgresoPk']);

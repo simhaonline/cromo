@@ -67,6 +67,9 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.cantidad')
             ->addSelect('pd.diaDesde')
             ->addSelect('pd.diaHasta')
+            ->addSelect('cl.nombreCorto AS cliente')
+            ->addSelect('pd.mes')
+            ->addSelect('pd.anio')
             ->addSelect('pd.lunes')
             ->addSelect('pd.martes')
             ->addSelect('pd.miercoles')
@@ -93,7 +96,10 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('m.nombre as modalidadNombre')
             ->leftJoin('pd.conceptoRel', 'c')
             ->leftJoin('pd.modalidadRel', 'm')
-            ->where('pd.estadoProgramado = 0');
+            ->leftJoin('pd.pedidoRel', 'p')
+            ->leftJoin('p.clienteRel', 'cl')
+            ->where('pd.estadoProgramado = 0')
+        ->orderBy('p.codigoPedidoPk', 'DESC');
 
         return $queryBuilder->getQuery()->getResult();
     }

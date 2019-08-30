@@ -73,6 +73,12 @@ class TurSoporte
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="dia31_solo_extra", type="boolean", options={"default":false})
+     */
+    private $dia31SoloExtra = false;
+
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuGrupo", inversedBy="soportesGrupoRel")
      * @ORM\JoinColumn(name="codigo_grupo_fk", referencedColumnName="codigo_grupo_pk")
      */
@@ -310,6 +316,22 @@ class TurSoporte
     public function setDias($dias): void
     {
         $this->dias = $dias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDia31SoloExtra()
+    {
+        return $this->dia31SoloExtra;
+    }
+
+    /**
+     * @param mixed $dia31SoloExtra
+     */
+    public function setDia31SoloExtra($dia31SoloExtra): void
+    {
+        $this->dia31SoloExtra = $dia31SoloExtra;
     }
 
 

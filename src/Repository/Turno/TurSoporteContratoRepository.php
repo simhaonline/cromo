@@ -303,6 +303,9 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                 $arSoporteHora->setHorasExtrasFestivasNocturnas($arrHoras['horasExtrasFestivasNocturnas']);
                 $arSoporteHora->setHorasDescanso($arrHoras['horasDescanso']);
                 $arSoporteHora->setHorasNovedad($arrHoras['horasNovedad']);
+                if ($dateFecha->format('d') == 31 && $arSoporte->getDia31SoloExtra()) {
+                    $this->limpiarHorasOrdinarias($arSoporteHora);
+                }
 
                 /*if ($strTurnoFijoNomina) {
                     $arSoporteHora->setHorasDiurnas($arrHoras['horasDiurnas'] + $arrHoras['horasFestivasDiurnas']);
@@ -347,13 +350,17 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                     $arSoporteHora->setHorasRecargoFestivoNocturno($arrHoras1['horasRecargoFestivoNocturno']);
                     $arSoporteHora->setDias(0);
                     $arSoporteHora->setHoras(0);
-
+                    if ($dateFecha->format('d') == 31 && $arSoporte->getDia31SoloExtra()) {
+                        $this->limpiarHorasOrdinarias($arSoporteHora);
+                    }
                     $arSoporteHora->setHorasExtrasOrdinariasDiurnas($arrHoras1['horasExtrasDiurnas']);
                     $arSoporteHora->setHorasExtrasOrdinariasNocturnas($arrHoras1['horasExtrasNocturnas']);
                     $arSoporteHora->setHorasExtrasFestivasDiurnas($arrHoras1['horasExtrasFestivasDiurnas']);
                     $arSoporteHora->setHorasExtrasFestivasNocturnas($arrHoras1['horasExtrasFestivasNocturnas']);
                     $arSoporteHora->setHorasDescanso($arrHoras1['horasDescanso']);
                     $arSoporteHora->setHorasNovedad($arrHoras1['horasNovedad']);
+
+
                     if ($arrTurno['codigoProgramacionPk']) {
                         $arSoporteHora->setProgramacionRel($em->getReference(TurProgramacion::class, $arrTurno['codigoProgramacionPk']));
                         //$arSoporteHora->setPedidoDetalleRel($arProgramacionDetalle->getPedidoDetalleRel());
@@ -603,6 +610,21 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             }
         }
         return true;
+    }
+
+    /**
+     * @param $arSoporteHora TurSoporteHora
+     */
+    public function  limpiarHorasOrdinarias($arSoporteHora) {
+        $arSoporteHora->setDias(0);
+        $arSoporteHora->setHoras(0);
+        $arSoporteHora->setHorasDiurnas(0);
+        $arSoporteHora->setHorasNocturnas(0);
+        $arSoporteHora->setHorasFestivasDiurnas(0);
+        $arSoporteHora->setHorasFestivasNocturnas(0);
+        $arSoporteHora->setHorasRecargoNocturno(0);
+        $arSoporteHora->setHorasRecargoFestivoDiurno(0);
+        $arSoporteHora->setHorasRecargoFestivoNocturno(0);
     }
 }
 

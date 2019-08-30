@@ -48,8 +48,8 @@
         <tr>
             <td class="titulo">SOPORTE:</td>
             <td class="td-in-well" style="text-align: left;">{{ arMovimiento.soporte }}</td>
-            <td class="titulo">GUIA:</td>
-            <td class="td-in-well" style="text-align: left;">{{ arMovimiento.guia }}</td>
+            <td class="titulo">FECHA DOC:</td>
+            <td class="td-in-well" style="text-align: left;">{{ arMovimiento.fechaDocumento | date('Y-m-d') }}</td>
             <td class="titulo">BRUTO:</td>
             <td class="td-in-well"
                 style="text-align: right;">{{ arMovimiento.vrTotal | number_format(0, '.', ',') }}</td>
@@ -57,8 +57,8 @@
         <tr>
             <td class="titulo">TERCERO:</td>
             <td class="td-in-well">{{ arMovimiento.terceroRel.numeroIdentificacion }}-{{ arMovimiento.terceroRel.nombreCorto }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-align: left;"></td>
+            <td class="titulo">GUIA:</td>
+            <td class="td-in-well" style="text-align: left;">{{ arMovimiento.guia }}</td>
             <td class="titulo">(-)RTE FUENTE:</td>
             <td class="td-in-well"
                 style="text-align: right;">{{ arMovimiento.vrRetencionFuente | number_format(0, '.', ',') }}</td>

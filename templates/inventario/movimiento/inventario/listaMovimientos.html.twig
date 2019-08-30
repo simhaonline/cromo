@@ -81,6 +81,7 @@
                 <th>NUMERO</th>
                 <th>TERCERO</th>
                 <th>FECHA</th>
+                <th>F_DOC</th>
                 <th>SUBTOTAL</th>
                 <th>IVA</th>
                 <th>DCT</th>
@@ -102,6 +103,7 @@
                     <td>{{ arMovimiento.numero }}</td>
                     <td>{{ arMovimiento.terceroNombreCorto }}</td>
                     <td>{{ arMovimiento.fecha | date('Y-m-d') }}</td>
+                    <td>{{ arMovimiento.fechaDocumento | date('Y-m-d') }}</td>
                     <td class="numero">{{ arMovimiento.vrSubtotal | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimiento.vrIva | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arMovimiento.vrDescuento | number_format(0, '.', ',') }}</td>
@@ -163,12 +165,12 @@
             {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
         </div>
         <div class="btn-group" style="float: right;">
-            {% if tipoDocumento != 'FAC' %}
-                <a class="btn btn-sm btn-default"
-                   href="{{ path('inventario_movimiento_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+            {% if tipoDocumento == 'FAC' %}
+                <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+            {% elseif tipoDocumento  %}
+                <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_compra',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
             {% else %}
-                <a class="btn btn-sm btn-default"
-                   href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+                <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
             {% endif %}
         </div>
     </div>

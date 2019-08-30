@@ -63,6 +63,11 @@ class InvMovimiento
     private $fecha;
 
     /**
+     * @ORM\Column(name="fecha_documento", type="date", nullable=true)
+     */
+    private $fechaDocumento;
+
+    /**
      * @ORM\Column(name="fecha_vence", type="date", nullable=true)
      */
     private $fechaVence;
@@ -886,6 +891,22 @@ class InvMovimiento
     public function setSucursalRel($sucursalRel): void
     {
         $this->sucursalRel = $sucursalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaDocumento()
+    {
+        return $this->fechaDocumento;
+    }
+
+    /**
+     * @param mixed $fechaDocumento
+     */
+    public function setFechaDocumento($fechaDocumento): void
+    {
+        $this->fechaDocumento = $fechaDocumento;
     }
 
 

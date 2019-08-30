@@ -54,6 +54,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('c.nombre AS terceroCiudad')
             ->addSelect('t.direccion AS direccionTercero')
             ->addSelect('m.fecha')
+            ->addSelect('m.fechaDocumento')
             ->addSelect('m.vrSubtotal')
             ->addSelect('m.vrIva')
             ->addSelect('m.vrDescuento')
@@ -886,7 +887,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.codigoDocumentoTipoFk')
             ->addSelect('m.codigoTerceroFk')
             ->addSelect('m.numero')
+            ->addSelect('m.soporte')
             ->addSelect('m.fecha')
+            ->addSelect('m.fechaDocumento')
             ->addSelect('m.estadoAprobado')
             ->addSelect('m.estadoContabilizado')
             ->addSelect('m.vrSubtotal')
@@ -937,6 +940,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         $arTercero = $em->getRepository(InvTercero::class)->terceroFinanciero($arMovimiento['codigoTerceroFk']);
                         //Contabilizar entradas
                         if ($arMovimiento['codigoDocumentoTipoFk'] == "COM") {
+                            $fecha = $arMovimiento['fechaDocumento'];
                             //Proveedor
                             if ($arMovimiento['codigoCuentaProveedorFk']) {
                                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arMovimiento['codigoCuentaProveedorFk']);
@@ -950,10 +954,10 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
                                 $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
-                                $arRegistro->setFecha($arMovimiento['fecha']);
+                                $arRegistro->setFecha($fecha);
                                 $arRegistro->setVrCredito($arMovimiento['vrNeto']);
                                 $arRegistro->setNaturaleza('C');
-                                $arRegistro->setDescripcion('PROVEEDORES');
+                                $arRegistro->setDescripcion('PROVEEDORES DOC ' . $arMovimiento['soporte']);
                                 $arRegistro->setCodigoModeloFk('InvMovimiento');
                                 $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
                                 $em->persist($arRegistro);
@@ -1012,7 +1016,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                                 $arRegistro->setComprobanteRel($arComprobante);
                                                 $arRegistro->setNumero($arMovimiento['numero']);
                                                 $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
-                                                $arRegistro->setFecha($arMovimiento['fecha']);
+                                                $arRegistro->setFecha($fecha);
                                                 if ($arMovimiento['notaCredito']) {
                                                     $arRegistro->setVrDebito($arrRetencion['vrRetencionFuente']);
                                                     $arRegistro->setNaturaleza('D');
@@ -1051,7 +1055,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                                 $arRegistro->setComprobanteRel($arComprobante);
                                                 $arRegistro->setNumero($arMovimiento['numero']);
                                                 $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
-                                                $arRegistro->setFecha($arMovimiento['fecha']);
+                                                $arRegistro->setFecha($fecha);
                                                 if ($arMovimiento['notaCredito']) {
                                                     $arRegistro->setVrCredito($arrIva['vrIva']);
                                                     $arRegistro->setNaturaleza('C');
@@ -1092,7 +1096,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                         $arRegistro->setComprobanteRel($arComprobante);
                                         $arRegistro->setNumero($arMovimiento['numero']);
                                         $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
-                                        $arRegistro->setFecha($arMovimiento['fecha']);
+                                        $arRegistro->setFecha($fecha);
                                         if ($arMovimiento['notaCredito']) {
                                             $arRegistro->setVrCredito($arrCompra['vrSubtotal']);
                                             $arRegistro->setNaturaleza('C');
@@ -1473,6 +1477,10 @@ class InvMovimientoRepository extends ServiceEntityRepository
         if($arMovimiento->getDocumentoRel()->getCodigoCuentaPagarTipoFk()) {
             $arTercero = $em->getRepository(InvTercero::class)->terceroTesoreria($arMovimiento->getTerceroRel());
             /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
+            $fecha = $arMovimiento->getFecha();
+            if($arMovimiento->getCodigoDocumentoTipoFk() == 'COM') {
+                $fecha = $arMovimiento->getFechaDocumento();
+            }
             $arCuentaPagarTipo = $em->getRepository(TesCuentaPagarTipo::class)->find($arMovimiento->getDocumentoRel()->getCodigoCuentaPagarTipoFk());
             $arCuentaPagar = New TesCuentaPagar();
             $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
@@ -1482,7 +1490,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $arCuentaPagar->setCodigoDocumento($arMovimiento->getCodigoMovimientoPk());
             $arCuentaPagar->setNumeroDocumento($arMovimiento->getNumero());
             $arCuentaPagar->setSoporte($arMovimiento->getSoporte());
-            $arCuentaPagar->setFecha($arMovimiento->getFecha());
+            $arCuentaPagar->setFecha($fecha);
             $arCuentaPagar->setFechaVence($arMovimiento->getFechaVence());
             $arCuentaPagar->setVrSubtotal($arMovimiento->getVrSubtotal());
             $arCuentaPagar->setVrTotal($arMovimiento->getVrTotal());

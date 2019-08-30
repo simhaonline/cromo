@@ -15,6 +15,7 @@ use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvTercero;
+use App\Form\Type\Inventario\CompraType;
 use App\Form\Type\Inventario\FacturaType;
 use App\Formato\Inventario\Factura3;
 use App\Formato\Inventario\FormatoMovimiento;
@@ -245,6 +246,59 @@ class MovimientoController extends ControllerListenerGeneral
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param $codigoDocumento
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     * @Route("/inventario/movimiento/inventario/movimiento/nuevo/compra/{codigoDocumento}/{id}", name="inventario_movimiento_inventario_movimiento_nuevo_compra")
+     */
+    public function nuevoCompra(Request $request, $codigoDocumento, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arMovimiento = new InvMovimiento();
+        $objFunciones = new FuncionesController();
+        if ($id != 0) {
+            $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
+            if (!$arMovimiento) {
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_lista', ['codigoDocumento' => $codigoDocumento]));
+            }
+        } else {
+            $arMovimiento->setFechaDocumento(new \DateTime('now'));
+        }
+        $arMovimiento->setUsuario($this->getUser()->getUserName());
+        $arDocumento = $em->getRepository(InvDocumento::class)->find($codigoDocumento);
+        $arMovimiento->setDocumentoRel($arDocumento);
+        $form = $this->createForm(CompraType::class, $arMovimiento);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                $arMovimiento->setTerceroRel($em->getRepository(InvTercero::class)->find($txtCodigoTercero));
+                if ($id == 0) {
+                    $arMovimiento->setFecha(new \DateTime('now'));
+                    if ($arMovimiento->getPlazoPago() == 0) {
+                        $arMovimiento->setPlazoPago($arMovimiento->getTerceroRel()->getPlazoPago());
+                    }
+                }
+
+                $arMovimiento->setFechaVence($arMovimiento->getPlazoPago() == 0 ? $arMovimiento->getFechaDocumento() : $objFunciones->sumarDiasFecha($arMovimiento->getFechaDocumento(), $arMovimiento->getPlazoPago()));
+                $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
+                $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
+                $arMovimiento->setOperacionComercial($arDocumento->getOperacionComercial());
+                $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
+                $em->persist($arMovimiento);
+                $em->flush();
+                return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
+            }
+        }
+        return $this->render('inventario/movimiento/inventario/nuevoCompra.html.twig', [
+            'tipoDocumento' => $arDocumento->getCodigoDocumentoTipoFk(),
+            'arMovimiento' => $arMovimiento,
+            'form' => $form->createView()
+        ]);
+    }
 
     /**
      * @param Request $request

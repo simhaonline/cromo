@@ -164,4 +164,26 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->select('c');
              return $queryBuilder;
     }
+
+    public function ContratoIntercambio($codigoEmpleado)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuContrato::class, 'con')
+            ->select('con.codigoContratoPk')
+            ->addSelect('con.numero')
+            ->addSelect('con.fechaDesde')
+            ->addSelect('con.fechaHasta')
+            ->addSelect('con.vrSalario')
+            ->addSelect('em.codigoEmpleadoPk')
+            ->addSelect('g.nombre as grupo')
+            ->addSelect('t.nombre as tipo')
+            ->addSelect('cl.nombre as clase')
+            ->addSelect('car.nombre as cargo')
+            ->leftJoin('con.empleadoRel', 'em')
+            ->leftJoin('con.grupoRel', 'g')
+            ->leftJoin('con.contratoTipoRel', 't')
+            ->leftJoin('con.contratoClaseRel', 'cl')
+            ->leftJoin('con.cargoRel', 'car')
+            ->where("em.codigoEmpleadoPk = {$codigoEmpleado}");
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
 }

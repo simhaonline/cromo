@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Utilidad\programaciones;
 
+use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
@@ -31,6 +32,7 @@ use Symfony\Component\Routing\Annotation\Route;
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
                 $codigoProgramacion = $request->request->get('btnTransferir');
+                $arProgramacion = $em->getRepository(RhuProgramacion::class)->find($codigoProgramacion);
                 $arPagos = $em->getRepository(RhuPago::class)->findBy(["codigoProgramacionFk"=>$codigoProgramacion]);
                 foreach ($arPagos as $arPago) {
                     $arrDatos['pagos'] = array(
@@ -52,6 +54,7 @@ use Symfony\Component\Routing\Annotation\Route;
                         'vrSalarioContrato'=>(float)$arPago->getvrSalarioContrato(),
                         'vrDevengado'=>(float)$arPago->getvrDevengado(),
                         'vrDeduccion'=>(float)$arPago->getvrDeduccion(),
+                        'vrNeto'=>(float)$arPago->getvrNeto(),
                         'diasAusentismo'=>$arPago->getdiasAusentismo(),
                         'estadoAutorizado'=>$arPago->getestadoAutorizado()??false,
                         'estadoAprobado'=>$arPago->getestadoAprobado()??false,
@@ -59,10 +62,17 @@ use Symfony\Component\Routing\Annotation\Route;
                         'estadoEgreso'=>$arPago->getestadoEgreso()??false,
                         'comentario'=>$arPago->getcomentario(),
                         'codigoVacacionFk'=>$arPago->getcodigoVacacionFk(),
-                        'usuario'=>$arPago->getusuario(),
+                        'salud'=>$arPago->getentidadSaludRel()->getnombre(),
+                        'pension'=>$arPago->getentidadPensionRel()->getnombre(),
+                        'banco'=>$arPago->getempleadoRel()->getbancoRel()->getnombre()??"no",
+                        'cuenta'=>$arPago->getempleadoRel()->getcuenta(),
+                        'grupo'=>$arPago->getgrupoRel()->getNombre(),
+                        'salario'=>$arPago->getContratoRel()->getVrSalario(),
+                        'usuario'=>$arPago->getusuario()
                     );
                     $arrDatos['programacionDetalle'] = $em->getRepository(RhuPagoDetalle::class)->PagoDetalleIntercambio($arPago->getCodigoPagoPK());
                     $arrDatos['empleados'] = $em->getRepository(RhuEmpleado::class)->empleadoIntercambio($arPago->getCodigoEmpleadoFK());
+                    $arrDatos['contrato'] = $em->getRepository(RhuContrato::class)->contratoIntercambio($arPago->getCodigoEmpleadoFK());
                     $arrDatos = json_encode($arrDatos);
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, "http://localhost/oxigeno/public/index.php/api/pagos/lista"); //cambiar url desde bd
@@ -73,7 +83,12 @@ use Symfony\Component\Routing\Annotation\Route;
                             'Content-Type: application/json',
                             'Content-Length: ' . strlen($arrDatos))
                     );
-                    $boorespuesta = json_decode(curl_exec($ch));
+                    $booRespuesta = json_decode(curl_exec($ch));
+//                    if ($booRespuesta){
+//                        $arProgramacion->setEstadoTransferido(true);
+//                        $em->persist($arProgramacion);
+//                        $em->flush();
+//                    }
                     curl_close($ch);
                     unset($arrDatos);
 

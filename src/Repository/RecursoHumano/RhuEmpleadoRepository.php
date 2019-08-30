@@ -152,11 +152,16 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
     public function empleadoIntercambio($codigoEmpleado){
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuEmpleado::class, 'e')
             ->select('e.codigoEmpleadoPk')
+            ->addSelect('e.codigoCuentaTipoFk')
             ->addSelect('e.numeroIdentificacion')
+            ->addSelect('c.nombre as lugarExpedicion')
             ->addSelect('e.nombre1')
             ->addSelect('e.nombre2')
             ->addSelect('e.apellido1')
             ->addSelect('e.apellido2')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('e.correo')
+            ->leftJoin('e.ciudadExpedicionRel', 'c')
             ->where("e.codigoEmpleadoPk = {$codigoEmpleado}");
 
         return $queryBuilder->getQuery()->getArrayResult();

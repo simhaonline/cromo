@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Utilidad\programaciones;
 
+use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuPago;
@@ -33,6 +34,8 @@ use Symfony\Component\Routing\Annotation\Route;
                 ini_set("memory_limit", -1);
                 $codigoProgramacion = $request->request->get('btnTransferir');
                 $arProgramacion = $em->getRepository(RhuProgramacion::class)->find($codigoProgramacion);
+                $arConfiguracion =  $em->getRepository(GenConfiguracion::class)->find(1);
+                $codigoEmpresa = $arConfiguracion->getCodigoEmpresa();
                 $arPagos = $em->getRepository(RhuPago::class)->findBy(["codigoProgramacionFk"=>$codigoProgramacion]);
                 foreach ($arPagos as $arPago) {
                     $arrDatos['pagos'] = array(
@@ -73,9 +76,10 @@ use Symfony\Component\Routing\Annotation\Route;
                     $arrDatos['programacionDetalle'] = $em->getRepository(RhuPagoDetalle::class)->PagoDetalleIntercambio($arPago->getCodigoPagoPK());
                     $arrDatos['empleados'] = $em->getRepository(RhuEmpleado::class)->empleadoIntercambio($arPago->getCodigoEmpleadoFK());
                     $arrDatos['contrato'] = $em->getRepository(RhuContrato::class)->contratoIntercambio($arPago->getCodigoEmpleadoFK());
+                    $arrDatos['empresa']= $codigoEmpresa;
                     $arrDatos = json_encode($arrDatos);
                     $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, "http://localhost/oxigeno/public/index.php/api/pagos/lista"); //cambiar url desde bd
+                    curl_setopt($ch, CURLOPT_URL, $arConfiguracion->getWebServiceOxigenoUrl());
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $arrDatos);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -84,11 +88,11 @@ use Symfony\Component\Routing\Annotation\Route;
                             'Content-Length: ' . strlen($arrDatos))
                     );
                     $booRespuesta = json_decode(curl_exec($ch));
-//                    if ($booRespuesta){
-//                        $arProgramacion->setEstadoTransferido(true);
-//                        $em->persist($arProgramacion);
-//                        $em->flush();
-//                    }
+                    if ($booRespuesta){
+                        $arProgramacion->setEstadoTransferido(true);
+                        $em->persist($arProgramacion);
+                        $em->flush();
+                    }
                     curl_close($ch);
                     unset($arrDatos);
 

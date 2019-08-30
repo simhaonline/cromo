@@ -83,6 +83,11 @@ class GenConfiguracion
     private $webServiceGalioUrl;
 
     /**
+     * @ORM\Column(name="web_service_oxigeno_url", type="string", nullable=true)
+     */
+    private $webServiceOxigenoUrl;
+
+    /**
      * @ORM\Column(name="dominio", type="string", nullable=true)
      */
     private $dominio;
@@ -121,6 +126,12 @@ class GenConfiguracion
      * @ORM\Column(name="version_base_datos", type="integer", options={"default" : 0})
      */
     private $versionBaseDatos = 0;
+
+    /**
+     * @ORM\Column(name="codigo_empresa", type="integer", options={"default" : 0})
+     */
+    private $codigoEmpresa = 0;
+
 
     /**
      * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
@@ -502,6 +513,37 @@ class GenConfiguracion
         $this->identificacionRel = $identificacionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getWebServiceOxigenoUrl()
+    {
+        return $this->webServiceOxigenoUrl;
+    }
+
+    /**
+     * @param mixed $webServiceOxigenoUrl
+     */
+    public function setWebServiceOxigenoUrl($webServiceOxigenoUrl): void
+    {
+        $this->webServiceOxigenoUrl = $webServiceOxigenoUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpresa()
+    {
+        return $this->codigoEmpresa;
+    }
+
+    /**
+     * @param mixed $codigoEmpresa
+     */
+    public function setCodigoEmpresa($codigoEmpresa): void
+    {
+        $this->codigoEmpresa = $codigoEmpresa;
+    }
 
 }
 

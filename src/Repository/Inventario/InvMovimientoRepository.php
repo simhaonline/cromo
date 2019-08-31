@@ -954,6 +954,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $arRegistro->setComprobanteRel($arComprobante);
                                 $arRegistro->setNumero($arMovimiento['numero']);
                                 $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
+                                $arRegistro->setNumeroReferencia($arMovimiento['soporte']);
                                 $arRegistro->setFecha($fecha);
                                 $arRegistro->setVrCredito($arMovimiento['vrNeto']);
                                 $arRegistro->setNaturaleza('C');

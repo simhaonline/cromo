@@ -1938,10 +1938,11 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->select('g.codigoGuiaPk')
             ->addSelect('g.nombreDestinatario AS destinatario')
             ->addSelect('cd.nombre AS destino')
+            ->addSelect('g.unidades')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
             ->where("g.codigoDespachoFk = " . $codigoDespacho)
             ->andWhere('g.estadoEntregado = 0')
-            ->orderBy('g.ordenRuta');
+            ->orderBy('g.codigoCiudadDestinoFk');
         return $queryBuilder->getQuery()->getResult();
     }
 

@@ -172,6 +172,11 @@ class CarCuentaCobrar
     private $anticipo = false;
 
     /**
+     * @ORM\Column(name="saldo_inicial", type="boolean", options={"default":true})
+     */
+    private $saldoInicial = true;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrarTipo", inversedBy="cuentasCobrarCuentaCobrarTipoRel")
      * @ORM\JoinColumn(name="codigo_cuenta_cobrar_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
      */
@@ -852,6 +857,22 @@ class CarCuentaCobrar
     public function setCompromisosDetallesCuentaCobrarRel($compromisosDetallesCuentaCobrarRel): void
     {
         $this->compromisosDetallesCuentaCobrarRel = $compromisosDetallesCuentaCobrarRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSaldoInicial()
+    {
+        return $this->saldoInicial;
+    }
+
+    /**
+     * @param mixed $saldoInicial
+     */
+    public function setSaldoInicial($saldoInicial): void
+    {
+        $this->saldoInicial = $saldoInicial;
     }
 
 

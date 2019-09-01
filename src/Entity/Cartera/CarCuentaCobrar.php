@@ -172,9 +172,9 @@ class CarCuentaCobrar
     private $anticipo = false;
 
     /**
-     * @ORM\Column(name="saldo_inicial", type="boolean", options={"default":true})
+     * @ORM\Column(name="saldo_inicial", type="boolean", options={"default":false})
      */
-    private $saldoInicial = true;
+    private $saldoInicial = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrarTipo", inversedBy="cuentasCobrarCuentaCobrarTipoRel")
@@ -702,6 +702,38 @@ class CarCuentaCobrar
     /**
      * @return mixed
      */
+    public function getAnticipo()
+    {
+        return $this->anticipo;
+    }
+
+    /**
+     * @param mixed $anticipo
+     */
+    public function setAnticipo($anticipo): void
+    {
+        $this->anticipo = $anticipo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSaldoInicial()
+    {
+        return $this->saldoInicial;
+    }
+
+    /**
+     * @param mixed $saldoInicial
+     */
+    public function setSaldoInicial($saldoInicial): void
+    {
+        $this->saldoInicial = $saldoInicial;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCuentaCobrarTipoRel()
     {
         return $this->cuentaCobrarTipoRel;
@@ -814,38 +846,6 @@ class CarCuentaCobrar
     /**
      * @return mixed
      */
-    public function getAnticipo()
-    {
-        return $this->anticipo;
-    }
-
-    /**
-     * @param mixed $anticipo
-     */
-    public function setAnticipo($anticipo): void
-    {
-        $this->anticipo = $anticipo;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCompromisosDetallesCuentaCobrarRel()
     {
         return $this->compromisosDetallesCuentaCobrarRel;
@@ -857,22 +857,6 @@ class CarCuentaCobrar
     public function setCompromisosDetallesCuentaCobrarRel($compromisosDetallesCuentaCobrarRel): void
     {
         $this->compromisosDetallesCuentaCobrarRel = $compromisosDetallesCuentaCobrarRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSaldoInicial()
-    {
-        return $this->saldoInicial;
-    }
-
-    /**
-     * @param mixed $saldoInicial
-     */
-    public function setSaldoInicial($saldoInicial): void
-    {
-        $this->saldoInicial = $saldoInicial;
     }
 
 

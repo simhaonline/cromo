@@ -6,6 +6,7 @@ use App\Entity\Documental\DocConfiguracion;
 use App\Entity\Documental\DocDirectorio;
 use App\Entity\Documental\DocMasivo;
 use App\Entity\Documental\DocMasivoTipo;
+use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TtePrecioDetalle;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -75,6 +76,14 @@ class ApiCesioController extends FOSRestController
             $unidades = $raw['unidades']?? null;
             $peso = $raw['peso']?? null;
             $declarado = $raw['declarado']?? null;
+            if($destino) {
+                $arCiudad = $em->getRepository(TteCiudad::class)->find($destino);
+                if($arCiudad) {
+                    if($arCiudad->getCodigoZonaFk()) {
+                        $zona = $arCiudad->getCodigoZonaFk();
+                    }
+                }
+            }
             if($cliente && $condicion && $precio && $origen && $destino && $producto && $tipoLiquidacion && $unidades) {
                 return $em->getRepository(TteGuia::class)->liquidar($cliente, $condicion, $precio, $origen, $destino, $producto, $zona, $tipoLiquidacion, $unidades, $peso, $declarado);
             } else {

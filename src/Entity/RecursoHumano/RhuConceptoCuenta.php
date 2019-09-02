@@ -38,9 +38,9 @@ class RhuConceptoCuenta
     private $codigoCuentaFk;
 
     /**
-     * @ORM\Column(name="codigo_empleado_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="naturaleza", type="string", length=1, nullable=true)
      */
-    private $codigoEmpleadoTipoFk;
+    private $naturaleza = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="conceptosCuentasConceptoRel")
@@ -169,18 +169,20 @@ class RhuConceptoCuenta
     /**
      * @return mixed
      */
-    public function getCodigoEmpleadoTipoFk()
+    public function getNaturaleza()
     {
-        return $this->codigoEmpleadoTipoFk;
+        return $this->naturaleza;
     }
 
     /**
-     * @param mixed $codigoEmpleadoTipoFk
+     * @param mixed $naturaleza
      */
-    public function setCodigoEmpleadoTipoFk($codigoEmpleadoTipoFk): void
+    public function setNaturaleza($naturaleza): void
     {
-        $this->codigoEmpleadoTipoFk = $codigoEmpleadoTipoFk;
+        $this->naturaleza = $naturaleza;
     }
+
+
 
 
 

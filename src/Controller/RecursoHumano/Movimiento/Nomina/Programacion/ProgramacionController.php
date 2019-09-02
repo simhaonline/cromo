@@ -206,6 +206,7 @@ class ProgramacionController extends ControllerListenerGeneral
         return $this->render('recursohumano/movimiento/nomina/programacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arProgramacion' => $arProgramacion,
+            'clase' => array('clase' => 'RhuProgramacion', 'codigo' => $id),
             'arProgramacionDetalles' => $arProgramacionDetalles
         ]);
     }

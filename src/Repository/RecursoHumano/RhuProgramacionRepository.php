@@ -6,7 +6,12 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Compra\ComCuentaPagarTipo;
 use App\Entity\Compra\ComProveedor;
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
+use App\Entity\Financiero\FinTercero;
 use App\Entity\RecursoHumano\RhuConcepto;
+use App\Entity\RecursoHumano\RhuConceptoCuenta;
 use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuConsecutivo;
@@ -31,6 +36,7 @@ use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use PhpParser\Node\Expr\New_;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 
 class RhuProgramacionRepository extends ServiceEntityRepository
@@ -406,7 +412,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         ini_set("memory_limit", -1);
 
         $arSoporte = $em->getRepository(TurSoporte::class)->find($codigoSoporte);
-        if($arSoporte->getEstadoAprobado()) {
+        if ($arSoporte->getEstadoAprobado()) {
             //if ($arSoportePagoPeriodo->getEstadoAprobadoPagoNomina() == 1) {
             //$em->getRepository('BrasaRecursoHumanoBundle:RhuProgramacionPagoInconsistencia')->eliminarProgramacionPago($codigoProgramacionPago);
             $arrInconsistencias = array();
@@ -563,5 +569,150 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             ->leftJoin('p.grupoRel', "g")
             ->where("p.estadoTransferido = false");
         return $queryBuilder;
+    }
+
+    /**
+     * @param $arr
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function contabilizar($arr): bool
+    {
+
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            foreach ($arr AS $codigo) {
+                $arPagos = $em->getRepository(RhuPago::class)->findBy(array('codigoProgramacionFk' => $codigo));
+                foreach ($arPagos AS $arPago) {
+                    $arTercero = $em->getRepository(RhuEmpleado::class)->terceroFinanciero($arPago->getCodigoEmpleadoFk());
+                    $em->flush($arTercero);
+                }
+            }
+
+
+            foreach ($arr AS $codigo) {
+                $arProgramacion = $em->getRepository(RhuProgramacion::class)->find($codigo);
+                $arPagos = $em->getRepository(RhuPago::class)->findBy(array('codigoProgramacionFk' => $codigo));
+                foreach ($arPagos AS $arPago) {
+                    $arTercero = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPago->getEmpleadoRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPago->getEmpleadoRel()->getNumeroIdentificacion()));
+                    $arComprobanteContable = $em->getRepository(FinComprobante::class)->find(11);
+                    $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->findBy(array('codigoPagoFk' => $arPago->getCodigoPagoPk()));
+                    foreach ($arPagoDetalles AS $arPagoDetalle) {
+                        $arConceptoCuenta = $em->getRepository(RhuConceptoCuenta::class)->findOneBy(array('codigoConceptoFk' => $arPagoDetalle->getCodigoConceptoFk(), 'codigoCostoClaseFk' => $arPago->getContratoRel()->getCodigoCostoClaseFk()));
+                        if ($arConceptoCuenta) {
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arConceptoCuenta->getCodigoCuentaFk());
+                            if ($arCuenta) {
+                                $arRegistro = New FinRegistro();
+                                $arRegistro->setComprobanteRel($arComprobanteContable);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setTerceroRel($arTercero);
+
+                                // Cuando el detalle es de salud y pension se lleva al nit de la entidad
+                                if ($arCuenta->getExigeTercero() == 1) {
+                                    if ($arPagoDetalle->getConceptoRel()->getSalud() || $arPagoDetalle->getConceptoRel()->getIncapacidadEntidad()) {
+                                        $arTerceroSalud = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arPago->getEntidadSaludRel()->getNit()));
+                                        if ($arTerceroSalud) {
+                                            $arRegistro->setTerceroRel($arTerceroSalud);
+                                        } else {
+                                            $error = "La entidad de salud " . $arPago->getEntidadSaludRel()->getNit() . "-" . $arPago->getEntidadSaludRel()->getNombre() . " del pago " . $arPago->getNumero() . " no existe en contabilidad";
+                                            break;
+                                        }
+                                    }
+                                    if ($arPagoDetalle->getConceptoRel()->getPension() || $arPagoDetalle->getConceptoRel()->getFondoSolidaridadPensional()) {
+                                        $arTerceroPension = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arPago->getEntidadPensionRel()->getNit()));
+                                        if ($arTerceroPension) {
+                                            $arRegistro->setTerceroRel($arTerceroPension);
+                                        } else {
+                                            $error = "La entidad de pension " . $arPago->getEntidadPensionRel()->getNit() . "-" . $arPago->getEntidadPensionRel()->getNombre() . " del pago " . $arPago->getNumero() . " no existe en contabilidad";
+                                            break;
+                                        }
+                                    }
+                                    // Se comenta por que la propiedad no esta licencia entidad
+//                                    if ($arPagoDetalle->getConceptoRel()->getLicenciaEntidad()) {
+//                                        $arTerceroLicenciaEntidad = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arPago->getEntidadSaludRel()->getNit()));
+//                                        if ($arTerceroLicenciaEntidad) {
+//                                            $arRegistro->setTerceroRel($arTerceroLicenciaEntidad);
+//                                        } else {
+//                                            $error = "La entidad de salud " . $arPago->getEntidadSaludRel()->getNombre() . " del pago " . $arPago->getNumero() . " no existe en contabilidad";
+//                                            break;
+//                                        }
+//                                    }
+                                }
+
+                                $arRegistro->setNumero($arPago->getNumero());
+                                $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                $arRegistro->setFecha($arPago->getFechaHasta());
+                                if ($arConceptoCuenta->getNaturaleza() == "D") {
+                                    $arRegistro->setVrDebito($arPagoDetalle->getVrPago());
+                                    $arRegistro->setNaturaleza("D");
+                                } else {
+                                    $arRegistro->setVrCredito($arPagoDetalle->getVrPago());
+                                    $arRegistro->setNaturaleza("C");
+                                }
+                                $arRegistro->setCodigoDocumento($codigo);
+                                $arRegistro->setDescripcion($arPagoDetalle->getConceptoRel()->getNombre());
+                                $arRegistro->setCodigoModeloFk('RhuProgramacion');
+                                $arRegistro->setCodigoDocumento($arProgramacion->getCodigoProgramacionPk());
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "La cuenta . $arCuenta . no existe";
+                            }
+                        } else {
+                            $error = "EL concepto " . $arPagoDetalle->getCodigoConceptoFk() . "no tiene una cuenta contable asociada";
+                        }
+                    }
+
+                    //Cuenta por pagar
+                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arPago->getPagoTipoRel()->getCodigoCuentaFk()); //estaba 250501
+                    $arRegistro = new FinRegistro();
+                    $arRegistro->setCuentaRel($arCuenta);
+                    $arRegistro->setComprobanteRel($arComprobanteContable);
+                    $arRegistro->setTerceroRel($arTercero);
+                    $arRegistro->setNumero($arPago->getNumero());
+                    $arRegistro->setNumeroReferencia($arPago->getNumero());
+                    $arRegistro->setFecha($arPago->getFechaHasta());
+                    $arRegistro->setVrCredito($arPago->getVrNeto());
+                    $arRegistro->setNaturaleza("C");
+                    $arRegistro->setDescripcion('NOMINA POR PAGAR');
+                    $arRegistro->setCodigoModeloFk('RhuProgramacion');
+                    $arRegistro->setCodigoDocumento($arProgramacion->getCodigoProgramacionPk());
+                    $em->persist($arRegistro);
+                }
+
+                $arProgramacionAct = $em->getRepository(RhuProgramacion::class)->find($arProgramacion->getCodigoProgramacionPk());
+                $arProgramacionAct->setEstadoContabilizado(1);
+                $em->persist($arProgramacionAct);
+            }
+
+
+            if ($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
+    }
+
+    /**
+     * @param $codigo
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public
+    function registroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuProgramacion::class, 'pr')
+            ->select('pr.codigoProgramacionPk')
+            ->addSelect('pr.estadoAprobado')
+            ->addSelect('pr.estadoContabilizado')
+            ->where('pr.codigoProgramacionPk = ' . $codigo);
+        $arProgramacion = $queryBuilder->getQuery()->getSingleResult();
+        return $arProgramacion;
     }
 }

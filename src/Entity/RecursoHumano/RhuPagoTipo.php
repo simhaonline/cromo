@@ -27,6 +27,11 @@ class RhuPagoTipo
      * @ORM\Column(name="codigo_cuenta_pagar_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCuentaPagarTipoFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaFk;
     
     /**
      * @ORM\Column(name="nombre", type="string", length=50, nullable=true)
@@ -202,5 +207,23 @@ class RhuPagoTipo
     {
         $this->generaTesoreria = $generaTesoreria;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaFk()
+    {
+        return $this->codigoCuentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaFk
+     */
+    public function setCodigoCuentaFk($codigoCuentaFk): void
+    {
+        $this->codigoCuentaFk = $codigoCuentaFk;
+    }
+
+
 
 }

@@ -16,9 +16,11 @@
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="" readOnly="ReadOnly" />
+                                <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
+                                       value="" readOnly="ReadOnly"/>
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_buscar_tercero', { 'campoCodigo': 'form_txtCodigoTercero', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('inventario_buscar_tercero', { 'campoCodigo': 'form_txtCodigoTercero', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -93,7 +95,8 @@
                 <th>ANU</th>
                 <th></th>
                 <th></th>
-                <th><input type="checkbox" name="ChkSeleccionar" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+                <th><input type="checkbox" name="ChkSeleccionar"
+                           OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
             </tr>
             </thead>
             <tbody>
@@ -115,13 +118,18 @@
                     <td class="estado">{{ arMovimiento.estadoAnulado?'SI':'NO' }}</td>
                     <td style="text-align: center;">
                         {% if not arMovimiento.estadoAutorizado %}
-                            {% if tipoDocumento != 'FAC' %}
-                                <a href="{{ path('inventario_movimiento_inventario_movimiento_nuevo', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
+                            {% if tipoDocumento == 'FAC' %}
+                                <a href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
+                                    <i class="fa fa-edit" style="font-size: large;color: black;">
+                                    </i>
+                                </a>
+                            {% elseif tipoDocumento == 'COM' %}
+                                <a href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_compra', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
                                     <i class="fa fa-edit" style="font-size: large;color: black;">
                                     </i>
                                 </a>
                             {% else %}
-                                <a href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
+                                <a href="{{ path('inventario_movimiento_inventario_movimiento_nuevo', {'codigoDocumento':arMovimiento.codigoDocumentoFk,'id': arMovimiento.codigoMovimientoPk}) }}">
                                     <i class="fa fa-edit" style="font-size: large;color: black;">
                                     </i>
                                 </a>
@@ -134,7 +142,8 @@
                             </i>
                         </a>
                     </td>
-                    <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arMovimiento.codigoMovimientoPk }}"></td>
+                    <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                           value="{{ arMovimiento.codigoMovimientoPk }}"></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -166,15 +175,18 @@
         </div>
         <div class="btn-group" style="float: right;">
             {% if tipoDocumento == 'FAC' %}
-                <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
-            {% elseif tipoDocumento  %}
-                <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_compra',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+                <a class="btn btn-sm btn-default"
+                   href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+            {% elseif tipoDocumento == 'COM' %}
+                <a class="btn btn-sm btn-default"
+                   href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_compra',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
             {% else %}
-                <a class="btn btn-sm btn-default" href="{{ path('inventario_movimiento_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
+                <a class="btn btn-sm btn-default"
+                   href="{{ path('inventario_movimiento_inventario_movimiento_nuevo',{'codigoDocumento': codigoDocumento,'id' : 0 }) }}">Nuevo</a>
             {% endif %}
         </div>
     </div>
-<br><br><br><br>
+    <br><br><br><br>
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

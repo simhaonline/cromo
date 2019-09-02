@@ -79,7 +79,7 @@ use Symfony\Component\Routing\Annotation\Route;
                     $arrDatos['empresa']= $codigoEmpresa;
                     $arrDatos = json_encode($arrDatos);
                     $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $arConfiguracion->getWebServiceOxigenoUrl());
+                    curl_setopt($ch, CURLOPT_URL, $arConfiguracion->getWebServiceOxigenoUrl().'/api/'.'pagos/lista');
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $arrDatos);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

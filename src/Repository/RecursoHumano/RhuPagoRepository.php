@@ -67,6 +67,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
         $arPago->setEmpleadoRel($arProgramacionDetalle->getEmpleadoRel());
         $arPago->setContratoRel($arProgramacionDetalle->getContratoRel());
+        $arPago->setGrupoRel($arProgramacionDetalle->getContratoRel()->getGrupoRel());
         $arPago->setProgramacionDetalleRel($arProgramacionDetalle);
         $arPago->setProgramacionRel($arProgramacion);
         $arPago->setVrSalarioContrato($arContrato->getVrSalario());

@@ -223,12 +223,17 @@ class ReciboController extends ControllerListenerGeneral
                         //Lo quito mario porque no sabia que era
                         //$vrPago = $em->getRepository(CarReciboDetalle::class)->vrPagoRecibo($codigoCuentaCobrar, $id);
                         //$saldo = $arrControles['TxtSaldo' . $codigoCuentaCobrar] - $vrPago;
+                        $retencionFuente = $arrControles['TxtRetencionFuente' . $codigoCuentaCobrar];
+                        $retencionIca = $arrControles['TxtRetencionIca' . $codigoCuentaCobrar];
+                        $retencionFuente += $arCuentaCobrar->getVrRetencionFuente();
                         $saldo = $arrControles['TxtSaldo' . $codigoCuentaCobrar];
+
                         $arReciboDetalle = new CarReciboDetalle();
                         $arReciboDetalle->setReciboRel($arRecibo);
                         $arReciboDetalle->setCuentaCobrarRel($arCuentaCobrar);
-                        $arReciboDetalle->setVrRetencionFuente($arCuentaCobrar->getVrRetencionFuente());
-                        $saldo -= $arCuentaCobrar->getVrRetencionFuente();
+                        $arReciboDetalle->setVrRetencionFuente($retencionFuente);
+                        $arReciboDetalle->setVrRetencionIca($retencionIca);
+                        $saldo -= $retencionFuente+$retencionIca;
                         $pagoAfectar = $arrControles['TxtSaldo' . $codigoCuentaCobrar];
                         $arReciboDetalle->setVrPago($saldo);
                         $arReciboDetalle->setVrPagoAfectar($pagoAfectar);

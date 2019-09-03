@@ -12,6 +12,8 @@
             <th>FECHA</th>
             <th>VENCE</th>
             <th style="text-align: right">VALOR</th>
+            <th style="text-align: center">RTE_ICA</th>
+            <th style="text-align: center">RTE_FTE</th>
             <th style="text-align: center">SALDO</th>
             <th><input type="checkbox" name="ChkSeleccionarTodos"
                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -27,6 +29,16 @@
             <td>{{ arCuentasCobrar.fecha | date('Y-m-d') }}</td>
             <td>{{ arCuentasCobrar.fechaVence | date('Y-m-d') }}</td>
             <td style="text-align: right">{{ arCuentasCobrar.vrTotal | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right"><input width="60px" style="text-align: right" type="text"
+                                                 name="TxtRetencionIca{{ arCuentasCobrar.codigoCuentaCobrarPk }}"
+                                                 value="0" size="8"
+                                                 onkeypress="return validarNumeros(event)" onclick="this.select()"/>
+
+            <td style="text-align: right"><input width="60px" style="text-align: right" type="text"
+                                                 name="TxtRetencionFuente{{ arCuentasCobrar.codigoCuentaCobrarPk }}"
+                                                 value="0" size="8"
+                                                 onkeypress="return validarNumeros(event)" onclick="this.select()"/>
+            </td>
             <td style="text-align: right"><input width="60px" style="text-align: right" type="text"
                                                  name="TxtSaldo{{ arCuentasCobrar.codigoCuentaCobrarPk }}"
                                                  value="{{ arCuentasCobrar.vrSaldo }}" size="8"

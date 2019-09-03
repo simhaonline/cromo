@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('tesoreria_movimiento_cuenta_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+            <tr>
+                <td class="titulo">ID:</td>
+                <td class="td-in-well">{{ arCuenta.codigoCuentaPk }}</td>
+                <td class="titulo">NUMERO:</td>
+                <td class="td-in-well">{{ arCuenta.numero }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">TIPO:</td>
+                <td class="td-in-well">{{ arCuenta.CuentaTipoRel.nombre }}</td>
+                <td class="titulo">FECHA:</td>
+                <td class="td-in-well">{{ arCuenta.fecha | date("Y-m-d") }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

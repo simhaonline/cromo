@@ -209,6 +209,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             $intDias = $intDias->format('%a');
             $intDias = $intDias + 1;
             $intDiasLicencia = $this->diasReconocimiento($intDias, $arIncapacidad->getEstadoProrroga(), $arIncapacidad->getIncapacidadTipoRel()->getCodigoIncapacidadTipoPk(), $diasProrroga);
+            $fechaDesdeCalculo = $arIncapacidad->getFechaDesde();
             if ($intDiasLicencia['intDiasEmpresa'] > 0) {
                 $fechaDesdeCalculo = $arIncapacidad->getFechaDesde();
                 $intDiasTemporal = $intDiasLicencia['intDiasEmpresa'] - 1;

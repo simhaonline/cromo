@@ -225,7 +225,6 @@ class ReciboController extends ControllerListenerGeneral
                         //$saldo = $arrControles['TxtSaldo' . $codigoCuentaCobrar] - $vrPago;
                         $retencionFuente = $arrControles['TxtRetencionFuente' . $codigoCuentaCobrar];
                         $retencionIca = $arrControles['TxtRetencionIca' . $codigoCuentaCobrar];
-                        $retencionFuente += $arCuentaCobrar->getVrRetencionFuente();
                         $saldo = $arrControles['TxtSaldo' . $codigoCuentaCobrar];
 
                         $arReciboDetalle = new CarReciboDetalle();

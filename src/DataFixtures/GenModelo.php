@@ -226,8 +226,8 @@ class GenModelo extends Fixture
                 'TesCuentaPagar',
                 'TesCuentaPagarTipo',
                 'TesEgreso',
-                'TesCuenta',
-                'TesCuentaTipo',
+                'TesMovimiento',
+                'TesMovimientoTipo',
             )),
             array('modulo'=>'Seguridad','modelo'=>array(
                 'SegUsuarioMOdelo',

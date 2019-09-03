@@ -156,7 +156,7 @@ class IncapacidadController extends ControllerListenerGeneral
                 $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
                 $arConfiguracionAporte = $em->getRepository(RhuConfiguracion::class)->find(1);
                 if ($arEmpleado){
-                    if ( is_null($arEmpleado->getcodigoContratoUltimoFk()) ) {
+                    if ($arEmpleado->getEstadoContrato() == 1) {
                         $codigoContrato = $arEmpleado->getCodigoContratoFk();
                     } else {
                         $codigoContrato = $arEmpleado->getCodigoContratoUltimoFk();

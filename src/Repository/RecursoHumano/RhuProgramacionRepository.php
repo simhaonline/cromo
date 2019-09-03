@@ -555,7 +555,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         }
     }
 
-    public function Trasferencia()
+    public function intercambio()
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuProgramacion::class, 'p')
             ->select('p.codigoProgramacionPk')
@@ -567,7 +567,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             ->addSelect('p.vrNeto')
             ->leftJoin('p.pagoTipoRel', "pt")
             ->leftJoin('p.grupoRel', "g")
-            ->where("p.estadoTransferido = false");
+            ->where("p.estadoIntercambio = false");
         return $queryBuilder;
     }
 

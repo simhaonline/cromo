@@ -160,8 +160,7 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery();
     }
 
-    public
-    function pagoPrimaDeduccion($codigoEmpleado, $tipoPago)
+    public function pagoPrimaDeduccion($codigoEmpleado, $tipoPago)
     {
         $em = $this->getEntityManager();
         $strSql = "SELECT ppd.codigoProgramacionDetallePk, ppd.vrNetoPagar, ppd.diasAusentismo, ppd.diasReales, ppd.fechaHasta, ppd.fechaHastaPago FROM App\Entity\RecursoHumano\RhuProgramacionDetalle ppd JOIN ppd.programacionRel pp" .
@@ -174,4 +173,27 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
         }
         return $arRegistros;
     }
+
+    public function empleadosProgramacion($codigoProgramacion) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuProgramacionDetalle::class, 'pd')
+            ->select('pd.codigoEmpleadoFk')
+            ->addSelect('e.codigoIdentificacionFk')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.correo')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('e.nombre1')
+            ->addSelect('e.nombre2')
+            ->addSelect('e.apellido1')
+            ->addSelect('e.apellido2')
+            ->addSelect('e.telefono')
+            ->addSelect('e.celular')
+            ->addSelect('e.direccion')
+            ->leftJoin('pd.empleadoRel', 'e')
+            ->groupBy('pd.codigoEmpleadoFk')
+            ->where("pd.codigoProgramacionFk = {$codigoProgramacion}");
+        $arEmpleados = $queryBuilder->getQuery()->getResult();
+        return $arEmpleados;
+    }
+
 }

@@ -199,6 +199,21 @@
             </ul>
         </li>
         <li>
+            <a href="#"><i class="fa fa-wrench"></i>
+                <span class="menu-item-parent">Utilidad</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul>
+                <li>
+                    <a href="#">Programacion <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('recursohumano_utilidad_pago_formatopagomasivo_lista') }}">Imprimir pago masivo</a><li>
+                        <li><a href="{{ path('recursohumano_utilidad_intercambio_programacion') }}">Intercambio de datos</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
             <a href="#"><i class="fa fa-clipboard"></i>
                 <span class="menu-item-parent">Informe</span>
                 <span class="fa arrow"></span>
@@ -216,20 +231,6 @@
                     <ul>
                         <li><a href="{{  path('recursohumano_informe_seguridadsocial_aporte_lista') }}">Aportes</a></li>
                     </ul>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="#"><i class="fa fa-wrench"></i>
-                <span class="menu-item-parent">Utildiad</span>
-                <span class="fa arrow"></span>
-            </a>
-            <ul>
-                <li>
-                    <a href="{{ path('recursohumano_utilidad_pago_formatopagomasivo_lista') }}">Imprimir pago masivo</a>
-                <li>
-                <li>
-                    <a href="{{ path('recursohumano_utilidad_pago_programaciones_lista') }}">Programación pago</a>
                 </li>
             </ul>
         </li>

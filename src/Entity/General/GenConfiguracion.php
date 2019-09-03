@@ -132,6 +132,11 @@ class GenConfiguracion
      */
     private $codigoEmpresa = 0;
 
+    /**
+     * @ORM\Column(name="codigo_empresa_oxigeno", type="integer", options={"default" : null}, nullable=true)
+     */
+    private $codigoEmpresaOxigeno;
+
 
     /**
      * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
@@ -159,6 +164,22 @@ class GenConfiguracion
     public function setCodigoConfiguracionPk($codigoConfiguracionPk): void
     {
         $this->codigoConfiguracionPk = $codigoConfiguracionPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIdentificacionFk()
+    {
+        return $this->codigoIdentificacionFk;
+    }
+
+    /**
+     * @param mixed $codigoIdentificacionFk
+     */
+    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
+    {
+        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
     }
 
     /**
@@ -340,6 +361,22 @@ class GenConfiguracion
     /**
      * @return mixed
      */
+    public function getWebServiceOxigenoUrl()
+    {
+        return $this->webServiceOxigenoUrl;
+    }
+
+    /**
+     * @param mixed $webServiceOxigenoUrl
+     */
+    public function setWebServiceOxigenoUrl($webServiceOxigenoUrl): void
+    {
+        $this->webServiceOxigenoUrl = $webServiceOxigenoUrl;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDominio()
     {
         return $this->dominio;
@@ -452,22 +489,6 @@ class GenConfiguracion
     /**
      * @return mixed
      */
-    public function getCiudadRel()
-    {
-        return $this->ciudadRel;
-    }
-
-    /**
-     * @param mixed $ciudadRel
-     */
-    public function setCiudadRel($ciudadRel): void
-    {
-        $this->ciudadRel = $ciudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVersionBaseDatos()
     {
         return $this->versionBaseDatos;
@@ -484,17 +505,49 @@ class GenConfiguracion
     /**
      * @return mixed
      */
-    public function getCodigoIdentificacionFk()
+    public function getCodigoEmpresa()
     {
-        return $this->codigoIdentificacionFk;
+        return $this->codigoEmpresa;
     }
 
     /**
-     * @param mixed $codigoIdentificacionFk
+     * @param mixed $codigoEmpresa
      */
-    public function setCodigoIdentificacionFk($codigoIdentificacionFk): void
+    public function setCodigoEmpresa($codigoEmpresa): void
     {
-        $this->codigoIdentificacionFk = $codigoIdentificacionFk;
+        $this->codigoEmpresa = $codigoEmpresa;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpresaOxigeno()
+    {
+        return $this->codigoEmpresaOxigeno;
+    }
+
+    /**
+     * @param mixed $codigoEmpresaOxigeno
+     */
+    public function setCodigoEmpresaOxigeno($codigoEmpresaOxigeno): void
+    {
+        $this->codigoEmpresaOxigeno = $codigoEmpresaOxigeno;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
     }
 
     /**
@@ -513,37 +566,7 @@ class GenConfiguracion
         $this->identificacionRel = $identificacionRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getWebServiceOxigenoUrl()
-    {
-        return $this->webServiceOxigenoUrl;
-    }
 
-    /**
-     * @param mixed $webServiceOxigenoUrl
-     */
-    public function setWebServiceOxigenoUrl($webServiceOxigenoUrl): void
-    {
-        $this->webServiceOxigenoUrl = $webServiceOxigenoUrl;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoEmpresa()
-    {
-        return $this->codigoEmpresa;
-    }
-
-    /**
-     * @param mixed $codigoEmpresa
-     */
-    public function setCodigoEmpresa($codigoEmpresa): void
-    {
-        $this->codigoEmpresa = $codigoEmpresa;
-    }
 
 }
 

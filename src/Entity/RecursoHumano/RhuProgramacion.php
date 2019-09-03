@@ -107,9 +107,9 @@ class RhuProgramacion
     private $estadoContabilizado = false;
 
     /**
-     * @ORM\Column(name="estado_Transferido", options={"default": false}, type="boolean", nullable=true)
+     * @ORM\Column(name="estado_intercambio", options={"default": false}, type="boolean", nullable=true)
      */
-    private $estadoTransferido = false;
+    private $estadoIntercambio = false;
 
     /**
      * @ORM\Column(name="mensaje_pago", type="text", nullable=true)
@@ -237,22 +237,6 @@ class RhuProgramacion
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoPagado()
-    {
-        return $this->estadoPagado;
-    }
-
-    /**
-     * @param mixed $estadoPagado
-     */
-    public function setEstadoPagado($estadoPagado): void
-    {
-        $this->estadoPagado = $estadoPagado;
     }
 
     /**
@@ -386,6 +370,22 @@ class RhuProgramacion
     /**
      * @return mixed
      */
+    public function getEstadoPagado()
+    {
+        return $this->estadoPagado;
+    }
+
+    /**
+     * @param mixed $estadoPagado
+     */
+    public function setEstadoPagado($estadoPagado): void
+    {
+        $this->estadoPagado = $estadoPagado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAnulado()
     {
         return $this->estadoAnulado;
@@ -397,6 +397,38 @@ class RhuProgramacion
     public function setEstadoAnulado($estadoAnulado): void
     {
         $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoIntercambio()
+    {
+        return $this->estadoIntercambio;
+    }
+
+    /**
+     * @param mixed $estadoIntercambio
+     */
+    public function setEstadoIntercambio($estadoIntercambio): void
+    {
+        $this->estadoIntercambio = $estadoIntercambio;
     }
 
     /**
@@ -493,38 +525,6 @@ class RhuProgramacion
     public function setPagosProgramacionRel($pagosProgramacionRel): void
     {
         $this->pagosProgramacionRel = $pagosProgramacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoContabilizado()
-    {
-        return $this->estadoContabilizado;
-    }
-
-    /**
-     * @param mixed $estadoContabilizado
-     */
-    public function setEstadoContabilizado($estadoContabilizado): void
-    {
-        $this->estadoContabilizado = $estadoContabilizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoTransferido()
-    {
-        return $this->estadoTransferido;
-    }
-
-    /**
-     * @param mixed $estadoTransferido
-     */
-    public function setEstadoTransferido($estadoTransferido): void
-    {
-        $this->estadoTransferido = $estadoTransferido;
     }
 
 

@@ -725,4 +725,69 @@ class RhuPagoRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getArrayResult();
     }
+
+    public function programacion($codigoProgramacion) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuPago::class, 'p')
+            ->select('p.codigoPagoPk')
+            ->addSelect('p.numero')
+            ->addSelect('p.codigoContratoFk')
+            ->addSelect('p.fechaDesde')
+            ->addSelect('p.fechaHasta')
+            ->addSelect('p.fechaDesdeContrato')
+            ->addSelect('p.fechaHastaContrato')
+            ->addSelect('p.vrSalarioContrato')
+            ->addSelect('p.vrDevengado')
+            ->addSelect('p.vrDeduccion')
+            ->addSelect('p.vrNeto')
+            ->addSelect('p.comentario')
+            ->addSelect('g.nombre as grupoNombre')
+            ->addSelect('e.codigoIdentificacionFk')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.cuenta')
+            ->addSelect('b.nombre as bancoNombre')
+            ->addSelect('ep.nombre as entidadPension')
+            ->addSelect('es.nombre as entidadSalud')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('p.grupoRel', 'g')
+            ->leftJoin('e.bancoRel', 'b')
+            ->leftJoin('p.entidadPensionRel', 'ep')
+            ->leftJoin('p.entidadSaludRel', 'es')
+            ->where("p.codigoProgramacionFk = {$codigoProgramacion}");
+        $arPagos = $queryBuilder->getQuery()->getResult();
+        $i = 0;
+        foreach($arPagos as $arPago) {
+            $queryBuilder = $em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+                ->select('pd.codigoPagoDetallePk')
+                ->addSelect('pd.codigoConceptoFk')
+                ->addSelect('c.nombre as conceptoNombre')
+                ->addSelect('pd.vrPago')
+                ->addSelect('pd.operacion')
+                ->addSelect('pd.vrPagoOperado')
+                ->addSelect('pd.horas')
+                ->addSelect('pd.vrHora')
+                ->addSelect('pd.porcentaje')
+                ->addSelect('pd.dias')
+                ->addSelect('pd.detalle')
+                ->addSelect('pd.vrDeduccion')
+                ->addSelect('pd.vrDevengado')
+                ->addSelect('pd.vrIngresoBaseCotizacion')
+                ->addSelect('pd.vrIngresoBasePrestacion')
+                ->leftJoin('pd.conceptoRel', 'c')
+                ->where("pd.codigoPagoFk = {$arPago['codigoPagoPk']}");
+            $arPagoDetalles = $queryBuilder->getQuery()->getResult();
+            if(!$arPagoDetalles) {
+                $arPagoDetalles = [];
+            }
+            $arPagos[$i]['arrDetalles'] = $arPagoDetalles;
+            $arPagos[$i]['fechaDesde'] = $arPago['fechaDesde']?$arPago['fechaDesde']->format('Y-m-d'):null;
+            $arPagos[$i]['fechaHasta'] = $arPago['fechaHasta']?$arPago['fechaHasta']->format('Y-m-d'):null;
+            $arPagos[$i]['fechaDesdeContrato'] = $arPago['fechaDesdeContrato']?$arPago['fechaDesdeContrato']->format('Y-m-d'):null;
+            $arPagos[$i]['fechaHastaContrato'] = $arPago['fechaHastaContrato']?$arPago['fechaHastaContrato']->format('Y-m-d'):null;
+
+            $i++;
+        }
+        return $arPagos;
+    }
+
 }

@@ -24,7 +24,7 @@
                 <td>{{ arProgrmacion.fechaHasta | date("Y-m-d") }}</td>
                 <td>{{ arProgrmacion.dias }}</td>
                 <td class="numero">{{ arProgrmacion.vrNeto | number_format(0, '.', ',') }}</td>
-                <td class="text-center" > <button name="btnTransferir" class="btn btn-sm btn-default" value="{{ arProgrmacion.codigoProgramacionPk }}">Transferir</button></td>
+                <td class="text-center" > <button name="btnTransferir" class="btn btn-xs btn-default" value="{{ arProgrmacion.codigoProgramacionPk }}">Transferir</button></td>
             </tr>
         {% endfor %}
         </tbody>

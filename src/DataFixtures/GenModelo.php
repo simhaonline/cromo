@@ -169,7 +169,6 @@ class GenModelo extends Fixture
                 'RhuCredito',
                 'RhuCreditoPago',
                 'RhuCreditoTipo',
-                'RhuEgreso',
                 'RhuEmbargo',
                 'RhuEmbargoJuzgado',
                 'RhuEmbargoPago',

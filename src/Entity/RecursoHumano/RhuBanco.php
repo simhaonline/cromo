@@ -66,11 +66,6 @@ class RhuBanco {
 //    protected $empleadosBancoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuEgresoDetalle", mappedBy="bancoRel")
-     */
-    protected $egresosDetallesBancoRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoBancoPk()
@@ -230,19 +225,4 @@ class RhuBanco {
         $this->empleadosBancoRel = $empleadosBancoRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEgresosDetallesBancoRel()
-    {
-        return $this->egresosDetallesBancoRel;
-    }
-
-    /**
-     * @param mixed $egresosDetallesBancoRel
-     */
-    public function setEgresosDetallesBancoRel($egresosDetallesBancoRel): void
-    {
-        $this->egresosDetallesBancoRel = $egresosDetallesBancoRel;
-    }
 }

@@ -213,11 +213,6 @@ class RhuPago
     protected $pagosDetallesPagoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuEgresoDetalle", mappedBy="pagoRel" )
-     */
-    protected $egresosDetallesPagoRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoPagoPk()

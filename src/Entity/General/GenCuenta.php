@@ -73,11 +73,6 @@ class GenCuenta
     protected $egresosCuentaRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEgreso" , mappedBy="cuentaRel")
-     */
-    protected $rhuEgresosCuentaRel;
-
-    /**
      * @return array
      */
     public function getInfoLog(): array

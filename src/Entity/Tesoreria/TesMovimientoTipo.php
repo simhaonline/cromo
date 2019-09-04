@@ -30,6 +30,52 @@ class TesMovimientoTipo
      */
     private $movimientosMovimientoTipoRel;
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoMovimientoTipoPK()
+    {
+        return $this->codigoMovimientoTipoPK;
+    }
 
+    /**
+     * @param mixed $codigoMovimientoTipoPK
+     */
+    public function setCodigoMovimientoTipoPK($codigoMovimientoTipoPK): void
+    {
+        $this->codigoMovimientoTipoPK = $codigoMovimientoTipoPK;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * @param mixed $nombre
+     */
+    public function setNombre($nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosMovimientoTipoRel()
+    {
+        return $this->movimientosMovimientoTipoRel;
+    }
+
+    /**
+     * @param mixed $movimientosMovimientoTipoRel
+     */
+    public function setMovimientosMovimientoTipoRel($movimientosMovimientoTipoRel): void
+    {
+        $this->movimientosMovimientoTipoRel = $movimientosMovimientoTipoRel;
+    }
 
 }

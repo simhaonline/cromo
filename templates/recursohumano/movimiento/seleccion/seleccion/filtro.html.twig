@@ -2,8 +2,8 @@
 <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
      data-widget-fullscreenbutton="true">
     <header>
-        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-        <h2>Lista</h2>
+        <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+        <h2>Filtro</h2>
     </header>
     <div>
         <div class="widget-body no-padding">
@@ -30,9 +30,11 @@
                         {{ form_widget(formFiltro.estadoAprobado) }}
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                {{ form_end(formFiltro) }}
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(formFiltro.btnFiltro, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

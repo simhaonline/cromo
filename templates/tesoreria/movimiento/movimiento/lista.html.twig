@@ -11,7 +11,7 @@
                 <div class="form-group form-group-sm">
                     <label for="form_cboGuiaTipoRel" class="col-sm-2 control-label">Codigo:</label>
                     <div class="col-sm-4">
-                        {{ form_widget(form.codigoCuentaPk, { 'attr': {'class': 'form-control'} }) }}
+                        {{ form_widget(form.codigoMovimientoPk, { 'attr': {'class': 'form-control'} }) }}
                     </div>
                     <label for="form_cboOperacionRel" class="col-sm-2 control-label">Numero:</label>
                     <div class="col-sm-4">
@@ -55,24 +55,24 @@
             </tr>
         </thead>
         <tbody>
-            {% for arCuenta in arCuentas %}
+            {% for arMovimiento in arMovimientos %}
                 <tr>
-                    <td>{{ arCuenta.codigoCuentaPk }}</td>
-                    <td>{{ arCuenta.nombre }}</td>
-                    <td>{{ arCuenta.numero }}</td>
-                    <td>{{ arCuenta.fecha | date('Y-m-d') }}</td>
+                    <td>{{ arMovimiento.codigoMovimientoPk }}</td>
+                    <td>{{ arMovimiento.nombre }}</td>
+                    <td>{{ arMovimiento.numero }}</td>
+                    <td>{{ arMovimiento.fecha | date('Y-m-d') }}</td>
                     <td style="text-align: center;">
-                        <a href="{{ path('tesoreria_movimiento_cuenta_nuevo',{'id': arCuenta.codigoCuentaPk }) }}"><i
+                        <a href="{{ path('tesoreria_movimiento_movimiento_nuevo',{'id': arMovimiento.codigoMovimientoPk }) }}"><i
                                     class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                     </td>
                     <td style="text-align: center;">
-                        <a href="{{ path('tesoreria_movimiento_cuenta_detalle',{'id' : arCuenta.codigoCuentaPk}) }}">
+                        <a href="{{ path('tesoreria_movimiento_movimiento_detalle',{'id' : arMovimiento.codigoMovimientoPk}) }}">
                             <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                             </i>
                         </a>
                     </td>
                     <td class="text-center">
-                        <input type="checkbox" name="ChkSeleccionar[]" value="{{ arCuenta.codigoCuentaPk  }}"/>
+                        <input type="checkbox" name="ChkSeleccionar[]" value="{{ arMovimiento.codigoMovimientoPk  }}"/>
                     </td>
                 </tr>
             {% endfor %}
@@ -80,17 +80,17 @@
     </table>
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">Registros
-            <span class="badge">{{ arCuentas.getTotalItemCount }}
+            <span class="badge">{{ arMovimientos.getTotalItemCount }}
             </span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-        {{ knp_pagination_render(arCuentas) }}
+        {{ knp_pagination_render(arMovimientos) }}
     </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group" style="float: right">
             <a class="btn btn-default btn-sm"
-               href="{{ path('tesoreria_movimiento_cuenta_nuevo', {'id': 0}) }}">Nuevo</a>
+               href="{{ path('tesoreria_movimiento_movimiento_nuevo', {'id': 0}) }}">Nuevo</a>
             {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
     </div>

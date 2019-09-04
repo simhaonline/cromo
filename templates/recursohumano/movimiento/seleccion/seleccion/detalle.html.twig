@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seleccion_seleccion_lista') }}"
+               style="float:left">Volver</a>
+        </div>
+    </div>
+    <br/><br/>
+    <table widtd="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arSeleccionado.codigoSeleccionPk }}</td>
+                <td class="titulo">TIPO:</td>
+            <td class="td-in-well">{{ arSeleccionado.seleccionTipoRel.nombre }}</td>
+            <td class="titulo">CARGO:</td>
+            <td class="td-in-well">{{ arSeleccionado.cargoRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">ESTADO CIVIL:</td>
+            <td class="td-in-well">{{ arSeleccionado.estadoCivilRel.nombre }}</td>
+            <td class="titulo">RH:</td>
+            <td class="td-in-well">{{ arSeleccionado.rhRel.nombre }}</td>
+            <td class="titulo">CIUDAD:</td>
+            <td class="td-label" >{{ arSeleccionado.ciudadRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">IDENTIFICACICIÓN:</td>
+            <td class="td-label">{{ arSeleccionado.codigoIdentificacionFk }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-label">{{ arSeleccionado.fecha | date("Y-m-d") }}</td>
+            <td class="titulo">CIUDAD DE EXPEDICIÓN:</td>
+            <td class="td-in-well">{{ arSeleccionado.ciudadExpedicionRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NUMERO IDENTIFICACION:</td>
+            <td class="td-in-well">{{ arSeleccionado.numeroIdentificacion }}</td>
+            <td class="titulo">FECHA EXPEDICION:</td>
+            <td class="td-label">{{ arSeleccionado.fechaExpedicion | date("Y-m-d") }}</td>
+            <td class="titulo">CIUDAD DE EXPEDICIÓN:</td>
+            <td class="td-in-well">{{ arSeleccionado.ciudadExpedicionRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NOMBRE 1</td>
+            <td class="td-in-well">{{  arSeleccionado.nombre1 }} </td>
+            <td class="titulo">FECHA NACIMIENTO</td>
+            <td class="td-label">{{ arSeleccionado.fechaNacimiento | date("Y-m-d") }}</td>
+            <td class="titulo">ESTADO APROBADO</td>
+            <td class="td-in-well">{{ arSeleccionado.estadoAprobado ? "SI":"NO" }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NOMBRE 2</td>
+            <td class="td-in-well">{{  arSeleccionado.nombre2 }} </td>
+            <td class="titulo">BARRIO</td>
+            <td class="td-in-well">{{arSeleccionado.barrio }} </td>
+            <td class="titulo">PRESENTA PRUEBAS</td>
+            <td class="td-in-well">{{ arSeleccionado.presentaPruebas ? "SI":"NO" }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">APELLIDO 1</td>
+            <td class="td-in-well">{{  arSeleccionado.apellido1 }} </td>
+            <td class="titulo">DIRECCION</td>
+            <td class="td-in-well">{{arSeleccionado.direccion }} </td>
+            <td class="titulo">REFERENCIAS VERIFICADAS</td>
+            <td class="td-in-well">{{ arSeleccionado.referenciasVerificadas ? "SI":"NO" }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">APELLIDO 2</td>
+            <td class="td-in-well">{{  arSeleccionado.apellido2 }} </td>
+            <td class="titulo"></td>
+            <td class="td-in-well"> </td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIOS</td>
+            <td class="td-in-well" COLSPAN="5">{{  arSeleccionado.comentarios }} </td>
+        </tr>
+
+    </table>
+    <br/><br/><br/>
+{% endblock %}

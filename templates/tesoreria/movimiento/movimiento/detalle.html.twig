@@ -3,7 +3,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('tesoreria_movimiento_cuenta_lista') }}">Volver</a> &nbsp;&nbsp;
+               href="{{ path('tesoreria_movimiento_movimiento_lista') }}">Volver</a> &nbsp;&nbsp;
         </div>
     </div>
     <br><br>
@@ -11,15 +11,15 @@
         <tbody>
             <tr>
                 <td class="titulo">ID:</td>
-                <td class="td-in-well">{{ arCuenta.codigoCuentaPk }}</td>
+                <td class="td-in-well">{{ arMovimiento.codigoMovimientoPk }}</td>
                 <td class="titulo">NUMERO:</td>
-                <td class="td-in-well">{{ arCuenta.numero }}</td>
+                <td class="td-in-well">{{ arMovimiento.numero }}</td>
             </tr>
             <tr>
                 <td class="titulo">TIPO:</td>
-                <td class="td-in-well">{{ arCuenta.CuentaTipoRel.nombre }}</td>
+                <td class="td-in-well">{{ arMovimiento.movimientoTipoRel.nombre }}</td>
                 <td class="titulo">FECHA:</td>
-                <td class="td-in-well">{{ arCuenta.fecha | date("Y-m-d") }}</td>
+                <td class="td-in-well">{{ arMovimiento.fecha | date("Y-m-d") }}</td>
             </tr>
         </tbody>
     </table>

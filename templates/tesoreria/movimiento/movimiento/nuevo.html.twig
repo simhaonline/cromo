@@ -19,15 +19,15 @@
                 </div>
                 <label class="col-sm-2 control-label">tipo</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.cuentaTipoRel) }}
-                    <div style="color:red;">{{ form_errors(form.cuentaTipoRel) }}</div>
+                    {{ form_widget(form.movimientoTipoRel) }}
+                    <div style="color:red;">{{ form_errors(form.movimientoTipoRel) }}</div>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm"
-           href="{{ path('tesoreria_movimiento_cuenta_lista') }}">Cancelar</a>
+           href="{{ path('tesoreria_movimiento_movimiento_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

@@ -102,7 +102,16 @@ class SeleccionController extends ControllerListenerGeneral
      */
     public function detalle(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_seleccion_lista'));
+        $em = $this->getDoctrine()->getManager();
+        if ($id != 0) {
+            $arSeleccionado = $em->getRepository(RhuSeleccion::class)->find($id);
+            if (!$arSeleccionado) {
+                return $this->redirect($this->generateUrl('crm_administracion_fase_fase_lista'));
+            }
+        }
+        return $this->render('recursohumano/movimiento/seleccion/seleccion/detalle.html.twig', [
+            'arSeleccionado' => $arSeleccionado
+        ]);
 
     }
 

@@ -25,9 +25,9 @@ class CreditoType extends AbstractType
     {
         $builder
             ->add('codigoEmpleadoFk', TextType::class, ['required' => true])
-            ->add('fechaInicio', DateType::class, ['data' => new \DateTime('now'),'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
-            ->add('fechaFinalizacion', DateType::class, ['data' => new \DateTime('now'),'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
-            ->add('fechaCredito', DateType::class, ['data' => new \DateTime('now'),'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
+            ->add('fechaInicio', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
+            ->add('fechaFinalizacion', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
+            ->add('fechaCredito', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('numeroCuotas', IntegerType::class, ['required' => true])
             ->add('comentario', TextareaType::class, ['required' => false])
             ->add('vrCredito',NumberType::class,['required' => false])

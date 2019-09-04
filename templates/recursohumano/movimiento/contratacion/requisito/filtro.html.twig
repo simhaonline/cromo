@@ -7,70 +7,16 @@
         <div>
             <div class="widget-body">
                 {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
-                {#                {% include 'recursohumano/buscar/empleado.html.twig' %}#}
-
                 <div class="form-group form-group-sm">
-                    <label for="txtNit" class="col-sm-1 control-label">Empleado:</label>
-                    <div class="col-sm-11">
-                        <div class="row">
-                            <div class="col-lg-2">
-                                <div class="input-group">
-                                    {#{{ form_widget(formFiltro.codigoEmpleadoFk) }}#}
-                                </div>
-                            </div>
-                            <div class="col-lg-10">
-                                <div class="input-group">
-                                    <input id="form_txtNombreCorto" class="form-control" readOnly="ReadOnly">
-                                    <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm"
-                                           href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'txtCodigoEmpleado', 'campoNombre': 'txtNombreCorto'  }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
-                    </span>
-                                </div>
-                            </div>
-                        </div>
+                    <label class="col-sm-2 control-label">Numero identificacion:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(formFiltro.numeroIdentificacion, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Nombre:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(formFiltro.nombreCorto, { 'attr': {'class': 'form-control'} }) }}
                     </div>
                 </div>
-
-                {#<div class="form-group form-group-sm">#}
-                    {#<label class="col-sm-1 control-label">Codigo:</label>#}
-                    {#<div class="col-sm-2">#}
-                        {#{{ form_widget(formFiltro.codigoExamenPk, { 'attr': {'class': 'form-control'} }) }}#}
-                    {#</div>#}
-                    {#<label class="col-sm-1 control-label">Tipo:</label>#}
-                    {#<div class="col-sm-2">#}
-                        {#{{ form_widget(formFiltro.codigoExamenClaseFk, { 'attr': {'class': 'form-control'} }) }}#}
-                    {#</div>#}
-                    {#<label class="col-sm-1 control-label"></label>#}
-                    {#<div class="col-sm-2">#}
-                    {#</div>#}
-                    {#<label class="col-sm-1 control-label">Autorizado:</label>#}
-                    {#<div class="col-sm-2">#}
-                        {#{{ form_widget(formFiltro.estadoAutorizado, { 'attr': {'class': 'form-control'} }) }}#}
-                    {#</div>#}
-                {#</div>#}
-                {#<div class="form-group form-group-sm">#}
-                    {#<label class="col-sm-1 control-label">Desde:</label>#}
-                    {#<div class="col-sm-2">#}
-                        {#{{ form_widget(formFiltro.fechaDesde) }}#}
-                    {#</div>#}
-                    {#<label class="col-sm-1 control-label"></label>#}
-                    {#<div class="col-sm-2">#}
-                    {#</div>#}
-                    {#<label class="col-sm-1 col-sm-offset-3 control-label">Aprobado:</label>#}
-                    {#<div class="col-sm-2">#}
-                        {#{{ form_widget(formFiltro.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}#}
-                    {#</div>#}
-                {#</div>#}
-                {#<div class="form-group form-group-sm">#}
-                    {#<label class="col-sm-1 control-label">Hasta:</label>#}
-                    {#<div class="col-sm-2">#}
-                        {#{{ form_widget(formFiltro.fechaHasta) }}#}
-                    {#</div>#}
-                    {#<label class="col-sm-1 col-sm-offset-6 control-label">Anulado:</label>#}
-                    {#<div class="col-sm-2">#}
-                        {#{{ form_widget(formFiltro.estadoAnulado, { 'attr': {'class': 'form-control'} }) }}#}
-                    {#</div>#}
-                {#</div>#}
                 <div class="form-group form-group-sm">
                     <label class="col-sm-1 control-label"></label>
                     <div class="col-sm-2">

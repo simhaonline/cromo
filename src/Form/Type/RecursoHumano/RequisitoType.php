@@ -68,7 +68,9 @@ class RequisitoType extends AbstractType
     public function getEstructuraPropiedadesFiltro()
     {
         $campos = '[
-          
+            {"child":"numeroIdentificacion",      "tipo":"TextType",   "propiedades":{"label":"Numero identificacion"},   "operador":"like"},
+            {"child":"nombreCorto",                              "tipo":"TextType",      "propiedades":{"label":"Nombre"},     "operador":"like"}
+
         ]';
         return $campos;
     }

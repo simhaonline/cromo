@@ -68,11 +68,6 @@ class RhuSolicitud
     private $codigoSexoFk;
 
     /**
-     * @ORM\Column(name="codigo_religion_fk", type="string", length=10, nullable=true)
-     */
-    private $codigoReligionFk;
-
-    /**
      * @ORM\Column(name="disponibilidad", type="string", length=20, nullable=true)
      */
     private $disponbilidad;
@@ -253,12 +248,6 @@ class RhuSolicitud
     protected $sexoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenReligion", inversedBy="rhuSolicitudesReligicionRel")
-     * @ORM\JoinColumn(name="codigo_religion_fk", referencedColumnName="codigo_religion_pk")
-     */
-    protected $religionRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoSolicitudPk()
@@ -416,22 +405,6 @@ class RhuSolicitud
     public function setCodigoSexoFk($codigoSexoFk): void
     {
         $this->codigoSexoFk = $codigoSexoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoReligionFk()
-    {
-        return $this->codigoReligionFk;
-    }
-
-    /**
-     * @param mixed $codigoReligionFk
-     */
-    public function setCodigoReligionFk($codigoReligionFk): void
-    {
-        $this->codigoReligionFk = $codigoReligionFk;
     }
 
     /**
@@ -961,23 +934,5 @@ class RhuSolicitud
     {
         $this->sexoRel = $sexoRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getReligionRel()
-    {
-        return $this->religionRel;
-    }
-
-    /**
-     * @param mixed $religionRel
-     */
-    public function setReligionRel($religionRel): void
-    {
-        $this->religionRel = $religionRel;
-    }
-
-
 
 }

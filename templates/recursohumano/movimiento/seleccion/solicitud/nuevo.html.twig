@@ -78,10 +78,14 @@
                     {{ form_widget(form.edadMaxima, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.edadMaxima) }}
                 </div>
-                <label for="form_salarioFijo" class="col-sm-2 control-label"></label>
-                <div class="sol-sm-10">
-                    <div class="col-sm-2">{{ form_widget(form.salarioFijo) }}</div>
-                    <div class="col-sm-2">{{ form_widget(form.salarioVariable) }}</div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="sol-sm-10" style="display: flex">
+                    <div class="col-sm-5"><input type="radio" name="tipo"
+                                                 value="salarioFijo" {{ arSolicitud.salarioFijo == true?"checked='checked'":"" }}>Salario fijo
+                    </div>
+                    <div class="col-sm-5"><input type="radio" name="tipo"
+                                                 value="salarioVariable" {{ arSolicitud.salarioVariable == true?"checked='checked'":"" }}>Salario variable
+                    </div>
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -96,7 +100,6 @@
                     {{ form_errors(form.estudioTipoRel) }}
                 </div>
             </div>
-
             <div class="form-group form-group-sm">
                 <label for="form_estadoCivilRel" class="col-sm-2 control-label">Estado civil:</label>
                 <div class="col-sm-4">
@@ -114,11 +117,6 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.sexoRel, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.sexoRel) }}
-                </div>
-                <label for="form_religionRel" class="col-sm-2 control-label">Religion:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.religionRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.religionRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

@@ -81,6 +81,19 @@ class SolicitudController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arSolicitud->setFecha(new \DateTime('now'));
+                $arrControles = $request->request->All();
+                if (isset($arrControles["tipo"])) {
+                    switch ($arrControles["tipo"]) {
+                        case "salarioFijo":
+                            $arSolicitud->setSalarioFijo(1);
+                            $arSolicitud->setSalarioVariable(0);
+                            break;
+                        case "salarioVariable":
+                            $arSolicitud->setSalarioFijo(0);
+                            $arSolicitud->setSalarioVariable(1);
+                            break;
+                    }
+                }
                 $em->persist($arSolicitud);
                 $em->flush();
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));

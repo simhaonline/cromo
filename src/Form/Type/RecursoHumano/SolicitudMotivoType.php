@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\RecursoHumano;
 
+
 use App\Entity\RecursoHumano\RhuSolicitudMotivo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

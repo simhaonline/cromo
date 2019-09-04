@@ -17,7 +17,7 @@ class GenEstudioTipo
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_estudio_tipo_pk", type="string", length=10, nullable=true)
+     * @ORM\Column(name="codigo_estudio_tipo_pk", type="string", length=20, nullable=true)
      */
     private $codigoEstudioTipoPk;
 

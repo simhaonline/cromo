@@ -104,16 +104,6 @@ class SolicitudType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Sexo:'
             ])
-            ->add('religionRel',EntityType::class,[
-                'required' => false,
-                'class' => 'App\Entity\General\GenReligion',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('rg')
-                        ->orderBy('rg.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'Religion:'
-            ])
             ->add('solicitudExperienciaRel',EntityType::class,[
                 'required' => false,
                 'class' => 'App\Entity\RecursoHumano\RhuSolicitudExperiencia',
@@ -132,8 +122,8 @@ class SolicitudType extends AbstractType
             ->add('fechaVencimiento', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('edadMinima', TextType::class, ['required' => false,'label' => 'Edad minima:'])
             ->add('edadMaxima', TextType::class, ['required' => false,'label' => 'Edad maxima:'])
-            ->add('salarioFijo', CheckboxType::class, array('required'  => false))
-            ->add('salarioVariable', CheckboxType::class, array('required'  => false))
+//            ->add('salarioFijo', RadioType::class, array('required'  => false))
+//            ->add('salarioVariable', RadioType::class, array('required'  => false))
             ->add('numeroHijos', NumberType::class, ['required' => false,'label' => 'Numero de hijos:'])
             ->add('codigoTipoVehiculoFk', ChoiceType::class, array('choices'   => array('CARRO' => '1', 'MOTO' => '2', 'NO APLICA' => '0')))
             ->add('codigoLicenciaCarroFk', ChoiceType::class, array('choices'   => array('SI' => '1', 'NO' => '2', 'NO APLICA' => '0')))

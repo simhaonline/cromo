@@ -7,6 +7,7 @@ use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
+use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuPago;
@@ -93,6 +94,13 @@ class RhuPagoRepository extends ServiceEntityRepository
         $diaAuxilioTransporte = $auxilioTransporte / 30;
         $salarioMinimo = $arConfiguracion['vrSalarioMinimo'];
         $ibcVacaciones = 0;
+        $vrPagoIncapacidad = 0;
+        $vrPagoLicencia = 0;
+        $devengado = 0;
+        $devengadoPrestacional = 0;
+        $salud = 0;
+        $pension = 0;
+        $transporte = 0;
 
         //Vacaciones
         $arVacaciones = $em->getRepository(RhuVacacion::class)->periodo($arProgramacionDetalle->getFechaDesdeContrato(), $arProgramacionDetalle->getFechaHastaContrato(), $arProgramacionDetalle->getCodigoEmpleadoFk());
@@ -172,6 +180,9 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $pagoDetalle = 0;
             }
             $pagoDetalle = round($pagoDetalle);
+            $vrPagoIncapacidad += $pagoDetalle;
+            $devengado += $pagoDetalle;
+            $devengadoPrestacional += $pagoDetalle;
             $arPagoDetalle->setHoras($intHorasProcesarIncapacidad);
             $arPagoDetalle->setDias($intDias);
             $arPagoDetalle->setVrHora($vrHoraIncapacidad);
@@ -220,9 +231,10 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $pagoDetalle = 0;
             }
             $pagoDetalle = round($pagoDetalle);
-            //$devengado += $pagoDetalle;
-            //$devengadoPrestacional += $pagoDetalle;
-            //$vrPagoIncapacidad += $pagoDetalle;
+            $vrPagoIncapacidad += $pagoDetalle;
+            $devengado += $pagoDetalle;
+            $devengadoPrestacional += $pagoDetalle;
+
             $arPagoDetalle->setHoras($intHorasProcesarIncapacidad);
             $arPagoDetalle->setDias($intDias);
             $arPagoDetalle->setVrHora($vrHoraIncapacidad);
@@ -329,13 +341,13 @@ class RhuPagoRepository extends ServiceEntityRepository
 //                $valorDia = $arPagoAdicional->getValor() / $diasPeriodo;
 //                $douPagoDetalle = $valorDia * ($arProgramacionPagoDetalle->getDias() - ($arProgramacionPagoDetalle->getHorasDescanso() / 8));
 //            }
-//            $douPagoDetalle = round($douPagoDetalle);
-//            if ($arPagoAdicional->getPagoConceptoRel()->getOperacion() == 1) {
-//                $devengado += $douPagoDetalle;
-//                if ($arPagoAdicional->getPagoConceptoRel()->getPrestacional() == 1) {
-//                    $devengadoPrestacional += $douPagoDetalle;
-//                }
-//            }
+            $pagoDetalle = round($pagoDetalle);
+            if ($arConcepto->getOperacion() == 1) {
+                $devengado += $pagoDetalle;
+                if ($arConcepto->getGeneraIngresoBasePrestacion()) {
+                    $devengadoPrestacional += $pagoDetalle;
+                }
+            }
             //$arPagoDetalle->setNumeroHoras($arPagoAdicional->getHoras());
             $arPagoDetalle->setDetalle($arAdicional['detalle']);
             $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
@@ -351,6 +363,9 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $arPagoDetalle = new RhuPagoDetalle();
                 $valorHoraDetalle = ($valorHora * $arConcepto->getPorcentaje()) / 100;
                 $pagoDetalle = $valorHoraDetalle * $arrHora['cantidad'];
+                $pagoDetalle = round($pagoDetalle);
+                $devengado += $pagoDetalle;
+                $devengadoPrestacional += $pagoDetalle;
                 $arPagoDetalle->setVrHora($valorHoraDetalle);
                 $arPagoDetalle->setPorcentaje($arConcepto->getPorcentaje());
                 $arPagoDetalle->setHoras($arrHora['cantidad']);
@@ -413,7 +428,7 @@ class RhuPagoRepository extends ServiceEntityRepository
 
                     $pagoDetalle = ($ingresoBaseCotizacionSalud * $porcentajeSalud) / 100;
                     $pagoDetalle = round($pagoDetalle);
-
+                    $salud = $pagoDetalle;
                     $arPagoDetalle = new RhuPagoDetalle();
                     $arPagoDetalle->setPorcentaje($porcentajeSalud);
                     $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
@@ -441,6 +456,7 @@ class RhuPagoRepository extends ServiceEntityRepository
 
                     $pagoDetalle = ($ingresoBaseCotizacionPension * $porcentajePension) / 100;
                     $pagoDetalle = round($pagoDetalle);
+                    $pension = $pagoDetalle;
                     $arPagoDetalle = new RhuPagoDetalle();
                     $arPagoDetalle->setPorcentaje($porcentajePension);
                     $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
@@ -473,12 +489,117 @@ class RhuPagoRepository extends ServiceEntityRepository
             if ($arContrato->getAuxilioTransporte() == 1) {
                 $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAuxilioTransporteFk']);
                 $pagoDetalle = round($diaAuxilioTransporte * $arProgramacionDetalle->getDiasTransporte());
+                $transporte += $pagoDetalle;
+                $devengado += $pagoDetalle;
                 $arPagoDetalle = new RhuPagoDetalle();
                 $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
                 $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
                 $em->persist($arPagoDetalle);
             }
         }
+
+        //Embargos
+        $arEmbargos = $em->getRepository(RhuEmbargo::class)->findBy(array('codigoEmpleadoFk' => $arProgramacionDetalle->getCodigoEmpleadoFk(), 'estadoActivo' => 1));
+        foreach ($arEmbargos as $arEmbargo) {
+            $douPagoDetalle = 0;
+            $detalle = "";
+            if ($arEmbargo->getValorFijo()) {
+                $douPagoDetalle = $arEmbargo->getVrValor();
+            }
+            if ($arEmbargo->getPorcentajeDevengado()) {
+                $douPagoDetalle = (($devengado) * $arEmbargo->getPorcentaje()) / 100;
+                $douPagoDetalle = round($douPagoDetalle);
+                $detalle = $arEmbargo->getPorcentaje() . "% devengado";
+            }
+            if ($arEmbargo->getPorcentajeDevengadoPrestacional()) {
+                $douPagoDetalle = (($devengadoPrestacional) * $arEmbargo->getPorcentaje()) / 100;
+                $douPagoDetalle = round($douPagoDetalle);
+                $detalle = $arEmbargo->getPorcentaje() . "% prestacional";
+            }
+            if ($arEmbargo->getPorcentajeDevengadoPrestacionalMenosDescuentoLey()) {
+                $douPagoDetalle = ((($devengadoPrestacional) - $salud - $pension) * $arEmbargo->getPorcentaje()) / 100;
+                $douPagoDetalle = round($douPagoDetalle);
+                $detalle = $arEmbargo->getPorcentaje() . "% prestacional (menos dcto ley)";
+            }
+            if ($arEmbargo->getPorcentajeDevengadoPrestacionalMenosDescuentoLeyTransporte()) {
+                $douPagoDetalle = ((($devengadoPrestacional) - $salud - $pension) * $arEmbargo->getPorcentaje()) / 100;
+                $douPagoDetalle = round($douPagoDetalle);
+                $detalle = $arEmbargo->getPorcentaje() . "% prestacional (menos dcto ley + tte)";
+            }
+            if ($arEmbargo->getPorcentajeDevengadoMenosDescuentoLey()) {
+                $douPagoDetalle = ((($devengado) - $salud - $pension) * $arEmbargo->getPorcentaje()) / 100;
+                $douPagoDetalle = round($douPagoDetalle);
+                $detalle = $arEmbargo->getPorcentaje() . "% devengado (menos dcto ley)";
+            }
+            if ($arEmbargo->getPorcentajeDevengadoMenosDescuentoLeyTransporte()) {
+                $douPagoDetalle = ((($devengado) - $salud - $pension - $transporte) * $arEmbargo->getPorcentaje()) / 100;
+                $douPagoDetalle = round($douPagoDetalle);
+                $detalle = $arEmbargo->getPorcentaje() . "% devengado (menos dcto ley + tte)";
+            }
+            if ($arEmbargo->getPorcentajeExcedaSalarioMinimo()) {
+                $salarioMinimoDevengado = ($salarioMinimo / 30) * $arProgramacionDetalle->getDiasTransporte();
+                $baseDescuento = ($devengado) - $salarioMinimoDevengado;
+                if ($baseDescuento > 0) {
+                    $douPagoDetalle = ($baseDescuento * $arEmbargo->getPorcentaje()) / 100;
+                    $douPagoDetalle = round($douPagoDetalle);
+                }
+                $detalle = $arEmbargo->getPorcentaje() . "% exceda el salario minimo";
+            }
+            if ($arEmbargo->getPorcentajeSalarioMinimo()) {
+                if ($salarioMinimo > 0) {
+                    $douPagoDetalle = ($salarioMinimo * $arEmbargo->getPorcentaje()) / 100;
+                    $douPagoDetalle = round($douPagoDetalle);
+                }
+                $detalle = $arEmbargo->getPorcentaje() . "% exceda el salario minimo";
+            }
+            if ($arEmbargo->getPartesExcedaSalarioMinimo()) {
+                $salarioMinimoDevengado = ($salarioMinimo / 30) * $arProgramacionDetalle->getDiasTransporte();
+                $baseDescuento = (($devengado) - $transporte) - $salarioMinimoDevengado;
+                if ($baseDescuento > 0) {
+                    $douPagoDetalle = $baseDescuento / $arEmbargo->getPartes();
+                }
+                $detalle = $arEmbargo->getPartes() . " partes exceda el salario minimo";
+            }
+            if ($arEmbargo->getPartesExcedaSalarioMinimoMenosDescuentoLey()) {
+                $salarioMinimoDevengado = ($salarioMinimo / 30) * $arProgramacionDetalle->getDiasTransporte();
+                $baseDescuento = (($devengado) - $salud - $pension) - $salarioMinimoDevengado;
+                if ($baseDescuento > 0) {
+                    $douPagoDetalle = $baseDescuento / $arEmbargo->getPartes();
+                }
+                $detalle = $arEmbargo->getPartes() . " partes exceda el salario minimo";
+            }
+            if ($arEmbargo->getPartesExcedaSalarioMinimoPrestacionalesMenosDescuentoLey()) {
+                $salarioMinimoDevengado = ($salarioMinimo / 30) * $arProgramacionDetalle->getDiasTransporte();
+                $baseDescuento = (($devengadoPrestacional) - $salud - $pension) - $salarioMinimoDevengado;
+                if ($baseDescuento > 0) {
+                    $douPagoDetalle = $baseDescuento / $arEmbargo->getPartes();
+                }
+                $detalle = $arEmbargo->getPartes() . " partes exceda el salario minimo";
+            }
+            if ($arEmbargo->getValidarMontoMaximo()) {
+                $saldo = $arEmbargo->getVrMontoMaximo() - $arEmbargo->getDescuento();
+                if ($saldo > 0) {
+                    if ($saldo < $douPagoDetalle) {
+                        $douPagoDetalle = round($saldo);
+                    }
+                } else {
+                    $douPagoDetalle = 0;
+                }
+            }
+
+            if ($arEmbargo->getAfectaNomina()) {
+                if ($douPagoDetalle > 0) {
+                    $arConcepto = $arEmbargo->getEmbargoTipoRel()->getConceptoRel();
+                    $pagoDetalle = round($douPagoDetalle);
+                    $arPagoDetalle = new RhuPagoDetalle();
+                    $arPagoDetalle->setEmbargoRel($arEmbargo);
+                    $arPagoDetalle->setDetalle($detalle);
+                    $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+                    $em->persist($arPagoDetalle);
+                }
+            }
+        }
+
 
         $arPago->setVrNeto($arrDatosGenerales['neto']);
         $arPago->setVrDeduccion($arrDatosGenerales['deduccion']);

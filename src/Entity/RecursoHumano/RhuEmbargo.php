@@ -150,6 +150,11 @@ class RhuEmbargo
     private $partesExcedaSalarioMinimoMenosDescuentoLey = false;
 
     /**
+     * @ORM\Column(name="partesExcedaSalarioMinimoPrestacionalesMenosDescuentoLey", type="boolean", nullable=true)
+     */
+    private $partesExcedaSalarioMinimoPrestacionalesMenosDescuentoLey = false;
+
+    /**
      * @ORM\Column(name="partes", type="float")
      */
     private $partes = 0;
@@ -160,9 +165,9 @@ class RhuEmbargo
     private $vrValor = 0;
 
     /**
-     * @ORM\Column(name="vr_porcentaje", type="float", nullable=true)
+     * @ORM\Column(name="porcentaje", type="float", nullable=true)
      */
-    private $vrPorcentaje = 0;
+    private $porcentaje = 0;
 
     /**
      * @ORM\Column(name="codigo_usuario", type="string", length=50, nullable=true)
@@ -339,6 +344,11 @@ class RhuEmbargo
      * @ORM\OneToMany(targetEntity="RhuVacacionAdicional", mappedBy="embargoRel")
      */
     protected $vacacionesAdicionalesEmbargoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="embargoRel")
+     */
+    protected $pagosDetallesEmbargoRel;
 
     /**
      * @return mixed
@@ -727,6 +737,22 @@ class RhuEmbargo
     /**
      * @return mixed
      */
+    public function getPartesExcedaSalarioMinimoPrestacionalesMenosDescuentoLey()
+    {
+        return $this->partesExcedaSalarioMinimoPrestacionalesMenosDescuentoLey;
+    }
+
+    /**
+     * @param mixed $partesExcedaSalarioMinimoPrestacionalesMenosDescuentoLey
+     */
+    public function setPartesExcedaSalarioMinimoPrestacionalesMenosDescuentoLey($partesExcedaSalarioMinimoPrestacionalesMenosDescuentoLey): void
+    {
+        $this->partesExcedaSalarioMinimoPrestacionalesMenosDescuentoLey = $partesExcedaSalarioMinimoPrestacionalesMenosDescuentoLey;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPartes()
     {
         return $this->partes;
@@ -759,17 +785,17 @@ class RhuEmbargo
     /**
      * @return mixed
      */
-    public function getVrPorcentaje()
+    public function getPorcentaje()
     {
-        return $this->vrPorcentaje;
+        return $this->porcentaje;
     }
 
     /**
-     * @param mixed $vrPorcentaje
+     * @param mixed $porcentaje
      */
-    public function setVrPorcentaje($vrPorcentaje): void
+    public function setPorcentaje($porcentaje): void
     {
-        $this->vrPorcentaje = $vrPorcentaje;
+        $this->porcentaje = $porcentaje;
     }
 
     /**
@@ -1282,6 +1308,22 @@ class RhuEmbargo
     public function setVacacionesAdicionalesEmbargoRel($vacacionesAdicionalesEmbargoRel): void
     {
         $this->vacacionesAdicionalesEmbargoRel = $vacacionesAdicionalesEmbargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosDetallesEmbargoRel()
+    {
+        return $this->pagosDetallesEmbargoRel;
+    }
+
+    /**
+     * @param mixed $pagosDetallesEmbargoRel
+     */
+    public function setPagosDetallesEmbargoRel($pagosDetallesEmbargoRel): void
+    {
+        $this->pagosDetallesEmbargoRel = $pagosDetallesEmbargoRel;
     }
 
 

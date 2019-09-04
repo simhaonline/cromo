@@ -218,22 +218,6 @@ class RhuPago
     protected $egresosDetallesPagoRel;
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoPagoPk()
@@ -359,6 +343,22 @@ class RhuPago
     public function setCodigoContratoFk($codigoContratoFk): void
     {
         $this->codigoContratoFk = $codigoContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
     }
 
     /**
@@ -620,6 +620,22 @@ class RhuPago
     /**
      * @return mixed
      */
+    public function getCodigoVacacionFk()
+    {
+        return $this->codigoVacacionFk;
+    }
+
+    /**
+     * @param mixed $codigoVacacionFk
+     */
+    public function setCodigoVacacionFk($codigoVacacionFk): void
+    {
+        $this->codigoVacacionFk = $codigoVacacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getUsuario()
     {
         return $this->usuario;
@@ -748,6 +764,38 @@ class RhuPago
     /**
      * @return mixed
      */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionRel()
+    {
+        return $this->vacacionRel;
+    }
+
+    /**
+     * @param mixed $vacacionRel
+     */
+    public function setVacacionRel($vacacionRel): void
+    {
+        $this->vacacionRel = $vacacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPagosDetallesPagoRel()
     {
         return $this->pagosDetallesPagoRel;
@@ -775,70 +823,6 @@ class RhuPago
     public function setEgresosDetallesPagoRel($egresosDetallesPagoRel): void
     {
         $this->egresosDetallesPagoRel = $egresosDetallesPagoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoGrupoFk()
-    {
-        return $this->codigoGrupoFk;
-    }
-
-    /**
-     * @param mixed $codigoGrupoFk
-     */
-    public function setCodigoGrupoFk($codigoGrupoFk): void
-    {
-        $this->codigoGrupoFk = $codigoGrupoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGrupoRel()
-    {
-        return $this->grupoRel;
-    }
-
-    /**
-     * @param mixed $grupoRel
-     */
-    public function setGrupoRel($grupoRel): void
-    {
-        $this->grupoRel = $grupoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoVacacionFk()
-    {
-        return $this->codigoVacacionFk;
-    }
-
-    /**
-     * @param mixed $codigoVacacionFk
-     */
-    public function setCodigoVacacionFk($codigoVacacionFk): void
-    {
-        $this->codigoVacacionFk = $codigoVacacionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVacacionRel()
-    {
-        return $this->vacacionRel;
-    }
-
-    /**
-     * @param mixed $vacacionRel
-     */
-    public function setVacacionRel($vacacionRel): void
-    {
-        $this->vacacionRel = $vacacionRel;
     }
 
 

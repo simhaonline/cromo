@@ -41,7 +41,7 @@ class EmbargoType extends AbstractType
             ->add('oficioInactivacion', TextType::class, ['required' => false])
             ->add('fechaInicioFolio', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
             ->add('vrValor', NumberType::class, ['required' => true])
-            ->add('vrPorcentaje', NumberType::class, ['required' => false])
+            ->add('porcentaje', NumberType::class, ['required' => false])
             ->add('valorFijo', CheckboxType::class, ['required' => false])
             ->add('porcentajeDevengado', CheckboxType::class, ['required' => false])
             ->add('porcentajeDevengadoPrestacional', CheckboxType::class, ['required' => false])
@@ -94,7 +94,7 @@ class EmbargoType extends AbstractType
             {"campo":"porcentajeDevengado","tipo":"bool", "ayuda":"Porcentaje devengado"  ,"titulo":"%DEV"},
             {"campo":"porcentajeDevengadoPrestacional","tipo":"bool", "ayuda":"Porcentaje devengado prestacional","titulo":"%DEV (PRES)"},
             {"campo":"porcentajeExcedaSalarioMinimo","tipo":"bool"  ,"ayuda":"Porcentaje exceda salario minimo","titulo":"%EXEDA SAL.MIN"},
-            {"campo":"vrPorcentaje"                 ,"tipo":"moneda","ayuda":"Porcentaje","titulo":"%"},
+            {"campo":"porcentaje"                 ,"tipo":"moneda","ayuda":"Porcentaje","titulo":"%"},
             {"campo":"partesExcedaSalarioMinimo"    ,"tipo":"bool"  ,"ayuda":"Partes que excedan salario minimo" ,"titulo":"PARTES"},
             {"campo":"partes"                       ,"tipo":"texto" ,"ayuda":"Numero de partes"                  ,"titulo":"N.PARTES"},
             {"campo":"estadoActivo"                 ,"tipo":"bool"  ,"ayuda":"Estado activo"                            ,"titulo":"ACT"}

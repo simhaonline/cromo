@@ -123,6 +123,11 @@ class RhuPagoDetalle
     private $codigoNovedadFk;
 
     /**
+     * @ORM\Column(name="codigo_embargo_fk", type="integer", nullable=true)
+     */
+    private $codigoEmbargoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuPago", inversedBy="pagosDetallesPagoRel")
      * @ORM\JoinColumn(name="codigo_pago_fk", referencedColumnName="codigo_pago_pk")
      */
@@ -162,6 +167,12 @@ class RhuPagoDetalle
      * @ORM\JoinColumn(name="codigo_incapacidad_fk", referencedColumnName="codigo_incapacidad_pk")
      */
     protected $incapacidadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEmbargo", inversedBy="pagosDetallesEmbargoRel")
+     * @ORM\JoinColumn(name="codigo_embargo_fk",referencedColumnName="codigo_embargo_pk")
+     */
+    protected $embargoRel;
 
     /**
      * @return mixed
@@ -209,6 +220,70 @@ class RhuPagoDetalle
     public function setCodigoConceptoFk($codigoConceptoFk): void
     {
         $this->codigoConceptoFk = $codigoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoLicenciaFk()
+    {
+        return $this->codigoLicenciaFk;
+    }
+
+    /**
+     * @param mixed $codigoLicenciaFk
+     */
+    public function setCodigoLicenciaFk($codigoLicenciaFk): void
+    {
+        $this->codigoLicenciaFk = $codigoLicenciaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoIncapacidadFk()
+    {
+        return $this->codigoIncapacidadFk;
+    }
+
+    /**
+     * @param mixed $codigoIncapacidadFk
+     */
+    public function setCodigoIncapacidadFk($codigoIncapacidadFk): void
+    {
+        $this->codigoIncapacidadFk = $codigoIncapacidadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCreditoFk()
+    {
+        return $this->codigoCreditoFk;
+    }
+
+    /**
+     * @param mixed $codigoCreditoFk
+     */
+    public function setCodigoCreditoFk($codigoCreditoFk): void
+    {
+        $this->codigoCreditoFk = $codigoCreditoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVacacionFk()
+    {
+        return $this->codigoVacacionFk;
+    }
+
+    /**
+     * @param mixed $codigoVacacionFk
+     */
+    public function setCodigoVacacionFk($codigoVacacionFk): void
+    {
+        $this->codigoVacacionFk = $codigoVacacionFk;
     }
 
     /**
@@ -326,6 +401,22 @@ class RhuPagoDetalle
     /**
      * @return mixed
      */
+    public function getDetalle()
+    {
+        return $this->detalle;
+    }
+
+    /**
+     * @param mixed $detalle
+     */
+    public function setDetalle($detalle): void
+    {
+        $this->detalle = $detalle;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrDeduccion()
     {
         return $this->vrDeduccion;
@@ -353,22 +444,6 @@ class RhuPagoDetalle
     public function setVrDevengado($vrDevengado): void
     {
         $this->vrDevengado = $vrDevengado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDetalle()
-    {
-        return $this->detalle;
-    }
-
-    /**
-     * @param mixed $detalle
-     */
-    public function setDetalle($detalle): void
-    {
-        $this->detalle = $detalle;
     }
 
     /**
@@ -406,6 +481,54 @@ class RhuPagoDetalle
     /**
      * @return mixed
      */
+    public function getVrIngresoBaseCotizacionAdicional()
+    {
+        return $this->vrIngresoBaseCotizacionAdicional;
+    }
+
+    /**
+     * @param mixed $vrIngresoBaseCotizacionAdicional
+     */
+    public function setVrIngresoBaseCotizacionAdicional($vrIngresoBaseCotizacionAdicional): void
+    {
+        $this->vrIngresoBaseCotizacionAdicional = $vrIngresoBaseCotizacionAdicional;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoNovedadFk()
+    {
+        return $this->codigoNovedadFk;
+    }
+
+    /**
+     * @param mixed $codigoNovedadFk
+     */
+    public function setCodigoNovedadFk($codigoNovedadFk): void
+    {
+        $this->codigoNovedadFk = $codigoNovedadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmbargoFk()
+    {
+        return $this->codigoEmbargoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmbargoFk
+     */
+    public function setCodigoEmbargoFk($codigoEmbargoFk): void
+    {
+        $this->codigoEmbargoFk = $codigoEmbargoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPagoRel()
     {
         return $this->pagoRel;
@@ -438,22 +561,6 @@ class RhuPagoDetalle
     /**
      * @return mixed
      */
-    public function getCodigoCreditoFk()
-    {
-        return $this->codigoCreditoFk;
-    }
-
-    /**
-     * @param mixed $codigoCreditoFk
-     */
-    public function setCodigoCreditoFk( $codigoCreditoFk ): void
-    {
-        $this->codigoCreditoFk = $codigoCreditoFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCreditoRel()
     {
         return $this->creditoRel;
@@ -462,89 +569,9 @@ class RhuPagoDetalle
     /**
      * @param mixed $creditoRel
      */
-    public function setCreditoRel( $creditoRel ): void
+    public function setCreditoRel($creditoRel): void
     {
         $this->creditoRel = $creditoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCreditosPagosPagoDetalleRel()
-    {
-        return $this->creditosPagosPagoDetalleRel;
-    }
-
-    /**
-     * @param mixed $creditosPagosPagoDetalleRel
-     */
-    public function setCreditosPagosPagoDetalleRel( $creditosPagosPagoDetalleRel ): void
-    {
-        $this->creditosPagosPagoDetalleRel = $creditosPagosPagoDetalleRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoNovedadFk()
-    {
-        return $this->codigoNovedadFk;
-    }
-
-    /**
-     * @param mixed $codigoNovedadFk
-     */
-    public function setCodigoNovedadFk($codigoNovedadFk): void
-    {
-        $this->codigoNovedadFk = $codigoNovedadFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoVacacionFk()
-    {
-        return $this->codigoVacacionFk;
-    }
-
-    /**
-     * @param mixed $codigoVacacionFk
-     */
-    public function setCodigoVacacionFk($codigoVacacionFk): void
-    {
-        $this->codigoVacacionFk = $codigoVacacionFk;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrIngresoBaseCotizacionAdicional()
-    {
-        return $this->vrIngresoBaseCotizacionAdicional;
-    }
-
-    /**
-     * @param mixed $vrIngresoBaseCotizacionAdicional
-     */
-    public function setVrIngresoBaseCotizacionAdicional($vrIngresoBaseCotizacionAdicional): void
-    {
-        $this->vrIngresoBaseCotizacionAdicional = $vrIngresoBaseCotizacionAdicional;
     }
 
     /**
@@ -566,33 +593,17 @@ class RhuPagoDetalle
     /**
      * @return mixed
      */
-    public function getCodigoLicenciaFk()
+    public function getCreditosPagosPagoDetalleRel()
     {
-        return $this->codigoLicenciaFk;
+        return $this->creditosPagosPagoDetalleRel;
     }
 
     /**
-     * @param mixed $codigoLicenciaFk
+     * @param mixed $creditosPagosPagoDetalleRel
      */
-    public function setCodigoLicenciaFk($codigoLicenciaFk): void
+    public function setCreditosPagosPagoDetalleRel($creditosPagosPagoDetalleRel): void
     {
-        $this->codigoLicenciaFk = $codigoLicenciaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoIncapacidadFk()
-    {
-        return $this->codigoIncapacidadFk;
-    }
-
-    /**
-     * @param mixed $codigoIncapacidadFk
-     */
-    public function setCodigoIncapacidadFk($codigoIncapacidadFk): void
-    {
-        $this->codigoIncapacidadFk = $codigoIncapacidadFk;
+        $this->creditosPagosPagoDetalleRel = $creditosPagosPagoDetalleRel;
     }
 
     /**
@@ -625,6 +636,22 @@ class RhuPagoDetalle
     public function setIncapacidadRel($incapacidadRel): void
     {
         $this->incapacidadRel = $incapacidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmbargoRel()
+    {
+        return $this->embargoRel;
+    }
+
+    /**
+     * @param mixed $embargoRel
+     */
+    public function setEmbargoRel($embargoRel): void
+    {
+        $this->embargoRel = $embargoRel;
     }
 
 

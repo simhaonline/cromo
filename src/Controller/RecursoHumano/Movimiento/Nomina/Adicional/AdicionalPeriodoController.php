@@ -139,6 +139,7 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
      */
     public function detalleNuevo(Request $request, $codigoAdicional, $codigoAdicionalPeriodo){
         $em = $this->getDoctrine()->getManager();
+        /** @var $arAdicionalPerido RhuAdicionalPeriodo */
         $arAdicionalPerido =  $em->getRepository(RhuAdicionalPeriodo::class)->find($codigoAdicionalPeriodo);
         $arAdicional = new RhuAdicional();
         if ($codigoAdicional != 0) {
@@ -152,7 +153,7 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arAdicional->getCodigoEmpleadoFk());
                 if ($arEmpleado->getCodigoContratoFk()) {
                     $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
-                    $arAdicional->setFecha(new \DateTime('now'));
+                    $arAdicional->setFecha($arAdicionalPerido->getFecha());
                     $arAdicional->setEmpleadoRel($arEmpleado);
                     $arAdicional->setContratoRel($arContrato);
                     $arAdicional->setAdicionalPeriodoRel($arAdicionalPerido);

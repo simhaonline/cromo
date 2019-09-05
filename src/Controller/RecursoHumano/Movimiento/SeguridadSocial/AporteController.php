@@ -157,7 +157,6 @@ class AporteController extends ControllerListenerGeneral
                 $em->getRepository(RhuAporte::class)->Anular($arAporte);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_detalle', array('id' => $id)));
             }
-
             if ($form->get('btnExcelContrato')->isClicked()) {
                 General::get()->setExportar($em->getRepository(RhuAporteContrato::class)->lista($id)->getQuery()->getResult(), "AporteContrato");
             }

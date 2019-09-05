@@ -176,7 +176,7 @@ class AporteController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_detalle', array('id' => $id)));
             }
         }
-        $arAporteDetalles = $paginator->paginate($em->getRepository(RhuAporteDetalle::class)->lista($id), $request->query->getInt('page', 1), 30);
+        $arAporteDetalles = $paginator->paginate($em->getRepository(RhuAporteDetalle::class)->lista($id), $request->query->getInt('page', 1), 2000);
         $arAporteContratos = $paginator->paginate($em->getRepository(RhuAporteContrato::class)->lista($id), $request->query->getInt('page', 1), 2000);
         return $this->render('recursohumano/movimiento/seguridadsocial/aporte/detalle.html.twig', [
             'arAporte' => $arAporte,

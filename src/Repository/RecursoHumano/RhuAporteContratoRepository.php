@@ -38,6 +38,7 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporteContrato::class, 'ac')
             ->select('ac.codigoAporteContratoPk')
             ->addSelect('ac.codigoContratoFk')
+            ->addSelect('ac.codigoEmpleadoFk')
             ->addSelect('c.indefinido')
             ->addSelect('c.fechaDesde')
             ->addSelect('c.fechaHasta')

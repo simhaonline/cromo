@@ -410,6 +410,16 @@ class RhuEmpleado
     protected $licenciasEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuTrasladoPension", mappedBy="empleadoRel")
+     */
+    protected $trasladosPensionesEmpleadoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuTrasladoSalud", mappedBy="empleadoRel")
+     */
+    protected $trasladosSaludEmpleadoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()
@@ -1511,6 +1521,38 @@ class RhuEmpleado
     public function setLicenciasEmpleadoRel($licenciasEmpleadoRel): void
     {
         $this->licenciasEmpleadoRel = $licenciasEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrasladosPensionesEmpleadoRel()
+    {
+        return $this->trasladosPensionesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $trasladosPensionesEmpleadoRel
+     */
+    public function setTrasladosPensionesEmpleadoRel($trasladosPensionesEmpleadoRel): void
+    {
+        $this->trasladosPensionesEmpleadoRel = $trasladosPensionesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrasladosSaludEmpleadoRel()
+    {
+        return $this->trasladosSaludEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $trasladosSaludEmpleadoRel
+     */
+    public function setTrasladosSaludEmpleadoRel($trasladosSaludEmpleadoRel): void
+    {
+        $this->trasladosSaludEmpleadoRel = $trasladosSaludEmpleadoRel;
     }
 
 

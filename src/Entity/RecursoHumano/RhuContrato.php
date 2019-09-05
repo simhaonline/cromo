@@ -462,6 +462,16 @@ class RhuContrato
     protected $licenciasContratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuTrasladoPension", mappedBy="contratoRel")
+     */
+    protected $trasladosPensionesContratoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuTrasladoSalud", mappedBy="contratoRel")
+     */
+    protected $trasladosSaludContratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoPk()
@@ -1819,6 +1829,38 @@ class RhuContrato
     public function setVrDevengadoPactado($vrDevengadoPactado): void
     {
         $this->vrDevengadoPactado = $vrDevengadoPactado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrasladosPensionesContratoRel()
+    {
+        return $this->trasladosPensionesContratoRel;
+    }
+
+    /**
+     * @param mixed $trasladosPensionesContratoRel
+     */
+    public function setTrasladosPensionesContratoRel($trasladosPensionesContratoRel): void
+    {
+        $this->trasladosPensionesContratoRel = $trasladosPensionesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrasladosSaludContratoRel()
+    {
+        return $this->trasladosSaludContratoRel;
+    }
+
+    /**
+     * @param mixed $trasladosSaludContratoRel
+     */
+    public function setTrasladosSaludContratoRel($trasladosSaludContratoRel): void
+    {
+        $this->trasladosSaludContratoRel = $trasladosSaludContratoRel;
     }
 
 

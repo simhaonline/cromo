@@ -5,12 +5,12 @@
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_examenClaseRel" class="col-sm-2 control-label">Código pila:</label>
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Código:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoSucursalPk) }}
                     {{ form_errors(form.codigoSucursalPk) }}
                 </div>
-                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Cargo:</label>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Nombre:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.nombre) }}
                     {{ form_errors(form.nombre) }}
@@ -21,6 +21,11 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.estadoActivo) }}
                     {{ form_errors(form.estadoActivo) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Codigo pila:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigo) }}
+                    {{ form_errors(form.codigo) }}
                 </div>
             </div>
         </div>

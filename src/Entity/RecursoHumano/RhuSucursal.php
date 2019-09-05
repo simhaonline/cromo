@@ -28,14 +28,14 @@ class RhuSucursal {
     private $nombre;
 
     /**
-     * @ORM\Column(name="estado_activo",type="boolean", nullable=true,options={"default":false})
-     */
-    private $estadoActivo = false;
-
-    /**
      * @ORM\Column(name="codigo", type="string", length=50, nullable=true)
      */
     private $codigo;
+
+    /**
+     * @ORM\Column(name="estado_activo",type="boolean", nullable=true,options={"default":false})
+     */
+    private $estadoActivo = false;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="sucursalRel")

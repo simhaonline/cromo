@@ -1124,4 +1124,18 @@ class RhuVacacionRepository extends ServiceEntityRepository
         return $arFactura;
     }
 
+    public function listaVacacionesMes($fechaDesde, $fechaHasta, $codigoEmpleado)
+    {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from(RhuVacacion::class, "v")
+            ->select("v.codigoVacacionPk, v.fechaDesdeDisfrute, v.fechaHastaDisfrute")
+            ->where("v.fechaDesdeDisfrute <= '{$fechaHasta->format('Y-m-d')}' AND  v.fechaHastaDisfrute >= '{$fechaHasta->format('Y-m-d')}'")
+            ->orWhere("v.fechaDesdeDisfrute <= '{$fechaDesde->format('Y-m-d')}' AND  v.fechaHastaDisfrute >='{$fechaDesde->format('Y-m-d')}' AND v.codigoEmpleadoFk = '{$codigoEmpleado}'")
+            ->orWhere("v.fechaDesdeDisfrute >= '{$fechaDesde->format('Y-m-d')}' AND  v.fechaHastaDisfrute <='{$fechaHasta->format('Y-m-d')}' AND v.codigoEmpleadoFk = '{$codigoEmpleado}'")
+            ->andWhere("v.codigoEmpleadoFk = '{$codigoEmpleado}' AND v.estadoAnulado = 0 ");
+
+        $arrVacacionesEmpleado = $qb->getQuery()->execute();
+        return $arrVacacionesEmpleado;
+    }
+
 }

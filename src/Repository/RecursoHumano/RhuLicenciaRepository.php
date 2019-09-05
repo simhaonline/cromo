@@ -177,4 +177,18 @@ class RhuLicenciaRepository extends ServiceEntityRepository
         return $arrDevolver;
     }
 
+    public function listaLicenciasMes($fechaDesde, $fechaHasta, $codigoEmpleado)
+    {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from(RhuLicencia::class, "lc")
+            ->select("lc.codigoLicenciaPk, lc.fechaDesde, lc.fechaHasta")
+            ->where("lc.fechaDesde <= '{$fechaHasta->format('Y-m-d')}' AND  lc.fechaHasta >= '{$fechaHasta->format('Y-m-d')}'")
+            ->orWhere("lc.fechaDesde <= '{$fechaDesde->format('Y-m-d')}' AND  lc.fechaHasta >='{$fechaDesde->format('Y-m-d')}' AND lc.codigoEmpleadoFk = '{$codigoEmpleado}'")
+            ->orWhere("lc.fechaDesde >= '{$fechaDesde->format('Y-m-d')}' AND  lc.fechaHasta <='{$fechaHasta->format('Y-m-d')}' AND lc.codigoEmpleadoFk = '{$codigoEmpleado}'")
+            ->andWhere("lc.codigoEmpleadoFk = '{$codigoEmpleado}'");
+
+        $arrLicenciasEmpleado = $qb->getQuery()->execute();
+        return $arrLicenciasEmpleado;
+    }
+
 }

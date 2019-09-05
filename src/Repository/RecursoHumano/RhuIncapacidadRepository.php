@@ -500,4 +500,20 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         $arrDevolver = array('dias' => $intDiasIncapacidad);
         return $arrDevolver;
     }
+
+    public function listaIncapacidadMes($fechaDesde, $fechaHasta, $codigoEmpleado)
+    {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from(RhuIncapacidad::class, "i")
+            ->select("i.codigoIncapacidadPk, i.fechaDesde, i.fechaHasta, i.vrIncapacidad, i.cantidad, it.generaIbc")
+            ->join("i.incapacidadTipoRel", "it")
+            ->where("i.fechaDesde <= '{$fechaHasta->format('Y-m-d')}' AND  i.fechaHasta >= '{$fechaHasta->format('Y-m-d')}'")
+            ->orWhere("i.fechaDesde <= '{$fechaDesde->format('Y-m-d')}' AND  i.fechaHasta >='{$fechaDesde->format('Y-m-d')}' AND i.codigoEmpleadoFk = '{$codigoEmpleado}'")
+            ->orWhere("i.fechaDesde >= '{$fechaDesde->format('Y-m-d')}' AND  i.fechaHasta <='{$fechaHasta->format('Y-m-d')}' AND i.codigoEmpleadoFk = '{$codigoEmpleado}'")
+            ->andWhere("i.codigoEmpleadoFk = '{$codigoEmpleado}'");
+
+        $arrIncapacidadesEmpleado = $qb->getQuery()->execute();
+        return $arrIncapacidadesEmpleado;
+    }
+
 }

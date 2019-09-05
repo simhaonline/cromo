@@ -148,6 +148,26 @@ class RhuEntidad
     protected $licenciasEntidadSaludRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuTrasladoPension", mappedBy="entidadPensionAnteriorRel")
+     */
+    protected $trasladosPensionesEntidadPensionAnteriorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuTrasladoPension", mappedBy="entidadPensionNuevaRel")
+     */
+    protected $trasladosPensionesEntidadPensionNuevaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuTrasladoSalud", mappedBy="entidadSaludAnteriorRel")
+     */
+    protected $trasladosSaludEntidadSaludAnteriorRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuTrasladoSalud", mappedBy="entidadSaludNuevaRel")
+     */
+    protected $trasladosSaludEntidadSaludNuevaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEntidadPk()
@@ -561,6 +581,70 @@ class RhuEntidad
     public function setLicenciasEntidadSaludRel($licenciasEntidadSaludRel): void
     {
         $this->licenciasEntidadSaludRel = $licenciasEntidadSaludRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrasladosPensionesEntidadPensionAnteriorRel()
+    {
+        return $this->trasladosPensionesEntidadPensionAnteriorRel;
+    }
+
+    /**
+     * @param mixed $trasladosPensionesEntidadPensionAnteriorRel
+     */
+    public function setTrasladosPensionesEntidadPensionAnteriorRel($trasladosPensionesEntidadPensionAnteriorRel): void
+    {
+        $this->trasladosPensionesEntidadPensionAnteriorRel = $trasladosPensionesEntidadPensionAnteriorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrasladosPensionesEntidadPensionNuevaRel()
+    {
+        return $this->trasladosPensionesEntidadPensionNuevaRel;
+    }
+
+    /**
+     * @param mixed $trasladosPensionesEntidadPensionNuevaRel
+     */
+    public function setTrasladosPensionesEntidadPensionNuevaRel($trasladosPensionesEntidadPensionNuevaRel): void
+    {
+        $this->trasladosPensionesEntidadPensionNuevaRel = $trasladosPensionesEntidadPensionNuevaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrasladosSaludEntidadSaludAnteriorRel()
+    {
+        return $this->trasladosSaludEntidadSaludAnteriorRel;
+    }
+
+    /**
+     * @param mixed $trasladosSaludEntidadSaludAnteriorRel
+     */
+    public function setTrasladosSaludEntidadSaludAnteriorRel($trasladosSaludEntidadSaludAnteriorRel): void
+    {
+        $this->trasladosSaludEntidadSaludAnteriorRel = $trasladosSaludEntidadSaludAnteriorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrasladosSaludEntidadSaludNuevaRel()
+    {
+        return $this->trasladosSaludEntidadSaludNuevaRel;
+    }
+
+    /**
+     * @param mixed $trasladosSaludEntidadSaludNuevaRel
+     */
+    public function setTrasladosSaludEntidadSaludNuevaRel($trasladosSaludEntidadSaludNuevaRel): void
+    {
+        $this->trasladosSaludEntidadSaludNuevaRel = $trasladosSaludEntidadSaludNuevaRel;
     }
 
 

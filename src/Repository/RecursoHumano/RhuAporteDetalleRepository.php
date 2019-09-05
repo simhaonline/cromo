@@ -65,16 +65,22 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
             ->addSelect('ad.tarifaSena')
             ->addSelect('ad.tarifaIcbf')
             ->addSelect('ad.cotizacionPension')
+            ->addSelect('ep.nombre AS entidadPension')
             ->addSelect('ad.aportesFondoSolidaridadPensionalSolidaridad')
             ->addSelect('ad.aportesFondoSolidaridadPensionalSubsistencia')
             ->addSelect('ad.cotizacionSalud')
+            ->addSelect('es.nombre AS entidadSalud')
             ->addSelect('ad.cotizacionRiesgos')
             ->addSelect('ad.cotizacionCaja')
+            ->addSelect('ec.nombre AS entidadCaja')
             ->addSelect('ad.cotizacionSena')
             ->addSelect('ad.cotizacionIcbf')
             ->addSelect('ad.totalCotizacion')
-
             ->leftJoin('ad.empleadoRel', 'e')
+            ->leftJoin('ad.contratoRel', 'c')
+            ->leftJoin('c.entidadPensionRel', 'ep')
+            ->leftJoin('c.entidadSaludRel', 'es')
+            ->leftJoin('c.entidadCajaRel', 'ec')
             ->where('ad.codigoAporteFk = ' . $codigoAporte);
         return $queryBuilder;
     }

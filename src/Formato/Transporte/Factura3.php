@@ -76,7 +76,7 @@ class Factura3 extends \FPDF {
         $this->SetXY(250, 13);
         $this->Cell(30, 6, utf8_decode('DE VENTA'), 0, 0, 'l', 1);
         $this->SetXY(255, 18);
-        $this->Cell(30, 6, utf8_decode($arFacturaTipo->getPrefijo() . $arFactura->getNumero()), 0, 0, 'l', 1);
+        $this->Cell(30, 6, utf8_decode("01-" . $arFactura->getNumero()), 0, 0, 'l', 1);
         $this->SetFont('Arial', '', 8);
         $this->Text(250, 45, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
         $this->SetFont('Arial', 'b', 8);

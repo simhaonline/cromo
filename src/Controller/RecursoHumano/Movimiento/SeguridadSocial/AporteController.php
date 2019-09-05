@@ -159,7 +159,10 @@ class AporteController extends ControllerListenerGeneral
             }
 
             if ($form->get('btnExcelContrato')->isClicked()) {
-                General::get()->setExportar($em->getRepository(RhuAporteContrato::class)->lista(), "aporte contrato");
+                General::get()->setExportar($em->getRepository(RhuAporteContrato::class)->lista($id)->getQuery()->getResult(), "AporteContrato");
+            }
+            if ($form->get('btnExcelDetalle')->isClicked()) {
+                General::get()->setExportar($em->getRepository(RhuAporteDetalle::class)->lista($id)->getQuery()->getResult(), "AporteDetalle");
             }
             if ($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(RhuAporteContrato::class)->cargar($arAporte);

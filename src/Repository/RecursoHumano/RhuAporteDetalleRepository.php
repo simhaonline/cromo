@@ -29,6 +29,8 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $em->createQueryBuilder()->from(RhuAporteDetalle::class, 'ad')
             ->select('ad.codigoAporteDetallePk')
             ->addSelect('ad.codigoContratoFk')
+            ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
             ->addSelect('ad.ingreso')
             ->addSelect('ad.retiro')
             ->addSelect('ad.variacionTransitoriaSalario')
@@ -71,8 +73,7 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
             ->addSelect('ad.cotizacionSena')
             ->addSelect('ad.cotizacionIcbf')
             ->addSelect('ad.totalCotizacion')
-            ->addSelect('e.nombreCorto as empleadoNombreCorto')
-            ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
+
             ->leftJoin('ad.empleadoRel', 'e')
             ->where('ad.codigoAporteFk = ' . $codigoAporte);
         return $queryBuilder;

@@ -13,6 +13,7 @@ use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\AdicionalPeriodoType;
 use App\Form\Type\RecursoHumano\AdicionalType;
+use App\General\General;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -59,7 +60,10 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
                 $this->get("UtilidadesModelo")->eliminar(RhuAdicionalPeriodo::class, $arrSeleccionados);
 				return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_lista'));
 			}
-            
+            if ($form->get('btnExcel')->isClicked()){
+                General::get()->setExportar($em->createQuery($em->getRepository(RhuAdicionalPeriodo::class)->lista())->execute(), "Adicional periodo");
+            }
+
         }
         $arAdicionalPeriodos = $paginator->paginate($em->getRepository(RhuAdicionalPeriodo::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/nomina/adicionalPeriodo/lista.html.twig', [

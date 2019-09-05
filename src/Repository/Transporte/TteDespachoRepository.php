@@ -1767,7 +1767,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect("SUM(d.vrFletePago) as fletePago")
             ->leftJoin('d.despachoTipoRel', 'dt')
             ->where("d.fechaSalida >='" . $fechaDesde . "' AND d.fechaSalida <= '" . $fechaHasta . "'")
-            ->andWhere('dt.viaje = 1')
+            ->andWhere('dt.contabilizar = 1')
             ->andWhere('d.estadoAprobado = 1')
             ->groupBy('d.codigoPoseedorFk')
             ->addGroupBy('d.codigoDespachoTipoFk');

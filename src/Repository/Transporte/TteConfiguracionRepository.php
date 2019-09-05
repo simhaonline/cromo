@@ -42,4 +42,13 @@ class TteConfiguracionRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
 
     }
+
+    public function contabilizar(): array
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteConfiguracion::class, 'c')
+            ->select('c.contabilizarDespachoTipo')
+            ->where('c.codigoConfiguracionPk = 1');
+        return $queryBuilder->getQuery()->getSingleResult();
+
+    }
 }

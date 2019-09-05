@@ -660,7 +660,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
             $arAporteContratoActualizar->setVrSalario($salario);
             $arAporteContratoActualizar->setDias($diasCotizar);
             $arAporteContratoActualizar->setIbc($ibc);
-            //$arAporteContratoActualizar->setIbcFondoSolidaridad($ibcFS);
+            $arAporteContratoActualizar->setIbcFondoSolidaridad($ibcFS);
 
 
             $em->persist($arAporteContratoActualizar);

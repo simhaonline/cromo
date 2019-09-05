@@ -189,6 +189,41 @@ class RhuConfiguracion
     private $codigoComprobanteLiquidacion;
 
     /**
+     * @ORM\Column(name="prestaciones_porcentaje_cesantias", type="float", nullable=true)
+     */
+    private $prestacionesPorcentajeCesantias = 0;
+
+    /**
+     * @ORM\Column(name="prestaciones_porcentaje_intereses_cesantias", type="float", nullable=true)
+     */
+    private $prestacionesPorcentajeInteresesCesantias = 0;
+
+    /**
+     * @ORM\Column(name="prestaciones_porcentaje_primas", type="float", nullable=true)
+     */
+    private $prestacionesPorcentajePrimas = 0;
+
+    /**
+     * @ORM\Column(name="prestaciones_porcentaje_vacaciones", type="float", nullable=true)
+     */
+    private $prestacionesPorcentajeVacaciones = 0;
+
+    /**
+     * @ORM\Column(name="prestaciones_porcentaje_aporte_vacaciones", type="float", nullable=true)
+     */
+    private $prestacionesPorcentajeAporteVacaciones = 0;
+
+    /**
+     * @ORM\Column(name="prestaciones_porcentaje_indemnizacion", type="float", nullable=true)
+     */
+    private $prestacionesPorcentajeIndemnizacion = 0;
+
+    /**
+     * @ORM\Column(name="aportes_porcentaje_caja", type="float", nullable=true)
+     */
+    private $aportesPorcentajeCaja = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoAuxilioTransporteRel")
      * @ORM\JoinColumn(name="codigo_concepto_auxilio_transporte_fk", referencedColumnName="codigo_concepto_pk")
      */
@@ -814,6 +849,119 @@ class RhuConfiguracion
     {
         $this->codigoComprobanteLiquidacion = $codigoComprobanteLiquidacion;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPrestacionesPorcentajeCesantias()
+    {
+        return $this->prestacionesPorcentajeCesantias;
+    }
+
+    /**
+     * @param mixed $prestacionesPorcentajeCesantias
+     */
+    public function setPrestacionesPorcentajeCesantias($prestacionesPorcentajeCesantias): void
+    {
+        $this->prestacionesPorcentajeCesantias = $prestacionesPorcentajeCesantias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrestacionesPorcentajeInteresesCesantias()
+    {
+        return $this->prestacionesPorcentajeInteresesCesantias;
+    }
+
+    /**
+     * @param mixed $prestacionesPorcentajeInteresesCesantias
+     */
+    public function setPrestacionesPorcentajeInteresesCesantias($prestacionesPorcentajeInteresesCesantias): void
+    {
+        $this->prestacionesPorcentajeInteresesCesantias = $prestacionesPorcentajeInteresesCesantias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrestacionesPorcentajePrimas()
+    {
+        return $this->prestacionesPorcentajePrimas;
+    }
+
+    /**
+     * @param mixed $prestacionesPorcentajePrimas
+     */
+    public function setPrestacionesPorcentajePrimas($prestacionesPorcentajePrimas): void
+    {
+        $this->prestacionesPorcentajePrimas = $prestacionesPorcentajePrimas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrestacionesPorcentajeVacaciones()
+    {
+        return $this->prestacionesPorcentajeVacaciones;
+    }
+
+    /**
+     * @param mixed $prestacionesPorcentajeVacaciones
+     */
+    public function setPrestacionesPorcentajeVacaciones($prestacionesPorcentajeVacaciones): void
+    {
+        $this->prestacionesPorcentajeVacaciones = $prestacionesPorcentajeVacaciones;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrestacionesPorcentajeAporteVacaciones()
+    {
+        return $this->prestacionesPorcentajeAporteVacaciones;
+    }
+
+    /**
+     * @param mixed $prestacionesPorcentajeAporteVacaciones
+     */
+    public function setPrestacionesPorcentajeAporteVacaciones($prestacionesPorcentajeAporteVacaciones): void
+    {
+        $this->prestacionesPorcentajeAporteVacaciones = $prestacionesPorcentajeAporteVacaciones;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrestacionesPorcentajeIndemnizacion()
+    {
+        return $this->prestacionesPorcentajeIndemnizacion;
+    }
+
+    /**
+     * @param mixed $prestacionesPorcentajeIndemnizacion
+     */
+    public function setPrestacionesPorcentajeIndemnizacion($prestacionesPorcentajeIndemnizacion): void
+    {
+        $this->prestacionesPorcentajeIndemnizacion = $prestacionesPorcentajeIndemnizacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesPorcentajeCaja()
+    {
+        return $this->aportesPorcentajeCaja;
+    }
+
+    /**
+     * @param mixed $aportesPorcentajeCaja
+     */
+    public function setAportesPorcentajeCaja($aportesPorcentajeCaja): void
+    {
+        $this->aportesPorcentajeCaja = $aportesPorcentajeCaja;
+    }
+
 
 
 }

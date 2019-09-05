@@ -50,7 +50,7 @@
         <tbody>
         {% for arProvision in arProvisiones %}
             <tr>
-                <td>{{ arProvision.codigoProvisionPk }}</td>
+                <td>{{ arProvision.codigoProvisionPeriodoPk }}</td>
                 <td>{{ arProvision.anio }}</td>
                 <td>{{ arProvision.mes }}</td>
                 <td class="numero">{{ arProvision.vrSalud | number_format(0, '.', ',')}}</td>
@@ -61,16 +61,16 @@
                 <td>{{ arProvision.estadoAprobado ? 'SI':'NO' }}</td>
                 <td>{{ arProvision.estadoAnulado ? 'SI':'NO' }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_financiero_provision_nuevo',{'id': arProvision.codigoProvisionPk }) }}"><i
+                    <a href="{{ path('recursohumano_movimiento_financiero_provision_nuevo',{'id': arProvision.codigoProvisionPeriodoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_financierto_provision_detalle',{'id' : arProvision.codigoProvisionPk}) }}">
+                    <a href="{{ path('recursohumano_movimiento_financiero_provision_detalle',{'id' : arProvision.codigoProvisionPeriodoPk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
                 </td>
-                <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arProvision.codigoProvisionPk  }}"/></td>
+                <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arProvision.codigoProvisionPeriodoPk  }}"/></td>
             </tr>
         {% endfor %}
         </tbody>

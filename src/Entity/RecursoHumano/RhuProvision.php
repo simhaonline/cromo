@@ -10,9 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RhuProvision
 {
+    public $infoLog = [
+        "primaryKey" => "codigoProvisionPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_provision_periodo_pk", type="integer")
+     * @ORM\Column(name="codigo_provision_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoProvisionPk;
@@ -116,6 +120,22 @@ class RhuProvision
      * @ORM\Column(name="estado_anulado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoAnulado = false;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed

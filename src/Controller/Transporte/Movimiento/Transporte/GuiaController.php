@@ -180,7 +180,7 @@ class GuiaController extends ControllerListenerGeneral
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
                 $session->set('filtroTteGuiaTopRegistros', 15000);
-                General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->lista())->execute(), "Guias");
+                General::get()->setExportar($em->getRepository(TteGuia::class)->lista()->getQuery()->getResult(), "Guias");
             }
         }
 

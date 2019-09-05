@@ -171,6 +171,8 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
             // nos indica si ya aplico la novedad de traslado de pension para periodos sin dias ordinarios
             $novedadTrasladoDesdeOtraPension = false;
 
+
+
             //Vacaciones
             $diasVacaciones = 0;
             $ibcVacaciones = 0;
@@ -797,8 +799,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
             $fechaHasta = $fechaFinal;
             if ($fechaDesde->format('d') == 31 && $fechaDesde->format('d') == 31) {
                 // se añade esta validacion por que no estaba tomando las vacaciones que inician el 31 y pasan de mes
-                // se comenta el continue
-                $fechaDesde = date_create($fechaHasta->format('Y-m') . "-1");
+                $fechaDesde = date_create($fechaDesde->format('Y-m') . "-30");
                 //continue;
             }
 

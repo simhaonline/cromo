@@ -1244,6 +1244,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $arComprobante = $em->getRepository(FinComprobante::class)->find($arDespacho['codigoComprobanteFk']);
                                 $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arDespacho['codigoPropietarioFk']);
 
+
                                 //Cuenta flete pagado
                                 if ($arDespacho['vrFletePago'] > 0) {
                                     if ($arDespacho['codigoCuentaDespachoFleteFk']) {

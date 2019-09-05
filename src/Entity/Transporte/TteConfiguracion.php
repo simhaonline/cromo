@@ -108,6 +108,11 @@ class TteConfiguracion
     private $numeroUnicoGuia = false;
 
     /**
+     * @ORM\Column(name="contabilizar_despacho_tipo", type="boolean", options={"default" : false})
+     */
+    private $contabilizarDespachoTipo = false;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -409,6 +414,22 @@ class TteConfiguracion
     public function setCodigoCondicionGeneralFk($codigoCondicionGeneralFk): void
     {
         $this->codigoCondicionGeneralFk = $codigoCondicionGeneralFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContabilizarDespachoTipo()
+    {
+        return $this->contabilizarDespachoTipo;
+    }
+
+    /**
+     * @param mixed $contabilizarDespachoTipo
+     */
+    public function setContabilizarDespachoTipo($contabilizarDespachoTipo): void
+    {
+        $this->contabilizarDespachoTipo = $contabilizarDespachoTipo;
     }
 
 

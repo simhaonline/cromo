@@ -55,6 +55,7 @@ class AdicionalController extends ControllerListenerGeneral
 
             }
             if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->createQuery($em->getRepository(RhuAdicional::class)->lista())->execute(), "Facturas");
 
             }
             /*if ($form->get('btnEliminar')->isClicked()) {

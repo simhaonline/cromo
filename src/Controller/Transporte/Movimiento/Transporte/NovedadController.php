@@ -43,7 +43,6 @@ class NovedadController extends ControllerListenerGeneral
             ->add('guiaNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroNormaCodigo')])
             ->add('fechaReporteDesde', DateType::class, ['required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd',
                 'data' => $session->get('filtroNovadadFechaReporteDesde') ? date_create($session->get('filtroNovadadFechaReporteDesde')): null])
-
             ->add('fechaReporteHasta', DateType::class, ['required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd',
                 'data' => $session->get('filtroNovadadFechaReporteHasta') ? date_create($session->get('filtroNovadadFechaReporteHasta')): null])
             ->add('codigoNovedadTipo',EntityType::class,[
@@ -63,16 +62,24 @@ class NovedadController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
+                $arNovedadTipo = $form->get('codigoNovedadTipo')->getData();
                 $session->set('filtroNovadadCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                $session->set('filtroNovadadNumeroGuia', $form->get('guiaNumero')->getData());
+                $session->set('filtroNovadadFechaReporteDesde',  $form->get('fechaReporteDesde')->getData() ?$form->get('fechaReporteDesde')->getData()->format('Y-m-d'): null);
+                $session->set('filtroNovadadFechaReporteHasta',  $form->get('fechaReporteHasta')->getData() ?$form->get('fechaReporteHasta')->getData()->format('Y-m-d'): null);
                 if ($session->get('filtroNovadadCodigoCliente') == ''){
                     $session->set('filtroNovadadNombreCorto', '');
                 }else{
                     $session->set('filtroNovadadNombreCorto', $form->get('txtNombreCorto')->getData());
                 }
-                $session->set('filtroNovadadNumeroGuia', $form->get('guiaNumero')->getData());
-                $session->set('filtroNovadadFechaReporteDesde',  $form->get('fechaReporteDesde')->getData() ?$form->get('fechaReporteDesde')->getData()->format('Y-m-d'): null);
-                $session->set('filtroNovadadFechaReporteHasta',  $form->get('fechaReporteHasta')->getData() ?$form->get('fechaReporteHasta')->getData()->format('Y-m-d'): null);
-
+                if ($arNovedadTipo != ''){
+                    $session->set('filtroTteNovedadcodigoNovedadTipo', $arNovedadTipo->getCodigoNovedadTipoPk());
+                }else{
+                    $session->set('filtroTteNovedadcodigoNovedadTipo', null);
+                }
+            }
+            if ($form->get('btnExcel')->isClicked()){
+                General::get()->setExportar($em->getRepository(TteNovedad::class)->lista()->getQuery()->getResult(), "Novedad");
             }
         }
         $arNovedades = $paginator->paginate($em->getRepository(TteNovedad::class)->lista(), $request->query->getInt('page', 1), 30);

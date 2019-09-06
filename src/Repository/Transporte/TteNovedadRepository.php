@@ -46,6 +46,9 @@ class TteNovedadRepository extends ServiceEntityRepository
         if ($session->get('filtroNovadadNumeroGuia')) {
             $queryBuilder->andWhere("g.numero = '{$session->get('filtroNovadadNumeroGuia')}'");
         }
+        if ($session->get('filtroTteNovedadcodigoNovedadTipo')) {
+            $queryBuilder->andWhere("nt.codigoNovedadTipoPk = {$session->get('filtroTteNovedadcodigoNovedadTipo')}");
+        }
         if ($session->get('filtroNovadadFechaReporteDesde') != null) {
             $queryBuilder->andWhere("n.fechaReporte >= '{$session->get('filtroNovadadFechaReporteDesde')} 00:00:00'");
         }

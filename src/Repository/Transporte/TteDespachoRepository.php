@@ -105,7 +105,6 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->leftJoin('td.ciudadDestinoRel ', 'cd')
             ->leftJoin('td.conductorRel', 'c')
             ->where('td.codigoDespachoPk <> 0');
-
         if ($session->get('TteDespacho_codigoConductorFk') != '') {
             $queryBuilder->andWhere("td.TteDespacho_codigoConductorFk = {$session->get('TteDespacho_codigoConductorFk')}");
         }
@@ -134,7 +133,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         }
 
         if ($session->get('TteDespacho_codigoDespachoTipoFk')) {
-            $queryBuilder->andWhere("td.codigoDespachoPk = '" . $session->get('TteDespacho_codigoDespachoTipoFk') . "'");
+            $queryBuilder->andWhere("td.codigoDespachoTipoFk = '{$session->get('TteDespacho_codigoDespachoTipoFk')}'");
         }
 
         if ($session->get('TteDespacho_codigoOperacionFk')) {
@@ -144,18 +143,11 @@ class TteDespachoRepository extends ServiceEntityRepository
         $fecha = new \DateTime('now');
         if ($session->get('TteDespacho_fechaSalidaDesde') != null) {
             $queryBuilder->andWhere("td.fechaSalida >= '{$session->get('TteDespacho_fechaSalidaDesde')} 00:00:00'");
-        }else{
-            $queryBuilder->andWhere("td.fechaSalida >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-
         }
 
         if ($session->get('TteDespacho_fechaSalidaHasta') != null) {
             $queryBuilder->andWhere("td.fechaSalida <= '{$session->get('TteDespacho_fechaSalidaHasta')} 23:59:59'");
-        }else{
-            $queryBuilder->andWhere("td.fechaSalida <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-
         }
-
         switch ($session->get('TteDespacho_estadoAutorizado')) {
             case '0':
                 $queryBuilder->andWhere("td.estadoAutorizado = 0");
@@ -191,9 +183,6 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("td.estadoAnulado = 1");
                 break;
         }
-
-
-
         $queryBuilder->orderBy('td.fechaSalida', 'DESC');
         return $queryBuilder->setMaxResults(5000);
     }

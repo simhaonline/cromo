@@ -35,9 +35,9 @@ class InicioController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-        $query = $em->createQuery($em->getRepository(DocMasivo::class)->listaArchivo($tipo, $codigo));
+        $query = $em->getRepository(DocMasivo::class)->listaArchivo($tipo, $codigo);
         $arMasivos = $paginator->paginate($query, $request->query->get('page', 1), 50);
-        $query = $em->createQuery($em->getRepository(DocArchivo::class)->listaArchivo($tipo, $codigo));
+        $query = $em->getRepository(DocArchivo::class)->listaArchivo($tipo, $codigo);
         $arArchivos = $paginator->paginate($query, $request->query->get('page', 1), 50);
         $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
         $arImagen = $em->getRepository(DocImagen::class)->findOneBy(array('codigoModeloFk' => $tipo, 'identificador' => $codigo));

@@ -56,7 +56,7 @@ class ReporteNovedadController extends Controller
             $session->set('filtroTteNovedadEstadoSolucionado', $form->get('chkEstadoSolucionado')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(TteNovedad::class)->reporteNovedad())->execute(), "Novedades");
+            General::get()->setExportar($em->getRepository(TteNovedad::class)->reporteNovedad()->getQuery()->getResult(), "Novedades");
         }
         $query = $this->getDoctrine()->getRepository(TteNovedad::class)->reporteNovedad();
         $arNovedades = $paginator->paginate($query, $request->query->getInt('page', 1),100);

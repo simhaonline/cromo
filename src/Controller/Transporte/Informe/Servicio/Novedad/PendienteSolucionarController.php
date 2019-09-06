@@ -18,9 +18,13 @@ use Doctrine\ORM\EntityRepository;
 
 class PendienteSolucionarController extends Controller
 {
-   /**
-    * @Route("/transporte/inf/control/novedad/pendiente/solucionar", name="transporte_inf_servicio_novedad_pendiente_solucionar")
-    */    
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/inf/control/novedad/pendiente/solucionar", name="transporte_inf_servicio_novedad_pendiente_solucionar")
+     */
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -55,7 +59,7 @@ class PendienteSolucionarController extends Controller
                     $respuesta = $this->getDoctrine()->getRepository(TteNovedad::class)->setReportar($arrNovedades, $arrControles);
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->createQuery($em->getRepository(TteNovedad::class)->pendienteSolucionar())->execute(), 'Novedades pendientes por solucionar');
+                    General::get()->setExportar($em->getRepository(TteNovedad::class)->pendienteSolucionar()->getQuery()->getResult(), 'Novedades pendientes por solucionar');
                 }
             }
         }

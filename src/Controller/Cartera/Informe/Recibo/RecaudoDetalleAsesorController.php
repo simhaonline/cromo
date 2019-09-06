@@ -79,7 +79,7 @@ class RecaudoDetalleAsesorController extends Controller
             }
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(CarReciboDetalle::class)->recaudo())->execute(), "Recaudo");
+            General::get()->setExportar($em->getRepository(CarReciboDetalle::class)->recaudo()->getQuery()->getResult(), "Recaudo");
         }
         if ($form->get('btnPdf')->isClicked()) {
             $formato = new RecaudoDetalleAsesor();

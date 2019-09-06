@@ -52,7 +52,7 @@ class DetalleController extends Controller
             $session->set('filtroInvInformeReciboDetalleFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(CarReciboDetalle::class)->detalle())->execute(), "Recibos");
+            General::get()->setExportar($em->getRepository(CarReciboDetalle::class)->detalle()->getQuery()->getResult(), "Recibos");
         }
         $arReciboDetalles = $paginator->paginate($em->getRepository(CarReciboDetalle::class)->detalle(), $request->query->getInt('page', 1), 30);
         return $this->render('cartera/informe/recibo/detalle.html.twig', [

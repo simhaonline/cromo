@@ -73,7 +73,7 @@ class ReciboController extends Controller
             }
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(CarRecibo::class)->informe())->execute(), "Recibos");
+            General::get()->setExportar($em->getRepository(CarRecibo::class)->informe()->getQuery()->getResult(), "Recibos");
         }
         $arRecibos = $paginator->paginate($em->getRepository(CarRecibo::class)->informe(), $request->query->getInt('page', 1), 30);
         return $this->render('cartera/informe/recibo.html.twig', [

@@ -104,7 +104,7 @@ class CuentaCobrarController extends Controller
             $em->getRepository(CarCuentaCobrar::class)->generarVencimientos();
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(CarCuentaCobrar::class)->pendientes())->execute(), "Cuenta cobrar");
+            General::get()->setExportar($em->getRepository(CarCuentaCobrar::class)->pendientes()->getQuery()->getResult(), "Cuenta cobrar");
         }
         $query = $this->getDoctrine()->getRepository(CarCuentaCobrar::class)->pendientes();
         $arCuentasCobrar = $paginator->paginate($query, $request->query->getInt('page', 1), 50);

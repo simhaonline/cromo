@@ -69,7 +69,7 @@ class ProduccionAsesorController extends Controller
                 if ($form->get('btnExcel')->isClicked()) {
                     $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
                     $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
-                    General::get()->setExportar($em->createQuery($this->getDoctrine()->getRepository(TteGuia::class)->informeProduccionAsesor($fechaDesde, $fechaHasta))->execute(), "Produccion_Asesor");
+                    General::get()->setExportar($this->getDoctrine()->getRepository(TteGuia::class)->informeProduccionAsesor($fechaDesde, $fechaHasta)->getQuery()->getResult(), "Produccion_Asesor");
                 }
             }
             $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');

@@ -77,7 +77,7 @@ class RecaudoController extends Controller
             }
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(CarRecibo::class)->recaudo())->execute(), "Recaudo");
+            General::get()->setExportar($em->getRepository(CarRecibo::class)->recaudo()->getQuery()->getResult(), "Recaudo");
         }
         if ($form->get('btnPdf')->isClicked()) {
             $formato = new Recaudo();

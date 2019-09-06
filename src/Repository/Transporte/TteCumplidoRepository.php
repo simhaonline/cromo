@@ -34,12 +34,49 @@ class TteCumplidoRepository extends ServiceEntityRepository
             ->addSelect('c.comentario')
             ->addSelect('ct.nombre AS tipoCumplido')
             ->where('c.codigoCumplidoPk <> 0')
-        ->leftJoin('c.cumplidoTipoRel', 'ct');
+            ->leftJoin('c.cumplidoTipoRel', 'ct');
         $queryBuilder->orderBy('c.fecha', 'DESC');
 
-        if($session->get('filtroTteCodigoCliente')){
-            $queryBuilder->andWhere("c.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        if($session->get('TteCumplido_codigoClienteFk')){
+            $queryBuilder->andWhere("c.codigoClienteFk = {$session->get('TteCumplido_codigoClienteFk')}");
         }
+
+        if ($session->get('TteCumplido_fechaDesde') != null) {
+            $queryBuilder->andWhere("c.fecha >= '{$session->get('TteCumplido_fechaDesde')} 00:00:00'");
+        }
+
+        if ($session->get('TteCumplido_fechaHasta') != null) {
+            $queryBuilder->andWhere("c.fecha <= '{$session->get('TteCumplido_fechaHasta')} 23:59:59'");
+        }
+
+        switch ($session->get('TteCumplido_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAutorizado = 1");
+                break;
+        }
+
+        switch ($session->get('TteCumplido_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAprobado = 1");
+                break;
+        }
+
+        switch ($session->get('TteCumplido_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAnulado = 1");
+                break;
+        }
+
+
         return $queryBuilder;
     }
 

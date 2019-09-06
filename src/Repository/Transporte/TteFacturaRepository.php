@@ -56,8 +56,12 @@ class TteFacturaRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
             ->select('f.codigoFacturaPk')
+            ->addSelect('f.codigoFacturaClaseFk AS clase')
+            ->addSelect('ft.nombre AS facturaTipo')
             ->addSelect('f.numero')
             ->addSelect('f.fecha')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('f.plazoPago')
             ->addSelect('f.guias')
             ->addSelect('f.vrFlete')
             ->addSelect('f.vrManejo')
@@ -66,38 +70,40 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.estadoAnulado')
             ->addSelect('f.estadoAprobado')
             ->addSelect('f.estadoAutorizado')
-            ->addSelect('f.codigoFacturaClaseFk')
-            ->addSelect('c.nombreCorto AS clienteNombre')
-            ->addSelect('ft.nombre AS facturaTipo')
             ->leftJoin('f.clienteRel', 'c')
             ->leftJoin('f.facturaTipoRel', 'ft')
             ->where('f.codigoFacturaPk <> 0');
-        $fecha =  new \DateTime('now');
-        if($session->get('filtroTteFacturaNumero') != ''){
-            $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
+        if($session->get('TteFactura_numero') != ''){
+            $queryBuilder->andWhere("f.numero = {$session->get('TteFactura_numero')}");
         }
-        if($session->get('filtroTteFacturaCodigo') != ''){
-            $queryBuilder->andWhere("f.codigoFacturaPk = {$session->get('filtroTteFacturaCodigo')}");
+        if($session->get('TteFactura_codigoFacturaPk') != ''){
+            $queryBuilder->andWhere("f.codigoFacturaPk = {$session->get('TteFactura_codigoFacturaPk')}");
         }
-        if($session->get('filtroTteCodigoCliente')){
-            $queryBuilder->andWhere("f.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        if ($session->get('TteFactura_codigoClienteFk')) {
+            $queryBuilder->andWhere("f.codigoClienteFk = '{$session->get('TteFactura_codigoClienteFk')}'");
         }
-        if($session->get('filtroFecha') == true){
-            if ($session->get('filtroFechaDesde') != null) {
-                $queryBuilder->andWhere("f.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("f.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroFechaHasta') != null) {
-                $queryBuilder->andWhere("f.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("f.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
+        if ($session->get('TteFactura_codigoFacturaTipoFk')) {
+            $queryBuilder->andWhere("f.codigoFacturaTipoFk = '{$session->get('TteFactura_codigoFacturaTipoFk')}'");
         }
-        if($session->get('filtroTteFacturaCodigoFacturaTipo')) {
-            $queryBuilder->andWhere("f.codigoFacturaTipoFk = '" . $session->get('filtroTteFacturaCodigoFacturaTipo') . "'");
+        if ($session->get('TteFactura_codigoOperacionFk')) {
+            $queryBuilder->andWhere("f.codigoOperacionFk = '{$session->get('TteFactura_codigoOperacionFk')}'");
         }
-        switch ($session->get('filtroTteFacturaEstadoAprobado')) {
+        if ($session->get('TteFactura_fechaDesde') != null) {
+            $queryBuilder->andWhere("f.fecha >= '{$session->get('TteFactura_fechaDesde')} 00:00:00'");
+        }
+
+        if ($session->get('TteFactura_fechaHasta') != null) {
+            $queryBuilder->andWhere("f.fecha <= '{$session->get('TteFactura_fechaHasta')} 23:59:59'");
+        }
+        switch ($session->get('TteFactura_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('TteFactura_estadoAprobado')) {
             case '0':
                 $queryBuilder->andWhere("f.estadoAprobado = 0");
                 break;
@@ -105,7 +111,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("f.estadoAprobado = 1");
                 break;
         }
-        switch ($session->get('filtroTteFacturaEstadoAnulado')) {
+        switch ($session->get('TteFactura_estadoAnulado')) {
             case '0':
                 $queryBuilder->andWhere("f.estadoAnulado = 0");
                 break;
@@ -113,11 +119,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("f.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->orderBy('f.estadoAprobado', 'ASC');
-        $queryBuilder->addOrderBy('f.fecha', 'DESC');
-        $queryBuilder->addOrderBy('f.codigoFacturaPk', 'DESC');
-
-        return $queryBuilder->getQuery()->execute();
+        return $queryBuilder;
     }
 
     public function listaInforme()

@@ -33,9 +33,45 @@ class TteDocumentalRepository extends ServiceEntityRepository
             ->where('doc.codigoDocumentalPk <> 0');
         $queryBuilder->orderBy('doc.fecha', 'DESC');
 
-        if ($session->get('filtroTteCodigoCliente')) {
-            $queryBuilder->andWhere("c.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        if ($session->get('TteDocumental_codigoClienteFk')) {
+            $queryBuilder->andWhere("doc.codigoClienteFk = {$session->get('TteDocumental_codigoClienteFk')}");
         }
+
+        if ($session->get('TteDocumental_fechaDesde') != null) {
+            $queryBuilder->andWhere("doc.fecha >= '{$session->get('TteDocumental_fechaDesde')} 00:00:00'");
+        }
+
+        if ($session->get('TteDocumental_fechaHasta') != null) {
+            $queryBuilder->andWhere("doc.fecha <= '{$session->get('TteDocumental_fechaHasta')} 23:59:59'");
+        }
+
+        switch ($session->get('TteDocumental_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("doc.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("doc.estadoAutorizado = 1");
+                break;
+        }
+
+        switch ($session->get('TteDocumental_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("doc.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("doc.estadoAprobado = 1");
+                break;
+        }
+
+        switch ($session->get('TteDocumental_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("doc.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("doc.estadoAnulado = 1");
+                break;
+        }
+        
         return $queryBuilder;
     }
 

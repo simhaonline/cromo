@@ -44,8 +44,8 @@ class KardexController extends ControllerListenerGeneral
             ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
             ->add('cboRemisionTipo', EntityType::class, $em->getRepository(InvRemisionTipo::class)->llenarCombo())
             ->add('txtCodigoItem', TextType::class, ['required' => false, 'data' => $session->get('filtroInvItemCodigo'), 'attr' => ['class' => 'form-control']])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvKardexFechaDesde') ? date_create($session->get('filtroInvKardexFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvKardexFechaHasta') ? date_create($session->get('filtroInvKardexFechaHasta')): null])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvKardexFechaDesde') ? date_create($session->get('filtroInvKardexFechaDesde')) : null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvKardexFechaHasta') ? date_create($session->get('filtroInvKardexFechaHasta')) : null])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -53,8 +53,8 @@ class KardexController extends ControllerListenerGeneral
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvLote', $form->get('txtLote')->getData());
-                $session->set('filtroInvKardexFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-                $session->set('filtroInvKardexFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+                $session->set('filtroInvKardexFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
+                $session->set('filtroInvKardexFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
                 $arBodega = $form->get('cboBodega')->getData();
                 if ($arBodega != '') {
                     $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
@@ -62,14 +62,14 @@ class KardexController extends ControllerListenerGeneral
                     $session->set('filtroInvBodega', null);
                 }
                 $remisionTipo = $form->get('cboRemisionTipo')->getData();
-                if($remisionTipo != ''){
+                if ($remisionTipo != '') {
                     $session->set('filtroInvCodigoRemisionTipo', $form->get('cboRemisionTipo')->getData()->getCodigoRemisionTipoPk());
                 } else {
                     $session->set('filtroInvCodigoRemisionTipo', null);
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvRemisionDetalle::class)->listaKardex())->execute(), "Kardex");
+                General::get()->setExportar($em->getRepository(InvRemisionDetalle::class)->listaKardex()->getQuery()->getResult(), "Kardex");
             }
         }
         $arRemisionesDetalles = $paginator->paginate($em->getRepository(InvRemisionDetalle::class)->listaKardex(), $request->query->getInt('page', 1), 100);

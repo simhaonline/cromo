@@ -120,7 +120,7 @@ class MovimientoController extends ControllerListenerGeneral
                     }
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->createQuery($em->getRepository(InvMovimiento::class)->lista($codigoDocumento, $this->getUser()))->execute(), "Movimientos");
+                    General::get()->setExportar($em->getRepository(InvMovimiento::class)->lista($codigoDocumento, $this->getUser())->getQuery()->getResult(), "Movimientos");
                 }
                 if ($form->get('btnEliminar')->isClicked()) {
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');

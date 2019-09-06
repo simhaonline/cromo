@@ -36,7 +36,7 @@ use App\Form\Type\Inventario\PedidoType;
 
 class RemisionController extends ControllerListenerGeneral
 {
-    protected $class= InvRemision::class;
+    protected $class = InvRemision::class;
     protected $claseNombre = "InvRemision";
     protected $modulo = "Inventario";
     protected $funcion = "Movimiento";
@@ -68,7 +68,7 @@ class RemisionController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Importacion");
+                General::get()->setExportar($em->getRepository(InvRemision::class)->lista()->getQuery()->getResult(), "Remisiones");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -161,15 +161,15 @@ class RemisionController extends ControllerListenerGeneral
                 $em->getRepository(InvRemision::class)->desautorizar($arRemision);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                    $codigoRemision = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoRemision();
-                    if ($codigoRemision == 1) {
-                        $objFormatoRemision = new Remision();
-                        $objFormatoRemision->Generar($em, $id);
-                    }
-                    if ($codigoRemision == 2) {
-                        $objFormatoRemision = new Remision2();
-                        $objFormatoRemision->Generar($em, $id);
-                    }
+                $codigoRemision = $em->getRepository(InvConfiguracion::class)->find(1)->getCodigoFormatoRemision();
+                if ($codigoRemision == 1) {
+                    $objFormatoRemision = new Remision();
+                    $objFormatoRemision->Generar($em, $id);
+                }
+                if ($codigoRemision == 2) {
+                    $objFormatoRemision = new Remision2();
+                    $objFormatoRemision->Generar($em, $id);
+                }
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(InvRemision::class)->aprobar($arRemision);
@@ -190,7 +190,7 @@ class RemisionController extends ControllerListenerGeneral
         $arRemisionDetalles = $paginator->paginate($em->getRepository(InvRemisionDetalle::class)->remision($id), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/comercial/remision/detalle.html.twig', [
             'form' => $form->createView(),
-            'clase' => array('clase'=>'InvRemision', 'codigo' => $id),
+            'clase' => array('clase' => 'InvRemision', 'codigo' => $id),
             'arRemisionDetalles' => $arRemisionDetalles,
             'arRemision' => $arRemision
         ]);
@@ -222,7 +222,7 @@ class RemisionController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                if(is_numeric($form->get('txtCodigoItem')->getData())) {
+                if (is_numeric($form->get('txtCodigoItem')->getData())) {
                     $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
                 } else {
                     $session->set('filtroInvBucarItemCodigo', null);

@@ -44,19 +44,22 @@ class InvRemisionRepository extends ServiceEntityRepository
             ->addSelect('t.nombreCorto AS terceroNombreCorto')
             ->where('r.codigoRemisionPk <> 0')
             ->orderBy('r.codigoRemisionPk', 'DESC');
-        if ($session->get('filtroInvRemisionNumero') != "") {
-            $queryBuilder->andWhere("r.numero = " . $session->get('filtroInvRemisionNumero'));
+        if ($session->get('InvRemision_codigoRemisionFk')) {
+            $queryBuilder->andWhere("r.codigoRemisionPk = '{$session->get('InvRemision_codigoRemisionFk')}'");
         }
-        if ($session->get('filtroInvCodigoTercero') != "") {
-            $queryBuilder->andWhere("r.codigoTerceroFk = " . $session->get('filtroInvCodigoTercero'));
+        if ($session->get('InvRemision_numero') != "") {
+            $queryBuilder->andWhere("r.numero = " . $session->get('InvRemision_numero'));
         }
-        if ($session->get('filtroInvRemisionTipo')) {
-            $queryBuilder->andWhere("r.codigoRemisionTipoFk = '{$session->get('filtroInvRemisionTipo')}'");
+        if ($session->get('InvRemision_codigoTerceroFk') != "") {
+            $queryBuilder->andWhere("r.codigoTerceroFk = " . $session->get('InvRemision_codigoTerceroFk'));
         }
-        if ($session->get('filtroGenAsesor')) {
-            $queryBuilder->andWhere("r.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
+        if ($session->get('InvRemision_codigoRemisionTipoFk')) {
+            $queryBuilder->andWhere("r.codigoRemisionTipoFk = '{$session->get('InvRemision_codigoRemisionTipoFk')}'");
         }
-        switch ($session->get('filtroInvRemisionEstadoAutorizado')) {
+        if ($session->get('InvRemision_codigoAsesorFk')) {
+            $queryBuilder->andWhere("r.codigoAsesorFk = '{$session->get('InvRemision_codigoAsesorFk')}'");
+        }
+        switch ($session->get('InvRemision_estadoAutorizado')) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAutorizado = 0");
                 break;
@@ -64,12 +67,20 @@ class InvRemisionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('filtroInvRemisionEstadoAprobado')) {
+        switch ($session->get('InvRemision_estadoAprobado')) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAprobado = 0");
                 break;
             case '1':
                 $queryBuilder->andWhere("r.estadoAprobado = 1");
+                break;
+        }
+        switch ($session->get('InvRemision_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAnulado = 1");
                 break;
         }
 

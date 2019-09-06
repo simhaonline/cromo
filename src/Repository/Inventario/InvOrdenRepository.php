@@ -51,10 +51,19 @@ class InvOrdenRepository extends ServiceEntityRepository
             ->addSelect('o.estadoAnulado')
             ->join('o.ordenTipoRel', 'ot')
             ->where('o.codigoOrdenPk <> 0');
-        if ($session->get('filtroInvOrdenNumero') != '') {
-            $queryBuilder->andWhere("o.numero = {$session->get('filtroInvOrdenNumero')}");
+        if ($session->get('InvOrden_numero') != "") {
+            $queryBuilder->andWhere("o.numero = " . $session->get('InvOrden_numero'));
         }
-        switch ($session->get('filtroInvOrdenEstadoAprobado')) {
+        if ($session->get('InvOrden_codigoOrdenPk') != "") {
+            $queryBuilder->andWhere("o.codigoOrdenPk = " . $session->get('InvOrden_codigoOrdenPk'));
+        }
+        if ($session->get('InvOrden_codigoOrdenTipoFk')) {
+            $queryBuilder->andWhere("o.codigoOrdenTipoFk = '{$session->get('InvOrden_codigoOrdenTipoFk')}'");
+        }
+        if ($session->get('InvOrden_codigoTerceroFk')) {
+            $queryBuilder->andWhere("o.codigoTerceroFk = '{$session->get('InvOrden_codigoTerceroFk')}'");
+        }
+        switch ($session->get('InvOrden_estadoAprobado')) {
             case '0':
                 $queryBuilder->andWhere("o.estadoAprobado = 0");
                 break;
@@ -62,8 +71,21 @@ class InvOrdenRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("o.estadoAprobado = 1");
                 break;
         }
-        if ($session->get('filtroInvOrdenCodigoOrdenTipo')) {
-            $queryBuilder->andWhere("o.codigoOrdenTipoFk = '{$session->get('filtroInvOrdenCodigoOrdenTipo')}'");
+        switch ($session->get('InvOrden_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("o.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("o.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('InvOrden_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("o.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("o.estadoAnulado = 1");
+                break;
         }
         return $queryBuilder;
     }

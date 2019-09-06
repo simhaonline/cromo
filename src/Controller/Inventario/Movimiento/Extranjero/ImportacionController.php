@@ -57,7 +57,7 @@ class ImportacionController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Importacion");
+                General::get()->setExportar($em->getRepository(InvImportacion::class)->lista()->getQuery()->getResult(), "Importacion");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -139,7 +139,7 @@ class ImportacionController extends ControllerListenerGeneral
             $arrBtnActualizarDetalle['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
         }
-        if($arImportacion->getEstadoContabilizado()) {
+        if ($arImportacion->getEstadoContabilizado()) {
             $arrBtnEliminarCosto['disabled'] = true;
         }
         $form->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle);
@@ -188,7 +188,7 @@ class ImportacionController extends ControllerListenerGeneral
             'arImportacionDetalles' => $arImportacionDetalles,
             'arImportacion' => $arImportacion,
             'arImportacionCostos' => $arImportacionCostos,
-            'clase' => array('clase'=>'InvImportacion', 'codigo' => $id),
+            'clase' => array('clase' => 'InvImportacion', 'codigo' => $id),
         ]);
     }
 

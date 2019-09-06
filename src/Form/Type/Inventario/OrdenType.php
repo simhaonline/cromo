@@ -81,7 +81,10 @@ class OrdenType extends AbstractType
             {"child":"numero",                  "tipo":"TextType",    "propiedades":{"label":"Numero"}},
             {"child":"codigoOrdenPk",           "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
             {"child":"codigoTerceroFk",         "tipo":"TextType",    "propiedades":{"label":"Codigo cliente"}},
-            {"child":"codigoOrdenTipoFk",       "tipo":"EntityType",  "propiedades":{"class":"InvOrdenTipo","choice_label":"nombre","label":"Tipo"}}
+            {"child":"codigoOrdenTipoFk",       "tipo":"EntityType",  "propiedades":{"class":"InvOrdenTipo","choice_label":"nombre","label":"Tipo"}},
+            {"child":"estadoAutorizado",        "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",          "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",           "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",     "choices":{"SI":true,"NO":false}}}
         ]';
         return $campos;
     }

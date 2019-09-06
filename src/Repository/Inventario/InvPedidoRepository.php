@@ -39,14 +39,41 @@ class InvPedidoRepository extends ServiceEntityRepository
             ->addSelect('t.nombreCorto AS terceroNombreCorto')
             ->where('p.codigoPedidoPk <> 0')
             ->orderBy('p.codigoPedidoPk', 'DESC');
-        if ($session->get('filtroInvNumeroPedido')) {
-            $queryBuilder->andWhere("p.numero = {$session->get('filtroInvNumeroPedido')}");
+        if ($session->get('InvPedido_codigoPedidoPk')) {
+            $queryBuilder->andWhere("r.codigoPedidoPk = '{$session->get('InvPedido_codigoPedidoPk')}'");
         }
-        if ($session->get('filtroInvPedidoTipo')) {
-            $queryBuilder->andWhere("p.codigoPedidoTipoFk = '{$session->get('filtroInvPedidoTipo')}'");
+        if ($session->get('InvPedido_numero')) {
+            $queryBuilder->andWhere("p.numero = {$session->get('InvPedido_numero')}");
         }
-        if ($session->get('filtroInvCodigoTercero')) {
-            $queryBuilder->andWhere("p.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
+        if ($session->get('InvPedido_codigoPedidoTipoFk')) {
+            $queryBuilder->andWhere("p.codigoPedidoTipoFk = '{$session->get('InvPedido_codigoPedidoTipoFk')}'");
+        }
+        if ($session->get('InvPedido_codigoTerceroFk')) {
+            $queryBuilder->andWhere("p.codigoTerceroFk = {$session->get('InvPedido_codigoTerceroFk')}");
+        }
+        switch ($session->get('InvPedido_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('InvPedido_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAprobado = 1");
+                break;
+        }
+        switch ($session->get('InvPedido_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAnulado = 1");
+                break;
         }
         return $queryBuilder;
 

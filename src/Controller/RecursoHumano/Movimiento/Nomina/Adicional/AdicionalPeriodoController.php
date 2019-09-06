@@ -33,6 +33,10 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
     protected $nombre = "AdicionalPeriodo";
 
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/movimiento/nomina/adicionalperiodo/lista", name="recursohumano_movimiento_nomina_adicionalperiodo_lista")
      */
     public function lista(Request $request)
@@ -41,27 +45,27 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('estado', ChoiceType::class,  [
+            ->add('estado', ChoiceType::class, [
                 'label' => 'CERRADOS:',
-                'choices' => ['TODOS' => '','SIN CERRAR' => true, 'CERRAR' => false],
+                'choices' => ['TODOS' => '', 'SIN CERRAR' => true, 'CERRAR' => false],
                 'required' => false
             ])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add( 'btnExcel', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
-            ->add( 'btnEliminar', SubmitType::class, ['label'=>'Eliminar', 'attr'=>['class'=> 'btn btn-sm btn-danger']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroRhuAdicionalPeriodoEstado', $form->get('estado')->getData());
             }
-            if ($form->get('btnEliminar')->isClicked()){
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(RhuAdicionalPeriodo::class, $arrSeleccionados);
-				return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_lista'));
-			}
-            if ($form->get('btnExcel')->isClicked()){
-                General::get()->setExportar($em->createQuery($em->getRepository(RhuAdicionalPeriodo::class)->lista())->execute(), "Adicional periodo");
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_lista'));
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(RhuAdicionalPeriodo::class)->lista()->getQuery()->getResult(), "Adicional periodo");
             }
 
         }
@@ -113,7 +117,7 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
 
         $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
         $form = $this->createFormBuilder()
-            ->add('txtCodigoEmpleado', TextType::class,['required' => false])
+            ->add('txtCodigoEmpleado', TextType::class, ['required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
             ->getForm();
@@ -121,7 +125,7 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroRhuEmpleadoCodigo',  $form->get('txtCodigoEmpleado')->getData());
+                $session->set('filtroRhuEmpleadoCodigo', $form->get('txtCodigoEmpleado')->getData());
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(RhuAdicional::class)->eliminar($arrSeleccionados);
@@ -141,10 +145,11 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
     /**
      * @Route("recursohumano/movimiento/nomina/adicionalperiodo/detalle/nuevo/{codigoAdicional}/{codigoAdicionalPeriodo}", name="recursohumano_movimiento_nomina_adicionalperiodo_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $codigoAdicional, $codigoAdicionalPeriodo){
+    public function detalleNuevo(Request $request, $codigoAdicional, $codigoAdicionalPeriodo)
+    {
         $em = $this->getDoctrine()->getManager();
         /** @var $arAdicionalPerido RhuAdicionalPeriodo */
-        $arAdicionalPerido =  $em->getRepository(RhuAdicionalPeriodo::class)->find($codigoAdicionalPeriodo);
+        $arAdicionalPerido = $em->getRepository(RhuAdicionalPeriodo::class)->find($codigoAdicionalPeriodo);
         $arAdicional = new RhuAdicional();
         if ($codigoAdicional != 0) {
             $arAdicional = $em->getRepository(RhuAdicional::class)->find($codigoAdicional);

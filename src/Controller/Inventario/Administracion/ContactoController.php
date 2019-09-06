@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ContactoController extends ControllerListenerGeneral
 {
-    protected $class= InvTercero::class;
+    protected $class = InvTercero::class;
     protected $claseNombre = "InvContacto";
     protected $modulo = "Inventario";
     protected $funcion = "Administracion";
@@ -73,7 +73,7 @@ class ContactoController extends ControllerListenerGeneral
 //                }
 //            }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvContacto::class)->lista(null))->execute(), "Contactos");
+                General::get()->setExportar($em->getRepository(InvContacto::class)->lista(null)->getQuery()->getResult(), "Contactos");
             }
         }
         $arContactos = $paginator->paginate($em->getRepository(InvContacto::class)->lista(null), $request->query->getInt('page', 1), 30);

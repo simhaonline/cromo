@@ -43,14 +43,41 @@ class InvImportacionRepository extends ServiceEntityRepository
             ->leftJoin('i.importacionTipoRel', 'it')
             ->where('i.codigoImportacionPk <> 0')
             ->orderBy('i.codigoImportacionPk', 'DESC');
-        if ($session->get('filtroInvNumeroImportacion')) {
-            $queryBuilder->andWhere("i.numero = {$session->get('filtroInvNumeroImportacion')}");
+        if ($session->get('InvImportacion_codigoImportacionPk')) {
+            $queryBuilder->andWhere("r.codigoImportacionPk = '{$session->get('InvImportacion_codigoImportacionPk')}'");
         }
-        if ($session->get('filtroInvImportacionTipo')) {
-            $queryBuilder->andWhere("i.codigoImportacionTipoFk = '{$session->get('filtroInvImportacionTipo')}'");
+        if ($session->get('InvImportacion_numero')) {
+            $queryBuilder->andWhere("i.numero = {$session->get('InvImportacion_numero')}");
         }
-        if ($session->get('filtroInvCodigoTercero')) {
-            $queryBuilder->andWhere("i.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
+        if ($session->get('InvImportacion_codigoImportacionTipoFk')) {
+            $queryBuilder->andWhere("i.codigoImportacionTipoFk = '{$session->get('InvImportacion_codigoImportacionTipoFk')}'");
+        }
+        if ($session->get('InvImportacion_codigoTerceroFk')) {
+            $queryBuilder->andWhere("i.codigoTerceroFk = {$session->get('InvImportacion_codigoTerceroFk')}");
+        }
+        switch ($session->get('InvImportacion_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('InvImportacion_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoAprobado = 1");
+                break;
+        }
+        switch ($session->get('InvImportacion_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoAnulado = 1");
+                break;
         }
         return $queryBuilder;
 

@@ -26,7 +26,7 @@ use App\Form\Type\Inventario\PedidoType;
 
 class PedidoController extends ControllerListenerGeneral
 {
-    protected $class= InvPedido::class;
+    protected $class = InvPedido::class;
     protected $claseNombre = "InvPedido";
     protected $modulo = "Inventario";
     protected $funcion = "Movimiento";
@@ -58,7 +58,7 @@ class PedidoController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Importacion");
+                General::get()->setExportar($em->getRepository(InvPedido::class)->lista()->getQuery()->getResult(), "Pedidos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

@@ -12,14 +12,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class SolicitudType extends AbstractType {
+class SolicitudType extends AbstractType
+{
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
-            ->add('solicitudTipoRel',EntityType::class,[
+            ->add('solicitudTipoRel', EntityType::class, [
                 'required' => true,
                 'class' => InvSolicitudTipo::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -29,15 +31,16 @@ class SolicitudType extends AbstractType {
                 'choice_label' => 'nombre',
                 'label' => 'Solicitud tipo:'
             ])
-            ->add('comentarios',TextareaType::class, ['required' => false,'label' => 'Comentarios:'])
-            ->add('soporte',TextType::class, ['required' => false,'label' => 'Soporte:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('comentarios', TextareaType::class, ['required' => false, 'label' => 'Comentarios:'])
+            ->add('soporte', TextType::class, ['required' => false, 'label' => 'Soporte:'])
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults(array(
             'data_class' => 'App\Entity\Inventario\InvSolicitud'
         ));
@@ -46,7 +49,8 @@ class SolicitudType extends AbstractType {
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix() {
+    public function getBlockPrefix()
+    {
         return 'App_solicitud';
     }
 
@@ -69,9 +73,12 @@ class SolicitudType extends AbstractType {
     public function getEstructuraPropiedadesFiltro()
     {
         $campos = '[
-            {"child":"codigoSolicitudPk",       "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
             {"child":"numero",                  "tipo":"TextType",    "propiedades":{"label":"Numero"}},
-            {"child":"codigoSolicitudTipoFk",   "tipo":"EntityType",  "propiedades":{"class":"InvSolicitudTipo","choice_label":"nombre","label":"Tipo"}}
+            {"child":"codigoSolicitudPk",           "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
+            {"child":"codigoSolicitudTipoFk",       "tipo":"EntityType",  "propiedades":{"class":"InvOrdenTipo","choice_label":"nombre","label":"Tipo"}},
+            {"child":"estadoAutorizado",        "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",          "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",    "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",           "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",     "choices":{"SI":true,"NO":false}}}
         ]';
         return $campos;
     }

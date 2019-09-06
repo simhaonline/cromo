@@ -23,7 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class PrecioController extends ControllerListenerGeneral
 {
-    protected $class= InvPrecio::class;
+    protected $class = InvPrecio::class;
     protected $claseNombre = "InvPrecio";
     protected $modulo = "Inventario";
     protected $funcion = "Administracion";
@@ -100,6 +100,12 @@ class PrecioController extends ControllerListenerGeneral
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/administracion/general/precio/detalle/{id}", name="inventario_administracion_general_precio_detalle")
      */
     public function detalle(Request $request, $id)
@@ -119,7 +125,7 @@ class PrecioController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('inventario_administracion_general_precio_detalle', ['id' => $id]));
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvPrecioDetalle::class)->lista($id))->execute(), "Precio detalles");
+                General::get()->setExportar($em->getRepository(InvPrecioDetalle::class)->lista($id)->getQuery()->getResult(), "Precio detalles");
             }
         }
         $query = $em->getRepository(InvPrecioDetalle::class)->lista($id);
@@ -165,7 +171,7 @@ class PrecioController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             $itemRel = $form->get('itemRel')->getData();
             $arItemExistente = $em->getRepository(InvPrecioDetalle::class)
-                    ->findBy(['itemRel' => $itemRel, 'codigoPrecioFk' => $codigoPrecio]);
+                ->findBy(['itemRel' => $itemRel, 'codigoPrecioFk' => $codigoPrecio]);
             if (!$arItemExistente || $arPrecioDetalle->getCodigoPrecioDetallePk()) {
                 if ($form->get('guardar')->isClicked()) {
                     $arPrecioDetalle->setItemRel($itemRel);

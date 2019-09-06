@@ -73,7 +73,7 @@ class TerceroController extends ControllerListenerGeneral
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvTercero::class)->lista(null))->execute(), "Terceros");
+                General::get()->setExportar($em->getRepository(InvTercero::class)->lista(null)->getQuery()->getResult(), "Terceros");
             }
         }
         $arTerceros = $paginator->paginate($em->getRepository(InvTercero::class)->lista(null), $request->query->getInt('page', 1), 30);
@@ -123,21 +123,21 @@ class TerceroController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             $strRespuesta = "";
             $identificacion = $form->get('numeroIdentificacion')->getData();
-            if($id == 0){
+            if ($id == 0) {
                 $identificacionExistente = $em->getRepository(InvTercero::class)
                     ->findBy(['numeroIdentificacion' => $identificacion]);
                 if (!$identificacionExistente) {
-                        $em->persist($arTercero);
+                    $em->persist($arTercero);
                 } else {
                     $strRespuesta = "El numero de identificacion ya existe";
                 }
-            }else{
+            } else {
                 $em->persist($arTercero);
             }
-            if($strRespuesta == ""){
+            if ($strRespuesta == "") {
                 $em->flush();
                 return $this->redirect($this->generateUrl('inventario_administracion_general_tercero_detalle', ['id' => $arTercero->getCodigoTerceroPk()]));
-            }else{
+            } else {
                 Mensajes::error($strRespuesta);
             }
         }

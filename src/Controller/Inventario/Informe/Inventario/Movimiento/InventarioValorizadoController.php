@@ -16,11 +16,16 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\General\General;
+
 class InventarioValorizadoController extends Controller
 {
-   /**
-    * @Route("/inventario/informe/inventario/movimiento/inventariovalorizado", name="inventario_informe_inventario_movimiento_inventariovalorizado")
-    */
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/inventario/informe/inventario/movimiento/inventariovalorizado", name="inventario_informe_inventario_movimiento_inventariovalorizado")
+     */
     public function lista(Request $request)
     {
         $session = new Session();
@@ -44,7 +49,7 @@ class InventarioValorizadoController extends Controller
 
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvInventarioValorizado::class)->lista())->execute(), "InventarioValorizado");
+                General::get()->setExportar($em->getRepository(InvInventarioValorizado::class)->lista()->getQuery()->getResult(), "InventarioValorizado");
             }
         }
         $arInventarioValorizado = $paginator->paginate($em->getRepository(InvInventarioValorizado::class)->lista(), $request->query->getInt('page', 1), 1000);

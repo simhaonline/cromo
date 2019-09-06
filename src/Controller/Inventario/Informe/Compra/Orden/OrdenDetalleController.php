@@ -34,8 +34,8 @@ class OrdenDetalleController extends Controller
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvInformeOrdenDetalleFechaDesde') ? date_create($session->get('filtroInvInformeOrdenDetalleFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvInformeOrdenDetalleFechaHasta') ? date_create($session->get('filtroIInvInformeOrdenDetalleFechaHasta')): null])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvInformeOrdenDetalleFechaDesde') ? date_create($session->get('filtroInvInformeOrdenDetalleFechaDesde')) : null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvInformeOrdenDetalleFechaHasta') ? date_create($session->get('filtroIInvInformeOrdenDetalleFechaHasta')) : null])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->getForm();
@@ -43,11 +43,11 @@ class OrdenDetalleController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvInformeOrdenDetalleCodigoTercero', $form->get('txtCodigoTercero')->getData());
-                $session->set('filtroInvInformeOrdenDetalleFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-                $session->set('filtroInvInformeOrdenDetalleFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+                $session->set('filtroInvInformeOrdenDetalleFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
+                $session->set('filtroInvInformeOrdenDetalleFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvOrdenDetalle::class)->informeDetalles())->execute(), "Informe orden detalles");
+                General::get()->setExportar($em->getRepository(InvOrdenDetalle::class)->informeDetalles()->getQuery()->getResult(), "Informe orden detalles");
             }
         }
         $arOrdenDetalles = $paginator->paginate($em->getRepository(InvOrdenDetalle::class)->informeDetalles(), $request->query->getInt('page', 1), 30);

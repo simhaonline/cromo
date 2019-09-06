@@ -15,9 +15,11 @@
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <input id="txtNombre"  name="txtNombre"  type="text" class="form-control" value="" readOnly="ReadOnly" />
+                                <input id="txtNombre" name="txtNombre" type="text" class="form-control" value=""
+                                       readOnly="ReadOnly"/>
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('inventario_buscar_item', { 'campoCodigo': 'txtCodigoItem', 'campoNombre': 'txtNombre' }) }}', 'buscarItem', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('inventario_buscar_item', { 'campoCodigo': 'txtCodigoItem', 'campoNombre': 'txtNombre' }) }}', 'buscarItem', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -27,7 +29,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-4">
-                    
+
                 </div>
                 <label class="col-sm-2 control-label">Fecha hasta:</label>
                 <div class="col-sm-4">
@@ -56,12 +58,12 @@
             {% for arInventarioValorizado in arInventarioValorizado %}
                 <tr>
                     <td>{{ arInventarioValorizado.codigoInventarioValorizadoPk }}</td>
-                    <td>{{ arInventarioValorizado.fecha | date ('Y-m-d')}}</td>
+                    <td>{{ arInventarioValorizado.fecha | date ('Y-m-d') }}</td>
                     <td>{{ arInventarioValorizado.codigoItemFk }}</td>
                     <td>{{ arInventarioValorizado.nombreItem }}</td>
                     <td class="numero">{{ arInventarioValorizado.saldo | number_format(0, '.', ',') }}</td>
-                    <td class="numero">{{ arInventarioValorizado.vrCosto | number_format(0, '.', ',')}}</td>
-                    <td class="numero">{{ arInventarioValorizado.vrCostoTotal | number_format(0, '.', ',')}}</td>
+                    <td class="numero">{{ arInventarioValorizado.vrCosto | number_format(0, '.', ',') }}</td>
+                    <td class="numero">{{ arInventarioValorizado.vrCostoTotal | number_format(0, '.', ',') }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -80,5 +82,6 @@
     <div class="btn-group btn-xs">
         {{ knp_pagination_render(arInventarioValorizado) }}
     </div>
+    <br/><br/><br/>
     {{ form_end(form) }}
 {% endblock %}

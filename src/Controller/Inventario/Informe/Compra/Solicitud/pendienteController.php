@@ -46,7 +46,7 @@ class pendienteController extends Controller
                 $session->set('filtroInvCodigoSolicitudTipo', $arSolicitudTipo);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvSolicitudDetalle::class)->pendientes()->execute(), "Informe solicitudes pendientes");
+                General::get()->setExportar($em->getRepository(InvSolicitudDetalle::class)->pendientes()->getQuery()->getResult(), "Informe solicitudes pendientes");
             }
         }
         $arSolicitudDetalles = $paginator->paginate($em->getRepository(InvSolicitudDetalle::class)->pendientes(), $request->query->getInt('page', 1), 30);

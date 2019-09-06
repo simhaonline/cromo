@@ -87,12 +87,13 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return \Doctrine\ORM\Query
+     * @return \Doctrine\ORM\QueryBuilder
      */
-    public function pendientes(){
+    public function pendientes()
+    {
         $session = new Session();
         $em = $this->getEntityManager();
-        $queryBuilder = $em->createQueryBuilder()->from(InvSolicitudDetalle::class,'sd')
+        $queryBuilder = $em->createQueryBuilder()->from(InvSolicitudDetalle::class, 'sd')
             ->select('sd.codigoSolicitudDetallePk')
             ->addSelect('s.numero')
             ->addSelect('s.fecha')
@@ -107,24 +108,25 @@ class InvSolicitudDetalleRepository extends ServiceEntityRepository
             ->leftJoin('sd.itemRel', 'i')
             ->where('s.estadoAprobado = 1')
             ->andWhere('sd.cantidadPendiente > 0');
-        if($session->get('filtroInvCodigoSolicitudTipo') != null){
+        if ($session->get('filtroInvCodigoSolicitudTipo') != null) {
             $queryBuilder->andWhere("s.codigoSolicitudTipoFk = '{$session->get('filtroInvCodigoSolicitudTipo')}'");
         }
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
     /**
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function regenerarCantidadAfectada() {
+    public function regenerarCantidadAfectada()
+    {
         $em = $this->getEntityManager();
         $arDetalles = $this->listaRegenerarCantidadAfectada();
         foreach ($arDetalles as $arDetalle) {
             $cantidad = $arDetalle['cantidad'];
             $cantidadAfectada = $em->getRepository(InvOrdenDetalle::class)->cantidadAfectaSolicitud($arDetalle['codigoSolicitudDetallePk']);
             $cantidadPendiente = $cantidad - $cantidadAfectada;
-            if($cantidadAfectada != $arDetalle['cantidadAfectada'] || $cantidadPendiente != $arDetalle['cantidadPendiente']) {
+            if ($cantidadAfectada != $arDetalle['cantidadAfectada'] || $cantidadPendiente != $arDetalle['cantidadPendiente']) {
                 $arDetalleAct = $em->getRepository(InvSolicitudDetalle::class)->find($arDetalle['codigoSolicitudDetallePk']);
                 $arDetalleAct->setCantidadAfectada($cantidadAfectada);
                 $arDetalleAct->setCantidadPendiente($cantidadPendiente);

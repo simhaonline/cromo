@@ -59,7 +59,7 @@ class VentasDetalleController extends Controller
             $session->set('filtroInvInformeAsesorVentasDetalleFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(InvMovimientoDetalle::class)->ventasSoloAsesor($asesor))->execute(), "Ventas por asesor");
+            General::get()->setExportar($em->getRepository(InvMovimientoDetalle::class)->ventasSoloAsesor($asesor)->getQuery()->getResult(), "Ventas por asesor");
         }
         $arFacturas = $paginator->paginate($em->getRepository(InvMovimientoDetalle::class)->ventasSoloAsesor($asesor), $request->query->getInt('page', 1), 500);
         return $this->render('inventario/informe/asesor/ventasDetalle.twig', [

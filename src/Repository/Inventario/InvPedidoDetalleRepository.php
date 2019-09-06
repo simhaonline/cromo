@@ -93,7 +93,7 @@ class InvPedidoDetalleRepository extends ServiceEntityRepository
         if($session->get('filtroInvPedidoTipo')){
             $queryBuilder->andWhere("p.codigoPedidoTipoFk = '{$session->get('filtroInvPedidoTipo')}'");
         }
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
     public function listarDetallesPendientes()

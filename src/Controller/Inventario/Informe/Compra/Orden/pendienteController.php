@@ -49,7 +49,7 @@ class pendienteController extends Controller
                 $session->set('filtroInvOrdenNumero', $form->get('txtNumero')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvOrdenCompraDetalle::class)->informeOrdenCompraPendientes()->getQuery()->getResult(), "Informe ordenes de compra pendientes");
+                General::get()->setExportar($em->getRepository(InvOrdenDetalle::class)->informeOrdenCompraPendientes()->getQuery()->getResult(), "Informe ordenes de compra pendientes");
             }
         }
         $arOrdenCompraDetalles = $paginator->paginate($em->getRepository(InvOrdenDetalle::class)->informeOrdenCompraPendientes(), $request->query->getInt('page', 1), 30);

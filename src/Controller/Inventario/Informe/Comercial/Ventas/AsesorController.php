@@ -53,7 +53,7 @@ class AsesorController extends Controller
             $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(InvMovimiento::class)->ventaPorAsesor())->execute(), "Ventas por asesor");
+            General::get()->setExportar($em->getRepository(InvMovimiento::class)->ventaPorAsesor()->getQuery()->getResult(), "Ventas por asesor");
         }
         $arFacturas = $paginator->paginate($em->getRepository(InvMovimiento::class)->ventaPorAsesor(), $request->query->getInt('page', 1), 100);
         return $this->render('inventario/informe/comercial/Venta/porAsesor.twig', [

@@ -54,7 +54,7 @@ class RotacionController extends ControllerListenerGeneral
                 $session->set('filtroInvInformeItemRotacionFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvMovimientoDetalle::class)->rotacion())->execute(), "Rotacion");
+                General::get()->setExportar($em->getRepository(InvMovimientoDetalle::class)->rotacion()->getQuery()->getResult(), "Rotacion");
             }
         }
         $arMovimientoDetalles = $paginator->paginate($em->getRepository(InvMovimientoDetalle::class)->rotacion(), $request->query->getInt('page', 1), 100);

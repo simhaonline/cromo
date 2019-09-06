@@ -44,7 +44,7 @@ class PedidoPendienteController extends Controller
                 $session->set('filtroInvPedidoTipo', $arPedidoTipo);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvPedidoDetalle::class)->pendientes()->execute(), "Informe pedidos pendientes");
+                General::get()->setExportar($em->getRepository(InvPedidoDetalle::class)->pendientes()->getQuery()->getResult(), "Informe pedidos pendientes");
             }
         }
         $arPedidoDetalles = $paginator->paginate($em->getRepository(InvPedidoDetalle::class)->pendientes(), $request->query->getInt('page', 1), 30);

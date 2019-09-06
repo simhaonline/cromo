@@ -127,7 +127,7 @@ class InvTerceroRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("t.codigoTerceroPk = {$session->get('filtroInvTerceroInformeCodigoTercero')}");
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
     public function terceroTesoreria($arTerceroInventario)

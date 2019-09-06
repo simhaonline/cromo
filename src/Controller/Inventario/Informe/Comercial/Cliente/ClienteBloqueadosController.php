@@ -42,7 +42,7 @@ class ClienteBloqueadosController extends Controller
                 $session->set('filtroInvTerceroInformeCodigoTercero', $form->get('txtCodigoTercero')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvTercero::class)->informeBloqueadosExcel()->execute(), "Clientes bloqueados");
+                General::get()->setExportar($em->getRepository(InvTercero::class)->informeBloqueadosExcel()->getQuery()->getResult(), "Clientes bloqueados");
             }
         }
         $arClienteBloqueados = $paginator->paginate($em->getRepository(InvTercero::class)->informeBloqueados(), $request->query->getInt('page', 1), 30);

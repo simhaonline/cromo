@@ -50,7 +50,7 @@ class ExistenciaController extends ControllerListenerGeneral
                 $session->set('filtroInvInformeItemCodigo', $form->get('txtCodigoItem')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvItem::class)->existencia())->execute(), "Existencia");
+                General::get()->setExportar($em->getRepository(InvItem::class)->existencia()->getQuery()->getResult(), "Existencia");
             }
         }
         $arItemes = $paginator->paginate($em->getRepository(InvItem::class)->existencia(), $request->query->getInt('page', 1), 100);

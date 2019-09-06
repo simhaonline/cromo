@@ -24,6 +24,7 @@ class StockBajoController extends ControllerListenerGeneral
 {
 
     protected $proceso = "0007";
+
     /**
      * @param Request $request
      * @return Response
@@ -39,7 +40,7 @@ class StockBajoController extends ControllerListenerGeneral
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoItem', TextType::class, array('data' => $session->get('filtroInvInformeStockBajoItemCodigo'), 'required' => false))
-            ->add('txtNombreItem', TextType::class, array('data' => $session->get('filtroInvInformeStockBajoItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
+            ->add('txtNombreItem', TextType::class, array('data' => $session->get('filtroInvInformeStockBajoItemNombre'), 'required' => false, 'attr' => ['readonly' => 'readonly']))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -50,7 +51,7 @@ class StockBajoController extends ControllerListenerGeneral
                 $session->set('filtroInvInformeStockBajoItemCodigo', $form->get('txtCodigoItem')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvItem::class)->stockBajo())->execute(), "Stock bajo");
+                General::get()->setExportar($em->getRepository(InvItem::class)->stockBajo()->getQuery()->getResult(), "Stock bajo");
             }
         }
         $arItems = $paginator->paginate($em->getRepository(InvItem::class)->stockBajo(), $request->query->getInt('page', 1), 100);

@@ -50,7 +50,7 @@ class RemisionDetalleController extends Controller
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvRemisionDetalle::class)->informeDetalles())->execute(), "Informe remisiones pendientes");
+                General::get()->setExportar($em->getRepository(InvRemisionDetalle::class)->informeDetalles()->getQuery()->getResult(), "Informe remisiones pendientes");
             }
         }
         $arRemisionDetalles = $paginator->paginate($em->getRepository(InvRemisionDetalle::class)->informeDetalles(), $request->query->getInt('page', 1), 30);

@@ -23,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class KardexController extends ControllerListenerGeneral
 {
     protected $proceso = "0001";
-    protected $procestoTipo= "I";
+    protected $procestoTipo = "I";
     protected $nombreProceso = "Kardex";
     protected $modulo = "Inventario";
 
@@ -47,8 +47,8 @@ class KardexController extends ControllerListenerGeneral
             ->add('cboDocumento', EntityType::class, $em->getRepository(InvDocumento::class)->llenarCombo())
             ->add('cboDocumentoTipo', EntityType::class, $em->getRepository(InvDocumentoTipo::class)->llenarCombo())
             ->add('txtCodigoItem', TextType::class, ['required' => false, 'data' => $session->get('filtroInvItemCodigo'), 'attr' => ['class' => 'form-control']])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvKardexFechaDesde') ? date_create($session->get('filtroInvKardexFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvKardexFechaHasta') ? date_create($session->get('filtroInvKardexFechaHasta')): null])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvKardexFechaDesde') ? date_create($session->get('filtroInvKardexFechaDesde')) : null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvKardexFechaHasta') ? date_create($session->get('filtroInvKardexFechaHasta')) : null])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -57,23 +57,23 @@ class KardexController extends ControllerListenerGeneral
                 $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvKardexLote', $form->get('txtLote')->getData());
                 $session->set('filtroInvKardexLoteBodega', $form->get('txtBodega')->getData());
-                $session->set('filtroInvKardexFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-                $session->set('filtroInvKardexFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+                $session->set('filtroInvKardexFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
+                $session->set('filtroInvKardexFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
                 $documento = $form->get('cboDocumento')->getData();
-                if($documento != ''){
+                if ($documento != '') {
                     $session->set('filtroInvCodigoDocumento', $form->get('cboDocumento')->getData()->getCodigoDocumentoPk());
                 } else {
                     $session->set('filtroInvCodigoDocumento', null);
                 }
                 $documentoTipo = $form->get('cboDocumentoTipo')->getData();
-                if($documentoTipo != ''){
+                if ($documentoTipo != '') {
                     $session->set('filtroInvCodigoDocumentoTipo', $form->get('cboDocumentoTipo')->getData()->getCodigoDocumentoTipoPk());
                 } else {
                     $session->set('filtroInvCodigoDocumentoTipo', null);
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvMovimientoDetalle::class)->listaKardex())->execute(), "Kardex");
+                General::get()->setExportar($em->getRepository(InvMovimientoDetalle::class)->listaKardex()->getQuery()->getResult(), "Kardex");
             }
         }
         $arMovimientosDetalles = $paginator->paginate($em->getRepository(InvMovimientoDetalle::class)->listaKardex(), $request->query->getInt('page', 1), 100);

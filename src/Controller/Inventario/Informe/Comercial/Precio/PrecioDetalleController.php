@@ -44,7 +44,7 @@ class PrecioDetalleController extends Controller
                 $session->set('filtroInvNombreListPrecio', $form->get('txtNombreListaPrecio')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvPrecioDetalle::class)->informePrecioDetalle())->execute(), "Informe precio detalles");
+                General::get()->setExportar($em->getRepository(InvPrecioDetalle::class)->informePrecioDetalle()->getQuery()->getResult(), "Informe precio detalles");
             }
         }
         $arPrecioDetalle = $paginator->paginate($em->getRepository(InvPrecioDetalle::class)->informePrecioDetalle(), $request->query->getInt('page', 1), 30);

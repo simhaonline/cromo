@@ -204,7 +204,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         if($session->get('filtroInvCodigoAsesor')){
             $queryBuilder->andWhere("r.codigoAsesorFk = '{$session->get('filtroInvCodigoAsesor')}'");
         }
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
     public function validarDetalles($codigoRemision){

@@ -23,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class DetalleController extends ControllerListenerGeneral
 {
     protected $proceso = "0002";
-    protected $procestoTipo= "I";
+    protected $procestoTipo = "I";
     protected $nombreProceso = "MovimientoDetalle";
     protected $modulo = "Inventario";
 
@@ -47,7 +47,7 @@ class DetalleController extends ControllerListenerGeneral
             ->add('cboDocumento', EntityType::class, $em->getRepository(InvDocumento::class)->llenarCombo())
             ->add('txtCodigoItem', TextType::class, ['required' => false, 'data' => $session->get('filtroInvItemCodigo'), 'attr' => ['class' => 'form-control']])
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroInvMovimientoFechaDesde'))])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroInvMovimientoFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroInvMovimientoFechaHasta'))])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -56,7 +56,7 @@ class DetalleController extends ControllerListenerGeneral
             if ($form->get('btnFiltrar')->isClicked()) {
                 $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
                 $session->set('filtroInvLote', $form->get('txtLote')->getData());
-                $session->set('filtroInvMovimientoFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroInvMovimientoFechaDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroInvMovimientoFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $arBodega = $form->get('cboBodega')->getData();
                 if ($arBodega != '') {
@@ -65,14 +65,14 @@ class DetalleController extends ControllerListenerGeneral
                     $session->set('filtroInvBodega', null);
                 }
                 $documentoTipo = $form->get('cboDocumento')->getData();
-                if($documentoTipo != ''){
+                if ($documentoTipo != '') {
                     $session->set('filtroInvCodigoDocumento', $form->get('cboDocumento')->getData()->getCodigoDocumentoPk());
                 } else {
                     $session->set('filtroInvCodigoDocumento', null);
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvMovimientoDetalle::class)->informeDetalles())->execute(), "Detalles");
+                General::get()->setExportar($em->getRepository(InvMovimientoDetalle::class)->informeDetalles()->getQuery()->getResult(), "Detalles");
             }
         }
         $arMovimientosDetalles = $paginator->paginate($em->getRepository(InvMovimientoDetalle::class)->informeDetalles(), $request->query->getInt('page', 1), 100);

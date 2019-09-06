@@ -69,7 +69,7 @@ class ExistenciaController extends ControllerListenerGeneral
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(InvLote::class)->existencia())->execute(), "Existencia");
+                General::get()->setExportar($em->getRepository(InvLote::class)->existencia()->getQuery()->getResult(), "Existencia");
             }
             if ($form->get('btnPdf')->isClicked()) {
                 $formato = new ExistenciaLote();

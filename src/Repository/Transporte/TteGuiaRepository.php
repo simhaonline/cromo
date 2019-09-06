@@ -283,7 +283,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             $queryBuilder->setMaxResults( $session->get('filtroTteGuiaTopRegistros'));
         }
         $queryBuilder->orderBy('tg.fechaIngreso', 'DESC');
-        return $queryBuilder->setMaxResults(5000);
+        return $queryBuilder->setMaxResults(15000);
     }
 
     /**

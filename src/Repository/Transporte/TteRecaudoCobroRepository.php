@@ -33,6 +33,33 @@ class TteRecaudoCobroRepository extends ServiceEntityRepository
             ->addSelect('rc.estadoAnulado')
             ->where('rc.codigoRecaudoCobroPk <> 0');
         $queryBuilder->orderBy('rc.fecha', 'DESC');
+
+        switch ($session->get('TteRecaudoCobro_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("rc.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("rc.estadoAutorizado = 1");
+                break;
+        }
+
+        switch ($session->get('TteRecaudoCobro_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("rc.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("rc.estadoAprobado = 1");
+                break;
+        }
+
+        switch ($session->get('TteRecaudoCobro_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("rc.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("rc.estadoAnulado = 1");
+                break;
+        }
         return $queryBuilder;
     }
 

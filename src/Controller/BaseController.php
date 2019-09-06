@@ -32,7 +32,6 @@ abstract class BaseController extends Controller
         } else {
             $camposFiltro = json_decode($namespaceType::getEstructuraPropiedadesFiltro(), true);
             $queryBuilder = $this->getGenerarQueryConFiltro($nombreRepositorio, $camposFiltro);
-          //  dd($queryBuilder->getDQL());
         }
         /** @var  $queryBuilder QueryBuilder */
         if($paginar) {

@@ -39,6 +39,33 @@ class TteRecaudoDevolucionRepository extends ServiceEntityRepository
         if($session->get('filtroTteCodigoCliente')){
             $queryBuilder->andWhere("rc.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }
+        switch ($session->get('TteRecaudoDevolucion_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("rc.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("rc.estadoAutorizado = 1");
+                break;
+        }
+
+        switch ($session->get('TteRecaudoDevolucion_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("rc.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("rc.estadoAprobado = 1");
+                break;
+        }
+
+        switch ($session->get('TteRecaudoDevolucion_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("rc.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("rc.estadoAnulado = 1");
+                break;
+        }
+
         return $queryBuilder;
     }
 

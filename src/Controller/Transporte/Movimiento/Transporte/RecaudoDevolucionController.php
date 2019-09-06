@@ -46,15 +46,14 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
         }
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Recaudo devolucion");
-            }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteRecaudoDevolucion::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_recaudodevolucion_lista'));
             }
-
+            if ($formBotonera->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TteRecaudoDevolucion::class)->lista()->getQuery()->execute(), "Recaudo devolucion");
+            }
         }
 
         return $this->render('transporte/movimiento/transporte/recaudodevolucion/lista.html.twig', [

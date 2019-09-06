@@ -81,13 +81,12 @@ class DespachoController extends ControllerListenerGeneral
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
                 FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
-//                $datos = $this->getDatosLista();
             }
         }
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho");
+                General::get()->setExportar($em->getRepository(TteDespacho::class)->lista()->getQuery()->getResult(), "Despacho");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 /*set_time_limit(0);

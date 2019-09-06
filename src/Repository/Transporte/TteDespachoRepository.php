@@ -105,44 +105,67 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->leftJoin('td.ciudadDestinoRel ', 'cd')
             ->leftJoin('td.conductorRel', 'c')
             ->where('td.codigoDespachoPk <> 0');
-        $fecha = new \DateTime('now');
-        if ($session->get('filtroTteMovDespachoFiltroFecha') == true) {
-            if ($session->get('filtroTteMovDespachoFechaDesde') != null) {
-                $queryBuilder->andWhere("td.fechaSalida >= '{$session->get('filtroTteMovDespachoFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("td.fechaSalida >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroTteMovDespachoFechaHasta') != null) {
-                $queryBuilder->andWhere("td.fechaSalida <= '{$session->get('filtroTteMovDespachoFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("td.fechaSalida <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
+
+        if ($session->get('TteDespacho_codigoConductorFk') != '') {
+            $queryBuilder->andWhere("td.TteDespacho_codigoConductorFk = {$session->get('TteDespacho_codigoConductorFk')}");
         }
-        if ($session->get('filtroTteDespachoCodigoVehiculo') != '') {
-            $queryBuilder->andWhere("td.codigoVehiculoFk = '{$session->get('filtroTteDespachoCodigoVehiculo')}'");
+
+        if ($session->get('TteDespacho_codigoDespachoPk') != '') {
+            $queryBuilder->andWhere("td.codigoDespachoPk = {$session->get('TteDespacho_codigoDespachoPk')}");
         }
+
+        if ($session->get('TteDespacho_numero') != '') {
+            $queryBuilder->andWhere("td.numero = {$session->get('TteDespacho_numero')}");
+        }
+
+        if ($session->get('TteDespacho_codigoVehiculoFk') != '') {
+            $queryBuilder->andWhere("td.codigoVehiculoFk = {$session->get('TteDespacho_codigoVehiculoFk')}");
+        }
+
+        if ($session->get('TteDespacho_codigoCiudadOrigenFk')) {
+            $queryBuilder->andWhere("td.codigoCiudadOrigenFk = {$session->get('TteDespacho_codigoCiudadOrigenFk')}");
+        }
+        if ($session->get('TteDespacho_codigoCiudadDestinoFk')) {
+            $queryBuilder->andWhere("td.codigoCiudadDestinoFk = {$session->get('TteDespacho_codigoCiudadDestinoFk')}");
+        }
+
         if ($session->get('filtroTteDespachoCodigo') != '') {
             $queryBuilder->andWhere("td.codigoDespachoPk = {$session->get('filtroTteDespachoCodigo')}");
         }
-        if ($session->get('filtroTteDespachoNumero') != '') {
-            $queryBuilder->andWhere("td.numero = {$session->get('filtroTteDespachoNumero')}");
+
+        if ($session->get('TteDespacho_codigoDespachoTipoFk')) {
+            $queryBuilder->andWhere("td.codigoDespachoPk = '" . $session->get('TteDespacho_codigoDespachoTipoFk') . "'");
         }
-        if ($session->get('filtroTteDespachoCodigoCiudadOrigen')) {
-            $queryBuilder->andWhere("td.codigoCiudadOrigenFk = {$session->get('filtroTteDespachoCodigoCiudadOrigen')}");
+
+        if ($session->get('TteDespacho_codigoOperacionFk')) {
+            $queryBuilder->andWhere("td.codigoOperacionFk = '" . $session->get('TteDespacho_codigoOperacionFk') . "'");
         }
-        if ($session->get('filtroTteDespachoCodigoCiudadDestino')) {
-            $queryBuilder->andWhere("td.codigoCiudadDestinoFk = {$session->get('filtroTteDespachoCodigoCiudadDestino')}");
+
+        $fecha = new \DateTime('now');
+        if ($session->get('TteDespacho_fechaSalidaDesde') != null) {
+            $queryBuilder->andWhere("td.fechaSalida >= '{$session->get('TteDespacho_fechaSalidaDesde')} 00:00:00'");
+        }else{
+            $queryBuilder->andWhere("td.fechaSalida >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+
         }
-        if ($session->get('filtroTteDespachoTipo')) {
-            $queryBuilder->andWhere("td.codigoDespachoTipoFk = '" . $session->get('filtroTteDespachoTipo') . "'");
+
+        if ($session->get('TteDespacho_fechaSalidaHasta') != null) {
+            $queryBuilder->andWhere("td.fechaSalida <= '{$session->get('TteDespacho_fechaSalidaHasta')} 23:59:59'");
+        }else{
+            $queryBuilder->andWhere("td.fechaSalida <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+
         }
-        if ($session->get('filtroTteDespachoOperacion')) {
-            $queryBuilder->andWhere("td.codigoOperacionFk = '" . $session->get('filtroTteDespachoOperacion') . "'");
+
+        switch ($session->get('TteDespacho_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("td.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("td.estadoAutorizado = 1");
+                break;
         }
-        if ($session->get('filtroTteDespachoCodigoConductor')) {
-            $queryBuilder->andWhere("td.codigoConductorFk = {$session->get('filtroTteDespachoCodigoConductor')}");
-        }
-        switch ($session->get('filtroTteDespachoEstadoAprobado')) {
+
+        switch ($session->get('TteDespacho_estadoAprobado')) {
             case '0':
                 $queryBuilder->andWhere("td.estadoAprobado = 0");
                 break;
@@ -150,9 +173,29 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("td.estadoAprobado = 1");
                 break;
         }
-        $queryBuilder->orderBy('td.fechaSalida', 'DESC');
-        return $queryBuilder;
 
+        switch ($session->get('TteDespacho_estadoSoporte')) {
+            case '0':
+                $queryBuilder->andWhere("td.estadoSoporte = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("td.estadoSoporte = 1");
+                break;
+        }
+
+        switch ($session->get('TteDespacho_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("td.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("td.estadoAnulado = 1");
+                break;
+        }
+
+
+
+        $queryBuilder->orderBy('td.fechaSalida', 'DESC');
+        return $queryBuilder->setMaxResults(5000);
     }
 
     /**

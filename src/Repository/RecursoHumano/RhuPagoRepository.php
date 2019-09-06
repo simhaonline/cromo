@@ -869,11 +869,14 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->addSelect('b.nombre as bancoNombre')
             ->addSelect('ep.nombre as entidadPension')
             ->addSelect('es.nombre as entidadSalud')
+            ->addSelect('ca.nombre as cargo')
             ->leftJoin('p.empleadoRel', 'e')
             ->leftJoin('p.grupoRel', 'g')
             ->leftJoin('e.bancoRel', 'b')
             ->leftJoin('p.entidadPensionRel', 'ep')
             ->leftJoin('p.entidadSaludRel', 'es')
+            ->leftJoin('p.contratoRel', 'c')
+            ->leftJoin('c.cargoRel', 'ca')
             ->where("p.codigoProgramacionFk = {$codigoProgramacion}");
         $arPagos = $queryBuilder->getQuery()->getResult();
         $i = 0;

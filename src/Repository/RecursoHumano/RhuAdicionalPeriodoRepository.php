@@ -22,8 +22,10 @@ class RhuAdicionalPeriodoRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicionalPeriodo::class, 'ap')
-            ->select('ap');
-
+            ->select('ap.codigoAdicionalPeriodoPk')
+            ->addSelect('ap.fecha')
+            ->addSelect('ap.nombre')
+            ->addSelect('ap.estadoCerrado');
         if ($session->get('filtroRhuAdicionalPeriodoEstado') != '') {
             $queryBuilder->andWhere("ap.estadoCerrado = '{$session->get('filtroRhuAdicionalPeriodoEstado')}' ");
         }

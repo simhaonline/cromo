@@ -47,7 +47,7 @@ class PendienteSoporteController extends Controller
             $session->set('filtroNumeroDespacho', $form->get('txtDespacho')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->getRepository(TteGuia::class)->pendienteSoporte()->getQuery()->execute(), "Pendiente soporte");
+            General::get()->setExportar($em->getRepository(TteGuia::class)->pendienteSoporte()->getQuery()->getResult(), "Pendiente soporte");
         }
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->pendienteSoporte(), $request->query->getInt('page', 1), 40);
         return $this->render('transporte/informe/transporte/guia/pendienteSoporte.html.twig', [

@@ -34,14 +34,14 @@ class FacturacionController extends Controller
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $session = new Session();
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('btnRelacion', SubmitType::class, array('label' => 'Relacion'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaCodigo')])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNumero')])
@@ -60,7 +60,7 @@ class FacturacionController extends Controller
                 $session->set('filtroTteFacturaEstadoAnulado', $form->get('chkEstadoAnulado')->getData());
                 $session->set('filtroTteFacturaNumero', $form->get('txtNumero')->getData());
                 $session->set('filtroTteFacturaCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroFechaDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
                 if ($form->get('cboOperacionRel')->getData() != '') {
@@ -92,13 +92,13 @@ class FacturacionController extends Controller
                 $formato->Generar($em);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteFactura::class)->listaInforme())->execute(), "Facturas");
+                General::get()->setExportar($em->getRepository(TteFactura::class)->listaInforme()->getQuery()->getResult(), "Facturas");
             }
         }
         $arFacturas = $paginator->paginate($this->getDoctrine()->getRepository(TteFactura::class)->listaInforme(), $request->query->getInt('page', 1), 100);
         return $this->render('transporte/informe/comercial/facturacion/factura.html.twig', [
             'arFacturas' => $arFacturas,
-            'form' => $form->createView() ]);
+            'form' => $form->createView()]);
     }
 }
 

@@ -20,9 +20,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class PendienteProgramarController extends Controller
 {
-   /**
-    * @Route("/transporte/informe/recogida/recogida/pendiente/programar", name="transporte_informe_recogida_recogida_pendiente_programar")
-    */    
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/informe/recogida/recogida/pendiente/programar", name="transporte_informe_recogida_recogida_pendiente_programar")
+     */
     public function lista(Request $request)
     {
         $session = new Session();

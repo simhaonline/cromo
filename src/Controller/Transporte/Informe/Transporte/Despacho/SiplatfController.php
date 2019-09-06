@@ -34,7 +34,7 @@ class SiplatfController extends Controller
         ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
@@ -45,7 +45,7 @@ class SiplatfController extends Controller
         $form->handleRequest($request);
         $arGuias = null;
         if ($form->get('btnFiltrar')->isClicked()) {
-            if($form->get('fechaDesde')->getData() && $form->get('fechaHasta')->getData()) {
+            if ($form->get('fechaDesde')->getData() && $form->get('fechaHasta')->getData()) {
                 $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
                 $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
                 $queryBuilder = $this->getDoctrine()->getRepository(TteGuia::class)->siplatf($fechaDesde, $fechaHasta);
@@ -56,7 +56,7 @@ class SiplatfController extends Controller
         if ($form->get('btnExcel')->isClicked()) {
             $fechaDesde = $form->get('fechaDesde')->getData()->format('Y-m-d');
             $fechaHasta = $form->get('fechaHasta')->getData()->format('Y-m-d');
-            General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->siplatf($fechaDesde, $fechaHasta))->execute(), "Siplatf");
+            General::get()->setExportar($em->getRepository(TteGuia::class)->siplatf($fechaDesde, $fechaHasta)->getQuery()->getResult(), "Siplatf");
         }
         return $this->render('transporte/informe/transporte/despacho/siplatf.html.twig', [
             'arGuias' => $arGuias,

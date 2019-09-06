@@ -22,13 +22,17 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class CostosController extends Controller
 {
-   /**
-    * @Route("/transporte/informe/financiero/general/costos/", name="transporte_informe_financiero_general_costos")
-    */    
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/informe/financiero/general/costos/", name="transporte_informe_financiero_general_costos")
+     */
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('txtAnio', NumberType::class)
@@ -41,7 +45,7 @@ class CostosController extends Controller
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if ($form->get('btnFiltrar')->isClicked()) {
-                    if($form->get('txtAnio')->getData() && $form->get('txtMes')->getData()) {
+                    if ($form->get('txtAnio')->getData() && $form->get('txtMes')->getData()) {
                         $anio = $form->get('txtAnio')->getData();
                         $mes = $form->get('txtMes')->getData();
                         $queryBuilder = $this->getDoctrine()->getRepository(TteCosto::class)->listaInforme($anio, $mes);
@@ -50,10 +54,10 @@ class CostosController extends Controller
                     }
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    if($form->get('txtAnio')->getData() && $form->get('txtMes')->getData()) {
+                    if ($form->get('txtAnio')->getData() && $form->get('txtMes')->getData()) {
                         $anio = $form->get('txtAnio')->getData();
                         $mes = $form->get('txtMes')->getData();
-                        General::get()->setExportar($em->createQuery($this->getDoctrine()->getRepository(TteCosto::class)->listaInforme($anio, $mes))->execute(), "Costos");
+                        General::get()->setExportar($em->getRepository(TteCosto::class)->listaInforme($anio, $mes)->getQuery()->getResult(), "Costos");
                     }
                 }
             }

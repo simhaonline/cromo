@@ -20,9 +20,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class FechaController extends Controller
 {
-   /**
-    * @Route("/transporte/informe/recogida/recogida/fecha", name="transporte_informe_recogida_recogida_fecha")
-    */    
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/informe/recogida/recogida/fecha", name="transporte_informe_recogida_recogida_fecha")
+     */
     public function lista(Request $request)
     {
         $session = new Session();

@@ -29,13 +29,13 @@ class PendienteFacturaClienteController extends Controller
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $session = new Session();
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
@@ -44,7 +44,7 @@ class PendienteFacturaClienteController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroFechaDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroFechaDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
                 $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
                 $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
                 if ($form->get('txtCodigoCliente')->getData() != '') {
@@ -56,10 +56,10 @@ class PendienteFacturaClienteController extends Controller
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteGuia::class)->informeFacturaPendienteCliente())->execute(), "Pendiente por facturar");
+                General::get()->setExportar($em->getRepository(TteGuia::class)->informeFacturaPendienteCliente()->getQuery()->getResult(), "Pendiente por facturar");
             }
 
-            if($form->get('btnPdf')->isClicked()){
+            if ($form->get('btnPdf')->isClicked()) {
                 $formato = new PendienteFacturaCliente();
                 $formato->Generar($em);
             }
@@ -67,7 +67,7 @@ class PendienteFacturaClienteController extends Controller
         $arGuiasPendientes = $paginator->paginate($this->getDoctrine()->getRepository(TteGuia::class)->informeFacturaPendienteCliente(), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/informe/comercial/facturacion/pendienteFacturaCliente.html.twig', [
             'arGuiasPendientes' => $arGuiasPendientes,
-            'form' => $form->createView() ]);
+            'form' => $form->createView()]);
     }
 }
 

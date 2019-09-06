@@ -52,7 +52,8 @@
     </table>
     <div class="btn-group" style="float: left">
         <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arDesembarcos.getTotalItemCount }}</span></div>
+            <div class="btn btn-default btn-sm">Registros <span
+                        class="badge">{{ arDesembarcos.getTotalItemCount }}</span></div>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
@@ -61,6 +62,7 @@
     <div class="btn-group" style="float: right">
         {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
     </div>
+    <br/><br/><br/>
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}

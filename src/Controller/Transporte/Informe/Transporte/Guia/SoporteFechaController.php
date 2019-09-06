@@ -32,26 +32,26 @@ class SoporteFechaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaSoporteDesde'))])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroFechaSoporteDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaSoporteHasta'))])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked()) {
-            if($form->get('fechaDesde')->getData() != ''){
-                $session->set('filtroFechaSoporteDesde',  $form->get('fechaDesde')->getData()->format('Y-m-d'));
+            if ($form->get('fechaDesde')->getData() != '') {
+                $session->set('filtroFechaSoporteDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
             } else {
-                $session->set('filtroFechaSoporteDesde',null);
+                $session->set('filtroFechaSoporteDesde', null);
             }
-            if($form->get('fechaHasta')->getData() != ''){
+            if ($form->get('fechaHasta')->getData() != '') {
                 $session->set('filtroFechaSoporteHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
             } else {
-                $session->set('filtroFechaSoporteHasta',null);
+                $session->set('filtroFechaSoporteHasta', null);
             }
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->getRepository(TteGuia::class)->soporteFecha()->getQuery()->execute(), "Soporte por fecha");
+            General::get()->setExportar($em->getRepository(TteGuia::class)->soporteFecha()->getQuery()->getResult(), "Soporte por fecha");
         }
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->soporteFecha(), $request->query->getInt('page', 1), 40);
         return $this->render('transporte/informe/transporte/guia/soporteFecha.html.twig', [

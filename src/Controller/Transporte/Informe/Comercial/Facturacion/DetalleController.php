@@ -15,9 +15,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class DetalleController extends Controller
 {
-   /**
-    * @Route("/transporte/informe/comercial/facturacion/detalle", name="transporte_informe_comercial_facturacion_detalle")
-    */
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/informe/comercial/facturacion/detalle", name="transporte_informe_comercial_facturacion_detalle")
+     */
     public function lista(Request $request)
     {
         set_time_limit(0);
@@ -46,7 +50,7 @@ class DetalleController extends Controller
                 $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(TteFacturaDetalle::class)->detalle())->execute(), "Factura detalle");
+                General::get()->setExportar($em->getRepository(TteFacturaDetalle::class)->detalle()->getQuery()->getResult(), "Factura detalle");
             }
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->detalle();

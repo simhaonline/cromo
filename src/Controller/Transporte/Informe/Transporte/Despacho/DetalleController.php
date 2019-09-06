@@ -47,7 +47,7 @@ class DetalleController extends Controller
             $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(TteDespachoDetalle::class)->detalle())->execute(), "Novedades");
+            General::get()->setExportar($em->getRepository(TteDespachoDetalle::class)->detalle()->getQuery()->getResult(), "Novedades");
         }
         $query = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->detalle();
         $arDespachoDetalles = $paginator->paginate($query, $request->query->getInt('page', 1),100);

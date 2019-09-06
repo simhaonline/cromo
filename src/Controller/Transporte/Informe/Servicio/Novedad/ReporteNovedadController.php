@@ -19,9 +19,13 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class ReporteNovedadController extends Controller
 {
-   /**
-    * @Route("/transporte/informe/control/novedad/reporte/novedad", name="transporte_informe_servicio_novedad_reporte_novedad")
-    */    
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/transporte/informe/control/novedad/reporte/novedad", name="transporte_informe_servicio_novedad_reporte_novedad")
+     */
     public function lista(Request $request)
     {
         set_time_limit(0);

@@ -261,6 +261,8 @@ class FacturaController extends ControllerListenerGeneral
      */
     public function detalleAdicionarGuia(Request $request, $codigoFactura)
     {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $form = $this->createFormBuilder()

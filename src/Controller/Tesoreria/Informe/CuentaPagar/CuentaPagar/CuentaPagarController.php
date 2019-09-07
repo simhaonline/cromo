@@ -90,7 +90,7 @@ class CuentaPagarController extends Controller
             $em->getRepository(TesCuentaPagar::class)->generarVencimientos();
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(TesCuentaPagar::class)->pendientes())->execute(), "Cuenta pagar");
+            General::get()->setExportar($em->getRepository(TesCuentaPagar::class)->pendientes()->getQuery()->getResult(), "Cuenta pagar");
         }
         $query = $this->getDoctrine()->getRepository(TesCuentaPagar::class)->pendientes();
         $arCuentasPagar = $paginator->paginate($query, $request->query->getInt('page', 1), 50);

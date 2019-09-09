@@ -3,8 +3,6 @@
 namespace App\Repository\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
-use App\Entity\Compra\ComCuentaPagar;
-use App\Entity\Compra\ComCuentaPagarTipo;
 use App\Entity\Compra\ComProveedor;
 use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
@@ -30,8 +28,8 @@ use App\Entity\Transporte\TtePoseedor;
 use App\Entity\Transporte\TteVehiculo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use SoapClient;
 use Symfony\Component\HttpFoundation\Session\Session;
+use SoapClient;
 
 class TteDespachoRepository extends ServiceEntityRepository
 {

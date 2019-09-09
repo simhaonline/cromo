@@ -11,6 +11,30 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteCiudadRepository extends ServiceEntityRepository
 {
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCiudad::class, 'c')
+            ->select('c.codigoCiudadPk')
+            ->addSelect('c.nombre')
+            ->addSelect('c.codigoDepartamentoFk')
+            ->addSelect('c.codigoRutaFk')
+            ->addSelect('d.nombre  as departamento')
+            ->addSelect('c.codigoRutaFk ')
+            ->addSelect('r.nombre ruta')
+            ->addSelect('c.ordenRuta')
+            ->addSelect('c.codigoInterface')
+            ->addSelect('c.reexpedicion')
+            ->leftJoin('c.departamentoRel', 'd')
+            ->leftJoin('c.rutaRel', 'r');
+
+        if ($session->get('TteCiudad_nombre')) {
+            $queryBuilder->andWhere("c.nombre like '%{$session->get('TteCiudad_nombre')}%' ");
+        }
+
+        return $queryBuilder;
+    }
+    
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, TteCiudad::class);

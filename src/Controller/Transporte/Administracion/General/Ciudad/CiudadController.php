@@ -35,14 +35,12 @@ class CiudadController extends ControllerListenerGeneral
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
                 FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
-//                $datos = $this->getDatosLista();
             }
         }
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-//                General::get()->setExportarE($em->createQuery($datos['queryBuilder'])->execute(), "Ciudad");//cambiar
-                $this->exportarExcel($datos['queryBuilder']);
+                General::get()->setExportar($em->getRepository(TteCiudad::class)->lista()->getQuery()->execute(), "Ciudad");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

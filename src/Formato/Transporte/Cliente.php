@@ -38,7 +38,7 @@ class Cliente extends \FPDF
         $this->SetFont('Arial', 'B', 10);
         //Logo
 
-
+        $this->Image('../public/img/recursos/transporte/supertransporte.png', 13, 3, 30, 20);
         Estandares::generarEncabezado($this, 'Cliente', self::$em);
 
         $this->SetXY(53, 34);
@@ -53,7 +53,7 @@ class Cliente extends \FPDF
 
     public function EncabezadoDetalles()
     {
-        $this->Ln(8);
+        $this->Ln(4);
     }
 
     public function Body($pdf, $fecha, $codigoCliente)

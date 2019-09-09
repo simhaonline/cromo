@@ -33,14 +33,13 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
             ->addSelect('z.nombre as zonaNombre')
             ->addSelect('cdz.nombre as zonaCiudadDestino')
             ->leftJoin('prd.productoRel', 'p')
-            ->leftJoin('prd.ciudadDestinoRel','cd')
-            ->leftJoin('prd.ciudadOrigenRel','co')
+            ->leftJoin('prd.ciudadDestinoRel', 'cd')
+            ->leftJoin('prd.ciudadOrigenRel', 'co')
             ->leftJoin('cd.zonaRel', 'cdz')
             ->leftJoin('prd.zonaRel', 'z')
-            ->where('prd.codigoPrecioFk = ' . $id )
-            ->orderBy('prd.codigoPrecioDetallePk', 'ASC')
-            ->getQuery();
-        $result = $queryBuilder->getResult();
+            ->where('prd.codigoPrecioFk = ' . $id)
+            ->orderBy('cd.nombre', 'ASC');
+        $result = $queryBuilder->getQuery()->getResult();
 
         return $result;
     }
@@ -74,12 +73,13 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
         return $arPrecioDetalle;
     }
 
-    public function apiWindowsDetalle($raw) {
+    public function apiWindowsDetalle($raw)
+    {
         $em = $this->getEntityManager();
-        $precio = $raw['precio']?? null;
-        $origen = $raw['origen']?? null;
-        $destino = $raw['destino']?? null;
-        if($precio && $origen && $destino) {
+        $precio = $raw['precio'] ?? null;
+        $origen = $raw['origen'] ?? null;
+        $destino = $raw['destino'] ?? null;
+        if ($precio && $origen && $destino) {
             $queryBuilder = $em->createQueryBuilder()->from(TtePrecioDetalle::class, 'pd')
                 ->select('pd.codigoPrecioDetallePk')
                 ->addSelect('pd.minimo')
@@ -96,7 +96,7 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
                 ->andWhere('pd.codigoCiudadOrigenFk=' . $origen)
                 ->andWhere('pd.codigoCiudadDestinoFk=' . $destino);
             $arPrecios = $queryBuilder->getQuery()->getResult();
-            if($arPrecios) {
+            if ($arPrecios) {
                 return $arPrecios;
             } else {
                 return [
@@ -110,14 +110,15 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
         }
     }
 
-    public function apiWindowsDetalleProducto($raw) {
+    public function apiWindowsDetalleProducto($raw)
+    {
         $em = $this->getEntityManager();
-        $precio = $raw['precio']?? null;
-        $origen = $raw['origen']?? null;
-        $destino = $raw['destino']?? null;
-        $producto = $raw['producto']?? null;
-        $zona = $raw['zona']?? null;
-        if($precio && $origen && $destino && $producto) {
+        $precio = $raw['precio'] ?? null;
+        $origen = $raw['origen'] ?? null;
+        $destino = $raw['destino'] ?? null;
+        $producto = $raw['producto'] ?? null;
+        $zona = $raw['zona'] ?? null;
+        if ($precio && $origen && $destino && $producto) {
             $queryBuilder = $em->createQueryBuilder()->from(TtePrecioDetalle::class, 'pd')
                 ->select('pd.codigoPrecioDetallePk')
                 ->addSelect('pd.minimo')
@@ -133,9 +134,9 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
                 ->where("pd.codigoPrecioFk='" . $precio . "'")
                 ->andWhere("pd.codigoCiudadOrigenFk='" . $origen . "'")
                 ->andWhere("pd.codigoCiudadDestinoFk='" . $destino . "'")
-            ->andWhere("pd.codigoProductoFk='" . $producto . "'");
+                ->andWhere("pd.codigoProductoFk='" . $producto . "'");
             $arPrecios = $queryBuilder->getQuery()->getResult();
-            if($arPrecios) {
+            if ($arPrecios) {
                 return $arPrecios[0];
             } else {
                 $queryBuilder = $em->createQueryBuilder()->from(TtePrecioDetalle::class, 'pd')
@@ -155,7 +156,7 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
                     ->andWhere("pd.codigoZonaFk='" . $zona . "'")
                     ->andWhere("pd.codigoProductoFk='" . $producto . "'");
                 $arPrecios = $queryBuilder->getQuery()->getResult();
-                if($arPrecios) {
+                if ($arPrecios) {
                     return $arPrecios[0];
                 } else {
                     $queryBuilder = $em->createQueryBuilder()->from(TtePrecioDetalle::class, 'pd')
@@ -175,7 +176,7 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
                         ->andWhere("pd.codigoZonaFk IS NULL")
                         ->andWhere("pd.codigoProductoFk='" . $producto . "'");
                     $arPrecios = $queryBuilder->getQuery()->getResult();
-                    if($arPrecios) {
+                    if ($arPrecios) {
                         return $arPrecios[0];
                     } else {
                         return [

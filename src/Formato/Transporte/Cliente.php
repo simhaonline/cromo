@@ -22,13 +22,13 @@ class Cliente extends \FPDF
     {
         ob_clean();
         self::$em = $em;
-        self::$fecha =  date_format(new \DateTime('now'),"Y/m/d H:i:s");
+        self::$fecha = date_format(new \DateTime('now'), "Y/m/d H:i:s");
 
         $pdf = new Cliente();
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
-        $this->Body($pdf,  self::$fecha, $codigoCliente);
+        $this->Body($pdf, self::$fecha, $codigoCliente);
         $pdf->Output("Cliente.pdf", 'D');
     }
 
@@ -64,7 +64,7 @@ class Cliente extends \FPDF
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(0, 0, 0);
         $pdf->SetFont('Arial', 'b', 9);
-        $pdf->Cell(20, 4,$fecha, 0, 0, 'L', 1);
+        $pdf->Cell(20, 4, $fecha, 0, 0, 'L', 1);
 
         $pdf->SetXY(10, 50);
         $pdf->SetFillColor(170, 170, 170);
@@ -112,10 +112,10 @@ class Cliente extends \FPDF
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(197, 5, "FLETE", 1, 0, 'C', 1);
         $pdf->Ln(5);
-        $headerFlete = array('ID',	'ORIGEN',	'DESTINO','ZONA',	'D_PESO',	'D_UND',	'P_MIN',	'P_MIN_GUIA',	'F_MIN', 'F_MIN_GUIA');
-        $weightFlete = array(15, 40, 30, 20, 15, 15, 15,16,15,16 );
+        $headerFlete = array('ID', 'ORIGEN', 'DESTINO', 'ZONA', 'D_PESO', 'D_UND', 'P_MIN', 'P_MIN_GUIA', 'F_MIN', 'F_MIN_GUIA');
+        $weightFlete = array(15, 40, 30, 20, 15, 15, 15, 16, 15, 16);
         $arCondicionesFletes = $em->getRepository(TteCondicionFlete::class)->cliente($codigoCliente);
-        for ($i = 0; $i < count($headerFlete); $i++){
+        for ($i = 0; $i < count($headerFlete); $i++) {
             $pdf->SetFillColor(170, 170, 170);
             $pdf->SetTextColor(0);
             $pdf->SetFont('arial', 'B', 7);
@@ -141,10 +141,10 @@ class Cliente extends \FPDF
         $pdf->SetFillColor(200, 200, 200);
         $pdf->Cell(165, 5, "MANEJO", 1, 0, 'C', 1);
         $pdf->Ln(5);
-        $headerManejo = array('ID','ORIGEN','DESTINO','ZONA','PORCENTAJE','MIN(UND)','MIN(DES)');
-        $weightManejo= array(15, 40, 40, 20, 20, 15, 15);
+        $headerManejo = array('ID', 'ORIGEN', 'DESTINO', 'ZONA', 'PORCENTAJE', 'MIN(UND)', 'MIN(DES)');
+        $weightManejo = array(15, 40, 40, 20, 20, 15, 15);
         $arCondicionesManejos = $em->getRepository(TteCondicionManejo::class)->cliente($codigoCliente);
-        for ($i = 0; $i < count($headerManejo); $i++){
+        for ($i = 0; $i < count($headerManejo); $i++) {
             $pdf->SetFillColor(170, 170, 170);
             $pdf->SetTextColor(0);
             $pdf->SetFont('arial', 'B', 7);
@@ -192,7 +192,7 @@ class Cliente extends \FPDF
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-        $pdf->Cell(97.5, 5,  date_format($arPrecio->getFechaVence(),"Y/m/d") , 1, 0, 'L', 1);
+        $pdf->Cell(97.5, 5, date_format($arPrecio->getFechaVence(), "Y/m/d"), 1, 0, 'L', 1);
         $pdf->Ln();
         $pdf->SetFillColor(170, 170, 170);
         $pdf->SetTextColor(0);
@@ -208,28 +208,27 @@ class Cliente extends \FPDF
         $pdf->SetFillColor(200, 200, 200);
         $pdf->Cell(190, 5, "PRECIO", 1, 0, 'C', 1);
         $pdf->Ln(5);
-        $headerPrecio = array('ID','ORIGEN','DESTINO','ZONA','PRODUCTO','PESO','UND','TOPE','VR T.', 'VR A.','DIC', 'MIN');
-        $weightPrecio = array(15, 20, 20, 15, 15,15,15,15,15,15,15,15 );
-        for ($i = 0; $i < count($headerPrecio); $i++){
+        $headerPrecio = array('ID', 'ORIGEN', 'DESTINO', 'ZONA', 'PRODUCTO', 'VR KILO', 'VR UNIDAD');
+        $weightPrecio = array(15, 20, 20, 35, 18, 15, 15);
+        for ($i = 0; $i < count($headerPrecio); $i++) {
             $pdf->SetFillColor(170, 170, 170);
             $pdf->SetTextColor(0);
             $pdf->SetFont('arial', 'B', 7);
-            $pdf->Cell($weightPrecio[$i], 4, $headerPrecio[$i], 1, 0, 'L', 1);
+            $pdf->Cell($weightPrecio[$i], 6, $headerPrecio[$i], 1, 0, 'L', 1);
         }
         $pdf->Ln();
         foreach ($arPrecios as $arPrecio => $precioItem) {
             $pdf->Cell(15, 4, utf8_decode(substr($precioItem['codigoPrecioDetallePk'], 0, 5)), 'LRB', 0, 'L');
             $pdf->Cell(20, 4, utf8_decode(substr($precioItem['ciudadOrigen'], 0, 8)), 'LRB', 0, 'L');
             $pdf->Cell(20, 4, utf8_decode(substr($precioItem['ciudadDestino'], 0, 8)), 'LRB', 0, 'L');
-            $pdf->Cell(15, 4, $precioItem['zonaNombre'], 'LRB', 0, 'L');
-            $pdf->Cell(15, 4, $precioItem['codigoCiudadDestinoFk'], 'LRB', 0, 'L');
-            $pdf->Cell(15, 4, $precioItem['nombre'], 'LRB', 0, 'L');
-            $pdf->Cell(15, 4, $precioItem['codigoProductoFk'], 'LRB', 0, 'L');
-            $pdf->Cell(15, 4, $precioItem['vrPeso'], 'LRB', 0, 'L');
-            $pdf->Cell(15, 4, $precioItem['vrUnidad'], 'LRB', 0, 'L');
-            $pdf->Cell(15, 4, $precioItem['vrPesoTope'], 'LRB', 0, 'L');
-            $pdf->Cell(15, 4, $precioItem['vrPesoTopeAdicional'], 'LRB', 0, 'L');
-            $pdf->Cell(15, 4, $precioItem['minimo'], 'LRB', 0, 'L');
+            if ($precioItem['zonaNombre']) {
+                $pdf->Cell(35, 4, substr($precioItem['zonaNombre'], 0, 20), 'LRB', 0, 'L');
+            } else {
+                $pdf->Cell(35, 4, substr($precioItem['zonaCiudadDestino'], 0, 20), 'LRB', 0, 'L');
+            }
+            $pdf->Cell(18, 4, $precioItem['producto'], 'LRB', 0, 'L');
+            $pdf->Cell(15, 4, number_format($precioItem['vrPeso'], 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 4, number_format($precioItem['vrUnidad'], 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

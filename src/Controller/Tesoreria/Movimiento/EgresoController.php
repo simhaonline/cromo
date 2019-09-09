@@ -91,6 +91,8 @@ class EgresoController extends BaseController
             if (!$arEgreso) {
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_lista'));
             }
+        } else {
+            $arEgreso->setFechaPago(new \DateTime('now'));
         }
         $form = $this->createForm(EgresoType::class, $arEgreso);
         $form->handleRequest($request);

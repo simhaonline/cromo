@@ -51,11 +51,11 @@ class EgresoType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoEgresoPk",      "tipo":"pk",    "ayuda":"Codigo del registro",                 "titulo":"ID"},
-            {"campo":"numero",              "tipo":"entero","ayuda":"Numero del consecutivo de aprobación","titulo":"NUMERO"},
-            {"campo":"terceroRel.nombreCorto","tipo":"texto", "ayuda":"Tercero del registro",                    "titulo":"TERCERO","relacion":""},
             {"campo":"egresoTipoRel.nombre","tipo":"texto", "ayuda":"Tipo de registro",                    "titulo":"TIPO","relacion":""},
-            {"campo":"fecha",               "tipo":"fecha", "ayuda":"Fecha de registro",                   "titulo":"FECA"},
-            {"campo":"comentarios",         "tipo":"texto", "ayuda":"Comentarios",                         "titulo":"COMENTARIOS"},   
+            {"campo":"numero",              "tipo":"entero","ayuda":"Numero del consecutivo de aprobación","titulo":"NUMERO"},
+            {"campo":"fecha",               "tipo":"fecha", "ayuda":"Fecha de registro",                   "titulo":"FECHA"},
+            {"campo":"fechaPago",               "tipo":"fecha", "ayuda":"Fecha de registro",                   "titulo":"F_PAGO"},            
+            {"campo":"terceroRel.nombreCorto","tipo":"texto", "ayuda":"Tercero del registro",                    "titulo":"TERCERO","relacion":""},                          
             {"campo":"estadoAutorizado",    "tipo":"bool",  "ayuda":"Estado autorizado",                   "titulo":"AUT"},
             {"campo":"estadoAprobado",      "tipo":"bool",  "ayuda":"Estado aprobado",                     "titulo":"APR"},
             {"campo":"estadoAnulado",       "tipo":"bool",  "ayuda":"Estado anulado",                      "titulo":"ANU"}

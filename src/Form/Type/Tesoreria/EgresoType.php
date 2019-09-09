@@ -69,8 +69,7 @@ class EgresoType extends AbstractType
         $campos = '[
             {"child":"codigoEgresoPk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
             {"child":"codigoTerceroFk",  "tipo":"TextType",    "propiedades":{"label":"Codigo proveedor"}},
-            {"child":"numero",             "tipo":"TextType",          "propiedades":{"label":"Numero"}},
-           
+            {"child":"numero",             "tipo":"TextType",          "propiedades":{"label":"Numero"}},        
             {"child":"fechaDesde",  "tipo":"DateType",           "propiedades":{"label":"Fecha desde"}},
             {"child":"fechaHasta",  "tipo":"DateType",           "propiedades":{"label":"Fecha hasta"}},
             {"child":"estadoAutorizado",   "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},

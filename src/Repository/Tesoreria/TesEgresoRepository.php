@@ -38,49 +38,63 @@ class TesEgresoRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $em = $this->getEntityManager();
-        $queryBuilder = $em->createQueryBuilder()->from(ComEgreso::class, 'e')
+        $queryBuilder = $em->createQueryBuilder()->from(TesEgreso::class, 'e')
             ->select('e.codigoEgresoPk')
-            ->leftJoin('e.proveedorRel', 'p')
-            ->leftJoin('e.egresoTipoRel', 'et')
             ->addSelect('e.numero')
-            ->addSelect('e.codigoEgresoTipoFk')
-            ->addSelect('et.nombre AS tipo')
             ->addSelect('e.fecha')
-//            ->addSelect('cp.soporte')
-            ->addSelect('p.nombreCorto')
-            ->addSelect('p.numeroIdentificacion')
-            ->addSelect('e.vrPagoTotal')
+            ->addSelect('e.fechaPago')
             ->addSelect('e.estadoAnulado')
             ->addSelect('e.estadoAprobado')
             ->addSelect('e.estadoAutorizado')
             ->addSelect('e.estadoImpreso')
-            ->where('e.codigoEgresoTipoFk <> 0')
-            ->andWhere('e.estadoAprobado = 1')
-            ->orderBy('e.codigoEgresoTipoFk', 'DESC');
-        $fecha = new \DateTime('now');
-        if ($session->get('filtroComEgresoPagarTipo') != "") {
-            $queryBuilder->andWhere("cp.codigoEgresoPagarTipoFk = '" . $session->get('filtroComEgresoPAgarTipo') . "'");
+            ->addSelect('et.nombre as egresoTipo')
+            ->addSelect('t.nombreCorto as tercero')
+            ->leftJoin('e.egresoTipoRel', 'et')
+            ->leftJoin('e.terceroRel', 't')
+            ->where('e.codigoEgresoPk <> 0');
+
+        if ($session->get('TesEgreso_codigoEgresoPk')) {
+            $queryBuilder->andWhere("e.codigoEgresoPk = '{$session->get('TesEgreso_codigoEgresoPk')}'");
         }
-//        if ($session->get('filtroComNumeroReferencia') != '') {
-//            $queryBuilder->andWhere("cp.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
-//        }
-//        if ($session->get('filtroComEgresoPagarNumero') != '') {
-//            $queryBuilder->andWhere("cp.numeroDocumento = {$session->get('filtroComEgresoPagarNumero')}");
-//        }
-//        if ($session->get('filtroComCodigoProveedor')) {
-//            $queryBuilder->andWhere("cp.codigoProveedorFk = {$session->get('filtroComCodigoProveedor')}");
-//        }
-//        if ($session->get('filtroCarEgresoCobrarTipo')) {
-//            $queryBuilder->andWhere("cc.codigoEgresoCobrarTipoFk = '" . $session->get('filtroCarEgresoCobrarTipo') . "'");
-//        }
-        if ($session->get('filtroComFiltrarPorFecha') == true) {
-            if ($session->get('filtroComFechaDesde') != null) {
-                $queryBuilder->andWhere("cp.fecha >= '{$session->get('filtroComFechaDesde')}'");
-            }
-            if ($session->get('filtroComFechaHasta') != null) {
-                $queryBuilder->andWhere("cp.fecha <= '{$session->get('filtroComFechaHasta')}'");
-            }
+        if ($session->get('TesEgreso_codigoTerceroFk')) {
+            $queryBuilder->andWhere("e.codigoTerceroFk = '{$session->get('TesEgreso_codigoTerceroFk')}'");
         }
+        if ($session->get('TesEgreso_numero')) {
+            $queryBuilder->andWhere("e.numero = '{$session->get('TesEgreso_numero')}'");
+        }
+        if ($session->get('TesEgreso_fechaDesde') != null) {
+            $queryBuilder->andWhere("e.fecha >= '{$session->get('TesEgreso_fechaDesde')} 0000:00'");
+        }
+
+        if ($session->get('TesEgreso_fechaHasta') != null) {
+            $queryBuilder->andWhere("e.fecha <= '{$session->get('TesEgreso_fechaHasta')} 23:59:59'");
+        }
+
+        switch ($session->get('TesEgreso_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("e.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("e.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('TesEgreso_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("e.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("e.estadoAprobado = 1");
+                break;
+        }
+        switch ($session->get('TesEgreso_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("e.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("e.estadoAnulado = 1");
+                break;
+        }
+
         return $queryBuilder;
     }
 

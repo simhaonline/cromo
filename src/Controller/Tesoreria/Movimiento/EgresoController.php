@@ -61,7 +61,7 @@ class EgresoController extends BaseController
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Egresos");
+                General::get()->setExportar($em->getRepository(TesEgreso::class)->lista()->getQuery()->execute(), "Egresos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

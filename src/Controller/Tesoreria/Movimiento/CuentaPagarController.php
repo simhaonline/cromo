@@ -44,7 +44,7 @@ class CuentaPagarController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Cuentas pagar");
+                General::get()->setExportar($em->getRepository(TesCuentaPagar::class)->lista()->getQuery()->getResult(), "Cuentas pagar");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class VehiculoController extends ControllerListenerGeneral
 {
-    protected $class= TteVehiculo::class;
+    protected $class = TteVehiculo::class;
     protected $claseNombre = "TteVehiculo";
     protected $modulo = "Transporte";
     protected $funcion = "Administracion";
@@ -44,13 +44,13 @@ class VehiculoController extends ControllerListenerGeneral
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Vehiculos");
+                General::get()->setExportar($em->getRepository(TteVehiculo::class)->lista()->getQuery()->getResult(), "Vehiculos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -88,7 +88,7 @@ class VehiculoController extends ControllerListenerGeneral
             if ($form->get('guardar')->isClicked()) {
                 if ($id == '0') {
                     $arVehiculoValidar = $em->getRepository(TteVehiculo::class)->find($form->getData('codigoVehiculoPk'));
-                    if(!$arVehiculoValidar){
+                    if (!$arVehiculoValidar) {
                         $em->persist($arVehiculo);
                         $em->flush();
                         return $this->redirect($this->generateUrl('transporte_administracion_transporte_vehiculo_lista'));
@@ -128,8 +128,8 @@ class VehiculoController extends ControllerListenerGeneral
                 $formato->Generar($em, $id);
             }
         }
-        return $this->render('transporte/administracion/vehiculo/detalle.html.twig',[
-            'clase' => array('clase'=>'TteVehiculo','codigo' => $id),
+        return $this->render('transporte/administracion/vehiculo/detalle.html.twig', [
+            'clase' => array('clase' => 'TteVehiculo', 'codigo' => $id),
             'arVehiculo' => $arVehiculo,
             'form' => $form->createView()]);
     }

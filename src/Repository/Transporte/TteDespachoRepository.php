@@ -306,7 +306,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             $retencionFuente = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
         }
         $industriaComercio = 0;
-        if($arDespacho->getOperacionRel()->getRetencionIndustriaComercio()) {
+        if ($arDespacho->getOperacionRel()->getRetencionIndustriaComercio()) {
             $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
         }
 
@@ -352,7 +352,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                     if ($arDespacho->getVehiculoRel()->getFechaVencePoliza() > $fechaActual) {
                         if ($arDespacho->getVehiculoRel()->getFechaVenceTecnicomecanica() > $fechaActual) {
                             $vehiculoDisponible = $em->getRepository(TteVehiculoDisponible::class)->findOneBy([('codigoVehiculoFk') => $arDespacho->getCodigoVehiculoFk(), 'estadoDespachado' => 0, 'estadoDescartado' => 0]);
-                            if($vehiculoDisponible){
+                            if ($vehiculoDisponible) {
                                 $vehiculoDisponible->setEstadoDespachado(1);
                                 $vehiculoDisponible->setFechaDespacho($fechaActual);
                                 $em->persist($vehiculoDisponible);
@@ -447,7 +447,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $respuesta = "";
         $em = $this->getEntityManager();
         if ($arDespacho->getEstadoAnulado() == 0 && $arDespacho->getEstadoAprobado() == 1 && $arDespacho->getEstadoContabilizado() == 0) {
-            if($em->getRepository(TesCuentaPagar::class)->anularExterno('TteDespacho', $arDespacho->getCodigoDespachoPk())) {
+            if ($em->getRepository(TesCuentaPagar::class)->anularExterno('TteDespacho', $arDespacho->getCodigoDespachoPk())) {
                 $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 0, 
                             g.estadoEmbarcado = 0, g.codigoDespachoFk = NULL
                             WHERE g.codigoDespachoFk = :codigoDespacho')
@@ -640,7 +640,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         if ($arDespacho->getNumeroRndc() == "") {
             if ($arDespacho->getEstadoAprobado() == 1 && $arDespacho->getEstadoAnulado() == 0) {
                 try {
-                    $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
+                    $cliente = new SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
                     $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
                     $arrDespacho = $em->getRepository(TteDespacho::class)->dqlRndc($arDespacho->getCodigoDespachoPk());
                     $retorno = $this->reportarRndcTerceros($cliente, $arConfiguracionTransporte, $arrDespacho);
@@ -880,11 +880,11 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 <COMPANIASEGURO>" . $arConfiguracionTransporte->getNumeroIdentificacionAseguradora() . "</COMPANIASEGURO>
                                 <HORASPACTOCARGA>24</HORASPACTOCARGA>
                                 <MINUTOSPACTOCARGA>00</MINUTOSPACTOCARGA>
-                                <FECHACITAPACTADACARGUE>". $arrDespacho['fechaSalida']->format('d/m/Y') ."</FECHACITAPACTADACARGUE>
+                                <FECHACITAPACTADACARGUE>" . $arrDespacho['fechaSalida']->format('d/m/Y') . "</FECHACITAPACTADACARGUE>
                                 <HORACITAPACTADACARGUE>22:00</HORACITAPACTADACARGUE>
                                 <HORASPACTODESCARGUE>72</HORASPACTODESCARGUE>
                                 <MINUTOSPACTODESCARGUE>00</MINUTOSPACTODESCARGUE>
-                                <FECHACITAPACTADADESCARGUE>". $arrDespacho['fechaSalida']->format('d/m/Y') ."</FECHACITAPACTADADESCARGUE>
+                                <FECHACITAPACTADADESCARGUE>" . $arrDespacho['fechaSalida']->format('d/m/Y') . "</FECHACITAPACTADADESCARGUE>
                                 <HORACITAPACTADADESCARGUEREMESA>08:00</HORACITAPACTADADESCARGUEREMESA>
                             </variables>
 		  		</root>";
@@ -1278,7 +1278,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 if ($arDespacho) {
                     if ($arDespacho['contabilizar']) {
                         if ($arDespacho['estadoAprobado'] == 1 && $arDespacho['estadoContabilizado'] == 0) {
-                            if($arDespacho['codigoComprobanteFk']) {
+                            if ($arDespacho['codigoComprobanteFk']) {
                                 $arComprobante = $em->getRepository(FinComprobante::class)->find($arDespacho['codigoComprobanteFk']);
                                 $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arDespacho['codigoPropietarioFk']);
 
@@ -1288,7 +1288,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                 $codigoCuentaAnticipo = null;
                                 $codigoCuentaPagar = null;
 
-                                if($arConfiguracion['contabilizarDespachoTipo']) {
+                                if ($arConfiguracion['contabilizarDespachoTipo']) {
                                     $codigoCuentaFlete = $arDespacho['codigoCuentaFleteFk'];
                                     $codigoCuentaIndustriaComercio = $arDespacho['codigoCuentaIndustriaComercioFk'];
                                     $codigoCuenteRetencionFuente = $arDespacho['codigoCuentaRetencionFuenteFk'];
@@ -1821,10 +1821,11 @@ class TteDespachoRepository extends ServiceEntityRepository
     /**
      * @param $arDespacho TteDespacho
      */
-    public function generarCuentaPagar($arDespacho) {
+    public function generarCuentaPagar($arDespacho)
+    {
         $em = $this->getEntityManager();
         $arTercero = $em->getRepository(InvTercero::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
-        if($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk()) {
+        if ($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk()) {
             /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
             $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoRel();
             $arCuentaPagar = New TesCuentaPagar();
@@ -1849,8 +1850,8 @@ class TteDespachoRepository extends ServiceEntityRepository
         } else {
             Mensajes::error("El despacho genera cuenta por pagar pero no se pudo crear porque el despacho tipo " . $arDespacho->getDespachoTipoRel()->getNombre() . " no tiene configurado un tipo de cuenta por pagar");
         }
-        if($arDespacho->getVrAnticipo() > 0) {
-            if($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoAnticipoFk()) {
+        if ($arDespacho->getVrAnticipo() > 0) {
+            if ($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoAnticipoFk()) {
                 /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
                 $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoAnticipoRel();
                 $arCuentaPagar = New TesCuentaPagar();

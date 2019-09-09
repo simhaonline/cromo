@@ -28,8 +28,11 @@ class TteConductorRepository extends ServiceEntityRepository
             ->where('c.codigoConductorPk IS NOT NULL')
             ->orderBy('c.codigoConductorPk');
 
-        if ($session->get('filtroTteConductorNombre') != "") {
-            $queryBuilder->andWhere("c.nombreCorto LIKE '%" . $session->get('filtroTteConductorNombre') . "%'");
+        if ($session->get('TteConductor_nombreCorto') != "") {
+            $queryBuilder->andWhere("c.nombreCorto LIKE '%" . $session->get('TteConductor_nombreCorto') . "%'");
+        }
+        if ($session->get('TteConductor_numeroIdentificacion') != '') {
+            $queryBuilder->andWhere("c.numeroIdentificacion = '{$session->get('TteConductor_numeroIdentificacion')}'");
         }
 
         return $queryBuilder;

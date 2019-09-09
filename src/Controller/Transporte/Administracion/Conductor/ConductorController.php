@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ConductorController extends ControllerListenerGeneral
 {
-    protected $class= TteConductor::class;
+    protected $class = TteConductor::class;
     protected $claseNombre = "TteConductor";
     protected $modulo = "Transporte";
     protected $funcion = "Administracion";
@@ -44,13 +44,13 @@ class ConductorController extends ControllerListenerGeneral
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Conductores");
+                General::get()->setExportar($em->getRepository(TteConductor::class)->lista()->getQuery()->getResult(), "Conductores");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -83,41 +83,41 @@ class ConductorController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if ($id === 0 ) {
-                    $arConductor = $em->getRepository(TteConductor::class)->findBy(['numeroIdentificacion'=>(int)$form->get('numeroIdentificacion')->getData()]);
-                    if (!$arConductor){
+                if ($id === 0) {
+                    $arConductor = $em->getRepository(TteConductor::class)->findBy(['numeroIdentificacion' => (int)$form->get('numeroIdentificacion')->getData()]);
+                    if (!$arConductor) {
                         $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
                         $em->persist($arConductor);
                         $em->flush();
                         return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_detalle', ['id' => $arConductor->getCodigoConductorPk()]));
-                    }else{
+                    } else {
                         Mensajes::error("El conductor ya existe");
                         return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
                     }
-                }else{
+                } else {
                     $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
                     $em->persist($arConductor);
                     $em->flush();
                     return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_detalle', ['id' => $arConductor->getCodigoConductorPk()]));
                 }
             }
-            if($form->get('guardarnuevo')->isClicked()){
-                if ($id === 0 ) {
-                    $arConductor = $em->getRepository(TteConductor::class)->findBy(['numeroIdentificacion'=>(int)$form->get('numeroIdentificacion')->getData()]);
-                    if (!$arConductor){
+            if ($form->get('guardarnuevo')->isClicked()) {
+                if ($id === 0) {
+                    $arConductor = $em->getRepository(TteConductor::class)->findBy(['numeroIdentificacion' => (int)$form->get('numeroIdentificacion')->getData()]);
+                    if (!$arConductor) {
                         $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
                         $em->persist($arConductor);
                         $em->flush();
                         return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_detalle', ['id' => $arConductor->getCodigoConductorPk()]));
-                    }else{
+                    } else {
                         Mensajes::error("El conductor ya existe");
                         return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
                     }
-                }else{
+                } else {
                     $arConductor->setNombreCorto($arConductor->getNombre1() . " " . $arConductor->getNombre2() . " " . $arConductor->getApellido1() . " " . $arConductor->getApellido2());
                     $em->persist($arConductor);
                     $em->flush();
-                    return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_nuevo',['id'=>0]));
+                    return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_nuevo', ['id' => 0]));
                 }
             }
 
@@ -131,10 +131,11 @@ class ConductorController extends ControllerListenerGeneral
     /**
      * @Route("/transporte/administracion/conductor/detalle/{id}", name="transporte_administracion_transporte_conductor_detalle")
      */
-    public function detalle(Request $request, $id){
+    public function detalle(Request $request, $id)
+    {
         $em = $this->getDoctrine()->getManager();
         $arConductor = $em->getRepository(TteConductor::class)->find($id);
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
             ->getForm();
@@ -146,7 +147,7 @@ class ConductorController extends ControllerListenerGeneral
             }
         }
         return $this->render('transporte/administracion/conductor/detalle.html.twig', [
-            'clase' => array('clase'=>'TteConductor', 'codigo' => $id),
+            'clase' => array('clase' => 'TteConductor', 'codigo' => $id),
             'arConductor' => $arConductor,
             'form' => $form->createView()]);
 

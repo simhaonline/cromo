@@ -19,17 +19,21 @@ class TteVehiculoRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteVehiculo::class, 'v')
             ->select('v.codigoVehiculoPk')
-            ->leftJoin('v.marcaRel','m')
             ->addSelect('v.placa')
             ->addSelect('v.modelo')
             ->addSelect('v.placaRemolque')
             ->addSelect('v.motor')
             ->addSelect('v.numeroEjes')
-            ->addSelect('m.nombre')
+            ->addSelect('m.nombre AS marca')
+            ->addSelect('pro.nombreCorto AS propietario')
+            ->addSelect('pos.nombreCorto AS poseedor')
+            ->leftJoin('v.marcaRel', 'm')
+            ->leftJoin('v.propietarioRel', 'pro')
+            ->leftJoin('v.poseedorRel', 'pos')
             ->where('v.codigoVehiculoPk IS NOT NULL')
             ->orderBy('v.placa', 'ASC');
-        if ($session->get('filtroPlaca')) {
-            $queryBuilder->andWhere("v.codigoVehiculoPk = '{$session->get('filtroPlaca')}'");
+        if ($session->get('TteVehiculo_placa')) {
+            $queryBuilder->andWhere("v.codigoVehiculoPk = '{$session->get('TteVehiculo_placa')}'");
         }
 
         return $queryBuilder;
@@ -49,9 +53,10 @@ class TteVehiculoRepository extends ServiceEntityRepository
         return $queryBuilder->getDQL();
     }
 
-    public function camposPredeterminados(){
-        $qb = $this-> _em->createQueryBuilder()
-            ->from('App:Transporte\TteVehiculo','v')
+    public function camposPredeterminados()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->from('App:Transporte\TteVehiculo', 'v')
             ->select('v.codigoVehiculoPk AS ID')
             ->addSelect('v.placa AS PLACA');
         $query = $this->_em->createQuery($qb->getDQL());
@@ -91,7 +96,7 @@ class TteVehiculoRepository extends ServiceEntityRepository
         LEFT JOIN v.aseguradoraRel a 
         WHERE v.codigoVehiculoPk = :codigoVehiculo'
         )->setParameter('codigoVehiculo', $codigoVehiculo);
-        $arVehiculo =  $query->getSingleResult();
+        $arVehiculo = $query->getSingleResult();
         return $arVehiculo;
 
     }

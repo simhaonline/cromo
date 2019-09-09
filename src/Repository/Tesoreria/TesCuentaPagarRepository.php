@@ -14,7 +14,16 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TesCuentaPagar::class);
     }
-    
+
+    public function lista()
+    {
+        $session = new Session();
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TesCuentaPagar::class, 'cp')
+            ->select('cp.codigoCuentaPagarPk');
+        return $queryBuilder;
+    }
+
     public function pendientes()
     {
         $session = new Session();
@@ -284,7 +293,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arCuentaPagar->getEstadoAprobado() == 1 && $arCuentaPagar->getEstadoAnulado() == 0) {
-            if($arCuentaPagar->getVrAbono() <= 0) {
+            if ($arCuentaPagar->getVrAbono() <= 0) {
                 $arCuentaPagar->setEstadoAnulado(1);
                 $arCuentaPagar->setVrSubtotal(0);
                 $arCuentaPagar->setVrIva(0);
@@ -308,7 +317,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->findOneBy(['modelo' => $codigoModelo, 'codigoDocumento' => $codigoDocumento]);
-        if($arCuentaPagar) {
+        if ($arCuentaPagar) {
             return $em->getRepository(TesCuentaPagar::class)->anular($arCuentaPagar);
         } else {
             return true;

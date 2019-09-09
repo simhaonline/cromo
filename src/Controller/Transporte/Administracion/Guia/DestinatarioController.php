@@ -18,7 +18,7 @@ use App\Controller\BaseController;
 
 class DestinatarioController extends ControllerListenerGeneral
 {
-    protected $clase= TteDestinatario::class;
+    protected $clase = TteDestinatario::class;
     protected $claseFormulario = DestinatarioType::class;
     protected $claseNombre = "TteDestinatario";
     protected $modulo = "Transporte";
@@ -27,6 +27,10 @@ class DestinatarioController extends ControllerListenerGeneral
     protected $nombre = "Destinatario";
 
     /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/administracion/destinatario/lista", name="transporte_administracion_guia_destinatario_lista")
      */
     public function lista(Request $request)
@@ -39,13 +43,13 @@ class DestinatarioController extends ControllerListenerGeneral
         $formFiltro->handleRequest($request);
         if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
             if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Poseedor");
+                General::get()->setExportar($em->getRepository(TteDestinatario::class)->lista()->getQuery()->getResult(), "Destinatario");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arData = $request->request->get('ChkSeleccionar');
@@ -62,7 +66,8 @@ class DestinatarioController extends ControllerListenerGeneral
     /**
      * @Route("/transporte/administracion/destinatario/detalle/{id}", name="transporte_administracion_guia_destinatario_detalle")
      */
-    public function detalle(Request $request, $id){
+    public function detalle(Request $request, $id)
+    {
         $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arDestinatario = $em->getRepository(TteDestinatario::class)->find($id);
@@ -91,14 +96,13 @@ class DestinatarioController extends ControllerListenerGeneral
             if ($form->get('guardar')->isClicked()) {
                 $em->persist($arDestinatario);
                 $em->flush();
-                return $this->redirect($this->generateUrl('transporte_administracion_guia_destinatario_detalle', ['id'=>$arDestinatario->getCodigoDestinatarioPk()]));
+                return $this->redirect($this->generateUrl('transporte_administracion_guia_destinatario_detalle', ['id' => $arDestinatario->getCodigoDestinatarioPk()]));
             }
         }
         return $this->render('transporte/administracion/destinatario/nuevo.html.twig', [
             'form' => $form->createView()
         ]);
     }
-
 
 
 }

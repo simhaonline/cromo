@@ -74,7 +74,7 @@
         <td class="titulo">SERVICIO:</td>
         <td class="td-in-well">{{ arGuia.servicioRel.nombre }}</td>
         <td class="titulo">ORIGEN:</td>
-        <td class="td-in-well">{{ arGuia.ciudadOrigenRel.nombre | default('') }}</td>
+        <td class="td-in-well">({{ arGuia.codigoCiudadOrigenFk }}){{ arGuia.ciudadOrigenRel.nombre | default('') }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
         <td class="titulo">RECAUDO:</td>
@@ -84,7 +84,7 @@
         <td class="titulo">RUTA:</td>
         <td class="td-in-well">{{ arGuia.rutaRel.nombre | default('') }}</td>
         <td class="titulo">DESTINO:</td>
-        <td class="td-in-well">{{ arGuia.ciudadDestinoRel.nombre | default('') }}</td>
+        <td class="td-in-well">({{ arGuia.codigoCiudadDestinoFk }}){{ arGuia.ciudadDestinoRel.nombre | default('') }}</td>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
         <td class="titulo">ABONOS:</td>

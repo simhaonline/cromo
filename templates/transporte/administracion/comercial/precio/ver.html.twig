@@ -15,7 +15,9 @@
                         <thead>
                         <tr>
                             <th><p data-toggle="tooltip" data-placement="top" title="PORCENTAJE MANEJO">ID</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CODIGO CIUDAD ORIGEN">COD</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD ORIGEN">ORIGEN</p></th>
+                            <th><p data-toggle="tooltip" data-placement="top" title="CODIGOCIUDAD DESTINO">COD</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">DESTINO</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="CIUDAD DESTINO">ZONA</p></th>
                             <th><p data-toggle="tooltip" data-placement="top" title="PRODUCTO">PRODUCTO</p></th>
@@ -31,7 +33,9 @@
                         {% for arPrecioDetalle in arPrecioDetalles %}
                             <tr>
                                 <td>{{ arPrecioDetalle.codigoPrecioDetallePk }}</td>
+                                <td>{{ arPrecioDetalle.codigoCiudadOrigenFk }}</td>
                                 <td>{{ arPrecioDetalle.ciudadOrigen }}</td>
+                                <td>{{ arPrecioDetalle.codigoCiudadDestinoFk }}</td>
                                 <td>{{ arPrecioDetalle.ciudadDestino }}</td>
                                 <td>{{ arPrecioDetalle.zonaNombre }}</td>
                                 <td>{{ arPrecioDetalle.nombre }}</td>

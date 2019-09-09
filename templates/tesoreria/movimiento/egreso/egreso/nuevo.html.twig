@@ -41,6 +41,15 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Fecha pago:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaPago) }}
+                    <div style="color:red;">{{ form_errors(form.egresoTipoRel) }}</div>
+                </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Comentario:</label>

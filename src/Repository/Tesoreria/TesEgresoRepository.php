@@ -275,6 +275,7 @@ class TesEgresoRepository extends ServiceEntityRepository
             ->select('e.codigoEgresoPk')
             ->addSelect('e.numero')
             ->addSelect('e.fecha')
+            ->addSelect('e.fechaPago')
             ->addSelect('e.vrPago')
             ->addSelect('e.estadoAprobado')
             ->addSelect('e.estadoContabilizado')
@@ -301,7 +302,7 @@ class TesEgresoRepository extends ServiceEntityRepository
                         if ($arEgreso['codigoComprobanteFk']) {
                             $arComprobante = $em->getRepository(FinComprobante::class)->find($arEgreso['codigoComprobanteFk']);
                             if ($arComprobante) {
-
+                                $fecha = $arEgreso['fechaPago'];
                                 $arTercero = $em->getRepository(TesTercero::class)->terceroFinanciero($arEgreso['codigoTerceroFk']);
                                 $arEgresoDetalles = $em->getRepository(TesEgresoDetalle::class)->listaContabilizar($codigo);
                                 foreach ($arEgresoDetalles as $arEgresoDetalle) {
@@ -311,7 +312,6 @@ class TesEgresoRepository extends ServiceEntityRepository
                                         $cuenta = $arEgresoDetalle['codigoCuentaProveedorFk'];
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-
                                             if (!$arCuenta) {
                                                 $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
                                                 break;
@@ -322,8 +322,8 @@ class TesEgresoRepository extends ServiceEntityRepository
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arEgreso['numero']);
                                             $arRegistro->setNumeroReferencia($arEgresoDetalle['numeroDocumento']);
-                                            $arRegistro->setFecha($arEgreso['fecha']);
-                                            $arRegistro->setFechaVence($arEgreso['fecha']);
+                                            $arRegistro->setFecha($fecha);
+                                            $arRegistro->setFechaVence($fecha);
                                             $arRegistro->setVrDebito($arEgresoDetalle['vrPago']);
                                             $arRegistro->setNaturaleza('D');
                                             $arRegistro->setDescripcion($descripcion);
@@ -350,7 +350,7 @@ class TesEgresoRepository extends ServiceEntityRepository
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arEgreso['numero']);
-                                    $arRegistro->setFecha($arEgreso['fecha']);
+                                    $arRegistro->setFecha($fecha);
                                     $arRegistro->setVrCredito($arEgreso['vrPago']);
                                     $arRegistro->setNaturaleza('C');
                                     $arRegistro->setDescripcion("Egreso");
@@ -361,8 +361,6 @@ class TesEgresoRepository extends ServiceEntityRepository
                                     $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arEgreso['numero'];
                                     break;
                                 }
-
-
 
                                 $arEgresoAct = $em->getRepository(TesEgreso::class)->find($arEgreso['codigoEgresoPk']);
                                 $arEgresoAct->setEstadoContabilizado(1);

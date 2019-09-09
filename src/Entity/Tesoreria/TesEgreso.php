@@ -42,6 +42,11 @@ class TesEgreso
     private $fecha;
 
     /**
+     * @ORM\Column(name="fecha_pago", type="date", nullable=true)
+     */
+    private $fechaPago;
+
+    /**
      * @ORM\Column(name="numero" , type="integer")
      */
     private $numero = 0;
@@ -129,15 +134,15 @@ class TesEgreso
     private $egresoTipoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgresoDetalle", mappedBy="egresoRel")
-     */
-    private $egresoDetallesEgresoRel;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCuenta" , inversedBy="egresosCuentaRel")
      * @ORM\JoinColumn(name="codigo_cuenta_fk" , referencedColumnName="codigo_cuenta_pk")
      */
     private $cuentaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgresoDetalle", mappedBy="egresoRel")
+     */
+    private $egresoDetallesEgresoRel;
 
     /**
      * @return mixed
@@ -217,6 +222,22 @@ class TesEgreso
     public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaPago()
+    {
+        return $this->fechaPago;
+    }
+
+    /**
+     * @param mixed $fechaPago
+     */
+    public function setFechaPago($fechaPago): void
+    {
+        $this->fechaPago = $fechaPago;
     }
 
     /**
@@ -494,22 +515,6 @@ class TesEgreso
     /**
      * @return mixed
      */
-    public function getEgresoDetallesEgresoRel()
-    {
-        return $this->egresoDetallesEgresoRel;
-    }
-
-    /**
-     * @param mixed $egresoDetallesEgresoRel
-     */
-    public function setEgresoDetallesEgresoRel($egresoDetallesEgresoRel): void
-    {
-        $this->egresoDetallesEgresoRel = $egresoDetallesEgresoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCuentaRel()
     {
         return $this->cuentaRel;
@@ -521,6 +526,22 @@ class TesEgreso
     public function setCuentaRel($cuentaRel): void
     {
         $this->cuentaRel = $cuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEgresoDetallesEgresoRel()
+    {
+        return $this->egresoDetallesEgresoRel;
+    }
+
+    /**
+     * @param mixed $egresoDetallesEgresoRel
+     */
+    public function setEgresoDetallesEgresoRel($egresoDetallesEgresoRel): void
+    {
+        $this->egresoDetallesEgresoRel = $egresoDetallesEgresoRel;
     }
 
 

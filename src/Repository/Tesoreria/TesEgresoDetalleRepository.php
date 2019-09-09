@@ -86,7 +86,6 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
 
     public function actualizar($arrControles, $idEgreso)
     {
-
         $em = $this->getEntityManager();
         $arEgresosDetalle = $em->getRepository(TesEgresoDetalle::class)->findBy(['codigoEgresoFk' => $idEgreso]);
         foreach ($arEgresosDetalle as $arEgresoDetalle) {

@@ -152,6 +152,11 @@ class TesCuentaPagar
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="saldo_inicial", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $saldoInicial = false;
+
+    /**
      * @ORM\Column(name="dias_vencimiento", type="integer", nullable=true, options={"default" : 0})
      */
     private $diasVencimiento = 0;
@@ -731,6 +736,22 @@ class TesCuentaPagar
     public function setModelo($modelo): void
     {
         $this->modelo = $modelo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSaldoInicial()
+    {
+        return $this->saldoInicial;
+    }
+
+    /**
+     * @param mixed $saldoInicial
+     */
+    public function setSaldoInicial($saldoInicial): void
+    {
+        $this->saldoInicial = $saldoInicial;
     }
 
 

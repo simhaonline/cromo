@@ -39,19 +39,40 @@ class TteMonitoreoRepository extends ServiceEntityRepository
             ->leftJoin('d.ciudadDestinoRel', 'cd')
             ->where('m.codigoMonitoreoPk <> 0')
         ->orderBy('m.fechaRegistro', 'DESC');
-        $fecha =  new \DateTime('now');
-        if($session->get('filtroTteMovMonitoreoFiltroFecha') == true){
-            if ($session->get('filtroTteMovMonitoreoFechaDesde') != null) {
-                $queryBuilder->andWhere("m.fechaInicio >= '{$session->get('filtroTteMovMonitoreoFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("m.fechaInicio >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroTteMovMonitoreoFechaHasta') != null) {
-                $queryBuilder->andWhere("m.fechaFin <= '{$session->get('filtroTteMovMonitoreoFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("m.fechaFin <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
+        if ($session->get('TteMonitoreo_codigoVehiculoFk')) {
+            $queryBuilder->andWhere("v.codigoVehiculoPk = '{$session->get('TteMonitoreo_codigoVehiculoFk')}'");
         }
+        switch ($session->get('TteMonitoreo_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("m.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("m.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('TteMonitoreo_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("m.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("m.estadoAnulado = 1");
+                break;
+        }
+        switch ($session->get('TteMonitoreo_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("m.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("m.estadoAprobado = 1");
+                break;
+        }
+        if ($session->get('TteMonitoreo_fechaInicioDesde') != null) {
+            $queryBuilder->andWhere("m.fechaInicio >= '{$session->get('TteMonitoreo_fechaInicioDesde')} 00:00:00'");
+        }
+        if ($session->get('TteMonitoreo_fechaFinHasta') != null) {
+            $queryBuilder->andWhere("m.fechaFin <= '{$session->get('TteMonitoreo_fechaFinHasta')} 23:59:59'");
+        }
+
 
         return $queryBuilder;
     }

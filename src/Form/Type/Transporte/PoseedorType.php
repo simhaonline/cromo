@@ -82,7 +82,8 @@ class PoseedorType extends AbstractType
     {
 
         $campos = '[
-            {"child":"nombreCorto",               "tipo":"TextType",   "propiedades":{"label":"Nombre"},        "operador":"like"}
+            {"child":"nombreCorto",               "tipo":"TextType",   "propiedades":{"label":"Nombre"},        "operador":"like"},
+            {"child":"codigoPoseedorPk",      "tipo":"TextType",   "propiedades":{"label":"Identificacion"},   "operador":"like"}
 
         ]';
 
@@ -96,7 +97,6 @@ class PoseedorType extends AbstractType
             {"campo":"numeroIdentificacion",        "tipo":"texto",     "ayuda":"Numero identificacion",   "titulo":"NUMERO IDENTIFICACION"},
             {"campo":"digitoVerificacion",          "tipo":"texto",     "ayuda":"Digito verificacion",     "titulo":"DIGITO VERIFICACION"},
             {"campo":"nombreCorto",                 "tipo":"texto",     "ayuda":"Nombre corto",            "titulo":"NOMBRE CORTO"},
-            {"campo":"nombre1",                     "tipo":"texto",     "ayuda":"Nombre1",                 "titulo":"NOMBRE1"},
             {"campo":"nombre1",                     "tipo":"texto",     "ayuda":"Nombre1",                 "titulo":"NOMBRE1"},
             {"campo":"nombre2",                     "tipo":"texto",     "ayuda":"Nombre2",                 "titulo":"NOMBRE2"},
             {"campo":"apellido1",                   "tipo":"texto",     "ayuda":"Apellido1",               "titulo":"APELLIDO1"},

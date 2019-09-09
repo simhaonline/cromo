@@ -8,12 +8,45 @@ use App\Entity\Transporte\TtePoseedor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use SoapClient;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 class TtePoseedorRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, TtePoseedor::class);
     }
+
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TtePoseedor::class, 'p')
+            ->select('p.codigoPoseedorPk')
+            ->addSelect('p.codigoIdentificacionFk')
+            ->addSelect('p.numeroIdentificacion')
+            ->addSelect('p.nombreCorto')
+            ->addSelect('p.nombre1')
+            ->addSelect('p.nombre2')
+            ->addSelect('p.apellido1')
+            ->addSelect('p.apellido2')
+            ->addSelect('p.direccion')
+            ->addSelect('p.codigoCiudadFk')
+            ->addSelect('p.telefono')
+            ->addSelect('p.movil')
+            ->addSelect('p.correo');
+
+        if ($session->get('TtePoseedor_codigoPoseedorPk')) {
+            $queryBuilder->andWhere("p.codigoPoseedorPk = '{$session->get('TtePoseedor_codigoPoseedorPk')}'");
+        }
+
+        if ($session->get('TtePoseedor_nombreCorto')) {
+            $queryBuilder->andWhere("p.nombreCorto LIKE '%{$session->get('TtePoseedor_nombreCorto')}%' ");
+
+        }
+
+        return $queryBuilder;
+    }
+    
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:Transporte\TtePoseedor','p')
@@ -23,7 +56,7 @@ class TtePoseedorRepository extends ServiceEntityRepository
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }
-
+    
     public function dqlRndc($codigoPoseedor, $codigoPropietario): array
     {
         $em = $this->getEntityManager();

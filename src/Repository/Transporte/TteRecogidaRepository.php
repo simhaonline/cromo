@@ -25,6 +25,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->addSelect('r.codigoOperacionFk')
             ->addSelect('r.fechaRegistro')
             ->addSelect('r.fecha')
+            ->addSelect('r.')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('r.direccion')
             ->addSelect('r.anunciante')
@@ -41,13 +42,13 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->addSelect('r.estadoDescargado')
             ->leftJoin('r.clienteRel', 'c')
             ->leftJoin('r.ciudadRel', 'co');
-        if ($session->get('filtroTteCodigoCliente')) {
-            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        if ($session->get('TteRecogida_codigoClienteFk')) {
+            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('TteRecogida_codigoClienteFk')}");
         }
-        if ($session->get('filtroTteRecogidaCodigo') != '') {
-            $queryBuilder->andWhere("r.codigoRecogidaPk = {$session->get('filtroTteRecogidaCodigo')}");
+        if ($session->get('TteRecogida_codigoRecogidaPk') != '') {
+            $queryBuilder->andWhere("r.codigoRecogidaPk = {$session->get('TteRecogida_codigoRecogidaPk')}");
         }
-        switch ($session->get('filtroTteRecogidaEstadoProgramado')) {
+        switch ($session->get('TteRecogida_estadoProgramado')) {
             case '0':
                 $queryBuilder->andWhere("r.estadoProgramado = 0");
                 break;
@@ -55,6 +56,37 @@ class TteRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoProgramado = 1");
                 break;
         }
+        switch ($session->get('TteRecogida_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('TteRecogida_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAprobado = 1");
+                break;
+        }
+        switch ($session->get('TteRecogida_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAnulado = 1");
+                break;
+        }
+        if ($session->get('TteRecogida_fechaDesde') != null) {
+            $queryBuilder->andWhere("r.fecha >= '{$session->get('TteRecogida_fechaDesde')} 00:00:00'");
+        }
+        if ($session->get('TteRecogida_fechaHasta') != null) {
+            $queryBuilder->andWhere("r.fecha <= '{$session->get('TteRecogid_fechaHasta')} 23:59:59'");
+        }
+
         $queryBuilder->orderBy('r.fecha', 'DESC');
 
         return $queryBuilder;

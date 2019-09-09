@@ -53,36 +53,47 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->addSelect('dr.estadoAnulado')
             ->where('dr.codigoDespachoRecogidaPk <> 0')
             ->leftJoin('dr.conductorRel', 'cond');
-        $fecha = new \DateTime('now');
-        if ($session->get('filtroTteDespachoRecogidaFiltroFecha') == true) {
-            if ($session->get('filtroTteDespachoRecogidaFechaDesde') != null) {
-                $queryBuilder->andWhere("dr.fecha >= '{$session->get('filtroTteDespachoRecogidaFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("dr.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroTteDespachoRecogidaFechaHasta') != null) {
-                $queryBuilder->andWhere("dr.fecha <= '{$session->get('filtroTteDespachoRecogidaFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("dr.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
+        if ($session->get('TteDespachoRecogida_codigoVehiculoFk') != '') {
+            $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$session->get('TteDespachoRecogida_codigoVehiculoFk')}'");
         }
-        if ($session->get('filtroTteOperacion') != '') {
-            $queryBuilder->andWhere("dr.codigoOperacionFk = '{$session->get('filtroTteOperacion')}'");
+        if ($session->get('TteDespachoRecogida_codigoDespachoRecogidaPk') != '') {
+            $queryBuilder->andWhere("dr.codigoDespachoRecogidaPk = '{$session->get('TteDespachoRecogida_codigoDespachoRecogidaPk')}'");
         }
-        if ($session->get('filtroTteCodigoDespachoRecogida') != '') {
-            $queryBuilder->andWhere("dr.codigoDespachoRecogidaPk = '{$session->get('filtroTteCodigoDespachoRecogida')}'");
+        if ($session->get('TteDespachoRecogida_numero') != '') {
+            $queryBuilder->andWhere("dr.numero = '{$session->get('TteDespachoRecogida_numero')}'");
         }
-        if ($session->get('filtroTteNumeroDespachoRecogida') != '') {
-            $queryBuilder->andWhere("dr.numero = '{$session->get('filtroTteNumeroDespachoRecogida')}'");
+        if ($session->get('TteDespachoRecogida_codigoOperacionFk') != '') {
+            $queryBuilder->andWhere("dr.codigoOperacionFk = '{$session->get('TteDespachoRecogida_codigoOperacionFk')}'");
         }
-        if ($session->get('filtroTteDespachoRecogidaVehiculoCodigo') != '') {
-            $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$session->get('filtroTteDespachoRecogidaVehiculoCodigo')}'");
+        switch ($session->get('TteDespachoRecogida_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("dr.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("dr.estadoAutorizado = 1");
+                break;
         }
-        if ($session->get('filtroTteDespachoRecogidaEstadoAprobado') != '') {
-            $queryBuilder->andWhere("dr.estadoAprobado = {$session->get('filtroTteDespachoRecogidaEstadoAprobado')}");
+        switch ($session->get('TteDespachoRecogida_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("dr.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("dr.estadoAprobado = 1");
+                break;
         }
-        if ($session->get('filtroTteDespachoRecogidaEstadoAutorizado') != '') {
-            $queryBuilder->andWhere("dr.estadoAutorizado = {$session->get('filtroTteDespachoRecogidaEstadoAutorizado')}");
+        switch ($session->get('TteDespachoRecogida_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("dr.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("dr.estadoAnulado = 1");
+                break;
+        }
+        if ($session->get('TteDespachoRecogida_fechaDesde') != null) {
+            $queryBuilder->andWhere("dr.fecha >= '{$session->get('TteDespachoRecogida_fechaDesde')} 00:00:00'");
+        }
+        if ($session->get('TteDespachoRecogida_fechaHasta') != null) {
+            $queryBuilder->andWhere("dr.fecha <= '{$session->get('TteDespachoRecogida_fechaHasta')} 23:59:59'");
         }
         $queryBuilder->orderBy('dr.fecha', 'DESC');
 

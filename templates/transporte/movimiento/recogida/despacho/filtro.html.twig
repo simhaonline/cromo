@@ -9,7 +9,7 @@
                         {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
                         {#{% include ('estructura/buscarClienteTransporte.html.twig') %}#}
                         <div class="form-group form-group-sm">
-                            <label for="form_txtVehiculo" class="col-sm-1 control-label">Vehiculo:</label>
+                            <label for="form_txtVehiculo" class="col-sm-2 control-label">Vehiculo:</label>
                             <div class="col-sm-4">
                                 <div class="input-group">
                                     {{ form_widget(formFiltro.codigoVehiculoFk) }}
@@ -24,42 +24,42 @@
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
-                            <label for="form_txtCodigoDespachoRecogida" class="col-sm-1 control-label">Codigo:</label>
-                            <div class="col-sm-2">
+                            <label for="form_txtCodigoDespachoRecogida" class="col-sm-2 control-label">Codigo:</label>
+                            <div class="col-sm-4">
                                 {{ form_widget(formFiltro.codigoDespachoRecogidaPk) }}
                             </div>
-                            <label for="" class="col-sm-offset-3 col-sm-1 control-label">Aprobado:</label>
+                            <label for="" class="col-sm-2 control-label">Aprobado:</label>
                             <div class="col-sm-4">
                                 {{ form_widget(formFiltro.estadoAprobado) }}
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
-                            <label for="form_txtNumeroDespachoRecogida" class="col-sm-1 control-label">Numero:</label>
-                            <div class="col-sm-2">
+                            <label for="form_txtNumeroDespachoRecogida" class="col-sm-2 control-label">Numero:</label>
+                            <div class="col-sm-4">
                                 {{ form_widget(formFiltro.numero) }}
                             </div>
-                            <label for="" class="col-sm-offset-3 col-sm-1 control-label">Anulado:</label>
+                            <label for="" class="col-sm-2 control-label">Anulado:</label>
                             <div class="col-sm-4">
                                 {{ form_widget(formFiltro.estadoAnulado) }}
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
-                            <label for="form_fechaDesde" class="col-sm-1 control-label">Desde:</label>
-                            <div class="col-sm-5">
+                            <label for="form_fechaDesde" class="col-sm-2 control-label">Desde:</label>
+                            <div class="col-sm-4">
                                 {{ form_widget(formFiltro.fechaDesde) }}
                             </div>
-                            <label for="" class=" col-sm-1 control-label">Operacion:</label>
+                            <label for="" class=" col-sm-2 control-label">Operacion:</label>
                             <div class="col-sm-4">
                                 {{ form_widget(formFiltro.codigoOperacionFk) }}
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
-                            <label for="form_fechaHasta" class="col-sm-1 control-label">Hasta:</label>
-                            <div class="col-sm-5">
+                            <label for="form_fechaHasta" class="col-sm-2 control-label">Hasta:</label>
+                            <div class="col-sm-4">
                                 {{ form_widget(formFiltro.fechaHasta) }}
                             </div>
-                            <label for="form_fechaHasta" class="col-sm-1 control-label"></label>
-                            <div class="col-sm-5">
+                            <label for="form_fechaHasta" class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4">
 
                             </div>
                         </div>

@@ -140,7 +140,7 @@ class DespachoRecogidaController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Despacho recogidas");
+                General::get()->setExportar($em->getRepository(TteDespachoRecogida::class)->lista()->getQuery()->execute(), "Despacho recogidas");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 /*set_time_limit(0);

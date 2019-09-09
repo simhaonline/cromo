@@ -34,7 +34,6 @@ class ClienteController extends Controller
             $session->set('filtroTteNitCliente', $form->get('TxtNit')->getData());
             $session->set('filtroTteCodigoCliente', $form->get('TxtCodigo')->getData());
         }
-        $arClientes = $em->getRepository(TteCliente::class)->findAll();
         $arClientes = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1),20);
         return $this->render('transporte/buscar/cliente.html.twig', array(
             'arClientes' => $arClientes,

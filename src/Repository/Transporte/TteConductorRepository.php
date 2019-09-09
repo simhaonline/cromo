@@ -41,16 +41,16 @@ class TteConductorRepository extends ServiceEntityRepository
     public function listaDql()
     {
         $session = new Session();
-        $qb = $this->getEntityManager()->createQueryBuilder()->from(TteConductor::class, 'c')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteConductor::class, 'c')
             ->select('c.codigoConductorPk')
             ->addSelect('c.numeroIdentificacion')
             ->addSelect('c.nombreCorto')
             ->where('c.codigoConductorPk <> 0')
             ->orderBy('c.nombreCorto');
         if ($session->get('filtroTteConductorNombre') != '') {
-            $qb->andWhere("c.nombreCorto LIKE '%{$session->get('filtroTteConductorNombre')}%'");
+            $queryBuilder->andWhere("c.nombreCorto LIKE '%{$session->get('filtroTteConductorNombre')}%'");
         }
-        return $qb->getDQL();
+        return $queryBuilder;
     }
 
 

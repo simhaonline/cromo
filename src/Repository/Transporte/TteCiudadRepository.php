@@ -108,36 +108,36 @@ class TteCiudadRepository extends ServiceEntityRepository
     public function listaDql()
     {
         $session = new Session();
-        $qb = $this->getEntityManager()->createQueryBuilder()->from(TteCiudad::class, 'c')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCiudad::class, 'c')
             ->select('c.codigoCiudadPk')
             ->addSelect('c.nombre')
 //            ->addSelect('c.nombre')
 //            ->where('c.codigoConductorPk <> 0')
             ->orderBy('c.nombre');
         if ($session->get('filtroTteCiudadNombre') != '') {
-            $qb->andWhere("c.nombre LIKE '%{$session->get('filtroTteCiudadNombre')}%'");
+            $queryBuilder->andWhere("c.nombre LIKE '%{$session->get('filtroTteCiudadNombre')}%'");
         }
 
         if ($session->get('filtroTteCiudadCodigo') != '') {
-            $qb->andWhere("c.codigoCiudadPk ='{$session->get('filtroTteCiudadCodigo')}'");
+            $queryBuilder->andWhere("c.codigoCiudadPk ='{$session->get('filtroTteCiudadCodigo')}'");
         }
-        return $qb->getDQL();
+        return $queryBuilder;
     }
 
     public function listaDqlCiudadDestino()
     {
         $session = new Session();
-        $qb = $this->getEntityManager()->createQueryBuilder()->from(TteCiudad::class, 'c')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCiudad::class, 'c')
             ->select('c.codigoCiudadPk')
             ->addSelect('c.nombre')
             ->orderBy('c.nombre');
         if ($session->get('filtroTteCiudadNombreDestino') != '') {
-            $qb->andWhere("c.nombre LIKE '%{$session->get('filtroTteCiudadNombreDestino')}%'");
+            $queryBuilder->andWhere("c.nombre LIKE '%{$session->get('filtroTteCiudadNombreDestino')}%'");
         }
         if ($session->get('filtroTteCiudadCodigoDestino') != '') {
-            $qb->andWhere("c.codigoCiudadPk ='{$session->get('filtroTteCiudadCodigoDestino')}'");
+            $queryBuilder->andWhere("c.codigoCiudadPk ='{$session->get('filtroTteCiudadCodigoDestino')}'");
         }
-        return $qb->getDQL();
+        return $queryBuilder;
     }
 
     public function eliminar($arrSeleccionados){

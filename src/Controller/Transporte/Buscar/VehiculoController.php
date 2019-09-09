@@ -31,7 +31,7 @@ class VehiculoController extends Controller
             }
         }
 
-        $arVehiculos = $paginator->paginate($em->createQuery($em->getRepository(TteVehiculo::class)->listaDql()), $request->query->get('page', 1), 20);
+        $arVehiculos = $paginator->paginate($em->getRepository(TteVehiculo::class)->listaDql(), $request->query->get('page', 1), 20);
         return $this->render('transporte/buscar/vehiculo.html.twig', array(
             'arVehiculos' => $arVehiculos,
             'campoCodigo' => $campoCodigo,

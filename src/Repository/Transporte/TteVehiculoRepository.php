@@ -50,7 +50,7 @@ class TteVehiculoRepository extends ServiceEntityRepository
         if ($session->get('filtroTteVehiculoPlaca') != '') {
             $queryBuilder->andWhere("v.placa LIKE '%{$session->get('filtroTteVehiculoPlaca')}%'");
         }
-        return $queryBuilder->getDQL();
+        return $queryBuilder;
     }
 
     public function camposPredeterminados()

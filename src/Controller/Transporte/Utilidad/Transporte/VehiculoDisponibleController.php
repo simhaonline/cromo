@@ -57,7 +57,7 @@ class VehiculoDisponibleController extends Controller
             $session->set('filtroTteVehiculoDisponibleEstadoDescartado', $form->get('chkEstadoDescartado')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->createQuery($em->getRepository(TteVehiculoDisponible::class)->lista())->execute(), "Vehiculos disponibles");
+            General::get()->setExportar($em->getRepository(TteVehiculoDisponible::class)->lista()->getQuery()->execute(), "Vehiculos disponibles");
         }
         $query = $this->getDoctrine()->getRepository(TteVehiculoDisponible::class)->lista();
         $arVehiculosDisponible = $paginator->paginate($query, $request->query->getInt('page', 1), 100);

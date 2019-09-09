@@ -32,7 +32,7 @@ class ConductorController extends Controller
                 $session->set('filtroTteConductorNombre', $form->get('TxtNombre')->getData());
             }
         }
-        $arConductores = $paginator->paginate($em->createQuery($em->getRepository(TteConductor::class)->listaDql()), $request->query->get('page', 1), 20);
+        $arConductores = $paginator->paginate($em->getRepository(TteConductor::class)->listaDql(), $request->query->get('page', 1), 20);
         return $this->render('transporte/buscar/conductor.html.twig', array(
             'arConductores' => $arConductores,
             'campoCodigo' => $campoCodigo,
@@ -63,7 +63,7 @@ class ConductorController extends Controller
                 $session->set('filtroTteCiudadCodigo', $form->get('TxtCodigo')->getData());
             }
         }
-        $arCiudades = $paginator->paginate($em->createQuery($em->getRepository(TteCiudad::class)->listaDql()), $request->query->get('page', 1), 20);
+        $arCiudades = $paginator->paginate($em->getRepository(TteCiudad::class)->listaDql(), $request->query->get('page', 1), 20);
         return $this->render('transporte/buscar/ciudadOrigen.html.twig', array(
             'arCiudades' => $arCiudades,
             'campoCodigo' => $campoCodigo,
@@ -93,7 +93,7 @@ class ConductorController extends Controller
                 $session->set('filtroTteCiudadNombreDestino', $form->get('TxtNombreCiudadDestino')->getData());
             }
         }
-        $arCiudades = $paginator->paginate($em->createQuery($em->getRepository(TteCiudad::class)->listaDqlCiudadDestino()), $request->query->get('page', 1), 20);
+        $arCiudades = $paginator->paginate($em->getRepository(TteCiudad::class)->listaDqlCiudadDestino(), $request->query->get('page', 1), 20);
         return $this->render('transporte/buscar/ciudadDestino.html.twig', array(
             'arCiudades' => $arCiudades,
             'campoCodigo' => $campoCodigo,

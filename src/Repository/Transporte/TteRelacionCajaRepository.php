@@ -17,7 +17,7 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return \rctrine\ORM\QueryBuilder
      */
     public function lista()
     {
@@ -34,24 +34,38 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
             ->addSelect('rc.estadoAprobado')
             ->addSelect('rc.estadoAnulado')
             ->where('rc.codigoRelacionCajaPk <> 0');
-        $fecha =  new \DateTime('now');
-        if($session->get('filtroTteRelacionCajaFiltroFecha') == true){
-            if ($session->get('filtroTteRelacionCajaFechaDesde') != null) {
-                $queryBuilder->andWhere("rc.fecha >= '{$session->get('filtroTteRelacionCajaFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("rc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroTteRelacionCajaFechaHasta') != null) {
-                $queryBuilder->andWhere("rc.fecha <= '{$session->get('filtroTteRelacionCajaFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("rc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
-        }
-        if ($session->get('filtroTteReciboCajaCodigo') != "") {
-            $queryBuilder->andWhere("rc.codigoRelacionCajaPk = " . $session->get('filtroTteReciboCajaCodigo'));
-        }
         $queryBuilder->orderBy('rc.fecha', 'DESC');
+        switch ($session->get('TteRelacionCaja_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("rc.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("rc.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('TteRelacionCaja_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("rc.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("rc.estadoAprobado = 1");
+                break;
+        }
+        switch ($session->get('TteRelacionCaja_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("rc.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("rc.estadoAnulado = 1");
+                break;
+        }
+        if ($session->get('TteRelacionCaja_fechaDesde') != null) {
+            $queryBuilder->andWhere("rc.fecha >= '{$session->get('TteRelacionCaja_fechaDesde')} 00:00:00'");
+        }
 
+        if ($session->get('TteRelacionCaja_fechaHasta') != null) {
+            $queryBuilder->andWhere("rc.fecha <= '{$session->get('TteRelacionCaja_fechaHasta')} 23:59:59'");
+        }
         return $queryBuilder;
     }
 
@@ -159,7 +173,7 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
 
         } else {
-            Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
+            Mensajes::error('El rcumento debe estar autorizado y no puede estar previamente aprobado');
         }
     }
 }

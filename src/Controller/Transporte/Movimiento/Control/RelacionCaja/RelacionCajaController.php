@@ -49,7 +49,7 @@ class RelacionCajaController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Relacion caja");
+                General::get()->setExportar($em->getRepository(TteRelacionCaja::class)->lista()->getQuery()->execute(), "Relacion caja");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

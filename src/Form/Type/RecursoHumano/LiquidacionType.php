@@ -52,7 +52,7 @@ class LiquidacionType extends AbstractType
         $campos = '[
             {"campo":"codigoLiquidacionPk", "tipo":"pk"    ,"ayuda":"Codigo del registro" ,"titulo":"ID"},
             {"campo":"numero",            "tipo":"texto" ,"ayuda":"Numero"                ,"titulo":"NUMERO"},
-            {"campo":"fecha",             "tipo":"fecha" ,"ayuda":"Fecha del registro"    ,"titulo":"TIPO"},
+            {"campo":"fecha",             "tipo":"fecha" ,"ayuda":"Fecha del registro"    ,"titulo":"FECHA"},
             {"campo":"empleadoRel.nombreCorto",  "tipo":"texto"   ,"ayuda":"Nombre del empleado"        ,"titulo":"EMPLEADO", "relacion":""},
             {"campo":"codigoGrupoFk",     "tipo":"texto" ,"ayuda":"Codigo del grupo"      ,"titulo":"GRUPO"},
             {"campo":"fechaDesde",        "tipo":"fecha" ,"ayuda":"Fecha desde"           ,"titulo":"DESDE"},                     

@@ -46,6 +46,50 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuProgramacion::class);
     }
 
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuProgramacion::class, 'p')
+            ->select('p.codigoProgramacionPk')
+            ->addSelect('pt.nombre as pago tipo')
+            ->select('p.nombre')
+            ->select('g.nombre as grupo')
+            ->select('p.fechaDesde')
+            ->select('p.fechaHasta')
+            ->select('p.dias')
+            ->select('p.cantidad')
+            ->select('p.estadoAutorizado')
+            ->select('p.estadoAprobado')
+            ->select('p.estadoContabilizado')
+            ->leftJoin('p.pagoTipoRel', 'pt')
+            ->leftJoin('p.grupoRel', 'g');
+
+        if ($session->get('RhuProgramacion_codigoProgramacionPk')) {
+            $queryBuilder->andWhere("p.codigoProgramacionPk = '{$session->get('RhuProgramacion_codigoProgramacionPk')}'");
+        }
+
+        if ($session->get('RhuProgramacion_codigoPagoTipoFk')) {
+            $queryBuilder->andWhere("p.codigoProgramacionPk = '{$session->get('RhuProgramacion_codigoPagoTipoFk')}'");
+        }
+
+
+        if ($session->get('RhuProgramacion_nombre')) {
+            $queryBuilder->andWhere("p.nombre like '%{$session->get('RhuProgramacion_nombre')}%'");
+        }
+
+        if ($session->get('RhuProgramacion_codigoGrupoFk')) {
+            $queryBuilder->andWhere("p.codigoGrupoFk = '{$session->get('RhuProgramacion_codigoGrupoFk')}'");
+        }
+
+        if ($session->get('RhuProgramacion_fechaDesdeDesde') != null) {
+            $queryBuilder->andWhere("doc.fechaDesdeDesde >= '{$session->get('RhuProgramacion_fechaDesdeDesde')} 00:00:00'");
+        }
+
+        if ($session->get('RhuProgramacion_fechaHastaHasta') != null) {
+            $queryBuilder->andWhere("doc.fechaHastaHasta <= '{$session->get('RhuProgramacion_fechaHastaHasta')} 23:59:59'");
+        }
+    }
+    
     /**
      * @param $arrSeleccionados array
      * @throws \Doctrine\ORM\ORMException

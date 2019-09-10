@@ -28,6 +28,51 @@ class RhuPagoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuPago::class);
     }
 
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPago::class, 'p')
+            ->select('p.codigoPagoPk')
+            ->addSelect('p.numero')
+            ->addSelect('pt.nombre as pagoTipo')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('p.fechaDesde')
+            ->addSelect('p.fechaHasta')
+            ->addSelect('p.vrSalarioContrato')
+            ->addSelect('p.vrDevengado')
+            ->addSelect('p.vrDeduccion')
+            ->addSelect('p.vrNeto')
+            ->leftJoin('p.pagoTipoRel', 'pt')
+            ->leftJoin('p.empleadoRel', 'e');
+
+        if ($session->get('RhuPago_codigoEmpleadoFk')) {
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = '{$session->get('RhuPago_codigoEmpleadoFk')}'");
+        }
+
+        if ($session->get('RhuPago_codigoPagoPk')) {
+            $queryBuilder->andWhere("p.codigoPagoPk = '{$session->get('RhuPago_codigoPagoPk')}'");
+        }
+
+        if ($session->get('RhuPago_codigoPagoTipoFk')) {
+            $queryBuilder->andWhere("p.codigoPagoTipoFk = '{$session->get('RhuPago_codigoPagoTipoFk')}'");
+        }
+
+        if ($session->get('RhuPago_numero')) {
+            $queryBuilder->andWhere("p.numero = '{$session->get('RhuPago_numero')}'");
+        }
+
+        if ($session->get('RhuPago_fechaDesdeDesde') != null) {
+            $queryBuilder->andWhere("p.fechaDesde >= '{$session->get('RhuPago_fechaDesdeDesde')} 00:00:00'");
+        }
+
+        if ($session->get('RhuPago_fechaHastaHasta') != null) {
+            $queryBuilder->andWhere("p.fechaHasta <= '{$session->get('RhuPago_fechaHastaHasta')} 23:59:59'");
+        }
+
+        return $queryBuilder;
+    } 
+    
     /**
      * @param $codigoProgramacion integer
      */

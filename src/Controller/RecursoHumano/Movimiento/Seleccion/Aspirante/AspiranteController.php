@@ -51,7 +51,7 @@ class AspiranteController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Aspirantes");
+                General::get()->setExportar($em->getRepository(RhuAspirante::class)->lista()->getQuery()->execute(), "Aspirantes");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arSeleccionados = $request->request->get('ChkSeleccionar');

@@ -334,9 +334,80 @@ class RhuVacacionRepository extends ServiceEntityRepository
      */
     public function lista()
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'e');
-        $queryBuilder
-            ->select('e.codigoCreditoPk');
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuVacacion::class, 'v')
+            ->select('v.codigoCreditoPk')
+            ->addselect('v.codigoCreditoPk')
+            ->addselect('v.fecha')
+            ->addselect('g.nombre as grupo')
+            ->addselect('e.numeroIdentificacion as numeroIdentificacion')
+            ->addselect('e.nombreCorto as nombreCorto')
+            ->addselect('v.fechaDesdePeriodo')
+            ->addselect('v.fechaHastaPeriodo')
+            ->addselect('v.fechaDesdeDisfrute')
+            ->addselect('v.fechaHastaDisfrute')
+            ->addselect('v.fechaInicioLabor')
+            ->addselect('v.diasPagados')
+            ->addselect('v.diasDisfrutados')
+            ->addselect('v.diasDisfrutadosReales')
+            ->addselect('v.vrTotal')
+            ->addselect('v.estadoAutorizado')
+            ->addselect('v.estadoAprobado')
+            ->addselect('v.estadoAnulado')
+            ->leftJoin('v.grupoRel', 'g')
+            ->leftJoin('v.empleadoRel', 'e');
+
+        if ($session->get('RhuVacacion_codigoVacacionPk')) {
+            $queryBuilder->andWhere("v.codigoVacacionPk = '{$session->get('RhuVacacion_codigoVacacionPk')}'");
+        }
+
+        if ($session->get('RhuVacacion_codigoGrupoFk')) {
+            $queryBuilder->andWhere("v.codigoGrupoFk = '{$session->get('RhuVacacion_codigoGrupoFk')}'");
+        }
+
+        if ($session->get('RhuVacacion_numero')) {
+            $queryBuilder->andWhere("v.numero = '{$session->get('RhuVacacion_numero')}'");
+        }
+
+        if ($session->get('RhuVacacion_codigoEmpleadoFk')) {
+            $queryBuilder->andWhere("v.codigoEmpleadoFk = '{$session->get('RhuVacacion_codigoEmpleadoFk')}'");
+        }
+
+        if ($session->get('RhuVacacion_fechaDesde') != null) {
+            $queryBuilder->andWhere("v.fechaDesde >= '{$session->get('RhuVacacion_fechaDesde')} 00:00:00'");
+        }
+
+        if ($session->get('RhuVacacion_fechaHasta') != null) {
+            $queryBuilder->andWhere("v.fechaHasta <= '{$session->get('RhuVacacion_fechaHasta')} 23:59:59'");
+        }
+
+        switch ($session->get('RhuVacacion_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("v.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("v.estadoAutorizado = 1");
+                break;
+        }
+
+        switch ($session->get('RhuVacacion_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("v.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("v.estadoAprobado = 1");
+                break;
+        }
+
+        switch ($session->get('RhuVacacion_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("v.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("doc.estadoAnulado = 1");
+                break;
+        }
+
         return $queryBuilder;
     }
 

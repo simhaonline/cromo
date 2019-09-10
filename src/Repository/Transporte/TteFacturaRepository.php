@@ -1048,7 +1048,7 @@ class TteFacturaRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
             ->select("f.codigoClienteFk")
             ->addSelect('f.codigoFacturaTipoFk')
-            ->addSelect("SUM(f.vrFlete) as flete")
+            ->addSelect("SUM(f.vrFlete*f.operacionComercial) as flete")
             ->where("f.fecha >='" . $fechaDesde . "' AND f.fecha <= '" . $fechaHasta . "'")
         ->andWhere('f.estadoAprobado = 1')
         ->groupBy('f.codigoClienteFk')

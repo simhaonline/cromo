@@ -753,10 +753,10 @@ class RhuVacacionRepository extends ServiceEntityRepository
         foreach ($arEmbargos as $arEmbargo) {
             $vrDeduccionEmbargo = 0;
             $detalle = "";
-            $vrPago = $arVacacion->getVrVacacionBruto();
+            $vrPago = $arVacacion->getVrBruto();
             //Calcular la deduccion del embargo
             if ($arEmbargo->getValorFijo()) {
-                $vrDeduccionEmbargo = $arEmbargo->getValor();
+                $vrDeduccionEmbargo = $arEmbargo->getVrValor();
                 $detalle = "Valor fijo embargo";
             }
             if ($arEmbargo->getPorcentajeDevengado() || $arEmbargo->getPorcentajeDevengadoPrestacional()) {
@@ -815,7 +815,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
             //Aqui se registra la deduccion del embargo en la liquidacion adicionales
             if ($vrDeduccionEmbargo > 0) {
                 $arVacacionAdicional = new RhuVacacionAdicional();
-                $arVacacionAdicional->setConceptoRel($arEmbargo->getEmbargoTipoRel()->getPagoConceptoRel());
+                $arVacacionAdicional->setConceptoRel($arEmbargo->getEmbargoTipoRel()->getConceptoRel());
                 $arVacacionAdicional->setEmbargoRel($arEmbargo);
                 $arVacacionAdicional->setVacacionRel($arVacacion);
                 $arVacacionAdicional->setVrDeduccion($vrDeduccionEmbargo);

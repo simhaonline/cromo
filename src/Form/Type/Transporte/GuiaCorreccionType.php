@@ -84,6 +84,7 @@ class GuiaCorreccionType extends AbstractType {
                 },'choice_label' => 'nombre',
                 'required' => true
             ])
+            ->add('tipoLiquidacion', TextType::class)
             ->add('estadoEntregado', CheckboxType::class, array('required'  => false))
             ->add('estadoSoporte', CheckboxType::class, array('required'  => false))
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);

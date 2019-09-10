@@ -80,8 +80,10 @@
                     {{ form_widget(form.productoRel, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.productoRel) }}
                 </div>
-                <label class="col-sm-2 control-label"></label>
+                <label class="col-sm-2 control-label">Liquidación</label>
                 <div class="col-sm-4">
+                    {{ form_widget(form.tipoLiquidacion) }}
+                    {{ form_errors(form.tipoLiquidacion) }}
 
                 </div>
             </div>

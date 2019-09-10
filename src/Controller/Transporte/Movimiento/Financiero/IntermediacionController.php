@@ -62,7 +62,7 @@ class IntermediacionController extends Controller
             if ($form->get('btnEliminar')->isClicked()){
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(TteIntermediacion::class, $arrSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
+                return $this->redirect($this->generateUrl('transporte_movimiento_financiero_intermediacion_lista'));
             }
         }
         $arIntermediacions = $paginator->paginate($em->getRepository(TteIntermediacion::class)->lista(), $request->query->getInt('page', 1), 10);

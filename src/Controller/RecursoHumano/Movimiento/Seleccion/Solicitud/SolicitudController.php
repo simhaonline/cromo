@@ -48,7 +48,7 @@ class SolicitudController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Solicitudes");
+                General::get()->setExportar($em->getRepository(RhuSolicitud::class)->lista()->getQuery()->execute(), "Solicitudes");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arSeleccionados = $request->request->get('ChkSeleccionar');

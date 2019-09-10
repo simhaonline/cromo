@@ -43,9 +43,9 @@ class SeleccionController extends ControllerListenerGeneral
             }
         }
         $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
+        if ($formBotonera->isSubmitted() ) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Selecciones");
+                General::get()->setExportar($em->getRepository(RhuSeleccion::class)->lista()->getQuery()->execute(), "Selecciones");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arSeleccionados = $request->request->get('ChkSeleccionar');

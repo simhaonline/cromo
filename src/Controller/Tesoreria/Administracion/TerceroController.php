@@ -56,7 +56,7 @@ class TerceroController extends BaseController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/compra/administracion/proveedor/proveedor/nuevo/{id}", name="compra_administracion_proveedor_proveedor_nuevo")
+     * @Route("/compra/administracion/proveedor/proveedor/nuevo/{id}", name="tesoreria_administracion_tercero_tercero_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -89,7 +89,7 @@ class TerceroController extends BaseController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
-     * @Route("/compra/administracion/proveedor/proveedor/detalle/{id}", name="compra_administracion_proveedor_proveedor_detalle")
+     * @Route("/compra/administracion/proveedor/proveedor/detalle/{id}", name="tesoreria_administracion_tercero_tercero_detalle")
      */
     public function detalle(Request $request, $id)
     {

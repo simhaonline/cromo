@@ -5,6 +5,7 @@ namespace App\Formato\Transporte;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
+use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Utilidades\Estandares;
 
@@ -146,7 +147,7 @@ class Despacho extends \FPDF {
     }
 
     public function Body($pdf) {
-        $arGuias = self::$em->getRepository(TteGuia::class)->despachoOrden(self::$codigoDespacho);
+        $arGuias = self::$em->getRepository(TteDespachoDetalle::class)->imprimirDetalles(self::$codigoDespacho);
         $pdf->SetX(5);
         $pdf->SetFont('Arial', '', 6.9);
         if($arGuias) {
@@ -162,7 +163,7 @@ class Despacho extends \FPDF {
             foreach ($arGuias as $arGuia) {
                 $pdf->SetX(5);
                 $pdf->Cell(8, 4, $arGuia['codigoGuiaTipoFk'], 1, 0, 'L');
-                $pdf->Cell(15, 4, $arGuia['codigoGuiaPk'], 1, 0, 'L');
+                $pdf->Cell(15, 4, $arGuia['codigoGuiaFk'], 1, 0, 'L');
                 $pdf->Cell(10, 4, $arGuia['fechaIngreso']->format('m-d'), 1, 0, 'L');
                 $pdf->Cell(7, 4, $arGuia['codigoServicioFk'], 1, 0, 'L');
                 $pdf->Cell(15, 4, $arGuia['numero'], 1, 0, 'L');

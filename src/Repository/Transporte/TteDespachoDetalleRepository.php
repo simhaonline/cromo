@@ -51,6 +51,37 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
 
     }
 
+    public function imprimirDetalles($codigoDespacho)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
+            ->select('dd.codigoDespachoDetallePk')
+            ->addSelect('dd.codigoGuiaFk')
+            ->addSelect('g.codigoGuiaTipoFk')
+            ->addSelect('g.numero')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.unidades')
+            ->addSelect('g.pesoReal')
+            ->addSelect('g.pesoVolumen')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.direccionDestinatario')
+            ->addSelect('g.codigoProductoFk')
+            ->addSelect('g.empaqueReferencia')
+            ->addSelect('g.codigoCiudadDestinoFk')
+            ->addSelect('g.codigoServicioFk')
+            ->leftJoin('dd.guiaRel', 'g')
+            ->leftJoin('g.clienteRel', 'c')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->orderBy('g.codigoCiudadDestinoFk')
+            ->addOrderBy('g.codigoClienteFk')
+            ->where('dd.codigoDespachoFk = ' . $codigoDespacho);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
     /*public function guiaCosto($codigoGuia): array
     {
         $em = $this->getEntityManager();

@@ -316,8 +316,7 @@ class VacacionesController extends ControllerListenerGeneral
                 'class' => RhuConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('pc')
-                        ->where('pc.adicionalTipo = :adicionalTipo')
-                        ->setParameter('adicionalTipo', 2)
+                        ->where("pc.adicionalTipo = 'DES'")
                         ->orderBy('pc.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
@@ -357,8 +356,7 @@ class VacacionesController extends ControllerListenerGeneral
                 'class' => RhuConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('pc')
-                        ->where('pc.adicionalTipo = :adicionalTipo')
-                        ->setParameter('adicionalTipo', 1)
+                        ->where("pc.adicionalTipo = 'DES'")
                         ->orderBy('pc.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',

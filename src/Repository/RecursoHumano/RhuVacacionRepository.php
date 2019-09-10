@@ -336,8 +336,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuVacacion::class, 'v')
-            ->select('v.codigoCreditoPk')
-            ->addselect('v.codigoCreditoPk')
+            ->select('v.codigoVacacionPk')
             ->addselect('v.fecha')
             ->addselect('g.nombre as grupo')
             ->addselect('e.numeroIdentificacion as numeroIdentificacion')

@@ -63,7 +63,7 @@ class RegistroController extends Controller
                 $session->set('filtroFinRegistroFiltroFecha', $form->get('filtrarFecha')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(FinRegistro::class)->registros())->execute(), "Registros");
+                General::get()->setExportar($em->getRepository(FinRegistro::class)->registros()->getQuery()->getResult(), "Registros");
             }
         }
         $query = $this->getDoctrine()->getRepository(FinRegistro::class)->registros();

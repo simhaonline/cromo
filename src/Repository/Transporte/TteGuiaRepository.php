@@ -291,7 +291,23 @@ class TteGuiaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arGuia->getEstadoAnulado() == 0) {
-            if ($arGuia->getEstadoFacturaGenerada() == 0 && $arGuia->getEstadoFacturaExportado() == 0) {
+            $validacion = true;
+            if ($arGuia->getEstadoFacturaGenerada() && !$arGuia->getFactura()) {
+                $validacion = false;
+                Mensajes::error("La guia esta facturada y no se puede anular");
+            } else {
+                if($arGuia->getEstadoFacturaExportado()) {
+                    $arFactura = $em->getRepository(TteFactura::class)->findOneBy(['codigoFacturaTipoFk' => $arGuia->getGuiaTipoRel()->getCodigoFacturaTipoFk(), 'numero' => $arGuia->getNumeroFactura()]);
+                    if($arFactura) {
+                        if(!$arFactura->getEstadoAnulado()) {
+                            $validacion = false;
+                            Mensajes::error("La factura genero factura y esta no se encuentra anulada");
+                        }
+                    }
+                }
+            }
+
+            if($validacion) {
                 $arGuia->setEstadoAnulado(1);
                 $arGuia->setUnidades(0);
                 $arGuia->setPesoFacturado(0);
@@ -307,9 +323,8 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $em->persist($arGuia);
                 $em->flush();
                 Mensajes::success("La guia fue anulada con existo");
-            } else {
-                Mensajes::error("La guia genero un ingreso por factura o esta facturada al cliente");
             }
+
         }
         return true;
     }

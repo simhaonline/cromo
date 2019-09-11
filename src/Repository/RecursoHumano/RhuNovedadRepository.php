@@ -6,6 +6,7 @@ use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuNovedad;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuNovedadRepository extends ServiceEntityRepository
 {
@@ -27,9 +28,40 @@ class RhuNovedadRepository extends ServiceEntityRepository
      */
     public function lista()
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'e');
-        $queryBuilder
-            ->select('e.codigoCreditoPk');
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuNovedad::class, 'n')
+            ->select('n.codigoNovedadPk')
+            ->addSelect('nt.nombre as novedadTipo ')
+            ->addSelect('n.fecha')
+            ->addSelect('n.codigoEmpleadoFk')
+            ->addSelect('e.nombreCorto as empleado ')
+            ->addSelect('e.numeroIdentificacion as numeroIdentificacion ')
+            ->addSelect('n.codigoContratoFk')
+            ->addSelect('n.fechaDesde')
+            ->addSelect('n.fechaHasta')
+            ->leftJoin('n.novedadTipoRel', 'nt')
+            ->leftJoin('n.empleadoRel', 'e');
+
+        if ($session->get('RhuNovedad_codigoNovedadPk')) {
+            $queryBuilder->andWhere("n.codigoNovedadPk = '{$session->get('RhuNovedad_codigoNovedadPk')}'");
+        }
+
+        if ($session->get('RhuNovedad_codigoNovedadTipoFk')) {
+            $queryBuilder->andWhere("n.codigoNovedadTipoFk = '{$session->get('RhuNovedad_codigoNovedadTipoFk')}'");
+        }
+
+        if ($session->get('RhuNovedad_codigoEmpleadoFk')) {
+            $queryBuilder->andWhere("n.codigoEmpleadoFk = '{$session->get('RhuNovedad_codigoEmpleadoFk')}'");
+        }
+
+        if ($session->get('RhuNovedad_fechaDesde') != null) {
+            $queryBuilder->andWhere("doc.fechaDesde >= '{$session->get('RhuNovedad_fechaDesde')} 00:00:00'");
+        }
+
+        if ($session->get('RhuNovedad_fechaHasta') != null) {
+            $queryBuilder->andWhere("doc.fechaHasta <= '{$session->get('RhuNovedad_fechaHasta')} 23:59:59'");
+        }
+
         return $queryBuilder;
     }
 

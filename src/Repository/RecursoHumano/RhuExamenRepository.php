@@ -15,6 +15,75 @@ class RhuExamenRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuExamen::class);
     }
 
+
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuExamen::class, 'e')
+            ->select('e.codigoExamenPk')
+            ->addSelect('ec.nombre as examenClase')
+            ->addSelect('e.fecha')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('ee.nombre as entidadExamen')
+            ->addSelect('c.nombre as cargo')
+            ->addSelect('e.cobro')
+            ->addSelect('e.vrTotal')
+            ->addSelect('e.estadoAutorizado')
+            ->addSelect('e.estadoAprobado')
+            ->addSelect('e.estadoAnulado')
+            ->leftJoin('e.examenClaseRel' ,'ec')
+            ->leftJoin('e.entidadExamenRel' ,'ee')
+            ->leftJoin('e.cargoRel' ,'c');
+
+        if ($session->get('RhuExamen_codigoExamenPk')) {
+            $queryBuilder->andWhere("e.codigoExamenPk = '{$session->get('RhuExamen_codigoExamenPk')}'");
+        }
+
+        if ($session->get('RhuExamen_codigoExamenClaseFk')) {
+            $queryBuilder->andWhere("e.codigoExamenClaseFk = '{$session->get('RhuExamen_codigoExamenClaseFk')}'");
+        }
+
+        if ($session->get('RhuExamen_codigoEmpleadoFk')) {
+            $queryBuilder->andWhere("e.codigoEmpleadoFk = '{$session->get('RhuExamen_codigoEmpleadoFk')}'");
+        }
+
+        if ($session->get('RhuExamen_fechaDesde') != null) {
+            $queryBuilder->andWhere("e.fechaDesde >= '{$session->get('RhuExamen_fechaDesde')} 00:00:00'");
+        }
+
+        if ($session->get('RhuExamen_fechaHasta') != null) {
+            $queryBuilder->andWhere("e.fecha <= '{$session->get('RhuExamen_fechaHasta')} 23:59:59'");
+        }
+
+        switch ($session->get('RhuExamen_estadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("e.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("e.estadoAutorizado = 1");
+                break;
+        }
+
+        switch ($session->get('RhuExamen_estadoAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("e.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("e.estadoAprobado = 1");
+                break;
+        }
+
+        switch ($session->get('RhuExamen_estadoAnulado')) {
+            case '0':
+                $queryBuilder->andWhere("e.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("e.estadoAnulado = 1");
+                break;
+        }
+    }
+    
     /**
      * @param $arExamenes
      * @throws \Doctrine\ORM\ORMException

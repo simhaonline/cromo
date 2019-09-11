@@ -207,6 +207,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('g.numero')
             ->addSelect('g.documentoCliente')
             ->addSelect('g.nombreDestinatario')
+            ->addSelect('cd.nombre AS ciudadOrigen')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('g.vrFlete + g.vrManejo AS total')
             ->addSelect('fd.unidades')
@@ -220,7 +221,8 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->leftJoin('f.facturaTipoRel', 'ft')
             ->leftJoin('f.clienteRel', 'c')
             ->leftJoin('fd.guiaRel', 'g')
-            ->leftJoin('g.ciudadDestinoRel', 'cd');
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.ciudadOrigenRel', 'co');
         $fecha = new \DateTime('now');
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");

@@ -73,14 +73,12 @@ class CorreccionGuiaController extends ControllerListenerGeneral
         $arGuia = $em->getRepository(TteGuia::class)->find($id);
         $form = $this->createForm(GuiaCorreccionType::class, $arGuia);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                if ($form->get('guardar')->isClicked()) {
-                    $arCliente = $em->find(TteCliente::class, $arGuia->getCodigoClienteFk());
-                    $arGuia->setClienteRel($arCliente);
-                    $em->persist($arGuia);
-                    $em->flush();
-                }
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arCliente = $em->find(TteCliente::class, $arGuia->getCodigoClienteFk());
+                $arGuia->setClienteRel($arCliente);
+                $em->persist($arGuia);
+                $em->flush();
             }
             return $this->redirect($this->generateUrl('transporte_utilidad_transporte_correccion_guia_lista'));
         }

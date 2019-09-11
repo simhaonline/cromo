@@ -3,6 +3,7 @@
 namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteCiudad;
+use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteRuta;
@@ -95,7 +96,7 @@ class GuiaCorreccionType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'App\Entity\Transporte\TteGuia'
+            'data_class' => TteGuia::class
         ));
     }
 

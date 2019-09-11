@@ -514,9 +514,6 @@ class TteGuia
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Transporte\TteEmpaque", inversedBy="guiasEmpaqueRel")
      * @ORM\JoinColumn(name="codigo_empaque_fk", referencedColumnName="codigo_empaque_pk")
-     * @Assert\NotBlank(
-     *     message="Debe seleccionar un empaque"
-     * )
      */
     private $empaqueRel;
 
@@ -2108,7 +2105,7 @@ class TteGuia
     /**
      * @param mixed $estadoContabilizado
      */
-    public function setEstadoContabilizado( $estadoContabilizado ): void
+    public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
     }
@@ -2224,7 +2221,6 @@ class TteGuia
     {
         $this->zonaRel = $zonaRel;
     }
-
 
 
 }

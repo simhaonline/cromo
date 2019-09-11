@@ -179,11 +179,9 @@ class GuiaController extends ControllerListenerGeneral
             if ($form->get('btnExcel')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                $session->set('filtroTteGuiaTopRegistros', 15000);
                 General::get()->setExportar($em->getRepository(TteGuia::class)->lista()->getQuery()->getResult(), "Guias");
             }
         }
-
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/transporte/guia/lista.html.twig', [
             'arGuias' => $arGuias,

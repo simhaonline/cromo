@@ -98,9 +98,28 @@ class RhuAdicionalRepository extends ServiceEntityRepository
             ->leftJoin('a.conceptoRel', 'c')
             ->where('a.permanente = true');
 
-        if ($session->get('filtroRhuEmpleadoCodigo') != '') {
-            $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$session->get('filtroRhuEmpleadoCodigo')}'");
+        if ($session->get('filtroRhuAdicionalCodigoEmpleado') != '') {
+            $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$session->get('filtroRhuAdicionalCodigoEmpleado')}'");
         }
+
+        switch ($session->get('filtroRhuAdicionalEstadoInactivo')) {
+            case '0':
+                $queryBuilder->andWhere("a.estadoInactivoPeriodo = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("a.estadoInactivoPeriodo = 1");
+                break;
+        }
+
+        switch ($session->get('filtroRhuAdicionalEstadoInactivoPeriodo')) {
+            case '0':
+                $queryBuilder->andWhere("a.estadoInactivo = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("a.estadoInactivo = 1");
+                break;
+        }
+
         return $queryBuilder;
     }
 

@@ -51,11 +51,12 @@ class AdicionalController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroRhuEmpleadoCodigo',  $form->get('txtCodigoEmpleado')->getData());
-
+                $session->set('filtroRhuAdicionalCodigoEmpleado',  $form->get('txtCodigoEmpleado')->getData());
+                $session->set('filtroRhuAdicionalEstadoInactivo', $form->get('estadoInactivo')->getData());
+                $session->set('filtroRhuAdicionalEstadoInactivoPeriodo', $form->get('estadoInactivoPeriodo')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(RhuAdicional::class)->lista())->execute(), "Facturas");
+                General::get()->setExportar($em->getRepository(RhuAdicional::class)->lista()->getQuery()->execute(), "Facturas");
 
             }
             /*if ($form->get('btnEliminar')->isClicked()) {

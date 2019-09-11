@@ -281,6 +281,9 @@
                  style="margin-left: 5px; float: right; {% if  arLiquidacion.estadoAutorizado != 0 %}  display: none {% endif %}">
                 {{ form_widget(form.btnEliminar,  { 'attr': {'class': 'btn btn-danger', 'style':'inherit'}}) }}
             </div>
+            <div class="btn-group">
+                {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+            </div>
             {% if arLiquidacion.estadoAutorizado == 0 %}
                 <div class="btn-toolbar" style="float: right">
                     <a class="btn btn-default btn-sm"

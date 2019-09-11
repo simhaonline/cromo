@@ -98,6 +98,7 @@ class LiquidacionController extends ControllerListenerGeneral
         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($id);
         $form = Estandares::botonera($arLiquidacion->getEstadoAutorizado(), $arLiquidacion->getEstadoAprobado(), $arLiquidacion->getEstadoAnulado());
         $form->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']]);
+        $form->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnImprimir')->isClicked()) {
@@ -149,6 +150,9 @@ class LiquidacionController extends ControllerListenerGeneral
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(RhuLiquidacion::class)->aprobar($arLiquidacion);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_detalle', array('id' => $id)));
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(RhuLiquidacion::class)->Adicionales($id)->getQuery()->getResult(), "Adicionales");
             }
         }
         $arLiquidacionAdicionales = $em->getRepository(RhuLiquidacionAdicional::class)->findBy(['codigoLiquidacionFk' => $id]);

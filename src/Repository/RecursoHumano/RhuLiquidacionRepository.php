@@ -100,6 +100,23 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function adicionales($id)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuLiquidacionAdicional::class, 'la')
+            ->select('la.codigoLiquidacionAdicionalPk')
+            ->addSelect('e.nombreCorto AS empleado')
+            ->addSelect('c.nombre AS concepto')
+            ->addSelect('la.codigoConceptoFk')
+            ->addSelect('la.vrBonificacion')
+            ->addSelect('la.vrDeduccion')
+            ->leftJoin('la.liquidacionRel', 'l')
+            ->leftJoin('l.empleadoRel', 'e')
+            ->leftJoin('la.conceptoRel', 'c')
+            ->where("la.codigoLiquidacionFk = {$id}");
+        return $queryBuilder;
+    }
+
     /**
      * @return array
      */

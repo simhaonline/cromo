@@ -184,6 +184,11 @@ class TteGuiaTemporal
     private $codigoProductoFk;
 
     /**
+     * @ORM\Column(name="tipo_liquidacion", type="string", length=1, nullable=true)
+     */
+    private $tipoLiquidacion;
+
+    /**
      * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
      */
     private $usuario;
@@ -876,6 +881,22 @@ class TteGuiaTemporal
     public function setProductoRel($productoRel): void
     {
         $this->productoRel = $productoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoLiquidacion()
+    {
+        return $this->tipoLiquidacion;
+    }
+
+    /**
+     * @param mixed $tipoLiquidacion
+     */
+    public function setTipoLiquidacion($tipoLiquidacion): void
+    {
+        $this->tipoLiquidacion = $tipoLiquidacion;
     }
 
 

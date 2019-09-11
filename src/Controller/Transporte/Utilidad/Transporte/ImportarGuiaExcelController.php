@@ -162,7 +162,7 @@ class ImportarGuiaExcelController extends Controller
                     }
 
                     // Ciudad origen
-                    if($arCiudadOrigen) {
+                    if ($arCiudadOrigen) {
                         $arGuiaTemporal->setCiudadOrigenRel($arCiudadOrigen);
                     } else {
                         $arGuiaTemporal->setCiudadOrigenRel($this->getUser()->getOperacionRel()->getCiudadRel());
@@ -268,6 +268,7 @@ class ImportarGuiaExcelController extends Controller
                         $arGuiaTemporal->setVrFlete($arrLiquidacion['flete']);
                         $arGuiaTemporal->setVrManejo($arrLiquidacion['manejo']);
                         $arGuiaTemporal->setPesoFacturado($arrLiquidacion['pesoFacturado']);
+                        $arGuiaTemporal->setTipoLiquidacion($tipoLiquidacion);
                     }
                     // Valor recaudo
                     $cell = $worksheet->getCellByColumnAndRow(12, $row);
@@ -353,6 +354,7 @@ class ImportarGuiaExcelController extends Controller
                     $arGuia->setEstadoImpreso(1);
                     $arGuia->setUsuario($this->getUser()->getUsername());
                     $arGuia->setZonaRel($arGuiaTemporal->getCiudadDestinoRel()->getZonaRel());
+                    $arGuia->setTipoLiquidacion($arGuiaTemporal->getTipoLiquidacion());
                     $arGuia->setImportado('E');
                     $em->persist($arGuia);
                 } else {

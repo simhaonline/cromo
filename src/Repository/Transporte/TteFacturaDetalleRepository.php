@@ -207,7 +207,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('g.numero')
             ->addSelect('g.documentoCliente')
             ->addSelect('g.nombreDestinatario')
-            ->addSelect('cd.nombre AS ciudadOrigen')
+            ->addSelect('co.nombre AS ciudadOrigen')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('g.vrFlete + g.vrManejo AS total')
             ->addSelect('fd.unidades')

@@ -81,6 +81,7 @@
                 <th>TERCERO</th>
                 <th>FECHA</th>
                 <th>VENCE</th>
+                <th>VER</th>
                 <th>ABONO</th>
                 <th>SALDO</th>
                 <th class="text-center"><input type="checkbox" name="ChkSeleccionarTodos"
@@ -97,6 +98,7 @@
                     <td style="text-align: left;">{{ arCuentaPagar.terceroNombreCorto }}</td>
                     <td style="text-align: right;">{{ arCuentaPagar.fecha | date('d/m/Y') }}</td>
                     <td style="text-align: right;">{{ arCuentaPagar.fechaVence | date('d/m/Y') }}</td>
+                    <td>{{ arCuentaPagar.estadoVerificado? "SI":"NO" }}</td>
                     <td style="text-align: right;">{{ arCuentaPagar.vrAbono | number_format(0,'.',',') }}</td>
                     <td style="text-align: right;">{{ arCuentaPagar.vrSaldo | number_format }}</td>
                     <td style="text-align: center;">

@@ -152,6 +152,11 @@ class TesCuentaPagar
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="estado_verificado", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $estadoVerificado = false;
+
+    /**
      * @ORM\Column(name="saldo_inicial", type="boolean", nullable=true, options={"default" : false})
      */
     private $saldoInicial = false;
@@ -320,6 +325,22 @@ class TesCuentaPagar
     public function setModulo($modulo): void
     {
         $this->modulo = $modulo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModelo()
+    {
+        return $this->modelo;
+    }
+
+    /**
+     * @param mixed $modelo
+     */
+    public function setModelo($modelo): void
+    {
+        $this->modelo = $modelo;
     }
 
     /**
@@ -613,6 +634,38 @@ class TesCuentaPagar
     /**
      * @return mixed
      */
+    public function getEstadoVerificado()
+    {
+        return $this->estadoVerificado;
+    }
+
+    /**
+     * @param mixed $estadoVerificado
+     */
+    public function setEstadoVerificado($estadoVerificado): void
+    {
+        $this->estadoVerificado = $estadoVerificado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSaldoInicial()
+    {
+        return $this->saldoInicial;
+    }
+
+    /**
+     * @param mixed $saldoInicial
+     */
+    public function setSaldoInicial($saldoInicial): void
+    {
+        $this->saldoInicial = $saldoInicial;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDiasVencimiento()
     {
         return $this->diasVencimiento;
@@ -722,37 +775,7 @@ class TesCuentaPagar
         $this->egresosDetalleCuentasPagarRel = $egresosDetalleCuentasPagarRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getModelo()
-    {
-        return $this->modelo;
-    }
 
-    /**
-     * @param mixed $modelo
-     */
-    public function setModelo($modelo): void
-    {
-        $this->modelo = $modelo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSaldoInicial()
-    {
-        return $this->saldoInicial;
-    }
-
-    /**
-     * @param mixed $saldoInicial
-     */
-    public function setSaldoInicial($saldoInicial): void
-    {
-        $this->saldoInicial = $saldoInicial;
-    }
 
 
 

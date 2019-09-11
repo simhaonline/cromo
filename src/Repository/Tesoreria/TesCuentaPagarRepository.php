@@ -94,6 +94,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
             ->addSelect('cp.plazo')
             ->addSelect('cp.fecha')
             ->addSelect('cp.fechaVence')
+            ->addSelect('cp.estadoVerificado')
             ->addSelect('cpt.nombre as cuentaPagarTipoNombre')
             ->addSelect('t.nombreCorto as terceroNombreCorto')
             ->addSelect('t.numeroIdentificacion as terceroNumeroIdentificacion')
@@ -310,6 +311,15 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
                 Mensajes::error("La cuenta por pagar tiene abonos y no se puede anular");
                 return false;
             }
+        }
+    }
+
+    public function verificar($arCuentaPagar) {
+        $em = $this->getEntityManager();
+        if(!$arCuentaPagar->getEstadoVerificado()) {
+            $arCuentaPagar->setEstadoVerificado(1);
+            $em->persist($arCuentaPagar);
+            $em->flush();
         }
     }
 

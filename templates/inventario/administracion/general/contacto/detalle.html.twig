@@ -1,37 +1,34 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ notificar()|raw }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('inventario_administracion_general_contacto_lista') }}">Volver</a>
+            <a class="btn btn-default btn-sm" href="{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_lista') }}">Volver</a>
         </div>
+    </div>
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+        {{ form_widget(form.btnVerificar) }}
+    </div>
+    <div style="float:right">
+        {% if arCuentaPagar.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arCuentaPagar.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arCuentaPagar.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arCuentaPagar.estadoVerificado == true %}<span class="label label-success">Verificado</span>{% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-datos">
         <tr>
-            <td class="titulo">NOMBRE:</td>
-            <td class="td-in-well">{{ arContacto.nombreCorto }}</td>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
             <td class="titulo">IDENTIFICACION:</td>
-            <td class="td-in-well">{{ arContacto.numeroIdentificacion | default ('') }}</td>
+            <td class="td-in-well">{{ arCuentaPagar.terceroRel.numeroIdentificacion | default ('') }}</td>
             <td class="titulo">TERCERO:</td>
-            <td class="td-in-well">{{ arContacto.terceroRel.nombreCorto | default ('') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">CARGO:</td>
-            <td class="td-in-well">{{ arContacto.cargo | default ('') }}</td>
-            <td class="titulo">AREA:</td>
-            <td class="td-in-well">{{ arContacto.area | default ('') }}</td>
-            <td class="titulo">TELÉFONO:</td>
-            <td class="td-in-well">{{ arContacto.telefono | default ('') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">CELULAR:</td>
-            <td class="td-in-well">{{ arContacto.celular }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="td-in-well">{{ arCuentaPagar.terceroRel.nombreCorto | default ('') }}</td>
         </tr>
     </table>
-    {#{{ form_end(form) }}#}
+    {{ form_end(form) }}
 {% endblock %}

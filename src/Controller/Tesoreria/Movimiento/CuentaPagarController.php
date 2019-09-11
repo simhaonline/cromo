@@ -8,6 +8,8 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\General\General;
+use App\Utilidades\Estandares;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -78,8 +80,26 @@ class CuentaPagarController extends ControllerListenerGeneral
         $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($id);
+        $form = Estandares::botonera($arCuentaPagar->getEstadoAutorizado(), $arCuentaPagar->getEstadoAprobado(), $arCuentaPagar->getEstadoAnulado());
+
+        $arrBtnVerificar = ['label' => 'Verificar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        if ($arCuentaPagar->getEstadoVerificado()) {
+            $arrBtnVerificar['disabled'] = true;
+        }
+        $form
+            ->add('btnVerificar', SubmitType::class, $arrBtnVerificar);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnVerificar')->isClicked()) {
+                $em->getRepository(TesCuentaPagar::class)->verificar($arCuentaPagar);
+            }
+            return $this->redirect($this->generateUrl('tesoreria_movimiento_cuentapagar_cuentapagar_detalle', ['id' => $id]));
+        }
+
         return $this->render('inventario/administracion/general/contacto/detalle.html.twig', [
-            'arCuentaPagar' => $arCuentaPagar
+            'arCuentaPagar' => $arCuentaPagar,
+            'clase' => array('clase' => 'TesCuentaPagar', 'codigo' => $id),
+            'form' => $form->createView()
         ]);
     }
 }

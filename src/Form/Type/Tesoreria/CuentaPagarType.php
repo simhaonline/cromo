@@ -60,7 +60,8 @@ class CuentaPagarType extends AbstractType
             {"campo":"vrTotal",                    "tipo":"moneda","ayuda":"Total",                                "titulo":"TOTAL"},
             {"campo":"estadoAutorizado",               "tipo":"bool",  "ayuda":"Autorizado",                           "titulo":"AUT"},
             {"campo":"estadoAprobado",                 "tipo":"bool",  "ayuda":"Aprobado",                             "titulo":"APR"},
-            {"campo":"estadoAnulado",                  "tipo":"bool",  "ayuda":"Anulado",                              "titulo":"ANU"}
+            {"campo":"estadoAnulado",                  "tipo":"bool",  "ayuda":"Anulado",                              "titulo":"ANU"},
+            {"campo":"estadoVerificado",                  "tipo":"bool",  "ayuda":"Verificado",                              "titulo":"VER"}
         ]';
         return $campos;
     }

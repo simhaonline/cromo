@@ -16,7 +16,6 @@ class GenModulo
     ];
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\Column(type="string", name="codigo_modulo_pk",length=80, nullable=false)
      */
     private $codigoModuloPk;

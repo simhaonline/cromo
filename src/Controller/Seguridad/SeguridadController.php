@@ -30,7 +30,7 @@ class SeguridadController extends Controller
         $error = $authUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authUtils->getLastUsername();
-        return $this->render('seguridad/login.html.twig', array(
+        return $this->render('seguridad/login2.html.twig', array(
             'last_username' => $lastUsername,
             'error'         => $error,
             'licencia'      => $arLicencia?$arLicencia[0]->getCodigoLicenciaPk():null

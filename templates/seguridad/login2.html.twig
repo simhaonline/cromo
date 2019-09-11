@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!--
+Template Name:  SmartAdmin Responsive WebApp - Template build with Twitter Bootstrap 4
+Version: 4.0.0
+Author: Sunnyat Ahmmed
+Website: http://gootbootstrap.com
+Purchase: https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0
+License: You must have a valid license purchased only from wrapbootstrap.com (link above) in order to legally use this theme for your project.
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>
+        Ingreso - - Semantica vCromo1.0
+    </title>
+    <meta name="description" content="Login">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
+    <!-- Call App Mode on ios devices -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- Remove Tap Highlight on Windows Phone IE -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- base css -->
+    <link rel="stylesheet" media="screen, print" href="{{ asset('plantilla2/css/vendors.bundle.css') }}">
+    <link rel="stylesheet" media="screen, print" href="{{ asset('plantilla2/css/app.bundle.css') }}">
+    <!-- Place favicon.ico in the root directory -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('plantilla2/img/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('plantilla2/img/favicon/favicon-32x32.png') }}">
+    <link rel="mask-icon" href="{{ asset('plantilla2/') }}img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <!-- Optional: page related CSS-->
+    <link rel="stylesheet" media="screen, print" href="{{ asset('plantilla2/css/fa-brands.css') }}">
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="page-inner bg-brand-gradient">
+        <div class="page-content-wrapper bg-transparent m-0">
+            <div class="height-10 w-100 shadow-lg px-4 bg-brand-gradient">
+                <div class="d-flex align-items-center container p-0">
+                    <div class="page-logo width-mobile-auto m-0 align-items-center justify-content-center p-0 bg-transparent bg-img-none shadow-0 height-9">
+                        <a href="javascript:void(0)" class="page-logo-link press-scale-down d-flex align-items-center">
+                            <img src="{{ asset('plantilla2/img/logo.png') }}" alt="SmartAdmin WebApp" aria-roledescription="logo">
+                            <span class="page-logo-text mr-1">Semantica WebApp</span>
+                        </a>
+                    </div>
+                    <a href="page_register.html" class="btn-link text-white ml-auto">
+                        Crear Cuenta
+                    </a>
+                </div>
+            </div>
+            <div class="flex-1" style="background: url({{ asset('plantilla2/img/svg/pattern-1.svg') }}) no-repeat center bottom fixed; background-size: cover;">
+                <div class="container py-4 py-lg-5 my-lg-5 px-4 px-sm-0">
+                    <div class="row">
+                        <div class="col col-md-6 col-lg-7 hidden-sm-down">
+                            <h2 class="fs-xxl fw-500 mt-4 text-white">
+                                Es momento de hacer lo que tienes en mente, nosotros lo programamos
+                                <small class="h3 fw-300 mt-3 mb-5 text-white opacity-60">
+                                    No se asuste, también teníamos en mente muchas cosas para hoy, no solo iluminar nuestros colores o cambiar el fondo de inicio de sesión. Tenemos grandes cambios que ira experimentando y que siempre son pensados para mejorar su experiencia de uso, estamos comprometidos con mejorar continuamente. Ayudanos!
+                                </small>
+                            </h2>
+                            <a href="semantica.com.co" class="fs-lg fw-500 text-white opacity-70">Leer mas &gt;&gt;</a>
+                            <div class="d-sm-flex flex-column align-items-center justify-content-center d-md-block">
+                                <div class="px-0 py-1 mt-5 text-white fs-nano opacity-50">
+                                    Encuentranos en redes sociales
+                                </div>
+                                <div class="d-flex flex-row opacity-70">
+                                    <a href="#" class="mr-2 fs-xxl text-white">
+                                        <i class="fab fa-facebook-square"></i>
+                                    </a>
+                                    <a href="#" class="mr-2 fs-xxl text-white">
+                                        <i class="fab fa-twitter-square"></i>
+                                    </a>
+                                    <a href="#" class="mr-2 fs-xxl text-white">
+                                        <i class="fab fa-google-plus-square"></i>
+                                    </a>
+                                    <a href="#" class="mr-2 fs-xxl text-white">
+                                        <i class="fab fa-linkedin"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 ml-auto">
+                            <h1 class="text-white fw-300 mb-3 d-sm-block d-md-none">
+                                Secure login
+                            </h1>
+                            {% if error %}
+                                <div style="color: #ffffff;background: #a90329;padding: 3px;">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                            {% endif %}
+                            <div class="card p-4 rounded-plus bg-faded">
+                                <form action="{{ path('login') }}" method="post">
+                                    <div class="form-group">
+                                        <label class="form-label" for="username">Username</label>
+                                        <input type="text" id="username" name="_username" class="form-control form-control-lg" placeholder="su usuario" value="" required>
+                                        <div class="invalid-feedback">No, you missed this one.</div>
+                                        <div class="help-block">Your unique username to app</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="password">Password</label>
+                                        <input type="password" id="password" name="_password" class="form-control form-control-lg" placeholder="contraseña" value="" required>
+                                        <div class="invalid-feedback">Sorry, you missed this one.</div>
+                                        <div class="help-block">Your password</div>
+                                    </div>
+                                    <div class="form-group text-left">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="rememberme">
+                                            <label class="custom-control-label" for="rememberme"> Remember me for the next 30 days</label>
+                                        </div>
+                                    </div>
+                                    <div class="row no-gutters">
+                                        <div class="col-lg-6 pr-lg-1 my-2">
+                                            <button type="submit" class="btn btn-info btn-block btn-lg">Sign in with <i class="fab fa-google"></i></button>
+                                        </div>
+                                        <div class="col-lg-6 pl-lg-1 my-2">
+                                            <button id="js-login-btn" type="submit" class="btn btn-danger btn-block btn-lg">Inicio seguro</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-absolute pos-bottom pos-left pos-right p-3 text-center text-white">
+                        2019 © SmartAdmin by&nbsp;<a href='https://www.gotbootstrap.com' class='text-white opacity-40 fw-500' title='gotbootstrap.com' target='_blank'>gotbootstrap.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- base vendor bundle:
+     DOC: if you remove pace.js from core please note on Internet Explorer some CSS animations may execute before a page is fully loaded, resulting 'jump' animations
+                + pace.js (recommended)
+                + jquery.js (core)
+                + jquery-ui-cust.js (core)
+                + popper.js (core)
+                + bootstrap.js (core)
+                + slimscroll.js (extension)
+                + app.navigation.js (core)
+                + ba-throttle-debounce.js (core)
+                + waves.js (extension)
+                + smartpanels.js (extension)
+                + src/../jquery-snippets.js (core) -->
+<script src="{{ asset('plantilla2/js/vendors.bundle.js') }}"></script>
+<script src="{{ asset('plantilla2/js/app.bundle.js') }}"></script>
+<script>
+    $("#js-login-btn").click(function(event)
+    {
+
+        // Fetch form to apply custom Bootstrap validation
+        var form = $("#js-login")
+
+        if (form[0].checkValidity() === false)
+        {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+
+        form.addClass('was-validated');
+        // Perform ajax submit here...
+    });
+
+</script>
+</body>
+</html>

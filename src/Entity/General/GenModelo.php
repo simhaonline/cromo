@@ -26,6 +26,15 @@ class GenModelo
      */
     private $codigoModuloFk;
 
+    /**
+     * @ORM\Column(name="codigo_funcion_fk", length=30, type="string")
+     */
+    private $codigoFuncionFk;
+
+    /**
+     * @ORM\Column(name="codigo_grupo_fk", length=50, type="string")
+     */
+    private $codigoGrupoFk;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Seguridad\SegUsuarioModelo", mappedBy="modeloRel", cascade={"persist", "remove"})
@@ -78,6 +87,38 @@ class GenModelo
     public function setSeguridadUsuarioModeloModeloRel( $seguridadUsuarioModeloModeloRel ): void
     {
         $this->seguridadUsuarioModeloModeloRel = $seguridadUsuarioModeloModeloRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFuncionFk()
+    {
+        return $this->codigoFuncionFk;
+    }
+
+    /**
+     * @param mixed $codigoFuncionFk
+     */
+    public function setCodigoFuncionFk($codigoFuncionFk): void
+    {
+        $this->codigoFuncionFk = $codigoFuncionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
     }
 
 

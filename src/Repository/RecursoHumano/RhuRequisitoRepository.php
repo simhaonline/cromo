@@ -7,6 +7,7 @@ use App\Entity\RecursoHumano\RhuRequisitoCargo;
 use App\Entity\RecursoHumano\RhuRequisitoDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuRequisitoRepository extends ServiceEntityRepository
 {
@@ -18,15 +19,35 @@ class RhuRequisitoRepository extends ServiceEntityRepository
 
     public function lista()
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuRequisitoCargo::class, 'rhrc')
-            ->select('rhrc.codigoRequisitoCargoPk')
-            ->addSelect('rc.nombre AS nombreRequisito')
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuRequisito::class, 'r')
+            ->select('r.codigoRequisitoPk')
+            ->addSelect('rt.nombre AS nombreRequisito')
             ->addSelect('c.nombre AS nombreCargo')
-            ->addSelect('rc.general')
-            ->leftJoin('rhrc.requisitoConceptoRel','rc')
-            ->leftJoin('rhrc.cargoRel','c')
-            ->orderBy('rhrc.codigoRequisitoCargoPk', 'ASC');
+            ->addSelect('r.nombreCorto')
+            ->addSelect('r.numeroIdentificacion')
+            ->leftJoin('r.requisitoTipoRel','rt')
+            ->leftJoin('rhrc.cargoRel','c');
 
+
+
+//        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuRequisitoCargo::class, 'rhrc')
+//            ->select('rhrc.codigoRequisitoCargoPk')
+//            ->addSelect('rc.nombre AS nombreRequisito')
+//            ->addSelect('c.nombre AS nombreCargo')
+//            ->addSelect('rc.general')
+//            ->leftJoin('rhrc.requisitoConceptoRel','rc')
+//            ->leftJoin('rhrc.cargoRel','c')
+//            ->orderBy('rhrc.codigoRequisitoCargoPk', 'ASC');
+
+
+            if ($session->get('RhuRequisitoCargo_numeroIdentificacion')) {
+                $queryBuilder->andWhere("r.numeroIdentificacion = '{$session->get('RhuRequisitoCargo_numeroIdentificacion')}'");
+            }
+
+            if ($session->get('RhuRequisitoCargo_nombreCorto')) {
+                $queryBuilder->andWhere("r.nombreCorto = '{$session->get('RhuRequisitoCargo_nombreCorto')}'");
+            }
         return $queryBuilder;
     }
 

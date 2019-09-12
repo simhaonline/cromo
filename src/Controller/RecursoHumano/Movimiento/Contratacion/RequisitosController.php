@@ -60,7 +60,8 @@ class RequisitosController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Requisitos");
+                General::get()->setExportar($em->getRepository(RhuRequisito::class)->lista()->getQuery()->execute(), "Requisitos");
+
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

@@ -1092,7 +1092,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                         //Adicionales
                         $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(array('codigoVacacionFk' => $codigo));
                         foreach ($arVacacionAdicionales as $arVacacionAdicional) {
-                            $arConceptoCuenta = $em->getRepository(RhuConceptoCuenta::class)->findOneBy(array('codigoConceptoFk' => $arVacacionAdicional->getCodigoConceptoFk(), 'codigoEmpleadoTipoFk' => $arVacacion->getEmpleadoRel()->getCodigoEmpleadoTipoFk()));
+                            $arConceptoCuenta = $em->getRepository(RhuConceptoCuenta::class)->findOneBy(array('codigoConceptoFk' => $arVacacionAdicional->getCodigoConceptoFk(), 'codigoCostoClaseFk' => $arVacacion->getContratoRel()->getCodigoCostoClaseFk()));
                             if ($arConceptoCuenta) {
                                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arConceptoCuenta->getCodigoCuentaFk());
                                 if ($arCuenta) {
@@ -1111,14 +1111,14 @@ class RhuVacacionRepository extends ServiceEntityRepository
                                         $arRegistro->setNaturaleza("D");
                                     }
                                     //Para contabilizar al nit fijo el concepto
-                                    if ($arVacacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad() != null) {
-                                        $arTerceroConcepto = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arVacacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad()));
-                                        $arRegistro->setTerceroRel($arTerceroConcepto);
-                                    }
-                                    if ($arCuenta->getCodigoTerceroFijoFk()) {
-                                        $arTerceroDetalle = $em->getRepository(FinTercero::class)->find($arCuenta->getCodigoTerceroFijoFk());
-                                        $arRegistro->setTerceroRel($arTerceroDetalle);
-                                    }
+                                    //if ($arVacacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad() != null) {
+                                      //  $arTerceroConcepto = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arVacacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad()));
+                                        //$arRegistro->setTerceroRel($arTerceroConcepto);
+                                    //}
+                                    //if ($arCuenta->getCodigoTerceroFijoFk()) {
+                                        //$arTerceroDetalle = $em->getRepository(FinTercero::class)->find($arCuenta->getCodigoTerceroFijoFk());
+                                        //$arRegistro->setTerceroRel($arTerceroDetalle);
+                                    //}
 
                                     $arRegistro->setDescripcion($arVacacionAdicional->getConceptoRel()->getNombre());
                                     $arRegistro->setCodigoModeloFk('RhuVacacion');

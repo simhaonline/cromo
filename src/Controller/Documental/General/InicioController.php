@@ -206,17 +206,18 @@ class InicioController extends Controller
 
     /**
      * @param $tipo
-     * @param $codigo
+     * @param $codigoArchivo
+     * @param $codigoMovimiento
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @Route("/documental/general/eliminar/{tipo}/{codigo}", name="documental_general_general_eliminar")
+     * @Route("/documental/general/eliminar/{tipo}/{codigoMovimiento}/{codigoArchivo}", name="documental_general_general_eliminar")
      */
-    public function EliminarAction($tipo, $codigo)
+    public function EliminarAction($tipo, $codigoMovimiento, $codigoArchivo)
     {
         $em = $this->getDoctrine()->getManager();
         $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
-        $arArchivo = $em->getRepository(DocArchivo::class)->find($codigo);
+        $arArchivo = $em->getRepository(DocArchivo::class)->find($codigoArchivo);
         if (!$arArchivo) {
-            return $this->redirect($this->generateUrl('documental_general_general_lista', array('tipo' => $tipo, 'codigo' => $codigo)));
+            return $this->redirect($this->generateUrl('documental_general_general_lista', array('tipo' => $tipo, 'codigo' => $codigoMovimiento)));
         }
         $strRuta = $arrConfiguracion['rutaAlmacenamiento'] . "/archivo/" . $arArchivo->getCodigoArchivoTipoFk() . "/" . $arArchivo->getDirectorio() . "/" . $arArchivo->getCodigoArchivoPk() . "_" . $arArchivo->getNombre();
         if (file_exists($strRuta)) {
@@ -224,7 +225,7 @@ class InicioController extends Controller
         }
         $em->remove($arArchivo);
         $em->flush();
-        return $this->redirect($this->generateUrl('documental_general_general_lista', array('tipo' => $tipo, 'codigo' => $codigo)));
+        return $this->redirect($this->generateUrl('documental_general_general_lista', array('tipo' => $tipo, 'codigo' => $codigoMovimiento)));
     }
 
 }

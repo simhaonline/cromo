@@ -25,7 +25,7 @@
                             <td>{{ arArchivos.nombre  }}</td>
                             <td>{{ arArchivos.usuario  }}</td>
                             <td style="text-align: center"><a href="{{ path('documental_general_general_descargar', { 'codigoArchivo': arArchivos.codigoArchivoPk }) }}"><i class="fa fa-download" style="font-size: large;color: black;"></i></a></td>
-                            <td style="text-align: center"><a href="{{ path('documental_general_general_eliminar', { 'tipo': tipo, 'codigo': arArchivos.codigoArchivoPk }) }}"onclick='return confirm("Esta seguro de eliminar el archivo?")'><i class="fa fa-trash" style="font-size: large;color: black;"></i></a></td>
+                            <td style="text-align: center"><a href="{{ path('documental_general_general_eliminar', { 'tipo': tipo, 'codigoMovimiento':codigo,'codigoArchivo': arArchivos.codigoArchivoPk }) }}"onclick='return confirm("Esta seguro de eliminar el archivo?")'><i class="fa fa-trash" style="font-size: large;color: black;"></i></a></td>
                         </tr>
                     {% endfor %}
                 </table>

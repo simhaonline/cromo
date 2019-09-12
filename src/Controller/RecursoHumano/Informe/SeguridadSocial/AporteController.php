@@ -54,7 +54,7 @@ class AporteController extends  Controller
                 $session->set('filtroRhuInformeAporteFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($em->getRepository(RhuAporteDetalle::class)->informe())->execute(), "Aportes");
+                General::get()->setExportar($em->getRepository(RhuAporteDetalle::class)->informe()->getQuery()->execute(), "Aportes");
             }
         }
         $arAportes = $paginator->paginate($em->getRepository(RhuAporteDetalle::class)->informe(), $request->query->getInt('page', 1), 30);

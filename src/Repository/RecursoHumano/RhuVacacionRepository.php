@@ -1104,10 +1104,10 @@ class RhuVacacionRepository extends ServiceEntityRepository
                                     $arRegistro->setNumeroReferencia($arVacacion->getCodigoVacacionPk());
                                     $arRegistro->setFecha($arVacacion->getFechaContabilidad());
                                     if ($arVacacionAdicional->getVrBonificacion() > 0) {
-                                        $arRegistro->setVrCredito($arVacacionAdicional->getVrBonificacion());
+                                        $arRegistro->setVrCredito($arVacacionAdicional->getVrDeduccion());
                                         $arRegistro->setNaturaleza("C");
                                     } else {
-                                        $arRegistro->setVrDebito($arVacacionAdicional->getVrDeduccion());
+                                        $arRegistro->setVrDebito($arVacacionAdicional->getVrBonificacion());
                                         $arRegistro->setNaturaleza("D");
                                     }
                                     //Para contabilizar al nit fijo el concepto

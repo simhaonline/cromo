@@ -10,6 +10,8 @@ use App\Form\Type\Cartera\ReciboType;
 use App\Utilidades\Mensajes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +37,9 @@ class CrearReciboMasivoController extends Controller
         $form = $this->createFormBuilder()
             ->add('cboCuentaCobrarTipoRel', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
             ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNumeroReferencia'), 'attr' => ['class' => 'form-control']])
+            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('btnFiltrar', SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
             ->getForm();
         $form->handleRequest($request);
@@ -44,6 +49,9 @@ class CrearReciboMasivoController extends Controller
         $formRecibo->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroFechaDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
+                $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
+                $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
                 $arCuentaCobrarTipo = $form->get('cboCuentaCobrarTipoRel')->getData();
                 if ($arCuentaCobrarTipo) {
                     $session->set('filtroCarReciboCodigoReciboTipo', $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk());

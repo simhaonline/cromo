@@ -452,7 +452,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $session = new Session();
 
-        $arCrearReciboMasivo = $em->createQueryBuilder()
+        $queryBuilder = $em->createQueryBuilder()
             ->from('App:Cartera\CarCuentaCobrar', 'cc')
             ->addSelect("cc.codigoCuentaCobrarPk")
             ->addSelect('cc.numeroDocumento')
@@ -467,13 +467,26 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->leftJoin('cc.cuentaCobrarTipoRel', 'cct')
             ->andWhere("cc.vrSaldo > 0")
             ->andWhere("cct.permiteReciboMasivo = 1");
+        $fecha = new \DateTime('now');
         if ($session->get('filtroCarReciboCodigoReciboTipo')) {
-            $arCrearReciboMasivo->andWhere("cc.codigoCuentaCobrarTipoFk='{$session->get("filtroCarReciboCodigoReciboTipo")}'");
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk='{$session->get("filtroCarReciboCodigoReciboTipo")}'");
         }
         if ($session->get('filtroCarNumeroReferencia') != '') {
-            $arCrearReciboMasivo->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
+            $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
         }
-        return $arCrearReciboMasivo->getQuery()->execute();
+        if ($session->get('filtroFecha') == true) {
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("cc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("cc.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("cc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        return $queryBuilder->getQuery()->execute();
     }
 
     public function corregirSaldos()

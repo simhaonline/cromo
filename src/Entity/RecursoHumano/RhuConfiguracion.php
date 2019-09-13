@@ -179,12 +179,12 @@ class RhuConfiguracion
     private $codigoEntidadRiesgosProfesionalesFk;
 
     /**
-     * @ORM\Column(name="codigo_comprobante_nomina", type="integer", length=10, nullable=true)
+     * @ORM\Column(name="codigo_comprobante_nomina", type="string", length=10, nullable=true)
      */
     private $codigoComprobanteNomina;
 
     /**
-     * @ORM\Column(name="codigo_comprobante_vacacion", type="integer", length=10, nullable=true)
+     * @ORM\Column(name="codigo_comprobante_vacacion", type="string", length=10, nullable=true)
      */
     private $codigoComprobanteVacacion;
 

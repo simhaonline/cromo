@@ -179,17 +179,17 @@ class RhuConfiguracion
     private $codigoEntidadRiesgosProfesionalesFk;
 
     /**
-     * @ORM\Column(name="codigo_comprobante_nomina", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_comprobante_nomina", type="integer", length=10, nullable=true)
      */
     private $codigoComprobanteNomina;
 
     /**
-     * @ORM\Column(name="codigo_comprobante_vacacion", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_comprobante_vacacion", type="integer", length=10, nullable=true)
      */
     private $codigoComprobanteVacacion;
 
     /**
-     * @ORM\Column(name="codigo_comprobante_liquidacion", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_comprobante_liquidacion", type="string", length=10, nullable=true)
      */
     private $codigoComprobanteLiquidacion;
 
@@ -245,6 +245,22 @@ class RhuConfiguracion
      * @ORM\JoinColumn(name="codigo_entidad_riesgos_profesionales_fk", referencedColumnName="codigo_entidad_pk")
      */
     protected $entidadRiesgosRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -324,6 +340,70 @@ class RhuConfiguracion
     public function setCodigoConceptoFondoSolidaridadPensionFk($codigoConceptoFondoSolidaridadPensionFk): void
     {
         $this->codigoConceptoFondoSolidaridadPensionFk = $codigoConceptoFondoSolidaridadPensionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuxilioTransporteNoPrestacional()
+    {
+        return $this->auxilioTransporteNoPrestacional;
+    }
+
+    /**
+     * @param mixed $auxilioTransporteNoPrestacional
+     */
+    public function setAuxilioTransporteNoPrestacional($auxilioTransporteNoPrestacional): void
+    {
+        $this->auxilioTransporteNoPrestacional = $auxilioTransporteNoPrestacional;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoVacacionFk()
+    {
+        return $this->codigoConceptoVacacionFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoVacacionFk
+     */
+    public function setCodigoConceptoVacacionFk($codigoConceptoVacacionFk): void
+    {
+        $this->codigoConceptoVacacionFk = $codigoConceptoVacacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoVacacionDisfruteFk()
+    {
+        return $this->codigoConceptoVacacionDisfruteFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoVacacionDisfruteFk
+     */
+    public function setCodigoConceptoVacacionDisfruteFk($codigoConceptoVacacionDisfruteFk): void
+    {
+        $this->codigoConceptoVacacionDisfruteFk = $codigoConceptoVacacionDisfruteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescontarAusentismosDeLicencias()
+    {
+        return $this->descontarAusentismosDeLicencias;
+    }
+
+    /**
+     * @param mixed $descontarAusentismosDeLicencias
+     */
+    public function setDescontarAusentismosDeLicencias($descontarAusentismosDeLicencias): void
+    {
+        $this->descontarAusentismosDeLicencias = $descontarAusentismosDeLicencias;
     }
 
     /**
@@ -409,81 +489,17 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getCodigoEntidadRiesgosProfesionalesFk()
+    public function getLiquidarLicenciasIbcMesAnterior()
     {
-        return $this->codigoEntidadRiesgosProfesionalesFk;
+        return $this->liquidarLicenciasIbcMesAnterior;
     }
 
     /**
-     * @param mixed $codigoEntidadRiesgosProfesionalesFk
+     * @param mixed $liquidarLicenciasIbcMesAnterior
      */
-    public function setCodigoEntidadRiesgosProfesionalesFk($codigoEntidadRiesgosProfesionalesFk): void
+    public function setLiquidarLicenciasIbcMesAnterior($liquidarLicenciasIbcMesAnterior): void
     {
-        $this->codigoEntidadRiesgosProfesionalesFk = $codigoEntidadRiesgosProfesionalesFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConceptoAuxilioTransporteRel()
-    {
-        return $this->conceptoAuxilioTransporteRel;
-    }
-
-    /**
-     * @param mixed $conceptoAuxilioTransporteRel
-     */
-    public function setConceptoAuxilioTransporteRel($conceptoAuxilioTransporteRel): void
-    {
-        $this->conceptoAuxilioTransporteRel = $conceptoAuxilioTransporteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConceptoFondoSolidaridadRel()
-    {
-        return $this->conceptoFondoSolidaridadRel;
-    }
-
-    /**
-     * @param mixed $conceptoFondoSolidaridadRel
-     */
-    public function setConceptoFondoSolidaridadRel($conceptoFondoSolidaridadRel): void
-    {
-        $this->conceptoFondoSolidaridadRel = $conceptoFondoSolidaridadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEntidadRiesgosRel()
-    {
-        return $this->entidadRiesgosRel;
-    }
-
-    /**
-     * @param mixed $entidadRiesgosRel
-     */
-    public function setEntidadRiesgosRel($entidadRiesgosRel): void
-    {
-        $this->entidadRiesgosRel = $entidadRiesgosRel;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
+        $this->liquidarLicenciasIbcMesAnterior = $liquidarLicenciasIbcMesAnterior;
     }
 
     /**
@@ -521,22 +537,6 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getDescontarAusentismosDeLicencias()
-    {
-        return $this->descontarAusentismosDeLicencias;
-    }
-
-    /**
-     * @param mixed $descontarAusentismosDeLicencias
-     */
-    public function setDescontarAusentismosDeLicencias($descontarAusentismosDeLicencias): void
-    {
-        $this->descontarAusentismosDeLicencias = $descontarAusentismosDeLicencias;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getEliminarAusentismo()
     {
         return $this->eliminarAusentismo;
@@ -548,6 +548,22 @@ class RhuConfiguracion
     public function setEliminarAusentismo($eliminarAusentismo): void
     {
         $this->eliminarAusentismo = $eliminarAusentismo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraPorcentajeLiquidacion()
+    {
+        return $this->generaPorcentajeLiquidacion;
+    }
+
+    /**
+     * @param mixed $generaPorcentajeLiquidacion
+     */
+    public function setGeneraPorcentajeLiquidacion($generaPorcentajeLiquidacion): void
+    {
+        $this->generaPorcentajeLiquidacion = $generaPorcentajeLiquidacion;
     }
 
     /**
@@ -649,38 +665,6 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getCodigoConceptoVacacionFk()
-    {
-        return $this->codigoConceptoVacacionFk;
-    }
-
-    /**
-     * @param mixed $codigoConceptoVacacionFk
-     */
-    public function setCodigoConceptoVacacionFk($codigoConceptoVacacionFk): void
-    {
-        $this->codigoConceptoVacacionFk = $codigoConceptoVacacionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoConceptoVacacionDisfruteFk()
-    {
-        return $this->codigoConceptoVacacionDisfruteFk;
-    }
-
-    /**
-     * @param mixed $codigoConceptoVacacionDisfruteFk
-     */
-    public function setCodigoConceptoVacacionDisfruteFk($codigoConceptoVacacionDisfruteFk): void
-    {
-        $this->codigoConceptoVacacionDisfruteFk = $codigoConceptoVacacionDisfruteFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getPagarIncapacidadSalarioPactado()
     {
         return $this->pagarIncapacidadSalarioPactado;
@@ -713,6 +697,22 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
+    public function getLiquidarVacacionesSalarioPromedioCesantias()
+    {
+        return $this->liquidarVacacionesSalarioPromedioCesantias;
+    }
+
+    /**
+     * @param mixed $liquidarVacacionesSalarioPromedioCesantias
+     */
+    public function setLiquidarVacacionesSalarioPromedioCesantias($liquidarVacacionesSalarioPromedioCesantias): void
+    {
+        $this->liquidarVacacionesSalarioPromedioCesantias = $liquidarVacacionesSalarioPromedioCesantias;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPagarIncapacidadCompleta()
     {
         return $this->pagarIncapacidadCompleta;
@@ -735,13 +735,12 @@ class RhuConfiguracion
     }
 
     /**
-     * @param mixed $iquidarIncapacidadSinBase
+     * @param mixed $liquidarIncapacidadSinBase
      */
-    public function setLiquidarIncapacidadSinBase($iquidarIncapacidadSinBase): void
+    public function setLiquidarIncapacidadSinBase($liquidarIncapacidadSinBase): void
     {
-        $this->liquidarIncapacidadSinBase = $iquidarIncapacidadSinBase;
+        $this->liquidarIncapacidadSinBase = $liquidarIncapacidadSinBase;
     }
-
 
     /**
      * @return mixed
@@ -762,65 +761,33 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getGeneraPorcentajeLiquidacion()
+    public function getCodigoEntidadRiesgosProfesionalesFk()
     {
-        return $this->generaPorcentajeLiquidacion;
+        return $this->codigoEntidadRiesgosProfesionalesFk;
     }
 
     /**
-     * @param mixed $generaPorcentajeLiquidacion
+     * @param mixed $codigoEntidadRiesgosProfesionalesFk
      */
-    public function setGeneraPorcentajeLiquidacion($generaPorcentajeLiquidacion): void
+    public function setCodigoEntidadRiesgosProfesionalesFk($codigoEntidadRiesgosProfesionalesFk): void
     {
-        $this->generaPorcentajeLiquidacion = $generaPorcentajeLiquidacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLiquidarVacacionesSalarioPromedioCesantias()
-    {
-        return $this->liquidarVacacionesSalarioPromedioCesantias;
-    }
-
-    /**
-     * @param mixed $liquidarVacacionesSalarioPromedioCesantias
-     */
-    public function setLiquidarVacacionesSalarioPromedioCesantias($liquidarVacacionesSalarioPromedioCesantias): void
-    {
-        $this->liquidarVacacionesSalarioPromedioCesantias = $liquidarVacacionesSalarioPromedioCesantias;
+        $this->codigoEntidadRiesgosProfesionalesFk = $codigoEntidadRiesgosProfesionalesFk;
     }
 
     /**
      * @return mixed
      */
-    public function getLiquidarLicenciasIbcMesAnterior()
+    public function getCodigoComprobanteNomina()
     {
-        return $this->liquidarLicenciasIbcMesAnterior;
+        return $this->codigoComprobanteNomina;
     }
 
     /**
-     * @param mixed $liquidarLicenciasIbcMesAnterior
+     * @param mixed $codigoComprobanteNomina
      */
-    public function setLiquidarLicenciasIbcMesAnterior($liquidarLicenciasIbcMesAnterior): void
+    public function setCodigoComprobanteNomina($codigoComprobanteNomina): void
     {
-        $this->liquidarLicenciasIbcMesAnterior = $liquidarLicenciasIbcMesAnterior;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAuxilioTransporteNoPrestacional()
-    {
-        return $this->auxilioTransporteNoPrestacional;
-    }
-
-    /**
-     * @param mixed $auxilioTransporteNoPrestacional
-     */
-    public function setAuxilioTransporteNoPrestacional($auxilioTransporteNoPrestacional): void
-    {
-        $this->auxilioTransporteNoPrestacional = $auxilioTransporteNoPrestacional;
+        $this->codigoComprobanteNomina = $codigoComprobanteNomina;
     }
 
     /**
@@ -970,17 +937,49 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getCodigoComprobanteNomina()
+    public function getConceptoAuxilioTransporteRel()
     {
-        return $this->codigoComprobanteNomina;
+        return $this->conceptoAuxilioTransporteRel;
     }
 
     /**
-     * @param mixed $codigoComprobanteNomina
+     * @param mixed $conceptoAuxilioTransporteRel
      */
-    public function setCodigoComprobanteNomina($codigoComprobanteNomina): void
+    public function setConceptoAuxilioTransporteRel($conceptoAuxilioTransporteRel): void
     {
-        $this->codigoComprobanteNomina = $codigoComprobanteNomina;
+        $this->conceptoAuxilioTransporteRel = $conceptoAuxilioTransporteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoFondoSolidaridadRel()
+    {
+        return $this->conceptoFondoSolidaridadRel;
+    }
+
+    /**
+     * @param mixed $conceptoFondoSolidaridadRel
+     */
+    public function setConceptoFondoSolidaridadRel($conceptoFondoSolidaridadRel): void
+    {
+        $this->conceptoFondoSolidaridadRel = $conceptoFondoSolidaridadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntidadRiesgosRel()
+    {
+        return $this->entidadRiesgosRel;
+    }
+
+    /**
+     * @param mixed $entidadRiesgosRel
+     */
+    public function setEntidadRiesgosRel($entidadRiesgosRel): void
+    {
+        $this->entidadRiesgosRel = $entidadRiesgosRel;
     }
 
 

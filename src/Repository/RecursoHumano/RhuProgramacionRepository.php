@@ -625,6 +625,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
     {
 
         $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
         if ($arr) {
             $error = "";
             foreach ($arr AS $codigo) {
@@ -641,7 +642,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $arPagos = $em->getRepository(RhuPago::class)->findBy(array('codigoProgramacionFk' => $codigo));
                 foreach ($arPagos AS $arPago) {
                     $arTercero = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPago->getEmpleadoRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPago->getEmpleadoRel()->getNumeroIdentificacion()));
-                    $arComprobanteContable = $em->getRepository(FinComprobante::class)->find(11);
+                    $arComprobanteContable = $em->getRepository(FinComprobante::class)->find($arConfiguracion->getCodigoComprobanteNomina());
                     $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->findBy(array('codigoPagoFk' => $arPago->getCodigoPagoPk()));
                     foreach ($arPagoDetalles AS $arPagoDetalle) {
                         $arConceptoCuenta = $em->getRepository(RhuConceptoCuenta::class)->findOneBy(array('codigoConceptoFk' => $arPagoDetalle->getCodigoConceptoFk(), 'codigoCostoClaseFk' => $arPago->getContratoRel()->getCodigoCostoClaseFk()));

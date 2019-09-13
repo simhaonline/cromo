@@ -101,12 +101,12 @@ class TteGuiaRepository extends ServiceEntityRepository
      */
     public function lista($raw)
     {
-        $limiteRegistros = $raw['limiteRegistros']??100;
-        $filtros = $raw['filtros']??null;
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
 
         $codigoGuia = null;
-        if($filtros) {
-            $codigoGuia = $filtros['codigoGuia']??null;
+        if ($filtros) {
+            $codigoGuia = $filtros['codigoGuia'] ?? null;
         }
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
@@ -114,6 +114,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.codigoServicioFk')
             ->addSelect('tg.codigoGuiaTipoFk')
             ->addSelect('tg.numero')
+            ->addSelect('tg.numeroFactura')
             ->addSelect('tg.documentoCliente')
             ->addSelect('tg.fechaIngreso')
             ->addSelect('tg.codigoOperacionIngresoFk')
@@ -205,7 +206,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
             $queryBuilder->andWhere("tg.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
-        }elseif ($session->get('filtroTteGuiaGuiaTipoCodigo')) {
+        } elseif ($session->get('filtroTteGuiaGuiaTipoCodigo')) {
             $queryBuilder->andWhere("tg.codigoGuiaTipoFk = '{$session->get('filtroTteGuiaGuiaTipoCodigo')}'");
         }
         if ($session->get('filtroTteGuiaCodigoServicio')) {
@@ -213,7 +214,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroTteGuiaDocumento') != "") {
             $queryBuilder->andWhere("tg.documentoCliente LIKE '%" . $session->get('filtroTteGuiaDocumento') . "%'");
-        }elseif ($session->get('filtroTteGuiaDocumentoCliente')) {
+        } elseif ($session->get('filtroTteGuiaDocumentoCliente')) {
             $queryBuilder->andWhere("tg.documentoCliente LIKE '%{$session->get('filtroTteGuiaDocumentoCliente')}%'");
         }
 
@@ -293,10 +294,10 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $validacion = false;
                 Mensajes::error("La guia esta facturada y no se puede anular");
             } else {
-                if($arGuia->getEstadoFacturaExportado()) {
+                if ($arGuia->getEstadoFacturaExportado()) {
                     $arFactura = $em->getRepository(TteFactura::class)->findOneBy(['codigoFacturaTipoFk' => $arGuia->getGuiaTipoRel()->getCodigoFacturaTipoFk(), 'numero' => $arGuia->getNumeroFactura()]);
-                    if($arFactura) {
-                        if(!$arFactura->getEstadoAnulado()) {
+                    if ($arFactura) {
+                        if (!$arFactura->getEstadoAnulado()) {
                             $validacion = false;
                             Mensajes::error("La factura genero factura y esta no se encuentra anulada");
                         }
@@ -304,7 +305,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 }
             }
 
-            if($validacion) {
+            if ($validacion) {
                 $arGuia->setEstadoAnulado(1);
                 $arGuia->setUnidades(0);
                 $arGuia->setPesoFacturado(0);
@@ -3005,7 +3006,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $arGuiaEstado->execute();
     }
 
-    public function estadoGuia(){
+    public function estadoGuia()
+    {
         $session = new Session();
         $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class, 'g')
             ->select('g.codigoGuiaPk')
@@ -3349,8 +3351,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         $codigoHasta = $raw['codigoHasta'] ?? null;
 
         if ($codigoDesde && $codigoHasta) {
-            if($codigoHasta >= $codigoDesde) {
-                if($codigoHasta - $codigoDesde <=3000 ) {
+            if ($codigoHasta >= $codigoDesde) {
+                if ($codigoHasta - $codigoDesde <= 3000) {
                     $queryBuilder = $em->createQueryBuilder()->from(TteGuia::class, 'g')
                         ->select('g.codigoGuiaPk')
                         ->addSelect('g.numero')

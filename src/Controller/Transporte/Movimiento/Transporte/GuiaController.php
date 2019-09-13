@@ -134,7 +134,7 @@ class GuiaController extends ControllerListenerGeneral
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(TteGuia::class)->listaExcel($raw), "Guias");
+                General::get()->setExportar($em->getRepository(TteGuia::class)->lista($raw), "Guias");
             }
         }
 

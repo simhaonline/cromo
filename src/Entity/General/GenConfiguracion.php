@@ -68,11 +68,6 @@ class GenConfiguracion
     private $logo;
 
     /**
-     * @ORM\Column(name="web_service_oro_url", type="string", nullable=true)
-     */
-    private $webServiceOroUrl;
-
-    /**
      * @ORM\Column(name="web_service_cesio_url", type="string", nullable=true)
      */
     private $webServiceCesioUrl;
@@ -93,9 +88,9 @@ class GenConfiguracion
     private $dominio;
 
     /**
-     * @ORM\Column(name="codigo_cliente_oro", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_cliente_mesa_ayuda", type="integer", nullable=true)
      */
-    private $codigoClienteOro;
+    private $codigoClienteMesaAyuda;
 
     /**
      * @ORM\Column(name="autoretencion_venta", type="boolean", options={"default" : false})
@@ -313,22 +308,6 @@ class GenConfiguracion
     /**
      * @return mixed
      */
-    public function getWebServiceOroUrl()
-    {
-        return $this->webServiceOroUrl;
-    }
-
-    /**
-     * @param mixed $webServiceOroUrl
-     */
-    public function setWebServiceOroUrl($webServiceOroUrl): void
-    {
-        $this->webServiceOroUrl = $webServiceOroUrl;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getWebServiceCesioUrl()
     {
         return $this->webServiceCesioUrl;
@@ -393,17 +372,17 @@ class GenConfiguracion
     /**
      * @return mixed
      */
-    public function getCodigoClienteOro()
+    public function getCodigoClienteMesaAyuda()
     {
-        return $this->codigoClienteOro;
+        return $this->codigoClienteMesaAyuda;
     }
 
     /**
-     * @param mixed $codigoClienteOro
+     * @param mixed $codigoClienteMesaAyuda
      */
-    public function setCodigoClienteOro($codigoClienteOro): void
+    public function setCodigoClienteMesaAyuda($codigoClienteMesaAyuda): void
     {
-        $this->codigoClienteOro = $codigoClienteOro;
+        $this->codigoClienteMesaAyuda = $codigoClienteMesaAyuda;
     }
 
     /**

@@ -154,7 +154,6 @@ class GenModelo extends Fixture
             ['codigo' =>'RhuIncapacidad',           'modulo'=> 'RecursoHumano',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' =>'RhuLicencia',              'modulo'=> 'RecursoHumano',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' =>'RhuProvision',             'modulo'=> 'RecursoHumano',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' =>'',                         'modulo'=> 'RecursoHumano',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 
             ['codigo' => 'TesTercero',              'modulo'=> 'Tesoreria',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' => 'TesCuentaPagar',          'modulo'=> 'Tesoreria',     'funcion' => 'Administracion',  'grupo' => 'Varios'],

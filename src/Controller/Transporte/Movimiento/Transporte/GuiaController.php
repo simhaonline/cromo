@@ -102,16 +102,6 @@ class GuiaController extends ControllerListenerGeneral
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-            ->add('codigoServicioFk', EntityType::class, [
-                'class' => TteServicio::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('o')
-                        ->orderBy('o.codigoServicioPk', 'ASC');
-                },
-                'required' => false,
-                'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
-            ])
             ->add('codigoGuiaPk', TextType::class, array('required' => false))
             ->add('codigoDespachoFk', TextType::class, array('required' => false))
             ->add('codigoFacturaFk', TextType::class, array('required' => false))
@@ -139,50 +129,53 @@ class GuiaController extends ControllerListenerGeneral
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
                 $filtro = [
-                    'codigoGuia' => $form->get('codigoGuiaPk')->getData()
+                    'codigoGuia' => $form->get('codigoGuiaPk')->getData(),
+                    'codigoDespacho' => $form->get('codigoDespachoFk')->getData(),
+                    'numero' => $form->get('numero')->getData(),
+                    'numeroFactura' => $form->get('numeroFactura')->getData(),
+                    'estadoDespachado' => $form->get('estadoDespachado')->getData(),
+                    'codigoCliente' => $form->get('codigoClienteFk')->getData(),
+                    'documentoCliente' => $form->get('documentoCliente')->getData(),
+                    'fechaIngresoDesde' => $form->get('fechaIngresoDesde')->getData() ?$form->get('fechaIngresoDesde')->getData()->format('Y-m-d'): null,
+                    'fechaIngresoHasta' => $form->get('fechaIngresoHasta')->getData() ?$form->get('fechaIngresoHasta')->getData()->format('Y-m-d'): null,
+                    'codigoFactura' => $form->get('codigoFacturaFk')->getData(),
+                    'estadoFacturado' => $form->get('estadoFacturado')->getData(),
+                    'estadoNovedad' => $form->get('estadoNovedad')->getData(),
+                    'estadoNovedadSolucion' => $form->get('estadoNovedadSolucion')->getData(),
+                    'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+                    'nombreDestinatario' => $form->get('nombreDestinatario')->getData(),
+                    'remitente' => $form->get('remitente')->getData(),
                 ];
 
                 $arGuiaTipo = $form->get('codigoGuiaTipoFk')->getData();
                 $arOperacionCargo = $form->get('codigoOperacionCargoFk')->getData();
                 $arServicio = $form->get('codigoServicioFk')->getData();
                 $arCiudadDestino = $form->get('codigoCiudadDestinoFk')->getData();
-                $session->set('filtroTteGuiaCodigo', $form->get('codigoGuiaPk')->getData());
-                $session->set('filtroTteGuiaDespacho', $form->get('codigoDespachoFk')->getData());
-                $session->set('filtroTteGuiaNumero', $form->get('numero')->getData());
-                $session->set('filtroTteGuiaNumeroFactura', $form->get('numeroFactura')->getData());
-                $session->set('filtroTteGuiaEstadoDespachado', $form->get('estadoDespachado')->getData());
-                $session->set('filtroTteGuiaClienteNombre', $form->get('codigoClienteFk')->getData());
-                $session->set('filtroTteGuiaDocumentoCliente', $form->get('documentoCliente')->getData());
-                $session->set('filtroTteGuiaFechaIngresoDesde',  $form->get('fechaIngresoDesde')->getData() ?$form->get('fechaIngresoDesde')->getData()->format('Y-m-d'): null);
-                $session->set('filtroTteGuiaFechaIngresoHasta', $form->get('fechaIngresoHasta')->getData() ? $form->get('fechaIngresoHasta')->getData()->format('Y-m-d'): null);
-                $session->set('filtroTteGuiaDocumentocodigoFactura', $form->get('codigoFacturaFk')->getData());
-                $session->set('filtroTteGuiaDocumentoEstadoFacturado', $form->get('estadoFacturado')->getData());
-                $session->set('filtroTteGuiaDocumentoEstadoNovedad', $form->get('estadoNovedad')->getData());
-                $session->set('filtroTteGuiaDocumentoEstadoNovedadSolucion', $form->get('estadoNovedadSolucion')->getData());
-                $session->set('filtroTteGuiaDocumentoEstadoAnulado', $form->get('estadoAnulado')->getData());
-                $session->set('filtroTteGuiaRemitente', $form->get('remitente')->getData());
-                $session->set('filtroTteGuiaNombreDestinatario', $form->get('nombreDestinatario')->getData());
 
-                if ($arGuiaTipo != '') {
-                    $session->set('filtroTteGuiaGuiaTipoCodigo', $arGuiaTipo->getCodigoGuiaTipoPk());
-                } else {
-                    $session->set('filtroTteGuiaGuiaTipoCodigo', null);
+                if (is_object($arGuiaTipo)) {
+                    $filtro['guiaTipo'] = $arGuiaTipo->getCodigoGuiaTipoPk();
+                }else{
+                    $filtro['guiaTipo'] =  $arGuiaTipo;
                 }
-                if ($arOperacionCargo != '') {
-                    $session->set('filtroTteGuiaOperacionCargoCodigo', $arOperacionCargo->getCodigoOperacionPk());
-                } else {
-                    $session->set('filtroTteGuiaOperacionCargoCodigo', null);
+
+                if (is_object($arOperacionCargo)) {
+                    $filtro['operacionCargo'] = $arOperacionCargo->getCodigoOperacionPk();
+                }else{
+                    $filtro['operacionCargo'] = $arOperacionCargo;
                 }
-                if ($arServicio != '') {
-                    $session->set('filtroTteGuiaServicioCodigo', $arServicio->getCodigoServicioPk());
-                } else {
-                    $session->set('filtroTteGuiaServicioCodigo', null);
+
+                if (is_object($arServicio)) {
+                    $filtro['servicio'] = $arServicio->getCodigoServicioPk();
+                }else{
+                    $filtro['servicio'] = $arServicio;
                 }
-                if ($arCiudadDestino != '') {
-                    $session->set('filtroTteGuiaCiudadDestino', $arCiudadDestino->getCodigoCiudadPk());
+
+                if (is_object($arCiudadDestino)) {
+                    $filtro['ciudadDestino'] =  $arCiudadDestino->getCodigoCiudadPk();
                 } else {
-                    $session->set('filtroTteGuiaCiudadDestino', null);
+                    $filtro['ciudadDestino'] = $arCiudadDestino;
                 }
+
                 $raw['filtros'] = $filtro;
             }
             if ($form->get('btnExcel')->isClicked()) {

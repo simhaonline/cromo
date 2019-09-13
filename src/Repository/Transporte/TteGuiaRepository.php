@@ -61,6 +61,25 @@ class TteGuiaRepository extends ServiceEntityRepository
         $codigoGuia = null;
         if ($filtros) {
             $codigoGuia = $filtros['codigoGuia'] ?? null;
+            $codigoDespacho = $filtros['codigoDespacho'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $numeroFactura = $filtros['numeroFactura'] ?? null;
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $documentoCliente = $filtros['documentoCliente'] ?? null;
+            $fechaIngresoDesde = $filtros['fechaIngresoDesde'] ?? null;
+            $fechaIngresoHasta = $filtros['fechaIngresoHasta'] ?? null;
+            $codigoFactura = $filtros['codigoFactura'] ?? null;
+            $estadoDespachado = $filtros['estadoDespachado'] ?? null;
+            $estadoFacturado = $filtros['estadoFacturado'] ?? null;
+            $estadoNovedad = $filtros['estadoNovedad'] ?? null;
+            $estadoNovedadSolucion = $filtros['estadoNovedadSolucion'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+            $nombreDestinatario = $filtros['nombreDestinatario'] ?? null;
+            $guiaTipo = $filtros['guiaTipo'] ?? null;
+            $operacionCargo = $filtros['operacionCargo'] ?? null;
+            $servicio = $filtros['servicio'] ?? null;
+            $ciudadDestino = $filtros['ciudadDestino'] ?? null;
+            $remitente = $filtros['remitente'] ?? null;
         }
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
@@ -121,75 +140,66 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->where('tg.codigoGuiaPk <> 0');
         $fecha = new \DateTime('now');
-
-        if ($session->get('filtroTteGuiaClienteNombre')) {
-            $queryBuilder->andWhere("tg.codigoClienteFk = {$session->get('filtroTteGuiaClienteNombre')}");
-        }
-        if ($session->get('filtroTteGuiaOperacionCargoCodigo')) {
-            $queryBuilder->andWhere("tg.codigoOperacionCargoFk = '{$session->get('filtroTteGuiaOperacionCargoCodigo')}'");
-        }
-        if ($session->get('filtroTteGuiaServicioCodigo')) {
-            $queryBuilder->andWhere("tg.codigoServicioFk = '{$session->get('filtroTteGuiaServicioCodigo')}'");
-        }
-        if ($session->get('filtroTteGuiaDespacho')) {
-            $queryBuilder->andWhere("tg.codigoDespachoFk = '{$session->get('filtroTteGuiaDespacho')}'");
-        }
-        if ($session->get('filtroTteGuiaNumero')) {
-            $queryBuilder->andWhere("tg.numero = '{$session->get('filtroTteGuiaNumero')}'");
-        }
-        if ($session->get('filtroTteGuiaNumeroFactura')) {
-            $queryBuilder->andWhere("tg.numeroFactura = '{$session->get('filtroTteGuiaNumeroFactura')}'");
-        }
-        if ($session->get('filtroTteGuiaNombreDestinatario') != '') {
-            $queryBuilder->andWhere("tg.nombreDestinatario LIKE '%{$session->get('filtroTteGuiaNombreDestinatario')}%'");
-        }
-        if ($session->get('filtroTteGuiaRemitente') != '') {
-            $queryBuilder->andWhere("tg.remitente LIKE '%{$session->get('filtroTteGuiaRemitente')}%'");
-        }
-        if ($session->get('filtroTteGuiaFechaIngresoDesde') != null) {
-            $queryBuilder->andWhere("tg.fechaIngreso >= '{$session->get('filtroTteGuiaFechaIngresoDesde')} 00:00:00'");
-        }
-        if ($session->get('filtroTteGuiaFechaIngresoHasta') != null) {
-            $queryBuilder->andWhere("tg.fechaIngreso <= '{$session->get('filtroTteGuiaFechaIngresoHasta')} 23:59:59'");
-        }
-        if ($session->get('filtroTteGuiaRemitente') != "") {
-            $queryBuilder->andWhere("tg.remitente LIKE '%" . $session->get('filtroTteGuiaRemitente') . "%'");
-        }
-        if ($session->get('filtroTteFacturaCodigo')) {
-            $queryBuilder->andWhere("tg.codigoFacturaFk = '" . $session->get('filtroTteFacturaCodigo') . "'");
-        }
-        if ($session->get('filtroTteGuiaCodigoGuiaTipo')) {
-            $queryBuilder->andWhere("tg.codigoGuiaTipoFk = '" . $session->get('filtroTteGuiaCodigoGuiaTipo') . "'");
-        } elseif ($session->get('filtroTteGuiaGuiaTipoCodigo')) {
-            $queryBuilder->andWhere("tg.codigoGuiaTipoFk = '{$session->get('filtroTteGuiaGuiaTipoCodigo')}'");
-        }
-        if ($session->get('filtroTteGuiaCodigoServicio')) {
-            $queryBuilder->andWhere("tg.codigoServicioFk = '" . $session->get('filtroTteGuiaCodigoServicio') . "'");
-        }
-        if ($session->get('filtroTteGuiaDocumento') != "") {
-            $queryBuilder->andWhere("tg.documentoCliente LIKE '%" . $session->get('filtroTteGuiaDocumento') . "%'");
-        } elseif ($session->get('filtroTteGuiaDocumentoCliente')) {
-            $queryBuilder->andWhere("tg.documentoCliente LIKE '%{$session->get('filtroTteGuiaDocumentoCliente')}%'");
-        }
-
-        if ($session->get('filtroTteGuiaNumero') != "") {
-            $queryBuilder->andWhere("tg.numero = " . $session->get('filtroTteGuiaNumero'));
-        }
         if ($codigoGuia) {
             $queryBuilder->andWhere("tg.codigoGuiaPk = {$codigoGuia}");
         }
-        if ($session->get('filtroTteCodigoCliente')) {
-            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
-        }
-        if ($session->get('filtroTteGuiaOperacion')) {
-            $queryBuilder->andWhere("tg.codigoOperacionCargoFk = '" . $session->get('filtroTteGuiaOperacion') . "'");
+
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("tg.codigoClienteFk = '{$codigoCliente}'");
         }
 
-
-        if ($session->get('filtroTteGuiaCiudadDestino')) {
-            $queryBuilder->andWhere("tg.codigoCiudadDestinoFk = '" . $session->get('filtroTteGuiaCiudadDestino') . "'");
+        if ($operacionCargo) {
+            $queryBuilder->andWhere("tg.codigoOperacionCargoFk = '{$operacionCargo}'");
         }
-        switch ($session->get('filtroTteGuiaEstadoDespachado')) {
+
+        if ($codigoDespacho) {
+            $queryBuilder->andWhere("tg.codigoDespachoFk = '{$codigoDespacho}'");
+        }
+
+        if ($numero) {
+            $queryBuilder->andWhere("tg.numero = '{$numero}'");
+        }
+
+        if ($numeroFactura) {
+            $queryBuilder->andWhere("tg.numeroFactura = '{$numeroFactura}'");
+        }
+
+        if ($nombreDestinatario) {
+            $queryBuilder->andWhere("tg.nombreDestinatario LIKE '%{$nombreDestinatario}%'");
+        }
+
+        if ($remitente) {
+            $queryBuilder->andWhere("tg.remitente LIKE '%{$remitente}%'");
+        }
+
+        if ($fechaIngresoHasta) {
+            $queryBuilder->andWhere("tg.fechaIngreso >= '{$fechaIngresoHasta} 00:00:00'");
+        }
+
+        if ($fechaIngresoDesde) {
+            $queryBuilder->andWhere("tg.fechaIngreso <= '{$fechaIngresoDesde} 23:59:59'");
+        }
+
+        if ($codigoFactura) {
+            $queryBuilder->andWhere("tg.codigoFacturaFk = '{$codigoFactura}'");
+        }
+
+        if ($guiaTipo) {
+            $queryBuilder->andWhere("tg.codigoGuiaTipoFk = '{$guiaTipo}'");
+        }
+
+        if ($servicio) {
+            $queryBuilder->andWhere("tg.codigoServicioFk = '{$servicio}'");
+        }
+
+        if ($documentoCliente) {
+            $queryBuilder->andWhere("tg.documentoCliente LIKE '%{$documentoCliente}%'");
+        }
+
+        if ($ciudadDestino) {
+            $queryBuilder->andWhere("tg.codigoCiudadDestinoFk = '{$ciudadDestino}'");
+        }
+        switch ($estadoDespachado) {
             case '0':
                 $queryBuilder->andWhere("tg.estadoDespachado = 0");
                 break;
@@ -197,7 +207,8 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("tg.estadoDespachado = 1");
                 break;
         }
-        switch ($session->get('filtroTteGuiaDocumentoEstadoFacturado')) {
+
+        switch ($estadoFacturado) {
             case '0':
                 $queryBuilder->andWhere("tg.estadoFacturado = 0");
                 break;
@@ -205,7 +216,8 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("tg.estadoFacturado = 1");
                 break;
         }
-        switch ($session->get('filtroTteGuiaDocumentoEstadoNovedad')) {
+
+        switch ($estadoNovedad) {
             case '0':
                 $queryBuilder->andWhere("tg.estadoNovedad = 0");
                 break;
@@ -213,7 +225,8 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("tg.estadoNovedad = 1");
                 break;
         }
-        switch ($session->get('filtroTteGuiaDocumentoEstadoNovedadSolucion')) {
+
+        switch ($estadoNovedadSolucion) {
             case '0':
                 $queryBuilder->andWhere("tg.estadoNovedadSolucion = 0");
                 break;
@@ -221,7 +234,8 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("tg.estadoNovedadSolucion = 1");
                 break;
         }
-        switch ($session->get('filtroTteGuiaDocumentoEstadoAnulado')) {
+
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("tg.estadoAnulado = 0");
                 break;

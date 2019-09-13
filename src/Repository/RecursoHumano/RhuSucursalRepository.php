@@ -12,4 +12,32 @@ class RhuSucursalRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuSucursal::class);
     }
+
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuSucursal::class, 's')
+            ->select('s.codigoSucursalPk')
+            ->addSelect('s.nombre')
+            ->addSelect('s.estadoActivo');
+
+        if ($session->get('RhuSucursal_codigoSucursalPk')) {
+            $queryBuilder->andWhere(" = '{$session->get('RhuSucursal_codigoSucursalPk')}'");
+        }
+
+        if ($session->get('RhuSucursal_nombre')) {
+            $queryBuilder->andWhere("s.nombre = '%{$session->get('RhuSucursal_cnombre')}%'");
+        }
+
+        switch ($session->get('RhuSucursal_estadoActivo')) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoActivo = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoActivo= 1");
+                break;
+        }
+
+        return $queryBuilder;
+    }
 }

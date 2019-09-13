@@ -103,6 +103,7 @@ class SoporteController extends ControllerListenerGeneral
                 if ($id == 0) {
                     $arSoporte->setUsuario($this->getUser()->getUserName());
                 }
+                $arSoporte->setDias(($arSoporte->getFechaDesde()->diff($arSoporte->getFechaHasta()))->days + 1);
                 $em->persist($arSoporte);
                 $em->flush();
                 return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $arSoporte->getCodigoSoportePk()]));

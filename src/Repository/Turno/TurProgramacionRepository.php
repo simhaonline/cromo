@@ -403,7 +403,7 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
 
     }
 
-    public function validacionTurnos($codigoEmpleado, $anio, $mes) {
+    public function validacionTurnos($codigoEmpleado, $anio, $mes, $fechaDesde, $fechaHasta) {
         $em = $this->getEntityManager();
         $arrValidacionTurnos = [
                 'faltantes' => "",
@@ -417,11 +417,10 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
         for ($i = 1; $i <= 31; $i++) {
             $queryBuilder->addSelect('p.dia' . $i);
         }
-
         $arrProgramaciones = $queryBuilder->getQuery()->getResult();
         if($arrProgramaciones) {
             $numeroProgramaciones = count($arrProgramaciones);
-            for ($j=1; $j<=31; $j++) {
+            for ($j= $fechaDesde; $j<= $fechaHasta; $j++) {
                 $turnoFaltante = true;
                 $turnoDoble = false;
                 $arrTurnos = [];

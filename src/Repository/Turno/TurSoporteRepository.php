@@ -476,7 +476,7 @@ class TurSoporteRepository extends ServiceEntityRepository
 
         //Recursos sin turno asignado o con turnos dobles
         foreach ($arSoportesContratos as $arSoporteContrato) {
-            $arrValidacionTurnos = $em->getRepository(TurProgramacion::class)->validacionTurnos($arSoporteContrato->getCodigoEmpleadoFk(), $arSoporteContrato->getAnio(), $arSoporteContrato->getMes());
+            $arrValidacionTurnos = $em->getRepository(TurProgramacion::class)->validacionTurnos($arSoporteContrato->getCodigoEmpleadoFk(), $arSoporteContrato->getAnio(), $arSoporteContrato->getMes(), $arSoporte->getFechaDesde()->format('j'), $arSoporte->getFechaHasta()->format('j'));
             if($arrValidacionTurnos['faltantes']) {
                 $arrInconsistencias[] = [
                     'descripcion' => "El empleado no tiene turnos asignados dias: " . $arrValidacionTurnos['faltantes'],

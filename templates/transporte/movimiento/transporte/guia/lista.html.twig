@@ -205,18 +205,21 @@
         </tbody>
     </table>
     <div class="btn-group" style="float: left">
-        <div class="btn btn-default btn-sm">Registros
-            <span class="badge">{{ arGuias.getTotalItemCount }}
-            </span>
+        <div class="btn btn-default btn-sm">
+            <span class="badge">{{ arGuias.getTotalItemCount }}</span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arGuias) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
     </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group" style="float: right">
             {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
     </div>
+    {{ form_end(form) }}
     <br /><br /><br />
 {% endblock %}

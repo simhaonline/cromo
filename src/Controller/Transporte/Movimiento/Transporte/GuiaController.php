@@ -60,7 +60,6 @@ class GuiaController extends ControllerListenerGeneral
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
-
         $form = $this->createFormBuilder()
             ->add('codigoGuiaTipoFk', EntityType::class, [
                 'class' => TteGuiaTipo::class,
@@ -121,19 +120,28 @@ class GuiaController extends ControllerListenerGeneral
             ->add('remitente', TextType::class, array('required' => false))
             ->add('documentoCliente', TextType::class, array('required' => false))
             ->add('nombreDestinatario', TextType::class, array('required' => false))
-            ->add('fechaIngresoDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTteGuiaFechaIngresoDesde') ? date_create($session->get('filtroTteGuiaFechaIngresoDesde')): null])
-            ->add('fechaIngresoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTteGuiaFechaIngresoHasta') ? date_create($session->get('filtroTteGuiaFechaIngresoHasta')): null])
+            ->add('fechaIngresoDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaIngresoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('estadoDespachado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoFacturado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoNovedad', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoNovedadSolucion', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
+                $filtro = [
+                    'codigoGuia' => $form->get('codigoGuiaPk')->getData()
+                ];
+
                 $arGuiaTipo = $form->get('codigoGuiaTipoFk')->getData();
                 $arOperacionCargo = $form->get('codigoOperacionCargoFk')->getData();
                 $arServicio = $form->get('codigoServicioFk')->getData();
@@ -175,14 +183,16 @@ class GuiaController extends ControllerListenerGeneral
                 } else {
                     $session->set('filtroTteGuiaCiudadDestino', null);
                 }
+                $raw['filtros'] = $filtro;
             }
             if ($form->get('btnExcel')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                General::get()->setExportar($em->getRepository(TteGuia::class)->lista()->getQuery()->getResult(), "Guias");
+                General::get()->setExportar($em->getRepository(TteGuia::class)->lista($raw), "Guias");
             }
         }
-        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->lista(), $request->query->getInt('page', 1), 30);
+
+        $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/transporte/guia/lista.html.twig', [
             'arGuias' => $arGuias,
             'form' => $form->createView(),

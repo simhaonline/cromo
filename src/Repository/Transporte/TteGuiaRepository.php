@@ -99,8 +99,15 @@ class TteGuiaRepository extends ServiceEntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function lista()
+    public function lista($raw)
     {
+        $limiteRegistros = $raw['limiteRegistros']??100;
+        $filtros = $raw['filtros']??null;
+
+        $codigoGuia = null;
+        if($filtros) {
+            $codigoGuia = $filtros['codigoGuia']??null;
+        }
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
             ->select('tg.codigoGuiaPk')
@@ -213,8 +220,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteGuiaNumero') != "") {
             $queryBuilder->andWhere("tg.numero = " . $session->get('filtroTteGuiaNumero'));
         }
-        if ($session->get('filtroTteGuiaCodigo') != "") {
-            $queryBuilder->andWhere("tg.codigoGuiaPk = " . $session->get('filtroTteGuiaCodigo'));
+        if ($codigoGuia) {
+            $queryBuilder->andWhere("tg.codigoGuiaPk = {$codigoGuia}");
         }
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')}");
@@ -222,18 +229,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($session->get('filtroTteGuiaOperacion')) {
             $queryBuilder->andWhere("tg.codigoOperacionCargoFk = '" . $session->get('filtroTteGuiaOperacion') . "'");
         }
-        if ($session->get('filtroFecha') == true) {
-            if ($session->get('filtroFechaDesde') != null) {
-                $queryBuilder->andWhere("tg.fechaIngreso >= '{$session->get('filtroFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("tg.fechaIngreso >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroFechaHasta') != null) {
-                $queryBuilder->andWhere("tg.fechaIngreso <= '{$session->get('filtroFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("tg.fechaIngreso <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
-        }
+
 
         if ($session->get('filtroTteGuiaCiudadDestino')) {
             $queryBuilder->andWhere("tg.codigoCiudadDestinoFk = '" . $session->get('filtroTteGuiaCiudadDestino') . "'");
@@ -280,7 +276,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         }
 
         $queryBuilder->orderBy('tg.fechaIngreso', 'DESC');
-        return $queryBuilder->setMaxResults(5000);
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**

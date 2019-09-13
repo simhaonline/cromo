@@ -61,18 +61,20 @@ class SegUsuarioModelo
      */
     private $anular;
 
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenModelo", inversedBy="seguridadUsuarioModeloModeloRel")
-     * @ORM\JoinColumn(name="codigo_modelo_fk", referencedColumnName="codigo_modelo_pk")
-     */
-    protected $modeloRel;
     /**
      * @return mixed
      */
     public function getCodigoSeguridadUsuarioModeloPk()
     {
         return $this->codigoSeguridadUsuarioModeloPk;
+    }
+
+    /**
+     * @param mixed $codigoSeguridadUsuarioModeloPk
+     */
+    public function setCodigoSeguridadUsuarioModeloPk($codigoSeguridadUsuarioModeloPk): void
+    {
+        $this->codigoSeguridadUsuarioModeloPk = $codigoSeguridadUsuarioModeloPk;
     }
 
     /**
@@ -86,10 +88,9 @@ class SegUsuarioModelo
     /**
      * @param mixed $codigoUsuarioFk
      */
-    public function setCodigoUsuarioFk($codigoUsuarioFk)
+    public function setCodigoUsuarioFk($codigoUsuarioFk): void
     {
         $this->codigoUsuarioFk = $codigoUsuarioFk;
-        return $this;
     }
 
     /**
@@ -103,10 +104,9 @@ class SegUsuarioModelo
     /**
      * @param mixed $codigoModeloFk
      */
-    public function setCodigoModeloFK($codigoModeloFk)
+    public function setCodigoModeloFk($codigoModeloFk): void
     {
         $this->codigoModeloFk = $codigoModeloFk;
-        return $this;
     }
 
     /**
@@ -120,10 +120,9 @@ class SegUsuarioModelo
     /**
      * @param mixed $nuevo
      */
-    public function setNuevo($nuevo)
+    public function setNuevo($nuevo): void
     {
         $this->nuevo = $nuevo;
-        return $this;
     }
 
     /**
@@ -137,10 +136,9 @@ class SegUsuarioModelo
     /**
      * @param mixed $lista
      */
-    public function setLista($lista)
+    public function setLista($lista): void
     {
         $this->lista = $lista;
-        return $this;
     }
 
     /**
@@ -154,10 +152,9 @@ class SegUsuarioModelo
     /**
      * @param mixed $detalle
      */
-    public function setDetalle($detalle)
+    public function setDetalle($detalle): void
     {
         $this->detalle = $detalle;
-        return $this;
     }
 
     /**
@@ -171,10 +168,9 @@ class SegUsuarioModelo
     /**
      * @param mixed $autorizar
      */
-    public function setAutorizar($autorizar)
+    public function setAutorizar($autorizar): void
     {
         $this->autorizar = $autorizar;
-        return $this;
     }
 
     /**
@@ -188,10 +184,9 @@ class SegUsuarioModelo
     /**
      * @param mixed $aprobar
      */
-    public function setAprobar($aprobar)
+    public function setAprobar($aprobar): void
     {
         $this->aprobar = $aprobar;
-        return $this;
     }
 
     /**
@@ -205,47 +200,11 @@ class SegUsuarioModelo
     /**
      * @param mixed $anular
      */
-    public function setAnular($anular)
+    public function setAnular($anular): void
     {
         $this->anular = $anular;
-        return $this;
     }
 
-
-
-    /**
-     * @return mixed
-     */
-    public function getUsuarioRel()
-    {
-        return $this->usuarioRel;
-    }
-
-    /**
-     * @param mixed $usuarioRel
-     */
-    public function setUsuarioRel($usuarioRel)
-    {
-        $this->usuarioRel = $usuarioRel;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getModeloRel()
-    {
-        return $this->modeloRel;
-    }
-
-    /**
-     * @param mixed $modeloRel
-     */
-    public function setModeloRel($modeloRel)
-    {
-        $this->modeloRel = $modeloRel;
-        return $this;
-    }
 
 
 

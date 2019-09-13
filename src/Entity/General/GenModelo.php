@@ -37,11 +37,6 @@ class GenModelo
     private $codigoGrupoFk;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Seguridad\SegUsuarioModelo", mappedBy="modeloRel", cascade={"persist", "remove"})
-     */
-    protected $seguridadUsuarioModeloModeloRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoModeloPk()
@@ -52,7 +47,7 @@ class GenModelo
     /**
      * @param mixed $codigoModeloPk
      */
-    public function setCodigoModeloPk( $codigoModeloPk ): void
+    public function setCodigoModeloPk($codigoModeloPk): void
     {
         $this->codigoModeloPk = $codigoModeloPk;
     }
@@ -68,25 +63,9 @@ class GenModelo
     /**
      * @param mixed $codigoModuloFk
      */
-    public function setCodigoModuloFk( $codigoModuloFk ): void
+    public function setCodigoModuloFk($codigoModuloFk): void
     {
         $this->codigoModuloFk = $codigoModuloFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSeguridadUsuarioModeloModeloRel()
-    {
-        return $this->seguridadUsuarioModeloModeloRel;
-    }
-
-    /**
-     * @param mixed $seguridadUsuarioModeloModeloRel
-     */
-    public function setSeguridadUsuarioModeloModeloRel( $seguridadUsuarioModeloModeloRel ): void
-    {
-        $this->seguridadUsuarioModeloModeloRel = $seguridadUsuarioModeloModeloRel;
     }
 
     /**
@@ -120,7 +99,6 @@ class GenModelo
     {
         $this->codigoGrupoFk = $codigoGrupoFk;
     }
-
 
 
 }

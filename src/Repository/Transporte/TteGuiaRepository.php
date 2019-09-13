@@ -269,6 +269,222 @@ class TteGuiaRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function listaExcel($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoGuia = null;
+        $codigoDespacho = null;
+        $numero = null;
+        $numeroFactura = null;
+        $codigoCliente = null;
+        $documentoCliente = null;
+        $fechaIngresoDesde = null;
+        $fechaIngresoHasta = null;
+        $codigoFactura = null;
+        $estadoDespachado = null;
+        $estadoFacturado = null;
+        $estadoNovedad = null;
+        $estadoNovedadSolucion = null;
+        $estadoAnulado = null;
+        $nombreDestinatario = null;
+        $guiaTipo = null;
+        $operacionCargo = null;
+        $servicio = null;
+        $ciudadDestino = null;
+        $remitente = null;
+
+        if ($filtros) {
+            $codigoGuia = $filtros['codigoGuia'] ?? null;
+            $codigoDespacho = $filtros['codigoDespacho'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $numeroFactura = $filtros['numeroFactura'] ?? null;
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $documentoCliente = $filtros['documentoCliente'] ?? null;
+            $fechaIngresoDesde = $filtros['fechaIngresoDesde'] ?? null;
+            $fechaIngresoHasta = $filtros['fechaIngresoHasta'] ?? null;
+            $codigoFactura = $filtros['codigoFactura'] ?? null;
+            $estadoDespachado = $filtros['estadoDespachado'] ?? null;
+            $estadoFacturado = $filtros['estadoFacturado'] ?? null;
+            $estadoNovedad = $filtros['estadoNovedad'] ?? null;
+            $estadoNovedadSolucion = $filtros['estadoNovedadSolucion'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+            $nombreDestinatario = $filtros['nombreDestinatario'] ?? null;
+            $guiaTipo = $filtros['guiaTipo'] ?? null;
+            $operacionCargo = $filtros['operacionCargo'] ?? null;
+            $servicio = $filtros['servicio'] ?? null;
+            $ciudadDestino = $filtros['ciudadDestino'] ?? null;
+            $remitente = $filtros['remitente'] ?? null;
+        }
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'tg')
+            ->select('tg.codigoGuiaPk')
+            ->addSelect('tg.codigoServicioFk')
+            ->addSelect('tg.codigoGuiaTipoFk')
+            ->addSelect('tg.numero')
+            ->addSelect('tg.numeroFactura')
+            ->addSelect('tg.documentoCliente')
+            ->addSelect('tg.fechaIngreso')
+            ->addSelect('tg.codigoOperacionIngresoFk')
+            ->addSelect('tg.codigoOperacionCargoFk')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('tg.nombreDestinatario')
+            ->addSelect('tg.telefonoDestinatario')
+            ->addSelect('tg.direccionDestinatario')
+            ->addSelect('tg.codigoDespachoFk')
+            ->addSelect('tg.cortesia')
+            ->addSelect('tg.remitente')
+            ->addSelect('tg.unidades')
+            ->addSelect('tg.pesoReal')
+            ->addSelect('tg.pesoVolumen')
+            ->addSelect('tg.vrFlete')
+            ->addSelect('tg.vrManejo')
+            ->addSelect('tg.vrRecaudo')
+            ->addSelect('tg.vrDeclara')
+            ->addSelect('tg.fechaIngreso')
+            ->addSelect('tg.fechaDesembarco')
+            ->addSelect('tg.fechaDespacho')
+            ->addSelect('tg.fechaEntrega')
+            ->addSelect('tg.fechaSoporte')
+            ->addSelect('tg.fechaCumplido')
+            ->addSelect('tg.fechaFactura')
+            ->addSelect('tg.fechaDocumental')
+            ->addSelect('tg.estadoImpreso')
+            ->addSelect('tg.estadoAutorizado')
+            ->addSelect('tg.estadoAnulado')
+            ->addSelect('tg.estadoAprobado')
+            ->addSelect('tg.estadoEmbarcado')
+            ->addSelect('tg.estadoDespachado')
+            ->addSelect('tg.estadoEntregado')
+            ->addSelect('tg.estadoSoporte')
+            ->addSelect('tg.estadoCumplido')
+            ->addSelect('tg.estadoFacturado')
+            ->addSelect('tg.estadoNovedad')
+            ->addSelect('tg.estadoImpreso')
+            ->addSelect('tg.estadoEmbarcado')
+            ->addSelect('tg.estadoCumplido')
+            ->addSelect('tg.estadoAnulado')
+            ->addSelect('tg.comentario')
+            ->addSelect('tg.usuario')
+            ->addSelect('ase.nombre')
+            ->leftJoin('tg.ciudadOrigenRel', 'co')
+            ->leftJoin('tg.clienteRel', 'c')
+            ->leftJoin('c.asesorRel', 'ase')
+            ->leftJoin('tg.ciudadDestinoRel', 'cd')
+            ->where('tg.codigoGuiaPk <> 0');
+        $fecha = new \DateTime('now');
+        if ($codigoGuia) {
+            $queryBuilder->andWhere("tg.codigoGuiaPk = '{$codigoGuia}'");
+        }
+
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("tg.codigoClienteFk = '{$codigoCliente}'");
+        }
+
+        if ($operacionCargo) {
+            $queryBuilder->andWhere("tg.codigoOperacionCargoFk = '{$operacionCargo}'");
+        }
+
+        if ($codigoDespacho) {
+            $queryBuilder->andWhere("tg.codigoDespachoFk = '{$codigoDespacho}'");
+        }
+
+        if ($numero) {
+            $queryBuilder->andWhere("tg.numero = '{$numero}'");
+        }
+
+        if ($numeroFactura) {
+            $queryBuilder->andWhere("tg.numeroFactura = '{$numeroFactura}'");
+        }
+
+        if ($nombreDestinatario) {
+            $queryBuilder->andWhere("tg.nombreDestinatario LIKE '%{$nombreDestinatario}%'");
+        }
+
+        if ($remitente) {
+            $queryBuilder->andWhere("tg.remitente LIKE '%{$remitente}%'");
+        }
+
+        if ($fechaIngresoHasta) {
+            $queryBuilder->andWhere("tg.fechaIngreso >= '{$fechaIngresoHasta} 00:00:00'");
+        }
+
+        if ($fechaIngresoDesde) {
+            $queryBuilder->andWhere("tg.fechaIngreso <= '{$fechaIngresoDesde} 23:59:59'");
+        }
+
+        if ($codigoFactura) {
+            $queryBuilder->andWhere("tg.codigoFacturaFk = '{$codigoFactura}'");
+        }
+
+        if ($guiaTipo) {
+            $queryBuilder->andWhere("tg.codigoGuiaTipoFk = '{$guiaTipo}'");
+        }
+
+        if ($servicio) {
+            $queryBuilder->andWhere("tg.codigoServicioFk = '{$servicio}'");
+        }
+
+        if ($documentoCliente) {
+            $queryBuilder->andWhere("tg.documentoCliente LIKE '%{$documentoCliente}%'");
+        }
+
+        if ($ciudadDestino) {
+            $queryBuilder->andWhere("tg.codigoCiudadDestinoFk = '{$ciudadDestino}'");
+        }
+        switch ($estadoDespachado) {
+            case '0':
+                $queryBuilder->andWhere("tg.estadoDespachado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("tg.estadoDespachado = 1");
+                break;
+        }
+
+        switch ($estadoFacturado) {
+            case '0':
+                $queryBuilder->andWhere("tg.estadoFacturado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("tg.estadoFacturado = 1");
+                break;
+        }
+
+        switch ($estadoNovedad) {
+            case '0':
+                $queryBuilder->andWhere("tg.estadoNovedad = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("tg.estadoNovedad = 1");
+                break;
+        }
+
+        switch ($estadoNovedadSolucion) {
+            case '0':
+                $queryBuilder->andWhere("tg.estadoNovedadSolucion = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("tg.estadoNovedadSolucion = 1");
+                break;
+        }
+
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("tg.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("tg.estadoAnulado = 1");
+                break;
+        }
+
+        $queryBuilder->orderBy('tg.fechaIngreso', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
     /**
      * @param $arGuia TteGuia
      * @return bool

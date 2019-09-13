@@ -91,7 +91,7 @@ class GuiaController extends ControllerListenerGeneral
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-            ->add('codigoClienteFk', TextType::class, array('required' => false, 'data' => $session->get('filtroCrmNombreCliente')))
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
             ->add('codigoServicioFk', EntityType::class, [
                 'class' => TteServicio::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -128,60 +128,13 @@ class GuiaController extends ControllerListenerGeneral
         ];
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
-                $filtro = [
-                    'codigoGuia' => $form->get('codigoGuiaPk')->getData(),
-                    'codigoDespacho' => $form->get('codigoDespachoFk')->getData(),
-                    'numero' => $form->get('numero')->getData(),
-                    'numeroFactura' => $form->get('numeroFactura')->getData(),
-                    'estadoDespachado' => $form->get('estadoDespachado')->getData(),
-                    'codigoCliente' => $form->get('codigoClienteFk')->getData(),
-                    'documentoCliente' => $form->get('documentoCliente')->getData(),
-                    'fechaIngresoDesde' => $form->get('fechaIngresoDesde')->getData() ?$form->get('fechaIngresoDesde')->getData()->format('Y-m-d'): null,
-                    'fechaIngresoHasta' => $form->get('fechaIngresoHasta')->getData() ?$form->get('fechaIngresoHasta')->getData()->format('Y-m-d'): null,
-                    'codigoFactura' => $form->get('codigoFacturaFk')->getData(),
-                    'estadoFacturado' => $form->get('estadoFacturado')->getData(),
-                    'estadoNovedad' => $form->get('estadoNovedad')->getData(),
-                    'estadoNovedadSolucion' => $form->get('estadoNovedadSolucion')->getData(),
-                    'estadoAnulado' => $form->get('estadoAnulado')->getData(),
-                    'nombreDestinatario' => $form->get('nombreDestinatario')->getData(),
-                    'remitente' => $form->get('remitente')->getData(),
-                ];
-
-                $arGuiaTipo = $form->get('codigoGuiaTipoFk')->getData();
-                $arOperacionCargo = $form->get('codigoOperacionCargoFk')->getData();
-                $arServicio = $form->get('codigoServicioFk')->getData();
-                $arCiudadDestino = $form->get('codigoCiudadDestinoFk')->getData();
-
-                if (is_object($arGuiaTipo)) {
-                    $filtro['guiaTipo'] = $arGuiaTipo->getCodigoGuiaTipoPk();
-                }else{
-                    $filtro['guiaTipo'] =  $arGuiaTipo;
-                }
-
-                if (is_object($arOperacionCargo)) {
-                    $filtro['operacionCargo'] = $arOperacionCargo->getCodigoOperacionPk();
-                }else{
-                    $filtro['operacionCargo'] = $arOperacionCargo;
-                }
-
-                if (is_object($arServicio)) {
-                    $filtro['servicio'] = $arServicio->getCodigoServicioPk();
-                }else{
-                    $filtro['servicio'] = $arServicio;
-                }
-
-                if (is_object($arCiudadDestino)) {
-                    $filtro['ciudadDestino'] =  $arCiudadDestino->getCodigoCiudadPk();
-                } else {
-                    $filtro['ciudadDestino'] = $arCiudadDestino;
-                }
-
-                $raw['filtros'] = $filtro;
+                $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                General::get()->setExportar($em->getRepository(TteGuia::class)->lista($raw), "Guias");
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(TteGuia::class)->listaExcel($raw), "Guias");
             }
         }
 
@@ -360,6 +313,60 @@ class GuiaController extends ControllerListenerGeneral
         }
         return $this->render('transporte/movimiento/transporte/guia/novedadSolucion.html.twig', array(
             'form' => $form->createView()));
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoGuia' => $form->get('codigoGuiaPk')->getData(),
+            'codigoDespacho' => $form->get('codigoDespachoFk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'numeroFactura' => $form->get('numeroFactura')->getData(),
+            'estadoDespachado' => $form->get('estadoDespachado')->getData(),
+            'codigoCliente' => $form->get('codigoClienteFk')->getData(),
+            'documentoCliente' => $form->get('documentoCliente')->getData(),
+            'fechaIngresoDesde' => $form->get('fechaIngresoDesde')->getData() ?$form->get('fechaIngresoDesde')->getData()->format('Y-m-d'): null,
+            'fechaIngresoHasta' => $form->get('fechaIngresoHasta')->getData() ?$form->get('fechaIngresoHasta')->getData()->format('Y-m-d'): null,
+            'codigoFactura' => $form->get('codigoFacturaFk')->getData(),
+            'estadoFacturado' => $form->get('estadoFacturado')->getData(),
+            'estadoNovedad' => $form->get('estadoNovedad')->getData(),
+            'estadoNovedadSolucion' => $form->get('estadoNovedadSolucion')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'nombreDestinatario' => $form->get('nombreDestinatario')->getData(),
+            'remitente' => $form->get('remitente')->getData(),
+        ];
+
+        $arGuiaTipo = $form->get('codigoGuiaTipoFk')->getData();
+        $arOperacionCargo = $form->get('codigoOperacionCargoFk')->getData();
+        $arServicio = $form->get('codigoServicioFk')->getData();
+        $arCiudadDestino = $form->get('codigoCiudadDestinoFk')->getData();
+
+        if (is_object($arGuiaTipo)) {
+            $filtro['guiaTipo'] = $arGuiaTipo->getCodigoGuiaTipoPk();
+        }else{
+            $filtro['guiaTipo'] =  $arGuiaTipo;
+        }
+
+        if (is_object($arOperacionCargo)) {
+            $filtro['operacionCargo'] = $arOperacionCargo->getCodigoOperacionPk();
+        }else{
+            $filtro['operacionCargo'] = $arOperacionCargo;
+        }
+
+        if (is_object($arServicio)) {
+            $filtro['servicio'] = $arServicio->getCodigoServicioPk();
+        }else{
+            $filtro['servicio'] = $arServicio;
+        }
+
+        if (is_object($arCiudadDestino)) {
+            $filtro['ciudadDestino'] =  $arCiudadDestino->getCodigoCiudadPk();
+        } else {
+            $filtro['ciudadDestino'] = $arCiudadDestino;
+        }
+
+        return $filtro;
+
     }
 }
 

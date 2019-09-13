@@ -179,6 +179,11 @@ class RhuConfiguracion
     private $codigoEntidadRiesgosProfesionalesFk;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_nomina", type="integer", nullable=true)
+     */
+    private $codigoComprobanteNomina;
+
+    /**
      * @ORM\Column(name="codigo_comprobante_vacacion", type="integer", nullable=true)
      */
     private $codigoComprobanteVacacion;
@@ -960,6 +965,22 @@ class RhuConfiguracion
     public function setAportesPorcentajeCaja($aportesPorcentajeCaja): void
     {
         $this->aportesPorcentajeCaja = $aportesPorcentajeCaja;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteNomina()
+    {
+        return $this->codigoComprobanteNomina;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteNomina
+     */
+    public function setCodigoComprobanteNomina($codigoComprobanteNomina): void
+    {
+        $this->codigoComprobanteNomina = $codigoComprobanteNomina;
     }
 
 

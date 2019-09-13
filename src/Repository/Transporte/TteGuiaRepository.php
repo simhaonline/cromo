@@ -59,6 +59,26 @@ class TteGuiaRepository extends ServiceEntityRepository
         $filtros = $raw['filtros'] ?? null;
 
         $codigoGuia = null;
+        $codigoDespacho = null;
+        $numero = null;
+        $numeroFactura = null;
+        $codigoCliente = null;
+        $documentoCliente = null;
+        $fechaIngresoDesde = null;
+        $fechaIngresoHasta = null;
+        $codigoFactura = null;
+        $estadoDespachado = null;
+        $estadoFacturado = null;
+        $estadoNovedad = null;
+        $estadoNovedadSolucion = null;
+        $estadoAnulado = null;
+        $nombreDestinatario = null;
+        $guiaTipo = null;
+        $operacionCargo = null;
+        $servicio = null;
+        $ciudadDestino = null;
+        $remitente = null;
+
         if ($filtros) {
             $codigoGuia = $filtros['codigoGuia'] ?? null;
             $codigoDespacho = $filtros['codigoDespacho'] ?? null;

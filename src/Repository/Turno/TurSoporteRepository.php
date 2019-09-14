@@ -11,6 +11,7 @@ use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Turno\TurContratoTipo;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurProgramacionRespaldo;
 use App\Entity\Turno\TurSector;
 use App\Entity\Turno\TurSoporte;
 use App\Entity\Turno\TurSoporteContrato;
@@ -38,7 +39,9 @@ class TurSoporteRepository extends ServiceEntityRepository
             ->addSelect('g.nombre as grupoNombre')
             ->addSelect('s.estadoAutorizado')
             ->addSelect('s.estadoAprobado')
-            ->leftJoin('s.grupoRel', 'g');
+            ->leftJoin('s.grupoRel', 'g')
+            ->where('s.cargadoNomina = 0')
+            ->orderBy('s.fechaDesde', 'DESC');
         $arSoportes = $queryBuilder->getQuery()->getResult();
         return $arSoportes;
     }
@@ -156,6 +159,10 @@ class TurSoporteRepository extends ServiceEntityRepository
 
         $em->getRepository(TurSoporte::class)->resumen($arSoporte);
 
+        foreach ($arSoportesContratos as $arSoporteContrato) {
+            $em->getRepository(TurProgramacionRespaldo::class)->generar($arSoporte, $arSoporteContrato);
+        }
+        $em->flush();
         //$em->getRepository('BrasaTurnoBundle:TurSoportePagoPeriodo')->analizarInconsistencias($codigoSoportePagoPeriodo);
         //$em->flush();
         //$em->getRepository('BrasaTurnoBundle:TurSoportePagoPeriodo')->liquidar($codigoSoportePagoPeriodo);
@@ -171,6 +178,8 @@ class TurSoporteRepository extends ServiceEntityRepository
             $arSoporte->setEstadoAutorizado(0);
             $em->persist($arSoporte);
             $q = $em->createQuery('delete from App\Entity\Turno\TurSoporteHora sh where sh.codigoSoporteFk = ' . $arSoporte->getCodigoSoportePk());
+            $numeroRegistros = $q->execute();
+            $q = $em->createQuery('delete from App\Entity\Turno\TurProgramacionRespaldo pr where pr.codigoSoporteFk = ' . $arSoporte->getCodigoSoportePk());
             $numeroRegistros = $q->execute();
             $em->flush();
             $em->getRepository(TurSoporte::class)->resumen($arSoporte);

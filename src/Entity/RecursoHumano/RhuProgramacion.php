@@ -122,21 +122,26 @@ class RhuProgramacion
     private $usuario;
 
     /**
+     * @ORM\Column(name="codigo_soporte_fk", type="integer", nullable=true, options={"default": 0})
+     */
+    private $codigoSoporteFk = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuGrupo", inversedBy="programacionesGrupoRel")
      * @ORM\JoinColumn(name="codigo_grupo_fk",referencedColumnName="codigo_grupo_pk")
      */
     protected $grupoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuProgramacionDetalle", mappedBy="programacionRel")
-     */
-    protected $programacionesDetallesProgramacionRel;
-
-    /**
      * @ORM\ManyToOne(targetEntity="RhuPagoTipo", inversedBy="programacionesPagoTipoRel")
      * @ORM\JoinColumn(name="codigo_pago_tipo_fk", referencedColumnName="codigo_pago_tipo_pk")
      */
     protected $pagoTipoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuProgramacionDetalle", mappedBy="programacionRel")
+     */
+    protected $programacionesDetallesProgramacionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="programacionRel")
@@ -466,6 +471,22 @@ class RhuProgramacion
     /**
      * @return mixed
      */
+    public function getCodigoSoporteFk()
+    {
+        return $this->codigoSoporteFk;
+    }
+
+    /**
+     * @param mixed $codigoSoporteFk
+     */
+    public function setCodigoSoporteFk($codigoSoporteFk): void
+    {
+        $this->codigoSoporteFk = $codigoSoporteFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getGrupoRel()
     {
         return $this->grupoRel;
@@ -477,22 +498,6 @@ class RhuProgramacion
     public function setGrupoRel($grupoRel): void
     {
         $this->grupoRel = $grupoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProgramacionesDetallesProgramacionRel()
-    {
-        return $this->programacionesDetallesProgramacionRel;
-    }
-
-    /**
-     * @param mixed $programacionesDetallesProgramacionRel
-     */
-    public function setProgramacionesDetallesProgramacionRel($programacionesDetallesProgramacionRel): void
-    {
-        $this->programacionesDetallesProgramacionRel = $programacionesDetallesProgramacionRel;
     }
 
     /**
@@ -514,6 +519,22 @@ class RhuProgramacion
     /**
      * @return mixed
      */
+    public function getProgramacionesDetallesProgramacionRel()
+    {
+        return $this->programacionesDetallesProgramacionRel;
+    }
+
+    /**
+     * @param mixed $programacionesDetallesProgramacionRel
+     */
+    public function setProgramacionesDetallesProgramacionRel($programacionesDetallesProgramacionRel): void
+    {
+        $this->programacionesDetallesProgramacionRel = $programacionesDetallesProgramacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPagosProgramacionRel()
     {
         return $this->pagosProgramacionRel;
@@ -526,6 +547,7 @@ class RhuProgramacion
     {
         $this->pagosProgramacionRel = $pagosProgramacionRel;
     }
+
 
 
 

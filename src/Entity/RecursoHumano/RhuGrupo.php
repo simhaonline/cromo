@@ -28,6 +28,16 @@ class RhuGrupo
     private $nombre;
 
     /**
+     * @ORM\Column(name="cargar_contrato", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $cargarContrato = false;
+
+    /**
+     * @ORM\Column(name="cargar_soporte", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $cargarSoporte = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="grupoRel")
      */
     protected $contratosGrupoRel;
@@ -267,6 +277,54 @@ class RhuGrupo
     public function setIncapacidadesGrupoRel($incapacidadesGrupoRel): void
     {
         $this->incapacidadesGrupoRel = $incapacidadesGrupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargarContrato()
+    {
+        return $this->cargarContrato;
+    }
+
+    /**
+     * @param mixed $cargarContrato
+     */
+    public function setCargarContrato($cargarContrato): void
+    {
+        $this->cargarContrato = $cargarContrato;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargarSoporte()
+    {
+        return $this->cargarSoporte;
+    }
+
+    /**
+     * @param mixed $cargarSoporte
+     */
+    public function setCargarSoporte($cargarSoporte): void
+    {
+        $this->cargarSoporte = $cargarSoporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLicenciasGrupoRel()
+    {
+        return $this->licenciasGrupoRel;
+    }
+
+    /**
+     * @param mixed $licenciasGrupoRel
+     */
+    public function setLicenciasGrupoRel($licenciasGrupoRel): void
+    {
+        $this->licenciasGrupoRel = $licenciasGrupoRel;
     }
 
 

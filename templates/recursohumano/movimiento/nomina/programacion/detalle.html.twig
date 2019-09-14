@@ -7,6 +7,7 @@
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
+            {{ form_widget(form.btnLiberarSoporte) }}
             {{ form_widget(form.btnImprimirResumen) }}
         </div>
     </div>
@@ -17,8 +18,8 @@
             <td class="td-in-well">{{ arProgramacion.codigoProgramacionPk }}</td>
             <td class="titulo">TIPO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arProgramacion.pagoTipoRel.nombre }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="titulo">CANTIDAD:</td>
+            <td class="td-in-well numero" style="text-transform: uppercase;">{{ arProgramacion.cantidad }}</td>
         </tr>
         <tr>
             <td class="titulo">NOMBRE:</td>
@@ -41,9 +42,16 @@
             <td class="td-in-well">{{ arProgramacion.dias }}</td>
             <td class="titulo">HASTA PERIODO:</td>
             <td class="td-in-well">{{ arProgramacion.fechaHastaPeriodo | date('Y-m-d') }}</td>
-            <td class="titulo">VR.NETO</td>
-            <td class="td-in-well numero"
-                style="text-transform: uppercase;">{{ arProgramacion.vrNeto | number_format(0, '.', ',') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well numero"></td>
+        </tr>
+        <tr>
+            <td class="titulo">SOPORTE:</td>
+            <td class="td-in-well">{{ arProgramacion.codigoSoporteFk }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">NETO:</td>
+            <td class="td-in-well numero">{{ arProgramacion.vrNeto | number_format(0, '.', ',') }}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -134,7 +142,9 @@
                         <div class="btn-group">
                             {{ form_widget(form.btnCargarContratos) }}
                             {% if arProgramacion.estadoAutorizado == 0 %}
-                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_cargar_soporte', {'id': arProgramacion.codigoProgramacionPk}) }}', 'CargarSoporte', 600, 900)">Cargar de turnos</a>
+                                {% if arProgramacion.grupoRel.cargarSoporte == 1 %}
+                                    <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_cargar_soporte', {'id': arProgramacion.codigoProgramacionPk}) }}', 'CargarSoporte', 600, 900)">Cargar de turnos</a>
+                                {% endif %}
                             {% endif %}
                         </div>
                         <div class="btn-group">

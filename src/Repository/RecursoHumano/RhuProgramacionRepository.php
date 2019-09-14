@@ -151,7 +151,6 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             ->andWhere("c.fechaDesde <= '{$arProgramacion->getFechaHastaPeriodo()->format('Y-m-d')}'")
             ->andWhere("(c.fechaHasta >= '{$arProgramacion->getFechaDesde()->format('Y-m-d')}' OR c.indefinido=1)")
             ->getQuery()->execute();
-
         /** @var $arContrato RhuContrato */
         foreach ($arContratos as $arContrato) {
             $arProgramacionDetalle = new RhuProgramacionDetalle();
@@ -423,6 +422,22 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         $em->flush();
     }
 
+    public function liberarSoporte($arProgramacion)
+    {
+        $em = $this->getEntityManager();
+        if ($arProgramacion->getCodigoSoporteFk()) {
+            $arSoporte = $em->getRepository(TurSoporte::class)->find($arProgramacion->getCodigoSoporteFk());
+            if($arSoporte) {
+                $arSoporte->setEstadoAprobado(0);
+                $arSoporte->setCargadoNomina(0);
+                $arProgramacion->setCodigoSoporteFk(null);
+                $em->flush();
+            }
+        } else {
+            Mensajes::error('La programacion no tiene un soporte');
+        }
+    }
+
     private function fechaHastaContrato($fechaHastaPeriodo, $fechaHastaContrato, $indefinido)
     {
         $fechaHasta = $fechaHastaContrato;
@@ -498,6 +513,12 @@ class RhuProgramacionRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @param $codigoSoporte
+     * @param $arProgramacion RhuProgramacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function cargarContratosTurnos($codigoSoporte, $arProgramacion)
     {
         $em = $this->getEntityManager();
@@ -524,7 +545,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $arProgramacionDetalle->setContratoRel($em->getReference(RhuContrato::class, $arSoporteContrato['codigoContratoFk']));
                 $arProgramacionDetalle->setVrSalario($salario);
                 //$arProgramacionDetalle->setSoporteTurno(TRUE);
-                //$arProgramacionDetalle->setCodigoSoportePagoFk($arSoportePago->getCodigoSoportePagoPk());
+                $arProgramacionDetalle->setCodigoSoporteContratoFk($arSoporteContrato['codigoSoporteContratoPk']);
                 $arProgramacionDetalle->setFechaDesde($arSoporteContrato['fechaDesde']);
                 $arProgramacionDetalle->setFechaHasta($arSoporteContrato['fechaHasta']);
                 //$arProgramacionDetalle->setCodigoCompensacionTipoFk($arSoporteContrato->getCodigoCompensacionTipoFk());
@@ -633,18 +654,20 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     $arProgramacionPagoInconsistencia->setInconsistencia($arrInconsistencia['inconsistencia']);
                     $em->persist($arProgramacionPagoInconsistencia);
                 }
-            }
-            $arProgramacionPago->setEmpleadosGenerados(1);
-            $arProgramacionPago->setNumeroEmpleados(count($arSoportesPago));
-            $arProgramacionPago->setCodigoSoportePagoPeriodoFk($codigoSoportePagoPeriodo);
-            */
+            }*/
+            $arProgramacion->setEmpleadosGenerados(1);
+            $arProgramacion->setCantidad(count($arSoportesContratos));
+            $arProgramacion->setCodigoSoporteFk($codigoSoporte);
             $em->persist($arProgramacion);
-            //$arSoportePagoPeriodo->setEstadoBloqueoNomina(1);
+
+            $arSoporte->setCargadoNomina(1);
+            $em->persist($arSoporte);
             $em->flush();
+
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             //}
         } else {
-            Mensajes::error("El soporte no estaba aprobado");
+            Mensajes::error("El soporte no esta aprobado");
         }
     }
 
@@ -797,8 +820,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public
-    function registroContabilizar($codigo)
+    public function registroContabilizar($codigo)
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuProgramacion::class, 'pr')

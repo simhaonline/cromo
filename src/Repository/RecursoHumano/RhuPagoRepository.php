@@ -18,6 +18,7 @@ use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
+use App\Entity\Turno\TurProgramacionRespaldo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -125,6 +126,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setFechaHasta($arProgramacion->getFechaHasta());
         $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaDesdeContrato());
         $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaHastaContrato());
+        $arPago->setCodigoSoporteContratoFk($arProgramacionDetalle->getCodigoSoporteContratoFk());
 
         $arrDatosGenerales = array(
             'pago' => $arPago,
@@ -893,6 +895,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->addSelect('ep.nombre as entidadPension')
             ->addSelect('es.nombre as entidadSalud')
             ->addSelect('ca.nombre as cargo')
+            ->addSelect('p.codigoSoporteContratoFk')
             ->leftJoin('p.empleadoRel', 'e')
             ->leftJoin('p.grupoRel', 'g')
             ->leftJoin('e.bancoRel', 'b')
@@ -926,7 +929,47 @@ class RhuPagoRepository extends ServiceEntityRepository
             if(!$arPagoDetalles) {
                 $arPagoDetalles = [];
             }
+            $queryBuilder = $em->createQueryBuilder()->from(TurProgramacionRespaldo::class, 'pr')
+                ->select('pr.codigoProgramacionRespaldoPk')
+                ->addSelect('pr.dia1')
+                ->addSelect('pr.dia2')
+                ->addSelect('pr.dia3')
+                ->addSelect('pr.dia4')
+                ->addSelect('pr.dia5')
+                ->addSelect('pr.dia6')
+                ->addSelect('pr.dia7')
+                ->addSelect('pr.dia8')
+                ->addSelect('pr.dia9')
+                ->addSelect('pr.dia10')
+                ->addSelect('pr.dia11')
+                ->addSelect('pr.dia12')
+                ->addSelect('pr.dia13')
+                ->addSelect('pr.dia14')
+                ->addSelect('pr.dia15')
+                ->addSelect('pr.dia16')
+                ->addSelect('pr.dia17')
+                ->addSelect('pr.dia18')
+                ->addSelect('pr.dia19')
+                ->addSelect('pr.dia20')
+                ->addSelect('pr.dia21')
+                ->addSelect('pr.dia22')
+                ->addSelect('pr.dia23')
+                ->addSelect('pr.dia24')
+                ->addSelect('pr.dia25')
+                ->addSelect('pr.dia26')
+                ->addSelect('pr.dia27')
+                ->addSelect('pr.dia28')
+                ->addSelect('pr.dia29')
+                ->addSelect('pr.dia30')
+                ->addSelect('pr.dia31')
+                ->where("pr.codigoSoporteContratoFk = {$arPago['codigoSoporteContratoFk']}");
+            $arProgramacionesRespaldo = $queryBuilder->getQuery()->getResult();
+            if(!$arProgramacionesRespaldo) {
+                $arProgramacionesRespaldo = [];
+            }
+
             $arPagos[$i]['arrDetalles'] = $arPagoDetalles;
+            $arPagos[$i]['arrProgramaciones'] = $arProgramacionesRespaldo;
             $arPagos[$i]['fechaDesde'] = $arPago['fechaDesde']?$arPago['fechaDesde']->format('Y-m-d'):null;
             $arPagos[$i]['fechaHasta'] = $arPago['fechaHasta']?$arPago['fechaHasta']->format('Y-m-d'):null;
             $arPagos[$i]['fechaDesdeContrato'] = $arPago['fechaDesdeContrato']?$arPago['fechaDesdeContrato']->format('Y-m-d'):null;

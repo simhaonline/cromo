@@ -4,6 +4,7 @@ namespace App\Form\Type\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuGrupo;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,6 +17,8 @@ class GrupoType extends AbstractType
         $builder
             ->add('codigoGrupoPk',TextType::class,['label' => 'Codigo grupo:', 'required' => true])
             ->add('nombre',TextType::class,['label' => 'Nombre:', 'required' => true])
+            ->add('cargarContrato', CheckboxType::class, ['required' => false])
+            ->add('cargarSoporte', CheckboxType::class, ['required' => false])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
         ;
     }

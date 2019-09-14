@@ -154,6 +154,11 @@ class RhuPago
     private $usuario;
 
     /**
+     * @ORM\Column(name="codigo_soporte_contrato_fk", type="integer", nullable=true)
+     */
+    private $codigoSoporteContratoFk = null;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="pagosEmpleadoRel")
      * @ORM\JoinColumn(name="codigo_empleado_fk",referencedColumnName="codigo_empleado_pk")
      */
@@ -818,6 +823,22 @@ class RhuPago
     public function setEgresosDetallesPagoRel($egresosDetallesPagoRel): void
     {
         $this->egresosDetallesPagoRel = $egresosDetallesPagoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSoporteContratoFk()
+    {
+        return $this->codigoSoporteContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoSoporteContratoFk
+     */
+    public function setCodigoSoporteContratoFk($codigoSoporteContratoFk): void
+    {
+        $this->codigoSoporteContratoFk = $codigoSoporteContratoFk;
     }
 
 

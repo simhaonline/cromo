@@ -77,6 +77,10 @@ class TurSoporte
      */
     private $dia31SoloExtra = false;
 
+    /**
+     * @ORM\Column(name="cargado_nomina", type="boolean", options={"default":false})
+     */
+    private $cargadoNomina = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuGrupo", inversedBy="soportesGrupoRel")
@@ -332,6 +336,22 @@ class TurSoporte
     public function setDia31SoloExtra($dia31SoloExtra): void
     {
         $this->dia31SoloExtra = $dia31SoloExtra;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargadoNomina()
+    {
+        return $this->cargadoNomina;
+    }
+
+    /**
+     * @param mixed $cargadoNomina
+     */
+    public function setCargadoNomina($cargadoNomina): void
+    {
+        $this->cargadoNomina = $cargadoNomina;
     }
 
 

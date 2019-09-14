@@ -198,6 +198,11 @@ class RhuProgramacionDetalle
     private $factorHorasDia = 0;
 
     /**
+     * @ORM\Column(name="codigo_soporte_contrato_fk", type="integer", nullable=true)
+     */
+    private $codigoSoporteContratoFk = null;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuProgramacion", inversedBy="programacionesDetallesProgramacionRel")
      * @ORM\JoinColumn(name="codigo_programacion_fk", referencedColumnName="codigo_programacion_pk")
      */
@@ -858,6 +863,22 @@ class RhuProgramacionDetalle
     public function setDiasIncapacidad($diasIncapacidad): void
     {
         $this->diasIncapacidad = $diasIncapacidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSoporteContratoFk()
+    {
+        return $this->codigoSoporteContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoSoporteContratoFk
+     */
+    public function setCodigoSoporteContratoFk($codigoSoporteContratoFk): void
+    {
+        $this->codigoSoporteContratoFk = $codigoSoporteContratoFk;
     }
 
 

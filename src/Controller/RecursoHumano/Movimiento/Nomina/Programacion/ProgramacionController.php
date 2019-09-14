@@ -131,21 +131,30 @@ class ProgramacionController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_lista'));
             }
         }
-        $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Cargar contratos'];
+        $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Cargar contratos','disabled' => false];
+        $arrBtnLiberarSoporte = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Liberar soporte','disabled' => true];
         $arrBtnExcelDetalle = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Excel'];
         $arrBtnExcelPagoDetalles = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Excel detalle'];
         $arrBtnImprimirResumen = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Resumen','disabled' => true];
         $arrBtnEliminarTodos = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar todos'];
         $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
         if ($arProgramacion->getEstadoAutorizado()) {
-            $arrBtnCargarContratos['attr']['class'] .= ' hidden';
+            $arrBtnCargarContratos['disabled'] = true;
             $arrBtnEliminarTodos['attr']['class'] .= ' hidden';
             $arrBtnEliminar['attr']['class'] .= ' hidden';
             $arrBtnImprimirResumen['disabled'] = false;
+        } else {
+            if(!$arProgramacion->getGrupoRel()->getCargarContrato()) {
+                $arrBtnCargarContratos['disabled'] = true;
+            }
+            if($arProgramacion->getCodigoSoporteFk()) {
+                $arrBtnLiberarSoporte['disabled'] = false;
+            }
         }
 
 
         $form = Estandares::botonera($arProgramacion->getEstadoAutorizado(), $arProgramacion->getEstadoAprobado(), $arProgramacion->getEstadoAnulado());
+        $form->add('btnLiberarSoporte', SubmitType::class, $arrBtnLiberarSoporte);
         $form->add('btnCargarContratos', SubmitType::class, $arrBtnCargarContratos);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
         $form->add('btnEliminarTodos', SubmitType::class, $arrBtnEliminarTodos);
@@ -181,6 +190,10 @@ class ProgramacionController extends ControllerListenerGeneral
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
                 $em->getRepository(RhuProgramacion::class)->aprobar($arProgramacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnLiberarSoporte')->isClicked()) {
+                $em->getRepository(RhuProgramacion::class)->liberarSoporte($arProgramacion);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {

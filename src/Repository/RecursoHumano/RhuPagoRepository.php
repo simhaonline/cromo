@@ -10,6 +10,7 @@ use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuIncapacidad;
+use App\Entity\RecursoHumano\RhuLicencia;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
@@ -291,85 +292,63 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
 
         //Procesar licencias
-        /*
-        if ($arProgramacionPagoProcesar->getAplicarLicencia()) {
-            $arLicencias = new \Brasa\RecursoHumanoBundle\Entity\RhuLicencia();
-            $arLicencias = $em->getRepository('BrasaRecursoHumanoBundle:RhuLicencia')->periodo($arProgramacionPagoDetalle->getFechaDesdePago(), $arProgramacionPagoDetalle->getFechaHasta(), $arProgramacionPagoDetalle->getCodigoEmpleadoFk());
-            foreach ($arLicencias as $arLicencia) {
-                $arPagoConcepto = new \Brasa\RecursoHumanoBundle\Entity\RhuPagoConcepto();
-                $arPagoConcepto = $arLicencia->getLicenciaTipoRel()->getPagoConceptoRel();
-                $arPagoDetalle = new \Brasa\RecursoHumanoBundle\Entity\RhuPagoDetalle();
-                $arPagoDetalle->setPagoRel($arPago);
-                $arPagoDetalle->setPagoConceptoRel($arPagoConcepto);
-                $fechaDesde = $arProgramacionPagoDetalle->getFechaDesdePago();
-                $fechaHasta = $arProgramacionPagoDetalle->getFechaHasta();
-                if ($arLicencia->getFechaDesde() > $fechaDesde) {
-                    $fechaDesde = $arLicencia->getFechaDesde();
-                }
-                if ($arLicencia->getFechaHasta() < $fechaHasta) {
-                    $fechaHasta = $arLicencia->getFechaHasta();
-                }
-
-                $intDias = $fechaDesde->diff($fechaHasta);
-                $intDias = $intDias->format('%a');
-                $intDias += 1;
-
-
-                if ($arConfiguracion->getLiquidarLicenciasIbcMesAnterior() && ($arLicencia->getPaternidad() || $arLicencia->getMaternidad())) {
-                    $douVrHora = ($arLicencia->getVrLicencia() / $arLicencia->getCantidad()) / $intFactorDia;
-
-                }
-
-                $intHorasProcesarLicencia = $intDias * $intFactorDia;
-                $intHorasLaboradas = $intHorasLaboradas - $intHorasProcesarLicencia;
-                $douPagoDetalle = $intHorasProcesarLicencia * $douVrHora;
-                if ($arConfiguracion->getPagarLicenciaSalarioPactado()) {
-                    $devengadoPactado = $arContrato->getVrDevengadoPactado();
-                    if ($devengadoPactado > 0) {
-                        $vrHoraDevengadoPactado = $devengadoPactado / 30 / 8;
-                        $douPagoDetalle = $intHorasProcesarLicencia * $vrHoraDevengadoPactado;
-                    }
-                }
-                $douPagoDetalle = round($douPagoDetalle);
-                $vrPagoLicencia += $douPagoDetalle;
-                if (!$arLicencia->getLicenciaTipoRel()->getSuspensionContratoTrabajo()) {
-                    $douIngresoBasePrestacional += $douPagoDetalle;
-                    $arPagoDetalle->setVrIngresoBasePrestacion($douPagoDetalle);
-                    $arPagoDetalle->setVrIngresoBaseCotizacion($douPagoDetalle);
-                }
-                if ($arPagoConcepto->getGeneraIngresoBaseCotizacion() == 1) {
-                    $douIngresoBaseCotizacion += $douPagoDetalle;
-                    $arPagoDetalle->setVrIngresoBaseCotizacion($douPagoDetalle);
-                }
-                if ($arLicencia->getLicenciaTipoRel()->getAusentismo() == 1) {
-                    $arPagoDetalle->setDiasAusentismo($intDias);
-                }
-                if ($arPagoConcepto->getOperacion() == 0) {
-                    $douPagoDetalle = 0;
-                }
-                if ($douPagoDetalle > 0) {
-                    $douIngresoBaseCotizacionSalud += $douPagoDetalle;
-                }
-                $douPagoDetalle = round($douPagoDetalle);
-                $devengado += $douPagoDetalle;
-                $devengadoPrestacional += $douPagoDetalle;
-                $arPagoDetalle->setVrPago($douPagoDetalle);
-                $arPagoDetalle->setOperacion($arLicencia->getLicenciaTipoRel()->getPagoConceptoRel()->getOperacion());
-                $arPagoDetalle->setVrPagoOperado($douPagoDetalle * $arLicencia->getLicenciaTipoRel()->getPagoConceptoRel()->getOperacion());
-                $arPagoDetalle->setNumeroHoras($intHorasProcesarLicencia);
-                $arPagoDetalle->setNumeroDias($intDias);
-                $arPagoDetalle->setProgramacionPagoDetalleRel($arProgramacionPagoDetalle);
-                $arPagoDetalle->setLicenciaRel($arLicencia);
-                $arPagoDetalle->setFechaDesdeNovedad($fechaDesde);
-                $arPagoDetalle->setFechaHastaNovedad($fechaHasta);
-                $em->persist($arPagoDetalle);
-                if ($arLicencia->getAfectaTransporte() == 1) {
-                    $intDiasLicenciaProcesar = intval($intHorasProcesarLicencia / $intFactorDia);
-                    $intDiasTransporte = $intDiasTransporte - $intDiasLicenciaProcesar;
-                }
+        $arLicencias = $em->getRepository(RhuLicencia::class)->periodo($arProgramacionDetalle->getFechaDesdeContrato(), $arProgramacionDetalle->getFechaHasta(), $arProgramacionDetalle->getCodigoEmpleadoFk());
+        foreach ($arLicencias as $arLicencia) {
+            $arConcepto = $arLicencia->getLicenciaTipoRel()->getConceptoRel();
+            $arPagoDetalle = new RhuPagoDetalle();
+            $arPagoDetalle->setLicenciaRel($arLicencia);
+            $fechaDesde = $arProgramacionDetalle->getFechaDesdeContrato();
+            $fechaHasta = $arProgramacionDetalle->getFechaHasta();
+            if ($arLicencia->getFechaDesde() > $fechaDesde) {
+                $fechaDesde = $arLicencia->getFechaDesde();
             }
+            if ($arLicencia->getFechaHasta() < $fechaHasta) {
+                $fechaHasta = $arLicencia->getFechaHasta();
+            }
+            $intDias = $fechaDesde->diff($fechaHasta);
+            $intDias = $intDias->format('%a');
+            $intDias += 1;
+            $douVrHora = 0;
+            if ($arLicencia->getPaternidad() || $arLicencia->getMaternidad()) {
+                $douVrHora = ($arLicencia->getVrLicencia() / $arLicencia->getCantidad()) / $factorHorasDia;
+            }
+
+            $intHorasProcesarLicencia = $intDias * $factorHorasDia;
+            //$intHorasLaboradas = $intHorasLaboradas - $intHorasProcesarLicencia;
+            $pagoDetalle = $intHorasProcesarLicencia * $douVrHora;
+            /*if ($arConfiguracion->getPagarLicenciaSalarioPactado()) {
+                $devengadoPactado = $arContrato->getVrDevengadoPactado();
+                if ($devengadoPactado > 0) {
+                    $vrHoraDevengadoPactado = $devengadoPactado / 30 / 8;
+                    $douPagoDetalle = $intHorasProcesarLicencia * $vrHoraDevengadoPactado;
+                }
+            }*/
+            $pagoDetalle = round($pagoDetalle);
+            /*if (!$arLicencia->getLicenciaTipoRel()->getSuspensionContratoTrabajo()) {
+                $douIngresoBasePrestacional += $douPagoDetalle;
+                $arPagoDetalle->setVrIngresoBasePrestacion($douPagoDetalle);
+                $arPagoDetalle->setVrIngresoBaseCotizacion($douPagoDetalle);
+            }*/
+            /*if ($arConcepto->getGeneraIngresoBaseCotizacion() == 1) {
+                $douIngresoBaseCotizacion += $douPagoDetalle;
+                $arPagoDetalle->setVrIngresoBaseCotizacion($douPagoDetalle);
+            }*/
+            if ($arConcepto->getOperacion() == 0) {
+                $pagoDetalle = 0;
+            }
+            /*if ($pagoDetalle > 0) {
+                $douIngresoBaseCotizacionSalud += $douPagoDetalle;
+            }*/
+            $devengado += $pagoDetalle;
+            $devengadoPrestacional += $pagoDetalle;
+            $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+            //$arPagoDetalle->setNumeroHoras($intHorasProcesarLicencia);
+            $em->persist($arPagoDetalle);
+            /*if ($arLicencia->getAfectaTransporte() == 1) {
+                $intDiasLicenciaProcesar = intval($intHorasProcesarLicencia / $factorHorasDia);
+                $intDiasTransporte = $intDiasTransporte - $intDiasLicenciaProcesar;
+            }*/
         }
-        */
 
         //Adicionales
         $arAdicionales = $em->getRepository(RhuAdicional::class)->programacionPago($arProgramacionDetalle->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getCodigoPagoTipoFk(), $arProgramacion->getFechaDesde()->format('Y/m/d'), $arProgramacion->getFechaHasta()->format('Y/m/d'));
@@ -644,7 +623,6 @@ class RhuPagoRepository extends ServiceEntityRepository
                 }
             }
         }
-
 
         $arPago->setVrNeto($arrDatosGenerales['neto']);
         $arPago->setVrDeduccion($arrDatosGenerales['deduccion']);

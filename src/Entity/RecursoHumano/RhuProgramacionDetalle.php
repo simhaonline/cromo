@@ -37,20 +37,30 @@ class RhuProgramacionDetalle
     private $codigoContratoFk;
 
     /**
-     * @ORM\Column(name="dias", type="integer")
+     * @ORM\Column(name="dias", type="integer", options={"default": 0})
      */
     private $dias = 0;
 
     /**
      * Para el auxilio de transporte
-     * @ORM\Column(name="dias_transporte", type="integer")
+     * @ORM\Column(name="dias_transporte", type="integer", options={"default": 0})
      */
     private $diasTransporte = 0;
 
     /**
-     * @ORM\Column(name="dias_vacaciones", type="integer", nullable=true)
+     * @ORM\Column(name="dias_vacaciones", type="integer", nullable=true, options={"default": 0})
      */
     private $diasVacaciones = 0;
+
+    /**
+     * @ORM\Column(name="dias_licencia", type="integer", nullable=true, options={"default": 0})
+     */
+    private $diasLicencia = 0;
+
+    /**
+     * @ORM\Column(name="dias_incapacidad", type="integer", nullable=true, options={"default": 0})
+     */
+    private $diasIncapacidad = 0;
 
     /**
      * @ORM\Column(name="vr_salario", type="float")
@@ -816,6 +826,38 @@ class RhuProgramacionDetalle
     public function setHorasDescanso($horasDescanso): void
     {
         $this->horasDescanso = $horasDescanso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasLicencia()
+    {
+        return $this->diasLicencia;
+    }
+
+    /**
+     * @param mixed $diasLicencia
+     */
+    public function setDiasLicencia($diasLicencia): void
+    {
+        $this->diasLicencia = $diasLicencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasIncapacidad()
+    {
+        return $this->diasIncapacidad;
+    }
+
+    /**
+     * @param mixed $diasIncapacidad
+     */
+    public function setDiasIncapacidad($diasIncapacidad): void
+    {
+        $this->diasIncapacidad = $diasIncapacidad;
     }
 
 

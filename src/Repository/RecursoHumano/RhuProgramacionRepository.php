@@ -179,11 +179,60 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arrIbc = $em->getRepository(RhuPagoDetalle::class)->ibcMes($fechaDesde->format('Y'), $fechaDesde->format('m'), $arContrato->getCodigoContratoPk());
             $arProgramacionDetalle->setVrIbcAcumulado($arrIbc['ibc']);
             $arProgramacionDetalle->setVrDeduccionFondoPensionAnterior($arrIbc['deduccionAnterior']);
-            $arrVacaciones = $em->getRepository(RhuVacacion::class)->diasProgramacion($arContrato->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getFechaDesde()->format('Y-m-d'), $arProgramacion->getFechaHasta()->format('Y-m-d'));
-            $arrIncapacidades = $em->getRepository(RhuIncapacidad::class)->diasProgramacion($arContrato->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getFechaDesde()->format('Y-m-d'), $arProgramacion->getFechaHasta()->format('Y-m-d'));
-            $arrLicencias = $em->getRepository(RhuLicencia::class)->diasProgramacion($arContrato->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getFechaDesde()->format('Y-m-d'), $arProgramacion->getFechaHasta()->format('Y-m-d'));
-            $arProgramacionDetalle->setDiasVacaciones($arrVacaciones['dias']);
-            $dias = $dias - $arrVacaciones['dias'] - $arrIncapacidades['dias'] - $arrLicencias['dias'];
+
+
+            //dias vacaciones
+            $diasVacaciones = 0;
+            $arrVacaciones = $em->getRepository(RhuVacacion::class)->dias($arContrato->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getFechaDesde(), $arProgramacion->getFechaHasta());
+            $intDiasVacaciones = $arrVacaciones['dias'];
+            if ($intDiasVacaciones > 0) {
+                $arProgramacionDetalle->setDiasVacaciones($intDiasVacaciones);
+                //$arProgramacionDetalle->setIbcVacaciones($arrVacaciones['ibc']);
+            }
+
+            $diasLicencia = 0;
+            $arLicencias = $em->getRepository(RhuLicencia::class)->periodo($arProgramacionDetalle->getFechaDesdeContrato(), $arProgramacionDetalle->getFechaHasta(), $arContrato->getCodigoEmpleadoFk());
+            foreach ($arLicencias as $arLicencia) {
+                $fechaDesde = $arProgramacionDetalle->getFechaDesdeContrato();
+                $fechaHasta = $arProgramacionDetalle->getFechaHasta();
+                if ($arLicencia->getFechaDesde() > $fechaDesde) {
+                    $fechaDesde = $arLicencia->getFechaDesde();
+                }
+                if ($arLicencia->getFechaHasta() < $fechaHasta) {
+                    $fechaHasta = $arLicencia->getFechaHasta();
+                }
+                $intDias = $fechaDesde->diff($fechaHasta);
+                $intDias = $intDias->format('%a');
+                $intDias += 1;
+                $diasLicencia += $intDias;
+            }
+            if ($diasLicencia > 0) {
+                $arProgramacionDetalle->setDiasLicencia($diasLicencia);
+            }
+
+            $diasIncapacidad = 0;
+            $arIncapacidades = $em->getRepository(RhuIncapacidad::class)->periodo($arProgramacionDetalle->getFechaDesdeContrato(), $arProgramacionDetalle->getFechaHasta(), $arContrato->getCodigoEmpleadoFk());
+            foreach ($arIncapacidades as $arIncapacidad) {
+                $fechaDesde = $arProgramacionDetalle->getFechaDesdeContrato();
+                $fechaHasta = $arProgramacionDetalle->getFechaHasta();
+                if ($arIncapacidad->getFechaDesde() > $fechaDesde) {
+                    $fechaDesde = $arIncapacidad->getFechaDesde();
+                }
+                if ($arIncapacidad->getFechaHasta() < $fechaHasta) {
+                    $fechaHasta = $arIncapacidad->getFechaHasta();
+                }
+                $intDias = $fechaDesde->diff($fechaHasta);
+                $intDias = $intDias->format('%a');
+                $intDias += 1;
+                $diasIncapacidad += $intDias;
+            }
+            if ($diasIncapacidad > 0) {
+                $arProgramacionDetalle->setDiasIncapacidad($diasIncapacidad);
+            }
+
+
+            $diasNovedad = $diasIncapacidad + $diasLicencia + $diasVacaciones;
+            $dias = $dias - $diasNovedad;
             $horas = $dias * $arContrato->getFactorHorasDia();
             $arProgramacionDetalle->setDias($dias);
             $arProgramacionDetalle->setDiasTransporte($dias);

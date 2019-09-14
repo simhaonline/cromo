@@ -191,4 +191,25 @@ class RhuLicenciaRepository extends ServiceEntityRepository
         return $arrLicenciasEmpleado;
     }
 
+    public function periodo($fechaDesde, $fechaHasta, $codigoEmpleado = "", $codigoGrupo = "")
+    {
+        $em = $this->getEntityManager();
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+        $dql = "SELECT licencia FROM App\Entity\RecursoHumano\RhuLicencia licencia "
+            . "WHERE (((licencia.fechaDesde BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (licencia.fechaHasta BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
+            . "OR (licencia.fechaDesde >= '$strFechaDesde' AND licencia.fechaDesde <= '$strFechaHasta') "
+            . "OR (licencia.fechaHasta >= '$strFechaHasta' AND licencia.fechaDesde <= '$strFechaDesde')) ";
+        if ($codigoEmpleado != "") {
+            $dql = $dql . "AND licencia.codigoEmpleadoFk = '" . $codigoEmpleado . "' ";
+        }
+        if ($codigoGrupo != "") {
+            $dql = $dql . "AND licencia.codigoGrupoFk = " . $codigoGrupo . " ";
+        }
+
+        $objQuery = $em->createQuery($dql);
+        $arLicencias = $objQuery->getResult();
+        return $arLicencias;
+    }
+
 }

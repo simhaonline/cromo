@@ -1208,4 +1208,50 @@ class RhuVacacionRepository extends ServiceEntityRepository
         return $arrVacacionesEmpleado;
     }
 
+    public
+    function dias($codigoEmpleado, $codigoContrato, $fechaDesde, $fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+        $dql = "SELECT v FROM App\Entity\RecursoHumano\RhuVacacion v "
+            . "WHERE (((v.fechaDesdeDisfrute BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (v.fechaHastaDisfrute BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
+            . "OR (v.fechaDesdeDisfrute >= '$strFechaDesde' AND v.fechaDesdeDisfrute <= '$strFechaHasta') "
+            . "OR (v.fechaHastaDisfrute >= '$strFechaHasta' AND v.fechaDesdeDisfrute <= '$strFechaDesde')) "
+            . "AND v.codigoEmpleadoFk = '" . $codigoEmpleado . "' AND v.diasDisfrutados > 0 AND v.estadoAnulado = 0";
+        if ($codigoContrato != "") {
+            $dql .= " AND v.codigoContratoFk = {$codigoContrato}";
+        }
+
+        $query = $em->createQuery($dql);
+        $arVacaciones = $query->getResult();
+        $intDiasDevolver = 0;
+        $vrIbc = 0;
+        foreach ($arVacaciones as $arVacacion) {
+            $intDias = 0;
+            $dateFechaDesde = "";
+            $dateFechaHasta = "";
+            if ($arVacacion->getFechaDesdeDisfrute() < $fechaDesde == true) {
+                $dateFechaDesde = $fechaDesde;
+            } else {
+                $dateFechaDesde = $arVacacion->getFechaDesdeDisfrute();
+            }
+
+            if ($arVacacion->getFechaHastaDisfrute() > $fechaHasta == true) {
+                $dateFechaHasta = $fechaHasta;
+            } else {
+                $dateFechaHasta = $arVacacion->getFechaHastaDisfrute();
+            }
+            if ($dateFechaDesde != "" && $dateFechaHasta != "") {
+                $intDias = $dateFechaDesde->diff($dateFechaHasta);
+                $intDias = $intDias->format('%a');
+                $intDias = $intDias + 1;
+                $intDiasDevolver += $intDias;
+            }
+            $vrIbc += $intDias * $arVacacion->getVrIbcPromedio();
+        }
+        $arrDevolver = array('dias' => $intDiasDevolver, 'ibc' => $vrIbc);
+        return $arrDevolver;
+    }
+
 }

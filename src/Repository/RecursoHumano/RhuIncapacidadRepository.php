@@ -401,7 +401,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         return $intDiasIncapacidad;
     }
 
-    public function periodo($fechaDesde, $fechaHasta, $codigoEmpleado = "", $codigoCentroCosto = "")
+    public function periodo($fechaDesde, $fechaHasta, $codigoEmpleado = "", $codigoGrupo = "")
     {
         $em = $this->getEntityManager();
         $strFechaDesde = $fechaDesde->format('Y-m-d');
@@ -413,8 +413,8 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         if ($codigoEmpleado != "") {
             $dql = $dql . "AND incapacidad.codigoEmpleadoFk = " . $codigoEmpleado . " ";
         }
-        if ($codigoCentroCosto != "") {
-            $dql = $dql . "AND incapacidad.codigoGrupoFk = " . $codigoCentroCosto . " ";
+        if ($codigoGrupo != "") {
+            $dql = $dql . "AND incapacidad.codigoGrupoFk = " . $codigoGrupo . " ";
         }
         $objQuery = $em->createQuery($dql);
         $arIncapacidades = $objQuery->getResult();

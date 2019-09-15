@@ -137,7 +137,7 @@ class Programacion extends \FPDF
 
         $this->Ln(14);
         $arPago = new RhuPago();
-        $header = array('COD', 'IDENTIFICACION', 'EMPLEADO', 'DEVENGADO', 'DEDUCCION','NETO');
+        $header = array('IDENT', 'EMPLEADO', 'CUENTA', 'DEVENGADO', 'DEDUCCION','NETO');
         $this->SetFillColor(200, 200, 200);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -145,7 +145,7 @@ class Programacion extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //Creamos la cabecera de la tabla.
-        $w = array(15, 30, 79, 23, 23, 20);
+        $w = array(25, 70, 30,23, 23, 20);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 4, $header[$i], 1, 0, 'C', 1);
         }
@@ -169,9 +169,9 @@ class Programacion extends \FPDF
         $vrDeducciones = 0;
         $vrDevengado = 0;
         foreach ($arPagos as $arPago) {
-            $pdf->Cell(15, 4, $arPago->getCodigoPagoPk(), 1, 0, 'L');
-            $pdf->Cell(30, 4, $arPago->getEmpleadoRel()->getNumeroIdentificacion(), 1, 0, 'L');
-            $pdf->Cell(79, 4, utf8_decode($arPago->getEmpleadoRel()->getNombreCorto()), 1, 0, 'L');
+            $pdf->Cell(25, 4, $arPago->getEmpleadoRel()->getNumeroIdentificacion(), 1, 0, 'L');
+            $pdf->Cell(70, 4, utf8_decode($arPago->getEmpleadoRel()->getNombreCorto()), 1, 0, 'L');
+            $pdf->Cell(30, 4, $arPago->getEmpleadoRel()->getCuenta(), 1, 0, 'L');
             $pdf->Cell(23, 4, number_format($arPago->getVrDevengado(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(23, 4, number_format($arPago->getVrDeduccion(), 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(20, 4, number_format($arPago->getVrNeto(), 0, '.', ','), 1, 0, 'R');

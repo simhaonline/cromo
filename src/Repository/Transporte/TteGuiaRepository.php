@@ -3003,6 +3003,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('c.nombreCorto AS cliente')
             ->addSelect('g.documentoCliente')
             ->addSelect('g.nombreDestinatario')
+            ->addSelect('g.fechaIngreso')
             ->addSelect('g.fechaDespacho')
             ->addSelect('g.fechaEntrega')
             ->addSelect('g.fechaSoporte')

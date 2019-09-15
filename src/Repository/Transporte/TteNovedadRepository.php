@@ -367,4 +367,39 @@ class TteNovedadRepository extends ServiceEntityRepository
             ->where('n.codigoGuiaFk = '.$codigoGuia);
         return $qb->getQuery()->getResult();
     }
+
+    public function fechaGuia($raw)
+    {
+        $filtros = $raw['filtros'];
+        $fechaDesde = $filtros['fechaDesde']??null;
+        $fechaHasta = $filtros['fechaHasta']??null;
+        $codigoCliente = $filtros['codigoCliente']??null;
+        if($fechaDesde && $fechaHasta) {
+            $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteNovedad::class, 'n')
+                ->select('n.codigoNovedadPk')
+                ->addSelect('n.codigoGuiaFk')
+                ->addSelect('n.descripcion')
+                ->addSelect('n.solucion')
+                ->addSelect('n.fecha')
+                ->addSelect('n.fechaReporte')
+                ->addSelect('n.fechaAtencion')
+                ->addSelect('n.fechaSolucion')
+                ->addSelect('nt.nombre as novedadTipoNombre')
+                ->addSelect('g.numero')
+                ->join('n.novedadTipoRel', 'nt')
+                ->join('n.guiaRel', 'g')
+                ->where('n.estadoSolucion = 0')
+                ->andWhere("g.fechaIngreso >='{$fechaDesde} 00:00:00'")
+                ->andWhere("g.fechaIngreso <='{$fechaHasta} 23:59:59'")
+                ->orderBy('n.codigoNovedadPk', 'DESC');
+            if($codigoCliente) {
+                $queryBuilder->andWhere("g.codigoClienteFk = {$codigoCliente}");
+            }
+            return $queryBuilder->getQuery()->getResult();
+        } else {
+            return [];
+        }
+    }
+
+
 }

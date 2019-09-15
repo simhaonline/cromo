@@ -4,8 +4,11 @@ namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
+use App\Entity\Transporte\TteNovedad;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,6 +59,7 @@ class EstadoGuiasController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                $raw = [];
                 if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked() || $form->get('btnEnviar')->isClicked()) {
                     $session = new session;
                     $session->set('filtroTteFechaDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
@@ -65,9 +69,21 @@ class EstadoGuiasController extends Controller
                     if ($form->get('txtCodigoCliente')->getData() != '') {
                         $arGuias = $em->getRepository(TteGuia::class)->estadoGuia()->getQuery()->getResult();
                     }
+                    $filtros = [
+                        'fechaDesde' => $form->get('fechaDesde')->getData()->format('Y-m-d'),
+                        'fechaHasta' => $form->get('fechaHasta')->getData()->format('Y-m-d'),
+                        'codigoCliente' => $form->get('txtCodigoCliente')->getData()
+                    ];
+                    $raw['filtros'] = $filtros;
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->getRepository(TteGuia::class)->estadoGuia()->getQuery()->getResult(), "Guias cliente");
+                    if($raw['filtros']['fechaDesde'] && $raw['filtros']['fechaHasta'] && $raw['filtros']['codigoCliente']) {
+                        $arrGuias = $em->getRepository(TteGuia::class)->estadoGuia()->getQuery()->getResult();
+                        $arrNovedades = $em->getRepository(TteNovedad::class)->fechaGuia($raw);
+                        $this->exportarExcel($arrGuias, $arrNovedades);
+                    } else {
+                        Mensajes::error("Debe seleccionar las fechas y el cliente");
+                    }
                 }
                 if ($form->get('btnEnviar')->isClicked()) {
                     $codigoCliente = $form->get('txtCodigoCliente')->getData();
@@ -109,6 +125,71 @@ class EstadoGuiasController extends Controller
             'form' => $form->createView()]);
     }
 
+    private function exportarExcel($arrGuias, $arrNovedades) {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arrGuias) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->setTitle('guias');
+            $j = 0;
+            $arrColumnas = ['GUIA', 'FECHA', 'DOCUMENTO', 'CLIENTE', 'DESTINATARIO', 'DESTINO', 'DESPACHO', 'ENTREGA', 'SOPORTE', 'UND', 'FLETE', 'MANEJO', 'DES', 'ENT', 'NOV'];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arrGuias as $arrGuia) {
+                //$spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setBold(false);
+                $hoja->setCellValue('A' . $j, $arrGuia['codigoGuiaPk']);
+                $hoja->setCellValue('B' . $j, $arrGuia['fechaIngreso']->format('Y-m-d'));
+                $hoja->setCellValue('C' . $j, $arrGuia['documentoCliente']);
+                $hoja->setCellValue('D' . $j, $arrGuia['cliente']);
+                $hoja->setCellValue('E' . $j, $arrGuia['nombreDestinatario']);
+                $hoja->setCellValue('F' . $j, $arrGuia['ciudadDestinoNombre']);
+                $hoja->setCellValue('G' . $j, $arrGuia['fechaDespacho']?$arrGuia['fechaDespacho']->format('Y-m-d'):null);
+                $hoja->setCellValue('H' . $j, $arrGuia['fechaEntrega']?$arrGuia['fechaEntrega']->format('Y-m-d'):null);
+                $hoja->setCellValue('I' . $j, $arrGuia['fechaSoporte']?$arrGuia['fechaSoporte']->format('Y-m-d'):null);
+                $hoja->setCellValue('J' . $j, $arrGuia['unidades']);
+                $hoja->setCellValue('K' . $j, $arrGuia['vrFlete']);
+                $hoja->setCellValue('L' . $j, $arrGuia['vrManejo']);
+                $hoja->setCellValue('M' . $j, $arrGuia['estadoDespachado']?'SI':'NO');
+                $hoja->setCellValue('N' . $j, $arrGuia['estadoEntregado']?'SI':'NO');
+                $hoja->setCellValue('O' . $j, $arrGuia['estadoNovedad']?'SI':'NO');
+                $j++;
+            }
+
+            $hoja2 = new Worksheet($libro, "novedades");
+            $libro->addSheet($hoja2);
+            $j = 0;
+            $arrColumnas = ['ID', 'GUIA', 'FECHA', 'NOVEDAD', 'DESCRIPCION'];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja2->getColumnDimension($i)->setAutoSize(true);
+                $hoja2->getStyle(1)->getFont()->setBold(true);;
+                $hoja2->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arrNovedades as $arrNovedad) {
+                $hoja2->setCellValue('A' . $j, $arrNovedad['codigoNovedadPk']);
+                $hoja2->setCellValue('B' . $j, $arrNovedad['codigoGuiaFk']);
+                $hoja2->setCellValue('C' . $j, $arrNovedad['fecha']->format('Y-m-d'));
+                $hoja2->setCellValue('D' . $j, $arrNovedad['novedadTipoNombre']);
+                $hoja2->setCellValue('E' . $j, $arrNovedad['descripcion']);
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=estadoGuias.xls");
+            header('Cache-Control: max-age=0');
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
+    }
 
 }
 

@@ -70,9 +70,43 @@ class TteDespachoRepository extends ServiceEntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoDespachoPk = null;
+        $codigoConductorFk = null;
+        $numero = null;
+        $codigoCiudadOrigenFk = null;
+        $codigoCiudadDestinoFk = null;
+        $codigoDespachoTipoFk = null;
+        $codigoOperacionFk = null;
+        $fechaSalidaDesde = null;
+        $fechaSalidaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoSoporte = null;
+        $estadoAnulado = null;
+        $codigoVehiculoFk =null;
+
+        if ($filtros){
+            $codigoDespachoPk = $filtros['codigoDespachoPk'] ??null;
+            $codigoConductorFk = $filtros['codigoConductorFk'] ??null;
+            $codigoVehiculoFk = $filtros['codigoVehiculoFk'] ??null;
+            $numero = $filtros['numero'] ??null;
+            $codigoCiudadOrigenFk = $filtros['codigoCiudadOrigenFk'] ??null;
+            $codigoCiudadDestinoFk = $filtros['codigoCiudadDestinoFk'] ??null;
+            $codigoDespachoTipoFk = $filtros['codigoDespachoTipoFk'] ??null;
+            $codigoOperacionFk = $filtros['codigoOperacionFk'] ??null;
+            $fechaSalidaDesde = $filtros['fechaSalidaDesde'] ??null;
+            $fechaSalidaHasta = $filtros['fechaSalidaHasta'] ??null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ??null;
+            $estadoAprobado = $filtros['estadoAprobado'] ??null;
+            $estadoSoporte = $filtros['estadoSoporte'] ??null;
+            $estadoAnulado = $filtros['estadoAnulado'] ??null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'td')
             ->select('td.codigoDespachoPk')
             ->addSelect('td.fechaSalida')
@@ -97,55 +131,57 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('td.estadoAnulado')
             ->addSelect('dt.nombre AS despachoTipo')
             ->addSelect('td.usuario')
+            ->addSelect('td.estadoSoporte')
             ->leftJoin('td.despachoTipoRel', 'dt')
             ->leftJoin('td.ciudadOrigenRel', 'co')
             ->leftJoin('td.ciudadDestinoRel ', 'cd')
             ->leftJoin('td.conductorRel', 'c')
             ->where('td.codigoDespachoPk <> 0');
-        if ($session->get('TteDespacho_codigoConductorFk') != '') {
-            $queryBuilder->andWhere("td.TteDespacho_codigoConductorFk = {$session->get('TteDespacho_codigoConductorFk')}");
+
+        if ($codigoConductorFk) {
+            $queryBuilder->andWhere("td.codigoConductorFk = '{$codigoConductorFk}'");
         }
 
-        if ($session->get('TteDespacho_codigoDespachoPk') != '') {
-            $queryBuilder->andWhere("td.codigoDespachoPk = {$session->get('TteDespacho_codigoDespachoPk')}");
+        if ($codigoDespachoPk) {
+            $queryBuilder->andWhere("td.codigoDespachoPk = {$codigoDespachoPk}");
         }
 
-        if ($session->get('TteDespacho_numero') != '') {
-            $queryBuilder->andWhere("td.numero = {$session->get('TteDespacho_numero')}");
+        if ($numero) {
+            $queryBuilder->andWhere("td.numero = '{$numero}'");
         }
 
-        if ($session->get('TteDespacho_codigoVehiculoFk') != '') {
-            $queryBuilder->andWhere("td.codigoVehiculoFk = {$session->get('TteDespacho_codigoVehiculoFk')}");
+        if ($codigoVehiculoFk) {
+            $queryBuilder->andWhere("td.codigoVehiculoFk = '{$codigoVehiculoFk}'");
         }
 
-        if ($session->get('TteDespacho_codigoCiudadOrigenFk')) {
-            $queryBuilder->andWhere("td.codigoCiudadOrigenFk = {$session->get('TteDespacho_codigoCiudadOrigenFk')}");
-        }
-        if ($session->get('TteDespacho_codigoCiudadDestinoFk')) {
-            $queryBuilder->andWhere("td.codigoCiudadDestinoFk = {$session->get('TteDespacho_codigoCiudadDestinoFk')}");
+        if ($codigoCiudadOrigenFk) {
+            $queryBuilder->andWhere("td.codigoCiudadOrigenFk = {$codigoCiudadOrigenFk}");
         }
 
-        if ($session->get('filtroTteDespachoCodigo') != '') {
-            $queryBuilder->andWhere("td.codigoDespachoPk = {$session->get('filtroTteDespachoCodigo')}");
+       if ($codigoCiudadDestinoFk) {
+            $queryBuilder->andWhere("td.codigoCiudadDestinoFk = {$codigoCiudadDestinoFk}");
         }
 
-        if ($session->get('TteDespacho_codigoDespachoTipoFk')) {
-            $queryBuilder->andWhere("td.codigoDespachoTipoFk = '{$session->get('TteDespacho_codigoDespachoTipoFk')}'");
+        if ($codigoDespachoPk) {
+            $queryBuilder->andWhere("td.codigoDespachoPk = '{$codigoDespachoPk}'");
         }
 
-        if ($session->get('TteDespacho_codigoOperacionFk')) {
-            $queryBuilder->andWhere("td.codigoOperacionFk = '" . $session->get('TteDespacho_codigoOperacionFk') . "'");
+        if ($codigoDespachoTipoFk) {
+            $queryBuilder->andWhere("td.codigoDespachoTipoFk = '{$codigoDespachoTipoFk}'");
         }
 
-        $fecha = new \DateTime('now');
-        if ($session->get('TteDespacho_fechaSalidaDesde') != null) {
-            $queryBuilder->andWhere("td.fechaSalida >= '{$session->get('TteDespacho_fechaSalidaDesde')} 00:00:00'");
+        if ($codigoOperacionFk) {
+            $queryBuilder->andWhere("td.codigoOperacionFk = '{$codigoOperacionFk}'");
         }
 
-        if ($session->get('TteDespacho_fechaSalidaHasta') != null) {
-            $queryBuilder->andWhere("td.fechaSalida <= '{$session->get('TteDespacho_fechaSalidaHasta')} 23:59:59'");
+        if ($fechaSalidaDesde) {
+            $queryBuilder->andWhere("td.fechaSalida >= '{$fechaSalidaDesde} 00:00:00'");
         }
-        switch ($session->get('TteDespacho_estadoAutorizado')) {
+
+        if ($fechaSalidaHasta) {
+            $queryBuilder->andWhere("td.fechaSalida <= '{$fechaSalidaHasta} 23:59:59'");
+        }
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("td.estadoAutorizado = 0");
                 break;
@@ -154,7 +190,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 break;
         }
 
-        switch ($session->get('TteDespacho_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("td.estadoAprobado = 0");
                 break;
@@ -163,7 +199,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 break;
         }
 
-        switch ($session->get('TteDespacho_estadoSoporte')) {
+        switch ($estadoSoporte) {
             case '0':
                 $queryBuilder->andWhere("td.estadoSoporte = 0");
                 break;
@@ -172,7 +208,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 break;
         }
 
-        switch ($session->get('TteDespacho_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("td.estadoAnulado = 0");
                 break;
@@ -180,8 +216,10 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("td.estadoAnulado = 1");
                 break;
         }
+
         $queryBuilder->orderBy('td.fechaSalida', 'DESC');
-        return $queryBuilder->setMaxResults(5000);
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
     }
 
     /**

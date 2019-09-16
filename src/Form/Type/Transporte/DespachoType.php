@@ -83,59 +83,6 @@ class DespachoType extends AbstractType {
         ));
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoDespachoPk",                        "tipo":"pk",        "ayuda":"Codigo de despacho",                       "titulo":"ID"},
-            {"campo":"codigoOperacionFk",                       "tipo":"texto",     "ayuda":"Codigo de operacion",                      "titulo":"OP"},
-            {"campo":"despachoTipoRel.nombre",                  "tipo":"texto",     "ayuda":"Despacho tipo",                            "titulo":"TIPO",                "relacion":""},
-            {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
-            {"campo":"fechaSalida",                             "tipo":"fecha",     "ayuda":"Fecha salida",                             "titulo":"FECHA"},
-            {"campo":"codigoVehiculoFk",                        "tipo":"texto",     "ayuda":"Vehiculo",                                 "titulo":"VEH"},
-            {"campo":"conductorRel.nombreCorto",                "tipo":"texto",     "ayuda":"Conductor",                                "titulo":"CONDUCTOR",           "relacion":""},
-            {"campo":"codigoRutaFk",                            "tipo":"texto",     "ayuda":"Codigo ruta",                              "titulo":"RUTA"},
-            {"campo":"ciudadOrigenRel.nombre",                  "tipo":"texto",     "ayuda":"Ciudad origen",                            "titulo":"ORIGEN",              "relacion":""},
-            {"campo":"ciudadDestinoRel.nombre",                 "tipo":"texto",     "ayuda":"Ciudad destino",                           "titulo":"DESTINO",             "relacion":""},
-            {"campo":"vrFletePago",                             "tipo":"moneda",    "ayuda":"Valor flete pago",                         "titulo":"FLETE"},
-            {"campo":"vrAnticipo",                              "tipo":"moneda",    "ayuda":"Valor anticipo pago",                      "titulo":"ANTICIPO"},
-            {"campo":"cantidad",                                "tipo":"moneda",    "ayuda":"Cantidad",                                 "titulo":"CANT"},
-            {"campo":"unidades",                                "tipo":"moneda",    "ayuda":"Unidades",                                 "titulo":"UND"},
-            {"campo":"pesoReal",                                "tipo":"moneda",    "ayuda":"Peso real",                                "titulo":"PES"},
-            {"campo":"vrDeclara",                              "tipo":"moneda",    "ayuda":"Valor declarado",                         "titulo":"DECLARADO"},
-            {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
-            {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
-            {"campo":"estadoSoporte",                          "tipo":"bool",      "ayuda":"Soporte",                                 "titulo":"SOP"},
-            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"},
-            {"campo":"usuario",                                 "tipo":"texto",     "ayuda":"Usuario",                                  "titulo":"USUARIO"}
-        ]';
-        return $campos;
-
-    }
-
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoConductorFk",               "tipo":"TextType",   "propiedades":{"label":"Conductor"}},
-            {"child":"codigoDespachoPk",                "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"numero",                          "tipo":"TextType",   "propiedades":{"label":"Numero"}},
-            {"child":"codigoVehiculoFk",                "tipo":"TextType",   "propiedades":{"label":"Numero"}},
-            {"child":"codigoCiudadOrigenFk",            "tipo":"TextType",   "propiedades":{"label":"Origen"}},
-            {"child":"codigoCiudadDestinoFk",           "tipo":"TextType",   "propiedades":{"label":"Destino"}},
-            {"child":"codigoDespachoTipoFk",            "tipo":"EntityType", "propiedades":{"class":"TteDespachoTipo",  "choice_label":"nombre",    "label":"TODOS"}},
-            {"child":"codigoOperacionFk",               "tipo":"EntityType", "propiedades":{"class":"TteOperacion",     "choice_label":"nombre",    "label":"TODOS"}},
-            {"child":"fechaSalidaDesde",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaSalidaHasta",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
-            {"child":"estadoAutorizado",                "tipo":"ChoiceType",   "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",                  "tipo":"ChoiceType",   "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoSoporte",                  "tipo":"ChoiceType",   "propiedades":{"label":"Soporte",       "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",                   "tipo":"ChoiceType",   "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
-        ]';
-
-        return $campos;
-    }
-
 
     /**
      * {@inheritdoc}

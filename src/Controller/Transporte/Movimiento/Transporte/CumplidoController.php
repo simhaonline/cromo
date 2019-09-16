@@ -26,7 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class CumplidoController extends ControllerListenerGeneral
+class CumplidoController extends AbstractController
 {
     protected $clase= TteCumplido::class;
     protected $claseNombre = "TteCumplido";

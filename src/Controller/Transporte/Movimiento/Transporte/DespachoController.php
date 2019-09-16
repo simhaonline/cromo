@@ -34,7 +34,9 @@ use App\Formato\Transporte\RelacionEntrega;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +50,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class DespachoController extends ControllerListenerGeneral
+class DespachoController extends AbstractController
 {
     protected $clase = TteDespacho::class;
     protected $proceso = "0006";
@@ -68,57 +70,49 @@ class DespachoController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/transporte/despacho/lista", name="transporte_movimiento_transporte_despacho_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoConductorFk', TextType::class, array('required' => false))
+            ->add('codigoDespachoPk', TextType::class, array('required' => false))
+            ->add('codigoVehiculoFk', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoCiudadOrigenFk', TextType::class, array('required' => false))
+            ->add('codigoCiudadDestinoFk', TextType::class, array('required' => false))
+            ->add('codigoDespachoTipoFk', TextType::class, array('required' => false))
+            ->add('codigoOperacionFk', TextType::class, array('required' => false))
+            ->add('fechaSalidaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaSalidaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoSoporte', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltro($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltro($form);
+                General::get()->setExportar($em->getRepository(TteDespacho::class)->lista($raw)->getQuery()->execute(), "Facturas");
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteDespacho::class)->lista()->getQuery()->getResult(), "Despacho");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                /*set_time_limit(0);
-                ini_set("memory_limit", -1);
-                $arDespachos = $em->getRepository(TteDespacho::class)->findBy(['estadoAprobado' => 1]);
-                foreach ($arDespachos as $arDespacho) {
-                    if($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
-                        $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
-                        $em->flush();
-                    }
-                }
-
-                foreach ($arDespachos as $arDespacho) {
-                    if($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
-                        $em->getRepository(TteDespacho::class)->generarCuentaPagar($arDespacho);
-                    }
-                }
-                $em->flush();*/
-
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteDespacho::class)->eliminar($arrSeleccionados);
-
-                return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_lista'));
-            }
-        }
+        $arDespachos = $paginator->paginate($em->getRepository(TteDespacho::class)->lista($raw), $request->query->getInt('page', 1), 30);
 
         return $this->render('transporte/movimiento/transporte/despacho/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arDespachos'=>$arDespachos,
+            'form' => $form->createView()
         ]);
-
     }
 
     /**
@@ -601,4 +595,24 @@ class DespachoController extends ControllerListenerGeneral
             'form' => $form->createView()));
     }
 
+    public function getFiltro($form){
+
+        return $filtro = [
+            'codigoConductorFk' => $form->get('codigoConductorFk')->getData(),
+            'codigoDespachoPk' => $form->get('codigoDespachoPk')->getData(),
+            'codigoVehiculoFk' => $form->get('codigoVehiculoFk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'codigoCiudadOrigenFk' => $form->get('codigoCiudadOrigenFk')->getData(),
+            'codigoCiudadDestinoFk' => $form->get('codigoCiudadDestinoFk')->getData(),
+            'codigoDespachoTipoFk' => $form->get('codigoDespachoTipoFk')->getData(),
+            'codigoOperacionFk' => $form->get('codigoOperacionFk')->getData(),
+            'fechaSalidaDesde' => $form->get('fechaSalidaDesde')->getData() ?$form->get('fechaSalidaDesde')->getData()->format('Y-m-d'): null,
+            'fechaSalidaHasta' => $form->get('fechaSalidaHasta')->getData() ?$form->get('fechaSalidaHasta')->getData()->format('Y-m-d'): null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoSoporte' => $form->get('estadoSoporte')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+    }
 }

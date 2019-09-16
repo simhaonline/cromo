@@ -46,50 +46,91 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuProgramacion::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoProgramacion = null;
+        $pagoTipo = null;
+        $nombre = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoProgramacion = $filtros['codigoProgramacion'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+            $pagoTipo = $filtros['pagoTipo'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuProgramacion::class, 'p')
             ->select('p.codigoProgramacionPk')
-            ->addSelect('pt.nombre as pago tipo')
-            ->select('p.nombre')
-            ->select('g.nombre as grupo')
-            ->select('p.fechaDesde')
-            ->select('p.fechaHasta')
-            ->select('p.dias')
-            ->select('p.cantidad')
-            ->select('p.estadoAutorizado')
-            ->select('p.estadoAprobado')
-            ->select('p.estadoContabilizado')
+            ->addSelect('pt.nombre as tipo')
+            ->addSelect('p.nombre')
+            ->addSelect('g.nombre as grupo')
+            ->addSelect('p.fechaDesde')
+            ->addSelect('p.fechaHasta')
+            ->addSelect('p.dias')
+            ->addSelect('p.cantidad')
+            ->addSelect('p.vrNeto')
+            ->addSelect('p.estadoAutorizado')
+            ->addSelect('p.estadoAprobado')
+            ->addSelect('p.estadoAnulado')
             ->leftJoin('p.pagoTipoRel', 'pt')
             ->leftJoin('p.grupoRel', 'g');
-
-        if ($session->get('RhuProgramacion_codigoProgramacionPk')) {
-            $queryBuilder->andWhere("p.codigoProgramacionPk = '{$session->get('RhuProgramacion_codigoProgramacionPk')}'");
+        if ($codigoProgramacion) {
+            $queryBuilder->andWhere("p.codigoProgramacionPk = '{$codigoProgramacion}'");
         }
-
-        if ($session->get('RhuProgramacion_codigoPagoTipoFk')) {
-            $queryBuilder->andWhere("p.codigoProgramacionPk = '{$session->get('RhuProgramacion_codigoPagoTipoFk')}'");
+        if ($pagoTipo) {
+            $queryBuilder->andWhere("p.codigoPagoTipoFk = '{$pagoTipo}'");
         }
-
-
-        if ($session->get('RhuProgramacion_nombre')) {
-            $queryBuilder->andWhere("p.nombre like '%{$session->get('RhuProgramacion_nombre')}%'");
+        if ($nombre) {
+            $queryBuilder->andWhere("p.nombre LIKE '%{$nombre}%'");
         }
-
-        if ($session->get('RhuProgramacion_codigoGrupoFk')) {
-            $queryBuilder->andWhere("p.codigoGrupoFk = '{$session->get('RhuProgramacion_codigoGrupoFk')}'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("p.fechaDesde >= '{$fechaDesde} 00:00:00'");
         }
-
-        if ($session->get('RhuProgramacion_fechaDesdeDesde') != null) {
-            $queryBuilder->andWhere("doc.fechaDesdeDesde >= '{$session->get('RhuProgramacion_fechaDesdeDesde')} 00:00:00'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("p.fechaHasta <= '{$fechaHasta} 23:59:59'");
         }
-
-        if ($session->get('RhuProgramacion_fechaHastaHasta') != null) {
-            $queryBuilder->andWhere("doc.fechaHastaHasta <= '{$session->get('RhuProgramacion_fechaHastaHasta')} 23:59:59'");
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAutorizado = 1");
+                break;
         }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('p.estadoAutorizado', 'ASC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
-    
+
     /**
      * @param $arrSeleccionados array
      * @throws \Doctrine\ORM\ORMException
@@ -427,7 +468,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arProgramacion->getCodigoSoporteFk()) {
             $arSoporte = $em->getRepository(TurSoporte::class)->find($arProgramacion->getCodigoSoporteFk());
-            if($arSoporte) {
+            if ($arSoporte) {
                 $arSoporte->setEstadoAprobado(0);
                 $arSoporte->setCargadoNomina(0);
                 $arProgramacion->setCodigoSoporteFk(null);
@@ -832,3 +873,4 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         return $arProgramacion;
     }
 }
+

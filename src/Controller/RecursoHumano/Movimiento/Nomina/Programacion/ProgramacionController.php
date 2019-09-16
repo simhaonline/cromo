@@ -10,6 +10,7 @@ use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\Turno\TurSoporte;
@@ -19,12 +20,19 @@ use App\Formato\RecursoHumano\ResumenConceptos;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class ProgramacionController extends ControllerListenerGeneral
+class ProgramacionController extends AbstractController
 {
     protected $clase = RhuProgramacion::class;
     protected $claseNombre = "RhuProgramacion";
@@ -42,35 +50,49 @@ class ProgramacionController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/movimiento/nomina/programacion/lista", name="recursohumano_movimiento_nomina_programacion_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoPagoTipoFk', EntityType::class, [
+                'class' => RhuPagoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('rt')
+                        ->orderBy('rt.codigoPagoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoProgramacionPk', TextType::class, array('required' => false))
+            ->add('nombre', TextType::class, ['required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuProgramacion::class)->lista($raw), "Programaciones");
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(RhuProgramacion::class)->lista()->getQuery()->execute(), "Programaciones");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $this->get("UtilidadesModelo")->eliminar( RhuProgramacion::class, $arrSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_lista'));
-            }
-        }
+        $arProgramaciones = $paginator->paginate($em->getRepository(RhuProgramacion::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/nomina/programacion/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arProgramaciones' => $arProgramaciones,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -120,10 +142,9 @@ class ProgramacionController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\ORMException
      * @Route("recursohumano/movimiento/nomina/programacion/detalle/{id}", name="recursohumano_movimiento_nomina_programacion_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $arProgramacion = $this->clase;
         if ($id != 0) {
             $arProgramacion = $em->getRepository($this->clase)->find($id);
@@ -131,11 +152,11 @@ class ProgramacionController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_lista'));
             }
         }
-        $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Cargar contratos','disabled' => false];
-        $arrBtnLiberarSoporte = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Liberar soporte','disabled' => true];
+        $arrBtnCargarContratos = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Cargar contratos', 'disabled' => false];
+        $arrBtnLiberarSoporte = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Liberar soporte', 'disabled' => true];
         $arrBtnExcelDetalle = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Excel'];
         $arrBtnExcelPagoDetalles = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Excel detalle'];
-        $arrBtnImprimirResumen = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Resumen','disabled' => true];
+        $arrBtnImprimirResumen = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Resumen', 'disabled' => true];
         $arrBtnEliminarTodos = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar todos'];
         $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
         if ($arProgramacion->getEstadoAutorizado()) {
@@ -144,10 +165,10 @@ class ProgramacionController extends ControllerListenerGeneral
             $arrBtnEliminar['attr']['class'] .= ' hidden';
             $arrBtnImprimirResumen['disabled'] = false;
         } else {
-            if(!$arProgramacion->getGrupoRel()->getCargarContrato()) {
+            if (!$arProgramacion->getGrupoRel()->getCargarContrato()) {
                 $arrBtnCargarContratos['disabled'] = true;
             }
-            if($arProgramacion->getCodigoSoporteFk()) {
+            if ($arProgramacion->getCodigoSoporteFk()) {
                 $arrBtnLiberarSoporte['disabled'] = false;
             }
         }
@@ -249,7 +270,7 @@ class ProgramacionController extends ControllerListenerGeneral
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoProgramacionDetalleFk' => $id));
-        if($arPago) {
+        if ($arPago) {
             $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->lista($arPago->getCodigoPagoPk());
         } else {
             $arPagoDetalles = null;
@@ -535,5 +556,29 @@ class ProgramacionController extends ControllerListenerGeneral
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xls');
         $writer->save('php://output');
         exit;
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoProgramacion' => $form->get('codigoProgramacionPk')->getData(),
+            'nombre' => $form->get('nombre')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arPagoTipo = $form->get('codigoPagoTipoFk')->getData();
+
+        if (is_object($arPagoTipo)) {
+            $filtro['pagoTipo'] = $arPagoTipo->getCodigoPagoTipoPk();
+        } else {
+            $filtro['pagoTipo'] = $arPagoTipo;
+        }
+
+        return $filtro;
+
     }
 }

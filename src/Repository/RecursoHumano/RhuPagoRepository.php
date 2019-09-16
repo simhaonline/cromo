@@ -30,15 +30,34 @@ class RhuPagoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuPago::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoPago = null;
+        $codigoEmpleado = null;
+        $pagoTipo = null;
+        $numero = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+
+        if ($filtros) {
+            $codigoPago = $filtros['codigoPago'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $pagoTipo = $filtros['pagoTipo'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+        }
+
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPago::class, 'p')
             ->select('p.codigoPagoPk')
             ->addSelect('p.numero')
             ->addSelect('pt.nombre as pagoTipo')
             ->addSelect('e.numeroIdentificacion')
-            ->addSelect('e.nombreCorto')
+            ->addSelect('e.nombreCorto AS empleado')
             ->addSelect('p.fechaDesde')
             ->addSelect('p.fechaHasta')
             ->addSelect('p.vrSalarioContrato')
@@ -47,34 +66,29 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->addSelect('p.vrNeto')
             ->leftJoin('p.pagoTipoRel', 'pt')
             ->leftJoin('p.empleadoRel', 'e');
-
-        if ($session->get('RhuPago_codigoEmpleadoFk')) {
-            $queryBuilder->andWhere("p.codigoEmpleadoFk = '{$session->get('RhuPago_codigoEmpleadoFk')}'");
+        if ($codigoPago) {
+            $queryBuilder->andWhere("p.codigoPagoPk = '{$codigoPago}'");
         }
-
-        if ($session->get('RhuPago_codigoPagoPk')) {
-            $queryBuilder->andWhere("p.codigoPagoPk = '{$session->get('RhuPago_codigoPagoPk')}'");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-
-        if ($session->get('RhuPago_codigoPagoTipoFk')) {
-            $queryBuilder->andWhere("p.codigoPagoTipoFk = '{$session->get('RhuPago_codigoPagoTipoFk')}'");
+        if ($pagoTipo) {
+            $queryBuilder->andWhere("p.codigoPagoTipoFk = '{$pagoTipo}'");
         }
-
-        if ($session->get('RhuPago_numero')) {
-            $queryBuilder->andWhere("p.numero = '{$session->get('RhuPago_numero')}'");
+        if ($numero) {
+            $queryBuilder->andWhere("p.numero = '{$numero}'");
         }
-
-        if ($session->get('RhuPago_fechaDesdeDesde') != null) {
-            $queryBuilder->andWhere("p.fechaDesde >= '{$session->get('RhuPago_fechaDesdeDesde')} 00:00:00'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("p.fechaDesde >= '{$fechaDesde} 00:00:00'");
         }
-
-        if ($session->get('RhuPago_fechaHastaHasta') != null) {
-            $queryBuilder->andWhere("p.fechaHasta <= '{$session->get('RhuPago_fechaHastaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("p.fechaHasta <= '{$fechaHasta} 23:59:59'");
         }
+        $queryBuilder->addOrderBy('p.codigoPagoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
 
-        return $queryBuilder;
-    } 
-    
     /**
      * @param $codigoProgramacion integer
      */
@@ -436,7 +450,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
 
         //Salud
-        if($arProgramacionDetalle->getDescuentoSalud()) {
+        if ($arProgramacionDetalle->getDescuentoSalud()) {
             $arSalud = $arContrato->getSaludRel();
             $porcentajeSalud = $arSalud->getPorcentajeEmpleado();
             if ($porcentajeSalud > 0) {
@@ -464,7 +478,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
 
         //Pension
-        if($arProgramacionDetalle->getDescuentoPension()) {
+        if ($arProgramacionDetalle->getDescuentoPension()) {
             $arPension = $arContrato->getPensionRel();
             $porcentajePension = $arPension->getPorcentajeEmpleado();
             if ($porcentajePension > 0) {
@@ -511,7 +525,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
 
         //Auxilio de transporte
-        if($arProgramacionDetalle->getPagoAuxilioTransporte()) {
+        if ($arProgramacionDetalle->getPagoAuxilioTransporte()) {
             if ($arContrato->getAuxilioTransporte() == 1) {
                 $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAuxilioTransporteFk']);
                 $pagoDetalle = round($diaAuxilioTransporte * $arProgramacionDetalle->getDiasTransporte());
@@ -698,7 +712,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $pagoDetalle = round($pagoDetalle);
         $arPagoDetalle->setPagoRel($arrDatosGenerales['pago']);
         $arPagoDetalle->setVrPago($pagoDetalle);
-        if($arConcepto) {
+        if ($arConcepto) {
             $arPagoDetalle->setConceptoRel($arConcepto);
         }
         $pagoDetalleOperado = $pagoDetalle * $arConcepto->getOperacion();
@@ -808,7 +822,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $ibp;
     }
 
-    public function listaImpresionDql($codigoProgramacionPago = "",  $porFecha = false, $fechaDesde = "", $fechaHasta = "", $codigoPagoTipo = "", $codigoGrupo = "")
+    public function listaImpresionDql($codigoProgramacionPago = "", $porFecha = false, $fechaDesde = "", $fechaHasta = "", $codigoPagoTipo = "", $codigoGrupo = "")
     {
         $qb = $this->_em->createQueryBuilder()->from(RhuPago::class, 'p');
         $qb->select('p,e')
@@ -838,7 +852,8 @@ class RhuPagoRepository extends ServiceEntityRepository
      * @param $arPago RhuPago
      * @throws \Doctrine\ORM\ORMException
      */
-    public function generarCuentaPagar($arPago) {
+    public function generarCuentaPagar($arPago)
+    {
         $em = $this->getEntityManager();
         $arTercero = $em->getRepository(RhuEmpleado::class)->terceroTesoreria($arPago->getEmpleadoRel());
         $arCuentaPagarTipo = $em->getRepository(TesCuentaPagarTipo::class)->find($arPago->getPagoTipoRel()->getCodigoCuentaPagarTipoFk());
@@ -863,7 +878,8 @@ class RhuPagoRepository extends ServiceEntityRepository
 
     }
 
-    public function  getPago($codigoProgramacion){
+    public function getPago($codigoProgramacion)
+    {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPago::class, 'p')
             ->select('p.codigoPagoPk')
             ->select('p.codigoPagoTipoFk')
@@ -872,7 +888,8 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getArrayResult();
     }
 
-    public function programacion($codigoProgramacion) {
+    public function programacion($codigoProgramacion)
+    {
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(RhuPago::class, 'p')
             ->select('p.codigoPagoPk')
@@ -906,7 +923,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->where("p.codigoProgramacionFk = {$codigoProgramacion}");
         $arPagos = $queryBuilder->getQuery()->getResult();
         $i = 0;
-        foreach($arPagos as $arPago) {
+        foreach ($arPagos as $arPago) {
             $queryBuilder = $em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
                 ->select('pd.codigoPagoDetallePk')
                 ->addSelect('pd.codigoConceptoFk')
@@ -926,7 +943,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                 ->leftJoin('pd.conceptoRel', 'c')
                 ->where("pd.codigoPagoFk = {$arPago['codigoPagoPk']}");
             $arPagoDetalles = $queryBuilder->getQuery()->getResult();
-            if(!$arPagoDetalles) {
+            if (!$arPagoDetalles) {
                 $arPagoDetalles = [];
             }
             $queryBuilder = $em->createQueryBuilder()->from(TurProgramacionRespaldo::class, 'pr')
@@ -964,16 +981,16 @@ class RhuPagoRepository extends ServiceEntityRepository
                 ->addSelect('pr.dia31')
                 ->where("pr.codigoSoporteContratoFk = {$arPago['codigoSoporteContratoFk']}");
             $arProgramacionesRespaldo = $queryBuilder->getQuery()->getResult();
-            if(!$arProgramacionesRespaldo) {
+            if (!$arProgramacionesRespaldo) {
                 $arProgramacionesRespaldo = [];
             }
 
             $arPagos[$i]['arrDetalles'] = $arPagoDetalles;
             $arPagos[$i]['arrProgramaciones'] = $arProgramacionesRespaldo;
-            $arPagos[$i]['fechaDesde'] = $arPago['fechaDesde']?$arPago['fechaDesde']->format('Y-m-d'):null;
-            $arPagos[$i]['fechaHasta'] = $arPago['fechaHasta']?$arPago['fechaHasta']->format('Y-m-d'):null;
-            $arPagos[$i]['fechaDesdeContrato'] = $arPago['fechaDesdeContrato']?$arPago['fechaDesdeContrato']->format('Y-m-d'):null;
-            $arPagos[$i]['fechaHastaContrato'] = $arPago['fechaHastaContrato']?$arPago['fechaHastaContrato']->format('Y-m-d'):null;
+            $arPagos[$i]['fechaDesde'] = $arPago['fechaDesde'] ? $arPago['fechaDesde']->format('Y-m-d') : null;
+            $arPagos[$i]['fechaHasta'] = $arPago['fechaHasta'] ? $arPago['fechaHasta']->format('Y-m-d') : null;
+            $arPagos[$i]['fechaDesdeContrato'] = $arPago['fechaDesdeContrato'] ? $arPago['fechaDesdeContrato']->format('Y-m-d') : null;
+            $arPagos[$i]['fechaHastaContrato'] = $arPago['fechaHastaContrato'] ? $arPago['fechaHastaContrato']->format('Y-m-d') : null;
 
             $i++;
         }

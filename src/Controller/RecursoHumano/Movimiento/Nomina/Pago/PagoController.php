@@ -7,6 +7,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurProgramacion;
 use App\Form\Type\RecursoHumano\PagoType;
@@ -14,10 +15,17 @@ use App\Formato\RecursoHumano\Pago;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class PagoController extends ControllerListenerGeneral
+class PagoController extends AbstractController
 {
     protected $clase = RhuPago::class;
     protected $claseFormulario = PagoType::class;
@@ -34,35 +42,47 @@ class PagoController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/movimiento/nomina/pago/lista", name="recursohumano_movimiento_nomina_pago_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoPagoTipoFk', EntityType::class, [
+                'class' => RhuPagoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('rt')
+                        ->orderBy('rt.codigoPagoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoPagoPk', TextType::class, array('required' => false))
+            ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
+            ->add('numero', TextType::class, ['required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuPago::class)->lista($raw), "Pagos");
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(RhuPago::class)->lista()->getQuery()->execute(), "Pagos");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuPago::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_pago_lista'));
-            }
-        }
+        $arPagos = $paginator->paginate($em->getRepository(RhuPago::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/nomina/pago/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arPagos' => $arPagos,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -84,15 +104,14 @@ class PagoController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @Route("recursohumano/movimiento/nomina/pago/detalle/{id}", name="recursohumano_movimiento_nomina_pago_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arPago = $em->find(RhuPago::class, $id);
         $form = Estandares::botonera($arPago->getEstadoAutorizado(), $arPago->getEstadoAprobado(), $arPago->getEstadoAnulado());
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('btnImprimir')->isClicked()){
+            if ($form->get('btnImprimir')->isClicked()) {
                 $objFormato = new Pago();
                 $objFormato->Generar($em, $id);
             }
@@ -127,6 +146,28 @@ class PagoController extends ControllerListenerGeneral
             'arProgramaciones' => $arProgramaciones,
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoPago' => $form->get('codigoPagoPk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+        ];
+
+        $arPagoTipo = $form->get('codigoPagoTipoFk')->getData();
+
+        if (is_object($arPagoTipo)) {
+            $filtro['pagoTipo'] = $arPagoTipo->getCodigoPagoTipoPk();
+        } else {
+            $filtro['pagoTipo'] = $arPagoTipo;
+        }
+
+        return $filtro;
+
     }
 
 }

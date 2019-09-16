@@ -109,12 +109,12 @@
     <div class="btn-group btn-xs" style="float: left; width: 60px">
         {{ form_widget(form.limiteRegistros) }}
     </div>
-    <div class="btn-toolbar" style="float: right">
-        <div class="btn-group">
-            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
-            <a class="btn btn-default btn-sm"
-               href="{{ path('recursohumano_movimiento_nomina_adicional_nuevo', {'id': 0}) }}">Nuevo</a>
-        </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_movimiento_nomina_liquidacion_nuevo', {'id': 0}) }}">Nuevo</a>
     </div>
     <br/><br/>
     {{ form_end(form) }}

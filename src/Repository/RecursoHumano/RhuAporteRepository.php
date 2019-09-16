@@ -16,8 +16,19 @@ class RhuAporteRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuAporte::class);
     }
 
-    public function lista()
+    public function  lista($raw)
     {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $anio = null;
+        $mes = null;
+
+        if ($filtros) {
+            $anio = $filtros['anio'] ?? null;
+            $mes = $filtros['mes'] ?? null;
+        }
+
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporte::class, 'a')
             ->select('a.codigoAportePk')
@@ -33,15 +44,13 @@ class RhuAporteRepository extends ServiceEntityRepository
             ->addSelect('a.estadoAnulado')
             ->leftJoin('a.sucursalRel', 's')
             ->orderBy('a.codigoAportePk', 'DESC');
-        if ($session->get('filtroRhuAporteAnio') != '') {
-            $queryBuilder->andWhere("a.anio LIKE '%{$session->get('filtroRhuAporteAnio')}%' ");
+        if ($anio) {
+            $queryBuilder->andWhere("a.anio  = '{$anio}'");
         }
-        if ($session->get('filtroRhuAporteMes') != '') {
-            $queryBuilder->andWhere("a.mes = {$session->get('filtroRhuAporteMes')} ");
+        if ($mes) {
+            $queryBuilder->andWhere("a.mes  = '{$mes}'");
         }
-//        if ($session->get('filtroTurClienteCodigo') != '') {
-//            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTurClienteCodigo')} ");
-//        }
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 

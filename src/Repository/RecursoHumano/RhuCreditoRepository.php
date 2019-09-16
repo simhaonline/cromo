@@ -14,9 +14,29 @@ class RhuCreditoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuCredito::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCredito = null;
+        $creditoTipo = null;
+        $codigoEmpleado = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoPagado = null;
+        $estadoSuspendido = null;
+
+        if ($filtros) {
+            $codigoCredito = $filtros['codigoCredito'] ?? null;
+            $creditoTipo = $filtros['creditoTipo'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoPagado = $filtros['estadoPagado'] ?? null;
+            $estadoSuspendido = $filtros['estadoSuspendido'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'c')
             ->select('c.codigoCreditoPk')
             ->addSelect('ct.nombre as creditoTipo')
@@ -35,28 +55,26 @@ class RhuCreditoRepository extends ServiceEntityRepository
             ->addSelect('c.vrSaldo')
             ->addSelect('c.estadoPagado')
             ->addSelect('c.inactivoPeriodo')
+            ->addSelect('c.estadoSuspendido')
             ->leftJoin('c.creditoTipoRel', 'ct')
             ->leftJoin('c.empleadoRel', 'e')
             ->leftJoin('c.grupoRel', 'g');
-
-        if ($session->get('RhuCredito_codigoCreditoPk')) {
-            $queryBuilder->andWhere("c.codigoCreditoPk = '{$session->get('RhuCredito_codigoCreditoPk')}'");
+        if ($codigoCredito) {
+            $queryBuilder->andWhere("c.codigoCreditoPk = '{$codigoCredito}'");
         }
-        if ($session->get('RhuCredito_codigoCreditoTipoFk')) {
-            $queryBuilder->andWhere("c.codigoCreditoTipoFk = '{$session->get('RhuCredito_codigoCreditoTipoFk')}'");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("c.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-        if ($session->get('RhuCredito_codigoEmpleadoFk')) {
-            $queryBuilder->andWhere("c.codigoEmpleadoFk = '{$session->get('RhuCredito_codigoEmpleadoFk')}'");
+        if ($creditoTipo) {
+            $queryBuilder->andWhere("c.codigoCreditoTipoFk = '{$creditoTipo}'");
         }
-        if ($session->get('RhuCredito_fechaDesde') != null) {
-            $queryBuilder->andWhere("c.fechaDesde >= '{$session->get('RhuCredito_fechaDesde')} 00:00:00'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("c.fecha >= '{$fechaDesde} 00:00:00'");
         }
-
-        if ($session->get('RhuCredito_fechaHasta') != null) {
-            $queryBuilder->andWhere("c.fechaHasta <= '{$session->get('RhuCredito_fechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("c.fecha <= '{$fechaHasta} 23:59:59'");
         }
-
-        switch ($session->get('RhuCredito_estadoPagado')) {
+        switch ($estadoPagado) {
             case '0':
                 $queryBuilder->andWhere("c.estadoPagado = 0");
                 break;
@@ -64,8 +82,7 @@ class RhuCreditoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("c.estadoPagado = 1");
                 break;
         }
-
-        switch ($session->get('RhuCredito_estadoAprobado')) {
+        switch ($estadoSuspendido) {
             case '0':
                 $queryBuilder->andWhere("c.estadoSuspendido = 0");
                 break;
@@ -73,11 +90,12 @@ class RhuCreditoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("c.estadoSuspendido = 1");
                 break;
         }
-        
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('c.fecha', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
 
     }
-    
+
     /**
      * @param $arrSeleccionados array
      * @throws \Doctrine\ORM\ORMException
@@ -96,7 +114,8 @@ class RhuCreditoRepository extends ServiceEntityRepository
         }
     }
 
-    public function pendientes($codigoEmpleado){
+    public function pendientes($codigoEmpleado)
+    {
         $em = $this->getEntityManager();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'c')
             ->select('c.codigoCreditoPk')
@@ -105,7 +124,7 @@ class RhuCreditoRepository extends ServiceEntityRepository
             ->addSelect('c.vrCuota')
             ->where('c.vrSaldo > 0')
             ->andWhere("c.codigoEmpleadoFk = {$codigoEmpleado}")
-        ->leftJoin('c.creditoTipoRel' ,'ct');
+            ->leftJoin('c.creditoTipoRel', 'ct');
         return $queryBuilder->getQuery()->getArrayResult();
     }
 }

@@ -32,15 +32,33 @@ class RhuEmbargoRepository extends ServiceEntityRepository
         }
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoEmbargo = null;
+        $embargoTipo = null;
+        $codigoEmpleado = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoActivo = null;
+
+        if ($filtros) {
+            $codigoEmbargo = $filtros['codigoEmbargo'] ?? null;
+            $embargoTipo = $filtros['embargoTipo'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoActivo = $filtros['estadoActivo'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuEmbargo::class, 'e')
             ->select('e.codigoEmbargoPk')
             ->addSelect('et.nombre as embargoTipo')
             ->addSelect('e.numero')
             ->addSelect('em.numeroIdentificacion')
-            ->addSelect('em.nombreCorto')
+            ->addSelect('em.nombreCorto AS empleado')
             ->addSelect('e.fecha')
             ->addSelect('e.vrValor')
             ->addSelect('e.porcentajeDevengado')
@@ -52,32 +70,22 @@ class RhuEmbargoRepository extends ServiceEntityRepository
             ->addSelect('e.estadoActivo')
             ->leftJoin('e.embargoTipoRel', 'et')
             ->leftJoin('e.empleadoRel', 'em');
-
-        if ($session->get('RhuEmbargo_codigoEmbargoPk')) {
-            $queryBuilder->andWhere("e.codigoEmbargoPk = '{$session->get('RhuEmbargo_codigoEmbargoPk')}'");
+        if ($codigoEmbargo) {
+            $queryBuilder->andWhere("e.codigoEmbargoPk = '{$codigoEmbargo}'");
         }
-
-        if ($session->get('RhuEmbargo_codigoEmbargoTipoFk')) {
-            $queryBuilder->andWhere("e.codigoEmbargoTipoFk = '{$session->get('RhuEmbargo_codigoEmbargoTipoFk')}'");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("e.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-
-        if ($session->get('RhuEmbargo_numero')) {
-            $queryBuilder->andWhere("e.numero = '{$session->get('RhuEmbargo_numero')}'");
+        if ($embargoTipo) {
+            $queryBuilder->andWhere("e.codigoEmbargoTipoFk = '{$embargoTipo}'");
         }
-
-        if ($session->get('RhuEmbargo_codigoEmpleadoFk')) {
-            $queryBuilder->andWhere("e.codigoEmpleadoFk = '{$session->get('RhuEmbargo_codigoEmpleadoFk')}'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("e.fecha >= '{$fechaDesde} 00:00:00'");
         }
-
-        if ($session->get('RhuEmbargo_fechaDesde') != null) {
-            $queryBuilder->andWhere("e.fechaDesde >= '{$session->get('RhuEmbargo_fechaDesde')} 00:00:00'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("e.fecha <= '{$fechaHasta} 23:59:59'");
         }
-
-        if ($session->get('RhuEmbargo_fechaHasta') != null) {
-            $queryBuilder->andWhere("e.fechaHasta <= '{$session->get('RhuEmbargo_fechaHasta')} 23:59:59'");
-        }
-
-        switch ($session->get('RhuEmbargo_estadoActivo')) {
+        switch ($estadoActivo) {
             case '0':
                 $queryBuilder->andWhere("e.estadoActivo = 0");
                 break;
@@ -85,8 +93,11 @@ class RhuEmbargoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("e.estadoActivo = 1");
                 break;
         }
+        $queryBuilder->addOrderBy('e.fecha', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
 
-        return $queryBuilder;
+
     }
     
     public function listaEmbargo($codigoEmpleado, $afectaLiquidacion = 0, $afectaVacacion = 0, $afectaPrima = 0, $afectaCesantias = 0)

@@ -18,17 +18,34 @@ class RhuAdicionalPeriodoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuAdicionalPeriodo::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $estadoCerrado = null;
+
+        if ($filtros) {
+            $estadoCerrado = $filtros['estadoCerrado'] ?? null;
+        }
+
+
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicionalPeriodo::class, 'ap')
             ->select('ap.codigoAdicionalPeriodoPk')
             ->addSelect('ap.fecha')
             ->addSelect('ap.nombre')
             ->addSelect('ap.estadoCerrado');
-        if ($session->get('filtroRhuAdicionalPeriodoEstado') != '') {
-            $queryBuilder->andWhere("ap.estadoCerrado = '{$session->get('filtroRhuAdicionalPeriodoEstado')}' ");
+        switch ($estadoCerrado) {
+            case '0':
+                $queryBuilder->andWhere("ap.estadoCerrado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("ap.estadoCerrado = 1");
+                break;
         }
+
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 

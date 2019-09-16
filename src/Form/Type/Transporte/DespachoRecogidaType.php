@@ -58,30 +58,6 @@ class DespachoRecogidaType extends AbstractType {
         ));
     }
 
-
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoDespachoRecogidaPk",                "tipo":"pk",        "ayuda":"Codigo despacho recogida",                 "titulo":"ID"},
-            {"campo":"numero",                                  "tipo":"entero",    "ayuda":"Numero",                                   "titulo":"NUMERO"},
-            {"campo":"fecha",                                   "tipo":"fecha",     "ayuda":"Fecha",                                    "titulo":"FECHA"},
-            {"campo":"codigoOperacionFk",                       "tipo":"texto",     "ayuda":"Codigo operacion",                         "titulo":"OP"},
-            {"campo":"codigoVehiculoFk",                        "tipo":"texto",     "ayuda":"Codigo vehiculo",                          "titulo":"VEH"},
-            {"campo":"conductorRel.nombreCorto",                "tipo":"texto",     "ayuda":"Conductor",                                "titulo":"CONDUCTOR",                "relacion":""},
-            {"campo":"rutaRecogidaRel.nombre",                "tipo":"texto",     "ayuda":"Ruta",                                "titulo":"RUTA",                "relacion":""},
-            {"campo":"cantidad",                                "tipo":"entero",    "ayuda":"Cantidad",                                 "titulo":"CAN"},
-            {"campo":"unidades",                                "tipo":"entero",    "ayuda":"Unidad",                                   "titulo":"UND"},
-            {"campo":"pesoReal",                                "tipo":"entero",    "ayuda":"Peso real",                                "titulo":"PES"},
-            {"campo":"pesoVolumen",                             "tipo":"entero",    "ayuda":"Peso volumen",                             "titulo":"VOL"},
-            {"campo":"vrFletePago",                             "tipo":"moneda",    "ayuda":"Valor flete pago",                         "titulo":"PAGO"},
-            {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
-            {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
-            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"}
-        ]';
-        return $campos;
-
-    }
-
     public function getEstructuraPropiedadesFiltro()
     {
 

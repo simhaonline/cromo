@@ -32,9 +32,34 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoVehiculoFk = null;
+        $codigoDespachoRecogidaPk =null;
+        $numero = null;
+        $codigoOperacionFk = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+
+        if ($filtros){
+            $codigoVehiculoFk = $filtros['codigoVehiculoFk']??null;
+            $codigoDespachoRecogidaPk = $filtros['codigoDespachoRecogidaPk']??null;
+            $numero = $filtros['numero']??null;
+            $codigoOperacionFk = $filtros['codigoOperacionFk']??null;
+            $estadoAutorizado = $filtros['estadoAutorizado']??null;
+            $estadoAprobado = $filtros['estadoAprobado']??null;
+            $estadoAnulado = $filtros['estadoAnulado']??null;
+            $fechaDesde = $filtros['fechaDesde']??null;
+            $fechaHasta = $filtros['fechaHasta']??null;
+        }
+        dump($filtros);
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'dr')
             ->select('dr.codigoDespachoRecogidaPk')
             ->addSelect('dr.numero')
@@ -42,6 +67,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->addSelect('dr.codigoOperacionFk')
             ->addSelect('dr.codigoVehiculoFk')
             ->addSelect('cond.nombreCorto AS conductorNombreCorto')
+            ->addSelect('dr.codigoRutaRecogidaFk')
             ->addSelect('dr.codigoRutaRecogidaFk')
             ->addSelect('dr.cantidad')
             ->addSelect('dr.unidades')
@@ -51,21 +77,24 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->addSelect('dr.estadoAutorizado')
             ->addSelect('dr.estadoAprobado')
             ->addSelect('dr.estadoAnulado')
+            ->addSelect('r.nombre as ruta')
             ->where('dr.codigoDespachoRecogidaPk <> 0')
-            ->leftJoin('dr.conductorRel', 'cond');
-        if ($session->get('TteDespachoRecogida_codigoVehiculoFk') != '') {
-            $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$session->get('TteDespachoRecogida_codigoVehiculoFk')}'");
+            ->leftJoin('dr.conductorRel', 'cond')
+            ->leftJoin('dr.rutaRecogidaRel', 'r');
+
+        if ($codigoVehiculoFk) {
+            $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$codigoVehiculoFk}'");
         }
-        if ($session->get('TteDespachoRecogida_codigoDespachoRecogidaPk') != '') {
-            $queryBuilder->andWhere("dr.codigoDespachoRecogidaPk = '{$session->get('TteDespachoRecogida_codigoDespachoRecogidaPk')}'");
+        if ($codigoDespachoRecogidaPk) {
+            $queryBuilder->andWhere("dr.codigoDespachoRecogidaPk = '{$codigoDespachoRecogidaPk}'");
         }
-        if ($session->get('TteDespachoRecogida_numero') != '') {
-            $queryBuilder->andWhere("dr.numero = '{$session->get('TteDespachoRecogida_numero')}'");
+        if ($numero) {
+            $queryBuilder->andWhere("dr.numero = '{$numero}'");
         }
-        if ($session->get('TteDespachoRecogida_codigoOperacionFk') != '') {
-            $queryBuilder->andWhere("dr.codigoOperacionFk = '{$session->get('TteDespachoRecogida_codigoOperacionFk')}'");
+        if ($codigoOperacionFk) {
+            $queryBuilder->andWhere("dr.codigoOperacionFk = '{$codigoOperacionFk}'");
         }
-        switch ($session->get('TteDespachoRecogida_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("dr.estadoAutorizado = 0");
                 break;
@@ -73,7 +102,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("dr.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('TteDespachoRecogida_estadoAprobado')) {
+
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("dr.estadoAprobado = 0");
                 break;
@@ -81,7 +111,8 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("dr.estadoAprobado = 1");
                 break;
         }
-        switch ($session->get('TteDespachoRecogida_estadoAnulado')) {
+
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("dr.estadoAnulado = 0");
                 break;
@@ -89,15 +120,17 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("dr.estadoAnulado = 1");
                 break;
         }
-        if ($session->get('TteDespachoRecogida_fechaDesde') != null) {
-            $queryBuilder->andWhere("dr.fecha >= '{$session->get('TteDespachoRecogida_fechaDesde')} 00:00:00'");
+
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("dr.fecha >= '{$fechaDesde} 00:00:00'");
         }
-        if ($session->get('TteDespachoRecogida_fechaHasta') != null) {
-            $queryBuilder->andWhere("dr.fecha <= '{$session->get('TteDespachoRecogida_fechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("dr.fecha <= '{$fechaHasta} 23:59:59'");
         }
         $queryBuilder->orderBy('dr.fecha', 'DESC');
 
-        return $queryBuilder;
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function eliminar($arrSeleccionados)

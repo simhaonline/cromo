@@ -18,12 +18,13 @@ use App\Entity\Transporte\TteDespachoRecogidaAuxiliar;
 use App\Entity\Transporte\TteRecogida;
 use App\Entity\Transporte\TteAuxiliar;
 use App\Entity\Transporte\TteMonitoreo;
-use App\Formato\Transporte\Despacho;
 use App\Formato\Transporte\DespachoRecogida;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Validator\Constraints\Count;
 
-class DespachoRecogidaController extends ControllerListenerGeneral
+class DespachoRecogidaController extends AbstractController
 {
     protected $clase = TteDespachoRecogida::class;
     protected $claseNombre = "TteDespachoRecogida";
@@ -124,52 +125,43 @@ class DespachoRecogidaController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/recogida/despacho/lista", name="transporte_movimiento_recogida_despacho_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoVehiculoFk', TextType::class, array('required' => false))
+            ->add('codigoDespachoRecogidaPk', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoOperacionFk', TextType::class, array('required' => false))
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(TteDespachoRecogida::class)->lista($raw)->getQuery()->execute(), "Facturas");
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteDespachoRecogida::class)->lista()->getQuery()->execute(), "Despacho recogidas");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                /*set_time_limit(0);
-                ini_set("memory_limit", -1);
-                $arDespachosRecogidas = $em->getRepository(TteDespachoRecogida::class)->findBy(['estadoAprobado' => 1]);
-                foreach ($arDespachosRecogidas as $arDespachoRecogida) {
-                    if($arDespachoRecogida->getDespachoRecogidaTipoRel()->getGeneraCuentaPagar()) {
-                        $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespachoRecogida->getVehiculoRel()->getPoseedorRel());
-                        $em->flush();
-                    }
-                }
-
-                foreach ($arDespachosRecogidas as $arDespachoRecogida) {
-                    if($arDespachoRecogida->getDespachoRecogidaTipoRel()->getGeneraCuentaPagar()) {
-                        $em->getRepository(TteDespachoRecogida::class)->generarCuentaPagar($arDespachoRecogida);
-                    }
-                }
-                $em->flush();*/
-
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_lista'));
-            }
-        }
+        $arDespachoRecogidas = $paginator->paginate($em->getRepository(TteDespachoRecogida::class)->lista($raw), $request->query->getInt('page', 1), 30);
 
         return $this->render('transporte/movimiento/recogida/despacho/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arDespachoRecogidas'=>$arDespachoRecogidas,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -350,5 +342,20 @@ class DespachoRecogidaController extends ControllerListenerGeneral
         }
     }
 
+
+    public function getFiltros($form)
+    {
+        return $filtro = [
+            'codigoVehiculoFk' => $form->get('codigoVehiculoFk')->getData(),
+            'codigoDespachoRecogidaPk' => $form->get('codigoDespachoRecogidaPk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'codigoOperacionFk' => $form->get('codigoOperacionFk')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData(),
+            'fechaHasta' => $form->get('fechaHasta')->getData(),
+        ];
+    }
 }
 

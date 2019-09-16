@@ -91,7 +91,7 @@ class OperacionController extends ControllerListenerGeneral
     /**
      * @param Request $request
      * @param $id
-     * @Route("/transporte/administracion/general/operacion/detalle/{id}", name="transporte_administracion_general_ciudad_detalle")
+     * @Route("/transporte/administracion/general/operacion/detalle/{id}", name="transporte_administracion_general_operacion_detalle")
      */
     public function detalle(Request $request, $id)
     {

@@ -8,11 +8,14 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Transporte\TteCiudad;
 use App\Form\Type\Transporte\CiudadType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CiudadController extends ControllerListenerGeneral
+class CiudadController extends AbstractController
 {
     protected $clase= TteCiudad::class;
     protected $claseNombre = "TteCiudad";
@@ -24,34 +27,37 @@ class CiudadController extends ControllerListenerGeneral
     /**
      * @Route("/transporte/administracion/general/ciudad/lista", name="transporte_administracion_general_ciudad_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('nombre', TextType::class, array('required' => false))
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltro($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltro($form);
+                General::get()->setExportar($em->getRepository(TteCiudad::class)->lista($raw)->getQuery()->execute(), "Facturas");
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteCiudad::class)->lista()->getQuery()->execute(), "Ciudad");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteCiudad::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('transporte_administracion_general_ciudad_lista'));
-            }
-        }
+        $arCiudades = $paginator->paginate($em->getRepository(TteCiudad::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
+
         return $this->render('transporte/administracion/general/ciudad/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arCiudades'=>$arCiudades,
+            'form' => $form->createView()
         ]);
     }
 
@@ -102,5 +108,13 @@ class CiudadController extends ControllerListenerGeneral
         return $this->render('transporte/administracion/general/ciudad/detalle.html.twig',[
             'arCiudad'=>$arCiudad,
         ]);
+    }
+
+    public function getFiltro($form){
+
+        return $filtro = [
+            'nombre' => $form->get('nombre')->getData(),
+        ];
+
     }
 }

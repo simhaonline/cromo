@@ -99,16 +99,6 @@ class CiudadType extends AbstractType
         ]';
     }
 
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"nombre",               "tipo":"TextType",   "propiedades":{"label":"Nombre"},       "operador":"like"}
-        ]';
-
-        return $campos;
-    }
-
     public function getEstructuraPropiedadesExportar(){
         return '[
             {"campo":"codigoCiudadPk",      "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},

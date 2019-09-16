@@ -11,9 +11,16 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteCiudadRepository extends ServiceEntityRepository
 {
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $nombre =null;
+        if ($filtros){
+            $nombre = $filtros['nombre'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCiudad::class, 'c')
             ->select('c.codigoCiudadPk')
             ->addSelect('c.nombre')
@@ -28,8 +35,8 @@ class TteCiudadRepository extends ServiceEntityRepository
             ->leftJoin('c.departamentoRel', 'd')
             ->leftJoin('c.rutaRel', 'r');
 
-        if ($session->get('TteCiudad_nombre')) {
-            $queryBuilder->andWhere("c.nombre like '%{$session->get('TteCiudad_nombre')}%' ");
+        if ($nombre) {
+            $queryBuilder->andWhere("c.nombre like '%{$nombre}%' ");
         }
 
         return $queryBuilder;

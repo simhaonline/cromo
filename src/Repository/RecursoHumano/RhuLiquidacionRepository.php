@@ -44,13 +44,36 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoLiquidacion = null;
+        $codigoEmpleado = null;
+        $numero = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoLiquidacion = $filtros['codigoLiquidacion'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuLiquidacion::class, 'l')
             ->select('l.codigoLiquidacionPk')
             ->addSelect('l.numero')
             ->addSelect('l.fecha')
+            ->addSelect('e.numeroIdentificacion')
             ->addSelect('e.nombreCorto AS empleado')
             ->addSelect('l.fechaDesde')
             ->addSelect('l.fechaHasta')
@@ -58,22 +81,22 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
             ->addSelect('l.estadoAprobado')
             ->addSelect('l.estadoAnulado')
             ->leftJoin('l.empleadoRel', 'e');
-        if ($session->get('RhuLiquidacion_codigoLiquidacionPk')) {
-            $queryBuilder->andWhere("l.codigoLiquidacionPk = '{$session->get('RhuLiquidacion_codigoLiquidacionPk')}'");
+        if ($codigoLiquidacion) {
+            $queryBuilder->andWhere("l.codigoLiquidacionPk = '{$codigoLiquidacion}'");
         }
-        if ($session->get('RhuLiquidacion_numero')) {
-            $queryBuilder->andWhere("l.numero = '{$session->get('RhuLiquidacion_numero')}'");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("l.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-        if ($session->get('RhuLiquidacion_codigoEmpleadoFk')) {
-            $queryBuilder->andWhere("l.codigoEmpleadoFk = '{$session->get('RhuLiquidacion_codigoEmpleadoFk')}'");
+        if ($numero) {
+            $queryBuilder->andWhere("l.numero = '{$numero}'");
         }
-        if ($session->get('RhuLiquidacion_fechaDesde') != null) {
-            $queryBuilder->andWhere("l.fechaDesde >= '{$session->get('RhuLiquidacion_fechaDesde')} 00:00:00'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("l.fechaDesde >= '{$fechaDesde} 00:00:00'");
         }
-        if ($session->get('RhuLiquidacion_fechaHasta') != null) {
-            $queryBuilder->andWhere("l.fechaHasta <= '{$session->get('RhuLiquidacion_fechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("l.fechaHasta <= '{$fechaHasta} 23:59:59'");
         }
-        switch ($session->get('RhuLiquidacion_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("l.estadoAutorizado = 0");
                 break;
@@ -81,7 +104,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("l.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('RhuLiquidacion_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("l.estadoAprobado = 0");
                 break;
@@ -89,7 +112,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("l.estadoAprobado = 1");
                 break;
         }
-        switch ($session->get('RhuLiquidacion_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("l.estadoAnulado = 0");
                 break;
@@ -97,7 +120,9 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("l.estadoAnulado = 1");
                 break;
         }
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('l.fecha', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function adicionales($id)

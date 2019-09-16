@@ -112,8 +112,8 @@ class Cliente extends \FPDF
         $pdf->SetFont('arial', 'B', 7);
         $pdf->Cell(195, 5, "FLETE", 1, 0, 'C', 1);
         $pdf->Ln(5);
-        $headerFlete = array('ID', 'ORIGEN', 'DESTINO', 'ZONA', 'LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO', 'D_P', 'D_U', 'P_M', 'M_GUIA', 'F_MIN', 'M_GUIA');
-        $weightFlete = array(10, 25, 45, 22, 5, 5, 5, 5, 5, 5, 5, 9, 9, 10, 10, 10, 10);
+        $headerFlete = array('ID', 'ORIGEN', 'DESTINO', 'ZONA', 'D_P', 'D_U', 'P_M', 'M_GUIA', 'F_MIN', 'M_GUIA');
+        $weightFlete = array(10, 25, 45, 22, 9, 9, 10, 10, 10, 10);
         $arCondicionesFletes = $em->getRepository(TteCondicionFlete::class)->cliente($codigoCliente);
         for ($i = 0; $i < count($headerFlete); $i++) {
             $pdf->SetFillColor(170, 170, 170);
@@ -127,13 +127,6 @@ class Cliente extends \FPDF
             $pdf->Cell(25, 4, utf8_decode($fleteItem['ciudadOrigenNombre']), 'LRB', 0, 'L');
             $pdf->Cell(45, 4, utf8_decode($fleteItem['ciudadDestinoNombre']), 'LRB', 0, 'L');
             $pdf->Cell(22, 4, $fleteItem['zonaNombre'], 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $fleteItem['ciudadDestinoLunes']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $fleteItem['ciudadDestinoMartes']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $fleteItem['ciudadDestinoMiercoles']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $fleteItem['ciudadDestinoJueves']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $fleteItem['ciudadDestinoViernes']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $fleteItem['ciudadDestinoSabado']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $fleteItem['ciudadDestinoDomingo']?'SI':'NO', 'LRB', 0, 'L');
             $pdf->Cell(9, 4, $fleteItem['descuentoPeso'], 'LRB', 0, 'L');
             $pdf->Cell(9, 4, $fleteItem['descuentoUnidad'], 'LRB', 0, 'L');
             $pdf->Cell(10, 4, $fleteItem['pesoMinimo'], 'LRB', 0, 'L');
@@ -148,8 +141,8 @@ class Cliente extends \FPDF
         $pdf->SetFillColor(200, 200, 200);
         $pdf->Cell(195, 5, "MANEJO", 1, 0, 'C', 1);
         $pdf->Ln(5);
-        $headerManejo = array('ID', 'ORIGEN', 'DESTINO', 'ZONA', 'LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO', 'POR', 'MIN(UND)', 'MIN(DES)');
-        $weightManejo = array(10, 25, 45, 30, 5, 5, 5, 5, 5, 5, 5, 20, 15, 15);
+        $headerManejo = array('ID', 'ORIGEN', 'DESTINO', 'ZONA', 'POR', 'MIN(UND)', 'MIN(DES)');
+        $weightManejo = array(10, 25, 45, 30, 20, 15, 15);
         $arCondicionesManejos = $em->getRepository(TteCondicionManejo::class)->cliente($codigoCliente);
         for ($i = 0; $i < count($headerManejo); $i++) {
             $pdf->SetFillColor(170, 170, 170);
@@ -163,13 +156,6 @@ class Cliente extends \FPDF
             $pdf->Cell(25, 4, utf8_decode($manejoItem['ciudadOrigenNombre']), 'LRB', 0, 'L');
             $pdf->Cell(45, 4, utf8_decode($manejoItem['ciudadDestinoNombre']), 'LRB', 0, 'L');
             $pdf->Cell(30, 4, $manejoItem['zonaNombre'], 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $manejoItem['ciudadDestinoLunes']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $manejoItem['ciudadDestinoMartes']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $manejoItem['ciudadDestinoMiercoles']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $manejoItem['ciudadDestinoJueves']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $manejoItem['ciudadDestinoViernes']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $manejoItem['ciudadDestinoSabado']?'SI':'NO', 'LRB', 0, 'L');
-            $pdf->Cell(5, 4, $manejoItem['ciudadDestinoDomingo']?'SI':'NO', 'LRB', 0, 'L');
             $pdf->Cell(20, 4, $manejoItem['porcentaje'], 'LRB', 0, 'R');
             $pdf->Cell(15, 4, $manejoItem['minimoUnidad'], 'LRB', 0, 'R');
             $pdf->Cell(15, 4, $manejoItem['minimoDespacho'], 'LRB', 0, 'R');

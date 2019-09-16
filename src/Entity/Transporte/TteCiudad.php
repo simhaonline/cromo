@@ -87,6 +87,41 @@ class TteCiudad
     private $reexpedicion = false;
 
     /**
+     * @ORM\Column(name="lunes", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $lunes = false;
+
+    /**
+     * @ORM\Column(name="martes", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $martes = false;
+
+    /**
+     * @ORM\Column(name="miercoles", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $miercoles = false;
+
+    /**
+     * @ORM\Column(name="jueves", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $jueves = false;
+
+    /**
+     * @ORM\Column(name="viernes", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $viernes = false;
+
+    /**
+     * @ORM\Column(name="sabado", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $sabado = false;
+
+    /**
+     * @ORM\Column(name="domingo", type="boolean", nullable=true, options={"default" : 0})
+     */
+    private $domingo = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteRuta", inversedBy="ciudadesRutaRel")
      * @ORM\JoinColumn(name="codigo_ruta_fk", referencedColumnName="codigo_ruta_pk")
      */
@@ -836,6 +871,118 @@ class TteCiudad
     public function setCondicionesManejosCiudadDestinoRel($condicionesManejosCiudadDestinoRel): void
     {
         $this->condicionesManejosCiudadDestinoRel = $condicionesManejosCiudadDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLunes()
+    {
+        return $this->lunes;
+    }
+
+    /**
+     * @param mixed $lunes
+     */
+    public function setLunes($lunes): void
+    {
+        $this->lunes = $lunes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMartes()
+    {
+        return $this->martes;
+    }
+
+    /**
+     * @param mixed $martes
+     */
+    public function setMartes($martes): void
+    {
+        $this->martes = $martes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMiercoles()
+    {
+        return $this->miercoles;
+    }
+
+    /**
+     * @param mixed $miercoles
+     */
+    public function setMiercoles($miercoles): void
+    {
+        $this->miercoles = $miercoles;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJueves()
+    {
+        return $this->jueves;
+    }
+
+    /**
+     * @param mixed $jueves
+     */
+    public function setJueves($jueves): void
+    {
+        $this->jueves = $jueves;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViernes()
+    {
+        return $this->viernes;
+    }
+
+    /**
+     * @param mixed $viernes
+     */
+    public function setViernes($viernes): void
+    {
+        $this->viernes = $viernes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSabado()
+    {
+        return $this->sabado;
+    }
+
+    /**
+     * @param mixed $sabado
+     */
+    public function setSabado($sabado): void
+    {
+        $this->sabado = $sabado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDomingo()
+    {
+        return $this->domingo;
+    }
+
+    /**
+     * @param mixed $domingo
+     */
+    public function setDomingo($domingo): void
+    {
+        $this->domingo = $domingo;
     }
 
 

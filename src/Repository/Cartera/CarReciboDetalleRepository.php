@@ -260,6 +260,7 @@ class CarReciboDetalleRepository extends ServiceEntityRepository
             ->select('rd.codigoReciboDetallePk')
             ->addSelect('rd.numeroFactura')
             ->addSelect('r.numero')
+            ->addSelect('r.fechaPago')
             ->addSelect('cct.nombre')
             ->addSelect('rd.vrDescuento')
             ->addSelect('rd.vrRetencionIca')

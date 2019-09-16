@@ -20,7 +20,7 @@ class CuentaCobrar extends \FPDF {
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
         $this->Body($pdf);
-        $pdf->Output("CuentasCobrar.pdf", 'D');
+        $pdf->Output("EstadoCuenta.pdf", 'D');
     }
 
     public function Header() {

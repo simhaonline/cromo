@@ -15,6 +15,8 @@ use App\Form\Type\RecursoHumano\AdicionalPeriodoType;
 use App\Form\Type\RecursoHumano\AdicionalType;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AdicionalPeriodoController extends ControllerListenerGeneral
+class AdicionalPeriodoController extends AbstractController
 {
     protected $clase = RhuAdicionalPeriodo::class;
     protected $claseFormulario = AdicionalPeriodoType::class;
@@ -39,25 +41,24 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/movimiento/nomina/adicionalperiodo/lista", name="recursohumano_movimiento_nomina_adicionalperiodo_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('estado', ChoiceType::class, [
-                'label' => 'CERRADOS:',
-                'choices' => ['TODOS' => '', 'SIN CERRAR' => true, 'CERRAR' => false],
-                'required' => false
-            ])
+            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroRhuAdicionalPeriodoEstado', $form->get('estado')->getData());
+                $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -65,11 +66,12 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_lista'));
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(RhuAdicionalPeriodo::class)->lista()->getQuery()->getResult(), "Adicional periodo");
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuAdicionalPeriodo::class)->lista($raw)->getQuery()->getResult(), "Adicional periodo");
             }
 
         }
-        $arAdicionalPeriodos = $paginator->paginate($em->getRepository(RhuAdicionalPeriodo::class)->lista(), $request->query->getInt('page', 1), 30);
+        $arAdicionalPeriodos = $paginator->paginate($em->getRepository(RhuAdicionalPeriodo::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/nomina/adicionalPeriodo/lista.html.twig', [
             'arAdicionalPeriodos' => $arAdicionalPeriodos,
             'form' => $form->createView()
@@ -178,5 +180,14 @@ class AdicionalPeriodoController extends ControllerListenerGeneral
         return $this->render('recursohumano/movimiento/nomina/adicional/nuevo.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'estadoCerrado' => $form->get('estadoCerrado')->getData(),
+        ];
+
+        return $filtro;
     }
 }

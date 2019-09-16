@@ -83,8 +83,21 @@ class RhuAdicionalRepository extends ServiceEntityRepository
         return $arrResultado;
     }
 
-    public function lista()
+    public function lista($raw)
     {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoEmpleado = null;
+        $estadoInactivo = null;
+        $estadoInactivoPeriodo = null;
+
+        if ($filtros) {
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $estadoInactivo = $filtros['estadoInactivo'] ?? null;
+            $estadoInactivoPeriodo = $filtros['estadoInactivoPeriodo'] ?? null;
+        }
+
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicional::class, 'a')
             ->select('a.codigoAdicionalPk')
@@ -98,11 +111,18 @@ class RhuAdicionalRepository extends ServiceEntityRepository
             ->leftJoin('a.conceptoRel', 'c')
             ->where('a.permanente = true');
 
-        if ($session->get('filtroRhuAdicionalCodigoEmpleado') != '') {
-            $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$session->get('filtroRhuAdicionalCodigoEmpleado')}'");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$codigoEmpleado}'");
         }
-
-        switch ($session->get('filtroRhuAdicionalEstadoInactivo')) {
+        switch ($estadoInactivo) {
+            case '0':
+                $queryBuilder->andWhere("a.estadoInactivo = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("a.estadoInactivo = 1");
+                break;
+        }
+        switch ($estadoInactivoPeriodo) {
             case '0':
                 $queryBuilder->andWhere("a.estadoInactivoPeriodo = 0");
                 break;
@@ -111,16 +131,9 @@ class RhuAdicionalRepository extends ServiceEntityRepository
                 break;
         }
 
-        switch ($session->get('filtroRhuAdicionalEstadoInactivoPeriodo')) {
-            case '0':
-                $queryBuilder->andWhere("a.estadoInactivo = 0");
-                break;
-            case '1':
-                $queryBuilder->andWhere("a.estadoInactivo = 1");
-                break;
-        }
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
 
-        return $queryBuilder;
     }
 
     public function adicionalesPorPeriodo($codigoPeriodo)

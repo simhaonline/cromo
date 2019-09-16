@@ -18,6 +18,8 @@ use App\Entity\Transporte\TteGuia;
 use App\Form\Type\RecursoHumano\AporteType;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AporteController extends ControllerListenerGeneral
+class AporteController extends AbstractController
 {
     protected $clase = RhuAporte::class;
     protected $claseNombre = "RhuAporte";
@@ -35,45 +37,56 @@ class AporteController extends ControllerListenerGeneral
     protected $nombre = "Aporte";
 
     /**
-    * @Route("recursohumano/movimiento/seguridadsocial/aporte/lista", name="recursohumano_movimiento_seguridadsocial_aporte_lista")
-    */
-    public function lista(Request $request)
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("recursohumano/movimiento/seguridadsocial/aporte/lista", name="recursohumano_movimiento_seguridadsocial_aporte_lista")
+     */
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtAnio', TextType::class, ['required' => false])
-            ->add('txtMes', ChoiceType::class, [
+            ->add('anio', TextType::class, ['required' => false])
+            ->add('mes', ChoiceType::class, [
                 'choices' => array(
-                    'Enero' => '1', 'Febrero' => '2', 'Marzo' => '3', 'Abril' => '4', 'Mayo' => '5', 'Junio' => '6', 'Julio' => '7',
-                    'Agosto' => '8', 'Septiembre' => '9', 'Octubre' => '10', 'Noviembre' => '11', 'Diciembre' => '12',
+                    'TODOS' => '', 'ENERO' => '1', 'FEBRERO' => '2', 'MARZO' => '3', 'ABRIL' => '4', 'MAYO' => '5', 'JUNIO' => '6', 'JULIO' => '7',
+                    'AGOSTO' => '8', 'SEPTIEMBRE' => '9', 'OCTUBRE' => '10', 'NOVIEMBRE' => '11', 'DICIEMBRE' => '12',
                 ),
-                'required'    => false,
+                'required' => false,
                 'placeholder' => '',
             ])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add( 'btnExcel', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
-            ->add( 'btnEliminar', SubmitType::class, ['label'=>'Eliminar', 'attr'=>['class'=> 'btn btn-sm btn-danger']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroRhuAporteAnio', $form->get('txtAnio')->getData());
-                $session->set('filtroRhuAporteMes', $form->get('txtMes')->getData());
+                $raw['filtros'] = $this->getFiltros($form);
             }
-            if ($form->get('btnEliminar')->isClicked()){
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(RhuAporte::class, $arrSeleccionados);
-				return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
-			}
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuAporte::class)->lista($raw)->getQuery()->getResult(), "Periodo de aportes");
+            }
         }
-        $arAportes = $paginator->paginate($em->getRepository(RhuAporte::class)->lista(), $request->query->getInt('page', 1), 30);
+        $arAportes = $paginator->paginate($em->getRepository(RhuAporte::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/seguridadsocial/aporte/lista.html.twig', [
             'arAportes' => $arAportes,
             'form' => $form->createView()
         ]);
-	}
+    }
 
     /**
      * @Route("recursohumano/movimiento/seguridadsocial/aporte/nuevo/{id}", name="recursohumano_movimiento_seguridadsocial_aporte_nuevo")
@@ -84,10 +97,10 @@ class AporteController extends ControllerListenerGeneral
         $arAporte = new RhuAporte();
         if ($id != 0) {
             $arAporte = $em->getRepository(RhuAporte::class)->find($id);
-			if (!$arAporte) {
+            if (!$arAporte) {
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
             }
-		}else{
+        } else {
             $arAporte->setAnio((new \DateTime('now'))->format('Y'));
             $arAporte->setMes((new \DateTime('now'))->format('m'));
         }
@@ -124,22 +137,22 @@ class AporteController extends ControllerListenerGeneral
         if (!$arAporte) {
             return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
         }
-        $arrPropiedadesEliminarContratos = ['label'=>'Eliminar contratos', 'disabled' => false, 'attr'=>['class'=> 'btn btn-sm btn-danger']];
-        $arrPropiedadesCargarContratos = ['label'=>'Cargar contratos', 'disabled' => false,'attr'=>['class'=> 'btn btn-sm btn-default']];
-        if($arAporte->getEstadoAutorizado()) {
-           $arrPropiedadesEliminarContratos['disabled'] = true;
+        $arrPropiedadesEliminarContratos = ['label' => 'Eliminar contratos', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        $arrPropiedadesCargarContratos = ['label' => 'Cargar contratos', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        if ($arAporte->getEstadoAutorizado()) {
+            $arrPropiedadesEliminarContratos['disabled'] = true;
             $arrPropiedadesCargarContratos['disabled'] = true;
         }
 
         $form = Estandares::botonera($arAporte->getEstadoAutorizado(), $arAporte->getEstadoAprobado(), $arAporte->getEstadoAnulado());
         $form
-            ->add( 'btnExcelContrato', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
-            ->add( 'btnExcelDetalle', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
-            ->add( 'btnCargarContratos', SubmitType::class, $arrPropiedadesCargarContratos)
-            ->add( 'btnEliminarContratos', SubmitType::class, $arrPropiedadesEliminarContratos)
-            ->add( 'btnExportarPlano', SubmitType::class, ['label'=>'Plano pila', 'attr'=>['class'=> 'btn btn-sm btn-default']]);
+            ->add('btnExcelContrato', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcelDetalle', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnCargarContratos', SubmitType::class, $arrPropiedadesCargarContratos)
+            ->add('btnEliminarContratos', SubmitType::class, $arrPropiedadesEliminarContratos)
+            ->add('btnExportarPlano', SubmitType::class, ['label' => 'Plano pila', 'attr' => ['class' => 'btn btn-sm btn-default']]);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(RhuAporte::class)->autorizar($arAporte);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_detalle', array('id' => $id)));
@@ -170,8 +183,8 @@ class AporteController extends ControllerListenerGeneral
             if ($form->get('btnExportarPlano')->isClicked()) {
                 $this->generarPlano($arAporte);
             }
-            if ($form->get('btnEliminarContratos')->isClicked()){
-                if(!$arAporte->getEstadoAutorizado()) {
+            if ($form->get('btnEliminarContratos')->isClicked()) {
+                if (!$arAporte->getEstadoAutorizado()) {
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');
                     $this->get("UtilidadesModelo")->eliminar(RhuAporteContrato::class, $arrSeleccionados);
                 }
@@ -182,12 +195,12 @@ class AporteController extends ControllerListenerGeneral
         $arAporteContratos = $paginator->paginate($em->getRepository(RhuAporteContrato::class)->lista($id), $request->query->getInt('page', 1), 2000);
         return $this->render('recursohumano/movimiento/seguridadsocial/aporte/detalle.html.twig', [
             'arAporte' => $arAporte,
-            'arAporteContratos'=>$arAporteContratos,
+            'arAporteContratos' => $arAporteContratos,
             'arAporteDetalles' => $arAporteDetalles,
             'clase' => array('clase' => 'RhuAporte', 'codigo' => $id),
-            'form'=>$form->createView()
+            'form' => $form->createView()
         ]);
-	}
+    }
 
     /**
      * @Route("recursohumano/movimiento/seguridadsocial/soporte/aporte/detalle/{id}", name="recursohumano_movimiento_seguridadsocial_soporte_aporte_detalle")
@@ -496,8 +509,9 @@ class AporteController extends ControllerListenerGeneral
         exit;
     }
 
-    private function periodoSalud($anio = null, $mes) {
-        if($mes == '12') {
+    private function periodoSalud($anio = null, $mes)
+    {
+        if ($mes == '12') {
             $mes = '1';
             $anio += 1;
         } else {
@@ -505,6 +519,16 @@ class AporteController extends ControllerListenerGeneral
         }
         $arrPeriodo = array('anio' => $anio, 'mes' => $mes);
         return $arrPeriodo;
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'anio' => $form->get('anio')->getData(),
+            'mes' => $form->get('mes')->getData(),
+        ];
+
+        return $filtro;
     }
 
 }

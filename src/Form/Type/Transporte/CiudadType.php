@@ -59,6 +59,13 @@ class CiudadType extends AbstractType
             ->add('ordenRuta',TextType::class,['required' => true,'label' => 'Orden ruta:'])
             ->add('codigoInterface',TextType::class,['required' => true,'label' => 'Codigo interfaz:'])
             ->add('reexpedicion',CheckboxType::class,['required' => false,'label' => 'Reexpedicion'])
+            ->add('lunes',CheckboxType::class,['required' => false,'label' => 'Lunes'])
+            ->add('martes',CheckboxType::class,['required' => false,'label' => 'Martes'])
+            ->add('miercoles',CheckboxType::class,['required' => false,'label' => 'Miercoles'])
+            ->add('jueves',CheckboxType::class,['required' => false,'label' => 'Jueves'])
+            ->add('viernes',CheckboxType::class,['required' => false,'label' => 'Viernes'])
+            ->add('sabado',CheckboxType::class,['required' => false,'label' => 'Sabado'])
+            ->add('domingo',CheckboxType::class,['required' => false,'label' => 'Domingo'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
         ;
@@ -81,7 +88,14 @@ class CiudadType extends AbstractType
             {"campo":"rutaRel.nombre",          "tipo":"texto",     "ayuda":"Codigo ruta",             "titulo":"RUTA","relacion":""},
             {"campo":"ordenRuta",             "tipo":"numero",    "ayuda":"Orden ruta",              "titulo":"ORD"},
             {"campo":"codigoInterface",       "tipo":"texto",     "ayuda":"Codigo interface",        "titulo":"INTERFACE"},
-            {"campo":"reexpedicion",          "tipo":"bool",      "ayuda":"Reexpedicion",            "titulo":"REEX"}
+            {"campo":"reexpedicion",          "tipo":"bool",      "ayuda":"Reexpedicion",            "titulo":"REEX"},
+            {"campo":"lunes",          "tipo":"bool",      "ayuda":"Lunes",            "titulo":"LU"},
+            {"campo":"martes",          "tipo":"bool",      "ayuda":"Martes",            "titulo":"MA"},
+            {"campo":"miercoles",          "tipo":"bool",      "ayuda":"Miercoles",            "titulo":"MI"},
+            {"campo":"jueves",          "tipo":"bool",      "ayuda":"Jueves",            "titulo":"JU"},
+            {"campo":"viernes",          "tipo":"bool",      "ayuda":"Viernes",            "titulo":"VI"},
+            {"campo":"sabado",          "tipo":"bool",      "ayuda":"Sabado",            "titulo":"SA"},
+            {"campo":"domingo",          "tipo":"bool",      "ayuda":"Domingo",            "titulo":"DO"}
         ]';
     }
 

@@ -12,7 +12,7 @@
                     <div class="form-group form-group-sm">
                         <label class="col-sm-offset-6 col-sm-2 control-label">Estado:</label>
                         <div class="col-sm-4">
-                            {{ form_widget(form.estado) }}
+                            {{ form_widget(form.estadoCerrado) }}
                         </div>
                     </div>
                 </div>
@@ -64,6 +64,9 @@
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arAdicionalPeriodos) }}
     </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
             {{ form_widget(form.btnEliminar) }}
@@ -71,6 +74,7 @@
         <div class="btn-group">
             {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
         </div>
+
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
                href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_nuevo', {'id': 0}) }}">Nuevo</a>

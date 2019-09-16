@@ -58,7 +58,6 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             $fechaDesde = $filtros['fechaDesde']??null;
             $fechaHasta = $filtros['fechaHasta']??null;
         }
-        dump($filtros);
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'dr')
             ->select('dr.codigoDespachoRecogidaPk')

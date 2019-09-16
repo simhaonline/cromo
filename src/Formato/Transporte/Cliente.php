@@ -171,8 +171,8 @@ class Cliente extends \FPDF
             $pdf->Cell(5, 4, $manejoItem['ciudadDestinoSabado']?'SI':'NO', 'LRB', 0, 'L');
             $pdf->Cell(5, 4, $manejoItem['ciudadDestinoDomingo']?'SI':'NO', 'LRB', 0, 'L');
             $pdf->Cell(20, 4, $manejoItem['porcentaje'], 'LRB', 0, 'R');
-            $pdf->Cell(15, 4, $manejoItem['minimoUnidad'], 'LRB', 0, 'L');
-            $pdf->Cell(15, 4, $manejoItem['minimoDespacho'], 'LRB', 0, 'L');
+            $pdf->Cell(15, 4, $manejoItem['minimoUnidad'], 'LRB', 0, 'R');
+            $pdf->Cell(15, 4, $manejoItem['minimoDespacho'], 'LRB', 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }
@@ -222,8 +222,8 @@ class Cliente extends \FPDF
         $pdf->SetFillColor(200, 200, 200);
         $pdf->Cell(190, 5, "PRECIO", 1, 0, 'C', 1);
         $pdf->Ln(5);
-        $headerPrecio = array('ID', 'ORIGEN', 'DESTINO', 'ZONA', 'PRODUCTO', 'VR KILO', 'VR UNIDAD');
-        $weightPrecio = array(15, 20, 20, 35, 18, 15, 15);
+        $headerPrecio = array('ID', 'ORIGEN', 'DESTINO', 'ZONA', 'LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO', 'PRODUCTO', 'VR KILO', 'VR UNIDAD');
+        $weightPrecio = array(15, 20, 37, 35, 5, 5, 5, 5, 5, 5, 5, 18, 15, 15);
         for ($i = 0; $i < count($headerPrecio); $i++) {
             $pdf->SetFillColor(170, 170, 170);
             $pdf->SetTextColor(0);
@@ -234,12 +234,19 @@ class Cliente extends \FPDF
         foreach ($arPrecios as $arPrecio => $precioItem) {
             $pdf->Cell(15, 4, utf8_decode(substr($precioItem['codigoPrecioDetallePk'], 0, 5)), 'LRB', 0, 'L');
             $pdf->Cell(20, 4, utf8_decode(substr($precioItem['ciudadOrigen'], 0, 8)), 'LRB', 0, 'L');
-            $pdf->Cell(20, 4, utf8_decode(substr($precioItem['ciudadDestino'], 0, 8)), 'LRB', 0, 'L');
+            $pdf->Cell(37, 4, utf8_decode(substr($precioItem['ciudadDestino'], 0, 8)), 'LRB', 0, 'L');
             if ($precioItem['zonaNombre']) {
                 $pdf->Cell(35, 4, substr($precioItem['zonaNombre'], 0, 20), 'LRB', 0, 'L');
             } else {
                 $pdf->Cell(35, 4, substr($precioItem['zonaCiudadDestino'], 0, 20), 'LRB', 0, 'L');
             }
+            $pdf->Cell(5, 4, $precioItem['ciudadDestinoLunes']?'SI':'NO', 'LRB', 0, 'L');
+            $pdf->Cell(5, 4, $precioItem['ciudadDestinoMartes']?'SI':'NO', 'LRB', 0, 'L');
+            $pdf->Cell(5, 4, $precioItem['ciudadDestinoMiercoles']?'SI':'NO', 'LRB', 0, 'L');
+            $pdf->Cell(5, 4, $precioItem['ciudadDestinoJueves']?'SI':'NO', 'LRB', 0, 'L');
+            $pdf->Cell(5, 4, $precioItem['ciudadDestinoViernes']?'SI':'NO', 'LRB', 0, 'L');
+            $pdf->Cell(5, 4, $precioItem['ciudadDestinoSabado']?'SI':'NO', 'LRB', 0, 'L');
+            $pdf->Cell(5, 4, $precioItem['ciudadDestinoDomingo']?'SI':'NO', 'LRB', 0, 'L');
             $pdf->Cell(18, 4, $precioItem['producto'], 'LRB', 0, 'L');
             $pdf->Cell(15, 4, number_format($precioItem['vrPeso'], 0, '.', ','), 1, 0, 'R');
             $pdf->Cell(15, 4, number_format($precioItem['vrUnidad'], 0, '.', ','), 1, 0, 'R');

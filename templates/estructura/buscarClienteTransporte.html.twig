@@ -4,12 +4,11 @@
         <div class="row">
             <div class="col-lg-2">
                 <div class="input-group">
-                    {{ form_widget(formFiltro.codigoClienteFk) }}
+                    {{ form_widget(form.codigoClienteFk) }}
                 </div>
             </div>
             <div class="col-lg-10">
                 <div class="input-group">
-                    {#{{ form_widget(formFiltro.txtNombreCorto) }}#}
                     <input id="form_txtNombreCorto" class="form-control" readonly>
                     <span class="input-group-btn">
                         <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_cliente', { 'campoCodigo': 'form_codigoClienteFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>

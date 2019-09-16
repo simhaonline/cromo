@@ -49,7 +49,6 @@ class CreditoController extends AbstractController
      */
     public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('codigoCreditoTipoFk', EntityType::class, [
@@ -83,7 +82,7 @@ class CreditoController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(RhuCredito::class)->lista($raw)->getQuery()->getResult(), "Adicionales al pago permanentes");
+                General::get()->setExportar($em->getRepository(RhuCredito::class)->lista($raw), "Creditos");
             }
         }
         $arCreditos = $paginator->paginate($em->getRepository(RhuCredito::class)->lista($raw), $request->query->getInt('page', 1), 30);

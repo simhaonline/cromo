@@ -17,13 +17,30 @@ class RhuLicenciaRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuLicencia::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoLicencia = null;
+        $licenciaTipo = null;
+        $grupo = null;
+        $codigoEmpleado = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+
+        if ($filtros) {
+            $codigoLicencia = $filtros['codigoLicencia'] ?? null;
+            $licenciaTipo = $filtros['licenciaTipo'] ?? null;
+            $grupo = $filtros['grupo'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuLicencia::class, 'l')
             ->select('l.codigoLicenciaPk')
             ->addSelect('l.fecha')
-            ->addSelect('lt.nombre as licenciaTipo')
+            ->addSelect('lt.nombre as tipo')
             ->addSelect('es.nombre as entidadSalud')
             ->addSelect('em.nombreCorto as empleado')
             ->addSelect('em.numeroIdentificacion')
@@ -45,28 +62,31 @@ class RhuLicenciaRepository extends ServiceEntityRepository
             ->leftJoin('l.entidadSaludRel', 'es')
             ->leftJoin('l.empleadoRel', 'em')
             ->leftJoin('l.grupoRel', 'g');
-
-        if($session->get('filtroRhuLicenciaCodigoEmpleado')){
-            $queryBuilder->andWhere("l.codigoEmpleadoFk = {$session->get('filtroRhuLicenciaCodigoEmpleado')}");
+        if ($codigoLicencia) {
+            $queryBuilder->andWhere("l.codigoLicenciaPk = '{$codigoLicencia}'");
         }
-        if($session->get('filtroRhuLicenciaLiencenciaTipo')){
-            $queryBuilder->andWhere("l.codigoLicenciaTipoFk = '{$session->get('filtroRhuLicenciaLiencenciaTipo')}' ");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("l.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-        if($session->get('filtroRhuLicenciaCodigoGrupo')){
-            $queryBuilder->andWhere("l.codigoGrupoFk = '{$session->get('filtroRhuLicenciaCodigoGrupo')}' ");
+        if ($licenciaTipo) {
+            $queryBuilder->andWhere("l.codigoLicenciaTipoFk = '{$licenciaTipo}'");
         }
-        if ($session->get('filtroRhuLicenciaFechaDesde') != null) {
-            $queryBuilder->andWhere("l.fechaDesde >= '{$session->get('filtroRhuLicenciaFechaDesde')} 00:00:00'");
+        if ($grupo) {
+            $queryBuilder->andWhere("l.codigoGrupoFk = '{$grupo}'");
         }
-        if ($session->get('filtroRhuLicenciaFechaHasta') != null) {
-            $queryBuilder->andWhere("l.fechaHasta <= '{$session->get('filtroRhuLicenciaFechaHasta')} 23:59:59'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("l.fechaDesde >= '{$fechaDesde} 00:00:00'");
         }
-        $queryBuilder->orderBy('l.codigoLicenciaPk', 'DESC');
-        return $queryBuilder;
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("l.fechaHasta <= '{$fechaHasta} 23:59:59'");
+        }
+        $queryBuilder->addOrderBy('l.fecha', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
 
     }
 
-    public function validarFecha($fechaDesde, $fechaHasta, $codigoEmpleado, $codigoLicencia = ""):bool
+    public function validarFecha($fechaDesde, $fechaHasta, $codigoEmpleado, $codigoLicencia = ""): bool
     {
         $em = $this->getEntityManager();
         $strFechaDesde = $fechaDesde->format('Y-m-d');
@@ -82,9 +102,9 @@ class RhuLicenciaRepository extends ServiceEntityRepository
         $objQuery = $em->createQuery($dql);
         $arLicencias = $objQuery->getResult();
         if (count($arLicencias) > 0) {
-            return  FALSE;
+            return FALSE;
         } else {
-            return  TRUE;
+            return TRUE;
         }
     }
 

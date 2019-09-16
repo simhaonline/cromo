@@ -14,9 +14,12 @@ use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuLicencia;
 use App\Entity\RecursoHumano\RhuLicenciaTipo;
 use App\Form\Type\RecursoHumano\LicenciaType;
+use App\General\General;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -25,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LicenciaController extends ControllerListenerGeneral
+class LicenciaController extends AbstractController
 {
     protected $clase = RhuLicencia::class;
     protected $claseNombre = "RhuLicencia";
@@ -35,16 +38,20 @@ class LicenciaController extends ControllerListenerGeneral
     protected $nombre = "Licencia";
 
     /**
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/moviento/nomina/licencia/lista", name="recursohumano_movimiento_nomina_licencia_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('codigoEmpleadoPk', TextType::class, array('required' => false))
-            ->add('grupoRel', EntityType::class, [
+            ->add('codigoEmpleadoFk', TextType::class, array('required' => false))
+            ->add('codigoGrupoFk', EntityType::class, [
                 'class' => RhuGrupo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
@@ -52,9 +59,10 @@ class LicenciaController extends ControllerListenerGeneral
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
             ])
-            ->add('licenciaTipo', EntityType::class, [
+            ->add('codigoLicenciaTipoFk', EntityType::class, [
                 'class' => RhuLicenciaTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('l')
@@ -62,37 +70,28 @@ class LicenciaController extends ControllerListenerGeneral
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
             ])
-            ->add('licenciaFechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuLicenciaFechaDesde') ? date_create($session->get('filtroRhuLicenciaFechaDesde')) : null])
-            ->add('licenciafechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuLicenciaFechaHasta') ? date_create($session->get('filtroRhuLicenciaFechaHasta')) : null])
-            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('codigoLicenciaPk', TextType::class, array('required' => false))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
         if ($form->isSubmitted()) {
-            if ($form->get('btnFiltro')->isClicked()) {
-                $codigoEmpleado = $form->get('codigoEmpleadoPk')->getData();
-                $arGrupo = $form->get('grupoRel')->getData();
-                $arLicenciaTipo = $form->get('licenciaTipo')->getData();
-                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigoEmpleado ?? 0);
-                if ($arEmpleado) {
-                    $session->set('filtroRhuLicenciaCodigoEmpleado', $arEmpleado->getCodigoEmpleadoPk());
-                } else {
-                    $session->set('filtroRhuLicenciaCodigoEmpleado', null);
-                }
-                if ($arLicenciaTipo) {
-                    $session->set('filtroRhuLicenciaLiencenciaTipo', $arLicenciaTipo->getCodigoLicenciaTipoPk());
-                } else {
-                    $session->set('filtroRhuLicenciaLiencenciaTipo', null);
-                }
-                if ($arGrupo) {
-                    $session->set('filtroRhuLicenciaCodigoGrupo', $arGrupo->getCodigoGrupoPk());
-                } else {
-                    $session->set('filtroRhuLicenciaCodigoGrupo', null);
-                }
-                $session->set('filtroRhuLicenciaFechaDesde', $form->get('licenciaFechaDesde')->getData() ? $form->get('licenciaFechaDesde')->getData()->format('Y-m-d') : null);
-                $session->set('filtroRhuLicenciaFechaHasta', $form->get('licenciafechaHasta')->getData() ? $form->get('licenciafechaHasta')->getData()->format('Y-m-d') : null);
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuLicencia::class)->lista($raw), "Licencias");
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arLicenicasSeleccionados = $request->request->get('ChkSeleccionar');
@@ -100,8 +99,7 @@ class LicenciaController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_licencia_lista'));
             }
         }
-
-        $arLicencias = $paginator->paginate($em->getRepository(RhuLicencia::class)->lista(), $request->query->getInt('page', 1), 30);
+        $arLicencias = $paginator->paginate($em->getRepository(RhuLicencia::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/nomina/licencia/lista.html.twig', [
             'arLicencias' => $arLicencias,
             'form' => $form->createView(),
@@ -172,7 +170,7 @@ class LicenciaController extends ControllerListenerGeneral
                                                     $arrIbc = array('respuesta' => true, 'ibc' => $arLicencia->getVrIbcPropuesto(), 'dias' => 30);
                                                 }
                                                 if (!$arrIbc['respuesta']) {
-                                                    $arLicenciaAnterior = $em->getRepository( RhuLicencia::class)->findOneBy(array('codigoEmpleadoFk' => $arEmpleado->getCodigoEmpleadoPk(), 'codigoLicenciaTipoFk' => $arLicencia->getLicenciaTipoRel()->getCodigoLicenciaTipoPk()));
+                                                    $arLicenciaAnterior = $em->getRepository(RhuLicencia::class)->findOneBy(array('codigoEmpleadoFk' => $arEmpleado->getCodigoEmpleadoPk(), 'codigoLicenciaTipoFk' => $arLicencia->getLicenciaTipoRel()->getCodigoLicenciaTipoPk()));
                                                     if ($arLicenciaAnterior) {
                                                         if (($arLicenciaAnterior->getDiasCobro() <= 31 && $arLicencia->getLicenciaTipoRel()->getMaternidad() == $arLicenciaAnterior->getMaternidad()) || ($arLicenciaAnterior->getDiasCobro() <= 8 && $arLicencia->getLicenciaTipoRel()->getPaternidad == $arLicenciaAnterior->getPaternidad()))
                                                             $arrIbc = array('respuesta' => true, 'ibc' => $arLicenciaAnterior->getVrIbcMesAnterior(), 'dias' => $arLicenciaAnterior->getDiasIbcMesAnterior());
@@ -213,7 +211,7 @@ class LicenciaController extends ControllerListenerGeneral
                                         $arLicencia->setContratoRel($arContrato);
                                         $em->persist($arLicencia);
                                         $em->flush();
-                                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_licencia_detalle', array("id"=>$arLicencia->getCodigoLicenciaPk())));
+                                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_licencia_detalle', array("id" => $arLicencia->getCodigoLicenciaPk())));
                                     }
                                 } else {
                                     Mensajes::error("La fecha de inicio del contrato es mayor a la licencia");
@@ -259,6 +257,34 @@ class LicenciaController extends ControllerListenerGeneral
         return $this->render('recursohumano/movimiento/nomina/licencia/detalle.html.twig', [
             'arLicencia' => $arLicencia
         ]);
+
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoLicencia' => $form->get('codigoLicenciaPk')->getData(),
+            'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+        ];
+
+        $arLicenciaTipo = $form->get('codigoLicenciaTipoFk')->getData();
+        $arGrupo = $form->get('codigoGrupoFk')->getData();
+
+        if (is_object($arLicenciaTipo)) {
+            $filtro['licenciaTipo'] = $arLicenciaTipo->getCodigoLicenciaTipoPK();
+        } else {
+            $filtro['licenciaTipo'] = $arLicenciaTipo;
+        }
+
+        if (is_object($arGrupo)) {
+            $filtro['grupo'] = $arGrupo->getCodigoGrupoPk();
+        } else {
+            $filtro['grupo'] = $arGrupo;
+        }
+
+        return $filtro;
 
     }
 

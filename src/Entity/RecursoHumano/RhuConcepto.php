@@ -175,7 +175,7 @@ class RhuConcepto
     protected $incapacidadesTiposConceptoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuIncapacidadTipo", mappedBy="conceptoRel")
+     * @ORM\OneToMany(targetEntity="RhuIncapacidadTipo", mappedBy="conceptoEmpresaRel")
      */
     protected $incapacidadesTiposConceptoEmpresaRel;
 
@@ -190,7 +190,7 @@ class RhuConcepto
     protected $conceptosCuentasConceptoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuLicenciaTipo", mappedBy="conceptoReloRel")
+     * @ORM\OneToMany(targetEntity="RhuLicenciaTipo", mappedBy="conceptoRel")
      */
     protected $conceptosLicenciasTiposRel;
 

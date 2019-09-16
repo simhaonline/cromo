@@ -410,6 +410,11 @@ class RhuEmpleado
     protected $licenciasEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuIncapacidad", mappedBy="empleadoRel")
+     */
+    protected $incapacidadesEmpleadoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuTrasladoPension", mappedBy="empleadoRel")
      */
     protected $trasladosPensionesEmpleadoRel;
@@ -1553,6 +1558,38 @@ class RhuEmpleado
     public function setTrasladosSaludEmpleadoRel($trasladosSaludEmpleadoRel): void
     {
         $this->trasladosSaludEmpleadoRel = $trasladosSaludEmpleadoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadesEmpleadoRel()
+    {
+        return $this->incapacidadesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $incapacidadesEmpleadoRel
+     */
+    public function setIncapacidadesEmpleadoRel($incapacidadesEmpleadoRel): void
+    {
+        $this->incapacidadesEmpleadoRel = $incapacidadesEmpleadoRel;
     }
 
 

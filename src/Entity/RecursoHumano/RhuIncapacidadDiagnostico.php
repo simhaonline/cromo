@@ -40,6 +40,11 @@ class RhuIncapacidadDiagnostico
     private $codigoGrupoEnfermedadFk;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuIncapacidad", mappedBy="incapacidadDiagnosticoRel")
+     */
+    protected $incapacidadesIncapacidadDiagnosticoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoIncapacidadDiagnosticoPk()
@@ -103,7 +108,37 @@ class RhuIncapacidadDiagnostico
         $this->codigoGrupoEnfermedadFk = $codigoGrupoEnfermedadFk;
     }
 
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
 
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadesIncapacidadDiagnosticoRel()
+    {
+        return $this->incapacidadesIncapacidadDiagnosticoRel;
+    }
+
+    /**
+     * @param mixed $incapacidadesIncapacidadDiagnosticoRel
+     */
+    public function setIncapacidadesIncapacidadDiagnosticoRel($incapacidadesIncapacidadDiagnosticoRel): void
+    {
+        $this->incapacidadesIncapacidadDiagnosticoRel = $incapacidadesIncapacidadDiagnosticoRel;
+    }
 
 
 }

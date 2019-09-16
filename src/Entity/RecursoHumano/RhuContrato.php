@@ -462,6 +462,11 @@ class RhuContrato
     protected $licenciasContratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuIncapacidad", mappedBy="contratoRel")
+     */
+    protected $incapacidadesContratoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuTrasladoPension", mappedBy="contratoRel")
      */
     protected $trasladosPensionesContratoRel;
@@ -1863,8 +1868,21 @@ class RhuContrato
         $this->trasladosSaludContratoRel = $trasladosSaludContratoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadesContratoRel()
+    {
+        return $this->incapacidadesContratoRel;
+    }
 
-
+    /**
+     * @param mixed $incapacidadesContratoRel
+     */
+    public function setIncapacidadesContratoRel($incapacidadesContratoRel): void
+    {
+        $this->incapacidadesContratoRel = $incapacidadesContratoRel;
+    }
 
 
 }

@@ -7,7 +7,9 @@ use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurProgramacionRespaldo;
 use App\Entity\Turno\TurSoporteContrato;
+use App\Repository\Turno\TurProgramacionRepository;
 use App\Utilidades\Estandares;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -185,10 +187,9 @@ class Pago extends \FPDF
         /** @var  $arPago RhuPago */
         $arPago = self::$em->getRepository(RhuPago::class)->find(self::$codigoPago);
         $dateFecha = (new \DateTime('now'));
-        $arrDiaSemana = FuncionesController::diasMes($dateFecha,  self::$em->getRepository(TurFestivo::class)->festivos($dateFecha->format('Y-m-') . '01', $dateFecha->format('Y-m-t')));
-
+        $arrDiaSemana = FuncionesController::diasMes($dateFecha, self::$em->getRepository(TurFestivo::class)->festivos($dateFecha->format('Y-m-') . '01', $dateFecha->format('Y-m-t')));
         $arPagoDetalles = self::$em->getRepository(RhuPagoDetalle::class)->findBy(['codigoPagoFk' => self::$codigoPago]);
-        $arProgramaciones = self::$em->getRepository(TurProgramacion::class)->programacionEmpleado($arPago->getCodigoEmpleadoFk(), $arPago->getFechaDesde()->format('Y'), $arPago->getFechaHasta()->format('n'));
+        $arProgramacionRespaldos = self::$em->getRepository(TurProgramacionRespaldo::class)->findOneBy(['codigoSoporteContratoFk' => $arPago->getCodigoSoporteContratoFk()]);
 
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
@@ -205,12 +206,74 @@ class Pago extends \FPDF
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }
+        $pdf->Ln(5);
+
+        $boolSoportePago = false;
+        $desde = $arPago->getFechaDesde()->format('j');
+        $hasta = $arPago->getFechaHasta()->format('j');
+        if ($hasta == 30) {
+            $hasta = 31;
+        }
+        if ($arProgramacionRespaldos){
+            $boolSoportePago = true;
+            $header = array('D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15', 'D16', 'D17', 'D18', 'D19', 'D20', 'D21', 'D22', 'D23', 'D24', 'D25', 'D26', 'D27', 'D28', 'D29', 'D30', 'D31');
+            $pdf->SetFillColor(200, 200, 200);
+            $pdf->SetTextColor(0);
+            $pdf->SetDrawColor(0, 0, 0);
+            $pdf->SetLineWidth(.2);
+            $pdf->SetFont('', 'B', 6.8);
+
+            //creamos la cabecera de la tabla.
+            $w = array(6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2);
+            for ($i = $desde; $i <= $hasta; $i++) {
+                $pdf->Cell(6.2, 4, "D" . $i, 1, 0, 'L', 1);
+            }
+            $pdf->Ln();
+            if ($hasta <= 15 ){
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia1(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia2(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia3(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia4(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia5(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia6(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia7(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia8(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia9(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia10(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia11(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia12(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia13(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia14(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia15(), 1, 0, 'L');
+                $pdf->Ln();
+            }else{
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia16(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia17(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia18(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia18(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia19(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia20(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia21(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia22(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia23(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia24(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia25(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia26(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia27(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia28(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia29(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia30(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia31(), 1, 0, 'L');
+                $pdf->Ln();
+            }
+
+        }
 
         //TOTALES
-        $pdf->Ln();
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Ln(5);
         $pdf->Cell(130, 4, "", 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 7);
-        $pdf->SetFillColor(200, 200, 200);
         $pdf->Cell(35, 4, "TOTAL DEVENGADO:", 1, 0, 'R', true);
         $pdf->Cell(25, 4, number_format($arPago->getVrDevengado(), 0, '.', ','), 1, 0, 'R');
         $pdf->Ln();
@@ -223,65 +286,6 @@ class Pago extends \FPDF
         $pdf->Cell(25, 4, number_format($arPago->getVrNeto(), 0, '.', ','), 1, 0, 'R');
 //        $pdf->Ln(-8);
         $pdf->Ln(8);
-
-
-        $strDiaPago = $arPago->getFechaDesde()->format("d");
-        //primera quicena del mes 1 al 15
-        foreach ($arrDiaSemana as $arrDia) {
-            if ($strDiaPago <= 15 && $arrDia["dia"] <= 15){
-                $pdf->Cell(7, 4, $arrDia["dia"].$arrDia['diaSemana'], 1, 0, 'L');
-            }
-        }
-        //segunda quicena del mes 1 al 16
-        foreach ($arrDiaSemana as $arrDia) {
-            //dias menores a 15 primera quicena del mes
-            if ($strDiaPago > 15 && $arrDia["dia"] > 15){
-                $pdf->Cell(7, 4, $arrDia["dia"].$arrDia['diaSemana'], 1, 0, 'L');
-            }
-        }
-        $pdf->Ln();
-        if ($strDiaPago <= 15 ){
-            foreach ($arProgramaciones as $programacion)
-            {
-                $pdf->Cell(7, 4, $programacion["dia1"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia2"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia3"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia4"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia5"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia6"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia7"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia8"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia9"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia10"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia11"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia12"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia13"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia14"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia15"], 1, 0, 'L');
-                $pdf->Ln();
-            }
-        }else{
-            foreach ($arProgramaciones as $programacion)
-            {
-                $pdf->Cell(7, 4, $programacion["dia16"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia17"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia18"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia19"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia20"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia21"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia22"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia23"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia24"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia25"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia26"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia27"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia28"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia29"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia30"], 1, 0, 'L');
-                $pdf->Cell(7, 4, $programacion["dia31"]??"", 1, 0, 'L'); //validad si el 31 tiene datos
-                $pdf->Ln();
-            }
-        }
     }
 
     public function Footer()

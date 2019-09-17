@@ -1033,9 +1033,27 @@ class TteFacturaRepository extends ServiceEntityRepository
     {
         $valor = 0;
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
-            ->select("SUM(f.vrFlete*f.operacionComercial) as flete")
+            ->select("SUM(f.vrFlete) as flete")
+            ->leftJoin("f.facturaTipoRel", "ft")
             ->where("f.fecha >='" . $fechaDesde . "' AND f.fecha <= '" . $fechaHasta . "'")
-        ->andWhere('f.estadoAprobado = 1');
+            ->andWhere('ft.intermediacion = 1')
+            ->andWhere('f.estadoAprobado = 1');
+        $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+        if($arrResultado['flete']) {
+            $valor = $arrResultado['flete'];
+        }
+        return $valor;
+    }
+
+    public function fleteCobroTotal($fechaDesde, $fechaHasta)
+    {
+        $valor = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
+            ->select("SUM(f.vrFlete*f.operacionComercial) as flete")
+            ->leftJoin("f.facturaTipoRel", "ft")
+            ->where("f.fecha >='" . $fechaDesde . "' AND f.fecha <= '" . $fechaHasta . "'")
+            ->andWhere('ft.intermediacion = 1')
+            ->andWhere('f.estadoAprobado = 1');
         $arrResultado = $queryBuilder->getQuery()->getSingleResult();
         if($arrResultado['flete']) {
             $valor = $arrResultado['flete'];
@@ -1048,11 +1066,13 @@ class TteFacturaRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
             ->select("f.codigoClienteFk")
             ->addSelect('f.codigoFacturaTipoFk')
-            ->addSelect("SUM(f.vrFlete*f.operacionComercial) as flete")
+            ->addSelect("SUM(f.vrFlete) as flete")
+            ->leftJoin("f.facturaTipoRel", "ft")
             ->where("f.fecha >='" . $fechaDesde . "' AND f.fecha <= '" . $fechaHasta . "'")
-        ->andWhere('f.estadoAprobado = 1')
-        ->groupBy('f.codigoClienteFk')
-        ->addGroupBy('f.codigoFacturaTipoFk');
+            ->andWhere("ft.intermediacion = 1")
+            ->andWhere('f.estadoAprobado = 1')
+            ->groupBy('f.codigoClienteFk')
+            ->addGroupBy('f.codigoFacturaTipoFk');
         $arrResultado = $queryBuilder->getQuery()->getResult();
 
         return $arrResultado;

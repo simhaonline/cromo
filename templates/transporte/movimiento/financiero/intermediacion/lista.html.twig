@@ -37,6 +37,7 @@
             <th>MES</th>
             <th>PAGO</th>
             <th>COBRO</th>
+            <th>C_C</th>
             <th></th>
             <th class="text-center" title="seleccionar todas los grupos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
 
@@ -50,6 +51,7 @@
                 <td>{{ arIntermediacion.mes }}</td>
                 <td class="numero">{{ arIntermediacion.vrFletePago | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arIntermediacion.vrFleteCobro | number_format(0, '.', ',') }}</td>
+                <td>{{ arIntermediacion.codigoCentroCostoFk }}</td>
                 <td style="text-align: center">
                     <a href="{{ path('transporte_movimiento_financiero_intermediacion_detalle',{ 'id': arIntermediacion.codigoIntermediacionPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

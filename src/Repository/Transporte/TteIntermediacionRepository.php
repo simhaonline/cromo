@@ -49,6 +49,7 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             ->addSelect('i.estadoAprobado')
             ->addSelect('i.vrFletePago')
             ->addSelect('i.vrFleteCobro')
+            ->addSelect('i.codigoCentroCostoFk')
             ->orderBy('i.anio', 'DESC');
         if ($session->get('filtroTteIntermediacionAnio') != '') {
             $queryBuilder->andWhere("i.anio LIKE '%{$session->get('filtroTteIntermediacionAnio')}%' ");
@@ -76,19 +77,19 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             $fletePagoRecogida = $em->getRepository(TteDespachoRecogida::class)->fletePago($fechaDesde, $fechaHasta);
             $fletePagoTotal = $fletePago + $fletePagoRecogida;
             $fleteCobro = $em->getRepository(TteFactura::class)->fleteCobro($fechaDesde, $fechaHasta);
-            $arIntermediacion->setVrFleteCobro($fleteCobro);
+            $fleteCobroTotal = $em->getRepository(TteFactura::class)->fleteCobroTotal($fechaDesde, $fechaHasta);
             $ingresoTotal = 0;
-
-
+            $ingresoTotalNeto = 0;
 
             $arrFleteCobroDetallados = $em->getRepository(TteFactura::class)->fleteCobroDetallado($fechaDesde, $fechaHasta);
             foreach ($arrFleteCobroDetallados as $arrFleteCobroDetallado) {
                 $arCliente = $em->getRepository(TteCliente::class)->find($arrFleteCobroDetallado['codigoClienteFk']);
                 $arFacturaTipo = $em->getRepository(TteFacturaTipo::class)->find($arrFleteCobroDetallado['codigoFacturaTipoFk']);
                 $fleteCobroFactura = $arrFleteCobroDetallado['flete'];
-                $participacion = ($fleteCobroFactura / $fleteCobro) * 100;
+                $participacion = ($fleteCobroFactura / $fleteCobroTotal) * 100;
                 $fleteParticipacion = $fletePagoTotal * $participacion / 100;
                 $fleteIngreso = $fleteCobroFactura - $fleteParticipacion;
+
                 $arIntermediacionVenta = new TteIntermediacionVenta();
                 $arIntermediacionVenta->setClienteRel($arCliente);
                 $arIntermediacionVenta->setFacturaTipoRel($arFacturaTipo);
@@ -100,6 +101,11 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                 $arIntermediacionVenta->setVrFleteParticipacion($fleteParticipacion);
                 $arIntermediacionVenta->setVrFleteIngreso($fleteIngreso);
                 $em->persist($arIntermediacionVenta);
+                if($arFacturaTipo->getCodigoFacturaClaseFk() == 'NC') {
+                    $ingresoTotalNeto -= $fleteIngreso;
+                } else {
+                    $ingresoTotalNeto += $fleteIngreso;
+                }
                 $ingresoTotal += $fleteIngreso;
             }
 
@@ -143,10 +149,12 @@ class TteIntermediacionRepository extends ServiceEntityRepository
 
             $arIntermediacion->setEstadoAutorizado(1);
             $arIntermediacion->setVrFleteCobro($fleteCobro);
+            $arIntermediacion->setVrFleteCobroTotal($fleteCobroTotal);
             $arIntermediacion->setVrFletePago($fletePago);
             $arIntermediacion->setVrFletePagoRecogida($fletePagoRecogida);
             $arIntermediacion->setVrFletePagoTotal($fletePagoTotal);
             $arIntermediacion->setVrIngreso($ingresoTotal);
+            $arIntermediacion->setVrIngresoTotal($ingresoTotalNeto);
             $em->flush();
         } else {
             Mensajes::error("El documento ya esta autorizado");
@@ -192,11 +200,13 @@ class TteIntermediacionRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if($arIntermediacion->getEstadoAutorizado() && !$arIntermediacion->getEstadoAprobado()) {
-            $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
-            $consecutivo = $arConsecutivo->getIntermediacion();
-            $arConsecutivo->setIntermediacion($consecutivo + 1);
-            $em->persist($arConsecutivo);
-            $arIntermediacion->setNumero($consecutivo);
+            if($arIntermediacion->getNumero() == 0) {
+                $arConsecutivo = $em->getRepository(TteConsecutivo::class)->find(1);
+                $consecutivo = $arConsecutivo->getIntermediacion();
+                $arConsecutivo->setIntermediacion($consecutivo + 1);
+                $em->persist($arConsecutivo);
+                $arIntermediacion->setNumero($consecutivo);
+            }
             $arIntermediacion->setEstadoAprobado(1);
             $em->persist($arIntermediacion);
             $em->flush();
@@ -268,6 +278,7 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             ->addSelect('i.estadoAprobado')
             ->addSelect('i.estadoContabilizado')
             ->addSelect('i.fecha')
+            ->addSelect('i.codigoCentroCostoFk')
             ->where('i.codigoIntermediacionPk = ' . $codigo);
         $arIntermediacion = $queryBuilder->getQuery()->getSingleResult();
         return $arIntermediacion;
@@ -286,8 +297,8 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                     if(!$arIntermediacion['estadoContabilizado']) {
                         if($arIntermediacion) {
                             if($arIntermediacion['estadoContabilizado'] == 0) {
-                                $arCentroCosto = null;
-                                //$arCentroCosto = $em->getRepository(FinCentroCosto::class)->find(112);
+                                $arCentroCosto = $arIntermediacion['codigoCentroCostoFk'];
+                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find(112);
 
                                 //Contabilizar intermediacion parte ventas
                                 $arrIntermediacionesVenta = $em->getRepository(TteIntermediacionVenta::class)->registroContabilizar($codigo);

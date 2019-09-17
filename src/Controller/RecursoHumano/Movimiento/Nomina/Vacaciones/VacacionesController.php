@@ -92,7 +92,7 @@ class VacacionesController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(RhuVacacion::class)->lista($raw), "Creditos");
+                General::get()->setExportar($em->getRepository(RhuVacacion::class)->lista($raw), "Vacaciones");
             }
         }
         $arVacaciones = $paginator->paginate($em->getRepository(RhuVacacion::class)->lista($raw), $request->query->getInt('page', 1), 30);

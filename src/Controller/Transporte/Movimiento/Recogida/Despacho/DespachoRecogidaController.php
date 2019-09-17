@@ -353,8 +353,8 @@ class DespachoRecogidaController extends AbstractController
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
-            'fechaDesde' => $form->get('fechaDesde')->getData(),
-            'fechaHasta' => $form->get('fechaHasta')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
         ];
     }
 }

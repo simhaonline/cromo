@@ -14,9 +14,27 @@ class RhuAspiranteRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuAspirante::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoAspirante = null;
+        $nombre = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoAspirante = $filtros['codigoAspirante'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAspirante::class, 'a')
             ->select('a.codigoAspirantePk')
             ->addSelect('a.numeroIdentificacion')
@@ -24,48 +42,48 @@ class RhuAspiranteRepository extends ServiceEntityRepository
             ->addSelect('a.telefono')
             ->addSelect('a.celular')
             ->addSelect('a.correo')
-            ->addSelect('a.direccion');
-
-        if ($session->get('RhuAspirante_codigoAspirantePk')) {
-            $queryBuilder->andWhere("a.codigoAspirantePk = '{$session->get('RhuAspirante_codigoAspirantePk')}'");
+            ->addSelect('a.direccion')
+            ->addSelect('a.estadoAutorizado')
+            ->addSelect('a.estadoAprobado');
+        if ($codigoAspirante) {
+            $queryBuilder->andWhere("a.codigoAspirantePk = '{$codigoAspirante}'");
         }
-        if ($session->get('RhuAspirante_nombreCorto')) {
-            $queryBuilder->andWhere("a.nombreCorto like '{$session->get('RhuAspirante_nombreCorto')}'");
+        if ($nombre) {
+            $queryBuilder->andWhere("a.nombreCorto LIKE '%{$nombre}%'");
         }
-
-        switch ($session->get('RhuAspirante_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
-                $queryBuilder->andWhere("doc.estadoAutorizado = 0");
+                $queryBuilder->andWhere("a.estadoAutorizado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("doc.estadoAutorizado = 1");
+                $queryBuilder->andWhere("a.estadoAutorizado = 1");
                 break;
         }
-
-        switch ($session->get('RhuAspirante_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
-                $queryBuilder->andWhere("doc.estadoAprobado = 0");
+                $queryBuilder->andWhere("a.estadoAprobado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("doc.estadoAprobado = 1");
+                $queryBuilder->andWhere("a.estadoAprobado = 1");
                 break;
         }
-
-        switch ($session->get('RhuAspirante_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
-                $queryBuilder->andWhere("doc.estadoAnulado = 0");
+                $queryBuilder->andWhere("a.estadoAnulado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("doc.estadoAnulado = 1");
+                $queryBuilder->andWhere("a.estadoAnulado = 1");
                 break;
         }
-        
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('a.codigoAspirantePk', 'ASC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
-    
-    public function camposPredeterminados(){
-        $qb = $this-> _em->createQueryBuilder()
-            ->from('App:RecursoHumano\RhuAspirante','a')
+
+    public function camposPredeterminados()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->from('App:RecursoHumano\RhuAspirante', 'a')
             ->select('a');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();

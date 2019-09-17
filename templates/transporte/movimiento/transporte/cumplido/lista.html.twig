@@ -93,10 +93,14 @@
                 <td>{{ arCumplido.estadoAutorizado? "SI":"NO" }}</td>
                 <td>{{ arCumplido.estadoAprobado? "SI":"NO" }}</td>
                 <td>{{ arCumplido.estadoAnulado? "SI":"NO" }}</td>
-                <td class="text-center">
-                    <a href="{{ path('transporte_movimiento_transporte_cumplido_nuevo',{'id': arCumplido.codigoCumplidoPk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arCumplido.estadoAutorizado  == true %}
+                    <td></td>
+                {% else %}
+                    <td class="text-center">
+                        <a href="{{ path('transporte_movimiento_transporte_cumplido_nuevo',{'id': arCumplido.codigoCumplidoPk }) }}">
+                            <i class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
                 <td class="text-center">
                     <a href="{{ path('transporte_movimiento_transporte_cumplido_detalle',{'id' : arCumplido.codigoCumplidoPk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

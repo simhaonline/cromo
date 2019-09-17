@@ -15,43 +15,61 @@ class RhuReclamoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuReclamo::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoReclamo = null;
+        $reclamoConcepto = null;
+        $codigoEmpleado = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoReclamo = $filtros['codigoReclamo'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $reclamoConcepto = $filtros['reclamoConcepto'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuReclamo::class, 'r')
             ->select('r.codigoReclamoPk')
-            ->addSelect('r.codigoReclamoConceptoFk')
+            ->addSelect('rc.nombre AS concepto')
             ->addSelect('e.numeroIdentificacion')
-            ->addSelect('e.nombreCorto')
+            ->addSelect('e.nombreCorto AS empleado')
             ->addSelect('r.fecha')
             ->addSelect('r.fechaCierre')
             ->addSelect('r.responsable')
             ->addSelect('r.estadoAutorizado')
             ->addSelect('r.estadoAprobado')
             ->addSelect('r.estadoAnulado')
-            ->leftJoin('r.empleadoRel', 'e');
-
-        if ($session->get('RhuReclamo_codigoReclamoPk')) {
-            $queryBuilder->andWhere("r.codigoReclamoPk = '{$session->get('RhuReclamo_codigoReclamoPk')}'");
+            ->leftJoin('r.empleadoRel', 'e')
+        ->leftJoin('r.reclamoConceptoRel', 'rc');
+        if ($codigoReclamo) {
+            $queryBuilder->andWhere("r.codigoReclamoPk = '{$codigoReclamo}'");
         }
-
-        if ($session->get('RhuReclamo_codigoReclamoConceptoFk')) {
-            $queryBuilder->andWhere("r.codigoReclamoConceptoFk = '{$session->get('RhuReclamo_codigoReclamoConceptoFk')}'");
+        if ($reclamoConcepto) {
+            $queryBuilder->andWhere("r.codigoReclamoConceptoFk = '{$reclamoConcepto}'");
         }
-
-        if ($session->get('RhuReclamo_codigoEmpleadoFk')) {
-            $queryBuilder->andWhere("r.codigoEmpleadoFk = '{$session->get('RhuReclamo_codigoEmpleadoFk')}'");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("r.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-
-        if ($session->get('RhuReclamo_fechaDesde') != null) {
-            $queryBuilder->andWhere("r.fechaDesde >= '{$session->get('RhuReclamo_fechaDesde')} 00:00:00'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("r.fecha >= '{$fechaDesde} 00:00:00'");
         }
-
-        if ($session->get('RhuReclamo_fechaHasta') != null) {
-            $queryBuilder->andWhere("r.fechaHasta <= '{$session->get('RhuReclamo_fechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("r.fecha <= '{$fechaHasta} 23:59:59'");
         }
-        
-        switch ($session->get('RhuReclamo_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAutorizado = 0");
                 break;
@@ -59,8 +77,7 @@ class RhuReclamoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAutorizado = 1");
                 break;
         }
-
-        switch ($session->get('RhuReclamo_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAprobado = 0");
                 break;
@@ -68,8 +85,7 @@ class RhuReclamoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAprobado = 1");
                 break;
         }
-
-        switch ($session->get('RhuReclamo_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAnulado = 0");
                 break;
@@ -77,8 +93,9 @@ class RhuReclamoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAnulado = 1");
                 break;
         }
-
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('r.codigoReclamoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
 
     }
 }

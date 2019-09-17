@@ -25,6 +25,8 @@ use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,11 +104,11 @@ class GuiaController extends ControllerListenerGeneral
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-            ->add('codigoGuiaPk', TextType::class, array('required' => false))
-            ->add('codigoDespachoFk', TextType::class, array('required' => false))
-            ->add('codigoFacturaFk', TextType::class, array('required' => false))
-            ->add('numeroFactura', TextType::class, array('required' => false))
-            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoGuiaPk', IntegerType::class, array('required' => false))
+            ->add('codigoDespachoFk', IntegerType::class, array('required' => false))
+            ->add('codigoFacturaFk', IntegerType::class, array('required' => false))
+            ->add('numeroFactura', IntegerType::class, array('required' => false))
+            ->add('numero', IntegerType::class, array('required' => false))
             ->add('remitente', TextType::class, array('required' => false))
             ->add('documentoCliente', TextType::class, array('required' => false))
             ->add('nombreDestinatario', TextType::class, array('required' => false))

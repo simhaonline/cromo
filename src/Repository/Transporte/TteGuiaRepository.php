@@ -159,9 +159,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->leftJoin('c.asesorRel', 'ase')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->where('tg.codigoGuiaPk <> 0');
-        $fecha = new \DateTime('now');
         if ($codigoGuia) {
-            $queryBuilder->andWhere("tg.codigoGuiaPk = {$codigoGuia}");
+            $queryBuilder->andWhere("tg.codigoGuiaPk = '{$codigoGuia}'");
         }
 
         if ($codigoCliente) {

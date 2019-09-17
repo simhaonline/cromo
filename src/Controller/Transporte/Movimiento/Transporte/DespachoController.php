@@ -342,11 +342,10 @@ class DespachoController extends AbstractController
      * @throws \Doctrine\ORM\ORMException
      * @Route("/transporte/movimiento/trasnporte/despacho/detalle/adicionar/guia/{id}", name="transporte_movimiento_transporte_despacho_detalle_adicionar_guia")
      */
-    public function detalleAdicionarGuia(Request $request, $id)
+    public function detalleAdicionarGuia(Request $request, PaginatorInterface $paginator, $id)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar'])
@@ -485,11 +484,10 @@ class DespachoController extends AbstractController
      * @return Response
      * @Route("/transporte/movimiento/trasnporte/despacho/detalle/adicionar/auxiliar/{id}", name="transporte_movimiento_transporte_despacho_detalle_adicionar_auxiliar")
      */
-    public function detalleAdicionarAuxiliar(Request $request, $id)
+    public function detalleAdicionarAuxiliar(Request $request, PaginatorInterface $paginator, $id)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar'])

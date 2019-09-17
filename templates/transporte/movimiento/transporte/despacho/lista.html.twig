@@ -192,8 +192,10 @@
                 <td>{{ arDespacho.estadoAnulado? "SI":"NO" }}</td>
                 <td>{{ arDespacho.usuario }}</td>
                 <td class="text-center">
+                    {% if arDespacho.estadoAutorizado == 0 %}
                     <a href="{{ path('transporte_movimiento_transporte_despacho_nuevo',{'id': arDespacho.codigoDespachoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     <a href="{{ path('transporte_movimiento_transporte_despacho_detalle',{'id' : arDespacho.codigoDespachoPk}) }}">

@@ -297,8 +297,7 @@ class TteIntermediacionRepository extends ServiceEntityRepository
                     if(!$arIntermediacion['estadoContabilizado']) {
                         if($arIntermediacion) {
                             if($arIntermediacion['estadoContabilizado'] == 0) {
-                                $arCentroCosto = $arIntermediacion['codigoCentroCostoFk'];
-                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find(112);
+                                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arIntermediacion['codigoCentroCostoFk']);
 
                                 //Contabilizar intermediacion parte ventas
                                 $arrIntermediacionesVenta = $em->getRepository(TteIntermediacionVenta::class)->registroContabilizar($codigo);

@@ -79,11 +79,10 @@ class CumplidoController extends AbstractController
     /**
      * @Route("/transporte/movimiento/transporte/cumplido/detalle/{id}", name="transporte_movimiento_transporte_cumplido_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arCumplido = $em->getRepository(TteCumplido::class)->find($id);
-        $paginator  = $this->get('knp_paginator');
         $form = Estandares::botonera($arCumplido->getEstadoAutorizado(),$arCumplido->getEstadoAprobado(),$arCumplido->getEstadoAnulado());
         $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -129,7 +128,7 @@ class CumplidoController extends AbstractController
             }
         }
 
-        $arGuias = $this->getDoctrine()->getRepository(TteGuia::class)->cumplido($id);
+        $arGuias = $paginator->paginate($this->getDoctrine()->getRepository(TteGuia::class)->cumplido($id), $request->query->getInt('page', 1), 30 );
         return $this->render('transporte/movimiento/transporte/cumplido/detalle.html.twig', [
             'arCumplido' => $arCumplido,
             'arGuias' => $arGuias,

@@ -1817,7 +1817,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->select("SUM(d.vrFletePago) as fletePago")
             ->leftJoin('d.despachoTipoRel', 'dt')
             ->where("d.fechaSalida >='" . $fechaDesde . "' AND d.fechaSalida <= '" . $fechaHasta . "'")
-            ->andWhere('dt.contabilizar = 1')
+            ->andWhere('dt.intermediacion = 1')
             ->andWhere('d.estadoAprobado = 1');
         $arrResultado = $queryBuilder->getQuery()->getSingleResult();
         if ($arrResultado['fletePago']) {

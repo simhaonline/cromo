@@ -64,9 +64,24 @@ class TteIntermediacion
     private $vrFleteCobro = 0;
 
     /**
+     * @ORM\Column(name="vr_flete_cobro_total", type="float", options={"default" : 0})
+     */
+    private $vrFleteCobroTotal = 0;
+
+    /**
      * @ORM\Column(name="vr_ingreso", type="float", options={"default" : 0})
      */
     private $vrIngreso = 0;
+
+    /**
+     * @ORM\Column(name="vr_ingreso_total", type="float", options={"default" : 0})
+     */
+    private $vrIngresoTotal = 0;
+
+    /**
+     * @ORM\Column(name="codigo_centro_costo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCentroCostoFk;
 
     /**
      * @ORM\Column(name="estado_autorizado", type="boolean", options={"default" : false}, nullable=true)
@@ -373,6 +388,54 @@ class TteIntermediacion
     public function setNumero($numero): void
     {
         $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCentroCostoFk()
+    {
+        return $this->codigoCentroCostoFk;
+    }
+
+    /**
+     * @param mixed $codigoCentroCostoFk
+     */
+    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
+    {
+        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrFleteCobroTotal()
+    {
+        return $this->vrFleteCobroTotal;
+    }
+
+    /**
+     * @param mixed $vrFleteCobroTotal
+     */
+    public function setVrFleteCobroTotal($vrFleteCobroTotal): void
+    {
+        $this->vrFleteCobroTotal = $vrFleteCobroTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoTotal()
+    {
+        return $this->vrIngresoTotal;
+    }
+
+    /**
+     * @param mixed $vrIngresoTotal
+     */
+    public function setVrIngresoTotal($vrIngresoTotal): void
+    {
+        $this->vrIngresoTotal = $vrIngresoTotal;
     }
 
 

@@ -97,6 +97,11 @@ class TteDespachoRecogidaTipo
     private $contabilizar = false;
 
     /**
+     * @ORM\Column(name="intermediacion", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $intermediacion = false;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_pagar_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCuentaPagarTipoFk;
@@ -479,6 +484,22 @@ class TteDespachoRecogidaTipo
     public function setCuentaPagarTipoAnticipoRel($cuentaPagarTipoAnticipoRel): void
     {
         $this->cuentaPagarTipoAnticipoRel = $cuentaPagarTipoAnticipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacion()
+    {
+        return $this->intermediacion;
+    }
+
+    /**
+     * @param mixed $intermediacion
+     */
+    public function setIntermediacion($intermediacion): void
+    {
+        $this->intermediacion = $intermediacion;
     }
 
 

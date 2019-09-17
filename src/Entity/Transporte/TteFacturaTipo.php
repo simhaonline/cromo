@@ -98,6 +98,11 @@ class TteFacturaTipo
     private $codigoCuentaIngresoInicialFijoManejoFk;
 
     /**
+     * @ORM\Column(name="intermediacion", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $intermediacion = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
@@ -430,6 +435,22 @@ class TteFacturaTipo
     public function setIntermediacionesVentasFacturaTipoRel($intermediacionesVentasFacturaTipoRel): void
     {
         $this->intermediacionesVentasFacturaTipoRel = $intermediacionesVentasFacturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntermediacion()
+    {
+        return $this->intermediacion;
+    }
+
+    /**
+     * @param mixed $intermediacion
+     */
+    public function setIntermediacion($intermediacion): void
+    {
+        $this->intermediacion = $intermediacion;
     }
 
 

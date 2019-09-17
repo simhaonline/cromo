@@ -30,6 +30,7 @@ class IntermediacionType extends AbstractType {
                 ),
                 'required'    => true,
             ])            ->add('guardar', SubmitType::class,array('label'=>'Guardar'))
+            ->add('codigoCentroCostoFk', TextType::class)
             ->add('guardarnuevo', SubmitType::class,array('label'=>'Guardar y nuevo'));
     }
 

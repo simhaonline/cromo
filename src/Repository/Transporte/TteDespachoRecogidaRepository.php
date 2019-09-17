@@ -853,7 +853,9 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         $valor = 0;
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoRecogida::class, 'd')
             ->select("SUM(d.vrFletePago) as fletePago")
+            ->leftJoin("d.despachoRecogidaTipoRel", "drt")
             ->where("d.fecha >='" . $fechaDesde . "' AND d.fecha <= '" . $fechaHasta . "'")
+            ->andWhere('drt.intermediacion = 1')
             ->andWhere('d.estadoAprobado = 1');
         $arrResultado = $queryBuilder->getQuery()->getSingleResult();
         if ($arrResultado['fletePago']) {

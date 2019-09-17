@@ -16,7 +16,7 @@
             <td class="td-in-well">{{ arIntermediacion.codigoIntermediacionPk }}</td>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arIntermediacion.numero }}</td>
-            <td class="titulo" >FLETE (COBRADO)</td>
+            <td class="titulo" >COBRO (FAC+NC):</td>
             <td align="right">{{ arIntermediacion.vrFleteCobro | number_format(0, '.', ',')}}</td>
         </tr>
         <tr>
@@ -24,15 +24,23 @@
             <td class="td-in-well">{{ arIntermediacion.fecha | date('Y-m-d') }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo" >FLETE (PAGADO-DES)</td>
-            <td align="right">{{ arIntermediacion.vrFletePago | number_format(0, '.', ',')}}</td>
+            <td class="titulo" >COBRO TOTAL:</td>
+            <td align="right">{{ arIntermediacion.vrFleteCobroTotal | number_format(0, '.', ',')}}</td>
         </tr>
         <tr>
             <td class="titulo">AÑO:</td>
             <td class="td-in-well">{{ arIntermediacion.anio }}</td>
             <td class="titulo">MES:</td>
             <td class="td-in-well">{{ arIntermediacion.mes }}</td>
-            <td class="titulo" >FLETE (PAGO-REC)</td>
+            <td class="titulo" >PAGO DESPACHO:</td>
+            <td align="right">{{ arIntermediacion.vrFletePago | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >PAGO RECOGIDA:</td>
             <td align="right">{{ arIntermediacion.vrFletePagoRecogida | number_format(0, '.', ',')}}</td>
         </tr>
         <tr>
@@ -40,7 +48,7 @@
             <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo" >FLETE (PAGADO)</td>
+            <td class="titulo" >PAGO TOTAL:</td>
             <td align="right">{{ arIntermediacion.vrFletePagoTotal | number_format(0, '.', ',')}}</td>
         </tr>
         <tr>
@@ -48,8 +56,16 @@
             <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo" >INTERMEDIACION (INGRESO)</td>
+            <td class="titulo" >INGRESO:</td>
             <td align="right">{{ arIntermediacion.vrIngreso | number_format(0, '.', ',')}}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo" >INGRESO TOTAL:</td>
+            <td align="right">{{ arIntermediacion.vrIngresoTotal | number_format(0, '.', ',')}}</td>
         </tr>
     </table>
     <ul class="nav nav-tabs">

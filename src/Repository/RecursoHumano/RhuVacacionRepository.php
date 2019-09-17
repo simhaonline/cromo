@@ -332,15 +332,40 @@ class RhuVacacionRepository extends ServiceEntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoVacacion = null;
+        $numero = null;
+        $grupo = null;
+        $codigoEmpleado = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoVacacion = $filtros['codigoVacacion'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $grupo = $filtros['grupo'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuVacacion::class, 'v')
             ->select('v.codigoVacacionPk')
             ->addselect('v.fecha')
+            ->addSelect('v.numero')
             ->addselect('g.nombre as grupo')
             ->addselect('e.numeroIdentificacion as numeroIdentificacion')
-            ->addselect('e.nombreCorto as nombreCorto')
+            ->addselect('e.nombreCorto as empleado')
             ->addselect('v.fechaDesdePeriodo')
             ->addselect('v.fechaHastaPeriodo')
             ->addselect('v.fechaDesdeDisfrute')
@@ -355,32 +380,25 @@ class RhuVacacionRepository extends ServiceEntityRepository
             ->addselect('v.estadoAnulado')
             ->leftJoin('v.grupoRel', 'g')
             ->leftJoin('v.empleadoRel', 'e');
-
-        if ($session->get('RhuVacacion_codigoVacacionPk')) {
-            $queryBuilder->andWhere("v.codigoVacacionPk = '{$session->get('RhuVacacion_codigoVacacionPk')}'");
+        if ($codigoVacacion) {
+            $queryBuilder->andWhere("v.codigoVacacionPk = '{$codigoVacacion}'");
         }
-
-        if ($session->get('RhuVacacion_codigoGrupoFk')) {
-            $queryBuilder->andWhere("v.codigoGrupoFk = '{$session->get('RhuVacacion_codigoGrupoFk')}'");
+        if ($grupo) {
+            $queryBuilder->andWhere("v.codigoGrupoFk = '{$grupo}'");
         }
-
-        if ($session->get('RhuVacacion_numero')) {
-            $queryBuilder->andWhere("v.numero = '{$session->get('RhuVacacion_numero')}'");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("v.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-
-        if ($session->get('RhuVacacion_codigoEmpleadoFk')) {
-            $queryBuilder->andWhere("v.codigoEmpleadoFk = '{$session->get('RhuVacacion_codigoEmpleadoFk')}'");
+        if ($numero) {
+            $queryBuilder->andWhere("v.numero = '{$numero}'");
         }
-
-        if ($session->get('RhuVacacion_fechaDesde') != null) {
-            $queryBuilder->andWhere("v.fechaDesde >= '{$session->get('RhuVacacion_fechaDesde')} 00:00:00'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("v.fecha >= '{$fechaDesde} 00:00:00'");
         }
-
-        if ($session->get('RhuVacacion_fechaHasta') != null) {
-            $queryBuilder->andWhere("v.fechaHasta <= '{$session->get('RhuVacacion_fechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("v.fecha <= '{$fechaHasta} 23:59:59'");
         }
-
-        switch ($session->get('RhuVacacion_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("v.estadoAutorizado = 0");
                 break;
@@ -388,8 +406,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("v.estadoAutorizado = 1");
                 break;
         }
-
-        switch ($session->get('RhuVacacion_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("v.estadoAprobado = 0");
                 break;
@@ -397,17 +414,17 @@ class RhuVacacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("v.estadoAprobado = 1");
                 break;
         }
-
-        switch ($session->get('RhuVacacion_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("v.estadoAnulado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("doc.estadoAnulado = 1");
+                $queryBuilder->andWhere("v.estadoAnulado = 1");
                 break;
         }
-
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('v.codigoVacacionPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function diasProgramacion($codigoEmpleado, $codigoContrato, $fechaDesde, $fechaHasta)
@@ -1112,12 +1129,12 @@ class RhuVacacionRepository extends ServiceEntityRepository
                                     }
                                     //Para contabilizar al nit fijo el concepto
                                     //if ($arVacacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad() != null) {
-                                      //  $arTerceroConcepto = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arVacacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad()));
-                                        //$arRegistro->setTerceroRel($arTerceroConcepto);
+                                    //  $arTerceroConcepto = $em->getRepository(FinTercero::class)->findOneBy(array('numeroIdentificacion' => $arVacacionAdicional->getConceptoRel()->getNumeroIdentificacionTerceroContabilidad()));
+                                    //$arRegistro->setTerceroRel($arTerceroConcepto);
                                     //}
                                     //if ($arCuenta->getCodigoTerceroFijoFk()) {
-                                        //$arTerceroDetalle = $em->getRepository(FinTercero::class)->find($arCuenta->getCodigoTerceroFijoFk());
-                                        //$arRegistro->setTerceroRel($arTerceroDetalle);
+                                    //$arTerceroDetalle = $em->getRepository(FinTercero::class)->find($arCuenta->getCodigoTerceroFijoFk());
+                                    //$arRegistro->setTerceroRel($arTerceroDetalle);
                                     //}
 
                                     $arRegistro->setDescripcion($arVacacionAdicional->getConceptoRel()->getNombre());

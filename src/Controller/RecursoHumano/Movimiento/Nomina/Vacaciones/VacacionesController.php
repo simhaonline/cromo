@@ -11,6 +11,7 @@ use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuNovedad;
@@ -23,16 +24,21 @@ use App\Formato\RecursoHumano\Vacaciones;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
-use Brasa\RecursoHumanoBundle\Entity\RhuVacacionDisfrute;
 use function Complex\add;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class VacacionesController extends ControllerListenerGeneral
+class VacacionesController extends AbstractController
 {
     protected $clase = RhuVacacion::class;
     protected $claseFormulario = VacacionType::class;
@@ -49,35 +55,50 @@ class VacacionesController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/movimiento/nomina/vacacion/lista", name="recursohumano_movimiento_nomina_vacacion_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoGrupoFk', EntityType::class, [
+                'class' => RhuGrupo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('g')
+                        ->orderBy('g.codigoGrupoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoVacacionPk', IntegerType::class, array('required' => false))
+            ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
+            ->add('numero', IntegerType::class, ['required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuVacacion::class)->lista($raw), "Creditos");
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(RhuVacacion::class)->lista()->getQuery()->execute(), "Vacaciones");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuVacacion::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_lista'));
-            }
-        }
+        $arVacaciones = $paginator->paginate($em->getRepository(RhuVacacion::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/nomina/vacacion/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arVacaciones' => $arVacaciones,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -248,11 +269,11 @@ class VacacionesController extends ControllerListenerGeneral
             }
         }
         $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(['codigoVacacionFk' => $id]);
-        $arVacacionCambios=$em->getRepository(RhuVacacionCambio::class)->findBy(['codigoVacacionFk' => $id]);
+        $arVacacionCambios = $em->getRepository(RhuVacacionCambio::class)->findBy(['codigoVacacionFk' => $id]);
         return $this->render('recursohumano/movimiento/nomina/vacacion/detalle.html.twig', [
             'arVacacion' => $arVacacion,
             'arVacacionAdicionales' => $arVacacionAdicionales,
-            'arVacacionCambios'=>$arVacacionCambios,
+            'arVacacionCambios' => $arVacacionCambios,
             'clase' => array('clase' => 'RhuVacacion', 'codigo' => $id),
             'form' => $form->createView()
         ]);
@@ -396,7 +417,7 @@ class VacacionesController extends ControllerListenerGeneral
 
         if ($id != 0) {
             $arVacacionesCambio = $em->getRepository(RhuVacacionCambio::class)->find($id);
-        }else{
+        } else {
             $arVacacionesCambio->setFechaDesdeDisfrute($arVacacion->getFechaDesdeDisfrute());
             $arVacacionesCambio->setFechaHastaDisfrute($arVacacion->getFechaHastaDisfrute());
             $arVacacionesCambio->setFechaInicioLabor($arVacacion->getFechaInicioLabor());
@@ -408,10 +429,10 @@ class VacacionesController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $boolIncapacidad= $em->getRepository(RhuIncapacidad::class)->validarFecha($arVacacionesCambio->getFechaDesdeDisfrute(), $arVacacionesCambio->getFechaHastaDisfrute(), $arVacacion->getCodigoEmpleadoFk());
-                if ($boolIncapacidad){
+                $boolIncapacidad = $em->getRepository(RhuIncapacidad::class)->validarFecha($arVacacionesCambio->getFechaDesdeDisfrute(), $arVacacionesCambio->getFechaHastaDisfrute(), $arVacacion->getCodigoEmpleadoFk());
+                if ($boolIncapacidad) {
                     $arUltimaVacacionDisfrute = $em->getRepository(RhuVacacionCambio::class)->validarUltimaVacacion($codigoVacacion);
-                    if ($arUltimaVacacionDisfrute){
+                    if ($arUltimaVacacionDisfrute) {
                         $arVacacion->setFechaDesdeDisfrute($arVacacionesCambio->getFechaDesdeDisfrute());
                         $arVacacion->setFechaHastaDisfrute($arVacacionesCambio->getFechaHastaDisfrute());
                         $arVacacion->setFechaInicioLabor($arVacacionesCambio->getFechaInicioLabor());
@@ -420,7 +441,7 @@ class VacacionesController extends ControllerListenerGeneral
                     $em->persist($arVacacionesCambio);
                     $em->flush();
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                }else{
+                } else {
                     Mensajes::error("El empleado tiene una incapacidad registrada en este periodo.");
                 }
             }
@@ -431,5 +452,29 @@ class VacacionesController extends ControllerListenerGeneral
         ]);
     }
 
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoVacacion' => $form->get('codigoVacacionPk')->getData(),
+            'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arGrupo = $form->get('codigoGrupoFk')->getData();
+
+        if (is_object($arGrupo)) {
+            $filtro['grupo'] = $arGrupo->getCodigoGrupoPk();
+        } else {
+            $filtro['grupo'] = $arGrupo;
+        }
+
+        return $filtro;
+
+    }
 }
 

@@ -81,7 +81,8 @@ class TteClienteRepository extends ServiceEntityRepository
                 $arTercero->setNumeroIdentificacion($arCliente->getNumeroIdentificacion());
                 $arTercero->setNombreCorto($arCliente->getNombreCorto());
                 $arTercero->setDireccion($arCliente->getDireccion());
-                $arTercero->setTelefono($arTercero->getTelefono());
+                $arTercero->setTelefono($arCliente->getTelefono());
+                $arTercero->setCiudadRel($arCliente->getCiudadRel());
                 //$arTercero->setEmail($arCliente->getCorreo());
                 $em->persist($arTercero);
             }

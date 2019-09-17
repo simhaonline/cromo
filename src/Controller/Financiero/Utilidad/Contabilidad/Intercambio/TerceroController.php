@@ -61,11 +61,11 @@ class TerceroController extends Controller
             fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['direccion']), ' ', 30, 'R') . "\t");
             fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['ciudadNombre']), ' ', 15, 'R') . "\t");
             fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['telefono']), ' ', 7, 'R') . "\t");
-            $codigoMunicipio = FuncionesController::RellenarNr($arTercero['codigoDaneDepartamento'], '0', 2);
-            $codigoCiudad = FuncionesController::RellenarNr($arTercero['codigoDaneCiudad'], '0', 3);
-            fputs($ar, $codigoMunicipio . $codigoCiudad. "\t");
+            fputs($ar, FuncionesController::RellenarNr($arTercero['codigoDaneCiudad'], '0', 5, 'R') . "\t");
             fputs($ar, 'S' . "\t");
             fputs($ar, 'N' . "\t");
+            //Pais
+            fputs($ar, FuncionesController::RellenarNr("169", '0', 3, 'R') . "\t");
             fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['nombre1']), ' ', 30, 'R') . "\t");
             fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['nombre2']), ' ', 30, 'R') . "\t");
             fputs($ar, FuncionesController::RellenarNr(utf8_decode($arTercero['apellido1']), ' ', 30, 'R') . "\t");

@@ -104,7 +104,7 @@ class DespachoController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltro($form);
-                General::get()->setExportar($em->getRepository(TteDespacho::class)->lista($raw)->getQuery()->execute(), "Facturas");
+                General::get()->setExportar($em->getRepository(TteDespacho::class)->lista($raw)->getQuery()->execute(), "Despachos");
             }
         }
         $arDespachos = $paginator->paginate($em->getRepository(TteDespacho::class)->lista($raw), $request->query->getInt('page', 1), 30);

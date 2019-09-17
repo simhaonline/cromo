@@ -24,9 +24,7 @@ class SegUsuarioModeloRepository extends ServiceEntityRepository
 
         $arSeguridadUsuarioModelo=$em->createQueryBuilder()
             ->from('App:Seguridad\SegUsuarioModelo','arsum')
-            ->join('arsum.modeloRel','gm')
             ->select('arsum.codigoSeguridadUsuarioModeloPk as codigoSeguridad')
-            ->addSelect('gm.codigoModuloFk as tipo')
             ->addSelect('arsum.codigoModeloFk as modelo')
             ->addSelect('arsum.lista')
             ->addSelect('arsum.detalle')

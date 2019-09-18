@@ -38,9 +38,17 @@ class TteIntermediacionRepository extends ServiceEntityRepository
         parent::__construct($registry, TteIntermediacion::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $anio= null;
+        $mes = null;
+        if ($filtros){
+            $anio=  $filtros['anio'] ?? null;
+            $mes = $filtros['mes'] ?? null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteIntermediacion::class, 'i')
             ->select('i.codigoIntermediacionPk')
             ->addSelect('i.anio')
@@ -51,11 +59,11 @@ class TteIntermediacionRepository extends ServiceEntityRepository
             ->addSelect('i.vrFleteCobro')
             ->addSelect('i.codigoCentroCostoFk')
             ->orderBy('i.anio', 'DESC');
-        if ($session->get('filtroTteIntermediacionAnio') != '') {
-            $queryBuilder->andWhere("i.anio LIKE '%{$session->get('filtroTteIntermediacionAnio')}%' ");
+        if ($anio) {
+            $queryBuilder->andWhere("i.anio LIKE '%{$anio}%' ");
         }
-        if ($session->get('filtroTteIntermediacioneMes') != '') {
-            $queryBuilder->andWhere("i.mes = {$session->get('filtroTteIntermediacioneMes')} ");
+        if ($mes) {
+            $queryBuilder->andWhere("i.mes = '{$mes}' ");
         }
         return $queryBuilder;
     }

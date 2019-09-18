@@ -12,11 +12,11 @@
                     <div class="form-group form-group-sm">
                         <label  class="col-sm-2 control-label">Año</label>
                         <div class="col-sm-4">
-                            {{ form_widget(form.txtAnio) }}
+                            {{ form_widget(form.anio) }}
                         </div>
                         <label  class="col-sm-2 control-label">Mes</label>
                         <div class="col-sm-4">
-                            {{ form_widget(form.txtMes) }}
+                            {{ form_widget(form.mes) }}
                         </div>
                     </div>
                 </div>
@@ -70,6 +70,9 @@
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
         {{ knp_pagination_render(arIntermediacions) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
     </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group" style="float: right;">

@@ -22,11 +22,33 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuIncapacidad::class, 'i');
-        $queryBuilder
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoIncapacidad = null;
+        $entidadSalud = null;
+        $numeroEps = null;
+        $grupo = null;
+        $codigoEmpleado = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoIncapacidad = $filtros['codigoIncapacidad'] ?? null;
+            $entidadSalud = $filtros['entidadSalud'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $numeroEps = $filtros['numeroEps'] ?? null;
+            $grupo = $filtros['grupo'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuIncapacidad::class, 'i')
             ->select('i.codigoIncapacidadPk')
             ->addSelect('i.numero as numeroEps')
             ->addSelect('es.nombre as entidad')
@@ -54,36 +76,54 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             ->leftJoin('i.entidadSaludRel', 'es')
             ->leftJoin('i.empleadoRel', 'e')
             ->orderBy('i.codigoIncapacidadPk', 'DESC');
-
-        if ($session->get('filtroRhuIncapacidadCodigoEmpleado') != null) {
-            $queryBuilder->andWhere("i.codigoEmpleadoFk = '{$session->get('filtroRhuIncapacidadCodigoEmpleado')}'");
+        if ($codigoIncapacidad) {
+            $queryBuilder->andWhere("i.codigoIncapacidadPk = '{$codigoIncapacidad}'");
         }
-        if ($session->get('filtroRhuIncapacidadCodigoEntidadSalud') != null) {
-            $queryBuilder->andWhere("i.codigoEntidadSaludFk = '{$session->get('filtroRhuIncapacidadCodigoEntidadSalud')}'");
+        if ($grupo) {
+            $queryBuilder->andWhere("i.codigoGrupoFk = '{$grupo}'");
         }
-        if ($session->get('filtroRhuIncapacidadCodigoGrupo') != null) {
-            $queryBuilder->andWhere("i.codigoGrupoFk = '{$session->get('filtroRhuIncapacidadCodigoGrupo')}'");
+        if ($entidadSalud) {
+            $queryBuilder->andWhere("i.codigoEntidadSaludFk = '{$entidadSalud}'");
         }
-        if ($session->get('filtroRhuIncapacidadNumeroEps') != null) {
-            $queryBuilder->andWhere("i.numeroEps = '{$session->get('filtroRhuIncapacidadNumeroEps')}'");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("i.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-        if ($session->get('filtroRhuIncapacidadLegalizada') != null) {
-            $queryBuilder->andWhere("i.estadoLegalizado = '{$session->get('filtroRhuIncapacidadLegalizada')}'");
+        if ($numeroEps) {
+            $queryBuilder->andWhere("i.numeroEps = '{$numeroEps}'");
         }
-        if ($session->get('filtroRhuIncapacidadEstadoTranscripcion') != null) {
-            $queryBuilder->andWhere("i.estadoTranscripcion = '{$session->get('filtroRhuIncapacidadEstadoTranscripcion')}'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("i.fechaDesde >= '{$fechaDesde} 00:00:00'");
         }
-        if ($session->get('filtroRhuIncapacidadTipoIncapacidad') != null) {
-            $queryBuilder->andWhere("i.codigoIncapacidadTipoFk = '{$session->get('filtroRhuIncapacidadTipoIncapacidad')}'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("i.fechaHasta <= '{$fechaHasta} 23:59:59'");
         }
-        if ($session->get('filtroRhuIncapacidadFechaDesde') != null) {
-            $queryBuilder->andWhere("i.fechaDesde >= '{$session->get('filtroRhuIncapacidadFechaDesde')} 00:00:00'");
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("v.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("v.estadoAutorizado = 1");
+                break;
         }
-        if ($session->get('filtroRhuIncapacidadFechaHasta') != null) {
-            $queryBuilder->andWhere("i.fechaHasta <= '{$session->get('filtroRhuIncapacidadFechaHasta')} 23:59:59'");
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("v.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("v.estadoAprobado = 1");
+                break;
         }
-
-        return $queryBuilder;
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("v.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("v.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('i.codigoIncapacidadPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function buscar()

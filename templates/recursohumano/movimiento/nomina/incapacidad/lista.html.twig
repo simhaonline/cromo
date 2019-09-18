@@ -9,73 +9,53 @@
             </header>
             <div>
                 <div class="widget-body">
+                    {% include 'estructura/buscarEmpleadoRecursohumano.html.twig' %}
                     <div class="form-group form-group-sm">
-                        <label for="txtCodigoConductor" class="col-sm-2 control-label">Empleado:</label>
-                        <div class="col-sm-10">
-                            <div class="row">
-                                <div class="col-lg-2">
-                                    <div class="input-group">
-                                        {{ form_widget(form.codigoEmpleadoPk) }}
-                                    </div>
-                                </div>
-                                <div class="col-lg-10">
-                                    <div class="input-group">
-                                        <input id="form_txtNombreCorto" class="form-control" readonly>
-                                        <span class="input-group-btn">
-                                            <a class="btn btn-default btn-sm"
-                                               href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado',
-                                                   { 'campoCodigo': 'form_codigoEmpleadoPk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                        <label class=" col-sm-1 control-label">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoIncapacidadPk) }}
                         </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label for="form_cboGuiaTipoRel" class="col-sm-2 control-label">Entidad Salud:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.entidadSaludRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
-                        </div>
-                        <label for="form_cboOperacionRel" class="col-sm-2 control-label">Numero Eps:</label>
-                        <div class="col-sm-4">
+                        <label for="form_cboOperacionRel" class="col-sm-1 control-label">Numero Eps:</label>
+                        <div class="col-sm-2">
                             {{ form_widget(form.numeroEps, { 'attr': {'class': 'form-control'} }) }}
                         </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label for="form_cboGuiaTipoRel" class="col-sm-2 control-label">Tipo:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.tipoIncapacidad, { 'attr': {'class': 'form-control'} }) }}
+                        <label for="form_cboGuiaTipoRel" class="col-sm-1 control-label">Tipo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoIncapacidadTipoFk) }}
                         </div>
-                        <label for="form_cboOperacionRel" class="col-sm-2 control-label">Grupo:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.grupoRel, { 'attr': {'class': 'form-control'} }) }}
+                        <label for="form_cboGuiaTipoRel" class="col-sm-1 control-label">Legalizada:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.estadoLegalizado, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label for="form_cboGuiaTipoRel" class="col-sm-2 control-label">Legalizada:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.tipoLegalizada, { 'attr': {'class': 'form-control'} }) }}
+                        <label for="form_cboGuiaTipoRel" class="col-sm-1 control-label">Desde:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.fechaDesde, { 'attr': {'class': 'form-control'} }) }}
                         </div>
-                        <label for="form_cboOperacionRel" class="col-sm-2 control-label">Transcripción:</label>
-                        <div class="col-sm-4">
+                        <label for="form_cboOperacionRel" class="col-sm-1 control-label">Grupo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoGrupoFk) }}
+                        </div>
+                        <label for="form_cboGuiaTipoRel" class="col-sm-1 control-label">Entidad Salud:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoEntidadSaludFk) }}
+                        </div>
+                        <label for="form_cboOperacionRel" class="col-sm-1 control-label">Transcripción:</label>
+                        <div class="col-sm-2">
                             {{ form_widget(form.estadoTranscripcion, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label for="form_cboGuiaTipoRel" class="col-sm-2 control-label">Desde:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.fechaIncapacidadDesde, { 'attr': {'class': 'form-control'} }) }}
+                        <label for="form_cboGuiaTipoRel" class="col-sm-1 control-label">Hasta:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                     </div>
-                    <div class="form-group form-group-sm">
-                        <label for="form_cboGuiaTipoRel" class="col-sm-2 control-label">Hasta:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.fechaIncapacidadHasta, { 'attr': {'class': 'form-control'} }) }}
-                        </div>
-                    </div>
+
                     <div class="form-group form-group-sm">
                         <div class="col-sm-offset-2 col-sm-10">
-                            {{ form_widget(form.btnFiltro, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                         </div>
                     </div>
                 </div>
@@ -109,7 +89,10 @@
             <th>USUARIO</th>
             <th style="text-align: center"></th>
             <th style="text-align: center"></th>
-            <th class="text-center" title="seleccionar todas las incapacidades"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+            <th class="text-center" title="seleccionar todas las incapacidades"><input type="checkbox"
+                                                                                       name="ChkSeleccionarTodos"
+                                                                                       onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')">
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -164,12 +147,18 @@
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arIncapacidades) }}
     </div>
-    <div class="btn-toolbar" style="float: right">
-        <div class="btn-group">
-            <a class="btn btn-default btn-sm"
-               href="{{ path('recursohumano_movimiento_nomina_incapacidad_nuevo', {'id': 0}) }}">Nuevo</a>
-            {{ form_widget(form.btnEliminar) }}
-        </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_movimiento_nomina_incapacidad_nuevo', {'id': 0}) }}">Nuevo</a>
     </div>
     <br/><br/><br/>
 {% endblock %}

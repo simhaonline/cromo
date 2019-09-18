@@ -15,9 +15,26 @@ class RhuSeleccionRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuSeleccion::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoSeleccion = null;
+        $nombre = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoSeleccion = $filtros['codigoSeleccion'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuSeleccion::class, 's')
             ->select('s.codigoSeleccionPk')
             ->addSelect('s.numeroIdentificacion')
@@ -26,16 +43,13 @@ class RhuSeleccionRepository extends ServiceEntityRepository
             ->addSelect('s.celular')
             ->addSelect('s.correo')
             ->addSelect('s.direccion');
-
-        if ($session->get('RhuSeleccion_codigoSeleccionPk')) {
-            $queryBuilder->andWhere("s.codigoSeleccionPk = '{$session->get('RhuSeleccion_codigoSeleccionPk')}'");
+        if ($codigoSeleccion) {
+            $queryBuilder->andWhere("s.codigoSeleccionPk = '{$codigoSeleccion}'");
         }
-
-        if ($session->get('RhuSeleccion_nombreCorto')) {
-            $queryBuilder->andWhere("s.nombreCorto like '%{$session->get('RhuSeleccion_nombreCorto')}%'");
+        if ($nombre) {
+            $queryBuilder->andWhere("s.nombreCorto LIKE '%{$nombre}%'");
         }
-
-        switch ($session->get('RhuSeleccion_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("s.estadoAutorizado = 0");
                 break;
@@ -43,8 +57,7 @@ class RhuSeleccionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("s.estadoAutorizado = 1");
                 break;
         }
-
-        switch ($session->get('RhuSeleccion_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("s.estadoAprobado = 0");
                 break;
@@ -52,13 +65,23 @@ class RhuSeleccionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("s.estadoAprobado = 1");
                 break;
         }
-        return $queryBuilder;
-
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('s.codigoSeleccionPk', 'ASC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
-    
-    public function camposPredeterminados(){
-        $qb = $this-> _em->createQueryBuilder()
-            ->from('App:RecursoHumano\RhuSeleccion','s')
+
+    public function camposPredeterminados()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->from('App:RecursoHumano\RhuSeleccion', 's')
             ->select('s');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();

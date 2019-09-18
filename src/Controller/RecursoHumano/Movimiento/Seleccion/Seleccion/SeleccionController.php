@@ -9,10 +9,15 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuSeleccion;
 use App\Form\Type\RecursoHumano\SeleccionType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class SeleccionController extends ControllerListenerGeneral
+class SeleccionController extends AbstractController
 {
     protected $clase = RhuSeleccion::class;
     protected $claseFormulario = SeleccionType::class;
@@ -29,34 +34,36 @@ class SeleccionController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/movimiento/seleccion/seleccion/lista", name="recursohumano_movimiento_seleccion_seleccion_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoSeleccionPk', TextType::class, array('required' => false))
+            ->add('nombre', TextType::class, ['required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuSeleccion::class)->lista($raw), "Aspirantes");
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() ) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(RhuSeleccion::class)->lista()->getQuery()->execute(), "Selecciones");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arSeleccionados = $request->request->get('ChkSeleccionar');
-                $this->get("UtilidadesModelo")->eliminar(RhuSeleccion::class, $arSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_seleccion_lista'));
-            }
-        }
+        $arSelecciones = $paginator->paginate($em->getRepository(RhuSeleccion::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/seleccion/seleccion/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arSelecciones' => $arSelecciones,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -112,6 +119,20 @@ class SeleccionController extends ControllerListenerGeneral
         return $this->render('recursohumano/movimiento/seleccion/seleccion/detalle.html.twig', [
             'arSeleccionado' => $arSeleccionado
         ]);
+
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoSeleccion' => $form->get('codigoSeleccionPk')->getData(),
+            'nombre' => $form->get('nombre')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        return $filtro;
 
     }
 

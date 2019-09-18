@@ -1,10 +1,117 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
-    <div class="table-responsive" style="padding:0px;">
-        {{ form_start(formBotonera) }}
-        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
-        {{ form_end(formBotonera) }}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">Codigo:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.codigoDocumentalPk, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <label class="col-sm-2 control-label">Autorizado:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.estadoAutorizado, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">Fecha desde</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaDesde, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <label class="col-sm-2 control-label">Aprobado:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">Fecha hasta</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <label class="col-sm-2 control-label">Anulado:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.estadoAnulado, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnFiltro, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+        <tr>
+            <th title="Codigo documental">ID</th>
+            <th title="Fecha">FECHA</th>
+            <th title="Autorizado">AUT</th>
+            <th title="Aprobado"  >APR</th>
+            <th title=Anulado >ANU</th>
+            <th title="Comentario">COMENTARIO</th>
+            <th></th>
+            <th></th>
+            <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
+                                                                     onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arDocumento in arDocumentos %}
+        <tr>
+            <td>{{ arDocumento.codigoDocumentalPk }}</td>
+            <td>{{ arDocumento.fecha | date("Y-m-d")}}</td>
+            <td>{{ arDocumento.comentario }}</td>
+            <td>{{ arDocumento.estadoAutorizado ? "SI":"NO" }}</td>
+            <td>{{ arDocumento.estadoAprobado  ? "SI":"NO" }}</td>
+            <td>{{ arDocumento.estadoAnulado  ? "SI":"NO" }}</td>
+            <td class="text-center">
+                <a href="{{ path('transporte_movimiento_transporte_documental_nuevo',{'id': arDocumento.codigoDocumentalPk }) }}"><i
+                            class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+            </td>
+            <td class="text-center">
+                <a
+                        href="{{ path('transporte_movimiento_transporte_documental_detalle',{'id' :arDocumento.codigoDocumentalPk}) }}">
+                    <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                    </i>
+                </a>
+            </td>
+            <td class="text-center">
+                <input type="checkbox" name="ChkSeleccionar[]" value="{{ arDocumento.codigoDocumentalPk }}" />
+            </td>
+            {% endfor %}
+
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">
+            <span class="badge">{{ arDocumentos.getTotalItemCount }}</span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arDocumentos) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('transporte_movimiento_transporte_documental_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    {{ form_end(form) }}
+
+    <br /><br /><br />
 {% endblock %}

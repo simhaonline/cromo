@@ -13,7 +13,10 @@ use App\Form\Type\Transporte\MonitoreoDetalleType;
 use App\Formato\Transporte\Monitoreo;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
@@ -25,7 +28,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class MonitoreoController extends ControllerListenerGeneral
+class MonitoreoController extends AbstractController
 {
     protected $clase= TteMonitoreo::class;
     protected $claseNombre = "TteMonitoreo";
@@ -36,37 +39,44 @@ class MonitoreoController extends ControllerListenerGeneral
 
    /**
     * @Route("/transporte/movimiento/monitoreo/monitoreo/lista", name="transporte_movimiento_monitoreo_monitoreo_lista")
-    */    
-    public function lista(Request $request)
+    */
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoVehiculoFk', TextType::class, array('required' => false))
+            ->add('fechaInicioDesde', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaFinHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteMonitoreo::class)->lista()->getQuery()->execute(), "Monitoreo");
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TteMonitoreo::class)->lista($raw)->getQuery()->execute(), "Monitoreo");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_monitoreo_monitoreo_lista'));
             }
         }
-
+        $arMonitoreos = $paginator->paginate($em->getRepository(TteMonitoreo::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/monitoreo/monitoreo/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arMonitoreos' => $arMonitoreos,
+            'form' => $form->createView(),
         ]);
 
     }
@@ -170,6 +180,19 @@ class MonitoreoController extends ControllerListenerGeneral
         return $this->render('transporte/movimiento/monitoreo/monitoreo/mapaRegistro.html.twig', [
             'datos' => $arrDatos ?? [],
             'apikey' => $googleMapsApiKey]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro =[
+            'codigoVehiculoFk' => $form->get('codigoVehiculoFk')->getData(),
+            'fechaInicioDesde' => $form->get('fechaInicioDesde')->getData() ?$form->get('fechaInicioDesde')->getData()->format('Y-m-d'): null,
+            'fechaFinHasta' => $form->get('fechaFinHasta')->getData() ?$form->get('fechaFinHasta')->getData()->format('Y-m-d'): null,
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData()
+        ];
+        return $filtro;
     }
 
 }

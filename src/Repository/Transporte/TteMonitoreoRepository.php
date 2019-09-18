@@ -17,9 +17,26 @@ class TteMonitoreoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteMonitoreo::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoVehiculoFk =   null;
+        $fechaInicioDesde =   null;
+        $fechaFinHasta =   null;
+        $estadoAnulado =   null;
+        $estadoAprobado =   null;
+        $estadoAutorizado =   null;
+
+        if($filtros){
+            $codigoVehiculoFk = $filtros['codigoVehiculoFk'];
+            $fechaInicioDesde =  $filtros['fechaInicioDesde'];
+            $fechaFinHasta =  $filtros['fechaFinHasta'];
+            $estadoAnulado = $filtros['estadoAnulado'];
+            $estadoAprobado = $filtros['estadoAprobado'];
+            $estadoAutorizado = $filtros['estadoAutorizado'];
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteMonitoreo::class, 'm')
             ->select('m.codigoMonitoreoPk')
             ->addSelect('m.fechaInicio')
@@ -27,8 +44,9 @@ class TteMonitoreoRepository extends ServiceEntityRepository
             ->addSelect('m.codigoVehiculoFk')
             ->addSelect('m.soporte')
             ->addSelect('m.codigoDespachoFk')
+            ->addSelect('m.codigoDespachoRecogidaFk')
             ->addSelect('c.nombreCorto')
-            ->addSelect('cd.nombre')
+            ->addSelect('cd.nombre as ciudad')
             ->addSelect('m.estadoAutorizado')
             ->addSelect('m.estadoAprobado')
             ->addSelect('m.estadoAnulado')
@@ -39,10 +57,12 @@ class TteMonitoreoRepository extends ServiceEntityRepository
             ->leftJoin('d.ciudadDestinoRel', 'cd')
             ->where('m.codigoMonitoreoPk <> 0')
         ->orderBy('m.fechaRegistro', 'DESC');
-        if ($session->get('TteMonitoreo_codigoVehiculoFk')) {
-            $queryBuilder->andWhere("v.codigoVehiculoPk = '{$session->get('TteMonitoreo_codigoVehiculoFk')}'");
+
+        if ($codigoVehiculoFk) {
+            $queryBuilder->andWhere("v.codigoVehiculoPk = '{$codigoVehiculoFk}'");
         }
-        switch ($session->get('TteMonitoreo_estadoAutorizado')) {
+
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("m.estadoAutorizado = 0");
                 break;
@@ -50,7 +70,8 @@ class TteMonitoreoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("m.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('TteMonitoreo_estadoAnulado')) {
+
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("m.estadoAnulado = 0");
                 break;
@@ -58,7 +79,8 @@ class TteMonitoreoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("m.estadoAnulado = 1");
                 break;
         }
-        switch ($session->get('TteMonitoreo_estadoAprobado')) {
+
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("m.estadoAprobado = 0");
                 break;
@@ -66,14 +88,15 @@ class TteMonitoreoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("m.estadoAprobado = 1");
                 break;
         }
-        if ($session->get('TteMonitoreo_fechaInicioDesde') != null) {
-            $queryBuilder->andWhere("m.fechaInicio >= '{$session->get('TteMonitoreo_fechaInicioDesde')} 00:00:00'");
+
+        if ($fechaInicioDesde) {
+            $queryBuilder->andWhere("m.fechaInicio >= '{$fechaInicioDesde} 00:00:00'");
         }
-        if ($session->get('TteMonitoreo_fechaFinHasta') != null) {
-            $queryBuilder->andWhere("m.fechaFin <= '{$session->get('TteMonitoreo_fechaFinHasta')} 23:59:59'");
+        if ($fechaFinHasta) {
+            $queryBuilder->andWhere("m.fechaFin <= '{$fechaFinHasta} 23:59:59'");
         }
 
-
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 

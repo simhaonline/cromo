@@ -1,5 +1,0 @@
-alter table inv_movimiento_detalle drop foreign key FK_56C4EAFC190F22AE;
-DROP TABLE IF EXISTS inv_orden_compra_detalle;
-DROP TABLE IF EXISTS inv_orden_compra;
-DROP TABLE IF EXISTS inv_orden_compra_tipo;
-DROP TABLE IF EXISTS inv_orden_compra_documento;

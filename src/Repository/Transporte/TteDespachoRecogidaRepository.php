@@ -129,7 +129,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         $queryBuilder->orderBy('dr.fecha', 'DESC');
 
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder;
     }
 
     public function eliminar($arrSeleccionados)

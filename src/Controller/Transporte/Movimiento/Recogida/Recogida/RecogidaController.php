@@ -15,9 +15,12 @@ use App\Formato\Transporte\Recogida;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -25,7 +28,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class RecogidaController extends ControllerListenerGeneral
+class RecogidaController extends AbstractController
 {
     protected $clase = TteRecogida::class;
     protected $claseNombre = "TteRecogida";
@@ -41,37 +44,42 @@ class RecogidaController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/recogida/recogida/lista", name="transporte_movimiento_recogida_recogida_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoClienteFk', IntegerType::class, array('required' => false))
+            ->add('codigoRecogidaPk', IntegerType::class, array('required' => false))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoProgramado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
                 $fechaActual = new \DateTime('now');
-                General::get()->setExportar($em->getRepository(TteRecogida::class)->lista()->getQuery()->execute(), "recogida {$fechaActual->format('ymd')}");
-
+                General::get()->setExportar($em->getRepository(TteRecogida::class)->lista($raw)->getQuery()->execute(), "recogida {$fechaActual->format('ymd')}");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TteRecogida::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('transporte_movimiento_recogida_recogida_lista'));
-            }
-
         }
+        $arRecogidas = $paginator->paginate($em->getRepository(TteRecogida::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/recogida/recogida/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arRecogidas' => $arRecogidas,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -175,6 +183,21 @@ class RecogidaController extends ControllerListenerGeneral
         return $this->render('transporte/movimiento/recogida/recogida/reprogramar.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
+            'codigoRecogidaPk' => $form->get('codigoRecogidaPk')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ?$form->get('fechaHasta')->getData()->format('Y-m-d'): null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'estadoProgramado' => $form->get('estadoProgramado')->getData(),
+        ];
+        return $filtro;
     }
 }
 

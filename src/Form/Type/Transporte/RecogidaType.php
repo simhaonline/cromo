@@ -103,7 +103,7 @@ class   RecogidaType extends AbstractType {
             {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"},
             {"campo":"estadoProgramado",                        "tipo":"bool",      "ayuda":"Programado",                               "titulo":"PRO"},
             {"campo":"estadoRecogido",                          "tipo":"bool",      "ayuda":"Recogido",                                 "titulo":"REC"},
-            {"campo":"estadoDescargado",                        "tipo":"bool",      "ayuda":"Descargado",                               "titulo":"DES"},
+            {"campo":"estadoDescargado",                        "tipo":"bool",      "ayuda":"",                               "titulo":""},
             {"campo":"comentario",                               "tipo":"texto",     "ayuda":"Comentario",                                 "titulo":"COMENTARIO"}
         ]';
         return $campos;

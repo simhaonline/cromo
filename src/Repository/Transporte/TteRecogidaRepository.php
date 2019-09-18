@@ -16,17 +16,36 @@ class TteRecogidaRepository extends ServiceEntityRepository
         parent::__construct($registry, TteRecogida::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r');
-        $queryBuilder
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoClienteFk =  null;
+        $codigoRecogidaPk =  null;
+        $fechaDesde =  null;
+        $fechaHasta = null;
+        $estadoAutorizado =null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+        $estadoProgramado =null;
+        if ($filtros){
+            $codigoClienteFk = $filtros['codigoClienteFk'] ?? null;
+            $codigoRecogidaPk = $filtros['codigoRecogidaPk'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta =$filtros['fechaHasta'] ?? null;
+            $estadoProgramado =$filtros['estadoProgramado'] ?? null;
+            $estadoAutorizado =$filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado =$filtros['estadoAnulado'] ?? null;
+        }
+
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRecogida::class, 'r')
             ->select('r.codigoRecogidaPk')
             ->addSelect('r.codigoOperacionFk')
             ->addSelect('r.fechaRegistro')
             ->addSelect('r.fecha')
-            ->addSelect('r.')
-            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('c.nombreCorto AS clienteNombre')
             ->addSelect('r.direccion')
             ->addSelect('r.anunciante')
             ->addSelect('co.nombre AS ciudad')
@@ -40,15 +59,18 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->addSelect('r.estadoAprobado')
             ->addSelect('r.estadoAnulado')
             ->addSelect('r.estadoDescargado')
+            ->addSelect('r.comentario')
+            ->addSelect('rr.nombre as rutaRecogida')
             ->leftJoin('r.clienteRel', 'c')
-            ->leftJoin('r.ciudadRel', 'co');
-        if ($session->get('TteRecogida_codigoClienteFk')) {
-            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('TteRecogida_codigoClienteFk')}");
+            ->leftJoin('r.ciudadRel', 'co')
+            ->leftJoin('r.rutaRecogidaRel', 'rr');
+        if ($codigoClienteFk) {
+            $queryBuilder->andWhere("r.codigoClienteFk = '{$codigoClienteFk}'");
         }
-        if ($session->get('TteRecogida_codigoRecogidaPk') != '') {
-            $queryBuilder->andWhere("r.codigoRecogidaPk = {$session->get('TteRecogida_codigoRecogidaPk')}");
+        if ($codigoRecogidaPk) {
+            $queryBuilder->andWhere("r.codigoRecogidaPk = '{$codigoRecogidaPk}'");
         }
-        switch ($session->get('TteRecogida_estadoProgramado')) {
+        switch ($estadoProgramado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoProgramado = 0");
                 break;
@@ -56,7 +78,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoProgramado = 1");
                 break;
         }
-        switch ($session->get('TteRecogida_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAutorizado = 0");
                 break;
@@ -64,7 +86,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('TteRecogida_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAprobado = 0");
                 break;
@@ -72,7 +94,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAprobado = 1");
                 break;
         }
-        switch ($session->get('TteRecogida_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAnulado = 0");
                 break;
@@ -80,14 +102,15 @@ class TteRecogidaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAnulado = 1");
                 break;
         }
-        if ($session->get('TteRecogida_fechaDesde') != null) {
-            $queryBuilder->andWhere("r.fecha >= '{$session->get('TteRecogida_fechaDesde')} 00:00:00'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("r.fecha >= '{$fechaDesde} 00:00:00'");
         }
-        if ($session->get('TteRecogida_fechaHasta') != null) {
-            $queryBuilder->andWhere("r.fecha <= '{$session->get('TteRecogid_fechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("r.fecha <= '{$fechaHasta} 23:59:59'");
         }
 
         $queryBuilder->orderBy('r.fecha', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
 
         return $queryBuilder;
 

@@ -154,7 +154,7 @@ class DespachoRecogidaController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(TteDespachoRecogida::class)->lista($raw)->getQuery()->execute(), "Facturas");
+                General::get()->setExportar($em->getRepository(TteDespachoRecogida::class)->lista($raw)->getQuery()->execute(), "DespachosRecogidas");
             }
         }
         $arDespachoRecogidas = $paginator->paginate($em->getRepository(TteDespachoRecogida::class)->lista($raw), $request->query->getInt('page', 1), 30);

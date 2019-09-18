@@ -4,6 +4,7 @@ namespace App\Repository\Cartera;
 
 use App\Entity\Cartera\CarAnticipo;
 use App\Entity\Cartera\CarCliente;
+use App\Entity\Cartera\CarCompromiso;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Financiero\FinTercero;
@@ -125,6 +126,13 @@ class CarClienteRepository extends ServiceEntityRepository
                             $arAnticipo->setClienteRel($arClienteFijo);
                             $em->persist($arAnticipo);
                         }
+
+                        $arCompromisos = $em->getRepository(CarCompromiso::class)->findBy(array('codigoClienteFk' => $arClienteActualizar->getCodigoClientePk()));
+                        foreach ($arCompromisos as $arCompromiso) {
+                            $arCompromiso->setClienteRel($arClienteFijo);
+                            $em->persist($arCompromiso);
+                        }
+                        $em->remove($arClienteActualizar);
                     }
                 }
             }

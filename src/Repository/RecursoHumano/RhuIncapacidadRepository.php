@@ -99,26 +99,26 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         }
         switch ($estadoAutorizado) {
             case '0':
-                $queryBuilder->andWhere("v.estadoAutorizado = 0");
+                $queryBuilder->andWhere("i.estadoAutorizado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("v.estadoAutorizado = 1");
+                $queryBuilder->andWhere("i.estadoAutorizado = 1");
                 break;
         }
         switch ($estadoAprobado) {
             case '0':
-                $queryBuilder->andWhere("v.estadoAprobado = 0");
+                $queryBuilder->andWhere("i.estadoAprobado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("v.estadoAprobado = 1");
+                $queryBuilder->andWhere("i.estadoAprobado = 1");
                 break;
         }
         switch ($estadoAnulado) {
             case '0':
-                $queryBuilder->andWhere("v.estadoAnulado = 0");
+                $queryBuilder->andWhere("i.estadoAnulado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("v.estadoAnulado = 1");
+                $queryBuilder->andWhere("i.estadoAnulado = 1");
                 break;
         }
         $queryBuilder->addOrderBy('i.codigoIncapacidadPk', 'DESC');

@@ -18,9 +18,11 @@ use App\Entity\Transporte\TteFacturaDetalleReliquidar;
 use App\Entity\Transporte\TteFacturaOtro;
 use App\Entity\Transporte\TteFacturaPlanilla;
 
+use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 
+use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TtePrecio;
 use App\Entity\Transporte\TtePrecioDetalle;
 use App\Form\Type\Transporte\FacturaDetalleConceptoType;
@@ -37,12 +39,16 @@ use App\General\General;
 use App\Utilidades\Estandares;
 
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpParser\Node\Stmt\Echo_;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +61,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use App\Utilidades\Mensajes;
 
-class FacturaController extends ControllerListenerGeneral
+class FacturaController extends AbstractController
 {
     protected $clase = TteFactura::class;
     protected $claseNombre = "TteFactura";
@@ -72,35 +78,69 @@ class FacturaController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/comercial/factura/lista", name="transporte_movimiento_comercial_factura_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
+            ->add('numero', IntegerType::class, array('required' => false))
+            ->add('codigoFacturaPk', IntegerType::class, array('required' => false))
+            ->add('codigoFacturaTipoFk', EntityType::class, [
+                'class' => TteFacturaTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('ft')
+                        ->orderBy('ft.codigoFacturaTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('codigoOperacionFk', EntityType::class, [
+                'class' => TteOperacion::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.codigoOperacionPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteFactura::class)->lista()->getQuery()->getResult(), "Facturas");
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(TteFactura::class)->listaProvicional($raw)->getQuery()->getResult(), "Facturas");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_lista'));
             }
         }
 
+        $arFacturas = $paginator->paginate($em->getRepository(TteFactura::class)->listaProvicional($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('transporte/movimiento/comercial/factura/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arFacturas' => $arFacturas,
+            'form' => $form->createView(),
         ]);
 
     }
@@ -830,6 +870,35 @@ class FacturaController extends ControllerListenerGeneral
         return $this->render('transporte/movimiento/comercial/factura/referencia.html.twig', [
             'arFacturas' => $arFacturas,
             'form' => $form->createView()]);
+    }
+
+    public function getFiltros($form)
+    {
+         $filtro = [
+            'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'codigoFacturaPk' => $form->get('codigoFacturaPk')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ?$form->get('fechaHasta')->getData()->format('Y-m-d'): null,
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData()
+        ];
+
+        $arFacturaTipoFk = $form->get('codigoFacturaTipoFk')->getData();
+        $arOperacion = $form->get('codigoOperacionFk')->getData();
+        if (is_object($arFacturaTipoFk)) {
+            $filtro['codigoFacturaTipoFk'] = $arFacturaTipoFk->getCodigoFacturaTipoPk();
+        } else {
+            $filtro['codigoFacturaTipoFk'] = $arFacturaTipoFk;
+        }
+
+        if (is_object($arOperacion)) {
+            $filtro['codigoOperacionFk'] = $arOperacion->getCodigoOperacionPk();
+        } else {
+            $filtro['codigoOperacionFk'] = $arOperacion;
+        }
+        return $filtro;
     }
 }
 

@@ -122,6 +122,108 @@ class TteFacturaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    /*
+     *evaluar si es necesaria a futuro
+     * andres cano
+     */
+    public function listaProvicional($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoClienteFk= null;
+        $numero = null;
+        $codigoFacturaPk = null;
+        $codigoFacturaTipoFk = null;
+        $codigoOperacionFk = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAprobado = null;
+        $estadoAutorizado = null;
+        $estadoAnulado = null;
+
+        if ($filtros){
+            $codigoFacturaPk = $filtros['codigoFacturaPk']??null;
+            $codigoClienteFk= $filtros['codigoClienteFk']??null;
+            $numero = $filtros['numero']??null;
+            $codigoFacturaTipoFk = $filtros['codigoFacturaTipoFk']??null;
+            $codigoOperacionFk = $filtros['codigoOperacionFk']??null;
+            $fechaDesde = $filtros['fechaDesde']??null;
+            $fechaHasta = $filtros['fechaHasta']??null;
+            $estadoAprobado = $filtros['estadoAprobado']??null;
+            $estadoAutorizado = $filtros['estadoAutorizado']??null;
+            $estadoAnulado = $filtros['estadoAnulado']??null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
+            ->select('f.codigoFacturaPk')
+            ->addSelect('f.codigoFacturaClaseFk AS clase')
+            ->addSelect('ft.nombre AS facturaTipo')
+            ->addSelect('f.numero')
+            ->addSelect('f.fecha')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('f.plazoPago')
+            ->addSelect('f.guias')
+            ->addSelect('f.vrFlete')
+            ->addSelect('f.vrManejo')
+            ->addSelect('f.vrSubtotal')
+            ->addSelect('f.vrTotal')
+            ->addSelect('f.estadoAnulado')
+            ->addSelect('f.estadoAprobado')
+            ->addSelect('f.estadoAutorizado')
+            ->leftJoin('f.clienteRel', 'c')
+            ->leftJoin('f.facturaTipoRel', 'ft')
+            ->where('f.codigoFacturaPk <> 0');
+
+        if($numero){
+            $queryBuilder->andWhere("f.numero = '{$numero}'");
+        }
+        if($codigoFacturaPk){
+            $queryBuilder->andWhere("f.codigoFacturaPk = '{$codigoFacturaPk}'");
+        }
+        if ($codigoClienteFk) {
+            $queryBuilder->andWhere("f.codigoClienteFk = '{$codigoClienteFk}'");
+        }
+        if ($codigoFacturaTipoFk) {
+            $queryBuilder->andWhere("f.codigoFacturaTipoFk = '{$codigoFacturaTipoFk}'");
+        }
+        if ($codigoOperacionFk) {
+            $queryBuilder->andWhere("f.codigoOperacionFk = '{$codigoOperacionFk}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("f.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("f.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+    }
+
     public function listaInforme()
     {
         $session = new Session();

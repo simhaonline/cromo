@@ -10,17 +10,19 @@ use App\Entity\Transporte\TteNovedadTipo;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class NovedadController extends ControllerListenerGeneral
+class NovedadController extends AbstractController
 {
     protected $class= TteNovedad::class;
     protected $claseNombre = "TteNovedad";
@@ -32,21 +34,15 @@ class NovedadController extends ControllerListenerGeneral
     /**
      * @Route("/transporte/movimiento/transporte/novedad/lista", name="transporte_movimiento_transporte_novedad_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {    $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
-
         $form = $this->createFormBuilder()
-            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroNovadadCodigoCliente')])
-            ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroNovadadNombreCorto'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
-            ->add('guiaNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroNormaCodigo')])
-            ->add('fechaReporteDesde', DateType::class, ['required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd',
-                'data' => $session->get('filtroNovadadFechaReporteDesde') ? date_create($session->get('filtroNovadadFechaReporteDesde')): null])
-            ->add('fechaReporteHasta', DateType::class, ['required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd',
-                'data' => $session->get('filtroNovadadFechaReporteHasta') ? date_create($session->get('filtroNovadadFechaReporteHasta')): null])
-            ->add('codigoNovedadTipo',EntityType::class,[
-                'required' => true,
+            ->add('codigoClienteFk', NumberType::class, ['required' => false])
+            ->add('guiaNumero', NumberType::class, ['required' => false])
+            ->add('fechaReporteDesde', DateType::class, ['required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaReporteHasta', DateType::class, ['required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('codigoNovedadTipoFK',EntityType::class,[
                 'class' => TteNovedadTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('n')
@@ -56,33 +52,26 @@ class NovedadController extends ControllerListenerGeneral
                 'placeholder'=>'Todos',
                 'required'=>false
             ])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $arNovedadTipo = $form->get('codigoNovedadTipo')->getData();
-                $session->set('filtroNovadadCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                $session->set('filtroNovadadNumeroGuia', $form->get('guiaNumero')->getData());
-                $session->set('filtroNovadadFechaReporteDesde',  $form->get('fechaReporteDesde')->getData() ?$form->get('fechaReporteDesde')->getData()->format('Y-m-d'): null);
-                $session->set('filtroNovadadFechaReporteHasta',  $form->get('fechaReporteHasta')->getData() ?$form->get('fechaReporteHasta')->getData()->format('Y-m-d'): null);
-                if ($session->get('filtroNovadadCodigoCliente') == ''){
-                    $session->set('filtroNovadadNombreCorto', '');
-                }else{
-                    $session->set('filtroNovadadNombreCorto', $form->get('txtNombreCorto')->getData());
-                }
-                if ($arNovedadTipo != ''){
-                    $session->set('filtroTteNovedadcodigoNovedadTipo', $arNovedadTipo->getCodigoNovedadTipoPk());
-                }else{
-                    $session->set('filtroTteNovedadcodigoNovedadTipo', null);
-                }
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+
             }
             if ($form->get('btnExcel')->isClicked()){
-                General::get()->setExportar($em->getRepository(TteNovedad::class)->lista()->getQuery()->getResult(), "Novedad");
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(TteNovedad::class)->lista($raw)->getQuery()->getResult(), "Novedad");
             }
         }
-        $arNovedades = $paginator->paginate($em->getRepository(TteNovedad::class)->lista(), $request->query->getInt('page', 1), 30);
+        $arNovedades = $paginator->paginate($em->getRepository(TteNovedad::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('transporte/movimiento/transporte/novedad/lista.html.twig', [
             'arNovedades'=>$arNovedades,
             'form' => $form->createView()
@@ -99,6 +88,24 @@ class NovedadController extends ControllerListenerGeneral
         return $this->render('transporte/movimiento/transporte/novedad/detalle.html.twig', array(
             'arNovedad' => $arNovedad,
         ));
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
+            'guiaNumero' => $form->get('guiaNumero')->getData(),
+            'fechaReporteDesde'=> $form->get('fechaReporteDesde')->getData() ?$form->get('fechaReporteDesde')->getData()->format('Y-m-d'): null,
+            'fechaReporteHasta'=> $form->get('fechaReporteHasta')->getData() ?$form->get('fechaReporteHasta')->getData()->format('Y-m-d'): null,
+        ];
+
+        $arCodigoNovedadTipo = $form->get('codigoNovedadTipoFK')->getData();
+        if (is_object($arCodigoNovedadTipo)) {
+            $filtro['codigoNovedadTipoFK'] = $arCodigoNovedadTipo->getCodigoNovedadTipoPk();
+        }else{
+            $filtro['codigoNovedadTipoFK'] =  $arCodigoNovedadTipo;
+        }
+        return $filtro;
     }
 }
 

@@ -14,32 +14,75 @@ class RhuSolicitudRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuSolicitud::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoSolicitud = null;
+        $nombre = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoSolicitud = $filtros['codigoSolicitud'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuSolicitud::class, 's')
             ->select('s.codigoSolicitudPk')
+            ->addSelect('m.nombre AS motivo')
             ->addSelect('s.cantidadSolicitada')
             ->addSelect('s.nombre')
             ->addSelect('s.salarioFijo')
             ->addSelect('s.salarioVariable')
             ->addSelect('s.edadMinima')
-            ->addSelect('s.edadMaxima');
-
-        if ($session->get('RhuSolicitud_codigoSolicitudPk')) {
-            $queryBuilder->andWhere("RhuSolicitud_codigoSolicitudPk = '{$session->get('RhuSolicitud_codigoSolicitudPk')}'");
+            ->addSelect('s.edadMaxima')
+            ->addSelect('s.estadoAprobado')
+        ->leftJoin('s.solicitudMotivoRel', 'm');
+        if ($codigoSolicitud) {
+            $queryBuilder->andWhere("s.codigoSolicitudPk = '{$codigoSolicitud}'");
         }
-
-        if ($session->get('RhuSolicitud_nombre')) {
-            $queryBuilder->andWhere("RhuSolicitud_nombre = '{$session->get('RhuSolicitud_nombre')}'");
+        if ($nombre) {
+            $queryBuilder->andWhere("s.nombreCorto LIKE '%{$nombre}%'");
         }
-
-        return $queryBuilder;
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('s.codigoSolicitudPk', 'ASC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
-    
-    public function camposPredeterminados(){
-        $qb = $this-> _em->createQueryBuilder()
-            ->from('App:RecursoHumano\RhuSolicitud','s')
+
+    public function camposPredeterminados()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->from('App:RecursoHumano\RhuSolicitud', 's')
             ->select('s.codigoSolicitudPk AS ID')
             ->addSelect('s.fecha AS FECHA')
             ->addSelect('s.nombre AS NOMBRE')

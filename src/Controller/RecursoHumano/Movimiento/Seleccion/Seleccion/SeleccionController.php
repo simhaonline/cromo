@@ -57,7 +57,7 @@ class SeleccionController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(RhuSeleccion::class)->lista($raw), "Aspirantes");
+                General::get()->setExportar($em->getRepository(RhuSeleccion::class)->lista($raw), "Selecciones");
             }
         }
         $arSelecciones = $paginator->paginate($em->getRepository(RhuSeleccion::class)->lista($raw), $request->query->getInt('page', 1), 30);

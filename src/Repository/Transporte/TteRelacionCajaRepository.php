@@ -19,9 +19,24 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
     /**
      * @return \rctrine\ORM\QueryBuilder
      */
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAnulado = null;
+        $estadoAprobado = null;
+        $estadoAutorizado = null;
+        if ($filtros){
+            $fechaDesde = $filtros['fechaDesde']??null;
+            $fechaHasta = $filtros['fechaHasta']??null;
+            $estadoAnulado = $filtros['estadoAnulado']??null;
+            $estadoAprobado = $filtros['estadoAprobado']??null;
+            $estadoAutorizado = $filtros['estadoAutorizado']??null;
+        }
+
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRelacionCaja::class, 'rc');
         $queryBuilder
             ->select('rc.codigoRelacionCajaPk')
@@ -34,8 +49,8 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
             ->addSelect('rc.estadoAprobado')
             ->addSelect('rc.estadoAnulado')
             ->where('rc.codigoRelacionCajaPk <> 0');
-        $queryBuilder->orderBy('rc.fecha', 'DESC');
-        switch ($session->get('TteRelacionCaja_estadoAutorizado')) {
+
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("rc.estadoAutorizado = 0");
                 break;
@@ -43,7 +58,7 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("rc.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('TteRelacionCaja_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("rc.estadoAprobado = 0");
                 break;
@@ -51,7 +66,7 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("rc.estadoAprobado = 1");
                 break;
         }
-        switch ($session->get('TteRelacionCaja_estadoAnulado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("rc.estadoAnulado = 0");
                 break;
@@ -59,13 +74,16 @@ class TteRelacionCajaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("rc.estadoAnulado = 1");
                 break;
         }
-        if ($session->get('TteRelacionCaja_fechaDesde') != null) {
-            $queryBuilder->andWhere("rc.fecha >= '{$session->get('TteRelacionCaja_fechaDesde')} 00:00:00'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("rc.fecha >= '{$fechaDesde} 00:00:00'");
         }
 
-        if ($session->get('TteRelacionCaja_fechaHasta') != null) {
-            $queryBuilder->andWhere("rc.fecha <= '{$session->get('TteRelacionCaja_fechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("rc.fecha <= '{$fechaHasta} 23:59:59'");
         }
+
+        $queryBuilder->orderBy('rc.fecha', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 

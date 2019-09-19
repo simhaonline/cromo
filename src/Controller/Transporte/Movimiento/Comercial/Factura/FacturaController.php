@@ -155,11 +155,10 @@ class FacturaController extends AbstractController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/comercial/factura/detalle/{id}", name="transporte_movimiento_comercial_factura_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator ,$id)
     {
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TteFactura::class)->find($id);
-        $paginator = $this->get('knp_paginator');
         $form = Estandares::botonera($arFactura->getEstadoAutorizado(), $arFactura->getEstadoAprobado(), $arFactura->getEstadoAnulado());
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnRetirarPlanilla = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -278,7 +277,13 @@ class FacturaController extends AbstractController
             }
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
-        $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
+        $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('PageFacturaPlanillas', 1), 10,
+            array(
+                'pageParameterName' => 'PageFacturaPlanillas',
+                'sortFieldParameterName' => 'sortPageFacturaPlanillas',
+                'sortDirectionParameterName' => 'directionPageFacturaPlanillas',
+            )
+        );
         $query = $this->getDoctrine()->getRepository(TteFacturaDetalleConcepto::class)->listaFacturaDetalle($id);
         $arFacturaDetallesConceptos = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         $arFacturaDetalles = $this->getDoctrine()->getRepository(TteFacturaDetalle::class)->factura($id);

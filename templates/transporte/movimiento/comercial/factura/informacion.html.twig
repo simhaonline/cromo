@@ -27,7 +27,7 @@
         <td class="titulo">REFERENCIA:</td>
         <td class="td-in-well">
             {% if arFactura.codigoFacturaClaseFk == 'NC' %}
-                COD: {{ arFactura.codigoFacturaReferenciaFk }} NUM: {{ arFacturaReferencia.numero }}
+                COD: {{ arFactura.codigoFacturaReferenciaFk  | default("") }} NUM: {{ arFacturaReferencia.numero   | default("") }}
                 {% if arFactura.codigoFacturaReferenciaFk == null and arFactura.estadoAutorizado == 0 %}
                     <a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('transporte_movimiento_comercial_factura_referencia_nc', {'codigoFactura': arFactura.codigoFacturaPk }) }}', 'FacturaAdicionarGuia', 600, 900)">Agregar</a>
                 {% endif %}

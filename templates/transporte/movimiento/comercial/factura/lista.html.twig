@@ -163,7 +163,11 @@
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('transporte_movimiento_comercial_factura_nuevo', {'id': 0}) }}">Nuevo</a>
+           href="{{ path('transporte_movimiento_comercial_factura_nuevo', {'id': 0, 'clase': 'FA'}) }}">Nuevo factura</a>
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('transporte_movimiento_comercial_factura_nuevo', {'id': 0, 'clase': 'NC'}) }}">Nuevo nota credito</a>
     </div>
     {{ form_end(form) }}
 

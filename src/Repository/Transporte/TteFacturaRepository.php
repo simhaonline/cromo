@@ -173,7 +173,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->leftJoin('f.clienteRel', 'c')
             ->leftJoin('f.facturaTipoRel', 'ft')
             ->where('f.codigoFacturaPk <> 0');
-
+        $queryBuilder->orderBy('f.codigoFacturaPk', 'DESC');
         if($numero){
             $queryBuilder->andWhere("f.numero = '{$numero}'");
         }

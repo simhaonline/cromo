@@ -20,7 +20,9 @@ use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -30,7 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PedidoController extends ControllerListenerGeneral
+class PedidoController extends AbstractController
 {
     protected $clase = TurPedido::class;
     protected $claseNombre = "TurPedido";
@@ -47,11 +49,10 @@ class PedidoController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/turno/movimiento/venta/pedido/lista", name="turno_movimiento_venta_pedido_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('codigoClienteFk', TextType::class, array('required' => false))
             ->add('numero', TextType::class, array('required' => false))
@@ -66,32 +67,36 @@ class PedidoController extends ControllerListenerGeneral
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurPedidoFechaDesde') ? date_create($session->get('filtroTurPedidoFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurPedidoFechaHasta') ? date_create($session->get('filtroTurPedidoFechaHasta')): null])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $arPedidoTipo = $form->get('codigoPedidoTipoFk')->getData();
-            $session->set('filtroTurPedidoCodigoCliente', $form->get('codigoClienteFk')->getData());
-            $session->set('filtroTurPedidoNumero', $form->get('numero')->getData());
-            $session->set('filtroTurPedidoCodigoPedido', $form->get('codigoPedidoPk')->getData());
-            if ($arPedidoTipo != '') {
-                $session->set('filtroTurPedidoCodigoPedidoTipo', $arPedidoTipo->getCodigoPedidoTipoPk());
-            } else {
-                $session->set('filtroTurPedidoCodigoPedidoTipo', null);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-            $session->set('filtroTurPedidoEstadoAutorizado', $form->get('estadoAutorizado')->getData());
-            $session->set('filtroTurPedidoEstadoAprobado', $form->get('estadoAprobado')->getData());
-            $session->set('filtroTurPedidoEstadoAnulado', $form->get('estadoAnulado')->getData());
-            $session->set('filtroTurPedidoFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-            $session->set('filtroTurPedidoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(TurPedido::class)->listaPedido($raw)->getQuery()->execute(), "Pedidos");
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TurPedido::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('turno_movimiento_comercial_pedido_lista'));
+            }
         }
-        $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->lista(), $request->query->getInt('page', 1), 30);
+        $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->listaPedido($raw), $request->query->getInt('page', 1), 30);
         return $this->render('turno/movimiento/venta/pedido/lista.html.twig', [
             'arPedidos' => $arPedidos,
             'form' => $form->createView()
@@ -158,9 +163,8 @@ class PedidoController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/turno/movimiento/venta/pedido/detalle/{id}", name="turno_movimiento_venta_pedido_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator, $id)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arPedido = $em->getRepository(TurPedido::class)->find($id);
         $form = Estandares::botonera($arPedido->getEstadoAutorizado(), $arPedido->getEstadoAprobado(), $arPedido->getEstadoAnulado());
@@ -248,7 +252,7 @@ class PedidoController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if($id == 0) {
+                if ($id == 0) {
                     $arPedidoDetalle->setPorcentajeIva($arPedidoDetalle->getConceptoRel()->getPorcentajeIva());
                     $arPedidoDetalle->setPorcentajeBaseIva(100);
                 }
@@ -264,6 +268,30 @@ class PedidoController extends ControllerListenerGeneral
             'arPedido' => $arPedido,
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $fitro = [
+            'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'codigoPedidoPk' => $form->get('codigoPedidoPk')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ?$form->get('fechaHasta')->getData()->format('Y-m-d'): null,
+
+        ];
+        $arPedidoTipo = $form->get('codigoPedidoTipoFk')->getData();
+
+        if ( is_object($arPedidoTipo)) {
+            $fitro['codigoPedidoTipoFk'] = $arPedidoTipo->getCodigoPedidoTipoPk();
+        } else {
+            $fitro['codigoPedidoTipoFk'] = $arPedidoTipo;
+        }
+        return $fitro;
+
     }
 
 }

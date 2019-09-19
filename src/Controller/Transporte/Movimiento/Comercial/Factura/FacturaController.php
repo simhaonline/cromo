@@ -355,10 +355,9 @@ class FacturaController extends AbstractController
     /**
      * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/cumplido/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_factura_detalle_adicionar_guia_cumplido")
      */
-    public function detalleAdicionarGuiaCumplido(Request $request, $codigoFactura, $codigoFacturaPlanilla)
+    public function detalleAdicionarGuiaCumplido(Request $request,  PaginatorInterface $paginator,$codigoFactura, $codigoFacturaPlanilla)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $arFacturaPlanilla = NULL;
         if ($codigoFacturaPlanilla != 0) {
@@ -421,10 +420,9 @@ class FacturaController extends AbstractController
     /**
      * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/archivo/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_factura_detalle_adicionar_guia_archivo")
      */
-    public function detalleAdicionarGuiaArchivo(Request $request, $codigoFactura, $codigoFacturaPlanilla)
+    public function detalleAdicionarGuiaArchivo(Request $request, PaginatorInterface $paginator,$codigoFactura, $codigoFacturaPlanilla)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $arFacturaPlanilla = NULL;
         if ($codigoFacturaPlanilla != 0) {
@@ -523,10 +521,9 @@ class FacturaController extends AbstractController
     /**
      * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/planilla/guia/{codigoFactura}/{codigoFacturaPlanilla}", name="transporte_movimiento_comercial_factura_detalle_adicionar_planilla_guia")
      */
-    public function detalleAdicionarGuiaPlanilla(Request $request, $codigoFactura, $codigoFacturaPlanilla)
+    public function detalleAdicionarGuiaPlanilla(Request $request, PaginatorInterface $paginator,$codigoFactura, $codigoFacturaPlanilla)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $arFacturaPlanilla = $em->getRepository(TteFacturaPlanilla::class)->find($codigoFacturaPlanilla);
         $form = $this->createFormBuilder()
@@ -648,11 +645,10 @@ class FacturaController extends AbstractController
     /**
      * @Route("/transporte/movimiento/comercial/factura/detalle/adicionar/guia/nc/{codigoFactura}", name="transporte_movimiento_comercial_factura_detalle_adicionar_nc_guia")
      */
-    public function detalleAdicionarGuiaNc(Request $request, $codigoFactura)
+    public function detalleAdicionarGuiaNc(Request $request, PaginatorInterface $paginator,$codigoFactura)
     {
         $em = $this->getDoctrine()->getManager();
         $session = new Session();
-        $paginator = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNumero')])
@@ -847,11 +843,10 @@ class FacturaController extends AbstractController
     /**
      * @Route("/transporte/movimiento/comercial/factura/referencia/nc/{codigoFactura}", name="transporte_movimiento_comercial_factura_referencia_nc")
      */
-    public function referencia(Request $request, $codigoFactura)
+    public function referencia(Request $request,PaginatorInterface $paginator,$codigoFactura)
     {
         $em = $this->getDoctrine()->getManager();
         $session = new Session();
-        $paginator = $this->get('knp_paginator');
         $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteFacturaNumero')])

@@ -32,6 +32,11 @@ class TurContratoDetalle
     private $codigoConceptoFk;
 
     /**
+     * @ORM\Column(name="codigo_item_fk", type="integer", nullable=true)
+     */
+    private $codigoItemFk;
+
+    /**
      * @ORM\Column(name="codigo_modalidad_fk", type="string", length=10, nullable=true)
      */
     private $codigoModalidadFk;
@@ -197,6 +202,12 @@ class TurContratoDetalle
      * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
      */
     protected $conceptoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurItem", inversedBy="contratosDetallesItemRel")
+     * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
+     */
+    protected $itemRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurModalidad", inversedBy="contratosDetallesModalidadRel")
@@ -874,6 +885,38 @@ class TurContratoDetalle
     public function setPedidosDetallesContratoDetalleRel($pedidosDetallesContratoDetalleRel): void
     {
         $this->pedidosDetallesContratoDetalleRel = $pedidosDetallesContratoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoItemFk()
+    {
+        return $this->codigoItemFk;
+    }
+
+    /**
+     * @param mixed $codigoItemFk
+     */
+    public function setCodigoItemFk($codigoItemFk): void
+    {
+        $this->codigoItemFk = $codigoItemFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemRel()
+    {
+        return $this->itemRel;
+    }
+
+    /**
+     * @param mixed $itemRel
+     */
+    public function setItemRel($itemRel): void
+    {
+        $this->itemRel = $itemRel;
     }
 
 

@@ -5,6 +5,7 @@ namespace App\Form\Type\RecursoHumano;
 use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Compra\ComCuentaPagarTipo;
 use App\Entity\RecursoHumano\RhuPagoTipo;
+use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -22,7 +23,7 @@ class PagoTipoType extends AbstractType
             ->add('codigoPagoTipoPk', TextType::class, ['required' => true, 'label' => 'Codigo pago tipo pk:'])
             ->add('nombre', TextType::class, ['required' => true, 'label' => 'Nombre:'])
             ->add('cuentaPagarTipoRel', EntityType::class, [
-                'class' => ComCuentaPagarTipo::class,
+                'class' => TesCuentaPagarTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('cp')
                         ->orderBy('cp.nombre', 'ASC');

@@ -54,15 +54,6 @@ class ContratoType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => true
             ])
-            ->add('costoGrupoRel', EntityType::class, [
-                'class' => RhuCostoGrupo::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('r')
-                        ->orderBy('r.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'required' => true
-            ])
             ->add('clasificacionRiesgoRel', EntityType::class, [
                 'class' => RhuClasificacionRiesgo::class,
                 'query_builder' => function (EntityRepository $er) {

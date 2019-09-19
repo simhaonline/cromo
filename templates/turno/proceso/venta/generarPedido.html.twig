@@ -28,6 +28,7 @@
             <th>NIT</th>
             <th>CLIENTE</th>
             <th>SECTOR</th>
+            <th>F_GENERACION</th>
             <th>H</th>
             <th>HD</th>
             <th>HN</th>
@@ -45,6 +46,7 @@
                 <td>{{ arContrato.clienteNumeroIdentificacion }}</td>
                 <td>{{ arContrato.clienteNombreCorto }}</td>
                 <td>{{ arContrato.sectorNombre }}</td>
+                <td>{{ arContrato.fechaGeneracion | date('Y-m-d') }}</td>
                 <td>{{ arContrato.horas }}</td>
                 <td>{{ arContrato.horasDiurnas }}</td>
                 <td>{{ arContrato.horasNocturnas }}</td>

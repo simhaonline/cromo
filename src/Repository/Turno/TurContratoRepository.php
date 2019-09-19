@@ -331,6 +331,7 @@ class TurContratoRepository extends ServiceEntityRepository
             ->addSelect('c.horasNocturnas')
             ->addSelect('c.estadoAutorizado')
             ->addSelect('c.estadoCerrado')
+            ->addSelect('c.fechaGeneracion')
             ->addSelect('cli.numeroIdentificacion as clienteNumeroIdentificacion')
             ->addSelect('cli.nombreCorto as clienteNombreCorto')
             ->addSelect('sec.nombre as sectorNombre')
@@ -416,6 +417,7 @@ class TurContratoRepository extends ServiceEntityRepository
 
                         $arPedidoDetalle->setCantidad($arContratoDetalle->getCantidad());
                         $arPedidoDetalle->setConceptoRel($arContratoDetalle->getConceptoRel());
+                        $arPedidoDetalle->setItemRel($arContratoDetalle->getItemRel());
                         $arPedidoDetalle->setVrSalarioBase($arContratoDetalle->getVrSalarioBase());
                         $arPedidoDetalle->setModalidadRel($arContratoDetalle->getModalidadRel());
                         $arPedidoDetalle->setPuestoRel($arContratoDetalle->getPuestoRel());

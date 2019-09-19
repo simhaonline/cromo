@@ -24,7 +24,7 @@ class TurPuesto
     private $codigoClienteFk;
 
     /**
-     * @ORM\Column(name="codigo_puesto_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_puesto_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoPuestoTipoFk;
 
@@ -190,6 +190,22 @@ class TurPuesto
     /**
      * @return mixed
      */
+    public function getCodigoPuestoTipoFk()
+    {
+        return $this->codigoPuestoTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoPuestoTipoFk
+     */
+    public function setCodigoPuestoTipoFk($codigoPuestoTipoFk): void
+    {
+        $this->codigoPuestoTipoFk = $codigoPuestoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getNombre()
     {
         return $this->nombre;
@@ -297,6 +313,22 @@ class TurPuesto
     public function setCodigoCiudadFk($codigoCiudadFk): void
     {
         $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContacto()
+    {
+        return $this->contacto;
+    }
+
+    /**
+     * @param mixed $contacto
+     */
+    public function setContacto($contacto): void
+    {
+        $this->contacto = $contacto;
     }
 
     /**
@@ -430,6 +462,22 @@ class TurPuesto
     /**
      * @return mixed
      */
+    public function getPuestoTipoRel()
+    {
+        return $this->puestoTipoRel;
+    }
+
+    /**
+     * @param mixed $puestoTipoRel
+     */
+    public function setPuestoTipoRel($puestoTipoRel): void
+    {
+        $this->puestoTipoRel = $puestoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPedidosDetallesPuestoRel()
     {
         return $this->pedidosDetallesPuestoRel;
@@ -457,54 +505,6 @@ class TurPuesto
     public function setContratosDetallesPuestoRel($contratosDetallesPuestoRel): void
     {
         $this->contratosDetallesPuestoRel = $contratosDetallesPuestoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoPuestoTipoFk()
-    {
-        return $this->codigoPuestoTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoPuestoTipoFk
-     */
-    public function setCodigoPuestoTipoFk($codigoPuestoTipoFk): void
-    {
-        $this->codigoPuestoTipoFk = $codigoPuestoTipoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPuestoTipoRel()
-    {
-        return $this->puestoTipoRel;
-    }
-
-    /**
-     * @param mixed $puestoTipoRel
-     */
-    public function setPuestoTipoRel($puestoTipoRel): void
-    {
-        $this->puestoTipoRel = $puestoTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContacto()
-    {
-        return $this->contacto;
-    }
-
-    /**
-     * @param mixed $contacto
-     */
-    public function setContacto($contacto): void
-    {
-        $this->contacto = $contacto;
     }
 
     /**

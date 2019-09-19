@@ -32,8 +32,9 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th title="Concepto">PUESTO</th>
                             <th title="Concepto">CONCEPTO</th>
+                            <th title="Item">ITEM</th>
+                            <th title="Puesto">PUESTO</th>
                             <th title="Modalidad">MOD</th>
                             <th title="Fecha desde">DES</th>
                             <th title="Fecha hasta">HAS</th>
@@ -65,8 +66,9 @@
                             <td> {{ arContratoDetalle.codigoContratoDetallePk }}</td> <input type="hidden"
                                                                                              name="arrCodigo[]"
                                                                                              value="{{ arContratoDetalle.codigoContratoDetallePk }}">
-                            <td>{{ arContratoDetalle.puesto }}</td>
                             <td>{{ arContratoDetalle.conceptoNombre }}</td>
+                            <td>{{ arContratoDetalle.itemNombre }}</td>
+                            <td>{{ arContratoDetalle.puesto }}</td>
                             <td>{{ arContratoDetalle.modalidadNombre }}</td>
                             <td>{{ arContratoDetalle.fechaDesde | date('Y-m-d') }}</td>
                             <td>{{ arContratoDetalle.fechaHasta | date('Y-m-d') }}</td>

@@ -12,8 +12,7 @@ class TurPuestoTipo
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_puesto_tipo_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_puesto_tipo_pk", type="string", length=10)
      */
     private $codigoPuestoTipoPk;
 
@@ -74,6 +73,7 @@ class TurPuestoTipo
     {
         $this->puestosPuestoTipoRel = $puestosPuestoTipoRel;
     }
+
 
 
 }

@@ -18,10 +18,16 @@
                     <div class="col-sm-4">
                         {{ form_widget(form.conceptoRel) }}
                         {{ form_errors(form.conceptoRel) }}
-
                     </div>
-                    <label class="col-sm-2 control-label">Puesto:</label>
+                    <label class="col-sm-2 control-label">Item:</label>
                     <div class="col-sm-4">
+                        {{ form_widget(form.itemRel) }}
+                        {{ form_errors(form.itemRel) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Puesto:</label>
+                    <div class="col-sm-10">
                         {{ form_widget(form.puestoRel) }}
                         {{ form_errors(form.puestoRel) }}
 

@@ -19,7 +19,7 @@ class TurConfiguracion
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_concepto_pk", type="integer")
+     * @ORM\Column(name="codigo_configuracion_pk", type="integer")
      */
     private $codigoConfiguracionPk;
 

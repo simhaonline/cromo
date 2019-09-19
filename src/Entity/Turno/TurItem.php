@@ -52,6 +52,16 @@ class TurItem
     protected $impuestoIvaVentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurContratoDetalle", mappedBy="itemRel")
+     */
+    protected $contratosDetallesItemRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="itemRel")
+     */
+    protected $pedidosDetallesItemRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurFacturaDetalle", mappedBy="itemRel")
      */
     protected $facturasDetallesItemRel;
@@ -183,6 +193,38 @@ class TurItem
     public function setFacturasDetallesItemRel($facturasDetallesItemRel): void
     {
         $this->facturasDetallesItemRel = $facturasDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratosDetallesItemRel()
+    {
+        return $this->contratosDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $contratosDetallesItemRel
+     */
+    public function setContratosDetallesItemRel($contratosDetallesItemRel): void
+    {
+        $this->contratosDetallesItemRel = $contratosDetallesItemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesItemRel()
+    {
+        return $this->pedidosDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $pedidosDetallesItemRel
+     */
+    public function setPedidosDetallesItemRel($pedidosDetallesItemRel): void
+    {
+        $this->pedidosDetallesItemRel = $pedidosDetallesItemRel;
     }
 
 

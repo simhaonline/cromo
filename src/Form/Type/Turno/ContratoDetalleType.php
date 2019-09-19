@@ -4,6 +4,7 @@ namespace App\Form\Type\Turno;
 
 use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContratoDetalle;
+use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurModalidad;
 use App\Entity\Turno\TurPuesto;
 use Symfony\Component\Form\AbstractType;
@@ -34,6 +35,17 @@ class ContratoDetalleType extends AbstractType
                 'label' => 'nombre:',
                 'attr' => ['class' => 'form-control to-select-2']
             ])
+            ->add('itemRel', EntityType::class, [
+                'required' => true,
+                'class' => TurItem::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->orderBy('i.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'nombre:',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
             ->add('modalidadRel', EntityType::class, [
                 'required' => true,
                 'class' => TurModalidad::class,
@@ -48,8 +60,10 @@ class ContratoDetalleType extends AbstractType
             ->add('puestoRel', EntityType::class, [
                 'required' => true,
                 'class' => TurPuesto::class,
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    $cliente = $options['data']->getContratoRel()->getCodigoClienteFk();
                     return $er->createQueryBuilder('p')
+                        ->where("p.codigoClienteFk = {$cliente}")
                         ->orderBy('p.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',

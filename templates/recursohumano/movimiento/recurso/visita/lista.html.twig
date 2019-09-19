@@ -13,11 +13,11 @@
                     <div class="form-group form-group-sm">
                         <label class=" col-sm-1 control-label">Codigo:</label>
                         <div class="col-sm-2">
-                            {{ form_widget(form.codigoCreditoPk) }}
+                            {{ form_widget(form.codigoVisitaPk) }}
                         </div>
                         <label class=" col-sm-1 control-label">Tipo:</label>
                         <div class="col-sm-2">
-                            {{ form_widget(form.codigoCreditoTipoFk) }}
+                            {{ form_widget(form.codigoVisitaTipoFk) }}
                         </div>
                         <label class="col-sm-1 col-sm-offset-3 control-label">Pagado:</label>
                         <div class="col-sm-2">
@@ -115,7 +115,7 @@
         <div class="btn-group">
             {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
             <a class="btn btn-default btn-sm"
-               href="{{ path('recursohumano_movimiento_nomina_credito_nuevo', {'id': 0}) }}">Nuevo</a>
+               href="{{ path('recursohumano_movimiento_nomina_adicional_nuevo', {'id': 0}) }}">Nuevo</a>
         </div>
     </div>
     <br/><br/>

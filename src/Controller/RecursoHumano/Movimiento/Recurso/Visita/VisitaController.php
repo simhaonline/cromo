@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Nomina\Credito;
+namespace App\Controller\RecursoHumano\Movimiento\Recurso\Visita;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -63,7 +63,7 @@ class VisitaController extends AbstractController
                 'placeholder' => 'TODOS',
                 'attr' => ['class' => 'form-control to-select-2']
             ])
-            ->add('codigoCreditoPk', TextType::class, array('required' => false))
+            ->add('codigoVisitaPk', TextType::class, array('required' => false))
             ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
             ->add('estadoPagado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoSuspendido', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])

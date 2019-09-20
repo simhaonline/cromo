@@ -430,7 +430,7 @@ class TurSoporteRepository extends ServiceEntityRepository
         $qb = $em->createQueryBuilder()->from(RhuContrato::class, "c")
             ->select("c.codigoContratoPk, c.codigoEmpleadoFk, e.numeroIdentificacion, e.nombreCorto, c.fechaHasta, c.estadoTerminado")
             ->join("c.empleadoRel", "e")
-            ->where("c.codigoGrupoFk = {$arSoporte->getCodigoGrupoFk()}")
+            ->where("c.codigoGrupoFk = '{$arSoporte->getCodigoGrupoFk()}'")
             ->andWhere("c.fechaUltimoPago < '{$fechaHastaSoportePagoPeriodo}'")
             ->andWhere("c.fechaDesde <= '{$arSoporte->getFechaHasta()->format('Y-m-d')}'")
             ->andWhere("c.fechaHasta >= '{$arSoporte->getFechaDesde()->format('Y-m-d')}' OR c.indefinido = 1");

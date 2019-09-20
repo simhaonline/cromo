@@ -265,6 +265,11 @@ class RhuEmpleado
     private $pagadoEntidad = false;
 
     /**
+     * @ORM\Column(name="habilitado_turno", type="boolean", nullable=false,options={"default":false})
+     */
+    private $habilitadoTurno = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadosIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
@@ -317,6 +322,12 @@ class RhuEmpleado
      * @ORM\JoinColumn(name="codigo_banco_fk",referencedColumnName="codigo_banco_pk")
      */
     protected $bancoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuContrato", inversedBy="empleadosContratoRel")
+     * @ORM\JoinColumn(name="codigo_contrato_fk",referencedColumnName="codigo_contrato_pk")
+     */
+    protected $contratoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="empleadoRel")
@@ -1595,6 +1606,38 @@ class RhuEmpleado
     public function setIncapacidadesEmpleadoRel($incapacidadesEmpleadoRel): void
     {
         $this->incapacidadesEmpleadoRel = $incapacidadesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHabilitadoTurno()
+    {
+        return $this->habilitadoTurno;
+    }
+
+    /**
+     * @param mixed $habilitadoTurno
+     */
+    public function setHabilitadoTurno($habilitadoTurno): void
+    {
+        $this->habilitadoTurno = $habilitadoTurno;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoRel()
+    {
+        return $this->contratoRel;
+    }
+
+    /**
+     * @param mixed $contratoRel
+     */
+    public function setContratoRel($contratoRel): void
+    {
+        $this->contratoRel = $contratoRel;
     }
 
 

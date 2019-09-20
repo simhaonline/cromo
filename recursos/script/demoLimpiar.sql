@@ -47,6 +47,9 @@ DELETE FROM rhu_credito;
 DELETE FROM rhu_contrato;
 DELETE FROM rhu_empleado;
 DELETE FROM gen_log;
-DELETE FROM tur_cotrato_detalle;
-DELETE FROM tur_cotrato;
+DELETE FROM tur_pedido_detalle;
+DELETE FROM tur_pedido;
+DELETE FROM tur_contrato_detalle;
+DELETE FROM tur_contrato;
+
 UPDATE inv_item SET cantidad_disponible = 0, cantidad_existencia = 0, cantidad_orden = 0, cantidad_remisionada = 0, cantidad_pedido = 0;

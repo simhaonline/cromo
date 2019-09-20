@@ -55,6 +55,51 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function listaProvicional($raw){
+
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoEmpleadoPk = null;
+        $nombreCorto = null;
+        $numeroIdentificacion =null;
+        $estadoContrato = null;
+        if ($filtros){
+            $codigoEmpleadoPk = $filtros['codigoEmpleadoPk']??null;
+            $nombreCorto = $filtros['nombreCorto']??null;
+            $numeroIdentificacion = $filtros['numeroIdentificacion']??null;
+            $estadoContrato = $filtros['estadoContrato']??null;
+        }
+
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class,'e')
+            ->select('e.codigoContratoFk')
+            ->addSelect('e.codigoEmpleadoPk')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.telefono')
+            ->addSelect('e.correo')
+            ->addSelect('e.direccion')
+            ->addSelect('e.estadoContrato')
+            ->where('e.codigoEmpleadoPk <> 0');
+        if($codigoEmpleadoPk){
+            $queryBuilder->andWhere("e.codigoEmpleadoPk = {$codigoEmpleadoPk}");
+        }
+        if($nombreCorto){
+            $queryBuilder->andWhere("e.nombreCorto LIKE '%{$nombreCorto}%'");
+        }
+        if($numeroIdentificacion){
+            $queryBuilder->andWhere("e.numeroIdentificacion = '{$numeroIdentificacion}' ");
+        }
+        switch ($estadoContrato ) {
+            case '0':
+                $queryBuilder->andWhere("e.estadoContrato = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("e.estadoContrato = 1");
+                break;
+        }
+        return $queryBuilder;
+    }
+
     public function parametrosExcel()
     {
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 'e')

@@ -140,31 +140,4 @@ class EmpleadoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoEmpleadoPk",      "tipo":"pk"      ,"ayuda":"Codigo del empleado"                   ,"titulo":"ID"},
-            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del empleado" ,"titulo":"IDENTIFICACION"},
-            {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del empleado"                   ,"titulo":"NOMBRE"},
-            {"campo":"codigoContratoFk",      "tipo":"texto"   ,"ayuda":"Codigo del contrato"                   ,"titulo":"CONTRATO"},
-            {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del empleado"                 ,"titulo":"TELEFONO"},
-            {"campo":"correo",                "tipo":"texto"   ,"ayuda":"Correo del empleado"                   ,"titulo":"CORREO"},
-            {"campo":"direccion",             "tipo":"texto"   ,"ayuda":"Direccion de residencia del empleado"  ,"titulo":"DIRECCION"},                     
-            {"campo":"estadoContrato",        "tipo":"bool"    ,"ayuda":"Posee contrato activo"                 ,"titulo":"E_C"}                     
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoEmpleadoPk",          "tipo":"TextType",   "propiedades":{"label":"Codigo"},   "operador":"="},
-            {"child":"nombreCorto",               "tipo":"TextType",   "propiedades":{"label":"Nombre"},   "operador":"like"},
-            {"child":"numeroIdentificacion",      "tipo":"TextType",   "propiedades":{"label":"Identificacion"},   "operador":"="},
-            {"child":"estadoContrato",                   "tipo":"ChoiceType",   "propiedades":{"label":"Contratado",        "choices":{"SI":true,"NO":false}}}
-        ]';
-
-        return $campos;
-    }
 }

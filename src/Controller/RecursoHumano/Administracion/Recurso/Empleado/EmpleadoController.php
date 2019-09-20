@@ -12,6 +12,10 @@ use App\Form\Type\RecursoHumano\ContratoType;
 use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -35,32 +39,41 @@ class EmpleadoController extends BaseController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/administracion/recurso/empleado/lista", name="recursohumano_administracion_recurso_empleado_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
-            }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Empleados");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
 
+        $form = $this->createFormBuilder()
+            ->add('codigoEmpleadoPk', TextType::class, array('required' => false))
+            ->add('nombreCorto', TextType::class, array('required' => false))
+            ->add('numeroIdentificacion', IntegerType::class, array('required' => false))
+            ->add('estadoContrato', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuEmpleado::class)->listaProvicional($raw)->getQuery()->execute(), "Empleados");
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
             }
         }
+        $arEmpleados = $paginator->paginate($em->getRepository(RhuEmpleado::class)->listaProvicional($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('recursohumano/administracion/recurso/empleado/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView()
+            'arEmpleados' => $arEmpleados,
+            'form' => $form->createView()
         ]);
     }
 
@@ -250,6 +263,16 @@ class EmpleadoController extends BaseController
             'form'=>$form->createView(),
             'arseleccion'=>$arseleccion
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        return $filtro = [
+            'codigoEmpleadoPk' => $form->get('codigoEmpleadoPk')->getData(),
+            'nombreCorto' => $form->get('nombreCorto')->getData(),
+            'numeroIdentificacion' => $form->get('numeroIdentificacion')->getData(),
+            'estadoContrato' => $form->get('estadoContrato')->getData(),
+        ];
     }
 }
 

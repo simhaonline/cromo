@@ -178,7 +178,7 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            Información empresa
+            Información financiera
         </div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
@@ -198,6 +198,19 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCuentaTipoFk, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.codigoCuentaTipoFk) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Información turnos
+        </div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_bancoRel" class="control-label col-sm-2"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.habilitadoTurno) }}
                 </div>
             </div>
         </div>

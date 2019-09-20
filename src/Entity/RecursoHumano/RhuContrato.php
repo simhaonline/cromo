@@ -477,6 +477,11 @@ class RhuContrato
     protected $trasladosSaludContratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuEmpleado", mappedBy="contratoRel")
+     */
+    protected $empleadosContratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoPk()
@@ -1883,6 +1888,23 @@ class RhuContrato
     {
         $this->incapacidadesContratoRel = $incapacidadesContratoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadosContratoRel()
+    {
+        return $this->empleadosContratoRel;
+    }
+
+    /**
+     * @param mixed $empleadosContratoRel
+     */
+    public function setEmpleadosContratoRel($empleadosContratoRel): void
+    {
+        $this->empleadosContratoRel = $empleadosContratoRel;
+    }
+
 
 
 }

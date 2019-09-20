@@ -18,15 +18,15 @@ class GenModelo extends Fixture
     {
         //$manager->createQueryBuilder()->delete(\App\Entity\General\GenModelo::class,'g')->getQuery()->execute();
         $arrModelos = array(
-            ['codigo' => 'TurCliente',              'modulo'=> 'Turno',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' =>'TurContrato',              'modulo'=> 'Turno',     'funcion' => 'Movimiento',      'grupo' => 'Varios'],
-            ['codigo' =>'TurCotizacion',            'modulo'=> 'Turno',     'funcion' => 'Movimiento',      'grupo' => 'Varios'],
+            ['codigo' =>'TurSoporte',               'modulo'=> 'Turno',     'funcion' => 'Movimiento',      'grupo' => 'Operacion'],
+            ['codigo' =>'TurFactura',               'modulo'=> 'Turno',     'funcion' => 'Movimiento',      'grupo' => 'Venta'],
+            ['codigo' =>'TurContrato',              'modulo'=> 'Turno',     'funcion' => 'Movimiento',      'grupo' => 'Juridico'],
+            ['codigo' =>'TurCotizacion',            'modulo'=> 'Turno',     'funcion' => 'Movimiento',      'grupo' => 'Comercial'],
+            ['codigo' =>'TurPedido',                'modulo'=> 'Turno',     'funcion' => 'Movimiento',      'grupo' => 'Venta'],
             ['codigo' =>'TurPuesto',                'modulo'=> 'Turno',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' =>'TurSoporte',               'modulo'=> 'Turno',     'funcion' => 'Movimiento',      'grupo' => 'Varios'],
-            ['codigo' =>'TurPedido',                'modulo'=> 'Turno',     'funcion' => 'Movimiento',      'grupo' => 'Varios'],
+            ['codigo' =>'TurCliente',               'modulo'=> 'Turno',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' =>'TurItem',                  'modulo'=> 'Turno',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' =>'TurTurno',                 'modulo'=> 'Turno',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' =>'TurFactura',               'modulo'=> 'Turno',     'funcion' => 'Movimiento',      'grupo' => 'Varios'],
             ['codigo' =>'TurSecuencia',             'modulo'=> 'Turno',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 
             ['codigo' =>'CarCliente',               'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],

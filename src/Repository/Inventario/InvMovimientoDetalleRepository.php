@@ -505,7 +505,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $cantidad = 0;
         $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
-            ->select("SUM(r.cantidad)")
+            ->select("SUM(md.cantidad)")
             ->leftJoin("md.movimientoRel", "m")
             ->where("md.codigoOrdenDetalleFk = {$codigoOrdenDetalle} ")
             ->andWhere('m.estadoAutorizado = 1');

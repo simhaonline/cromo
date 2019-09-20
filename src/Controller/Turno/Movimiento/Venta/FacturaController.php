@@ -14,13 +14,16 @@ use App\Form\Type\Turno\FacturaType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FacturaController extends ControllerListenerGeneral
+class FacturaController  extends AbstractController
 {
     protected $clase = TurFactura::class;
     protected $claseNombre = "TurFactura";
@@ -37,42 +40,47 @@ class FacturaController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/turno/movimiento/comercial/factura/lista", name="turno_movimiento_venta_factura_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoFacturaPk', TextType::class, array('required' => false))
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Pedidos");
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(TurFactura::class)->lista($raw)->getQuery()->execute(), "Factura");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurFactura::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_venta_factura_lista'));
             }
         }
-        return $this->render('turno/movimiento/comercial/factura/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+
+        $arFacturas = $paginator->paginate($em->getRepository(TurFactura::class)->lista($raw), $request->query->getInt('page', 1), 30);
+        return $this->render('turno/movimiento/venta/factura/lista.html.twig', [
+            'arFacturas' => $arFacturas,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
      * @Route("/turno/movimiento/comercial/factura/nuevo/{id}", name="turno_movimiento_venta_factura_nuevo")
      */
-    public function nuevo(Request $request, $id)
+    public function nuevo(Request $request,$id)
     {
         $em = $this->getDoctrine()->getManager();
         $arFactura = new TurFactura();
@@ -104,7 +112,7 @@ class FacturaController extends ControllerListenerGeneral
                 }
             }
         }
-        return $this->render('turno/movimiento/comercial/factura/nuevo.html.twig', [
+        return $this->render('turno/movimiento/venta/factura/nuevo.html.twig', [
             'arFactura' => $arFactura,
             'form' => $form->createView()
         ]);
@@ -120,9 +128,8 @@ class FacturaController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/turno/movimiento/comercial/factura/detalle/{id}", name="turno_movimiento_venta_factura_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request,  PaginatorInterface $paginator,$id)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TurFactura::class)->find($id);
         $form = Estandares::botonera($arFactura->getEstadoAutorizado(), $arFactura->getEstadoAprobado(), $arFactura->getEstadoAnulado());
@@ -172,7 +179,7 @@ class FacturaController extends ControllerListenerGeneral
         $arImpuestosRetencion = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'R'));
         $arFacturaDetalles = $paginator->paginate($em->getRepository(TurFacturaDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);
         return $this->render('turno/movimiento/comercial/factura/detalle.html.twig', [
-            'form' => $form->createView(),
+                        'form' => $form->createView(),
             'arFacturaDetalles' => $arFacturaDetalles,
             'arFactura' => $arFactura,
             'arImpuestosIva' => $arImpuestosIva,
@@ -237,6 +244,13 @@ class FacturaController extends ControllerListenerGeneral
             'arItems' => $arItems,
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        return $filtros = [
+            'codigoFacturaPk'=>$form->get('codigoFacturaPk')->getData()
+            ];
     }
 }
 

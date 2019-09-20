@@ -23,6 +23,7 @@ class SoporteType extends AbstractType
                 'class' => 'App\Entity\RecursoHumano\RhuGrupo',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('g')
+                        ->where('g.cargarSoporte = 1')
                         ->orderBy('g.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',

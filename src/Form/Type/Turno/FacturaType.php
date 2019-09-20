@@ -52,13 +52,4 @@ class FacturaType extends AbstractType
         return $campos;
     }
 
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoFacturaPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}}
-        ]';
-
-        return $campos;
-    }
 }

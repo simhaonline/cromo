@@ -122,6 +122,7 @@ class LicenciaController extends AbstractController
         } else {
             $arLicencia->setFechaDesde(new \DateTime('now'));
             $arLicencia->setFechaHasta(new \DateTime('now'));
+            $arLicencia->setFechaAplicacion(new \DateTime('now'));
         }
         $form = $this->createForm(LicenciaType::class, $arLicencia);
         $form->handleRequest($request);

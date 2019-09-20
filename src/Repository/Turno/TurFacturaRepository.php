@@ -24,6 +24,39 @@ class TurFacturaRepository extends ServiceEntityRepository
         parent::__construct($registry, TurFactura::class);
     }
 
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoFacturaPk = null;
+        if ($filtros){
+            $codigoFacturaPk = $filtros['codigoFacturaPk']??null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFactura::class, 'f')
+            ->select('f.codigoFacturaPk')
+            ->addSelect('f.numero')
+            ->addSelect('f.fecha')
+            ->addSelect('c.nombreCorto as cliente')
+            ->addSelect('f.numero')
+            ->addSelect('f.vrSubtotal')
+            ->addSelect('f.vrIva')
+            ->addSelect('f.vrNeto')
+            ->addSelect('f.vrTotal')
+            ->addSelect('f.usuario')
+            ->addSelect('f.estadoAutorizado')
+            ->addSelect('f.estadoAprobado')
+            ->addSelect('f.estadoAnulado')
+            ->leftJoin('f.clienteRel', 'c');
+
+        if ($codigoFacturaPk){
+            $queryBuilder->andWhere("f.codigoFacturaPk = {$codigoFacturaPk}");
+        }
+
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+    }
+
     public function liquidar($arFactura)
     {
         /**

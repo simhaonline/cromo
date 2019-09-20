@@ -3,6 +3,7 @@
 namespace App\Form\Type\Turno;
 
 use App\Entity\Turno\TurConcepto;
+use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurModalidad;
 use App\Entity\Turno\TurPedidoDetalle;
 use Symfony\Component\Form\AbstractType;
@@ -33,6 +34,17 @@ class PedidoDetalleType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'nombre:'
             ])
+            ->add('itemRel', EntityType::class, [
+                'required' => true,
+                'class' => TurItem::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->orderBy('i.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'nombre:',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
             ->add('modalidadRel', EntityType::class, [
                 'required' => true,
                 'class' => TurModalidad::class,
@@ -56,6 +68,7 @@ class PedidoDetalleType extends AbstractType
             ])
             ->add('cantidad', NumberType::class)
             ->add('vrPrecioAjustado', NumberType::class, array('required' => false))
+            ->add('porcentajeBaseIva', NumberType::class, array('required' => false))
             ->add('diaDesde', NumberType::class)
             ->add('diaHasta', NumberType::class)
             ->add('lunes', CheckboxType::class, array('required' => false))

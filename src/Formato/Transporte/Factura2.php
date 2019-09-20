@@ -199,6 +199,7 @@ class Factura2 extends \FPDF
             $totalUnidades = 0;
             $totalManejo = 0;
             $totalFlete = 0;
+            $totalSubTotal = 0;
             foreach ($arGuias as $arGuia) {
                 $pdf->Cell(20, 4, $arGuia['codigoGuiaFk'], 1, 0, 'L');
                 $pdf->Cell(19, 4, $arGuia['fechaIngreso']->format('Y-m-d'), 1, 0, 'L');
@@ -212,13 +213,15 @@ class Factura2 extends \FPDF
                 $totalUnidades += $arGuia['unidades'];
                 $totalManejo += $arGuia['vrManejo'];
                 $totalFlete += $arGuia['vrFlete'];
+                $totalSubTotal += $arGuia['vrFlete'] + $arGuia['vrManejo'];
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 85);
             }
-            $pdf->Cell(144, 4, 'TOTAL', 1, 0, 'L');
+            $pdf->Cell(129, 4, 'TOTAL', 1, 0, 'L');
             $pdf->Cell(15, 4,  $totalUnidades, 1, 0,'R');
             $pdf->Cell(15, 4,  number_format($totalManejo), 1, 0,'R');
             $pdf->Cell(15, 4,  number_format($totalFlete), 1, 0,'R');
+            $pdf->Cell(15, 4,  number_format($totalSubTotal), 1, 0,'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

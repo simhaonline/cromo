@@ -1,3 +1,10 @@
+DELETE FROM tur_simulacion;
+DELETE FROM tur_programacion;
+DELETE FROM tur_prototipo;
+DELETE FROM tur_pedido_detalle;
+DELETE FROM tur_pedido;
+DELETE FROM tur_contrato_detalle;
+DELETE FROM tur_contrato;
 DELETE FROM tte_recogida;
 DELETE FROM tte_despacho_recogida;
 DELETE FROM tte_novedad;
@@ -44,12 +51,10 @@ DELETE FROM rhu_programacion_detalle;
 DELETE FROM rhu_programacion;
 DELETE FROM rhu_adicional;
 DELETE FROM rhu_credito;
+UPDATE rhu_empleado SET codigo_contrato_fk = null;
 DELETE FROM rhu_contrato;
 DELETE FROM rhu_empleado;
 DELETE FROM gen_log;
-DELETE FROM tur_pedido_detalle;
-DELETE FROM tur_pedido;
-DELETE FROM tur_contrato_detalle;
-DELETE FROM tur_contrato;
+
 
 UPDATE inv_item SET cantidad_disponible = 0, cantidad_existencia = 0, cantidad_orden = 0, cantidad_remisionada = 0, cantidad_pedido = 0;

@@ -22,22 +22,24 @@ class RhuRequisitoRepository extends ServiceEntityRepository
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
 
-        $codigoCredito = null;
-        $creditoTipo = null;
+        $codigoRequisito = null;
+        $requisitoTipo = null;
         $codigoEmpleado = null;
         $fechaDesde = null;
         $fechaHasta = null;
-        $estadoPagado = null;
-        $estadoSuspendido = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
 
         if ($filtros) {
-            $codigoCredito = $filtros['codigoCredito'] ?? null;
-            $creditoTipo = $filtros['creditoTipo'] ?? null;
+            $codigoRequisito = $filtros['codigoRequisito'] ?? null;
+            $requisitoTipo = $filtros['requisitoTipo'] ?? null;
             $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
-            $estadoPagado = $filtros['estadoPagado'] ?? null;
-            $estadoSuspendido = $filtros['estadoSuspendido'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
         }
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuRequisito::class, 'r')
@@ -53,35 +55,43 @@ class RhuRequisitoRepository extends ServiceEntityRepository
             ->leftJoin('r.requisitoTipoRel', 'rt')
             ->leftJoin('r.cargoRel', 'c');
 
-        if ($codigoCredito) {
-            $queryBuilder->andWhere("c.codigoCreditoPk = '{$codigoCredito}'");
+        if ($codigoRequisito) {
+            $queryBuilder->andWhere("r.codigoRequisitoPk = '{$codigoRequisito}'");
         }
         if ($codigoEmpleado) {
             $queryBuilder->andWhere("c.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-        if ($creditoTipo) {
-            $queryBuilder->andWhere("c.codigoCreditoTipoFk = '{$creditoTipo}'");
+        if ($requisitoTipo) {
+            $queryBuilder->andWhere("r.codigoRequisitoTipoFk = '{$requisitoTipo}'");
         }
         if ($fechaDesde) {
-            $queryBuilder->andWhere("c.fecha >= '{$fechaDesde} 00:00:00'");
+            $queryBuilder->andWhere("r.fecha >= '{$fechaDesde} 00:00:00'");
         }
         if ($fechaHasta) {
-            $queryBuilder->andWhere("c.fecha <= '{$fechaHasta} 23:59:59'");
+            $queryBuilder->andWhere("r.fecha <= '{$fechaHasta} 23:59:59'");
         }
-        switch ($estadoPagado) {
+        switch ($estadoAutorizado) {
             case '0':
-                $queryBuilder->andWhere("c.estadoPagado = 0");
+                $queryBuilder->andWhere("r.estadoAutorizado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("c.estadoPagado = 1");
+                $queryBuilder->andWhere("r.estadoAutorizado = 1");
                 break;
         }
-        switch ($estadoSuspendido) {
+        switch ($estadoAprobado) {
             case '0':
-                $queryBuilder->andWhere("c.estadoSuspendido = 0");
+                $queryBuilder->andWhere("r.estadoAprobado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("c.estadoSuspendido = 1");
+                $queryBuilder->andWhere("r.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAnulado = 1");
                 break;
         }
         $queryBuilder->addOrderBy('r.fecha', 'DESC');

@@ -119,6 +119,9 @@ class LicenciaController extends AbstractController
             if (!$arLicencia) {
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_licencia_lista'));
             }
+        } else {
+            $arLicencia->setFechaDesde(new \DateTime('now'));
+            $arLicencia->setFechaHasta(new \DateTime('now'));
         }
         $form = $this->createForm(LicenciaType::class, $arLicencia);
         $form->handleRequest($request);

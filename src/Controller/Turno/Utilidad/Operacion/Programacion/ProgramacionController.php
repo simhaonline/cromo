@@ -83,22 +83,28 @@ class ProgramacionController extends Controller
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
             if($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TurPrototipo::class)->actualizar($arrControles);
+                return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $this->get("UtilidadesModelo")->eliminar(TurPrototipo::class, $arrDetallesSeleccionados);
+                return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
             }
             if($form->get('btnSimular')->isClicked()) {
                 $em->getRepository(TurPrototipo::class)->actualizar($arrControles);
                 $fechaProgramacion = $form->get('fechaSimulacion')->getData();
                 $em->getRepository(TurPrototipo::class)->generarSimulacion($arPedidoDetalle, $fechaProgramacion);
+                return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
             }
             if($form->get('btnGenerar')->isClicked()) {
                 $em->getRepository(TurProgramacion::class)->generar($arPedidoDetalle);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+
             }
             if($form->get('btnSimularLimpiar')->isClicked()) {
                 $em->getRepository(TurSimulacion::class)->limpiar($id);
+                return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
             }
-            return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
+
         }
         $arPrototipos = $em->getRepository(TurPrototipo::class)->listaProgramar($arPedidoDetalle->getCodigoContratoDetalleFk());
         $arSimulaciones = $em->getRepository(TurSimulacion::class)->listaProgramar($id);
@@ -128,6 +134,8 @@ class ProgramacionController extends Controller
             'form' => $form->createView()
         ]);
     }
+
+
     private function devuelveDiaSemanaEspaniol($dateFecha)
     {
         $strDia = "";

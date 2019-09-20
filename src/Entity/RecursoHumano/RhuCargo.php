@@ -79,6 +79,11 @@ class RhuCargo
     protected $requisitosCargoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAcreditacionTipo", mappedBy="cargoRel")
+     */
+    protected $acreditacionesTiposCargoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array

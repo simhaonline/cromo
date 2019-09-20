@@ -82,10 +82,12 @@ class RhuVisita
      * @ORM\Column(name="comentarios", type="text", nullable=true)
      */
     private $comentarios;
+
     /**
      * @ORM\Column(name="nombre_corto", type="text", nullable=true)
      */
     private $nombreCorto;
+
     /**
      * @ORM\Column(name="numero_identificacion", type="text", nullable=true)
      */
@@ -104,7 +106,7 @@ class RhuVisita
     /**
      * @ORM\Column(name="estado_cobrado", type="boolean")
      */
-    private $estadoCobrado = 0;
+    private $estadoCobrado = false;
 
     /**
      * @ORM\Column(name="vr_total", type="float")

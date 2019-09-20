@@ -13,18 +13,26 @@ use App\Entity\RecursoHumano\RhuRequisito;
 use App\Entity\RecursoHumano\RhuRequisitoCargo;
 use App\Entity\RecursoHumano\RhuRequisitoConcepto;
 use App\Entity\RecursoHumano\RhuRequisitoDetalle;
+use App\Entity\RecursoHumano\RhuRequisitoTipo;
 use App\Form\Type\RecursoHumano\ExamenType;
 use App\Form\Type\RecursoHumano\RequisitoType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class RequisitosController extends ControllerListenerGeneral
+class RequisitosController extends AbstractController
 {
     protected $clase = RhuRequisito::class;
     protected $claseNombre = "RhuRequisito";
@@ -43,36 +51,49 @@ class RequisitosController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/movimiento/contratacion/requisito/lista", name="recursohumano_movimiento_contratacion_requisito_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoRequisitoTipoFk', EntityType::class, [
+                'class' => RhuRequisitoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('rt')
+                        ->orderBy('rt.codigoRequisitoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoRequisitoPk', TextType::class, array('required' => false))
+            ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuRequisito::class)->lista($raw), "Creditos");
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(RhuRequisito::class)->lista()->getQuery()->execute(), "Requisitos");
-
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuRequisito::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_contratacion_requisito_lista'));
-            }
-        }
+        $arRequisitos = $paginator->paginate($em->getRepository(RhuRequisito::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/contratacion/requisito/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView()
+            'arRequisitos' => $arRequisitos,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -179,7 +200,7 @@ class RequisitosController extends ControllerListenerGeneral
                 $em->getRepository(RhuRequisitoDetalle::class)->entregar($arrSeleccionados);
                 if ($arrSeleccionados) {
                     foreach ($arrSeleccionados AS $codigoRequisitoDetallePk) {
-                        $arRequisitoDetalle = new \Brasa\RecursoHumanoBundle\Entity\RhuRequisitoDetalle();
+                        $arRequisitoDetalle = new RhuRequisitoDetalle();
                         $arRequisitoDetalle = $em->getRepository('BrasaRecursoHumanoBundle:RhuRequisitoDetalle')->find($codigoRequisitoDetallePk);
                         if ($arRequisitoDetalle->getEstadoNoAplica() == 0) {
                             if ($arRequisitoDetalle->getEstadoEntregado() == 0) {
@@ -191,14 +212,14 @@ class RequisitosController extends ControllerListenerGeneral
                     }
                     $em->flush();
                 }
-                return $this->redirect($this->generateUrl('brs_rhu_requisito_detalle', array('codigoRequisito' => $codigoRequisito)));
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_contratacion_requisito_detalle', array('codigoRequisito' => $id)));
             }
             return $this->redirect($this->generateUrl('recursohumano_movimiento_contratacion_requisito_detalle', ['id' => $id]));
         }
         $arRequisitoDetalles = $em->getRepository(RhuRequisitoDetalle::class)->lista($id);
         return $this->render('recursohumano/movimiento/contratacion/requisito/detalle.html.twig', array(
             'form' => $form->createView(),
-            'clase' => array('clase'=>'RhuRequisito', 'codigo' => $id),
+            'clase' => array('clase' => 'RhuRequisito', 'codigo' => $id),
             'arRequisitoDetalles' => $arRequisitoDetalles,
             'arRequisito' => $arRequisito
         ));
@@ -258,6 +279,30 @@ class RequisitosController extends ControllerListenerGeneral
             'arExamenListaPrecios' => $arExamenListaPrecios,
             'arExamen' => $arExamen,
             'form' => $form->createView()));
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoRequisito' => $form->get('codigoRequisitoPk')->getData(),
+            'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arRequisitoTipo = $form->get('codigoRequisitoTipoFk')->getData();
+
+        if (is_object($arRequisitoTipo)) {
+            $filtro['requisitoTipo'] = $arRequisitoTipo->getCodigoRequisitoTipoPk();
+        } else {
+            $filtro['requisitoTipo'] = $arRequisitoTipo;
+        }
+
+        return $filtro;
+
     }
 }
 

@@ -97,6 +97,11 @@ class GenIdentificacion
     protected $crmClienteIdentificacionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuPoligrafia", mappedBy="identificacionRel")
+     */
+    protected $rhuPoligrafiasIdentificacionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="GenConfiguracion", mappedBy="identificacionRel")
      */
     protected $configuracionesIdentificacionRel;

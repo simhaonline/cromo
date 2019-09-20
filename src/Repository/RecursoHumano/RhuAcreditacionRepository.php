@@ -7,6 +7,7 @@ use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
+use App\Entity\RecursoHumano\RhuAcreditacion;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
 use App\Entity\RecursoHumano\RhuConcepto;
@@ -35,11 +36,11 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class RhuVisitaRepository extends ServiceEntityRepository
+class RhuAcreditacionRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, RhuVisita::class);
+        parent::__construct($registry, RhuAcreditacion::class);
     }
 
     /**
@@ -50,7 +51,7 @@ class RhuVisitaRepository extends ServiceEntityRepository
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
 
-        $codigoVisita = null;
+        $codigoAcreditacion = null;
         $codigoEmpleado = null;
         $fechaDesde = null;
         $fechaHasta = null;
@@ -59,7 +60,7 @@ class RhuVisitaRepository extends ServiceEntityRepository
         $estadoAnulado = null;
 
         if ($filtros) {
-            $codigoVisita = $filtros['codigoVacacion'] ?? null;
+            $codigoAcreditacion = $filtros['codigoAcreditacion'] ?? null;
             $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
@@ -68,56 +69,60 @@ class RhuVisitaRepository extends ServiceEntityRepository
             $estadoAnulado = $filtros['estadoAnulado'] ?? null;
         }
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuVisita::class, 'v')
-            ->select('v.codigoVisitaPk')
-            ->addselect('vt.nombre AS tipo')
-            ->addSelect('v.fecha')
-            ->addSelect('v.fechaVence')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAcreditacion::class, 'a')
+            ->select('a.codigoAcreditacionPk')
+            ->addselect('at.nombre AS tipo')
+            ->addSelect('a.fecha')
+            ->addSelect('a.fechaVenceCurso')
             ->addselect('e.numeroIdentificacion as numeroIdentificacion')
             ->addselect('e.nombreCorto as empleado')
-            ->addSelect('v.nombreQuienVisita')
-            ->addselect('v.estadoAutorizado')
-            ->addselect('v.estadoAprobado')
-            ->addselect('v.estadoAnulado')
-            ->leftJoin('v.visitaTipoRel', 'vt')
-            ->leftJoin('v.empleadoRel', 'e');
-        if ($codigoVisita) {
-            $queryBuilder->andWhere("v.codigoVisitaPk = '{$codigoVisita}'");
+            ->addSelect('a.numeroRegistro')
+            ->addSelect('a.estadoValidado')
+            ->addSelect('a.estadoRechazado')
+            ->addSelect('a.estadoAcreditado')
+            ->addSelect('a.fechaAcreditacion')
+            ->addselect('a.estadoAutorizado')
+            ->addselect('a.estadoAprobado')
+            ->addselect('a.estadoAnulado')
+            ->leftJoin('a.acreditacionTipoRel', 'at')
+            ->leftJoin('a.empleadoRel', 'e');
+        if ($codigoAcreditacion) {
+            $queryBuilder->andWhere("a.codigoAcreditacionPk = '{$codigoAcreditacion}'");
         }
         if ($codigoEmpleado) {
-            $queryBuilder->andWhere("v.codigoEmpleadoFk = '{$codigoEmpleado}'");
+            $queryBuilder->andWhere("a.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
         if ($fechaDesde) {
-            $queryBuilder->andWhere("v.fecha >= '{$fechaDesde} 00:00:00'");
+            $queryBuilder->andWhere("a.fecha >= '{$fechaDesde} 00:00:00'");
         }
         if ($fechaHasta) {
-            $queryBuilder->andWhere("v.fecha <= '{$fechaHasta} 23:59:59'");
+            $queryBuilder->andWhere("a.fecha <= '{$fechaHasta} 23:59:59'");
         }
         switch ($estadoAutorizado) {
             case '0':
-                $queryBuilder->andWhere("v.estadoAutorizado = 0");
+                $queryBuilder->andWhere("a.estadoAutorizado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("v.estadoAutorizado = 1");
+                $queryBuilder->andWhere("a.estadoAutorizado = 1");
                 break;
         }
         switch ($estadoAprobado) {
             case '0':
-                $queryBuilder->andWhere("v.estadoAprobado = 0");
+                $queryBuilder->andWhere("a.estadoAprobado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("v.estadoAprobado = 1");
+                $queryBuilder->andWhere("a.estadoAprobado = 1");
                 break;
         }
         switch ($estadoAnulado) {
             case '0':
-                $queryBuilder->andWhere("v.estadoAnulado = 0");
+                $queryBuilder->andWhere("a.estadoAnulado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("v.estadoAnulado = 1");
+                $queryBuilder->andWhere("a.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->addOrderBy('v.codigoVisitaPk', 'DESC');
+        $queryBuilder->addOrderBy('a.codigoAcreditacionPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }

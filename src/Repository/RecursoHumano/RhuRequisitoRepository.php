@@ -17,38 +17,76 @@ class RhuRequisitoRepository extends ServiceEntityRepository
     }
 
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCredito = null;
+        $creditoTipo = null;
+        $codigoEmpleado = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoPagado = null;
+        $estadoSuspendido = null;
+
+        if ($filtros) {
+            $codigoCredito = $filtros['codigoCredito'] ?? null;
+            $creditoTipo = $filtros['creditoTipo'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoPagado = $filtros['estadoPagado'] ?? null;
+            $estadoSuspendido = $filtros['estadoSuspendido'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuRequisito::class, 'r')
             ->select('r.codigoRequisitoPk')
-            ->addSelect('rt.nombre AS nombreRequisito')
-            ->addSelect('c.nombre AS nombreCargo')
+            ->addSelect('rt.nombre AS tipo')
+            ->addSelect('r.fecha')
             ->addSelect('r.nombreCorto')
             ->addSelect('r.numeroIdentificacion')
-            ->leftJoin('r.requisitoTipoRel','rt')
-            ->leftJoin('rhrc.cargoRel','c');
+            ->addSelect('c.nombre AS cargo')
+            ->addSelect('r.estadoAutorizado')
+            ->addSelect('r.estadoAprobado')
+            ->addSelect('r.estadoAnulado')
+            ->leftJoin('r.requisitoTipoRel', 'rt')
+            ->leftJoin('r.cargoRel', 'c');
 
-
-
-//        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuRequisitoCargo::class, 'rhrc')
-//            ->select('rhrc.codigoRequisitoCargoPk')
-//            ->addSelect('rc.nombre AS nombreRequisito')
-//            ->addSelect('c.nombre AS nombreCargo')
-//            ->addSelect('rc.general')
-//            ->leftJoin('rhrc.requisitoConceptoRel','rc')
-//            ->leftJoin('rhrc.cargoRel','c')
-//            ->orderBy('rhrc.codigoRequisitoCargoPk', 'ASC');
-
-
-            if ($session->get('RhuRequisitoCargo_numeroIdentificacion')) {
-                $queryBuilder->andWhere("r.numeroIdentificacion = '{$session->get('RhuRequisitoCargo_numeroIdentificacion')}'");
-            }
-
-            if ($session->get('RhuRequisitoCargo_nombreCorto')) {
-                $queryBuilder->andWhere("r.nombreCorto = '{$session->get('RhuRequisitoCargo_nombreCorto')}'");
-            }
-        return $queryBuilder;
+        if ($codigoCredito) {
+            $queryBuilder->andWhere("c.codigoCreditoPk = '{$codigoCredito}'");
+        }
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("c.codigoEmpleadoFk = '{$codigoEmpleado}'");
+        }
+        if ($creditoTipo) {
+            $queryBuilder->andWhere("c.codigoCreditoTipoFk = '{$creditoTipo}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("c.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("c.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        switch ($estadoPagado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoPagado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoPagado = 1");
+                break;
+        }
+        switch ($estadoSuspendido) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoSuspendido = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoSuspendido = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('r.fecha', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**

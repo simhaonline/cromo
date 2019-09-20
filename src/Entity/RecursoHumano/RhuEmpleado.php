@@ -13,13 +13,13 @@ class RhuEmpleado
 {
     public $infoLog = [
         "primaryKey" => "codigoEmpleadoPk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_empleado_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     */        
+     */
     private $codigoEmpleadoPk;
 
     /**
@@ -360,6 +360,11 @@ class RhuEmpleado
     protected $visitasEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAcreditacion", mappedBy="empleadoRel")
+     */
+    protected $acreditacionesEmpleadoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuAdicional", mappedBy="empleadoRel")
      */
     protected $adicionalesEmpleadoRel;
@@ -439,6 +444,16 @@ class RhuEmpleado
      * @ORM\OneToMany(targetEntity="RhuTrasladoSalud", mappedBy="empleadoRel")
      */
     protected $trasladosSaludEmpleadoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuPermiso", mappedBy="empleadoRel")
+     */
+    protected $permisosEmpleadoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuPoligrafia", mappedBy="empleadoRel")
+     */
+    protected $poligrafiasEmpleadoRel;
 
     /**
      * @return mixed
@@ -1639,7 +1654,6 @@ class RhuEmpleado
     {
         $this->contratoRel = $contratoRel;
     }
-
 
 
 }

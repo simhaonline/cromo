@@ -109,6 +109,11 @@ class GenCiudad
     protected $rhuEmpleadosCiudadExpedicionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAcademia", mappedBy="ciudadRel")
+     */
+    protected $rhuAcademiaCiuidadRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvSucursal", mappedBy="ciudadRel")
      */
     protected $invSucursalesCiuidadRel;

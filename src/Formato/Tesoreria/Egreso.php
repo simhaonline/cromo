@@ -88,7 +88,7 @@ class Egreso extends \FPDF
         $this->Cell(30, 6, "FECHA PAGO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, $arEgreso->getFecha()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->Cell(65, 6, $arEgreso->getFechaPago()->format('Y-m-d'), 1, 0, 'L', 1);
         //linea 4
         $this->SetXY(10, 58);
         $this->SetFillColor(200, 200, 200);

@@ -44,13 +44,15 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="btn-toolbar" style="float: left">
+        <div class="btn-group">
+            {{ form_widget(form.btnGenerar) }}
+        </div>
+    </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
                href="javascript:abrirVentana3('{{ path('turno_buscar_empleadoprogramar', {'codigoContratoDetalle': arPedidoDetalle.codigoContratoDetalleFk }) }}', 'ProgramarEmpleado', 600, 1200)">Nuevo</a>
-        </div>
-        <div class="btn-group">
-            {{ form_widget(form.btnGenerar) }}
         </div>
         <div class="btn-group">
             {{ form_widget(form.btnActualizar) }}

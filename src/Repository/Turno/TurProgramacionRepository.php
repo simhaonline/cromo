@@ -117,6 +117,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
                 $arProgramacion = new TurProgramacion();
                 $arProgramacion->setPedidoDetalleRel($arPedidoDetalle);
                 $arProgramacion->setPedidoRel($arPedidoDetalle->getPedidoRel());
+                $arProgramacion->setPuestoRel($arPedidoDetalle->getPuestoRel());
                 $arProgramacion->setAnio($arPedidoDetalle->getAnio());
                 $arProgramacion->setMes($arPedidoDetalle->getMes());
                 $arProgramacion->setEmpleadoRel($arPrototipo->getEmpleadoRel());
@@ -214,6 +215,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
             $arPedidoDetalle->setHorasProgramadas($totalHorasDiurnasP + $totalHorasNocturnasP);
             $arPedidoDetalle->setHorasDiurnasProgramadas($totalHorasDiurnasP);
             $arPedidoDetalle->setHorasNocturnasProgramadas($totalHorasNocturnasP);
+            $arPedidoDetalle->setEstadoProgramado(1);
             $em->persist($arPedidoDetalle);
             $em->flush();
         }

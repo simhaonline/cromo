@@ -344,6 +344,11 @@ class RhuEmpleado
     protected $vacacionesEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuVisita", mappedBy="empleadoRel")
+     */
+    protected $visitasEmpleadoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuAdicional", mappedBy="empleadoRel")
      */
     protected $adicionalesEmpleadoRel;

@@ -83,12 +83,12 @@ class VisitaController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(RhuCredito::class)->lista($raw), "Creditos");
+                General::get()->setExportar($em->getRepository(RhuVisita::class)->lista($raw), "Creditos");
             }
         }
-        $arCreditos = $paginator->paginate($em->getRepository(RhuCredito::class)->lista($raw), $request->query->getInt('page', 1), 30);
-        return $this->render('recursohumano/movimiento/nomina/credito/lista.html.twig', [
-            'arCreditos' => $arCreditos,
+        $arVisitas = $paginator->paginate($em->getRepository(RhuVisita::class)->lista($raw), $request->query->getInt('page', 1), 30);
+        return $this->render('recursohumano/movimiento/recurso/visita/lista.html.twig', [
+            'arVisitas' => $arVisitas,
             'form' => $form->createView(),
         ]);
     }

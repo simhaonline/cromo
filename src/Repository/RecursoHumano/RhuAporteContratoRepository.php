@@ -4,8 +4,11 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteContrato;
+use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuEntidad;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -71,23 +74,34 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
         return $arAporteContratos;
     }
 
+    /**
+     * @param $arAporte RhuAporte
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function cargar($arAporte) {
         $em = $this->getEntityManager();
         if(!$arAporte->getEstadoAutorizado()) {
-            $arContratos = $em->getRepository(RhuContrato::class)->contratosPeriodoAporte($arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
-            foreach ($arContratos as $arContrato) {
-                if($this->validarContratoCargar($arAporte->getCodigoAportePk(), $arContrato['codigoContratoPk'])) {
-                    $arContratoProceso = $em->getRepository(RhuContrato::class)->find($arContrato['codigoContratoPk']);
-                    $arAporteContrato = new RhuAporteContrato();
-                    $arAporteContrato->setAporteRel($arAporte);
-                    $arAporteContrato->setContratoRel($arContratoProceso);
-                    $arAporteContrato->setEmpleadoRel($arContratoProceso->getEmpleadoRel());
-                    $arAporteContrato->setSucursalRel($arAporte->getSucursalRel());
-                    $em->persist($arAporteContrato);
+            $arrConfiguracionNomina = $em->getRepository(RhuConfiguracion::class)->generarAporte();
+            $arEntidadRiesgos = $em->getRepository(RhuEntidad::class)->find($arrConfiguracionNomina['codigoEntidadRiesgosProfesionalesFk']);
+            if($arEntidadRiesgos) {
+                $arContratos = $em->getRepository(RhuContrato::class)->contratosPeriodoAporte($arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'), $arAporte->getCodigoSucursalFk());
+                foreach ($arContratos as $arContrato) {
+                    if($this->validarContratoCargar($arAporte->getCodigoAportePk(), $arContrato['codigoContratoPk'])) {
+                        $arContratoProceso = $em->getRepository(RhuContrato::class)->find($arContrato['codigoContratoPk']);
+                        $arAporteContrato = new RhuAporteContrato();
+                        $arAporteContrato->setAporteRel($arAporte);
+                        $arAporteContrato->setContratoRel($arContratoProceso);
+                        $arAporteContrato->setEmpleadoRel($arContratoProceso->getEmpleadoRel());
+                        $arAporteContrato->setSucursalRel($arAporte->getSucursalRel());
+                        $em->persist($arAporteContrato);
+                    }
                 }
+                $em->flush();
+                $this->cantidadEmpleados($arAporte);
+            } else {
+                Mensajes::error('No se puede cargar los contratos porque no esta definida una entidad de riesgos profesionales');
             }
-            $em->flush();
-            $this->cantidadEmpleados($arAporte);
         }
     }
 

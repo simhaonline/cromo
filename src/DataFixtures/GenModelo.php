@@ -114,7 +114,6 @@ class GenModelo extends Fixture
             ['codigo' =>'RhuLicencia',              'modulo'=> 'RecursoHumano',     'funcion' => 'Movimiento',  'grupo' => 'Nomina',        'orden' => 10],
             ['codigo' =>'RhuReclamo',               'modulo'=> 'RecursoHumano',     'funcion' => 'Movimiento',  'grupo' => 'Nomina',        'orden' => 11],
             ['codigo' =>'RhuAporte',                'modulo'=> 'RecursoHumano',     'funcion' => 'Movimiento',  'grupo' => 'Social',        'orden' => 1],
-            ['codigo' =>'RhuProvision',             'modulo'=> 'RecursoHumano',     'funcion' => 'Movimiento',  'grupo' => 'Financiero',    'orden' => 2],
             ['codigo' =>'RhuAccidente',             'modulo'=> 'RecursoHumano',     'funcion' => 'Movimiento',  'grupo' => 'Ocupacional',   'orden' => 3],
             ['codigo' =>'RhuIncidente',             'modulo'=> 'RecursoHumano',     'funcion' => 'Movimiento',  'grupo' => 'Recurso',       'orden' => 4],
             ['codigo' =>'RhuDisciplinario',         'modulo'=> 'RecursoHumano',     'funcion' => 'Movimiento',  'grupo' => 'Recurso',       'orden' => 5],

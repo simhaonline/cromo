@@ -56,7 +56,11 @@ class ConfiguracionType extends AbstractType
                 'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('vrSalarioMinimo', NumberType::class, ['required' => false])
-            ->add('vrAuxilioTransporte', NumberType::class, ['required' => true]);
+            ->add('vrAuxilioTransporte', NumberType::class, ['required' => true])
+            ->add('provisionPorcentajeCesantia', NumberType::class, ['required' => false])
+            ->add('provisionPorcentajeInteres', NumberType::class, ['required' => false])
+            ->add('provisionPorcentajePrima', NumberType::class, ['required' => false])
+            ->add('provisionPorcentajeVacacion', NumberType::class, ['required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

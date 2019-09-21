@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller\RecursoHumano\Movimiento\Nomina\Licencia;
+namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;

@@ -114,6 +114,36 @@ class RhuPago
     private $vrNeto = 0;
 
     /**
+     * @ORM\Column(name="vr_cesantia", options={"default" : 0}, type="float", nullable=true)
+     */
+    private $vrCesantia = 0;
+
+    /**
+     * @ORM\Column(name="vr_interes", options={"default" : 0}, type="float", nullable=true)
+     */
+    private $vrInteres = 0;
+
+    /**
+     * @ORM\Column(name="vr_prima", options={"default" : 0}, type="float", nullable=true)
+     */
+    private $vrPrima = 0;
+
+    /**
+     * @ORM\Column(name="vr_vacacion", options={"default" : 0}, type="float", nullable=true)
+     */
+    private $vrVacacion = 0;
+
+    /**
+     * @ORM\Column(name="vr_ingreso_base_cotizacion", options={"default" : 0}, type="float", nullable=true)
+     */
+    private $vrIngresoBaseCotizacion = 0;
+
+    /**
+     * @ORM\Column(name="vr_ingreso_base_prestacion", options={"default" : 0}, type="float", nullable=true)
+     */
+    private $vrIngresoBasePrestacion = 0;
+
+    /**
      * @ORM\Column(name="dias_ausentismo", type="integer", nullable=true, options={"default":0})
      */
     private $diasAusentismo = 0;
@@ -132,6 +162,11 @@ class RhuPago
      * @ORM\Column(name="estado_anulado", type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoAnulado = false;
+
+    /**
+     * @ORM\Column(name="estado_contabilizado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoContabilizado = false;
 
     /**
      * @ORM\Column(name="estado_egreso", type="boolean",options={"default" : false}, nullable=true)
@@ -839,6 +874,118 @@ class RhuPago
     public function setCodigoSoporteContratoFk($codigoSoporteContratoFk): void
     {
         $this->codigoSoporteContratoFk = $codigoSoporteContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCesantia()
+    {
+        return $this->vrCesantia;
+    }
+
+    /**
+     * @param mixed $vrCesantia
+     */
+    public function setVrCesantia($vrCesantia): void
+    {
+        $this->vrCesantia = $vrCesantia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrInteres()
+    {
+        return $this->vrInteres;
+    }
+
+    /**
+     * @param mixed $vrInteres
+     */
+    public function setVrInteres($vrInteres): void
+    {
+        $this->vrInteres = $vrInteres;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPrima()
+    {
+        return $this->vrPrima;
+    }
+
+    /**
+     * @param mixed $vrPrima
+     */
+    public function setVrPrima($vrPrima): void
+    {
+        $this->vrPrima = $vrPrima;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrVacacion()
+    {
+        return $this->vrVacacion;
+    }
+
+    /**
+     * @param mixed $vrVacacion
+     */
+    public function setVrVacacion($vrVacacion): void
+    {
+        $this->vrVacacion = $vrVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoBaseCotizacion()
+    {
+        return $this->vrIngresoBaseCotizacion;
+    }
+
+    /**
+     * @param mixed $vrIngresoBaseCotizacion
+     */
+    public function setVrIngresoBaseCotizacion($vrIngresoBaseCotizacion): void
+    {
+        $this->vrIngresoBaseCotizacion = $vrIngresoBaseCotizacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoBasePrestacion()
+    {
+        return $this->vrIngresoBasePrestacion;
+    }
+
+    /**
+     * @param mixed $vrIngresoBasePrestacion
+     */
+    public function setVrIngresoBasePrestacion($vrIngresoBasePrestacion): void
+    {
+        $this->vrIngresoBasePrestacion = $vrIngresoBasePrestacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
     }
 
 

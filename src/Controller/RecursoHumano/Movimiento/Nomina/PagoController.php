@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Nomina\Pago;
+namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -104,7 +104,7 @@ class PagoController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @Route("recursohumano/movimiento/nomina/pago/detalle/{id}", name="recursohumano_movimiento_nomina_pago_detalle")
      */
-    public function detalle(Request $request, $id, PaginatorInterface $paginator)
+    public function detalle(Request $request, PaginatorInterface $paginator, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arPago = $em->find(RhuPago::class, $id);
@@ -114,6 +114,10 @@ class PagoController extends AbstractController
             if ($form->get('btnImprimir')->isClicked()) {
                 $objFormato = new Pago();
                 $objFormato->Generar($em, $id);
+            }
+            if ($form->get('btnAnular')->isClicked()) {
+                $em->getRepository(RhuPago::class)->liquidarProvision(['codigoPagoPk' => $arPago->getCodigoPagoPk()]);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_pago_detalle', ['id' => $id]));
             }
         }
         $arPagoDetalles = $paginator->paginate($em->getRepository(RhuPagoDetalle::class)->lista($id), $request->query->getInt('page', 1), 30);

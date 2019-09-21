@@ -640,7 +640,7 @@ class RhuAporteDetalle
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="aportesDetallesEntidadRiesgosRel")
-     * @ORM\JoinColumn(name="codigo_entidad_riesgos_fk",referencedColumnName="codigo_entidad_pk")
+     * @ORM\JoinColumn(name="codigo_entidad_riesgo_fk",referencedColumnName="codigo_entidad_pk")
      */
     protected $entidadRiesgosRel;
 
@@ -2173,70 +2173,6 @@ class RhuAporteDetalle
     /**
      * @return mixed
      */
-    public function getCodigoEntidadPensionFk()
-    {
-        return $this->codigoEntidadPensionFk;
-    }
-
-    /**
-     * @param mixed $codigoEntidadPensionFk
-     */
-    public function setCodigoEntidadPensionFk($codigoEntidadPensionFk): void
-    {
-        $this->codigoEntidadPensionFk = $codigoEntidadPensionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoEntidadSaludFk()
-    {
-        return $this->codigoEntidadSaludFk;
-    }
-
-    /**
-     * @param mixed $codigoEntidadSaludFk
-     */
-    public function setCodigoEntidadSaludFk($codigoEntidadSaludFk): void
-    {
-        $this->codigoEntidadSaludFk = $codigoEntidadSaludFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoEntidadRiesgoFk()
-    {
-        return $this->codigoEntidadRiesgoFk;
-    }
-
-    /**
-     * @param mixed $codigoEntidadRiesgoFk
-     */
-    public function setCodigoEntidadRiesgoFk($codigoEntidadRiesgoFk): void
-    {
-        $this->codigoEntidadRiesgoFk = $codigoEntidadRiesgoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoEntidadCajaFk()
-    {
-        return $this->codigoEntidadCajaFk;
-    }
-
-    /**
-     * @param mixed $codigoEntidadCajaFk
-     */
-    public function setCodigoEntidadCajaFk($codigoEntidadCajaFk): void
-    {
-        $this->codigoEntidadCajaFk = $codigoEntidadCajaFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getIndicadorTarifaEspecialPensiones()
     {
         return $this->indicadorTarifaEspecialPensiones;
@@ -2520,6 +2456,70 @@ class RhuAporteDetalle
     public function setNumeroHorasLaboradas($numeroHorasLaboradas): void
     {
         $this->numeroHorasLaboradas = $numeroHorasLaboradas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadPensionFk()
+    {
+        return $this->codigoEntidadPensionFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadPensionFk
+     */
+    public function setCodigoEntidadPensionFk($codigoEntidadPensionFk): void
+    {
+        $this->codigoEntidadPensionFk = $codigoEntidadPensionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadSaludFk()
+    {
+        return $this->codigoEntidadSaludFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadSaludFk
+     */
+    public function setCodigoEntidadSaludFk($codigoEntidadSaludFk): void
+    {
+        $this->codigoEntidadSaludFk = $codigoEntidadSaludFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadRiesgoFk()
+    {
+        return $this->codigoEntidadRiesgoFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadRiesgoFk
+     */
+    public function setCodigoEntidadRiesgoFk($codigoEntidadRiesgoFk): void
+    {
+        $this->codigoEntidadRiesgoFk = $codigoEntidadRiesgoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidadCajaFk()
+    {
+        return $this->codigoEntidadCajaFk;
+    }
+
+    /**
+     * @param mixed $codigoEntidadCajaFk
+     */
+    public function setCodigoEntidadCajaFk($codigoEntidadCajaFk): void
+    {
+        $this->codigoEntidadCajaFk = $codigoEntidadCajaFk;
     }
 
     /**

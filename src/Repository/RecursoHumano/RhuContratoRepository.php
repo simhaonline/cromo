@@ -123,14 +123,15 @@ class RhuContratoRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->execute();
     }
 
-    public function contratosPeriodoAporte($fechaDesde = "", $fechaHasta = "")
+    public function contratosPeriodoAporte($fechaDesde = "", $fechaHasta = "", $codigoSucursal = null)
     {
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select('c.codigoContratoPk')
             ->leftJoin('c.empleadoRel', 'e')
             ->where("(c.fechaHasta >= '" . $fechaDesde . "' OR c.indefinido = 1) "
-                . "AND c.fechaDesde <= '" . $fechaHasta . "' ");
+                . "AND c.fechaDesde <= '" . $fechaHasta . "' ")
+            ->andWhere("c.codigoSucursalFk = '{$codigoSucursal}'");
         $arContratos = $queryBuilder->getQuery()->getResult();
         return $arContratos;
     }

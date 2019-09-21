@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Nomina\Vacaciones;
+namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;

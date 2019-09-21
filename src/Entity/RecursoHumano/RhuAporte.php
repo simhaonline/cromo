@@ -32,12 +32,12 @@ class RhuAporte
     private $mes = 0;
 
     /**
-     * @ORM\Column(name="anioSalud", type="integer")
+     * @ORM\Column(name="anio_salud", type="integer")
      */
     private $anioSalud = 0;
 
     /**
-     * @ORM\Column(name="mesSalud", type="integer")
+     * @ORM\Column(name="mes_salud", type="integer")
      */
     private $mesSalud = 0;
 
@@ -122,6 +122,11 @@ class RhuAporte
      * @ORM\OneToMany(targetEntity="RhuAporteSoporte", mappedBy="aporteRel")
      */
     protected $aportesSoportesAporteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteEntidad", mappedBy="aporteRel")
+     */
+    protected $aportesEntidadesAporteRel;
 
     /**
      * @return mixed
@@ -457,6 +462,22 @@ class RhuAporte
     public function setVrIngresoBaseCotizacion($vrIngresoBaseCotizacion): void
     {
         $this->vrIngresoBaseCotizacion = $vrIngresoBaseCotizacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesEntidadesAporteRel()
+    {
+        return $this->aportesEntidadesAporteRel;
+    }
+
+    /**
+     * @param mixed $aportesEntidadesAporteRel
+     */
+    public function setAportesEntidadesAporteRel($aportesEntidadesAporteRel): void
+    {
+        $this->aportesEntidadesAporteRel = $aportesEntidadesAporteRel;
     }
 
 

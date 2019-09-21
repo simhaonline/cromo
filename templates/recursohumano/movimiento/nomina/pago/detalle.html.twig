@@ -17,8 +17,8 @@
             <td class="td-in-well">{{ arPago.codigoPagoPk }}</td>
             <td class="titulo">NÚMERO:</td>
             <td class="td-in-well">{{ arPago.numero }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well-numerico" align="right"></td>
+            <td class="titulo">IBC:</td>
+            <td class="td-in-well-numerico" align="right">{{ arPago.vrIngresoBaseCotizacion | number_format(0, '.', ',') }}</td>
             <td class="titulo"></td>
             <td class="td-in-well-numerico" align="right"></td>
         </tr>
@@ -28,9 +28,8 @@
                 - {{ arPago.empleadoRel.nombreCorto | default('') }}</td>
             <td class="titulo">TIPO:</td>
             <td class="td-in-well">{{ arPago.pagoTipoRel.nombre | default('') }}</td>
-            <td class="titulo">IBC:</td>
-            <td class="td-in-well-numerico" align="right">
-                {#$ {{ arPago.vrIngresoBaseCotizacion | number_format(0, '.', ',') }}</td>#}
+            <td class="titulo">IBP:</td>
+            <td class="td-in-well-numerico" align="right">{{ arPago.vrIngresoBasePrestacion | number_format(0, '.', ',') }}</td>
             <td class="titulo">TOTAL DEVENGADO:</td>
             <td class="td-in-well-numerico" align="right">{{ arPago.VrDevengado | number_format(0, '.', ',') }}</td>
         </tr>
@@ -39,8 +38,8 @@
             <td class="td-in-well">{{ arPago.contratoRel.grupoRel.nombre | default('') }}</td>
             <td class="titulo">DESDE:</td>
             <td class="td-in-well">{{ arPago.fechaDesde|date("Y/m/d") }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well-numerico" align="right"></td>
+            <td class="titulo">CESANTIA:</td>
+            <td class="td-in-well-numerico" align="right">{{ arPago.vrCesantia | number_format(0, '.', ',') }}</td>
             <td class="titulo">TOTAL DEDUCCIONES:</td>
             <td class="td-in-well-numerico" align="right">{{ arPago.vrDeduccion | number_format(0, '.', ',') }}</td>
         </tr>
@@ -49,10 +48,30 @@
             <td class="td-in-well">{{ arPago.codigoProgramacionDetalleFk }}</td>
             <td class="titulo">HASTA:</td>
             <td class="td-in-well">{{ arPago.fechaHasta|date("Y/m/d") }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well-numerico" align="right"></td>
+            <td class="titulo">INTERES:</td>
+            <td class="td-in-well-numerico" align="right">{{ arPago.vrInteres | number_format(0, '.', ',') }}</td>
             <td class="titulo">TOTAL NETO:</td>
             <td class="td-in-well-numerico" align="right">{{ arPago.VrNeto | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">PRIMA:</td>
+            <td class="td-in-well-numerico" align="right">{{ arPago.vrPrima | number_format(0, '.', ',') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well-numerico" align="right"></td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">VACACION:</td>
+            <td class="td-in-well-numerico" align="right">{{ arPago.vrVacacion | number_format(0, '.', ',') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well-numerico" align="right"></td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIOS:</td>

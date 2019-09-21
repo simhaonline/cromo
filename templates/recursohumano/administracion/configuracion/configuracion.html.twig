@@ -109,6 +109,36 @@
             </div>
         </div>
     </div>
+    <hr>
+    <div class="panel panel-default">
+        <div class="panel-heading">Provision</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Censantia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.provisionPorcentajeCesantia ) }}
+                    {{ form_errors(formConfiguracion.provisionPorcentajeCesantia ) }}
+                </div>
+                <label for="" class="col-sm-2 control-label">Interes:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.provisionPorcentajeInteres ) }}
+                    {{ form_errors(formConfiguracion.provisionPorcentajeInteres ) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Prima:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.provisionPorcentajePrima ) }}
+                    {{ form_errors(formConfiguracion.provisionPorcentajePrima ) }}
+                </div>
+                <label for="" class="col-sm-2 control-label">Vacacion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.provisionPorcentajeVacacion ) }}
+                    {{ form_errors(formConfiguracion.provisionPorcentajeVacacion ) }}
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal-footer">
         {{ form_widget(formConceptoHora.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>

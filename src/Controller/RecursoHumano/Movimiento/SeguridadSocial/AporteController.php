@@ -10,6 +10,7 @@ use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteContrato;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
+use App\Entity\RecursoHumano\RhuAporteEntidad;
 use App\Entity\RecursoHumano\RhuAportePlanilla;
 use App\Entity\RecursoHumano\RhuAporteSoporte;
 use App\Entity\RecursoHumano\RhuConfiguracion;
@@ -18,6 +19,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Form\Type\RecursoHumano\AporteType;
 use App\General\General;
 use App\Utilidades\Estandares;
+use App\Utilidades\Modelo;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -129,10 +131,9 @@ class AporteController extends AbstractController
     /**
      * @Route("recursohumano/movimiento/seguridadsocial/aporte/detalle/{id}", name="recursohumano_movimiento_seguridadsocial_aporte_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator, Modelo $utilidadesModelo, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arAporte = $em->getRepository(RhuAporte::class)->find($id);
         if (!$arAporte) {
             return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
@@ -155,6 +156,7 @@ class AporteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(RhuAporte::class)->autorizar($arAporte);
+                $em->getRepository(RhuAporte::class)->liquidar($arAporte);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_detalle', array('id' => $id)));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
@@ -186,17 +188,19 @@ class AporteController extends AbstractController
             if ($form->get('btnEliminarContratos')->isClicked()) {
                 if (!$arAporte->getEstadoAutorizado()) {
                     $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                    $this->get("UtilidadesModelo")->eliminar(RhuAporteContrato::class, $arrSeleccionados);
+                    $utilidadesModelo->eliminar(RhuAporteContrato::class, $arrSeleccionados);
                 }
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_detalle', array('id' => $id)));
             }
         }
         $arAporteDetalles = $paginator->paginate($em->getRepository(RhuAporteDetalle::class)->lista($id), $request->query->getInt('page', 1), 2000);
         $arAporteContratos = $paginator->paginate($em->getRepository(RhuAporteContrato::class)->lista($id), $request->query->getInt('page', 1), 2000);
+        $arAporteEntidades = $paginator->paginate($em->getRepository(RhuAporteEntidad::class)->lista($id), $request->query->getInt('page', 1), 2000);
         return $this->render('recursohumano/movimiento/seguridadsocial/aporte/detalle.html.twig', [
             'arAporte' => $arAporte,
             'arAporteContratos' => $arAporteContratos,
             'arAporteDetalles' => $arAporteDetalles,
+            'arAporteEntidades' => $arAporteEntidades,
             'clase' => array('clase' => 'RhuAporte', 'codigo' => $id),
             'form' => $form->createView()
         ]);

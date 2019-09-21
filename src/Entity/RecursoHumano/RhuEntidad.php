@@ -168,6 +168,11 @@ class RhuEntidad
     protected $trasladosSaludEntidadSaludNuevaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAporteEntidad", mappedBy="entidadRel")
+     */
+    protected $aportesEntidadesEntidadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEntidadPk()
@@ -645,6 +650,22 @@ class RhuEntidad
     public function setTrasladosSaludEntidadSaludNuevaRel($trasladosSaludEntidadSaludNuevaRel): void
     {
         $this->trasladosSaludEntidadSaludNuevaRel = $trasladosSaludEntidadSaludNuevaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesEntidadesEntidadRel()
+    {
+        return $this->aportesEntidadesEntidadRel;
+    }
+
+    /**
+     * @param mixed $aportesEntidadesEntidadRel
+     */
+    public function setAportesEntidadesEntidadRel($aportesEntidadesEntidadRel): void
+    {
+        $this->aportesEntidadesEntidadRel = $aportesEntidadesEntidadRel;
     }
 
 

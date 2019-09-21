@@ -2,7 +2,7 @@
 
 
 namespace App\Utilidades;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 
 class Modelo
@@ -10,10 +10,11 @@ class Modelo
     private $em;
     /*
     */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->em = $entityManager;
     }
+
     public function eliminar($entidad, $arrSeleccionados){
         try{
             $em = $this->em;

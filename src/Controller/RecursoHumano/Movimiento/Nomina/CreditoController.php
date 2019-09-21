@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Nomina\Credito;
+namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;

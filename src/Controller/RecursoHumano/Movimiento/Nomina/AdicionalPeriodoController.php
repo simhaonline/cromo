@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller\RecursoHumano\Movimiento\Nomina\Adicional;
+namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 
 
 use App\Controller\BaseController;

@@ -997,4 +997,59 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $arPagos;
     }
 
+    public function liquidarProvision($arrPagos) {
+        $em = $this->getEntityManager();
+        $arrConfiguracionNomina = $em->getRepository(RhuConfiguracion::class)->provision();
+        $porcentajeCesantia = $arrConfiguracionNomina['provisionPorcentajeCesantia'];
+        $porcentajeInteres = $arrConfiguracionNomina['provisionPorcentajeInteres'];
+        $porcentajeVacacion = $arrConfiguracionNomina['provisionPorcentajePrima'];
+        $porcentajePrima = $arrConfiguracionNomina['provisionPorcentajeVacacion'];
+        foreach ($arrPagos as $arrPago) {
+            $arPago = $em->getRepository(RhuPago::class)->find($arrPagos['codigoPagoPk']);
+            $ingresoBasePrestacion = $arPago->getVrIngresoBasePrestacion();
+            $cesantia = ($ingresoBasePrestacion * $porcentajeCesantia) / 100; // Porcentaje 8.33
+            $interes = ($cesantia * $porcentajeInteres) / 100; // Porcentaje 1 sobre las cesantias
+            $prima = ($ingresoBasePrestacion * $porcentajePrima) / 100; // 8.33
+            $arPago->setVrCesantia($cesantia);
+            $arPago->setVrInteres($interes);
+            $arPago->setVrPrima($prima);
+            $arPago->setVrVacacion(0);
+            $em->persist($arPago);
+        }
+        $em->flush();
+
+    }
+
+    public function regenerarIbp($fechaDesde, $fechaHasta) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuPago::class, 'p')
+            ->select('p.codigoPagoPk')
+            ->where("p.fechaDesde >= '{$fechaDesde}' AND p.fechaDesde <= '{$fechaHasta}'")
+        ->andWhere('p.estadoContabilizado = 0');
+        $arPagos = $queryBuilder->getQuery()->getResult();
+        foreach ($arPagos as $arPago) {
+            $queryBuilder = $em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+                ->select('pd.codigoPagoDetallePk')
+                ->addSelect('c.generaIngresoBasePrestacion')
+                ->addSelect('pd.vrPago')
+                ->leftJoin('pd.conceptoRel', 'c')
+                ->where("pd.codigoPagoFk = {$arPago['codigoPagoPk']}");
+            $arPagosDetalles = $queryBuilder->getQuery()->getResult();
+            $ingresoBasePrestacion = 0;
+            foreach ($arPagosDetalles as $arPagoDetalle) {
+                $arPagoDetalleAct = $em->getRepository(RhuPagoDetalle::class)->find($arPagoDetalle['codigoPagoDetallePk']);
+                if($arPagoDetalle['generaIngresoBasePrestacion']) {
+                    $arPagoDetalleAct->setVrIngresoBasePrestacion($arPagoDetalle['vrPago']);
+                    $ingresoBasePrestacion += $arPagoDetalle['vrPago'];
+                } else {
+                    $arPagoDetalleAct->setVrIngresoBasePrestacion(0);
+                }
+                $em->persist($arPagoDetalleAct);
+            }
+            $arPagoAct = $em->getRepository(RhuPago::class)->find($arPago['codigoPagoPk']);
+            $arPagoAct->setVrIngresoBasePrestacion($ingresoBasePrestacion);
+            $em->persist($arPagoAct);
+        }
+        $em->flush();
+    }
 }

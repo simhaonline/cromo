@@ -194,39 +194,24 @@ class RhuConfiguracion
     private $codigoComprobanteLiquidacion;
 
     /**
-     * @ORM\Column(name="prestaciones_porcentaje_cesantias", type="float", nullable=true)
+     * @ORM\Column(name="provision_porcentaje_cesantia", type="float", nullable=true, options={"default":8.33})
      */
-    private $prestacionesPorcentajeCesantias = 0;
+    private $provisionPorcentajeCesantia = 0;
 
     /**
-     * @ORM\Column(name="prestaciones_porcentaje_intereses_cesantias", type="float", nullable=true)
+     * @ORM\Column(name="provision_porcentaje_interes", type="float", nullable=true, options={"default":12})
      */
-    private $prestacionesPorcentajeInteresesCesantias = 0;
+    private $provisionPorcentajeInteres = 0;
 
     /**
-     * @ORM\Column(name="prestaciones_porcentaje_primas", type="float", nullable=true)
+     * @ORM\Column(name="provision_porcentaje_prima", type="float", nullable=true, options={"default":8.33})
      */
-    private $prestacionesPorcentajePrimas = 0;
+    private $provisionPorcentajePrima = 0;
 
     /**
-     * @ORM\Column(name="prestaciones_porcentaje_vacaciones", type="float", nullable=true)
+     * @ORM\Column(name="provision_porcentaje_vacacion", type="float", nullable=true, options={"default":5})
      */
-    private $prestacionesPorcentajeVacaciones = 0;
-
-    /**
-     * @ORM\Column(name="prestaciones_porcentaje_aporte_vacaciones", type="float", nullable=true)
-     */
-    private $prestacionesPorcentajeAporteVacaciones = 0;
-
-    /**
-     * @ORM\Column(name="prestaciones_porcentaje_indemnizacion", type="float", nullable=true)
-     */
-    private $prestacionesPorcentajeIndemnizacion = 0;
-
-    /**
-     * @ORM\Column(name="aportes_porcentaje_caja", type="float", nullable=true)
-     */
-    private $aportesPorcentajeCaja = 0;
+    private $provisionPorcentajeVacacion = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoAuxilioTransporteRel")
@@ -245,22 +230,6 @@ class RhuConfiguracion
      * @ORM\JoinColumn(name="codigo_entidad_riesgos_profesionales_fk", referencedColumnName="codigo_entidad_pk")
      */
     protected $entidadRiesgosRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -825,113 +794,65 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getPrestacionesPorcentajeCesantias()
+    public function getProvisionPorcentajeCesantia()
     {
-        return $this->prestacionesPorcentajeCesantias;
+        return $this->provisionPorcentajeCesantia;
     }
 
     /**
-     * @param mixed $prestacionesPorcentajeCesantias
+     * @param mixed $provisionPorcentajeCesantia
      */
-    public function setPrestacionesPorcentajeCesantias($prestacionesPorcentajeCesantias): void
+    public function setProvisionPorcentajeCesantia($provisionPorcentajeCesantia): void
     {
-        $this->prestacionesPorcentajeCesantias = $prestacionesPorcentajeCesantias;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrestacionesPorcentajeInteresesCesantias()
-    {
-        return $this->prestacionesPorcentajeInteresesCesantias;
-    }
-
-    /**
-     * @param mixed $prestacionesPorcentajeInteresesCesantias
-     */
-    public function setPrestacionesPorcentajeInteresesCesantias($prestacionesPorcentajeInteresesCesantias): void
-    {
-        $this->prestacionesPorcentajeInteresesCesantias = $prestacionesPorcentajeInteresesCesantias;
+        $this->provisionPorcentajeCesantia = $provisionPorcentajeCesantia;
     }
 
     /**
      * @return mixed
      */
-    public function getPrestacionesPorcentajePrimas()
+    public function getProvisionPorcentajeInteres()
     {
-        return $this->prestacionesPorcentajePrimas;
+        return $this->provisionPorcentajeInteres;
     }
 
     /**
-     * @param mixed $prestacionesPorcentajePrimas
+     * @param mixed $provisionPorcentajeInteres
      */
-    public function setPrestacionesPorcentajePrimas($prestacionesPorcentajePrimas): void
+    public function setProvisionPorcentajeInteres($provisionPorcentajeInteres): void
     {
-        $this->prestacionesPorcentajePrimas = $prestacionesPorcentajePrimas;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrestacionesPorcentajeVacaciones()
-    {
-        return $this->prestacionesPorcentajeVacaciones;
-    }
-
-    /**
-     * @param mixed $prestacionesPorcentajeVacaciones
-     */
-    public function setPrestacionesPorcentajeVacaciones($prestacionesPorcentajeVacaciones): void
-    {
-        $this->prestacionesPorcentajeVacaciones = $prestacionesPorcentajeVacaciones;
+        $this->provisionPorcentajeInteres = $provisionPorcentajeInteres;
     }
 
     /**
      * @return mixed
      */
-    public function getPrestacionesPorcentajeAporteVacaciones()
+    public function getProvisionPorcentajePrima()
     {
-        return $this->prestacionesPorcentajeAporteVacaciones;
+        return $this->provisionPorcentajePrima;
     }
 
     /**
-     * @param mixed $prestacionesPorcentajeAporteVacaciones
+     * @param mixed $provisionPorcentajePrima
      */
-    public function setPrestacionesPorcentajeAporteVacaciones($prestacionesPorcentajeAporteVacaciones): void
+    public function setProvisionPorcentajePrima($provisionPorcentajePrima): void
     {
-        $this->prestacionesPorcentajeAporteVacaciones = $prestacionesPorcentajeAporteVacaciones;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrestacionesPorcentajeIndemnizacion()
-    {
-        return $this->prestacionesPorcentajeIndemnizacion;
-    }
-
-    /**
-     * @param mixed $prestacionesPorcentajeIndemnizacion
-     */
-    public function setPrestacionesPorcentajeIndemnizacion($prestacionesPorcentajeIndemnizacion): void
-    {
-        $this->prestacionesPorcentajeIndemnizacion = $prestacionesPorcentajeIndemnizacion;
+        $this->provisionPorcentajePrima = $provisionPorcentajePrima;
     }
 
     /**
      * @return mixed
      */
-    public function getAportesPorcentajeCaja()
+    public function getProvisionPorcentajeVacacion()
     {
-        return $this->aportesPorcentajeCaja;
+        return $this->provisionPorcentajeVacacion;
     }
 
     /**
-     * @param mixed $aportesPorcentajeCaja
+     * @param mixed $provisionPorcentajeVacacion
      */
-    public function setAportesPorcentajeCaja($aportesPorcentajeCaja): void
+    public function setProvisionPorcentajeVacacion($provisionPorcentajeVacacion): void
     {
-        $this->aportesPorcentajeCaja = $aportesPorcentajeCaja;
+        $this->provisionPorcentajeVacacion = $provisionPorcentajeVacacion;
     }
 
     /**

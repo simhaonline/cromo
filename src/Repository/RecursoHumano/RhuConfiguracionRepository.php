@@ -23,7 +23,6 @@ class RhuConfiguracionRepository extends ServiceEntityRepository
             ->addSelect('c.codigoConceptoFondoSolidaridadPensionFk')
             ->where('c.codigoConfiguracionPk = 1');
         return $queryBuilder->getQuery()->getSingleResult();
-
     }
 
     public function cargarContratos(): array
@@ -78,6 +77,17 @@ class RhuConfiguracionRepository extends ServiceEntityRepository
             ->where('c.codigoConfiguracionPk = 1');
         return $queryBuilder->getQuery()->getSingleResult();
 
+    }
+
+    public function provision(): array
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuConfiguracion::class, 'c')
+            ->select('c.provisionPorcentajeCesantia')
+            ->addSelect('c.provisionPorcentajeInteres')
+            ->addSelect('c.provisionPorcentajePrima')
+            ->addSelect('c.provisionPorcentajeVacacion')
+            ->where('c.codigoConfiguracionPk = 1');
+        return $queryBuilder->getQuery()->getSingleResult();
     }
 
 }

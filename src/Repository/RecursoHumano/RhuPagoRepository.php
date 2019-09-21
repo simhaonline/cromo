@@ -997,15 +997,20 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $arPagos;
     }
 
-    public function liquidarProvision($arrPagos) {
+    public function regenerarProvision($fechaDesde, $fechaHasta) {
         $em = $this->getEntityManager();
         $arrConfiguracionNomina = $em->getRepository(RhuConfiguracion::class)->provision();
         $porcentajeCesantia = $arrConfiguracionNomina['provisionPorcentajeCesantia'];
         $porcentajeInteres = $arrConfiguracionNomina['provisionPorcentajeInteres'];
         $porcentajeVacacion = $arrConfiguracionNomina['provisionPorcentajePrima'];
         $porcentajePrima = $arrConfiguracionNomina['provisionPorcentajeVacacion'];
-        foreach ($arrPagos as $arrPago) {
-            $arPago = $em->getRepository(RhuPago::class)->find($arrPagos['codigoPagoPk']);
+        $queryBuilder = $em->createQueryBuilder()->from(RhuPago::class, 'p')
+            ->select('p.codigoPagoPk')
+            ->where("p.fechaDesde >= '{$fechaDesde}' AND p.fechaDesde <= '{$fechaHasta}'")
+            ->andWhere('p.estadoContabilizado = 0');
+        $arPagos = $queryBuilder->getQuery()->getResult();
+        foreach ($arPagos as $arPago) {
+            $arPago = $em->getRepository(RhuPago::class)->find($arPago['codigoPagoPk']);
             $ingresoBasePrestacion = $arPago->getVrIngresoBasePrestacion();
             $cesantia = ($ingresoBasePrestacion * $porcentajeCesantia) / 100; // Porcentaje 8.33
             $interes = ($cesantia * $porcentajeInteres) / 100; // Porcentaje 1 sobre las cesantias

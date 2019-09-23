@@ -99,6 +99,16 @@ class RhuVisita
     private $estadoAutorizado = false;
 
     /**
+     * @ORM\Column(name="estado_aprobado", type="boolean")
+     */
+    private $estadoAprobado = false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean")
+     */
+    private $estadoAnulado = false;
+
+    /**
      * @ORM\Column(name="estado_cerrado", type="boolean")
      */
     private $estadoCerrado = false;
@@ -459,6 +469,54 @@ class RhuVisita
     public function setVisitaTipoRel($visitaTipoRel): void
     {
         $this->visitaTipoRel = $visitaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoRel()
+    {
+        return $this->empleadoRel;
+    }
+
+    /**
+     * @param mixed $empleadoRel
+     */
+    public function setEmpleadoRel($empleadoRel): void
+    {
+        $this->empleadoRel = $empleadoRel;
     }
 
 

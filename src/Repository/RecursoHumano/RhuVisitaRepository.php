@@ -59,7 +59,7 @@ class RhuVisitaRepository extends ServiceEntityRepository
         $estadoAnulado = null;
 
         if ($filtros) {
-            $codigoVisita = $filtros['codigoVacacion'] ?? null;
+            $codigoVisita = $filtros['codigoVisita'] ?? null;
             $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
@@ -75,12 +75,14 @@ class RhuVisitaRepository extends ServiceEntityRepository
             ->addSelect('v.fechaVence')
             ->addselect('e.numeroIdentificacion as numeroIdentificacion')
             ->addselect('e.nombreCorto as empleado')
+            ->addselect('c.nombre as cargo')
             ->addSelect('v.nombreQuienVisita')
             ->addselect('v.estadoAutorizado')
             ->addselect('v.estadoAprobado')
             ->addselect('v.estadoAnulado')
             ->leftJoin('v.visitaTipoRel', 'vt')
-            ->leftJoin('v.empleadoRel', 'e');
+            ->leftJoin('v.empleadoRel', 'e')
+            ->leftJoin('e.cargoRel', 'c');
         if ($codigoVisita) {
             $queryBuilder->andWhere("v.codigoVisitaPk = '{$codigoVisita}'");
         }

@@ -13,11 +13,11 @@
                     <div class="form-group form-group-sm">
                         <label class=" col-sm-1 control-label">Codigo:</label>
                         <div class="col-sm-2">
-                            {{ form_widget(form.codigoVisitaPk) }}
+                            {{ form_widget(form.codigoExamenPk) }}
                         </div>
                         <label class=" col-sm-1 control-label">Tipo:</label>
                         <div class="col-sm-2">
-                            {{ form_widget(form.codigoVisitaTipoFk) }}
+                            {{ form_widget(form.codigoExamenClaseFk) }}
                         </div>
                         <label class="col-sm-1 col-sm-offset-3 control-label">Autorizado:</label>
                         <div class="col-sm-2">
@@ -57,43 +57,48 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>TIPO</th>
+            <th>CLASE</th>
             <th>FECHA</th>
-            <th>VENCE</th>
             <th>IDENTIFICACION</th>
             <th>EMPLEADO</th>
             <th>CARGO</th>
-            <th>RESPONSABLE</th>
+            <th>ENTIDAD</th>
+            <th>COBRO</th>
             <th title="Estado autorizado">AUT</th>
             <th title="Estado aprobado">APR</th>
             <th title="Estado anulado">ANU</th>
             <th></th>
             <th></th>
+            <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
+                                                                     onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
         </tr>
         </thead>
         <tbody>
-        {% for arVisita in arVisitas %}
+        {% for arExamen in arExamenes %}
             <tr>
-                <td>{{ arVisita.codigoVisitaPk }}</td>
-                <td>{{ arVisita.tipo }}</td>
-                <td>{{ arVisita.fecha | date('Y-m-d') }}</td>
-                <td>{{ arVisita.fechaVence | date('Y-m-d') }}</td>
-                <td>{{ arVisita.numeroIdentificacion }}</td>
-                <td>{{ arVisita.empleado }}</td>
-                <td>{{ arVisita.cargo }}</td>
-                <td>{{ arVisita.nombreQuienVisita }}</td>
-                <td>{{ arVisita.estadoAutorizado ? 'SI':'NO' }}</td>
-                <td>{{ arVisita.estadoAprobado ? 'SI':'NO' }}</td>
-                <td>{{ arVisita.estadoAnulado ? 'SI':'NO' }}</td>
+                <td>{{ arExamen.codigoExamenPk }}</td>
+                <td>{{ arExamen.clase }}</td>
+                <td>{{ arExamen.fecha | date('Y-m-d') }}</td>
+                <td>{{ arExamen.numeroIdentificacion }}</td>
+                <td>{{ arExamen.empleado }}</td>
+                <td>{{ arExamen.cargo }}</td>
+                <td>{{ arExamen.entidad }}</td>
+                <td>{{ arExamen.cobro }}</td>
+                <td>{{ arExamen.estadoAutorizado ? 'SI':'NO' }}</td>
+                <td>{{ arExamen.estadoAprobado ? 'SI':'NO' }}</td>
+                <td>{{ arExamen.estadoAnulado ? 'SI':'NO' }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_recurso_visita_nuevo',{'id': arVisita.codigoVisitaPk }) }}"><i
+                    <a href="{{ path('recursohumano_movimiento_contratacion_examen_nuevo',{'id': arExamen.codigoExamenPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_recurso_visita_detalle',{'id' : arVisita.codigoVisitaPk }) }}">
+                    <a href="{{ path('recursohumano_movimiento_contratacion_examen_detalle',{'id' : arExamen.codigoExamenPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arExamen.codigoExamenPk  }}" />
                 </td>
             </tr>
         {% endfor %}
@@ -101,25 +106,25 @@
     </table>
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">Registros
-            <span class="badge">{{ arVisitas.getTotalItemCount }}
+            <span class="badge">{{ arExamenes.getTotalItemCount }}
             </span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-        {{ knp_pagination_render(arVisitas) }}
+        {{ knp_pagination_render(arExamenes) }}
     </div>
     <div class="btn-group btn-xs" style="float: left; width: 60px">
         {{ form_widget(form.limiteRegistros) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
-        {{ form_widget(form.btnEliminar) }}
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('recursohumano_movimiento_recurso_visita_nuevo', {'id': 0}) }}">Nuevo</a>
+           href="{{ path('recursohumano_movimiento_contratacion_examen_nuevo', {'id': 0}) }}">Nuevo</a>
     </div>
     <br/><br/>
     {{ form_end(form) }}

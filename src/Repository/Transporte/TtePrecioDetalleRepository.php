@@ -29,7 +29,7 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
             ->addSelect('cd.sabado as ciudadDestinoSabado')
             ->addSelect('cd.domingo as ciudadDestinoDomingo')
             ->addSelect('prd.codigoCiudadDestinoFk')
-            ->addSelect('p.nombre AS producto')
+            ->addSelect('p.nombre AS productoNombre')
             ->addSelect('prd.codigoProductoFk')
             ->addSelect('prd.vrPeso')
             ->addSelect('prd.vrUnidad')

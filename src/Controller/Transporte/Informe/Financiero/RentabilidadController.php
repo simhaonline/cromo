@@ -9,6 +9,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteNovedad;
 use App\Formato\Transporte\Rentabilidad;
 use App\General\General;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,11 +36,13 @@ class RentabilidadController extends Controller
         $paginator  = $this->get('knp_paginator');
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
-            ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
-            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => $fecha])
             ->add('cboDespachoTipoRel', EntityType::class, $em->getRepository(TteDespachoTipo::class)->llenarCombo())
+            ->add('codigoVehiculo', TextType::class, array('required' => false))
+            ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
@@ -56,6 +59,7 @@ class RentabilidadController extends Controller
                         } else {
                             $session->set('filtroTteDespachoCodigoDespachoTipo', null);
                         }
+                        $session->set('filtroTteDespachoCodigoVehiculo', $form->get('codigoVehiculo')->getData());
                         $queryBuilder = $this->getDoctrine()->getRepository(TteDespacho::class)->rentabilidad($fechaDesde, $fechaHasta);
                         $arDespachos = $queryBuilder->getQuery()->getResult();
                         $arDespachos = $paginator->paginate($arDespachos, $request->query->getInt('page', 1), 1000);

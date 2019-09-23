@@ -219,8 +219,8 @@ class Cliente extends \FPDF
         $pdf->Ln();
         foreach ($arPrecios as $arPrecio => $precioItem) {
             $pdf->Cell(15, 4, utf8_decode(substr($precioItem['codigoPrecioDetallePk'], 0, 5)), 'LRB', 0, 'L');
-            $pdf->Cell(20, 4, utf8_decode(substr($precioItem['ciudadOrigen'], 0, 8)), 'LRB', 0, 'L');
-            $pdf->Cell(37, 4, utf8_decode(substr($precioItem['ciudadDestino'], 0, 8)), 'LRB', 0, 'L');
+            $pdf->Cell(20, 4, utf8_decode(substr($precioItem['ciudadOrigen'], 0, 20)), 'LRB', 0, 'L');
+            $pdf->Cell(37, 4, utf8_decode(substr($precioItem['ciudadDestino'], 0, 20)), 'LRB', 0, 'L');
             if ($precioItem['zonaNombre']) {
                 $pdf->Cell(35, 4, substr($precioItem['zonaNombre'], 0, 20), 'LRB', 0, 'L');
             } else {

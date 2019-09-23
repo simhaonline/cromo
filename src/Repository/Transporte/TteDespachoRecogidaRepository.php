@@ -77,6 +77,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->addSelect('dr.estadoAprobado')
             ->addSelect('dr.estadoAnulado')
             ->addSelect('r.nombre as ruta')
+            ->addSelect('dr.vrAnticipo')
             ->where('dr.codigoDespachoRecogidaPk <> 0')
             ->leftJoin('dr.conductorRel', 'cond')
             ->leftJoin('dr.rutaRecogidaRel', 'r');

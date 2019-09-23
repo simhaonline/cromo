@@ -43,32 +43,4 @@ class SoporteType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoSoportePk",               "tipo":"pk",    "ayuda":"Codigo del registro",                  "titulo":"ID"},
-            {"campo":"grupoRel.nombre",         "tipo":"texto", "ayuda":"Grupo",                        "titulo":"GRUPO",          "relacion":""},
-            {"campo":"fechaDesde",                          "tipo":"fecha", "ayuda":"Fecha desde",                                "titulo":"DESDE"},
-            {"campo":"fechaHasta",                          "tipo":"fecha", "ayuda":"Fecha hasta",                                "titulo":"HASTA"},
-            {"campo":"usuario",                        "tipo":"texto", "ayuda":"Usuario",                              "titulo":"USU"},            
-            {"campo":"estadoAutorizado",               "tipo":"bool",  "ayuda":"Autorizado",                           "titulo":"AUT"},
-            {"campo":"estadoAprobado",                 "tipo":"bool",  "ayuda":"Aprobado",                             "titulo":"APR"},
-            {"campo":"estadoAnulado",                  "tipo":"bool",  "ayuda":"Anulado",                              "titulo":"ANU"},
-            {"campo":"cargadoNomina",               "tipo":"bool",  "ayuda":"Cargado en nomina",                           "titulo":"CN"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoSoportePk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
-            {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}}
-        ]';
-
-        return $campos;
-    }
 }

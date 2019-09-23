@@ -28,6 +28,68 @@ class TurSoporteRepository extends ServiceEntityRepository
         parent::__construct($registry, TurSoporte::class);
     }
 
+
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoSoportePk = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+        if ($filtros){
+            $codigoSoportePk = $filtros['codigoSoportePk']??null;
+            $estadoAutorizado = $filtros['estadoAutorizado']??null;
+            $estadoAprobado = $filtros['estadoAprobado']??null;
+            $estadoAnulado = $filtros['estadoAnulado']??null;
+        }
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurSoporte::class, 's')
+            ->select('s.codigoSoportePk')
+            ->addSelect('s.fechaDesde')
+            ->addSelect('s.fechaHasta')
+            ->addSelect('s.usuario')
+            ->addSelect('s.estadoAutorizado')
+            ->addSelect('s.estadoAprobado')
+            ->addSelect('s.estadoAnulado')
+            ->addSelect('s.cargadoNomina')
+            ->addSelect('g.nombre as grupo')
+            ->leftJoin('s.grupoRel', 'g');
+
+        if ($codigoSoportePk) {
+            $queryBuilder->andWhere("s.codigoSoportePk = '{$codigoSoportePk}'");
+        }
+
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoAutorizado = 1");
+                break;
+        }
+
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoAprobado = 1");
+                break;
+        }
+
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoAnulado = 1");
+                break;
+        }
+
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+    }
+
     public function cargarSoporte()
     {
         $session = new Session();
@@ -53,10 +115,28 @@ class TurSoporteRepository extends ServiceEntityRepository
      */
     public function eliminar($arrSeleccionados)
     {
+        $respuesta = '';
         foreach ($arrSeleccionados as $arrSeleccionado) {
-            $ar = $this->getEntityManager()->getRepository(TurSoporte::class)->find($arrSeleccionado);
-            if ($ar) {
-                $this->getEntityManager()->remove($ar);
+            $arRegistro = $this->getEntityManager()->getRepository(TurSoporte::class)->find($arrSeleccionado);
+            if ($arRegistro) {
+                if ($arRegistro->getEstadoAprobado() == 0) {
+                    if ($arRegistro->getEstadoAutorizado() == 0) {
+                        if ( count($this->getEntityManager()->getRepository(TurSoporteHora::class)->findBy(['codigoSoporteFk'=>$arrSeleccionado])) <= 0 ){
+                            $this->getEntityManager()->remove($arRegistro);
+                        }else{
+                            $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                        }
+                    }else{
+                        $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                    }
+                }else{
+                    $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                }
+            }
+            if ($respuesta != '') {
+                Mensajes::error($respuesta);
+            } else {
+                $this->getEntityManager()->flush();
             }
         }
         $this->getEntityManager()->flush();

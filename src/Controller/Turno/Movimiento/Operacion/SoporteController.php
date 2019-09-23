@@ -24,8 +24,11 @@ use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -48,35 +51,46 @@ class SoporteController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/turno/movimiento/operacion/soporte/lista", name="turno_movimiento_operacion_soporte_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
+        $form = $this->createFormBuilder()
+            ->add('codigoSoportePk', TextType::class, array('required' => false))
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
 
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        if ($form->isSubmitted()) {
+
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Soporte");
+
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TurSoporte::class)->lista($raw)->getQuery()->execute(), "Soporte");
+
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TurSoporte::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_lista'));
             }
         }
+        $arSoportes = $paginator->paginate($em->getRepository(TurSoporte::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('turno/movimiento/operacion/soporte/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arSoportes' => $arSoportes,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -214,6 +228,20 @@ class SoporteController extends ControllerListenerGeneral
             'arrDiaSemana'=>$arrDiaSemana,
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        return $filtro = [
+            'codigoSoportePk' => $form->get('codigoSoportePk')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+
+        ];
+
+
+        return $filtro;
     }
 
 }

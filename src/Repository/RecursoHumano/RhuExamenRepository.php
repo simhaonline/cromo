@@ -16,47 +16,63 @@ class RhuExamenRepository extends ServiceEntityRepository
     }
 
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoExamen = null;
+        $examenClase = null;
+        $codigoEmpleado = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoExamen = $filtros['codigoExamen'] ?? null;
+            $examenClase = $filtros['examenClase'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuExamen::class, 'e')
             ->select('e.codigoExamenPk')
-            ->addSelect('ec.nombre as examenClase')
+            ->addSelect('ec.nombre as clase')
             ->addSelect('e.fecha')
             ->addSelect('e.numeroIdentificacion')
-            ->addSelect('e.nombreCorto')
-            ->addSelect('ee.nombre as entidadExamen')
+            ->addSelect('e.nombreCorto AS empleado')
+            ->addSelect('ee.nombre as entidad')
             ->addSelect('c.nombre as cargo')
             ->addSelect('e.cobro')
             ->addSelect('e.vrTotal')
             ->addSelect('e.estadoAutorizado')
             ->addSelect('e.estadoAprobado')
             ->addSelect('e.estadoAnulado')
-            ->leftJoin('e.examenClaseRel' ,'ec')
-            ->leftJoin('e.entidadExamenRel' ,'ee')
-            ->leftJoin('e.cargoRel' ,'c');
-
-        if ($session->get('RhuExamen_codigoExamenPk')) {
-            $queryBuilder->andWhere("e.codigoExamenPk = '{$session->get('RhuExamen_codigoExamenPk')}'");
+            ->leftJoin('e.examenClaseRel', 'ec')
+            ->leftJoin('e.entidadExamenRel', 'ee')
+            ->leftJoin('e.cargoRel', 'c');
+        if ($codigoExamen) {
+            $queryBuilder->andWhere("e.codigoExamenPk = '{$codigoExamen}'");
         }
-
-        if ($session->get('RhuExamen_codigoExamenClaseFk')) {
-            $queryBuilder->andWhere("e.codigoExamenClaseFk = '{$session->get('RhuExamen_codigoExamenClaseFk')}'");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("e.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-
-        if ($session->get('RhuExamen_codigoEmpleadoFk')) {
-            $queryBuilder->andWhere("e.codigoEmpleadoFk = '{$session->get('RhuExamen_codigoEmpleadoFk')}'");
+        if ($examenClase) {
+            $queryBuilder->andWhere("e.codigoExamenClaseFk = '{$examenClase}'");
         }
-
-        if ($session->get('RhuExamen_fechaDesde') != null) {
-            $queryBuilder->andWhere("e.fechaDesde >= '{$session->get('RhuExamen_fechaDesde')} 00:00:00'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("e.fecha >= '{$fechaDesde} 00:00:00'");
         }
-
-        if ($session->get('RhuExamen_fechaHasta') != null) {
-            $queryBuilder->andWhere("e.fecha <= '{$session->get('RhuExamen_fechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("e.fecha <= '{$fechaHasta} 23:59:59'");
         }
-
-        switch ($session->get('RhuExamen_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("e.estadoAutorizado = 0");
                 break;
@@ -64,8 +80,7 @@ class RhuExamenRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("e.estadoAutorizado = 1");
                 break;
         }
-
-        switch ($session->get('RhuExamen_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("e.estadoAprobado = 0");
                 break;
@@ -73,8 +88,7 @@ class RhuExamenRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("e.estadoAprobado = 1");
                 break;
         }
-
-        switch ($session->get('RhuExamen_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("e.estadoAnulado = 0");
                 break;
@@ -82,8 +96,11 @@ class RhuExamenRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("e.estadoAnulado = 1");
                 break;
         }
+        $queryBuilder->addOrderBy('e.fecha', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
-    
+
     /**
      * @param $arExamenes
      * @throws \Doctrine\ORM\ORMException

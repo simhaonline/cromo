@@ -7,10 +7,12 @@ use App\Entity\RecursoHumano\RhuCreditoPago;
 use App\Entity\RecursoHumano\RhuCreditoPagoTipo;
 use App\Entity\RecursoHumano\RhuCreditoTipo;
 use App\Entity\RecursoHumano\RhuVisita;
+use App\Entity\RecursoHumano\RhuVisitaTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -26,34 +28,20 @@ class VisitaType extends AbstractType
     {
         $builder
             ->add('codigoEmpleadoFk', TextType::class, ['required' => true])
-            ->add('fechaInicio', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
-            ->add('fechaFinalizacion', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
-            ->add('fechaCredito', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
-            ->add('numeroCuotas', IntegerType::class, ['required' => true])
-            ->add('comentario', TextareaType::class, ['required' => false])
-            ->add('vrCredito',NumberType::class,['required' => false])
-            ->add('vrCuota',NumberType::class,['required' => false])
-            ->add('numeroCuotaActual',NumberType::class,['required' => false])
-            ->add('validarCuotas',CheckboxType::class,['required' => false])
-            ->add('aplicarCuotaPrima',CheckboxType::class,['required' => false])
-            ->add('inactivoPeriodo',CheckboxType::class,['required' => false])
-            ->add('estadoSuspendido',CheckboxType::class,['required' => false])
-            ->add('aplicarCuotaCesantia',CheckboxType::class,['required' => false])
-            ->add('creditoPagoTipoRel',EntityType::class,[
-                'class' => RhuCreditoPagoTipo::class,
-                'query_builder' => function(EntityRepository $er){
-                    return $er->createQueryBuilder('cpt')
-                        ->orderBy('cpt.nombre');
-                },'required' => true,
-                'choice_label' => 'nombre'
-            ])
-            ->add('creditoTipoRel',EntityType::class,[
-                'class' => RhuCreditoTipo::class,
-                'query_builder' => function (EntityRepository $er){
-                    return $er->createQueryBuilder('er')
-                        ->orderBy('er.nombre','ASC');
-                },'required' => true,
-                'choice_label' => 'nombre'
+            ->add('validarVencimiento', CheckboxType::class, array('required'  => false))
+            ->add('comentarios', TextareaType::class, array('required' => false, 'attr' => array('cols' => '5', 'rows' => '25')))
+            ->add('fecha', DateTimeType::class, array('required' => true))
+            ->add('fechaVence', DateType::class, array('required' => true))
+            ->add('nombreQuienVisita', TextType::class,array('required' => true))
+            ->add('vrTotal', NumberType::class, array('required' => false))
+            ->add('visitaTipoRel', EntityType::class, [
+                'class' => RhuVisitaTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('vt')
+                        ->orderBy('vt.nombre', 'ASC');
+                }, 'required' => true,
+                'choice_label' => 'nombre',
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

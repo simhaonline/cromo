@@ -5,7 +5,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('recursohumano_movimiento_examen_examen_lista') }}">Volver</a>
+               href="{{ path('recursohumano_movimiento_contratacion_examen_lista') }}">Volver</a>
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
@@ -17,7 +17,7 @@
         {% if arExamenes.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    {% include 'recursohumano/movimiento/examen/examen/informacion.html.twig' %}
+    {% include 'recursohumano/movimiento/contratacion/examen/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
@@ -98,7 +98,7 @@
                                    value="Nuevo"/>
                         {% else %}
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_examen_examen_detalle_nuevo', {'codigoExamen':arExamenes.codigoExamenPk,'id': 0 }) }}', 'ExamenAdicionarDetalle', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_contratacion_examen_detalle_nuevo', {'codigoExamen':arExamenes.codigoExamenPk,'id': 0 }) }}', 'ExamenAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">

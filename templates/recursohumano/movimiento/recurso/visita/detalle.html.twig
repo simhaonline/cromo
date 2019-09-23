@@ -4,7 +4,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-sm btn-default"
-               href="{{ path('recursohumano_movimiento_nomina_credito_lista') }}">Volver</a>
+               href="{{ path('recursohumano_movimiento_recurso_visita_lista') }}">Volver</a>
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
@@ -14,109 +14,25 @@
     <table width="100%" class="table table-condensed table-bordered tabla-datos">
         <tr>
             <td class="titulo">CODIGO:</td>
-            <td class="td-in-well">{{ arRegistro.codigoCreditoPk }}</td>
-            <td class="titulo">FECHA CREACIÓN:</td>
+            <td class="td-in-well">{{ arRegistro.codigoVisitaPk }}</td>
+            <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arRegistro.fecha | date('Y-m-d') }}</td>
-            <td class="titulo">CRÉDITO:</td>
-            <td class="td-in-well">{{ arRegistro.vrCredito | number_format(0, '.', ',') }}</td>
+            <td class="titulo">VENCE:</td>
+            <td class="td-in-well">{{ arRegistro.fechaVence | date('Y-m-d') }}</td>
         </tr>
         <tr>
             <td class="titulo">EMPLEADO:</td>
             <td class="td-in-well">{{ arRegistro.empleadoRel.nombreCorto }}</td>
-            <td class="titulo">CRÉDITO:</td>
-            <td class="td-in-well">{{ arRegistro.creditoTipoRel.nombre }}</td>
-            <td class="titulo">CUOTA:</td>
-            <td class="td-in-well">{{ arRegistro.vrCuota | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">ENTIDAD BANCARIA:</td>
-            <td class="td-in-well">{{ arRegistro.empleadoRel.bancoRel.nombre | default('') }}</td>
-            <td class="titulo">CUENTA:</td>
-            <td class="td-in-well">{{ arRegistro.empleadoRel.cuenta }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-        </tr>
-        <tr>
-            <td class="titulo">FECHA INICIO:</td>
-            <td class="td-in-well">{{ arRegistro.fechaInicio | date('Y-m-d') }}</td>
-            <td class="titulo">FECHA FINALIZACIÓN:</td>
-            <td class="td-in-well">{{ arRegistro.fechaFinalizacion | date('Y-m-d') }}</td>
-            <td class="titulo">ABONOS:</td>
-            <td class="td-in-well">{{ arRegistro.vrAbonos | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">TIPO PAGO:</td>
-            <td class="td-in-well">{{ arRegistro.creditoTipoRel.nombre }}</td>
-            <td class="titulo">VALIDAR CUOTAS:</td>
-            <td class="td-in-well">{{ arRegistro.validarCuotas ? 'SI' : 'NO' }}</td>
-            <td class="titulo">SALDO:</td>
-            <td class="td-in-well">{{ arRegistro.vrSaldo | number_format(0, '.', ',') }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">PAGADO:</td>
-            <td class="td-in-well">{{ arRegistro.estadoPagado ? 'SI' : 'NO' }}</td>
-            <td class="titulo">SUSPENDIDO:</td>
-            <td class="td-in-well">{{ arRegistro.estadoSuspendido ? 'SI' : 'NO' }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-        </tr>
-        <tr>
-            <td class="titulo">APLICAR CUOTA PRIMA:</td>
-            <td class="td-in-well">{{ arRegistro.aplicarCuotaPrima ? 'SI' : 'NO' }}</td>
-            <td class="titulo">APLICAR CUOTA CESANTÍA:</td>
-            <td class="td-in-well">{{ arRegistro.aplicarCuotaCesantia ? 'SI' : 'NO' }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">IDENTIFICACION:</td>
+            <td class="td-in-well">{{ arRegistro.empleadoRel.numeroIdentificacion }}</td>
+            <td class="titulo">GRUPO:</td>
+            <td class="td-in-well">{{ arRegistro.empleadoRel.grupoRel.nombre | default ('') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIOS:</td>
-            <td class="td-in-well" colspan="5">{{ arRegistro.comentario }}</td>
+            <td class="td-in-well" colspan="5">{{ arRegistro.comentarios }}</td>
         </tr>
     </table>
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane fade in active" id="detalles">
-            <table class="table table-bordered table-striped tabla-datos">
-                <thead>
-                <tr>
-                    <th>CODIGO PAGO</th>
-                    <th>FECHA</th>
-                    <th>TIPO</th>
-                    <th>COUTA</th>
-                    <th>SALDO</th>
-                    <th>PAGO</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for arCreditoPago in arCreditoPagos %}
-                    <tr>
-                        <td>{{ arCreditoPago.codigoCreditoPagoPk }}</td>
-                        <td>{{ arCreditoPago.fechaPago |date("Y-m-d") }}</td>
-                        <td>{{ arCreditoPago.codigoCreditoPagoTipoFk }}</td>
-                        <td>{{ arCreditoPago.numeroCuotaActual }}</td>
-                        <td class="numero">{{ arCreditoPago.vrSaldo |  number_format(0, '.', ',') }}</td>
-                        <td class="numero">{{ arCreditoPago.vrPago  |  number_format(0, '.', ',') }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <div class="btn-toolbar" style="float: left">
-                <div class="btn btn-default btn-sm">Registros
-                    <span class="badge">{{ arCreditoPagos.getTotalItemCount }}
-            </span>
-                </div>
-            </div>
-            <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-                {{ knp_pagination_render(arCreditoPagos) }}
-            </div>
-            <div class="btn-group" style="float: right">
-                <a class="btn btn-sm btn-default"
-                   href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_credito_detalle_nuevo',{'id': arRegistro.codigoCreditoPk}) }}','detalleNuevo',700,900)">Nuevo</a>
-            </div>
-        </div>
-    </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
     <br>

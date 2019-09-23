@@ -469,7 +469,6 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
 
                 $intDiasLaborados = $this->diasPrestaciones($arLiquidacion->getContratoRel()->getFechaDesde(), $arLiquidacion->getContratoRel()->getFechaHasta());
                 $douSalario = $arLiquidacion->getContratoRel()->getVrSalario();
-
                 //Liquidar cesantias
                 $salarioPromedioCesantiasAnterior = 0;
                 $diasCesantiaAnterior = 0;
@@ -1028,9 +1027,9 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                     }
                 } else {
                     $arLiquidacion->setVrSalarioVacaciones(0);
-                    $arLiquidacion->setDiasVacaciones(0);
-                    $arLiquidacion->setDiasVacacionesAusentismo(0);
-                    $arLiquidacion->setVrVacaciones(0);
+                    $arLiquidacion->setDiasVacacion(0);
+                    $arLiquidacion->setDiasVacacionAusentismo(0);
+                    $arLiquidacion->setVrVacacion(0);
                 }
             } else {
                 $douCesantias = $arLiquidacion->getVrCesantias();

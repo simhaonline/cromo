@@ -1,0 +1,55 @@
+<div id="content sortable-grid ui-sortable">
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+        <header role="heading" class="ui-sortable-handle">
+            <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+            <h2>Filtro</h2>
+        </header>
+        <div>
+            <div class="widget-body">
+                {{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
+{#                {% include 'turno/buscar/cliente.html.twig' %}#}
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-1">Numero:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.numero) }}
+                    </div>
+                    <label for="" class="control-label col-sm-1">Codigo:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.codigoPedidoPk) }}
+                    </div>
+                    <label for="" class="control-label col-sm-1">Tipo:</label>
+                    <div class="col-sm-5">
+                        {{ form_widget(formFiltro.codigoPedidoTipoFk) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Desde:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.fechaDesde) }}
+                    </div>
+                    <label for="" class="control-label col-sm-offset-6 col-sm-1">Autorizado:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget((formFiltro.estadoAutorizado)) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Hasta:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(formFiltro.fechaHasta) }}
+                    </div>
+                    <label for="" class="control-label  col-sm-offset-6 col-sm-1">Aprobado:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget((formFiltro.estadoAprobado)) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label  col-sm-offset-9 col-sm-1">Anulado:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget((formFiltro.estadoAnulado)) }}
+                    </div>
+                </div>
+            </div>
+            {{ form_end(formFiltro) }}
+        </div>
+    </div>
+</div>

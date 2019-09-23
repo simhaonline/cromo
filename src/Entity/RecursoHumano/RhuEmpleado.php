@@ -374,6 +374,10 @@ class RhuEmpleado
      */
     protected $pagosEmpleadoRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="RhuCosto", mappedBy="empleadoRel")
+     */
+    protected $costosEmpleadoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuProgramacionDetalle", mappedBy="empleadoRel")
@@ -1654,6 +1658,87 @@ class RhuEmpleado
     {
         $this->contratoRel = $contratoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVisitasEmpleadoRel()
+    {
+        return $this->visitasEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $visitasEmpleadoRel
+     */
+    public function setVisitasEmpleadoRel($visitasEmpleadoRel): void
+    {
+        $this->visitasEmpleadoRel = $visitasEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcreditacionesEmpleadoRel()
+    {
+        return $this->acreditacionesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $acreditacionesEmpleadoRel
+     */
+    public function setAcreditacionesEmpleadoRel($acreditacionesEmpleadoRel): void
+    {
+        $this->acreditacionesEmpleadoRel = $acreditacionesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosEmpleadoRel()
+    {
+        return $this->costosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadoRel
+     */
+    public function setCostosEmpleadoRel($costosEmpleadoRel): void
+    {
+        $this->costosEmpleadoRel = $costosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPermisosEmpleadoRel()
+    {
+        return $this->permisosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $permisosEmpleadoRel
+     */
+    public function setPermisosEmpleadoRel($permisosEmpleadoRel): void
+    {
+        $this->permisosEmpleadoRel = $permisosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPoligrafiasEmpleadoRel()
+    {
+        return $this->poligrafiasEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $poligrafiasEmpleadoRel
+     */
+    public function setPoligrafiasEmpleadoRel($poligrafiasEmpleadoRel): void
+    {
+        $this->poligrafiasEmpleadoRel = $poligrafiasEmpleadoRel;
+    }
+
 
 
 }

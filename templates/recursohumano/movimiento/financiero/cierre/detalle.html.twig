@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_financiero_cierre_lista') }}">Volver</a>&nbsp;&nbsp;
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arCierre.codigoCierrePk }}</td>
+            <td class="titulo">AÑO:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arCierre.anio }}</td>
+            <td class="titulo">MES:</td>
+            <td class="td-in-well numero" style="text-transform: uppercase;">{{ arCierre.mes }}</td>
+        </tr>
+    </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+
+                    <div class="btn-group" style="float: left">
+                        <div class="btn-group" style="float: left">
+{#                            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arCierreDetalles.getTotalItemCount }}</span></div>#}
+{#                            {{ knp_pagination_render(arCierreDetalles) }}#}
+                        </div>
+                    </div>
+                    <div class="btn-toolbar" style="float: right">
+                        <div class="btn-group">
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

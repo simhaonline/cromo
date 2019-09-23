@@ -1,0 +1,47 @@
+{{ form_start(formFiltro, {'attr': {'class': 'form-horizontal'} }) }}
+<div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+     data-widget-fullscreenbutton="true">
+    <header>
+        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+        <h2>Lista</h2>
+    </header>
+    <div>
+        <div class="widget-body no-padding">
+                <div class="panel-body">
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1">Codigo</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(formFiltro.codigoProgramacionPk) }}
+                        </div>
+                        <label for="" class="control-label col-sm-1">Nombre</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(formFiltro.nombre) }}
+                        </div>
+                        <label for="" class="control-label col-sm-1">Tipo</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(formFiltro.codigoPagoTipoFk) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1">Desde</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(formFiltro.fechaDesdeDesde) }}
+                        </div>
+                        <label for="" class="control-label col-sm-1">Grupo</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(formFiltro.codigoGrupoFk) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1">Hasta</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(formFiltro.fechaHastaHasta) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {{ form_end(formFiltro) }}
+                </div>
+        </div>
+    </div>
+</div>

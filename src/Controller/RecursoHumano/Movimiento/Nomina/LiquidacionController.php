@@ -233,10 +233,9 @@ class LiquidacionController extends AbstractController
             ->add('conceptoRel', EntityType::class, array(
                 'class' => RhuConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('pc')
-                        ->where('pc.adicionalTipo = :adicionalTipo')
-                        ->setParameter('adicionalTipo', 2)
-                        ->orderBy('pc.nombre', 'ASC');
+                    return $er->createQueryBuilder('c')
+                        ->where("c.adicionalTipo = 'DES'")
+                        ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true))
@@ -274,10 +273,9 @@ class LiquidacionController extends AbstractController
             ->add('conceptoRel', EntityType::class, array(
                 'class' => RhuConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('pc')
-                        ->where('pc.adicionalTipo = :adicionalTipo')
-                        ->setParameter('adicionalTipo', 1)
-                        ->orderBy('pc.nombre', 'ASC');
+                    return $er->createQueryBuilder('c')
+                        ->where("c.adicionalTipo = 'BON'")
+                        ->orderBy('c.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true))

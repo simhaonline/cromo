@@ -130,7 +130,7 @@ class FacturaController extends AbstractController
                 General::get()->setExportar($em->getRepository(TteFactura::class)->listaProvicional($raw)->getQuery()->getResult(), "Facturas");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrSeleccionados =$request->query->get('ChkSeleccionar');
                 $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_comercial_factura_lista'));
             }

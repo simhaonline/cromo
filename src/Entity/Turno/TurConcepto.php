@@ -60,6 +60,11 @@ class TurConcepto
     protected $pedidosDetallesConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoServicio", mappedBy="conceptoRel")
+     */
+    protected $costosServiciosConceptoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()
@@ -186,6 +191,23 @@ class TurConcepto
     {
         $this->pedidosDetallesConceptoRel = $pedidosDetallesConceptoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosServiciosConceptoRel()
+    {
+        return $this->costosServiciosConceptoRel;
+    }
+
+    /**
+     * @param mixed $costosServiciosConceptoRel
+     */
+    public function setCostosServiciosConceptoRel($costosServiciosConceptoRel): void
+    {
+        $this->costosServiciosConceptoRel = $costosServiciosConceptoRel;
+    }
+
 
 
 }

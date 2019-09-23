@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Repository\Turno;
+
+
+use App\Entity\RecursoHumano\RhuCosto;
+use App\Entity\Turno\TurCierre;
+use App\Entity\Turno\TurCostoEmpleado;
+use App\Entity\Turno\TurCostoEmpleadoServicio;
+use App\Entity\Turno\TurCostoServicio;
+use App\Entity\Turno\TurDistribucion;
+use App\Entity\Turno\TurFestivo;
+use App\Entity\Turno\TurPedidoDetalle;
+use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurTurno;
+use App\Utilidades\Mensajes;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+
+class TurCostoServicioRepository extends ServiceEntityRepository
+{
+    public function __construct(RegistryInterface $registry)
+    {
+        parent::__construct($registry, TurCostoEmpleadoServicio::class);
+    }
+
+    public function generar($arCierre)
+    {
+        $em = $this->getEntityManager();
+            //Costos de los servicios del mes
+            $arPedidosDetalles = $em->getRepository(TurPedidoDetalle::class)->findBy(['anio' => $arCierre->getAnio(), 'mes' => $arCierre->getMes()]);
+            foreach ($arPedidosDetalles as $arPedidoDetalle) {
+                $dql = "SELECT SUM(ces.vrCosto) as vrCosto "
+                    . "FROM App\Entity\Turno\TurCostoEmpleadoServicio ces "
+                    . "WHERE ces.anio =  " . $arCierre->getAnio() . " AND ces.mes =  " . $arCierre->getMes() . " AND ces.codigoPedidoDetalleFk = " . $arPedidoDetalle->getCodigoPedidoDetallePk();
+                $query = $em->createQuery($dql);
+                $arrayResultados = $query->getResult();
+                $costo = 0;
+                if ($arrayResultados[0]['vrCosto']) {
+                    $costo = $arrayResultados[0]['vrCosto'];
+                }
+                $arCostoServicio = new TurCostoServicio();
+                $arCostoServicio->setCierreRel($arCierre);
+                $arCostoServicio->setAnio($arCierre->getAnio());
+                $arCostoServicio->setMes($arCierre->getMes());
+                $arCostoServicio->setPedidoDetalleRel($arPedidoDetalle);
+                $arCostoServicio->setClienteRel($arPedidoDetalle->getPedidoRel()->getClienteRel());
+                $arCostoServicio->setPuestoRel($arPedidoDetalle->getPuestoRel());
+                $arCostoServicio->setConceptoRel($arPedidoDetalle->getConceptoRel());
+                $arCostoServicio->setModalidadRel($arPedidoDetalle->getModalidadRel());
+                //$arCostoServicio->setPeriodoRel($arPedidoDetalle->getPeriodoRel());
+                $arCostoServicio->setDiaDesde($arPedidoDetalle->getDiaDesde());
+                $arCostoServicio->setDiaHasta($arPedidoDetalle->getDiaHasta());
+                $arCostoServicio->setDias($arPedidoDetalle->getDias());
+                $arCostoServicio->setHoras($arPedidoDetalle->getHoras());
+                $arCostoServicio->setHorasDiurnas($arPedidoDetalle->getHorasDiurnas());
+                $arCostoServicio->setHorasNocturnas($arPedidoDetalle->getHorasNocturnas());
+                $arCostoServicio->setCantidad($arPedidoDetalle->getCantidad());
+                $arCostoServicio->setVrTotal($arPedidoDetalle->getVrSubtotal());
+                $arCostoServicio->setVrCostoRecurso($costo);
+                $em->persist($arCostoServicio);
+            }
+            $em->flush();
+
+    }
+
+}

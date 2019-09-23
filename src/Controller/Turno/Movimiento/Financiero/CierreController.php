@@ -161,13 +161,7 @@ class CierreController extends AbstractController
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TurCierre::class)->aprobar($arCierre);
             }
-            if ($form->get('btnEliminar')->isClicked()) {
-                $em->getRepository(TurCierreDetalle::class)->eliminar($arCierre, $arrDetallesSeleccionados);
-                $em->getRepository(TurCierre::class)->liquidar($arCierre);
-            }
-            if ($form->get('btnActualizar')->isClicked()) {
-                $em->getRepository(TurCierreDetalle::class)->actualizarDetalles($arrControles, $form, $arCierre);
-            }
+
             return $this->redirect($this->generateUrl('turno_movimiento_financiero_cierre_detalle', ['id' => $id]));
         }
         //$arCierreDetalles = $paginator->paginate($em->getRepository(TurCierreDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);

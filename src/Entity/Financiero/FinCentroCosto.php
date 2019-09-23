@@ -70,6 +70,21 @@ class FinCentroCosto
     protected $turPuestosCentroCostoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurDistribucionEmpleado", mappedBy="centroCostoRel")
+     */
+    protected $distribucionesEmpleadosCentroCostoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleado", mappedBy="centroCostoRel")
+     */
+    protected $costosEmpleadosCentroCostoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleadoServicio", mappedBy="centroCostoRel")
+     */
+    protected $costosEmpleadosServiciosCentroCostoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCentroCostoPk()
@@ -180,6 +195,55 @@ class FinCentroCosto
     {
         $this->turPuestosCentroCostoRel = $turPuestosCentroCostoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDistribucionesEmpleadosCentroCostoRel()
+    {
+        return $this->distribucionesEmpleadosCentroCostoRel;
+    }
+
+    /**
+     * @param mixed $distribucionesEmpleadosCentroCostoRel
+     */
+    public function setDistribucionesEmpleadosCentroCostoRel($distribucionesEmpleadosCentroCostoRel): void
+    {
+        $this->distribucionesEmpleadosCentroCostoRel = $distribucionesEmpleadosCentroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosEmpleadosCentroCostoRel()
+    {
+        return $this->costosEmpleadosCentroCostoRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadosCentroCostoRel
+     */
+    public function setCostosEmpleadosCentroCostoRel($costosEmpleadosCentroCostoRel): void
+    {
+        $this->costosEmpleadosCentroCostoRel = $costosEmpleadosCentroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosEmpleadosServiciosCentroCostoRel()
+    {
+        return $this->costosEmpleadosServiciosCentroCostoRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadosServiciosCentroCostoRel
+     */
+    public function setCostosEmpleadosServiciosCentroCostoRel($costosEmpleadosServiciosCentroCostoRel): void
+    {
+        $this->costosEmpleadosServiciosCentroCostoRel = $costosEmpleadosServiciosCentroCostoRel;
+    }
+
 
 
 }

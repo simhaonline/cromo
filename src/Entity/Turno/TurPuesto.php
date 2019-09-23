@@ -156,6 +156,16 @@ class TurPuesto
     protected $programacionesPuestoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleadoServicio", mappedBy="puestoRel")
+     */
+    protected $costosEmpleadosServiciosPuestoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoServicio", mappedBy="puestoRel")
+     */
+    protected $costosServiciosPuestoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPuestoPk()
@@ -521,6 +531,38 @@ class TurPuesto
     public function setProgramacionesPuestoRel($programacionesPuestoRel): void
     {
         $this->programacionesPuestoRel = $programacionesPuestoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosEmpleadosServiciosPuestoRel()
+    {
+        return $this->costosEmpleadosServiciosPuestoRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadosServiciosPuestoRel
+     */
+    public function setCostosEmpleadosServiciosPuestoRel($costosEmpleadosServiciosPuestoRel): void
+    {
+        $this->costosEmpleadosServiciosPuestoRel = $costosEmpleadosServiciosPuestoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosServiciosPuestoRel()
+    {
+        return $this->costosServiciosPuestoRel;
+    }
+
+    /**
+     * @param mixed $costosServiciosPuestoRel
+     */
+    public function setCostosServiciosPuestoRel($costosServiciosPuestoRel): void
+    {
+        $this->costosServiciosPuestoRel = $costosServiciosPuestoRel;
     }
 
 

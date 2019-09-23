@@ -315,6 +315,16 @@ class TurPedidoDetalle
     protected $simulacionesPedidoDetalleRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleadoServicio", mappedBy="pedidoDetalleRel")
+     */
+    protected $costosEmpleadosServiciosPedidoDetalleRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoServicio", mappedBy="pedidoDetalleRel")
+     */
+    protected $costosServiciosPedidoDetalleRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPedidoDetallePk()
@@ -1224,6 +1234,38 @@ class TurPedidoDetalle
     public function setItemRel($itemRel): void
     {
         $this->itemRel = $itemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosEmpleadosServiciosPedidoDetalleRel()
+    {
+        return $this->costosEmpleadosServiciosPedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadosServiciosPedidoDetalleRel
+     */
+    public function setCostosEmpleadosServiciosPedidoDetalleRel($costosEmpleadosServiciosPedidoDetalleRel): void
+    {
+        $this->costosEmpleadosServiciosPedidoDetalleRel = $costosEmpleadosServiciosPedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosServiciosPedidoDetalleRel()
+    {
+        return $this->costosServiciosPedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $costosServiciosPedidoDetalleRel
+     */
+    public function setCostosServiciosPedidoDetalleRel($costosServiciosPedidoDetalleRel): void
+    {
+        $this->costosServiciosPedidoDetalleRel = $costosServiciosPedidoDetalleRel;
     }
 
 

@@ -64,6 +64,21 @@ class TurCierre
     private $comentario;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleado", mappedBy="cierreRel")
+     */
+    protected $costosEmpleadosCierreRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleadoServicio", mappedBy="cierreRel")
+     */
+    protected $costosEmpleadosServiciosCierreRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoServicio", mappedBy="cierreRel")
+     */
+    protected $costosServiciosCierreRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCierrePk()
@@ -205,6 +220,54 @@ class TurCierre
     public function setComentario($comentario): void
     {
         $this->comentario = $comentario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosEmpleadosCierreRel()
+    {
+        return $this->costosEmpleadosCierreRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadosCierreRel
+     */
+    public function setCostosEmpleadosCierreRel($costosEmpleadosCierreRel): void
+    {
+        $this->costosEmpleadosCierreRel = $costosEmpleadosCierreRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosEmpleadosServiciosCierreRel()
+    {
+        return $this->costosEmpleadosServiciosCierreRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadosServiciosCierreRel
+     */
+    public function setCostosEmpleadosServiciosCierreRel($costosEmpleadosServiciosCierreRel): void
+    {
+        $this->costosEmpleadosServiciosCierreRel = $costosEmpleadosServiciosCierreRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosServiciosCierreRel()
+    {
+        return $this->costosServiciosCierreRel;
+    }
+
+    /**
+     * @param mixed $costosServiciosCierreRel
+     */
+    public function setCostosServiciosCierreRel($costosServiciosCierreRel): void
+    {
+        $this->costosServiciosCierreRel = $costosServiciosCierreRel;
     }
 
 

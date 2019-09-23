@@ -161,6 +161,16 @@ class TurCliente
     protected $PuestosClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleadoServicio", mappedBy="clienteRel")
+     */
+    protected $costosEmpleadosServiciosClienteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoServicio", mappedBy="clienteRel")
+     */
+    protected $costosServiciosClienteRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -638,6 +648,38 @@ class TurCliente
     public function setEstrato($estrato): void
     {
         $this->estrato = $estrato;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosEmpleadosServiciosClienteRel()
+    {
+        return $this->costosEmpleadosServiciosClienteRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadosServiciosClienteRel
+     */
+    public function setCostosEmpleadosServiciosClienteRel($costosEmpleadosServiciosClienteRel): void
+    {
+        $this->costosEmpleadosServiciosClienteRel = $costosEmpleadosServiciosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosServiciosClienteRel()
+    {
+        return $this->costosServiciosClienteRel;
+    }
+
+    /**
+     * @param mixed $costosServiciosClienteRel
+     */
+    public function setCostosServiciosClienteRel($costosServiciosClienteRel): void
+    {
+        $this->costosServiciosClienteRel = $costosServiciosClienteRel;
     }
 
 

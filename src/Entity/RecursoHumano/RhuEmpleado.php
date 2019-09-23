@@ -460,6 +460,21 @@ class RhuEmpleado
     protected $poligrafiasEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurDistribucionEmpleado", mappedBy="empleadoRel")
+     */
+    protected $distribucionesEmpleadosEmpleadoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleado", mappedBy="empleadoRel")
+     */
+    protected $costosEmpleadosEmpleadoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleadoServicio", mappedBy="empleadoRel")
+     */
+    protected $costosEmpleadosServiciosEmpleadoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()
@@ -1737,6 +1752,54 @@ class RhuEmpleado
     public function setPoligrafiasEmpleadoRel($poligrafiasEmpleadoRel): void
     {
         $this->poligrafiasEmpleadoRel = $poligrafiasEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDistribucionesEmpleadosEmpleadoRel()
+    {
+        return $this->distribucionesEmpleadosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $distribucionesEmpleadosEmpleadoRel
+     */
+    public function setDistribucionesEmpleadosEmpleadoRel($distribucionesEmpleadosEmpleadoRel): void
+    {
+        $this->distribucionesEmpleadosEmpleadoRel = $distribucionesEmpleadosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosEmpleadosEmpleadoRel()
+    {
+        return $this->costosEmpleadosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadosEmpleadoRel
+     */
+    public function setCostosEmpleadosEmpleadoRel($costosEmpleadosEmpleadoRel): void
+    {
+        $this->costosEmpleadosEmpleadoRel = $costosEmpleadosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosEmpleadosServiciosEmpleadoRel()
+    {
+        return $this->costosEmpleadosServiciosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadosServiciosEmpleadoRel
+     */
+    public function setCostosEmpleadosServiciosEmpleadoRel($costosEmpleadosServiciosEmpleadoRel): void
+    {
+        $this->costosEmpleadosServiciosEmpleadoRel = $costosEmpleadosServiciosEmpleadoRel;
     }
 
 

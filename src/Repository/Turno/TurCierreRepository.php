@@ -4,13 +4,20 @@ namespace App\Repository\Turno;
 
 
 use App\Entity\Crm\CrmVisita;
+use App\Entity\RecursoHumano\RhuCosto;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContratoDetalle;
+use App\Entity\Turno\TurCostoEmpleado;
+use App\Entity\Turno\TurCostoEmpleadoServicio;
+use App\Entity\Turno\TurCostoServicio;
 use App\Entity\Turno\TurDistribucion;
+use App\Entity\Turno\TurDistribucionEmpleado;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurCierre;
 use App\Entity\Turno\TurCierreDetalle;
 use App\Entity\Turno\TurPedido;
+use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurTurno;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -342,7 +349,10 @@ class TurCierreRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if (!$arCierre->getEstadoAutorizado()) {
-            $em->getRepository(TurDistribucion::class)->generar();
+            $em->getRepository(TurDistribucion::class)->generar($arCierre->getAnio(), $arCierre->getMes());
+            $em->getRepository(TurDistribucionEmpleado::class)->generar($arCierre);
+            $em->getRepository(TurCostoEmpleado::class)->generar($arCierre);
+            $em->getRepository(TurCostoServicio::class)->generar($arCierre);
             $arCierre->setEstadoAutorizado(1);
             $em->persist($arCierre);
             $em->flush();
@@ -360,6 +370,16 @@ class TurCierreRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arCierre->getEstadoAutorizado()) {
+            $em->createQueryBuilder()->delete(TurDistribucion::class, 'd')
+                ->where("d.anio = " . $arCierre->getAnio() . " AND d.mes = " . $arCierre->getMes())->getQuery()->execute();
+            $em->createQueryBuilder()->delete(TurDistribucionEmpleado::class, 'de')
+                ->where("de.anio = " . $arCierre->getAnio() . " AND de.mes = " . $arCierre->getMes())->getQuery()->execute();
+            $em->createQueryBuilder()->delete(TurCostoEmpleado::class, 'ce')
+                ->where("ce.codigoCierreFk = " . $arCierre->getCodigoCierrePk())->getQuery()->execute();
+            $em->createQueryBuilder()->delete(TurCostoEmpleadoServicio::class, 'ces')
+                ->where("ces.codigoCierreFk = " . $arCierre->getCodigoCierrePk())->getQuery()->execute();
+            $em->createQueryBuilder()->delete(TurCostoServicio::class, 'cs')
+                ->where("cs.codigoCierreFk = " . $arCierre->getCodigoCierrePk())->getQuery()->execute();
             $arCierre->setEstadoAutorizado(0);
             $em->persist($arCierre);
             $em->flush();

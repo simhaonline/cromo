@@ -6,6 +6,7 @@ namespace App\Repository\Turno;
 use App\Entity\Turno\TurDistribucion;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurTurno;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -29,11 +30,10 @@ class TurDistribucionRepository extends ServiceEntityRepository
             . "GROUP BY p.codigoEmpleadoFk";
         $query = $em->createQuery($dql);
         $arEmpleados = $query->getResult();
-        /*foreach ($arEmpleados as $arRecurso) {
-            $arRecursoAct = new \Brasa\TurnoBundle\Entity\TurRecurso();
-            $arRecursoAct = $em->getRepository('BrasaTurnoBundle:TurRecurso')->find($arRecurso['codigoRecursoFk']);
-            $arProgramacionDetalles = $em->getRepository('BrasaTurnoBundle:TurProgramacionDetalle')->findBy(array('codigoRecursoFk' => $arRecurso['codigoRecursoFk'], "anio" => $anio, "mes" => $mes));
-            if ($arProgramacionDetalles) {
+        foreach ($arEmpleados as $arEmpleado) {
+            //$arRecursoAct = $em->getRepository('BrasaTurnoBundle:TurRecurso')->find($arRecurso['codigoRecursoFk']);
+            $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(array('codigoEmpleadoFk' => $arEmpleado['codigoEmpleadoFk'], "anio" => $anio, "mes" => $mes));
+            if ($arProgramaciones) {
                 //$arRecursoAct = $em->getRepository('BrasaTurnoBundle:TurRecurso')->find($arRecurso['codigoRecursoFk']);
                 for ($i = 1; $i <= 31; $i++) {
                     $strFecha = $anio . "/" . $mes . "/" . $i;
@@ -44,12 +44,16 @@ class TurDistribucionRepository extends ServiceEntityRepository
                     $boolFestivo = $this->festivo($arFestivos, $dateFecha);
                     $boolFestivo2 = $this->festivo($arFestivos, $dateFecha2);
                     $arrTurnos = array();
-                    foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
-                        $turno = call_user_func_array([$arProgramacionDetalle, "getDia{$i}"], []);
+                    foreach ($arProgramaciones as $arProgramacion) {
+                        $turno = call_user_func_array([$arProgramacion, "getDia{$i}"], []);
                         if ($turno != "") {
-                            $arTurno = $em->getRepository('BrasaTurnoBundle:TurTurno')->find($turno);
+                            $arTurno = $em->getRepository(TurTurno::class)->find($turno);
                             if ($arTurno) {
-                                $arrTurnos[] = array('horaDesde' => $arTurno->getHoraDesde(), 'horaHasta' => $arTurno->getHoraHasta(), 'turno' => $arTurno->getCodigoTurnoPk(), 'codigoPedidoDetalle' => $arProgramacionDetalle->getCodigoPedidoDetalleFk());
+                                $arrTurnos[] = array(
+                                    'horaDesde' => $arTurno->getHoraDesde(),
+                                    'horaHasta' => $arTurno->getHoraHasta(),
+                                    'turno' => $arTurno->getCodigoTurnoPk(),
+                                    'codigoPedidoDetalle' => $arProgramacion->getCodigoPedidoDetalleFk());
                             }
                         }
                     }
@@ -63,41 +67,41 @@ class TurDistribucionRepository extends ServiceEntityRepository
                             $horario = $arrTurno['horaDesde']->format('H:i') . " A " . $arrTurno['horaHasta']->format('H:i');
                             $arrHoras = $this->getHoras($strTurno, $dateFecha, $dateFecha2, $boolFestivo, $boolFestivo2, $horasIniciales);
                             $horasIniciales += $arrHoras['horas'];
-                            $arDistribucionDetalle = new \Brasa\TurnoBundle\Entity\TurDistribucionDetalle();
-                            $arDistribucionDetalle->setRecursoRel($arRecursoAct);
-                            $arDistribucionDetalle->setCodigoTurnoFk($strTurno);
-                            $arDistribucionDetalle->setCodigoPedidoDetalleFk($arrTurno['codigoPedidoDetalle']);
-                            $arDistribucionDetalle->setFecha($dateFecha);
-                            $arDistribucionDetalle->setAnio($anio);
-                            $arDistribucionDetalle->setMes($mes);
-                            $arDistribucionDetalle->setHorario($horario);
-                            $arDistribucionDetalle->setHoras($arrHoras['horas']);
-                            $arDistribucionDetalle->setHorasDescanso($arrHoras['horasDescanso']);
-                            $arDistribucionDetalle->setHorasDiurnas($arrHoras['horasDiurnas']);
-                            $arDistribucionDetalle->setHorasNocturnas($arrHoras['horasNocturnas']);
-                            $arDistribucionDetalle->setHorasFestivasDiurnas($arrHoras['horasFestivasDiurnas']);
-                            $arDistribucionDetalle->setHorasFestivasNocturnas($arrHoras['horasFestivasNocturnas']);
-                            $arDistribucionDetalle->setHorasExtrasOrdinariasDiurnas($arrHoras['horasExtrasDiurnas']);
-                            $arDistribucionDetalle->setHorasExtrasOrdinariasNocturnas($arrHoras['horasExtrasNocturnas']);
-                            $arDistribucionDetalle->setHorasExtrasFestivasDiurnas($arrHoras['horasExtrasFestivasDiurnas']);
-                            $arDistribucionDetalle->setHorasExtrasFestivasNocturnas($arrHoras['horasExtrasFestivasNocturnas']);
-                            $arDistribucionDetalle->setHorasRecargoNocturno($arrHoras['horasRecargoNocturno']);
-                            $arDistribucionDetalle->setHorasRecargoFestivoDiurno($arrHoras['horasRecargoFestivoDiurno']);
-                            $arDistribucionDetalle->setHorasRecargoFestivoNocturno($arrHoras['horasRecargoFestivoNocturno']);
-                            $em->persist($arDistribucionDetalle);
+                            $arDistribucion = new TurDistribucion();
+                            $arDistribucion->setCodigoEmpleadoFk($arEmpleado['codigoEmpleadoFk']);
+                            $arDistribucion->setCodigoTurnoFk($strTurno);
+                            $arDistribucion->setCodigoPedidoDetalleFk($arrTurno['codigoPedidoDetalle']);
+                            $arDistribucion->setFecha($dateFecha);
+                            $arDistribucion->setAnio($anio);
+                            $arDistribucion->setMes($mes);
+                            $arDistribucion->setHorario($horario);
+                            $arDistribucion->setHoras($arrHoras['horas']);
+                            $arDistribucion->setHorasDescanso($arrHoras['horasDescanso']);
+                            $arDistribucion->setHorasDiurnas($arrHoras['horasDiurnas']);
+                            $arDistribucion->setHorasNocturnas($arrHoras['horasNocturnas']);
+                            $arDistribucion->setHorasFestivasDiurnas($arrHoras['horasFestivasDiurnas']);
+                            $arDistribucion->setHorasFestivasNocturnas($arrHoras['horasFestivasNocturnas']);
+                            $arDistribucion->setHorasExtrasOrdinariasDiurnas($arrHoras['horasExtrasDiurnas']);
+                            $arDistribucion->setHorasExtrasOrdinariasNocturnas($arrHoras['horasExtrasNocturnas']);
+                            $arDistribucion->setHorasExtrasFestivasDiurnas($arrHoras['horasExtrasFestivasDiurnas']);
+                            $arDistribucion->setHorasExtrasFestivasNocturnas($arrHoras['horasExtrasFestivasNocturnas']);
+                            $arDistribucion->setHorasRecargoNocturno($arrHoras['horasRecargoNocturno']);
+                            $arDistribucion->setHorasRecargoFestivoDiurno($arrHoras['horasRecargoFestivoDiurno']);
+                            $arDistribucion->setHorasRecargoFestivoNocturno($arrHoras['horasRecargoFestivoNocturno']);
+                            $em->persist($arDistribucion);
                         }
                     }
                 }
             }
-        }*/
+
+        }
         $em->flush();
     }
 
     public function getHoras($codigoTurno, $dateFecha, $dateFecha2, $boolFestivo, $boolFestivo2, $horasIniciales)
     {
         $em = $this->getEntityManager();
-        $arTurno = new \Brasa\TurnoBundle\Entity\TurTurno();
-        $arTurno = $em->getRepository('BrasaTurnoBundle:TurTurno')->find($codigoTurno);
+        $arTurno = $em->getRepository(TurTurno::class)->find($codigoTurno);
 
         $intDias = 0;
         $intMinutoInicio = (($arTurno->getHoraDesde()->format('i') * 100) / 60) / 100;
@@ -119,7 +123,7 @@ class TurDistribucionRepository extends ServiceEntityRepository
         }
         $arrHoras1 = null;
         $arrTotalHoras = null;
-        if (($intHoraInicio + $intMinutoInicio) <= $intHoraFinal && $arTurno->getTurnoCompleto() == 0) {
+        if (($intHoraInicio + $intMinutoInicio) <= $intHoraFinal && $arTurno->getCompleto() == 0) {
             $arrHoras = $this->turnoHoras($intHoraInicio, $intMinutoInicio, $intHoraFinal, $boolFestivo, $horasIniciales, $arTurno->getNovedad(), $arTurno->getDescanso(), $dateFecha);
             $horasTotales = $arrHoras['horas'] + $arrHoras1['horas'];
             $arrTotalHoras = $arrHoras;
@@ -130,154 +134,6 @@ class TurDistribucionRepository extends ServiceEntityRepository
             $horasTotales = $arrHoras1['horas'];
         }
 
-
-        /* $arSoportePagoDetalle = new \Brasa\TurnoBundle\Entity\TurSoportePagoDetalle();
-          $arSoportePagoDetalle->setSoportePagoPeriodoRel($arSoportePagoPeriodo);
-          $arSoportePagoDetalle->setSoportePagoRel($arSoportePago);
-          $arSoportePagoDetalle->setAnio($arSoportePago->getAnio());
-          $arSoportePagoDetalle->setMes($arSoportePago->getMes());
-          $arSoportePagoDetalle->setRecursoRel($arSoportePago->getRecursoRel());
-          $arSoportePagoDetalle->setFecha($dateFecha);
-          $arSoportePagoDetalle->setFechaReal($dateFecha);
-          $arSoportePagoDetalle->setTurnoRel($arTurno);
-          if($laborado == false) {
-          $arSoportePagoDetalle->setDescanso($arTurno->getDescanso());
-          }
-          $arSoportePagoDetalle->setNovedad($arTurno->getNovedad());
-          $arSoportePagoDetalle->setIncapacidad($arTurno->getIncapacidad());
-          $arSoportePagoDetalle->setIncapacidadNoLegalizada($arTurno->getIncapacidadNoLegalizada());
-          $arSoportePagoDetalle->setLicencia($arTurno->getLicencia());
-          $arSoportePagoDetalle->setLicenciaNoRemunerada($arTurno->getLicenciaNoRemunerada());
-          $arSoportePagoDetalle->setVacacion($arTurno->getVacacion());
-          $arSoportePagoDetalle->setAusentismo($arTurno->getAusentismo());
-          $arSoportePagoDetalle->setIngreso($arTurno->getIngreso());
-          $arSoportePagoDetalle->setInduccion($arTurno->getInduccion());
-          if($dateFecha->format('d') == 31) {
-          $arSoportePagoDetalle->setDia31(1);
-          }
-
-          if($dateFecha->format('d') == 31 && $arSoportePagoPeriodo->getPagarDia31() == false) {
-          $arSoportePagoDetalle->setDias(0);
-          $arSoportePagoDetalle->setHoras(0);
-          $arSoportePagoDetalle->setHorasDiurnas(0);
-          $arSoportePagoDetalle->setHorasNocturnas(0);
-          $arSoportePagoDetalle->setHorasFestivasDiurnas(0);
-          $arSoportePagoDetalle->setHorasFestivasNocturnas(0);
-          $arSoportePagoDetalle->setHorasRecargoNocturno($arrHoras['horasNocturnas']);
-          $arSoportePagoDetalle->setHorasRecargoFestivoDiurno($arrHoras['horasFestivasDiurnas']);
-          $arSoportePagoDetalle->setHorasRecargoFestivoNocturno($arrHoras['horasFestivasNocturnas']);
-          } else {
-          $arSoportePagoDetalle->setRetiro($arTurno->getRetiro());
-          $arSoportePagoDetalle->setDias($intDias);
-          $arSoportePagoDetalle->setHoras($arTurno->getHorasNomina());
-          $arSoportePagoDetalle->setHorasDiurnas($arrHoras['horasDiurnas']);
-          $arSoportePagoDetalle->setHorasNocturnas($arrHoras['horasNocturnas']);
-          $arSoportePagoDetalle->setHorasFestivasDiurnas($arrHoras['horasFestivasDiurnas']);
-          $arSoportePagoDetalle->setHorasFestivasNocturnas($arrHoras['horasFestivasNocturnas']);
-
-          $arSoportePagoDetalle->setHorasRecargoNocturno($arrHoras['horasRecargoNocturno']);
-          $arSoportePagoDetalle->setHorasRecargoFestivoDiurno($arrHoras['horasRecargoFestivoDiurno']);
-          $arSoportePagoDetalle->setHorasRecargoFestivoNocturno($arrHoras['horasRecargoFestivoNocturno']);
-          }
-          if($dateFecha->format('d') == 31 && $arSoportePagoPeriodo->getPagarDia31Extra()) {
-          $arSoportePagoDetalle->setDias(0);
-          $arSoportePagoDetalle->setHoras(0);
-          $arSoportePagoDetalle->setHorasDiurnas(0);
-          $arSoportePagoDetalle->setHorasNocturnas(0);
-          $arSoportePagoDetalle->setHorasFestivasDiurnas(0);
-          $arSoportePagoDetalle->setHorasFestivasNocturnas(0);
-          $arSoportePagoDetalle->setHorasRecargoNocturno(0);
-          $arSoportePagoDetalle->setHorasRecargoFestivoDiurno(0);
-          $arSoportePagoDetalle->setHorasRecargoFestivoNocturno(0);
-          }
-
-          $arSoportePagoDetalle->setHorasExtrasOrdinariasDiurnas($arrHoras['horasExtrasDiurnas']);
-          $arSoportePagoDetalle->setHorasExtrasOrdinariasNocturnas($arrHoras['horasExtrasNocturnas']);
-          $arSoportePagoDetalle->setHorasExtrasFestivasDiurnas($arrHoras['horasExtrasFestivasDiurnas']);
-          $arSoportePagoDetalle->setHorasExtrasFestivasNocturnas($arrHoras['horasExtrasFestivasNocturnas']);
-          $arSoportePagoDetalle->setHorasDescanso($arrHoras['horasDescanso']);
-          $arSoportePagoDetalle->setHorasNovedad($arrHoras['horasNovedad']);
-
-          if($strTurnoFijoNomina) {
-          $arSoportePagoDetalle->setHorasDiurnas($arrHoras['horasDiurnas'] + $arrHoras['horasFestivasDiurnas']);
-          $arSoportePagoDetalle->setHorasFestivasDiurnas(0);
-          if($dateFecha->format('d') == 31 && $arSoportePagoPeriodo->getPagarDia31() == false) {
-          $arSoportePagoDetalle->setHorasDiurnas(0);
-          $arSoportePagoDetalle->setHorasFestivasDiurnas(0);
-          }
-          }
-          if($codigoProgramacionDetalle) {
-          $arSoportePagoDetalle->setProgramacionDetalleRel($arProgramacionDetalle);
-          $arSoportePagoDetalle->setPedidoDetalleRel($arProgramacionDetalle->getPedidoDetalleRel());
-          $arSoportePagoDetalle->setPuestoRel($arProgramacionDetalle->getPuestoRel());
-          $arSoportePagoDetalle->setComplementario($arProgramacionDetalle->getComplementario());
-          $arSoportePagoDetalle->setAdicional($arProgramacionDetalle->getAdicional());
-          }
-          $arSoportePagoDetalle->setFestivo($boolFestivo);
-          $em->persist($arSoportePagoDetalle);
-
-          if($arrHoras1) {
-          $arSoportePagoDetalle = new \Brasa\TurnoBundle\Entity\TurSoportePagoDetalle();
-          $arSoportePagoDetalle->setSoportePagoPeriodoRel($arSoportePagoPeriodo);
-          $arSoportePagoDetalle->setSoportePagoRel($arSoportePago);
-          $arSoportePagoDetalle->setAnio($arSoportePago->getAnio());
-          $arSoportePagoDetalle->setMes($arSoportePago->getMes());
-          $arSoportePagoDetalle->setRecursoRel($arSoportePago->getRecursoRel());
-          $arSoportePagoDetalle->setFecha($dateFecha2);
-          $arSoportePagoDetalle->setFechaReal($dateFecha);
-          $arSoportePagoDetalle->setTurnoRel($arTurno);
-          $arSoportePagoDetalle->setDescanso($arTurno->getDescanso());
-          $arSoportePagoDetalle->setNovedad(0);
-          if($dateFecha->format('d') == 31) {
-          $arSoportePagoDetalle->setDia31(1);
-          }
-          if($dateFecha->format('d') == 31 && $arSoportePagoPeriodo->getPagarDia31() == false) {
-          $arSoportePagoDetalle->setDias(0);
-          $arSoportePagoDetalle->setHoras(0);
-          $arSoportePagoDetalle->setHorasDiurnas(0);
-          $arSoportePagoDetalle->setHorasNocturnas(0);
-          $arSoportePagoDetalle->setHorasFestivasDiurnas(0);
-          $arSoportePagoDetalle->setHorasFestivasNocturnas(0);
-          $arSoportePagoDetalle->setHorasRecargoNocturno($arrHoras1['horasNocturnas']);
-          $arSoportePagoDetalle->setHorasRecargoFestivoDiurno($arrHoras1['horasFestivasDiurnas']);
-          $arSoportePagoDetalle->setHorasRecargoFestivoNocturno($arrHoras1['horasFestivasNocturnas']);
-          } else {
-          $arSoportePagoDetalle->setHorasDiurnas($arrHoras1['horasDiurnas']);
-          $arSoportePagoDetalle->setHorasNocturnas($arrHoras1['horasNocturnas']);
-          $arSoportePagoDetalle->setHorasFestivasDiurnas($arrHoras1['horasFestivasDiurnas']);
-          $arSoportePagoDetalle->setHorasFestivasNocturnas($arrHoras1['horasFestivasNocturnas']);
-          $arSoportePagoDetalle->setHorasRecargoNocturno($arrHoras1['horasRecargoNocturno']);
-          $arSoportePagoDetalle->setHorasRecargoFestivoDiurno($arrHoras1['horasRecargoFestivoDiurno']);
-          $arSoportePagoDetalle->setHorasRecargoFestivoNocturno($arrHoras1['horasRecargoFestivoNocturno']);
-          $arSoportePagoDetalle->setDias(0);
-          $arSoportePagoDetalle->setHoras(0);
-          }
-          if($dateFecha->format('d') == 31 && $arSoportePagoPeriodo->getPagarDia31Extra()) {
-          $arSoportePagoDetalle->setDias(0);
-          $arSoportePagoDetalle->setHoras(0);
-          $arSoportePagoDetalle->setHorasDiurnas(0);
-          $arSoportePagoDetalle->setHorasNocturnas(0);
-          $arSoportePagoDetalle->setHorasFestivasDiurnas(0);
-          $arSoportePagoDetalle->setHorasFestivasNocturnas(0);
-          $arSoportePagoDetalle->setHorasRecargoNocturno(0);
-          $arSoportePagoDetalle->setHorasRecargoFestivoDiurno(0);
-          $arSoportePagoDetalle->setHorasRecargoFestivoNocturno(0);
-          }
-          $arSoportePagoDetalle->setHorasExtrasOrdinariasDiurnas($arrHoras1['horasExtrasDiurnas']);
-          $arSoportePagoDetalle->setHorasExtrasOrdinariasNocturnas($arrHoras1['horasExtrasNocturnas']);
-          $arSoportePagoDetalle->setHorasExtrasFestivasDiurnas($arrHoras1['horasExtrasFestivasDiurnas']);
-          $arSoportePagoDetalle->setHorasExtrasFestivasNocturnas($arrHoras1['horasExtrasFestivasNocturnas']);
-          $arSoportePagoDetalle->setHorasDescanso($arrHoras1['horasDescanso']);
-          $arSoportePagoDetalle->setHorasNovedad($arrHoras1['horasNovedad']);
-          if($codigoProgramacionDetalle) {
-          $arSoportePagoDetalle->setProgramacionDetalleRel($arProgramacionDetalle);
-          $arSoportePagoDetalle->setPedidoDetalleRel($arProgramacionDetalle->getPedidoDetalleRel());
-          $arSoportePagoDetalle->setPuestoRel($arProgramacionDetalle->getPuestoRel());
-          }
-          $arSoportePagoDetalle->setFestivo($boolFestivo2);
-          $em->persist($arSoportePagoDetalle);
-          }
-         */
         return $arrTotalHoras;
     }
 

@@ -107,7 +107,7 @@ class DespachoController extends AbstractController
                 General::get()->setExportar($em->getRepository(TteDespacho::class)->lista($raw)->getQuery()->execute(), "Despachos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TteDespacho::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_lista'));
             }

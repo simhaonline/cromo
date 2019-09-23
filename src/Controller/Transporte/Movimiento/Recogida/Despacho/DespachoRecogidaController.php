@@ -157,7 +157,7 @@ class DespachoRecogidaController extends AbstractController
                 General::get()->setExportar($em->getRepository(TteDespachoRecogida::class)->lista($raw)->getQuery()->execute(), "DespachosRecogidas");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despacho_lista'));
             }

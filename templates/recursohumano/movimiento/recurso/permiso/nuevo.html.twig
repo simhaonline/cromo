@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form,{'attr': {'class' :'form-horizontal'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-2 control-label">Empleado:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoEmpleadoFk) }}
+                                {{ form_errors(form.codigoEmpleadoFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
+                                       value="{{ arPermiso.empleadoRel.nombreCorto |default('') }}"
+                                       readOnly="ReadOnly"/>
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'permiso_codigoEmpleadoFk', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="credito_creditoTipoRel" class="control-label col-sm-2">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.permisoTipoRel) }}
+                </div>
+                <label for="form_jefeAutoriza" class="col-sm-2 control-label">Jefe autoriza:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.jefeAutoriza, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="credito_fechaInicio" class="control-label col-sm-2">Fecha:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fecha) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_horaSalida" class="col-sm-2 control-label">Hora salida:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.horaSalida) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_horaLlegada" class="col-sm-2 control-label">Hora llegada:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.horaLlegada) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_afectaHorario" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.afectaHorario) }}
+                </div>
+                <label for="form_jefeAutoriza" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.constancia) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="form_motivo" class="col-sm-2 control-label">Motivo:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.motivo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="credito_comentarios" class="control-label col-sm-2">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" style="float: left;"
+           href="{{ path('recursohumano_movimiento_recurso_permiso_lista') }}">Volver</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+{% endblock %}

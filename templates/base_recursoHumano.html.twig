@@ -37,29 +37,37 @@
                         <li>
                             <a href="{{ path('recursohumano_movimiento_recurso_visita_lista') }}">Visita</a>
                         </li>
+                        <li>
+                            <a href="{{ path('recursohumano_movimiento_recurso_permiso_lista') }}">Permiso</a>
+                        </li>
                     </ul>
                 </li>
                 <li>
                     <a href="#">Nomina <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('recursohumano_movimiento_nomina_programacion_lista') }}">Programacion</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_programacion_lista') }}">Programacion</a>
+                        </li>
                         <li><a href="{{ path('recursohumano_movimiento_nomina_pago_lista') }}">Pago</a></li>
-                        <li><a href="{{ path('recursohumano_movimiento_nomina_liquidacion_lista') }}">Liquidacion</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_liquidacion_lista') }}">Liquidacion</a>
+                        </li>
                         <li><a href="{{ path('recursohumano_movimiento_nomina_adicional_lista') }}">Adicional</a></li>
-                        <li><a href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_lista') }}">Adicional periodo</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_adicionalperiodo_lista') }}">Adicional
+                                periodo</a></li>
                         <li><a href="{{ path('recursohumano_movimiento_nomina_vacacion_lista') }}">Vacacion</a></li>
                         <li><a href="{{ path('recursohumano_movimiento_nomina_embargo_lista') }}">Embargo</a></li>
                         <li><a href="{{ path('recursohumano_movimiento_nomina_credito_lista') }}">Credito</a></li>
                         <li><a href="{{ path('recursohumano_movimiento_nomina_reclamo_lista') }}">Reclamo</a></li>
                         <li><a href="{{ path('recursohumano_movimiento_nomina_licencia_lista') }}">Licencia</a>
-                        <li><a href="{{ path('recursohumano_movimiento_nomina_incapacidad_lista') }}">Incapacidad</a></li>
+                        <li><a href="{{ path('recursohumano_movimiento_nomina_incapacidad_lista') }}">Incapacidad</a>
+                        </li>
                     </ul>
                 </li>
                 <li>
                     <a href="#">Seguridad social <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_lista') }}">Aporte</a></li>
-                        </ul>
+                        <li><a href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_lista') }}">Aporte</a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="#">Seguridad y salud <span class="fa arrow"></span></a>
@@ -123,8 +131,11 @@
                         </li>
                         <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'pension'}) }}">Pension</a>
                         </li>
-                        <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'tiempo'}) }}">Tiempo</a></li>
-                        <li><a  href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'licenciaTipo'}) }}">Licencia tipo</a></li>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'tiempo'}) }}">Tiempo</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'licenciaTipo'}) }}">Licencia
+                                tipo</a></li>
                     </ul>
                 </li>
                 <li>
@@ -170,7 +181,8 @@
                             <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'clasificacionRiesgo'}) }}">Clasificacion
                                 del riesgo</a></li>
                         <li>
-                            <a href="{{ path('recursohumano_administracion_seguridadsocial_sucursal_lista') }}">Sucursal</a></li>
+                            <a href="{{ path('recursohumano_administracion_seguridadsocial_sucursal_lista') }}">Sucursal</a>
+                        </li>
                     </ul>
                 </li>
                 <li>
@@ -179,19 +191,22 @@
                         <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'cargo'}) }}">Cargo</a>
                         </li>
                         <li>
-                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'requisitoTipo'}) }}">Tipo requisito</a>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'requisitoTipo'}) }}">Tipo
+                                requisito</a>
                         </li>
                         <li>
-                            <a href="{{ path('recursohumano_administracion_contratacion_requisitoconcepto_lista') }}">Concepto requisito</a>
+                            <a href="{{ path('recursohumano_administracion_contratacion_requisitoconcepto_lista') }}">Concepto
+                                requisito</a>
                         </li>
                         <li>
-                            <a href="{{ path('recursohumano_administracion_contratacion_requisitocargo_lista') }}">Requisito por cargo</a>
+                            <a href="{{ path('recursohumano_administracion_contratacion_requisitocargo_lista') }}">Requisito
+                                por cargo</a>
                         </li>
                     </ul>
                 </li>
                 <li>
-                <a href="#">Dotación <span class="fa arrow"></span></a>
-                <ul>
+                    <a href="#">Dotación <span class="fa arrow"></span></a>
+                    <ul>
                         <li><a href="{{ path('recursohumano_administracion_dotacion_dotacionelemento_lista') }}">Elementos</a>
                         </li>
                     </ul>
@@ -209,8 +224,11 @@
                 <li>
                     <a href="#">Programacion <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('recursohumano_utilidad_pago_formatopagomasivo_lista') }}">Imprimir pago masivo</a><li>
-                        <li><a href="{{ path('recursohumano_utilidad_intercambio_programacion') }}">Intercambio de datos</a></li>
+                        <li><a href="{{ path('recursohumano_utilidad_pago_formatopagomasivo_lista') }}">Imprimir pago
+                                masivo</a>
+                        <li>
+                        <li><a href="{{ path('recursohumano_utilidad_intercambio_programacion') }}">Intercambio de
+                                datos</a></li>
                     </ul>
                 </li>
             </ul>
@@ -225,7 +243,8 @@
                     <a href="#">Pago <span class="fa arrow"></span></a>
                     <ul>
                         <li><a href="{{ path('recursohumano_proceso_pago_regeneraribp') }}">Regenerar IBP</a></li>
-                        <li><a href="{{ path('recursohumano_proceso_pago_regenerarprovision') }}">Regenerar provision</a></li>
+                        <li><a href="{{ path('recursohumano_proceso_pago_regenerarprovision') }}">Regenerar
+                                provision</a></li>
                     </ul>
                 </li>
             </ul>
@@ -239,14 +258,14 @@
                 <li>
                     <a href="#">Nomina <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{  path('recursohumano_informe_nomina_pago_lista') }}">Pago</a></li>
-                        <li><a href="{{  path('recursohumano_informe_nomina_pagodetalle_lista') }}">Pago detalle</a></li>
+                        <li><a href="{{ path('recursohumano_informe_nomina_pago_lista') }}">Pago</a></li>
+                        <li><a href="{{ path('recursohumano_informe_nomina_pagodetalle_lista') }}">Pago detalle</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#">Seguridad social <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{  path('recursohumano_informe_seguridadsocial_aporte_lista') }}">Aportes</a></li>
+                        <li><a href="{{ path('recursohumano_informe_seguridadsocial_aporte_lista') }}">Aportes</a></li>
                     </ul>
                 </li>
             </ul>

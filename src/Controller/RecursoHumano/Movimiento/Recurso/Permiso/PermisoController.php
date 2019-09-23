@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Recurso\Visita;
+namespace App\Controller\RecursoHumano\Movimiento\Recurso\Permiso;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -10,10 +10,13 @@ use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
 use App\Entity\RecursoHumano\RhuCreditoTipo;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuPermiso;
+use App\Entity\RecursoHumano\RhuPermisoTipo;
 use App\Entity\RecursoHumano\RhuVisita;
 use App\Entity\RecursoHumano\RhuVisitaTipo;
 use App\Form\Type\RecursoHumano\CreditoPagoType;
 use App\Form\Type\RecursoHumano\CreditoType;
+use App\Form\Type\RecursoHumano\PermisoType;
 use App\Form\Type\RecursoHumano\VisitaType;
 use App\Formato\RecursoHumano\Credito;
 use App\General\General;
@@ -32,15 +35,15 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class VisitaController extends AbstractController
+class PermisoController extends AbstractController
 {
-    protected $clase = RhuVisita::class;
-    protected $claseFormulario = VisitaType::class;
-    protected $claseNombre = "RhuVisita";
+    protected $clase = RhuPermiso::class;
+    protected $claseFormulario = PermisoType::class;
+    protected $claseNombre = "RhuPermiso";
     protected $modulo = "RecursoHumano";
     protected $funcion = "movimiento";
     protected $grupo = "Recurso";
-    protected $nombre = "Visita";
+    protected $nombre = "Permiso";
 
     /**
      * @param Request $request
@@ -48,24 +51,24 @@ class VisitaController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("recursohumano/movimiento/recurso/visita/lista", name="recursohumano_movimiento_recurso_visita_lista")
+     * @Route("recursohumano/movimiento/recurso/permiso/lista", name="recursohumano_movimiento_recurso_permiso_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('codigoVisitaTipoFk', EntityType::class, [
-                'class' => RhuVisitaTipo::class,
+            ->add('codigoPermisoTipoFk', EntityType::class, [
+                'class' => RhuPermisoTipo::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('vt')
-                        ->orderBy('vt.codigoVisitaTipoPk', 'ASC');
+                    return $er->createQueryBuilder('pt')
+                        ->orderBy('pt.codigoPermisoTipoPk', 'ASC');
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS',
                 'attr' => ['class' => 'form-control to-select-2']
             ])
-            ->add('codigoVisitaPk', TextType::class, array('required' => false))
+            ->add('codigoPermisoPk', TextType::class, array('required' => false))
             ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -87,12 +90,12 @@ class VisitaController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(RhuVisita::class)->lista($raw), "Visitas");
+                General::get()->setExportar($em->getRepository(RhuPermiso::class)->lista($raw), "Permisos");
             }
         }
-        $arVisitas = $paginator->paginate($em->getRepository(RhuVisita::class)->lista($raw), $request->query->getInt('page', 1), 30);
-        return $this->render('recursohumano/movimiento/recurso/visita/lista.html.twig', [
-            'arVisitas' => $arVisitas,
+        $arPermisos = $paginator->paginate($em->getRepository(RhuPermiso::class)->lista($raw), $request->query->getInt('page', 1), 30);
+        return $this->render('recursohumano/movimiento/recurso/permiso/lista.html.twig', [
+            'arPermisos' => $arPermisos,
             'form' => $form->createView(),
         ]);
     }
@@ -101,49 +104,49 @@ class VisitaController extends AbstractController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/movimiento/recurso/visita/nuevo/{id}", name="recursohumano_movimiento_recurso_visita_nuevo")
+     * @Route("recursohumano/movimiento/recurso/permiso/nuevo/{id}", name="recursohumano_movimiento_recurso_permiso_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arVisita = new RhuVisita();
+        $arPermiso = new RhuPermiso();
         if ($id != 0) {
-            $arVisita = $em->getRepository($this->clase)->find($id);
+            $arPermiso = $em->getRepository($this->clase)->find($id);
         } else {
-            $arVisita->setFecha(new \DateTime('now'));
+            $arPermiso->setFecha(new \DateTime('now'));
         }
-        $form = $this->createForm(VisitaType::class, $arVisita);
+        $form = $this->createForm(PermisoType::class, $arPermiso);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->get('guardar')->isClicked()) {
-                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arVisita->getCodigoEmpleadoFk());
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arPermiso->getCodigoEmpleadoFk());
                 if ($arEmpleado) {
                     $arContrato = null;
                     if ($arEmpleado->getCodigoContratoFk()) {
                         $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
                         if ($arContrato != null) {
                             if ($id == 0) {
-                                $arVisita->setFecha(new \DateTime('now'));
+                                $arPermiso->setFecha(new \DateTime('now'));
                             }
-                            $arVisita->setFechaCreacion(new \DateTime('now'));
-                            $arVisita->setEmpleadoRel($arEmpleado);
-                            $arVisita->setNombreCorto($arEmpleado->getNombreCorto());
-                            $arVisita->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
-                            $em->persist($arVisita);
+                            $arPermiso->setFecha(new \DateTime('now'));
+                            $arPermiso->setEmpleadoRel($arEmpleado);
+                            $srtTotalHoras = date_diff($arPermiso->getHoraLlegada(), $arPermiso->getHoraSalida());
+                            $arPermiso->setHoras($srtTotalHoras->format('%H'));
+                            $em->persist($arPermiso);
                             $em->flush();
-                            return $this->redirect($this->generateUrl('recursohumano_movimiento_recurso_visita_detalle', ['id' => $arVisita->getCodigoVisitaPk()]));
+                            return $this->redirect($this->generateUrl('recursohumano_movimiento_recurso_visita_detalle', ['id' => $arPermiso->getCodigoPermisoPk()]));
                         } else {
                             Mensajes::error('El empleado no tiene contratos en el sistema');
                         }
                     } else {
-                        Mensajes::error('No se ha encontrado un empleado con el codigo ingresado');
+                        Mensajes::error('El emplado no tiene contrato');
                     }
                 }
             }
         }
-        return $this->render('recursohumano/movimiento/recurso/visita/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/recurso/permiso/nuevo.html.twig', [
             'form' => $form->createView(),
-            'arVisita' => $arVisita
+            'arPermiso' => $arPermiso
         ]);
     }
 
@@ -151,7 +154,7 @@ class VisitaController extends AbstractController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/movimiento/recurso/visita/detalle/{id}", name="recursohumano_movimiento_recurso_visita_detalle")
+     * @Route("recursohumano/movimiento/recurso/permiso/detalle/{id}", name="recursohumano_movimiento_recurso_permiso_detalle")
      */
     public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
@@ -162,7 +165,7 @@ class VisitaController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
         }
-        return $this->render('recursohumano/movimiento/recurso/visita/detalle.html.twig', [
+        return $this->render('recursohumano/movimiento/recurso/permiso/detalle.html.twig', [
             'arRegistro' => $arRegistro,
             'form' => $form->createView()
         ]);
@@ -171,7 +174,7 @@ class VisitaController extends AbstractController
     public function getFiltros($form)
     {
         $filtro = [
-            'codigoVisita' => $form->get('codigoVisitaPk')->getData(),
+            'codigoPermiso' => $form->get('codigoPermisoPk')->getData(),
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
@@ -180,12 +183,12 @@ class VisitaController extends AbstractController
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
         ];
 
-        $arVisitaTipo = $form->get('codigoVisitaTipoFk')->getData();
+        $arPermisoTipo = $form->get('codigoPermisoTipoFk')->getData();
 
-        if (is_object($arVisitaTipo)) {
-            $filtro['visitaTipo'] = $arVisitaTipo->getCodigoVisitaTipoPk();
+        if (is_object($arPermisoTipo)) {
+            $filtro['permisoTipo'] = $arPermisoTipo->getCodigoPermisoTipoPk();
         } else {
-            $filtro['visitaTipo'] = $arVisitaTipo;
+            $filtro['permisoTipo'] = $arPermisoTipo;
         }
 
         return $filtro;

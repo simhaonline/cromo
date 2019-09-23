@@ -39,9 +39,9 @@ class RhuPermiso
     private $codigoCargoFk;
 
     /**
-     * @ORM\Column(name="fecha_permiso", type="date", nullable=true)
+     * @ORM\Column(name="fecha", type="date", nullable=true)
      */
-    private $fechaPermiso;
+    private $fecha;
 
     /**
      * @ORM\Column(name="hora_salida", type="time", nullable=true)
@@ -54,9 +54,9 @@ class RhuPermiso
     private $horaLlegada;
 
     /**
-     * @ORM\Column(name="horas_permiso", type="float", nullable=true)
+     * @ORM\Column(name="horas", type="float", nullable=true)
      */
-    private $horasPermiso = 0;
+    private $horas = 0;
 
     /**
      * @ORM\Column(name="motivo", type="text", nullable=true)
@@ -102,6 +102,11 @@ class RhuPermiso
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
      */
     private $usuario;
+
+    /**
+     * @ORM\Column(name="comentarios", type="string", length=1000, nullable=true)
+     */
+    private $comentarios;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuPermisoTipo", inversedBy="permisosPermisoTipoRel")
@@ -198,17 +203,17 @@ class RhuPermiso
     /**
      * @return mixed
      */
-    public function getFechaPermiso()
+    public function getFecha()
     {
-        return $this->fechaPermiso;
+        return $this->fecha;
     }
 
     /**
-     * @param mixed $fechaPermiso
+     * @param mixed $fecha
      */
-    public function setFechaPermiso($fechaPermiso): void
+    public function setFecha($fecha): void
     {
-        $this->fechaPermiso = $fechaPermiso;
+        $this->fecha = $fecha;
     }
 
     /**
@@ -246,17 +251,17 @@ class RhuPermiso
     /**
      * @return mixed
      */
-    public function getHorasPermiso()
+    public function getHoras()
     {
-        return $this->horasPermiso;
+        return $this->horas;
     }
 
     /**
-     * @param mixed $horasPermiso
+     * @param mixed $horas
      */
-    public function setHorasPermiso($horasPermiso): void
+    public function setHoras($horas): void
     {
-        $this->horasPermiso = $horasPermiso;
+        $this->horas = $horas;
     }
 
     /**
@@ -433,6 +438,22 @@ class RhuPermiso
     public function setEmpleadoRel($empleadoRel): void
     {
         $this->empleadoRel = $empleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * @param mixed $comentarios
+     */
+    public function setComentarios($comentarios): void
+    {
+        $this->comentarios = $comentarios;
     }
 
 

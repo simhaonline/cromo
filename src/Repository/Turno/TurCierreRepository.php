@@ -6,6 +6,7 @@ namespace App\Repository\Turno;
 use App\Entity\Crm\CrmVisita;
 use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContratoDetalle;
+use App\Entity\Turno\TurDistribucion;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurCierre;
 use App\Entity\Turno\TurCierreDetalle;
@@ -341,17 +342,10 @@ class TurCierreRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if (!$arCierre->getEstadoAutorizado()) {
-                $registros = $this->getEntityManager()->createQueryBuilder()->from(TurCierreDetalle::class, 'pd')
-                ->select('COUNT(pd.codigoCierreDetallePk) AS registros')
-                ->where('pd.codigoCierreFk = ' . $arCierre->getCodigoCierrePk())
-                ->getQuery()->getSingleResult();
-            if ($registros['registros'] > 0) {
-                $arCierre->setEstadoAutorizado(1);
-                $em->persist($arCierre);
-                $em->flush();
-            } else {
-                Mensajes::error("El registro no tiene detalles");
-            }
+            $em->getRepository(TurDistribucion::class)->generar();
+            $arCierre->setEstadoAutorizado(1);
+            $em->persist($arCierre);
+            $em->flush();
         } else {
             Mensajes::error('El documento ya esta autorizado');
         }

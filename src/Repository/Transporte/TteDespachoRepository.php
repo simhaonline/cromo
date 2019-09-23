@@ -533,7 +533,11 @@ class TteDespachoRepository extends ServiceEntityRepository
                     if ($arRegistro->getEstadoAprobado() == 0) {
                         if ($arRegistro->getEstadoAutorizado() == 0) {
                             if (count($this->getEntityManager()->getRepository(TteDespachoDetalle::class)->findBy(['codigoDespachoFk' => $arRegistro->getCodigoDespachoPk()])) <= 0) {
-                                $this->getEntityManager()->remove($arRegistro);
+                                if (count($this->getEntityManager()->getRepository(TteGuia::class)->findBy(['codigoDespachoFk' => $arRegistro->getCodigoDespachoPk()])) == 0){
+                                      $this->getEntityManager()->remove($arRegistro);
+                                }else{
+                                    $respuesta = 'No se puede eliminar, el registro tiene guías registradas, de caso contrario comunicarse con soporte técnico y informar el código del despacho';
+                                }
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';
                             }

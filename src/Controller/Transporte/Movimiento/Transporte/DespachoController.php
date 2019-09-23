@@ -356,6 +356,7 @@ class DespachoController extends AbstractController
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar'])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->add('txtNumero', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoGuiaNumero')])
+            ->add('verDireccion', CheckboxType::class, ['required' => false])
             ->add('cboCiudadDestinoRel', EntityType::class, $em->getRepository(TteCiudad::class)->llenarCombo("destino"))
             ->add('cboGuiaTipoRel', EntityType::class, $em->getRepository(TteGuiaTipo::class)->llenarCombo())
             ->add('cboRutaRel', EntityType::class, $em->getRepository(TteRuta::class)->llenarCombo())
@@ -418,7 +419,10 @@ class DespachoController extends AbstractController
             }
         }
         $arGuias = $paginator->paginate($em->getRepository(TteGuia::class)->despachoPendiente($arDespacho->getCodigoOperacionFk()), $request->query->getInt('page', 1), 300);
-        return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', ['arGuias' => $arGuias, 'form' => $form->createView()]);
+        return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarGuia.html.twig', [
+            'arGuias' => $arGuias,
+            'verDireccion' => $form->get('verDireccion')->getData(),
+            'form' => $form->createView()]);
     }
 
     /**

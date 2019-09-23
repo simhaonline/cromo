@@ -611,6 +611,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.nombreDestinatario as destinatario')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('tg.codigoServicioFk')
+            ->addSelect('tg.direccionDestinatario')
             ->leftJoin('tg.clienteRel', 'c')
             ->leftJoin('tg.ciudadDestinoRel', 'cd')
             ->where('tg.estadoDespachado = 0')

@@ -24,6 +24,16 @@
                     {{ form_widget(form.cboCiudadDestinoRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
                 </div>
             </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.verDireccion) }}
+                </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
             {{ form_widget(form.btnFiltrar,{'attr': { 'style':'float:right','class':'btn btn-sm btn-default' }}) }}
@@ -35,6 +45,7 @@
             <th>TIPO</th>
             <th>GUIA</th>
             <th>FECHA</th>
+            <th title="Tipo de servicio">SER</th>
             <th>OI</th>
             <th>OC</th>
             <th>NUMERO</th>
@@ -43,6 +54,9 @@
             <th>RUTA</th>
             <th>DESTINATARIO</th>
             <th>DESTINO</th>
+            {% if verDireccion %}
+                <th>DIRECCION</th>
+            {% endif %}
             <th>UND</th>
             <th>PES</th>
             <th>VOL</th>
@@ -55,6 +69,7 @@
                 <td>{{ arGuia.codigoGuiaTipoFk }}</td>
                 <td>{{ arGuia.codigoGuiaPk }}</td>
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arGuia.codigoServicioFk }}</td>
                 <td>{{ arGuia.codigoOperacionIngresoFk }}</td>
                 <td>{{ arGuia.codigoOperacionCargoFk }}</td>
                 <td>{{ arGuia.numero }}</td>
@@ -63,6 +78,9 @@
                 <td>{{ arGuia.codigoRutaFk }}</td>
                 <td>{{ arGuia.destinatario |slice(0, 25) }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
+                {% if verDireccion %}
+                    <td>{{ arGuia.direccionDestinatario }}</td>
+                {% endif %}
                 <td style="text-align: right">{{ arGuia.unidades }}</td>
                 <td style="text-align: right">{{ arGuia.pesoReal }}</td>
                 <td style="text-align: right">{{ arGuia.pesoVolumen }}</td>

@@ -277,7 +277,7 @@ class FacturaController extends AbstractController
             }
         }
         $query = $this->getDoctrine()->getRepository(TteFacturaPlanilla::class)->listaFacturaDetalle($id);
-        $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('PageFacturaPlanillas', 1), 10,
+        $arFacturaPlanillas = $paginator->paginate($query, $request->query->getInt('PageFacturaPlanillas', 1), 50,
             array(
                 'pageParameterName' => 'PageFacturaPlanillas',
                 'sortFieldParameterName' => 'sortPageFacturaPlanillas',

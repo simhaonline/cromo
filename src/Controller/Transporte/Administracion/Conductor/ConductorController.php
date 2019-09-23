@@ -54,7 +54,7 @@ class ConductorController extends ControllerListenerGeneral
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(TteFactura::class)->eliminar($arrSeleccionados);
+                $this->get("UtilidadesModelo")->eliminar(TteConductor::class, $arrSeleccionados);
                 return $this->redirect($this->generateUrl('transporte_administracion_transporte_conductor_lista'));
             }
 

@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class RhuPoligrafia
 {
     public $infoLog = [
-        "primaryKey" => "codigoPermisoPk",
+        "primaryKey" => "codigoPoligrafiaPk",
         "todos" => true,
     ];
 

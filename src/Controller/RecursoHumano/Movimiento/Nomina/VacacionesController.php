@@ -95,6 +95,11 @@ class VacacionesController extends AbstractController
                 $raw['filtros'] = $this->getFiltros($form);
                 General::get()->setExportar($em->getRepository(RhuVacacion::class)->lista($raw), "Vacaciones");
             }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuVacacion::class)->eliminar($arrSeleccionados);
+
+            }
         }
         $arVacaciones = $paginator->paginate($em->getRepository(RhuVacacion::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/nomina/vacacion/lista.html.twig', [

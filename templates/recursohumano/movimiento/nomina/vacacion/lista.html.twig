@@ -80,6 +80,7 @@
             <th title="Anulado">ANU</th>
             <th></th>
             <th></th>
+            <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
         </tr>
         </thead>
         <tbody>
@@ -116,6 +117,9 @@
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arVacacion.codigoVacacionPk }}" />
                 </td>
             </tr>
         {% endfor %}

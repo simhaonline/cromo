@@ -8,6 +8,7 @@ use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurCotizacion;
 use App\Entity\Turno\TurCotizacionDetalle;
+use App\Entity\Turno\TurCotizacionTipo;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
@@ -22,6 +23,86 @@ class TurCotizacionRepository extends ServiceEntityRepository
         parent::__construct($registry, TurCotizacion::class);
     }
 
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoCotizacionPk = null;
+        $numero = null;
+        $codigoCotizacionTipoFk = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+        if ($filtros){
+            $codigoCotizacionPk = $filtros['codigoCotizacionPk']??null;
+            $numero = $filtros['numero']??null;
+            $codigoCotizacionTipoFk = $filtros['codigoCotizacionTipoFk']??null;
+            $estadoAutorizado = $filtros['estadoAutorizado']??null;
+            $estadoAprobado = $filtros['estadoAprobado']??null;
+            $estadoAnulado = $filtros['estadoAnulado']??null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurCotizacion::class, 'c')
+            ->select('c.codigoCotizacionPk')
+            ->addSelect('c.numero')
+            ->addSelect('ct.nombre as cotizacionTipo')
+            ->addSelect('c.fecha')
+            ->addSelect('cl.nombreCorto as cliente')
+            ->addSelect('s.nombre as sector')
+            ->addSelect('c.horas')
+            ->addSelect('c.horasDiurnas')
+            ->addSelect('c.horasNocturnas')
+            ->addSelect('c.vrTotal')
+            ->addSelect('c.usuario')
+            ->addSelect('c.estadoAutorizado')
+            ->addSelect('c.estadoAprobado')
+            ->addSelect('c.estadoAnulado')
+            ->leftJoin('c.cotizacionTipoRel', 'ct')
+            ->leftJoin('c.clienteRel', 'cl')
+            ->leftJoin('c.sectorRel', 's');
+
+        if ($codigoCotizacionPk) {
+            $queryBuilder->andWhere("c.codigoCotizacionPk = '{$codigoCotizacionPk}'");
+        }
+
+        if ($numero) {
+            $queryBuilder->andWhere("c.numero = '{$numero}'");
+        }
+
+        if ($codigoCotizacionTipoFk) {
+            $queryBuilder->andWhere("ct.codigoCotizacionTipoPk = '{$codigoCotizacionTipoFk}'");
+        }
+
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAutorizado = 1");
+                break;
+        }
+
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAprobado = 1");
+                break;
+        }
+
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+    }
+
     /**
      * @param $arrSeleccionados
      * @throws \Doctrine\ORM\ORMException
@@ -32,11 +113,11 @@ class TurCotizacionRepository extends ServiceEntityRepository
         $respuesta = '';
         if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigo) {
-                $arRegistro = $this->getEntityManager()->getRepository(TurPedido::class)->find($codigo);
+                $arRegistro = $this->getEntityManager()->getRepository(TurCotizacion::class)->find($codigo);
                 if ($arRegistro) {
                     if ($arRegistro->getEstadoAprobado() == 0) {
                         if ($arRegistro->getEstadoAutorizado() == 0) {
-                            if (count($this->getEntityManager()->getRepository(TurPedidoDetalle::class)->findBy(['codigoPedidoFk' => $arRegistro->getCodigoPedidoPk()])) <= 0) {
+                            if (count($this->getEntityManager()->getRepository(TurCotizacionDetalle::class)->findBy(['codigoCotizacionFk' => $arRegistro->getCodigoCotizacionPk()])) <= 0) {
                                 $this->getEntityManager()->remove($arRegistro);
                             } else {
                                 $respuesta = 'No se puede eliminar, el registro tiene detalles';

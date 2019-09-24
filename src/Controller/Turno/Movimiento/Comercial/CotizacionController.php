@@ -11,6 +11,7 @@ use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurCotizacion;
 use App\Entity\Turno\TurCotizacionDetalle;
+use App\Entity\Turno\TurCotizacionTipo;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Form\Type\Turno\ContratoDetalleType;
@@ -22,13 +23,19 @@ use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CotizacionController extends ControllerListenerGeneral
+class CotizacionController extends AbstractController
 {
     protected $clase = TurCotizacion::class;
     protected $claseNombre = "TurCotizacion";
@@ -45,35 +52,56 @@ class CotizacionController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/turno/movimiento/comercial/cotizacion/lista", name="turno_movimiento_comercial_cotizacion_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
+        $form = $this->createFormBuilder()
+            ->add('codigoCotizacionPk', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoCotizacionTipoFk', EntityType::class, [
+                'class' => TurCotizacionTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('ct')
+                        ->orderBy('ct.codigoCotizacionTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
 
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Pedidos");
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TurCotizacion::class)->lista($raw)->getQuery()->execute(), "Pedidos");
+
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TurCotizacion::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_comercial_cotizacion_lista'));
             }
         }
+        $arCotizaciones = $paginator->paginate($em->getRepository(TurCotizacion::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('turno/movimiento/comercial/cotizacion/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arCotizaciones' => $arCotizaciones,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -137,9 +165,8 @@ class CotizacionController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/turno/movimiento/comercial/cotizacion/detalle/{id}", name="turno_movimiento_comercial_cotizacion_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator,$id)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arCotizacion = $em->getRepository(TurCotizacion::class)->find($id);
         $form = Estandares::botonera($arCotizacion->getEstadoAutorizado(), $arCotizacion->getEstadoAprobado(), $arCotizacion->getEstadoAnulado());
@@ -245,4 +272,23 @@ class CotizacionController extends ControllerListenerGeneral
         ]);
     }
 
+
+    public function getFiltros($form)
+    {
+         $filtro = [
+            'codigoCotizacionPk' => $form->get('codigoCotizacionPk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arCotizacionTipo = $form->get('codigoCotizacionTipoFk')->getData();
+        if (is_object($arCotizacionTipo)) {
+            $filtro['codigoCotizacionTipoFk'] = $arCotizacionTipo->getCodigoCotizacionTipoPk();
+        } else {
+            $filtro['codigoCotizacionTipoFk'] = $arCotizacionTipo;
+        }
+        return $filtro;
+    }
 }

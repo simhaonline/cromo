@@ -15,7 +15,6 @@ use App\Entity\Turno\TurDistribucion;
 use App\Entity\Turno\TurDistribucionEmpleado;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurCierre;
-use App\Entity\Turno\TurCierreDetalle;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurTurno;
@@ -99,11 +98,7 @@ class TurCierreRepository extends ServiceEntityRepository
                 if ($arRegistro) {
                     if ($arRegistro->getEstadoAprobado() == 0) {
                         if ($arRegistro->getEstadoAutorizado() == 0) {
-                            if (count($this->getEntityManager()->getRepository(TurCierreDetalle::class)->findBy(['codigoCierreFk' => $arRegistro->getCodigoCierrePk()])) <= 0) {
-                                $this->getEntityManager()->remove($arRegistro);
-                            } else {
-                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
-                            }
+                            $this->getEntityManager()->remove($arRegistro);
                         } else {
                             $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
                         }

@@ -76,9 +76,9 @@ class CierreController extends AbstractController
                 General::get()->setExportar($em->getRepository(TurCierre::class)->listaCierre($raw)->getQuery()->execute(), "Cierres");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TurCierre::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('turno_movimiento_comercial_cierre_lista'));
+                return $this->redirect($this->generateUrl('turno_movimiento_financiero_cierre_lista'));
             }
         }
         $arCierres = $paginator->paginate($em->getRepository(TurCierre::class)->lista($raw), $request->query->getInt('page', 1), 30);

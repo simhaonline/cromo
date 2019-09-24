@@ -13,11 +13,11 @@
                     <div class="form-group form-group-sm">
                         <label class=" col-sm-1 control-label">Codigo:</label>
                         <div class="col-sm-2">
-                            {{ form_widget(form.codigoPermisoPk) }}
+                            {{ form_widget(form.codigoPoligrafiaPk) }}
                         </div>
                         <label class=" col-sm-1 control-label">Tipo:</label>
                         <div class="col-sm-2">
-                            {{ form_widget(form.codigoPermisoTipoFk) }}
+                            {{ form_widget(form.codigoPoligrafiaTipoFk) }}
                         </div>
                         <label class="col-sm-1 col-sm-offset-3 control-label">Autorizado:</label>
                         <div class="col-sm-2">
@@ -62,11 +62,6 @@
             <th>IDENTIFICACION</th>
             <th>EMPLEADO</th>
             <th>CARGO</th>
-            <th>SALIDA</th>
-            <th>LLEGADA</th>
-            <th>HORAS</th>
-            <th title="Afecta horario">A.H</th>
-            <th title="Tiene constancia">CONST</th>
             <th title="Estado autorizado">AUT</th>
             <th title="Estado aprobado">APR</th>
             <th title="Estado anulado">ANU</th>
@@ -75,28 +70,23 @@
         </tr>
         </thead>
         <tbody>
-        {% for arPermiso in arPermisos %}
+        {% for arPoligrafia in arPoligrafias %}
             <tr>
-                <td>{{ arPermiso.codigoPermisoPk }}</td>
-                <td>{{ arPermiso.tipo }}</td>
-                <td>{{ arPermiso.fecha | date('Y-m-d') }}</td>
-                <td>{{ arPermiso.numeroIdentificacion }}</td>
-                <td>{{ arPermiso.empleado }}</td>
-                <td>{{ arPermiso.cargo }}</td>
-                <td>{{ arPermiso.horaSalida | date('H:i:s') }}</td>
-                <td>{{ arPermiso.horaLlegada  | date('H:i:s')}}</td>
-                <td>{{ arPermiso.horas }}</td>
-                <td>{{ arPermiso.afectaHorario ? 'SI':'NO' }}</td>
-                <td>{{ arPermiso.constancia}}</td>
-                <td>{{ arPermiso.estadoAutorizado ? 'SI':'NO' }}</td>
-                <td>{{ arPermiso.estadoAprobado ? 'SI':'NO' }}</td>
-                <td>{{ arPermiso.estadoAnulado ? 'SI':'NO' }}</td>
+                <td>{{ arPoligrafia.codigoPoligrafiaPk }}</td>
+                <td>{{ arPoligrafia.tipo }}</td>
+                <td>{{ arPoligrafia.fecha | date('Y-m-d') }}</td>
+                <td>{{ arPoligrafia.numeroIdentificacion }}</td>
+                <td>{{ arPoligrafia.empleado }}</td>
+                <td>{{ arPoligrafia.cargo }}</td>
+                <td>{{ arPoligrafia.estadoAutorizado ? 'SI':'NO' }}</td>
+                <td>{{ arPoligrafia.estadoAprobado ? 'SI':'NO' }}</td>
+                <td>{{ arPoligrafia.estadoAnulado ? 'SI':'NO' }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_recurso_permiso_nuevo',{'id': arPermiso.codigoPermisoPk }) }}"><i
+                    <a href="{{ path('recursohumano_movimiento_recurso_poligrafia_nuevo',{'id': arPoligrafia.codigoPoligrafiaPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_recurso_permiso_detalle',{'id' : arPermiso.codigoPermisoPk }) }}">
+                    <a href="{{ path('recursohumano_movimiento_recurso_poligrafia_detalle',{'id' : arPoligrafia.codigoPoligrafiaPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
@@ -107,12 +97,12 @@
     </table>
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">Registros
-            <span class="badge">{{ arPermisos.getTotalItemCount }}
+            <span class="badge">{{ arPoligrafias.getTotalItemCount }}
             </span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-        {{ knp_pagination_render(arPermisos) }}
+        {{ knp_pagination_render(arPoligrafias) }}
     </div>
     <div class="btn-group btn-xs" style="float: left; width: 60px">
         {{ form_widget(form.limiteRegistros) }}
@@ -125,7 +115,7 @@
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('recursohumano_movimiento_recurso_permiso_nuevo', {'id': 0}) }}">Nuevo</a>
+           href="{{ path('recursohumano_movimiento_recurso_poligrafia_nuevo', {'id': 0}) }}">Nuevo</a>
     </div>
     <br/><br/>
     {{ form_end(form) }}

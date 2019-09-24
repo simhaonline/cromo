@@ -47,4 +47,91 @@ class RhuPoligrafiaRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuPoligrafia::class);
     }
 
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoPoligrafia = null;
+        $codigoEmpleado = null;
+        $poligrafiaTipo = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoPoligrafia = $filtros['codigoPoligrafia'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $poligrafiaTipo = $filtros['poligrafiaTipo'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPoligrafia::class, 'p')
+            ->select('p.codigoPoligrafiaPk')
+            ->addselect('pt.nombre AS tipo')
+            ->addSelect('p.fecha')
+            ->addselect('e.numeroIdentificacion as numeroIdentificacion')
+            ->addselect('e.nombreCorto as empleado')
+            ->addselect('c.nombre as cargo')
+            ->addselect('p.estadoAutorizado')
+            ->addselect('p.estadoAprobado')
+            ->addselect('p.estadoAnulado')
+            ->leftJoin('p.poligrafiaTipoRel', 'pt')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('e.cargoRel', 'c');
+        if ($codigoPoligrafia) {
+            $queryBuilder->andWhere("p.codigoPoligrafiaPk = '{$codigoPoligrafia}'");
+        }
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = '{$codigoEmpleado}'");
+        }
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = '{$codigoEmpleado}'");
+        }
+        if ($poligrafiaTipo) {
+            $queryBuilder->andWhere("p.codigoPoligrafiaTipoFk = '{$poligrafiaTipo}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("p.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("p.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('p.codigoPoligrafiaPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

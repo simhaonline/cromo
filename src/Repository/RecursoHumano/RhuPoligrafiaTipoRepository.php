@@ -29,6 +29,7 @@ use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuPermisoTipo;
 use App\Entity\RecursoHumano\RhuPoligrafia;
+use App\Entity\RecursoHumano\RhuPoligrafiaTipo;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\RecursoHumano\RhuVacacionAdicional;
 use App\Entity\RecursoHumano\RhuVisita;
@@ -43,7 +44,7 @@ class RhuPoligrafiaTipoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, RhuPoligrafia::class);
+        parent::__construct($registry, RhuPoligrafiaTipo::class);
     }
 
 }

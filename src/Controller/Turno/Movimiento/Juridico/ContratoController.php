@@ -12,6 +12,10 @@ use App\Entity\Turno\TurContratoDetalle;
 use App\Form\Type\Turno\ContratoType;
 use App\Form\Type\Turno\ContratoDetalleType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -21,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ContratoController extends ControllerListenerGeneral
+class ContratoController extends AbstractController
 {
     protected $clase = TurContrato::class;
     protected $claseNombre = "TurContrato";
@@ -40,35 +44,45 @@ class ContratoController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/turno/movimiento/juridico/contrato/lista", name="turno_movimiento_juridico_contrato_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
-        $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
 
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+            ->add('codigoContratoPk', TextType::class, array('required' => false))
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SIN CERRAR' => '0', 'CERRADO' =>  '1'], 'required' => false])
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted() ) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Contratos");
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TurContrato::class)->lista($raw)->getQuery()->execute(), "Contratos");
+
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurContrato::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_lista'));
             }
         }
+        $arContratos = $paginator->paginate($em->getRepository(TurContrato::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('turno/movimiento/juridico/contrato/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView()
+            'arContratos' => $arContratos,
+            'form' => $form->createView()
         ]);
     }
 
@@ -137,10 +151,9 @@ class ContratoController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/turno/movimiento/juridico/contrato/detalle/{id}", name="turno_movimiento_juridico_contrato_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator,$id)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arContrato = $em->getRepository(TurContrato::class)->find($id);
         $form = Estandares::botonera($arContrato->getEstadoAutorizado(), $arContrato->getEstadoAprobado(), $arContrato->getEstadoAnulado());
 
@@ -301,6 +314,18 @@ class ContratoController extends ControllerListenerGeneral
             'arContrato' => $arContrato,
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        return $filtro = [
+            'codigoContratoPk' => $form->get('codigoContratoPk')->getData(),
+            'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoCerrado' => $form->get('estadoCerrado')->getData(),
+        ];
+
+        return $filtro;
     }
 }
 

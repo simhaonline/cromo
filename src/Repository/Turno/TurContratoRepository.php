@@ -22,6 +22,67 @@ class TurContratoRepository extends ServiceEntityRepository
         parent::__construct($registry, TurContrato::class);
     }
 
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoContratoPk = null;
+        $codigoClienteFk = null;
+        $estadoAutorizado = null;
+        $estadoCerrado = null;
+
+        if ($filtros){
+            $codigoContratoPk = $filtros['codigoContratoPk'] ?? null;
+            $codigoClienteFk = $filtros['codigoClienteFk'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoCerrado = $filtros['estadoCerrado'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContrato::class, 'c')
+            ->select('c.codigoContratoPk')
+            ->addSelect('c.horas')
+            ->addSelect('c.horasDiurnas')
+            ->addSelect('c.horasNocturnas')
+            ->addSelect('c.vrTotal')
+            ->addSelect('c.estadoAutorizado')
+            ->addSelect('c.estadoCerrado')
+            ->addSelect('ct.nombre as contratoTipo')
+            ->addSelect('cl.numeroIdentificacion')
+            ->addSelect('cl.nombreCorto ')
+            ->addSelect('s.nombre as  sector')
+            ->leftJoin('c.contratoTipoRel', 'ct')
+            ->leftJoin('c.clienteRel', 'cl')
+            ->leftJoin('c.sectorRel', 's');
+
+        if ($codigoContratoPk) {
+            $queryBuilder->andWhere("c.codigoContratoPk = '{$codigoContratoPk}'");
+        }
+
+        if ($codigoClienteFk) {
+            $queryBuilder->andWhere("c.codigoClienteFk = '{$codigoClienteFk}'");
+        }
+
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoCerrado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoCerrado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoCerrado = 1");
+                break;
+        }
+
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+    }
+
     public function autorizar($arContrato)
     {
         $em = $this->getEntityManager();

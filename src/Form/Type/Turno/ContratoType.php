@@ -53,35 +53,4 @@ class ContratoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoContratoPk",      "tipo":"pk"      ,"ayuda":"Codigo del registro"                      ,"titulo":"ID"},
-            {"campo":"contratoTipoRel.nombre","tipo":"texto"   ,"ayuda":"Tipo de contrato"                         ,"titulo":"TIPO", "relacion":""},            
-            {"campo":"clienteRel.numeroIdentificacion","tipo":"texto"   ,"ayuda":"Numero de identificacion"                     ,"titulo":"NIT", "relacion":""},
-            {"campo":"clienteRel.nombreCorto" ,"tipo":"texto"   ,"ayuda":"Cliente del contrato"                     ,"titulo":"CLIENTE", "relacion":""},
-            {"campo":"sectorRel.nombre",      "tipo":"texto"   ,"ayuda":"Sector al que pertenece el cliente"       ,"titulo":"SECTOR", "relacion":""},
-            {"campo":"horas",               "tipo":"texto"   ,"ayuda":"Contrato horas"                     ,"titulo":"H"},
-            {"campo":"horasDiurnas",               "tipo":"texto"   ,"ayuda":"Contrato horas diurnas"                     ,"titulo":"HD"},
-            {"campo":"horasNocturnas",               "tipo":"texto"   ,"ayuda":"Contrato horas nocturnas"                     ,"titulo":"HN"},
-            {"campo":"vrTotal",               "tipo":"moneda"   ,"ayuda":"Total del contrato"                     ,"titulo":"VALOR"},
-            {"campo":"estadoAutorizado",               "tipo":"bool"   ,"ayuda":"Autoriza contrato"                     ,"titulo":"AUT"},
-            {"campo":"estadoCerrado",               "tipo":"bool"   ,"ayuda":"Contrato cerrado"                     ,"titulo":"CER"}
-            
-            
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoContratoPk",   "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
-            {"child":"codigoClienteFk",    "tipo":"TextType",   "propiedades":{"label":"Cliente"}},            
-            {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoCerrado",      "tipo":"ChoiceType","propiedades":{"label":"Cerrado",       "choices":{"SIN CERRAR":false,"CERRADO":true}}}
-        ]';
-        return $campos;
-    }
 }

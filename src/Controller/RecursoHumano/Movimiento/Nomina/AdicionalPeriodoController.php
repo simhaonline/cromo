@@ -110,10 +110,9 @@ class AdicionalPeriodoController extends AbstractController
     /**
      * @Route("recursohumano/movimiento/nomina/adicionalperiodo/detalle/{id}", name="recursohumano_movimiento_nomina_adicionalperiodo_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
         $session = new Session();
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arAdicionalPeriodo = $em->getRepository(RhuAdicionalPeriodo::class)->find($id);
 

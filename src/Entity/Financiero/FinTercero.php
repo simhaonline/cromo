@@ -48,7 +48,7 @@ class FinTercero
     private $numeroIdentificacion;
 
     /**
-     * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true, unique=true)
+     * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true)
      * @Assert\Length(
      *     max = 1,
      *     maxMessage = "El campo no puede contener mas de {{ limit }} caracteres"

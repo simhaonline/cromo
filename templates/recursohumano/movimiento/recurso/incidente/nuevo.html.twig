@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form,{'attr': {'class' :'form-horizontal'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-2 control-label">Empleado:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoEmpleadoFk) }}
+                                {{ form_errors(form.codigoEmpleadoFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
+                                       value="{{ arIncidente.empleadoRel.nombreCorto |default('') }}"
+                                       readOnly="ReadOnly"/>
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'incidente_codigoEmpleadoFk', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_incidenteTipoRel" class="col-sm-2 control-label">Tipo incidente:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.incidenteTipoRel) }}
+                </div>
+                <label for="form_nombreReporta" class="col-sm-2 control-label">Nombre reporta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombreReporta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaNovedad" class="col-sm-2 control-label">Fecha novedad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaNovedad) }}
+                </div>
+                <label  class="col-sm-2 control-label">Cargo reporta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargoReporta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaHoraNotificacion" class="col-sm-2 control-label">Fecha/hora
+                    notificacion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaHoraNotificacion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaHoraCitacionDescargo" class="col-sm-2 control-label">Fecha/hora citacion
+                    descargo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaHoraCitacionDescargo) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_reportaSupervisor" class="col-sm-2 control-label"></label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.reportaSupervisor) }}
+                </div>
+                <div class="col-sm-2">
+                    {{ form_widget(form.estadoPresentaDescargo) }}
+                </div>
+                <div class="col-sm-2">
+                    {{ form_widget(form.estadoCitado) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_comentarios" class="col-sm-2 control-label">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentarios) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_comentarios" class="col-sm-2 control-label">Descripción:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.descripcion) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Preguntas <span class="fa fa-info-circle" style="float: right;color: grey;font-size: 16px;" title="Tener en cuenta antes de responder: en caso afirmativo (SÍ), dar click en la casilla correspondiente; en caso negativo (NO), dejar la casilla vacía"></span></div>
+        <div class="modal-body">
+            <table class="table table-hover">
+                <tbody>
+                <tr>
+                    <td class="pregunta">Existen elementos adjuntos (Imágenes, fotocopias, informes, etc):</td>
+                    <td class="respuesta">{{ form_widget(form.elementosAdjuntos) }}</td>
+                </tr>
+                <tr>
+                    <td class="pregunta">¿Es considerada la situación como una falta a procesos, procedimientos o el reglamento laboral de la compañía?</td>
+                    <td class="respuesta">{{ form_widget(form.faltaReglamento) }}</td>
+                </tr>
+                <tr>
+                    <td class="pregunta">¿Ha ocurrido esta situación antes?</td>
+                    <td class="respuesta">{{ form_widget(form.reiteraFalta) }}</td>
+                </tr>
+                <tr>
+                    <td class="pregunta">¿Se han realizado planes de mejoramiento al empleado?</td>
+                    <td class="respuesta">{{ form_widget(form.capacitacion) }}</td>
+                </tr>
+                <tr>
+                    <td class="pregunta">¿Tiene esta situación impacto para la compañía?</td>
+                    <td class="respuesta">{{ form_widget(form.impactaEmpresa) }}</td>
+                </tr>
+                <tr>
+                    <td class="pregunta">¿Tiene esta situación impacto para el puesto de trabajo?</td>
+                    <td class="respuesta">{{ form_widget(form.impactaCliente) }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" style="float: left;"
+           href="{{ path('recursohumano_movimiento_recurso_incidente_lista') }}">Volver</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+{% endblock %}

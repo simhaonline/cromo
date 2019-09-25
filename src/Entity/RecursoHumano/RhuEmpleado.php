@@ -400,6 +400,11 @@ class RhuEmpleado
     protected $reclamosEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuIncidente", mappedBy="empleadoRel")
+     */
+    protected $incidentesEmpleadoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuDotacion", mappedBy="empleadoRel")
      */
     protected $dotacionesEmpleadoRel;

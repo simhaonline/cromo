@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form,{'attr': {'class' :'form-horizontal'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class=" form-group form-group-sm">
+                <label for="form_txtCodigoCliente" class="col-sm-offset-1 col-sm-1 control-label">Empleado:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class=" col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoEmpleadoFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="form_txtNombreCorto" class="form-control" readonly>
+                                <span class="input-group-btn">
+                                    <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'desempeno_codigoEmpleadoFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Área o dependencia del evaluado:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.dependenciaEvaluado) }}
+                    <div style="color:red;">{{ form_errors(form.dependenciaEvaluado) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Nombre del jefe que evalua:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.jefeEvalua) }}
+                    <div style="color:red;">{{ form_errors(form.jefeEvalua) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Cargo del jefe que evalua:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargoJefeEvalua) }}
+                    <div style="color:red;">{{ form_errors(form.cargoJefeEvalua) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Área o dependencia del que evalua:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.dependenciaEvalua) }}
+                    <div style="color:red;">{{ form_errors(form.dependenciaEvalua) }}</div>
+                </div>
+            </div>
+{#            <div class="form-group form-group-sm">#}
+{#                <label for="credito_comentarios" class="control-label col-sm-2">Comentario:</label>#}
+{#                <div class="col-sm-10">#}
+{#                    {{ form_widget(form.comentarios) }}#}
+{#                </div>#}
+{#            </div>#}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" style="float: left;"
+           href="{{ path('recursohumano_movimiento_recurso_desempeno_lista') }}">Volver</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+{% endblock %}

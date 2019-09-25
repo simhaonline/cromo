@@ -23,7 +23,7 @@ class FinCuentaRepository extends ServiceEntityRepository
             ->addSelect('c.nombre')
             ->where('c.codigoCuentaPk IS NOT NULL');
         if ($session->get('filtroFinBuscarCuentaCodigo') != '') {
-            $queryBuilder->andWhere("c.codigoCuentaPk  = '{$session->get('filtroFinBuscarCuentaCodigo')}'");
+            $queryBuilder->andWhere("c.codigoCuentaPk LIKE '{$session->get('filtroFinBuscarCuentaCodigo')}%'");
         }
         if ($session->get('filtroFinBuscarCuentaNombre') != '') {
             $queryBuilder->andWhere("c.nombre LIKE '%{$session->get('filtroFinBuscarCuentaNombre')}%'");

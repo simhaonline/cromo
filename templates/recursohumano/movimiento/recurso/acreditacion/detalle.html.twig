@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default"
+               href="{{ path('recursohumano_movimiento_recurso_acreditacion_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
+        <tr>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arAcreditacion.codigoAcreditacionPk }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arAcreditacion.fecha | date('Y-m-d') }}</td>
+            <td class="titulo">TIPO:</td>
+            <td class="td-in-well">{{ arAcreditacion.codigoAcreditacionTipoFk }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA VENCIMIENTO:</td>
+            <td class="td-in-well">{{ arAcreditacion.fechaVencimiento | date('Y-m-d') }}</td>
+            <td class="titulo">NUMERO REGISTRO:</td>
+            <td class="td-in-well">{{ arAcreditacion.numeroRegistro }}</td>
+            <td class="titulo">RECHAZO:</td>
+            <td class="td-in-well">{{ arAcreditacion.codigoAcreditacionRechazoFk }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIO:</td>
+            <td class="td-in-well">{{ arAcreditacion.comentarios }}</td>
+            <td class="titulo">MOTIVO RECHAZADO:</td>
+            <td class="td-in-well">{{ arAcreditacion.motivoRechazo }}</td>
+            <td class="titulo">ACREDITACION RECHAZO:</td>
+            <td class="td-in-well">{{ arAcreditacion.codigoAcreditacionRechazoFk }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIOS:</td>
+            <td class="td-in-well" colspan="5">{{ arAcreditacion.comentarios }}</td>
+        </tr>
+    </table>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    <br>
+    <br>
+{% endblock %}

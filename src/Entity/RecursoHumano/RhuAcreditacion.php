@@ -59,6 +59,11 @@ class RhuAcreditacion
     private $codigoAcademiaFk;
 
     /**
+     * @ORM\Column(name="codigo_empleado_fk", type="integer", nullable=true)
+     */
+    private $codigoEmpleadoFk;
+
+    /**
      * @ORM\Column(name="numero_registro", type="string", length=20, nullable=true)
      */
     private $numeroRegistro;
@@ -82,6 +87,11 @@ class RhuAcreditacion
      * @ORM\Column(name="comentarios", type="string", length=200, nullable=true)
      */
     private $comentarios;
+
+    /**
+     * @ORM\Column(name="motivo_rechazo", type="string", length=200, nullable=true)
+     */
+    private $motivoRechazo;
 
     /**
      * @ORM\Column(name="detalle_validacion", type="string", length=150, nullable=true)
@@ -140,22 +150,6 @@ class RhuAcreditacion
      * @ORM\JoinColumn(name="codigo_acreditacion_tipo_fk", referencedColumnName="codigo_acreditacion_tipo_pk")
      */
     protected $acreditacionTipoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -283,6 +277,22 @@ class RhuAcreditacion
     public function setCodigoAcademiaFk($codigoAcademiaFk): void
     {
         $this->codigoAcademiaFk = $codigoAcademiaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpleadoFk()
+    {
+        return $this->codigoEmpleadoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpleadoFk
+     */
+    public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
+    {
+        $this->codigoEmpleadoFk = $codigoEmpleadoFk;
     }
 
     /**
@@ -544,19 +554,18 @@ class RhuAcreditacion
     /**
      * @return mixed
      */
-    public function getAcreditacionRechazoRel()
+    public function getMotivoRechazo()
     {
-        return $this->acreditacionRechazoRel;
+        return $this->motivoRechazo;
     }
 
     /**
-     * @param mixed $acreditacionRechazoRel
+     * @param mixed $motivoRechazo
      */
-    public function setAcreditacionRechazoRel($acreditacionRechazoRel): void
+    public function setMotivoRechazo($motivoRechazo): void
     {
-        $this->acreditacionRechazoRel = $acreditacionRechazoRel;
+        $this->motivoRechazo = $motivoRechazo;
     }
-
 
 
 }

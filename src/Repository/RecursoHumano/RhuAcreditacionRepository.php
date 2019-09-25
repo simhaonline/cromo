@@ -124,7 +124,7 @@ class RhuAcreditacionRepository extends ServiceEntityRepository
         }
         $queryBuilder->addOrderBy('a.codigoAcreditacionPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder;
     }
 
 

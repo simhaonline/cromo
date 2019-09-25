@@ -333,7 +333,11 @@ class TesEgresoRepository extends ServiceEntityRepository
                                             $arRegistro->setNumeroReferencia($arEgresoDetalle['numeroDocumento']);
                                             $arRegistro->setFecha($fecha);
                                             $arRegistro->setFechaVence($fecha);
-                                            $arRegistro->setVrDebito($arEgresoDetalle['vrPago']);
+                                            if($arEgresoDetalle['naturaleza'] == 'D') {
+                                                $arRegistro->setVrDebito($arEgresoDetalle['vrPago']);
+                                            } else {
+                                                $arRegistro->setVrCredito($arEgresoDetalle['vrPago']);
+                                            }
                                             $arRegistro->setNaturaleza($arEgresoDetalle['naturaleza']);
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('TesEgreso');

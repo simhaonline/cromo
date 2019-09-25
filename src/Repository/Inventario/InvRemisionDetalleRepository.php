@@ -237,7 +237,8 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->select('rd.codigoRemisionDetallePk')
             ->addSelect('rd.cantidad')
             ->addSelect('rd.cantidadAfectada')
-            ->addSelect('rd.cantidadPendiente');
+            ->addSelect('rd.cantidadPendiente')
+            ->addSelect('rd.operacionInventario');
         $arrRemisionsDetalles = $queryBuilder->getQuery()->getResult();
         return $arrRemisionsDetalles;
     }
@@ -265,7 +266,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         $cantidad = 0;
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
             ->select('rd.codigoItemFk')
-            ->addSelect("SUM(rd.cantidadOperada) AS cantidad")
+            ->addSelect("SUM(rd.cantidadPendiente) AS cantidad")
             ->leftJoin('rd.itemRel', 'i')
             ->leftJoin('rd.remisionRel', 'r')
             ->where('i.afectaInventario = 1')
@@ -286,14 +287,19 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         foreach ($arRemisionsDetalles as $arRemisionDetalle) {
             $cantidad = $arRemisionDetalle['cantidad'];
             $cantidadAfectada = $em->getRepository(InvMovimientoDetalle::class)->cantidadAfectaRemision($arRemisionDetalle['codigoRemisionDetallePk']);
-            $cantidadAfectadaDevolucion = $em->getRepository(InvRemisionDetalle::class)->cantidadAfectaDovolucion($arRemisionDetalle['codigoRemisionDetallePk']);
-            $cantidadAfectada+=$cantidadAfectadaDevolucion;
+            $cantidadAfectadaDevolucion = $em->getRepository(InvRemisionDetalle::class)->cantidadAfectaDevolucion($arRemisionDetalle['codigoRemisionDetallePk']);
+            $cantidadAfectada += $cantidadAfectadaDevolucion;
             $cantidadPendiente = $cantidad - $cantidadAfectada;
+            //Para que no queden pendientes las devoluciones de remision
+            if($arRemisionDetalle['operacionInventario'] == -1) {
+                $cantidadPendiente = 0;
+            }
             if($cantidadAfectada != $arRemisionDetalle['cantidadAfectada'] || $cantidadPendiente != $arRemisionDetalle['cantidadPendiente']) {
                 $arRemisionDetalleAct = $em->getRepository(InvRemisionDetalle::class)->find($arRemisionDetalle['codigoRemisionDetallePk']);
                 $arRemisionDetalleAct->setCantidadAfectada($cantidadAfectada);
                 $arRemisionDetalleAct->setCantidadPendiente($cantidadPendiente);
                 $em->persist($arRemisionDetalleAct);
+
             }
         }
         $em->flush();
@@ -324,6 +330,9 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         }
         $arRemisionDetalles = $this->listaRegenerarRemisionadaItem();
         foreach ($arRemisionDetalles as $arRemisionDetalle) {
+            /*if($arRemisionDetalle['codigoItemFk'] == 84) {
+                echo "hola";
+            }*/
             $arItem = $em->getRepository(InvItem::class)->find($arRemisionDetalle['codigoItemFk']);
             $arItem->setCantidadRemisionada($arRemisionDetalle['cantidad']);
             $arItem->setCantidadDisponible($arItem->getCantidadExistencia() - $arItem->getCantidadRemisionada());
@@ -343,6 +352,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->select('rd.codigoRemisionDetallePk')
             ->addSelect('rd.codigoItemFk')
             ->addSelect('i.nombre AS nombreItem')
+            ->addSelect('i.referencia')
             ->addSelect('rd.cantidad')
             ->addSelect('rd.cantidadOperada')
             ->addSelect('rd.cantidadPendiente')
@@ -391,7 +401,7 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         return $arrDetalles;
     }
 
-    public function cantidadAfectaDovolucion($codigoRemisionDetalle)
+    public function cantidadAfectaDevolucion($codigoRemisionDetalle)
     {
         $em = $this->getEntityManager();
         $cantidad = 0;

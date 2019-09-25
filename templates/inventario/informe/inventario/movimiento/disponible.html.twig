@@ -25,31 +25,21 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Desde:</label>
+                <label class="col-sm-1 control-label">Hasta:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.fechaDesde) }}
+                    {{ form_widget(form.fechaHasta) }}
                 </div>
                 <label class="col-sm-1 control-label">Lote:</label>
                 <div class="col-sm-2">
                     {{ form_widget(form.txtLote, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-1 control-label">Documento:</label>
+                <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.cboDocumento, { 'attr': {'class': 'form-control'} }) }}
+
                 </div>
-                <label class="col-sm-1 control-label">Documento tipo:</label>
+                <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.cboDocumentoTipo, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Hasta:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.fechaHasta) }}
-                </div>
-                <label class="col-sm-1 control-label">Bodega:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.txtBodega, { 'attr': {'class': 'form-control'} }) }}
+
                 </div>
             </div>
         </div>
@@ -72,33 +62,25 @@
                 <th>BOD</th>
                 <th>LOTE</th>
                 <th>VENCE</th>
-                <th>CAN</th>
-                <th>C_O</th>
-                <th>SALDO</th>
-                <th>COSTO</th>
-                <th>PRECIO</th>
+                <th>DIS</th>
             </tr>
             </thead>
             <tbody>
             {% set saldo = 0 %}
-            {% for arInformeKardex in arInformeKardexs %}
+            {% for arInformeDisponible in arInformeDisponibles %}
                 <tr>
-                    <td>{{ arInformeKardex.codigoMovimientoDetalle }}</td>
-                    <td>{{ arInformeKardex.numero }}</td>
-                    <td>{{ arInformeKardex.fecha | date ('Y-m-d H:i')}}</td>
-                    <td>{{ arInformeKardex.nombreDocumento }}</td>
-                    <td>{{ arInformeKardex.codigoItemFk }}</td>
-                    <td>{{ arInformeKardex.nombreItem }}</td>
-                    <td>{{ arInformeKardex.referencia }}</td>
-                    <td>{{ arInformeKardex.codigoRemisionDetalleFk }}</td>
-                    <td>{{ arInformeKardex.codigoBodegaFk }}</td>
-                    <td>{{ arInformeKardex.loteFk }}</td>
-                    <td>{{ arInformeKardex.fechaVencimiento | date('Y-m-d') }}</td>
-                    <td class="numero">{{ arInformeKardex.cantidad | number_format(0, '.', ',') }}</td>
-                    <td class="numero">{{ arInformeKardex.cantidadOperada | number_format(0, '.', ',') }}</td>
-                    <td class="numero">{{ arInformeKardex.saldo | number_format(0, '.', ',')}}</td>
-                    <td class="numero">{{ arInformeKardex.vrCosto | number_format(0, '.', ',')}}</td>
-                    <td class="numero">{{ arInformeKardex.vrPrecio | number_format(0, '.', ',')}}</td>
+                    <td>{{ arInformeDisponible.pk }}</td>
+                    <td>{{ arInformeDisponible.numero }}</td>
+                    <td>{{ arInformeDisponible.fecha | date ('Y-m-d H:i')}}</td>
+                    <td>{{ arInformeDisponible.nombreDocumento }}</td>
+                    <td>{{ arInformeDisponible.codigoItemFk }}</td>
+                    <td>{{ arInformeDisponible.nombreItem }}</td>
+                    <td>{{ arInformeDisponible.referencia }}</td>
+                    <td>{{ arInformeDisponible.codigoRemisionDetalleFk }}</td>
+                    <td>{{ arInformeDisponible.codigoBodegaFk }}</td>
+                    <td>{{ arInformeDisponible.loteFk }}</td>
+                    <td>{{ arInformeDisponible.fechaVencimiento | date('Y-m-d') }}</td>
+                    <td class="numero">{{ arInformeDisponible.disponible | number_format(0, '.', ',') }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -106,12 +88,12 @@
     </div>
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">Registros
-            <span class="badge">{{ arInformeKardexs.getTotalItemCount }}
+            <span class="badge">{{ arInformeDisponibles.getTotalItemCount }}
             </span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-        {{ knp_pagination_render(arInformeKardexs) }}
+        {{ knp_pagination_render(arInformeDisponibles) }}
     </div>
     <div class="btn-group" style="float: right">
         {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}

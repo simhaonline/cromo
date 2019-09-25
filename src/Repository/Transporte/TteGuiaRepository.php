@@ -3017,7 +3017,8 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('cd.nombre as ciudadDestinoNombre')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
-            ->orderBy('g.fechaIngreso', 'DESC');
+            ->orderBy('g.fechaIngreso', 'DESC')
+            ->andWhere('g.estadoAnulado = 0');
         if ($session->get('filtroTteCodigoCliente')) {
             $queryBuilder->andWhere("g.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
         }

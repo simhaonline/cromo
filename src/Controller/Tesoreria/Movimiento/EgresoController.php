@@ -235,6 +235,7 @@ class EgresoController extends BaseController
         $arEgreso = $em->getRepository(TesEgreso::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('todosTerceros', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTesCuentaPagarTodosTerceros')))
             ->add('txtCodigoTercero', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => ""])
             ->add('cboCuentaPagarTipo', EntityType::class, $em->getRepository(TesCuentaPagarTipo::class)->llenarCombo())
             ->add('cboBanco', EntityType::class, $em->getRepository(GenBanco::class)->llenarCombo())
@@ -266,6 +267,7 @@ class EgresoController extends BaseController
                 $session->set('filtroTesCuentaPagarNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
                 $session->set('filtroTesFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
                 $session->set('filtroTesFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
+                $session->set('filtroTesCuentaPagarTodosTerceros', $form->get('todosTerceros')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrCuentasPagar = $request->request->get('ChkSeleccionar');
@@ -291,7 +293,7 @@ class EgresoController extends BaseController
                 }
             }
         }
-        $arCuentasPagar = $paginator->paginate($em->getRepository(TesCuentaPagar::class)->cuentasPagar(), $request->query->getInt('page', 1), 500);
+        $arCuentasPagar = $paginator->paginate($em->getRepository(TesCuentaPagar::class)->cuentasPagarDetalleNuevo($arEgreso->getCodigoTerceroFk()), $request->query->getInt('page', 1), 500);
         return $this->render('tesoreria/movimiento/egreso/egreso/detalleNuevo.html.twig', [
             'arCuentasPagar' => $arCuentasPagar,
             'form' => $form->createView()

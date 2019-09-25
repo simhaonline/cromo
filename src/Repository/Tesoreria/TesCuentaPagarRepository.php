@@ -135,6 +135,65 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function cuentasPagarDetalleNuevo($codigoTercero)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesCuentaPagar::class, 'cp')
+            ->select('cp.codigoCuentaPagarPk')
+            ->addSelect('cp.numeroDocumento')
+            ->addSelect('cp.numeroReferencia')
+            ->addSelect('cp.vrTotal')
+            ->addSelect('cp.vrSaldo')
+            ->addSelect('cp.vrAbono')
+            ->addSelect('cp.plazo')
+            ->addSelect('cp.fecha')
+            ->addSelect('cp.fechaVence')
+            ->addSelect('cp.estadoVerificado')
+            ->addSelect('cpt.nombre as cuentaPagarTipoNombre')
+            ->addSelect('t.nombreCorto as terceroNombreCorto')
+            ->addSelect('t.numeroIdentificacion as terceroNumeroIdentificacion')
+            ->join('cp.terceroRel', 't')
+            ->join('cp.cuentaPagarTipoRel', 'cpt')
+            ->where('cp.vrSaldo <> 0')
+            ->andWhere('cp.operacion = 1')
+            ->orderBy('cp.codigoCuentaPagarPk', 'ASC');
+
+
+        if ($session->get('filtroTesCuentaPagarTodosTerceros')) {
+            if ($session->get('filtroTesCodigoTercero') != "") {
+                $queryBuilder->andWhere("cp.codigoTerceroFk = {$session->get('filtroTesCodigoTercero')}");
+            }
+        } else {
+            $queryBuilder->andWhere("cp.codigoTerceroFk = {$codigoTercero}");
+        }
+
+        if ($session->get('filtroTesCuentaPagarNumero') != "") {
+            $queryBuilder->andWhere("cp.numeroDocumento = {$session->get('filtroTesCuentaPagarNumero')}");
+        }
+        if ($session->get('filtroTesCuentaPagarNumeroReferencia') != "") {
+            $queryBuilder->andWhere("cp.numeroReferencia = {$session->get('filtroTesCuentaPagarNumeroReferencia')}");
+        }
+        if ($session->get('filtroTesCuentaPagarCodigo') != "") {
+            $queryBuilder->andWhere("cp.codigoCuentaPagarPk = {$session->get('filtroTesCuentaPagarCodigo')}");
+        }
+        if ($session->get('filtroTesCuentaPagarTipo') != "") {
+            $queryBuilder->andWhere("cp.codigoCuentaPagarTipoFk = '{$session->get('filtroTesCuentaPagarTipo')}'");
+        }
+
+        if ($session->get('filtroGenBanco') != "") {
+            $queryBuilder->andWhere("cp.codigoBancoFk = {$session->get('filtroGenBanco')}");
+        }
+
+        if ($session->get('filtroTesFechaDesde') != null) {
+            $queryBuilder->andWhere("cp.fecha >= '{$session->get('filtroTesFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroTesFechaHasta') != null) {
+            $queryBuilder->andWhere("cp.fecha <= '{$session->get('filtroTesFechaHasta')} 23:59:59'");
+        }
+
+
+        return $queryBuilder;
+    }
 
     public function generarVencimientos()
     {

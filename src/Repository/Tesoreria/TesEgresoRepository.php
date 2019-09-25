@@ -285,7 +285,7 @@ class TesEgresoRepository extends ServiceEntityRepository
             ->addSelect('e.numero')
             ->addSelect('e.fecha')
             ->addSelect('e.fechaPago')
-            ->addSelect('e.vrPago')
+            ->addSelect('e.vrTotalNeto')
             ->addSelect('e.estadoAprobado')
             ->addSelect('e.estadoContabilizado')
             ->addSelect('e.codigoTerceroFk')
@@ -318,7 +318,7 @@ class TesEgresoRepository extends ServiceEntityRepository
                                     //Cuenta proveedor
                                     if ($arEgresoDetalle['vrPago'] > 0) {
                                         $descripcion = "PROVEEDORES DOC " . $arEgresoDetalle['numeroDocumento'] ;
-                                        $cuenta = $arEgresoDetalle['codigoCuentaProveedorFk'];
+                                        $cuenta = $arEgresoDetalle['codigoCuentaFk'];
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                             if (!$arCuenta) {
@@ -334,13 +334,13 @@ class TesEgresoRepository extends ServiceEntityRepository
                                             $arRegistro->setFecha($fecha);
                                             $arRegistro->setFechaVence($fecha);
                                             $arRegistro->setVrDebito($arEgresoDetalle['vrPago']);
-                                            $arRegistro->setNaturaleza('D');
+                                            $arRegistro->setNaturaleza($arEgresoDetalle['naturaleza']);
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('TesEgreso');
                                             $arRegistro->setCodigoDocumento($arEgreso['codigoEgresoPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El [tipo cuenta cobrar] no tiene configurada la cuenta " . $descripcion;
+                                            $error = "La cuenta no existe" . $descripcion;
                                             break;
                                         }
                                     }
@@ -360,7 +360,7 @@ class TesEgresoRepository extends ServiceEntityRepository
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arEgreso['numero']);
                                     $arRegistro->setFecha($fecha);
-                                    $arRegistro->setVrCredito($arEgreso['vrPago']);
+                                    $arRegistro->setVrCredito($arEgreso['vrTotalNeto']);
                                     $arRegistro->setNaturaleza('C');
                                     $arRegistro->setDescripcion("Egreso");
                                     $arRegistro->setCodigoModeloFk('TesEgreso');

@@ -3,8 +3,10 @@
 namespace App\Repository\Tesoreria;
 
 
+use App\Entity\Financiero\FinCuenta;
 use App\Entity\Tesoreria\TesEgreso;
 use App\Entity\Tesoreria\TesEgresoDetalle;
+use App\Entity\Tesoreria\TesTercero;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -74,11 +76,34 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
     public function actualizar($arrControles, $idEgreso)
     {
         $em = $this->getEntityManager();
+        $arrCuenta = $arrControles['arrCuenta'];
+        $arrTercero = $arrControles['arrTercero'];
         $arEgresosDetalle = $em->getRepository(TesEgresoDetalle::class)->findBy(['codigoEgresoFk' => $idEgreso]);
         foreach ($arEgresosDetalle as $arEgresoDetalle) {
             $intCodigo = $arEgresoDetalle->getCodigoEgresoDetallePk();
             $valorPago = isset($arrControles['TxtVrPago' . $intCodigo]) && $arrControles['TxtVrPago' . $intCodigo] != '' ? $arrControles['TxtVrPago' . $intCodigo] : 0;
             $codigoNaturaleza = isset($arrControles['cboNaturaleza' . $intCodigo]) && $arrControles['cboNaturaleza' . $intCodigo] != '' ? $arrControles['cboNaturaleza' . $intCodigo] : null;
+            if ($arrCuenta[$intCodigo]) {
+                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$intCodigo]);
+                if ($arCuenta) {
+                    $arEgresoDetalle->setCuentaRel($arCuenta);
+                } else {
+                    $arEgresoDetalle->setCuentaRel(null);
+                }
+            } else {
+                $arEgresoDetalle->setCuentaRel(null);
+            }
+            if ($arrTercero[$intCodigo]) {
+                $arTercero = $em->getRepository(TesTercero::class)->find($arrTercero[$intCodigo]);
+                if ($arTercero) {
+                    $arEgresoDetalle->setTerceroRel($arTercero);
+                } else {
+                    $arEgresoDetalle->setTerceroRel(null);
+                }
+            } else {
+                $arEgresoDetalle->setTerceroRel(null);
+            }
+
             $arEgresoDetalle->setVrPago($valorPago);
             $arEgresoDetalle->setNaturaleza($codigoNaturaleza);
             $em->persist($arEgresoDetalle);
@@ -117,9 +142,9 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
             ->select('ed.codigoEgresoDetallePk')
             ->addSelect('ed.vrPago')
             ->addSelect('cp.numeroDocumento')
-            ->addSelect('cpt.codigoCuentaProveedorFk')
+            ->addSelect('ed.codigoCuentaFk')
+            ->addSelect('ed.naturaleza')
             ->leftJoin('ed.cuentaPagarRel', 'cp')
-            ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
             ->where('ed.codigoEgresoFk = ' . $codigoEgreso);
         $queryBuilder->orderBy('ed.codigoEgresoDetallePk', 'ASC');
 

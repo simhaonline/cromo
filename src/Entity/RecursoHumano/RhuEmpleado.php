@@ -470,6 +470,11 @@ class RhuEmpleado
     protected $permisosEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuEstudio", mappedBy="empleadoRel")
+     */
+    protected $estudiosEmpleadoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuPoligrafia", mappedBy="empleadoRel")
      */
     protected $poligrafiasEmpleadoRel;
@@ -1815,6 +1820,70 @@ class RhuEmpleado
     public function setCostosEmpleadosServiciosEmpleadoRel($costosEmpleadosServiciosEmpleadoRel): void
     {
         $this->costosEmpleadosServiciosEmpleadoRel = $costosEmpleadosServiciosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPruebasEmpleadoRel()
+    {
+        return $this->pruebasEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $pruebasEmpleadoRel
+     */
+    public function setPruebasEmpleadoRel($pruebasEmpleadoRel): void
+    {
+        $this->pruebasEmpleadoRel = $pruebasEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInduccionesEmpleadoRel()
+    {
+        return $this->induccionesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $induccionesEmpleadoRel
+     */
+    public function setInduccionesEmpleadoRel($induccionesEmpleadoRel): void
+    {
+        $this->induccionesEmpleadoRel = $induccionesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncidentesEmpleadoRel()
+    {
+        return $this->incidentesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $incidentesEmpleadoRel
+     */
+    public function setIncidentesEmpleadoRel($incidentesEmpleadoRel): void
+    {
+        $this->incidentesEmpleadoRel = $incidentesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstudiosEmpleadoRel()
+    {
+        return $this->estudiosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $estudiosEmpleadoRel
+     */
+    public function setEstudiosEmpleadoRel($estudiosEmpleadoRel): void
+    {
+        $this->estudiosEmpleadoRel = $estudiosEmpleadoRel;
     }
 
 

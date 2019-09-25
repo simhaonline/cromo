@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form,{'attr': {'class' :'form-horizontal'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-2 control-label">Empleado:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoEmpleadoFk) }}
+                                {{ form_errors(form.codigoEmpleadoFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
+                                       value="{{ arIncidente.empleadoRel.nombreCorto |default('') }}"
+                                       readOnly="ReadOnly"/>
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'incidente_codigoEmpleadoFk', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_institucion" class="col-sm-2 control-label">Institución:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.institucion, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.institucion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_empleadoEstudioTipoRel" class="col-sm-2 control-label">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.estudioTipoRel) }}
+                    {{ form_errors(form.estudioTipoRel) }}
+                </div>
+                <label for="form_ciudadRel" class="col-sm-2 control-label">Ciudad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadRel) }}
+                    {{ form_errors(form.ciudadRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_titulo" class="col-sm-2 control-label">Titulo obtenido:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.titulo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.titulo) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaInicio" class="col-sm-2 control-label">Fecha inicio:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaInicio) }}
+                    {{ form_errors(form.fechaInicio) }}
+                </div>
+                <label for="form_fechaTerminacion" class="col-sm-2 control-label">Fecha terminación:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaTerminacion) }}
+                    {{ form_errors(form.fechaTerminacion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_graduado" class="col-sm-2 control-label">Graduado:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.graduado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.graduado) }}
+                </div>
+                <label for="form_fechaVencimientoControl" class="col-sm-2 control-label">Fecha ven
+                    estudio/curso:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaVencimientoCurso) }}
+                    {{ form_errors(form.fechaVencimientoCurso) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_numeroRegistro" class="col-sm-2 control-label">Numero registro:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroRegistro, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.numeroRegistro) }}
+                </div>
+                <label for="form_validarVencimiento" class="col-sm-2 control-label">Validar vencimiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.validarVencimiento, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.validarVencimiento) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="form_comentarios" class="col-sm-2 control-label">Comentarios:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentarios, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" style="float: left;"
+           href="{{ path('recursohumano_movimiento_recurso_incidente_lista') }}">Volver</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+{% endblock %}

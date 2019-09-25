@@ -114,6 +114,11 @@ class GenCiudad
     protected $rhuAcademiaCiuidadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuEstudio", mappedBy="ciudadRel")
+     */
+    protected $rhuEstudiosCiudadRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvSucursal", mappedBy="ciudadRel")
      */
     protected $invSucursalesCiuidadRel;
@@ -630,6 +635,54 @@ class GenCiudad
     public function setCrmContactoCiuidadRel($crmContactoCiuidadRel): void
     {
         $this->crmContactoCiuidadRel = $crmContactoCiuidadRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuAcademiaCiuidadRel()
+    {
+        return $this->rhuAcademiaCiuidadRel;
+    }
+
+    /**
+     * @param mixed $rhuAcademiaCiuidadRel
+     */
+    public function setRhuAcademiaCiuidadRel($rhuAcademiaCiuidadRel): void
+    {
+        $this->rhuAcademiaCiuidadRel = $rhuAcademiaCiuidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuEstudiosCiudadRel()
+    {
+        return $this->rhuEstudiosCiudadRel;
+    }
+
+    /**
+     * @param mixed $rhuEstudiosCiudadRel
+     */
+    public function setRhuEstudiosCiudadRel($rhuEstudiosCiudadRel): void
+    {
+        $this->rhuEstudiosCiudadRel = $rhuEstudiosCiudadRel;
     }
 
 

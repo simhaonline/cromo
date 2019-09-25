@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default"
+               href="{{ path('recursohumano_movimiento_recurso_desempeno_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
+        <tr>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arRegistro.codigoDesempenoPk }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arRegistro.fecha | date('Y-m-d') }}</td>
+            <td class="titulo">EMPLEADO:</td>
+            <td class="td-in-well">{{ arRegistro.codigoEmpleadoFk }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CARGO:</td>
+            <td class="td-in-well">{{ arRegistro.codigoCargoFk }}</td>
+            <td class="titulo">DEPENDENCIA:</td>
+            <td class="td-in-well">{{ arRegistro.dependenciaEvaluado }}</td>
+            <td class="titulo">JEFE EVALUADO:</td>
+            <td class="td-in-well">{{ arRegistro.jefeEvalua }}</td>
+        </tr>
+    </table>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    <br>
+    <br>
+{% endblock %}

@@ -280,7 +280,7 @@ class EgresoController extends BaseController
                         $arEgresoDetalle->setEgresoRel($arEgreso);
                         $arEgresoDetalle->setNumero($arCuentaPagar->getNumeroDocumento());
                         $arEgresoDetalle->setCuentaPagarRel($arCuentaPagar);
-                        $arEgresoDetalle->setVrPago($arCuentaPagar->getVrTotal());
+                        $arEgresoDetalle->setVrPago($arCuentaPagar->getVrSaldo());
                         $arEgresoDetalle->setUsuario($this->getUser()->getUserName());
                         $arEgresoDetalle->setCuentaRel($em->getReference(FinCuenta::class, $arCuentaPagar->getCuentaPagarTipoRel()->getCodigoCuentaProveedorFk()));
                         $arEgresoDetalle->setTerceroRel($arCuentaPagar->getTerceroRel());

@@ -80,20 +80,20 @@
                         {% for arIngresoDetalle in arIngresoDetalles %}
                             <tr>
                                 <td>{{ arIngresoDetalle.codigoIngresoDetallePk }}</td>
-                                <td>{{ arIngresoDetalle.codigoCuentaPagarFk }}</td>
-                                <td>{{ arIngresoDetalle.codigoCuentaPagarTipoFk }}</td>
+                                <td>{{ arIngresoDetalle.codigoCuentaCobrarFk }}</td>
+                                <td>{{ arIngresoDetalle.codigoCuentaCobrarTipoFk }}</td>
                                 <td>{{ arIngresoDetalle.numero }}</td>
                                 {% if arIngreso.estadoAutorizado == false %}
                                     <td>
                                         <input type="text"
-                                               name="arrTercero[{{ arIngresoDetalle.codigoIngresoDetallePk }}]"
-                                               id="arrTercero[{{ arIngresoDetalle.codigoIngresoDetallePk }}]"
-                                               value="{{ arIngresoDetalle.codigoTerceroFk }}"
+                                               name="arrCliente[{{ arIngresoDetalle.codigoIngresoDetallePk }}]"
+                                               id="arrCliente[{{ arIngresoDetalle.codigoIngresoDetallePk }}]"
+                                               value="{{ arIngresoDetalle.codigoClienteFk }}"
                                                style="text-align: left; width:60px" size="20">
-                                        <a href="javascript:abrirVentana3('{{ path('cartera_buscar_tercero_movimiento',{'campoCodigo' : 'arrTercero['~ arIngresoDetalle.codigoIngresoDetallePk ~']' }) }}','BuscarTercero',600,900)"
+                                        <a href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente_movimiento',{'campoCodigo' : 'arrCliente['~ arIngresoDetalle.codigoIngresoDetallePk ~']' }) }}','BuscarTercero',600,900)"
                                            class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
-                                    <td>{{ arIngresoDetalle.terceroNombreCorto }}</td>
+                                    <td>{{ arIngresoDetalle.clienteNombreCorto }}</td>
                                     <td>
                                         <input type="text"
                                                name="arrCuenta[{{ arIngresoDetalle.codigoIngresoDetallePk }}]"
@@ -115,8 +115,8 @@
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
                                 {% else %}
-                                    <td>{{ arIngresoDetalle.codigoTerceroFk }}</td>
-                                    <td>{{ arIngresoDetalle.terceroNombreCorto }}</td>
+                                    <td>{{ arIngresoDetalle.codigoClienteFk }}</td>
+                                    <td>{{ arIngresoDetalle.clienteNombreCorto }}</td>
                                     <td>{{ arIngresoDetalle.codigoCuentaFk }}</td>
                                     <td>{{ arIngresoDetalle.naturaleza }}</td>
                                     <td style="text-align: right">{{ arIngresoDetalle.vrPago | number_format(0, '.', ',') }}</td>

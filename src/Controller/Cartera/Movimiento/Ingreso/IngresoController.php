@@ -192,7 +192,7 @@ class IngresoController extends BaseController
             if ($form->get('btnAdicionar')->isClicked()) {
                 $arIngresoDetalle = new CarIngresoDetalle();
                 $arIngresoDetalle->setIngresoRel($arIngreso);
-                $arIngresoDetalle->setTerceroRel($arIngreso->getTerceroRel());
+                $arIngresoDetalle->setClienteRel($arIngreso->getClienteRel());
                 $arIngresoDetalle->setNaturaleza('C');
                 $em->persist($arIngresoDetalle);
                 $em->flush();
@@ -203,11 +203,6 @@ class IngresoController extends BaseController
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(CarIngresoDetalle::class)->eliminar($arIngreso, $arrDetallesSeleccionados);
                 $em->getRepository(CarIngreso::class)->liquidar($id);
-            }
-            if ($form->get('btnArchivoPlanoBbva')->isClicked()) {
-                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-                $numero = $arIngreso->getNumero();
-                $this->generarArchivoBBVA($arIngreso, $numero,$arrDetallesSeleccionados);
             }
             return $this->redirect($this->generateUrl('cartera_movimiento_ingreso_ingreso_detalle', ['id' => $id]));
         }
@@ -236,9 +231,9 @@ class IngresoController extends BaseController
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('todosClientes', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroCarCuentaCobrarTodosClientes')))
-            ->add('txtCodigoTercero', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => ""])
+            ->add('txtCodigoCliente', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => ""])
             ->add('cboCuentaCobrarTipo', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
-            ->add('txtCodigoCuentaPagar', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroCarCuentaCobrarCodigo')])
+            ->add('txtCodigoCuentaCobrar', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroCarCuentaCobrarCodigo')])
             ->add('txtNumero', TextType::class, ['label' => 'Numero: ', 'required' => false, 'data' => $session->get('filtroCarCuentaCobrarNumero')])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroCarFechaDesde') ? date_create($session->get('filtroCarFechaDesde')) : null])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroCarFechaHasta') ? date_create($session->get('filtroCarFechaHasta')) : null])
@@ -247,34 +242,32 @@ class IngresoController extends BaseController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $arCuentaPagarTipo = $form->get('cboCuentaPagarTipo')->getData();
-                if ($arCuentaPagarTipo) {
-                    $session->set('filtroCarCuentaCobrarTipo', $arCuentaPagarTipo->getCodigoCuentaPagarTipoPk());
+                $arCuentaCobrarTipo = $form->get('cboCuentaCobrarTipo')->getData();
+                if ($arCuentaCobrarTipo) {
+                    $session->set('filtroCarCuentaCobrarTipo', $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk());
                 } else {
                     $session->set('filtroCarCuentaCobrarTipo', null);
                 }
                 $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
-                $session->set('filtroCarCuentaCobrarCodigo', $form->get('txtCodigoCuentaPagar')->getData());
+                $session->set('filtroCarCuentaCobrarCodigo', $form->get('txtCodigoCuentaCobrar')->getData());
                 $session->set('filtroCarCuentaCobrarNumero', $form->get('txtNumero')->getData());
                 $session->set('filtroCarFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
                 $session->set('filtroCarFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
                 $session->set('filtroCarCuentaCobrarTodosClientes', $form->get('todosClientes')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
-                $arrCuentasPagar = $request->request->get('ChkSeleccionar');
-                if ($arrCuentasPagar) {
-                    foreach ($arrCuentasPagar as $codigoCuentaPagar) {
-                        /** @var $arCuentaPagar  TesCuentaPagar */
-                        $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($codigoCuentaPagar);
-                        $arIngreso = $em->getRepository(CarIngreso::class)->find($id);
+                $arrCuentasCobrar = $request->request->get('ChkSeleccionar');
+                if ($arrCuentasCobrar) {
+                    foreach ($arrCuentasCobrar as $codigoCuentaCobrar) {
+                        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($codigoCuentaCobrar);
                         $arIngresoDetalle = new CarIngresoDetalle();
                         $arIngresoDetalle->setIngresoRel($arIngreso);
-                        $arIngresoDetalle->setNumero($arCuentaPagar->getNumeroDocumento());
-                        $arIngresoDetalle->setCuentaPagarRel($arCuentaPagar);
-                        $arIngresoDetalle->setVrPago($arCuentaPagar->getVrTotal());
+                        $arIngresoDetalle->setNumero($arCuentaCobrar->getNumeroDocumento());
+                        $arIngresoDetalle->setCuentaCobrarRel($arCuentaCobrar);
+                        $arIngresoDetalle->setVrPago($arCuentaCobrar->getVrSaldo());
                         $arIngresoDetalle->setUsuario($this->getUser()->getUserName());
-                        $arIngresoDetalle->setCuentaRel($em->getReference(FinCuenta::class, $arCuentaPagar->getCuentaPagarTipoRel()->getCodigoCuentaProveedorFk()));
-                        $arIngresoDetalle->setTerceroRel($arCuentaPagar->getTerceroRel());
+                        $arIngresoDetalle->setCuentaRel($em->getReference(FinCuenta::class, $arCuentaCobrar->getCuentaCobrarTipoRel()->getCodigoCuentaClienteFk()));
+                        $arIngresoDetalle->setClienteRel($arCuentaCobrar->getClienteRel());
                         $arIngresoDetalle->setNaturaleza('D');
                         $em->persist($arIngresoDetalle);
                     }
@@ -284,9 +277,9 @@ class IngresoController extends BaseController
                 }
             }
         }
-        $arCuentasPagar = $paginator->paginate($em->getRepository(CarCuentaCobrar::class)->cuentasCobrarDetalleNuevo($arIngreso->getCodigoClienteFk()), $request->query->getInt('page', 1), 500);
+        $arCuentasCobrar = $paginator->paginate($em->getRepository(CarCuentaCobrar::class)->cuentasCobrarDetalleNuevo($arIngreso->getCodigoClienteFk()), $request->query->getInt('page', 1), 500);
         return $this->render('cartera/movimiento/ingreso/ingreso/detalleNuevo.html.twig', [
-            'arCuentasPagar' => $arCuentasPagar,
+            'arCuentasCobrar' => $arCuentasCobrar,
             'form' => $form->createView()
         ]);
     }

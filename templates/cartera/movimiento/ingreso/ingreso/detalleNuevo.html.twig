@@ -8,21 +8,20 @@
         </div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="txtCodigoTercero" class="col-sm-1 control-label">Tercero:</label>
+                <label for="txtNit" class="col-sm-1 control-label">Cliente:</label>
                 <div class="col-sm-11">
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="input-group">
-                                {{ form_widget(form.txtCodigoTercero) }}
+                                {{ form_widget(form.txtCodigoCliente) }}
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <input id="form_txtNombreCorto" class="form-control" readonly>
+                                <input id="txtNombreCorto"  name="txtNombreCorto"  type="text" class="form-control" value="{{ arIngreso.clienteRel.nombreCorto |default('') }}" readOnly="ReadOnly" />
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm"
-                                           href="javascript:abrirVentana3('{{ path('tesoreria_buscar_tercero', { 'campoCodigo': 'form_txtCodigoTercero', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
-                    </span>
+                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                    </span>
                             </div>
                         </div>
                     </div>
@@ -31,7 +30,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-1 control-label">Codigo:</label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.txtCodigoCuentaPagar) }}
+                    {{ form_widget(form.txtCodigoCuentaCobrar) }}
                 </div>
                 <label class="col-sm-1 control-label">Numero:</label>
                 <div class="col-sm-2">
@@ -39,7 +38,7 @@
                 </div>
                 <label class="col-sm-1 control-label">Tipo:</label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.cboCuentaPagarTipo) }}
+                    {{ form_widget(form.cboCuentaCobrarTipo) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -47,13 +46,13 @@
                 <div class="col-sm-2">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
-                <label class="col-sm-1 control-label">Referencia:</label>
+                <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.txtNumeroReferencia) }}
+
                 </div>
-                <label class="col-sm-1 control-label">Banco:</label>
+                <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-5">
-                    {{ form_widget(form.cboBanco) }}
+
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -63,7 +62,7 @@
                 </div>
                 <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-2">
-                    {{ form_widget(form.todosTerceros) }}
+                    {{ form_widget(form.todosClientes) }}
                 </div>
             </div>
         </div>
@@ -80,11 +79,11 @@
                 <th>ID</th>
                 <th>NUM</th>
                 <th>TIPO</th>
-                <th>IDENTIFICACIÓN</th>
+                <th>NIT</th>
                 <th>TERCERO</th>
                 <th>FECHA</th>
                 <th>VENCE</th>
-                <th>VER</th>
+                <th>TOTAL</th>
                 <th>ABONO</th>
                 <th>SALDO</th>
                 <th class="text-center"><input type="checkbox" name="ChkSeleccionarTodos"
@@ -92,21 +91,21 @@
             </tr>
             </thead>
             <tbody>
-            {% for arCuentaPagar in arCuentasPagar %}
+            {% for arCuentaCobrar in arCuentasCobrar %}
                 <tr>
-                    <td style="text-align: right;">{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
-                    <td style="text-align: left;">{{ arCuentaPagar.numeroDocumento }}</td>
-                    <td style="text-align: left;">{{ arCuentaPagar.cuentaPagarTipoNombre }}</td>
-                    <td>{{ arCuentaPagar.terceroNumeroIdentificacion }}</td>
-                    <td style="text-align: left;">{{ arCuentaPagar.terceroNombreCorto }}</td>
-                    <td style="text-align: right;">{{ arCuentaPagar.fecha | date('d/m/Y') }}</td>
-                    <td style="text-align: right;">{{ arCuentaPagar.fechaVence | date('d/m/Y') }}</td>
-                    <td>{{ arCuentaPagar.estadoVerificado? "SI":"NO" }}</td>
-                    <td style="text-align: right;">{{ arCuentaPagar.vrAbono | number_format(0,'.',',') }}</td>
-                    <td style="text-align: right;">{{ arCuentaPagar.vrSaldo | number_format }}</td>
+                    <td style="text-align: right;">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
+                    <td style="text-align: left;">{{ arCuentaCobrar.numeroDocumento }}</td>
+                    <td style="text-align: left;">{{ arCuentaCobrar.cuentaCobrarTipoNombre }}</td>
+                    <td>{{ arCuentaCobrar.clienteNumeroIdentificacion }}</td>
+                    <td style="text-align: left;">{{ arCuentaCobrar.clienteNombreCorto }}</td>
+                    <td style="text-align: right;">{{ arCuentaCobrar.fecha | date('d/m/Y') }}</td>
+                    <td style="text-align: right;">{{ arCuentaCobrar.fechaVence | date('d/m/Y') }}</td>
+                    <td style="text-align: right;">{{ arCuentaCobrar.vrSaldoOriginal | number_format(0,'.',',') }}</td>
+                    <td style="text-align: right;">{{ arCuentaCobrar.vrAbono | number_format(0,'.',',') }}</td>
+                    <td style="text-align: right;">{{ arCuentaCobrar.vrSaldo | number_format }}</td>
                     <td style="text-align: center;">
                         <input type="checkbox" name="ChkSeleccionar[]"
-                               size="10" value="{{ arCuentaPagar.codigoCuentaPagarPk }}" style="width:70px">
+                               size="10" value="{{ arCuentaCobrar.codigoCuentaCobrarPk }}" style="width:70px">
                     </td>
                 </tr>
             {% endfor %}
@@ -114,12 +113,12 @@
         </table>
         <div class="btn-group" style="float: left">
             <div class="btn btn-default btn-sm">Registros
-                <span class="badge">{{ arCuentasPagar.getTotalItemCount }}
+                <span class="badge">{{ arCuentasCobrar.getTotalItemCount }}
             </span>
             </div>
         </div>
         <div class="btn-group btn-xs">
-            {{ knp_pagination_render(arCuentasPagar) }}
+            {{ knp_pagination_render(arCuentasCobrar) }}
         </div>
         <div class="btn-toolbar" style="float: right;">
             <div class="btn-group btn-group-sm">

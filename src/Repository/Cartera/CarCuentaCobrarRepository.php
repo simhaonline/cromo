@@ -659,16 +659,16 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
-            ->select('cc.codigoCuentaPagarPk')
+            ->select('cc.codigoCuentaCobrarPk')
             ->addSelect('cc.numeroDocumento')
             ->addSelect('cc.numeroReferencia')
             ->addSelect('cc.vrTotal')
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.vrAbono')
+            ->addSelect('cc.vrSaldoOriginal')
             ->addSelect('cc.plazo')
             ->addSelect('cc.fecha')
             ->addSelect('cc.fechaVence')
-            ->addSelect('cc.estadoVerificado')
             ->addSelect('cct.nombre as cuentaCobrarTipoNombre')
             ->addSelect('c.nombreCorto as clienteNombreCorto')
             ->addSelect('c.numeroIdentificacion as clienteNumeroIdentificacion')
@@ -698,10 +698,10 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         }
 
         if ($session->get('filtroCarFechaDesde') != null) {
-            $queryBuilder->andWhere("cc.fechaPago >= '{$session->get('filtroCarFechaDesde')} 00:00:00'");
+            $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroCarFechaDesde')} 00:00:00'");
         }
         if ($session->get('filtroCarFechaHasta') != null) {
-            $queryBuilder->andWhere("cc.fechaPago <= '{$session->get('filtroCarFechaHasta')} 23:59:59'");
+            $queryBuilder->andWhere("cc.fecha <= '{$session->get('filtroCarFechaHasta')} 23:59:59'");
         }
 
 

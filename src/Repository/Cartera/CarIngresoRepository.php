@@ -2,9 +2,21 @@
 
 namespace App\Repository\Cartera;
 
+use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarIngreso;
+use App\Entity\Cartera\CarIngresoDetalle;
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
+use App\Entity\Tesoreria\TesCuentaPagar;
+use App\Entity\Tesoreria\TesEgreso;
+use App\Entity\Tesoreria\TesEgresoDetalle;
+use App\Entity\Tesoreria\TesEgresoTipo;
+use App\Entity\Tesoreria\TesTercero;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class CarIngresoRepository extends ServiceEntityRepository
 {
@@ -13,5 +25,302 @@ class CarIngresoRepository extends ServiceEntityRepository
         parent::__construct($registry, CarIngreso::class);
     }
 
+    public function liquidar($id)
+    {
+        $em = $this->getEntityManager();
+        $debito = 0;
+        $credito = 0;
+        $arIngreso = $em->getRepository(CarIngreso::class)->find($id);
+        $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $id));
+        foreach ($arIngresosDetalle as $arIngresoDetalle) {
+            if($arIngresoDetalle->getNaturaleza() == 'D') {
+                $debito += $arIngresoDetalle->getVrPago();
+            } else {
+                $credito += $arIngresoDetalle->getVrPago();
+            }
+        }
+        $totalNeto = $debito - $credito;
+        $arIngreso->setVrTotalNeto($totalNeto);
+        $em->persist($arIngreso);
+        $em->flush();
+        return true;
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(CarIngreso::class)->find($codigo);
+                if ($arRegistro) {
+                    if ($arRegistro->getEstadoAprobado() == 0) {
+                        if ($arRegistro->getEstadoAutorizado() == 0) {
+                            if (count($this->getEntityManager()->getRepository(CarIngresoDetalle::class)->findBy(['codigoIngresoFk' => $arRegistro->getCodigoIngresoPk()])) <= 0) {
+                                $this->getEntityManager()->remove($arRegistro);
+                            } else {
+                                $respuesta = 'No se puede eliminar, el registro tiene detalles';
+                            }
+                        } else {
+                            $respuesta = 'No se puede eliminar, el registro se encuentra autorizado';
+                        }
+                    } else {
+                        $respuesta = 'No se puede eliminar, el registro se encuentra aprobado';
+                    }
+                }
+                if ($respuesta != '') {
+                    Mensajes::error($respuesta);
+                } else {
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
+    }
+
+    public function autorizar($arIngreso)
+    {
+        $em = $this->getEntityManager();
+        if ($arIngreso->getEstadoAutorizado() == 0) {
+            $error = false;
+            if($arIngreso->getVrTotalNeto() >= 0) {
+                $arIngresosDetalles = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
+                if ($arIngresosDetalles) {
+                    foreach ($arIngresosDetalles AS $arIngresoDetalle) {
+                        if ($arIngresoDetalle->getCodigoCuentaCobrarFk()) {
+                            $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arIngresoDetalle->getCodigoCuentaCobrarFk());
+                            if ($arCuentaCobrarAplicacion->getVrSaldo() >= $arIngresoDetalle->getVrPago()) {
+                                $saldo = $arCuentaCobrarAplicacion->getVrSaldo() - $arIngresoDetalle->getVrPago();
+                                $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
+                                $arCuentaCobrarAplicacion->setVrSaldo($saldo);
+                                $arCuentaCobrarAplicacion->setvRSaldoOperado($saldoOperado);
+                                $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() + $arIngresoDetalle->getVrPago());
+                                $em->persist($arCuentaCobrarAplicacion);
+                            } else {
+                                Mensajes::error('El valor a afectar del documento aplicacion ' . $arCuentaCobrarAplicacion->getNumeroDocumento() . " supera el saldo desponible: " . $arCuentaCobrarAplicacion->getVrSaldo());
+                                $error = true;
+                                break;
+                            }
+
+                        }
+                    }
+                    if ($error == false) {
+                        $arIngreso->setEstadoAutorizado(1);
+                        $em->persist($arIngreso);
+                        $em->flush();
+                    }
+                } else {
+                    Mensajes::error("No se puede autorizar un recibo sin detalles");
+                }
+            } else {
+                Mensajes::error("No se puede autorizar un egreso negativo");
+            }
+        }
+    }
+
+    public function desAutorizar($arIngreso)
+    {
+        $em = $this->getEntityManager();
+        $arIngresoDetalles = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
+        foreach ($arIngresoDetalles AS $arIngresoDetalle) {
+            if($arIngresoDetalle->getCodigoCuentaCobrarFk()) {
+                $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arIngresoDetalle->getCodigoCuentaCobrarFk());
+                $saldo = $arCuentaCobrar->getVrSaldo() + $arIngresoDetalle->getVrPago();
+                $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+                $arCuentaCobrar->setVrSaldo($saldo);
+                $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() - $arIngresoDetalle->getVrPago());
+                $em->persist($arCuentaCobrar);
+            }
+        }
+        $arIngreso->setEstadoAutorizado(0);
+        $em->persist($arIngreso);
+        $em->flush();
+    }
+
+    public function aprobar($arIngreso)
+    {
+        $em = $this->getEntityManager();
+        if ($arIngreso->getEstadoAutorizado()) {
+            $arIngresoTipo = $em->getRepository(CarIngresoTipo::class)->find($arIngreso->getCodigoIngresoTipoFk());
+            if ($arIngreso->getNumero() == 0 || $arIngreso->getNumero() == NULL) {
+                $arIngreso->setNumero($arIngresoTipo->getConsecutivo());
+                $arIngresoTipo->setConsecutivo($arIngresoTipo->getConsecutivo() + 1);
+                $em->persist($arIngresoTipo);
+            }
+            $arIngreso->setFecha(new \DateTime('now'));
+            $arIngreso->setEstadoAprobado(1);
+            $this->getEntityManager()->persist($arIngreso);
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * @param $arIngreso ComIngreso
+     * @return array
+     */
+    public function anular($arIngreso)
+    {
+        $em = $this->getEntityManager();
+        $respuesta = [];
+        if ($arIngreso->getEstadoAprobado() == 1) {
+            $arIngresosDetalle = $em->getRepository(ComIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
+            foreach ($arIngresosDetalle as $arIngresoDetalle) {
+                if ($arIngresoDetalle->getCodigoCuentaPagarFk()) {
+                    $arCuentaPagarAplicacion = $em->getRepository(ComCuentaPagar::class)->find($arIngresoDetalle->getCodigoCuentaPagarFk());
+                    if ($arCuentaPagarAplicacion->getVrSaldo() <= $arIngresoDetalle->getVrPagoAfectar() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
+                        $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arIngresoDetalle->getVrPagoAfectar();
+                        $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();
+                        $arCuentaPagarAplicacion->setVrSaldo($saldo);
+                        $arCuentaPagarAplicacion->setvRSaldoOperado($saldoOperado);
+                        $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() - $arIngresoDetalle->getVrPagoAfectar());
+                        $em->persist($arCuentaPagarAplicacion);
+                    }
+                }
+                $arIngresoDetalle->setVrDescuento(0);
+                $arIngresoDetalle->setVrAjustePeso(0);
+                $arIngresoDetalle->setVrRetencionIca(0);
+                $arIngresoDetalle->setVrRetencionIva(0);
+                $arIngresoDetalle->setVrRetencionFuente(0);
+                $arIngresoDetalle->setVrPago(0);
+                $arIngresoDetalle->setVrPagoAfectar(0);
+            }
+            $arIngreso->setVrPago(0);
+            $arIngreso->setVrPagoTotal(0);
+            $arIngreso->setVrTotalDescuento(0);
+            $arIngreso->setVrTotalAjustePeso(0);
+            $arIngreso->setVrTotalRetencionIca(0);
+            $arIngreso->setVrTotalRetencionIva(0);
+            $arIngreso->setVrTotalRetencionFuente(0);
+            $arIngreso->setEstadoAnulado(1);
+            $this->_em->persist($arIngreso);
+            $this->_em->flush();
+        }
+        return $respuesta;
+    }
+
+    public function registroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarIngreso::class, 'e')
+            ->select('e.codigoIngresoPk')
+            ->addSelect('e.numero')
+            ->addSelect('e.fecha')
+            ->addSelect('e.fechaPago')
+            ->addSelect('e.vrTotalNeto')
+            ->addSelect('e.estadoAprobado')
+            ->addSelect('e.estadoContabilizado')
+            ->addSelect('e.codigoTerceroFk')
+            ->addSelect('et.codigoComprobanteFk')
+            ->addSelect('c.codigoCuentaContableFk')
+            ->leftJoin('e.egresoTipoRel', 'et')
+            ->leftJoin('e.cuentaRel', 'c')
+            ->where('e.codigoIngresoPk = ' . $codigo);
+        $arRecibo = $queryBuilder->getQuery()->getSingleResult();
+        return $arRecibo;
+    }
+
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            //$arConfiguracion = $em->getRepository(CarConfiguracion::class)->contabilizarIngreso();
+            foreach ($arr AS $codigo) {
+                $arIngreso = $em->getRepository(CarIngreso::class)->registroContabilizar($codigo);
+                if ($arIngreso) {
+                    if ($arIngreso['estadoAprobado'] == 1 && $arIngreso['estadoContabilizado'] == 0) {
+                        if ($arIngreso['codigoComprobanteFk']) {
+                            $arComprobante = $em->getRepository(FinComprobante::class)->find($arIngreso['codigoComprobanteFk']);
+                            if ($arComprobante) {
+                                $fecha = $arIngreso['fechaPago'];
+                                $arTercero = $em->getRepository(TesTercero::class)->terceroFinanciero($arIngreso['codigoTerceroFk']);
+                                $arIngresoDetalles = $em->getRepository(CarIngresoDetalle::class)->listaContabilizar($codigo);
+                                foreach ($arIngresoDetalles as $arIngresoDetalle) {
+                                    //Cuenta proveedor
+                                    if ($arIngresoDetalle['vrPago'] > 0) {
+                                        $descripcion = "PROVEEDORES DOC " . $arIngresoDetalle['numeroDocumento'] ;
+                                        $cuenta = $arIngresoDetalle['codigoCuentaFk'];
+                                        if ($cuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                            if (!$arCuenta) {
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                break;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            $arRegistro->setNumero($arIngreso['numero']);
+                                            $arRegistro->setNumeroReferencia($arIngresoDetalle['numeroDocumento']);
+                                            $arRegistro->setFecha($fecha);
+                                            $arRegistro->setFechaVence($fecha);
+                                            if($arIngresoDetalle['naturaleza'] == 'D') {
+                                                $arRegistro->setVrDebito($arIngresoDetalle['vrPago']);
+                                            } else {
+                                                $arRegistro->setVrCredito($arIngresoDetalle['vrPago']);
+                                            }
+                                            $arRegistro->setNaturaleza($arIngresoDetalle['naturaleza']);
+                                            $arRegistro->setDescripcion($descripcion);
+                                            $arRegistro->setCodigoModeloFk('CarIngreso');
+                                            $arRegistro->setCodigoDocumento($arIngreso['codigoIngresoPk']);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "La cuenta no existe" . $descripcion;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                //Cuenta banco
+                                $cuenta = $arIngreso['codigoCuentaContableFk'];
+                                if ($cuenta) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta  " . $cuenta;
+                                        break;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setNumero($arIngreso['numero']);
+                                    $arRegistro->setFecha($fecha);
+                                    $arRegistro->setVrCredito($arIngreso['vrTotalNeto']);
+                                    $arRegistro->setNaturaleza('C');
+                                    $arRegistro->setDescripcion("Ingreso");
+                                    $arRegistro->setCodigoModeloFk('CarIngreso');
+                                    $arRegistro->setCodigoDocumento($arIngreso['codigoIngresoPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arIngreso['numero'];
+                                    break;
+                                }
+
+                                $arIngresoAct = $em->getRepository(CarIngreso::class)->find($arIngreso['codigoIngresoPk']);
+                                $arIngresoAct->setEstadoContabilizado(1);
+                                $em->persist($arIngresoAct);
+                            } else {
+                                $error = "No existe el comprobante en el [tipo egreso] del egreso " . $arIngreso['numero'];
+                                break;
+                            }
+                        } else {
+                            $error = "No esta configurado el comprobante en el [tipo egreso] del egreso " . $arIngreso['numero'];
+                            break;
+                        }
+                    }
+                } else {
+                    $error = "El egreso " . $codigo . " no existe";
+                    break;
+                }
+            }
+
+            if ($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
+    }
 
 }

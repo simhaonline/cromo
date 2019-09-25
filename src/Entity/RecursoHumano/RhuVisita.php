@@ -94,27 +94,27 @@ class RhuVisita
     private $numeroIdentificacion;
 
     /**
-     * @ORM\Column(name="estado_autorizado", type="boolean")
+     * @ORM\Column(name="estado_autorizado",type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoAutorizado = false;
 
     /**
-     * @ORM\Column(name="estado_aprobado", type="boolean")
+     * @ORM\Column(name="estado_aprobado", type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_anulado", type="boolean")
+     * @ORM\Column(name="estado_anulado", type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoAnulado = false;
 
     /**
-     * @ORM\Column(name="estado_cerrado", type="boolean")
+     * @ORM\Column(name="estado_cerrado", type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoCerrado = false;
 
     /**
-     * @ORM\Column(name="estado_cobrado", type="boolean")
+     * @ORM\Column(name="estado_cobrado", type="boolean",options={"default" : false}, nullable=true)
      */
     private $estadoCobrado = false;
 

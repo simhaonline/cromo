@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Controller\RecursoHumano\Movimiento\Recurso\Incidente;
+namespace App\Controller\RecursoHumano\Movimiento\Recurso\Estudio;
 
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuEstudio;
+use App\Entity\RecursoHumano\RhuEstudioTipo;
 use App\Entity\RecursoHumano\RhuIncidente;
 use App\Entity\RecursoHumano\RhuIncidenteTipo;
 use App\Entity\RecursoHumano\RhuInduccion;
 use App\Entity\RecursoHumano\RhuPermiso;
+use App\Form\Type\RecursoHumano\EstudioType;
 use App\Form\Type\RecursoHumano\IncidenteType;
 use App\Form\Type\RecursoHumano\InduccionType;
 use App\Form\Type\RecursoHumano\PermisoType;
@@ -26,15 +29,15 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class IncidenteController extends AbstractController
+class EstudioController extends AbstractController
 {
-    protected $clase = RhuIncidente::class;
+    protected $clase = RhuEstudio::class;
     protected $claseFormulario = IncidenteType::class;
-    protected $claseNombre = "RhuIncidente";
+    protected $claseNombre = "RhuEstudio";
     protected $modulo = "RecursoHumano";
     protected $funcion = "movimiento";
     protected $grupo = "Recurso";
-    protected $nombre = "Incidente";
+    protected $nombre = "Estudio";
 
     /**
      * @param Request $request
@@ -42,24 +45,24 @@ class IncidenteController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("recursohumano/movimiento/recurso/incidente/lista", name="recursohumano_movimiento_recurso_incidente_lista")
+     * @Route("recursohumano/movimiento/recurso/estudio/lista", name="recursohumano_movimiento_recurso_estudio_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('codigoIncidenteTipoFk', EntityType::class, [
-                'class' => RhuIncidenteTipo::class,
+            ->add('codigoEstudioTipoFk', EntityType::class, [
+                'class' => RhuEstudioTipo::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('it')
-                        ->orderBy('it.codigoIncidenteTipoPk', 'ASC');
+                    return $er->createQueryBuilder('et')
+                        ->orderBy('et.codigoEstudioTipoPk', 'ASC');
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS',
                 'attr' => ['class' => 'form-control to-select-2']
             ])
-            ->add('codigoIncidentePk', TextType::class, array('required' => false))
+            ->add('codigoEstudioPk', TextType::class, array('required' => false))
             ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -81,12 +84,12 @@ class IncidenteController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(RhuIncidente::class)->lista($raw), "Incidentes");
+                General::get()->setExportar($em->getRepository(RhuEstudio::class)->lista($raw), "Estudios");
             }
         }
-        $arIncidentes = $paginator->paginate($em->getRepository(RhuIncidente::class)->lista($raw), $request->query->getInt('page', 1), 30);
-        return $this->render('recursohumano/movimiento/recurso/incidente/lista.html.twig', [
-            'arIncidentes' => $arIncidentes,
+        $arEstudios = $paginator->paginate($em->getRepository(RhuEstudio::class)->lista($raw), $request->query->getInt('page', 1), 30);
+        return $this->render('recursohumano/movimiento/recurso/estudio/lista.html.twig', [
+            'arEstudios' => $arEstudios,
             'form' => $form->createView(),
         ]);
     }
@@ -95,38 +98,38 @@ class IncidenteController extends AbstractController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/movimiento/recurso/incidente/nuevo/{id}", name="recursohumano_movimiento_recurso_incidente_nuevo")
+     * @Route("recursohumano/movimiento/recurso/estudio/nuevo/{id}", name="recursohumano_movimiento_recurso_estudio_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arIncidente = new RhuIncidente();
+        $arEstudio = new RhuEstudio();
         if ($id != 0) {
-            $arIncidente = $em->getRepository($this->clase)->find($id);
+            $arEstudio = $em->getRepository($this->clase)->find($id);
         } else {
-            $arIncidente->setFecha(new \DateTime('now'));
-            $arIncidente->setFechaNovedad(new \DateTime('now'));
-            $arIncidente->setFechaHoraCitacionDescargo(new \DateTime('now'));
-            $arIncidente->setFechaHoraNotificacion(new \DateTime('now'));
+            $arEstudio->setFecha(new \DateTime('now'));
+            $arEstudio->setFechaInicio(new \DateTime('now'));
+            $arEstudio->setFechaTerminacion(new \DateTime('now'));
+            $arEstudio->setFechaVencimientoCurso(new \DateTime('now'));
         }
-        $form = $this->createForm(IncidenteType::class, $arIncidente);
+        $form = $this->createForm(EstudioType::class, $arEstudio);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->get('guardar')->isClicked()) {
-                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arIncidente->getCodigoEmpleadoFk());
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arEstudio->getCodigoEmpleadoFk());
                 if ($arEmpleado) {
                     $arContrato = null;
                     if ($arEmpleado->getCodigoContratoFk()) {
                         $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
                         if ($arContrato != null) {
                             if ($id == 0) {
-                                $arIncidente->setFecha(new \DateTime('now'));
+                                $arEstudio->setFecha(new \DateTime('now'));
                             }
-                            $arIncidente->setFecha(new \DateTime('now'));
-                            $arIncidente->setEmpleadoRel($arEmpleado);
-                            $em->persist($arIncidente);
+                            $arEstudio->setFecha(new \DateTime('now'));
+                            $arEstudio->setEmpleadoRel($arEmpleado);
+                            $em->persist($arEstudio);
                             $em->flush();
-                            return $this->redirect($this->generateUrl('recursohumano_movimiento_recurso_incidente_detalle', ['id' => $arIncidente->getCodigoIncidentePk()]));
+                            return $this->redirect($this->generateUrl('recursohumano_movimiento_recurso_estudio_detalle', ['id' => $arEstudio->getCodigoEstudioPk()]));
                         } else {
                             Mensajes::error('El empleado no tiene contratos en el sistema');
                         }
@@ -136,9 +139,9 @@ class IncidenteController extends AbstractController
                 }
             }
         }
-        return $this->render('recursohumano/movimiento/recurso/incidente/nuevo.html.twig', [
+        return $this->render('recursohumano/movimiento/recurso/estudio/nuevo.html.twig', [
             'form' => $form->createView(),
-            'arIncidente' => $arIncidente
+            'arEstudio' => $arEstudio
         ]);
     }
 
@@ -146,7 +149,7 @@ class IncidenteController extends AbstractController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("recursohumano/movimiento/recurso/incidente/detalle/{id}", name="recursohumano_movimiento_recurso_incidente_detalle")
+     * @Route("recursohumano/movimiento/recurso/estudio/detalle/{id}", name="recursohumano_movimiento_recurso_estudio_detalle")
      */
     public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
@@ -157,7 +160,7 @@ class IncidenteController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
         }
-        return $this->render('recursohumano/movimiento/recurso/incidente/detalle.html.twig', [
+        return $this->render('recursohumano/movimiento/recurso/estudio/detalle.html.twig', [
             'arRegistro' => $arRegistro,
             'form' => $form->createView()
         ]);
@@ -166,7 +169,7 @@ class IncidenteController extends AbstractController
     public function getFiltros($form)
     {
         $filtro = [
-            'codigoIncidente' => $form->get('codigoIncidentePk')->getData(),
+            'codigoEstudio' => $form->get('codigoEstudioPk')->getData(),
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
@@ -175,12 +178,12 @@ class IncidenteController extends AbstractController
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
         ];
 
-        $arIncidenteTipo = $form->get('codigoIncidenteTipoFk')->getData();
+        $arEstudioTipo = $form->get('codigoEstudioTipoFk')->getData();
 
-        if (is_object($arIncidenteTipo)) {
-            $filtro['incidenteTipo'] = $arIncidenteTipo->getCodigoIncidenteTipoPk();
+        if (is_object($arEstudioTipo)) {
+            $filtro['estudioTipo'] = $arEstudioTipo->getCodigoEstudioTipoPk();
         } else {
-            $filtro['incidenteTipo'] = $arIncidenteTipo;
+            $filtro['estudioTipo'] = $arEstudioTipo;
         }
 
         return $filtro;

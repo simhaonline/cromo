@@ -99,43 +99,13 @@ class Egreso extends \FPDF
         $this->Cell(66, 6, $arEgreso->getTerceroRel()->getTelefono(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "PAGO:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "TOTAL NETO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arEgreso->getVrPago()), 1, 0, 'R', 1);
-
-        //linea 5
-        $this->SetXY(10, 64);
-        $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, 'CUENTA', 1, 0, 'L', 1);
-        $this->SetFillColor(272, 272, 272);
-        $this->SetFont('Arial', '', 8);
-        $this->Cell(66, 6, "", 1, 0, 'L', 1);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "TOTAL", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 8);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arEgreso->getVrPagoTotal()), 1, 0, 'R', 1);
-
-        //linea 6
-        $this->SetXY(10, 70);
-        $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, 'SOPORTE', 1, 0, 'L', 1);
-        $this->SetFillColor(272, 272, 272);
-        $this->SetFont('Arial', '', 8);
-        $this->Cell(66, 6, "", 1, 0, 'L', 1);
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "", 1, 0, 'L', 1);
-        $this->SetFont('Arial', '', 8);
-        $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, '', 1, 0, 'R', 1);
+        $this->Cell(65, 6, number_format($arEgreso->getVrTotalNeto()), 1, 0, 'R', 1);
 
         //linea 7
-        $this->SetXY(10, 76);
+        $this->SetXY(10, 64);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(30, 6, 'NUM DOCUMENTO', 1, 0, 'L', 1);
@@ -149,7 +119,7 @@ class Egreso extends \FPDF
         $this->SetFillColor(272, 272, 272);
         $this->Cell(65, 6, '', 1, 0, 'R', 1);
         //linea 8
-        $this->SetXY(10, 82);
+        $this->SetXY(10, 70);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, "COMENTARIOS:", 1, 0, 'L', 1);
@@ -164,14 +134,14 @@ class Egreso extends \FPDF
     public function EncabezadoDetalles()
     {
         $this->Ln(12);
-        $header = array('ID', 'TIPO', 'TERCERO', 'IDENTIFICACION','FECHA', 'VALOR');
+        $header = array('ID', 'TIPO', 'DOC', 'NIT', 'TERCERO','CTA', 'N', 'VALOR');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(15, 20, 40, 25, 20,  20);
+        $w = array(15, 20, 20, 25, 60, 20, 5, 20);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -192,11 +162,13 @@ class Egreso extends \FPDF
         if ($arEgresosDetalle) {
             foreach ($arEgresosDetalle as $arEgresoDetalle) {
                 $pdf->Cell(15, 4, $arEgresoDetalle['codigoEgresoDetallePk'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arEgresoDetalle['codigoCuentaPagarFk'], 1, 0, 'L');
-                $pdf->Cell(40, 4, $arEgresoDetalle['tercero'], 1, 0, 'L');
-                $pdf->Cell(25, 4, $arEgresoDetalle['numeroIdentificacion'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arEgresoDetalle['fecha']->format('Y-m-d'), 1, 0, 'L');
-                $pdf->Cell(20, 4, number_format($arEgresoDetalle['vrPagoAfectar'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, $arEgresoDetalle['codigoCuentaPagarTipoFk'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arEgresoDetalle['numeroDocumento'], 1, 0, 'L');
+                $pdf->Cell(25, 4, $arEgresoDetalle['terceroNumeroIdentificacion'], 1, 0, 'L');
+                $pdf->Cell(60, 4, $arEgresoDetalle['terceroNombreCorto'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arEgresoDetalle['codigoCuentaFk'], 1, 0, 'L');
+                $pdf->Cell(5, 4, $arEgresoDetalle['naturaleza'], 1, 0, 'L');
+                $pdf->Cell(20, 4, number_format($arEgresoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 85);
             }

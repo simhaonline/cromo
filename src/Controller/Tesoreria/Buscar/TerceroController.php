@@ -3,6 +3,7 @@
 namespace App\Controller\Tesoreria\Buscar;
 
 use App\Entity\Compra\ComProveedor;
+use App\Entity\Financiero\FinTercero;
 use App\Entity\Inventario\InvTercero;
 use App\Entity\Tesoreria\TesTercero;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -42,6 +43,34 @@ class TerceroController extends Controller
             'arTerceros' => $arTerceros,
             'campoCodigo' => $campoCodigo,
             'campoNombre' => $campoNombre,
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/tesoreria/buscar/tercero/movimiento/{campoCodigo}", name="tesoreria_buscar_tercero_movimiento")
+     */
+    public function buscarTerceroMovimiento(Request $request, $campoCodigo)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTesBuscarTerceroCodigo')])
+            ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroTesBuscarTerceroNombre')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTesBuscarTerceroCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroTesBuscarTerceroNombre', $form->get('txtNombre')->getData());
+            }
+        }
+        $arTerceros = $paginator->paginate($em->getRepository(TesTercero::class)->lista(), $request->query->get('page', 1), 20);
+        return $this->render('tesoreria/buscar/buscarTerceroMovimiento.html.twig', array(
+            'arTerceros' => $arTerceros,
+            'campoCodigo' => $campoCodigo,
             'form' => $form->createView()
         ));
     }

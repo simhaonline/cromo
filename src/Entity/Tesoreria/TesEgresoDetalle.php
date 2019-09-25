@@ -27,9 +27,19 @@ class TesEgresoDetalle
     private $codigoEgresoFk;
 
     /**
-     * @ORM\Column(name="codigo_cuenta_pagar_fk" , type="integer")
+     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_pagar_fk" , type="integer", nullable=true)
      */
     private $codigoCuentaPagarFk;
+
+    /**
+     * @ORM\Column(name="codigo_tercero_fk" , type="integer", nullable=true)
+     */
+    private $codigoTerceroFk;
 
     /**
      * @ORM\Column(name="numero", type="string", length=30, nullable=true)
@@ -42,14 +52,14 @@ class TesEgresoDetalle
     private $vrPago = 0;
 
     /**
-     * @ORM\Column(name="vr_pago_afectar", type="float", nullable=true)
-     */
-    private $vrPagoAfectar = 0;
-
-    /**
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
      */
     private $usuario;
+
+    /**
+     * @ORM\Column(name="naturaleza", type="string", length=1, nullable=true)
+     */
+    private $naturaleza = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesEgreso" , inversedBy="egresoDetallesEgresoRel")
@@ -64,20 +74,16 @@ class TesEgresoDetalle
     private $cuentaPagarRel;
 
     /**
-     * @return array
+     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCuenta", inversedBy="egresosDetallesCuentaRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_fk", referencedColumnName="codigo_cuenta_pk")
      */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
+    protected $cuentaRel;
 
     /**
-     * @param array $infoLog
+     * @ORM\ManyToOne(targetEntity="TesTercero", inversedBy="egresosDetallesTerceroRel")
+     * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    protected $terceroRel;
 
     /**
      * @return mixed
@@ -114,6 +120,22 @@ class TesEgresoDetalle
     /**
      * @return mixed
      */
+    public function getCodigoCuentaFk()
+    {
+        return $this->codigoCuentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaFk
+     */
+    public function setCodigoCuentaFk($codigoCuentaFk): void
+    {
+        $this->codigoCuentaFk = $codigoCuentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoCuentaPagarFk()
     {
         return $this->codigoCuentaPagarFk;
@@ -125,6 +147,22 @@ class TesEgresoDetalle
     public function setCodigoCuentaPagarFk($codigoCuentaPagarFk): void
     {
         $this->codigoCuentaPagarFk = $codigoCuentaPagarFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTerceroFk()
+    {
+        return $this->codigoTerceroFk;
+    }
+
+    /**
+     * @param mixed $codigoTerceroFk
+     */
+    public function setCodigoTerceroFk($codigoTerceroFk): void
+    {
+        $this->codigoTerceroFk = $codigoTerceroFk;
     }
 
     /**
@@ -162,22 +200,6 @@ class TesEgresoDetalle
     /**
      * @return mixed
      */
-    public function getVrPagoAfectar()
-    {
-        return $this->vrPagoAfectar;
-    }
-
-    /**
-     * @param mixed $vrPagoAfectar
-     */
-    public function setVrPagoAfectar($vrPagoAfectar): void
-    {
-        $this->vrPagoAfectar = $vrPagoAfectar;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getUsuario()
     {
         return $this->usuario;
@@ -189,6 +211,22 @@ class TesEgresoDetalle
     public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNaturaleza()
+    {
+        return $this->naturaleza;
+    }
+
+    /**
+     * @param mixed $naturaleza
+     */
+    public function setNaturaleza($naturaleza): void
+    {
+        $this->naturaleza = $naturaleza;
     }
 
     /**
@@ -221,6 +259,38 @@ class TesEgresoDetalle
     public function setCuentaPagarRel($cuentaPagarRel): void
     {
         $this->cuentaPagarRel = $cuentaPagarRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaRel()
+    {
+        return $this->cuentaRel;
+    }
+
+    /**
+     * @param mixed $cuentaRel
+     */
+    public function setCuentaRel($cuentaRel): void
+    {
+        $this->cuentaRel = $cuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTerceroRel()
+    {
+        return $this->terceroRel;
+    }
+
+    /**
+     * @param mixed $terceroRel
+     */
+    public function setTerceroRel($terceroRel): void
+    {
+        $this->terceroRel = $terceroRel;
     }
 
 

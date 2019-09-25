@@ -35,7 +35,7 @@ class EgresoType extends AbstractType
                 },
                 'choice_label' => 'nombre'
             ])
-            ->add('fechaPago', DateType::class, array('format' => 'yyyyMMdd'))
+            ->add('fechaPago', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd'))
             ->add('comentarios', TextareaType::class, ['label' => 'Comentario:', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

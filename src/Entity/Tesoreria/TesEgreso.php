@@ -57,44 +57,9 @@ class TesEgreso
     private $comentarios;
 
     /**
-     * @ORM\Column(name="vr_pago" , type="float", nullable=true)
+     * @ORM\Column(name="vr_total_neto" ,type="float", nullable=true)
      */
-    private $vrPago = 0;
-
-    /**
-     * @ORM\Column(name="vr_descuento", type="float", nullable=true)
-     */
-    private $vrDescuento = 0;
-
-    /**
-     * @ORM\Column(name="vr_pago_total" ,type="float", nullable=true)
-     */
-    private $vrPagoTotal = 0;
-
-    /**
-     * @ORM\Column(name="vr_total_descuento" ,type="float", nullable=true)
-     */
-    private $vrTotalDescuento = 0;
-
-    /**
-     * @ORM\Column(name="vr_total_ajuste_peso" ,type="float", nullable=true)
-     */
-    private $vrTotalAjustePeso = 0;
-
-    /**
-     * @ORM\Column(name="vr_total_retencion_ica" ,type="float", nullable=true)
-     */
-    private $vrTotalRetencionIca = 0;
-
-    /**
-     * @ORM\Column(name="vr_total_retencion_iva" ,type="float", nullable=true)
-     */
-    private $vrTotalRetencionIva = 0;
-
-    /**
-     * @ORM\Column(name="vr_total_retencion_fuente" ,type="float", nullable=true)
-     */
-    private $vrTotalRetencionFuente = 0;
+    private $vrTotalNeto = 0;
 
     /**
      * @ORM\Column(name="estado_autorizado", type="boolean", nullable=true, options={"default" : false})
@@ -275,129 +240,17 @@ class TesEgreso
     /**
      * @return mixed
      */
-    public function getVrPago()
+    public function getVrTotalNeto()
     {
-        return $this->vrPago;
+        return $this->vrTotalNeto;
     }
 
     /**
-     * @param mixed $vrPago
+     * @param mixed $vrTotalNeto
      */
-    public function setVrPago($vrPago): void
+    public function setVrTotalNeto($vrTotalNeto): void
     {
-        $this->vrPago = $vrPago;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrDescuento()
-    {
-        return $this->vrDescuento;
-    }
-
-    /**
-     * @param mixed $vrDescuento
-     */
-    public function setVrDescuento($vrDescuento): void
-    {
-        $this->vrDescuento = $vrDescuento;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrPagoTotal()
-    {
-        return $this->vrPagoTotal;
-    }
-
-    /**
-     * @param mixed $vrPagoTotal
-     */
-    public function setVrPagoTotal($vrPagoTotal): void
-    {
-        $this->vrPagoTotal = $vrPagoTotal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalDescuento()
-    {
-        return $this->vrTotalDescuento;
-    }
-
-    /**
-     * @param mixed $vrTotalDescuento
-     */
-    public function setVrTotalDescuento($vrTotalDescuento): void
-    {
-        $this->vrTotalDescuento = $vrTotalDescuento;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalAjustePeso()
-    {
-        return $this->vrTotalAjustePeso;
-    }
-
-    /**
-     * @param mixed $vrTotalAjustePeso
-     */
-    public function setVrTotalAjustePeso($vrTotalAjustePeso): void
-    {
-        $this->vrTotalAjustePeso = $vrTotalAjustePeso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalRetencionIca()
-    {
-        return $this->vrTotalRetencionIca;
-    }
-
-    /**
-     * @param mixed $vrTotalRetencionIca
-     */
-    public function setVrTotalRetencionIca($vrTotalRetencionIca): void
-    {
-        $this->vrTotalRetencionIca = $vrTotalRetencionIca;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalRetencionIva()
-    {
-        return $this->vrTotalRetencionIva;
-    }
-
-    /**
-     * @param mixed $vrTotalRetencionIva
-     */
-    public function setVrTotalRetencionIva($vrTotalRetencionIva): void
-    {
-        $this->vrTotalRetencionIva = $vrTotalRetencionIva;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalRetencionFuente()
-    {
-        return $this->vrTotalRetencionFuente;
-    }
-
-    /**
-     * @param mixed $vrTotalRetencionFuente
-     */
-    public function setVrTotalRetencionFuente($vrTotalRetencionFuente): void
-    {
-        $this->vrTotalRetencionFuente = $vrTotalRetencionFuente;
+        $this->vrTotalNeto = $vrTotalNeto;
     }
 
     /**

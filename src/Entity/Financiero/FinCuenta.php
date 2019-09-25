@@ -120,6 +120,11 @@ class FinCuenta
     protected $asientosDetallesCuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgresoDetalle", mappedBy="cuentaRel")
+     */
+    protected $egresosDetallesCuentaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPk()
@@ -389,6 +394,22 @@ class FinCuenta
     public function setExigeDocumentoReferencia($exigeDocumentoReferencia): void
     {
         $this->exigeDocumentoReferencia = $exigeDocumentoReferencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEgresosDetallesCuentaRel()
+    {
+        return $this->egresosDetallesCuentaRel;
+    }
+
+    /**
+     * @param mixed $egresosDetallesCuentaRel
+     */
+    public function setEgresosDetallesCuentaRel($egresosDetallesCuentaRel): void
+    {
+        $this->egresosDetallesCuentaRel = $egresosDetallesCuentaRel;
     }
 
 

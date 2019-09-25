@@ -52,7 +52,7 @@ class ReciboType extends AbstractType
                 'label' => 'Asesor:'
             ])
             ->add('soporte', TextType::class, array('required' => false))
-            ->add('fechaPago', DateType::class, array('format' => 'yyyyMMdd'))
+            ->add('fechaPago', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd'))
             ->add('comentarios',TextareaType::class,['required' => false,'label' => 'Comentarios:'])
             ->add('numeroReferencia', NumberType::class, array('required' => false))
             ->add('numeroReferenciaPrefijo', TextType::class, array('required' => false))

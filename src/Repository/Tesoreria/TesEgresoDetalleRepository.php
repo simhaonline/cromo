@@ -23,37 +23,24 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->_em->createQueryBuilder()->from(TesEgresoDetalle::class, 'ed')
             ->select('ed.codigoEgresoDetallePk')
             ->addSelect('ed.numero')
-            ->addSelect('t.nombreCorto')
+            ->addSelect('ed.codigoCuentaPagarFk')
+            ->addSelect('cp.codigoCuentaPagarTipoFk')
+            ->addSelect('t.nombreCorto as terceroNombreCorto')
             ->addSelect('t.numeroIdentificacion')
             ->addSelect('cp.vrSaldo')
-            ->addSelect('ed.vrPagoAfectar')
-            ->addSelect('ed.vrPagoAfectar')
             ->addSelect('ed.vrPago')
             ->addSelect('cp.cuenta')
+            ->addSelect('ed.codigoCuentaFk')
+            ->addSelect('ed.codigoTerceroFk')
+            ->addSelect('ed.naturaleza')
             ->leftJoin('ed.cuentaPagarRel', 'cp')
-            ->leftJoin('cp.terceroRel', 't')
+            ->leftJoin('ed.terceroRel', 't')
             ->where("ed.codigoEgresoFk = '{$codigoEgreso}'");
 
         return $queryBuilder;
     }
 
-    public function liquidar($id)
-    {
-        $em = $this->getEntityManager();
-        $pago = 0;
-        $pagoTotal = 0;
-        $arEgreso = $em->getRepository(TesEgreso::class)->find($id);
-        $arEgresosDetalle = $em->getRepository(TesEgresoDetalle::class)->findBy(array('codigoEgresoFk' => $id));
-        foreach ($arEgresosDetalle as $arEgresoDetalle) {
-            $pago += $arEgresoDetalle->getVrPago();
-            $pagoTotal += $arEgresoDetalle->getVrPagoAfectar();
-        }
-        $arEgreso->setVrPago($pago);
-        $arEgreso->setVrPagoTotal($pagoTotal);
-        $em->persist($arEgreso);
-        $em->flush();
-        return true;
-    }
+
 
     /**
      * @param $arEgreso
@@ -91,30 +78,12 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
         foreach ($arEgresosDetalle as $arEgresoDetalle) {
             $intCodigo = $arEgresoDetalle->getCodigoEgresoDetallePk();
             $valorPago = isset($arrControles['TxtVrPago' . $intCodigo]) && $arrControles['TxtVrPago' . $intCodigo] != '' ? $arrControles['TxtVrPago' . $intCodigo] : 0;
-            $valorAjustePeso = isset($arrControles['TxtAjustePeso' . $intCodigo]) && $arrControles['TxtAjustePeso' . $intCodigo] != '' ? $arrControles['TxtAjustePeso' . $intCodigo] : 0;
-            $valorDescuento = isset($arrControles['TxtVrDescuento' . $intCodigo]) && $arrControles['TxtVrDescuento' . $intCodigo] != '' ? $arrControles['TxtVrDescuento' . $intCodigo] : 0;
-            $valorRetencionIva = isset($arrControles['TxtRetencionIva' . $intCodigo]) && $arrControles['TxtRetencionIva' . $intCodigo] != '' ? $arrControles['TxtRetencionIva' . $intCodigo] : 0;
-            $valorRetencionIca = isset($arrControles['TxtRetencionIca' . $intCodigo]) && $arrControles['TxtRetencionIca' . $intCodigo] != '' ? $arrControles['TxtRetencionIca' . $intCodigo] : 0;
-            $valorRetencionFte = isset($arrControles['TxtRetencionFuente' . $intCodigo]) && $arrControles['TxtRetencionFuente' . $intCodigo] != '' ? $arrControles['TxtRetencionFuente' . $intCodigo] : 0;
-            $valorPagoAfectar =
-                $valorPago
-                + $valorAjustePeso
-                - $valorDescuento
-                - $valorRetencionIva
-                - $valorRetencionIca
-                - $valorRetencionFte;
-            //$arEgresoDetalle->setVrDescuento($valorDescuento);
-            //$arEgresoDetalle->setVrAjustePeso($valorAjustePeso);
-            //$arEgresoDetalle->setVrRetencionIca($valorRetencionIca);
-            //$arEgresoDetalle->setVrRetencionIva($valorRetencionIva);
-            //$arEgresoDetalle->setVrRetencionFuente($valorRetencionFte);
-            $arEgresoDetalle->setVrPago($valorPagoAfectar);
-            $arEgresoDetalle->setVrPagoAfectar($valorPago);
+            $codigoNaturaleza = isset($arrControles['cboNaturaleza' . $intCodigo]) && $arrControles['cboNaturaleza' . $intCodigo] != '' ? $arrControles['cboNaturaleza' . $intCodigo] : null;
+            $arEgresoDetalle->setVrPago($valorPago);
+            $arEgresoDetalle->setNaturaleza($codigoNaturaleza);
             $em->persist($arEgresoDetalle);
         }
         $em->flush();
-        $this->liquidar($idEgreso);
-
     }
 
     public function listaFormato($codigoEgreso)
@@ -124,13 +93,16 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
         $queryBuilder
             ->select('ed.codigoEgresoDetallePk')
             ->addSelect('ed.codigoCuentaPagarFk')
-            ->addSelect('ter.nombreCorto AS tercero')
-            ->addSelect('ter.numeroIdentificacion')
-            ->addSelect('cp.fecha')
-            ->addSelect('ed.vrPagoAfectar')
+            ->addSelect('ed.codigoCuentaFk')
+            ->addSelect('ed.naturaleza')
+            ->addSelect('ter.nombreCorto AS terceroNombreCorto')
+            ->addSelect('ter.numeroIdentificacion as terceroNumeroIdentificacion')
+            ->addSelect('ed.vrPago')
+            ->addSelect('cp.numeroDocumento')
+            ->addSelect('cp.codigoCuentaPagarTipoFk')
             ->leftJoin('ed.egresoRel', 'r')
             ->leftJoin('ed.cuentaPagarRel', 'cp')
-            ->leftJoin('cp.terceroRel', 'ter')
+            ->leftJoin('ed.terceroRel', 'ter')
             ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
             ->where('ed.codigoEgresoFk = ' . $codigoEgreso);
         $queryBuilder->orderBy('ed.codigoEgresoDetallePk', 'ASC');

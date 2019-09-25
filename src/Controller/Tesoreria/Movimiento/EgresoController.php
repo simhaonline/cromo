@@ -4,6 +4,7 @@ namespace App\Controller\Tesoreria\Movimiento;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Financiero\FinCuenta;
 use App\Entity\General\GenBanco;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuConfiguracion;
@@ -21,6 +22,7 @@ use App\Utilidades\Mensajes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -136,14 +138,18 @@ class EgresoController extends BaseController
         $form = Estandares::botonera($arEgreso->getEstadoAutorizado(), $arEgreso->getEstadoAprobado(), $arEgreso->getEstadoAnulado());
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnAdicionar = ['label' => 'Adicionar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if ($arEgreso->getEstadoAutorizado()) {
             $arrBtnEliminar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
+            $arrBtnAdicionar['disabled'] = true;
         }
         $form
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
+            ->add('btnAdicionar', SubmitType::class, $arrBtnAdicionar)
             ->add('btnArchivoPlanoBbva', SubmitType::class, ['label' => 'Generar archivo bbva']);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->All();
@@ -180,12 +186,23 @@ class EgresoController extends BaseController
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TesEgresoDetalle::class)->actualizar($arrControles, $id);
+                $em->getRepository(TesEgreso::class)->liquidar($id);
+                return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnAdicionar')->isClicked()) {
+                $arEgresoDetalle = new TesEgresoDetalle();
+                $arEgresoDetalle->setEgresoRel($arEgreso);
+                $arEgresoDetalle->setTerceroRel($arEgreso->getTerceroRel());
+                $arEgresoDetalle->setNaturaleza('C');
+                $em->persist($arEgresoDetalle);
+                $em->flush();
+                $em->getRepository(TesEgreso::class)->liquidar($id);
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TesEgresoDetalle::class)->eliminar($arEgreso, $arrDetallesSeleccionados);
-                $em->getRepository(TesEgresoDetalle::class)->liquidar($id);
+                $em->getRepository(TesEgreso::class)->liquidar($id);
             }
             if ($form->get('btnArchivoPlanoBbva')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
@@ -261,13 +278,15 @@ class EgresoController extends BaseController
                         $arEgresoDetalle->setEgresoRel($arEgreso);
                         $arEgresoDetalle->setNumero($arCuentaPagar->getNumeroDocumento());
                         $arEgresoDetalle->setCuentaPagarRel($arCuentaPagar);
-                        $arEgresoDetalle->setVrPagoAfectar($arCuentaPagar->getVrTotal());
+                        $arEgresoDetalle->setVrPago($arCuentaPagar->getVrTotal());
                         $arEgresoDetalle->setUsuario($this->getUser()->getUserName());
+                        $arEgresoDetalle->setCuentaRel($em->getReference(FinCuenta::class, $arCuentaPagar->getCuentaPagarTipoRel()->getCodigoCuentaProveedorFk()));
+                        $arEgresoDetalle->setTerceroRel($arCuentaPagar->getTerceroRel());
+                        $arEgresoDetalle->setNaturaleza('D');
                         $em->persist($arEgresoDetalle);
-
                     }
                     $em->flush();
-                    $em->getRepository(TesEgresoDetalle::class)->liquidar($id);
+                    $em->getRepository(TesEgreso::class)->liquidar($id);
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
             }

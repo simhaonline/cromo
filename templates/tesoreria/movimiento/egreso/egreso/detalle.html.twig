@@ -27,9 +27,9 @@
             <td class="td-in-well">{{ arEgreso.codigoEgresoPk }}</td>
             <td class="titulo">TERCERO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arEgreso.terceroRel.nombreCorto }}</td>
-            <td class="titulo">PAGO:</td>
+            <td class="titulo"></td>
             <td class="td-in-well"
-                style="text-align: right;">{{ arEgreso.vrPagoTotal |number_format(0, '.', ',') }}</td>
+                style="text-align: right;"></td>
 
         </tr>
         <tr>
@@ -37,9 +37,8 @@
             <td class="td-in-well">{{ arEgreso.numero }}</td>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;"></td>
-            <td class="titulo">TOTAL:</td>
-            <td class="td-in-well"
-                style="text-align: right;">{{ arEgreso.vrPago |number_format(0, '.', ',') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well" style="text-align: right;"></td>
 
         </tr>
         <tr>
@@ -47,9 +46,8 @@
             <td class="td-in-well">{{ arEgreso.fecha | date('Y-m-d') }}</td>
             <td class="titulo">FECHA PAGO:</td>
             <td class="td-in-well">{{ arEgreso.fechaPago | date('Y-m-d') }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"
-                style="text-align: right;"></td>
+            <td class="titulo">NETO:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrTotalNeto |number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -67,10 +65,13 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>NUMERO</th>
+                            <th>COD</th>
+                            <th>TIPO</th>
+                            <th>DOC</th>
+                            <th>COD</th>
                             <th>TERCERO</th>
-                            <th>IDENTIFICAICON</th>
-                            <th>CUENTA</th>
+                            <th>CTA</th>
+                            <th title="Naturaleza">N</th>
                             <th style="width: 12%;">PAGO</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -80,21 +81,46 @@
                         {% for arEgresoDetalle in arEgresoDetalles %}
                             <tr>
                                 <td>{{ arEgresoDetalle.codigoEgresoDetallePk }}</td>
+                                <td>{{ arEgresoDetalle.codigoCuentaPagarFk }}</td>
+                                <td>{{ arEgresoDetalle.codigoCuentaPagarTipoFk }}</td>
                                 <td>{{ arEgresoDetalle.numero }}</td>
-                                <td>{{ arEgresoDetalle.nombreCorto }}</td>
-                                <td>{{ arEgresoDetalle.numeroIdentificacion }}</td>
-                                <td>{{ arEgresoDetalle.cuenta }}</td>
                                 {% if arEgreso.estadoAutorizado == false %}
+                                    <td>
+                                        <input type="text"
+                                               name="arrTercero[{{ arEgresoDetalle.codigoEgresoDetallePk }}]"
+                                               id="arrTercero[{{ arEgresoDetalle.codigoEgresoDetallePk }}]"
+                                               value="{{ arEgresoDetalle.codigoTerceroFk }}"
+                                               style="text-align: left; width:60px" size="20">
+                                        <a href="javascript:abrirVentana3('{{ path('tesoreria_buscar_tercero_movimiento',{'campoCodigo' : 'arrTercero['~ arEgresoDetalle.codigoEgresoDetallePk ~']' }) }}','BuscarTercero',600,900)"
+                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
+                                    <td>{{ arEgresoDetalle.terceroNombreCorto }}</td>
+                                    <td>
+                                        <input type="text"
+                                               name="arrCuenta[{{ arEgresoDetalle.codigoEgresoDetallePk }}]"
+                                               id="arrCuenta[{{ arEgresoDetalle.codigoEgresoDetallePk }}]"
+                                               value="{{ arEgresoDetalle.codigoCuentaFk }}"
+                                               style="text-align: left; width:120px" size="20">
+                                        <a href="javascript:abrirVentana3('{{ path('financiero_buscar_cuenta_asiento',{'campoCodigo' : 'arrCuenta['~ arEgresoDetalle.codigoEgresoDetallePk ~']' }) }}','BuscarCuenta',600,900)"
+                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
+                                    <td style="text-align: left">
+                                        <select name="cboNaturaleza{{ arEgresoDetalle.codigoEgresoDetallePk }}">
+                                            <option value="D" {% if arEgresoDetalle.naturaleza == "D" %} selected {% endif %}>D</option>
+                                            <option value="C" {% if arEgresoDetalle.naturaleza == "C" %} selected {% endif %}>C</option>
+                                        </select></td>
                                     <td style="text-align: center">
-                                        <input class="input-valor" type="number" placeholder="% DESCUENTO"
+                                        <input class="input-valor" type="number" placeholder=""
                                                name="TxtVrPago{{ arEgresoDetalle.codigoEgresoDetallePk }}"
-                                               value="{{ arEgresoDetalle.vrPagoAfectar }}"
+                                               value="{{ arEgresoDetalle.vrPago }}"
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
                                 {% else %}
-                                    <td style="text-align: right">
-                                        {{ arEgresoDetalle.vrPago | number_format(0, '.', ',') }}
-                                    </td>
+                                    <td>{{ arEgresoDetalle.codigoTerceroFk }}</td>
+                                    <td>{{ arEgresoDetalle.terceroNombreCorto }}</td>
+                                    <td>{{ arEgresoDetalle.codigoCuentaFk }}</td>
+                                    <td>{{ arEgresoDetalle.naturaleza }}</td>
+                                    <td style="text-align: right">{{ arEgresoDetalle.vrPago | number_format(0, '.', ',') }}</td>
                                 {% endif %}
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arEgresoDetalle.codigoEgresoDetallePk }}"/>
@@ -114,6 +140,9 @@
                             <a class="btn btn-default btn-sm"
                                href="javascript:abrirVentana3('{{ path('tesoreria_movimiento_egreso_egreso_detalle_nuevo', {'id' : arEgreso.codigoEgresoPk }) }}', 'egreso detalle', 600, 1200)">Nuevo</a>
                         {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnAdicionar) }}
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnActualizar) }}

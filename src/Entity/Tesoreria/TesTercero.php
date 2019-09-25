@@ -193,6 +193,11 @@ class TesTercero
     protected $egresosTerceroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgresoDetalle" , mappedBy="terceroRel")
+     */
+    protected $egresosDetallesTerceroRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTerceroPk()
@@ -558,6 +563,22 @@ class TesTercero
     public function setEgresosTerceroRel($egresosTerceroRel): void
     {
         $this->egresosTerceroRel = $egresosTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEgresosDetallesTerceroRel()
+    {
+        return $this->egresosDetallesTerceroRel;
+    }
+
+    /**
+     * @param mixed $egresosDetallesTerceroRel
+     */
+    public function setEgresosDetallesTerceroRel($egresosDetallesTerceroRel): void
+    {
+        $this->egresosDetallesTerceroRel = $egresosDetallesTerceroRel;
     }
 
 

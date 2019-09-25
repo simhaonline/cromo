@@ -145,6 +145,16 @@ class CarCliente
     protected $anticiposClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngreso", mappedBy="clienteRel")
+     */
+    protected $ingresosClienteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngresoDetalle", mappedBy="clienteRel")
+     */
+    protected $ingresosDetallesClienteRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -559,6 +569,39 @@ class CarCliente
     {
         $this->compromisosClienteRel = $compromisosClienteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getIngresosClienteRel()
+    {
+        return $this->ingresosClienteRel;
+    }
+
+    /**
+     * @param mixed $ingresosClienteRel
+     */
+    public function setIngresosClienteRel($ingresosClienteRel): void
+    {
+        $this->ingresosClienteRel = $ingresosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIngresosDetallesClienteRel()
+    {
+        return $this->ingresosDetallesClienteRel;
+    }
+
+    /**
+     * @param mixed $ingresosDetallesClienteRel
+     */
+    public function setIngresosDetallesClienteRel($ingresosDetallesClienteRel): void
+    {
+        $this->ingresosDetallesClienteRel = $ingresosDetallesClienteRel;
+    }
+
 
 
 }

@@ -57,29 +57,24 @@ class KardexController extends ControllerListenerGeneral
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $codigoItem = $form->get('txtCodigoItem')->getData();
-                if($codigoItem) {
-                    $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
-                    $session->set('filtroInvKardexLote', $form->get('txtLote')->getData());
-                    $session->set('filtroInvKardexLoteBodega', $form->get('txtBodega')->getData());
-                    $session->set('filtroInvKardexFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
-                    $session->set('filtroInvKardexFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
-                    $documento = $form->get('cboDocumento')->getData();
-                    if ($documento != '') {
-                        $session->set('filtroInvCodigoDocumento', $form->get('cboDocumento')->getData()->getCodigoDocumentoPk());
-                    } else {
-                        $session->set('filtroInvCodigoDocumento', null);
-                    }
-                    $documentoTipo = $form->get('cboDocumentoTipo')->getData();
-                    if ($documentoTipo != '') {
-                        $session->set('filtroInvCodigoDocumentoTipo', $form->get('cboDocumentoTipo')->getData()->getCodigoDocumentoTipoPk());
-                    } else {
-                        $session->set('filtroInvCodigoDocumentoTipo', null);
-                    }
-                    $em->getRepository(InvInformeKardex::class)->generarInforme($this->getUser()->getUsername());
+                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvKardexLote', $form->get('txtLote')->getData());
+                $session->set('filtroInvKardexLoteBodega', $form->get('txtBodega')->getData());
+                $session->set('filtroInvKardexFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
+                $session->set('filtroInvKardexFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
+                $documento = $form->get('cboDocumento')->getData();
+                if ($documento != '') {
+                    $session->set('filtroInvCodigoDocumento', $form->get('cboDocumento')->getData()->getCodigoDocumentoPk());
                 } else {
-                    Mensajes::error("Debe seleccionar un item");
+                    $session->set('filtroInvCodigoDocumento', null);
                 }
+                $documentoTipo = $form->get('cboDocumentoTipo')->getData();
+                if ($documentoTipo != '') {
+                    $session->set('filtroInvCodigoDocumentoTipo', $form->get('cboDocumentoTipo')->getData()->getCodigoDocumentoTipoPk());
+                } else {
+                    $session->set('filtroInvCodigoDocumentoTipo', null);
+                }
+                $em->getRepository(InvInformeKardex::class)->generarInforme($this->getUser()->getUsername());
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(InvInformeKardex::class)->lista($this->getUser()->getUsername()), "Kardex");

@@ -62,31 +62,15 @@ class GenCuenta
      */
     protected $anticiposCuentaRel;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComEgreso" , mappedBy="cuentaRel")
-//     */
-//    protected $egresosCuentaRel;
-
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgreso" , mappedBy="cuentaRel")
      */
     protected $egresosCuentaRel;
 
     /**
-     * @return array
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngreso" , mappedBy="cuentaRel")
      */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
+    protected $ingresosCuentaRel;
 
     /**
      * @return mixed
@@ -251,18 +235,19 @@ class GenCuenta
     /**
      * @return mixed
      */
-    public function getRhuEgresosCuentaRel()
+    public function getIngresosCuentaRel()
     {
-        return $this->rhuEgresosCuentaRel;
+        return $this->ingresosCuentaRel;
     }
 
     /**
-     * @param mixed $rhuEgresosCuentaRel
+     * @param mixed $ingresosCuentaRel
      */
-    public function setRhuEgresosCuentaRel($rhuEgresosCuentaRel): void
+    public function setIngresosCuentaRel($ingresosCuentaRel): void
     {
-        $this->rhuEgresosCuentaRel = $rhuEgresosCuentaRel;
+        $this->ingresosCuentaRel = $ingresosCuentaRel;
     }
+
 
 
 }

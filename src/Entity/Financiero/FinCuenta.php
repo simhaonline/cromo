@@ -125,6 +125,11 @@ class FinCuenta
     protected $egresosDetallesCuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngresoDetalle", mappedBy="cuentaRel")
+     */
+    protected $ingresosDetallesCuentaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPk()
@@ -410,6 +415,22 @@ class FinCuenta
     public function setEgresosDetallesCuentaRel($egresosDetallesCuentaRel): void
     {
         $this->egresosDetallesCuentaRel = $egresosDetallesCuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIngresosDetallesCuentaRel()
+    {
+        return $this->ingresosDetallesCuentaRel;
+    }
+
+    /**
+     * @param mixed $ingresosDetallesCuentaRel
+     */
+    public function setIngresosDetallesCuentaRel($ingresosDetallesCuentaRel): void
+    {
+        $this->ingresosDetallesCuentaRel = $ingresosDetallesCuentaRel;
     }
 
 

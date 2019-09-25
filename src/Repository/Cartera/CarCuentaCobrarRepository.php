@@ -9,6 +9,7 @@ use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarNotaCreditoDetalle;
 use App\Entity\Cartera\CarNotaDebitoDetalle;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -652,6 +653,59 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
                 $em->flush();
             }
         }
+    }
+
+    public function cuentasCobrarDetalleNuevo($codigoCliente)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
+            ->select('cc.codigoCuentaPagarPk')
+            ->addSelect('cc.numeroDocumento')
+            ->addSelect('cc.numeroReferencia')
+            ->addSelect('cc.vrTotal')
+            ->addSelect('cc.vrSaldo')
+            ->addSelect('cc.vrAbono')
+            ->addSelect('cc.plazo')
+            ->addSelect('cc.fecha')
+            ->addSelect('cc.fechaVence')
+            ->addSelect('cc.estadoVerificado')
+            ->addSelect('cct.nombre as cuentaCobrarTipoNombre')
+            ->addSelect('c.nombreCorto as clienteNombreCorto')
+            ->addSelect('c.numeroIdentificacion as clienteNumeroIdentificacion')
+            ->join('cc.clienteRel', 'c')
+            ->join('cc.cuentaCobrarTipoRel', 'cct')
+            ->where('cc.vrSaldo <> 0')
+            ->andWhere('cc.operacion = 1')
+            ->orderBy('cc.codigoCuentaCobrarPk', 'ASC');
+
+
+        if ($session->get('filtroCarCuentaCobrarTodosClientes')) {
+            if ($session->get('filtroCarCodigoCliente') != "") {
+                $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+            }
+        } else {
+            $queryBuilder->andWhere("cc.codigoClienteFk = {$codigoCliente}");
+        }
+
+        if ($session->get('filtroCarCuentaCobrarNumero') != "") {
+            $queryBuilder->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
+        }
+        if ($session->get('filtroCarCuentaCobrarCodigo') != "") {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarPk = {$session->get('filtroCarCuentaCobrarCodigo')}");
+        }
+        if ($session->get('filtroCarCuentaCobrarTipo') != "") {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk = '{$session->get('filtroCarCuentaCobrarTipo')}'");
+        }
+
+        if ($session->get('filtroCarFechaDesde') != null) {
+            $queryBuilder->andWhere("cc.fechaPago >= '{$session->get('filtroCarFechaDesde')} 00:00:00'");
+        }
+        if ($session->get('filtroCarFechaHasta') != null) {
+            $queryBuilder->andWhere("cc.fechaPago <= '{$session->get('filtroCarFechaHasta')} 23:59:59'");
+        }
+
+
+        return $queryBuilder;
     }
 
 }

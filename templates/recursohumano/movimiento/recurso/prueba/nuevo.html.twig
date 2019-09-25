@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form,{'attr': {'class' :'form-horizontal'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-2 control-label">Empleado:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoEmpleadoFk) }}
+                                {{ form_errors(form.codigoEmpleadoFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
+                                       value="{{ arPoligrafia.empleadoRel.nombreCorto |default('') }}"
+                                       readOnly="ReadOnly"/>
+                                <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'prueba_codigoEmpleadoFk', 'campoNombre': 'txtNombreCorto' }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="credito_creditoTipoRel" class="control-label col-sm-2">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.pruebaTipoRel) }}
+                </div>
+                <label for="form_nombreQuienHacePrueba" class="col-sm-2 control-label">Prueba asignada por:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombreQuienHacePrueba)   }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_resultado" class="col-sm-2 control-label">Resultado cualitativo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.resultado)  }}
+                </div>
+                <label for="form_resultadoCuantitativo" class="col-sm-2 control-label">Resultado cuantitativo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.resultadoCuantitativo)   }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="credito_comentarios" class="control-label col-sm-2">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Informacion Comercial</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_vrTotal" class="col-sm-2 control-label">Valor:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrTotal) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" style="float: left;"
+           href="{{ path('recursohumano_movimiento_recurso_prueba_lista') }}">Volver</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+{% endblock %}

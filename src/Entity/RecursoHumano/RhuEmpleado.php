@@ -360,6 +360,11 @@ class RhuEmpleado
     protected $visitasEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuPrueba", mappedBy="empleadoRel")
+     */
+    protected $pruebasEmpleadoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuInduccion", mappedBy="empleadoRel")
      */
     protected $induccionesEmpleadoRel;

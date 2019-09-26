@@ -68,9 +68,17 @@ class IngresoController extends BaseController
                 General::get()->setExportar($em->getRepository(CarIngreso::class)->lista()->getQuery()->execute(), "Ingresos");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(CarIngreso::class)->eliminar($arrSeleccionados);
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $arIngresos = $em->getRepository(CarIngreso::class)->findAll();
+                foreach ($arIngresos as $arIngreso) {
+                    $em->getRepository(CarIngreso::class)->liquidar($arIngreso->getCodigoIngresoPk());
+                }
+
+                /*$arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(CarIngreso::class)->eliminar($arrSeleccionados);*/
                 return $this->redirect($this->generateUrl('cartera_movimiento_ingreso_ingreso_lista'));
+
             }
         }
         return $this->render('cartera/movimiento/ingreso/ingreso/lista.html.twig', [

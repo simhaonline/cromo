@@ -121,7 +121,7 @@ class EmpleadoController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arEmpleadoBuscar = $em->getRepository($this->clase)->findOneBy(['codigoIdentificacionFk' => $arEmpleado->getIdentificacionRel()->getCodigoIdentificacionPk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()]);
-                if ((!is_null($arEmpleado->getCodigoEmpleadoPk()) && $arEmpleado->getCodigoEmpleadoPk() == $arEmpleadoBuscar->getCodigoEmpleadoPk()) || is_null($arEmpleadoBuscar)) {
+                if ( is_null($arEmpleadoBuscar) ) {
                     $nombreCorto = $arEmpleado->getNombre1();
                     if ($arEmpleado->getNombre2()) {
                         $nombreCorto .= " " . $arEmpleado->getNombre2();

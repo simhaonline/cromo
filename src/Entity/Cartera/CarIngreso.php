@@ -97,6 +97,11 @@ class CarIngreso
     private $estadoImpreso = false;
 
     /**
+     * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
+     */
+    private $usuario;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCliente" , inversedBy="ingresosClienteRel")
      * @ORM\JoinColumn(name="codigo_cliente_fk" , referencedColumnName="codigo_cliente_pk")
      */
@@ -437,6 +442,22 @@ class CarIngreso
     public function setVrTotalBruto($vrTotalBruto): void
     {
         $this->vrTotalBruto = $vrTotalBruto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
 

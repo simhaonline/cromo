@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller\RecursoHumano\Movimiento\Financiero;
+
 use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuCierre;
 use App\Entity\RecursoHumano\RhuCierreDetalle;
@@ -62,7 +63,7 @@ class CierreController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(RhuCierre::class)->lista($raw), "Cierrees");
+                General::get()->setExportar($em->getRepository(RhuCierre::class)->lista($raw), "Cierres");
             }
         }
         $arCierres = $paginator->paginate($em->getRepository(RhuCierre::class)->lista($raw), $request->query->getInt('page', 1), 30);
@@ -154,22 +155,10 @@ class CierreController extends AbstractController
     public function getFiltros($form)
     {
         $filtro = [
-            'codigoCierre' => $form->get('codigoCierrePk')->getData(),
-            'nombre' => $form->get('nombre')->getData(),
-            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
-            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
         ];
-
-        $arPagoTipo = $form->get('codigoPagoTipoFk')->getData();
-
-        if (is_object($arPagoTipo)) {
-            $filtro['pagoTipo'] = $arPagoTipo->getCodigoPagoTipoPk();
-        } else {
-            $filtro['pagoTipo'] = $arPagoTipo;
-        }
 
         return $filtro;
 

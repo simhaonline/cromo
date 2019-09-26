@@ -463,6 +463,21 @@ class RhuAccidente
     private $estadoAccidente = 0;
 
     /**
+     * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":false})
+     */
+    private $estadoAutorizado=false;
+
+    /**
+     * @ORM\Column(name="estado_aprobado", type="boolean", options={"default":false})
+     */
+    private $estadoAprobado=false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean", options={"default":false})
+     */
+    private $estadoAnulado=false;
+
+    /**
      * @ORM\Column(name="codigo_usuario", type="string", length=50, nullable=true)
      * @Assert\Length(
      *     max=50,
@@ -1445,6 +1460,70 @@ class RhuAccidente
     public function setCodigoUsuario($codigoUsuario): void
     {
         $this->codigoUsuario = $codigoUsuario;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAprobado()
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param mixed $estadoAprobado
+     */
+    public function setEstadoAprobado($estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
     }
 
 

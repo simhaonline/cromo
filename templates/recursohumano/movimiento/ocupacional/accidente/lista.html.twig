@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    {% include 'estructura/buscarEmpleadoRecursohumano.html.twig' %}
+                    <div class="form-group form-group-sm">
+                        <label class=" col-sm-1 control-label">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoAccidentePk) }}
+                        </div>
+                        <label class=" col-sm-1 control-label"></label>
+                        <div class="col-sm-2">
+                        </div>
+                        <label class="col-sm-1 col-sm-offset-3 control-label">Autorizado:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.estadoAutorizado) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-1 control-label">Desde:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.fechaDesde) }}
+                        </div>
+                        <label class="col-sm-1 control-label col-sm-offset-6">Aprobado:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-1 control-label">Hasta:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.fechaHasta) }}
+                        </div>
+                        <label class="col-sm-1 control-label col-sm-offset-6">Anulado:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.estadoAnulado, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>IDENTIFICACIÓN</th>
+        <th>EMPLEADO</th>
+        <th>FECHA</th>
+        <th>TIPO ACCIDENTE</th>
+        <th>DIAGNÓSTICO</th>
+        <th></th>
+        <th></th>
+        <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for arAccidente in arAccidentes %}
+        <tr>
+            <td>{{ arAccidente.codigoAccidentePk  }}</td>
+            <td>{{ arAccidente.codigoEmpleadoFk  }}</td>
+            <td>{{ arAccidente.codigoEmpleadoFk  }}</td>
+            <td>{{ arAccidente.fechaAccidente | date('Y/m/d')  }}</td>
+            <td>{{ arAccidente.codigoTipoAccidenteFk  }}</td>
+            <td>{{ arAccidente.diagnostico  }}</td>
+            <td>{{ arAccidente.estadoAutorizado ? "SI":"NO" }}</td>
+            <td>{{ arAccidente.estadoAprobado ? "SI":"NO"}}</td>
+            <td>{{ arAccidente.estadoAnulado ? "SI":"NO"}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arAccidentes.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arAccidentes) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_movimiento_ocupacional_accidente_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    <br/><br/>
+    {{ form_end(form) }}
+{% endblock %}

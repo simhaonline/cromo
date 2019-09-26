@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default"
+               href="{{ path('recursohumano_movimiento_ocupacional_accidente_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arRegistro.codigoAccidentePk }}</td>
+            <td class="titulo">INGRESO:</td>
+            <td class="td-in-well">{{ arRegistro.codigoEmpleadoFk }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    <br>
+    <br>
+{% endblock %}

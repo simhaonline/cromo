@@ -91,7 +91,7 @@
                                                id="arrCliente[{{ arIngresoDetalle.codigoIngresoDetallePk }}]"
                                                value="{{ arIngresoDetalle.codigoClienteFk }}"
                                                style="text-align: left; width:60px" size="20">
-                                        <a href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente_movimiento',{'campoCodigo' : 'arrCliente['~ arIngresoDetalle.codigoIngresoDetallePk ~']' }) }}','BuscarTercero',600,900)"
+                                        <a href="javascript:abrirVentana3('{{ path('cartera_buscar_movimiento_cliente',{'campoCodigo' : 'arrCliente['~ arIngresoDetalle.codigoIngresoDetallePk ~']' }) }}','BuscarTercero',600,900)"
                                            class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
                                     <td>{{ arIngresoDetalle.clienteNombreCorto }}</td>

@@ -46,9 +46,9 @@
                 <div class="col-sm-2">
                     {{ form_widget(form.fechaDesde) }}
                 </div>
-                <label class="col-sm-1 control-label"></label>
+                <label class="col-sm-1 control-label">Soporte:</label>
                 <div class="col-sm-2">
-
+                    {{ form_widget(form.txtSoporte) }}
                 </div>
                 <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-5">
@@ -78,6 +78,7 @@
             <tr>
                 <th>ID</th>
                 <th>NUM</th>
+                <th>SOP</th>
                 <th>TIPO</th>
                 <th>NIT</th>
                 <th>TERCERO</th>
@@ -93,13 +94,14 @@
             <tbody>
             {% for arCuentaCobrar in arCuentasCobrar %}
                 <tr>
-                    <td style="text-align: right;">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
-                    <td style="text-align: left;">{{ arCuentaCobrar.numeroDocumento }}</td>
-                    <td style="text-align: left;">{{ arCuentaCobrar.cuentaCobrarTipoNombre }}</td>
+                    <td>{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
+                    <td>{{ arCuentaCobrar.numeroDocumento }}</td>
+                    <td>{{ arCuentaCobrar.soporte }}</td>
+                    <td>{{ arCuentaCobrar.cuentaCobrarTipoNombre }}</td>
                     <td>{{ arCuentaCobrar.clienteNumeroIdentificacion }}</td>
-                    <td style="text-align: left;">{{ arCuentaCobrar.clienteNombreCorto }}</td>
-                    <td style="text-align: right;">{{ arCuentaCobrar.fecha | date('d/m/Y') }}</td>
-                    <td style="text-align: right;">{{ arCuentaCobrar.fechaVence | date('d/m/Y') }}</td>
+                    <td>{{ arCuentaCobrar.clienteNombreCorto }}</td>
+                    <td>{{ arCuentaCobrar.fecha | date('d/m/Y') }}</td>
+                    <td>{{ arCuentaCobrar.fechaVence | date('d/m/Y') }}</td>
                     <td style="text-align: right;">{{ arCuentaCobrar.vrSaldoOriginal | number_format(0,'.',',') }}</td>
                     <td style="text-align: right;">{{ arCuentaCobrar.vrAbono | number_format(0,'.',',') }}</td>
                     <td style="text-align: right;">{{ arCuentaCobrar.vrSaldo | number_format }}</td>

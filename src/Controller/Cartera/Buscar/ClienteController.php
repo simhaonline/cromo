@@ -44,7 +44,7 @@ class ClienteController extends Controller
     }
 
     /**
-     * @Route("/cartera/buscar/cliente/movimiento/{campoCodigo}", name="cartera_buscar_cliente_movimiento")
+     * @Route("/cartera/buscar/movimiento/cliente/{campoCodigo}", name="cartera_buscar_movimiento_cliente")
      */
     public function buscarClienteMovimiento(Request $request, $campoCodigo)
     {

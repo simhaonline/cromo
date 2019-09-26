@@ -251,6 +251,7 @@ class IngresoController extends BaseController
             ->add('cboCuentaCobrarTipo', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
             ->add('txtCodigoCuentaCobrar', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroCarCuentaCobrarCodigo')])
             ->add('txtNumero', TextType::class, ['label' => 'Numero: ', 'required' => false, 'data' => $session->get('filtroCarCuentaCobrarNumero')])
+            ->add('txtSoporte', TextType::class, ['label' => 'Numero: ', 'required' => false, 'data' => $session->get('filtroCarCuentaCobrarSoporte')])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroCarFechaDesde') ? date_create($session->get('filtroCarFechaDesde')) : null])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroCarFechaHasta') ? date_create($session->get('filtroCarFechaHasta')) : null])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
@@ -267,6 +268,7 @@ class IngresoController extends BaseController
                 $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
                 $session->set('filtroCarCuentaCobrarCodigo', $form->get('txtCodigoCuentaCobrar')->getData());
                 $session->set('filtroCarCuentaCobrarNumero', $form->get('txtNumero')->getData());
+                $session->set('filtroCarCuentaCobrarSoporte', $form->get('txtSoporte')->getData());
                 $session->set('filtroCarFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
                 $session->set('filtroCarFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
                 $session->set('filtroCarCuentaCobrarTodosClientes', $form->get('todosClientes')->getData());

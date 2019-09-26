@@ -662,6 +662,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->select('cc.codigoCuentaCobrarPk')
             ->addSelect('cc.numeroDocumento')
             ->addSelect('cc.numeroReferencia')
+            ->addSelect('cc.soporte')
             ->addSelect('cc.vrTotal')
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.vrAbono')
@@ -689,6 +690,9 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
 
         if ($session->get('filtroCarCuentaCobrarNumero') != "") {
             $queryBuilder->andWhere("cc.numeroDocumento LIKE '%{$session->get('filtroCarCuentaCobrarNumero')}%'");
+        }
+        if ($session->get('filtroCarCuentaCobrarSoporte') != "") {
+            $queryBuilder->andWhere("cc.soporte LIKE '%{$session->get('filtroCarCuentaCobrarSoporte')}%'");
         }
         if ($session->get('filtroCarCuentaCobrarCodigo') != "") {
             $queryBuilder->andWhere("cc.codigoCuentaCobrarPk = {$session->get('filtroCarCuentaCobrarCodigo')}");

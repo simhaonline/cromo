@@ -183,9 +183,7 @@ class IngresoController extends BaseController
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new Ingreso();
                 $formato->Generar($em, $id);
-                $arIngreso->setEstadoImpreso(1);
-                $em->persist($arIngreso);
-                $em->flush();
+
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository(CarIngreso::class)->anular($arIngreso);

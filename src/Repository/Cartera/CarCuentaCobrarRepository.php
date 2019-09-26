@@ -688,7 +688,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         }
 
         if ($session->get('filtroCarCuentaCobrarNumero') != "") {
-            $queryBuilder->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
+            $queryBuilder->andWhere("cc.numeroDocumento LIKE '%{$session->get('filtroCarCuentaCobrarNumero')}%'");
         }
         if ($session->get('filtroCarCuentaCobrarCodigo') != "") {
             $queryBuilder->andWhere("cc.codigoCuentaCobrarPk = {$session->get('filtroCarCuentaCobrarCodigo')}");

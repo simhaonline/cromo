@@ -165,4 +165,25 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function listaFormato($id)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarIngresoDetalle::class, 'id');
+        $queryBuilder
+            ->select('id.codigoIngresoDetallePk')
+            ->addSelect('id.codigoCuentaCobrarFk')
+            ->addSelect('id.codigoCuentaCobrarTipoFk')
+            ->addSelect('id.codigoCuentaFk')
+            ->addSelect('id.naturaleza')
+            ->addSelect('c.nombreCorto AS clienteNombreCorto')
+            ->addSelect('c.numeroIdentificacion as clienteNumeroIdentificacion')
+            ->addSelect('id.vrPago')
+            ->addSelect('id.numero')
+            ->leftJoin('id.clienteRel', 'c')
+            ->where('id.codigoIngresoFk = ' . $id);
+        $queryBuilder->orderBy('id.codigoIngresoDetallePk', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

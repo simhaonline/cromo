@@ -249,6 +249,10 @@ class CarIngresoRepository extends ServiceEntityRepository
                                 foreach ($arIngresoDetalles as $arIngresoDetalle) {
                                     //Cuenta proveedor
                                     if ($arIngresoDetalle['vrPago'] > 0) {
+                                        $arClienteDetalle = null;
+                                        if($arIngresoDetalle['codigoClienteFk']) {
+                                            $arClienteDetalle = $em->getRepository(CarCliente::class)->terceroFinanciero($arIngresoDetalle['codigoClienteFk']);
+                                        }
                                         $descripcion = "CLIENTES DOC " . $arIngresoDetalle['numero'] ;
                                         $cuenta = $arIngresoDetalle['codigoCuentaFk'];
                                         if ($cuenta) {
@@ -258,7 +262,8 @@ class CarIngresoRepository extends ServiceEntityRepository
                                                 break;
                                             }
                                             $arRegistro = new FinRegistro();
-                                            $arRegistro->setTerceroRel($arCliente);
+
+                                            $arRegistro->setTerceroRel($arClienteDetalle);
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arIngreso['numero']);
@@ -287,7 +292,7 @@ class CarIngresoRepository extends ServiceEntityRepository
                                                             break;
                                                         }
                                                         $arRegistro = new FinRegistro();
-                                                        $arRegistro->setTerceroRel($arCliente);
+                                                        $arRegistro->setTerceroRel($arClienteDetalle);
                                                         $arRegistro->setCuentaRel($arCuenta);
                                                         $arRegistro->setComprobanteRel($arComprobante);
                                                         $arRegistro->setNumero($arIngreso['numero']);
@@ -322,7 +327,7 @@ class CarIngresoRepository extends ServiceEntityRepository
                                         break;
                                     }
                                     $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arCliente);
+                                    //$arRegistro->setTerceroRel($arCliente);
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arIngreso['numero']);

@@ -2,6 +2,7 @@
 
 namespace App\Repository\Tesoreria;
 
+use App\Entity\Cartera\CarCliente;
 use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Compra\ComEgreso;
 use App\Entity\Compra\ComEgresoDetalle;
@@ -317,6 +318,10 @@ class TesEgresoRepository extends ServiceEntityRepository
                                 foreach ($arEgresoDetalles as $arEgresoDetalle) {
                                     //Cuenta proveedor
                                     if ($arEgresoDetalle['vrPago'] > 0) {
+                                        $arTerceroDetalle = null;
+                                        if($arEgresoDetalle['codigoTerceroFk']) {
+                                            $arTerceroDetalle = $em->getRepository(TesTercero::class)->terceroFinanciero($arEgresoDetalle['codigoTerceroFk']);
+                                        }
                                         $descripcion = "PROVEEDORES DOC " . $arEgresoDetalle['numeroDocumento'] ;
                                         $cuenta = $arEgresoDetalle['codigoCuentaFk'];
                                         if ($cuenta) {
@@ -326,7 +331,7 @@ class TesEgresoRepository extends ServiceEntityRepository
                                                 break;
                                             }
                                             $arRegistro = new FinRegistro();
-                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setTerceroRel($arTerceroDetalle);
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arEgreso['numero']);
@@ -359,7 +364,7 @@ class TesEgresoRepository extends ServiceEntityRepository
                                         break;
                                     }
                                     $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arTercero);
+                                    //$arRegistro->setTerceroRel($arTercero);
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arEgreso['numero']);

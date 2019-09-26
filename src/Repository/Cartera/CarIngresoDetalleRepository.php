@@ -159,6 +159,7 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
             ->addSelect('id.codigoCuentaFk')
             ->addSelect('id.naturaleza')
             ->addSelect('id.codigoImpuestoRetencionFk')
+            ->addSelect('id.codigoClienteFk')
             ->where('id.codigoIngresoFk = ' . $id);
         $queryBuilder->orderBy('id.codigoIngresoDetallePk', 'ASC');
 

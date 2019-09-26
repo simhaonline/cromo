@@ -1,0 +1,404 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class=" form-group form-group-sm">
+                <label for="form_txtCodigoCliente" class="col-sm-offset-1 col-sm-1 control-label">Empleado:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class=" col-lg-2">
+                            <div class="input-group">
+                                {{ form_widget(form.codigoEmpleadoFk) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="form_txtNombreCorto" class="form-control" readonly>
+                                <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'accidente_codigoEmpleadoFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                        </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_tipoAccidenteRel" class="col-sm-2 control-label">Tipo accidente:</label>
+                <div class="col-sm-4">
+                    {#                    {{ form_widget(form.tipoAccidenteRel, { 'attr': {'class': 'form-control'} }) }}#}
+                </div>
+                <label for="form_ciudadRel" class="col-sm-2 control-label">Ciudad accidente:</label>
+                <div class="col-sm-4">
+                    {#                    {{ form_widget(form.ciudadRel, { 'attr': {'class': 'form-control'} }) }}#}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_codigoFurat" class="col-sm-2 control-label">Código furat:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoFurat, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label for="form_coordinadorEncargado" class="col-sm-2 control-label">Coordinador encargado:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.coordinadorEncargado, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.coordinadorEncargado) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaAccidente" class="col-sm-2 control-label">Fecha accidente:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaAccidente) }}
+                </div>
+                <label for="form_fechaAccidente" class="col-sm-2 control-label">Cliente de turnos:</label>
+                <div class="col-sm-4">
+                    {#                    {{ form_widget(form.turClienteRel) }}#}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaEnviaInvestigacion" class="col-sm-2 control-label">fecha envia
+                    investigación:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.fechaEnviaInvestigacion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaIncapacidadDesde" class="col-sm-2 control-label">fecha incapacidad
+                    desde:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.fechaIncapacidadDesde) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaIncapacidadHasta" class="col-sm-2 control-label">fecha incapacidad
+                    hasta:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.fechaIncapacidadHasta) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_tiempoServicioEmpleado" class="col-sm-2 control-label">Tiempo servicio
+                    empleado:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tiempoServicioEmpleado, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_oficioHabitual" class="col-sm-2 control-label">Oficio habitual:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.oficioHabitual, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Diagnostico:</label>
+                {#                <div class="col-sm-10">#}
+                {#                    <div class="row">#}
+                {#                        <div class="col-lg-2">#}
+                {#                            <div class="input-group">#}
+                {#                                <input id="form_txtCodigoIncapacidadDiagnostico"#}
+                {#                                       name="form_txtCodigoIncapacidadDiagnostico" type="text" class="form-control"#}
+                {#                                       value="{{ arAccidenteTrabajo.incapacidadDiagnosticoRel.codigo |default('') }}"/>#}
+                {#                            </div>#}
+                {#                        </div>#}
+                {#                        <div class="col-lg-10">#}
+                {#                            <div class="input-group">#}
+                {#                                <input id="form_txtNombreIncapacidadDiagnostico"#}
+                {#                                       name="form_txtNombreIncapacidadDiagnostico" type="text" class="form-control"#}
+                {#                                       value="{{ arAccidenteTrabajo.incapacidadDiagnosticoRel.nombre |default('') }}"#}
+                {#                                       readOnly="ReadOnly"/>#}
+                {#                                <span class="input-group-btn">#}
+                {#                                        <a class="btn btn-default btn-sm"#}
+                {#                                           href="javascript:abrirVentana3('{{ path('brs_rhu_buscar_incapacidad_diagnostico') }}', 'buscarIncapacidadDiagnostico', 600, 900)">Buscar</a>#}
+                {#                                    </span>#}
+                {#                            </div>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                </div>#}
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Naturaleza de la lesión:</label>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                {{ form_widget(form.naturalezaLesion, { 'attr': {'class': 'form-control'} }) }}
+                                {#                            <span class="input-group-btn">#}
+                                {#                                <a class="btn btn-default btn-sm"#}
+                                {#                                   href="javascript:abrirVentana3('{{ path('brs_rhu_buscar_naturalezaLesion') }}', 'buscarNaturalezaLesion', 600, 900)"><img#}
+                                {#                                            src="{{ asset('imagenes/bootstrap/glyphicons_027_search.png') }}"#}
+                                {#                                            width="15px" height="15px"></a>#}
+                                {#                            </span>#}
+                                {#                        </div>#}
+                                {#                        {{ form_errors(form.naturalezaLesion) }}#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <label class="col-sm-2 control-label">Cuerpo afectado:</label>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                {{ form_widget(form.cuerpoAfectado, { 'attr': {'class': 'form-control'} }) }}
+                                {#                                <span class="input-group-btn">#}
+                                {#                                        <a class="btn btn-default btn-sm"#}
+                                {#                                           href="javascript:abrirVentana3('{{ path('brs_rhu_buscar_cuerpoAfectado') }}', 'buscarCuerpoAfectado', 600, 900)"><img#}
+                                {#                                                    src="{{ asset('imagenes/bootstrap/glyphicons_027_search.png') }}"#}
+                                {#                                                    width="15px" height="15px"></a>#}
+                                {#                                    </span>#}
+                            </div>
+                            {{ form_errors(form.cuerpoAfectado) }}
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <label for="form_agenteRel" class="col-sm-2 control-label">Agente:</label>
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        {{ form_widget(form.agente, { 'attr': {'class': 'form-control'} }) }}
+                        {#                                <span class="input-group-btn">#}
+                        {#                                        <a class="btn btn-default btn-sm"#}
+                        {#                                           href="javascript:abrirVentana3('{{ path('brs_rhu_buscar_agente') }}', 'buscarAgente', 600, 900)"><img#}
+                        {#                                                    src="{{ asset('imagenes/bootstrap/glyphicons_027_search.png') }}"#}
+                        {#                                                    width="15px" height="15px"></a>#}
+                        {#                                    </span>#}
+                    </div>
+                    {{ form_errors(form.agente) }}
+                </div>
+            </div>
+        </div>
+        <label for="form_agenteRel" class="col-sm-2 control-label">Mecanismo accidente:</label>
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        {{ form_widget(form.mecanismoAccidente, { 'attr': {'class': 'form-control'} }) }}
+                        {#                                <span class="input-group-btn">#}
+                        {#                                        <a class="btn btn-default btn-sm"#}
+                        {#                                           href="javascript:abrirVentana3('{{ path('brs_rhu_buscar_mecanismoAccidente') }}', 'buscarMecanismoAccidente', 600, 900)"><img#}
+                        {#                                                    src="{{ asset('imagenes/bootstrap/glyphicons_027_search.png') }}"#}
+                        {#                                                    width="15px" height="15px"></a>#}
+                        {#                                    </span>#}
+                    </div>
+                    {{ form_errors(form.mecanismoAccidente) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <label for="form_tareaDesarrolladaMomentoAccidente" class="col-sm-2 control-label">¿Se encontraba desarrollando su labor habitual?:</label>
+        <div class="col-sm-4">
+            {{ form_widget(form.tareaDesarrolladaMomentoAccidente, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+            {{ form_errors(form.tareaDesarrolladaMomentoAccidente) }}
+        </div>
+        <label for="form_lugarAccidente" class="col-sm-2 control-label">Lugar accidente:</label>
+        <div class="col-sm-4">
+            {{ form_widget(form.lugarAccidente, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+            {{ form_errors(form.lugarAccidente) }}
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <label for="form_descripcionAccidente" class="col-sm-2 control-label">Descripción
+            accidente:</label>
+        <div class="col-sm-10">
+            {{ form_widget(form.descripcionAccidente, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+            {{ form_errors(form.descripcionAccidente) }}
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <label for="form_actoInseguro" class="col-sm-2 control-label">Acto inseguro:</label>
+        <div class="col-sm-10">
+            {{ form_widget(form.actoInseguro, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <label for="form_condicionInsegura" class="col-sm-2 control-label">Condición Insegura:</label>
+        <div class="col-sm-10">
+            {{ form_widget(form.condicionInsegura, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+            {{ form_errors(form.condicionInsegura) }}
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <label for="form_factorPersonal" class="col-sm-2 control-label">Factor personal:</label>
+        <div class="col-sm-10">
+            {{ form_widget(form.factorPersonal, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+            {{ form_errors(form.factorPersonal) }}
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <label for="form_factorTrabajo" class="col-sm-2 control-label">Factor trabajo:</label>
+        <div class="col-sm-10">
+            {{ form_widget(form.factorTrabajo, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+            {{ form_errors(form.factorTrabajo) }}
+        </div>
+    </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Recomendaciones B49 Lista priorizada de acciones de intervención</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_planAccion1" class="col-sm-2 control-label">Plan de acción 1:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.planAccion1, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.planAccion1) }}
+                </div>
+                <label for="form_tipoControlUnoRel" class="col-sm-2 control-label">Tipo Control:</label>
+                <div class="col-sm-4">
+                    {#                    {{ form_widget(form.tipoControlUnoRel, { 'attr': {'class': 'form-control'} }) }}#}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVerificacion1" class="col-sm-2 control-label">Fecha verificación:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaVerificacion1, {'attr': {'maxlength' : 10} }) }}
+                </div>
+                <label for="form_areaResponsable1" class="col-sm-2 control-label">Área responsable:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.areaResponsable1, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.areaResponsable1) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_planAccion2" class="col-sm-2 control-label">Plan de acción 2:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.planAccion2, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.planAccion2) }}
+                </div>
+                <label for="form_tipoControlDosRel" class="col-sm-2 control-label">Tipo Control:</label>
+                <div class="col-sm-4">
+                    {#                    {{ form_widget(form.tipoControlDosRel, { 'attr': {'class': 'form-control'} }) }}#}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVerificacion2" class="col-sm-2 control-label">Fecha verificación:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaVerificacion2, {'attr': {'maxlength' : 10} }) }}
+                </div>
+                <label for="form_areaResponsable2" class="col-sm-2 control-label">Área responsable:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.areaResponsable2, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.areaResponsable2) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_planAccion3" class="col-sm-2 control-label">Plan de acción 3:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.planAccion3, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.planAccion3) }}
+                </div>
+                <label for="form_tipoControlTresRel" class="col-sm-2 control-label">Tipo Control:</label>
+                <div class="col-sm-4">
+                    {#                    {{ form_widget(form.tipoControlTresRel, { 'attr': {'class': 'form-control'} }) }}#}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVerificacion3" class="col-sm-2 control-label">Fecha verificación:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaVerificacion3, {'attr': {'maxlength' : 10} }) }}
+                </div>
+                <label for="form_areaResponsable3" class="col-sm-2 control-label">Área responsable:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.areaResponsable3, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.areaResponsable3) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Participantes de la investigación</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_participanteInvestigacion1" class="col-sm-2 control-label">Participante
+                    investigación 1</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.participanteInvestigacion1, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.participanteInvestigacion1) }}
+                </div>
+                <label for="form_cargoParticipanteInvestigacion1" class="col-sm-2 control-label">Cargo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargoParticipanteInvestigacion1, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.cargoParticipanteInvestigacion1) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_participanteInvestigacion2" class="col-sm-2 control-label">Participante
+                    investigación 2</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.participanteInvestigacion2, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.participanteInvestigacion2) }}
+                </div>
+                <label for="form_cargoParticipanteInvestigacion2" class="col-sm-2 control-label">Cargo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargoParticipanteInvestigacion2, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.cargoParticipanteInvestigacion2) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_participanteInvestigacion3" class="col-sm-2 control-label">Participante
+                    investigación 3</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.participanteInvestigacion3, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.participanteInvestigacion3) }}
+                </div>
+                <label for="form_cargoParticipanteInvestigacion3" class="col-sm-2 control-label">Cargo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargoParticipanteInvestigacion3, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.cargoParticipanteInvestigacion3) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_representanteLegal" class="col-sm-2 control-label">Representante legal</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.representanteLegal, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.representanteLegal) }}
+                </div>
+                <label for="form_cargoRepresentanteLegal" class="col-sm-2 control-label">Cargo representante
+                    legal</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargoRepresentanteLegal, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.cargoRepresentanteLegal) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_representanteLegal" class="col-sm-2 control-label">Documento representante
+                    legal</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.documentoRepresentanteLegal, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.documentoRepresentanteLegal) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_reponsableVerificacion" class="col-sm-2 control-label">Responsable
+                    verificación</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.responsableVerificacion, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.responsableVerificacion) }}
+                </div>
+                <label for="form_licencia" class="col-sm-2 control-label">Licencia</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.licencia, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.licencia) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVerificacion" class="col-sm-2 control-label">Fecha verificación</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaVerificacion, {'attr': {'maxlength' : 10} }) }}
+                </div>
+            </div>
+            {#            {{ form_widget(form.codigoAccidenteTrabajoNaturalezaLesionFk, { 'attr': {'class' :'hidden'} }) }}#}
+            {#            {{ form_widget(form.codigoAccidenteTrabajoCuerpoAfectadoFk, { 'attr': {'class' :'hidden'} }) }}#}
+            {#            {{ form_widget(form.codigoAccidenteTrabajoAgenteFk, { 'attr': {'class' :'hidden'} }) }}#}
+            {#            {{ form_widget(form.codigoAccidenteTrabajoMecanismoAccidenteFk, { 'attr': {'class' :'hidden'} }) }}#}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_movimiento_ocupacional_accidente_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

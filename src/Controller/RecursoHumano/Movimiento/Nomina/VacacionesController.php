@@ -249,6 +249,7 @@ class VacacionesController extends AbstractController
             }
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(RhuVacacion::class)->autorizar($arVacacion);
+                $em->getRepository(RhuVacacion::class)->liquidar($id);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {

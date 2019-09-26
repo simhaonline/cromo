@@ -788,7 +788,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                 $detalle = $arEmbargo->getPorcentaje() . "% devengado (menos dcto ley)";
             }
             if ($arEmbargo->getPorcentajeExcedaSalarioMinimo()) {
-                $salarioMinimoDevengado = ($douVrSalarioMinimo / 30) * $arVacacion->getDiasVacaciones();
+                $salarioMinimoDevengado = ($douVrSalarioMinimo / 30) * $arVacacion->getDias();
                 $baseDescuento = $vrPago - $salarioMinimoDevengado;
                 if ($baseDescuento > 0) {
                     $vrDeduccionEmbargo = ($baseDescuento * $arEmbargo->getPorcentaje()) / 100;
@@ -804,7 +804,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                 }
             }
             if ($arEmbargo->getPartesExcedaSalarioMinimo()) {
-                $salarioMinimoDevengado = ($douVrSalarioMinimo / 30) * $arVacacion->getDiasVacaciones();
+                $salarioMinimoDevengado = ($douVrSalarioMinimo / 30) * $arVacacion->getDias();
                 $baseDescuento = $vrPago - $salarioMinimoDevengado;
                 if ($baseDescuento > 0) {
                     $vrDeduccionEmbargo = $baseDescuento / $arEmbargo->getPartes();
@@ -812,7 +812,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                 $detalle = $arEmbargo->getPartes() . " partes exceda el salario minimo";
             }
             if ($arEmbargo->getPartesExcedaSalarioMinimoMenosDescuentoLey()) {
-                $salarioMinimoDevengado = ($douVrSalarioMinimo / 30) * $arVacacion->getDiasVacaciones();
+                $salarioMinimoDevengado = ($douVrSalarioMinimo / 30) * $arVacacion->getDias();
                 $baseDescuento = ($vrPago - $arVacacion->getVrSalud() - $arVacacion->getVrPension()) - $salarioMinimoDevengado;
                 if ($baseDescuento > 0) {
                     $vrDeduccionEmbargo = $baseDescuento / $arEmbargo->getPartes();

@@ -26,9 +26,8 @@
             <td class="td-in-well">{{ arIngreso.codigoIngresoPk }}</td>
             <td class="titulo">CLIENTE:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arIngreso.clienteRel.nombreCorto }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"
-                style="text-align: right;"></td>
+            <td class="titulo">BRUTO:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arIngreso.vrTotalBruto |number_format(0, '.', ',') }}</td>
 
         </tr>
         <tr>

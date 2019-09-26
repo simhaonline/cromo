@@ -34,6 +34,7 @@ class CarIngresoRepository extends ServiceEntityRepository
         $debito = 0;
         $credito = 0;
         $retencionTotal = 0;
+        $totalBruto = 0;
         $arIngreso = $em->getRepository(CarIngreso::class)->find($id);
         $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $id));
         foreach ($arIngresosDetalle as $arIngresoDetalle) {
@@ -45,9 +46,11 @@ class CarIngresoRepository extends ServiceEntityRepository
 
             $retencionTotal += $arIngresoDetalle->getVrRetencion();
         }
-        $totalNeto = $debito - $credito;
-        $arIngreso->setVrTotalNeto($totalNeto);
+        $totalBruto = $debito - $credito;
+        $totalNeto  = $totalBruto - $retencionTotal;
+        $arIngreso->setVrTotalBruto($totalBruto);
         $arIngreso->setVrRetencion($retencionTotal);
+        $arIngreso->setVrTotalNeto($totalNeto);
         $em->persist($arIngreso);
         $em->flush();
         return true;
@@ -273,6 +276,37 @@ class CarIngresoRepository extends ServiceEntityRepository
                                             $arRegistro->setCodigoModeloFk('CarIngreso');
                                             $arRegistro->setCodigoDocumento($arIngreso['codigoIngresoPk']);
                                             $em->persist($arRegistro);
+
+                                            if($arIngresoDetalle['codigoImpuestoRetencionFk'] != "R00") {
+                                                if($arIngresoDetalle['vrRetencion'] > 0) {
+                                                    $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arIngresoDetalle['codigoImpuestoRetencionFk']);
+                                                    $cuenta = $arImpuesto->getCodigoCuentaFk();
+                                                    if ($cuenta) {
+                                                        $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                                        if (!$arCuenta) {
+                                                            $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                            break;
+                                                        }
+                                                        $arRegistro = new FinRegistro();
+                                                        $arRegistro->setTerceroRel($arCliente);
+                                                        $arRegistro->setCuentaRel($arCuenta);
+                                                        $arRegistro->setComprobanteRel($arComprobante);
+                                                        $arRegistro->setNumero($arIngreso['numero']);
+                                                        $arRegistro->setNumeroReferencia($arIngresoDetalle['numero']);
+                                                        $arRegistro->setFecha($fecha);
+                                                        $arRegistro->setFechaVence($fecha);
+                                                        $arRegistro->setVrCredito($arIngresoDetalle['vrRetencion']);
+                                                        $arRegistro->setNaturaleza("C");
+                                                        $arRegistro->setDescripcion("Retencion");
+                                                        $arRegistro->setCodigoModeloFk('CarIngreso');
+                                                        $arRegistro->setCodigoDocumento($arIngreso['codigoIngresoPk']);
+                                                        $em->persist($arRegistro);
+                                                    } else {
+                                                        $error = "La cuenta no existe" . $descripcion;
+                                                        break;
+                                                    }
+                                                }
+                                            }
                                         } else {
                                             $error = "La cuenta no existe" . $descripcion;
                                             break;

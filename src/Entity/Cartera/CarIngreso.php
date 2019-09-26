@@ -57,6 +57,11 @@ class CarIngreso
     private $comentarios;
 
     /**
+     * @ORM\Column(name="vr_total_bruto" ,type="float", nullable=true)
+     */
+    private $vrTotalBruto = 0;
+
+    /**
      * @ORM\Column(name="vr_retencion", type="float", nullable=true)
      */
     private $vrRetencion = 0;
@@ -416,6 +421,22 @@ class CarIngreso
     public function setVrRetencion($vrRetencion): void
     {
         $this->vrRetencion = $vrRetencion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalBruto()
+    {
+        return $this->vrTotalBruto;
+    }
+
+    /**
+     * @param mixed $vrTotalBruto
+     */
+    public function setVrTotalBruto($vrTotalBruto): void
+    {
+        $this->vrTotalBruto = $vrTotalBruto;
     }
 
 

@@ -57,6 +57,11 @@ class CarIngreso
     private $comentarios;
 
     /**
+     * @ORM\Column(name="vr_retencion", type="float", nullable=true)
+     */
+    private $vrRetencion = 0;
+
+    /**
      * @ORM\Column(name="vr_total_neto" ,type="float", nullable=true)
      */
     private $vrTotalNeto = 0;
@@ -395,6 +400,22 @@ class CarIngreso
     public function setIngresoDetallesIngresoRel($ingresoDetallesIngresoRel): void
     {
         $this->ingresoDetallesIngresoRel = $ingresoDetallesIngresoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencion()
+    {
+        return $this->vrRetencion;
+    }
+
+    /**
+     * @param mixed $vrRetencion
+     */
+    public function setVrRetencion($vrRetencion): void
+    {
+        $this->vrRetencion = $vrRetencion;
     }
 
 

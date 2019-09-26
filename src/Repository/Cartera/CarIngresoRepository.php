@@ -2,12 +2,15 @@
 
 namespace App\Repository\Cartera;
 
+use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarIngreso;
 use App\Entity\Cartera\CarIngresoDetalle;
+use App\Entity\Cartera\CarIngresoTipo;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
+use App\Entity\General\GenImpuesto;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesEgreso;
 use App\Entity\Tesoreria\TesEgresoDetalle;
@@ -30,6 +33,7 @@ class CarIngresoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $debito = 0;
         $credito = 0;
+        $retencionTotal = 0;
         $arIngreso = $em->getRepository(CarIngreso::class)->find($id);
         $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $id));
         foreach ($arIngresosDetalle as $arIngresoDetalle) {
@@ -38,9 +42,12 @@ class CarIngresoRepository extends ServiceEntityRepository
             } else {
                 $credito += $arIngresoDetalle->getVrPago();
             }
+
+            $retencionTotal += $arIngresoDetalle->getVrRetencion();
         }
         $totalNeto = $debito - $credito;
         $arIngreso->setVrTotalNeto($totalNeto);
+        $arIngreso->setVrRetencion($retencionTotal);
         $em->persist($arIngreso);
         $em->flush();
         return true;
@@ -99,7 +106,11 @@ class CarIngresoRepository extends ServiceEntityRepository
                                 $error = true;
                                 break;
                             }
-
+                        }
+                        if(!$arIngresoDetalle->getCodigoCuentaFk()) {
+                            Mensajes::error('En detalle ' . $arIngresoDetalle->getCodigoIngresoDetallePk() . " no tiene asignada una cuenta");
+                            $error = true;
+                            break;
                         }
                     }
                     if ($error == false) {
@@ -200,20 +211,19 @@ class CarIngresoRepository extends ServiceEntityRepository
     public function registroContabilizar($codigo)
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarIngreso::class, 'e')
-            ->select('e.codigoIngresoPk')
-            ->addSelect('e.numero')
-            ->addSelect('e.fecha')
-            ->addSelect('e.fechaPago')
-            ->addSelect('e.vrTotalNeto')
-            ->addSelect('e.estadoAprobado')
-            ->addSelect('e.estadoContabilizado')
-            ->addSelect('e.codigoTerceroFk')
-            ->addSelect('et.codigoComprobanteFk')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarIngreso::class, 'i')
+            ->select('i.codigoIngresoPk')
+            ->addSelect('i.numero')
+            ->addSelect('i.fechaPago')
+            ->addSelect('i.vrTotalNeto')
+            ->addSelect('i.estadoAprobado')
+            ->addSelect('i.estadoContabilizado')
+            ->addSelect('i.codigoClienteFk')
+            ->addSelect('it.codigoComprobanteFk')
             ->addSelect('c.codigoCuentaContableFk')
-            ->leftJoin('e.egresoTipoRel', 'et')
-            ->leftJoin('e.cuentaRel', 'c')
-            ->where('e.codigoIngresoPk = ' . $codigo);
+            ->leftJoin('i.ingresoTipoRel', 'it')
+            ->leftJoin('i.cuentaRel', 'c')
+            ->where('i.codigoIngresoPk = ' . $codigo);
         $arRecibo = $queryBuilder->getQuery()->getSingleResult();
         return $arRecibo;
     }
@@ -232,12 +242,12 @@ class CarIngresoRepository extends ServiceEntityRepository
                             $arComprobante = $em->getRepository(FinComprobante::class)->find($arIngreso['codigoComprobanteFk']);
                             if ($arComprobante) {
                                 $fecha = $arIngreso['fechaPago'];
-                                $arTercero = $em->getRepository(TesTercero::class)->terceroFinanciero($arIngreso['codigoTerceroFk']);
+                                $arCliente = $em->getRepository(CarCliente::class)->terceroFinanciero($arIngreso['codigoClienteFk']);
                                 $arIngresoDetalles = $em->getRepository(CarIngresoDetalle::class)->listaContabilizar($codigo);
                                 foreach ($arIngresoDetalles as $arIngresoDetalle) {
                                     //Cuenta proveedor
                                     if ($arIngresoDetalle['vrPago'] > 0) {
-                                        $descripcion = "PROVEEDORES DOC " . $arIngresoDetalle['numeroDocumento'] ;
+                                        $descripcion = "CLIENTES DOC " . $arIngresoDetalle['numero'] ;
                                         $cuenta = $arIngresoDetalle['codigoCuentaFk'];
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
@@ -246,11 +256,11 @@ class CarIngresoRepository extends ServiceEntityRepository
                                                 break;
                                             }
                                             $arRegistro = new FinRegistro();
-                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setTerceroRel($arCliente);
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arIngreso['numero']);
-                                            $arRegistro->setNumeroReferencia($arIngresoDetalle['numeroDocumento']);
+                                            $arRegistro->setNumeroReferencia($arIngresoDetalle['numero']);
                                             $arRegistro->setFecha($fecha);
                                             $arRegistro->setFechaVence($fecha);
                                             if($arIngresoDetalle['naturaleza'] == 'D') {
@@ -279,7 +289,7 @@ class CarIngresoRepository extends ServiceEntityRepository
                                         break;
                                     }
                                     $arRegistro = new FinRegistro();
-                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setTerceroRel($arCliente);
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arIngreso['numero']);
@@ -322,5 +332,7 @@ class CarIngresoRepository extends ServiceEntityRepository
         }
         return true;
     }
+
+
 
 }

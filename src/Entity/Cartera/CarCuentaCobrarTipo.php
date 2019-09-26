@@ -81,6 +81,11 @@ class CarCuentaCobrarTipo
     protected $cuentaCobrarTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngresoDetalle", mappedBy="cuentaCobrarTipoRel")
+     */
+    protected $ingresosDetallesCuentaCobrarTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaCobrarTipoPk()
@@ -286,6 +291,22 @@ class CarCuentaCobrarTipo
     public function setCodigoComprobanteFk($codigoComprobanteFk): void
     {
         $this->codigoComprobanteFk = $codigoComprobanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIngresosDetallesCuentaCobrarTipoRel()
+    {
+        return $this->ingresosDetallesCuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $ingresosDetallesCuentaCobrarTipoRel
+     */
+    public function setIngresosDetallesCuentaCobrarTipoRel($ingresosDetallesCuentaCobrarTipoRel): void
+    {
+        $this->ingresosDetallesCuentaCobrarTipoRel = $ingresosDetallesCuentaCobrarTipoRel;
     }
 
 

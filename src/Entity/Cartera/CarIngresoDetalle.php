@@ -37,6 +37,11 @@ class CarIngresoDetalle
     private $codigoCuentaCobrarFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaCobrarTipoFk;
+
+    /**
      * @ORM\Column(name="codigo_cliente_fk" , type="integer", nullable=true)
      */
     private $codigoClienteFk;
@@ -47,9 +52,19 @@ class CarIngresoDetalle
     private $numero;
 
     /**
+     * @ORM\Column(name="vr_retencion", type="float", nullable=true)
+     */
+    private $vrRetencion = 0;
+
+    /**
      * @ORM\Column(name="vr_pago", type="float", nullable=true)
      */
     private $vrPago = 0;
+
+    /**
+     * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=5, nullable=true)
+     */
+    private $codigoImpuestoRetencionFk;
 
     /**
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
@@ -72,6 +87,12 @@ class CarIngresoDetalle
      * @ORM\JoinColumn(name="codigo_cuenta_cobrar_fk", referencedColumnName="codigo_cuenta_cobrar_pk")
      */
     private $cuentaCobrarRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrarTipo", inversedBy="ingresosDetallesCuentaCobrarTipoRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_cobrar_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
+     */
+    protected $cuentaCobrarTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCuenta", inversedBy="ingresosDetallesCuentaRel")
@@ -291,6 +312,70 @@ class CarIngresoDetalle
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImpuestoRetencionFk()
+    {
+        return $this->codigoImpuestoRetencionFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoRetencionFk
+     */
+    public function setCodigoImpuestoRetencionFk($codigoImpuestoRetencionFk): void
+    {
+        $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRetencion()
+    {
+        return $this->vrRetencion;
+    }
+
+    /**
+     * @param mixed $vrRetencion
+     */
+    public function setVrRetencion($vrRetencion): void
+    {
+        $this->vrRetencion = $vrRetencion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCobrarTipoFk()
+    {
+        return $this->codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCobrarTipoFk
+     */
+    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    {
+        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaCobrarTipoRel()
+    {
+        return $this->cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarTipoRel
+     */
+    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
+    {
+        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
     }
 
 

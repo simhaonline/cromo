@@ -30,6 +30,7 @@ class GenModelo extends Fixture
             ['codigo' =>'TurTurno',                 'modulo'=> 'Turno',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' =>'TurSecuencia',             'modulo'=> 'Turno',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 
+            ['codigo' =>'CarIngreso',               'modulo'=> 'Cartera',     'funcion' => 'Movimiento',  'grupo' => 'Ingreso'],
             ['codigo' =>'CarCliente',               'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' =>'CarCuentaCobrar',          'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' =>'CarCompromiso',            'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],

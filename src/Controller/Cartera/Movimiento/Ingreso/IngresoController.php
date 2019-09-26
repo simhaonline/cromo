@@ -15,6 +15,7 @@ use App\Entity\Cartera\TesCuentaPagarTipo;
 use App\Entity\Cartera\CarIngreso;
 use App\Entity\Cartera\CarIngresoDetalle;
 use App\Entity\Cartera\TesTercero;
+use App\Entity\General\GenImpuesto;
 use App\Form\Type\Cartera\IngresoType;
 use App\Formato\Cartera\Ingreso;
 use App\General\General;
@@ -139,14 +140,17 @@ class IngresoController extends BaseController
         $form = Estandares::botonera($arIngreso->getEstadoAutorizado(), $arIngreso->getEstadoAprobado(), $arIngreso->getEstadoAnulado());
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnDuplicar = ['label' => 'Duplicar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-primary']];
         $arrBtnAdicionar = ['label' => 'Adicionar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if ($arIngreso->getEstadoAutorizado()) {
             $arrBtnEliminar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
             $arrBtnAdicionar['disabled'] = true;
+            $arrBtnDuplicar['disabled'] = true;
         }
         $form
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
+            ->add('btnDuplicar', SubmitType::class, $arrBtnDuplicar)
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
             ->add('btnAdicionar', SubmitType::class, $arrBtnAdicionar);
 
@@ -204,12 +208,19 @@ class IngresoController extends BaseController
                 $em->getRepository(CarIngresoDetalle::class)->eliminar($arIngreso, $arrDetallesSeleccionados);
                 $em->getRepository(CarIngreso::class)->liquidar($id);
             }
+            if ($form->get('btnDuplicar')->isClicked()) {
+                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(CarIngresoDetalle::class)->duplicar($arIngreso, $arrDetallesSeleccionados);
+                $em->getRepository(CarIngreso::class)->liquidar($id);
+            }
             return $this->redirect($this->generateUrl('cartera_movimiento_ingreso_ingreso_detalle', ['id' => $id]));
         }
+        $arImpuestosRetencion = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'R'));
         $arIngresoDetalles = $paginator->paginate($em->getRepository(CarIngresoDetalle::class)->lista($arIngreso->getCodigoIngresoPk()), $request->query->getInt('page', 1), 500);
         return $this->render('cartera/movimiento/ingreso/ingreso/detalle.html.twig', [
             'arIngresoDetalles' => $arIngresoDetalles,
             'arIngreso' => $arIngreso,
+            'arImpuestosRetencion' => $arImpuestosRetencion,
             'clase' => array('clase' => 'CarIngreso', 'codigo' => $id),
             'form' => $form->createView()
         ]);
@@ -264,11 +275,13 @@ class IngresoController extends BaseController
                         $arIngresoDetalle->setIngresoRel($arIngreso);
                         $arIngresoDetalle->setNumero($arCuentaCobrar->getNumeroDocumento());
                         $arIngresoDetalle->setCuentaCobrarRel($arCuentaCobrar);
+                        $arIngresoDetalle->setCuentaCobrarTipoRel($arCuentaCobrar->getCuentaCobrarTipoRel());
                         $arIngresoDetalle->setVrPago($arCuentaCobrar->getVrSaldo());
                         $arIngresoDetalle->setUsuario($this->getUser()->getUserName());
                         $arIngresoDetalle->setCuentaRel($em->getReference(FinCuenta::class, $arCuentaCobrar->getCuentaCobrarTipoRel()->getCodigoCuentaClienteFk()));
                         $arIngresoDetalle->setClienteRel($arCuentaCobrar->getClienteRel());
                         $arIngresoDetalle->setNaturaleza('D');
+                        $arIngresoDetalle->setCodigoImpuestoRetencionFk('R00');
                         $em->persist($arIngresoDetalle);
                     }
                     $em->flush();

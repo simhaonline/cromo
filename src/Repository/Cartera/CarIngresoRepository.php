@@ -34,7 +34,6 @@ class CarIngresoRepository extends ServiceEntityRepository
         $debito = 0;
         $credito = 0;
         $retencionTotal = 0;
-        $totalBruto = 0;
         $arIngreso = $em->getRepository(CarIngreso::class)->find($id);
         $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $id));
         foreach ($arIngresosDetalle as $arIngresoDetalle) {
@@ -46,7 +45,7 @@ class CarIngresoRepository extends ServiceEntityRepository
 
             $retencionTotal += $arIngresoDetalle->getVrRetencion();
         }
-        $totalBruto = $debito - $credito;
+        $totalBruto = $credito - $debito;
         $totalNeto  = $totalBruto - $retencionTotal;
         $arIngreso->setVrTotalBruto($totalBruto);
         $arIngreso->setVrRetencion($retencionTotal);
@@ -295,8 +294,8 @@ class CarIngresoRepository extends ServiceEntityRepository
                                                         $arRegistro->setNumeroReferencia($arIngresoDetalle['numero']);
                                                         $arRegistro->setFecha($fecha);
                                                         $arRegistro->setFechaVence($fecha);
-                                                        $arRegistro->setVrCredito($arIngresoDetalle['vrRetencion']);
-                                                        $arRegistro->setNaturaleza("C");
+                                                        $arRegistro->setVrDebito($arIngresoDetalle['vrRetencion']);
+                                                        $arRegistro->setNaturaleza("D");
                                                         $arRegistro->setDescripcion("Retencion");
                                                         $arRegistro->setCodigoModeloFk('CarIngreso');
                                                         $arRegistro->setCodigoDocumento($arIngreso['codigoIngresoPk']);
@@ -328,8 +327,8 @@ class CarIngresoRepository extends ServiceEntityRepository
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arIngreso['numero']);
                                     $arRegistro->setFecha($fecha);
-                                    $arRegistro->setVrCredito($arIngreso['vrTotalNeto']);
-                                    $arRegistro->setNaturaleza('C');
+                                    $arRegistro->setVrDebito($arIngreso['vrTotalNeto']);
+                                    $arRegistro->setNaturaleza('D');
                                     $arRegistro->setDescripcion("Ingreso");
                                     $arRegistro->setCodigoModeloFk('CarIngreso');
                                     $arRegistro->setCodigoDocumento($arIngreso['codigoIngresoPk']);

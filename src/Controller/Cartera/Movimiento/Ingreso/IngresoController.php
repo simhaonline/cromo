@@ -197,7 +197,7 @@ class IngresoController extends BaseController
                 $arIngresoDetalle = new CarIngresoDetalle();
                 $arIngresoDetalle->setIngresoRel($arIngreso);
                 $arIngresoDetalle->setClienteRel($arIngreso->getClienteRel());
-                $arIngresoDetalle->setNaturaleza('C');
+                $arIngresoDetalle->setNaturaleza('D');
                 $em->persist($arIngresoDetalle);
                 $em->flush();
                 $em->getRepository(CarIngreso::class)->liquidar($id);
@@ -280,7 +280,7 @@ class IngresoController extends BaseController
                         $arIngresoDetalle->setUsuario($this->getUser()->getUserName());
                         $arIngresoDetalle->setCuentaRel($em->getReference(FinCuenta::class, $arCuentaCobrar->getCuentaCobrarTipoRel()->getCodigoCuentaClienteFk()));
                         $arIngresoDetalle->setClienteRel($arCuentaCobrar->getClienteRel());
-                        $arIngresoDetalle->setNaturaleza('D');
+                        $arIngresoDetalle->setNaturaleza('C');
                         $arIngresoDetalle->setCodigoImpuestoRetencionFk('R00');
                         $em->persist($arIngresoDetalle);
                     }

@@ -390,6 +390,11 @@ class RhuEmpleado
     protected $costosEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuDisciplinario", mappedBy="empleadoRel")
+     */
+    protected $disciplinariosEmpleadoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuProgramacionDetalle", mappedBy="empleadoRel")
      */
     protected $programacionesPagosDetallesEmpleadoRel;

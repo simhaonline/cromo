@@ -1,0 +1,67 @@
+ {% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default"
+               href="{{ path('recursohumano_movimiento_recurso_capacitacion_lista') }}">Volver</a>
+        </div>
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
+        <tr>
+            <td class="titulo">CÓDIGO:</td>
+            <td class="td-in-well">{{ arRegistro.codigoCapacitacionPk }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arRegistro.fechaCapacitacion |date("Y/m/d") }}</td>
+            <td class="titulo">HORA:</td>
+            <td class="td-in-well">{{ arRegistro.fechaCapacitacion |date("H:i:s") }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DURACION:</td>
+            <td class="td-in-well">{{ arRegistro.duracion }}</td>
+            <td class="titulo">CIUDAD:</td>
+            <td class="td-in-well">{{ arRegistro.ciudadRel.nombre | default('') }}</td>
+            <td class="titulo">LUGAR:</td>
+            <td class="td-in-well">{{ arRegistro.lugar }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TIPO CAPACITACIÓN:</td>
+            <td class="td-in-well">{{ arRegistro.capacitacionTipoRel.nombre | default('') }}</td>
+            <td class="titulo">TEMA:</td>
+            <td class="td-in-well">{{ arRegistro.tema }}</td>
+            <td class="titulo">METODOLOGIA:</td>
+            <td class="td-in-well">{{ arRegistro.capacitacionMetodologiaRel.nombre | default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">OBJETIVO:</td>
+            <td class="td-in-well">{{ arRegistro.objetivo }}</td>
+            <td class="titulo">CONTENIDO:</td>
+            <td class="td-in-well">{{ arRegistro.contenido }}</td>
+            <td class="titulo">PERSONAS A CAPACITAR:</td>
+            <td class="td-in-well" align="rigth">{{ arRegistro.numeroPersonasCapacitar }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FACILITADOR:</td>
+            <td class="td-in-well">{{ arRegistro.facilitador }}</td>
+            <td class="titulo">IDENTIFICACION:</td>
+            <td class="td-in-well">{{ arRegistro.numeroIdentificacionFacilitador }}</td>
+            <td class="titulo">PERSONAS ASISTIERON:</td>
+            <td class="td-in-well" align="rigth">{{ arRegistro.numeroPersonasAsistieron }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">ZONA:</td>
+            <td class="td-in-well">{{ arRegistro.zonaRel.nombre | default('') }}</td>
+            <td class="titulo">AUTORIZADO:</td>
+            <td class="td-in-well">{{ arRegistro.estadoAutorizado ? "SI" : "NO" }}</td>
+            <td class="titulo">ABIERTO:</td>
+        </tr>
+    </table>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    <br>
+    <br>
+{% endblock %}

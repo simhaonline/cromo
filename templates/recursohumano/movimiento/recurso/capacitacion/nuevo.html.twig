@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form,{'attr': {'class' :'form-horizontal'}}) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_capacitacionTipoRel" class="col-sm-2 control-label">Tipo:</label>
+                <div class="col-sm-4">
+{#                    {{ form_widget(form.capacitacionTipoRel, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}#}
+{#                    {{ form_errors(form.capacitacionTipoRel) }}#}
+                </div>
+                <label for="form_ciudadRel" class="col-sm-1 control-label">Ciudad:</label>
+                <div class="col-sm-4">
+{#                    {{ form_widget(form.ciudadRel, { 'attr': {'class': 'form-control to-select-2','autofocus':'autofocus'} }) }}#}
+{#                    {{ form_errors(form.ciudadRel) }}#}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fecha" class="col-sm-2 control-label">Fecha / hora:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaCapacitacion) }}
+                    {{ form_errors(form.fechaCapacitacion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_ciudadRel" class="col-sm-2 control-label">Puesto:</label>
+                <div class="col-sm-4">
+{#                    {{ form_widget(form.puestoRel, { 'attr': {'class': 'form-control to-select-2','autofocus':'autofocus'} }) }}#}
+{#                    {{ form_errors(form.puestoRel) }}#}
+                </div>
+                <label for="form_lugar" class="col-sm-1 control-label">Lugar:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.lugar, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.lugar) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_zonaRel" class="col-sm-2 control-label">Zona:</label>
+                <div class="col-sm-4">
+{#                    {{ form_widget(form.zonaRel, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}#}
+{#                    {{ form_errors(form.zonaRel) }}#}
+                </div>
+                <label for="form_duracion" class="col-sm-1 control-label">Duración:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.duracion, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                    {{ form_errors(form.duracion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_tema" class="col-sm-2 control-label">Tema:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tema, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.tema) }}
+                </div>
+                <label for="form_capacitacionMetodologiaRel" class="col-sm-1 control-label">Metodología:</label>
+                <div class="col-sm-4">
+{#                    {{ form_widget(form.capacitacionMetodologiaRel, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}#}
+{#                    {{ form_errors(form.capacitacionMetodologiaRel) }}#}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_numeroPersonasCapacitar" class="col-sm-2 control-label">Personas a capacitar:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroPersonasCapacitar, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                    {{ form_errors(form.numeroPersonasCapacitar) }}
+                </div>
+                <label for="form_vrCapacitacion" class="col-sm-1 control-label">Valor:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrCapacitacion, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                    {{ form_errors(form.vrCapacitacion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_objetivo" class="col-sm-2 control-label">Objetivo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.objetivo, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                    {{ form_errors(form.objetivo) }}
+                </div>
+                <label for="form_comentarios" class="col-sm-1 control-label">Contenido:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.contenido, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                    {{ form_errors(form.contenido) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_facilitador" class="col-sm-2 control-label">Facilitador:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.facilitador, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                    {{ form_errors(form.facilitador) }}
+                </div>
+                <label for="form_numeroIdentificacionFacilitador" class="col-sm-1 control-label">Identificación:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroIdentificacionFacilitador, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                    {{ form_errors(form.numeroIdentificacionFacilitador) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" style="float: left;"
+           href="{{ path('recursohumano_movimiento_recurso_capacitacion_lista') }}">Volver</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+{% endblock %}

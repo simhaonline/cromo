@@ -438,12 +438,13 @@ class VacacionesController extends AbstractController
             if ($form->get('guardar')->isClicked()) {
                 $boolIncapacidad = $em->getRepository(RhuIncapacidad::class)->validarFecha($arVacacionesCambio->getFechaDesdeDisfrute(), $arVacacionesCambio->getFechaHastaDisfrute(), $arVacacion->getCodigoEmpleadoFk());
                 if ($boolIncapacidad) {
-                    $arUltimaVacacionDisfrute = $em->getRepository(RhuVacacionCambio::class)->validarUltimaVacacion($codigoVacacion);
-                    if ($arUltimaVacacionDisfrute) {
+                    //$arUltimaVacacionDisfrute = $em->getRepository(RhuVacacionCambio::class)->validarUltimaVacacion($codigoVacacion);
+                    //if ($arUltimaVacacionDisfrute) {
                         $arVacacion->setFechaDesdeDisfrute($arVacacionesCambio->getFechaDesdeDisfrute());
                         $arVacacion->setFechaHastaDisfrute($arVacacionesCambio->getFechaHastaDisfrute());
                         $arVacacion->setFechaInicioLabor($arVacacionesCambio->getFechaInicioLabor());
-                    }
+                        $em->persist($arVacacion);
+                    //}
                     $arVacacionesCambio = $form->getData();
                     $em->persist($arVacacionesCambio);
                     $em->flush();

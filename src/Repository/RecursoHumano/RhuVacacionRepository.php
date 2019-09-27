@@ -393,10 +393,10 @@ class RhuVacacionRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("v.numero = '{$numero}'");
         }
         if ($fechaDesde) {
-            $queryBuilder->andWhere("v.fecha >= '{$fechaDesde} 00:00:00'");
+            $queryBuilder->andWhere("v.fechaDesdeDisfrute >= '{$fechaDesde}'");
         }
         if ($fechaHasta) {
-            $queryBuilder->andWhere("v.fecha <= '{$fechaHasta} 23:59:59'");
+            $queryBuilder->andWhere("v.fechaDesdeDisfrute <= '{$fechaHasta}'");
         }
         switch ($estadoAutorizado) {
             case '0':

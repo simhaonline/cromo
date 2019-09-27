@@ -7,6 +7,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
+use App\Entity\Cartera\CarIngresoTipo;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\General\GenBanco;
 use App\Entity\General\GenConfiguracion;
@@ -21,8 +22,11 @@ use App\Formato\Cartera\Ingreso;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -48,42 +52,56 @@ class IngresoController extends BaseController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/movimiento/ingreso/ingreso/lista", name="cartera_movimiento_ingreso_ingreso_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
+            ->add('numero', NumberType::class, array('required' => false))
+            ->add('codigoIngresoPk', TextType::class, array('required' => false))
+            ->add('fechaPagoDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaPagoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('codigoIngresoTipoFk', EntityType::class, [
+                'class' => CarIngresoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('it')
+                        ->orderBy('it.codigoIngresoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(CarIngreso::class)->lista()->getQuery()->execute(), "Ingresos");
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(CarIngreso::class)->lista($raw)->getQuery()->execute(), "Ingresos");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                /*set_time_limit(0);
-                ini_set("memory_limit", -1);
-                $arIngresos = $em->getRepository(CarIngreso::class)->findAll();
-                foreach ($arIngresos as $arIngreso) {
-                    $em->getRepository(CarIngreso::class)->liquidar($arIngreso->getCodigoIngresoPk());
-                }*/
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(CarIngreso::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('cartera_movimiento_ingreso_ingreso_lista'));
-
             }
         }
+        $arIngresos = $paginator->paginate($em->getRepository(CarIngreso::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('cartera/movimiento/ingreso/ingreso/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView()
+            'arIngresos' => $arIngresos,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -139,11 +157,10 @@ class IngresoController extends BaseController
      * @throws \Doctrine\ORM\ORMException
      * @Route("/cartera/movimiento/ingreso/ingreso/detalle/{id}", name="cartera_movimiento_ingreso_ingreso_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator,$id)
     {
         $em = $this->getDoctrine()->getManager();
         $arIngreso = $em->getRepository(CarIngreso::class)->find($id);
-        $paginator = $this->get('knp_paginator');
         $form = Estandares::botonera($arIngreso->getEstadoAutorizado(), $arIngreso->getEstadoAprobado(), $arIngreso->getEstadoAnulado());
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -310,4 +327,28 @@ class IngresoController extends BaseController
         ]);
     }
 
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoCliente' => $form->get('codigoClienteFk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'codigoIngreso' => $form->get('codigoIngresoPk')->getData(),
+            'fechaDesde' => $form->get('fechaPagoDesde')->getData() ? $form->get('fechaPagoDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaPagoHasta')->getData() ? $form->get('fechaPagoHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $codigoIngresoTipo = $form->get('codigoIngresoTipoFk')->getData();
+
+        if (is_object($codigoIngresoTipo)) {
+            $filtro['codigoIngresoTipo'] = $codigoIngresoTipo->getCodigoIngresoTipoPk();
+        } else {
+            $filtro['codigoIngresoTipo'] = $codigoIngresoTipo;
+        }
+
+        return $filtro;
+
+    }
 }

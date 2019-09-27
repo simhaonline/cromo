@@ -28,6 +28,96 @@ class CarIngresoRepository extends ServiceEntityRepository
         parent::__construct($registry, CarIngreso::class);
     }
 
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCliente = null;
+        $numero = null;
+        $codigoIngreso = null;
+        $codigoIngresoTipo = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $codigoIngreso = $filtros['codigoIngreso'] ?? null;
+            $codigoIngresoTipo = $filtros['codigoIngresoTipo'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarIngreso::class, 'i')
+            ->select('i.codigoIngresoPk')
+            ->addSelect('i.numero')
+            ->addSelect('it.nombre as ingresoTipo')
+            ->addSelect('i.fecha')
+            ->addSelect('i.fechaPago')
+            ->addSelect('cl.numeroIdentificacion')
+            ->addSelect('cl.nombreCorto as cliente')
+            ->addSelect('cu.nombre as cuenta')
+            ->addSelect('i.vrTotalNeto')
+            ->addSelect('i.estadoAutorizado')
+            ->addSelect('i.estadoAprobado')
+            ->addSelect('i.estadoAnulado')
+            ->leftJoin('i.ingresoTipoRel', 'it')
+            ->leftJoin('i.clienteRel', 'cl')
+            ->leftJoin('i.cuentaRel', 'cu')
+        ;
+        if ($codigoIngreso) {
+            $queryBuilder->andWhere("i.codigoIngresoPk = '{$codigoIngreso}'");
+        }
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("i.codigoClienteFk = '{$codigoCliente}'");
+        }
+        if ($codigoIngresoTipo) {
+            $queryBuilder->andWhere("it.codigoIngresoTipoPk = '{$codigoIngresoTipo}'");
+        }
+        if ($numero) {
+            $queryBuilder->andWhere("i.numero = '{$numero}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("i.fechaPago >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("i.fechaPago <= '{$fechaHasta} 23:59:59'");
+        }
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('i.codigoIngresoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+    }
+
     public function liquidar($id)
     {
         $em = $this->getEntityManager();

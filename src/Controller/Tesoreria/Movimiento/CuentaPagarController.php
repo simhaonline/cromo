@@ -5,16 +5,23 @@ namespace App\Controller\Tesoreria\Movimiento;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
-use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagar;
+use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CuentaPagarController extends ControllerListenerGeneral
+class CuentaPagarController extends AbstractController
 {
     protected $clase = TesCuentaPagar::class;
     protected $claseNombre = "TesCuentaPagar";
@@ -30,34 +37,51 @@ class CuentaPagarController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/tesoreria/movimiento/cuenta/pagar/lista", name="tesoreria_movimiento_cuentapagar_cuentapagar_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoCuentaPagarTipoFk', EntityType::class, [
+                'class' => TesCuentaPagarTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('cpt')
+                        ->orderBy('cpt.codigoCuentaPagarTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoCuentaPagarPk', TextType::class, array('required' => false))
+            ->add('txtCodigoTercero', TextType::class, ['required' => false])
+            ->add('txtNombreCorto', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(TesCuentaPagar::class)->lista($raw), "Egresos");
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TesCuentaPagar::class)->lista()->getQuery()->getResult(), "Cuentas pagar");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TesCuentaPagar::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('tesoreria_movimiento_cuentapagar_cuentapagar_lista'));
-            }
-        }
+        $arCuentasPagar = $paginator->paginate($em->getRepository(TesCuentaPagar::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('tesoreria/movimiento/cuentapagar/cuentapagar/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arCuentasPagar' => $arCuentasPagar,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -66,7 +90,8 @@ class CuentaPagarController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route("/compra/movimiento/cuenta/pagar/lista", name="tesoreria_movimiento_cuentapagar_cuentapagar_nuevo")
      */
-    public function nuevo(Request $request){
+    public function nuevo(Request $request)
+    {
         return $this->redirect($this->generateUrl('tesoreria_movimiento_cuentapagar_cuentapagar_nuevo'));
     }
 
@@ -75,9 +100,9 @@ class CuentaPagarController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/compra/movimiento/cuenta/pagar/detalle/{id}", name="tesoreria_movimiento_cuentapagar_cuentapagar_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
-        $paginator = $this->get('knp_paginator');
+
         $em = $this->getDoctrine()->getManager();
         $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($id);
         $form = Estandares::botonera($arCuentaPagar->getEstadoAutorizado(), $arCuentaPagar->getEstadoAprobado(), $arCuentaPagar->getEstadoAnulado());
@@ -101,5 +126,29 @@ class CuentaPagarController extends ControllerListenerGeneral
             'clase' => array('clase' => 'TesCuentaPagar', 'codigo' => $id),
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoCuentaPagar' => $form->get('codigoCuentaPagarPk')->getData(),
+            'codigoTercero' => $form->get('txtCodigoTercero')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arCuentaPagarTipo = $form->get('codigoCuentaPagarTipoFk')->getData();
+
+        if (is_object($arCuentaPagarTipo)) {
+            $filtro['cuentaPagarTipo'] = $arCuentaPagarTipo->getCodigoCuentaPagarTipoPk();
+        } else {
+            $filtro['cuentaPagarTipo'] = $arCuentaPagarTipo;
+        }
+
+        return $filtro;
+
     }
 }

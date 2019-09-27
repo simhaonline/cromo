@@ -15,13 +15,88 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         parent::__construct($registry, TesCuentaPagar::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCuentaPagar = null;
+        $codigoTercero = null;
+        $cuentaPagarTipo = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoCuentaPagar = $filtros['codigoCuentaPagar'] ?? null;
+            $codigoTercero = $filtros['codigoTercero'] ?? null;
+            $cuentaPagarTipo = $filtros['cuentaPagarTipo'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(TesCuentaPagar::class, 'cp')
-            ->select('cp.codigoCuentaPagarPk');
-        return $queryBuilder;
+            ->select('cp.codigoCuentaPagarPk')
+            ->addSelect('cp.fecha')
+            ->addSelect('cp.fechaVence')
+            ->addSelect('cp.numeroDocumento')
+            ->addSelect('cpt.nombre AS tipo')
+            ->addSelect('t.numeroIdentificacion')
+            ->addSelect('t.nombreCorto AS tercero')
+            ->addSelect('cp.vrTotal')
+            ->addSelect('cp.estadoAutorizado')
+            ->addSelect('cp.estadoAprobado')
+            ->addSelect('cp.estadoAnulado')
+            ->leftJoin('cp.terceroRel', 't')
+            ->leftJoin('cp.cuentaPagarTipoRel', 'cpt');
+        if ($codigoCuentaPagar) {
+            $queryBuilder->andWhere("cp.codigoCuentaPagarPk = '{$codigoCuentaPagar}'");
+        }
+        if ($codigoTercero) {
+            $queryBuilder->andWhere("cp.codigoTerceroFk = '{$codigoTercero}'");
+        }
+        if ($cuentaPagarTipo) {
+            $queryBuilder->andWhere("cp.codigoCuentaPagarTipoFk = '{$cuentaPagarTipo}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("cp.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("cp.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("cp.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cp.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("cp.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cp.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("cp.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cp.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('cp.codigoCuentaPagarPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function pendientes()
@@ -373,9 +448,10 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         }
     }
 
-    public function verificar($arCuentaPagar) {
+    public function verificar($arCuentaPagar)
+    {
         $em = $this->getEntityManager();
-        if(!$arCuentaPagar->getEstadoVerificado()) {
+        if (!$arCuentaPagar->getEstadoVerificado()) {
             $arCuentaPagar->setEstadoVerificado(1);
             $em->persist($arCuentaPagar);
             $em->flush();

@@ -23,6 +23,7 @@ use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -33,7 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class EgresoController extends BaseController
+class EgresoController extends AbstractController
 {
     protected $clase = TesEgreso::class;
     protected $claseNombre = "TesEgreso";

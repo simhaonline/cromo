@@ -13,14 +13,18 @@ use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Entity\Tesoreria\TesEgreso;
 use App\Entity\Tesoreria\TesEgresoDetalle;
+use App\Entity\Tesoreria\TesEgresoTipo;
 use App\Entity\Tesoreria\TesTercero;
 use App\Form\Type\Tesoreria\EgresoType;
 use App\Formato\Tesoreria\Egreso;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -46,35 +50,51 @@ class EgresoController extends BaseController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/tesoreria/movimiento/egreso/egreso/lista", name="tesoreria_movimiento_egreso_egreso_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoEgresoTipoFk', EntityType::class, [
+                'class' => TesEgresoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('et')
+                        ->orderBy('et.codigoEgresoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoEgresoPk', TextType::class, array('required' => false))
+            ->add('txtCodigoTercero', TextType::class, ['required' => false])
+            ->add('txtNombreCorto', TextType::class, ['required' => false ,'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(TesEgreso::class)->lista($raw), "Egresos");
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TesEgreso::class)->lista()->getQuery()->execute(), "Egresos");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(TesEgreso::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_lista'));
-            }
-        }
+        $arEgresos = $paginator->paginate($em->getRepository(TesEgreso::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('tesoreria/movimiento/egreso/egreso/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView()
+            'arEgresos' => $arEgresos,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -207,7 +227,7 @@ class EgresoController extends BaseController
             if ($form->get('btnArchivoPlanoBbva')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $numero = $arEgreso->getNumero();
-                $this->generarArchivoBBVA($arEgreso, $numero,$arrDetallesSeleccionados);
+                $this->generarArchivoBBVA($arEgreso, $numero, $arrDetallesSeleccionados);
             }
             return $this->redirect($this->generateUrl('tesoreria_movimiento_egreso_egreso_detalle', ['id' => $id]));
         }
@@ -439,7 +459,7 @@ class EgresoController extends BaseController
     }
 
     //Rellenar numeros
-    public static function RellenarNr($Nro, $Str, $NroCr):string
+    public static function RellenarNr($Nro, $Str, $NroCr): string
     {
         $Longitud = strlen($Nro);
 
@@ -450,7 +470,7 @@ class EgresoController extends BaseController
         return (string)$Nro;
     }
 
-    public static function RellenarNr2($Nro, $Str, $NroCr, $strPosicion):string
+    public static function RellenarNr2($Nro, $Str, $NroCr, $strPosicion): string
     {
         $Nro = utf8_decode($Nro);
         $Longitud = strlen($Nro);
@@ -464,6 +484,30 @@ class EgresoController extends BaseController
         }
 
         return (string)$Nro;
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoEgreso' => $form->get('codigoEgresoPk')->getData(),
+            'codigoTercero' => $form->get('txtCodigoTercero')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arEgresoTipo = $form->get('codigoEgresoTipoFk')->getData();
+
+        if (is_object($arEgresoTipo)) {
+            $filtro['egresoTipo'] = $arEgresoTipo->getCodigoEgresoTipoPk();
+        } else {
+            $filtro['egresoTipo'] = $arEgresoTipo;
+        }
+
+        return $filtro;
+
     }
 
 }

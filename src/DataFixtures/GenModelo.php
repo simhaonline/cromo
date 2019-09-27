@@ -31,15 +31,15 @@ class GenModelo extends Fixture
             ['codigo' =>'TurSecuencia',             'modulo'=> 'Turno',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 
             ['codigo' =>'CarIngreso',               'modulo'=> 'Cartera',     'funcion' => 'Movimiento',  'grupo' => 'Ingreso'],
+            ['codigo' =>'CarAnticipo',              'modulo'=> 'Cartera',     'funcion' => 'Movimiento',  'grupo' => 'Ingreso'],
+            ['codigo' =>'CarRecibo',                'modulo'=> 'Cartera',     'funcion' => 'Movimiento',  'grupo' => 'Ingreso'],
+            ['codigo' =>'CarAplicacion',            'modulo'=> 'Cartera',     'funcion' => 'Movimiento',  'grupo' => 'Ingreso'],
+            ['codigo' =>'CarCuentaCobrar',          'modulo'=> 'Cartera',     'funcion' => 'Movimiento',  'grupo' => 'Cobrar'],
+            ['codigo' =>'CarCompromiso',            'modulo'=> 'Cartera',     'funcion' => 'Movimiento',  'grupo' => 'Cartera'],
             ['codigo' =>'CarCliente',               'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' =>'CarCuentaCobrar',          'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' =>'CarCompromiso',            'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' =>'CarCuentaCobrarTipo',      'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' =>'CarRecibo',                'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' =>'CarReciboTipo',            'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' =>'CarAnticipo',              'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' =>'CarAnticipoTipo',          'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' =>'CarAplicacion',            'modulo'=> 'Cartera',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 
             ['codigo' =>'DocArchivo',               'modulo'=> 'Documental',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 
@@ -164,12 +164,10 @@ class GenModelo extends Fixture
             ['codigo' =>'RhuTipoCotizacion',        'modulo'=> 'RecursoHumano',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 
 
+            ['codigo' => 'TesCuentaPagar',          'modulo'=> 'Tesoreria',     'funcion' => 'Movimiento',  'grupo' => 'Pagar'],
+            ['codigo' => 'TesEgreso',               'modulo'=> 'Tesoreria',     'funcion' => 'Movimiento',  'grupo' => 'Egreso'],
             ['codigo' => 'TesTercero',              'modulo'=> 'Tesoreria',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' => 'TesCuentaPagar',          'modulo'=> 'Tesoreria',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' => 'TesCuentaPagarTipo',      'modulo'=> 'Tesoreria',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' => 'TesEgreso',               'modulo'=> 'Tesoreria',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' => 'TesMovimiento',           'modulo'=> 'Tesoreria',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' => 'TesMovimientoTipo',       'modulo'=> 'Tesoreria',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 
             ['codigo' => 'TteRecogida',             'modulo'=> 'Transporte',     'funcion' => 'Movimiento',  'grupo' => 'Recogida',     'orden' => 1],
             ['codigo' => 'TteDespachoRecogida',     'modulo'=> 'Transporte',     'funcion' => 'Movimiento',  'grupo' => 'Recogida',     'orden' => 2],
@@ -218,10 +216,10 @@ class GenModelo extends Fixture
             ['codigo' => 'TteVehiculo',             'modulo'=> 'Transporte',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' => 'TteZona',                 'modulo'=> 'Transporte',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 
-            ['codigo' => 'CrmVisita',               'modulo'=> 'Crm',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
+            ['codigo' => 'CrmVisita',               'modulo'=> 'Crm',     'funcion' => 'Movimiento',  'grupo' => 'Comercial'],
+            ['codigo' => 'CrmNegocio',              'modulo'=> 'Crm',     'funcion' => 'Movimiento',  'grupo' => 'Comercial'],
             ['codigo' => 'CrmVisitaTipo',           'modulo'=> 'Crm',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' => 'CrmFase',                 'modulo'=> 'Crm',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
-            ['codigo' => 'CrmNegocio',              'modulo'=> 'Crm',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' => 'CrmContacto',             'modulo'=> 'Crm',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
         );
         foreach ($arrModelos as $arrModelo){

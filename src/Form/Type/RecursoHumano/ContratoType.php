@@ -43,7 +43,7 @@ class ContratoType extends AbstractType
             ->add('vrSalario',NumberType::class,['required' => true])
             ->add('vrAdicional',NumberType::class,['required' => false])
             ->add('vrAdicionalPrestacional',NumberType::class,['required' => false])
-            ->add('codigoCostoTipoFk',ChoiceType::class,['required' => true, 'choices' => ['DISTRIBUIDO' => 'DIS','FIJO' => 'FIJ', 'OPERATIVO' => 'OPE']])
+            ->add('codigoCostoTipoFk',ChoiceType::class,['required' => true, 'choices' => ['FIJO' => 'FIJ', 'FIJO DISTRIBUIDO' => 'DIS', 'OPERATIVO' => 'OPE']])
             ->add('salarioIntegral',CheckboxType::class,['required' => false, 'label' => 'Salario integral'])
             ->add('auxilioTransporte',CheckboxType::class,['required' => false, 'label' => 'Auxilio transporte'])
             ->add('contratoTipoRel', EntityType::class, [

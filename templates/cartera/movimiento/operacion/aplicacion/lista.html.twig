@@ -77,10 +77,14 @@
                 <td>{{ arAplicacion.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arAplicacion.estadoAprobado ? "SI":"NO" }}</td>
                 <td>{{ arAplicacion.estadoAnulado ? "SI":"NO" }}</td>
-                <td class="text-center">
-                    <a href="{{ path('cartera_movimiento_operacion_aplicacion_nuevo',{'id': arAplicacion.codigoAplicacionPk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arIngreso.estadoAutorizado %}
+                    <td></td>
+                {% else %}
+                    <td class="text-center">
+                        <a href="{{ path('cartera_movimiento_operacion_aplicacion_nuevo',{'id': arAplicacion.codigoAplicacionPk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
                 <td class="text-center">
                     <a href="{{ path('cartera_movimiento_operacion_aplicacion_detalle',{'id' : arAplicacion.codigoAplicacionPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

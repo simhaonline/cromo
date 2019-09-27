@@ -99,10 +99,15 @@
                 <td>{{ arCompromiso.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arCompromiso.estadoAprobado ? "SI":"NO"}}</td>
                 <td>{{ arCompromiso.estadoAnulado ? "SI":"NO"}}</td>
+                 {% if arCompromiso.estadoAutorizado %}
+                    <td></td>
+                {% else %}
                 <td class="text-center">
                     <a href="{{ path('cartera_movimiento_compromiso_compromiso_nuevo',{'id':  arCompromiso.codigoCompromisoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
+                {% endif %}
+
                 <td class="text-center">
                     <a
                             href="{{ path('cartera_movimiento_compromiso_compromiso_detalle',{'id' :  arCompromiso.codigoCompromisoPk}) }}">

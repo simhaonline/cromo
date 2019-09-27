@@ -121,10 +121,14 @@
                 <td>{{ arIngreso.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arIngreso.estadoAprobado ? "SI":"NO"}}</td>
                 <td>{{ arIngreso.estadoAnulado ? "SI":"NO"}}</td>
-                <td class="text-center">
-                    <a href="{{ path('cartera_movimiento_ingreso_ingreso_nuevo',{'id':  arIngreso.codigoIngresoPk  }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arIngreso.estadoAutorizado %}
+                    <td></td>
+                {% else %}
+                    <td class="text-center">
+                        <a href="{{ path('cartera_movimiento_ingreso_ingreso_nuevo',{'id':  arIngreso.codigoIngresoPk  }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
                 <td class="text-center">
                     <a
                             href="{{ path('cartera_movimiento_ingreso_ingreso_detalle',{'id' :  arIngreso.codigoIngresoPk  }) }}">

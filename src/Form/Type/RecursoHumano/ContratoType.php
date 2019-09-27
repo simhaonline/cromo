@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\RecursoHumano;
 
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\General\GenCiudad;
 use App\Entity\RecursoHumano\RhuCargo;
 use App\Entity\RecursoHumano\RhuCentroTrabajo;
@@ -86,6 +87,15 @@ class ContratoType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
                         ->orderBy('r.orden', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => true
+            ])
+            ->add('centroCostoRel', EntityType::class, [
+                'class' => FinCentroCosto::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('cc')
+                        ->orderBy('cc.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true

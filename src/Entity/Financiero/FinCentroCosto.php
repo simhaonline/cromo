@@ -85,6 +85,11 @@ class FinCentroCosto
     protected $costosEmpleadosServiciosCentroCostoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuContrato", mappedBy="centroCostoRel")
+     */
+    protected $contratosCentroCostoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCentroCostoPk()
@@ -242,6 +247,22 @@ class FinCentroCosto
     public function setCostosEmpleadosServiciosCentroCostoRel($costosEmpleadosServiciosCentroCostoRel): void
     {
         $this->costosEmpleadosServiciosCentroCostoRel = $costosEmpleadosServiciosCentroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratosCentroCostoRel()
+    {
+        return $this->contratosCentroCostoRel;
+    }
+
+    /**
+     * @param mixed $contratosCentroCostoRel
+     */
+    public function setContratosCentroCostoRel($contratosCentroCostoRel): void
+    {
+        $this->contratosCentroCostoRel = $contratosCentroCostoRel;
     }
 
 

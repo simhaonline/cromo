@@ -104,6 +104,7 @@ class VacacionesController extends AbstractController
             }
             if ($form->get('btnContabilizar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuVacacion::class)->contabilizar();
                 //$em->getRepository(RhuVacacion::class)->eliminar($arrSeleccionados);
             }
         }

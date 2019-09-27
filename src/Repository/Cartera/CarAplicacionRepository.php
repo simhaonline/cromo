@@ -15,6 +15,76 @@ class CarAplicacionRepository extends ServiceEntityRepository
         parent::__construct($registry, CarAplicacion::class);
     }
 
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoAplicacion = null;
+        $numeroDocumento = null;
+        $numeroDocumentoAplicacion = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoAplicacion = $filtros['codigoAplicacion'] ?? null;
+            $numeroDocumento = $filtros['numeroDocumento'] ?? null;
+            $numeroDocumentoAplicacion = $filtros['numeroDocumentoAplicacion'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarAplicacion::class, 'a')
+            ->select('a.codigoAplicacionPk')
+            ->addSelect('a.numeroDocumento')
+            ->addSelect('a.numeroDocumentoAplicacion')
+            ->addSelect('a.vrAplicacion')
+            ->addSelect('a.usuario')
+            ->addSelect('a.estadoAutorizado')
+            ->addSelect('a.estadoAprobado')
+            ->addSelect('a.estadoAnulado');
+        if ($codigoAplicacion) {
+            $queryBuilder->andWhere("a.codigoAplicacionPk = '{$codigoAplicacion}'");
+        }
+        if ($numeroDocumento) {
+            $queryBuilder->andWhere("a.numeroDocumento = '{$numeroDocumento}'");
+        }
+        if ($numeroDocumentoAplicacion) {
+            $queryBuilder->andWhere("a.numeroDocumentoAplicacion = '{$numeroDocumentoAplicacion}'");
+        }
+
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("a.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("a.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("a.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("a.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("a.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("a.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('a.codigoAplicacionPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+    }
+
     public function anular($arAplicacion)
     {
         $em = $this->getEntityManager();

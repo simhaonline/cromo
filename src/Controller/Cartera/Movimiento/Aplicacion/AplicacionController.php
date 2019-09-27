@@ -12,10 +12,16 @@ use App\Form\Type\Compra\CuentaPagarType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class AplicacionController extends ControllerListenerGeneral
+class AplicacionController extends AbstractController
 {
     protected $clase = CarAplicacion::class;
     protected $claseNombre = "CarAplicacion";
@@ -31,36 +37,43 @@ class AplicacionController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/movimiento/operacion/aplicacion/lista", name="cartera_movimiento_operacion_aplicacion_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoAplicacionPk', TextType::class, array('required' => false))
+            ->add('numeroDocumento', NumberType::class, array('required' => false))
+            ->add('numeroDocumentoAplicacion', NumberType::class, array('required' => false))
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "CuentasCobrar");
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(CarAplicacion::class)->lista($raw)->getQuery()->execute(), "Aplicaciones");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 Mensajes::info("Las aplicaciones no se pueden eliminar solo anular");
-//                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(CarAplicacion::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('cartera_movimiento_operacion_aplicacion_lista'));
             }
         }
+        $arAplicaciones = $paginator->paginate($em->getRepository(CarAplicacion::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('cartera/movimiento/operacion/aplicacion/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arAplicaciones' => $arAplicaciones,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -70,7 +83,7 @@ class AplicacionController extends ControllerListenerGeneral
      */
     public function nuevo()
     {
-        return $this->redirect($this->generateUrl('cartera_movimiento_aplicacion_aplicacion_lista'));
+        return $this->redirect($this->generateUrl('cartera_movimiento_operacion_aplicacion_lista'));
     }
 
     /**
@@ -95,6 +108,21 @@ class AplicacionController extends ControllerListenerGeneral
             'arAplicacion' => $arAplicacion,
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoAplicacion' => $form->get('codigoAplicacionPk')->getData(),
+            'numeroDocumento' => $form->get('numeroDocumento')->getData(),
+            'numeroDocumentoAplicacion' => $form->get('numeroDocumentoAplicacion')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        return $filtro;
+
     }
 
 }

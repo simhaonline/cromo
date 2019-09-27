@@ -6,6 +6,7 @@ use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuAdicionalPeriodo;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\Transporte\TteMonitoreo;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -48,5 +49,21 @@ class RhuAdicionalPeriodoRepository extends ServiceEntityRepository
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
+
+    public function eliminar($arrSeleccionados)
+    {
+        try{
+            foreach ($arrSeleccionados as $arrSeleccionado) {
+                $arRegistro = $this->getEntityManager()->getRepository(RhuAdicionalPeriodo::class)->find($arrSeleccionado);
+                if ($arRegistro) {
+                    $this->getEntityManager()->remove($arRegistro);
+                }
+            }
+            $this->getEntityManager()->flush();
+        } catch (\Exception $ex) {
+            Mensajes::error("El registro tiene registros relacionados");
+        }
+    }
+
 
 }

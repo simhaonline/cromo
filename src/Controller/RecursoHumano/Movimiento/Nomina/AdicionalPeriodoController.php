@@ -62,7 +62,7 @@ class AdicionalPeriodoController extends AbstractController
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $this->get("UtilidadesModelo")->eliminar(RhuAdicionalPeriodo::class, $arrSeleccionados);
+                $em->getRepository(RhuAdicionalPeriodo::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_lista'));
             }
             if ($form->get('btnExcel')->isClicked()) {

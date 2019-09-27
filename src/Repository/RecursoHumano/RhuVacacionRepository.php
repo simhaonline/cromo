@@ -3,6 +3,7 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
@@ -953,7 +954,6 @@ class RhuVacacionRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arr) {
             $error = "";
-            $arCentroCosto = null;
             $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(7);
             $codigoCuentaPagadas = $arCuenta->getCodigoCuentaFk();
             $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(8);
@@ -972,6 +972,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                 $arVacacion = $em->getRepository(RhuVacacion::class)->find($codigo);
                 if ($arVacacion) {
                     if ($arVacacion->getEstadoAprobado() == 1 && $arVacacion->getEstadoContabilizado() == 0) {
+                        $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arVacacion->getContratoRel()->getCentroCostoRel());
                         $arTercero = $em->getRepository(RhuEmpleado::class)->terceroFinanciero($arVacacion->getCodigoEmpleadoFk());
                         //Vacaciones
                         if ($arVacacion->getVrBruto() > 0) {
@@ -1161,6 +1162,10 @@ class RhuVacacionRepository extends ServiceEntityRepository
                                 break;
                             }
                         }
+
+                        $arVacacionAct = $em->getRepository(RhuVacacion::class)->find($arVacacion->getCodigoVacacionPk());
+                        $arVacacionAct->setEstadoContabilizado(1);
+                        $em->persist($arVacacionAct);
                     } else {
                         $error = "La vacacion con codigo " . $codigo . " Se encuentra sin aprobar o ya esta contabilizada ";
                     }
@@ -1168,9 +1173,6 @@ class RhuVacacionRepository extends ServiceEntityRepository
                     $error = "La vacacion codigo " . $codigo . " no existe";
                     break;
                 }
-                $arVacacionAct = $em->getRepository(RhuVacacion::class)->find($arVacacion->getCodigoVacacionPk());
-                $arVacacionAct->setEstadoContabilizado(1);
-                $em->persist($arVacacionAct);
             }
             if ($error == "") {
                 $em->flush();

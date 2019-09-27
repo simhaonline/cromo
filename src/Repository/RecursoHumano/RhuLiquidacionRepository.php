@@ -91,10 +91,10 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("l.numero = '{$numero}'");
         }
         if ($fechaDesde) {
-            $queryBuilder->andWhere("l.fechaDesde >= '{$fechaDesde} 00:00:00'");
+            $queryBuilder->andWhere("l.fechaHasta >= '{$fechaDesde}'");
         }
         if ($fechaHasta) {
-            $queryBuilder->andWhere("l.fechaHasta <= '{$fechaHasta} 23:59:59'");
+            $queryBuilder->andWhere("l.fechaHasta <= '{$fechaHasta}'");
         }
         switch ($estadoAutorizado) {
             case '0':

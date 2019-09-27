@@ -48,6 +48,16 @@
                             {{ form_widget(form.estadoAnulado) }}
                         </div>
                     </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-1 control-label"></label>
+                        <div class="col-sm-2">
+
+                        </div>
+                        <label class="col-sm-1 control-label col-sm-offset-6">Contabilizado:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.estadoContabilizado) }}
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group form-group-sm">
                     <div class="col-sm-offset-2 col-sm-10">
@@ -78,6 +88,7 @@
             <th title="Autorizado">AUT</th>
             <th title="Aprobado">APR</th>
             <th title="Anulado">ANU</th>
+            <th title="Contabilizado">CON</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
@@ -104,6 +115,7 @@
                 <td>{{ arVacacion.estadoAutorizado ? 'SI':'NO' }}</td>
                 <td>{{ arVacacion.estadoAprobado ? 'SI':'NO' }}</td>
                 <td>{{ arVacacion.estadoAnulado ? 'SI':'NO' }}</td>
+                <td>{{ arVacacion.estadoContabilizado ? 'SI':'NO' }}</td>
                 {% if arVacacion.estadoAutorizado == 0 %}
                     <td style="text-align: center;">
                         <a href="{{ path('recursohumano_movimiento_nomina_vacacion_nuevo',{'id': arVacacion.codigoVacacionPk }) }}"><i
@@ -138,6 +150,7 @@
         {{ form_widget(form.limiteRegistros) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnContabilizar) }}
         {{ form_widget(form.btnEliminar) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">

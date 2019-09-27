@@ -13,6 +13,7 @@ use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurProgramacionRespaldo;
 use App\Entity\Turno\TurSoporte;
 use App\Entity\Turno\TurSoporteContrato;
 use App\Entity\Turno\TurSoporteHora;
@@ -81,6 +82,14 @@ class SoporteController extends ControllerListenerGeneral
 
             }
             if ($form->get('btnEliminar')->isClicked()) {
+                /*set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $arSoporte = $em->getRepository(TurSoporte::class)->find(8);
+                $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->listaHoras($arSoporte->getCodigoSoportePk(), null);
+                foreach ($arSoportesContratos as $arSoporteContrato) {
+                    $em->getRepository(TurProgramacionRespaldo::class)->generar($arSoporte, $arSoporteContrato);
+                }
+                $em->flush();*/
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TurSoporte::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_lista'));

@@ -85,7 +85,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("s.estadoAnulado = 1");
                 break;
         }
-
+        $queryBuilder->orderBy('s.codigoSoportePk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }

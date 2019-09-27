@@ -76,9 +76,11 @@ class VacacionesController extends AbstractController
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoContabilizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -99,6 +101,10 @@ class VacacionesController extends AbstractController
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(RhuVacacion::class)->eliminar($arrSeleccionados);
 
+            }
+            if ($form->get('btnContabilizar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                //$em->getRepository(RhuVacacion::class)->eliminar($arrSeleccionados);
             }
         }
         $arVacaciones = $paginator->paginate($em->getRepository(RhuVacacion::class)->lista($raw), $request->query->getInt('page', 1), 30);
@@ -471,6 +477,7 @@ class VacacionesController extends AbstractController
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'estadoContabilizado' => $form->get('estadoContabilizado')->getData(),
         ];
 
         $arGrupo = $form->get('codigoGrupoFk')->getData();

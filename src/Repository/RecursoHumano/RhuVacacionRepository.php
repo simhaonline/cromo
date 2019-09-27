@@ -346,6 +346,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
         $estadoAutorizado = null;
         $estadoAprobado = null;
         $estadoAnulado = null;
+        $estadoContabilizado = null;
 
         if ($filtros) {
             $codigoVacacion = $filtros['codigoVacacion'] ?? null;
@@ -357,6 +358,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
             $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
             $estadoAprobado = $filtros['estadoAprobado'] ?? null;
             $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+            $estadoContabilizado = $filtros['estadoContabilizado'] ?? null;
         }
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuVacacion::class, 'v')
@@ -378,6 +380,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
             ->addselect('v.estadoAutorizado')
             ->addselect('v.estadoAprobado')
             ->addselect('v.estadoAnulado')
+            ->addSelect('v.estadoContabilizado')
             ->leftJoin('v.grupoRel', 'g')
             ->leftJoin('v.empleadoRel', 'e');
         if ($codigoVacacion) {
@@ -420,6 +423,14 @@ class RhuVacacionRepository extends ServiceEntityRepository
                 break;
             case '1':
                 $queryBuilder->andWhere("v.estadoAnulado = 1");
+                break;
+        }
+        switch ($estadoContabilizado) {
+            case '0':
+                $queryBuilder->andWhere("v.estadoContabilizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("v.estadoContabilizado = 1");
                 break;
         }
         $queryBuilder->addOrderBy('v.codigoVacacionPk', 'DESC');
@@ -1225,8 +1236,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
         return $arrVacacionesEmpleado;
     }
 
-    public
-    function dias($codigoEmpleado, $codigoContrato, $fechaDesde, $fechaHasta)
+    public function dias($codigoEmpleado, $codigoContrato, $fechaDesde, $fechaHasta)
     {
         $em = $this->getEntityManager();
         $strFechaDesde = $fechaDesde->format('Y-m-d');

@@ -126,7 +126,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("p.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->addOrderBy('p.estadoAutorizado', 'ASC');
+        $queryBuilder->orderBy('p.estadoAutorizado', 'ASC');
+        $queryBuilder->addOrderBy('p.codigoProgramacionPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }

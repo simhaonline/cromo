@@ -31,61 +31,82 @@ class CarCompromisoRepository extends ServiceEntityRepository
         parent::__construct($registry, CarCompromiso::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
-            ->select('r.codigoReciboPk')
-            ->leftJoin('r.reciboTipoRel', 'rt')
-            ->addSelect('c.nombre')
-            ->addSelect('cr.nombreCorto')
-            ->addSelect('cr.numeroIdentificacion')
-            ->addSelect('r.numero')
-            ->addSelect('rt.nombre AS tipo')
-            ->addSelect('r.fecha')
-            ->addSelect('r.fechaPago')
-            ->addSelect('r.codigoCuentaFk')
-            ->addSelect('r.vrPagoTotal')
-            ->addSelect('r.usuario')
-            ->addSelect('r.estadoAutorizado')
-            ->addSelect('r.estadoAnulado')
-            ->addSelect('r.estadoImpreso')
-            ->addSelect('r.estadoAprobado')
-            ->leftJoin('r.clienteRel', 'cr')
-            ->leftJoin('r.cuentaRel', 'c')
-            ->where('r.codigoReciboPk <> 0')
-            ->orderBy('r.estadoAprobado', 'ASC')
-            ->addOrderBy('r.fecha', 'DESC');
-        $fecha = new \DateTime('now');
-        if ($session->get('filtroFecha') == true) {
-            if ($session->get('filtroFechaDesde') != null) {
-                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("r.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroFechaHasta') != null) {
-                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("r.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCliente = null;
+        $codigoCompromiso = null;
+        $fechaCompromisoDesde = null;
+        $fechaCompromisoHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $codigoCompromiso = $filtros['codigoCompromiso'] ?? null;
+            $fechaCompromisoDesde = $filtros['fechaCompromisoDesde'] ?? null;
+            $fechaCompromisoHasta = $filtros['fechaCompromisoHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
         }
-        if ($session->get('filtroCarReciboNumero')) {
-            $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCompromiso::class, 'c')
+            ->select('c.codigoCompromisoPk')
+            ->addSelect('c.fecha')
+            ->addSelect('c.fechaCompromiso')
+            ->addSelect('c.usuario')
+            ->addSelect('c.estadoAutorizado')
+            ->addSelect('c.estadoAnulado')
+            ->addSelect('c.estadoAprobado')
+            ->addSelect('cl.numeroIdentificacion')
+            ->addSelect('cl.nombreCorto as cliente')
+            ->leftJoin('c.clienteRel', 'cl')
+            ->where('c.codigoCompromisoPk <> 0')
+            ->orderBy('c.estadoAprobado', 'ASC')
+            ->addOrderBy('c.fecha', 'DESC');
+
+        if ($fechaCompromisoDesde) {
+            $queryBuilder->andWhere("c.fecha >= '{$fechaCompromisoDesde} 00:00:00'");
         }
-        if ($session->get('filtroCarCodigoCliente')) {
-            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        if ($fechaCompromisoHasta) {
+            $queryBuilder->andWhere("c.fecha <= '{$fechaCompromisoHasta} 23:59:59'");
         }
-        if ($session->get('filtroCarReciboTipo')) {
-            $queryBuilder->andWhere("r.codigoReciboTipoFk = '" . $session->get('filtroCarReciboTipo') . "'");
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("cl.codigoClientePk = '{$codigoCliente}'");
         }
-        switch ($session->get('filtroCarReciboEstadoAprobado')) {
+        if ($codigoCompromiso) {
+            $queryBuilder->andWhere("c.codigoCompromisoPk = '{$codigoCompromiso}'");
+        }
+        switch ($estadoAutorizado) {
             case '0':
-                $queryBuilder->andWhere("r.estadoAprobado = 0");
+                $queryBuilder->andWhere("c.estadoAutorizado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("r.estadoAprobado = 1");
+                $queryBuilder->andWhere("c.estadoAutorizado = 1");
                 break;
         }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('c.codigoCompromisoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 
@@ -877,7 +898,7 @@ class CarCompromisoRepository extends ServiceEntityRepository
         $fecha = new \DateTime('now');
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCompromiso::class, 'c')
             ->select('c.codigoCompromisoPk')
-            ->addSelect('cli.nombreCorto as clienteNombre')
+            ->addSelect('clc.nombreCorto as clienteNombre')
             ->leftJoin('c.clienteRel', 'cli')
             ->where("c.fecha >= '" . $fecha->format('Y-m-d') . " 00:00:00'")
             ->andWhere("c.fecha <= '" . $fecha->format('Y-m-d') . " 23:00:00'");

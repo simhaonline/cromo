@@ -22,12 +22,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-/**
- * @method ComEgreso|null find($id, $lockMode = null, $lockVersion = null)
- * @method ComEgreso|null findOneBy(array $criteria, array $orderBy = null)
- * @method ComEgreso[]    findAll()
- * @method ComEgreso[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class TesEgresoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -35,12 +29,36 @@ class TesEgresoRepository extends ServiceEntityRepository
         parent::__construct($registry, TesEgreso::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoEgreso = null;
+        $codigoTercero = null;
+        $egresoTipo = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoEgreso = $filtros['codigoEgreso'] ?? null;
+            $codigoTercero = $filtros['codigoTercero'] ?? null;
+            $egresoTipo = $filtros['egresoTipo'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(TesEgreso::class, 'e')
             ->select('e.codigoEgresoPk')
+            ->addSelect('et.nombre as tipo')
+            ->addSelect('t.nombreCorto as tercero')
             ->addSelect('e.numero')
             ->addSelect('e.fecha')
             ->addSelect('e.fechaPago')
@@ -48,30 +66,25 @@ class TesEgresoRepository extends ServiceEntityRepository
             ->addSelect('e.estadoAprobado')
             ->addSelect('e.estadoAutorizado')
             ->addSelect('e.estadoImpreso')
-            ->addSelect('et.nombre as egresoTipo')
-            ->addSelect('t.nombreCorto as tercero')
             ->leftJoin('e.egresoTipoRel', 'et')
             ->leftJoin('e.terceroRel', 't')
             ->where('e.codigoEgresoPk <> 0');
-
-        if ($session->get('TesEgreso_codigoEgresoPk')) {
-            $queryBuilder->andWhere("e.codigoEgresoPk = '{$session->get('TesEgreso_codigoEgresoPk')}'");
+        if ($codigoEgreso) {
+            $queryBuilder->andWhere("e.codigoEgresoPk = '{$codigoEgreso}'");
         }
-        if ($session->get('TesEgreso_codigoTerceroFk')) {
-            $queryBuilder->andWhere("e.codigoTerceroFk = '{$session->get('TesEgreso_codigoTerceroFk')}'");
+        if ($codigoTercero) {
+            $queryBuilder->andWhere("e.codigoTerceroFk = '{$codigoTercero}'");
         }
-        if ($session->get('TesEgreso_numero')) {
-            $queryBuilder->andWhere("e.numero = '{$session->get('TesEgreso_numero')}'");
+        if ($egresoTipo) {
+            $queryBuilder->andWhere("e.codigoEgresoTipoFk = '{$egresoTipo}'");
         }
-        if ($session->get('TesEgreso_fechaDesde') != null) {
-            $queryBuilder->andWhere("e.fecha >= '{$session->get('TesEgreso_fechaDesde')} 0000:00'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("e.fecha >= '{$fechaDesde} 00:00:00'");
         }
-
-        if ($session->get('TesEgreso_fechaHasta') != null) {
-            $queryBuilder->andWhere("e.fecha <= '{$session->get('TesEgreso_fechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("e.fecha <= '{$fechaHasta} 23:59:59'");
         }
-
-        switch ($session->get('TesEgreso_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("e.estadoAutorizado = 0");
                 break;
@@ -79,7 +92,7 @@ class TesEgresoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("e.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('TesEgreso_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("e.estadoAprobado = 0");
                 break;
@@ -87,7 +100,7 @@ class TesEgresoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("e.estadoAprobado = 1");
                 break;
         }
-        switch ($session->get('TesEgreso_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("e.estadoAnulado = 0");
                 break;
@@ -95,8 +108,9 @@ class TesEgresoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("e.estadoAnulado = 1");
                 break;
         }
-
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('e.codigoEgresoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function liquidar($id)

@@ -23,6 +23,7 @@ class ConceptoType extends AbstractType
             ->add('operacion',ChoiceType::class,['required' => true,'choices' => ['SUMA' => 1,'RESTA' => -1,'NEUTRO' => 0],'label' => 'Operacion:'])
             ->add('numeroDian',TextType::class,['required' => false,'label' => 'Numero Dian (Cert. Ing):'])
             ->add('adicionalTipo',ChoiceType::class,['required' => true,'choices' => ['BONIFICACION' => 'BON','DESCUENTO' => 'DES','COMISION' => 'COM','NO APLICA' => 'NNN'],'label' => 'Adicional tipo:'])
+            ->add('generaIngresoBasePrestacionVacacion',CheckboxType::class,['required' => false])
             ->add('generaIngresoBasePrestacion',CheckboxType::class,['required' => false])
             ->add('generaIngresoBaseCotizacion',CheckboxType::class,['required' => false])
             ->add('auxilioTransporte',CheckboxType::class,['required'=> false])

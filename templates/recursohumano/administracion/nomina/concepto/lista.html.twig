@@ -1,10 +1,121 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
-    <div class="table-responsive" style="padding:0px;">
-        {{ form_start(formBotonera) }}
-        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
-        {{ form_end(formBotonera) }}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label class=" col-sm-1 control-label">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoConceptoPk) }}
+                        </div>
+                        <label class=" col-sm-1 control-label">Nombre:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.nombreConcepto) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>NOMBRE</th>
+            <th title="Operacion">OP</th>
+            <th title="Porcentaje">%</th>
+            <th title="Adicional">ADI</th>
+            <th title="Tipo de adicional">TIPO</th>
+            <th title="Comision">COM</th>
+            <th title="Salud">SAL</th>
+            <th title="Pension">PEN</th>
+            <th title="Fondo de solidaridad pensional">FSP</th>
+            <th title="Auxilio de transporte">AUX</th>
+            <th title="Cesantias">CES</th>
+            <th title="Vacaciones">VAC</th>
+            <th title="Incapacidad">INC</th>
+            <th title="Incapacidad de entidad de salud">IES</th>
+            <th title="Recargo nocturno">RCN</th>
+            <th title="Genera ingreso base prestacion vacaciones">IBPV</th>
+            <th title="Genera ingreso base cotizacion">IBC</th>
+            <th title="Genera ingreso base prestacion">IBP</th>
+            <th></th>
+            <th></th>
+            <th><input type="checkbox" name="ChkSeleccionarTodos"
+                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arConcepto in arConceptos %}
+            <tr>
+                <td>{{ arConcepto.codigoConceptoPk }}</td>
+                <td>{{ arConcepto.nombre }}</td>
+                <td>{{ arConcepto.operacion }}</td>
+                <td>{{ arConcepto.porcentaje }}</td>
+                <td>{{ arConcepto.adicional ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.adicionalTipo }}</td>
+                <td>{{ arConcepto.comision ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.salud ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.pension ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.fondoSolidaridadPensional ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.auxilioTransporte ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.cesantia ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.vacacion ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.incapacidad ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.incapacidadEntidad ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.recargoNocturno ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.generaIngresoBasePrestacionVacacion ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.generaIngresoBaseCotizacion ? 'SI':'NO' }}</td>
+                <td>{{ arConcepto.generaIngresoBasePrestacion ? 'SI':'NO' }}</td>
+                <td style="text-align: center;">
+                    <a href="{{ path('recursohumano_administracion_nomina_concepto_nuevo',{'id': arConcepto.codigoConceptoPk }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
+                <td style="text-align: center;">
+                    <a href="{{ path('recursohumano_administracion_nomina_concepto_detalle',{'id' : arConcepto.codigoConceptoPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
+                                          value="{{ arConcepto.codigoConceptoPk }}"/></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arConceptos.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arConceptos) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_administracion_nomina_concepto_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    <br/><br/>
+    {{ form_end(form) }}
 {% endblock %}

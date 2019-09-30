@@ -32,6 +32,7 @@
                             <th>ID</th>
                             <th>TIPO</th>
                             <th>CUENTA</th>
+                            <th>NATURALEZA</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -42,6 +43,7 @@
                                 <td>{{ arConceptoCuenta.codigoConceptoCuentaPk }}</td>
                                 <td>{{ arConceptoCuenta.costoClaseRel.nombre }}</td>
                                 <td>{{ arConceptoCuenta.codigoCuentaFk }}</td>
+                                {% if arConceptoCuenta.naturaleza == 'D' %}<td>{{ 'DEBITO' }}</td>{% else %}<td>{{ 'CREDITO' }}</td>{% endif %}
                                 <td><a href="javascript:abrirVentana3('{{ path('recursohumano_administracion_nomina_concepto_detalle_nuevo', {'id' : arConceptoCuenta.codigoConceptoCuentaPk, 'codigoConcepto': arConceptoCuenta.codigoConceptoFk }) }}', 'AgregarNuevo', 600, 900)"><i
                                                 title="Editar el registro" class="fa fa-edit"
                                                 style="font-size: large;color: black;"></i></a></td>

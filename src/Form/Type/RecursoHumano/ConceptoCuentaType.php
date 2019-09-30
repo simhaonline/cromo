@@ -46,6 +46,7 @@ class ConceptoCuentaType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => true
             ])
+            ->add('naturaleza', ChoiceType::class, array('choices'   => array('DEBITO' => 'D', 'CREDITO' => 'C') ,'required' => true))
             ->add('codigoCuentaFk',TextType::class,['required' => true])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

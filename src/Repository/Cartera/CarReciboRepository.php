@@ -29,9 +29,34 @@ class CarReciboRepository extends ServiceEntityRepository
         parent::__construct($registry, CarRecibo::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCliente = null;
+        $numero = null;
+        $codigoRecibo = null;
+        $codigoReciboTipo = null;
+        $fechaPagoDesde = null;
+        $fechaPagoHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $codigoRecibo = $filtros['codigoRecibo'] ?? null;
+            $codigoReciboTipo = $filtros['codigoReciboTipo'] ?? null;
+            $codigoAsesor = $filtros['codigoAsesor'] ?? null;
+            $fechaPagoDesde = $filtros['fechaPagoDesde'] ?? null;
+            $fechaPagoHasta = $filtros['fechaPagoHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
             ->select('r.codigoReciboPk')
             ->leftJoin('r.reciboTipoRel', 'rt')
@@ -43,6 +68,7 @@ class CarReciboRepository extends ServiceEntityRepository
             ->addSelect('r.fecha')
             ->addSelect('r.fechaPago')
             ->addSelect('r.codigoCuentaFk')
+            ->addSelect('r.vrPago')
             ->addSelect('r.vrPagoTotal')
             ->addSelect('r.usuario')
             ->addSelect('r.estadoAutorizado')
@@ -54,29 +80,42 @@ class CarReciboRepository extends ServiceEntityRepository
             ->where('r.codigoReciboPk <> 0')
             ->orderBy('r.estadoAprobado', 'ASC')
             ->addOrderBy('r.fecha', 'DESC');
-        $fecha = new \DateTime('now');
-        if ($session->get('filtroFecha') == true) {
-            if ($session->get('filtroFechaDesde') != null) {
-                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("r.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroFechaHasta') != null) {
-                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("r.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
+
+        if ($fechaPagoDesde) {
+            $queryBuilder->andWhere("r.fecha >= '{$fechaPagoDesde} 00:00:00'");
         }
-        if ($session->get('filtroCarReciboNumero')) {
-            $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
+        if ($fechaPagoHasta) {
+            $queryBuilder->andWhere("r.fecha <= '{$fechaPagoHasta} 23:59:59'");
         }
-        if ($session->get('filtroCarCodigoCliente')) {
-            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+
+        if ($numero) {
+            $queryBuilder->andWhere("r.numero = '{$numero}'");
         }
-        if ($session->get('filtroCarReciboTipo')) {
-            $queryBuilder->andWhere("r.codigoReciboTipoFk = '" . $session->get('filtroCarReciboTipo') . "'");
+
+        if ($codigoAsesor) {
+            $queryBuilder->andWhere("r.codigoAsesorFk = '{$codigoAsesor}'");
         }
-        switch ($session->get('filtroCarReciboEstadoAprobado')) {
+
+        if ($codigoRecibo) {
+            $queryBuilder->andWhere("r.codigoReciboPk = '{$codigoRecibo}'");
+        }
+
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("r.codigoClienteFk = {$codigoCliente}");
+        }
+
+        if ($codigoReciboTipo) {
+            $queryBuilder->andWhere("r.codigoReciboTipoFk = {$codigoReciboTipo}");
+        }
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAprobado = 0");
                 break;
@@ -84,6 +123,16 @@ class CarReciboRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAprobado = 1");
                 break;
         }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("r.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("r.estadoAnulado = 1");
+                break;
+        }
+
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 

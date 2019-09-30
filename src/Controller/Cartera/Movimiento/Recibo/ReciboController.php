@@ -13,17 +13,25 @@ use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Financiero\FinTercero;
 use App\Entity\General\GenAsesor;
+use App\Entity\Transporte\TteGuiaTipo;
 use App\Form\Type\Cartera\ReciboType;
 use App\Formato\Cartera\Recibo;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ReciboController extends ControllerListenerGeneral
+class ReciboController extends AbstractController
 {
     protected $clase = CarRecibo::class;
     protected $claseNombre = "CarRecibo";
@@ -40,35 +48,68 @@ class ReciboController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/movimiento/recibo/recibo/lista", name="cartera_movimiento_recibo_recibo_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
+        $form = $this->createFormBuilder()
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoReciboPk', TextType::class, array('required' => false))
+            ->add('codigoReciboTipoFk', EntityType::class, [
+                'class' => TteGuiaTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('gt')
+                        ->orderBy('gt.codigoGuiaTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('codigoAsesorFk', EntityType::class, [
+                'class' => GenAsesor::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.codigoAsesorPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('fechaPagoDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaPagoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(CarRecibo::class)->lista($raw)->getQuery()->getResult(), "Recibos");
+            }
 
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
-            }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(CarRecibo::class)->lista()->getQuery()->getResult(), "Recibos");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(CarRecibo::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
             }
         }
+        $arResibos = $paginator->paginate($em->getRepository(CarRecibo::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('cartera/movimiento/recibo/recibo/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arResibos' => $arResibos,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -298,6 +339,38 @@ class ReciboController extends ControllerListenerGeneral
                 'arCuentasCobrar' => $arCuentasCobrar,
                 'form' => $form->createView()));
         }
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoCliente' => $form->get('codigoClienteFk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'codigoRecibo' => $form->get('codigoReciboPk')->getData(),
+            'fechaPagoDesde' => $form->get('fechaPagoDesde')->getData() ? $form->get('fechaPagoDesde')->getData()->format('Y-m-d') : null,
+            'fechaPagoHasta' => $form->get('fechaPagoHasta')->getData() ? $form->get('fechaPagoHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arReciboTipo = $form->get('codigoReciboTipoFk')->getData();
+        $arAsesor = $form->get('codigoAsesorFk')->getData();
+
+        if (is_object($arReciboTipo)) {
+            $filtro['codigoReciboTipo'] = $arReciboTipo->getCodigoIncidenteTipoPk();
+        } else {
+            $filtro['codigoReciboTipo'] = $arReciboTipo;
+        }
+
+        if (is_object($arAsesor)) {
+            $filtro['codigoAsesor'] = $arAsesor->getCodigoAsesorPk();
+        } else {
+            $filtro['codigoAsesor'] = $arAsesor;
+        }
+
+        return $filtro;
+
     }
 }
 

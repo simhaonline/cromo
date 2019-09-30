@@ -304,6 +304,8 @@ class EgresoController extends AbstractController
                         $arEgresoDetalle->setCuentaRel($em->getReference(FinCuenta::class, $arCuentaPagar->getCuentaPagarTipoRel()->getCodigoCuentaProveedorFk()));
                         $arEgresoDetalle->setTerceroRel($arCuentaPagar->getTerceroRel());
                         $arEgresoDetalle->setNaturaleza('D');
+                        $arEgresoDetalle->setCuenta($arCuentaPagar->getCuenta());
+                        $arEgresoDetalle->setBancoRel($arCuentaPagar->getBancoRel());
                         $em->persist($arEgresoDetalle);
                     }
                     $em->flush();
@@ -342,12 +344,12 @@ class EgresoController extends AbstractController
             foreach ($arrSeleccionados as $codigo) {
                 $arEgresoDetalle = $em->getRepository(TesEgresoDetalle::class)->find($codigo);
                 $arEgresoDetalles[] = $arEgresoDetalle;
-                $strValorTotal += round($arEgresoDetalle->getVrPagoAfectar());
+                $strValorTotal += round($arEgresoDetalle->getVrPago());
             }
         }
         //Inicio cuerpo
         foreach ($arEgresoDetalles AS $arEgresoDetalle) {
-            if ($arEgresoDetalle->getVrPagoAfectar() > 0) {
+            if ($arEgresoDetalle->getVrPago() > 0) {
                 $varTipoDocumento = $arEgresoDetalle->getCuentaPagarRel()->getTerceroRel()->getCodigoIdentificacionFk();
                 switch ($varTipoDocumento) {
                     //'01' - Cédula de ciudadanía
@@ -418,7 +420,7 @@ class EgresoController extends AbstractController
                 }
 
                 //Valor entero del pago
-                fputs($archivo, $this->RellenarNr($arEgresoDetalle->getVrPagoAfectar(), '0', 13));
+                fputs($archivo, $this->RellenarNr($arEgresoDetalle->getVrPago(), '0', 13));
 
                 //Valor decimal del pago
                 fputs($archivo, $this->RellenarNr('0', '0', 2));

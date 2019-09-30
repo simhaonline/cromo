@@ -70,9 +70,11 @@
                             <th>DOC</th>
                             <th>COD</th>
                             <th>TERCERO</th>
-                            <th>CTA</th>
+                            <th>CTA_C</th>
                             <th title="Naturaleza">N</th>
                             <th style="width: 12%;">PAGO</th>
+                            <th>CUENTA</th>
+                            <th>BANCO</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
@@ -122,6 +124,8 @@
                                     <td>{{ arEgresoDetalle.naturaleza }}</td>
                                     <td style="text-align: right">{{ arEgresoDetalle.vrPago | number_format(0, '.', ',') }}</td>
                                 {% endif %}
+                                <td>{{ arEgresoDetalle.cuenta }}</td>
+                                <td>{{ arEgresoDetalle.codigoBancoFk }}</td>
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arEgresoDetalle.codigoEgresoDetallePk }}"/>
                                 </td>

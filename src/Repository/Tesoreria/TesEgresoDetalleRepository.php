@@ -35,6 +35,8 @@ class TesEgresoDetalleRepository extends ServiceEntityRepository
             ->addSelect('ed.codigoCuentaFk')
             ->addSelect('ed.codigoTerceroFk')
             ->addSelect('ed.naturaleza')
+            ->addSelect('ed.cuenta')
+            ->addSelect('ed.codigoBancoFk')
             ->leftJoin('ed.cuentaPagarRel', 'cp')
             ->leftJoin('ed.terceroRel', 't')
             ->where("ed.codigoEgresoFk = '{$codigoEgreso}'");

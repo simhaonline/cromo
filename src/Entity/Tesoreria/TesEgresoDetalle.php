@@ -62,6 +62,16 @@ class TesEgresoDetalle
     private $naturaleza = 0;
 
     /**
+     * @ORM\Column(name="codigo_banco_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoBancoFk;
+
+    /**
+     * @ORM\Column(name="cuenta", type="string", length=80, nullable=true)
+     */
+    private $cuenta;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesEgreso" , inversedBy="egresoDetallesEgresoRel")
      * @ORM\JoinColumn(name="codigo_egreso_fk" , referencedColumnName="codigo_egreso_pk")
      */
@@ -84,6 +94,12 @@ class TesEgresoDetalle
      * @ORM\JoinColumn(name="codigo_tercero_fk", referencedColumnName="codigo_tercero_pk")
      */
     protected $terceroRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenBanco", inversedBy="egresosDetallesBancoRel")
+     * @ORM\JoinColumn(name="codigo_banco_fk",referencedColumnName="codigo_banco_pk")
+     */
+    protected $bancoRel;
 
     /**
      * @return mixed
@@ -291,6 +307,54 @@ class TesEgresoDetalle
     public function setTerceroRel($terceroRel): void
     {
         $this->terceroRel = $terceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBancoFk()
+    {
+        return $this->codigoBancoFk;
+    }
+
+    /**
+     * @param mixed $codigoBancoFk
+     */
+    public function setCodigoBancoFk($codigoBancoFk): void
+    {
+        $this->codigoBancoFk = $codigoBancoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
+    }
+
+    /**
+     * @param mixed $cuenta
+     */
+    public function setCuenta($cuenta): void
+    {
+        $this->cuenta = $cuenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBancoRel()
+    {
+        return $this->bancoRel;
+    }
+
+    /**
+     * @param mixed $bancoRel
+     */
+    public function setBancoRel($bancoRel): void
+    {
+        $this->bancoRel = $bancoRel;
     }
 
 

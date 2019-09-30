@@ -108,6 +108,7 @@ class TesEgresoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("e.estadoAnulado = 1");
                 break;
         }
+        $queryBuilder->addOrderBy('e.estadoAprobado', 'ASC');
         $queryBuilder->addOrderBy('e.codigoEgresoPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();

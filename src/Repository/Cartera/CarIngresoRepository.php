@@ -114,7 +114,7 @@ class CarIngresoRepository extends ServiceEntityRepository
                 break;
         }
         $queryBuilder->addOrderBy('i.estadoAprobado', 'ASC');
-        $queryBuilder->addOrderBy('i.codigoIngresoPk', 'DESC');
+        $queryBuilder->addOrderBy('i.numero', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }

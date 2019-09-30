@@ -5,18 +5,28 @@ namespace App\Controller\Crm\Movimiento\Control\Visita;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Crm\CrmContacto;
 use App\Entity\Crm\CrmVisita;
 use App\Entity\Crm\CrmVisitaReporte;
+use App\Entity\Crm\CrmVisitaTipo;
 use App\Form\Type\Crm\VisitaReporteType;
 use App\Form\Type\Crm\VisitaType;
 use App\Formato\Crm\Visita;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class VisitaController extends ControllerListenerGeneral
+class VisitaController extends AbstractController
 {
     protected $clase = CrmVisita::class;
     protected $claseNombre = "CrmVisita";
@@ -26,41 +36,68 @@ class VisitaController extends ControllerListenerGeneral
     protected $nombre = "Visita";
 
     /**
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/crm/movimiento/control/visita/lista", name="crm_movimiento_control_visita_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
-//                $datos = $this->getDatosLista();
+        $form = $this->createFormBuilder()
+            ->add('codigoVisitaTipoFk', EntityType::class, [
+                'class' => CrmVisitaTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('vt')
+                        ->orderBy('vt.codigoVisitaTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoContactoFk', EntityType::class, [
+                'class' => CrmContacto::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.codigoContactoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombreCorto',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoVisitaPk', TextType::class, array('required' => false))
+            ->add('txtCodigoCliente', TextType::class, ['required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(CrmVisita::class)->lista($raw), "Visitas");
             }
         }
-
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Visita");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository('App:Crm\CrmVisita')->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('crm_movimiento_control_visita_lista'));
-            }
-        }
-
+        $arVisitas = $paginator->paginate($em->getRepository(CrmVisita::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('crm/movimiento/control/visita/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arVisitas' => $arVisitas,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -165,5 +202,35 @@ class VisitaController extends ControllerListenerGeneral
         return $this->render('crm/movimiento/control/visita/reporte.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoVisita' => $form->get('codigoVisitaPk')->getData(),
+            'codigoCliente' => $form->get('txtCodigoCliente')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arVisitaTipo = $form->get('codigoVisitaTipoFk')->getData();
+        $arContacto = $form->get('codigoContactoFk')->getData();
+
+        if (is_object($arVisitaTipo)) {
+            $filtro['visitaTipo'] = $arVisitaTipo->getCodigoVisitaTipoPk();
+        } else {
+            $filtro['visitaTipo'] = $arVisitaTipo;
+        }
+        if (is_object($arContacto)) {
+            $filtro['contacto'] = $arContacto->getCodigoContactoPk();
+        } else {
+            $filtro['contacto'] = $arContacto;
+        }
+
+        return $filtro;
+
     }
 }

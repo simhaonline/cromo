@@ -7,12 +7,6 @@ use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-/**
- * @method CrmVisita|null find($id, $lockMode = null, $lockVersion = null)
- * @method CrmVisita|null findOneBy(array $criteria, array $orderBy = null)
- * @method CrmVisita[]    findAll()
- * @method CrmVisita[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class CrmVisitaRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
@@ -45,29 +39,112 @@ class CrmVisitaRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @param $arVisita CrmVisita
-     */
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoVisita = null;
+        $visitaTipo = null;
+        $contacto = null;
+        $codigoCliente = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoVisita = $filtros['codigoVisita'] ?? null;
+            $visitaTipo = $filtros['visitaTipo'] ?? null;
+            $contacto = $filtros['contacto'] ?? null;
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CrmVisita::class, 'v')
+            ->select('v.codigoVisitaPk')
+            ->addSelect('v.fecha')
+            ->addSelect('vt.nombre AS tipo')
+            ->addSelect('c.nombreCorto AS cliente')
+            ->addSelect('con.nombreCorto AS contacto')
+            ->addSelect('v.comentarios')
+            ->addSelect('v.estadoAutorizado')
+            ->addSelect('v.estadoAprobado')
+            ->addSelect('v.estadoAnulado')
+            ->leftJoin('v.visitaTipoRel', 'vt')
+            ->leftJoin('v.contactoRel', 'con')
+            ->leftJoin('v.clienteRel', 'c');
+        if ($codigoVisita) {
+            $queryBuilder->andWhere("v.codigoVisitaPk = '{$codigoVisita}'");
+        }
+        if ($contacto) {
+            $queryBuilder->andWhere("v.codigoContactoFk = '{$contacto}'");
+        }
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("v.codigoClienteFk = '{$codigoCliente}'");
+        }
+        if ($visitaTipo) {
+            $queryBuilder->andWhere("v.codigoVisitaTipoFk = '{$visitaTipo}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("v.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("v.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("v.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("v.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("v.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("v.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("v.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("v.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('v.codigoVisitaPk', 'ASC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+
+    }
+
     public function autorizar($arVisita)
     {
         $em = $this->getEntityManager();
-        if($arVisita->getEstadoAutorizado() == 0) {
+        if ($arVisita->getEstadoAutorizado() == 0) {
 
-                $arVisita->setEstadoAutorizado(1);
-                $em->persist($arVisita);
-                $em->flush();
+            $arVisita->setEstadoAutorizado(1);
+            $em->persist($arVisita);
+            $em->flush();
 
         } else {
             Mensajes::error('La visita ya esta autorizado');
         }
     }
 
-    /**
-     * @param $arVisita CrmVisita
-     */
-    public function desautorizar($arVisita){
+    public function desautorizar($arVisita)
+    {
         $em = $this->getEntityManager();
-        if($arVisita->getEstadoAutorizado() == 1) {
+        if ($arVisita->getEstadoAutorizado() == 1) {
 
             $arVisita->setEstadoAutorizado(0);
             $em->persist($arVisita);
@@ -78,17 +155,15 @@ class CrmVisitaRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @param $arVisita CrmVisita
-     */
-    public function aprobar($arVisita){
+    public function aprobar($arVisita)
+    {
         $em = $this->getEntityManager();
-        if($arVisita->getEstadoAutorizado() == 1 ) {
-            if($arVisita->getEstadoAprobado() == 0){
+        if ($arVisita->getEstadoAutorizado() == 1) {
+            if ($arVisita->getEstadoAprobado() == 0) {
                 $arVisita->setEstadoAprobado(1);
                 $em->persist($arVisita);
                 $em->flush();
-            }else{
+            } else {
                 Mensajes::error('La visita ya esta aprobada');
             }
 
@@ -97,14 +172,15 @@ class CrmVisitaRepository extends ServiceEntityRepository
         }
     }
 
-    public function anular($arVisita){
+    public function anular($arVisita)
+    {
         $em = $this->getEntityManager();
-        if($arVisita->getEstadoAutorizado() == 1 ) {
-            if($arVisita->getEstadoAnulado() == 0){
+        if ($arVisita->getEstadoAutorizado() == 1) {
+            if ($arVisita->getEstadoAnulado() == 0) {
                 $arVisita->setEstadoAnulado(1);
                 $em->persist($arVisita);
                 $em->flush();
-            }else{
+            } else {
                 Mensajes::error('La visita ya esta anulado');
             }
 
@@ -113,32 +189,4 @@ class CrmVisitaRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return CrmVisita[] Returns an array of CrmVisita objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?CrmVisita
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

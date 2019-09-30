@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('recursohumano_administracion_nomina_vacaciontipo_lista') }}">Volver</a>
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arVacacionTipo.codigoVacacionTipoPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arVacacionTipo.nombre|default("") }}</td>
+            <td class="titulo">CONSECUTIVO:</td>
+            <td class="numero">{{ arVacacionTipo.consecutivo | default("") }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CONCEPTO DISFRUTE:</td>
+            <td class="td-in-well">{{ arVacacionTipo.conceptoDisfrutadaRel.nombre | default('') }}</td>
+            <td class="titulo">CONCEPTO DINERO:</td>
+            <td class="td-in-well">{{ arVacacionTipo.conceptoDineroRel.nombre|default("") }}</td>
+            <td class="titulo"></td>
+            <td class="numero"></td>
+        </tr>
+        </tbody>
+    </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Cuentas </a></li>
+    </ul>
+    <br/>
+    <br/>
+    {{ form_end(form) }}
+{% endblock %}

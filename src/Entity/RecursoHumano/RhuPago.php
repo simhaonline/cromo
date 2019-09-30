@@ -144,6 +144,11 @@ class RhuPago
     private $vrIngresoBasePrestacion = 0;
 
     /**
+     * @ORM\Column(name="vr_ingreso_base_prestacion_vacacion", options={"default" : 0}, type="float", nullable=true)
+     */
+    private $vrIngresoBasePrestacionVacacion = 0;
+
+    /**
      * @ORM\Column(name="dias_ausentismo", type="integer", nullable=true, options={"default":0})
      */
     private $diasAusentismo = 0;
@@ -986,6 +991,22 @@ class RhuPago
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoBasePrestacionVacacion()
+    {
+        return $this->vrIngresoBasePrestacionVacacion;
+    }
+
+    /**
+     * @param mixed $vrIngresoBasePrestacionVacacion
+     */
+    public function setVrIngresoBasePrestacionVacacion($vrIngresoBasePrestacionVacacion): void
+    {
+        $this->vrIngresoBasePrestacionVacacion = $vrIngresoBasePrestacionVacacion;
     }
 
 

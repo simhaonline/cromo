@@ -113,6 +113,11 @@ class RhuPagoDetalle
     private $vrIngresoBasePrestacion = 0;
 
     /**
+     * @ORM\Column(name="vr_ingreso_base_prestacion_vacacion", type="float")
+     */
+    private $vrIngresoBasePrestacionVacacion = 0;
+
+    /**
      * @ORM\Column(name="vr_ingreso_base_cotizacion_adicional", type="float", nullable=true, options={"default":0})
      */
     private $vrIngresoBaseCotizacionAdicional = 0;
@@ -652,6 +657,22 @@ class RhuPagoDetalle
     public function setEmbargoRel($embargoRel): void
     {
         $this->embargoRel = $embargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoBasePrestacionVacacion()
+    {
+        return $this->vrIngresoBasePrestacionVacacion;
+    }
+
+    /**
+     * @param mixed $vrIngresoBasePrestacionVacacion
+     */
+    public function setVrIngresoBasePrestacionVacacion($vrIngresoBasePrestacionVacacion): void
+    {
+        $this->vrIngresoBasePrestacionVacacion = $vrIngresoBasePrestacionVacacion;
     }
 
 

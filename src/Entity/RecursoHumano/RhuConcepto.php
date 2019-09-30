@@ -44,6 +44,11 @@ class RhuConcepto
     private $generaIngresoBaseCotizacion = false;
 
     /**
+     * @ORM\Column(name="genera_ingreso_base_prestacion_vacacion" ,options={"default":false} ,type="boolean", nullable=true)
+     */
+    private $generaIngresoBasePrestacionVacacion = false;
+
+    /**
      * @ORM\Column(name="operacion", type="integer",options={"default":0} , nullable=true)
      */
     private $operacion = 0;
@@ -810,6 +815,22 @@ class RhuConcepto
     public function setVacacionesTiposConceptoDineroRel($vacacionesTiposConceptoDineroRel): void
     {
         $this->vacacionesTiposConceptoDineroRel = $vacacionesTiposConceptoDineroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraIngresoBasePrestacionVacacion()
+    {
+        return $this->generaIngresoBasePrestacionVacacion;
+    }
+
+    /**
+     * @param mixed $generaIngresoBasePrestacionVacacion
+     */
+    public function setGeneraIngresoBasePrestacionVacacion($generaIngresoBasePrestacionVacacion): void
+    {
+        $this->generaIngresoBasePrestacionVacacion = $generaIngresoBasePrestacionVacacion;
     }
 
 

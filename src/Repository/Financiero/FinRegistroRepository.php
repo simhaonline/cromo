@@ -277,8 +277,7 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->leftJoin('r.comprobanteRel', 'c')
             ->where("r.codigoModeloFk ='" . $clase . "'")
             ->andWhere('r.codigoDocumento = ' . $id)
-            ->orderBy('r.numero', 'DESC')
-            ->addOrderBy('r.codigoComprobanteFk', 'DESC');
+            ->orderBy('r.codigoRegistroPk', 'ASC');
         return $queryBuilder;
     }
 

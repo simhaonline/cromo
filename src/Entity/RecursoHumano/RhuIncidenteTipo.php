@@ -19,7 +19,6 @@ class RhuIncidenteTipo
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_incidente_tipo_pk", type="string", length=10)
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoIncidenteTipoPk;
 

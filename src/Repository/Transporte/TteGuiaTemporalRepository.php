@@ -53,6 +53,7 @@ class TteGuiaTemporalRepository extends ServiceEntityRepository
             ->addSelect('g.vrFlete')
             ->addSelect('g.vrManejo')
             ->addSelect('p.nombre as productoNombre')
+            ->addSelect('g.tipoLiquidacion')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadOrigenRel', 'co')
             ->leftJoin('g.ciudadDestinoRel', 'cd')

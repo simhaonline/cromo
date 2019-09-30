@@ -250,7 +250,32 @@ class ImportarGuiaExcelController extends Controller
                         $arrErrores[] = $respuesta . "existe un error con el 'valor declara' ingresado";
                         $error = true;
                     }
+
+
+
+                    // Valor recaudo
+                    $cell = $worksheet->getCellByColumnAndRow(12, $row);
+                    if (is_numeric($cell->getValue())) {
+                        $arGuiaTemporal->setVrRecaudo($cell->getValue());
+                    } else {
+                        $arrErrores[] = $respuesta . "existe un error con el 'valor recaudo' ingresado";
+                        $error = true;
+                    }
+
+                    //Comentario
+                    $cell = $worksheet->getCellByColumnAndRow(13, $row);
+                    $arGuiaTemporal->setComentario(substr($cell->getValue(), 0, 2000));
+
                     $tipoLiquidacion = $em->getRepository(TteCondicion::class)->tipoLiquidacion($arCondicion);
+                    //Si el archivo de excel tiene tipo de liquidacion se prima este
+                    $cell = $worksheet->getCellByColumnAndRow(14, $row);
+                    $tipoLiquidacionExcel = substr($cell->getValue(), 0, 1);
+                    if($tipoLiquidacionExcel) {
+                        $tipoLiquidacionExcel = strtoupper($tipoLiquidacionExcel);
+                        if($tipoLiquidacionExcel === 'K' || $tipoLiquidacionExcel === 'U' || $tipoLiquidacionExcel === 'A') {
+                            $tipoLiquidacion = $tipoLiquidacionExcel;
+                        }
+                    }
 
                     if ($error == false) {
                         $arrLiquidacion = $em->getRepository(TteGuia::class)->liquidar(
@@ -270,18 +295,6 @@ class ImportarGuiaExcelController extends Controller
                         $arGuiaTemporal->setPesoFacturado($arrLiquidacion['pesoFacturado']);
                         $arGuiaTemporal->setTipoLiquidacion($tipoLiquidacion);
                     }
-                    // Valor recaudo
-                    $cell = $worksheet->getCellByColumnAndRow(12, $row);
-                    if (is_numeric($cell->getValue())) {
-                        $arGuiaTemporal->setVrRecaudo($cell->getValue());
-                    } else {
-                        $arrErrores[] = $respuesta . "existe un error con el 'valor recaudo' ingresado";
-                        $error = true;
-                    }
-
-                    //Comentario
-                    $cell = $worksheet->getCellByColumnAndRow(13, $row);
-                    $arGuiaTemporal->setComentario(substr($cell->getValue(), 0, 2000));
 
                     if (!$error) {
                         $em->persist($arGuiaTemporal);

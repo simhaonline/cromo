@@ -60,6 +60,7 @@
             <th scope="col" class="th">DECLARADO</th>
             <th scope="col" class="th">FLETE</th>
             <th scope="col" class="th">MANEJO</th>
+            <th scope="col" class="th">T</th>
             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
@@ -82,6 +83,7 @@
                 <td class="numero">{{ arGuia.vrDeclara | number_format(0,'.',',') }}</td>
                 <td class="numero">{{ arGuia.vrFlete | number_format(0,'.',',') }}</td>
                 <td class="numero">{{ arGuia.vrManejo | number_format(0,'.',',') }}</td>
+                <td>{{ arGuia.tipoLiquidacion }}</td>
                 <td align="center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arGuia.codigoGuiaPk }}">
                 </td>
             </tr>

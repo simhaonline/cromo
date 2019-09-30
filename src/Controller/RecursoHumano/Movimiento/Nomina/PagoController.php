@@ -8,6 +8,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuPagoTipo;
+use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurProgramacion;
 use App\Form\Type\RecursoHumano\PagoType;
@@ -67,6 +68,7 @@ class PagoController extends AbstractController
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
         $raw = [
@@ -79,6 +81,11 @@ class PagoController extends AbstractController
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
                 General::get()->setExportar($em->getRepository(RhuPago::class)->lista($raw), "Pagos");
+            }
+            if ($form->get('btnContabilizar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuPago::class)->contabilizar($arrSeleccionados);
             }
         }
         $arPagos = $paginator->paginate($em->getRepository(RhuPago::class)->lista($raw), $request->query->getInt('page', 1), 50);

@@ -106,31 +106,6 @@ class RhuVacacionRepository extends ServiceEntityRepository
                         $numero = $arVacacion->getNumero();
                     }
                     $validar = "";
-                    //Afectar creditos
-                    $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(array('codigoVacacionFk' => $arVacacion->getCodigoVacacionPk()));
-                    foreach ($arVacacionAdicionales as $arVacacionAdicional) {
-                        if ($arVacacionAdicional->getCodigoCreditoFk() != null) {
-                            $arCredito = $em->getRepository(RhuCredito::class)->find($arVacacionAdicional->getCodigoCreditoFk());
-                            $arCredito->setVrSaldo($arCredito->getVrSaldo() - $arVacacionAdicional->getVrDeduccion());
-                            $arCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual() + 1);
-                            $arCredito->setVrAbonos($arCredito->getVrAbonos() + $arVacacionAdicional->getVrDeduccion());
-
-                            $arPagoCredito = new RhuCreditoPago();
-                            $arPagoCredito->setCreditoRel($arCredito);
-                            $arPagoCredito->setfechaPago(new \ DateTime("now"));
-                            $arCreditoTipoPago = $em->getRepository(RhuCreditoPagoTipo::class)->find('VAC');
-                            $arPagoCredito->setCreditoPagoTipoRel($arCreditoTipoPago);
-                            $arPagoCredito->setVrPago($arVacacionAdicional->getVrDeduccion());
-                            $arPagoCredito->setVrSaldo($arCredito->getVrSaldo());
-                            $arPagoCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual());
-                            $em->persist($arPagoCredito);
-                            if ($arCredito->getVrSaldo() <= 0) {
-                                $arCredito->setEstadoPagado(1);
-                            }
-                            $em->persist($arCredito);
-                        }
-                    }
-
                     $arPagoTipo = $em->getRepository(RhuPagoTipo::class)->find('VAC');
                     $arPago = new RhuPago();
                     $arPago->setPagoTipoRel($arPagoTipo);
@@ -274,6 +249,28 @@ class RhuVacacionRepository extends ServiceEntityRepository
                         }
                         $em->persist($arPagoDetalle);
                         $neto += $pagoOperado;
+                        //Generar pago credito
+                        if ($arVacacionAdicional->getCodigoCreditoFk() != null) {
+                            $arCredito = $em->getRepository(RhuCredito::class)->find($arVacacionAdicional->getCodigoCreditoFk());
+                            $arCredito->setVrSaldo($arCredito->getVrSaldo() - $arVacacionAdicional->getVrDeduccion());
+                            $arCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual() + 1);
+                            $arCredito->setVrAbonos($arCredito->getVrAbonos() + $arVacacionAdicional->getVrDeduccion());
+
+                            $arPagoCredito = new RhuCreditoPago();
+                            $arPagoCredito->setCreditoRel($arCredito);
+                            $arPagoCredito->setfechaPago(new \ DateTime("now"));
+                            $arCreditoTipoPago = $em->getRepository(RhuCreditoPagoTipo::class)->find('VAC');
+                            $arPagoCredito->setCreditoPagoTipoRel($arCreditoTipoPago);
+                            $arPagoCredito->setVrPago($arVacacionAdicional->getVrDeduccion());
+                            $arPagoCredito->setVrSaldo($arCredito->getVrSaldo());
+                            $arPagoCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual());
+                            $em->persist($arPagoCredito);
+                            if ($arCredito->getVrSaldo() <= 0) {
+                                $arCredito->setEstadoPagado(1);
+                            }
+                            $em->persist($arCredito);
+                        }
+
                         //Validar si algun adicional corresponde a un embargo para generar el pago en RhuEmbargoPago.
                         if ($arVacacionAdicional->getCodigoEmbargoFk() != "") {
                             $arEmbargo = $arVacacionAdicional->getEmbargoRel();
@@ -287,6 +284,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                             $em->persist($arEmbargoPago);
                             $em->persist($arEmbargo);
                         }
+
                     }
                     $arPago->setVrNeto($neto);
 
@@ -1276,8 +1274,8 @@ class RhuVacacionRepository extends ServiceEntityRepository
             $arCredito = $em->getRepository(RhuCredito::class)->find($arrCredito['codigoCreditoFk']);
             if ($arCredito->getVrSaldo() < $arrCredito['total']) {
                 Mensajes::error("El credito " . $arrCredito['codigoCreditoFk'] . " tiene un saldo de " . $arCredito->getVrSaldo() . " y la deduccion de " . $arrCredito['total'] . " lo supera");
-                break;
                 return false;
+                break;
             }
         }
         return true;

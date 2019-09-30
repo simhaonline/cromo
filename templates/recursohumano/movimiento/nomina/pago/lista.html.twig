@@ -76,6 +76,7 @@
             <th title="Anulado">ANU</th>
             <th title="Contabilizado">CON</th>
             <th></th>
+            <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
         </tr>
         </thead>
         <tbody>
@@ -102,6 +103,9 @@
                         </i>
                     </a>
                 </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arPago.codigoPagoPk }}" />
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -119,11 +123,14 @@
         {{ form_widget(form.limiteRegistros) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnContabilizar) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
         {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('recursohumano_movimiento_nomina_liquidacion_nuevo', {'id': 0}) }}">Nuevo</a>
+           href="#">Nuevo</a>
     </div>
     <br/><br/>
     {{ form_end(form) }}

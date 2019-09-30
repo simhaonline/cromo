@@ -49,6 +49,11 @@ class RhuPagoTipo
     private $generaTesoreria = false;
 
     /**
+     * @ORM\Column(name="codigo_comprobante_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoComprobanteFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesCuentaPagarTipo", inversedBy="pagosTipoCuentaPagarTipoRel")
      * @ORM\JoinColumn(name="codigo_cuenta_pagar_tipo_fk",referencedColumnName="codigo_cuenta_pagar_tipo_pk")
      */
@@ -222,6 +227,22 @@ class RhuPagoTipo
     public function setCodigoCuentaFk($codigoCuentaFk): void
     {
         $this->codigoCuentaFk = $codigoCuentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoComprobanteFk()
+    {
+        return $this->codigoComprobanteFk;
+    }
+
+    /**
+     * @param mixed $codigoComprobanteFk
+     */
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
+    {
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
     }
 
 

@@ -195,6 +195,16 @@ class RhuConcepto
     protected $conceptosLicenciasTiposRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuVacacionTipo", mappedBy="conceptoDisfrutadaRel")
+     */
+    protected $vacacionesTiposConceptoDisfrutadaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuVacacionTipo", mappedBy="conceptoDineroRel")
+     */
+    protected $vacacionesTiposConceptoDineroRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -752,6 +762,54 @@ class RhuConcepto
     public function setConceptosCuentasConceptoRel($conceptosCuentasConceptoRel): void
     {
         $this->conceptosCuentasConceptoRel = $conceptosCuentasConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptosLicenciasTiposRel()
+    {
+        return $this->conceptosLicenciasTiposRel;
+    }
+
+    /**
+     * @param mixed $conceptosLicenciasTiposRel
+     */
+    public function setConceptosLicenciasTiposRel($conceptosLicenciasTiposRel): void
+    {
+        $this->conceptosLicenciasTiposRel = $conceptosLicenciasTiposRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesTiposConceptoDisfrutadaRel()
+    {
+        return $this->vacacionesTiposConceptoDisfrutadaRel;
+    }
+
+    /**
+     * @param mixed $vacacionesTiposConceptoDisfrutadaRel
+     */
+    public function setVacacionesTiposConceptoDisfrutadaRel($vacacionesTiposConceptoDisfrutadaRel): void
+    {
+        $this->vacacionesTiposConceptoDisfrutadaRel = $vacacionesTiposConceptoDisfrutadaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesTiposConceptoDineroRel()
+    {
+        return $this->vacacionesTiposConceptoDineroRel;
+    }
+
+    /**
+     * @param mixed $vacacionesTiposConceptoDineroRel
+     */
+    public function setVacacionesTiposConceptoDineroRel($vacacionesTiposConceptoDineroRel): void
+    {
+        $this->vacacionesTiposConceptoDineroRel = $vacacionesTiposConceptoDineroRel;
     }
 
 

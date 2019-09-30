@@ -2,13 +2,19 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Entity\Financiero\FinCentroCosto;
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuConcepto;
+use App\Entity\RecursoHumano\RhuConceptoCuenta;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuEntidad;
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuLicencia;
 use App\Entity\RecursoHumano\RhuPago;
@@ -19,6 +25,7 @@ use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Entity\Turno\TurProgramacionRespaldo;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -655,22 +662,22 @@ class RhuPagoRepository extends ServiceEntityRepository
     public function liquidar($arPago)
     {
         $em = $this->getEntityManager();
-//        $douSalario = 0;
-//        $douAuxilioTransporte = 0;
-//        $douPension = 0;
-//        $douEps = 0;
         $douDeducciones = 0;
         $douDevengado = 0;
-//        $douIngresoBaseCotizacion = 0;
-//        $douIngresoBasePrestacion = 0;
         $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->findBy(array('codigoPagoFk' => $arPago->getCodigoPagoPk()));
         foreach ($arPagoDetalles as $arPagoDetalle) {
             if ($arPagoDetalle->getOperacion() == 1) {
-                $douDevengado = $douDevengado + $arPagoDetalle->getVrPago();
+                $douDevengado += $arPagoDetalle->getVrPago();
             }
+            if ($arPagoDetalle->getOperacion() == -1) {
+                $douDeducciones += $arPagoDetalle->getVrPago();
+            }
+
         }
         $douNeto = $douDevengado - $douDeducciones;
         $arPago->setVrNeto($douNeto);
+        $arPago->setVrDevengado($douDevengado);
+        $arPago->setVrDeduccion($douDeducciones);
         $em->persist($arPago);
         return $douNeto;
     }
@@ -1057,4 +1064,387 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
         $em->flush();
     }
+
+    public function contabilizar($arr): bool
+    {
+        /**
+         * @var $arVacacion RhuVacacion
+         */
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $this->contabilizarCrearTercero($arr);
+            $error = "";
+            foreach ($arr AS $codigo) {
+                /** @var $arPago RhuPago */
+                $arPago = $em->getRepository(RhuPago::class)->find($codigo);
+                if($arPago->getEstadoAprobado() == 1 && $arPago->getEstadoContabilizado() == 0) {
+                    $arContrato = $em->getRepository(RhuContrato::class)->find($arPago->getCodigoContratoFk());
+                    $arCentroCosto = $arContrato->getCentroCostoRel();
+                    $arTercero = $em->getRepository(RhuEmpleado::class)->terceroFinanciero($arPago->getCodigoEmpleadoFk());
+                    if($arPago->getPagoTipoRel()->getCodigoComprobanteFk()) {
+                        $arComprobante = $em->getRepository(FinComprobante::class)->find($arPago->getPagoTipoRel()->getCodigoComprobanteFk());
+                        if($arComprobante) {
+                            //$participacionTotal = 0;
+                            $datos = $this->contabilizarGenerarDistribucion($arContrato->getCodigoCostoTipoFk(), $arCentroCosto, $arPago);
+                            if($datos['error'] == "") {
+                                $arContratoDistribucion = $datos['arContratoDistribucion'];
+                                $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->findBy(array('codigoPagoFk' => $codigo));
+                                foreach ($arPagoDetalles as $arPagoDetalle) {
+                                    if ($arPagoDetalle->getVrPago() > 0) {
+                                        $arConceptoCuenta = $em->getRepository(RhuConceptoCuenta::class)->findOneBy(array('codigoConceptoFk' => $arPagoDetalle->getCodigoConceptoFk(), 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()));
+                                        if ($arConceptoCuenta) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arConceptoCuenta->getCodigoCuentaFk());
+                                            if ($arCuenta) {
+                                                if ($arContrato->getCodigoCostoTipoFk() == 'DIS' || $arContrato->getCodigoCostoTipoFk() == 'OPE') {
+                                                    /*$arTerceroDetalle = $arTercero;
+                                                    if ($arCuenta->getCodigoTerceroFijoFk()) {
+                                                        $arTerceroDetalle = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->find($arCuenta->getCodigoTerceroFijoFk());
+                                                    }
+                                                    foreach ($arEmpleadoDistribucion as $arEmpleadoDistribucionFijo) {
+                                                        $participacionDetalle = $arEmpleadoDistribucionFijo['participacion'];
+                                                        $valor = ($arPagoDetalle->getVrPago() / 100) * $participacionDetalle;
+
+                                                        $arRegistro = new \Brasa\ContabilidadBundle\Entity\CtbRegistro();
+                                                        $arCentroCosto = null;
+                                                        if ($arEmpleadoDistribucionFijo['codigoCentroCostoFk']) {
+                                                            $arCentroCosto = $em->getRepository('BrasaContabilidadBundle:CtbCentroCosto')->find($arEmpleadoDistribucionFijo['codigoCentroCostoFk']);
+                                                        }
+                                                        $arSucursal = null;
+                                                        if ($arEmpleadoDistribucionFijo['codigoSucursalFk']) {
+                                                            $arSucursal = $em->getRepository('BrasaContabilidadBundle:CtbSucursal')->find($arEmpleadoDistribucionFijo['codigoSucursalFk']);
+                                                        }
+                                                        $arArea = null;
+                                                        if ($arEmpleadoDistribucionFijo['codigoAreaFk']) {
+                                                            $arArea = $em->getRepository('BrasaContabilidadBundle:CtbArea')->find($arEmpleadoDistribucionFijo['codigoAreaFk']);
+                                                        }
+                                                        $arProyecto = null;
+                                                        if ($arEmpleadoDistribucionFijo['codigoProyectoFk']) {
+                                                            $arProyecto = $em->getRepository('BrasaContabilidadBundle:CtbProyecto')->find($arEmpleadoDistribucionFijo['codigoProyectoFk']);
+                                                        }
+
+                                                        //$arRegistro->setComprobanteRel($arComprobanteContable);
+                                                        if ($arConfiguracionNomina->getContabilizarPagoComprobantePagoTipo()) {
+                                                            $arComprobantePagoTipo = $em->getRepository('BrasaContabilidadBundle:CtbComprobante')->find($arPago->getPagoTipoRel()->getCodigoComprobante());
+                                                            if ($arComprobantePagoTipo) {
+                                                                $arRegistro->setComprobanteRel($arComprobantePagoTipo);
+                                                            } else {
+                                                                $respuesta = "La cofiguracion esta para contabilizar con el comprobante del pago tipo y este no existe en comprobantes ";
+                                                            }
+                                                        } else {
+                                                            $arRegistro->setComprobanteRel($arComprobanteContable);
+                                                        }
+
+                                                        if ($arCuenta->getExigeCentroCostos()) {
+                                                            $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                        }
+                                                        if ($arCuenta->getExigeSucursal()) {
+                                                            $arRegistro->setSucursalRel($arSucursal);
+                                                        }
+                                                        if ($arCuenta->getExigeArea()) {
+                                                            $arRegistro->setAreaRel($arArea);
+                                                        }
+                                                        if ($arCuenta->getExigeProyecto()) {
+                                                            $arRegistro->setProyectoRel($arProyecto);
+                                                        }
+                                                        $arRegistro->setCuentaRel($arCuenta);
+                                                        $arRegistro->setTerceroRel($arTerceroDetalle);
+                                                        // Cuando el detalle es de salud y pension se lleva al nit de la entidad
+                                                        if ($arCuenta->getExigeNit() == 1) {
+                                                            if ($arPagoDetalle->getPagoConceptoRel()->getConceptoSalud() || $arPagoDetalle->getPagoConceptoRel()->getConceptoIncapacidadEntidad()) {
+                                                                $arTerceroSalud = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPago->getEntidadSaludRel()->getNit()));
+                                                                if ($arTerceroSalud) {
+                                                                    $arRegistro->setTerceroRel($arTerceroSalud);
+                                                                } else {
+                                                                    $respuesta = "La entidad de salud " . $arPago->getEntidadSaludRel()->getNit() . "-" . $arPago->getEntidadSaludRel()->getNombre() . " del pago " . $arPago->getNumero() . " no existe en contabilidad";
+                                                                    break;
+                                                                }
+                                                            }
+                                                            if ($arPagoDetalle->getPagoConceptoRel()->getConceptoPension() || $arPagoDetalle->getPagoConceptoRel()->getConceptoFondoSolidaridadPensional()) {
+                                                                $arTerceroPension = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPago->getEntidadPensionRel()->getNit()));
+                                                                if ($arTerceroPension) {
+                                                                    $arRegistro->setTerceroRel($arTerceroPension);
+                                                                } else {
+                                                                    $respuesta = "La entidad de pension " . $arPago->getEntidadPensionRel()->getNombre() . " del pago " . $arPago->getNumero() . " no existe en contabilidad";
+                                                                    break;
+                                                                }
+                                                            }
+                                                            if ($arPagoDetalle->getPagoConceptoRel()->getConceptoLicenciaEntidad()) {
+                                                                $arTerceroSaludLicencia = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPago->getEntidadSaludRel()->getNit()));
+                                                                if ($arTerceroSaludLicencia) {
+                                                                    $arRegistro->setTerceroRel($arTerceroSaludLicencia);
+                                                                } else {
+                                                                    $respuesta = "La entidad de salud " . $arPago->getEntidadSaludRel()->getNit() . "-" . $arPago->getEntidadSaludRel()->getNombre() . " del pago " . $arPago->getNumero() . " no existe en contabilidad";
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                        if ($arCuenta->getCodigoTerceroFijoFk()) {
+                                                            $arTerceroDetalle = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->find($arCuenta->getCodigoTerceroFijoFk());
+                                                            $arRegistro->setTerceroRel($arTerceroDetalle);
+                                                        }
+                                                        //Para contabilizar al nit de la entidad del credito
+                                                        if ($arPagoDetalle->getCodigoCreditoFk() != null) {
+                                                            if ($arConfiguracionNomina->getContabilizarCreditoNitEntidad()) {
+                                                                if ($arPagoDetalle->getCreditoRel()->getCreditoTipoRel()->getNumeroIdentificacionTerceroContabilidad() != "") {
+                                                                    $arTerceroCredito = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPagoDetalle->getCreditoRel()->getCreditoTipoRel()->getNumeroIdentificacionTerceroContabilidad()));
+                                                                    $arRegistro->setTerceroRel($arTerceroCredito);
+                                                                }
+                                                            }
+                                                        }
+                                                        //Para contabilizar al nit fijo el concepto
+                                                        if ($arPagoDetalle->getPagoConceptoRel()->getNumeroIdentificacionTerceroContabilidad() != null) {
+                                                            $arTerceroConcepto = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPagoDetalle->getPagoConceptoRel()->getNumeroIdentificacionTerceroContabilidad()));
+                                                            $arRegistro->setTerceroRel($arTerceroConcepto);
+                                                        }
+
+                                                        //Para contabilizar al nit del cliente
+                                                        if ($arPagoDetalle->getPagoConceptoRel()->getContabilizarNitCliente()) {
+                                                            if ($arConfiguracionNomina->getContabilizarConceptoPagoNitCliente()) {//Validar si tambien el cliente maneja la configuracion para contabilizar el centro de costo del cliente
+                                                                if ($arPago->getEmpleadoRel()->getEmpleadoTipoRel()->getOperativo()) {
+                                                                    if ($arPago->getContratoRel()->getCentroCostoRel()->getClienteRel()) {
+                                                                        $arTerceroCliente = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPago->getCentroCostoRel()->getClienteRel()->getNit()));
+                                                                        $arRegistro->setTerceroRel($arTerceroCliente);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        //fin de validación para contablizar al nit del cliente
+
+                                                        if ($arCuenta->getExigeBase()) {
+                                                            $arRegistro->setBase($arPagoDetalle->getVrPago());
+                                                            if ($arPagoDetalle->getPagoConceptoRel()->getConceptoRetencion() || $arPagoDetalle->getPagoConceptoRel()->getConceptoFondoSolidaridadPensional()) {
+                                                                $ibp = $em->getRepository("BrasaRecursoHumanoBundle:RhuPagoDetalle")->ibp($arPagoDetalle->getPagoRel()->getFechaDesde()->format("Y-m-d"), $arPagoDetalle->getPagoRel()->getFechaHasta()->format("Y-m-d"), $arPagoDetalle->getPagoRel()->getCodigoContratoFk());
+                                                                $arRegistro->setBase($ibp);
+                                                            }
+                                                        }
+                                                        $arRegistro->setNumero($arPago->getNumero());
+                                                        $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                                        $arRegistro->setFecha($arPago->getFechaHasta());
+                                                        if ($arPagoConceptoCuenta->getTipoCuenta() == 1 && $arPagoDetalle->getVrPagoOperado() >= 0) {
+                                                            $arRegistro->setDebito($valor);
+                                                            $arRegistro->setNaturaleza(1);
+                                                        } else {
+                                                            $arRegistro->setCredito($valor);
+                                                            $arRegistro->setNaturaleza(2);
+                                                        }
+                                                        $arRegistro->setDescripcionContable($arPagoDetalle->getPagoConceptoRel()->getNombre());
+                                                        $em->persist($arRegistro);
+                                                    }
+                                                    */
+                                                } else {
+                                                    $arRegistro = new FinRegistro();
+                                                    $arRegistro->setComprobanteRel($arComprobante);
+                                                    $arRegistro->setCuentaRel($arCuenta);
+                                                    $arRegistro->setTerceroRel($arTercero);
+                                                    // Cuando el detalle es de salud y pension se lleva al nit de la entidad
+                                                    /*if ($arCuenta->getExigeNit() == 1) {
+                                                        if ($arPagoDetalle->getSalud() || $arPagoDetalle->getPagoConceptoRel()->getConceptoIncapacidadEntidad()) {
+                                                            $arTerceroSalud = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPago->getEntidadSaludRel()->getNit()));
+                                                            if ($arTerceroSalud) {
+                                                                $arRegistro->setTerceroRel($arTerceroSalud);
+                                                            } else {
+                                                                $respuesta = "La entidad de salud " . $arPago->getEntidadSaludRel()->getNit() . "-" . $arPago->getEntidadSaludRel()->getNombre() . " del pago " . $arPago->getNumero() . " no existe en contabilidad";
+                                                                break;
+                                                            }
+                                                        }
+                                                        if ($arPagoDetalle->getPension() || $arPagoDetalle->getPagoConceptoRel()->getConceptoFondoSolidaridadPensional()) {
+                                                            $arTerceroPension = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPago->getEntidadPensionRel()->getNit()));
+                                                            if ($arTerceroPension) {
+                                                                $arRegistro->setTerceroRel($arTerceroPension);
+                                                            } else {
+                                                                $respuesta = "La entidad de pension " . $arPago->getEntidadPensionRel()->getNombre() . " del pago " . $arPago->getNumero() . " no existe en contabilidad";
+                                                                break;
+                                                            }
+                                                        }
+                                                        if ($arPagoDetalle->getPagoConceptoRel()->getConceptoLicenciaEntidad()) {
+                                                            $arTerceroLicenciaEntidad = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPago->getEntidadSaludRel()->getNit()));
+                                                            if ($arTerceroLicenciaEntidad) {
+                                                                $arRegistro->setTerceroRel($arTerceroLicenciaEntidad);
+                                                            } else {
+                                                                $respuesta = "La entidad de salud " . $arPago->getEntidadSaludRel()->getNombre() . " del pago " . $arPago->getNumero() . " no existe en contabilidad";
+                                                                break;
+                                                            }
+                                                        }
+                                                    }*/
+
+                                                    $arRegistro->setNumero($arPago->getNumero());
+                                                    $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                                    $arRegistro->setFecha($arPago->getFechaHasta());
+                                                    if ($arConceptoCuenta->getNaturaleza() == 'D') {
+                                                        $arRegistro->setVrDebito($arPagoDetalle->getVrPago());
+                                                        $arRegistro->setNaturaleza('D');
+                                                    } else {
+                                                        $arRegistro->setVrCredito($arPagoDetalle->getVrPago());
+                                                        $arRegistro->setNaturaleza('C');
+                                                    }
+                                                    if($arPagoDetalle->getConceptoRel()->getSalud()) {
+                                                        $arTerceroRegistro = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arPago->getCodigoEntidadSaludFk());
+                                                        $arRegistro->setTerceroRel($arTerceroRegistro);
+                                                    }
+                                                    if($arPagoDetalle->getConceptoRel()->getPension()) {
+                                                        $arTerceroRegistro = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arPago->getCodigoEntidadPensionFk());
+                                                        $arRegistro->setTerceroRel($arTerceroRegistro);
+                                                    }
+                                                    /*if ($arCuenta->getCodigoTerceroFijoFk() != "" && $arPagoDetalle->getPagoConceptoRel()->getConceptoIncapacidadEntidad() == 0) {
+                                                        $arTerceroCuenta = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->find($arCuenta->getCodigoTerceroFijoFk());
+                                                        $arRegistro->setTerceroRel($arTerceroCuenta);
+                                                    }*/
+                                                    //Para contabilizar al nit de la entidad del credito
+                                                    /*if ($arPagoDetalle->getCodigoCreditoFk() != null) {
+                                                        if ($arConfiguracionNomina->getContabilizarCreditoNitEntidad()) {
+                                                            if ($arPagoDetalle->getCreditoRel()->getCreditoTipoRel()->getNumeroIdentificacionTerceroContabilidad() != "") {
+                                                                $arTerceroCredito = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPagoDetalle->getCreditoRel()->getCreditoTipoRel()->getNumeroIdentificacionTerceroContabilidad()));
+                                                                $arRegistro->setTerceroRel($arTerceroCredito);
+                                                            }
+                                                        }
+                                                    }*/
+                                                    //Para contabilizar al nit fijo el concepto
+                                                    /*if ($arPagoDetalle->getPagoConceptoRel()->getNumeroIdentificacionTerceroContabilidad() != null) {
+                                                        $arTerceroConcepto = $em->getRepository('BrasaContabilidadBundle:CtbTercero')->findOneBy(array('numeroIdentificacion' => $arPagoDetalle->getPagoConceptoRel()->getNumeroIdentificacionTerceroContabilidad()));
+                                                        $arRegistro->setTerceroRel($arTerceroConcepto);
+                                                    }*/
+                                                    /*if ($arCuenta->getExigeBase()) {
+                                                        $arRegistro->setBase($arPagoDetalle->getVrPago());
+                                                        if ($arPagoDetalle->getPagoConceptoRel()->getConceptoRetencion() || $arPagoDetalle->getPagoConceptoRel()->getConceptoFondoSolidaridadPensional()) {
+                                                            $ibp = $em->getRepository("BrasaRecursoHumanoBundle:RhuPagoDetalle")->ibp($arPagoDetalle->getPagoRel()->getFechaDesde()->format("Y-m-d"), $arPagoDetalle->getPagoRel()->getFechaHasta()->format("Y-m-d"), $arPagoDetalle->getPagoRel()->getCodigoContratoFk());
+                                                            $arRegistro->setBase($ibp);
+                                                        }
+                                                    }*/
+                                                    $arRegistro->setDescripcion($arPagoDetalle->getConceptoRel()->getNombre());
+                                                    if ($arCuenta->getExigeCentroCosto() == 1) {
+                                                        $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                    }
+                                                    $arRegistro->setCodigoModeloFk('RhuPago');
+                                                    $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
+                                                    $em->persist($arRegistro);
+                                                }
+                                            } else {
+                                                $$error = "La cuenta " . $arConceptoCuenta->getCodigoCuentaFk() . " no existe en el plan de cuentas";
+                                                break;
+                                            }
+                                        } else {
+                                            $error = "El concepto de pago " . $arPagoDetalle->getCodigoConceptoFk() . " no tiene cuenta para la clase de costo " . $arContrato->getCostoClaseFk();
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                //Procesar cuenta por pagar
+                                if ($arPago->getVrNeto() > 0) {
+                                    if ($arPago->getPagoTipoRel()->getCodigoCuentaFk()) {
+                                        $arCuenta = $em->getRepository(FinCuenta::class)->find($arPago->getPagoTipoRel()->getCodigoCuentaFk());
+                                        if ($arCuenta) {
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            $arRegistro->setNumero($arPago->getNumero());
+                                            $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                            $arRegistro->setFecha($arPago->getFechaHasta());
+                                            $arRegistro->setVrCredito($arPago->getVrNeto());
+                                            $arRegistro->setNaturaleza("C");
+                                            $arRegistro->setDescripcion('POR PAGAR');
+                                            if ($arCuenta->getExigeCentroCosto() == 1) {
+                                                $arRegistro->setCentroCostoRel($arCentroCosto);
+                                            }
+                                            $arRegistro->setCodigoModeloFk('RhuPago');
+                                            $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "La cuenta " . $arPago->getPagoTipoRel()->getCodigoCuentaFk() . " no existe en el plan de cuentas";
+                                            break;
+                                        }
+                                    } else {
+                                        $error = "La cuenta por pagar no esta configurada en el tipo de pago";
+                                        break;
+                                    }
+                                }
+                                $arPago->setEstadoContabilizado(1);
+                                $em->persist($arPago);
+                            } else {
+                                $error = $datos['error'];
+                                break;
+                            }
+                        } else {
+                            $error = "El comprobante " . $arPago->getPagoTipoRel()->getCodigoComprobanteFk() . " no existe";
+                            break;
+                        }
+                    } else {
+                        $error = "El tipo de pago no tiene un comprobante asignado";
+                        break;
+                    }
+                }
+            }
+            if ($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+        }
+        return true;
+    }
+
+    public function contabilizarCrearTercero($arr) {
+        $em = $this->getEntityManager();
+        foreach ($arr AS $codigo) {
+            $arPago = $em->getRepository(RhuPago::class)->find($codigo);
+            if($arPago) {
+                $em->getRepository(RhuEmpleado::class)->terceroFinanciero($arPago->getCodigoEmpleadoFk());
+            }
+        }
+    }
+
+    public function contabilizarGenerarDistribucion($costotipo = 'FIJ', $arCentroCosto, $arPago) {
+        $respuesta = [
+            'error' => "",
+            'arContratoDistribucion' => null
+        ];
+        if ($costotipo == 'OPE') {
+            /*$anio = $arPago->getFechaHasta()->format('Y');
+            $mes = $arPago->getFechaHasta()->format('m');
+            $dql = "SELECT ed.codigoCentroCostoFk, ed.codigoSucursalFk, ed.codigoAreaFk, ed.codigoProyectoFk, SUM(ed.participacion) AS participacion FROM BrasaRecursoHumanoBundle:RhuEmpleadoDistribucion ed WHERE ed.codigoEmpleadoFk = " . $arPago->getCodigoEmpleadoFk() . " AND ed.anio = " . $anio . " AND ed.mes = " . $mes . " ";
+            $dql .= " GROUP BY ed.codigoCentroCostoFk, ed.codigoAreaFk, ed.codigoProyectoFk, ed.codigoSucursalFk ";
+            $query = $em->createQuery($dql);
+            $arEmpleadoDistribucion = $query->getResult();*/
+        }
+        if ($costotipo == 'DIS') {
+            /*$dql = "SELECT edf.codigoCentroCostoFk, edf.codigoSucursalFk, edf.codigoAreaFk, edf.codigoProyectoFk, SUM(edf.participacion) AS participacion FROM BrasaRecursoHumanoBundle:RhuEmpleadoDistribucionFijo edf WHERE edf.codigoEmpleadoFk = " . $arPago->getCodigoEmpleadoFk();
+            $dql .= " GROUP BY edf.codigoCentroCostoFk, edf.codigoAreaFk, edf.codigoProyectoFk, edf.codigoSucursalFk, edf.participacion ";
+            $query = $em->createQuery($dql);
+            $arEmpleadoDistribucion = $query->getResult();*/
+        }
+        if ($costotipo == 'FIJ') {
+            $respuesta['arContratoDistribucion'] =
+                array(
+                    array(
+                        'codigoCentroCostoFk' => $arCentroCosto->getCodigoCentroCostoPk(),
+                        'participacion' => 100
+                    )
+                );
+            /*if ($arConfiguracionNomina->getContabilizarPagoCentroCostoCliente()) {//Validar si tambien el cliente maneja la configuracion para contabilizar el centro de costo del cliente
+                if ($arPago->getEmpleadoRel()->getEmpleadoTipoRel()->getOperativo()) {
+                    if ($arPago->getContratoRel()->getCentroCostoRel()->getClienteRel()->getCentroCostoRel()) {
+                        $arEmpleadoDistribucion[0]["codigoCentroCostoFk"] = $arPago->getCentroCostoRel()->getClienteRel()->getCodigoCentroCostoFk();
+                        $arEmpleadoDistribucion[0]["codigoSucursalFk"] = $arPago->getCentroCostoRel()->getClienteRel()->getCodigoSucursalFk();
+                        $arEmpleadoDistribucion[0]["codigoAreaFk"] = "1101";//Temporal agregar relaciones en el cliente.
+                        $arEmpleadoDistribucion[0]["codigoProyectoFk"] = "20002";//Temporal agregar relaciones en el cliente.
+                    }
+                }
+            }*/
+        }
+        if ($respuesta['arContratoDistribucion']) {
+            $participacionTotal = 0;
+            foreach ($respuesta['arContratoDistribucion'] as $arContratoDistribucionFijo) {
+                $participacionDetalle = $arContratoDistribucionFijo['participacion'];
+                $participacionTotal += $participacionDetalle;
+            }
+            if (round($participacionTotal) != 100) {
+                $respuesta['error'] = "En el pago numero " . $arPago->getNumero() . " el empleado no tiene el 100% en la distribucion de costos";
+            }
+        } else {
+            $respuesta['error'] = "En el pago numero " . $arPago->getNumero() . " el empleado no tiene distribucion de costos";
+        }
+        return $respuesta;
+    }
+
 }

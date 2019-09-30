@@ -124,6 +124,7 @@ class PagoController extends AbstractController
         return $this->render('recursohumano/movimiento/nomina/pago/detalle.html.twig', [
             'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles,
+            'clase' => array('clase' => 'RhuPago', 'codigo' => $id),
             'form' => $form->createView()
         ]);
     }

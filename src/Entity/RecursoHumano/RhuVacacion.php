@@ -23,6 +23,11 @@ class RhuVacacion
     private $codigoVacacionPk;
 
     /**
+     * @ORM\Column(name="codigo_vacacion_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoVacacionTipoFk;
+
+    /**
      * @ORM\Column(name="codigo_empleado_fk", type="integer", nullable=true)
      */
     private $codigoEmpleadoFk;
@@ -41,11 +46,6 @@ class RhuVacacion
      * @ORM\Column(name="fecha", type="date",nullable=true)
      */
     private $fecha;
-
-    /**
-     * @ORM\Column(name="fecha_contabilidad", type="date", nullable=true)
-     */
-    private $fechaContabilidad;
 
     /**
      * @ORM\Column(name="numero", options={"default": 0},type="integer",nullable=true)
@@ -282,6 +282,12 @@ class RhuVacacion
     private $vrIbcPromedio = 0;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuVacacionTipo", inversedBy="vacacionesVacacionTipoRel")
+     * @ORM\JoinColumn(name="codigo_vacacion_tipo_fk", referencedColumnName="codigo_vacacion_tipo_pk")
+     */
+    protected $vacacionTipoRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuContrato", inversedBy="vacacionesContratoRel")
      * @ORM\JoinColumn(name="codigo_contrato_fk", referencedColumnName="codigo_contrato_pk")
      */
@@ -333,6 +339,22 @@ class RhuVacacion
     public function setCodigoVacacionPk($codigoVacacionPk): void
     {
         $this->codigoVacacionPk = $codigoVacacionPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoVacacionTipoFk()
+    {
+        return $this->codigoVacacionTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoVacacionTipoFk
+     */
+    public function setCodigoVacacionTipoFk($codigoVacacionTipoFk): void
+    {
+        $this->codigoVacacionTipoFk = $codigoVacacionTipoFk;
     }
 
     /**
@@ -397,22 +419,6 @@ class RhuVacacion
     public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaContabilidad()
-    {
-        return $this->fechaContabilidad;
-    }
-
-    /**
-     * @param mixed $fechaContabilidad
-     */
-    public function setFechaContabilidad($fechaContabilidad): void
-    {
-        $this->fechaContabilidad = $fechaContabilidad;
     }
 
     /**
@@ -1154,6 +1160,22 @@ class RhuVacacion
     /**
      * @return mixed
      */
+    public function getVacacionTipoRel()
+    {
+        return $this->vacacionTipoRel;
+    }
+
+    /**
+     * @param mixed $vacacionTipoRel
+     */
+    public function setVacacionTipoRel($vacacionTipoRel): void
+    {
+        $this->vacacionTipoRel = $vacacionTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getContratoRel()
     {
         return $this->contratoRel;
@@ -1262,6 +1284,7 @@ class RhuVacacion
     {
         $this->vacacionesCambiosVacacionRel = $vacacionesCambiosVacacionRel;
     }
+
 
 
 }

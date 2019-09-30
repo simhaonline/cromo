@@ -49,16 +49,6 @@ class RhuConfiguracion
     private $auxilioTransporteNoPrestacional = false;
 
     /**
-     * @ORM\Column(name="codigo_concepto_vacacion_fk", type="string", length=10, nullable=true)
-     */
-    private $codigoConceptoVacacionFk;
-
-    /**
-     * @ORM\Column(name="codigo_concepto_vacacion_disfrute_fk", type="string", length=10, nullable=true)
-     */
-    private $codigoConceptoVacacionDisfruteFk;
-
-    /**
      * @ORM\Column(name="descontar_ausentismos_de_licencias" , type="boolean" ,nullable=true)
      */
     private $descontarAusentismosDeLicencias = false;
@@ -177,21 +167,6 @@ class RhuConfiguracion
      * @ORM\Column(name="codigo_entidad_riesgos_profesionales_fk", type="integer", nullable=true)
      */
     private $codigoEntidadRiesgosProfesionalesFk;
-
-    /**
-     * @ORM\Column(name="codigo_comprobante_nomina", type="string", length=10, nullable=true)
-     */
-    private $codigoComprobanteNomina;
-
-    /**
-     * @ORM\Column(name="codigo_comprobante_vacacion", type="string", length=10, nullable=true)
-     */
-    private $codigoComprobanteVacacion;
-
-    /**
-     * @ORM\Column(name="codigo_comprobante_liquidacion", type="string", length=10, nullable=true)
-     */
-    private $codigoComprobanteLiquidacion;
 
     /**
      * @ORM\Column(name="provision_porcentaje_cesantia", type="float", nullable=true, options={"default":8.33})
@@ -325,38 +300,6 @@ class RhuConfiguracion
     public function setAuxilioTransporteNoPrestacional($auxilioTransporteNoPrestacional): void
     {
         $this->auxilioTransporteNoPrestacional = $auxilioTransporteNoPrestacional;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoConceptoVacacionFk()
-    {
-        return $this->codigoConceptoVacacionFk;
-    }
-
-    /**
-     * @param mixed $codigoConceptoVacacionFk
-     */
-    public function setCodigoConceptoVacacionFk($codigoConceptoVacacionFk): void
-    {
-        $this->codigoConceptoVacacionFk = $codigoConceptoVacacionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoConceptoVacacionDisfruteFk()
-    {
-        return $this->codigoConceptoVacacionDisfruteFk;
-    }
-
-    /**
-     * @param mixed $codigoConceptoVacacionDisfruteFk
-     */
-    public function setCodigoConceptoVacacionDisfruteFk($codigoConceptoVacacionDisfruteFk): void
-    {
-        $this->codigoConceptoVacacionDisfruteFk = $codigoConceptoVacacionDisfruteFk;
     }
 
     /**
@@ -746,54 +689,6 @@ class RhuConfiguracion
     /**
      * @return mixed
      */
-    public function getCodigoComprobanteNomina()
-    {
-        return $this->codigoComprobanteNomina;
-    }
-
-    /**
-     * @param mixed $codigoComprobanteNomina
-     */
-    public function setCodigoComprobanteNomina($codigoComprobanteNomina): void
-    {
-        $this->codigoComprobanteNomina = $codigoComprobanteNomina;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoComprobanteVacacion()
-    {
-        return $this->codigoComprobanteVacacion;
-    }
-
-    /**
-     * @param mixed $codigoComprobanteVacacion
-     */
-    public function setCodigoComprobanteVacacion($codigoComprobanteVacacion): void
-    {
-        $this->codigoComprobanteVacacion = $codigoComprobanteVacacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoComprobanteLiquidacion()
-    {
-        return $this->codigoComprobanteLiquidacion;
-    }
-
-    /**
-     * @param mixed $codigoComprobanteLiquidacion
-     */
-    public function setCodigoComprobanteLiquidacion($codigoComprobanteLiquidacion): void
-    {
-        $this->codigoComprobanteLiquidacion = $codigoComprobanteLiquidacion;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getProvisionPorcentajeCesantia()
     {
         return $this->provisionPorcentajeCesantia;
@@ -902,6 +797,7 @@ class RhuConfiguracion
     {
         $this->entidadRiesgosRel = $entidadRiesgosRel;
     }
+
 
 
 

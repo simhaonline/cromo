@@ -38,7 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class VacacionesController extends AbstractController
+class VacacionController extends AbstractController
 {
     protected $clase = RhuVacacion::class;
     protected $claseFormulario = VacacionType::class;
@@ -149,7 +149,7 @@ class VacacionesController extends AbstractController
                 if ($validarVacacion) {
                     $boolNovedad = $em->getRepository(RhuNovedad::class)->validarFecha($arVacacion->getFechaDesdeDisfrute(), $arVacacion->getFechaHastaDisfrute(), $arVacacion->getCodigoEmpleadoFk());
                     if ($boolNovedad) {
-                        if ($arEmpleado->getCodigoContratoFk() != '') {
+                        if ($arEmpleado->getCodigoContratoFk()) {
                             if ($form->get('fechaDesdeDisfrute')->getData() > $form->get('fechaHastaDisfrute')->getData()) {
                                 Mensajes::error("La fecha desde no debe ser mayor a la fecha hasta");
                             } else {
@@ -181,6 +181,8 @@ class VacacionesController extends AbstractController
                                     $arVacacion->setDiasDisfrutadosReales($diasDisfrutadosReales);
                                     $arVacacion->setEmpleadoRel($arEmpleado);
                                     $arVacacion->setGrupoRel($arContrato->getGrupoRel());
+                                    $arVacacion->setFecha($arVacacion->getFechaDesdeDisfrute());
+                                    $arVacacion->setUsuario($this->getUser()->getUsername());
                                     $em->persist($arVacacion);
 
                                     //Calcular deducciones credito
@@ -265,7 +267,7 @@ class VacacionesController extends AbstractController
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository(RhuVacacion::class)->aprobar($arVacacion);
+                $em->getRepository(RhuVacacion::class)->aprobar($arVacacion, $this->getUser()->getUsername());
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_vacacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {

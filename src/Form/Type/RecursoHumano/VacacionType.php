@@ -2,7 +2,11 @@
 
 namespace App\Form\Type\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuRequisitoTipo;
 use App\Entity\RecursoHumano\RhuVacacion;
+use App\Entity\RecursoHumano\RhuVacacionTipo;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -16,6 +20,15 @@ class VacacionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('vacacionTipoRel',EntityType::class,[
+                'class' => RhuVacacionTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('vt')
+                        ->orderBy('vt.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => true,
+            ])
             ->add('fechaDesdeDisfrute', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('fechaHastaDisfrute', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
             ->add('fechaInicioLabor', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))

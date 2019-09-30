@@ -38,8 +38,9 @@
                 align="right">{{ arVacacion.vrRecargoNocturno | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo">PERIODO DESDE:</td>
-            <td class="td-in-well">{{ arVacacion.fechaDesdePeriodo |date("Y/m/d") }}</td>
+            <td class="titulo">DISFRUTE DESDE:</td>
+            <td class="td-in-well">{{ arVacacion.fechaDesdeDisfrute |date("Y/m/d") }}</td>
+
             <td class="titulo">DÍAS VACACIONES:</td>
             <td class="td-in-well">{{ arVacacion.dias }}</td>
             <td class="titulo">PROM. RECARGO NOCTURNO TOTAL ({{ arVacacion.mesesPeriodo }} meses):</td>
@@ -47,8 +48,8 @@
                 align="right">{{ arVacacion.vrPromedioRecargoNocturno | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo">PERIODO HASTA:</td>
-            <td class="td-in-well">{{ arVacacion.fechaHastaPeriodo |date("Y/m/d") }}</td>
+            <td class="titulo">DISFRUTE HASTA</td>
+            <td class="td-in-well">{{ arVacacion.fechaHastaDisfrute |date("Y/m/d") }}</td>
             <td class="titulo">DÍAS PAGADOS:</td>
             <td class="td-in-well">{{ arVacacion.diasPagados }}</td>
             <td class="titulo">SALARIO ACTUAL:</td>
@@ -56,8 +57,8 @@
                 align="right">{{ arVacacion.vrSalarioActual | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo">DISFRUTE DESDE:</td>
-            <td class="td-in-well">{{ arVacacion.fechaDesdeDisfrute |date("Y/m/d") }}</td>
+            <td class="titulo">PERIODO DESDE:</td>
+            <td class="td-in-well">{{ arVacacion.fechaDesdePeriodo |date("Y/m/d") }}</td>
             <td class="titulo">DÍAS DISFRUTADOS:</td>
             <td class="td-in-well">{{ arVacacion.diasDisfrutados }}</td>
             <td class="titulo">SALARIO PROMEDIO:</td>
@@ -65,8 +66,8 @@
                 align="right">{{ arVacacion.vrSalarioPromedio | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo">DISFRUTE HASTA</td>
-            <td class="td-in-well">{{ arVacacion.fechaHastaDisfrute |date("Y/m/d") }}</td>
+            <td class="titulo">PERIODO HASTA:</td>
+            <td class="td-in-well">{{ arVacacion.fechaHastaPeriodo |date("Y/m/d") }}</td>
             <td class="titulo">DÍAS DISFRUTADOS (REALES):</td>
             <td class="td-in-well">{{ arVacacion.diasDisfrutadosReales }}</td>
             <td class="titulo">VR. SALUD</td>

@@ -1,10 +1,19 @@
+DELETE FROM tur_soporte_hora;
 DELETE FROM tur_simulacion;
 DELETE FROM tur_programacion;
 DELETE FROM tur_prototipo;
+DELETE FROM tur_costo_servicio;
+DELETE FROM tur_costo_empleado_servicio;
 DELETE FROM tur_pedido_detalle;
 DELETE FROM tur_pedido;
 DELETE FROM tur_contrato_detalle;
 DELETE FROM tur_contrato;
+DELETE FROM tur_soporte_contrato;
+DELETE FROM tur_distribucion_empleado;
+DELETE FROM tur_costo_empleado;
+DELETE FROM tur_soporte;
+DELETE FROM tur_cierre;
+
 DELETE FROM tte_recogida;
 DELETE FROM tte_despacho_recogida;
 DELETE FROM tte_novedad;
@@ -52,8 +61,17 @@ DELETE FROM rhu_programacion;
 DELETE FROM rhu_adicional;
 DELETE FROM rhu_credito;
 UPDATE rhu_empleado SET codigo_contrato_fk = null;
+DELETE FROM rhu_aporte_detalle;
+DELETE FROM rhu_aporte_entidad;
+DELETE FROM rhu_aporte_soporte;
+DELETE FROM rhu_aporte_contrato;
+DELETE FROM rhu_aporte;
+DELETE FROM rhu_incapacidad;
+DELETE FROM rhu_licencia;
 DELETE FROM rhu_contrato;
+DELETE FROM rhu_costo;
 DELETE FROM rhu_empleado;
+DELETE FROM rhu_cierre;
 DELETE FROM gen_log;
 
 

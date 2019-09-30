@@ -176,6 +176,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             'deduccion' => 0,
             'ingresoBaseCotizacion' => 0,
             'ingresoBasePrestacion' => 0,
+            'ingresoBasePrestacionVacacion' => 0,
             'neto' => 0);
         $valorDia = $arProgramacionDetalle->getVrDia();
         $valorHora = $arProgramacionDetalle->getVrHora();
@@ -671,6 +672,23 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setVrNeto($arrDatosGenerales['neto']);
         $arPago->setVrDeduccion($arrDatosGenerales['deduccion']);
         $arPago->setVrDevengado($arrDatosGenerales['devengado']);
+        $arPago->setVrIngresoBaseCotizacion($arrDatosGenerales['ingresoBaseCotizacion']);
+        $arPago->setVrIngresoBasePrestacion($arrDatosGenerales['ingresoBasePrestacion']);
+        $arPago->setVrIngresoBasePrestacionVacacion($arrDatosGenerales['ingresoBasePrestacionVacacion']);
+        //Calcular provision
+        $porcentajeCesantia = $arConfiguracion['provisionPorcentajeCesantia'];
+        $porcentajeInteres = $arConfiguracion['provisionPorcentajeInteres'];
+        $porcentajePrima = $arConfiguracion['provisionPorcentajePrima'];
+        $porcentajeVacacion = $arConfiguracion['provisionPorcentajeVacacion'];
+        $cesantia = ($arrDatosGenerales['ingresoBasePrestacion'] * $porcentajeCesantia) / 100; // Porcentaje 8.33
+        $interes = ($cesantia * $porcentajeInteres) / 100; // Porcentaje 1 sobre las cesantias
+        $prima = ($arrDatosGenerales['ingresoBasePrestacion'] * $porcentajePrima) / 100; // 8.33
+        $vacacion = ($arrDatosGenerales['ingresoBasePrestacionVacacion'] * $porcentajeVacacion) / 100; // 5
+        $arPago->setVrCesantia($cesantia);
+        $arPago->setVrInteres($interes);
+        $arPago->setVrPrima($prima);
+        $arPago->setVrVacacion($vacacion);
+
         $em->persist($arPago);
         return $arrDatosGenerales['neto'];
     }
@@ -701,17 +719,6 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setVrDeduccion($douDeducciones);
         $em->persist($arPago);
         return $douNeto;
-    }
-
-    public function getCodigoPagoPk($codigoProgramacionDetalle)
-    {
-        $query = $this->_em->createQueryBuilder()->from(RhuPago::class, 'p')
-            ->select('p.codigoPagoPk')
-            ->where("p.codigoProgramacionDetalleFk = {$codigoProgramacionDetalle}")->getQuery()->getOneOrNullResult();
-        if ($query) {
-            $query = $query['codigoPagoPk'];
-        }
-        return $query;
     }
 
     /**
@@ -763,6 +770,10 @@ class RhuPagoRepository extends ServiceEntityRepository
         if ($arConcepto->getGeneraIngresoBasePrestacion()) {
             $arrDatosGenerales['ingresoBasePrestacion'] += $pagoDetalleOperado;
             $arPagoDetalle->setVrIngresoBasePrestacion($pagoDetalleOperado);
+        }
+        if ($arConcepto->getGeneraIngresoBasePrestacionVacacion()) {
+            $arrDatosGenerales['ingresoBasePrestacionVacacion'] += $pagoDetalleOperado;
+            $arPagoDetalle->setVrIngresoBasePrestacionVacacion($pagoDetalleOperado);
         }
     }
 

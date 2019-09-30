@@ -47,7 +47,7 @@
             <td class="titulo">FECHA PAGO:</td>
             <td class="td-in-well">{{ arEgreso.fechaPago | date('Y-m-d') }}</td>
             <td class="titulo">NETO:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrTotalNeto |number_format(0, '.', ',') }}</td>
+            <td class="td-in-well" style="text-align: right;">{{ arEgreso.vrTotalNeto |number_format(2, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -112,7 +112,7 @@
                                             <option value="C" {% if arEgresoDetalle.naturaleza == "C" %} selected {% endif %}>C</option>
                                         </select></td>
                                     <td style="text-align: center">
-                                        <input class="input-valor" type="number" placeholder=""
+                                        <input type="text"
                                                name="TxtVrPago{{ arEgresoDetalle.codigoEgresoDetallePk }}"
                                                value="{{ arEgresoDetalle.vrPago }}"
                                                style="text-align: right; width:90px" size="10"/>

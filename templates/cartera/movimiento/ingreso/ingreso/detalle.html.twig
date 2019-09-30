@@ -27,8 +27,7 @@
             <td class="titulo">CLIENTE:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arIngreso.clienteRel.nombreCorto }}</td>
             <td class="titulo">BRUTO:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arIngreso.vrTotalBruto |number_format(0, '.', ',') }}</td>
-
+            <td class="td-in-well" style="text-align: right;">{{ arIngreso.vrTotalBruto |number_format(2, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
@@ -36,7 +35,7 @@
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;"></td>
             <td class="titulo">RETENCION:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arIngreso.vrRetencion |number_format(0, '.', ',') }}</td>
+            <td class="td-in-well" style="text-align: right;">{{ arIngreso.vrRetencion |number_format(2, '.', ',') }}</td>
 
         </tr>
         <tr>
@@ -45,7 +44,7 @@
             <td class="titulo">FECHA PAGO:</td>
             <td class="td-in-well">{{ arIngreso.fechaPago | date('Y-m-d') }}</td>
             <td class="titulo">NETO:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arIngreso.vrTotalNeto |number_format(0, '.', ',') }}</td>
+            <td class="td-in-well" style="text-align: right;">{{ arIngreso.vrTotalNeto |number_format(2, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIO:</td>
@@ -117,7 +116,7 @@
                                         </select></td>
                                     <td style="text-align: right">{{ arIngresoDetalle.vrRetencion | number_format(0, '.', ',') }}</td>
                                     <td style="text-align: center">
-                                        <input class="input-valor" type="number" placeholder=""
+                                        <input class="input-valor" type="text"
                                                name="TxtVrPago{{ arIngresoDetalle.codigoIngresoDetallePk }}"
                                                value="{{ arIngresoDetalle.vrPago }}"
                                                style="text-align: right; width:90px" size="10"/>

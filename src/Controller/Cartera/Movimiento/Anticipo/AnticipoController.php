@@ -99,6 +99,7 @@ class AnticipoController extends AbstractController
                 $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
                 General::get()->setExportar($em->getRepository(CarAnticipo::class)->lista($raw)->getQuery()->execute(), "Anticipos");
 
             }

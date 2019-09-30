@@ -22,9 +22,33 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         parent::__construct($registry, CarCuentaCobrar::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $numeroDocumento = null;
+        $numeroReferencia =  null;
+        $codigoCuentaCobrar =  null;
+        $codigoCliente =  null;
+        $codigoCuentaCobrarTipo =  null;
+        $fechaDesde = null;
+        $fechaHasta =  null;
+        $estadoAutorizado =  null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+        if ($filtros) {
+            $numeroDocumento = $filtros['numeroDocumento'] ?? null;
+            $numeroReferencia = $filtros['numeroReferencia'] ?? null;
+            $codigoCuentaCobrar = $filtros['codigoCuentaCobrar'] ?? null;
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $codigoCuentaCobrarTipo = $filtros['codigoCuentaCobrarTipo'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(CarCuentaCobrar::class, 'cc')
             ->select('cc.codigoCuentaCobrarPk')
@@ -44,33 +68,68 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrAbono')
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.vrSaldoOperado')
+            ->addSelect('cc.estadoAnulado')
+            ->addSelect('cc.estadoAprobado')
+            ->addSelect('cc.estadoAutorizado')
             ->where('cc.codigoCuentaCobrarPk <> 0')
             ->orderBy('cc.codigoCuentaCobrarPk', 'DESC');
-        $fecha = new \DateTime('now');
-        if ($session->get('filtroCarCuentaCobrarTipo') != "") {
-            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk in ({$session->get('filtroCarCuentaCobrarTipo')})");
+        
+        if ($codigoCuentaCobrarTipo) {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk in ('{$codigoCuentaCobrarTipo}')");
         }
-        if ($session->get('filtroCarNumeroReferencia') != '') {
-            $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
+        
+        if ($numeroDocumento) {
+            $queryBuilder->andWhere("cc.numeroDocumento = {$numeroDocumento}");
         }
-        if ($session->get('filtroCarCuentaCobrarNumero') != '') {
-            $queryBuilder->andWhere("cc.numeroDocumento = {$session->get('filtroCarCuentaCobrarNumero')}");
+        
+        if ($numeroReferencia) {
+            $queryBuilder->andWhere("cc.numeroReferencia= {$numeroReferencia}");
         }
-        if ($session->get('filtroCarCodigoCliente')) {
-            $queryBuilder->andWhere("cc.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("cc.codigoClienteFk = {$codigoCliente}");
         }
-        if ($session->get('filtroFecha') == true) {
-            if ($session->get('filtroFechaDesde') != null) {
-                $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("cc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroFechaHasta') != null) {
-                $queryBuilder->andWhere("cc.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("cc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
+
+        if ($codigoCuentaCobrar) {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarPk = {$codigoCuentaCobrar}");
         }
+
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("cc.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("cc.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("cc.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cc.estadoAutorizado = 1");
+                break;
+        }
+        
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("cc.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cc.estadoAprobado = 1");
+                break;
+        }
+        
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("cc.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cc.estadoAnulado = 1");
+                break;
+        }
+        
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 

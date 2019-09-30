@@ -8,15 +8,24 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Form\Type\Cartera\CuentaCobrarType;
 use App\Form\Type\Compra\CuentaPagarType;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class CuentaCobrarController extends ControllerListenerGeneral
+class CuentaCobrarController extends AbstractController
 {
     protected $clase = CarCuentaCobrar::class;
     protected $claseNombre = "CarCuentaCobrar";
@@ -32,35 +41,58 @@ class CuentaCobrarController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/movimiento/cartera/cuentacobrar/lista", name="cartera_movimiento_cuentacobrar_cuentacobrar_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('numeroDocumento', TextType::class, array('required' => false))
+            ->add('numeroReferencia', TextType::class, array('required' => false))
+            ->add('codigoCuentaCobrarPk', TextType::class, array('required' => false))
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
+            ->add('codigoCuentaCobrarTipoFk', EntityType::class, [
+                'class' => CarCuentaCobrarTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('cct')
+                        ->orderBy('cct.codigoCuentaCobrarTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "CuentasCobrar");
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(CarCuentaCobrar::class)->lista($raw)->getQuery()->execute(), "CuentasCobrar");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(CarCuentaCobrar::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_lista'));
             }
         }
+        $arCuentaCobrar = $paginator->paginate($em->getRepository(CarCuentaCobrar::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arCuentaCobrar' => $arCuentaCobrar,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -149,5 +181,31 @@ class CuentaCobrarController extends ControllerListenerGeneral
             'arReciboDetalles' => $arReciboDetalles,
             'arAplicaciones' => $arAplicaciones
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'numeroDocumento' => $form->get('numeroDocumento')->getData(),
+            'numeroReferencia' => $form->get('numeroReferencia')->getData(),
+            'codigoCuentaCobrar' => $form->get('codigoCuentaCobrarPk')->getData(),
+            'codigoCliente' => $form->get('codigoClienteFk')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arCuentaCobrarTipo = $form->get('codigoCuentaCobrarTipoFk')->getData();
+
+        if (is_object($arCuentaCobrarTipo)) {
+            $filtro['codigoCuentaCobrarTipo'] = $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk();
+        } else {
+            $filtro['codigoCuentaCobrarTipo'] = $arCuentaCobrarTipo;
+        }
+
+        return $filtro;
+
     }
 }

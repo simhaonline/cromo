@@ -1,10 +1,174 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
-    <div class="table-responsive" style="padding:0px;">
-        {{ form_start(formBotonera) }}
-        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
-        {{ form_end(formBotonera) }}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+             data-widget-fullscreenbutton="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>Lista</h2>
+            </header>
+            <div>
+                <div class="widget-body no-padding">
+                    <div class="panel-body">
+                        <div class="form-group form-group-sm">
+                            <label for="txtCodigoConductor" class="col-sm-2 control-label">Cliente:</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <div class="input-group">
+                                            {{ form_widget(form.codigoClienteFk) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-10">
+                                        <div class="input-group">
+                                            <input id="form_txtNombreCorto" class="form-control" readonly>
+                                            <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente', { 'campoCodigo': 'form_codigoClienteFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="" class="control-label col-sm-2">Numero:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.numeroDocumento) }}
+                            </div>
+                            <label for="" class="control-label col-sm-2">Codigo:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.codigoCuentaCobrarPk) }}
+                            </div>
+                            <label class="col-sm-2 control-label">Autorizado:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.estadoAutorizado, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="" class="control-label col-sm-2">Desde:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.fechaDesde) }}
+                            </div>
+                            <label for="" class="control-label col-sm-2">Tipo:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.codigoCuentaCobrarTipoFk, { 'attr': {'class': 'form-control to-select-2', 'multiple':true} }) }}
+                            </div>
+                            <label class="col-sm-2 control-label">Aprobado:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="" class="control-label col-sm-2">Hasta:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.fechaHasta) }}
+                            </div>
+                            <label for="" class="control-label col-sm-2">Referencia(Numero):</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.numeroReferencia) }}
+                            </div>
+                            <label class="col-sm-2 control-label">Anulado:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.estadoAnulado, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+        <tr>
+            <th title="Codigo del registro">ID</th>
+            <th title="Tipo de registro">TIPO</th>
+            <th title="Numero de documento">NUMERO</th>
+            <th title="Numero de referencia">REF</th>
+            <th title="Fecha de registro">FECHA</th>
+            <th title="Fecha en que vence el registro">VENCE</th>
+            <th title="Numero de identificacion del cliente">IDENTIFICACION</th>
+            <th title="Nombre del cliente">CLIENTE</th>
+            <th title="Plazo de pago del cliente">PLAZO</th>
+            <th title="Valor del saldo original">ORIGINAL</th>
+            <th title="Valor del abono">ABONO</th>
+            <th title="Valor del saldo">SALDO</th>
+            <th title="Valor del saldo operado">S_O</th>
+            <th title="Autorizado">AUT</th>
+            <th title="Aprobado">APR</th>
+            <th title="Anulado">ANU</th>
+            <th></th>
+            <th></th>
+            <th><input type="checkbox" name="ChkSeleccionar" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arCuentaCobrar in arCuentaCobrar %}
+            <tr>
+                <td>{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
+                <td>{{ arCuentaCobrar.tipo }}</td>
+                <td>{{ arCuentaCobrar.numeroDocumento }}</td>
+                <td>{{ arCuentaCobrar.numeroReferencia }}</td>
+                <td>{{ arCuentaCobrar.fecha | date('Y-m-d') }}</td>
+                <td>{{ arCuentaCobrar.fechaVence | date('Y-m-d') }}</td>
+                <td>{{ arCuentaCobrar.numeroIdentificacion }}</td>
+                <td>{{ arCuentaCobrar.nombreCorto }}</td>
+                <td>{{ arCuentaCobrar.plazo }}</td>
+                <td class="numero">{{ arCuentaCobrar.vrTotal | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arCuentaCobrar.vrAbono | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arCuentaCobrar.vrSaldo | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arCuentaCobrar.vrSaldoOperado | number_format(0, '.', ',') }}</td>
+                <td>{{ arCuentaCobrar.estadoAutorizado ? "SI":"NO" }}</td>
+                <td>{{ arCuentaCobrar.estadoAprobado ? "SI":"NO"}}</td>
+                <td>{{ arCuentaCobrar.estadoAnulado ? "SI":"NO"}}</td>
+                {% if arCuentaCobrar.estadoAutorizado %}
+                    <td></td>
+                {% else %}
+                    <td class="text-center">
+                        <a href="{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_nuevo',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
+                <td class="text-center">
+                    <a href="{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_detalle',{'id' : arCuentaCobrar.codigoCuentaCobrarPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arCuentaCobrar.codigoCuentaCobrarPk }}" />
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">
+            <span class="badge">{{ arCuentaCobrar.getTotalItemCount }}</span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arCuentaCobrar) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    {{ form_end(form) }}
+    <br/><br/><br/>
 {% endblock %}

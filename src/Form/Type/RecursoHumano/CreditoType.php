@@ -43,7 +43,7 @@ class CreditoType extends AbstractType
                 'class' => RhuCreditoPagoTipo::class,
                 'query_builder' => function(EntityRepository $er){
                     return $er->createQueryBuilder('cpt')
-                        ->orderBy('cpt.nombre');
+                        ->orderBy('cpt.orden');
                 },'required' => true,
                 'choice_label' => 'nombre'
             ])

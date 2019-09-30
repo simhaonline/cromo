@@ -19,7 +19,11 @@
                         <div class="col-sm-2">
                             {{ form_widget(form.codigoCreditoTipoFk) }}
                         </div>
-                        <label class="col-sm-1 col-sm-offset-3 control-label">Pagado:</label>
+                        <label class=" col-sm-1 control-label">Pago tipo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoCreditoPagoTipoFk) }}
+                        </div>
+                        <label class="col-sm-1 control-label">Pagado:</label>
                         <div class="col-sm-2">
                             {{ form_widget(form.estadoPagado) }}
                         </div>
@@ -54,6 +58,7 @@
         <tr>
             <th>ID</th>
             <th>TIPO</th>
+            <th>PAGO TIPO</th>
             <th>FECHA</th>
             <th>IDENTIFICACION</th>
             <th>EMPLEADO</th>
@@ -73,7 +78,8 @@
         {% for arCredito in arCreditos %}
             <tr>
                 <td>{{ arCredito.codigoCreditoPk }}</td>
-                <td>{{ arCredito.creditoTipo }}</td>
+                <td>{{ arCredito.tipo }}</td>
+                <td>{{ arCredito.pagoTipo }}</td>
                 <td>{{ arCredito.fecha | date('Y-m-d') }}</td>
                 <td>{{ arCredito.numeroIdentificacion }}</td>
                 <td>{{ arCredito.empleado }}</td>

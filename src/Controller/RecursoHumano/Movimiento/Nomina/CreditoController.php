@@ -8,6 +8,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
+use App\Entity\RecursoHumano\RhuCreditoPagoTipo;
 use App\Entity\RecursoHumano\RhuCreditoTipo;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\CreditoPagoType;
@@ -56,6 +57,17 @@ class CreditoController extends AbstractController
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('ct')
                         ->orderBy('ct.codigoCreditoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoCreditoPagoTipoFk', EntityType::class, [
+                'class' => RhuCreditoPagoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('pt')
+                        ->orderBy('pt.codigoCreditoPagoTipoPk', 'ASC');
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
@@ -235,11 +247,17 @@ class CreditoController extends AbstractController
         ];
 
         $arCreditoTipo = $form->get('codigoCreditoTipoFk')->getData();
+        $arCreditoPagoTipo = $form->get('codigoCreditoPagoTipoFk')->getData();
 
         if (is_object($arCreditoTipo)) {
             $filtro['creditoTipo'] = $arCreditoTipo->getCodigoCreditoTipoPk();
         } else {
             $filtro['creditoTipo'] = $arCreditoTipo;
+        }
+        if (is_object($arCreditoPagoTipo)) {
+            $filtro['creditoPagoTipo'] = $arCreditoPagoTipo->getCodigoCreditoPagoTipoPk();
+        } else {
+            $filtro['creditoPagoTipo'] = $arCreditoPagoTipo;
         }
 
         return $filtro;

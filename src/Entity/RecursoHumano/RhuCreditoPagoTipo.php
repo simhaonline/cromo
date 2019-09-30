@@ -26,6 +26,11 @@ class RhuCreditoPagoTipo {
     private $nombre;
 
     /**
+     * @ORM\Column(name="orden", type="integer", nullable=true)
+     */
+    private $orden = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuCredito", mappedBy="creditoPagoTipoRel")
      */
     protected $creditosCreditoPagoTipoRel;
@@ -97,6 +102,38 @@ class RhuCreditoPagoTipo {
     public function setCreditosPagosCreditoPagoTipoRel( $creditosPagosCreditoPagoTipoRel ): void
     {
         $this->creditosPagosCreditoPagoTipoRel = $creditosPagosCreditoPagoTipoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
 

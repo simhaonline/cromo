@@ -33,6 +33,11 @@ class RhuCreditoTipo
     private $cupoMaximo;
 
     /**
+     * @ORM\Column(name="orden", type="integer", nullable=true)
+     */
+    private $orden = 0;
+
+    /**
      * @ORM\Column(name="codigo_concepto_fk", type="string", length=10, nullable=true)
      */
     private $codigoConceptoFk;
@@ -143,4 +148,38 @@ class RhuCreditoTipo
     {
         $this->creditosCreditoTipoRel = $creditosCreditoTipoRel;
     }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
+    }
+
+
 }

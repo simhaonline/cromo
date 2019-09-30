@@ -21,6 +21,7 @@ class RhuCreditoRepository extends ServiceEntityRepository
 
         $codigoCredito = null;
         $creditoTipo = null;
+        $creditoPagoTipo = null;
         $codigoEmpleado = null;
         $fechaDesde = null;
         $fechaHasta = null;
@@ -30,6 +31,7 @@ class RhuCreditoRepository extends ServiceEntityRepository
         if ($filtros) {
             $codigoCredito = $filtros['codigoCredito'] ?? null;
             $creditoTipo = $filtros['creditoTipo'] ?? null;
+            $creditoPagoTipo = $filtros['creditoPagoTipo'] ?? null;
             $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
@@ -39,7 +41,8 @@ class RhuCreditoRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCredito::class, 'c')
             ->select('c.codigoCreditoPk')
-            ->addSelect('ct.nombre as creditoTipo')
+            ->addSelect('ct.nombre as tipo')
+            ->addSelect('cpt.nombre as pagoTipo')
             ->addSelect('c.codigoEmpleadoFk')
             ->addSelect('c.codigoEmpleadoFk')
             ->addSelect('e.numeroIdentificacion')
@@ -57,6 +60,7 @@ class RhuCreditoRepository extends ServiceEntityRepository
             ->addSelect('c.inactivoPeriodo')
             ->addSelect('c.estadoSuspendido')
             ->leftJoin('c.creditoTipoRel', 'ct')
+            ->leftJoin('c.creditoPagoTipoRel', 'cpt')
             ->leftJoin('c.empleadoRel', 'e')
             ->leftJoin('c.grupoRel', 'g');
         if ($codigoCredito) {
@@ -67,6 +71,9 @@ class RhuCreditoRepository extends ServiceEntityRepository
         }
         if ($creditoTipo) {
             $queryBuilder->andWhere("c.codigoCreditoTipoFk = '{$creditoTipo}'");
+        }
+        if ($creditoPagoTipo) {
+            $queryBuilder->andWhere("c.codigoCreditoPagoTipoFk = '{$creditoPagoTipo}'");
         }
         if ($fechaDesde) {
             $queryBuilder->andWhere("c.fecha >= '{$fechaDesde} 00:00:00'");

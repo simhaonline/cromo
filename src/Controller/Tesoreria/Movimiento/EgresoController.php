@@ -151,11 +151,10 @@ class EgresoController extends AbstractController
      * @throws \Doctrine\ORM\ORMException
      * @Route("/tesoreria/movimiento/egreso/egreso/detalle/{id}", name="tesoreria_movimiento_egreso_egreso_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
         $arEgreso = $em->getRepository(TesEgreso::class)->find($id);
-        $paginator = $this->get('knp_paginator');
         $form = Estandares::botonera($arEgreso->getEstadoAutorizado(), $arEgreso->getEstadoAprobado(), $arEgreso->getEstadoAnulado());
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -248,11 +247,10 @@ class EgresoController extends AbstractController
      * @throws \Doctrine\ORM\ORMException
      * @Route("/tesoreria/movimiento/egreso/egreso/detalle/nuevo/{id}", name="tesoreria_movimiento_egreso_egreso_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $id)
+    public function detalleNuevo(Request $request, $id, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arEgreso = $em->getRepository(TesEgreso::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])

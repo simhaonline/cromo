@@ -123,10 +123,14 @@
                 <td>{{ arResibo.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arResibo.estadoAprobado ? "SI":"NO"}}</td>
                 <td>{{ arResibo.estadoAnulado ? "SI":"NO"}}</td>
-                <td class="text-center">
-                    <a href="{{ path('cartera_movimiento_recibo_recibo_nuevo',{'id': arResibo.codigoReciboPk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arResibo.estadoAutorizado %}
+                    <td></td>
+                {% else %}
+                    <td class="text-center">
+                        <a href="{{ path('cartera_movimiento_recibo_recibo_nuevo',{'id': arResibo.codigoReciboPk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
                 <td class="text-center">
                     <a href="{{ path('cartera_movimiento_recibo_recibo_detalle',{'id' : arResibo.codigoReciboPk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

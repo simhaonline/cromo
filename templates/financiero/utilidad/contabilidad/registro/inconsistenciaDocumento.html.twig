@@ -31,6 +31,7 @@
             <th>NUMERO</th>
             <th>COMPROBANTE</th>
             <th>DESCRIPCION</th>
+            <th>DIF</th>
         </tr>
         </thead>
         <tbody>
@@ -41,6 +42,7 @@
                 <td>{{ arRegistrosInconsistencia.numero }}</td>
                 <td>{{ arRegistrosInconsistencia.codigoComprobanteFk }}</td>
                 <td>{{ arRegistrosInconsistencia.descripcion }}</td>
+                <td>{{ arRegistrosInconsistencia.diferencia }}</td>
             </tr>
         {% endfor %}
     </table>

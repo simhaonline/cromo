@@ -23,6 +23,7 @@ class FinRegistroInconsistenciaRepository extends ServiceEntityRepository
             ->addSelect('ri.numero')
             ->addSelect('ri.codigoComprobanteFk')
             ->addSelect('ri.descripcion')
+            ->addSelect('ri.diferencia')
         ->where("ri.utilidad = '" . $utilidad . "'");
         return $queryBuilder;
     }

@@ -13,6 +13,7 @@ INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'EPS023','','830009783','Cruz Blanca S.A','',0,0,1,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'EPS033','','830074184','Saludvida S.A EPS','',0,0,1,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'EPS037','','900156264','Nueva EPS','',0,0,1,0,0);
+INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'EPS044','','901097473','Medimas EPS S.A.S.','',0,0,1,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'MIN001','','900462447','Fondo de Solidaridad y Garantía Fosyga','',0,0,1,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'MIN002','','900462447','Fondo de Solidaridad y Garantía Fosyga','',0,0,1,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'MIN003','','900462447','Fondo de Solidaridad y Garantía Fosyga','',0,0,1,0,0);

@@ -50,6 +50,11 @@ class FinRegistroInconsistencia
     private $utilidad;
 
     /**
+     * @ORM\Column(name="diferencia", type="float", nullable=true)
+     */
+    private $diferencia = 0;
+
+    /**
      * @return mixed
      */
     public function getCodigoRegistroInconsistenciaPk()
@@ -143,6 +148,22 @@ class FinRegistroInconsistencia
     public function setUtilidad($utilidad): void
     {
         $this->utilidad = $utilidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiferencia()
+    {
+        return $this->diferencia;
+    }
+
+    /**
+     * @param mixed $diferencia
+     */
+    public function setDiferencia($diferencia): void
+    {
+        $this->diferencia = $diferencia;
     }
 
 

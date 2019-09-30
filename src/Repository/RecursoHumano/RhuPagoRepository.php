@@ -79,6 +79,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->addSelect('p.vrInteres')
             ->addSelect('p.vrPrima')
             ->addSelect('p.vrVacacion')
+            ->addSelect('p.codigoGrupoFk')
             ->addSelect('p.estadoAutorizado')
             ->addSelect('p.estadoAprobado')
             ->addSelect('p.estadoAnulado')
@@ -1355,7 +1356,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                                 break;
                                             }
                                         } else {
-                                            $error = "El concepto de pago " . $arPagoDetalle->getCodigoConceptoFk() . " no tiene cuenta para la clase de costo " . $arContrato->getCostoClaseFk();
+                                            $error = "El concepto de pago " . $arPagoDetalle->getCodigoConceptoFk() . " no tiene cuenta para la clase de costo " . $arContrato->getCodigoCostoClaseFk();
                                             break;
                                         }
                                     }

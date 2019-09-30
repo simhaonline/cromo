@@ -48,12 +48,14 @@ class InconsistenciaDocumentoController extends Controller
                 $arRegistros = $this->getDoctrine()->getRepository(FinRegistro::class)->analizarInconsistencias($fechaDesde, $fechaHasta);
                 foreach ($arRegistros as $arRegistro){
                     if($arRegistro['vrDebito'] != $arRegistro['vrCredito']) {
+                        $dif = $arRegistro['vrDebito'] - $arRegistro['vrCredito'];
                         $arRegistroInconsistencia = new FinRegistroInconsistencia();
                         $arRegistroInconsistencia->setNumero($arRegistro['numero']);
                         $arRegistroInconsistencia->setNumeroPrefijo($arRegistro['numeroPrefijo']);
                         $arRegistroInconsistencia->setCodigoComprobanteFk($arRegistro['codigoComprobanteFk']);
                         $arRegistroInconsistencia->setDescripcion('Diferencia en debito y credito');
                         $arRegistroInconsistencia->setUtilidad('inconsistencia');
+                        $arRegistroInconsistencia->setDiferencia($dif);
                         $em->persist($arRegistroInconsistencia);
                     }
                 }

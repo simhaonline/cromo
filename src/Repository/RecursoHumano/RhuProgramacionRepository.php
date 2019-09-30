@@ -221,14 +221,11 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arProgramacionDetalle->setVrIbcAcumulado($arrIbc['ibc']);
             $arProgramacionDetalle->setVrDeduccionFondoPensionAnterior($arrIbc['deduccionAnterior']);
 
-
             //dias vacaciones
-            $diasVacaciones = 0;
             $arrVacaciones = $em->getRepository(RhuVacacion::class)->dias($arContrato->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getFechaDesde(), $arProgramacion->getFechaHasta());
-            $intDiasVacaciones = $arrVacaciones['dias'];
-            if ($intDiasVacaciones > 0) {
-                $arProgramacionDetalle->setDiasVacaciones($intDiasVacaciones);
-                //$arProgramacionDetalle->setIbcVacaciones($arrVacaciones['ibc']);
+            $diasVacaciones = $arrVacaciones['dias'];
+            if ($diasVacaciones > 0) {
+                $arProgramacionDetalle->setDiasVacaciones($diasVacaciones);
             }
 
             $diasLicencia = 0;
@@ -270,7 +267,6 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             if ($diasIncapacidad > 0) {
                 $arProgramacionDetalle->setDiasIncapacidad($diasIncapacidad);
             }
-
 
             $diasNovedad = $diasIncapacidad + $diasLicencia + $diasVacaciones;
             $dias = $dias - $diasNovedad;

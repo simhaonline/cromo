@@ -48,7 +48,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $numero = null;
         $fechaDesde = null;
         $fechaHasta = null;
-
+        $estadoContabilizado = null;
         if ($filtros) {
             $codigoPago = $filtros['codigoPago'] ?? null;
             $numero = $filtros['numero'] ?? null;
@@ -56,6 +56,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoContabilizado = $filtros['estadoContabilizado'] ?? null;
         }
 
         $session = new Session();
@@ -71,6 +72,10 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->addSelect('p.vrDevengado')
             ->addSelect('p.vrDeduccion')
             ->addSelect('p.vrNeto')
+            ->addSelect('p.estadoAutorizado')
+            ->addSelect('p.estadoAprobado')
+            ->addSelect('p.estadoAnulado')
+            ->addSelect('p.estadoContabilizado')
             ->leftJoin('p.pagoTipoRel', 'pt')
             ->leftJoin('p.empleadoRel', 'e');
         if ($codigoPago) {
@@ -90,6 +95,14 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
         if ($fechaHasta) {
             $queryBuilder->andWhere("p.fechaHasta <= '{$fechaHasta} 23:59:59'");
+        }
+        switch ($estadoContabilizado) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoContabilizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoContabilizado = 1");
+                break;
         }
         $queryBuilder->addOrderBy('p.codigoPagoPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);

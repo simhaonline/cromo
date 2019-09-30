@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -62,6 +63,7 @@ class PagoController extends AbstractController
             ->add('numero', TextType::class, ['required' => false])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoContabilizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -79,7 +81,7 @@ class PagoController extends AbstractController
                 General::get()->setExportar($em->getRepository(RhuPago::class)->lista($raw), "Pagos");
             }
         }
-        $arPagos = $paginator->paginate($em->getRepository(RhuPago::class)->lista($raw), $request->query->getInt('page', 1), 30);
+        $arPagos = $paginator->paginate($em->getRepository(RhuPago::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('recursohumano/movimiento/nomina/pago/lista.html.twig', [
             'arPagos' => $arPagos,
             'form' => $form->createView(),
@@ -161,6 +163,7 @@ class PagoController extends AbstractController
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoContabilizado' => $form->get('estadoContabilizado')->getData(),
         ];
 
         $arPagoTipo = $form->get('codigoPagoTipoFk')->getData();

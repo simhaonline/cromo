@@ -74,6 +74,7 @@ class ProgramacionController extends AbstractController
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -87,6 +88,11 @@ class ProgramacionController extends AbstractController
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
                 General::get()->setExportar($em->getRepository(RhuProgramacion::class)->lista($raw), "Programaciones");
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuProgramacion::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_lista'));
             }
         }
         $arProgramaciones = $paginator->paginate($em->getRepository(RhuProgramacion::class)->lista($raw), $request->query->getInt('page', 1), 30);

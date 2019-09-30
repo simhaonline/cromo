@@ -139,14 +139,16 @@ class RhuProgramacionRepository extends ServiceEntityRepository
      */
     public function eliminar($arrSeleccionados)
     {
-        if (is_array($arrSeleccionados) && count($arrSeleccionados) > 0) {
-            foreach ($arrSeleccionados as $codigoRegistro) {
-                $arRegistro = $this->_em->getRepository(RhuProgramacion::class)->find($codigoRegistro);
+        try{
+            foreach ($arrSeleccionados as $arrSeleccionado) {
+                $arRegistro = $this->getEntityManager()->getRepository(RhuProgramacion::class)->find($arrSeleccionado);
                 if ($arRegistro) {
-                    $this->_em->remove($arRegistro);
+                    $this->getEntityManager()->remove($arRegistro);
                 }
             }
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
+        } catch (\Exception $ex) {
+            Mensajes::error("El registro tiene registros relacionados");
         }
     }
 

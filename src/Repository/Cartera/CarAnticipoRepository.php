@@ -27,61 +27,97 @@ class CarAnticipoRepository extends ServiceEntityRepository
         parent::__construct($registry, CarAnticipo::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoCliente = null;
+        $numero = null;
+        $codigoAnticipo = null;
+        $codigoAnticipoTipo = null;
+        $codigoAsesor =null;
+        $fechaDesde =  null;
+        $fechaHasta =  null;
+        $estadoAutorizado = null;
+        $estadoAprobado =  null;
+        $estadoAnulado =null;
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $codigoAnticipo = $filtros['codigoAnticipo'] ?? null;
+            $codigoAnticipoTipo = $filtros['codigoAnticipoTipo'] ?? null;
+            $codigoAsesor = $filtros['codigoAsesor'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarAnticipo::class, 'a')
             ->select('a.codigoAnticipoPk')
-//            ->leftJoin('r.reciboTipoRel', 'rt')
-//            ->addSelect('c.nombre')
-//            ->addSelect('cr.nombreCorto')
-//            ->addSelect('cr.numeroIdentificacion')
-//            ->addSelect('r.numero')
-//            ->addSelect('rt.nombre AS tipo')
-//            ->addSelect('r.fecha')
-//            ->addSelect('r.fechaPago')
-//            ->addSelect('r.codigoCuentaFk')
-//            ->addSelect('r.vrPagoTotal')
-//            ->addSelect('r.usuario')
-//            ->addSelect('r.estadoAutorizado')
-//            ->addSelect('r.estadoAnulado')
-//            ->addSelect('r.estadoImpreso')
-//            ->addSelect('r.estadoAprobado')
-//            ->leftJoin('r.clienteRel','cr')
-//            ->leftJoin('r.cuentaRel','c')
-//            ->where('r.codigoReciboPk <> 0')
-//            ->orderBy('r.estadoAprobado', 'ASC')
+            ->addSelect('a.numero')
+            ->addSelect('a.fecha')
+            ->addSelect('a.fechaPago')
+            ->addSelect('a.vrPago')
+            ->addSelect('a.usuario')
+            ->addSelect('a.estadoAutorizado')
+            ->addSelect('a.estadoAprobado')
+            ->addSelect('a.estadoAnulado')
+            ->addSelect('at.nombre as anticipoTipo')
+            ->addSelect('cl.numeroIdentificacion')
+            ->addSelect('cl.nombreCorto as cliente')
+            ->addSelect('cu.nombre as cuenta')
+            ->leftJoin('a.anticipoTipoRel', 'at')
+            ->leftJoin('a.clienteRel', 'cl')
+            ->leftJoin('a.cuentaRel', 'cu')
             ->addOrderBy('a.fecha', 'DESC');
-//        $fecha =  new \DateTime('now');
-//        if($session->get('filtroFecha') == true){
-//            if ($session->get('filtroFechaDesde') != null) {
-//                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
-//            } else {
-//                $queryBuilder->andWhere("r.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-//            }
-//            if ($session->get('filtroFechaHasta') != null) {
-//                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
-//            } else {
-//                $queryBuilder->andWhere("r.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-//            }
-//        }
-//        if ($session->get('filtroCarReciboNumero')) {
-//            $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
-//        }
-//        if($session->get('filtroCarCodigoCliente')){
-//            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
-//        }
-//        if ($session->get('filtroCarReciboTipo')) {
-//            $queryBuilder->andWhere("r.codigoReciboTipoFk = '" . $session->get('filtroCarReciboTipo') . "'");
-//        }
-//        switch ($session->get('filtroCarReciboEstadoAprobado')) {
-//            case '0':
-//                $queryBuilder->andWhere("r.estadoAprobado = 0");
-//                break;
-//            case '1':
-//                $queryBuilder->andWhere("r.estadoAprobado = 1");
-//                break;
-//        }
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("cl.codigoClientePk = '{$codigoCliente}'");
+        }
+        if ($numero) {
+            $queryBuilder->andWhere("a.numero = '{$numero}'");
+        }
+        if ($codigoAnticipo) {
+            $queryBuilder->andWhere("a.codigoAnticipoPk = '{$codigoAnticipo}'");
+        }
+        if ($codigoAnticipoTipo) {
+            $queryBuilder->andWhere("a.codigoAnticipoTipoFk = '{$codigoAnticipoTipo}'");
+        }
+        if ($codigoAsesor) {
+            $queryBuilder->andWhere("a.codigoAsesorFk = '{$codigoAsesor}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("a.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("a.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("a.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("a.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("a.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("a.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("a.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("a.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 

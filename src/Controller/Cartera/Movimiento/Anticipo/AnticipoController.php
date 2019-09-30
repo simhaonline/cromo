@@ -8,9 +8,12 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarAnticipo;
 use App\Entity\Cartera\CarAnticipoConcepto;
 use App\Entity\Cartera\CarAnticipoDetalle;
+use App\Entity\Cartera\CarAnticipoTipo;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\Financiero\FinTercero;
+use App\Entity\General\GenAsesor;
 use App\Form\Type\Cartera\AnticipoDetalleType;
 use App\Form\Type\Cartera\AnticipoType;
 use App\Formato\Cartera\Anticipo;
@@ -18,16 +21,21 @@ use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class AnticipoController extends ControllerListenerGeneral
+class AnticipoController extends AbstractController
 {
     protected $clase = CarAnticipo::class;
     protected $claseNombre = "CarAnticipo";
@@ -44,35 +52,67 @@ class AnticipoController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/movimiento/anticipo/anticipo/lista", name="cartera_movimiento_anticipo_anticipo_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
+        $form = $this->createFormBuilder()
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoAnticipoPk', TextType::class, array('required' => false))
+            ->add('codigoAnticipoTipoFk', EntityType::class, [
+                'class' => CarAnticipoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('at')
+                        ->orderBy('at.codigoAnticipoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('codigoAsesorFk', EntityType::class, [
+                'class' => GenAsesor::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.codigoAsesorPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(CarAnticipo::class)->lista($raw)->getQuery()->execute(), "Anticipos");
 
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Anticipos");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(CarAnticipo::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('cartera_movimiento_anticipo_anticipo_lista'));
             }
         }
+
+        $arAnticipos = $paginator->paginate($em->getRepository(CarAnticipo::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('cartera/movimiento/anticipo/anticipo/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arAnticipos' => $arAnticipos,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -220,5 +260,36 @@ class AnticipoController extends ControllerListenerGeneral
         return $this->render('cartera/movimiento/anticipo/anticipo/detalleNuevo.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoCliente' => $form->get('codigoClienteFk')->getData(),
+            'numero' => $form->get('numero')->getData(),
+            'codigoAnticipo' => $form->get('codigoAnticipoPk')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arAnticipoTipo = $form->get('codigoAnticipoTipoFk')->getData();
+        $arsesor = $form->get('codigoAsesorFk')->getData();
+
+        if (is_object($arAnticipoTipo)) {
+            $filtro['codigoAnticipoTipo'] = $arAnticipoTipo->getCodigoAnticipoTipoPk();
+        } else {
+            $filtro['codigoAnticipoTipo'] = $arAnticipoTipo;
+        }
+        if (is_object($arsesor)) {
+            $filtro['codigoAsesor'] = $arsesor->getCodigoAsesorPk();
+        } else {
+            $filtro['codigoAsesor'] = $arsesor;
+        }
+
+        return $filtro;
+
     }
 }

@@ -64,25 +64,6 @@ class AnticipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoAnticipoPk",               "tipo":"pk",    "ayuda":"Codigo del registro",                  "titulo":"ID"},
-            {"campo":"numero",                         "tipo":"texto", "ayuda":"Consecutivo de aprobación",            "titulo":"NUMERO"},
-            {"campo":"anticipoTipoRel.nombre",         "tipo":"texto", "ayuda":"Tipo anticipo",                        "titulo":"TIPO",          "relacion":""},
-            {"campo":"fecha",                          "tipo":"fecha", "ayuda":"Fecha",                                "titulo":"FECHA"},
-            {"campo":"fechaPago",                      "tipo":"fecha", "ayuda":"Fecha de pago",                        "titulo":"FECHA_PAGO"},
-            {"campo":"clienteRel.numeroIdentificacion","tipo":"texto", "ayuda":"Numero de identificacion del tercero", "titulo":"IDENTIFICACION","relacion":""},
-            {"campo":"clienteRel.nombreCorto",         "tipo":"texto", "ayuda":"Nombre del tercero",                   "titulo":"NOMBRE",        "relacion":""},
-            {"campo":"cuentaRel.nombre",               "tipo":"texto", "ayuda":"Nombre de la cuenta",                  "titulo":"CUENTA",        "relacion":""},
-            {"campo":"vrPago",                         "tipo":"moneda","ayuda":"Pago que realizo el cliente",          "titulo":"PAGO"},
-            {"campo":"usuario",                        "tipo":"texto", "ayuda":"Usuario",                              "titulo":"USU"},
-            {"campo":"estadoAutorizado",               "tipo":"bool",  "ayuda":"Autorizado",                           "titulo":"AUT"},
-            {"campo":"estadoAprobado",                 "tipo":"bool",  "ayuda":"Aprobado",                             "titulo":"APR"},
-            {"campo":"estadoAnulado",                  "tipo":"bool",  "ayuda":"Anulado",                              "titulo":"ANU"}
-        ]';
-        return $campos;
-    }
 
     public function getEstructuraPropiedadesFiltro()
     {

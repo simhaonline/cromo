@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="form-group form-group-sm">
+                    <label for="form_txtCodigoEmpleado"
+                           class="col-sm-1 control-label">Empleado:</label>
+                    <div class="col-sm-11">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="input-group">
+                                    {{ form_widget(form.txtEmpleado) }}
+                                </div>
+                            </div>
+                            <div class="col-lg-10">
+                                <div class="input-group">
+                                    <input id="form_txtNombreCorto" class="form-control" readonly>
+                                    <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'form_txtEmpleado', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEMpleado', 600, 900)">Buscar</a>
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="form_TxtCodigo" class="col-sm-1 control-label">Año:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.txtAnio) }}
+                    </div>
+                    <label for="form_TxtCodigo" class="col-sm-1 control-label">Mes:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.txtMes) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-condensed tabla-datos">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>PD</th>
+                <th>AÑO</th>
+                <th>MES</th>
+                <th>CLIENTE</th>
+                <th>COD</th>
+                <th>PUESTO</th>
+                <th>CONCEPTO</th>
+                <th>MODALIDAD</th>
+                <th>DES</th>
+                <th>HAS</th>
+                <th>D</th>
+                <th>H</th>
+                <th>CANT</th>
+                <th>COSTO</th>
+                <th>PRECIO</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arCostoServicio in arCostosServicio %}
+                <tr>
+                    <td>{{ arCostoServicio.codigoCostoServicioPk }}</td>
+                    <td>{{ arCostoServicio.codigoPedidoDetalleFk }}</td>
+                    <td>{{ arCostoServicio.anio }}</td>
+                    <td>{{ arCostoServicio.mes }}</td>
+                    <td>{{ arCostoServicio.clienteNombreCorto }}</td>
+                    <td>{{ arCostoServicio.codigoPuestoFk }}</td>
+                    <td>{{ arCostoServicio.puestoNombre }}</td>
+                    <td>{{ arCostoServicio.conceptoNombre }}</td>
+                    <td>{{ arCostoServicio.modalidadNombre }}</td>
+                    <td>{{ arCostoServicio.diaDesde }}</td>
+                    <td>{{ arCostoServicio.diaHasta }}</td>
+                    <td>{{ arCostoServicio.dias }}</td>
+                    <td>{{ arCostoServicio.horas }}</td>
+                    <td>{{ arCostoServicio.cantidad }}</td>
+                    <td class="numero">{{ arCostoServicio.vrCostoRecurso | number_format() }}</td>
+                    <td class="numero">{{ arCostoServicio.vrTotal | number_format }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arCostosServicio.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arCostosServicio) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+        </div>
+    </div>
+    <br/><br/>
+    {{ form_end(form) }}
+{% endblock %}

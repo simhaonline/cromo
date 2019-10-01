@@ -65,4 +65,41 @@ class TurCostoServicioRepository extends ServiceEntityRepository
 
     }
 
+    public function informe()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurCostoServicio::class, 'cs')
+            ->select('cs.codigoCostoServicioPk')
+            ->addSelect('cs.codigoPedidoDetalleFk')
+            ->addSelect('cs.anio')
+            ->addSelect('cs.mes')
+            ->addSelect('c.nombreCorto as clienteNombreCorto')
+            ->addSelect('cs.codigoPuestoFk')
+            ->addSelect('p.nombre as puestoNombre')
+            ->addSelect('cs.vrCostoRecurso')
+            ->addSelect('cs.vrTotal')
+            ->addSelect('co.nombre as conceptoNombre')
+            ->addSelect('m.nombre as modalidadNombre')
+            ->addSelect('cs.diaDesde')
+            ->addSelect('cs.diaHasta')
+            ->addSelect('cs.dias')
+            ->addSelect('cs.horas')
+            ->addSelect('cs.cantidad')
+            ->leftJoin('cs.clienteRel', 'c')
+            ->leftJoin('cs.puestoRel', 'p')
+            ->leftJoin('cs.conceptoRel', 'co')
+            ->leftJoin('cs.modalidadRel', 'm');
+
+        if ($session->get('filtroTurCostoServicioAnio') != null) {
+            $queryBuilder->andWhere("cs.anio = '{$session->get('filtroTurCostoServicioAnio')}'");
+        }
+        if ($session->get('filtroTurCostoServicioMes') != null) {
+            $queryBuilder->andWhere("cs.mes = '{$session->get('filtroTurCostoServicioMes')}'");
+        }
+        if ($session->get('filtroTurCostoServicioCodigoEmpleado') != null) {
+            $queryBuilder->andWhere("cs.codigoEmpleadoFk = '{$session->get('filtroTurCostoServicioCodigoEmpleado')}'");
+        }
+        return $queryBuilder->setMaxResults(5000)->getQuery();
+    }
+
 }

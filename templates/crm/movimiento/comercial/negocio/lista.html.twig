@@ -15,18 +15,30 @@
                             <div class="row">
                                 <div class="col-lg-2">
                                     <div class="input-group">
-                                        {{ form_widget(form.txtCodigoCliente) }}
+                                        {{ form_widget(form.codigoClienteFk) }}
                                     </div>
                                 </div>
                                 <div class="col-lg-10">
                                     <div class="input-group">
                                         <input id="form_txtNombreCorto" class="form-control" readonly>
                                         <span class="input-group-btn">
-                                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('crm_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('crm_cliente', { 'campoCodigo': 'form_codigoClienteFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                         </span>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 col-sm-offset-6 control-label">Aprobado:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.estadoGanado) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 col-sm-offset-6 control-label">Autorizado:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.estadoCerrado) }}
                         </div>
                     </div>
                 </div>
@@ -92,6 +104,9 @@
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arNegocios) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
     </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">

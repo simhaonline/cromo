@@ -16,9 +16,21 @@ class CrmNegocioRepository extends ServiceEntityRepository
         parent::__construct($registry, CrmNegocio::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCliente = null;
+        $estadoGanado = null;
+        $estadoCerrado = null;
+
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $estadoGanado = $filtros['estadoGanado'] ?? null;
+            $estadoCerrado = $filtros['estadoCerrado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CrmNegocio::class, 'n')
             ->select('n.codigoNegocioPk')
             ->addSelect('c.nombreCorto')
@@ -32,10 +44,26 @@ class CrmNegocioRepository extends ServiceEntityRepository
             ->addSelect('f.nombre as faseNombre')
             ->leftJoin('n.clienteRel', 'c')
         ->leftJoin('n.faseRel', 'f');
-        if($session->get('filtroCrmNegocioCodigoCliente')){
-            $queryBuilder->andWhere("n.codigoClienteFk  = '{$session->get('filtroCrmNegocioCodigoCliente')}' ");
+        if($codigoCliente){
+            $queryBuilder->andWhere("n.codigoClienteFk  = '{$codigoCliente}' ");
         }
-
+        switch ($estadoGanado) {
+            case '0':
+                $queryBuilder->andWhere("n.estadoGanado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("n.estadoGanado = 1");
+                break;
+        }
+        switch ($estadoCerrado) {
+            case '0':
+                $queryBuilder->andWhere("n.estadoCerrado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("n.estadoCerrado = 1");
+                break;
+        }
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
     

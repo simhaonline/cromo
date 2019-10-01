@@ -10,14 +10,18 @@ use App\Entity\Crm\CrmCliente;
 use App\Entity\Crm\CrmContacto;
 use App\Entity\Crm\CrmNegocio;
 use App\Form\Type\Crm\NegocioType;
+use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Ob\HighchartsBundle\Highcharts\Highchart;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class NegocioController extends ControllerListenerGeneral
+class NegocioController extends AbstractController
 {
     protected $clase = CrmNegocio::class;
     protected $claseFormulario = NegocioType::class;
@@ -30,29 +34,39 @@ class NegocioController extends ControllerListenerGeneral
     /**
      * @Route("/crm/movimiento/negocio/lista", name="crm_movimiento_comercial_negocio_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroCrmNegocioCodigoCliente')])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add( 'btnExcel', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
-            ->add( 'btnEliminar', SubmitType::class, ['label'=>'Eliminar', 'attr'=>['class'=> 'btn btn-sm btn-danger']])
+            ->add('codigoClienteFk', TextType::class, ['required' => false])
+            ->add('estadoGanado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroCrmNegocioCodigoCliente', $form->get('txtCodigoCliente')->getData());
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(CrmNegocio::class)->lista($raw)->getQuery()->execute(), "Negocios");
+            }
+            if ($form->get('btnEliminar')->isClicked()){
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $this->get("UtilidadesModelo")->eliminar(CrmNegocio::class, $arrSeleccionados);
+                return $this->redirect($this->generateUrl('crm_movimiento_comercial_negocio_lista'));
             }
         }
-        if ($form->get('btnEliminar')->isClicked()){
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            $this->get("UtilidadesModelo")->eliminar(CrmNegocio::class, $arrSeleccionados);
-            return $this->redirect($this->generateUrl('crm_movimiento_comercial_negocio_lista'));
-        }
-        $arNegocios = $paginator->paginate($em->getRepository(CrmNegocio::class)->lista(), $request->query->getInt('page', 1), 500);
+        $arNegocios = $paginator->paginate($em->getRepository(CrmNegocio::class)->lista($raw), $request->query->getInt('page', 1), 500);
         return $this->render('crm/movimiento/comercial/negocio/lista.html.twig', [
             'arNegocios' => $arNegocios,
             'form' => $form->createView()
@@ -122,5 +136,17 @@ class NegocioController extends ControllerListenerGeneral
         return $this->render('crm/movimiento/comercial/negocio/detalle.html.twig', [
             'arNegocio' => $arNegocio
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoCliente' => $form->get('CodigoClienteFk')->getData(),
+            'estadoGanado' => $form->get('estadoGanado')->getData(),
+            'estadoCerrado' => $form->get('estadoCerrado')->getData(),
+        ];
+
+        return $filtro;
+
     }
 }

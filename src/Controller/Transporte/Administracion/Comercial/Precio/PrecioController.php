@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Administracion\Comercial\Precio;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteProducto;
+use App\Entity\Transporte\TteZona;
 use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -252,6 +253,10 @@ class PrecioController extends ControllerListenerGeneral
                             } else {
                                 $arrCargas [$i]['minimo'] = 0;
                             }
+                            $cell = $worksheet->getCellByColumnAndRow(21, $row);
+                            if ($cell->getValue() != '') {
+                                $arrCargas [$i]['codigoZonaFk'] = $cell->getValue();
+                            }
                             $i++;
                         }
                     }
@@ -271,6 +276,7 @@ class PrecioController extends ControllerListenerGeneral
                                 $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($arrCarga['codigoCiudadOrigenFk']);
                                 $arCiudadDestino = $em->getRepository(TteCiudad::class)->find($arrCarga['codigoCiudadDestinoFk']);
                                 $arProducto = $em->getRepository(TteProducto::class)->find($arrCarga['codigoProductoFk']);
+                                $arZona = $em->getRepository(TteZona::class)->find($arrCarga['codigoZonaFk']);
                                 if ($arCiudadOrigen && $arCiudadDestino && $arProducto) {
                                     $arPrecioDetalleNuevo = new TtePrecioDetalle();
                                     $arPrecioDetalleNuevo->setPrecioRel($arPrecio);
@@ -283,6 +289,7 @@ class PrecioController extends ControllerListenerGeneral
                                     $arPrecioDetalleNuevo->setVrPesoTope($arrCarga['vrPesoTope']);
                                     $arPrecioDetalleNuevo->setVrPesoTopeAdicional($arrCarga['vrPesoTopeAdicional']);
                                     $arPrecioDetalleNuevo->setMinimo($arrCarga['minimo']);
+                                    $arPrecioDetalleNuevo->setZonaRel($arZona);
                                     $em->persist($arPrecioDetalleNuevo);
                                 }
                             }

@@ -120,23 +120,18 @@ class EmpleadoController extends BaseController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arEmpleadoBuscar = $em->getRepository($this->clase)->findOneBy(['codigoIdentificacionFk' => $arEmpleado->getIdentificacionRel()->getCodigoIdentificacionPk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()]);
-                if ( is_null($arEmpleadoBuscar) ) {
-                    $nombreCorto = $arEmpleado->getNombre1();
-                    if ($arEmpleado->getNombre2()) {
-                        $nombreCorto .= " " . $arEmpleado->getNombre2();
-                    }
-                    $nombreCorto .= " " . $arEmpleado->getApellido1();
-                    if ($arEmpleado->getApellido2()) {
-                        $nombreCorto .= " " . $arEmpleado->getApellido2();
-                    }
-                    $arEmpleado->setNombreCorto($nombreCorto);
-                    $em->persist($arEmpleado);
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
-                } else {
-                    Mensajes::error('Ya existe un empleado con la identificación ingresada.');
+                $nombreCorto = $arEmpleado->getNombre1();
+                if ($arEmpleado->getNombre2()) {
+                    $nombreCorto .= " " . $arEmpleado->getNombre2();
                 }
+                $nombreCorto .= " " . $arEmpleado->getApellido1();
+                if ($arEmpleado->getApellido2()) {
+                    $nombreCorto .= " " . $arEmpleado->getApellido2();
+                }
+                $arEmpleado->setNombreCorto($nombreCorto);
+                $em->persist($arEmpleado);
+                $em->flush();
+                return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
             }
         }
         return $this->render('recursohumano/administracion/recurso/empleado/nuevo.html.twig', [

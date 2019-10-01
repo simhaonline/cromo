@@ -267,7 +267,7 @@ class PrecioController extends ControllerListenerGeneral
                     //leercargas
                     foreach ($arrCargas as $arrCarga) {
                         $arPrecioDetalle = null;
-                        if($arrCarga['codigoCiudadDestinoFk'] != null){
+                        if ($arrCarga['codigoCiudadDestinoFk'] != null) {
                             $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->findOneBy(array('codigoPrecioFk' => $codigoPrecio, 'codigoCiudadOrigenFk' => $arrCarga['codigoCiudadOrigenFk'], 'codigoCiudadDestinoFk' => $arrCarga['codigoCiudadDestinoFk'], 'codigoProductoFk' => $arrCarga['codigoProductoFk']));
                         }
                         if ($arPrecioDetalle) {
@@ -283,12 +283,6 @@ class PrecioController extends ControllerListenerGeneral
                                 $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($arrCarga['codigoCiudadOrigenFk']);
                                 $arCiudadDestino = $em->getRepository(TteCiudad::class)->find($arrCarga['codigoCiudadDestinoFk']);
                                 $arProducto = $em->getRepository(TteProducto::class)->find($arrCarga['codigoProductoFk']);
-                                if ($arrCarga['codigoZonaFk']) {
-                                    $arZona = $em->getRepository(TteZona::class)->find($arrCarga['codigoZonaFk']);
-                                } else {
-                                    $arZona = null;
-                                }
-
                                 if ($arCiudadOrigen && $arCiudadDestino && $arProducto) {
                                     $arPrecioDetalleNuevo = new TtePrecioDetalle();
                                     $arPrecioDetalleNuevo->setPrecioRel($arPrecio);
@@ -303,7 +297,7 @@ class PrecioController extends ControllerListenerGeneral
                                     $arPrecioDetalleNuevo->setMinimo($arrCarga['minimo']);
                                     $em->persist($arPrecioDetalleNuevo);
                                 }
-                            } elseif ($arrCarga['codigoCiudadOrigenFk'] && $arrCarga['codigoZonaFk'] ) {
+                            } elseif ($arrCarga['codigoCiudadOrigenFk'] && $arrCarga['codigoZonaFk']) {
                                 $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($arrCarga['codigoCiudadOrigenFk']);
                                 $arProducto = $em->getRepository(TteProducto::class)->find($arrCarga['codigoProductoFk']);
                                 if ($arrCarga['codigoZonaFk']) {
@@ -312,7 +306,7 @@ class PrecioController extends ControllerListenerGeneral
                                     $arZona = null;
                                 }
 
-                                if($arCiudadOrigen && $arZona && $arProducto){
+                                if ($arCiudadOrigen && $arZona && $arProducto) {
                                     $arPrecioDetalleNuevo = new TtePrecioDetalle();
                                     $arPrecioDetalleNuevo->setPrecioRel($arPrecio);
                                     $arPrecioDetalleNuevo->setCiudadOrigenRel($arCiudadOrigen);
@@ -324,6 +318,22 @@ class PrecioController extends ControllerListenerGeneral
                                     $arPrecioDetalleNuevo->setVrPesoTopeAdicional($arrCarga['vrPesoTopeAdicional']);
                                     $arPrecioDetalleNuevo->setMinimo($arrCarga['minimo']);
                                     $arPrecioDetalleNuevo->setZonaRel($arZona);
+                                    $em->persist($arPrecioDetalleNuevo);
+                                }
+                            } elseif ($arrCarga['codigoCiudadOrigenFk'] && $arrCarga['codigoProductoFk']) {
+                                $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($arrCarga['codigoCiudadOrigenFk']);
+                                $arProducto = $em->getRepository(TteProducto::class)->find($arrCarga['codigoProductoFk']);
+                                if ($arCiudadOrigen && $arProducto) {
+                                    $arPrecioDetalleNuevo = new TtePrecioDetalle();
+                                    $arPrecioDetalleNuevo->setPrecioRel($arPrecio);
+                                    $arPrecioDetalleNuevo->setCiudadOrigenRel($arCiudadOrigen);
+                                    $arPrecioDetalleNuevo->setProductoRel($arProducto);
+                                    $arPrecioDetalleNuevo->setVrPeso($arrCarga['vrPeso']);
+                                    $arPrecioDetalleNuevo->setVrUnidad($arrCarga['vrUnidad']);
+                                    $arPrecioDetalleNuevo->setPesoTope($arrCarga['pesoTope']);
+                                    $arPrecioDetalleNuevo->setVrPesoTope($arrCarga['vrPesoTope']);
+                                    $arPrecioDetalleNuevo->setVrPesoTopeAdicional($arrCarga['vrPesoTopeAdicional']);
+                                    $arPrecioDetalleNuevo->setMinimo($arrCarga['minimo']);
                                     $em->persist($arPrecioDetalleNuevo);
                                 }
                             }

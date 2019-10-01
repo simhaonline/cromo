@@ -256,6 +256,8 @@ class PrecioController extends ControllerListenerGeneral
                             $cell = $worksheet->getCellByColumnAndRow(21, $row);
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['codigoZonaFk'] = $cell->getValue();
+                            } else {
+                                $arrCargas [$i]['codigoZonaFk'] = null;
                             }
                             $i++;
                         }

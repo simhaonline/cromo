@@ -104,6 +104,7 @@ class PrecioController extends ControllerListenerGeneral
         $arPrecio = $em->getRepository(TtePrecio::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('btnEstructuraExcel', SubmitType::class, array('label' => 'Estructura Excel'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
@@ -113,6 +114,9 @@ class PrecioController extends ControllerListenerGeneral
         }
         if ($form->get('btnExcel')->isClicked()) {
             General::get()->setExportar($em->getRepository(TtePrecioDetalle::class)->lista($id), "Precio detalle $id");
+        }
+        if ($form->get('btnEstructuraExcel')->isClicked()) {
+            General::get()->setExportar($em->getRepository(TtePrecioDetalle::class)->excelEstructura($id), "Estructura Precio detalle $id");
         }
         $arPrecioDetalles = $paginator->paginate($em->getRepository(TtePrecioDetalle::class)->lista($id), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/administracion/comercial/precio/detalle.html.twig', array(

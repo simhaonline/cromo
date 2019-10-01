@@ -51,6 +51,36 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
         return $result;
     }
 
+    public function excelEstructura($id)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TtePrecioDetalle::class, 'prd')
+            ->select('prd.codigoPrecioDetallePk')
+            ->addSelect('co.nombre as ciudadOrigen')
+            ->addSelect('prd.codigoCiudadOrigenFk')
+            ->addSelect('cd.nombre as ciudadDestino')
+            ->addSelect('prd.codigoCiudadDestinoFk')
+            ->addSelect('p.nombre AS productoNombre')
+            ->addSelect('prd.codigoProductoFk')
+            ->addSelect('prd.vrPeso')
+            ->addSelect('prd.vrUnidad')
+            ->addSelect('prd.pesoTope')
+            ->addSelect('prd.vrPesoTope')
+            ->addSelect('prd.vrPesoTopeAdicional')
+            ->addSelect('prd.minimo')
+            ->addSelect('z.nombre as zonaNombre')
+            ->addSelect('cdz.nombre as zonaCiudadDestino')
+            ->leftJoin('prd.productoRel', 'p')
+            ->leftJoin('prd.ciudadDestinoRel', 'cd')
+            ->leftJoin('prd.ciudadOrigenRel', 'co')
+            ->leftJoin('cd.zonaRel', 'cdz')
+            ->leftJoin('prd.zonaRel', 'z')
+            ->where('prd.codigoPrecioFk = ' . $id)
+            ->orderBy('cd.nombre', 'ASC');
+        $result = $queryBuilder->getQuery()->getResult();
+
+        return $result;
+    }
+
     public function eliminar($arrSeleccionados)
     {
         foreach ($arrSeleccionados as $arrSeleccionado) {

@@ -33,6 +33,7 @@
                 <th>DEPARTAMENTO</th>
                 <th>COD</th>
                 <th>RUTA</th>
+                <th>ZONA</th>
                 <th>INTERFACE</th>
                 <th>REEX</th>
                 <th></th>
@@ -49,6 +50,7 @@
                 <td>{{ arCiudad.departamento }}</td>
                 <td>{{ arCiudad.codigoRutaFk }}</td>
                 <td>{{ arCiudad.ruta }}</td>
+                <td>{{ arCiudad.zona }}</td>
                 <td>{{ arCiudad.codigoInterface }}</td>
                 <td>{{ arCiudad.reexpedicion?"SI":"NO" }}</td>
                 <td class="text-center">
@@ -92,3 +94,4 @@
     {{ form_end(form) }}
     <br /><br /><br />
 {% endblock %}
+

@@ -29,11 +29,13 @@ class TteCiudadRepository extends ServiceEntityRepository
             ->addSelect('d.nombre  as departamento')
             ->addSelect('c.codigoRutaFk ')
             ->addSelect('r.nombre ruta')
+            ->addSelect('z.nombre zona')
             ->addSelect('c.ordenRuta')
             ->addSelect('c.codigoInterface')
             ->addSelect('c.reexpedicion')
             ->leftJoin('c.departamentoRel', 'd')
-            ->leftJoin('c.rutaRel', 'r');
+            ->leftJoin('c.rutaRel', 'r')
+        ->leftJoin('c.zonaRel', 'z');
 
         if ($nombre) {
             $queryBuilder->andWhere("c.nombre like '%{$nombre}%' ");

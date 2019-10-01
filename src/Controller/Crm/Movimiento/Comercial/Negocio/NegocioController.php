@@ -141,7 +141,7 @@ class NegocioController extends AbstractController
     public function getFiltros($form)
     {
         $filtro = [
-            'codigoCliente' => $form->get('CodigoClienteFk')->getData(),
+            'codigoCliente' => $form->get('codigoClienteFk')->getData(),
             'estadoGanado' => $form->get('estadoGanado')->getData(),
             'estadoCerrado' => $form->get('estadoCerrado')->getData(),
         ];

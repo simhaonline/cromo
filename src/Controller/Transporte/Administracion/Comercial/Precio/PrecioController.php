@@ -212,6 +212,8 @@ class PrecioController extends ControllerListenerGeneral
                             $cell = $worksheet->getCellByColumnAndRow(12, $row);
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['codigoCiudadDestinoFk'] = $cell->getValue();
+                            } else {
+                                $arrCargas [$i]['codigoCiudadDestinoFk'] = null;
                             }
                             $cell = $worksheet->getCellByColumnAndRow(14, $row);
                             if ($cell->getValue() != '') {
@@ -264,7 +266,10 @@ class PrecioController extends ControllerListenerGeneral
                     }
                     //leercargas
                     foreach ($arrCargas as $arrCarga) {
-                        $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->findOneBy(array('codigoPrecioFk' => $codigoPrecio, 'codigoCiudadOrigenFk' => $arrCarga['codigoCiudadOrigenFk'], 'codigoCiudadDestinoFk' => $arrCarga['codigoCiudadDestinoFk'], 'codigoProductoFk' => $arrCarga['codigoProductoFk']));
+                        $arPrecioDetalle = null;
+                        if($arrCarga['codigoCiudadDestinoFk'] != null){
+                            $arPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->findOneBy(array('codigoPrecioFk' => $codigoPrecio, 'codigoCiudadOrigenFk' => $arrCarga['codigoCiudadOrigenFk'], 'codigoCiudadDestinoFk' => $arrCarga['codigoCiudadDestinoFk'], 'codigoProductoFk' => $arrCarga['codigoProductoFk']));
+                        }
                         if ($arPrecioDetalle) {
                             $arPrecioDetalle->setVrPeso($arrCarga['vrPeso']);
                             $arPrecioDetalle->setVrUnidad($arrCarga['vrUnidad']);
@@ -278,12 +283,39 @@ class PrecioController extends ControllerListenerGeneral
                                 $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($arrCarga['codigoCiudadOrigenFk']);
                                 $arCiudadDestino = $em->getRepository(TteCiudad::class)->find($arrCarga['codigoCiudadDestinoFk']);
                                 $arProducto = $em->getRepository(TteProducto::class)->find($arrCarga['codigoProductoFk']);
-                                $arZona = $em->getRepository(TteZona::class)->find($arrCarga['codigoZonaFk']);
+                                if ($arrCarga['codigoZonaFk']) {
+                                    $arZona = $em->getRepository(TteZona::class)->find($arrCarga['codigoZonaFk']);
+                                } else {
+                                    $arZona = null;
+                                }
+
                                 if ($arCiudadOrigen && $arCiudadDestino && $arProducto) {
                                     $arPrecioDetalleNuevo = new TtePrecioDetalle();
                                     $arPrecioDetalleNuevo->setPrecioRel($arPrecio);
                                     $arPrecioDetalleNuevo->setCiudadOrigenRel($arCiudadOrigen);
                                     $arPrecioDetalleNuevo->setCiudadDestinoRel($arCiudadDestino);
+                                    $arPrecioDetalleNuevo->setProductoRel($arProducto);
+                                    $arPrecioDetalleNuevo->setVrPeso($arrCarga['vrPeso']);
+                                    $arPrecioDetalleNuevo->setVrUnidad($arrCarga['vrUnidad']);
+                                    $arPrecioDetalleNuevo->setPesoTope($arrCarga['pesoTope']);
+                                    $arPrecioDetalleNuevo->setVrPesoTope($arrCarga['vrPesoTope']);
+                                    $arPrecioDetalleNuevo->setVrPesoTopeAdicional($arrCarga['vrPesoTopeAdicional']);
+                                    $arPrecioDetalleNuevo->setMinimo($arrCarga['minimo']);
+                                    $em->persist($arPrecioDetalleNuevo);
+                                }
+                            } elseif ($arrCarga['codigoCiudadOrigenFk'] && $arrCarga['codigoZonaFk'] ) {
+                                $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($arrCarga['codigoCiudadOrigenFk']);
+                                $arProducto = $em->getRepository(TteProducto::class)->find($arrCarga['codigoProductoFk']);
+                                if ($arrCarga['codigoZonaFk']) {
+                                    $arZona = $em->getRepository(TteZona::class)->find($arrCarga['codigoZonaFk']);
+                                } else {
+                                    $arZona = null;
+                                }
+
+                                if($arCiudadOrigen && $arZona && $arProducto){
+                                    $arPrecioDetalleNuevo = new TtePrecioDetalle();
+                                    $arPrecioDetalleNuevo->setPrecioRel($arPrecio);
+                                    $arPrecioDetalleNuevo->setCiudadOrigenRel($arCiudadOrigen);
                                     $arPrecioDetalleNuevo->setProductoRel($arProducto);
                                     $arPrecioDetalleNuevo->setVrPeso($arrCarga['vrPeso']);
                                     $arPrecioDetalleNuevo->setVrUnidad($arrCarga['vrUnidad']);

@@ -32,8 +32,6 @@ class Programacion extends Controller
         $paginator = $this->get('knp_paginator');
         $dateFecha = (new \DateTime('now'));
         $arrDiaSemana = "";
-        $session->set('filtroTurProgramacionAnio', $dateFecha->format("Y"));
-        $session->set('filtroTurProgramacionMes', $dateFecha->format("m"));
         $form = $this->createFormBuilder()
             ->add('txtAnio', TextType::class, ['required' => false, 'data' => $session->get('filtroTurProgramacionAnio'), 'attr' => ['class' => 'form-control']])
             ->add('txtMes', TextType::class, ['required' => false, 'data' => $session->get('filtroTurProgramacionMes'), 'attr' => ['class' => 'form-control']])

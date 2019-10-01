@@ -1422,7 +1422,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                             $arRegistro->setVrDebito($arPago->getVrCesantia());
                                             $arRegistro->setNaturaleza("D");
                                             $arRegistro->setDescripcion('PROV CESANTIA DEB');
-                                            if ($arCuenta->getExigeCentroCosto() == 1) {
+                                            if ($arCuentaDebito->getExigeCentroCosto() == 1) {
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }
                                             $arRegistro->setCodigoModeloFk('RhuPago');
@@ -1440,7 +1440,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                             $arRegistro->setVrCredito($arPago->getVrCesantia());
                                             $arRegistro->setNaturaleza("C");
                                             $arRegistro->setDescripcion('PROV CESANTIA CRE');
-                                            if ($arCuenta->getExigeCentroCosto() == 1) {
+                                            if ($arCuentaCredito->getExigeCentroCosto() == 1) {
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }
                                             $arRegistro->setCodigoModeloFk('RhuPago');
@@ -1475,7 +1475,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                             $arRegistro->setVrDebito($arPago->getVrInteres());
                                             $arRegistro->setNaturaleza("D");
                                             $arRegistro->setDescripcion('PROV INTERES DEB');
-                                            if ($arCuenta->getExigeCentroCosto() == 1) {
+                                            if ($arCuentaDebito->getExigeCentroCosto() == 1) {
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }
                                             $arRegistro->setCodigoModeloFk('RhuPago');
@@ -1493,7 +1493,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                             $arRegistro->setVrCredito($arPago->getVrInteres());
                                             $arRegistro->setNaturaleza("C");
                                             $arRegistro->setDescripcion('PROV INTERES CRE');
-                                            if ($arCuenta->getExigeCentroCosto() == 1) {
+                                            if ($arCuentaCredito->getExigeCentroCosto() == 1) {
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }
                                             $arRegistro->setCodigoModeloFk('RhuPago');
@@ -1528,7 +1528,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                             $arRegistro->setVrDebito($arPago->getVrPrima());
                                             $arRegistro->setNaturaleza("D");
                                             $arRegistro->setDescripcion('PROV PRIMA DEB');
-                                            if ($arCuenta->getExigeCentroCosto() == 1) {
+                                            if ($arCuentaDebito->getExigeCentroCosto() == 1) {
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }
                                             $arRegistro->setCodigoModeloFk('RhuPago');
@@ -1546,7 +1546,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                             $arRegistro->setVrCredito($arPago->getVrPrima());
                                             $arRegistro->setNaturaleza("C");
                                             $arRegistro->setDescripcion('PROV PRIMA CRE');
-                                            if ($arCuenta->getExigeCentroCosto() == 1) {
+                                            if ($arCuentaCredito->getExigeCentroCosto() == 1) {
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }
                                             $arRegistro->setCodigoModeloFk('RhuPago');
@@ -1581,7 +1581,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                             $arRegistro->setVrDebito($arPago->getVrVacacion());
                                             $arRegistro->setNaturaleza("D");
                                             $arRegistro->setDescripcion('PROV VACACION DEB');
-                                            if ($arCuenta->getExigeCentroCosto() == 1) {
+                                            if ($arCuentaDebito->getExigeCentroCosto() == 1) {
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }
                                             $arRegistro->setCodigoModeloFk('RhuPago');
@@ -1599,7 +1599,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                             $arRegistro->setVrCredito($arPago->getVrVacacion());
                                             $arRegistro->setNaturaleza("C");
                                             $arRegistro->setDescripcion('PROV VACACION CRE');
-                                            if ($arCuenta->getExigeCentroCosto() == 1) {
+                                            if ($arCuentaCredito->getExigeCentroCosto() == 1) {
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }
                                             $arRegistro->setCodigoModeloFk('RhuPago');

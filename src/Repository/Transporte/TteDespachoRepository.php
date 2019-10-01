@@ -1867,27 +1867,29 @@ class TteDespachoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arTercero = $em->getRepository(InvTercero::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
         if ($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk()) {
-            /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
-            $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoRel();
-            $arCuentaPagar = New TesCuentaPagar();
-            $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
-            $arCuentaPagar->setTerceroRel($arTercero);
-            $arCuentaPagar->setModulo('tte');
-            $arCuentaPagar->setModelo('TteDespacho');
-            $arCuentaPagar->setCodigoDocumento($arDespacho->getCodigoDespachoPk());
-            $arCuentaPagar->setNumeroDocumento($arDespacho->getNumero());
-            $arCuentaPagar->setSoporte($arDespacho->getCodigoVehiculoFk());
-            $arCuentaPagar->setFecha($arDespacho->getFechaSalida());
-            $arCuentaPagar->setFechaVence($arDespacho->getFechaSalida());
-            $arCuentaPagar->setVrSubtotal($arDespacho->getVrTotalNeto());
-            $arCuentaPagar->setVrTotal($arDespacho->getVrTotalNeto());
-            $arCuentaPagar->setVrSaldoOriginal($arDespacho->getVrTotalNeto());
-            $arCuentaPagar->setVrSaldo($arDespacho->getVrTotalNeto());
-            $arCuentaPagar->setVrSaldoOperado($arDespacho->getVrTotalNeto() * $arCuentaPagarTipo->getOperacion());
-            $arCuentaPagar->setEstadoAutorizado(1);
-            $arCuentaPagar->setEstadoAprobado(1);
-            $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
-            $em->persist($arCuentaPagar);
+            if($arDespacho->getVrSaldo() > 0) {
+                /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
+                $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoRel();
+                $arCuentaPagar = New TesCuentaPagar();
+                $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+                $arCuentaPagar->setTerceroRel($arTercero);
+                $arCuentaPagar->setModulo('tte');
+                $arCuentaPagar->setModelo('TteDespacho');
+                $arCuentaPagar->setCodigoDocumento($arDespacho->getCodigoDespachoPk());
+                $arCuentaPagar->setNumeroDocumento($arDespacho->getNumero());
+                $arCuentaPagar->setSoporte($arDespacho->getCodigoVehiculoFk());
+                $arCuentaPagar->setFecha($arDespacho->getFechaSalida());
+                $arCuentaPagar->setFechaVence($arDespacho->getFechaSalida());
+                $arCuentaPagar->setVrSubtotal($arDespacho->getVrTotalNeto());
+                $arCuentaPagar->setVrTotal($arDespacho->getVrTotalNeto());
+                $arCuentaPagar->setVrSaldoOriginal($arDespacho->getVrSaldo());
+                $arCuentaPagar->setVrSaldo($arDespacho->getVrSaldo());
+                $arCuentaPagar->setVrSaldoOperado($arDespacho->getVrSaldo() * $arCuentaPagarTipo->getOperacion());
+                $arCuentaPagar->setEstadoAutorizado(1);
+                $arCuentaPagar->setEstadoAprobado(1);
+                $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
+                $em->persist($arCuentaPagar);
+            }
         } else {
             Mensajes::error("El despacho genera cuenta por pagar pero no se pudo crear porque el despacho tipo " . $arDespacho->getDespachoTipoRel()->getNombre() . " no tiene configurado un tipo de cuenta por pagar");
         }

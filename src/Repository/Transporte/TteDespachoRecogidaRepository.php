@@ -888,27 +888,29 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arTercero = $em->getRepository(TtePoseedor::class)->terceroTesoreria($arDespachoRecogida->getVehiculoRel()->getPoseedorRel());
         if($arDespachoRecogida->getDespachoRecogidaTipoRel()->getCodigoCuentaPagarTipoFk()) {
-            /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
-            $arCuentaPagarTipo = $arDespachoRecogida->getDespachoRecogidaTipoRel()->getCuentaPagarTipoRel();
-            $arCuentaPagar = New TesCuentaPagar();
-            $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
-            $arCuentaPagar->setTerceroRel($arTercero);
-            $arCuentaPagar->setModulo('tte');
-            $arCuentaPagar->setCodigoDocumento($arDespachoRecogida->getCodigoDespachoRecogidaPk());
-            $arCuentaPagar->setModelo('TteDespachoRecogida');
-            $arCuentaPagar->setNumeroDocumento($arDespachoRecogida->getNumero());
-            $arCuentaPagar->setSoporte($arDespachoRecogida->getCodigoVehiculoFk());
-            $arCuentaPagar->setFecha($arDespachoRecogida->getFecha());
-            $arCuentaPagar->setFechaVence($arDespachoRecogida->getFecha());
-            $arCuentaPagar->setVrSubtotal($arDespachoRecogida->getVrTotal());
-            $arCuentaPagar->setVrTotal($arDespachoRecogida->getVrTotal());
-            $arCuentaPagar->setVrSaldoOriginal($arDespachoRecogida->getVrTotal());
-            $arCuentaPagar->setVrSaldo($arDespachoRecogida->getVrTotal());
-            $arCuentaPagar->setVrSaldoOperado($arDespachoRecogida->getVrTotal() * $arCuentaPagarTipo->getOperacion());
-            $arCuentaPagar->setEstadoAutorizado(1);
-            $arCuentaPagar->setEstadoAprobado(1);
-            $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
-            $em->persist($arCuentaPagar);
+            if($arDespachoRecogida->getVrSaldo() > 0) {
+                /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
+                $arCuentaPagarTipo = $arDespachoRecogida->getDespachoRecogidaTipoRel()->getCuentaPagarTipoRel();
+                $arCuentaPagar = New TesCuentaPagar();
+                $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+                $arCuentaPagar->setTerceroRel($arTercero);
+                $arCuentaPagar->setModulo('tte');
+                $arCuentaPagar->setCodigoDocumento($arDespachoRecogida->getCodigoDespachoRecogidaPk());
+                $arCuentaPagar->setModelo('TteDespachoRecogida');
+                $arCuentaPagar->setNumeroDocumento($arDespachoRecogida->getNumero());
+                $arCuentaPagar->setSoporte($arDespachoRecogida->getCodigoVehiculoFk());
+                $arCuentaPagar->setFecha($arDespachoRecogida->getFecha());
+                $arCuentaPagar->setFechaVence($arDespachoRecogida->getFecha());
+                $arCuentaPagar->setVrSubtotal($arDespachoRecogida->getVrTotal());
+                $arCuentaPagar->setVrTotal($arDespachoRecogida->getVrTotal());
+                $arCuentaPagar->setVrSaldoOriginal($arDespachoRecogida->getVrSaldo());
+                $arCuentaPagar->setVrSaldo($arDespachoRecogida->getVrSaldo());
+                $arCuentaPagar->setVrSaldoOperado($arDespachoRecogida->getVrSaldo() * $arCuentaPagarTipo->getOperacion());
+                $arCuentaPagar->setEstadoAutorizado(1);
+                $arCuentaPagar->setEstadoAprobado(1);
+                $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
+                $em->persist($arCuentaPagar);
+            }
         } else {
             Mensajes::error("El despacho genera cuenta por pagar pero no se pudo crear porque el despacho tipo " . $arDespachoRecogida->getDespachoTipoRel()->getNombre() . " no tiene configurado un tipo de cuenta por pagar");
         }

@@ -104,7 +104,6 @@ class PrecioController extends ControllerListenerGeneral
         $arPrecio = $em->getRepository(TtePrecio::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
-            ->add('btnEstructuraExcel', SubmitType::class, array('label' => 'Estructura Excel'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
@@ -114,9 +113,6 @@ class PrecioController extends ControllerListenerGeneral
         }
         if ($form->get('btnExcel')->isClicked()) {
             General::get()->setExportar($em->getRepository(TtePrecioDetalle::class)->lista($id), "Precio detalle $id");
-        }
-        if ($form->get('btnEstructuraExcel')->isClicked()) {
-            General::get()->setExportar($em->getRepository(TtePrecioDetalle::class)->excelEstructura($id), "Estructura Precio detalle $id");
         }
         $arPrecioDetalles = $paginator->paginate($em->getRepository(TtePrecioDetalle::class)->lista($id), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/administracion/comercial/precio/detalle.html.twig', array(
@@ -212,45 +208,45 @@ class PrecioController extends ControllerListenerGeneral
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['codigoCiudadOrigenFk'] = $cell->getValue();
                             }
-                            $cell = $worksheet->getCellByColumnAndRow(5, $row);
+                            $cell = $worksheet->getCellByColumnAndRow(12, $row);
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['codigoCiudadDestinoFk'] = $cell->getValue();
                             }
-                            $cell = $worksheet->getCellByColumnAndRow(7, $row);
+                            $cell = $worksheet->getCellByColumnAndRow(14, $row);
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['codigoProductoFk'] = $cell->getValue();
                             }
-                            $cell = $worksheet->getCellByColumnAndRow(8, $row);
+                            $cell = $worksheet->getCellByColumnAndRow(15, $row);
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['vrPeso'] = $cell->getValue();
                             } else {
                                 $arrCargas [$i]['vrPeso'] = 0;
                             }
-                            $cell = $worksheet->getCellByColumnAndRow(9, $row);
+                            $cell = $worksheet->getCellByColumnAndRow(16, $row);
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['vrUnidad'] = $cell->getValue();
                             } else {
                                 $arrCargas [$i]['vrUnidad'] = 0;
                             }
-                            $cell = $worksheet->getCellByColumnAndRow(10, $row);
+                            $cell = $worksheet->getCellByColumnAndRow(17, $row);
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['pesoTope'] = $cell->getValue();
                             } else {
                                 $arrCargas [$i]['pesoTope'] = 0;
                             }
-                            $cell = $worksheet->getCellByColumnAndRow(11, $row);
+                            $cell = $worksheet->getCellByColumnAndRow(18, $row);
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['vrPesoTope'] = $cell->getValue();
                             } else {
                                 $arrCargas [$i]['vrPesoTope'] = 0;
                             }
-                            $cell = $worksheet->getCellByColumnAndRow(12, $row);
+                            $cell = $worksheet->getCellByColumnAndRow(19, $row);
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['vrPesoTopeAdicional'] = $cell->getValue();
                             } else {
                                 $arrCargas [$i]['vrPesoTopeAdicional'] = 0;
                             }
-                            $cell = $worksheet->getCellByColumnAndRow(13, $row);
+                            $cell = $worksheet->getCellByColumnAndRow(20, $row);
                             if ($cell->getValue() != '') {
                                 $arrCargas [$i]['minimo'] = $cell->getValue();
                             } else {

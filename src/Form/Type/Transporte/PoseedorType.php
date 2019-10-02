@@ -83,7 +83,8 @@ class PoseedorType extends AbstractType
 
         $campos = '[
             {"child":"nombreCorto",               "tipo":"TextType",   "propiedades":{"label":"Nombre"},        "operador":"like"},
-            {"child":"codigoPoseedorPk",      "tipo":"TextType",   "propiedades":{"label":"Identificacion"},   "operador":"like"}
+            {"child":"codigoPoseedorPk",      "tipo":"TextType",   "propiedades":{"label":"Identificacion"},   "operador":"like"},
+            {"child":"numeroIdentificacion",                          "tipo":"TextType",   "propiedades":{"label":"Indetificacion"}}
 
         ]';
 

@@ -13,14 +13,19 @@ use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\DotacionElementoType;
 use App\Form\Type\RecursoHumano\DotacionType;
 use App\Form\Type\RecursoHumano\EmpleadoType;
+use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class DotacionController extends BaseController
+class DotacionController extends AbstractController
 {
     protected $clase = RhuDotacion::class;
     protected $claseFormulario = DotacionType::class;
@@ -37,24 +42,47 @@ class DotacionController extends BaseController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/moviento/dotacion/empleado/lista", name="recursohumano_movimiento_dotacion_dotacion_lista")
      */
-    public function lista(Request $request){
-        $this->request = $request;
+    public function lista(Request $request, PaginatorInterface $paginator)
+    {
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoDotacionPk', TextType::class, array('required' => false))
+            ->add('codigoEmpleadoFk', TextType::class, array('required' => false))
+            ->add('codigoInternoReferencia', TextType::class, array('required' => false))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoSalidaInventario', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuDotacion::class)->lista($raw)->getQuery()->execute(), "Dotaciones");
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
+                $em->getRepository(RhuDotacion::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_dotacion_dotacion_lista'));
             }
         }
-        $datos = $this->getDatosLista(true);
+        $arDotaciones = $paginator->paginate($em->getRepository(RhuDotacion::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('recursohumano/movimiento/dotacion/dotacion/lista.html.twig', [
-            'arrDatosLista' =>  $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView()
+            'arDotaciones' => $arDotaciones,
+            'form' => $form->createView()
         ]);
     }
     
@@ -215,6 +243,22 @@ class DotacionController extends BaseController
             'form' => $form->createView(),
             'arDotacionElementos' => $arDotacionElementos
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoDotacion' => $form->get('codigoDotacionPk')->getData(),
+            'codigoInternoReferencia' => $form->get('codigoInternoReferencia')->getData(),
+            'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoCerrado' => $form->get('estadoCerrado')->getData(),
+            'estadoSalidaInventario' => $form->get('estadoSalidaInventario')->getData(),
+        ];
+
+        return $filtro;
     }
 
 }

@@ -37,26 +37,4 @@ class DotacionType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoDotacionPk",        "tipo":"pk"     ,"ayuda":"Codigo del empleado"                      ,"titulo":"ID"},
-            {"campo":"fecha",                   "tipo":"fecha"  ,"ayuda":"fecha"                                    ,"titulo":"FECHA"},
-            {"campo":"codigoEmpleadoFk",        "tipo":"texto"  ,"ayuda":"Numero de identificacion del empleado"    ,"titulo":"IDENTIFICACION"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoDotacionPk",                "tipo":"TextType",      "propiedades":{"label":"Nombre"},   "operador":"="},
-            {"child":"codigoInternoReferencia",         "tipo":"TextType",      "propiedades":{"label":"Nombre"},   "operador":"like"},
-            {"child":"fechaHasta",               "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaDesde",               "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
-            {"child":"codigoEmpleadoFk",    "tipo":"TextType",   "propiedades":{"label":"Empleado"}}
-
-        ]';
-        return $campos;
-    }
 }

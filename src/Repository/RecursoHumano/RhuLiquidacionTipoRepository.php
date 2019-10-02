@@ -3,6 +3,7 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuLiquidacionTipo;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -29,11 +30,15 @@ class RhuLiquidacionTipoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuLiquidacionTipo::class, 'vt')
             ->select('vt.codigoLiquidacionTipoPk')
             ->addSelect('vt.nombre')
-            ->addselect('cd.nombre AS conceptoDinero')
-            ->addselect('cdf.nombre AS conceptoDisfrutada')
             ->addSelect('vt.consecutivo')
-            ->leftJoin('vt.conceptoDineroRel', 'cd')
-            ->leftJoin('vt.conceptoDisfrutadaRel', 'cdf');
+            ->addSelect('vt.codigoConceptoCesantiaFk')
+            ->addSelect('vt.codigoConceptoInteresFk')
+            ->addSelect('vt.codigoConceptoCesantiaAnteriorFk')
+            ->addSelect('vt.codigoConceptoInteresAnteriorFk')
+            ->addSelect('vt.codigoConceptoPrimaFk')
+            ->addSelect('vt.codigoConceptoVacacionFk')
+            ->addSelect('vt.codigoConceptoIndemnizacionFk')
+        ;
         if ($codigoLiquidacionTipo) {
             $queryBuilder->andWhere("vt.codigoLiquidacionTipoPk = '{$codigoLiquidacionTipo}'");
         }
@@ -42,7 +47,21 @@ class RhuLiquidacionTipoRepository extends ServiceEntityRepository
         }
         $queryBuilder->addOrderBy('vt.codigoLiquidacionTipoPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder;
     }
 
+    public function eliminar($arrSeleccionados)
+    {
+        try{
+            foreach ($arrSeleccionados as $arrSeleccionado) {
+                $arRegistro = $this->getEntityManager()->getRepository(RhuLiquidacionTipo::class)->find($arrSeleccionado);
+                if ($arRegistro) {
+                    $this->getEntityManager()->remove($arRegistro);
+                }
+            }
+            $this->getEntityManager()->flush();
+        } catch (\Exception $ex) {
+            Mensajes::error("El registro tiene registros relacionados");
+        }
+    }
 }

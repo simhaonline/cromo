@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Código:</label>
+                <div class="col-sm-4">
+                    {% if arLiquidacionTipo.codigoLiquidacionTipoPk  %}
+                        {{ form_widget(form.codigoLiquidacionTipoPk, {'attr':{'style':'display:none'}}) }}
+                    {% else %}
+                        {{ form_widget(form.codigoLiquidacionTipoPk) }}
+                        {{ form_errors(form.codigoLiquidacionTipoPk) }}
+                    {% endif %}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre) }}
+                    {{ form_errors(form.nombre) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Consecutivo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.consecutivo) }}
+                    {{ form_errors(form.consecutivo) }}
+                </div>
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Concepto cesantia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoConceptoCesantiaFk) }}
+                    {{ form_errors(form.codigoConceptoCesantiaFk) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Concepto interes:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoConceptoInteresFk) }}
+                    {{ form_errors(form.codigoConceptoInteresFk) }}
+                </div>
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Concepto cesantia Anterior:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoConceptoCesantiaAnteriorFk) }}
+                    {{ form_errors(form.codigoConceptoCesantiaAnteriorFk) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Concepto interes Anterior:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoConceptoInteresAnteriorFk) }}
+                    {{ form_errors(form.codigoConceptoInteresAnteriorFk) }}
+                </div>
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Concepto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoConceptoPrimaFk) }}
+                    {{ form_errors(form.codigoConceptoPrimaFk) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Concepto vacaciones:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoConceptoVacacionFk) }}
+                    {{ form_errors(form.codigoConceptoVacacionFk) }}
+                </div>
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Concepto indemnizacion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoConceptoIndemnizacionFk) }}
+                    {{ form_errors(form.codigoConceptoIndemnizacionFk) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_administracion_nomina_liquidaciontipo_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

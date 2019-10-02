@@ -93,6 +93,7 @@ class FinTerceroRepository extends ServiceEntityRepository
             ->addSelect('d.codigoDane as codigoDaneDepartamento')
             ->addSelect('t.email')
             ->addSelect('t.celular')
-            ->addSelect('t.numeroIdentificacion');
+            ->addSelect('t.numeroIdentificacion')
+            ->where('t.estadoInactivo = 0');
     }
 }

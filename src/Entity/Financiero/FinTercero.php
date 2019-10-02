@@ -159,6 +159,11 @@ class FinTercero
     private $email;
 
     /**
+     * @ORM\Column(name="estado_inactivo", type="boolean", nullable=true,options={"default":false})
+     */
+    private $estadoInactivo = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="finTercerosCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      * @Assert\NotNull(message="Este campo no puede estar vacio")
@@ -521,6 +526,22 @@ class FinTercero
     public function setCarRecibosTerceroRel( $carRecibosTerceroRel ): void
     {
         $this->carRecibosTerceroRel = $carRecibosTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoInactivo()
+    {
+        return $this->estadoInactivo;
+    }
+
+    /**
+     * @param mixed $estadoInactivo
+     */
+    public function setEstadoInactivo($estadoInactivo): void
+    {
+        $this->estadoInactivo = $estadoInactivo;
     }
 
 

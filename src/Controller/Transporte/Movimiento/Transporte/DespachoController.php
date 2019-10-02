@@ -269,11 +269,7 @@ class DespachoController extends AbstractController
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnRndc')->isClicked()) {
-                if ($em->getRepository(SegUsuarioProceso::class)->findBy(['codigoUsuarioFk' => $this->getUser()->getUsername(), 'codigoProcesoFk' => '0006'])) {
-                    $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($arDespacho);
-                } else {
-                    Mensajes::error('Usted no tiene permisos para utilizar este botón');
-                }
+                $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->reportarRndc($arDespacho);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnAnular')->isClicked()) {

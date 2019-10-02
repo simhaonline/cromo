@@ -38,6 +38,7 @@ class CarReciboRepository extends ServiceEntityRepository
         $numero = null;
         $codigoRecibo = null;
         $codigoReciboTipo = null;
+        $codigoAsesor = null;
         $fechaPagoDesde = null;
         $fechaPagoHasta = null;
         $estadoAutorizado = null;
@@ -286,21 +287,21 @@ class CarReciboRepository extends ServiceEntityRepository
 
                 if ($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk()) {
                     $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarAplicacionFk());
-                        $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
-                        $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
-                        $arCuentaCobrarAplicacion->setVrSaldo($saldo);
-                        $arCuentaCobrarAplicacion->setVrSaldoOperado($saldoOperado);
-                        $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
-                        $em->persist($arCuentaCobrarAplicacion);
+                    $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+                    $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
+                    $arCuentaCobrarAplicacion->setVrSaldo($saldo);
+                    $arCuentaCobrarAplicacion->setVrSaldoOperado($saldoOperado);
+                    $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
+                    $em->persist($arCuentaCobrarAplicacion);
 
-                        //Cuenta por cobrar
-                        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
-                        $saldo = $arCuentaCobrar->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
-                        $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
-                        $arCuentaCobrar->setVrSaldo($saldo);
-                        $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
-                        $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
-                        $em->persist($arCuentaCobrar);
+                    //Cuenta por cobrar
+                    $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
+                    $saldo = $arCuentaCobrar->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
+                    $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
+                    $arCuentaCobrar->setVrSaldo($saldo);
+                    $arCuentaCobrar->setVrSaldoOperado($saldoOperado);
+                    $arCuentaCobrar->setVrAbono($arCuentaCobrar->getVrAbono() - $arReciboDetalle->getVrPagoAfectar());
+                    $em->persist($arCuentaCobrar);
                 } else {
                     $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arReciboDetalle->getCodigoCuentaCobrarFk());
                     $saldo = $arCuentaCobrar->getVrSaldo() + $arReciboDetalle->getVrPagoAfectar();
@@ -449,7 +450,7 @@ class CarReciboRepository extends ServiceEntityRepository
                 if ($arRecibo) {
                     if ($arRecibo['estadoAprobado'] == 1 && $arRecibo['estadoContabilizado'] == 0) {
                         $fecha = $arRecibo['fecha'];
-                        if($arConfiguracion['contabilizarReciboFechaPago']) {
+                        if ($arConfiguracion['contabilizarReciboFechaPago']) {
                             $fecha = $arRecibo['fechaPago'];
                         }
                         if ($arRecibo['codigoComprobanteFk']) {
@@ -459,12 +460,12 @@ class CarReciboRepository extends ServiceEntityRepository
                                 $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->listaContabilizar($codigo);
                                 foreach ($arReciboDetalles as $arReciboDetalle) {
                                     $arCentroCosto = null;
-                                    if($arReciboDetalle['codigoCentroCostoFk']) {
+                                    if ($arReciboDetalle['codigoCentroCostoFk']) {
                                         $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arReciboDetalle['codigoCentroCostoFk']);
                                     }
                                     //Cuenta cliente
                                     if ($arReciboDetalle['vrPagoAfectar'] > 0) {
-                                        $descripcion = "CLIENTES DOC " . $arReciboDetalle['numeroDocumento'] ;
+                                        $descripcion = "CLIENTES DOC " . $arReciboDetalle['numeroDocumento'];
                                         $cuenta = $arReciboDetalle['codigoCuentaClienteFk'];
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
@@ -474,7 +475,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 break;
                                             }
                                             $arComprobanteReferencia = null;
-                                            if($arReciboDetalle['codigoComprobanteFk']) {
+                                            if ($arReciboDetalle['codigoComprobanteFk']) {
                                                 $arComprobanteReferencia = $em->getRepository(FinComprobante::class)->find($arReciboDetalle['codigoComprobanteFk']);
                                             }
                                             $arRegistro = new FinRegistro();
@@ -493,7 +494,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('CarRecibo');
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
-                                            if($arCuenta->getExigeCentroCosto()) {
+                                            if ($arCuenta->getExigeCentroCosto()) {
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }
                                             $em->persist($arRegistro);
@@ -529,7 +530,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion. " recibo numero: " . $arRecibo['numero'];
+                                            $error = "El tipo no tiene configurada la cuenta " . $descripcion . " recibo numero: " . $arRecibo['numero'];
                                             break;
                                         }
                                     }
@@ -541,7 +542,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                             if (!$arCuenta) {
-                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta. " recibo numero: " . $arRecibo['numero'];
+                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta . " recibo numero: " . $arRecibo['numero'];
                                                 break;
                                             }
                                             $arRegistro = new FinRegistro();
@@ -658,7 +659,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('CarRecibo');
                                             $arRegistro->setCodigoDocumento($arRecibo['codigoReciboPk']);
-                                            if($arCuenta->getExigeCentroCosto()) {
+                                            if ($arCuenta->getExigeCentroCosto()) {
                                                 $arRegistro->setCentroCostoRel($arCentroCosto);
                                             }
                                             $em->persist($arRegistro);
@@ -702,7 +703,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                                 break;
                                             }
                                         } else {
-                                            $error = "El recibo tiene un valor para otro descuento y no tiene concepto". " recibo numero: " . $arRecibo['numero'];
+                                            $error = "El recibo tiene un valor para otro descuento y no tiene concepto" . " recibo numero: " . $arRecibo['numero'];
                                             break;
                                         }
                                     }
@@ -785,7 +786,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                 } else {
                                     $pagoAplicacion = 0;
                                     foreach ($arReciboDetalles as $arReciboDetalle) {
-                                        if($arReciboDetalle['codigoCuentaCobrarAplicacionFk']) {
+                                        if ($arReciboDetalle['codigoCuentaCobrarAplicacionFk']) {
                                             $descripcion = "APLICACION";
                                             $cuenta = $arReciboDetalle['codigoCuentaAplicacionFk'];
                                             if ($cuenta) {
@@ -815,7 +816,7 @@ class CarReciboRepository extends ServiceEntityRepository
                                         }
                                     }
                                     $pago = $arRecibo['vrPago'] - $pagoAplicacion;
-                                    if($pago > 0) {
+                                    if ($pago > 0) {
                                         $cuenta = $arRecibo['codigoCuentaContableFk'];
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);

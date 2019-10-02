@@ -48,7 +48,7 @@ class ReciboController extends AbstractController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/movimiento/recibo/recibo/lista", name="cartera_movimiento_recibo_recibo_lista")
      */
-    public function lista(Request $request, PaginatorInterface $paginator )
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
@@ -75,8 +75,8 @@ class ReciboController extends AbstractController
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-            ->add('fechaPagoDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaPagoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaPagoDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaPagoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -134,11 +134,11 @@ class ReciboController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $txtCodigoCliente = $request->request->get('txtCodigoCliente');
-                if($txtCodigoCliente != '') {
+                if ($txtCodigoCliente != '') {
                     $arCliente = $em->getRepository(CarCliente::class)->find($txtCodigoCliente);
                     if ($arCliente) {
                         $txtCodigoTercero = $request->request->get('txtCodigoTercero');
-                        if($txtCodigoTercero != '') {
+                        if ($txtCodigoTercero != '') {
                             $arTercero = $em->getRepository(FinTercero::class)->find($txtCodigoTercero);
                             $arRecibo->setTerceroRel($arTercero);
                         }
@@ -167,10 +167,10 @@ class ReciboController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $arRecibo = $em->getRepository(CarRecibo::class)->find($id);
-        $form = Estandares::botonera($arRecibo->getEstadoAutorizado(),$arRecibo->getEstadoAprobado(),$arRecibo->getEstadoAnulado());
+        $form = Estandares::botonera($arRecibo->getEstadoAutorizado(), $arRecibo->getEstadoAprobado(), $arRecibo->getEstadoAnulado());
         $arrBtnEliminarDetalle = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnActualizarDetalle = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        if($arRecibo->getEstadoAutorizado()){
+        if ($arRecibo->getEstadoAutorizado()) {
             $arrBtnEliminarDetalle['disabled'] = true;
             $arrBtnActualizarDetalle['disabled'] = true;
         }
@@ -196,7 +196,7 @@ class ReciboController extends AbstractController
                 if ($arRecibo->getEstadoAutorizado() == 1 && $arRecibo->getEstadoImpreso() == 0) {
                     $em->getRepository(CarRecibo::class)->desAutorizar($arRecibo);
                     return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_detalle', ['id' => $id]));
-                }else {
+                } else {
                     Mensajes::error("El recibo debe estar autorizado y no puede estar impreso");
                 }
             }
@@ -228,8 +228,8 @@ class ReciboController extends AbstractController
         $arAsesores = $em->getRepository(GenAsesor::class)->findAll();
         $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->findBy(array('codigoReciboFk' => $id));
         return $this->render('cartera/movimiento/recibo/recibo/detalle.html.twig', array(
-            'arRecibo'=> $arRecibo,
-            'arReciboDetalle'=> $arReciboDetalle,
+            'arRecibo' => $arRecibo,
+            'arReciboDetalle' => $arReciboDetalle,
             'arDescuentoConceptos' => $arDescuentosConceptos,
             'arIngresoConceptos' => $arIngresosConceptos,
             'arAsesores' => $arAsesores,
@@ -245,9 +245,8 @@ class ReciboController extends AbstractController
      * * @Route("/cartera/movimiento/recibo/recibo/detalle/nuevo/{id}", name="cartera_movimiento_recibo_recibo_detalle_nuevo")
      * @throws \Doctrine\ORM\ORMException
      */
-    public function detalleNuevo(Request $request, $id)
+    public function detalleNuevo(Request $request, $id, PaginatorInterface $paginator)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arRecibo = $em->getRepository(CarRecibo::class)->find($id);
         $form = $this->createFormBuilder()
@@ -273,7 +272,7 @@ class ReciboController extends AbstractController
                         $arReciboDetalle->setCuentaCobrarRel($arCuentaCobrar);
                         $arReciboDetalle->setVrRetencionFuente($retencionFuente);
                         $arReciboDetalle->setVrRetencionIca($retencionIca);
-                        $saldo -= $retencionFuente+$retencionIca;
+                        $saldo -= $retencionFuente + $retencionIca;
                         $pagoAfectar = $arrControles['TxtSaldo' . $codigoCuentaCobrar];
                         $arReciboDetalle->setVrPago($saldo);
                         $arReciboDetalle->setVrPagoAfectar($pagoAfectar);

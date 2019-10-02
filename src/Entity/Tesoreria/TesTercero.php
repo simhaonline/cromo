@@ -198,6 +198,16 @@ class TesTercero
     protected $egresosDetallesTerceroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCompra" , mappedBy="terceroRel")
+     */
+    protected $comprasTerceroRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCompraDetalle" , mappedBy="terceroRel")
+     */
+    protected $comprasDetallesTerceroRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTerceroPk()
@@ -579,6 +589,38 @@ class TesTercero
     public function setEgresosDetallesTerceroRel($egresosDetallesTerceroRel): void
     {
         $this->egresosDetallesTerceroRel = $egresosDetallesTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComprasTerceroRel()
+    {
+        return $this->comprasTerceroRel;
+    }
+
+    /**
+     * @param mixed $comprasTerceroRel
+     */
+    public function setComprasTerceroRel($comprasTerceroRel): void
+    {
+        $this->comprasTerceroRel = $comprasTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComprasDetallesTerceroRel()
+    {
+        return $this->comprasDetallesTerceroRel;
+    }
+
+    /**
+     * @param mixed $comprasDetallesTerceroRel
+     */
+    public function setComprasDetallesTerceroRel($comprasDetallesTerceroRel): void
+    {
+        $this->comprasDetallesTerceroRel = $comprasDetallesTerceroRel;
     }
 
 

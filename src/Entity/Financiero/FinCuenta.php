@@ -130,6 +130,11 @@ class FinCuenta
     protected $ingresosDetallesCuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCompraDetalle", mappedBy="cuentaRel")
+     */
+    protected $comprasDetallesCuentaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPk()
@@ -431,6 +436,22 @@ class FinCuenta
     public function setIngresosDetallesCuentaRel($ingresosDetallesCuentaRel): void
     {
         $this->ingresosDetallesCuentaRel = $ingresosDetallesCuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComprasDetallesCuentaRel()
+    {
+        return $this->comprasDetallesCuentaRel;
+    }
+
+    /**
+     * @param mixed $comprasDetallesCuentaRel
+     */
+    public function setComprasDetallesCuentaRel($comprasDetallesCuentaRel): void
+    {
+        $this->comprasDetallesCuentaRel = $comprasDetallesCuentaRel;
     }
 
 

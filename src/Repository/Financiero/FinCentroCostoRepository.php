@@ -3,8 +3,10 @@
 namespace App\Repository\Financiero;
 
 use App\Entity\Financiero\FinCentroCosto;
+use App\Entity\Financiero\FinCuenta;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class FinCentroCostoRepository extends ServiceEntityRepository
 {
@@ -14,6 +16,20 @@ class FinCentroCostoRepository extends ServiceEntityRepository
         parent::__construct($registry, FinCentroCosto::class);
     }
 
+    public function lista()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinCentroCosto::class, 'cc')
+            ->select('cc.codigoCentroCostoPk')
+            ->addSelect('cc.nombre');
+        if ($session->get('filtroFinBuscarCentroCostoCodigo') != '') {
+            $queryBuilder->andWhere("cc.codigoCentroPk LIKE '{$session->get('filtroFinBuscarCentroCostoCodigo')}%'");
+        }
+        if ($session->get('filtroFinBuscarCentroCostoNombre') != '') {
+            $queryBuilder->andWhere("cc.nombre LIKE '%{$session->get('filtroFinBuscarCentroCostoNombre')}%'");
+        }
+        return $queryBuilder;
+    }
 
     public function camposPredeterminados()
     {

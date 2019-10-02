@@ -7,6 +7,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinTercero;
 use App\Form\Type\Financiero\AsientoType;
@@ -261,6 +262,34 @@ class AsientoController extends ControllerListenerGeneral
         $arCuentas = $paginator->paginate($em->getRepository(FinCuenta::class)->lista(), $request->query->get('page', 1), 20);
         return $this->render('financiero/movimiento/contabilidad/asiento/buscarCuenta.html.twig', array(
             'arCuentas' => $arCuentas,
+            'campoCodigo' => $campoCodigo,
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/financiero/buscar/centrocosto/asiento/{campoCodigo}", name="financiero_buscar_centrocosto_asiento")
+     */
+    public function buscarCentroCosto(Request $request, $campoCodigo)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCentroCostoCodigo')])
+            ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCentroCostoNombre')])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroFinBuscarCentroCostoCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroFinBuscarCentroCostoNombre', $form->get('txtNombre')->getData());
+            }
+        }
+        $arCentrosCostos = $paginator->paginate($em->getRepository(FinCentroCosto::class)->lista(), $request->query->get('page', 1), 20);
+        return $this->render('financiero/movimiento/contabilidad/asiento/buscarCentroCosto.html.twig', array(
+            'arCentrosCostos' => $arCentrosCostos,
             'campoCodigo' => $campoCodigo,
             'form' => $form->createView()
         ));

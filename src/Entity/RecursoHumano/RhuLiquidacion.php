@@ -23,6 +23,11 @@ class RhuLiquidacion
     private $codigoLiquidacionPk;
 
     /**
+     * @ORM\Column(name="codigo_liquidacion_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoLiquidacionTipoFk;
+
+    /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
@@ -398,6 +403,12 @@ class RhuLiquidacion
     private $omitirInteresCesantiasAnterior = false;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuLiquidacionTipo", inversedBy="liquidacionesLiquidacionTipoRel")
+     * @ORM\JoinColumn(name="codigo_liquidacion_tipo_fk", referencedColumnName="codigo_liquidacion_tipo_pk")
+     */
+    protected $liquidacionTipoRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="liquidacionesEmpleadoRel")
      * @ORM\JoinColumn(name="codigo_empleado_fk", referencedColumnName="codigo_empleado_pk")
      */
@@ -419,6 +430,11 @@ class RhuLiquidacion
      * @ORM\OneToMany(targetEntity="RhuLiquidacionAdicional", mappedBy="liquidacionRel")
      */
     protected $liquidacionesAdicionalesLiquidacionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuPago", mappedBy="liquidacionRel")
+     */
+    protected $pagosLiquidacionRel;
 
     /**
      * @return array
@@ -1714,6 +1730,54 @@ class RhuLiquidacion
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidacionTipoRel()
+    {
+        return $this->liquidacionTipoRel;
+    }
+
+    /**
+     * @param mixed $liquidacionTipoRel
+     */
+    public function setLiquidacionTipoRel($liquidacionTipoRel): void
+    {
+        $this->liquidacionTipoRel = $liquidacionTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoLiquidacionTipoFk()
+    {
+        return $this->codigoLiquidacionTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoLiquidacionTipoFk
+     */
+    public function setCodigoLiquidacionTipoFk($codigoLiquidacionTipoFk): void
+    {
+        $this->codigoLiquidacionTipoFk = $codigoLiquidacionTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosLiquidacionRel()
+    {
+        return $this->pagosLiquidacionRel;
+    }
+
+    /**
+     * @param mixed $pagosLiquidacionRel
+     */
+    public function setPagosLiquidacionRel($pagosLiquidacionRel): void
+    {
+        $this->pagosLiquidacionRel = $pagosLiquidacionRel;
     }
 
 

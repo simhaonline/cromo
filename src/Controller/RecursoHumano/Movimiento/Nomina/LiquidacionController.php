@@ -160,7 +160,7 @@ class LiquidacionController extends AbstractController
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_detalle', array('id' => $id)));
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository(RhuLiquidacion::class)->aprobar($arLiquidacion);
+                $em->getRepository(RhuLiquidacion::class)->aprobar($arLiquidacion, $this->getUser()->getUsername());
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_detalle', array('id' => $id)));
             }
             if ($form->get('btnExcel')->isClicked()) {

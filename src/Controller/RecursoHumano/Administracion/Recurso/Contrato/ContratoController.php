@@ -14,10 +14,12 @@ use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
+use App\Entity\RecursoHumano\RhuLiquidacionTipo;
 use App\Entity\RecursoHumano\RhuParametroPrestacion;
 use App\Form\Type\RecursoHumano\ContratoParametrosInicialesType;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\General\General;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -141,11 +143,20 @@ class ContratoController extends BaseController
         $em = $this->getDoctrine()->getManager();
         $arContrato = $em->getRepository(RhuContrato::class)->find($id);
         $form = $this->createFormBuilder()
-            ->add('fechaTerminacion', DateType::class, array('label' => 'Terminacion', 'data' => new \DateTime('now')))
+            ->add('liquidacionTipoRel',EntityType::class,[
+                'class' => RhuLiquidacionTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('lt')
+                        ->orderBy('lt.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => true,
+            ])
             ->add('terminacionContratoRel', EntityType::class, array(
                 'class' => RhuContratoMotivo::class,
                 'choice_label' => 'motivo',
             ))
+            ->add('fechaTerminacion', DateType::class, array('label' => 'Terminacion', 'data' => new \DateTime('now')))
             ->add('comentarioTerminacion', TextareaType::class, array('required' => false))
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();

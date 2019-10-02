@@ -25,6 +25,12 @@
             </tr>
         </table>
         <div class="form-group form-group-sm">
+            <label for="form_fechaTerminacion" class="col-sm-4 control-label">Tipo:</label>
+            <div class="col-sm-8">
+                {{ form_widget(form.liquidacionTipoRel) }}
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
             <label for="form_fechaTerminacion" class="col-sm-4 control-label">Fecha terminacion:</label>
             <div class="col-sm-8">
                 {{ form_widget(form.fechaTerminacion) }}

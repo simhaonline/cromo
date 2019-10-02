@@ -7,6 +7,7 @@ use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
+use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoCuenta;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuConfiguracionCuenta;
@@ -15,11 +16,14 @@ use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
+use App\Entity\RecursoHumano\RhuLiquidacionTipo;
 use App\Entity\RecursoHumano\RhuNovedad;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\RecursoHumano\RhuReclamo;
+use App\Entity\RecursoHumano\RhuVacacionTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -1089,24 +1093,235 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arLiquiracion RhuLiquidacion
+     * @param $arLiquidacion RhuLiquidacion
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function aprobar($arLiquiracion)
+    public function aprobar($arLiquidacion, $usuario)
     {
         $em = $this->getEntityManager();
-        if ($arLiquiracion->getEstadoAutorizado() == 1) {
-            if ($arLiquiracion->getEstadoAprobado() == 0) {
-                $arLiquiracion->setEstadoAprobado(1);
-                $em->persist($arLiquiracion);
-                $em->flush();
+        if ($arLiquidacion->getEstadoAutorizado() == 1) {
+            if ($arLiquidacion->getEstadoAprobado() == 0) {
+                    $arrConceptos = $this->conceptos($arLiquidacion);
+                    if($arrConceptos['error'] == '') {
+                        $numero = $arLiquidacion->getNumero();
+                        if($arLiquidacion->getNumero() == 0 || $arLiquidacion->getNumero() == null) {
+                            $arLiquidacionTipo = $em->getRepository(RhuLiquidacionTipo::class)->find($arLiquidacion->getCodigoLiquidacionTipoFk());
+                            $arLiquidacion->setNumero($arLiquidacionTipo->getConsecutivo());
+                            $arLiquidacionTipo->setConsecutivo($arLiquidacionTipo->getConsecutivo() + 1);
+                            $em->persist($arLiquidacionTipo);
+                            $numero = $arLiquidacion->getNumero();
+                        }
+
+                        $arPagoTipo = $em->getRepository(RhuPagoTipo::class)->find('LIQ');
+                        $arPago = new RhuPago();
+                        $arPago->setPagoTipoRel($arPagoTipo);
+                        $arPago->setLiquidacionRel($arLiquidacion);
+                        $arPago->setGrupoRel($arLiquidacion->getContratoRel()->getGrupoRel());
+                        $arPago->setEmpleadoRel($arLiquidacion->getEmpleadoRel());
+                        $arPago->setVrSalarioContrato($arLiquidacion->getContratoRel()->getVrSalario());
+                        $arPago->setFechaDesde($arLiquidacion->getFechaHasta());
+                        $arPago->setFechaHasta($arLiquidacion->getFechaHasta());
+                        $arPago->setFechaDesdeContrato($arLiquidacion->getFechaHasta());
+                        $arPago->setFechaHastaContrato($arLiquidacion->getFechaHasta());
+                        $arPago->setContratoRel($arLiquidacion->getContratoRel());
+                        $arPago->setEntidadPensionRel($arLiquidacion->getContratoRel()->getEntidadPensionRel());
+                        $arPago->setEntidadSaludRel($arLiquidacion->getContratoRel()->getEntidadSaludRel());
+                        $arPago->setEstadoAutorizado(1);
+                        $arPago->setEstadoAprobado(1);
+                        $arPago->setNumero($numero);
+                        $arPago->setUsuario($usuario);
+                        $em->persist($arPago);
+                        $neto = 0;
+
+                        //Cesantias
+                        if ($arLiquidacion->getVrCesantias() > 0) {
+                            $arConcepto = $arrConceptos['cesantia'];
+                            $arPagoDetalle = new RhuPagoDetalle();
+                            $vrCesantia = round($arLiquidacion->getVrCesantias());
+                            $arPagoDetalle->setPagoRel($arPago);
+                            $arPagoDetalle->setConceptoRel($arConcepto);
+                            $arPagoDetalle->setDetalle('');
+                            $arPagoDetalle->setVrPago($vrCesantia);
+                            $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+                            $arPagoDetalle->setDias($arLiquidacion->getDiasCesantias());
+                            $pagoOperado = $vrCesantia * $arConcepto->getOperacion();
+                            $arPagoDetalle->setVrPagoOperado($pagoOperado);
+                            $em->persist($arPagoDetalle);
+                            $neto += $pagoOperado;
+                        }
+
+                        //Intereses
+                        if ($arLiquidacion->getVrInteresesCesantias() > 0) {
+                            $arConcepto = $arrConceptos['interes'];
+                            $arPagoDetalle = new RhuPagoDetalle();
+                            $vrInteres = round($arLiquidacion->getVrInteresesCesantias());
+                            $arPagoDetalle->setPagoRel($arPago);
+                            $arPagoDetalle->setConceptoRel($arConcepto);
+                            $arPagoDetalle->setDetalle('');
+                            $arPagoDetalle->setVrPago($vrInteres);
+                            $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+                            $arPagoDetalle->setDias($arLiquidacion->getDiasCesantias());
+                            $pagoOperado = $vrInteres * $arConcepto->getOperacion();
+                            $arPagoDetalle->setVrPagoOperado($pagoOperado);
+                            $em->persist($arPagoDetalle);
+                            $neto += $pagoOperado;
+                        }
+
+                        //Cesantias anterior
+                        if ($arLiquidacion->getVrCesantiasAnterior() > 0) {
+                            $arConcepto = $arrConceptos['cesantiaAnterior'];
+                            $arPagoDetalle = new RhuPagoDetalle();
+                            $vrCesantia = round($arLiquidacion->getVrCesantiasAnterior());
+                            $arPagoDetalle->setPagoRel($arPago);
+                            $arPagoDetalle->setConceptoRel($arConcepto);
+                            $arPagoDetalle->setDetalle('');
+                            $arPagoDetalle->setVrPago($vrCesantia);
+                            $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+                            $arPagoDetalle->setDias($arLiquidacion->getDiasCesantiasAnterior());
+                            $pagoOperado = $vrCesantia * $arConcepto->getOperacion();
+                            $arPagoDetalle->setVrPagoOperado($pagoOperado);
+                            $em->persist($arPagoDetalle);
+                            $neto += $pagoOperado;
+                        }
+
+                        //Intereses anterior
+                        if ($arLiquidacion->getVrInteresesCesantiasAnterior() > 0) {
+                            $arConcepto = $arrConceptos['interesAnterior'];
+                            $arPagoDetalle = new RhuPagoDetalle();
+                            $vrInteres = round($arLiquidacion->getVrInteresesCesantias());
+                            $arPagoDetalle->setPagoRel($arPago);
+                            $arPagoDetalle->setConceptoRel($arConcepto);
+                            $arPagoDetalle->setDetalle('');
+                            $arPagoDetalle->setVrPago($vrInteres);
+                            $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+                            $arPagoDetalle->setDias($arLiquidacion->getDiasCesantiasAnterior());
+                            $pagoOperado = $vrInteres * $arConcepto->getOperacion();
+                            $arPagoDetalle->setVrPagoOperado($pagoOperado);
+                            $em->persist($arPagoDetalle);
+                            $neto += $pagoOperado;
+                        }
+
+                        //Prima
+                        if ($arLiquidacion->getVrPrima() > 0) {
+                            $arConcepto = $arrConceptos['prima'];
+                            $arPagoDetalle = new RhuPagoDetalle();
+                            $vrPrima = round($arLiquidacion->getVrPrima());
+                            $arPagoDetalle->setPagoRel($arPago);
+                            $arPagoDetalle->setConceptoRel($arConcepto);
+                            $arPagoDetalle->setDetalle('');
+                            $arPagoDetalle->setVrPago($vrPrima);
+                            $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+                            $arPagoDetalle->setDias($arLiquidacion->getDiasPrima());
+                            $pagoOperado = $vrPrima * $arConcepto->getOperacion();
+                            $arPagoDetalle->setVrPagoOperado($pagoOperado);
+                            $em->persist($arPagoDetalle);
+                            $neto += $pagoOperado;
+                        }
+
+                        //Vacacion
+                        if ($arLiquidacion->getVrVacacion() > 0) {
+                            $arConcepto = $arrConceptos['vacacion'];
+                            $arPagoDetalle = new RhuPagoDetalle();
+                            $vrVacacion = round($arLiquidacion->getVrVacacion());
+                            $arPagoDetalle->setPagoRel($arPago);
+                            $arPagoDetalle->setConceptoRel($arConcepto);
+                            $arPagoDetalle->setDetalle('');
+                            $arPagoDetalle->setVrPago($vrVacacion);
+                            $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+                            $arPagoDetalle->setDias($arLiquidacion->getDiasVacacion());
+                            $pagoOperado = $vrVacacion * $arConcepto->getOperacion();
+                            $arPagoDetalle->setVrPagoOperado($pagoOperado);
+                            $em->persist($arPagoDetalle);
+                            $neto += $pagoOperado;
+                        }
+
+                        //Indemnizacion
+                        if ($arLiquidacion->getVrPrima() > 0) {
+                            $arConcepto = $arrConceptos['indemnizacion'];
+                            $arPagoDetalle = new RhuPagoDetalle();
+                            $vrIndemnizacion = round($arLiquidacion->getVrIndemnizacion());
+                            $arPagoDetalle->setPagoRel($arPago);
+                            $arPagoDetalle->setConceptoRel($arConcepto);
+                            $arPagoDetalle->setDetalle('');
+                            $arPagoDetalle->setVrPago($vrIndemnizacion);
+                            $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+                            $pagoOperado = $vrIndemnizacion * $arConcepto->getOperacion();
+                            $arPagoDetalle->setVrPagoOperado($pagoOperado);
+                            $em->persist($arPagoDetalle);
+                            $neto += $pagoOperado;
+                        }
+
+                        //Adicionales
+                        $arAdicionales = $em->getRepository(RhuLiquidacionAdicional::class)->findBy(array('codigoLiquidacionFk' => $arLiquidacion->getCodigoLiquidacionPk()));
+                        foreach ($arAdicionales as $arAdicional) {
+                            $vrPagoAdicional = 0;
+                            $ingresoBaseCotizacion = 0;
+                            $ingresoBasePrestacional = 0;
+                            $ingresoBasePrestacionalVacacion = 0;
+                            if ($arAdicional->getVrBonificacion() > 0) {
+                                $vrPagoAdicional = $arAdicional->getVrBonificacion() * $arAdicional->getPagoConceptoRel()->getOperacion();
+                            } else {
+                                $vrPagoAdicional = $arAdicional->getVrDeduccion() * $arAdicional->getPagoConceptoRel()->getOperacion();
+                            }
+
+                            if ($arAdicional->getPagoConceptoRel()->getGeneraIngresoBaseCotizacion()) {
+                                $douIngresoBaseCotizacion = $vrPagoAdicional;
+                            }
+                            if ($arAdicional->getPagoConceptoRel()->getGeneraIngresoBasePrestacion()) {
+                                $douIngresoBasePrestacional = $vrPagoAdicional;
+                            }
+                            $arPagoDetalle = new \Brasa\RecursoHumanoBundle\Entity\RhuPagoDetalle();
+                            $arPagoDetalle->setPagoRel($arPago);
+                            $arPagoDetalle->setPagoConceptoRel($arAdicional->getPagoConceptoRel());
+                            $arPagoDetalle->setDetalle('');
+                            if ($vrPagoAdicional < 0) {
+                                $arPagoDetalle->setVrPago($vrPagoAdicional * -1);
+                            } else {
+                                $arPagoDetalle->setVrPago($vrPagoAdicional);
+                            }
+                            $arPagoDetalle->setOperacion($arAdicional->getPagoConceptoRel()->getOperacion());
+                            $arPagoDetalle->setVrPagoOperado($vrPagoAdicional);
+                            $arPagoDetalle->setVrIngresoBaseCotizacion($douIngresoBaseCotizacion);
+                            $arPagoDetalle->setVrIngresoBasePrestacion($douIngresoBasePrestacional);
+                            // se valida si el concepto es de salud o pension
+                            if ($arAdicional->getPagoConceptoRel()->getConceptoSalud()) {
+                                $arPagoDetalle->setSalud(1);
+                            } else {
+                                if ($arAdicional->getPagoConceptoRel()->getConceptoPension()) {
+                                    $arPagoDetalle->setPension(1);
+                                }
+                            }
+                            $em->persist($arPagoDetalle);
+
+                            //Validar si algun adicional corresponde a un embargo para generar el pago en RhuEmbargoPago.
+                            if ($arAdicional->getCodigoEmbargoFk() != "") {
+                                $arEmbargo = $arAdicional->getEmbargoRel();
+                                //Crear embargo pago, se guarda el pago en al tabla rhu_embargo_pago
+                                $arEmbargoPago = new \Brasa\RecursoHumanoBundle\Entity\RhuEmbargoPago();
+                                $arEmbargoPago->setEmbargoRel($arEmbargo);
+                                $arEmbargoPago->setPagoRel($arPago);
+                                $arEmbargoPago->setFechaPago(new \ DateTime('now'));
+                                $arEmbargoPago->setVrCuota($arAdicional->getVrDeduccion());
+                                $arEmbargo->setDescuento($arEmbargo->getDescuento() + $arAdicional->getVrDeduccion());
+                                $em->persist($arEmbargoPago);
+                                $em->persist($arEmbargo);
+                            }
+                        }
+
+
+                       //$arLiquidacion->setEstadoAprobado(1);
+                       //$em->persist($arLiquidacion);
+                        $em->flush();
+                    } else {
+                        Mensajes::error($arrConceptos['error']);
+                    }
             } else {
-                Mensajes::error('La visita ya esta aprobada');
+                Mensajes::error('La liquidacion ya esta aprobada');
             }
 
         } else {
-            Mensajes::error('La visita ya esta desautorizada');
+            Mensajes::error('La liquidacion ya esta desautorizada');
         }
     }
 
@@ -1526,5 +1741,68 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
         return true;
     }
 
-
+    /**
+     * @param $arLiquidacion RhuLiquidacion
+     * @return mixed
+     */
+    private function conceptos($arLiquidacion) {
+        $em = $this->getEntityManager();
+        $respuesta = [
+            'error' => '',
+            'censatia' => null,
+            'interes' => null,
+            'cesantiaAnterior' => null,
+            'interesAnterior' => null,
+            'prima' => null,
+            'vacacion' => null,
+            'indemnizacion' => null
+        ];
+        if($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoCesantiaFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoInteresFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoCesantiaAnteriorFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoInteresAnteriorFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoPrimaFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoVacacionFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoIndemnizacionFk()) {
+            $arConceptoCesantia = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoCesantiaFk());
+            if($arConceptoCesantia) {
+                $respuesta['cesantia'] = $arConceptoCesantia;
+                $arConceptoInteres = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoInteresFk());
+                if($arConceptoInteres) {
+                    $respuesta['interes'] = $arConceptoInteres;
+                    $arConceptoCesantiaAnterior = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoCesantiaAnteriorFk());
+                    if($arConceptoCesantiaAnterior) {
+                        $respuesta['cesantiaAnterior'] = $arConceptoCesantiaAnterior;
+                        $arConceptoInteresAnterior = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoInteresAnteriorFk());
+                        if($arConceptoInteresAnterior) {
+                            $respuesta['interesAnterior'] = $arConceptoInteresAnterior;
+                            $arConceptoPrima = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoPrimaFk());
+                            if($arConceptoPrima) {
+                                $respuesta['prima'] = $arConceptoPrima;
+                                $arConceptoVacacion = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoVacacionFk());
+                                if($arConceptoVacacion) {
+                                    $respuesta['vacacion'] = $arConceptoVacacion;
+                                    $arConceptoIndemnizacion = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoIndemnizacionFk());
+                                    if($arConceptoIndemnizacion) {
+                                        $respuesta['indemnizacion'] = $arConceptoIndemnizacion;
+                                    } else {
+                                        $respuesta['error'] = "El concepto indemnizacion configurado en el tipo de liquidacion no existe";
+                                    }
+                                } else {
+                                    $respuesta['error'] = "El concepto vacacion configurado en el tipo de liquidacion no existe";
+                                }
+                            } else {
+                                $respuesta['error'] = "El concepto prima configurado en el tipo de liquidacion no existe";
+                            }
+                        } else {
+                            $respuesta['error'] = "El concepto interes anterior configurado en el tipo de liquidacion no existe";
+                        }
+                    } else {
+                        $respuesta['error'] = "El concepto cesantia anterior configurado en el tipo de liquidacion no existe";
+                    }
+                } else {
+                    $respuesta['error'] = "El concepto interes configurado en el tipo de liquidacion no existe";
+                }
+            } else {
+                $respuesta['error'] = "El concepto cesantia configurado en el tipo de liquidacion no existe";
+            }
+        } else {
+            $respuesta['error'] = "El tipo de liquidacion no tiene configurados todos los conceptos";
+        }
+        return $respuesta;
+    }
 }

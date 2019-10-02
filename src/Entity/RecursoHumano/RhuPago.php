@@ -189,6 +189,11 @@ class RhuPago
     private $codigoVacacionFk;
 
     /**
+     * @ORM\Column(name="codigo_liquidacion_fk", type="integer", nullable=true)
+     */
+    private $codigoLiquidacionFk;
+
+    /**
      * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
      */
     private $usuario;
@@ -251,6 +256,12 @@ class RhuPago
      * @ORM\JoinColumn(name="codigo_vacacion_fk",referencedColumnName="codigo_vacacion_pk")
      */
     protected $vacacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuLiquidacion", inversedBy="pagosLiquidacionRel")
+     * @ORM\JoinColumn(name="codigo_liquidacion_fk",referencedColumnName="codigo_liquidacion_pk")
+     */
+    protected $liquidacionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="pagoRel" )
@@ -1007,6 +1018,38 @@ class RhuPago
     public function setVrIngresoBasePrestacionVacacion($vrIngresoBasePrestacionVacacion): void
     {
         $this->vrIngresoBasePrestacionVacacion = $vrIngresoBasePrestacionVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoLiquidacionFk()
+    {
+        return $this->codigoLiquidacionFk;
+    }
+
+    /**
+     * @param mixed $codigoLiquidacionFk
+     */
+    public function setCodigoLiquidacionFk($codigoLiquidacionFk): void
+    {
+        $this->codigoLiquidacionFk = $codigoLiquidacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidacionRel()
+    {
+        return $this->liquidacionRel;
+    }
+
+    /**
+     * @param mixed $liquidacionRel
+     */
+    public function setLiquidacionRel($liquidacionRel): void
+    {
+        $this->liquidacionRel = $liquidacionRel;
     }
 
 

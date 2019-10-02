@@ -131,16 +131,16 @@ class RhuVacacionRepository extends ServiceEntityRepository
 
                     //Estos van en el detalle del pago
                     if ($arVacacion->getDiasDisfrutados() > 0) {
-                        $arPagoConceptoVacacion = $arVacacion->getVacacionTipoRel()->getConceptoDisfrutadaRel();
+                        $arConceptoVacacion = $arVacacion->getVacacionTipoRel()->getConceptoDisfrutadaRel();
                         $arPagoDetalleVacacion = new RhuPagoDetalle();
                         $vrVacacionDisfrute = round($arVacacion->getVrDisfrute());
                         $arPagoDetalleVacacion->setPagoRel($arPago);
-                        $arPagoDetalleVacacion->setConceptoRel($arPagoConceptoVacacion);
+                        $arPagoDetalleVacacion->setConceptoRel($arConceptoVacacion);
                         $arPagoDetalleVacacion->setDetalle('');
                         $arPagoDetalleVacacion->setVrPago($vrVacacionDisfrute);
-                        $arPagoDetalleVacacion->setOperacion($arPagoConceptoVacacion->getOperacion());
+                        $arPagoDetalleVacacion->setOperacion($arConceptoVacacion->getOperacion());
                         $arPagoDetalleVacacion->setDias($arVacacion->getDiasDisfrutados());
-                        $pagoOperado = $vrVacacionDisfrute * $arPagoConceptoVacacion->getOperacion();
+                        $pagoOperado = $vrVacacionDisfrute * $arConceptoVacacion->getOperacion();
                         $arPagoDetalleVacacion->setVrPagoOperado($pagoOperado);
                         $em->persist($arPagoDetalleVacacion);
                         $neto += $pagoOperado;

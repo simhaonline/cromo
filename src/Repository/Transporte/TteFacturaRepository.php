@@ -635,7 +635,6 @@ class TteFacturaRepository extends ServiceEntityRepository
             if($arFactura->getEstadoContabilizado() == 0) {
                 if($arFactura->getEstadoAprobado() == 1) {
                     if($arFactura->getEstadoAnulado() == 0) {
-
                             $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->findOneBy(array('modulo' => 'TTE', 'codigoDocumento' => $arFactura->getCodigoFacturaPk()));
                             if($arCuentaCobrar) {
                                 $arCuentaCobrarAct = $em->getRepository(CarCuentaCobrar::class)->find($arCuentaCobrar->getCodigoCuentaCobrarPk());
@@ -670,6 +669,10 @@ class TteFacturaRepository extends ServiceEntityRepository
                             $query = $em->createQuery('UPDATE App\Entity\Transporte\TteFacturaDetalle fd set fd.vrFlete = 0, fd.vrManejo = 0,  fd.unidades = 0, 
                             fd.pesoReal = 0, fd.pesoVolumen = 0, fd.vrDeclara = 0 
                             WHERE fd.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
+                            $query->execute();
+                            $query = $em->createQuery('UPDATE App\Entity\Transporte\TteFacturaDetalleConcepto fdc set fdc.vrPrecio = 0, fdc.vrSubtotal = 0,  fdc.vrIva = 0, 
+                                fdc.pesoReal = 0, fdc.vrTotal = 0 
+                                WHERE fd.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
                             $query->execute();
                             $em->flush();
 

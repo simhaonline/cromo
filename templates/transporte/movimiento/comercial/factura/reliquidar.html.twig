@@ -43,9 +43,10 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.tipoLiquidacion) }}
                 </div>
-                <label for="" class="control-label col-sm-1"></label>
+                <label for="" class="control-label col-sm-1">Fecha desde:</label>
                 <div class="col-sm-4">
-
+                    {{ form_widget(form.fechaDesde) }}
+                    * Si especifica una fecha solo se reliquidan las guias mayores o iguales a esta
                 </div>
             </div>
         </div>
@@ -58,6 +59,7 @@
         <tr>
             <th>ID</th>
             <th>GUIA</th>
+            <th>FECHA</th>
             <th>OI</th>
             <th>OC</th>
             <th>ORIGEN</th>
@@ -83,6 +85,7 @@
             <tr>
                 <td>{{ arFacturaDetalleReliquidar.codigoFacturaDetalleReliquidarPk }}</td>
                 <td>{{ arFacturaDetalleReliquidar.codigoGuiaFk }}</td>
+                <td>{{ arFacturaDetalleReliquidar.fechaIngreso | date('Y-m-d H-i') }}</td>
                 <td>{{ arFacturaDetalleReliquidar.codigoOperacionIngresoFk }}</td>
                 <td>{{ arFacturaDetalleReliquidar.codigoOperacionCargoFk }}</td>
                 <td>{{ arFacturaDetalleReliquidar.ciudadOrigen}}</td>

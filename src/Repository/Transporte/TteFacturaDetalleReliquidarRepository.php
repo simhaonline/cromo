@@ -30,6 +30,7 @@ class TteFacturaDetalleReliquidarRepository extends ServiceEntityRepository
             ->addSelect('fdr.vrFleteNuevo')
             ->addSelect('fdr.vrManejoNuevo')
             ->addSelect('fdr.pesoFacturadoNuevo')
+            ->addSelect('fdr.fechaIngreso')
             ->addSelect('g.codigoOperacionIngresoFk')
             ->addSelect('g.codigoOperacionCargoFk')
             ->addSelect('co.nombre AS ciudadOrigen')

@@ -751,6 +751,7 @@ class FacturaController extends AbstractController
             exit;
         }
         $form = $this->createFormBuilder()
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('btnReliquidar', SubmitType::class, array('label' => 'Reliquidar'))
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
             ->add('tipoLiquidacion', ChoiceType::class, [
@@ -765,8 +766,8 @@ class FacturaController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnReliquidar')->isClicked()) {
+                $fechaDesde = $form->get('fechaDesde')->getData();
                 $em->getRepository(TteFacturaDetalleReliquidar::class)->limpiarTabla($codigoFactura);
-
                 $tipoLiquidacionParametro = $form->get('tipoLiquidacion')->getData();
                 if($tipoLiquidacionParametro == "0") {
                     $tipoLiquidacionParametro = $em->getRepository(TteCondicion::class)->tipoLiquidacion($arFactura->getClienteRel()->getCondicionRel());
@@ -774,38 +775,48 @@ class FacturaController extends AbstractController
 
                 $arFacturaDetalles = $em->getRepository(TteFacturaDetalle::class)->findBy(['codigoFacturaFk' => $codigoFactura]);
                 foreach ($arFacturaDetalles as $arFacturaDetalle){
-                    $tipoLiquidacion = $tipoLiquidacionParametro;
-                    if($tipoLiquidacionParametro == "1") {
-                        $tipoLiquidacion = "K";
-                        if($arFacturaDetalle->getGuiaRel()->getTipoLiquidacion()) {
-                            $tipoLiquidacion = $arFacturaDetalle->getGuiaRel()->getTipoLiquidacion();
+                    $reliquidar = true;
+                    if($fechaDesde) {
+                        $fechaGuia = $arFacturaDetalle->getGuiaRel()->getFechaIngreso();
+                        if($fechaGuia <  $fechaDesde) {
+                            $reliquidar = false;
                         }
                     }
-                    $arrResultado = $em->getRepository(TteGuia::class)->liquidar(
-                        $arFactura->getCodigoClienteFk(),
-                        $arFactura->getClienteRel()->getCodigoCondicionFk(),
-                        $arFactura->getClienteRel()->getCondicionRel()->getCodigoPrecioFk(),
-                        $arFacturaDetalle->getGuiaRel()->getCodigoCiudadOrigenFk(),
-                        $arFacturaDetalle->getGuiaRel()->getCodigoCiudadDestinoFk(),
-                        $arFacturaDetalle->getGuiaRel()->getCodigoProductoFk(),
-                        $arFacturaDetalle->getGuiaRel()->getCodigoZonaFk(),
-                        $tipoLiquidacion,
-                        $arFacturaDetalle->getUnidades(),
-                        $arFacturaDetalle->getPesoReal(),
-                        $arFacturaDetalle->getVrDeclara()
+                    if($reliquidar) {
+                        $tipoLiquidacion = $tipoLiquidacionParametro;
+                        if($tipoLiquidacionParametro == "1") {
+                            $tipoLiquidacion = "K";
+                            if($arFacturaDetalle->getGuiaRel()->getTipoLiquidacion()) {
+                                $tipoLiquidacion = $arFacturaDetalle->getGuiaRel()->getTipoLiquidacion();
+                            }
+                        }
+                        $arrResultado = $em->getRepository(TteGuia::class)->liquidar(
+                            $arFactura->getCodigoClienteFk(),
+                            $arFactura->getClienteRel()->getCodigoCondicionFk(),
+                            $arFactura->getClienteRel()->getCondicionRel()->getCodigoPrecioFk(),
+                            $arFacturaDetalle->getGuiaRel()->getCodigoCiudadOrigenFk(),
+                            $arFacturaDetalle->getGuiaRel()->getCodigoCiudadDestinoFk(),
+                            $arFacturaDetalle->getGuiaRel()->getCodigoProductoFk(),
+                            $arFacturaDetalle->getGuiaRel()->getCodigoZonaFk(),
+                            $tipoLiquidacion,
+                            $arFacturaDetalle->getUnidades(),
+                            $arFacturaDetalle->getPesoReal(),
+                            $arFacturaDetalle->getVrDeclara()
                         );
 
-                    $arFacturaDetalleReliquidar =  new TteFacturaDetalleReliquidar;
-                    $arFacturaDetalleReliquidar->setFacturaDetalleRel($arFacturaDetalle);
-                    $arFacturaDetalleReliquidar->setCodigoGuiaFk($arFacturaDetalle->getCodigoGuiaFk());
-                    $arFacturaDetalleReliquidar->setCodigoFacturaFk($codigoFactura);
-                    $arFacturaDetalleReliquidar->setVrFlete($arFacturaDetalle->getVrFlete());
-                    $arFacturaDetalleReliquidar->setVrManejo($arFacturaDetalle->getVrManejo());
-                    $arFacturaDetalleReliquidar->setPesoFacturado($arFacturaDetalle->getPesoFacturado());
-                    $arFacturaDetalleReliquidar->setVrFleteNuevo($arrResultado['flete']);
-                    $arFacturaDetalleReliquidar->setVrManejoNuevo($arrResultado['manejo']);
-                    $arFacturaDetalleReliquidar->setPesoFacturadoNuevo($arrResultado['pesoFacturado']);
-                    $em->persist($arFacturaDetalleReliquidar);
+                        $arFacturaDetalleReliquidar =  new TteFacturaDetalleReliquidar;
+                        $arFacturaDetalleReliquidar->setFacturaDetalleRel($arFacturaDetalle);
+                        $arFacturaDetalleReliquidar->setCodigoGuiaFk($arFacturaDetalle->getCodigoGuiaFk());
+                        $arFacturaDetalleReliquidar->setFechaIngreso($arFacturaDetalle->getGuiaRel()->getFechaIngreso());
+                        $arFacturaDetalleReliquidar->setCodigoFacturaFk($codigoFactura);
+                        $arFacturaDetalleReliquidar->setVrFlete($arFacturaDetalle->getVrFlete());
+                        $arFacturaDetalleReliquidar->setVrManejo($arFacturaDetalle->getVrManejo());
+                        $arFacturaDetalleReliquidar->setPesoFacturado($arFacturaDetalle->getPesoFacturado());
+                        $arFacturaDetalleReliquidar->setVrFleteNuevo($arrResultado['flete']);
+                        $arFacturaDetalleReliquidar->setVrManejoNuevo($arrResultado['manejo']);
+                        $arFacturaDetalleReliquidar->setPesoFacturadoNuevo($arrResultado['pesoFacturado']);
+                        $em->persist($arFacturaDetalleReliquidar);
+                    }
                 }
                 $em->flush();
             }

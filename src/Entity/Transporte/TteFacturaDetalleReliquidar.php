@@ -38,6 +38,11 @@ class TteFacturaDetalleReliquidar
     private $codigoGuiaFk;
 
     /**
+     * @ORM\Column(name="fecha_ingreso", type="datetime", nullable=true)
+     */
+    private $fechaIngreso;
+
+    /**
      * @ORM\Column(name="vr_flete", type="float", options={"default" : 0})
      */
     private $vrFlete = 0;
@@ -247,6 +252,22 @@ class TteFacturaDetalleReliquidar
     public function setPesoFacturadoNuevo($pesoFacturadoNuevo): void
     {
         $this->pesoFacturadoNuevo = $pesoFacturadoNuevo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaIngreso()
+    {
+        return $this->fechaIngreso;
+    }
+
+    /**
+     * @param mixed $fechaIngreso
+     */
+    public function setFechaIngreso($fechaIngreso): void
+    {
+        $this->fechaIngreso = $fechaIngreso;
     }
 
 

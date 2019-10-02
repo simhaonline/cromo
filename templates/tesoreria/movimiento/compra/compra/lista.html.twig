@@ -79,7 +79,7 @@
             <th>ID</th>
             <th>NUMERO</th>
             <th>FECHA</th>
-            <th title="Fecha de pago">FECHA P</th>
+            {#<th title="Fecha de pago">FECHA P</th>#}
             <th>TIPO</th>
             <th>TERCERO</th>
             <th title="Estado autorizado">AUT</th>
@@ -95,7 +95,6 @@
                 <td>{{ arCompra.codigoCompraPk }}</td>
                 <td>{{ arCompra.numero }}</td>
                 <td>{{ arCompra.fecha | date('Y-m-d') }}</td>
-                <td>{{ arCompra.fechaPago | date('Y-m-d') }}</td>
                 <td>{{ arCompra.tipo }}</td>
                 <td>{{ arCompra.tercero }}</td>
                 <td>{{ arCompra.estadoAutorizado ? 'SI':'NO' }}</td>

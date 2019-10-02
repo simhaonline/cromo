@@ -49,61 +49,60 @@ class TesCompraRepository extends ServiceEntityRepository
         }
 
         $em = $this->getEntityManager();
-        $queryBuilder = $em->createQueryBuilder()->from(TesCompra::class, 'e')
-            ->select('e.codigoCompraPk')
+        $queryBuilder = $em->createQueryBuilder()->from(TesCompra::class, 'c')
+            ->select('c.codigoCompraPk')
             ->addSelect('et.nombre as tipo')
             ->addSelect('t.nombreCorto as tercero')
-            ->addSelect('e.numero')
-            ->addSelect('e.fecha')
-            ->addSelect('e.fechaPago')
-            ->addSelect('e.estadoAnulado')
-            ->addSelect('e.estadoAprobado')
-            ->addSelect('e.estadoAutorizado')
-            ->addSelect('e.estadoImpreso')
-            ->leftJoin('e.compraTipoRel', 'et')
-            ->leftJoin('e.terceroRel', 't')
-            ->where('e.codigoCompraPk <> 0');
+            ->addSelect('c.numero')
+            ->addSelect('c.fecha')
+            ->addSelect('c.estadoAnulado')
+            ->addSelect('c.estadoAprobado')
+            ->addSelect('c.estadoAutorizado')
+            ->addSelect('c.estadoImpreso')
+            ->leftJoin('c.compraTipoRel', 'et')
+            ->leftJoin('c.terceroRel', 't')
+            ->where('c.codigoCompraPk <> 0');
         if ($codigoCompra) {
-            $queryBuilder->andWhere("e.codigoCompraPk = '{$codigoCompra}'");
+            $queryBuilder->andWhere("c.codigoCompraPk = '{$codigoCompra}'");
         }
         if ($codigoTercero) {
-            $queryBuilder->andWhere("e.codigoTerceroFk = '{$codigoTercero}'");
+            $queryBuilder->andWhere("c.codigoTerceroFk = '{$codigoTercero}'");
         }
         if ($compraTipo) {
-            $queryBuilder->andWhere("e.codigoCompraTipoFk = '{$compraTipo}'");
+            $queryBuilder->andWhere("c.codigoCompraTipoFk = '{$compraTipo}'");
         }
         if ($fechaDesde) {
-            $queryBuilder->andWhere("e.fecha >= '{$fechaDesde} 00:00:00'");
+            $queryBuilder->andWhere("c.fecha >= '{$fechaDesde} 00:00:00'");
         }
         if ($fechaHasta) {
-            $queryBuilder->andWhere("e.fecha <= '{$fechaHasta} 23:59:59'");
+            $queryBuilder->andWhere("c.fecha <= '{$fechaHasta} 23:59:59'");
         }
         switch ($estadoAutorizado) {
             case '0':
-                $queryBuilder->andWhere("e.estadoAutorizado = 0");
+                $queryBuilder->andWhere("c.estadoAutorizado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("e.estadoAutorizado = 1");
+                $queryBuilder->andWhere("c.estadoAutorizado = 1");
                 break;
         }
         switch ($estadoAprobado) {
             case '0':
-                $queryBuilder->andWhere("e.estadoAprobado = 0");
+                $queryBuilder->andWhere("c.estadoAprobado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("e.estadoAprobado = 1");
+                $queryBuilder->andWhere("c.estadoAprobado = 1");
                 break;
         }
         switch ($estadoAnulado) {
             case '0':
-                $queryBuilder->andWhere("e.estadoAnulado = 0");
+                $queryBuilder->andWhere("c.estadoAnulado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("e.estadoAnulado = 1");
+                $queryBuilder->andWhere("c.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->addOrderBy('e.estadoAprobado', 'ASC');
-        $queryBuilder->addOrderBy('e.codigoCompraPk', 'DESC');
+        $queryBuilder->addOrderBy('c.estadoAprobado', 'ASC');
+        $queryBuilder->addOrderBy('c.codigoCompraPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }

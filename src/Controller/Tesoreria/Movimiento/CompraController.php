@@ -115,7 +115,7 @@ class CompraController extends AbstractController
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_compra_compra_lista'));
             }
         } else {
-            $arCompra->setFechaPago(new \DateTime('now'));
+            $arCompra->setFecha(new \DateTime('now'));
         }
         $form = $this->createForm(CompraType::class, $arCompra);
         $form->handleRequest($request);

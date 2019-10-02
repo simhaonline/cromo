@@ -78,9 +78,11 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->addSelect('dr.estadoAnulado')
             ->addSelect('r.nombre as ruta')
             ->addSelect('dr.vrAnticipo')
+            ->addSelect('drt.nombre as despachoRecogidaTipoNombre')
             ->where('dr.codigoDespachoRecogidaPk <> 0')
             ->leftJoin('dr.conductorRel', 'cond')
-            ->leftJoin('dr.rutaRecogidaRel', 'r');
+            ->leftJoin('dr.rutaRecogidaRel', 'r')
+            ->leftJoin('dr.despachoRecogidaTipoRel', 'drt');
 
         if ($codigoVehiculoFk) {
             $queryBuilder->andWhere("dr.codigoVehiculoFk = '{$codigoVehiculoFk}'");
@@ -321,7 +323,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
     public function anular($arDespachoRecogida)
     {
         $em = $this->getEntityManager();
-        if ($arDespachoRecogida->getEstadoAutorizado() == 1) {
+        if ($arDespachoRecogida->getEstadoAprobado() == 1) {
             if ($arDespachoRecogida->getEstadoAnulado() == 0) {
                 if($em->getRepository(TesCuentaPagar::class)->anularExterno('TteDespachoRecogida', $arDespachoRecogida->getCodigoDespachoRecogidaPk())) {
                     $arRecogidas = $em->getRepository(TteRecogida::class)->findBy(['codigoDespachoRecogidaFk' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]);
@@ -354,7 +356,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             }
 
         } else {
-            Mensajes::error('El despacho no esta autorizada');
+            Mensajes::error('El despacho no esta aprobado');
         }
     }
 

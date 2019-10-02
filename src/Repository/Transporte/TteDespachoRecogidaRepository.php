@@ -876,6 +876,7 @@ class TteDespachoRecogidaRepository extends ServiceEntityRepository
             ->leftJoin('d.despachoRecogidaTipoRel', 'dt')
             ->where("d.fecha >='" . $fechaDesde . "' AND d.fecha <= '" . $fechaHasta . "'")
             ->andWhere('d.estadoAprobado = 1')
+            ->andWhere('dt.intermediacion = 1')
             ->groupBy('d.codigoPoseedorFk')
             ->addGroupBy('d.codigoDespachoRecogidaTipoFk');
         $arrResultado = $queryBuilder->getQuery()->getResult();

@@ -65,6 +65,7 @@ class DespachoType extends AbstractType {
                 'placeholder' => ''
             ))
             ->add('vrFletePago', NumberType::class)
+            ->add('vrCostoPago', NumberType::class)
             ->add('vrAnticipo', NumberType::class)
             ->add('vrDescuentoPapeleria', NumberType::class)
             ->add('vrDescuentoSeguridad', NumberType::class)

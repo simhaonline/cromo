@@ -176,7 +176,9 @@ class DespachoController extends AbstractController
                                 $arDespacho->setVrTotal($total);
                                 $arDespacho->setVrSaldo($saldo);
                                 $arDespacho->setVrTotalNeto($totalNeto);
-
+                                if(!$arVehiculo->getPropio()) {
+                                    $arDespacho->setVrCostoPago($arDespacho->getVrFletePago());
+                                }
                                 $em->persist($arDespacho);
                                 $em->flush();
                                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $arDespacho->getCodigoDespachoPk())));

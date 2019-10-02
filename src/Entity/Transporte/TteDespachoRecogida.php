@@ -148,6 +148,11 @@ class TteDespachoRecogida
     private $vrSaldo = 0;
 
     /**
+     * @ORM\Column(name="vr_costo_pago", type="float", options={"default" : 0})
+     */
+    private $vrCostoPago = 0;
+
+    /**
      * @ORM\Column(name="estado_descargado", type="boolean", nullable=true, options={"default": 0})
      */
     private $estadoDescargado = false;
@@ -962,6 +967,22 @@ class TteDespachoRecogida
     public function setPoseedorRel($poseedorRel): void
     {
         $this->poseedorRel = $poseedorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoPago()
+    {
+        return $this->vrCostoPago;
+    }
+
+    /**
+     * @param mixed $vrCostoPago
+     */
+    public function setVrCostoPago($vrCostoPago): void
+    {
+        $this->vrCostoPago = $vrCostoPago;
     }
 
 

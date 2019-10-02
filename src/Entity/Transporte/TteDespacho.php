@@ -209,6 +209,11 @@ class TteDespacho
     private $vrCostoBase = 0;
 
     /**
+     * @ORM\Column(name="vr_costo_pago", type="float", options={"default" : 0})
+     */
+    private $vrCostoPago = 0;
+
+    /**
      * @ORM\Column(name="porcentaje_rentabilidad", type="float", nullable=true, options={"default" : 0})
      */
     private $porcentajeRentabilidad = 0;
@@ -1447,6 +1452,22 @@ class TteDespacho
     public function setPoseedorRel($poseedorRel): void
     {
         $this->poseedorRel = $poseedorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrCostoPago()
+    {
+        return $this->vrCostoPago;
+    }
+
+    /**
+     * @param mixed $vrCostoPago
+     */
+    public function setVrCostoPago($vrCostoPago): void
+    {
+        $this->vrCostoPago = $vrCostoPago;
     }
 
 

@@ -42,8 +42,8 @@
     <tr>
         <td class="titulo"></td>
         <td class="td-in-well"></td>
-        <td class="titulo"></td>
-        <td align="right"></td>
+        <td class="titulo">COSTO PAGO:</td>
+        <td align="right">{{ arDespachoRecogida.vrCostoPago | number_format(0, '.', ',')  }}</td>
         <td class="titulo" >PAPELERIA:</td>
         <td align="right">{{ arDespachoRecogida.vrDescuentoPapeleria | number_format(0, '.', ',') }}</td>
     </tr>

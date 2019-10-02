@@ -93,7 +93,9 @@ class DespachoRecogidaController extends AbstractController
                                 $arDespachoRecogida->setVrTotal($total);
                                 $arDespachoRecogida->setVrSaldo($saldo);
                                 $arDespachoRecogida->setUsuario($this->getUser()->getUsername());
-
+                                if(!$arVehiculo->getPropio()) {
+                                    $arDespachoRecogida->setVrCostoPago($arDespachoRecogida->getVrFletePago());
+                                }
                                 $em->persist($arDespachoRecogida);
                                 $em->flush();
                                 return $this->redirect($this->generateUrl('transporte_movimiento_recogida_despachorecogida_detalle', ['id' => $arDespachoRecogida->getCodigoDespachoRecogidaPk()]));

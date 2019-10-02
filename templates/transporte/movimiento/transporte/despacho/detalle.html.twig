@@ -71,12 +71,11 @@
                         <tr>
                             <td class="titulo">ORIGEN:</td>
                             <td class="td-in-well">{{ arDespacho.ciudadOrigenRel.nombre | default('') }}</td>
-                            <td class="titulo">DESTINO:</td>
-                            <td class="td-in-well">{{ arDespacho.ciudadDestinoRel.nombre | default('') }}</td>
+                            <td class="titulo">COSTO PAGO:</td>
+                            <td align="right">{{ arDespacho.vrCostoPago | number_format(0, '.', ',') }}</td>
                             <td class="titulo">TOTAL</td>
                             <td align="right">{{ arDespacho.vrTotal | number_format(0, '.', ',') }}</td>
                         </tr>
-
                         <tr>
                             <td class="titulo">RUTA:</td>
                             <td class="td-in-well">{{ arDespacho.rutaRel.nombre | default('') }}</td>
@@ -102,8 +101,8 @@
                             <td align="right">{{ arDespacho.vrDescuentoCargue | number_format(0, '.', ',') }}</td>
                         </tr>
                         <tr>
-                            <td class="titulo"></td>
-                            <td class="td-in-well"></td>
+                            <td class="titulo">DESTINO:</td>
+                            <td class="td-in-well">{{ arDespacho.ciudadDestinoRel.nombre | default('') }}</td>
                             <td class="titulo">PESO(COSTO):</td>
                             <td class="td-in-well numero">{{ arDespacho.pesoCosto }}</td>
                             <td class="titulo">ESTAMPILLA:</td>

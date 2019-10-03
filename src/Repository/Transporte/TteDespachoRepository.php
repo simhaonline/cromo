@@ -1280,7 +1280,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
             ->select('d.codigoDespachoPk')
-            ->addSelect('d.codigoPropietarioFk')
+            ->addSelect('d.codigoPoseedorFk')
             ->addSelect('d.numero')
             ->addSelect('d.fechaSalida')
             ->addSelect('d.estadoAprobado')
@@ -1333,7 +1333,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                         if ($arDespacho['estadoAprobado'] == 1 && $arDespacho['estadoContabilizado'] == 0) {
                             if ($arDespacho['codigoComprobanteFk']) {
                                 $arComprobante = $em->getRepository(FinComprobante::class)->find($arDespacho['codigoComprobanteFk']);
-                                $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arDespacho['codigoPropietarioFk']);
+                                $arTercero = $em->getRepository(TtePoseedor::class)->terceroFinanciero($arDespacho['codigoPoseedorFk']);
 
                                 $codigoCuentaFlete = null;
                                 $codigoCuentaIndustriaComercio = null;

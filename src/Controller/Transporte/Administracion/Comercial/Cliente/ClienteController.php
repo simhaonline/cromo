@@ -58,7 +58,7 @@ class ClienteController extends ControllerListenerGeneral
             $session->set('filtroTteNitCliente', $form->get('txtNumeroIdentificacion')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->getRepository(TteCliente::class)->lista()->getQuery()->getResult(), "Informe clientes");
+            General::get()->setExportar($em->getRepository(TteCliente::class)->lista()->getQuery()->getResult(), "Clientes");
         }
         $arClientes = $paginator->paginate($em->getRepository(TteCliente::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('transporte/administracion/comercial/cliente/lista.html.twig',

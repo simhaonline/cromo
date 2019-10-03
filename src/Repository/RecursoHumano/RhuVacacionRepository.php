@@ -97,6 +97,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
         if ($arVacacion->getEstadoAutorizado() == 1 && $arVacacion->getEstadoAprobado() == 0) {
             if($arVacacion->getVacacionTipoRel()->getCodigoConceptoDisfrutadaFk() && $arVacacion->getVacacionTipoRel()->getCodigoConceptoDineroFk()) {
                 if($this->validarCreditoAprobacion($arVacacion->getCodigoVacacionPk())) {
+                    $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
                     $numero = $arVacacion->getNumero();
                     if($arVacacion->getNumero() == 0) {
                         $arVacacionTipo = $em->getRepository(RhuVacacionTipo::class)->find($arVacacion->getCodigoVacacionTipoFk());
@@ -127,10 +128,12 @@ class RhuVacacionRepository extends ServiceEntityRepository
                     $arPago->setNumero($numero);
                     $arPago->setUsuario($usuario);
                     $em->persist($arPago);
+                    $devengado = 0;
+                    $deduccion = 0;
                     $neto = 0;
 
                     //Estos van en el detalle del pago
-                    if ($arVacacion->getDiasDisfrutados() > 0) {
+                    if ($arVacacion->getVrDisfrute() > 0) {
                         $arConceptoVacacion = $arVacacion->getVacacionTipoRel()->getConceptoDisfrutadaRel();
                         $arPagoDetalleVacacion = new RhuPagoDetalle();
                         $vrVacacionDisfrute = round($arVacacion->getVrDisfrute());
@@ -144,10 +147,11 @@ class RhuVacacionRepository extends ServiceEntityRepository
                         $arPagoDetalleVacacion->setVrPagoOperado($pagoOperado);
                         $em->persist($arPagoDetalleVacacion);
                         $neto += $pagoOperado;
+                        $devengado += $vrVacacionDisfrute;
                     }
 
                     //Total de pago de vacacion por concepto de vacacion , se consulta el parametro en vacacionParametrizacion
-                    if ($arVacacion->getDiasPagados() > 0) {
+                    if ($arVacacion->getVrDinero() > 0) {
                         $arPagoConceptoVacacion = $arVacacion->getVacacionTipoRel()->getConceptoDineroRel();
                         $arPagoDetalleVacacion = new RhuPagoDetalle();
                         $vrvacacionDinero = $arVacacion->getVrDinero();
@@ -161,6 +165,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                         $arPagoDetalleVacacion->setVrPagoOperado($pagoOperado);
                         $em->persist($arPagoDetalleVacacion);
                         $neto += $pagoOperado;
+                        $devengado += $vrvacacionDinero;
                     }
 
                     $codigoPension = $arVacacion->getContratoRel()->getPensionRel()->getCodigoConceptoFk();
@@ -179,6 +184,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                         $arPagoDetallePension->setVrPagoOperado($pagoOperado);
                         $em->persist($arPagoDetallePension);
                         $neto += $pagoOperado;
+                        $deduccion += $arVacacion->getVrPension();
                     } else {
                         $validar = "El codigo de pension no esta configurado correctamente";
                     }
@@ -198,6 +204,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                         $arPagoDetalleSalud->setVrPagoOperado($pagoOperado);
                         $em->persist($arPagoDetalleSalud);
                         $neto += $pagoOperado;
+                        $deduccion += $arVacacion->getVrSalud();
                     } else {
                         $validar = "El codigo de salud no esta configurado correctamente";
                     }
@@ -219,19 +226,24 @@ class RhuVacacionRepository extends ServiceEntityRepository
                             $arPagoDetalleFondoSolidaridad->setVrPagoOperado($pagoOperado);
                             $em->persist($arPagoDetalleFondoSolidaridad);
                             $neto += $pagoOperado;
+                            $deduccion += $arVacacion->getVrFondoSolidaridad();
                         } else {
                             $validar = "El codigo de fondo solidaridad no esta configurado correctamente";
                         }
                     }
 
                     //Se recorren los adicionales de las vacaciones
+                    $ingresoBaseCotizacionTotal = 0;
+                    $ingresoBasePrestacionTotal = 0;
+                    $ingresoBasePrestacionVacacionTotal = 0;
                     $arVacacionAdicionales = $em->getRepository(RhuVacacionAdicional::class)->findBy(array('codigoVacacionFk' => $arVacacion->getCodigoVacacionPk()));
                     foreach ($arVacacionAdicionales as $arVacacionAdicional) {
-                        $vrPagoAdicional = 0;
                         if ($arVacacionAdicional->getVrBonificacion() > 0) {
                             $vrPagoAdicional = $arVacacionAdicional->getVrBonificacion();
+                            $devengado += $arVacacionAdicional->getVrBonificacion();
                         } else {
                             $vrPagoAdicional = $arVacacionAdicional->getVrDeduccion();
+                            $deduccion += $arVacacionAdicional->getVrDeduccion();
                         }
                         $arPagoDetalle = new RhuPagoDetalle();
                         $arPagoDetalle->setPagoRel($arPago);
@@ -243,50 +255,35 @@ class RhuVacacionRepository extends ServiceEntityRepository
                         $arPagoDetalle->setVrPagoOperado($pagoOperado);
                         if ($arVacacionAdicional->getConceptoRel()->getGeneraIngresoBaseCotizacion()) {
                             $arPagoDetalle->setVrIngresoBaseCotizacion($vrPagoAdicional);
+                            $ingresoBaseCotizacionTotal += $vrPagoAdicional;
                         }
                         if ($arVacacionAdicional->getConceptoRel()->getGeneraIngresoBasePrestacion()) {
                             $arPagoDetalle->setVrIngresoBasePrestacion($vrPagoAdicional);
+                            $ingresoBasePrestacionTotal += $vrPagoAdicional;
+                        }
+                        if ($arVacacionAdicional->getConceptoRel()->getGeneraIngresoBasePrestacionVacacion()) {
+                            $arPagoDetalle->setVrIngresoBasePrestacionVacacion($vrPagoAdicional);
+                            $ingresoBasePrestacionVacacionTotal += $vrPagoAdicional;
                         }
                         $em->persist($arPagoDetalle);
                         $neto += $pagoOperado;
                         //Generar pago credito
                         if ($arVacacionAdicional->getCodigoCreditoFk() != null) {
-                            $arCredito = $em->getRepository(RhuCredito::class)->find($arVacacionAdicional->getCodigoCreditoFk());
-                            $arCredito->setVrSaldo($arCredito->getVrSaldo() - $arVacacionAdicional->getVrDeduccion());
-                            $arCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual() + 1);
-                            $arCredito->setVrAbonos($arCredito->getVrAbonos() + $arVacacionAdicional->getVrDeduccion());
-
-                            $arPagoCredito = new RhuCreditoPago();
-                            $arPagoCredito->setCreditoRel($arCredito);
-                            $arPagoCredito->setfechaPago(new \ DateTime("now"));
-                            $arCreditoTipoPago = $em->getRepository(RhuCreditoPagoTipo::class)->find('VAC');
-                            $arPagoCredito->setCreditoPagoTipoRel($arCreditoTipoPago);
-                            $arPagoCredito->setVrPago($arVacacionAdicional->getVrDeduccion());
-                            $arPagoCredito->setVrSaldo($arCredito->getVrSaldo());
-                            $arPagoCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual());
-                            $em->persist($arPagoCredito);
-                            if ($arCredito->getVrSaldo() <= 0) {
-                                $arCredito->setEstadoPagado(1);
-                            }
-                            $em->persist($arCredito);
+                            $em->getRepository(RhuCreditoPago::class)->generar($arVacacionAdicional->getCodigoCreditoFk(),'VAC', $arVacacionAdicional->getVrDeduccion());
                         }
 
                         //Validar si algun adicional corresponde a un embargo para generar el pago en RhuEmbargoPago.
                         if ($arVacacionAdicional->getCodigoEmbargoFk() != "") {
-                            $arEmbargo = $arVacacionAdicional->getEmbargoRel();
-                            //Crear embargo pago, se guarda el pago en al tabla rhu_embargo_pago
-                            $arEmbargoPago = new RhuEmbargoPago();
-                            $arEmbargoPago->setEmbargoRel($arEmbargo);
-                            $arEmbargoPago->setPagoRel($arPago);
-                            $arEmbargoPago->setFechaPago(new \ DateTime('now'));
-                            $arEmbargoPago->setVrCuota($arVacacionAdicional->getVrDeduccion());
-                            $arEmbargo->setDescuento($arEmbargo->getDescuento() + $arVacacionAdicional->getVrDeduccion());
-                            $em->persist($arEmbargoPago);
-                            $em->persist($arEmbargo);
+                            $em->getRepository(RhuEmbargoPago::class)->generar($arVacacionAdicional->getCodigoEmbargoFk(), $arPago, $arVacacionAdicional->getVrDeduccion());
                         }
-
                     }
+                    $arPago->setVrIngresoBaseCotizacion($ingresoBaseCotizacionTotal);
+                    $arPago->setVrIngresoBasePrestacion($ingresoBasePrestacionTotal);
+                    $arPago->setVrIngresoBasePrestacionVacacion($ingresoBasePrestacionVacacionTotal);
+                    $arPago->setVrDevengado($devengado);
+                    $arPago->setVrDeduccion($deduccion);
                     $arPago->setVrNeto($neto);
+                    $em->getRepository(RhuPago::class)->liquidarProvision($arPago, $arConfiguracion);
 
                     if ($validar == '') {
                         $arVacacion->setFecha(new \DateTime('now'));

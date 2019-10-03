@@ -1272,38 +1272,36 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                     $ingresoBasePrestacionVacacionTotal = 0;
                     $arAdicionales = $em->getRepository(RhuLiquidacionAdicional::class)->findBy(array('codigoLiquidacionFk' => $arLiquidacion->getCodigoLiquidacionPk()));
                     foreach ($arAdicionales as $arAdicional) {
-                        $ingresoBaseCotizacion = 0;
-                        $ingresoBasePrestacion = 0;
-                        $ingresoBasePrestacionVacacion = 0;
-                        $arConcepto =  $arAdicional->getPagoConceptoRel();
+                        $arConcepto =  $arAdicional->getConceptoRel();
                         if ($arAdicional->getVrBonificacion() > 0) {
                             $pago = $arAdicional->getVrBonificacion();
                             $devengado += $pago;
+                            $neto += $pago;
                         } else {
                             $pago = $arAdicional->getVrDeduccion();
                             $deduccion += $arAdicional->getVrDeduccion();
+                            $neto -= $pago;
                         }
-
                         if ($arConcepto->getGeneraIngresoBaseCotizacion()) {
-                            $ingresoBaseCotizacion = $pago;
+                            $arPagoDetalle->setVrIngresoBaseCotizacion($pago);
+                            $ingresoBaseCotizacionTotal += $pago;
                         }
                         if ($arConcepto->getGeneraIngresoBasePrestacion()) {
-                            $ingresoBasePrestacion = $pago;
+                            $arPagoDetalle->setVrIngresoBasePrestacion($pago);
+                            $ingresoBasePrestacionTotal += $pago;
                         }
                         if ($arConcepto->getGeneraIngresoBasePrestacionVacacion()) {
-                            $ingresoBasePrestacionVacacion = $pago;
+                            $arPagoDetalle->setVrIngresoBasePrestacionVacacion($pago);
+                            $ingresoBasePrestacionVacacionTotal += $pago;
                         }
 
                         $arPagoDetalle = new RhuPagoDetalle();
                         $arPagoDetalle->setPagoRel($arPago);
-                        $arPagoDetalle->setPagoConceptoRel($arConcepto);
+                        $arPagoDetalle->setConceptoRel($arConcepto);
                         $arPagoDetalle->setDetalle('');
-                        $arPagoDetalle->setVrPago($pago * -1);
+                        $arPagoDetalle->setVrPago($pago);
                         $arPagoDetalle->setVrPagoOperado($pago * $arConcepto->getOperacion());
                         $arPagoDetalle->setOperacion($arConcepto->getOperacion());
-                        $arPagoDetalle->setVrIngresoBaseCotizacion($ingresoBaseCotizacion);
-                        $arPagoDetalle->setVrIngresoBasePrestacion($ingresoBasePrestacion);
-                        $arPagoDetalle->setVrIngresoBasePrestacionVacacion($ingresoBasePrestacionVacacion);
                         $em->persist($arPagoDetalle);
                         //Generar pago credito
                         if ($arAdicional->getCodigoCreditoFk() != null) {
@@ -1313,9 +1311,6 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                         if ($arAdicional->getCodigoEmbargoFk() != "") {
                             $em->getRepository(RhuEmbargoPago::class)->generar($arAdicional->getCodigoEmbargoFk(), $arPago, $arAdicional->getVrDeduccion());
                         }
-                        $ingresoBaseCotizacionTotal += $ingresoBaseCotizacion;
-                        $ingresoBasePrestacionTotal += $ingresoBasePrestacion;
-                        $ingresoBasePrestacionVacacionTotal += $ingresoBasePrestacionVacacion;
                     }
 
                     $arPago->setVrIngresoBaseCotizacion($ingresoBaseCotizacionTotal);
@@ -1325,9 +1320,12 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                     $arPago->setVrDeduccion($deduccion);
                     $arPago->setVrNeto($neto);
                     $em->getRepository(RhuPago::class)->liquidarProvision($arPago, $arConfiguracion);
-
-                   //$arLiquidacion->setEstadoAprobado(1);
-                   //$em->persist($arLiquidacion);
+                    $arLiquidacion->setEstadoAprobado(1);
+                    $em->persist($arLiquidacion);
+                    $em->flush();
+                    $em->getRepository(RhuPago::class)->liquidar($arPago);
+                    $em->flush();
+                    $em->getRepository(RhuPago::class)->generarCuentaPagar($arPago);
                     $em->flush();
                 } else {
                     Mensajes::error($arrConceptos['error']);
@@ -1413,7 +1411,8 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
          * @var $arLiquidacion RhuLiquidacion
          */
         $em = $this->getEntityManager();
-        if ($arr) {
+        Mensajes::error("La contabilizacion de este documento es generada por el documento pago");
+        /*if ($arr) {
             $error = "";
             $arCentroCosto = null;
             $arCuenta = $em->getRepository(RhuConfiguracionCuenta::class)->find(1);
@@ -1754,6 +1753,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                 Mensajes::error($error);
             }
         }
+        */
         return true;
     }
 

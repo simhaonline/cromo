@@ -236,8 +236,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
             ->addSelect('t.numeroIdentificacion as terceroNumeroIdentificacion')
             ->join('cp.terceroRel', 't')
             ->join('cp.cuentaPagarTipoRel', 'cpt')
-            ->where('cp.vrSaldo <> 0')
-            ->andWhere('cp.operacion = 1')
+            ->where('cp.vrSaldo > 0')
             ->orderBy('cp.codigoCuentaPagarPk', 'ASC');
 
 

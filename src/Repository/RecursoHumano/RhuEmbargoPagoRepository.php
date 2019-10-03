@@ -23,7 +23,6 @@ class RhuEmbargoPagoRepository extends ServiceEntityRepository
         if($arEmbargo) {
             $arEmbargoPago = new RhuEmbargoPago();
             $arEmbargoPago->setEmbargoRel($arEmbargo);
-            $arEmbargoPago->setPagoRel($arPago);
             $arEmbargoPago->setFechaPago(new \ DateTime('now'));
             $arEmbargoPago->setVrCuota($valor);
             $arEmbargo->setDescuento($arEmbargo->getDescuento() + $valor);

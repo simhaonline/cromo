@@ -3,6 +3,7 @@
 namespace App\Repository\Inventario;
 
 
+use App\Entity\Cartera\CarCliente;
 use App\Entity\Financiero\FinTercero;
 use App\Entity\Inventario\InvTercero;
 use App\Entity\Tesoreria\TesTercero;
@@ -54,28 +55,28 @@ class InvTerceroRepository extends ServiceEntityRepository
             ->addSelect('t.retencionFuenteSinBase')
             ->leftJoin('t.ciudadRel', 'c')
             ->where('t.codigoTerceroPk <> 0');
-            if ($session->get('filtroInvTerceroCodigo') != '') {
-                $queryBuilder->andWhere("t.codigoTerceroPk = {$session->get('filtroInvTerceroCodigo')}");
-            }
-            if ($session->get('filtroInvTerceroNombre') != '') {
-                $queryBuilder->andWhere("t.nombreCorto LIKE '%{$session->get('filtroInvTerceroNombre')}%'");
-            }
+        if ($session->get('filtroInvTerceroCodigo') != '') {
+            $queryBuilder->andWhere("t.codigoTerceroPk = {$session->get('filtroInvTerceroCodigo')}");
+        }
+        if ($session->get('filtroInvTerceroNombre') != '') {
+            $queryBuilder->andWhere("t.nombreCorto LIKE '%{$session->get('filtroInvTerceroNombre')}%'");
+        }
         if ($session->get('filtroInvNombreTercero') != '') {
             $queryBuilder->andWhere("t.nombreCorto LIKE '%{$session->get('filtroInvNombreTercero')}%'");
         }
-            if ($session->get('filtroInvTerceroIdentificacion') != '') {
-                $queryBuilder->andWhere("t.numeroIdentificacion = {$session->get('filtroInvTerceroIdentificacion')}");
-            }
+        if ($session->get('filtroInvTerceroIdentificacion') != '') {
+            $queryBuilder->andWhere("t.numeroIdentificacion = {$session->get('filtroInvTerceroIdentificacion')}");
+        }
 
-            switch ($terceroTipo) {
-                case 'C':
-                    $queryBuilder->andWhere("t.cliente = 1");
-                    break;
+        switch ($terceroTipo) {
+            case 'C':
+                $queryBuilder->andWhere("t.cliente = 1");
+                break;
 
-                case 'P':
-                    $queryBuilder->andWhere("t.proveedor = 1");
-                    break;
-            }
+            case 'P':
+                $queryBuilder->andWhere("t.proveedor = 1");
+                break;
+        }
         return $queryBuilder;
     }
 
@@ -84,9 +85,9 @@ class InvTerceroRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arTercero = null;
         $arTerceroInventario = $em->getRepository(InvTercero::class)->find($codigo);
-        if($arTerceroInventario) {
+        if ($arTerceroInventario) {
             $arTercero = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arTerceroInventario->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arTerceroInventario->getNumeroIdentificacion()));
-            if(!$arTercero) {
+            if (!$arTercero) {
                 $arTercero = new FinTercero();
                 $arTercero->setIdentificacionRel($arTerceroInventario->getIdentificacionRel());
                 $arTercero->setNumeroIdentificacion($arTerceroInventario->getNumeroIdentificacion());
@@ -100,19 +101,45 @@ class InvTerceroRepository extends ServiceEntityRepository
         return $arTercero;
     }
 
-    public function informeBloqueados(){
+    public function terceroCartera($codigo)
+    {
+        $em = $this->getEntityManager();
+        $arCliente = null;
+        $arTerceroInventario = $em->getRepository(InvTercero::class)->find($codigo);
+        if ($arTerceroInventario) {
+            $arCliente = $em->getRepository(CarCliente::class)->findOneBy(array('codigoIdentificacionFk' => $arTerceroInventario->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arTerceroInventario->getNumeroIdentificacion()));
+            if (!$arCliente) {
+                $arCliente = new CarCliente();
+                $arCliente->setIdentificacionRel($arTerceroInventario->getIdentificacionRel());
+                $arCliente->setNumeroIdentificacion($arTerceroInventario->getNumeroIdentificacion());
+                $arCliente->setNombreCorto($arTerceroInventario->getNombreCorto());
+                $arCliente->setDireccion($arTerceroInventario->getDireccion());
+                $arCliente->setTelefono($arCliente->getTelefono());
+                $arCliente->setFormaPagoRel($arTerceroInventario->getFormaPagoRel());
+                $arCliente->setCiudadRel($arTerceroInventario->getCiudadRel());
+                $em->persist($arCliente);
+                $em->flush();
+            }
+        }
+
+        return $arCliente;
+    }
+
+    public function informeBloqueados()
+    {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvTercero::class, 't')
             ->select("t")
             ->where('t.bloqueoCartera = true');
-        if($session->get('filtroInvTerceroInformeCodigoTercero')){
+        if ($session->get('filtroInvTerceroInformeCodigoTercero')) {
             $queryBuilder->andWhere("t.codigoTerceroPk = {$session->get('filtroInvTerceroInformeCodigoTercero')}");
         }
 
         return $queryBuilder->getQuery();
     }
 
-    public function informeBloqueadosExcel(){
+    public function informeBloqueadosExcel()
+    {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvTercero::class, 't')
             ->select("t.codigoTerceroPk")
@@ -134,9 +161,9 @@ class InvTerceroRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arTercero = null;
-        if($arTerceroInventario) {
+        if ($arTerceroInventario) {
             $arTercero = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arTerceroInventario->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arTerceroInventario->getNumeroIdentificacion()));
-            if(!$arTercero) {
+            if (!$arTercero) {
                 $arTercero = new TesTercero();
                 $arTercero->setIdentificacionRel($arTerceroInventario->getIdentificacionRel());
                 $arTercero->setNumeroIdentificacion($arTerceroInventario->getNumeroIdentificacion());

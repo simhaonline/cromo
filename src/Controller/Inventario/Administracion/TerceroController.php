@@ -128,14 +128,16 @@ class TerceroController extends ControllerListenerGeneral
                     ->findBy(['numeroIdentificacion' => $identificacion]);
                 if (!$identificacionExistente) {
                     $em->persist($arTercero);
+                    $em->flush();
+                    $em->getRepository(InvTercero::class)->terceroCartera($arTercero->getCodigoTerceroPk());
                 } else {
                     $strRespuesta = "El numero de identificacion ya existe";
                 }
             } else {
                 $em->persist($arTercero);
+                $em->flush();
             }
             if ($strRespuesta == "") {
-                $em->flush();
                 return $this->redirect($this->generateUrl('inventario_administracion_general_tercero_detalle', ['id' => $arTercero->getCodigoTerceroPk()]));
             } else {
                 Mensajes::error($strRespuesta);

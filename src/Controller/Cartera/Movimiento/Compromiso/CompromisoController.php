@@ -205,9 +205,8 @@ class CompromisoController extends AbstractController
      * * @Route("/cartera/movimiento/compromiso/compromiso/detalle/nuevo/{id}", name="cartera_movimiento_compromiso_compromiso_detalle_nuevo")
      * @throws \Doctrine\ORM\ORMException
      */
-    public function detalleNuevo(Request $request, $id)
+    public function detalleNuevo(Request $request, PaginatorInterface $paginator, $id)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arCompromiso = $em->getRepository(CarCompromiso::class)->find($id);
         $form = $this->createFormBuilder()

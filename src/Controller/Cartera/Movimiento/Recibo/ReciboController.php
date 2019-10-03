@@ -303,11 +303,10 @@ class ReciboController extends AbstractController
      * * @Route("/cartera/movimiento/recibo/recibo/detalle/aplicar/{id}", name="cartera_movimiento_recibo_recibo_detalle_aplicar")
      * @throws \Doctrine\ORM\ORMException
      */
-    public function detalleNuevoAplicar(Request $request, $id)
+    public function detalleNuevoAplicar(Request $request, PaginatorInterface $paginator, $id)
     {
         {
             $em = $this->getDoctrine()->getManager();
-            $paginator = $this->get('knp_paginator');
             $arReciboDetalle = $em->getRepository(CarReciboDetalle::class)->find($id);
             $form = $this->createFormBuilder()
                 ->getForm();

@@ -255,11 +255,10 @@ class IngresoController extends BaseController
      * @throws \Doctrine\ORM\ORMException
      * @Route("/cartera/movimiento/ingreso/ingreso/detalle/nuevo/{id}", name="cartera_movimiento_ingreso_ingreso_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $id)
+    public function detalleNuevo(Request $request, PaginatorInterface $paginator, $id)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arIngreso = $em->getRepository(CarIngreso::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])

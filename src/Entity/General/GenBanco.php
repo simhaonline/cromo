@@ -47,6 +47,11 @@ class GenBanco
     protected $empleadosBancoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuPago", mappedBy="bancoRel")
+     */
+    protected $pagosBancoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCuentaPagar", mappedBy="bancoRel")
      */
     protected $cuentasPagarBancoRel;
@@ -219,6 +224,22 @@ class GenBanco
     public function setEgresosDetallesBancoRel($egresosDetallesBancoRel): void
     {
         $this->egresosDetallesBancoRel = $egresosDetallesBancoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosBancoRel()
+    {
+        return $this->pagosBancoRel;
+    }
+
+    /**
+     * @param mixed $pagosBancoRel
+     */
+    public function setPagosBancoRel($pagosBancoRel): void
+    {
+        $this->pagosBancoRel = $pagosBancoRel;
     }
 
 

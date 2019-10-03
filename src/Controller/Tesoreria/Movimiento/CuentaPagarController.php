@@ -5,6 +5,7 @@ namespace App\Controller\Tesoreria\Movimiento;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\General\GenBanco;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\General\General;
@@ -46,6 +47,17 @@ class CuentaPagarController extends AbstractController
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('cpt')
                         ->orderBy('cpt.codigoCuentaPagarTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoBancoFk', EntityType::class, [
+                'class' => GenBanco::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('cpb')
+                        ->orderBy('cpb.codigoBancoPk', 'ASC');
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
@@ -141,11 +153,17 @@ class CuentaPagarController extends AbstractController
         ];
 
         $arCuentaPagarTipo = $form->get('codigoCuentaPagarTipoFk')->getData();
+        $arCuentaPagarBanco = $form->get('codigoBancoFk')->getData();
 
         if (is_object($arCuentaPagarTipo)) {
             $filtro['cuentaPagarTipo'] = $arCuentaPagarTipo->getCodigoCuentaPagarTipoPk();
         } else {
             $filtro['cuentaPagarTipo'] = $arCuentaPagarTipo;
+        }
+        if (is_object($arCuentaPagarBanco)) {
+            $filtro['cuentaPagarBanco'] = $arCuentaPagarBanco->getCodigoBancoPk();
+        } else {
+            $filtro['cuentaPagarBanco'] = $arCuentaPagarBanco;
         }
 
         return $filtro;

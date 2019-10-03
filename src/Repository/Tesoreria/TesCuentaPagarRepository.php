@@ -23,6 +23,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         $codigoCuentaPagar = null;
         $codigoTercero = null;
         $cuentaPagarTipo = null;
+        $cuentaPagarBanco = null;
         $fechaDesde = null;
         $fechaHasta = null;
         $estadoAutorizado = null;
@@ -33,6 +34,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
             $codigoCuentaPagar = $filtros['codigoCuentaPagar'] ?? null;
             $codigoTercero = $filtros['codigoTercero'] ?? null;
             $cuentaPagarTipo = $filtros['cuentaPagarTipo'] ?? null;
+            $cuentaPagarBanco = $filtros['cuentaPagarBanco'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
             $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
@@ -47,6 +49,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
             ->addSelect('cp.fechaVence')
             ->addSelect('cp.numeroDocumento')
             ->addSelect('cpt.nombre AS tipo')
+            ->addSelect('cpb.nombre AS banco')
             ->addSelect('t.numeroIdentificacion')
             ->addSelect('t.nombreCorto AS tercero')
             ->addSelect('cp.vrTotal')
@@ -54,7 +57,8 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
             ->addSelect('cp.estadoAprobado')
             ->addSelect('cp.estadoAnulado')
             ->leftJoin('cp.terceroRel', 't')
-            ->leftJoin('cp.cuentaPagarTipoRel', 'cpt');
+            ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
+            ->leftJoin('cp.bancoRel', 'cpb');
         if ($codigoCuentaPagar) {
             $queryBuilder->andWhere("cp.codigoCuentaPagarPk = '{$codigoCuentaPagar}'");
         }
@@ -63,6 +67,9 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         }
         if ($cuentaPagarTipo) {
             $queryBuilder->andWhere("cp.codigoCuentaPagarTipoFk = '{$cuentaPagarTipo}'");
+        }
+        if ($cuentaPagarBanco) {
+            $queryBuilder->andWhere("cp.codigoBancoFk = '{$cuentaPagarBanco}'");
         }
         if ($fechaDesde) {
             $queryBuilder->andWhere("cp.fecha >= '{$fechaDesde} 00:00:00'");

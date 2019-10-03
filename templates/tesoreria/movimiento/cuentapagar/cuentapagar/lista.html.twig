@@ -40,7 +40,11 @@
                         <div class="col-sm-2">
                             {{ form_widget(form.codigoCuentaPagarTipoFk) }}
                         </div>
-                        <label class="col-sm-1 col-sm-offset-3 control-label">Autorizado:</label>
+                        <label class=" col-sm-1 control-label">Banco:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoBancoFk) }}
+                        </div>
+                        <label class="col-sm-1 control-label">Autorizado:</label>
                         <div class="col-sm-2">
                             {{ form_widget(form.estadoAutorizado) }}
                         </div>
@@ -84,6 +88,7 @@
             <th>FECHA VENCE</th>
             <th>IDENTIFICACION</th>
             <th>TERCERO</th>
+            <th>BANCO</th>
             <th>TOTAL</th>
             <th title="Estado autorizado">AUT</th>
             <th title="Estado aprobado">APR</th>
@@ -102,6 +107,7 @@
                 <td>{{ arCuentaPagar.fechaVence | date('Y-m-d') }}</td>
                 <td>{{ arCuentaPagar.numeroIdentificacion }}</td>
                 <td>{{ arCuentaPagar.tercero }}</td>
+                <td>{{ arCuentaPagar.banco }}</td>
                 <td class="numero">{{ arCuentaPagar.vrTotal | number_format }}</td>
                 <td>{{ arCuentaPagar.estadoAutorizado ? 'SI':'NO' }}</td>
                 <td>{{ arCuentaPagar.estadoAprobado ? 'SI':'NO' }}</td>

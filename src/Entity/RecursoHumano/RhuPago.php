@@ -43,6 +43,21 @@ class RhuPago
     private $codigoPeriodoFk;
 
     /**
+     * @ORM\Column(name="codigo_banco_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoBancoFk;
+
+    /**
+     * @ORM\Column(name="cuenta", type="string", length=80, nullable=true)
+     */
+    private $cuenta;
+
+    /**
+     * @ORM\Column(name="cuenta_tipo", type="string", length=10, nullable=true)
+     */
+    private $cuentaTipo;
+
+    /**
      * @ORM\Column(name="numero", options={"default" : 0}, type="integer", nullable=true)
      */
     private $numero = 0;
@@ -269,6 +284,28 @@ class RhuPago
     protected $pagosDetallesPagoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenBanco", inversedBy="pagosBancoRel")
+     * @ORM\JoinColumn(name="codigo_banco_fk",referencedColumnName="codigo_banco_pk")
+     */
+    protected $bancoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoPagoPk()
@@ -346,6 +383,54 @@ class RhuPago
     public function setCodigoPeriodoFk($codigoPeriodoFk): void
     {
         $this->codigoPeriodoFk = $codigoPeriodoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBancoFk()
+    {
+        return $this->codigoBancoFk;
+    }
+
+    /**
+     * @param mixed $codigoBancoFk
+     */
+    public function setCodigoBancoFk($codigoBancoFk): void
+    {
+        $this->codigoBancoFk = $codigoBancoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
+    }
+
+    /**
+     * @param mixed $cuenta
+     */
+    public function setCuenta($cuenta): void
+    {
+        $this->cuenta = $cuenta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaTipo()
+    {
+        return $this->cuentaTipo;
+    }
+
+    /**
+     * @param mixed $cuentaTipo
+     */
+    public function setCuentaTipo($cuentaTipo): void
+    {
+        $this->cuentaTipo = $cuentaTipo;
     }
 
     /**
@@ -575,6 +660,118 @@ class RhuPago
     /**
      * @return mixed
      */
+    public function getVrCesantia()
+    {
+        return $this->vrCesantia;
+    }
+
+    /**
+     * @param mixed $vrCesantia
+     */
+    public function setVrCesantia($vrCesantia): void
+    {
+        $this->vrCesantia = $vrCesantia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrInteres()
+    {
+        return $this->vrInteres;
+    }
+
+    /**
+     * @param mixed $vrInteres
+     */
+    public function setVrInteres($vrInteres): void
+    {
+        $this->vrInteres = $vrInteres;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPrima()
+    {
+        return $this->vrPrima;
+    }
+
+    /**
+     * @param mixed $vrPrima
+     */
+    public function setVrPrima($vrPrima): void
+    {
+        $this->vrPrima = $vrPrima;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrVacacion()
+    {
+        return $this->vrVacacion;
+    }
+
+    /**
+     * @param mixed $vrVacacion
+     */
+    public function setVrVacacion($vrVacacion): void
+    {
+        $this->vrVacacion = $vrVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoBaseCotizacion()
+    {
+        return $this->vrIngresoBaseCotizacion;
+    }
+
+    /**
+     * @param mixed $vrIngresoBaseCotizacion
+     */
+    public function setVrIngresoBaseCotizacion($vrIngresoBaseCotizacion): void
+    {
+        $this->vrIngresoBaseCotizacion = $vrIngresoBaseCotizacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoBasePrestacion()
+    {
+        return $this->vrIngresoBasePrestacion;
+    }
+
+    /**
+     * @param mixed $vrIngresoBasePrestacion
+     */
+    public function setVrIngresoBasePrestacion($vrIngresoBasePrestacion): void
+    {
+        $this->vrIngresoBasePrestacion = $vrIngresoBasePrestacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrIngresoBasePrestacionVacacion()
+    {
+        return $this->vrIngresoBasePrestacionVacacion;
+    }
+
+    /**
+     * @param mixed $vrIngresoBasePrestacionVacacion
+     */
+    public function setVrIngresoBasePrestacionVacacion($vrIngresoBasePrestacionVacacion): void
+    {
+        $this->vrIngresoBasePrestacionVacacion = $vrIngresoBasePrestacionVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDiasAusentismo()
     {
         return $this->diasAusentismo;
@@ -639,6 +836,22 @@ class RhuPago
     /**
      * @return mixed
      */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoEgreso()
     {
         return $this->estadoEgreso;
@@ -687,6 +900,22 @@ class RhuPago
     /**
      * @return mixed
      */
+    public function getCodigoLiquidacionFk()
+    {
+        return $this->codigoLiquidacionFk;
+    }
+
+    /**
+     * @param mixed $codigoLiquidacionFk
+     */
+    public function setCodigoLiquidacionFk($codigoLiquidacionFk): void
+    {
+        $this->codigoLiquidacionFk = $codigoLiquidacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getUsuario()
     {
         return $this->usuario;
@@ -698,6 +927,22 @@ class RhuPago
     public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSoporteContratoFk()
+    {
+        return $this->codigoSoporteContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoSoporteContratoFk
+     */
+    public function setCodigoSoporteContratoFk($codigoSoporteContratoFk): void
+    {
+        $this->codigoSoporteContratoFk = $codigoSoporteContratoFk;
     }
 
     /**
@@ -847,6 +1092,22 @@ class RhuPago
     /**
      * @return mixed
      */
+    public function getLiquidacionRel()
+    {
+        return $this->liquidacionRel;
+    }
+
+    /**
+     * @param mixed $liquidacionRel
+     */
+    public function setLiquidacionRel($liquidacionRel): void
+    {
+        $this->liquidacionRel = $liquidacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPagosDetallesPagoRel()
     {
         return $this->pagosDetallesPagoRel;
@@ -863,193 +1124,17 @@ class RhuPago
     /**
      * @return mixed
      */
-    public function getEgresosDetallesPagoRel()
+    public function getBancoRel()
     {
-        return $this->egresosDetallesPagoRel;
+        return $this->bancoRel;
     }
 
     /**
-     * @param mixed $egresosDetallesPagoRel
+     * @param mixed $bancoRel
      */
-    public function setEgresosDetallesPagoRel($egresosDetallesPagoRel): void
+    public function setBancoRel($bancoRel): void
     {
-        $this->egresosDetallesPagoRel = $egresosDetallesPagoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoSoporteContratoFk()
-    {
-        return $this->codigoSoporteContratoFk;
-    }
-
-    /**
-     * @param mixed $codigoSoporteContratoFk
-     */
-    public function setCodigoSoporteContratoFk($codigoSoporteContratoFk): void
-    {
-        $this->codigoSoporteContratoFk = $codigoSoporteContratoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrCesantia()
-    {
-        return $this->vrCesantia;
-    }
-
-    /**
-     * @param mixed $vrCesantia
-     */
-    public function setVrCesantia($vrCesantia): void
-    {
-        $this->vrCesantia = $vrCesantia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrInteres()
-    {
-        return $this->vrInteres;
-    }
-
-    /**
-     * @param mixed $vrInteres
-     */
-    public function setVrInteres($vrInteres): void
-    {
-        $this->vrInteres = $vrInteres;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrPrima()
-    {
-        return $this->vrPrima;
-    }
-
-    /**
-     * @param mixed $vrPrima
-     */
-    public function setVrPrima($vrPrima): void
-    {
-        $this->vrPrima = $vrPrima;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrVacacion()
-    {
-        return $this->vrVacacion;
-    }
-
-    /**
-     * @param mixed $vrVacacion
-     */
-    public function setVrVacacion($vrVacacion): void
-    {
-        $this->vrVacacion = $vrVacacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrIngresoBaseCotizacion()
-    {
-        return $this->vrIngresoBaseCotizacion;
-    }
-
-    /**
-     * @param mixed $vrIngresoBaseCotizacion
-     */
-    public function setVrIngresoBaseCotizacion($vrIngresoBaseCotizacion): void
-    {
-        $this->vrIngresoBaseCotizacion = $vrIngresoBaseCotizacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrIngresoBasePrestacion()
-    {
-        return $this->vrIngresoBasePrestacion;
-    }
-
-    /**
-     * @param mixed $vrIngresoBasePrestacion
-     */
-    public function setVrIngresoBasePrestacion($vrIngresoBasePrestacion): void
-    {
-        $this->vrIngresoBasePrestacion = $vrIngresoBasePrestacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoContabilizado()
-    {
-        return $this->estadoContabilizado;
-    }
-
-    /**
-     * @param mixed $estadoContabilizado
-     */
-    public function setEstadoContabilizado($estadoContabilizado): void
-    {
-        $this->estadoContabilizado = $estadoContabilizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrIngresoBasePrestacionVacacion()
-    {
-        return $this->vrIngresoBasePrestacionVacacion;
-    }
-
-    /**
-     * @param mixed $vrIngresoBasePrestacionVacacion
-     */
-    public function setVrIngresoBasePrestacionVacacion($vrIngresoBasePrestacionVacacion): void
-    {
-        $this->vrIngresoBasePrestacionVacacion = $vrIngresoBasePrestacionVacacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoLiquidacionFk()
-    {
-        return $this->codigoLiquidacionFk;
-    }
-
-    /**
-     * @param mixed $codigoLiquidacionFk
-     */
-    public function setCodigoLiquidacionFk($codigoLiquidacionFk): void
-    {
-        $this->codigoLiquidacionFk = $codigoLiquidacionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLiquidacionRel()
-    {
-        return $this->liquidacionRel;
-    }
-
-    /**
-     * @param mixed $liquidacionRel
-     */
-    public function setLiquidacionRel($liquidacionRel): void
-    {
-        $this->liquidacionRel = $liquidacionRel;
+        $this->bancoRel = $bancoRel;
     }
 
 

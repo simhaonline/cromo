@@ -161,6 +161,9 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setProgramacionDetalleRel($arProgramacionDetalle);
         $arPago->setProgramacionRel($arProgramacion);
         $arPago->setVrSalarioContrato($arContrato->getVrSalario());
+        $arPago->setCuenta($arContrato->getEmpleadoRel()->getCuenta());
+        $arPago->setCuentaTipo($arContrato->getEmpleadoRel()->getCodigoCuentaTipoFk());
+        $arPago->setBancoRel($arContrato->getEmpleadoRel()->getBancoRel());
         $arPago->setUsuario($usuario);
         $arPago->setEntidadPensionRel($arContrato->getEntidadPensionRel());
         $arPago->setEntidadSaludRel($arContrato->getEntidadSaludRel());
@@ -1025,7 +1028,8 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $arPagos;
     }
 
-    public function regenerarProvision($fechaDesde, $fechaHasta) {
+    public function regenerarProvision($fechaDesde, $fechaHasta)
+    {
         $em = $this->getEntityManager();
         $arrConfiguracionNomina = $em->getRepository(RhuConfiguracion::class)->provision();
         $porcentajeCesantia = $arrConfiguracionNomina['provisionPorcentajeCesantia'];
@@ -1056,12 +1060,13 @@ class RhuPagoRepository extends ServiceEntityRepository
 
     }
 
-    public function regenerarIbp($fechaDesde, $fechaHasta) {
+    public function regenerarIbp($fechaDesde, $fechaHasta)
+    {
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(RhuPago::class, 'p')
             ->select('p.codigoPagoPk')
             ->where("p.fechaDesde >= '{$fechaDesde}' AND p.fechaDesde <= '{$fechaHasta}'")
-        ->andWhere('p.estadoContabilizado = 0');
+            ->andWhere('p.estadoContabilizado = 0');
         $arPagos = $queryBuilder->getQuery()->getResult();
         foreach ($arPagos as $arPago) {
             $queryBuilder = $em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
@@ -1076,13 +1081,13 @@ class RhuPagoRepository extends ServiceEntityRepository
             $ingresoBasePrestacionVacacion = 0;
             foreach ($arPagosDetalles as $arPagoDetalle) {
                 $arPagoDetalleAct = $em->getRepository(RhuPagoDetalle::class)->find($arPagoDetalle['codigoPagoDetallePk']);
-                if($arPagoDetalle['generaIngresoBasePrestacion']) {
+                if ($arPagoDetalle['generaIngresoBasePrestacion']) {
                     $arPagoDetalleAct->setVrIngresoBasePrestacion($arPagoDetalle['vrPago']);
                     $ingresoBasePrestacion += $arPagoDetalle['vrPago'];
                 } else {
                     $arPagoDetalleAct->setVrIngresoBasePrestacion(0);
                 }
-                if($arPagoDetalle['generaIngresoBasePrestacionVacacion']) {
+                if ($arPagoDetalle['generaIngresoBasePrestacionVacacion']) {
                     $arPagoDetalleAct->setVrIngresoBasePrestacionVacacion($arPagoDetalle['vrPago']);
                     $ingresoBasePrestacionVacacion += $arPagoDetalle['vrPago'];
                 } else {
@@ -1110,16 +1115,16 @@ class RhuPagoRepository extends ServiceEntityRepository
             foreach ($arr AS $codigo) {
                 /** @var $arPago RhuPago */
                 $arPago = $em->getRepository(RhuPago::class)->find($codigo);
-                if($arPago->getEstadoAprobado() == 1 && $arPago->getEstadoContabilizado() == 0) {
+                if ($arPago->getEstadoAprobado() == 1 && $arPago->getEstadoContabilizado() == 0) {
                     $arContrato = $em->getRepository(RhuContrato::class)->find($arPago->getCodigoContratoFk());
                     $arCentroCosto = $arContrato->getCentroCostoRel();
                     $arTercero = $em->getRepository(RhuEmpleado::class)->terceroFinanciero($arPago->getCodigoEmpleadoFk());
-                    if($arPago->getPagoTipoRel()->getCodigoComprobanteFk()) {
+                    if ($arPago->getPagoTipoRel()->getCodigoComprobanteFk()) {
                         $arComprobante = $em->getRepository(FinComprobante::class)->find($arPago->getPagoTipoRel()->getCodigoComprobanteFk());
-                        if($arComprobante) {
+                        if ($arComprobante) {
                             //$participacionTotal = 0;
                             $datos = $this->contabilizarGenerarDistribucion($arContrato->getCodigoCostoTipoFk(), $arCentroCosto, $arPago);
-                            if($datos['error'] == "") {
+                            if ($datos['error'] == "") {
                                 $arContratoDistribucion = $datos['arContratoDistribucion'];
                                 $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->findBy(array('codigoPagoFk' => $codigo));
                                 foreach ($arPagoDetalles as $arPagoDetalle) {
@@ -1310,11 +1315,11 @@ class RhuPagoRepository extends ServiceEntityRepository
                                                         $arRegistro->setVrCredito($arPagoDetalle->getVrPago());
                                                         $arRegistro->setNaturaleza('C');
                                                     }
-                                                    if($arPagoDetalle->getConceptoRel()->getSalud()) {
+                                                    if ($arPagoDetalle->getConceptoRel()->getSalud()) {
                                                         $arTerceroRegistro = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arPago->getCodigoEntidadSaludFk());
                                                         $arRegistro->setTerceroRel($arTerceroRegistro);
                                                     }
-                                                    if($arPagoDetalle->getConceptoRel()->getPension()) {
+                                                    if ($arPagoDetalle->getConceptoRel()->getPension()) {
                                                         $arTerceroRegistro = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arPago->getCodigoEntidadPensionFk());
                                                         $arRegistro->setTerceroRel($arTerceroRegistro);
                                                     }
@@ -1396,7 +1401,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                 //Provision cesantia
                                 if ($arPago->getVrCesantia() > 0) {
                                     $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'CES', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
-                                    if($arConfiguracionProvision) {
+                                    if ($arConfiguracionProvision) {
                                         $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
                                         $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
                                         if ($arCuentaDebito && $arCuentaCredito) {
@@ -1449,7 +1454,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                 //Provision interes
                                 if ($arPago->getVrInteres() > 0) {
                                     $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'INT', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
-                                    if($arConfiguracionProvision) {
+                                    if ($arConfiguracionProvision) {
                                         $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
                                         $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
                                         if ($arCuentaDebito && $arCuentaCredito) {
@@ -1502,7 +1507,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                 //Provision prima
                                 if ($arPago->getVrPrima() > 0) {
                                     $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'PRI', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
-                                    if($arConfiguracionProvision) {
+                                    if ($arConfiguracionProvision) {
                                         $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
                                         $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
                                         if ($arCuentaDebito && $arCuentaCredito) {
@@ -1555,7 +1560,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                 //Provision vacacion
                                 if ($arPago->getVrVacacion() > 0) {
                                     $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'VAC', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
-                                    if($arConfiguracionProvision) {
+                                    if ($arConfiguracionProvision) {
                                         $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
                                         $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
                                         if ($arCuentaDebito && $arCuentaCredito) {
@@ -1630,17 +1635,19 @@ class RhuPagoRepository extends ServiceEntityRepository
         return true;
     }
 
-    public function contabilizarCrearTercero($arr) {
+    public function contabilizarCrearTercero($arr)
+    {
         $em = $this->getEntityManager();
         foreach ($arr AS $codigo) {
             $arPago = $em->getRepository(RhuPago::class)->find($codigo);
-            if($arPago) {
+            if ($arPago) {
                 $em->getRepository(RhuEmpleado::class)->terceroFinanciero($arPago->getCodigoEmpleadoFk());
             }
         }
     }
 
-    public function contabilizarGenerarDistribucion($costotipo = 'FIJ', $arCentroCosto, $arPago) {
+    public function contabilizarGenerarDistribucion($costotipo = 'FIJ', $arCentroCosto, $arPago)
+    {
         $respuesta = [
             'error' => "",
             'arContratoDistribucion' => null
@@ -1697,7 +1704,8 @@ class RhuPagoRepository extends ServiceEntityRepository
      * @param $arPago RhuPago
      * @param $arConfiguracion
      */
-    public function liquidarProvision($arPago, $arConfiguracion) {
+    public function liquidarProvision($arPago, $arConfiguracion)
+    {
         $em = $this->getEntityManager();
         $porcentajeCesantia = $arConfiguracion['provisionPorcentajeCesantia'];
         $porcentajeInteres = $arConfiguracion['provisionPorcentajeInteres'];

@@ -154,15 +154,6 @@
                 {#<div class="separador-1"></div>#}
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        {% if arCompra.estadoAutorizado == true %}
-                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
-                                   value="Nuevo"/>
-                        {% else %}
-                            <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('tesoreria_movimiento_compra_compra_detalle_nuevo', {'id' : arCompra.codigoCompraPk }) }}', 'compra detalle', 600, 1200)">Nuevo</a>
-                        {% endif %}
-                    </div>
-                    <div class="btn-group">
                         {{ form_widget(form.btnAdicionar) }}
                     </div>
                     <div class="btn-group">

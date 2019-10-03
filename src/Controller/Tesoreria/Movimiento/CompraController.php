@@ -206,10 +206,12 @@ class CompraController extends AbstractController
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_compra_compra_detalle', ['id' => $id]));
             }
             if ($form->get('btnAdicionar')->isClicked()) {
+                $em->getRepository(TesCompraDetalle::class)->actualizar($arrControles, $id);
                 $arCompraDetalle = new TesCompraDetalle();
                 $arCompraDetalle->setCompraRel($arCompra);
                 $arCompraDetalle->setTerceroRel($arCompra->getTerceroRel());
-                $arCompraDetalle->setNaturaleza('C');
+                $arCompraDetalle->setNaturaleza('D');
+                $arCompraDetalle->setNumero($arCompra->getNumeroDocumento());
                 $em->persist($arCompraDetalle);
                 $em->flush();
                 $em->getRepository(TesCompra::class)->liquidar($id);
@@ -231,86 +233,6 @@ class CompraController extends AbstractController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\ORMException
-     * @Route("/tesoreria/movimiento/compra/compra/detalle/nuevo/{id}", name="tesoreria_movimiento_compra_compra_detalle_nuevo")
-     */
-    public function detalleNuevo(Request $request, $id, PaginatorInterface $paginator)
-    {
-        $session = new Session();
-        $em = $this->getDoctrine()->getManager();
-        $arCompra = $em->getRepository(TesCompra::class)->find($id);
-        $form = $this->createFormBuilder()
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('todosTerceros', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroTesCuentaPagarTodosTerceros')))
-            ->add('txtCodigoTercero', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => ""])
-            ->add('cboCuentaPagarTipo', EntityType::class, $em->getRepository(TesCuentaPagarTipo::class)->llenarCombo())
-            ->add('cboBanco', EntityType::class, $em->getRepository(GenBanco::class)->llenarCombo())
-            ->add('txtCodigoCuentaPagar', TextType::class, ['label' => 'Codigo: ', 'required' => false, 'data' => $session->get('filtroTesCuentaPagarCodigo')])
-            ->add('txtNumero', TextType::class, ['label' => 'Numero: ', 'required' => false, 'data' => $session->get('filtroTesCuentaPagarNumero')])
-            ->add('txtNumeroReferencia', TextType::class, ['label' => 'Numero referecia: ', 'required' => false, 'data' => $session->get('filtroTesCuentaPagarNumeroReferencia')])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTesFechaDesde') ? date_create($session->get('filtroTesFechaDesde')) : null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTesFechaHasta') ? date_create($session->get('filtroTesFechaHasta')) : null])
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $arCuentaPagarTipo = $form->get('cboCuentaPagarTipo')->getData();
-                if ($arCuentaPagarTipo) {
-                    $session->set('filtroTesCuentaPagarTipo', $arCuentaPagarTipo->getCodigoCuentaPagarTipoPk());
-                } else {
-                    $session->set('filtroTesCuentaPagarTipo', null);
-                }
-                $arBanco = $form->get('cboBanco')->getData();
-                if ($arBanco) {
-                    $session->set('filtroGenBanco', $arBanco->getCodigoBancoPk());
-                } else {
-                    $session->set('filtroGenBanco', null);
-                }
-                $session->set('filtroTesCodigoTercero', $form->get('txtCodigoTercero')->getData());
-                $session->set('filtroTesCuentaPagarCodigo', $form->get('txtCodigoCuentaPagar')->getData());
-                $session->set('filtroTesCuentaPagarNumero', $form->get('txtNumero')->getData());
-                $session->set('filtroTesCuentaPagarNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
-                $session->set('filtroTesFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
-                $session->set('filtroTesFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
-                $session->set('filtroTesCuentaPagarTodosTerceros', $form->get('todosTerceros')->getData());
-            }
-            if ($form->get('btnGuardar')->isClicked()) {
-                $arrCuentasPagar = $request->request->get('ChkSeleccionar');
-                if ($arrCuentasPagar) {
-                    foreach ($arrCuentasPagar as $codigoCuentaPagar) {
-                        /** @var $arCuentaPagar  TesCuentaPagar */
-                        $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($codigoCuentaPagar);
-                        $arCompra = $em->getRepository(TesCompra::class)->find($id);
-                        $arCompraDetalle = new TesCompraDetalle();
-                        $arCompraDetalle->setCompraRel($arCompra);
-                        $arCompraDetalle->setNumero($arCuentaPagar->getNumeroDocumento());
-                        $arCompraDetalle->setCuentaPagarRel($arCuentaPagar);
-                        $arCompraDetalle->setVrPago($arCuentaPagar->getVrSaldo());
-                        $arCompraDetalle->setUsuario($this->getUser()->getUserName());
-                        $arCompraDetalle->setCuentaRel($em->getReference(FinCuenta::class, $arCuentaPagar->getCuentaPagarTipoRel()->getCodigoCuentaProveedorFk()));
-                        $arCompraDetalle->setTerceroRel($arCuentaPagar->getTerceroRel());
-                        $arCompraDetalle->setNaturaleza('D');
-                        $arCompraDetalle->setCuenta($arCuentaPagar->getCuenta());
-                        $arCompraDetalle->setBancoRel($arCuentaPagar->getBancoRel());
-                        $em->persist($arCompraDetalle);
-                    }
-                    $em->flush();
-                    $em->getRepository(TesCompra::class)->liquidar($id);
-                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                }
-            }
-        }
-        $arCuentasPagar = $paginator->paginate($em->getRepository(TesCuentaPagar::class)->cuentasPagarDetalleNuevo($arCompra->getCodigoTerceroFk()), $request->query->getInt('page', 1), 500);
-        return $this->render('tesoreria/movimiento/compra/compra/detalleNuevo.html.twig', [
-            'arCuentasPagar' => $arCuentasPagar,
-            'form' => $form->createView()
-        ]);
-    }
 
     public function getFiltros($form)
     {

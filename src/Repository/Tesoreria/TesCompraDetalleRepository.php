@@ -72,52 +72,54 @@ class TesCompraDetalleRepository extends ServiceEntityRepository
     public function actualizar($arrControles, $idCompra)
     {
         $em = $this->getEntityManager();
-        $arrCuenta = $arrControles['arrCuenta'];
-        $arrCentroCosto = $arrControles['arrCentroCosto'];
-        $arrTercero = $arrControles['arrTercero'];
-        $arrNumero = $arrControles['arrNumero'];
-        $arComprasDetalle = $em->getRepository(TesCompraDetalle::class)->findBy(['codigoCompraFk' => $idCompra]);
-        foreach ($arComprasDetalle as $arCompraDetalle) {
-            $intCodigo = $arCompraDetalle->getCodigoCompraDetallePk();
-            $valorPago = isset($arrControles['TxtVrPrecio' . $intCodigo]) && $arrControles['TxtVrPrecio' . $intCodigo] != '' ? $arrControles['TxtVrPrecio' . $intCodigo] : 0;
-            $numero = $arrNumero[$intCodigo] && $arrNumero[$intCodigo] != '' ? $arrNumero[$intCodigo] : null;
-            $codigoNaturaleza = isset($arrControles['cboNaturaleza' . $intCodigo]) && $arrControles['cboNaturaleza' . $intCodigo] != '' ? $arrControles['cboNaturaleza' . $intCodigo] : null;
-            if ($arrCuenta[$intCodigo]) {
-                $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$intCodigo]);
-                if ($arCuenta) {
-                    $arCompraDetalle->setCuentaRel($arCuenta);
+        if(isset($arrControles['arrCuenta'])) {
+            $arrCuenta = $arrControles['arrCuenta'];
+            $arrCentroCosto = $arrControles['arrCentroCosto'];
+            $arrTercero = $arrControles['arrTercero'];
+            $arrNumero = $arrControles['arrNumero'];
+            $arComprasDetalle = $em->getRepository(TesCompraDetalle::class)->findBy(['codigoCompraFk' => $idCompra]);
+            foreach ($arComprasDetalle as $arCompraDetalle) {
+                $intCodigo = $arCompraDetalle->getCodigoCompraDetallePk();
+                $valorPago = isset($arrControles['TxtVrPrecio' . $intCodigo]) && $arrControles['TxtVrPrecio' . $intCodigo] != '' ? $arrControles['TxtVrPrecio' . $intCodigo] : 0;
+                $numero = $arrNumero[$intCodigo] && $arrNumero[$intCodigo] != '' ? $arrNumero[$intCodigo] : null;
+                $codigoNaturaleza = isset($arrControles['cboNaturaleza' . $intCodigo]) && $arrControles['cboNaturaleza' . $intCodigo] != '' ? $arrControles['cboNaturaleza' . $intCodigo] : null;
+                if ($arrCuenta[$intCodigo]) {
+                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$intCodigo]);
+                    if ($arCuenta) {
+                        $arCompraDetalle->setCuentaRel($arCuenta);
+                    } else {
+                        $arCompraDetalle->setCuentaRel(null);
+                    }
                 } else {
                     $arCompraDetalle->setCuentaRel(null);
                 }
-            } else {
-                $arCompraDetalle->setCuentaRel(null);
-            }
-            if ($arrTercero[$intCodigo]) {
-                $arTercero = $em->getRepository(TesTercero::class)->find($arrTercero[$intCodigo]);
-                if ($arTercero) {
-                    $arCompraDetalle->setTerceroRel($arTercero);
+                if ($arrTercero[$intCodigo]) {
+                    $arTercero = $em->getRepository(TesTercero::class)->find($arrTercero[$intCodigo]);
+                    if ($arTercero) {
+                        $arCompraDetalle->setTerceroRel($arTercero);
+                    } else {
+                        $arCompraDetalle->setTerceroRel(null);
+                    }
                 } else {
                     $arCompraDetalle->setTerceroRel(null);
                 }
-            } else {
-                $arCompraDetalle->setTerceroRel(null);
-            }
-            if ($arrCentroCosto[$intCodigo]) {
-                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arrCentroCosto[$intCodigo]);
-                if ($arCentroCosto) {
-                    $arCompraDetalle->setCentroCostoRel($arCentroCosto);
+                if ($arrCentroCosto[$intCodigo]) {
+                    $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arrCentroCosto[$intCodigo]);
+                    if ($arCentroCosto) {
+                        $arCompraDetalle->setCentroCostoRel($arCentroCosto);
+                    } else {
+                        $arCompraDetalle->setCentroCostoRel(null);
+                    }
                 } else {
                     $arCompraDetalle->setCentroCostoRel(null);
                 }
-            } else {
-                $arCompraDetalle->setCentroCostoRel(null);
+                $arCompraDetalle->setVrPrecio($valorPago);
+                $arCompraDetalle->setNaturaleza($codigoNaturaleza);
+                $arCompraDetalle->setNumero($numero);
+                $em->persist($arCompraDetalle);
             }
-            $arCompraDetalle->setVrPrecio($valorPago);
-            $arCompraDetalle->setNaturaleza($codigoNaturaleza);
-            $arCompraDetalle->setNumero($numero);
-            $em->persist($arCompraDetalle);
+            $em->flush();
         }
-        $em->flush();
     }
 
     public function listaFormato($codigoCompra)

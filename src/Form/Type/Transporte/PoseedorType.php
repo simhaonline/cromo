@@ -6,6 +6,7 @@ use App\Entity\Transporte\TtePoseedor;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -46,6 +47,8 @@ class PoseedorType extends AbstractType
             ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
             ->add('telefono',TextType::class,['required' => false,'label' => 'Telefono:'])
             ->add('movil',TextType::class,['required' => false,'label' => 'Celular:'])
+            ->add('retencionFuente', CheckboxType::class, array('required' => false))
+            ->add('retencionIndustriaComercio', CheckboxType::class, array('required' => false))
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
         ;

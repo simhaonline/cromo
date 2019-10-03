@@ -94,6 +94,16 @@ class TtePoseedor
     private $correo;
 
     /**
+     * @ORM\Column(name="retencion_fuente", type="boolean", nullable=true,options={"default":true})
+     */
+    private $retencionFuente = true;
+
+    /**
+     * @ORM\Column(name="retencion_industria_comercio", type="boolean", nullable=true,options={"default":true})
+     */
+    private $retencionIndustriaComercio = true;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="poseedoresCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -485,6 +495,38 @@ class TtePoseedor
     public function setDespachosRecogidasPoseedorRel($despachosRecogidasPoseedorRel): void
     {
         $this->despachosRecogidasPoseedorRel = $despachosRecogidasPoseedorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionFuente()
+    {
+        return $this->retencionFuente;
+    }
+
+    /**
+     * @param mixed $retencionFuente
+     */
+    public function setRetencionFuente($retencionFuente): void
+    {
+        $this->retencionFuente = $retencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionIndustriaComercio()
+    {
+        return $this->retencionIndustriaComercio;
+    }
+
+    /**
+     * @param mixed $retencionIndustriaComercio
+     */
+    public function setRetencionIndustriaComercio($retencionIndustriaComercio): void
+    {
+        $this->retencionIndustriaComercio = $retencionIndustriaComercio;
     }
 
 

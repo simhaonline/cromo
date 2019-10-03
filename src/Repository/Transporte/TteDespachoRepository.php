@@ -337,12 +337,17 @@ class TteDespachoRepository extends ServiceEntityRepository
         $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();
         $descuentos = $arDespacho->getVrDescuentoPapeleria() + $arDespacho->getVrDescuentoSeguridad() + $arDespacho->getVrDescuentoCargue() + $arDespacho->getVrDescuentoEstampilla();
         $retencionFuente = 0;
-        if ($arDespacho->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
-            $retencionFuente = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
+        $arPoseedor = $arDespacho->getPoseedorRel();
+        if($arPoseedor->getRetencionFuente()) {
+            if ($arDespacho->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
+                $retencionFuente = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
+            }
         }
         $industriaComercio = 0;
-        if ($arDespacho->getOperacionRel()->getRetencionIndustriaComercio()) {
-            $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
+        if($arPoseedor->getRetencionIndustriaComercio()) {
+            if ($arDespacho->getOperacionRel()->getRetencionIndustriaComercio()) {
+                $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
+            }
         }
 
         $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);

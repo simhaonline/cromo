@@ -60,7 +60,11 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.direccion, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
                 </div>
-
+                <label for="form_direccion" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.retencionFuente) }}
+                    {{ form_widget(form.retencionIndustriaComercio) }}
+                </div>
             </div>
         </div>
         <div class="modal-footer">

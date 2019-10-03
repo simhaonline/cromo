@@ -69,24 +69,24 @@
                             <td align="right">{{ arDespacho.vrRetencionFuente | number_format(0, '.', ',') }}</td>
                         </tr>
                         <tr>
-                            <td class="titulo">ORIGEN:</td>
-                            <td class="td-in-well">{{ arDespacho.ciudadOrigenRel.nombre | default('') }}</td>
+                            <td class="titulo">POSEEDOR:</td>
+                            <td class="td-in-well">{{ arDespacho.poseedorRel.numeroIdentificacion | default('') }}-{{ arDespacho.poseedorRel.nombreCorto | default('') }}</td>
                             <td class="titulo">COSTO PAGO:</td>
                             <td align="right">{{ arDespacho.vrCostoPago | number_format(0, '.', ',') }}</td>
                             <td class="titulo">TOTAL</td>
                             <td align="right">{{ arDespacho.vrTotal | number_format(0, '.', ',') }}</td>
                         </tr>
                         <tr>
-                            <td class="titulo">RUTA:</td>
-                            <td class="td-in-well">{{ arDespacho.rutaRel.nombre | default('') }}</td>
+                            <td class="titulo"></td>
+                            <td class="td-in-well"></td>
                             <td class="titulo">UNIDADES:</td>
                             <td class="td-in-well">{{ arDespacho.unidades | number_format(0, '.', ',') }}</td>
                             <td class="titulo">PAPELERIA:</td>
                             <td align="right">{{ arDespacho.vrDescuentoPapeleria | number_format(0, '.', ',') }}</td>
                         </tr>
                         <tr>
-                            <td class="titulo">USUARIO:</td>
-                            <td class="td-in-well">{{ arDespacho.usuario }}</td>
+                            <td class="titulo"></td>
+                            <td class="td-in-well"></td>
                             <td class="titulo">PESO:</td>
                             <td class="td-in-well">{{ arDespacho.pesoReal }}</td>
                             <td class="titulo">SEGURIDAD:</td>
@@ -101,32 +101,32 @@
                             <td align="right">{{ arDespacho.vrDescuentoCargue | number_format(0, '.', ',') }}</td>
                         </tr>
                         <tr>
-                            <td class="titulo">DESTINO:</td>
-                            <td class="td-in-well">{{ arDespacho.ciudadDestinoRel.nombre | default('') }}</td>
+                            <td class="titulo">ORIGEN:</td>
+                            <td class="td-in-well">{{ arDespacho.ciudadOrigenRel.nombre | default('') }}</td>
                             <td class="titulo">PESO(COSTO):</td>
                             <td class="td-in-well numero">{{ arDespacho.pesoCosto }}</td>
                             <td class="titulo">ESTAMPILLA:</td>
                             <td align="right">{{ arDespacho.vrDescuentoEstampilla | number_format(0, '.', ',') }}</td>
                         </tr>
                         <tr>
-                            <td class="titulo"></td>
-                            <td class="td-in-well"></td>
+                            <td class="titulo">DESTINO:</td>
+                            <td class="td-in-well">{{ arDespacho.ciudadDestinoRel.nombre | default('') }}</td>
                             <td class="titulo">CANTIDAD:</td>
                             <td class="td-in-well">{{ arDespacho.cantidad }}</td>
                             <td class="titulo">(-)COBRO ENTREGA:</td>
                             <td align="right">{{ arDespacho.vrCobroEntrega | number_format(0, '.', ',') }}</td>
                         </tr>
                         <tr>
-                            <td class="titulo"></td>
-                            <td class="td-in-well"></td>
+                            <td class="titulo">RUTA:</td>
+                            <td class="td-in-well">{{ arDespacho.rutaRel.nombre | default('') }}</td>
                             <td class="titulo">FLETE:</td>
                             <td class="td-in-well numero">{{ arDespacho.vrFlete | number_format(0, '.', ',') }}</td>
                             <td class="titulo">(+)COBRO (RECHAZADO):</td>
                             <td align="right">{{ arDespacho.vrCobroEntregaRechazado | number_format(0, '.', ',') }}</td>
                         </tr>
                         <tr>
-                            <td class="titulo"></td>
-                            <td class="td-in-well"></td>
+                            <td class="titulo">USUARIO:</td>
+                            <td class="td-in-well">{{ arDespacho.usuario }}</td>
                             <td class="titulo">MANEJO:</td>
                             <td class="td-in-well numero">{{ arDespacho.vrManejo | number_format(0, '.', ',') }}</td>
                             <td class="titulo">TOTAL NETO:</td>

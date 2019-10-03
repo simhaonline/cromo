@@ -142,17 +142,16 @@ class TesCompraDetalleRepository extends ServiceEntityRepository
 
     public function listaContabilizar($codigoCompra)
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesCompraDetalle::class, 'ed');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesCompraDetalle::class, 'cd');
         $queryBuilder
-            ->select('ed.codigoCompraDetallePk')
-            ->addSelect('ed.vrPago')
-            ->addSelect('cp.numeroDocumento')
-            ->addSelect('ed.codigoCuentaFk')
-            ->addSelect('ed.codigoTerceroFk')
-            ->addSelect('ed.naturaleza')
-            ->leftJoin('ed.cuentaPagarRel', 'cp')
-            ->where('ed.codigoCompraFk = ' . $codigoCompra);
-        $queryBuilder->orderBy('ed.codigoCompraDetallePk', 'ASC');
+            ->select('cd.codigoCompraDetallePk')
+            ->addSelect('cd.vrPrecio')
+            ->addSelect('cd.numero')
+            ->addSelect('cd.codigoCuentaFk')
+            ->addSelect('cd.codigoTerceroFk')
+            ->addSelect('cd.naturaleza')
+            ->where('cd.codigoCompraFk = ' . $codigoCompra);
+        $queryBuilder->orderBy('cd.codigoCompraDetallePk', 'ASC');
 
         return $queryBuilder->getQuery()->getResult();
     }

@@ -23,7 +23,7 @@ class FinCentroCostoRepository extends ServiceEntityRepository
             ->select('cc.codigoCentroCostoPk')
             ->addSelect('cc.nombre');
         if ($session->get('filtroFinBuscarCentroCostoCodigo') != '') {
-            $queryBuilder->andWhere("cc.codigoCentroPk LIKE '{$session->get('filtroFinBuscarCentroCostoCodigo')}%'");
+            $queryBuilder->andWhere("cc.codigoCentroCostoPk LIKE '{$session->get('filtroFinBuscarCentroCostoCodigo')}%'");
         }
         if ($session->get('filtroFinBuscarCentroCostoNombre') != '') {
             $queryBuilder->andWhere("cc.nombre LIKE '%{$session->get('filtroFinBuscarCentroCostoNombre')}%'");

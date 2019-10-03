@@ -207,6 +207,7 @@ class TesCompraRepository extends ServiceEntityRepository
             }
             $arCompra->setEstadoAprobado(1);
             $em->persist($arCompra);
+            $this->generarCuentaPagar($arCompra);
             $em->flush();
         }
     }
@@ -258,20 +259,19 @@ class TesCompraRepository extends ServiceEntityRepository
     public function registroContabilizar($codigo)
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesCompra::class, 'e')
-            ->select('e.codigoCompraPk')
-            ->addSelect('e.numero')
-            ->addSelect('e.fecha')
-            ->addSelect('e.fechaPago')
-            ->addSelect('e.vrTotalNeto')
-            ->addSelect('e.estadoAprobado')
-            ->addSelect('e.estadoContabilizado')
-            ->addSelect('e.codigoTerceroFk')
-            ->addSelect('et.codigoComprobanteFk')
-            ->addSelect('c.codigoCuentaContableFk')
-            ->leftJoin('e.compraTipoRel', 'et')
-            ->leftJoin('e.cuentaRel', 'c')
-            ->where('e.codigoCompraPk = ' . $codigo);
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesCompra::class, 'c')
+            ->select('c.codigoCompraPk')
+            ->addSelect('c.numero')
+            ->addSelect('c.fecha')
+            ->addSelect('c.codigoTerceroFk')
+            ->addSelect('c.vrTotalNeto')
+            ->addSelect('c.estadoAprobado')
+            ->addSelect('c.estadoContabilizado')
+            ->addSelect('c.codigoTerceroFk')
+            ->addSelect('ct.codigoComprobanteFk')
+            ->addSelect('ct.codigoCuentaFk')
+            ->leftJoin('c.compraTipoRel', 'ct')
+            ->where('c.codigoCompraPk = ' . $codigo);
         $arRecibo = $queryBuilder->getQuery()->getSingleResult();
         return $arRecibo;
     }
@@ -289,22 +289,21 @@ class TesCompraRepository extends ServiceEntityRepository
                         if ($arCompra['codigoComprobanteFk']) {
                             $arComprobante = $em->getRepository(FinComprobante::class)->find($arCompra['codigoComprobanteFk']);
                             if ($arComprobante) {
-                                $fecha = $arCompra['fechaPago'];
+                                $fecha = $arCompra['fecha'];
                                 $arTercero = $em->getRepository(TesTercero::class)->terceroFinanciero($arCompra['codigoTerceroFk']);
                                 $arCompraDetalles = $em->getRepository(TesCompraDetalle::class)->listaContabilizar($codigo);
                                 foreach ($arCompraDetalles as $arCompraDetalle) {
                                     //Cuenta proveedor
-                                    if ($arCompraDetalle['vrPago'] > 0) {
+                                    if ($arCompraDetalle['vrPrecio'] > 0) {
                                         $arTerceroDetalle = null;
                                         if($arCompraDetalle['codigoTerceroFk']) {
                                             $arTerceroDetalle = $em->getRepository(TesTercero::class)->terceroFinanciero($arCompraDetalle['codigoTerceroFk']);
                                         }
-                                        $descripcion = "PROVEEDORES DOC " . $arCompraDetalle['numeroDocumento'] ;
                                         $cuenta = $arCompraDetalle['codigoCuentaFk'];
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                             if (!$arCuenta) {
-                                                $error = "No se encuentra la cuenta  " . $descripcion . " " . $cuenta;
+                                                $error = "No se encuentra la cuenta  " . $cuenta;
                                                 break;
                                             }
                                             $arRegistro = new FinRegistro();
@@ -312,28 +311,28 @@ class TesCompraRepository extends ServiceEntityRepository
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arCompra['numero']);
-                                            $arRegistro->setNumeroReferencia($arCompraDetalle['numeroDocumento']);
+                                            $arRegistro->setNumeroReferencia($arCompraDetalle['numero']);
                                             $arRegistro->setFecha($fecha);
                                             $arRegistro->setFechaVence($fecha);
                                             if($arCompraDetalle['naturaleza'] == 'D') {
-                                                $arRegistro->setVrDebito($arCompraDetalle['vrPago']);
+                                                $arRegistro->setVrDebito($arCompraDetalle['vrPrecio']);
                                             } else {
-                                                $arRegistro->setVrCredito($arCompraDetalle['vrPago']);
+                                                $arRegistro->setVrCredito($arCompraDetalle['vrPrecio']);
                                             }
                                             $arRegistro->setNaturaleza($arCompraDetalle['naturaleza']);
-                                            $arRegistro->setDescripcion($descripcion);
+                                            $arRegistro->setDescripcion("");
                                             $arRegistro->setCodigoModeloFk('TesCompra');
                                             $arRegistro->setCodigoDocumento($arCompra['codigoCompraPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "La cuenta no existe" . $descripcion;
+                                            $error = "La cuenta no existe";
                                             break;
                                         }
                                     }
                                 }
 
-                                //Cuenta banco
-                                $cuenta = $arCompra['codigoCuentaContableFk'];
+                                //Cuenta por pagar
+                                $cuenta = $arCompra['codigoCuentaFk'];
                                 if ($cuenta) {
                                     $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
                                     if (!$arCuenta) {
@@ -341,7 +340,7 @@ class TesCompraRepository extends ServiceEntityRepository
                                         break;
                                     }
                                     $arRegistro = new FinRegistro();
-                                    //$arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setTerceroRel($arTercero);
                                     $arRegistro->setCuentaRel($arCuenta);
                                     $arRegistro->setComprobanteRel($arComprobante);
                                     $arRegistro->setNumero($arCompra['numero']);
@@ -383,6 +382,40 @@ class TesCompraRepository extends ServiceEntityRepository
 
         }
         return true;
+    }
+
+    /**
+     * @param $arCompra TesCompra
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function generarCuentaPagar($arCompra)
+    {
+        $em = $this->getEntityManager();
+        if ($arCompra->getCompraTipoRel()->getCodigoCuentaPagarTipoFk()) {
+            if($arCompra->getVrTotalNeto() > 0) {
+                $arCuentaPagar = New TesCuentaPagar();
+                $arCuentaPagar->setCuentaPagarTipoRel($arCompra->getCompraTipoRel()->getCuentaPagarTipoRel());
+                $arCuentaPagar->setTerceroRel($arCompra->getTerceroRel());
+                $arCuentaPagar->setModulo('com');
+                $arCuentaPagar->setModelo('TesCompra');
+                $arCuentaPagar->setCodigoDocumento($arCompra->getCodigoCompraPk());
+                $arCuentaPagar->setNumeroDocumento($arCompra->getNumeroDocumento());
+                $arCuentaPagar->setNumeroReferencia($arCompra->getNumero());
+                $arCuentaPagar->setFecha($arCompra->getFecha());
+                $arCuentaPagar->setFechaVence($arCompra->getFecha());
+                $arCuentaPagar->setVrTotal($arCompra->getVrTotalNeto());
+                $arCuentaPagar->setVrSaldoOriginal($arCompra->getVrTotalNeto());
+                $arCuentaPagar->setVrSaldo($arCompra->getVrTotalNeto());
+                $arCuentaPagar->setVrSaldoOperado($arCompra->getVrTotalNeto() * $arCompra->getCompraTipoRel()->getCuentaPagarTipoRel()->getOperacion());
+                $arCuentaPagar->setEstadoAutorizado(1);
+                $arCuentaPagar->setEstadoAprobado(1);
+                $arCuentaPagar->setOperacion($arCompra->getCompraTipoRel()->getCuentaPagarTipoRel()->getOperacion());
+                $em->persist($arCuentaPagar);
+            }
+        } else {
+            Mensajes::error("El tipo de compra no tiene configurada un tipo de cuenta por pagar");
+        }
+
     }
 
 }

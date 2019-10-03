@@ -226,6 +226,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
             ->addSelect('cp.numeroReferencia')
             ->addSelect('cp.vrTotal')
             ->addSelect('cp.vrSaldo')
+            ->addSelect('cp.vrSaldoOperado')
             ->addSelect('cp.vrAbono')
             ->addSelect('cp.plazo')
             ->addSelect('cp.fecha')

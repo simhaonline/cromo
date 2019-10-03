@@ -103,7 +103,7 @@
                     <td style="text-align: right;">{{ arCuentaPagar.fechaVence | date('d/m/Y') }}</td>
                     <td>{{ arCuentaPagar.estadoVerificado? "SI":"NO" }}</td>
                     <td style="text-align: right;">{{ arCuentaPagar.vrAbono | number_format(0,'.',',') }}</td>
-                    <td style="text-align: right;">{{ arCuentaPagar.vrSaldo | number_format }}</td>
+                    <td style="text-align: right;">{{ arCuentaPagar.vrSaldoOperado | number_format }}</td>
                     <td style="text-align: center;">
                         <input type="checkbox" name="ChkSeleccionar[]"
                                size="10" value="{{ arCuentaPagar.codigoCuentaPagarPk }}" style="width:70px">
@@ -124,6 +124,9 @@
         <div class="btn-toolbar" style="float: right;">
             <div class="btn-group btn-group-sm">
                 {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+            </div>
+            <div class="btn-group btn-group-sm">
+                {{ form_widget(form.btnGuardarNuevo,{'attr':{'style':'float: right;'}}) }}
             </div>
         </div>
     </div>

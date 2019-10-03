@@ -264,6 +264,7 @@ class EgresoController extends AbstractController
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTesFechaDesde') ? date_create($session->get('filtroTesFechaDesde')) : null])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTesFechaHasta') ? date_create($session->get('filtroTesFechaHasta')) : null])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnGuardarNuevo', SubmitType::class, ['label' => 'Guardar y nuevo', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -288,7 +289,7 @@ class EgresoController extends AbstractController
                 $session->set('filtroTesFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
                 $session->set('filtroTesCuentaPagarTodosTerceros', $form->get('todosTerceros')->getData());
             }
-            if ($form->get('btnGuardar')->isClicked()) {
+            if ($form->get('btnGuardar')->isClicked() || $form->get('btnGuardarNuevo')->isClicked()) {
                 $arrCuentasPagar = $request->request->get('ChkSeleccionar');
                 if ($arrCuentasPagar) {
                     foreach ($arrCuentasPagar as $codigoCuentaPagar) {
@@ -310,7 +311,13 @@ class EgresoController extends AbstractController
                     }
                     $em->flush();
                     $em->getRepository(TesEgreso::class)->liquidar($id);
-                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    if ($form->get('btnGuardar')->isClicked()) {
+                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    }
+                    if ($form->get('btnGuardarNuevo')->isClicked()) {
+                        echo "<script languaje='javascript' type='text/javascript'>window.opener.location.reload();</script>";
+                    }
+
                 }
             }
         }

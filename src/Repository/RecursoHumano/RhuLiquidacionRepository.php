@@ -128,7 +128,8 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("l.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->addOrderBy('l.fecha', 'DESC');
+        $queryBuilder->orderBy('l.estadoAprobado', 'ASC');
+        $queryBuilder->addOrderBy('l.fechaHasta', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }
@@ -1321,6 +1322,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                     $arPago->setVrNeto($neto);
                     $em->getRepository(RhuPago::class)->liquidarProvision($arPago, $arConfiguracion);
                     $arLiquidacion->setEstadoAprobado(1);
+                    $arLiquidacion->setFecha($arLiquidacion->getFechaHasta());
                     $em->persist($arLiquidacion);
                     $em->flush();
                     $em->getRepository(RhuPago::class)->liquidar($arPago);

@@ -35,34 +35,39 @@ class TteClienteRepository extends ServiceEntityRepository
     public function lista()
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCliente::class, 'tc')
-            ->select('tc.codigoClientePk')
-            ->addSelect('tc.nombreCorto')
-            ->addSelect('tc.numeroIdentificacion')
-            ->addSelect('tc.telefono')
-            ->addSelect('tc.movil')
-            ->addSelect('tc.direccion')
-            ->addSelect('tc.codigoOperacionFk')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCliente::class, 'c')
+            ->select('c.codigoClientePk')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.telefono')
+            ->addSelect('c.movil')
+            ->addSelect('c.direccion')
+            ->addSelect('c.codigoOperacionFk')
             ->addSelect('a.nombre AS asesorNombre')
-            ->addSelect('c.nombre AS ciudadNombre')
+            ->addSelect('ciu.nombre AS ciudadNombre')
             ->addSelect('con.nombre AS condicion')
-            ->addSelect('tc.codigoCondicionFk')
+            ->addSelect('c.codigoCondicionFk')
             ->addSelect('con.codigoPrecioFk')
             ->addSelect('p.nombre as precioNombre')
-            ->leftJoin('tc.asesorRel', 'a')
-            ->leftJoin('tc.ciudadRel', 'c')
-            ->leftJoin('tc.condicionRel', 'con')
+            ->addSelect('c.guiaPagoCredito as CRE')
+            ->addSelect('c.guiaPagoContado as CON')
+            ->addSelect('c.guiaPagoDestino as DES')
+            ->addSelect('c.guiaPagoCortesia as COR')
+            ->addSelect('c.guiaPagoRecogida as REC')
+            ->leftJoin('c.asesorRel', 'a')
+            ->leftJoin('c.ciudadRel', 'ciu')
+            ->leftJoin('c.condicionRel', 'con')
             ->leftJoin('con.precioRel', 'p')
-            ->where('tc.codigoClientePk IS NOT NULL')
-            ->orderBy('tc.codigoClientePk', 'ASC');
+            ->where('c.codigoClientePk IS NOT NULL')
+            ->orderBy('c.codigoClientePk', 'ASC');
         if ($session->get('filtroTteNombreCliente') != '') {
-            $queryBuilder->andWhere("tc.nombreCorto LIKE '%{$session->get('filtroTteNombreCliente')}%' ");
+            $queryBuilder->andWhere("c.nombreCorto LIKE '%{$session->get('filtroTteNombreCliente')}%' ");
         }
         if ($session->get('filtroTteNitCliente') != '') {
-            $queryBuilder->andWhere("tc.numeroIdentificacion = {$session->get('filtroTteNitCliente')} ");
+            $queryBuilder->andWhere("c.numeroIdentificacion = {$session->get('filtroTteNitCliente')} ");
         }
         if ($session->get('filtroTteCodigoCliente') != '') {
-            $queryBuilder->andWhere("tc.codigoClientePk = {$session->get('filtroTteCodigoCliente')} ");
+            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTteCodigoCliente')} ");
         }
 
         return $queryBuilder;

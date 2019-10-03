@@ -676,18 +676,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setVrIngresoBasePrestacion($arrDatosGenerales['ingresoBasePrestacion']);
         $arPago->setVrIngresoBasePrestacionVacacion($arrDatosGenerales['ingresoBasePrestacionVacacion']);
         //Calcular provision
-        $porcentajeCesantia = $arConfiguracion['provisionPorcentajeCesantia'];
-        $porcentajeInteres = $arConfiguracion['provisionPorcentajeInteres'];
-        $porcentajePrima = $arConfiguracion['provisionPorcentajePrima'];
-        $porcentajeVacacion = $arConfiguracion['provisionPorcentajeVacacion'];
-        $cesantia = ($arrDatosGenerales['ingresoBasePrestacion'] * $porcentajeCesantia) / 100; // Porcentaje 8.33
-        $interes = ($cesantia * $porcentajeInteres) / 100; // Porcentaje 1 sobre las cesantias
-        $prima = ($arrDatosGenerales['ingresoBasePrestacion'] * $porcentajePrima) / 100; // 8.33
-        $vacacion = ($arrDatosGenerales['ingresoBasePrestacionVacacion'] * $porcentajeVacacion) / 100; // 5
-        $arPago->setVrCesantia($cesantia);
-        $arPago->setVrInteres($interes);
-        $arPago->setVrPrima($prima);
-        $arPago->setVrVacacion($vacacion);
+        $this->liquidarProvision($arPago, $arConfiguracion);
 
         $em->persist($arPago);
         return $arrDatosGenerales['neto'];
@@ -1702,6 +1691,27 @@ class RhuPagoRepository extends ServiceEntityRepository
             $respuesta['error'] = "En el pago numero " . $arPago->getNumero() . " el empleado no tiene distribucion de costos";
         }
         return $respuesta;
+    }
+
+    /**
+     * @param $arPago RhuPago
+     * @param $arConfiguracion
+     */
+    public function liquidarProvision($arPago, $arConfiguracion) {
+        $em = $this->getEntityManager();
+        $porcentajeCesantia = $arConfiguracion['provisionPorcentajeCesantia'];
+        $porcentajeInteres = $arConfiguracion['provisionPorcentajeInteres'];
+        $porcentajePrima = $arConfiguracion['provisionPorcentajePrima'];
+        $porcentajeVacacion = $arConfiguracion['provisionPorcentajeVacacion'];
+        $cesantia = ($arPago->getVrIngresoBasePrestacion() * $porcentajeCesantia) / 100; // Porcentaje 8.33
+        $interes = ($cesantia * $porcentajeInteres) / 100; // Porcentaje 1 sobre las cesantias
+        $prima = ($arPago->getVrIngresoBasePrestacion() * $porcentajePrima) / 100; // 8.33
+        $vacacion = ($arPago->getVrIngresoBasePrestacionVacacion() * $porcentajeVacacion) / 100; // 5
+        $arPago->setVrCesantia($cesantia);
+        $arPago->setVrInteres($interes);
+        $arPago->setVrPrima($prima);
+        $arPago->setVrVacacion($vacacion);
+
     }
 
 }

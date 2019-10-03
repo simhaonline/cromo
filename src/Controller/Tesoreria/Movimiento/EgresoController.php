@@ -304,7 +304,12 @@ class EgresoController extends AbstractController
                         $arEgresoDetalle->setUsuario($this->getUser()->getUserName());
                         $arEgresoDetalle->setCuentaRel($em->getReference(FinCuenta::class, $arCuentaPagar->getCuentaPagarTipoRel()->getCodigoCuentaProveedorFk()));
                         $arEgresoDetalle->setTerceroRel($arCuentaPagar->getTerceroRel());
-                        $arEgresoDetalle->setNaturaleza('D');
+                        if($arCuentaPagar->getOperacion() == 1) {
+                            $arEgresoDetalle->setNaturaleza('D');
+                        } else {
+                            $arEgresoDetalle->setNaturaleza('C');
+                        }
+
                         $arEgresoDetalle->setCuenta($arCuentaPagar->getCuenta());
                         $arEgresoDetalle->setBancoRel($arCuentaPagar->getBancoRel());
                         $em->persist($arEgresoDetalle);

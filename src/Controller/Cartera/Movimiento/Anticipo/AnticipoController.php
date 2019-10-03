@@ -166,10 +166,9 @@ class AnticipoController extends AbstractController
      * @throws \Doctrine\ORM\ORMException
      * @Route("/cartera/movimiento/anticipo/anticipo/detalle/{id}", name="cartera_movimiento_anticipo_anticipo_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arAnticipo = $em->getRepository(CarAnticipo::class)->find($id);
         $form = Estandares::botonera($arAnticipo->getEstadoAutorizado(), $arAnticipo->getEstadoAprobado(), $arAnticipo->getEstadoAnulado());
         $arrBtnActualizarDetalle = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];

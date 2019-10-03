@@ -671,8 +671,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                             WHERE fd.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
                             $query->execute();
                             $query = $em->createQuery('UPDATE App\Entity\Transporte\TteFacturaDetalleConcepto fdc set fdc.vrPrecio = 0, fdc.vrSubtotal = 0,  fdc.vrIva = 0, 
-                                fdc.pesoReal = 0, fdc.vrTotal = 0 
-                                WHERE fd.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
+                                fdc.vrTotal = 0 
+                                WHERE fdc.codigoFacturaFk = :codigoFactura')->setParameter('codigoFactura', $arFactura->getCodigoFacturaPk());
                             $query->execute();
                             $em->flush();
 

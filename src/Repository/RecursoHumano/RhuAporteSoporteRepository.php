@@ -408,33 +408,36 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                     }
                 }
 
-                if ($diasOrdinariosTotal <= 0 && $novedadTrasladoDesdeOtraEntidad == false) {
-                    //Se valida si el traslado fue aprobado para reportar traslado desde otra entidad.
-                    $arrTrasladoDesdeOtraEntidadEmpleado = $this->trasladoDesdeOtraEntidadEmpleado($arContrato->getCodigoContratoPk(), $arAporteContrato->getSsoPeriodoRel()->getFechaPago());
-                    if ($arrTrasladoDesdeOtraEntidadEmpleado) {
-                        $arAporteSoporte->setTrasladoDesdeOtraEps(true);
-                        $novedadTrasladoDesdeOtraEntidad = true;
-                    }
-                }
-
-                if ($diasOrdinariosTotal <= 0 && $novedadTrasladoPension == false) {
-                    //Validación si el empleado contiene un traslado de pension en el periodo a reportar para marcar la X trasladoAOtraPension.
-                    $arrTrasladoPensionEmpleado = $this->trasladoPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
-                    if ($arrTrasladoPensionEmpleado) {
-                        $arAporteSoporte->setTrasladoAOtraPension(true);
-                        $arAporteSoporte->setCodigoEntidadPensionTraslada($arrTrasladoPensionEmpleado['codigoPensionNueva']);
-                        $novedadTrasladoPension = true;
-                    }
-                }
-
-                if ($diasOrdinariosTotal <= 0 && $novedadTrasladoDesdeOtraPension == false) {
-                    //Se valida si el traslado fue aprobado para reportar traslado desde otra pension.
-                    $arrTrasladoDesdeOtraPensionEmpleado = $this->trasladoDesdeOtraPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporteContrato->getSsoPeriodoRel()->getFechaPago());
-                    if ($arrTrasladoDesdeOtraPensionEmpleado) {
-                        $arAporteSoporte->setTrasladoDesdeOtraPension(true);
-                        $novedadTrasladoDesdeOtraPension = true;
-                    }
-                }
+                /**
+                 * @var $arAporteContrato RhuAporteContrato
+                 */
+//                if ($diasOrdinariosTotal <= 0 && $novedadTrasladoDesdeOtraEntidad == false) {
+//                    //Se valida si el traslado fue aprobado para reportar traslado desde otra entidad.
+//                    $arrTrasladoDesdeOtraEntidadEmpleado = $this->trasladoDesdeOtraEntidadEmpleado($arContrato->getCodigoContratoPk(), $arAporteContrato->getAporteRel()->getFechaDesde());
+//                    if ($arrTrasladoDesdeOtraEntidadEmpleado) {
+//                        $arAporteSoporte->setTrasladoDesdeOtraEps(true);
+//                        $novedadTrasladoDesdeOtraEntidad = true;
+//                    }
+//                }
+//
+//                if ($diasOrdinariosTotal <= 0 && $novedadTrasladoPension == false) {
+//                    //Validación si el empleado contiene un traslado de pension en el periodo a reportar para marcar la X trasladoAOtraPension.
+//                    $arrTrasladoPensionEmpleado = $this->trasladoPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+//                    if ($arrTrasladoPensionEmpleado) {
+//                        $arAporteSoporte->setTrasladoAOtraPension(true);
+//                        $arAporteSoporte->setCodigoEntidadPensionTraslada($arrTrasladoPensionEmpleado['codigoPensionNueva']);
+//                        $novedadTrasladoPension = true;
+//                    }
+//                }
+//
+//                if ($diasOrdinariosTotal <= 0 && $novedadTrasladoDesdeOtraPension == false) {
+//                    //Se valida si el traslado fue aprobado para reportar traslado desde otra pension.
+//                    $arrTrasladoDesdeOtraPensionEmpleado = $this->trasladoDesdeOtraPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporteContrato->getSsoPeriodoRel()->getFechaPago());
+//                    if ($arrTrasladoDesdeOtraPensionEmpleado) {
+//                        $arAporteSoporte->setTrasladoDesdeOtraPension(true);
+//                        $novedadTrasladoDesdeOtraPension = true;
+//                    }
+//                }
 
                 $em->persist($arAporteSoporte);
             }

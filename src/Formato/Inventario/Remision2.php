@@ -223,8 +223,15 @@ class Remision2 extends \FPDF
         $this->Text(10, 180, utf8_decode('OBSERVACIONES: A partir de la fecha de recibido los productos, el cliente expresa responsabilidad sobre los mismos  y se compromete a'));
         $this->Text(10, 184, utf8_decode('mantenerlos en condiciones optimas para su uso. El daño o perdida de los elementos aquí remisionados genera facturación a nombre del cliente'));
         //Bloque firmas Fila 1
-        $this->Text(50, 200, utf8_decode('RECIBE'));
-        $this->Text(150, 200, utf8_decode('ENTREGA'));
+
+        if ($arRemision->getCodigoRemisionTipoFk()=='DEV'){
+            $this->Text(50, 200, utf8_decode('RECIBE'));
+            $this->Text(150, 200, utf8_decode('ENTREGA'));
+        }else{
+            $this->Text(50, 200, utf8_decode('ENTREGA'));
+            $this->Text(150, 200, utf8_decode('RECIBE'));
+        }
+
         //Bloque firmas Fila 2
         $this->Text(20, 214, utf8_decode('FIRMA:_________________________________'));
         $this->Text(120, 214, utf8_decode('FIRMA:_________________________________'));

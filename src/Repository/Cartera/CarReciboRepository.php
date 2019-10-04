@@ -83,10 +83,10 @@ class CarReciboRepository extends ServiceEntityRepository
             ->addOrderBy('r.fecha', 'DESC');
 
         if ($fechaPagoDesde) {
-            $queryBuilder->andWhere("r.fecha >= '{$fechaPagoDesde} 00:00:00'");
+            $queryBuilder->andWhere("r.fechaPago >= '{$fechaPagoDesde} 00:00:00'");
         }
         if ($fechaPagoHasta) {
-            $queryBuilder->andWhere("r.fecha <= '{$fechaPagoHasta} 23:59:59'");
+            $queryBuilder->andWhere("r.fechaPago <= '{$fechaPagoHasta} 23:59:59'");
         }
 
         if ($numero) {
@@ -362,9 +362,21 @@ class CarReciboRepository extends ServiceEntityRepository
         }
     }
 
-    public function listaContabilizar()
+    public function listaContabilizar($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $codigoCliente = null;
+        $reciboTipo = $filtros['reciboTipo'] ?? null;
+        if ($filtros) {
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $reciboTipo = $filtros['reciboTipo'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarRecibo::class, 'r')
             ->select('r.codigoReciboPk')
             ->addSelect('c.nombre')
@@ -387,29 +399,20 @@ class CarReciboRepository extends ServiceEntityRepository
             ->where('r.estadoContabilizado =  0')
             ->andWhere('r.estadoAprobado = 1')
             ->orderBy('r.fecha', 'ASC');
-        /*if ($session->get('filtroCarReciboNumero')) {
-            $queryBuilder->andWhere("r.numero = '{$session->get('filtroCarReciboNumero')}'");
-        }*/
-        if ($session->get('filtroCarCodigoCliente')) {
-            $queryBuilder->andWhere("r.codigoClienteFk = {$session->get('filtroCarCodigoCliente')}");
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("r.codigoClienteFk = {$codigoCliente}");
         }
-        if ($session->get('filtroCarReciboCodigoReciboTipo') != "") {
-            $queryBuilder->andWhere("r.codigoReciboTipoFk = '" . $session->get('filtroCarReciboCodigoReciboTipo') . "'");
+        if ($reciboTipo) {
+            $queryBuilder->andWhere("r.codigoReciboTipoFk = {$reciboTipo}");
         }
-        $fecha = new \DateTime('now');
-        if ($session->get('filtroCarReciboFiltroFecha') == true) {
-            if ($session->get('filtroCarReciboFechaDesde') != null) {
-                $queryBuilder->andWhere("r.fecha >= '{$session->get('filtroCarReciboFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("r.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroCarReciboFechaHasta') != null) {
-                $queryBuilder->andWhere("r.fecha <= '{$session->get('filtroCarReciboFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("r.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
-        };
-        return $queryBuilder->getQuery()->execute();
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("r.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("r.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
     }
 
     public function registroContabilizar($codigo)

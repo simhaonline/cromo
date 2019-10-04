@@ -400,7 +400,7 @@ class CarReciboRepository extends ServiceEntityRepository
             ->andWhere('r.estadoAprobado = 1')
             ->orderBy('r.fecha', 'ASC');
         if ($codigoCliente) {
-            $queryBuilder->andWhere("r.codigoClienteFk = {$codigoCliente}");
+            $queryBuilder->andWhere("cr.codigoClientePk = {$codigoCliente}");
         }
         if ($reciboTipo) {
             $queryBuilder->andWhere("r.codigoReciboTipoFk = {$reciboTipo}");

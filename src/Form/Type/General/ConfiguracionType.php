@@ -46,8 +46,8 @@ class ConfiguracionType extends AbstractType
             ->add('rutaTemporal', TextType::class, ['required' => true])
             ->add('telefono', TextType::class, ['required' => true])
             ->add('direccion', TextType::class, ['required' => true])
-            ->add('codigoClienteOro', IntegerType::class, ['required' => true])
-            ->add('webServiceOroUrl', TextType::class, ['required' => false])
+            ->add('codigoClienteMesaAyuda', IntegerType::class, ['required' => true])
+            ->add('webServiceGalioUrl', TextType::class, ['required' => false])
             ->add('webServiceCesioUrl', TextType::class, ['required' => false])
             ->add('dominio', TextType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Actualizar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);

@@ -337,15 +337,17 @@ class Manifiesto extends \FPDF {
         $pdf->Rect($x+100, $y, 80, $alto2);
         $yt += 5;
         $pdf->SetFont('Arial', 'b', 8);
-        $pdf->Text(20, $yt, "NETO:");
+        $pdf->Text(20, $yt, "TOTAL:");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(40, $yt-3);
-        $neto = $arDespacho['vrFletePago']-($arDespacho['vrRetencionFuente'] - $arDespacho['vrIndustriaComercio']);
+        $neto = $arDespacho['vrFletePago']-($arDespacho['vrRetencionFuente'] + $arDespacho['vrIndustriaComercio']);
         $pdf->Cell(25, 4, number_format($neto), 0, 0, 'R');
 
         $y += 5;
         $pdf->Rect($x, $y, 25, $alto2);
         $pdf->Rect($x+25, $y, 25, $alto2);
+        $pdf->Rect($x+50, $y, 25, $alto2);
+        $pdf->Rect($x+75, $y, 25, $alto2);
         $pdf->Rect($x+100, $y, 80, $alto2);
         $yt += 5;
         $pdf->SetFont('Arial', 'b', 8);
@@ -357,18 +359,24 @@ class Manifiesto extends \FPDF {
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(40, $yt-3);
         $pdf->Cell(25, 4, number_format($arDespacho['vrAnticipo']), 0, 0, 'R');
+        $pdf->setXY(85, $yt-3);
+        $pdf->Cell(25, 4, number_format($arDespacho['vrCobroEntrega']), 0, 0, 'R');
 
         $y += 5;
         $pdf->Rect($x, $y, 25, $alto2);
         $pdf->Rect($x+25, $y, 25, $alto2);
+        $pdf->Rect($x+50, $y, 25, $alto2);
+        $pdf->Rect($x+75, $y, 25, $alto2);
         $pdf->Rect($x+100, $y, 80, $alto2);
         $yt += 5;
         $pdf->SetFont('Arial', 'b', 8);
-        $pdf->Text(20, $yt, "SALDO:");
+        $pdf->Text(20, $yt, "NETO:");
+        $pdf->Text(65, $yt, "SALDO:");
         $pdf->SetFont('Arial', '', 8);
         $pdf->setXY(40, $yt-3);
-        $saldo = $arDespacho['vrTotal'];
-        $pdf->Cell(25, 4, number_format($saldo), 0, 0, 'R');
+        $pdf->Cell(25, 4, number_format($arDespacho['vrTotal']), 0, 0, 'R');
+        $pdf->setXY(85, $yt-3);
+        $pdf->Cell(25, 4, number_format($arDespacho['vrSaldo']), 0, 0, 'R');
 
         $y += 8;
         $pdf->Rect($x, $y, 260, $alto2);

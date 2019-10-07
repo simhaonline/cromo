@@ -200,6 +200,11 @@ class TesCuentaPagar
     private $egresosDetalleCuentasPagarRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoDetalle" , mappedBy="cuentaPagarRel")
+     */
+    private $movimientosDetalleCuentasPagarRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPagarPk()
@@ -773,6 +778,22 @@ class TesCuentaPagar
     public function setEgresosDetalleCuentasPagarRel($egresosDetalleCuentasPagarRel): void
     {
         $this->egresosDetalleCuentasPagarRel = $egresosDetalleCuentasPagarRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDetalleCuentasPagarRel()
+    {
+        return $this->movimientosDetalleCuentasPagarRel;
+    }
+
+    /**
+     * @param mixed $movimientosDetalleCuentasPagarRel
+     */
+    public function setMovimientosDetalleCuentasPagarRel($movimientosDetalleCuentasPagarRel): void
+    {
+        $this->movimientosDetalleCuentasPagarRel = $movimientosDetalleCuentasPagarRel;
     }
 
 

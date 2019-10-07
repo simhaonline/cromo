@@ -67,6 +67,11 @@ class GenBanco
     protected $egresosDetallesBancoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoDetalle", mappedBy="bancoRel")
+     */
+    protected $movimientosDetallesBancoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -240,6 +245,22 @@ class GenBanco
     public function setPagosBancoRel($pagosBancoRel): void
     {
         $this->pagosBancoRel = $pagosBancoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDetallesBancoRel()
+    {
+        return $this->movimientosDetallesBancoRel;
+    }
+
+    /**
+     * @param mixed $movimientosDetallesBancoRel
+     */
+    public function setMovimientosDetallesBancoRel($movimientosDetallesBancoRel): void
+    {
+        $this->movimientosDetallesBancoRel = $movimientosDetallesBancoRel;
     }
 
 

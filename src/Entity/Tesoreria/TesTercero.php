@@ -208,6 +208,16 @@ class TesTercero
     protected $comprasDetallesTerceroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimiento" , mappedBy="terceroRel")
+     */
+    protected $movimientosTerceroRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoDetalle" , mappedBy="terceroRel")
+     */
+    protected $movimientosDetallesTerceroRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTerceroPk()
@@ -621,6 +631,38 @@ class TesTercero
     public function setComprasDetallesTerceroRel($comprasDetallesTerceroRel): void
     {
         $this->comprasDetallesTerceroRel = $comprasDetallesTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosTerceroRel()
+    {
+        return $this->movimientosTerceroRel;
+    }
+
+    /**
+     * @param mixed $movimientosTerceroRel
+     */
+    public function setMovimientosTerceroRel($movimientosTerceroRel): void
+    {
+        $this->movimientosTerceroRel = $movimientosTerceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDetallesTerceroRel()
+    {
+        return $this->movimientosDetallesTerceroRel;
+    }
+
+    /**
+     * @param mixed $movimientosDetallesTerceroRel
+     */
+    public function setMovimientosDetallesTerceroRel($movimientosDetallesTerceroRel): void
+    {
+        $this->movimientosDetallesTerceroRel = $movimientosDetallesTerceroRel;
     }
 
 

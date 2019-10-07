@@ -63,6 +63,11 @@ class TteNovedad
     private $fechaSolucion;
 
     /**
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
+     */
+    private $usuario;
+
+    /**
      * @ORM\Column(name="estado_reporte", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoReporte = false;
@@ -419,6 +424,21 @@ class TteNovedad
         $this->despachoRel = $despachoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
+    }
 
 
 

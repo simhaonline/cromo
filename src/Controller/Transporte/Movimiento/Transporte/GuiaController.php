@@ -270,6 +270,7 @@ class GuiaController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             $arNovedad = $form->getData();
             $arNovedad->setGuiaRel($arGuia);
+            $arNovedad->setUsuario($this->getUser()->getUserName());
             if ($codigoNovedad == 0) {
                 $arNovedad->setFechaRegistro(new \DateTime('now'));
                 $arNovedad->setFechaAtencion(new \DateTime('now'));

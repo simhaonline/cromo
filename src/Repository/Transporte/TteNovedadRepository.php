@@ -85,6 +85,7 @@ class TteNovedadRepository extends ServiceEntityRepository
                   n.estadoAtendido,
                   n.estadoReporte,
                   n.estadoSolucion,
+                  n.usuario,
                   nt.nombre as nombreTipo
         FROM App\Entity\Transporte\TteNovedad n 
         LEFT JOIN n.novedadTipoRel nt

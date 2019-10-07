@@ -507,10 +507,27 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
-    public function crearReciboMasivoLista()
+    public function crearReciboMasivoLista($raw)
     {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $numeroReferencia =null;
+        $fechaDesde =null;
+        $fechaHasta =null;
+        $estadoAutorizado =null;
+        $estadoAprobado =null;
+        $estadoAnulado =null;
+        $cuentaCobrarTipo =null;
+        if ($filtros) {
+            $numeroReferencia = $filtros['numeroReferencia'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+            $cuentaCobrarTipo = $filtros['cuentaCobrarTipo'] ?? null;
+        }
         $em = $this->getEntityManager();
-        $session = new Session();
 
         $queryBuilder = $em->createQueryBuilder()
             ->from('App:Cartera\CarCuentaCobrar', 'cc')
@@ -527,26 +544,45 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->leftJoin('cc.cuentaCobrarTipoRel', 'cct')
             ->andWhere("cc.vrSaldo > 0")
             ->andWhere("cct.permiteReciboMasivo = 1");
-        $fecha = new \DateTime('now');
-        if ($session->get('filtroCarReciboCodigoReciboTipo')) {
-            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk='{$session->get("filtroCarReciboCodigoReciboTipo")}'");
+        if ($cuentaCobrarTipo) {
+            $queryBuilder->andWhere("cc.codigoCuentaCobrarTipoFk='{$cuentaCobrarTipo}'");
         }
-        if ($session->get('filtroCarNumeroReferencia') != '') {
-            $queryBuilder->andWhere("cc.numeroReferencia = {$session->get('filtroCarNumeroReferencia')}");
+        if ($numeroReferencia) {
+            $queryBuilder->andWhere("cc.numeroReferencia = {$numeroReferencia}");
         }
-        if ($session->get('filtroFecha') == true) {
-            if ($session->get('filtroFechaDesde') != null) {
-                $queryBuilder->andWhere("cc.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
-            } else {
-                $queryBuilder->andWhere("cc.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
-            }
-            if ($session->get('filtroFechaHasta') != null) {
-                $queryBuilder->andWhere("cc.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
-            } else {
-                $queryBuilder->andWhere("cc.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
-            }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("cc.fecha >= '{$fechaDesde} 00:00:00'");
         }
-        return $queryBuilder->getQuery()->execute();
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("cc.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("cc.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cc.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("cc.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cc.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("cc.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cc.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
     }
 
     public function corregirSaldos()

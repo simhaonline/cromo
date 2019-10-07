@@ -7,10 +7,13 @@ use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Form\Type\Cartera\ReciboType;
+use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,7 +23,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class CrearReciboMasivoController extends Controller
+class CrearReciboMasivoController extends AbstractController
 {
     /**
      * @param Request $request
@@ -29,36 +32,38 @@ class CrearReciboMasivoController extends Controller
      * @throws \Doctrine\ORM\ORMException
      * @Route("/cartera/proceso/ingreso/recibomasivo/lista", name="cartera_proceso_ingreso_recibomasivo_lista")
      */
-    public function lista(Request $request, TokenStorageInterface $user)
+    public function lista(Request $request, PaginatorInterface $paginator,TokenStorageInterface $user)
     {
         $em = $this->getDoctrine()->getManager();
         $session = new Session();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('cboCuentaCobrarTipoRel', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
-            ->add('txtNumeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNumeroReferencia'), 'attr' => ['class' => 'form-control']])
-            ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
+            ->add('cuentaCobrarTipo', EntityType::class, $em->getRepository(CarCuentaCobrarTipo::class)->llenarCombo())
+            ->add('numeroReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroCarNumeroReferencia'), 'attr' => ['class' => 'form-control']])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
         $arReciboInicial = new CarRecibo();
         $arReciboInicial->setFechaPago(new \DateTime('now'));
         $formRecibo = $this->createForm(ReciboType::class, $arReciboInicial);
         $formRecibo->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroFechaDesde', $form->get('fechaDesde')->getData()->format('Y-m-d'));
-                $session->set('filtroFechaHasta', $form->get('fechaHasta')->getData()->format('Y-m-d'));
-                $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
-                $arCuentaCobrarTipo = $form->get('cboCuentaCobrarTipoRel')->getData();
-                if ($arCuentaCobrarTipo) {
-                    $session->set('filtroCarReciboCodigoReciboTipo', $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk());
-                } else {
-                    $session->set('filtroCarReciboCodigoReciboTipo', null);
-                }
-                $session->set('filtroCarNumeroReferencia', $form->get('txtNumeroReferencia')->getData());
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(CarCuentaCobrar::class)->crearReciboMasivoLista($raw)->getQuery()->execute(), "cuenta cobrar");
             }
         }
         if ($formRecibo->isSubmitted() && $formRecibo->isValid()) {
@@ -114,7 +119,7 @@ class CrearReciboMasivoController extends Controller
                 return $this->redirect($this->generateUrl('cartera_proceso_ingreso_recibomasivo_lista'));
             }
         }
-        $arCuentasCobrar = $paginator->paginate($em->getRepository(CarCuentaCobrar::class)->crearReciboMasivoLista(), $request->query->getInt('page', 1), 100);
+        $arCuentasCobrar = $paginator->paginate($em->getRepository(CarCuentaCobrar::class)->crearReciboMasivoLista($raw), $request->query->getInt('page', 1), 100);
         return $this->render('cartera/proceso/contabilidad/crearrecibomasivo/lista.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,
             'form' => $form->createView(),
@@ -135,5 +140,28 @@ class CrearReciboMasivoController extends Controller
                 $em->getRepository(CarRecibo::class)->aprobar($arRecibo);
             }
         }
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'numeroReferencia' => $form->get('numeroReferencia')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arCuentaCobrarTipo = $form->get('cuentaCobrarTipo')->getData();
+
+        if (is_object($arCuentaCobrarTipo)) {
+            $filtro['cuentaCobrarTipo'] = $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk();
+        } else {
+            $filtro['cuentaCobrarTipo'] = $arCuentaCobrarTipo;
+        }
+
+        return $filtro;
+
     }
 }

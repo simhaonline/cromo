@@ -80,13 +80,7 @@ class TiempoController extends Controller
                     $raw['filtros'] = $filtros;
                 }
                 if ($form->get('btnExcel')->isClicked()) {
-                    if($raw['filtros']['fechaDesde'] && $raw['filtros']['fechaHasta'] && $raw['filtros']['codigoCliente']) {
-                        $arrGuias = $em->getRepository(TteGuia::class)->estadoGuia()->getQuery()->getResult();
-                        $arrNovedades = $em->getRepository(TteNovedad::class)->fechaGuia($raw);
-                        $this->exportarExcel($arrGuias, $arrNovedades);
-                    } else {
-                        Mensajes::error("Debe seleccionar las fechas y el cliente");
-                    }
+                    General::get()->setExportar($em->getRepository(TteInformeTiempo::class)->excel(), "Informe tiempo entrega");
                 }
             }
         }

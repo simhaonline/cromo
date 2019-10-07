@@ -167,5 +167,20 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             ->addSelect('it.ciudadDestinoNombre');
         return $queryBuilder;
     }
+
+    public function excel(){
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TteInformeTiempo::class, 'it')
+            ->select('it.codigoInformeTiempoPk')
+            ->addSelect('it.fechaIngreso')
+            ->addSelect('it.fechaEntrega')
+            ->addSelect('it.fechaRuta')
+            ->addSelect('it.dias')
+            ->addSelect('it.estadoEntregado')
+            ->addSelect('it.codigoGuiaFk')
+            ->addSelect('it.codigoCiudadDestinoFk')
+            ->addSelect('it.ciudadDestinoNombre');
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
 

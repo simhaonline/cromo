@@ -18,6 +18,21 @@ class TteInformeTiempo
     private $codigoInformeTiempoPk;
 
     /**
+     * @ORM\Column(name="codigo_guia_fk", type="integer", nullable=true)
+     */
+    private $codigoGuiaFk;
+
+    /**
+     * @ORM\Column(name="codigo_ciudad_destino_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCiudadDestinoFk;
+
+    /**
+     * @ORM\Column(name="ciudad_destino_nombre", type="string", length=150, nullable=true)
+     */
+    private $ciudadDestinoNombre;
+
+    /**
      * @ORM\Column(name="fecha_ingreso", type="date", nullable=true)
      */
     private $fechaIngreso;
@@ -138,6 +153,52 @@ class TteInformeTiempo
         $this->estadoEntregado = $estadoEntregado;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoGuiaFk()
+    {
+        return $this->codigoGuiaFk;
+    }
 
+    /**
+     * @param mixed $codigoGuiaFk
+     */
+    public function setCodigoGuiaFk($codigoGuiaFk): void
+    {
+        $this->codigoGuiaFk = $codigoGuiaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadDestinoFk()
+    {
+        return $this->codigoCiudadDestinoFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadDestinoFk
+     */
+    public function setCodigoCiudadDestinoFk($codigoCiudadDestinoFk): void
+    {
+        $this->codigoCiudadDestinoFk = $codigoCiudadDestinoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadDestinoNombre()
+    {
+        return $this->ciudadDestinoNombre;
+    }
+
+    /**
+     * @param mixed $ciudadDestinoNombre
+     */
+    public function setCiudadDestinoNombre($ciudadDestinoNombre): void
+    {
+        $this->ciudadDestinoNombre = $ciudadDestinoNombre;
+    }
 
 }

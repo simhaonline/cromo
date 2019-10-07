@@ -75,7 +75,7 @@ INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'14-30','','830054904','Mapfre Colombia Vida Seguros S.A','',1,0,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF02','','890900840','Camacol','',0,1,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF03','','890900842','Comfenalco Antioquia CCF','',0,1,0,0,0);
-INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF04','','890900841','Caja de Compensación Familiar de Antioquia','',0,1,0,0,0);
+INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF04','','890900841','Caja de Compensación Familiar de Antioquia - Comfama','',0,1,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF05','','890102044','Caja de Compensación Familiar Cajacopi Atlántico','',0,1,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF06','','890102002','Combarranquilla','',0,1,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF07','','890101994','Comfamiliar Atlántico','',0,1,0,0,0);

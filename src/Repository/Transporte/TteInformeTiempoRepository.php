@@ -61,6 +61,7 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
         $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class, 'g')
             ->select('g.codigoGuiaPk')
             ->addSelect('g.codigoClienteFk')
+            ->addSelect('g.codigoCiudadDestinoFk')
             ->addSelect('c.nombreCorto AS cliente')
             ->addSelect('g.documentoCliente')
             ->addSelect('g.nombreDestinatario')
@@ -98,43 +99,43 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
         $arGuias = $queryBuilder->getQuery()->getResult();
         foreach ($arGuias as $arGuia) {
             $arrDias = [];
-            if($arGuia['lunes']) {
+            if ($arGuia['lunes']) {
                 $arrDias[] = '1';
             }
-            if($arGuia['martes']) {
+            if ($arGuia['martes']) {
                 $arrDias[] = '2';
             }
-            if($arGuia['miercoles']) {
+            if ($arGuia['miercoles']) {
                 $arrDias[] = '3';
             }
-            if($arGuia['jueves']) {
+            if ($arGuia['jueves']) {
                 $arrDias[] = '4';
             }
-            if($arGuia['viernes']) {
+            if ($arGuia['viernes']) {
                 $arrDias[] = '5';
             }
-            if($arGuia['sabado']) {
+            if ($arGuia['sabado']) {
                 $arrDias[] = '6';
             }
-            if($arGuia['domingo']) {
+            if ($arGuia['domingo']) {
                 $arrDias[] = '7';
             }
             $diaIngreso = $arGuia['fechaIngreso']->format('N');
             $diasDespacho = 0;
             $dif = 0;
             foreach ($arrDias as $dia) {
-                if($dia >= $diaIngreso) {
+                if ($dia >= $diaIngreso) {
                     $dif = $dia - $diaIngreso;
                     break;
                 }
             }
             $fechaIngreso = $arGuia['fechaIngreso']->format('Y-m-d');
-            $fechaRuta = date("Y-m-d", strtotime($fechaIngreso."+ {$dif} days"));
+            $fechaRuta = date("Y-m-d", strtotime($fechaIngreso . "+ {$dif} days"));
             $fechaRuta = date_create($fechaRuta);
             $dias = 0;
-            if($arGuia['fechaEntrega']) {
+            if ($arGuia['fechaEntrega']) {
                 $fechaEntrega = date_create($arGuia['fechaEntrega']->format('Y-m-d'));
-                if($fechaRuta && $fechaEntrega) {
+                if ($fechaRuta && $fechaEntrega) {
                     $interval = $fechaRuta->diff($fechaEntrega);
                     $dias = $interval->format('%R%a');
                 }
@@ -145,6 +146,10 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             $arInformeTiempo->setFechaRuta($fechaRuta);
             $arInformeTiempo->setFechaEntrega($arGuia['fechaEntrega']);
             $arInformeTiempo->setEstadoEntregado($arGuia['estadoEntregado']);
+            $arInformeTiempo->setCodigoGuiaFk($arGuia['codigoGuiaPk']);
+            $arInformeTiempo->setCodigoCiudadDestinoFk($arGuia['codigoCiudadDestinoFk']);
+            $arInformeTiempo->setCiudadDestinoNombre($arGuia['ciudadDestinoNombre']);
+
 
             $arInformeTiempo->setDias($dias);
             $em->persist($arInformeTiempo);
@@ -156,7 +161,10 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             ->addSelect('it.fechaEntrega')
             ->addSelect('it.fechaRuta')
             ->addSelect('it.dias')
-            ->addSelect('it.estadoEntregado');
+            ->addSelect('it.estadoEntregado')
+            ->addSelect('it.codigoGuiaFk')
+            ->addSelect('it.codigoCiudadDestinoFk')
+            ->addSelect('it.ciudadDestinoNombre');
         return $queryBuilder;
     }
 }

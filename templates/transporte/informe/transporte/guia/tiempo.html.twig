@@ -49,6 +49,9 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>GUIA</th>
+            <th>CIUDAD DESTINO</th>
+            <th>NOMBRE</th>
             <th>ING</th>
             <th>RUTA</th>
             <th>ENTREGA</th>
@@ -60,6 +63,9 @@
         {% for arInformeTiempo in arInformeTiempos %}
             <tr>
                 <td>{{ arInformeTiempo.codigoInformeTiempoPk }}</td>
+                <td>{{ arInformeTiempo.codigoGuiaFk }}</td>
+                <td>{{ arInformeTiempo.codigoCiudadDestinoFk }}</td>
+                <td>{{ arInformeTiempo.ciudadDestinoNombre }}</td>
                 <td>{{ arInformeTiempo.fechaIngreso | date('Y-m-d') }}</td>
                 <td>{{ arInformeTiempo.fechaRuta | date('Y-m-d') }}</td>
                 <td>{{ arInformeTiempo.fechaEntrega | date('Y-m-d') }}</td>

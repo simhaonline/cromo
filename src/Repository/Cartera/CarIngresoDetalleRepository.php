@@ -35,6 +35,7 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
             ->addSelect('id.codigoCuentaFk')
             ->addSelect('id.codigoClienteFk')
             ->addSelect('id.naturaleza')
+            ->addSelect('id.detalle')
             ->addSelect('id.codigoImpuestoRetencionFk')
             ->leftJoin('id.clienteRel', 'c')
             ->where("id.codigoIngresoFk = '{$codigoIngreso}'");
@@ -70,12 +71,14 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
         $arrCuenta = $arrControles['arrCuenta'];
         $arrCliente = $arrControles['arrCliente'];
         $arrRetencion = $arrControles['cboImpuestoRetencion'];
+        $arrDetalle = $arrControles['arrDetalle'];
         $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(['codigoIngresoFk' => $id]);
         foreach ($arIngresosDetalle as $arIngresoDetalle) {
             $intCodigo = $arIngresoDetalle->getCodigoIngresoDetallePk();
             $valorPago = isset($arrControles['TxtVrPago' . $intCodigo]) && $arrControles['TxtVrPago' . $intCodigo] != '' ? $arrControles['TxtVrPago' . $intCodigo] : 0;
             $codigoNaturaleza = isset($arrControles['cboNaturaleza' . $intCodigo]) && $arrControles['cboNaturaleza' . $intCodigo] != '' ? $arrControles['cboNaturaleza' . $intCodigo] : null;
             $codigoRetencion = $arrRetencion[$intCodigo];
+            $detalle = $arrDetalle[$intCodigo];
             $retencion = 0;
             if ($arrCuenta[$intCodigo]) {
                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$intCodigo]);
@@ -111,6 +114,7 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
             $arIngresoDetalle->setVrRetencion($retencion);
             $arIngresoDetalle->setNaturaleza($codigoNaturaleza);
             $arIngresoDetalle->setCodigoImpuestoRetencionFk($codigoRetencion);
+            $arIngresoDetalle->setDetalle($detalle);
             $em->persist($arIngresoDetalle);
         }
         $em->flush();

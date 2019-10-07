@@ -72,6 +72,7 @@
                             <th>RET</th>
                             <th>RET</th>
                             <th>PAGO</th>
+                            <th>DET</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
@@ -121,6 +122,13 @@
                                                value="{{ arIngresoDetalle.vrPago }}"
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
+                                    <td style="text-align: center">
+                                        <input type="text"
+                                               name="arrDetalle[{{ arIngresoDetalle.codigoIngresoDetallePk }}]"
+                                               id="arrDetalle[{{ arIngresoDetalle.codigoIngresoDetallePk }}]"
+                                               value="{{ arIngresoDetalle.detalle }}"
+                                               style="text-align: left; width:120px" size="10">
+                                    </td>
                                 {% else %}
                                     <td>{{ arIngresoDetalle.codigoClienteFk }}</td>
                                     <td>{{ arIngresoDetalle.clienteNombreCorto }}</td>
@@ -129,6 +137,7 @@
                                     <td>{{ arIngresoDetalle.codigoImpuestoRetencionFk }}</td>
                                     <td style="text-align: right">{{ arIngresoDetalle.vrRetencion | number_format(0, '.', ',') }}</td>
                                     <td style="text-align: right">{{ arIngresoDetalle.vrPago | number_format(0, '.', ',') }}</td>
+                                    <td>{{ arIngresoDetalle.detalle }}</td>
                                 {% endif %}
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arIngresoDetalle.codigoIngresoDetallePk }}"/>

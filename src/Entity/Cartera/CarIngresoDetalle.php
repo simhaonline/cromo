@@ -77,6 +77,11 @@ class CarIngresoDetalle
     private $naturaleza = 0;
 
     /**
+     * @ORM\Column(name="detalle", type="string", length=800, nullable=true)
+     */
+    private $detalle = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarIngreso" , inversedBy="ingresoDetallesIngresoRel")
      * @ORM\JoinColumn(name="codigo_ingreso_fk" , referencedColumnName="codigo_ingreso_pk")
      */
@@ -376,6 +381,22 @@ class CarIngresoDetalle
     public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
     {
         $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDetalle()
+    {
+        return $this->detalle;
+    }
+
+    /**
+     * @param mixed $detalle
+     */
+    public function setDetalle($detalle): void
+    {
+        $this->detalle = $detalle;
     }
 
 

@@ -951,7 +951,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->leftJoin('p.entidadSaludRel', 'es')
             ->leftJoin('p.contratoRel', 'c')
             ->leftJoin('c.cargoRel', 'ca')
-            ->where("p.codigoProgramacionFk = {$codigoProgramacion}");
+            ->where("p.codigoProgramacionFk = '{$codigoProgramacion}'");
         $arPagos = $queryBuilder->getQuery()->getResult();
         $i = 0;
         foreach ($arPagos as $arPago) {
@@ -976,6 +976,10 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arPagoDetalles = $queryBuilder->getQuery()->getResult();
             if (!$arPagoDetalles) {
                 $arPagoDetalles = [];
+            }
+            if (is_null($arPago['codigoSoporteContratoFk']))
+            {
+                $arPago['codigoSoporteContratoFk']= 0;
             }
             $queryBuilder = $em->createQueryBuilder()->from(TurProgramacionRespaldo::class, 'pr')
                 ->select('pr.codigoProgramacionRespaldoPk')
@@ -1012,7 +1016,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                 ->addSelect('pr.dia31')
                 ->where("pr.codigoSoporteContratoFk = {$arPago['codigoSoporteContratoFk']}");
             $arProgramacionesRespaldo = $queryBuilder->getQuery()->getResult();
-            if (!$arProgramacionesRespaldo) {
+                if (!$arProgramacionesRespaldo) {
                 $arProgramacionesRespaldo = [];
             }
 

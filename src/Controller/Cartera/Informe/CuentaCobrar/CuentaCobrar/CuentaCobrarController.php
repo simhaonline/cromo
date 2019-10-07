@@ -14,10 +14,11 @@ use App\Formato\Cartera\CarteraEdadCliente;
 use App\Formato\Cartera\CuentaCobrar;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -26,7 +27,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class CuentaCobrarController extends Controller
+class CuentaCobrarController extends AbstractController
 {
     /**
      * @param Request $request
@@ -36,13 +37,12 @@ class CuentaCobrarController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/informe/cuentaCobrar/cuentaCobrar/pendiente", name="cartera_informe_cuentaCobrar_cuentaCobrar_pendiente")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnEstadoCuenta', SubmitType::class, array('label' => 'Estado cuenta'))
             ->add('btnGenerarVencimientos', SubmitType::class, array('label' => 'Generar rango'))
@@ -120,10 +120,9 @@ class CuentaCobrarController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/cartera/informe/cuentaCobrar/cuentaCobrar/aplicar/{id}", name="cartera_informe_cuentaCobrar_cuentaCobrar_aplicar")
      */
-    public function aplicar(Request $request, $id)
+    public function aplicar(Request $request, PaginatorInterface $paginator, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
         $form = $this->createFormBuilder()
             ->getForm();

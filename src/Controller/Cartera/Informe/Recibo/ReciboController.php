@@ -5,10 +5,11 @@ namespace App\Controller\Cartera\Informe\Recibo;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboTipo;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -17,7 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class ReciboController extends Controller
+class ReciboController extends AbstractController
 {
 
     /**
@@ -28,13 +29,12 @@ class ReciboController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/Cartera/informe/recibo/recibo/lista", name="cartera_informe_recibo_recibo_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))

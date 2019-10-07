@@ -9,10 +9,11 @@ use App\Entity\General\GenAsesor;
 use App\Formato\Cartera\Recaudo;
 use App\Formato\Cartera\RecaudoDetalleAsesor;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class RecaudoDetalleAsesorController extends Controller
+class RecaudoDetalleAsesorController extends AbstractController
 {
 
     /**
@@ -32,13 +33,12 @@ class RecaudoDetalleAsesorController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/informe/recibo/recaudo/detalle", name="cartera_informe_recibo_recaudo_detalle")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))

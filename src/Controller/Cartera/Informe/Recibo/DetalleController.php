@@ -9,7 +9,8 @@ use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -18,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class DetalleController extends Controller
+class DetalleController extends AbstractController
 {
 
     /**
@@ -29,13 +30,12 @@ class DetalleController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/informe/recibo/detalle", name="cartera_informe_recibo_detalle")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,  PaginatorInterface $paginator)
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvInformeReciboDetalleFechaDesde') ? date_create($session->get('filtroInvInformeItemRotacionFechaDesde')): null])

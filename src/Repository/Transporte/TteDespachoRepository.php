@@ -97,7 +97,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             $numero = $filtros['numero'] ??null;
             $codigoCiudadOrigenFk = $filtros['codigoCiudadOrigenFk'] ??null;
             $codigoCiudadDestinoFk = $filtros['codigoCiudadDestinoFk'] ??null;
-            $codigoDespachoTipoFk = $filtros['codigoDespachoTipoFk'] ??null;
+            $codigoDespachoTipoFk = $filtros['codigoDespachoTipo'] ??null;
             $codigoOperacionFk = $filtros['codigoOperacionFk'] ??null;
             $fechaSalidaDesde = $filtros['fechaSalidaDesde'] ??null;
             $fechaSalidaHasta = $filtros['fechaSalidaHasta'] ??null;
@@ -106,7 +106,6 @@ class TteDespachoRepository extends ServiceEntityRepository
             $estadoSoporte = $filtros['estadoSoporte'] ??null;
             $estadoAnulado = $filtros['estadoAnulado'] ??null;
         }
-
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'td')
             ->select('td.codigoDespachoPk')
             ->addSelect('td.fechaSalida')

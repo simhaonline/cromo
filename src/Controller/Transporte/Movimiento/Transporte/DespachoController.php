@@ -34,6 +34,7 @@ use App\Formato\Transporte\RelacionEntrega;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -80,7 +81,16 @@ class DespachoController extends AbstractController
             ->add('numero', TextType::class, array('required' => false))
             ->add('codigoCiudadOrigenFk', TextType::class, array('required' => false))
             ->add('codigoCiudadDestinoFk', TextType::class, array('required' => false))
-            ->add('codigoDespachoTipoFk', TextType::class, array('required' => false))
+            ->add('codigoDespachoTipoFk', EntityType::class, [
+                'class' => TteDespachoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('dt')
+                        ->orderBy('dt.codigoDespachoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
             ->add('codigoOperacionFk', TextType::class, array('required' => false))
             ->add('fechaSalidaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('fechaSalidaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
@@ -602,14 +612,13 @@ class DespachoController extends AbstractController
 
     public function getFiltro($form){
 
-        return $filtro = [
+         $filtro = [
             'codigoConductorFk' => $form->get('codigoConductorFk')->getData(),
             'codigoDespachoPk' => $form->get('codigoDespachoPk')->getData(),
             'codigoVehiculoFk' => $form->get('codigoVehiculoFk')->getData(),
             'numero' => $form->get('numero')->getData(),
             'codigoCiudadOrigenFk' => $form->get('codigoCiudadOrigenFk')->getData(),
             'codigoCiudadDestinoFk' => $form->get('codigoCiudadDestinoFk')->getData(),
-            'codigoDespachoTipoFk' => $form->get('codigoDespachoTipoFk')->getData(),
             'codigoOperacionFk' => $form->get('codigoOperacionFk')->getData(),
             'fechaSalidaDesde' => $form->get('fechaSalidaDesde')->getData() ?$form->get('fechaSalidaDesde')->getData()->format('Y-m-d'): null,
             'fechaSalidaHasta' => $form->get('fechaSalidaHasta')->getData() ?$form->get('fechaSalidaHasta')->getData()->format('Y-m-d'): null,
@@ -618,6 +627,14 @@ class DespachoController extends AbstractController
             'estadoSoporte' => $form->get('estadoSoporte')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
         ];
+        $arDespachoTipo = $form->get('codigoDespachoTipoFk')->getData();
 
+        if (is_object($arDespachoTipo)) {
+            $filtro['codigoDespachoTipo'] = $arDespachoTipo->getCodigoDespachoTipoPk();
+        } else {
+            $filtro['codigoDespachoTipo'] = $arDespachoTipo;
+        }
+
+        return $filtro;
     }
 }

@@ -81,10 +81,10 @@ class RelacionEntrega extends \FPDF {
         $this->SetXY(10, 58);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, '', 1, 0, 'L', 1);
+        $this->Cell(30, 6, 'CONDUCTOR', 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial','', 8);
-        $this->Cell(101, 6, '' , 1, 0, 'R', 1);
+        $this->Cell(101, 6, utf8_decode($arDespacho->getConductorRel()->getNumeroIdentificacion()."-".$arDespacho->getConductorRel()->getNombreCorto()) , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 6, "RTE FUENTE:", 1, 0, 'L', 1);
@@ -95,10 +95,10 @@ class RelacionEntrega extends \FPDF {
         $this->SetXY(10, 64);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, '', 1, 0, 'L', 1);
+        $this->Cell(30, 6, 'POSEEDOR:', 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial','', 8);
-        $this->Cell(101, 6, '' , 1, 0, 'R', 1);
+        $this->Cell(101, 6, utf8_decode($arDespacho->getPoseedorRel()->getNumeroIdentificacion()."-".$arDespacho->getPoseedorRel()->getNombreCorto()) , 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 6, "TOTAL:", 1, 0, 'L', 1);
@@ -109,10 +109,24 @@ class RelacionEntrega extends \FPDF {
         $this->SetXY(10, 70);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(30, 6, 'CONDUCTOR:', 1, 0, 'L', 1);
+        $this->Cell(30, 6, '', 1, 0, 'L', 1);
+        $this->SetFillColor(272, 272, 272);
+        $this->SetFont('Arial','', 8);
+        $this->Cell(101, 6, '' , 1, 0, 'R', 1);
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(200, 200, 200);
+        $this->Cell(30, 6, "COBRO:", 1, 0, 'L', 1);
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(272, 272, 272);
+        $this->Cell(30, 6, number_format($arDespacho->getVrCobroEntrega()), 1, 0, 'R', 1);
+
+        $this->SetXY(10, 76);
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(30, 6, '', 1, 0, 'L', 1);
         $this->SetFillColor(272, 272, 272);
         $this->SetFont('Arial', '', 8);
-        $this->Cell(101, 6, utf8_decode($arDespacho->getConductorRel()->getNombreCorto()), 1, 0, 'L', 1);
+        $this->Cell(101, 6, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 6, "SALDO:", 1, 0, 'L', 1);
@@ -120,7 +134,7 @@ class RelacionEntrega extends \FPDF {
         $this->SetFillColor(272, 272, 272);
         $this->Cell(30, 6, number_format($arDespacho->getVrSaldo()), 1, 0, 'R', 1);
 
-        $this->SetXY(10, 76);
+        $this->SetXY(10, 82);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(30, 6, 'COMENTARIOS:', 1, 0, 'L', 1);

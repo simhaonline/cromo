@@ -88,23 +88,23 @@ class TteDespachoRepository extends ServiceEntityRepository
         $estadoAprobado = null;
         $estadoSoporte = null;
         $estadoAnulado = null;
-        $codigoVehiculoFk =null;
+        $codigoVehiculoFk = null;
 
-        if ($filtros){
-            $codigoDespachoPk = $filtros['codigoDespachoPk'] ??null;
-            $codigoConductorFk = $filtros['codigoConductorFk'] ??null;
-            $codigoVehiculoFk = $filtros['codigoVehiculoFk'] ??null;
-            $numero = $filtros['numero'] ??null;
-            $codigoCiudadOrigenFk = $filtros['codigoCiudadOrigenFk'] ??null;
-            $codigoCiudadDestinoFk = $filtros['codigoCiudadDestinoFk'] ??null;
-            $codigoDespachoTipoFk = $filtros['codigoDespachoTipo'] ??null;
-            $codigoOperacionFk = $filtros['codigoOperacionFk'] ??null;
-            $fechaSalidaDesde = $filtros['fechaSalidaDesde'] ??null;
-            $fechaSalidaHasta = $filtros['fechaSalidaHasta'] ??null;
-            $estadoAutorizado = $filtros['estadoAutorizado'] ??null;
-            $estadoAprobado = $filtros['estadoAprobado'] ??null;
-            $estadoSoporte = $filtros['estadoSoporte'] ??null;
-            $estadoAnulado = $filtros['estadoAnulado'] ??null;
+        if ($filtros) {
+            $codigoDespachoPk = $filtros['codigoDespachoPk'] ?? null;
+            $codigoConductorFk = $filtros['codigoConductorFk'] ?? null;
+            $codigoVehiculoFk = $filtros['codigoVehiculoFk'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $codigoCiudadOrigenFk = $filtros['codigoCiudadOrigenFk'] ?? null;
+            $codigoCiudadDestinoFk = $filtros['codigoCiudadDestinoFk'] ?? null;
+            $codigoDespachoTipoFk = $filtros['codigoDespachoTipo'] ?? null;
+            $codigoOperacionFk = $filtros['codigoOperacionFk'] ?? null;
+            $fechaSalidaDesde = $filtros['fechaSalidaDesde'] ?? null;
+            $fechaSalidaHasta = $filtros['fechaSalidaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoSoporte = $filtros['estadoSoporte'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
         }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'td')
             ->select('td.codigoDespachoPk')
@@ -157,7 +157,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("td.codigoCiudadOrigenFk = {$codigoCiudadOrigenFk}");
         }
 
-       if ($codigoCiudadDestinoFk) {
+        if ($codigoCiudadDestinoFk) {
             $queryBuilder->andWhere("td.codigoCiudadDestinoFk = {$codigoCiudadDestinoFk}");
         }
 
@@ -337,13 +337,13 @@ class TteDespachoRepository extends ServiceEntityRepository
         $descuentos = $arDespacho->getVrDescuentoPapeleria() + $arDespacho->getVrDescuentoSeguridad() + $arDespacho->getVrDescuentoCargue() + $arDespacho->getVrDescuentoEstampilla();
         $retencionFuente = 0;
         $arPoseedor = $arDespacho->getPoseedorRel();
-        if($arPoseedor->getRetencionFuente()) {
+        if ($arPoseedor->getRetencionFuente()) {
             if ($arDespacho->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
                 $retencionFuente = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
             }
         }
         $industriaComercio = 0;
-        if($arPoseedor->getRetencionIndustriaComercio()) {
+        if ($arPoseedor->getRetencionIndustriaComercio()) {
             if ($arDespacho->getOperacionRel()->getRetencionIndustriaComercio()) {
                 $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
             }
@@ -371,74 +371,74 @@ class TteDespachoRepository extends ServiceEntityRepository
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if (!$arDespacho->getEstadoAprobado()) {
             if ($arDespacho->getCantidad() > 0) {
-                if ($arDespacho->getVrSaldo() >= 0) {
-                    $fechaActual = new \DateTime('now');
-                    $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 1, g.fechaDespacho=:fecha 
+//                if ($arDespacho->getVrSaldo() >= 0) {
+                $fechaActual = new \DateTime('now');
+                $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 1, g.fechaDespacho=:fecha 
                       WHERE g.codigoDespachoFk = :codigoDespacho')
-                        ->setParameter('codigoDespacho', $codigoDespacho)
-                        ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
-                    $query->execute();
-                    $arDespacho->setFechaSalida($fechaActual);
-                    $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
-                    if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
-                        $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
-                        $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
-                        $em->persist($arDespachoTipo);
-                    } else {
-                        Mensajes::error("El despacho ya tenia numero, por favor notifique el caso al administrador del sistema");
-                    }
-                    $arDespacho->setEstadoAprobado(1);
-                    if ($arDespacho->getConductorRel()->getFechaVenceLicencia() > $fechaActual) {
-                        if ($arDespacho->getVehiculoRel()->getFechaVencePoliza() > $fechaActual) {
-                            if ($arDespacho->getVehiculoRel()->getFechaVenceTecnicomecanica() > $fechaActual) {
-                                $vehiculoDisponible = $em->getRepository(TteVehiculoDisponible::class)->findOneBy([('codigoVehiculoFk') => $arDespacho->getCodigoVehiculoFk(), 'estadoDespachado' => 0, 'estadoDescartado' => 0]);
-                                if ($vehiculoDisponible) {
-                                    $vehiculoDisponible->setEstadoDespachado(1);
-                                    $vehiculoDisponible->setFechaDespacho($fechaActual);
-                                    $em->persist($vehiculoDisponible);
-                                }
-                            } else {
-                                Mensajes::error('El vehículo tiene la revisión tecnicomecanica vencida');
+                    ->setParameter('codigoDespacho', $codigoDespacho)
+                    ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
+                $query->execute();
+                $arDespacho->setFechaSalida($fechaActual);
+                $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
+                if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
+                    $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
+                    $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
+                    $em->persist($arDespachoTipo);
+                } else {
+                    Mensajes::error("El despacho ya tenia numero, por favor notifique el caso al administrador del sistema");
+                }
+                $arDespacho->setEstadoAprobado(1);
+                if ($arDespacho->getConductorRel()->getFechaVenceLicencia() > $fechaActual) {
+                    if ($arDespacho->getVehiculoRel()->getFechaVencePoliza() > $fechaActual) {
+                        if ($arDespacho->getVehiculoRel()->getFechaVenceTecnicomecanica() > $fechaActual) {
+                            $vehiculoDisponible = $em->getRepository(TteVehiculoDisponible::class)->findOneBy([('codigoVehiculoFk') => $arDespacho->getCodigoVehiculoFk(), 'estadoDespachado' => 0, 'estadoDescartado' => 0]);
+                            if ($vehiculoDisponible) {
+                                $vehiculoDisponible->setEstadoDespachado(1);
+                                $vehiculoDisponible->setFechaDespacho($fechaActual);
+                                $em->persist($vehiculoDisponible);
                             }
                         } else {
-                            Mensajes::error('El vehículo tiene la póliza vencida');
+                            Mensajes::error('El vehículo tiene la revisión tecnicomecanica vencida');
                         }
                     } else {
-                        Mensajes::error('El conductor tiene la licencia de conducción vencida');
-                    }
-
-                    //Generar monitoreo
-                    if ($arDespachoTipo->getGeneraMonitoreo()) {
-                        $arMonitoreo = new TteMonitoreo();
-                        $arMonitoreo->setVehiculoRel($arDespacho->getVehiculoRel());
-                        $arMonitoreo->setDespachoRel($arDespacho);
-                        $arMonitoreo->setCiudadDestinoRel($arDespacho->getCiudadDestinoRel());
-                        $arMonitoreo->setFechaRegistro(new \DateTime('now'));
-                        $arMonitoreo->setFechaInicio(new \DateTime('now'));
-                        $arMonitoreo->setFechaFin(new \DateTime('now'));
-                        $em->persist($arMonitoreo);
-                    }
-                    $em->persist($arDespacho);
-
-                    //Generar cuenta por pagar
-                    if ($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
-                        $this->generarCuentaPagar($arDespacho);
-                    }
-
-                    $em->flush();
-                    $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
-                    if ($arConfiguracion['contabilidadAutomatica']) {
-                        $this->contabilizar(array($arDespacho->getCodigoDespachoPk()));
+                        Mensajes::error('El vehículo tiene la póliza vencida');
                     }
                 } else {
-                    Mensajes::error("El saldo del despacho no puede ser negativo");
+                    Mensajes::error('El conductor tiene la licencia de conducción vencida');
+                }
+
+                //Generar monitoreo
+                if ($arDespachoTipo->getGeneraMonitoreo()) {
+                    $arMonitoreo = new TteMonitoreo();
+                    $arMonitoreo->setVehiculoRel($arDespacho->getVehiculoRel());
+                    $arMonitoreo->setDespachoRel($arDespacho);
+                    $arMonitoreo->setCiudadDestinoRel($arDespacho->getCiudadDestinoRel());
+                    $arMonitoreo->setFechaRegistro(new \DateTime('now'));
+                    $arMonitoreo->setFechaInicio(new \DateTime('now'));
+                    $arMonitoreo->setFechaFin(new \DateTime('now'));
+                    $em->persist($arMonitoreo);
+                }
+                $em->persist($arDespacho);
+
+                //Generar cuenta por pagar
+                if ($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
+                    $this->generarCuentaPagar($arDespacho);
+                }
+
+                $em->flush();
+                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+                if ($arConfiguracion['contabilidadAutomatica']) {
+                    $this->contabilizar(array($arDespacho->getCodigoDespachoPk()));
                 }
             } else {
-                Mensajes::error("El despacho debe tener guias asignadas");
+                Mensajes::error("El saldo del despacho no puede ser negativo");
             }
         } else {
-            Mensajes::error("El despacho debe estar generado");
+            Mensajes::error("El despacho debe tener guias asignadas");
         }
+//        } else {
+//            Mensajes::error("El despacho debe estar generado");
+//        }
 
         return $respuesta;
     }
@@ -541,9 +541,9 @@ class TteDespachoRepository extends ServiceEntityRepository
                     if ($arRegistro->getEstadoAprobado() == 0) {
                         if ($arRegistro->getEstadoAutorizado() == 0) {
                             if (count($this->getEntityManager()->getRepository(TteDespachoDetalle::class)->findBy(['codigoDespachoFk' => $arRegistro->getCodigoDespachoPk()])) <= 0) {
-                                if (count($this->getEntityManager()->getRepository(TteGuia::class)->findBy(['codigoDespachoFk' => $arRegistro->getCodigoDespachoPk()])) == 0){
-                                      $this->getEntityManager()->remove($arRegistro);
-                                }else{
+                                if (count($this->getEntityManager()->getRepository(TteGuia::class)->findBy(['codigoDespachoFk' => $arRegistro->getCodigoDespachoPk()])) == 0) {
+                                    $this->getEntityManager()->remove($arRegistro);
+                                } else {
                                     $respuesta = 'No se puede eliminar, el registro tiene guías registradas, de caso contrario comunicarse con soporte técnico y informar el código del despacho';
                                 }
                             } else {
@@ -690,7 +690,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arDespacho->getNumeroRndc() == "") {
             if ($arDespacho->getEstadoAprobado() == 1 && $arDespacho->getEstadoAnulado() == 0) {
-                if($arDespacho->getNumeroRndc() == null) {
+                if ($arDespacho->getNumeroRndc() == null) {
                     try {
                         $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
                         $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
@@ -1883,7 +1883,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arTercero = $em->getRepository(InvTercero::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
         if ($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk()) {
-            if($arDespacho->getVrSaldo() > 0) {
+            if ($arDespacho->getVrSaldo() > 0) {
                 /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
                 $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoRel();
                 $arCuentaPagar = New TesCuentaPagar();

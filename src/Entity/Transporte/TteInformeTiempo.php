@@ -58,6 +58,16 @@ class TteInformeTiempo
     private $estadoEntregado = false;
 
     /**
+     * @ORM\Column(name="estado_novedad", type="boolean",options={"default":false})
+     */
+    private $estadoNovedad = false;
+
+    /**
+     * @ORM\Column(name="estado_novedad_solucion", type="boolean",options={"default":false})
+     */
+    private $estadoNovedadSolucion = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoInformeTiempoPk()
@@ -200,5 +210,39 @@ class TteInformeTiempo
     {
         $this->ciudadDestinoNombre = $ciudadDestinoNombre;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoNovedad()
+    {
+        return $this->estadoNovedad;
+    }
+
+    /**
+     * @param mixed $estadoNovedad
+     */
+    public function setEstadoNovedad($estadoNovedad): void
+    {
+        $this->estadoNovedad = $estadoNovedad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoNovedadSolucion()
+    {
+        return $this->estadoNovedadSolucion;
+    }
+
+    /**
+     * @param mixed $estadoNovedadSolucion
+     */
+    public function setEstadoNovedadSolucion($estadoNovedadSolucion): void
+    {
+        $this->estadoNovedadSolucion = $estadoNovedadSolucion;
+    }
+
+
 
 }

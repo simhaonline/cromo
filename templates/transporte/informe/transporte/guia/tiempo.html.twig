@@ -50,13 +50,15 @@
         <tr>
             <th>ID</th>
             <th>GUIA</th>
-            <th>CIUDAD DESTINO</th>
-            <th>NOMBRE</th>
+            <th>COD</th>
+            <th>DESTINO</th>
             <th>ING</th>
             <th>RUTA</th>
             <th>ENTREGA</th>
             <th>DIAS</th>
-            <th>ENT</th>
+            <th title="Entregada">ENT</th>
+            <th title="En novedad">NOV</th>
+            <th title="Novedad solucionada">NSO</th>
         </tr>
         </thead>
         <tbody>
@@ -71,6 +73,8 @@
                 <td>{{ arInformeTiempo.fechaEntrega | date('Y-m-d') }}</td>
                 <td>{{ arInformeTiempo.dias }}</td>
                 <td>{{ arInformeTiempo.estadoEntregado?'SI':'NO' }}</td>
+                <td>{{ arInformeTiempo.estadoNovedad?'SI':'NO' }}</td>
+                <td>{{ arInformeTiempo.estadoNovedadSolucion?'SI':'NO' }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -70,6 +70,7 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             ->addSelect('g.fechaEntrega')
             ->addSelect('g.fechaSoporte')
             ->addSelect('g.estadoNovedad')
+            ->addSelect('g.estadoNovedadSolucion')
             ->addSelect('g.estadoDespachado')
             ->addSelect('g.estadoEntregado')
             ->addSelect('g.vrFlete')
@@ -138,6 +139,10 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
                 if ($fechaRuta && $fechaEntrega) {
                     $interval = $fechaRuta->diff($fechaEntrega);
                     $dias = $interval->format('%R%a');
+                    $dias -= 1;
+                }
+                if($dias < 0) {
+                    $dias = 0;
                 }
             }
 
@@ -145,10 +150,12 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             $arInformeTiempo->setFechaIngreso($arGuia['fechaIngreso']);
             $arInformeTiempo->setFechaRuta($fechaRuta);
             $arInformeTiempo->setFechaEntrega($arGuia['fechaEntrega']);
-            $arInformeTiempo->setEstadoEntregado($arGuia['estadoEntregado']);
             $arInformeTiempo->setCodigoGuiaFk($arGuia['codigoGuiaPk']);
             $arInformeTiempo->setCodigoCiudadDestinoFk($arGuia['codigoCiudadDestinoFk']);
             $arInformeTiempo->setCiudadDestinoNombre($arGuia['ciudadDestinoNombre']);
+            $arInformeTiempo->setEstadoEntregado($arGuia['estadoEntregado']);
+            $arInformeTiempo->setEstadoNovedad($arGuia['estadoNovedad']);
+            $arInformeTiempo->setEstadoNovedadSolucion($arGuia['estadoNovedadSolucion']);
 
 
             $arInformeTiempo->setDias($dias);
@@ -162,6 +169,8 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             ->addSelect('it.fechaRuta')
             ->addSelect('it.dias')
             ->addSelect('it.estadoEntregado')
+            ->addSelect('it.estadoNovedad')
+            ->addSelect('it.estadoNovedadSolucion')
             ->addSelect('it.codigoGuiaFk')
             ->addSelect('it.codigoCiudadDestinoFk')
             ->addSelect('it.ciudadDestinoNombre');

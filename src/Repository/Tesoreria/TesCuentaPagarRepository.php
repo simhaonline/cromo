@@ -21,6 +21,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         $filtros = $raw['filtros'] ?? null;
 
         $codigoCuentaPagar = null;
+        $numero = null;
         $codigoTercero = null;
         $cuentaPagarTipo = null;
         $cuentaPagarBanco = null;
@@ -32,6 +33,7 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
 
         if ($filtros) {
             $codigoCuentaPagar = $filtros['codigoCuentaPagar'] ?? null;
+            $numero = $filtros['numero'] ?? null;
             $codigoTercero = $filtros['codigoTercero'] ?? null;
             $cuentaPagarTipo = $filtros['cuentaPagarTipo'] ?? null;
             $cuentaPagarBanco = $filtros['cuentaPagarBanco'] ?? null;
@@ -61,6 +63,9 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
             ->leftJoin('cp.bancoRel', 'cpb');
         if ($codigoCuentaPagar) {
             $queryBuilder->andWhere("cp.codigoCuentaPagarPk = '{$codigoCuentaPagar}'");
+        }
+        if($numero) {
+            $queryBuilder->andWhere("cp.numeroDocumento = '{$numero}'");
         }
         if ($codigoTercero) {
             $queryBuilder->andWhere("cp.codigoTerceroFk = '{$codigoTercero}'");

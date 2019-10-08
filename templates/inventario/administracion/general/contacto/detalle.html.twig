@@ -29,6 +29,10 @@
             <td class="titulo">TERCERO:</td>
             <td class="td-in-well">{{ arCuentaPagar.terceroRel.nombreCorto | default ('') }}</td>
         </tr>
+        <tr>
+            <td class="titulo">COMENTARIO:</td>
+            <td class="td-in-well" colspan="6">{{ arCuentaPagar.comentario }}</td>
+        </tr>
     </table>
     {{ form_end(form) }}
 {% endblock %}

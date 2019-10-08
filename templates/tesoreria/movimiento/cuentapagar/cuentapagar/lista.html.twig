@@ -54,7 +54,11 @@
                         <div class="col-sm-2">
                             {{ form_widget(form.fechaDesde) }}
                         </div>
-                        <label class="col-sm-1 control-label col-sm-offset-6">Aprobado:</label>
+                        <label class="col-sm-1 control-label">Numero:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.numero) }}
+                        </div>
+                        <label class="col-sm-1 control-label col-sm-offset-3">Aprobado:</label>
                         <div class="col-sm-2">
                             {{ form_widget(form.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
                         </div>

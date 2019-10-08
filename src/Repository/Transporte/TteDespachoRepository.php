@@ -1904,6 +1904,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $arCuentaPagar->setEstadoAutorizado(1);
                 $arCuentaPagar->setEstadoAprobado(1);
                 $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
+                $arCuentaPagar->setComentario("UND:" . $arDespacho->getUnidades() . " RUTA:" . $arDespacho->getRutaRel()->getNombre() . " PESO:" . $arDespacho->getPesoReal());
                 $em->persist($arCuentaPagar);
             }
         } else {
@@ -1931,6 +1932,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $arCuentaPagar->setEstadoAutorizado(1);
                 $arCuentaPagar->setEstadoAprobado(1);
                 $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());
+                $arCuentaPagar->setComentario("UND:" . $arDespacho->getUnidades() . " RUTA:" . $arDespacho->getRutaRel()->getNombre() . " PESO:" . $arDespacho->getPesoReal());
                 $em->persist($arCuentaPagar);
             } else {
                 Mensajes::error("El despacho genera cuenta por pagar para (ANTICIPO) pero no se pudo crear porque el despacho tipo " . $arDespacho->getDespachoTipoRel()->getNombre() . " no tiene configurado un tipo de cuenta por pagar para los anticipos");

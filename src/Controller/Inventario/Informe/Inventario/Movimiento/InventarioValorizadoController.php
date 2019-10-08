@@ -5,11 +5,12 @@ namespace App\Controller\Inventario\Informe\Inventario\Movimiento;
 use App\Entity\Inventario\InvInventarioValorizado;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -17,7 +18,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\General\General;
 
-class InventarioValorizadoController extends Controller
+class InventarioValorizadoController extends AbstractController
 {
     /**
      * @param Request $request
@@ -26,11 +27,10 @@ class InventarioValorizadoController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/movimiento/inventariovalorizado", name="inventario_informe_inventario_movimiento_inventariovalorizado")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('fechaHasta', DateType::class, array('label' => 'Fecha hasta: ', 'required' => false, 'data' => new \DateTime('now')))
             ->add('txtCodigoItem', TextType::class, ['required' => false, 'data' => $session->get('filtroInvItemCodigo'), 'attr' => ['class' => 'form-control']])

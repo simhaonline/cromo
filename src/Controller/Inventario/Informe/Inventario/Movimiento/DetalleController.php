@@ -8,6 +8,8 @@ use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +22,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class DetalleController extends ControllerListenerGeneral
+class DetalleController extends AbstractController
 {
     protected $proceso = "0002";
     protected $procestoTipo = "I";
@@ -35,11 +37,10 @@ class DetalleController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/movimiento/detalle", name="inventario_informe_inventario_movimiento_detalle")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('txtLote', TextType::class, ['required' => false, 'data' => $session->get('filtroInvKardexLote')])

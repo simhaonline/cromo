@@ -10,6 +10,8 @@ use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +24,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class DisponibleController extends ControllerListenerGeneral
+class DisponibleController extends AbstractController
 {
     protected $proceso = "0001";
     protected $procestoTipo = "I";
@@ -37,11 +39,10 @@ class DisponibleController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/movimiento/disponible", name="inventario_informe_inventario_movimiento_disponible")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arRegistros = [];
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))

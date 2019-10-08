@@ -10,6 +10,8 @@ use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvRemisionTipo;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +23,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class KardexController extends ControllerListenerGeneral
+class KardexController extends AbstractController
 {
     protected $proceso = "0004";
 
@@ -33,7 +35,7 @@ class KardexController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/remision/kardex", name="inventario_informe_inventario_remision_kardex")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();

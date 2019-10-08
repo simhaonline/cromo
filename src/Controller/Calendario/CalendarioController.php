@@ -4,15 +4,15 @@ namespace App\Controller\Calendario;
 
 use App\Entity\Cartera\CarCliente;
 use App\Entity\General\GenEvento;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class CalendarioController extends Controller
+class CalendarioController extends AbstractController
 {
     /**
      * @Route("/calendario/lista", name="calendario_lista")

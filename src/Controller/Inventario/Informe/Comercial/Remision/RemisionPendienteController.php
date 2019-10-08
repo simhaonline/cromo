@@ -7,17 +7,18 @@ use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvRemisionTipo;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class RemisionPendienteController extends Controller
+class RemisionPendienteController extends AbstractController
 {
     /**
      * @param Request $request
@@ -27,11 +28,10 @@ class RemisionPendienteController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/comercial/remision/pendiente", name="inventario_informe_inventario_comercial_remision_pendiente")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('remisionTipoRel', EntityType::class, $em->getRepository(InvRemisionTipo::class)->llenarCombo())

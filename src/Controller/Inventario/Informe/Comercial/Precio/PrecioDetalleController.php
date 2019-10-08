@@ -5,17 +5,18 @@ namespace App\Controller\Inventario\Informe\Comercial\Precio;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class PrecioDetalleController extends Controller
+class PrecioDetalleController extends AbstractController
 {
     /**
      * @param Request $request
@@ -24,11 +25,10 @@ class PrecioDetalleController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/comercial/precio/precioDetalle", name="inventario_informe_inventario_comercial_precio_detalle")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtItemCodigo', TextType::class, array('data' => $session->get('filtroInvInformeItemCodigo'), 'required' => false))
             ->add('txtItemNombre', TextType::class, array('data' => $session->get('filtroInvInformeItemNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))

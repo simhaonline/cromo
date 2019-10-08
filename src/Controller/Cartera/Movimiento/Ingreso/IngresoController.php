@@ -183,6 +183,7 @@ class IngresoController extends BaseController
             $arrControles = $request->request->All();
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(CarIngresoDetalle::class)->actualizar($arrControles, $id);
+                $em->getRepository(CarIngreso::class)->liquidar($id);
                 $em->getRepository(CarIngreso::class)->autorizar($arIngreso);
                 return $this->redirect($this->generateUrl('cartera_movimiento_ingreso_ingreso_detalle', ['id' => $id]));
             }

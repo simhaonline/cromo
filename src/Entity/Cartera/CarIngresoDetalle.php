@@ -79,7 +79,7 @@ class CarIngresoDetalle
     /**
      * @ORM\Column(name="detalle", type="string", length=800, nullable=true)
      */
-    private $detalle = 0;
+    private $detalle;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarIngreso" , inversedBy="ingresoDetallesIngresoRel")
@@ -178,6 +178,22 @@ class CarIngresoDetalle
     /**
      * @return mixed
      */
+    public function getCodigoCuentaCobrarTipoFk()
+    {
+        return $this->codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCobrarTipoFk
+     */
+    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    {
+        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoClienteFk()
     {
         return $this->codigoClienteFk;
@@ -210,6 +226,22 @@ class CarIngresoDetalle
     /**
      * @return mixed
      */
+    public function getVrRetencion()
+    {
+        return $this->vrRetencion;
+    }
+
+    /**
+     * @param mixed $vrRetencion
+     */
+    public function setVrRetencion($vrRetencion): void
+    {
+        $this->vrRetencion = $vrRetencion;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrPago()
     {
         return $this->vrPago;
@@ -221,6 +253,22 @@ class CarIngresoDetalle
     public function setVrPago($vrPago): void
     {
         $this->vrPago = $vrPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoImpuestoRetencionFk()
+    {
+        return $this->codigoImpuestoRetencionFk;
+    }
+
+    /**
+     * @param mixed $codigoImpuestoRetencionFk
+     */
+    public function setCodigoImpuestoRetencionFk($codigoImpuestoRetencionFk): void
+    {
+        $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
     }
 
     /**
@@ -258,6 +306,22 @@ class CarIngresoDetalle
     /**
      * @return mixed
      */
+    public function getDetalle()
+    {
+        return $this->detalle;
+    }
+
+    /**
+     * @param mixed $detalle
+     */
+    public function setDetalle($detalle): void
+    {
+        $this->detalle = $detalle;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getIngresoRel()
     {
         return $this->ingresoRel;
@@ -290,6 +354,22 @@ class CarIngresoDetalle
     /**
      * @return mixed
      */
+    public function getCuentaCobrarTipoRel()
+    {
+        return $this->cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaCobrarTipoRel
+     */
+    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
+    {
+        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCuentaRel()
     {
         return $this->cuentaRel;
@@ -317,86 +397,6 @@ class CarIngresoDetalle
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoImpuestoRetencionFk()
-    {
-        return $this->codigoImpuestoRetencionFk;
-    }
-
-    /**
-     * @param mixed $codigoImpuestoRetencionFk
-     */
-    public function setCodigoImpuestoRetencionFk($codigoImpuestoRetencionFk): void
-    {
-        $this->codigoImpuestoRetencionFk = $codigoImpuestoRetencionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrRetencion()
-    {
-        return $this->vrRetencion;
-    }
-
-    /**
-     * @param mixed $vrRetencion
-     */
-    public function setVrRetencion($vrRetencion): void
-    {
-        $this->vrRetencion = $vrRetencion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCuentaCobrarTipoFk()
-    {
-        return $this->codigoCuentaCobrarTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoCuentaCobrarTipoFk
-     */
-    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
-    {
-        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuentaCobrarTipoRel()
-    {
-        return $this->cuentaCobrarTipoRel;
-    }
-
-    /**
-     * @param mixed $cuentaCobrarTipoRel
-     */
-    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
-    {
-        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDetalle()
-    {
-        return $this->detalle;
-    }
-
-    /**
-     * @param mixed $detalle
-     */
-    public function setDetalle($detalle): void
-    {
-        $this->detalle = $detalle;
     }
 
 

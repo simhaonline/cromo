@@ -12,11 +12,12 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class pendienteController extends Controller
+class pendienteController extends AbstractController
 {
 
     /**
@@ -27,11 +28,10 @@ class pendienteController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/compra/orden/pendiente", name="inventario_informe_inventario_compra_orden_pendiente")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNumero', NumberType::class, ['required' => false, 'data' => $session->get('filtroInvOrdenNumero')])
             ->add('ordenTipoRel',EntityType::class,$em->getRepository(InvOrdenTipo::class)->llenarCombo())

@@ -4,6 +4,8 @@ namespace App\Controller\Inventario\Buscar;
 
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvTercero;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,16 +13,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ItemController extends Controller
+class ItemController extends AbstractController
 {
    /**
     * @Route("/inventario/buscar/item/{campoCodigo}/{campoNombre}", name="inventario_buscar_item")
     */    
-    public function lista(Request $request, $campoCodigo, $campoNombre)
+    public function lista(Request $request,  PaginatorInterface $paginator,$campoCodigo, $campoNombre)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBucarItemCodigo')])
             ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarItemNombre')])

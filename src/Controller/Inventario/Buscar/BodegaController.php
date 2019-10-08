@@ -3,23 +3,23 @@
 namespace App\Controller\Inventario\Buscar;
 
 use App\Entity\Inventario\InvBodega;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class BodegaController extends Controller
+class BodegaController extends AbstractController
 {
    /**
     * @Route("/inventario/buscar/bodega/lista/{campoCodigo}", name="inventario_buscar_bodega_lista")
     */    
-    public function lista(Request $request, $campoCodigo)
+    public function lista(Request $request, PaginatorInterface $paginator,$campoCodigo)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarBodegaCodigo')])
             ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarBodegaNombre')])

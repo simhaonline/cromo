@@ -3,6 +3,8 @@
 namespace App\Controller\Inventario\Buscar;
 
 use App\Entity\Inventario\InvSucursal;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,16 +12,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class SucursalController extends Controller
+class SucursalController extends AbstractController
 {
    /**
     * @Route("/inventario/buscar/sucursal/lista/{campoCodigo}/{campoDireccion}/{codigoTercero}", name="inventario_buscar_sucursal_lista", defaults={"codigoTercero":0})
     */    
-    public function lista(Request $request, $campoCodigo, $campoDireccion, $codigoTercero)
+    public function lista(Request $request,  PaginatorInterface $paginator,$campoCodigo, $campoDireccion, $codigoTercero)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtDireccion', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarSucursalDireccion')])
             ->add('txtContacto', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarSucursalContacto')])

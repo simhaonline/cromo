@@ -3,6 +3,8 @@
 namespace App\Controller\Inventario\Buscar;
 
 use App\Entity\Inventario\InvTercero;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -11,16 +13,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class TerceroController extends Controller
+class TerceroController extends AbstractController
 {
    /**
     * @Route("/inventario/buscar/tercero/{campoCodigo}/{campoNombre}/{tipo}", name="inventario_buscar_tercero")
     */    
-    public function lista(Request $request, $campoCodigo, $campoNombre, $tipo = null)
+    public function lista(Request $request, PaginatorInterface $paginator, $campoCodigo, $campoNombre, $tipo = null)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroNombre')])
             ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroInvTerceroCodigo')])

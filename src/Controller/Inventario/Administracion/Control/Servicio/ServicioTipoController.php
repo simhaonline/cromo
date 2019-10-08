@@ -9,13 +9,17 @@ use App\Controller\Estructura\GeneralEntityListener;
 use App\Entity\Inventario\InvServicioTipo;
 use App\Form\Type\Inventario\ServicioTipoType;
 use App\General\General;
+use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use function PHPSTORM_META\type;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ServicioTipoController extends ControllerListenerGeneral
+class ServicioTipoController extends AbstractController
 {
     protected $clase= InvServicioTipo::class;
     protected $claseFormulario = ServicioTipoType::class;
@@ -27,34 +31,41 @@ class ServicioTipoController extends ControllerListenerGeneral
     /**
      * @Route("/inventario/administracion/control/serviciotipo/lista", name="inventario_administracion_control_serviciotipo_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoServicioTipoPk', TextType::class, array('required' => false))
+            ->add('nombre', TextType::class, array('required' => false))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+                if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Servicio tipo");
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(InvServicioTipo::class)->lista($raw)->getQuery()->execute(), "Servicio tipo");
+
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository('App:Inventario\InvServicioTipo')->eliminar($arrSeleccionados);
+                $em->getRepository(InvServicioTipo::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('inventario_administracion_control_serviciotipo_lista'));
             }
         }
+        $arServicioTipos = $paginator->paginate($em->getRepository(InvServicioTipo::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('inventario/administracion/control/serviciotipo/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arServicioTipos' => $arServicioTipos,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -85,7 +96,7 @@ class ServicioTipoController extends ControllerListenerGeneral
                 $arServicioTipo->setNombre($form->get('nombre')->getData());
                 $em->persist($arServicioTipo);
                 $em->flush();
-                return $this->redirect($this->generateUrl('inventario_administracion_control_serviciotipo_lista'));
+                    return $this->redirect($this->generateUrl('inventario_administracion_control_serviciotipo_detalle', array('id' => $arServicioTipo->getCodigoServicioTipoPk())));
                 }
                 }
             }
@@ -101,7 +112,21 @@ class ServicioTipoController extends ControllerListenerGeneral
      * @Route("/inventario/administracion/control/servicio/detalle/{id}", name="inventario_administracion_control_serviciotipo_detalle")
      */
     public function detalle(Request $request, $id){
-        return $this->redirect($this->generateUrl('inventario_administracion_control_serviciotipo_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arRegistro = $em->getRepository($this->clase)->find($id);
+        return $this->render('inventario/administracion/control/serviciotipo/detalle.html.twig', [
+            'arRegistro' => $arRegistro,
+        ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoServicioTipo' => $form->get('codigoServicioTipoPk')->getData(),
+            'nombre' => $form->get('nombre')->getData(),
+        ];
+
+        return $filtro;
 
     }
 

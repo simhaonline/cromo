@@ -1,10 +1,88 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
-    <div class="table-responsive" style="padding:0px;">
-        {{ form_start(formBotonera) }}
-        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
-        {{ form_end(formBotonera) }}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label for="form_cboGuiaTipoRel" class="col-sm-2 control-label">Código:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.codigoServicioTipoPk, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <label for="form_cboOperacionRel" class="col-sm-2 control-label">Nombre:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>NOMBRE</th>
+            <th></th>
+            <th></th>
+            <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arServicioTipo in arServicioTipos %}
+            <tr>
+                <td>{{ arServicioTipo.codigoServicioTipoPk }}</td>
+                <td>{{ arServicioTipo.nombre }}</td>
+                <td class="text-center">
+                    <a href="{{ path('inventario_administracion_control_serviciotipo_nuevo',{'id': arServicioTipo.codigoServicioTipoPk }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
+                <td class="text-center">
+                    <a href="{{ path('inventario_administracion_control_serviciotipo_detalle',{'id' : arServicioTipo.codigoServicioTipoPk}) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arServicioTipo.codigoServicioTipoPk }}" />
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arServicioTipos.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arServicioTipos) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('inventario_administracion_control_serviciotipo_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    {{ form_end(form) }}
+    <br /><br /><br />
 {% endblock %}

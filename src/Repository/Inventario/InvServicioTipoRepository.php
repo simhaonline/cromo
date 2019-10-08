@@ -20,6 +20,35 @@ class InvServicioTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, InvServicioTipo::class);
     }
 
+
+    public function lista($raw){
+
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoServicioTipo = null;
+        $nombre = null;
+
+        if ($filtros) {
+            $codigoServicioTipo = $filtros['codigoServicioTipo'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvServicioTipo::class, 'st')
+            ->select('st.codigoServicioTipoPk')
+            ->addSelect('st.nombre');
+
+        if ($codigoServicioTipo) {
+            $queryBuilder->andWhere("st.codigoServicioTipoPk = '{$codigoServicioTipo}'");
+        }
+        if ($nombre) {
+            $queryBuilder->andWhere("st.nombre  LIKE '%{$nombre}%'");
+        }
+
+        $queryBuilder->addOrderBy('st.codigoServicioTipoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+    }
+
     public function eliminar($arrSeleccionados)
     {
         $respuesta = '';
@@ -42,32 +71,5 @@ class InvServicioTipoRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return TurServicioTipo[] Returns an array of TurServicioTipo objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?TurServicioTipo
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

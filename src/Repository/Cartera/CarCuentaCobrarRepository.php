@@ -79,11 +79,11 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
         }
         
         if ($numeroDocumento) {
-            $queryBuilder->andWhere("cc.numeroDocumento = {$numeroDocumento}");
+            $queryBuilder->andWhere("cc.numeroDocumento = '{$numeroDocumento}'");
         }
         
         if ($numeroReferencia) {
-            $queryBuilder->andWhere("cc.numeroReferencia= {$numeroReferencia}");
+            $queryBuilder->andWhere("cc.numeroReferencia= '{$numeroReferencia}'");
         }
         
         if ($codigoCliente) {

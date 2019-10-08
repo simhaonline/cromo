@@ -2,6 +2,7 @@
 
 namespace App\Repository\Cartera;
 
+use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarIngresoDetalle;
 use App\Entity\Financiero\FinCuenta;
@@ -188,6 +189,18 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
             ->where('id.codigoIngresoFk = ' . $id);
         $queryBuilder->orderBy('id.codigoIngresoDetallePk', 'ASC');
 
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function referencia($codigoCuentaCobrar)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarIngresoDetalle::class, 'id')
+            ->select('id.codigoIngresoDetallePk')
+            ->addSelect('id.vrPago')
+            ->addSelect('id.codigoIngresoFk')
+            ->addSelect('i.numero')
+            ->leftJoin('id.ingresoRel', 'i')
+            ->where('id.codigoCuentaCobrarFk = ' . $codigoCuentaCobrar);
         return $queryBuilder->getQuery()->getResult();
     }
 

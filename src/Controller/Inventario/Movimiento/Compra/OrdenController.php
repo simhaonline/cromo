@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class OrdenController extends ControllerListenerGeneral
+    class OrdenController extends ControllerListenerGeneral
 {
     protected $class = InvOrden::class;
     protected $claseNombre = "InvOrden";

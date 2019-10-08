@@ -3,13 +3,14 @@
 namespace App\Controller\Inventario\Utilidad;
 
 use App\Entity\Inventario\InvMovimiento;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ReliquidarController extends Controller
+class ReliquidarController extends AbstractController
 {
     /**
      * @param Request $request
@@ -17,7 +18,7 @@ class ReliquidarController extends Controller
      * @throws \Doctrine\ORM\ORMException
      * @Route("/inventario/utilidad/inventario/reliquidar/lista", name="inventario_utilidad_inventario_reliquidar_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()

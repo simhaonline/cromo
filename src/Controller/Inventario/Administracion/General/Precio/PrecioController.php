@@ -10,7 +10,9 @@ use App\Form\Type\Inventario\PrecioType;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -21,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class PrecioController extends ControllerListenerGeneral
+class PrecioController extends AbstractController
 {
     protected $class = InvPrecio::class;
     protected $claseNombre = "InvPrecio";
@@ -33,25 +35,39 @@ class PrecioController extends ControllerListenerGeneral
     /**
      * @Route("/inventario/administracion/general/precio/lista", name="inventario_administracion_general_precio_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $session = new Session();
-        $paginator = $this->get('knp_paginator');
+        $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
+            ->add('nombre', TextType::class, ['required' => false])
+            ->add('tipoPrecio', ChoiceType::class, ['choices' => ['TODOS' => '', 'VENTA' => '1', 'COMPRA' => '0'], 'required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroInvNombrePrecio')])
-            ->add('chkTipoPrecio', ChoiceType::class, ['choices' => ['TODOS' => '', 'VENTA' => '1', 'COMPRA' => '0'], 'data' => $session->get('filtroInvTipoPrecio'), 'required' => false])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $session->set('filtroInvNombrePrecio', $form->get('txtNombre')->getData());
-            $session->set('filtroInvTipoPrecio', $form->get('chkTipoPrecio')->getData());
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(InvPrecio::class)->lista($raw)->getQuery()->execute(), "precios");
+            }
         }
-        $query = $this->getDoctrine()->getRepository(InvPrecio::class)->lista();
-        $arPrecios = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
+        $arPrecios = $paginator->paginate($em->getRepository(InvPrecio::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('inventario/administracion/general/precio/lista.html.twig', [
             'arPrecios' => $arPrecios,
-            'form' => $form->createView()]);
+            'form' => $form->createView()]
+        );
     }
 
     /**
@@ -108,9 +124,8 @@ class PrecioController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/administracion/general/precio/detalle/{id}", name="inventario_administracion_general_precio_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request,  PaginatorInterface $paginator,$id)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arPrecio = $em->getRepository(InvPrecio::class)->find($id);
         $form = $this->createFormBuilder()
@@ -190,5 +205,17 @@ class PrecioController extends ControllerListenerGeneral
             'form' => $form->createView()
         ]);
     }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'nombre' => $form->get('nombre')->getData(),
+            'tipoPrecio' => $form->get('tipoPrecio')->getData(),
+        ];
+
+        return $filtro;
+
+    }
+
 }
 

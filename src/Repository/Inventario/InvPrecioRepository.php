@@ -14,9 +14,16 @@ class InvPrecioRepository extends ServiceEntityRepository
         parent::__construct($registry, InvPrecio::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $nombre = null;
+        $tipoPrecio = null;
+        if ($filtros) {
+            $nombre = $filtros['nombre'] ?? null;
+            $tipoPrecio = $filtros['tipoPrecio'] ?? null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPrecio::class, 'p')
             ->select('p.codigoPrecioPk')
             ->addSelect('p.nombre')
@@ -25,10 +32,10 @@ class InvPrecioRepository extends ServiceEntityRepository
             ->addSelect('p.compra')
             ->where('p.codigoPrecioPk <> 0')
             ->orderBy('p.codigoPrecioPk', 'DESC');
-        if ($session->get('filtroInvNombrePrecio') != '') {
-            $queryBuilder->andWhere("p.nombre LIKE '%{$session->get('filtroInvNombrePrecio')}%' ");
+        if ($nombre) {
+            $queryBuilder->andWhere("p.nombre LIKE '%{$nombre}%' ");
         }
-        switch ($session->get('filtroInvTipoPrecio')) {
+        switch ($tipoPrecio) {
             case '0':
                 $queryBuilder->andWhere("p.compra = 1");
                 break;
@@ -36,6 +43,8 @@ class InvPrecioRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("p.venta = 1");
                 break;
         }
+        $queryBuilder->addOrderBy('p.codigoPrecioPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
 
     }

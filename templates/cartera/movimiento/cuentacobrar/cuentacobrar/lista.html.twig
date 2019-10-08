@@ -111,7 +111,7 @@
         <tbody>
         {% for arCuentaCobrar in arCuentaCobrar %}
             <tr>
-                <td>{{ arCuentaCobrar.codigoCuentaCobrarPk }}</td>
+                <td><a href="javascript:abrirVentana3('{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_referencia',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</a></td>
                 <td>{{ arCuentaCobrar.tipo }}</td>
                 <td>{{ arCuentaCobrar.numeroDocumento }}</td>
                 <td>{{ arCuentaCobrar.numeroReferencia }}</td>

@@ -81,7 +81,11 @@
                         {% for arIngresoDetalle in arIngresoDetalles %}
                             <tr>
                                 <td>{{ arIngresoDetalle.codigoIngresoDetallePk }}</td>
-                                <td>{{ arIngresoDetalle.codigoCuentaCobrarFk }}</td>
+                                <td>
+                                    {% if arIngresoDetalle.codigoCuentaCobrarFk != "" %}
+                                        <a href="javascript:abrirVentana3('{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_referencia',{'id': arIngresoDetalle.codigoCuentaCobrarFk }) }}','referencia',600,900)">{{ arIngresoDetalle.codigoCuentaCobrarFk }}</a>
+                                    {% endif %}
+                                </td>
                                 <td>{{ arIngresoDetalle.codigoCuentaCobrarTipoFk }}</td>
                                 <td>{{ arIngresoDetalle.numero }}</td>
                                 {% if arIngreso.estadoAutorizado == false %}

@@ -9,12 +9,13 @@ use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class CorregirFechaVencimientoLoteController extends Controller
+class CorregirFechaVencimientoLoteController extends AbstractController
 {
 
     /**

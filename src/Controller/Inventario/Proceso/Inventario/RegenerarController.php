@@ -9,12 +9,13 @@ use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class RegenerarController extends Controller
+class RegenerarController extends AbstractController
 {
 
     /**
@@ -23,7 +24,7 @@ class RegenerarController extends Controller
      * @throws \Doctrine\ORM\ORMException
      * @Route("/inventario/proceso/inventario/regenerar/lista", name="inventario_proceso_inventario_regenerar_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()

@@ -6,11 +6,11 @@ namespace App\Controller\Inventario\Administracion\Configuracion;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Form\Type\Inventario\ConfiguracionType;
 use App\Utilidades\Mensajes;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ConfiguracionController extends Controller
+class ConfiguracionController extends AbstractController
 {
     /**
      * @param Request $request

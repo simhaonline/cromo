@@ -9,6 +9,8 @@ use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Formato\Inventario\ExistenciaLote;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +22,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class StockBajoController extends ControllerListenerGeneral
+class StockBajoController extends AbstractController
 {
 
     protected $proceso = "0007";
@@ -33,11 +35,10 @@ class StockBajoController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/item/stockBajo", name="inventario_informe_inventario_item_stockbajo")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoItem', TextType::class, array('data' => $session->get('filtroInvInformeStockBajoItemCodigo'), 'required' => false))
             ->add('txtNombreItem', TextType::class, array('data' => $session->get('filtroInvInformeStockBajoItemNombre'), 'required' => false, 'attr' => ['readonly' => 'readonly']))

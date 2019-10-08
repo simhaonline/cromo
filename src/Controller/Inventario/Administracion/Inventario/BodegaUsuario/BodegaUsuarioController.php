@@ -11,24 +11,24 @@ use App\Form\Type\RecursoHumano\BodegaUsuarioType;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class BodegaUsuarioController extends Controller
+class BodegaUsuarioController extends AbstractController
 {
     /**
      * @Route("/inventario/administracion/inventario/bodegausuario/lista", name="inventario_administracion_inventario_bodegausuario_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,PaginatorInterface $paginator)
     {
         $session = new Session();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();

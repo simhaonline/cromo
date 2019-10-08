@@ -7,15 +7,16 @@ use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Entity\Inventario\InvSolicitudTipo;
 use App\General\General;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class pendienteController extends Controller
+class pendienteController extends AbstractController
 {
     /**
      * @param Request $request
@@ -25,11 +26,10 @@ class pendienteController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/informe/inventario/compra/solicitud/pendientes", name="inventario_informe_inventario_compra_solicitud_pendiente")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('solicitudTipoRel',EntityType::class,$em->getRepository(InvSolicitudTipo::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel','attr' => ['class' => 'btn btn-sm btn-default']])

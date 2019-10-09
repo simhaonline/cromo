@@ -304,7 +304,7 @@ class Factura extends \FPDF
         $this->Text(25, 278, utf8_decode("Todo pago debe hacerse a la orden del primer beneficiario LOGICUARTAS S.A.S consignar en BANCOLOMBIA la cuenta corriente 01882109665"));
         $this->SetXY(7, 279);
         $this->MultiCell(193, 3, utf8_decode("Factura impresa en computador por LOGICUARTAS S.A.S NIT 900486121-3 SEGÚN" . $arFactura->getFacturaTipoRel()->getResolucionFacturacion()), 0, 'C');
-        $this->Text(65, 284, utf8_decode("Pasados 10 días no se aceptan devoluciones y/o reclamos de esta factura"));
+        $this->Text(65, 286, utf8_decode("Pasados 10 días no se aceptan devoluciones y/o reclamos de esta factura"));
         $this->SetFont('Arial', '', 8);
         $this->Text(165, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }

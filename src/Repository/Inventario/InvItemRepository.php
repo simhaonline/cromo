@@ -22,16 +22,17 @@ class InvItemRepository extends ServiceEntityRepository
      */
     public function eliminar($arrSeleccionados)
     {
-        $respuesta = '';
-        if (count($arrSeleccionados) > 0) {
-            foreach ($arrSeleccionados as $codigoItem) {
-                $arItem = $this->_em->getRepository($this->_entityName)->find($codigoItem);
-                if ($arItem) {
-                    $this->_em->remove($arItem);
+        try{
+            foreach ($arrSeleccionados as $arrSeleccionado) {
+                $arRegistro = $this->getEntityManager()->getRepository(InvItem::class)->find($arrSeleccionado);
+                if ($arRegistro) {
+                    $this->getEntityManager()->remove($arRegistro);
                 }
             }
+            $this->getEntityManager()->flush();
+        } catch (\Exception $ex) {
+            Mensajes::error("El registro tiene registros relacionados");
         }
-        return $respuesta;
     }
 
     public function camposPredeterminados()
@@ -58,9 +59,26 @@ class InvItemRepository extends ServiceEntityRepository
         return $dql->execute();
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoItem = null;
+        $referenciaItem = null;
+        $existenciaItem = null;
+        $disponibilidad = null;
+        $nombreItem = null;
+        $marcaItem = null;
+
+        if ($filtros) {
+            $codigoItem = $filtros['codigoItem'] ?? null; //este filtro llega desde itenController
+            $referenciaItem = $filtros['referenciaItem'] ?? null;
+            $nombreItem = $filtros['nombreItem'] ?? null;
+            $marcaItem = $filtros['marcaItem'] ?? null;
+            $existenciaItem = $filtros['existenciaItem'] ?? null; //este filtro llega desde factura
+            $disponibilidad = $filtros['$disponibilidad'] ?? null; //este filtro llega desde movimiento
+        }
         $queryBuilder = $this->_em->createQueryBuilder()->from(InvItem::class, 'i')
             ->select('i.codigoItemPk')
             ->addSelect('i.nombre')
@@ -80,26 +98,30 @@ class InvItemRepository extends ServiceEntityRepository
             ->addSelect('i.codigoImpuestoIvaVentaFk')
             ->where('i.codigoItemPk <> 0')
             ->leftJoin('i.marcaRel', 'm')
-        ->addOrderBy('i.codigoItemPk', 'ASC');
-        if($session->get('itemConExistencia') == true){
+            ->addOrderBy('i.codigoItemPk', 'ASC');
+
+        if($existenciaItem){
             $queryBuilder->andWhere("i.cantidadExistencia > 0");
         }
-        if($session->get('filtroItemConDisponibilidad') == true){
+
+        if($disponibilidad == true){
             $queryBuilder->andWhere("i.cantidadDisponible > 0");
         }
-        if ($session->get('filtroInvBucarItemCodigo') != '') {
-            $queryBuilder->andWhere("i.codigoItemPk = {$session->get('filtroInvBucarItemCodigo')}");
-        }
-        if ($session->get('filtroInvBuscarItemNombre') != '') {
-            $queryBuilder->andWhere("i.nombre LIKE '%{$session->get('filtroInvBuscarItemNombre')}%'");
-        }
-        if ($session->get('filtroInvBuscarItemReferencia') != '') {
-            $queryBuilder->andWhere("i.referencia LIKE '%{$session->get('filtroInvBuscarItemReferencia')}%'");
-        }
-        if ($session->get('filtroInvMarcaItem') != '') {
-            $queryBuilder->andWhere("m.nombre LIKE '%{$session->get('filtroInvMarcaItem')}%'");
+
+        if ($codigoItem) {
+            $queryBuilder->andWhere("i.codigoItemPk = {$codigoItem}");
         }
 
+        if ($nombreItem) {
+            $queryBuilder->andWhere("i.nombre LIKE '%{$nombreItem}%'");
+        }
+        if ($referenciaItem) {
+            $queryBuilder->andWhere("i.referencia LIKE '%{$referenciaItem}%'");
+        }
+        if ($marcaItem) {
+            $queryBuilder->andWhere("m.nombre LIKE '%{$marcaItem}%'");
+        }
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 

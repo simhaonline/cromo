@@ -8,6 +8,8 @@ use App\Entity\Inventario\InvItem;
 use App\Form\Type\Inventario\ItemType;
 use App\General\General;
 use Doctrine\ORM\EntityManager;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ItemController extends ControllerListenerGeneral
+class ItemController extends AbstractController
 {
     var $query = '';
     protected $class= InvItem::class;
@@ -32,29 +34,39 @@ class ItemController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/administracion/inventario/item/lista", name="inventario_administracion_inventario_item_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $session = new Session();
-        $paginator = $this->get('knp_paginator');
+        $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('btnExcel', SubmitType::class, ['label' => 'Excel'])
-            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
-            ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroInvBucarItemCodigo')])
-            ->add('txtReferencia', TextType::class, ['required' => false, 'data' => $session->get('filtroInvBuscarItemReferencia')])
+            ->add('nombreItem', TextType::class, ['required' => false])
+            ->add('codigoItem', TextType::class, ['required' => false])
+            ->add('referenciaItem', TextType::class, ['required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+
+        if ($form->isSubmitted()) {
             if($form->get('btnFiltrar')->isClicked()){
-                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombre')->getData());
-                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferencia')->getData());
+                $raw['filtros'] = $this->getFiltros($form);
             }
             if($form->get('btnExcel')->isClicked()){
-                General::get()->setExportar($this->getDoctrine()->getRepository(InvItem::class)->lista()->getQuery()->execute(), 'Items');
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($this->getDoctrine()->getRepository(InvItem::class)->lista($raw)->getQuery()->execute(), 'Items');
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
+                $em->getRepository(InvItem::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('inventario_administracion_inventario_item_lista'));
             }
         }
-        $arItems = $paginator->paginate($this->getDoctrine()->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 50);
+        $arItems = $paginator->paginate($this->getDoctrine()->getRepository(InvItem::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/administracion/item/lista.html.twig', [
             'arItems' => $arItems,
             'form' => $form->createView()]);
@@ -115,12 +127,23 @@ class ItemController extends ControllerListenerGeneral
      */
     public function detalle(Request $request, $id)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arItem = $em->getRepository(InvItem::class)->find($id);
         return $this->render('inventario/administracion/item/detalle.html.twig', [
             'arItem' => $arItem,
             'clase' => array('clase' => 'InvItem', 'codigo' => $id),
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'nombreItem'=> $form->get('nombreItem')->getData(),
+            'codigoItem' => $form->get('codigoItem')->getData(),
+            'referenciaItem' =>  $form->get('referenciaItem')->getData()
+        ];
+
+        return $filtro;
+
     }
 }

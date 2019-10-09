@@ -3566,6 +3566,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                 ->addSelect('g.vrFlete')
                 ->addSelect('g.vrFlete AS fleteSinManejo')
                 ->addSelect('d.comentario AS observaciones')
+                ->addSelect('d.codigoDespachoTipoFk AS tipo')
                 ->addSelect('cd.codigoDivision AS codigoCiudadDestino')
                 ->leftJoin('g.productoRel', 'prod')
                 ->leftJoin('g.despachoRel', 'd')

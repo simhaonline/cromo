@@ -62,30 +62,9 @@ class GenBanco
     protected $tercerosBancoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgresoDetalle", mappedBy="bancoRel")
-     */
-    protected $egresosDetallesBancoRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoDetalle", mappedBy="bancoRel")
      */
     protected $movimientosDetallesBancoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -186,6 +165,22 @@ class GenBanco
     /**
      * @return mixed
      */
+    public function getPagosBancoRel()
+    {
+        return $this->pagosBancoRel;
+    }
+
+    /**
+     * @param mixed $pagosBancoRel
+     */
+    public function setPagosBancoRel($pagosBancoRel): void
+    {
+        $this->pagosBancoRel = $pagosBancoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCuentasPagarBancoRel()
     {
         return $this->cuentasPagarBancoRel;
@@ -213,38 +208,6 @@ class GenBanco
     public function setTercerosBancoRel($tercerosBancoRel): void
     {
         $this->tercerosBancoRel = $tercerosBancoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEgresosDetallesBancoRel()
-    {
-        return $this->egresosDetallesBancoRel;
-    }
-
-    /**
-     * @param mixed $egresosDetallesBancoRel
-     */
-    public function setEgresosDetallesBancoRel($egresosDetallesBancoRel): void
-    {
-        $this->egresosDetallesBancoRel = $egresosDetallesBancoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPagosBancoRel()
-    {
-        return $this->pagosBancoRel;
-    }
-
-    /**
-     * @param mixed $pagosBancoRel
-     */
-    public function setPagosBancoRel($pagosBancoRel): void
-    {
-        $this->pagosBancoRel = $pagosBancoRel;
     }
 
     /**

@@ -120,11 +120,6 @@ class FinCuenta
     protected $asientosDetallesCuentaRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgresoDetalle", mappedBy="cuentaRel")
-     */
-    protected $egresosDetallesCuentaRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngresoDetalle", mappedBy="cuentaRel")
      */
     protected $ingresosDetallesCuentaRel;
@@ -254,6 +249,22 @@ class FinCuenta
     /**
      * @return mixed
      */
+    public function getExigeDocumentoReferencia()
+    {
+        return $this->exigeDocumentoReferencia;
+    }
+
+    /**
+     * @param mixed $exigeDocumentoReferencia
+     */
+    public function setExigeDocumentoReferencia($exigeDocumentoReferencia): void
+    {
+        $this->exigeDocumentoReferencia = $exigeDocumentoReferencia;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPorcentajeBaseRetencion()
     {
         return $this->porcentajeBaseRetencion;
@@ -281,38 +292,6 @@ class FinCuenta
     public function setNivel($nivel): void
     {
         $this->nivel = $nivel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRegistrosCuentaRel()
-    {
-        return $this->registrosCuentaRel;
-    }
-
-    /**
-     * @param mixed $registrosCuentaRel
-     */
-    public function setRegistrosCuentaRel($registrosCuentaRel): void
-    {
-        $this->registrosCuentaRel = $registrosCuentaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAsientosDetallesCuentaRel()
-    {
-        return $this->asientosDetallesCuentaRel;
-    }
-
-    /**
-     * @param mixed $asientosDetallesCuentaRel
-     */
-    public function setAsientosDetallesCuentaRel($asientosDetallesCuentaRel): void
-    {
-        $this->asientosDetallesCuentaRel = $asientosDetallesCuentaRel;
     }
 
     /**
@@ -382,6 +361,22 @@ class FinCuenta
     /**
      * @return mixed
      */
+    public function getRegistrosCuentaRel()
+    {
+        return $this->registrosCuentaRel;
+    }
+
+    /**
+     * @param mixed $registrosCuentaRel
+     */
+    public function setRegistrosCuentaRel($registrosCuentaRel): void
+    {
+        $this->registrosCuentaRel = $registrosCuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSaldosCuentaRel()
     {
         return $this->saldosCuentaRel;
@@ -390,7 +385,7 @@ class FinCuenta
     /**
      * @param mixed $saldosCuentaRel
      */
-    public function setSaldosCuentaRel( $saldosCuentaRel ): void
+    public function setSaldosCuentaRel($saldosCuentaRel): void
     {
         $this->saldosCuentaRel = $saldosCuentaRel;
     }
@@ -398,33 +393,17 @@ class FinCuenta
     /**
      * @return mixed
      */
-    public function getExigeDocumentoReferencia()
+    public function getAsientosDetallesCuentaRel()
     {
-        return $this->exigeDocumentoReferencia;
+        return $this->asientosDetallesCuentaRel;
     }
 
     /**
-     * @param mixed $exigeDocumentoReferencia
+     * @param mixed $asientosDetallesCuentaRel
      */
-    public function setExigeDocumentoReferencia($exigeDocumentoReferencia): void
+    public function setAsientosDetallesCuentaRel($asientosDetallesCuentaRel): void
     {
-        $this->exigeDocumentoReferencia = $exigeDocumentoReferencia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEgresosDetallesCuentaRel()
-    {
-        return $this->egresosDetallesCuentaRel;
-    }
-
-    /**
-     * @param mixed $egresosDetallesCuentaRel
-     */
-    public function setEgresosDetallesCuentaRel($egresosDetallesCuentaRel): void
-    {
-        $this->egresosDetallesCuentaRel = $egresosDetallesCuentaRel;
+        $this->asientosDetallesCuentaRel = $asientosDetallesCuentaRel;
     }
 
     /**
@@ -474,7 +453,6 @@ class FinCuenta
     {
         $this->movimientosDetallesCuentaRel = $movimientosDetallesCuentaRel;
     }
-
 
 
 }

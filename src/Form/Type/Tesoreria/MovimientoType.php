@@ -3,7 +3,6 @@
 namespace App\Form\Type\Tesoreria;
 
 use App\Entity\General\GenCuenta;
-use App\Entity\Tesoreria\TesEgreso;
 use App\Entity\Tesoreria\TesMovimiento;
 use App\Entity\Tesoreria\TesMovimientoTipo;
 use Doctrine\ORM\EntityRepository;

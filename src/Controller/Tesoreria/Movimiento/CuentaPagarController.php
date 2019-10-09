@@ -8,6 +8,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenBanco;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
+use App\Entity\Tesoreria\TesMovimientoDetalle;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Doctrine\ORM\EntityRepository;
@@ -138,6 +139,22 @@ class CuentaPagarController extends AbstractController
             'arCuentaPagar' => $arCuentaPagar,
             'clase' => array('clase' => 'TesCuentaPagar', 'codigo' => $id),
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/tesoreria/movimiento/cuentapagar/cuentapagar/referencia/{id}", name="tesoreria_movimiento_cuentapagar_cuentapagar_referencia")
+     */
+    public function referencia($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($id);
+        $arMovimientoDetalles = $em->getRepository(TesMovimientoDetalle::class)->referencia($id);
+        return $this->render('tesoreria/movimiento/cuentapagar/cuentapagar/referencia.html.twig', [
+            'arCuentaPagar' => $arCuentaPagar,
+            'arMovimientoDetalles' => $arMovimientoDetalles
         ]);
     }
 

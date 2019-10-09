@@ -158,4 +158,16 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function referencia($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesMovimientoDetalle::class, 'md')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('md.codigoMovimientoFk')
+            ->addSelect('md.vrPago')
+            ->addSelect('m.numero')
+            ->leftJoin('md.movimientoRel', 'm')
+            ->where('md.codigoCuentaPagarFk = ' . $codigo);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

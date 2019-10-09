@@ -3600,6 +3600,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $manejoMinimoUnidad = 0;
         $manejoMinimoDespacho = 0;
         $pesoMinimoUnidad = 0;
+        $pesoMinimoDespacho = 0;
         $fleteMinimoUnidad = 0;
         $fleteMinimoDespacho = 0;
 
@@ -3622,12 +3623,16 @@ class TteGuiaRepository extends ServiceEntityRepository
             $descuentoPeso = $arrCondicionFlete['descuentoPeso'];
             $descuentoUnidad = $arrCondicionFlete['descuentoUnidad'];
             $pesoMinimoUnidad = $arrCondicionFlete['pesoMinimo'];
+            $pesoMinimoDespacho = $arrCondicionFlete['pesoMinimoGuia'];
             $fleteMinimoUnidad = $arrCondicionFlete['fleteMinimo'];
             $fleteMinimoDespacho = $arrCondicionFlete['fleteMinimoGuia'];
 
         }
         if ($pesoFacturado < $pesoMinimoUnidad * $unidades) {
             $pesoFacturado = $pesoMinimoUnidad * $unidades;
+        }
+        if($pesoFacturado < $pesoMinimoDespacho) {
+            $pesoFacturado = $pesoMinimoDespacho;
         }
         $raw = ['precio' => $precio, 'origen' => $origen, 'destino' => $destino, 'producto' => $producto, 'zona' => $zona];
         $arrPrecioDetalle = $em->getRepository(TtePrecioDetalle::class)->apiWindowsDetalleProducto($raw);
@@ -3672,6 +3677,5 @@ class TteGuiaRepository extends ServiceEntityRepository
         $arrDevolver['pesoFacturado'] = $pesoFacturado;
         return $arrDevolver;
     }
-
 }
 

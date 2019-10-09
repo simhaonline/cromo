@@ -305,7 +305,11 @@ class IngresoController extends BaseController
                         $arIngresoDetalle->setUsuario($this->getUser()->getUserName());
                         $arIngresoDetalle->setCuentaRel($em->getReference(FinCuenta::class, $arCuentaCobrar->getCuentaCobrarTipoRel()->getCodigoCuentaClienteFk()));
                         $arIngresoDetalle->setClienteRel($arCuentaCobrar->getClienteRel());
-                        $arIngresoDetalle->setNaturaleza('C');
+                        if ($arCuentaCobrar->getOperacion() == 1) {
+                            $arIngresoDetalle->setNaturaleza('C');
+                        } else {
+                            $arIngresoDetalle->setNaturaleza('D');
+                        }
                         $arIngresoDetalle->setCodigoImpuestoRetencionFk('R00');
                         $em->persist($arIngresoDetalle);
                     }

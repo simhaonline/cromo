@@ -104,7 +104,7 @@
                     <td>{{ arCuentaCobrar.fechaVence | date('d/m/Y') }}</td>
                     <td style="text-align: right;">{{ arCuentaCobrar.vrSaldoOriginal | number_format(0,'.',',') }}</td>
                     <td style="text-align: right;">{{ arCuentaCobrar.vrAbono | number_format(0,'.',',') }}</td>
-                    <td style="text-align: right;">{{ arCuentaCobrar.vrSaldo | number_format }}</td>
+                    <td style="text-align: right;">{{ arCuentaCobrar.vrSaldoOperado | number_format }}</td>
                     <td style="text-align: center;">
                         <input type="checkbox" name="ChkSeleccionar[]"
                                size="10" value="{{ arCuentaCobrar.codigoCuentaCobrarPk }}" style="width:70px">

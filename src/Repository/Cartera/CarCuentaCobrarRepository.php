@@ -762,6 +762,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.vrAbono')
             ->addSelect('cc.vrSaldoOriginal')
+            ->addSelect('cc.vrSaldoOperado')
             ->addSelect('cc.plazo')
             ->addSelect('cc.fecha')
             ->addSelect('cc.fechaVence')

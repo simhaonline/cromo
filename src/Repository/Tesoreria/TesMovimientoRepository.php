@@ -30,6 +30,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
         $clase = $raw['codigoMovimientoClase'] ?? null;
 
         $codigoMovimiento = null;
+        $numero = null;
         $codigoTercero = null;
         $movimientoTipo = null;
         $fechaDesde = null;
@@ -40,6 +41,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
 
         if ($filtros) {
             $codigoMovimiento = $filtros['codigoMovimiento'] ?? null;
+            $numero = $filtros['numero'] ?? null;
             $codigoTercero = $filtros['codigoTercero'] ?? null;
             $movimientoTipo = $filtros['movimientoTipo'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
@@ -56,6 +58,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
             ->addSelect('t.nombreCorto as tercero')
             ->addSelect('e.numero')
             ->addSelect('e.fecha')
+            ->addSelect('e.vrTotalNeto')
             ->addSelect('e.estadoAnulado')
             ->addSelect('e.estadoAprobado')
             ->addSelect('e.estadoAutorizado')
@@ -63,7 +66,10 @@ class TesMovimientoRepository extends ServiceEntityRepository
             ->leftJoin('e.terceroRel', 't')
             ->where("e.codigoMovimientoClaseFk = '{$clase}'");
         if ($codigoMovimiento) {
-            $queryBuilder->andWhere("e.codigoMovimientoPk = '{$codigoMovimiento}'");
+            $queryBuilder->andWhere("e.codigoMovimientoPk = {$codigoMovimiento}");
+        }
+        if ($numero) {
+            $queryBuilder->andWhere("e.numero = {$numero}");
         }
         if ($codigoTercero) {
             $queryBuilder->andWhere("e.codigoTerceroFk = '{$codigoTercero}'");

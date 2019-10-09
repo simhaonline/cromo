@@ -68,6 +68,7 @@ class MovimientoController extends AbstractController
                 'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('codigoMovimientoPk', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
             ->add('txtCodigoTercero', TextType::class, ['required' => false])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -501,6 +502,7 @@ class MovimientoController extends AbstractController
     {
         $filtro = [
             'codigoMovimiento' => $form->get('codigoMovimientoPk')->getData(),
+            'numero' => $form->get('numero')->getData(),
             'codigoTercero' => $form->get('txtCodigoTercero')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,

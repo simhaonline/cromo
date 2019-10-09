@@ -15,23 +15,9 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#">Compra <span class="fa arrow"></span></a>
-                            <ul>
-                                <li><a href="{{ path('tesoreria_movimiento_compra_compra_lista') }}">Compra</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Egreso <span class="fa arrow"></span></a>
-                            <ul>
-                                <li><a href="{{ path('tesoreria_movimiento_egreso_egreso_lista') }}">Egreso</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
                             <a href="#">Movimiento <span class="fa arrow"></span></a>
                             <ul>
-                                <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista') }}">Movimiento</a>
+                                <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'EG'}) }}">Egreso</a>
                                 </li>
                             </ul>
                         </li>

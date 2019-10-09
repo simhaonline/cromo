@@ -2,16 +2,10 @@
 
 namespace App\Repository\Tesoreria;
 
-use App\Entity\Cartera\CarCliente;
-use App\Entity\Compra\ComCuentaPagar;
-use App\Entity\Compra\ComMovimiento;
-use App\Entity\Compra\ComMovimientoDetalle;
-use App\Entity\Compra\ComMovimientoTipo;
-use App\Entity\Compra\ComProveedor;
+
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
-use App\Entity\Financiero\FinTercero;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesMovimiento;
 use App\Entity\Tesoreria\TesMovimientoDetalle;
@@ -33,6 +27,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
+        $clase = $raw['codigoMovimientoClase'] ?? null;
 
         $codigoMovimiento = null;
         $codigoTercero = null;
@@ -61,14 +56,12 @@ class TesMovimientoRepository extends ServiceEntityRepository
             ->addSelect('t.nombreCorto as tercero')
             ->addSelect('e.numero')
             ->addSelect('e.fecha')
-            ->addSelect('e.fechaPago')
             ->addSelect('e.estadoAnulado')
             ->addSelect('e.estadoAprobado')
             ->addSelect('e.estadoAutorizado')
-            ->addSelect('e.estadoImpreso')
             ->leftJoin('e.movimientoTipoRel', 'et')
             ->leftJoin('e.terceroRel', 't')
-            ->where('e.codigoMovimientoPk <> 0');
+            ->where("e.codigoMovimientoClaseFk = '{$clase}'");
         if ($codigoMovimiento) {
             $queryBuilder->andWhere("e.codigoMovimientoPk = '{$codigoMovimiento}'");
         }
@@ -242,7 +235,6 @@ class TesMovimientoRepository extends ServiceEntityRepository
                 $arMovimientoTipo->setConsecutivo($arMovimientoTipo->getConsecutivo() + 1);
                 $em->persist($arMovimientoTipo);
             }
-            $arMovimiento->setFecha(new \DateTime('now'));
             $arMovimiento->setEstadoAprobado(1);
             $this->getEntityManager()->persist($arMovimiento);
             $this->getEntityManager()->flush();
@@ -296,20 +288,19 @@ class TesMovimientoRepository extends ServiceEntityRepository
     public function registroContabilizar($codigo)
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesMovimiento::class, 'e')
-            ->select('e.codigoMovimientoPk')
-            ->addSelect('e.numero')
-            ->addSelect('e.fecha')
-            ->addSelect('e.fechaPago')
-            ->addSelect('e.vrTotalNeto')
-            ->addSelect('e.estadoAprobado')
-            ->addSelect('e.estadoContabilizado')
-            ->addSelect('e.codigoTerceroFk')
-            ->addSelect('et.codigoComprobanteFk')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesMovimiento::class, 'm')
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.numero')
+            ->addSelect('m.fecha')
+            ->addSelect('m.vrTotalNeto')
+            ->addSelect('m.estadoAprobado')
+            ->addSelect('m.estadoContabilizado')
+            ->addSelect('m.codigoTerceroFk')
+            ->addSelect('mt.codigoComprobanteFk')
             ->addSelect('c.codigoCuentaContableFk')
-            ->leftJoin('e.movimientoTipoRel', 'et')
-            ->leftJoin('e.cuentaRel', 'c')
-            ->where('e.codigoMovimientoPk = ' . $codigo);
+            ->leftJoin('m.movimientoTipoRel', 'mt')
+            ->leftJoin('m.cuentaRel', 'c')
+            ->where('m.codigoMovimientoPk = ' . $codigo);
         $arRecibo = $queryBuilder->getQuery()->getSingleResult();
         return $arRecibo;
     }
@@ -327,7 +318,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                         if ($arMovimiento['codigoComprobanteFk']) {
                             $arComprobante = $em->getRepository(FinComprobante::class)->find($arMovimiento['codigoComprobanteFk']);
                             if ($arComprobante) {
-                                $fecha = $arMovimiento['fechaPago'];
+                                $fecha = $arMovimiento['fecha'];
                                 $arTercero = $em->getRepository(TesTercero::class)->terceroFinanciero($arMovimiento['codigoTerceroFk']);
                                 $arMovimientoDetalles = $em->getRepository(TesMovimientoDetalle::class)->listaContabilizar($codigo);
                                 foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
@@ -337,7 +328,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                         if($arMovimientoDetalle['codigoTerceroFk']) {
                                             $arTerceroDetalle = $em->getRepository(TesTercero::class)->terceroFinanciero($arMovimientoDetalle['codigoTerceroFk']);
                                         }
-                                        $descripcion = "PROVEEDORES DOC " . $arMovimientoDetalle['numeroDocumento'] ;
+                                        $descripcion = "DOC " . $arMovimientoDetalle['numeroDocumento'] . " " . $arMovimientoDetalle['detalle'];
                                         $cuenta = $arMovimientoDetalle['codigoCuentaFk'];
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);

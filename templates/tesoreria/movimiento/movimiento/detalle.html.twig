@@ -5,7 +5,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista') }}">Volver</a>&nbsp;&nbsp;
+               href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase' : arMovimiento.codigoMovimientoClaseFk}) }}">Volver</a>&nbsp;&nbsp;
         </div>
     </div>
     <div class="btn-toolbar" style="float:left">
@@ -18,7 +18,6 @@
         {% if arMovimiento.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arMovimiento.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arMovimiento.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
-        {% if arMovimiento.estadoImpreso == true %}<span class="label label-success">Impreso</span>{% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
@@ -44,8 +43,8 @@
         <tr>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arMovimiento.fecha | date('Y-m-d') }}</td>
-            <td class="titulo">FECHA PAGO:</td>
-            <td class="td-in-well">{{ arMovimiento.fechaPago | date('Y-m-d') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
             <td class="titulo">NETO:</td>
             <td class="td-in-well"
                 style="text-align: right;">{{ arMovimiento.vrTotalNeto |number_format(2, '.', ',') }}</td>
@@ -74,6 +73,7 @@
                             <th>CTA_C</th>
                             <th title="Naturaleza">N</th>
                             <th style="width: 12%;">PAGO</th>
+                            <th>DET</th>
                             <th>CUENTA</th>
                             <th>BANCO</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
@@ -122,12 +122,20 @@
                                                value="{{ arMovimientoDetalle.vrPago }}"
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
+                                    <td style="text-align: center">
+                                        <input type="text"
+                                               name="arrDetalle[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrDetalle[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.detalle }}"
+                                               style="text-align: left; width:120px" size="10">
+                                    </td>
                                 {% else %}
                                     <td>{{ arMovimientoDetalle.codigoTerceroFk }}</td>
                                     <td>{{ arMovimientoDetalle.terceroNombreCorto }}</td>
                                     <td>{{ arMovimientoDetalle.codigoCuentaFk }}</td>
                                     <td>{{ arMovimientoDetalle.naturaleza }}</td>
                                     <td style="text-align: right">{{ arMovimientoDetalle.vrPago | number_format(0, '.', ',') }}</td>
+                                    <td>{{ arMovimientoDetalle.detalle }}</td>
                                 {% endif %}
                                 <td>{{ arMovimientoDetalle.cuenta }}</td>
                                 <td>{{ arMovimientoDetalle.codigoBancoFk }}</td>

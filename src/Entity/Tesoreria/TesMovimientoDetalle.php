@@ -72,6 +72,11 @@ class TesMovimientoDetalle
     private $cuenta;
 
     /**
+     * @ORM\Column(name="detalle", type="string", length=800, nullable=true)
+     */
+    private $detalle;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesMovimiento" , inversedBy="movimientoDetallesMovimientoRel")
      * @ORM\JoinColumn(name="codigo_movimiento_fk" , referencedColumnName="codigo_movimiento_pk")
      */
@@ -356,6 +361,23 @@ class TesMovimientoDetalle
     {
         $this->bancoRel = $bancoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDetalle()
+    {
+        return $this->detalle;
+    }
+
+    /**
+     * @param mixed $detalle
+     */
+    public function setDetalle($detalle): void
+    {
+        $this->detalle = $detalle;
+    }
+
 
 
 }

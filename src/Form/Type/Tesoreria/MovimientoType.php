@@ -23,14 +23,22 @@ class MovimientoType extends AbstractType
         $builder
             ->add('movimientoTipoRel', EntityType::class, [
                 'class' => TesMovimientoTipo::class,
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    $clase = $options['data']->getMovimientoClaseRel()->getCodigoMovimientoClasePk();
                     return $er->createQueryBuilder('et')
                         ->orderBy('et.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre'
             ])
-            ->add('codigoCuentaFk', TextType::class, array('label' => 'Cuenta', 'required' => false))
-            ->add('fechaPago', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd'))
+            ->add('cuentaRel', EntityType::class, [
+                'class' => GenCuenta::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre');
+                },
+                'choice_label' => 'nombre'
+            ])
+            ->add('fecha', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd'))
             ->add('comentarios', TextareaType::class, ['label' => 'Comentario:', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

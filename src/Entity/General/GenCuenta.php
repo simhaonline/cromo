@@ -68,6 +68,11 @@ class GenCuenta
     protected $egresosCuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimiento" , mappedBy="cuentaRel")
+     */
+    protected $movimientosCuentaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngreso" , mappedBy="cuentaRel")
      */
     protected $ingresosCuentaRel;
@@ -246,6 +251,22 @@ class GenCuenta
     public function setIngresosCuentaRel($ingresosCuentaRel): void
     {
         $this->ingresosCuentaRel = $ingresosCuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosCuentaRel()
+    {
+        return $this->movimientosCuentaRel;
+    }
+
+    /**
+     * @param mixed $movimientosCuentaRel
+     */
+    public function setMovimientosCuentaRel($movimientosCuentaRel): void
+    {
+        $this->movimientosCuentaRel = $movimientosCuentaRel;
     }
 
 

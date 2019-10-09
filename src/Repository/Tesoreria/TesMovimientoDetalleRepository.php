@@ -22,24 +22,25 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
     public function lista($codigoMovimiento)
     {
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(TesMovimientoDetalle::class, 'ed')
-            ->select('ed.codigoMovimientoDetallePk')
-            ->addSelect('ed.numero')
-            ->addSelect('ed.codigoCuentaPagarFk')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TesMovimientoDetalle::class, 'md')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('md.numero')
+            ->addSelect('md.codigoCuentaPagarFk')
             ->addSelect('cp.codigoCuentaPagarTipoFk')
             ->addSelect('t.nombreCorto as terceroNombreCorto')
             ->addSelect('t.numeroIdentificacion')
             ->addSelect('cp.vrSaldo')
-            ->addSelect('ed.vrPago')
+            ->addSelect('md.vrPago')
             ->addSelect('cp.cuenta')
-            ->addSelect('ed.codigoCuentaFk')
-            ->addSelect('ed.codigoTerceroFk')
-            ->addSelect('ed.naturaleza')
-            ->addSelect('ed.cuenta')
-            ->addSelect('ed.codigoBancoFk')
-            ->leftJoin('ed.cuentaPagarRel', 'cp')
-            ->leftJoin('ed.terceroRel', 't')
-            ->where("ed.codigoMovimientoFk = '{$codigoMovimiento}'");
+            ->addSelect('md.codigoCuentaFk')
+            ->addSelect('md.codigoTerceroFk')
+            ->addSelect('md.naturaleza')
+            ->addSelect('md.cuenta')
+            ->addSelect('md.codigoBancoFk')
+            ->addSelect('md.detalle')
+            ->leftJoin('md.cuentaPagarRel', 'cp')
+            ->leftJoin('md.terceroRel', 't')
+            ->where("md.codigoMovimientoFk = '{$codigoMovimiento}'");
 
         return $queryBuilder;
     }
@@ -80,11 +81,13 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arrCuenta = $arrControles['arrCuenta'];
         $arrTercero = $arrControles['arrTercero'];
+        $arrDetalle = $arrControles['arrDetalle'];
         $arMovimientosDetalle = $em->getRepository(TesMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $idMovimiento]);
         foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
             $intCodigo = $arMovimientoDetalle->getCodigoMovimientoDetallePk();
             $valorPago = isset($arrControles['TxtVrPago' . $intCodigo]) && $arrControles['TxtVrPago' . $intCodigo] != '' ? $arrControles['TxtVrPago' . $intCodigo] : 0;
             $codigoNaturaleza = isset($arrControles['cboNaturaleza' . $intCodigo]) && $arrControles['cboNaturaleza' . $intCodigo] != '' ? $arrControles['cboNaturaleza' . $intCodigo] : null;
+            $detalle = $arrDetalle[$intCodigo];
             if ($arrCuenta[$intCodigo]) {
                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$intCodigo]);
                 if ($arCuenta) {
@@ -108,6 +111,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
 
             $arMovimientoDetalle->setVrPago($valorPago);
             $arMovimientoDetalle->setNaturaleza($codigoNaturaleza);
+            $arMovimientoDetalle->setDetalle($detalle);
             $em->persist($arMovimientoDetalle);
         }
         $em->flush();
@@ -116,23 +120,22 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
     public function listaFormato($codigoMovimiento)
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesMovimientoDetalle::class, 'ed');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesMovimientoDetalle::class, 'md');
         $queryBuilder
-            ->select('ed.codigoMovimientoDetallePk')
-            ->addSelect('ed.codigoCuentaPagarFk')
-            ->addSelect('ed.codigoCuentaFk')
-            ->addSelect('ed.naturaleza')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('md.codigoCuentaPagarFk')
+            ->addSelect('md.codigoCuentaFk')
+            ->addSelect('md.naturaleza')
             ->addSelect('ter.nombreCorto AS terceroNombreCorto')
             ->addSelect('ter.numeroIdentificacion as terceroNumeroIdentificacion')
-            ->addSelect('ed.vrPago')
+            ->addSelect('md.vrPago')
             ->addSelect('cp.numeroDocumento')
             ->addSelect('cp.codigoCuentaPagarTipoFk')
-            ->leftJoin('ed.movimientoRel', 'r')
-            ->leftJoin('ed.cuentaPagarRel', 'cp')
-            ->leftJoin('ed.terceroRel', 'ter')
+            ->leftJoin('md.cuentaPagarRel', 'cp')
+            ->leftJoin('md.terceroRel', 'ter')
             ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
-            ->where('ed.codigoMovimientoFk = ' . $codigoMovimiento);
-        $queryBuilder->orderBy('ed.codigoMovimientoDetallePk', 'ASC');
+            ->where('md.codigoMovimientoFk = ' . $codigoMovimiento);
+        $queryBuilder->orderBy('md.codigoMovimientoDetallePk', 'ASC');
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -147,6 +150,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('ed.codigoCuentaFk')
             ->addSelect('ed.codigoTerceroFk')
             ->addSelect('ed.naturaleza')
+            ->addSelect('ed.detalle')
             ->leftJoin('ed.cuentaPagarRel', 'cp')
             ->where('ed.codigoMovimientoFk = ' . $codigoMovimiento);
         $queryBuilder->orderBy('ed.codigoMovimientoDetallePk', 'ASC');

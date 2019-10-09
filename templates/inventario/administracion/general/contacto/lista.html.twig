@@ -12,15 +12,15 @@
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="input-group">
-                                {{ form_widget(form.txtCodigo) }}
+                                {{ form_widget(form.codigoTercero) }}
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                {{ form_widget(form.txtNombre) }}
+                                <input id="form_txtNombreCorto" class="form-control" readonly>
                                 <span class="input-group-btn">
                                         <a class="btn btn-default btn-sm"
-                                           href="javascript:abrirVentana3('{{ path('inventario_buscar_tercero', { 'campoCodigo': 'form_txtCodigo', 'campoNombre': 'form_txtNombre' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
+                                           href="javascript:abrirVentana3('{{ path('inventario_buscar_tercero', { 'campoCodigo': 'form_codigoTercero', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarTercero', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -30,7 +30,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Nombre:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.txtNombreTercero, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.tercero, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
         </div>
@@ -96,17 +96,18 @@
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arContactos) }}
     </div>
-    <div class="btn-toolbar" style="float: right">
-        <div class="btn-group">
-            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
-        </div>
-        <div class="btn-group">
-            <a class="btn btn-default btn-sm"
-               href="{{ path('inventario_administracion_general_contacto_nuevo', {'id': 0}) }}">Nuevo</a>
-        </div>
-        {#<div class="btn-group">#}
-            {#{{ form_widget(form.btnEliminar) }}#}
-        {#</div>#}
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('inventario_administracion_general_contacto_nuevo', {'id': 0}) }}">Nuevo</a>
     </div>
     <br /><br />
     {{ form_rest(form) }}

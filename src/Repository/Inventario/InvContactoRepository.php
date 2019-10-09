@@ -17,9 +17,19 @@ class InvContactoRepository extends ServiceEntityRepository
         parent::__construct($registry, InvContacto::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoTercero = null;
+        $tercero = null;
+
+        if ($filtros) {
+            $codigoTercero = $filtros['codigoTercero'] ?? null;
+            $tercero = $filtros['tercero'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvContacto::class, 'ct')
             ->select('ct.codigoContactoPk')
             ->addSelect('ct.nombreCorto')
@@ -31,7 +41,31 @@ class InvContactoRepository extends ServiceEntityRepository
             ->addSelect('t.nombreCorto AS tercero')
             ->leftJoin('ct.terceroRel', 't')
             ->where('ct.codigoContactoPk <> 0');
+        if ($codigoTercero) {
+            $queryBuilder->andWhere("ct.codigoContactoPk = '{$codigoTercero}'");
+        }
+        if ($tercero) {
+            $queryBuilder->andWhere("t.nombreCorto like '%{$tercero}%'");
+        }
+
+        $queryBuilder->addOrderBy('ct.codigoContactoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        try{
+            foreach ($arrSeleccionados as $arrSeleccionado) {
+                $arRegistro = $this->getEntityManager()->getRepository(InvContacto::class)->find($arrSeleccionado);
+                if ($arRegistro) {
+                    $this->getEntityManager()->remove($arRegistro);
+                }
+            }
+            $this->getEntityManager()->flush();
+        } catch (\Exception $ex) {
+            Mensajes::error("El registro tiene registros relacionados");
+        }
     }
 
     public function listaTercero($codigoTercero)

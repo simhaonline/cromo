@@ -34,24 +34,4 @@ class ContactoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoContactoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"terceroRel.nombreCorto",  "tipo":"texto"  ,"ayuda":"Tercero",                "titulo":"TERCERO", "relacion":""},
-            {"campo":"numeroIdentificacion",                     "tipo":"texto"  ,"ayuda":"Numero identificacion",     "titulo":"IDENTIFICACION"},
-            {"campo":"nombreCorto",                          "tipo":"texto"  ,"ayuda":"Nombre de la importacion tipo",     "titulo":"NOMBRE"}                                                                                      
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoContactoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"numeroIdentificacion",                     "tipo":"texto"  ,"ayuda":"Numero identificacion",     "titulo":"IDENTIFICACION"},
-            {"campo":"nombreCorto",                          "tipo":"texto"  ,"ayuda":"Nombre de la importacion tipo",     "titulo":"NOMBRE"}                                           
-        ]';
-        return $campos;
-    }
 }

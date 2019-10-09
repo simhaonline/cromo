@@ -1167,12 +1167,6 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
                     if (!$arGuia->getEstadoFacturaExportado()) {
                         $arrFacturas[] = array('tipo' => $arGuia->getGuiaTipoRel()->getCodigoFacturaTipoFk(), 'numero' => $arGuia->getNumeroFactura());
-                        $fechaActual = new \DateTime('now');
-                        $arGuia->setEstadoFacturaExportado(1);
-                        $arGuia->setEstadoFacturaGenerada(1);
-                        $arGuia->setEstadoFacturado(1);
-                        $arGuia->setFechaFactura($fechaActual);
-                        $em->persist($arGuia);
 
                         $arFactura = new TteFactura();
                         $arFactura->setFacturaTipoRel($arGuia->getGuiaTipoRel()->getFacturaTipoRel());
@@ -1195,6 +1189,14 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arFactura->setEstadoAnulado($arGuia->getEstadoAnulado());
                         $arFactura->setUsuario($usuario);
                         $em->persist($arFactura);
+
+                        $fechaActual = new \DateTime('now');
+                        $arGuia->setEstadoFacturaExportado(1);
+                        $arGuia->setEstadoFacturaGenerada(1);
+                        $arGuia->setEstadoFacturado(1);
+                        $arGuia->setFechaFactura($fechaActual);
+                        $arGuia->setFacturaRel($arFactura);
+                        $em->persist($arGuia);
 
                         $arFacturaDetalle = new TteFacturaDetalle();
                         $arFacturaDetalle->setFacturaRel($arFactura);

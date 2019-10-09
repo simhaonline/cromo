@@ -25,8 +25,17 @@ class InvDocumentoRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function lista()
+    public function lista($raw)
     {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoDocumento = null;
+        $nombre = null;
+        if ($filtros) {
+            $codigoDocumento = $filtros['codigoDocumento'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
         $queryBuilder = $this->_em->createQueryBuilder()->from(InvDocumento::class, 'd')
             ->select('d.codigoDocumentoPk')
             ->addSelect('d.abreviatura')
@@ -35,7 +44,29 @@ class InvDocumentoRepository extends ServiceEntityRepository
             ->addSelect('d.operacionComercial')
             ->addOrderBy('d.codigoDocumentoPk', 'ASC');
 
+        if ($codigoDocumento) {
+            $queryBuilder->andWhere("d.codigoDocumentoPk = '{$codigoDocumento}'");
+        }
+        if ($nombre) {
+            $queryBuilder->andWhere("d.nombre like '%{$nombre}'");
+        }
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        try{
+            foreach ($arrSeleccionados as $arrSeleccionado) {
+                $arRegistro = $this->getEntityManager()->getRepository(InvDocumento::class)->find($arrSeleccionado);
+                if ($arRegistro) {
+                    $this->getEntityManager()->remove($arRegistro);
+                }
+            }
+            $this->getEntityManager()->flush();
+        } catch (\Exception $ex) {
+            Mensajes::error("El registro tiene registros relacionados");
+        }
     }
 
     /**

@@ -43,9 +43,9 @@ class SiplaftController extends Controller
             $session->set('filtroTteNombreCliente', $form->get('txtNombreCorto')->getData());
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->getRepository(TteDespachoDetalle::class)->detalle()->getQuery()->execute(), "Novedades");
+            General::get()->setExportar($em->getRepository(TteDespachoDetalle::class)->siplatf()->getQuery()->execute(), "Novedades");
         }
-        $query = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->detalle();
+        $query = $this->getDoctrine()->getRepository(TteDespachoDetalle::class)->siplatf();
         $arDespachoDetalles = $paginator->paginate($query, $request->query->getInt('page', 1),100);
         return $this->render('transporte/informe/transporte/despacho/detalle.html.twig', [
             'arDespachoDetalles' => $arDespachoDetalles,

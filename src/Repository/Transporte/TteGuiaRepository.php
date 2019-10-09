@@ -3596,6 +3596,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         $manejoMinimoUnidad = 0;
         $manejoMinimoDespacho = 0;
         $pesoMinimoUnidad = 0;
+        $fleteMinimoUnidad = 0;
+        $fleteMinimoDespacho = 0;
 
         $flete = 0;
         $manejo = 0;
@@ -3616,6 +3618,9 @@ class TteGuiaRepository extends ServiceEntityRepository
             $descuentoPeso = $arrCondicionFlete['descuentoPeso'];
             $descuentoUnidad = $arrCondicionFlete['descuentoUnidad'];
             $pesoMinimoUnidad = $arrCondicionFlete['pesoMinimo'];
+            $fleteMinimoUnidad = $arrCondicionFlete['fleteMinimo'];
+            $fleteMinimoDespacho = $arrCondicionFlete['fleteMinimoGuia'];
+
         }
         if ($pesoFacturado < $pesoMinimoUnidad * $unidades) {
             $pesoFacturado = $pesoMinimoUnidad * $unidades;
@@ -3636,9 +3641,13 @@ class TteGuiaRepository extends ServiceEntityRepository
                 case "A":
                     $flete = $pesoFacturado * $arrPrecioDetalle['vrPeso'];
                     break;
-
             }
-
+            if($fleteMinimoUnidad > $flete / $unidades) {
+                $flete = $fleteMinimoUnidad * $unidades;
+            }
+            if($fleteMinimoDespacho > $flete) {
+                $flete = $fleteMinimoDespacho;
+            }
         }
         $rawCondicionManejo = ['codigoCliente' => $cliente, 'origen' => $origen, 'destino' => $destino, 'codigoZona' => $zona];
         $arrCondicionManejo = $em->getRepository(TteCondicionManejo::class)->apiWindowsLiquidar($rawCondicionManejo);

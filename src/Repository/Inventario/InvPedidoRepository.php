@@ -18,12 +18,29 @@ class InvPedidoRepository extends ServiceEntityRepository
         parent::__construct($registry, InvPedido::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $numero = null;
+        $codigoPedido = null;
+        $codigoTercero = null;
+        $codigoPedidoTipo = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $numero =  $filtros['numero'] ?? null;
+            $codigoPedido =  $filtros['codigoPedido'] ?? null;
+            $codigoTercero =  $filtros['codigoTercero'] ?? null;
+            $codigoPedidoTipo =  $filtros['codigoPedidoTipo'] ?? null;
+            $estadoAutorizado =  $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ??  null;
+            $estadoAnulado =  $filtros['estadoAnulado'] ?? null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvPedido::class, 'p')
-            ->leftJoin('p.terceroRel', 't')
-            ->leftJoin('p.pedidoTipoRel', 'pt')
             ->select('p.codigoPedidoPk')
             ->addSelect('p.numero')
             ->addSelect('p.fecha')
@@ -31,27 +48,30 @@ class InvPedidoRepository extends ServiceEntityRepository
             ->addSelect('p.vrIva')
             ->addSelect('p.vrNeto')
             ->addSelect('p.vrTotal')
-            ->addSelect('pt.nombre')
+            ->addSelect('pt.nombre as pedidoTipo')
             ->addSelect('p.estadoAutorizado')
             ->addSelect('p.estadoAprobado')
             ->addSelect('p.estadoAnulado')
             ->addSelect('p.usuario')
-            ->addSelect('t.nombreCorto AS terceroNombreCorto')
+            ->addSelect('t.nombreCorto as tercero')
+            ->leftJoin('p.terceroRel', 't')
+            ->leftJoin('p.pedidoTipoRel', 'pt')
             ->where('p.codigoPedidoPk <> 0')
             ->orderBy('p.codigoPedidoPk', 'DESC');
-        if ($session->get('InvPedido_codigoPedidoPk')) {
-            $queryBuilder->andWhere("r.codigoPedidoPk = '{$session->get('InvPedido_codigoPedidoPk')}'");
+
+        if ($codigoPedido) {
+            $queryBuilder->andWhere("p.codigoPedidoPk = '{$codigoPedido}'");
         }
-        if ($session->get('InvPedido_numero')) {
-            $queryBuilder->andWhere("p.numero = {$session->get('InvPedido_numero')}");
+        if ($numero) {
+            $queryBuilder->andWhere("p.numero = {$numero}");
         }
-        if ($session->get('InvPedido_codigoPedidoTipoFk')) {
-            $queryBuilder->andWhere("p.codigoPedidoTipoFk = '{$session->get('InvPedido_codigoPedidoTipoFk')}'");
+        if ($codigoPedidoTipo) {
+            $queryBuilder->andWhere("p.codigoPedidoTipoFk = '{$codigoPedidoTipo}'");
         }
-        if ($session->get('InvPedido_codigoTerceroFk')) {
-            $queryBuilder->andWhere("p.codigoTerceroFk = {$session->get('InvPedido_codigoTerceroFk')}");
+        if ($codigoTercero) {
+            $queryBuilder->andWhere("p.codigoTerceroFk = {$codigoTercero}");
         }
-        switch ($session->get('InvPedido_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("p.estadoAutorizado = 0");
                 break;
@@ -59,7 +79,7 @@ class InvPedidoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("p.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('InvPedido_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("p.estadoAprobado = 0");
                 break;
@@ -67,7 +87,7 @@ class InvPedidoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("p.estadoAprobado = 1");
                 break;
         }
-        switch ($session->get('InvPedido_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("p.estadoAnulado = 0");
                 break;
@@ -75,6 +95,8 @@ class InvPedidoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("p.estadoAnulado = 1");
                 break;
         }
+
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
 
     }

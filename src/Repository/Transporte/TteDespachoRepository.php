@@ -1895,9 +1895,9 @@ class TteDespachoRepository extends ServiceEntityRepository
                 $arCuentaPagar->setFechaVence($arDespacho->getFechaSalida());
                 $arCuentaPagar->setVrSubtotal($arDespacho->getVrTotalNeto());
                 $arCuentaPagar->setVrTotal($arDespacho->getVrTotalNeto());
-                $arCuentaPagar->setVrSaldoOriginal($arDespacho->getVrSaldo());
-                $arCuentaPagar->setVrSaldo($arDespacho->getVrSaldo());
-                $arCuentaPagar->setVrSaldoOperado($arDespacho->getVrSaldo() * $arCuentaPagarTipo->getOperacion());
+                $arCuentaPagar->setVrSaldoOriginal($arDespacho->getVrTotalNeto());
+                $arCuentaPagar->setVrSaldo($arDespacho->getVrTotalNeto());
+                $arCuentaPagar->setVrSaldoOperado($arDespacho->getVrTotalNeto() * $arCuentaPagarTipo->getOperacion());
                 $arCuentaPagar->setEstadoAutorizado(1);
                 $arCuentaPagar->setEstadoAprobado(1);
                 $arCuentaPagar->setOperacion($arCuentaPagarTipo->getOperacion());

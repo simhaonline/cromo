@@ -16,6 +16,7 @@
     <div style="float:right">
         {% if arIngreso.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arIngreso.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arIngreso.estadoContabilizado == true %}<span class="label label-success">Contabilizado</span>{% endif %}
         {% if arIngreso.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
         {% if arIngreso.estadoImpreso == true %}<span class="label label-success">Impreso</span>{% endif %}
     </div>

@@ -52,15 +52,15 @@ class IngresoController extends BaseController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/movimiento/ingreso/ingreso/lista", name="cartera_movimiento_ingreso_ingreso_lista")
      */
-    public function lista(Request $request, PaginatorInterface $paginator )
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('codigoClienteFk', TextType::class, array('required' => false))
             ->add('numero', NumberType::class, array('required' => false))
             ->add('codigoIngresoPk', TextType::class, array('required' => false))
-            ->add('fechaPagoDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaPagoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaPagoDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaPagoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('codigoIngresoTipoFk', EntityType::class, [
                 'class' => CarIngresoTipo::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -135,6 +135,7 @@ class IngresoController extends BaseController
                         if ($id == 0) {
                             $arIngreso->setFecha(new \DateTime('now'));
                         }
+                        $arIngreso->setUsuario($this->getUser()->getName());
                         $em->persist($arIngreso);
                         $em->flush();
                         return $this->redirect($this->generateUrl('cartera_movimiento_ingreso_ingreso_detalle', ['id' => $arIngreso->getCodigoIngresoPk()]));
@@ -157,7 +158,7 @@ class IngresoController extends BaseController
      * @throws \Doctrine\ORM\ORMException
      * @Route("/cartera/movimiento/ingreso/ingreso/detalle/{id}", name="cartera_movimiento_ingreso_ingreso_detalle")
      */
-    public function detalle(Request $request, PaginatorInterface $paginator,$id)
+    public function detalle(Request $request, PaginatorInterface $paginator, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arIngreso = $em->getRepository(CarIngreso::class)->find($id);
@@ -205,10 +206,8 @@ class IngresoController extends BaseController
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository(CarIngreso::class)->anular($arIngreso);
-                if (count($respuesta) > 0) {
-                    foreach ($respuesta as $error) {
-                        Mensajes::error($error);
-                    }
+                if ($respuesta != '') {
+                    Mensajes::error($respuesta);
                 }
             }
             if ($form->get('btnActualizar')->isClicked()) {

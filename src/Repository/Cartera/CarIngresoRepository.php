@@ -253,45 +253,40 @@ class CarIngresoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arIngreso ComIngreso
+     * @param $arIngreso CarIngreso
      * @return array
      */
     public function anular($arIngreso)
     {
         $em = $this->getEntityManager();
-        $respuesta = [];
-        if ($arIngreso->getEstadoAprobado() == 1) {
-            $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
-            foreach ($arIngresosDetalle as $arIngresoDetalle) {
-                if ($arIngresoDetalle->getCodigoCuentaCobrarFk()) {
-                    $arCuentaPagarAplicacion = $em->getRepository(TesCuentaPagar::class)->find($arIngresoDetalle->getCodigoCuentaCobrarFk());
-                    if ($arCuentaPagarAplicacion->getVrSaldo() <= $arIngresoDetalle->getVrPagoAfectar() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
-                        $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arIngresoDetalle->getVrPagoAfectar();
-                        $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();
-                        $arCuentaPagarAplicacion->setVrSaldo($saldo);
-                        $arCuentaPagarAplicacion->setvRSaldoOperado($saldoOperado);
-                        $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() - $arIngresoDetalle->getVrPagoAfectar());
-                        $em->persist($arCuentaPagarAplicacion);
+        $respuesta = '';
+        if ($arIngreso->getEstadoContabilizado() == 0) {
+            if ($arIngreso->getEstadoAprobado() == 1) {
+                $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
+                foreach ($arIngresosDetalle as $arIngresoDetalle) {
+                    if ($arIngresoDetalle->getCodigoCuentaCobrarFk()) {
+                        $arCuentaPagarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arIngresoDetalle->getCodigoCuentaCobrarFk());
+                        if ($arCuentaPagarAplicacion->getVrSaldo() <= $arIngresoDetalle->getVrPago() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
+                            $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arIngresoDetalle->getVrPago();
+                            $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();
+                            $arCuentaPagarAplicacion->setVrSaldo($saldo);
+                            $arCuentaPagarAplicacion->setvRSaldoOperado($saldoOperado);
+                            $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() - $arIngresoDetalle->getVrPago());
+                            $em->persist($arCuentaPagarAplicacion);
+                        }
                     }
+                    $arIngresoDetalle->setVrPago(0);
+                    $arIngresoDetalle->setVrRetencion(0);
                 }
-                $arIngresoDetalle->setVrDescuento(0);
-                $arIngresoDetalle->setVrAjustePeso(0);
-                $arIngresoDetalle->setVrRetencionIca(0);
-                $arIngresoDetalle->setVrRetencionIva(0);
-                $arIngresoDetalle->setVrRetencionFuente(0);
-                $arIngresoDetalle->setVrPago(0);
-                $arIngresoDetalle->setVrPagoAfectar(0);
+                $arIngreso->setVrRetencion(0);
+                $arIngreso->setVrTotalBruto(0);
+                $arIngreso->setVrTotalBruto(0);
+                $arIngreso->setEstadoAnulado(1);
+                $this->_em->persist($arIngreso);
+                $this->_em->flush();
             }
-            $arIngreso->setVrPago(0);
-            $arIngreso->setVrPagoTotal(0);
-            $arIngreso->setVrTotalDescuento(0);
-            $arIngreso->setVrTotalAjustePeso(0);
-            $arIngreso->setVrTotalRetencionIca(0);
-            $arIngreso->setVrTotalRetencionIva(0);
-            $arIngreso->setVrTotalRetencionFuente(0);
-            $arIngreso->setEstadoAnulado(1);
-            $this->_em->persist($arIngreso);
-            $this->_em->flush();
+        } else {
+            $respuesta = "El registro se encuentra contabilizado";
         }
         return $respuesta;
     }

@@ -17,6 +17,7 @@ class InicioController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         return $this->render('base.html.twig');
+        //return $this->render('v2/tesoreria/inicio.html.twig');
     }
 }
 

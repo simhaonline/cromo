@@ -20,25 +20,58 @@ class InvCotizacionRepository extends ServiceEntityRepository
     /**
      * @return mixed
      */
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $numero = null;
+        $codigoCotizacion = null;
+        $codigoTercero = null;
+        $codigoCotizacionTipo = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $numero = $filtros['numero'] ?? null;
+            $codigoCotizacion = $filtros['codigoCotizacion'] ?? null;
+            $codigoTercero = $filtros['codigoTercero'] ?? null;
+            $codigoCotizacionTipo = $filtros['codigoCotizacionTipo'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvCotizacion::class, 'i')
             ->select('i.codigoCotizacionPk')
-            ->join('i.cotizacionTipoRel', 'it')
-            ->join('i.terceroRel', 't')
-            ->addSelect('i.numero')
+            ->addSelect('it.nombre as tipo')
             ->addSelect('t.nombreCorto as cliente')
-            ->addSelect('it.nombre as nombreTipo')
+            ->addSelect('i.numero')
             ->addSelect('i.fecha')
+            ->addSelect('i.vrSubtotal')
+            ->addSelect('i.vrIva')
+            ->addSelect('i.vrNeto')
+            ->addSelect('i.vrTotal')
             ->addSelect('i.estadoAutorizado')
             ->addSelect('i.estadoAprobado')
             ->addSelect('i.estadoAnulado')
+            ->leftJoin('i.cotizacionTipoRel', 'it')
+            ->leftJoin('i.terceroRel', 't')
             ->where('i.codigoCotizacionPk <> 0');
-        if ($session->get('filtroInvSolicitudNumero') != '') {
-            $queryBuilder->andWhere("i.numero = {$session->get('filtroInvCotizacionNumero')}");
+        if ($numero) {
+            $queryBuilder->andWhere("i.numero = {$numero}");
         }
-        switch ($session->get('filtroInvCotizacionEstadoAprobado')) {
+        if ($codigoCotizacion) {
+            $queryBuilder->andWhere("i.codigoCotizacionPk = '{$codigoCotizacion}'");
+        }
+        if ($codigoTercero) {
+            $queryBuilder->andWhere("t.codigoTerceroPk = '{$codigoTercero}'");
+        }
+        if ($codigoCotizacionTipo) {
+            $queryBuilder->andWhere("i.codigoCotizacionTipoFk = '{$codigoCotizacionTipo}'");
+        }
+
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("i.estadoAprobado = 0");
                 break;
@@ -46,9 +79,24 @@ class InvCotizacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("i.estadoAprobado = 1");
                 break;
         }
-        if ($session->get('filtroInvCotizacionTipoCodigo')) {
-            $queryBuilder->andWhere("i.codigoCotizacionTipoFk = '{$session->get('filtroInvCotizacionTipoCodigo')}'");
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoAutorizado = 1");
+                break;
         }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoAnulado = 1");
+                break;
+        }
+
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 

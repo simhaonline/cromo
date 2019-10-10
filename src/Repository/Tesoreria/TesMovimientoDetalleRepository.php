@@ -3,6 +3,7 @@
 namespace App\Repository\Tesoreria;
 
 
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Tesoreria\TesMovimiento;
 use App\Entity\Tesoreria\TesMovimientoDetalle;
@@ -38,6 +39,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.cuenta')
             ->addSelect('md.codigoBancoFk')
             ->addSelect('md.detalle')
+            ->addSelect('md.codigoCentroCostoFk')
             ->leftJoin('md.cuentaPagarRel', 'cp')
             ->leftJoin('md.terceroRel', 't')
             ->where("md.codigoMovimientoFk = '{$codigoMovimiento}'");
@@ -80,8 +82,10 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arrCuenta = $arrControles['arrCuenta'];
+        $arrCentroCosto = $arrControles['arrCentroCosto'];
         $arrTercero = $arrControles['arrTercero'];
         $arrDetalle = $arrControles['arrDetalle'];
+        $arrNumero = $arrControles['arrNumero']??null;
         $arMovimientosDetalle = $em->getRepository(TesMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $idMovimiento]);
         foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
             $intCodigo = $arMovimientoDetalle->getCodigoMovimientoDetallePk();
@@ -108,10 +112,24 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             } else {
                 $arMovimientoDetalle->setTerceroRel(null);
             }
-
+            if ($arrCentroCosto[$intCodigo]) {
+                $arCentroCosto = $em->getRepository(FinCentroCosto::class)->find($arrCentroCosto[$intCodigo]);
+                if ($arCentroCosto) {
+                    $arMovimientoDetalle->setCentroCostoRel($arCentroCosto);
+                } else {
+                    $arMovimientoDetalle->setCentroCostoRel(null);
+                }
+            } else {
+                $arMovimientoDetalle->setCentroCostoRel(null);
+            }
             $arMovimientoDetalle->setVrPago($valorPago);
             $arMovimientoDetalle->setNaturaleza($codigoNaturaleza);
             $arMovimientoDetalle->setDetalle($detalle);
+            if($arrNumero) {
+                $numero = $arrNumero[$intCodigo] && $arrNumero[$intCodigo] != '' ? $arrNumero[$intCodigo] : null;
+                $arMovimientoDetalle->setNumero($numero);
+            }
+
             $em->persist($arMovimientoDetalle);
         }
         $em->flush();

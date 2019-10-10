@@ -17,6 +17,13 @@ class TesMovimientoClase extends Fixture
             $arMovimientoClase->setNombre('EGRESO');
             $manager->persist($arMovimientoClase);
         }
+        $arMovimientoClase = $manager->getRepository(\App\Entity\Tesoreria\TesMovimientoClase::class)->find('CP');
+        if(!$arMovimientoClase){
+            $arMovimientoClase = new \App\Entity\Tesoreria\TesMovimientoClase();
+            $arMovimientoClase->setCodigoMovimientoClasePk('CP');
+            $arMovimientoClase->setNombre('COMPRA');
+            $manager->persist($arMovimientoClase);
+        }
         $manager->flush();
     }
 }

@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MovimientoType extends AbstractType
+class MovimientoCompraType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -40,6 +40,7 @@ class MovimientoType extends AbstractType
                 'choice_label' => 'nombre'
             ])
             ->add('fecha', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd'))
+            ->add('numeroDocumento', TextType::class, ['label' => 'Numero documento:'])
             ->add('comentarios', TextareaType::class, ['label' => 'Comentario:', 'required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

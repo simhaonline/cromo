@@ -52,6 +52,11 @@ class TesMovimiento
     private $numero = 0;
 
     /**
+     * @ORM\Column(name="numero_documento" , type="string", length=30, nullable=true)
+     */
+    private $numeroDocumento;
+
+    /**
      * @ORM\Column(name="comentarios" , type="string", nullable=true)
      */
     private $comentarios;
@@ -396,6 +401,22 @@ class TesMovimiento
     public function setMovimientoDetallesMovimientoRel($movimientoDetallesMovimientoRel): void
     {
         $this->movimientoDetallesMovimientoRel = $movimientoDetallesMovimientoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroDocumento()
+    {
+        return $this->numeroDocumento;
+    }
+
+    /**
+     * @param mixed $numeroDocumento
+     */
+    public function setNumeroDocumento($numeroDocumento): void
+    {
+        $this->numeroDocumento = $numeroDocumento;
     }
 
 

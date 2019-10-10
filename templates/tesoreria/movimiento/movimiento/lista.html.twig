@@ -84,6 +84,7 @@
             <th>NUMERO</th>
             <th>FECHA</th>
             <th>TIPO</th>
+            <th>DOC</th>
             <th>TERCERO</th>
             <th>NETO</th>
             <th title="Estado autorizado">AUT</th>
@@ -100,6 +101,7 @@
                 <td>{{ arMovimiento.numero }}</td>
                 <td>{{ arMovimiento.fecha | date('Y-m-d') }}</td>
                 <td>{{ arMovimiento.tipo }}</td>
+                <td>{{ arMovimiento.numeroDocumento }}</td>
                 <td>{{ arMovimiento.tercero }}</td>
                 <td class="numero">{{ arMovimiento.vrTotalNeto | number_format() }}</td>
                 <td>{{ arMovimiento.estadoAutorizado ? 'SI':'NO' }}</td>

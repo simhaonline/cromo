@@ -52,63 +52,65 @@ class TesMovimientoRepository extends ServiceEntityRepository
         }
 
         $em = $this->getEntityManager();
-        $queryBuilder = $em->createQueryBuilder()->from(TesMovimiento::class, 'e')
-            ->select('e.codigoMovimientoPk')
-            ->addSelect('et.nombre as tipo')
+        $queryBuilder = $em->createQueryBuilder()->from(TesMovimiento::class, 'm')
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.codigoMovimientoClaseFk')
+            ->addSelect('mt.nombre as tipo')
             ->addSelect('t.nombreCorto as tercero')
-            ->addSelect('e.numero')
-            ->addSelect('e.fecha')
-            ->addSelect('e.vrTotalNeto')
-            ->addSelect('e.estadoAnulado')
-            ->addSelect('e.estadoAprobado')
-            ->addSelect('e.estadoAutorizado')
-            ->leftJoin('e.movimientoTipoRel', 'et')
-            ->leftJoin('e.terceroRel', 't')
-            ->where("e.codigoMovimientoClaseFk = '{$clase}'");
+            ->addSelect('m.numero')
+            ->addSelect('m.numeroDocumento')
+            ->addSelect('m.fecha')
+            ->addSelect('m.vrTotalNeto')
+            ->addSelect('m.estadoAnulado')
+            ->addSelect('m.estadoAprobado')
+            ->addSelect('m.estadoAutorizado')
+            ->leftJoin('m.movimientoTipoRel', 'mt')
+            ->leftJoin('m.terceroRel', 't')
+            ->where("m.codigoMovimientoClaseFk = '{$clase}'");
         if ($codigoMovimiento) {
-            $queryBuilder->andWhere("e.codigoMovimientoPk = {$codigoMovimiento}");
+            $queryBuilder->andWhere("m.codigoMovimientoPk = {$codigoMovimiento}");
         }
         if ($numero) {
-            $queryBuilder->andWhere("e.numero = {$numero}");
+            $queryBuilder->andWhere("m.numero = {$numero}");
         }
         if ($codigoTercero) {
-            $queryBuilder->andWhere("e.codigoTerceroFk = '{$codigoTercero}'");
+            $queryBuilder->andWhere("m.codigoTerceroFk = '{$codigoTercero}'");
         }
         if ($movimientoTipo) {
-            $queryBuilder->andWhere("e.codigoMovimientoTipoFk = '{$movimientoTipo}'");
+            $queryBuilder->andWhere("m.codigoMovimientoTipoFk = '{$movimientoTipo}'");
         }
         if ($fechaDesde) {
-            $queryBuilder->andWhere("e.fecha >= '{$fechaDesde} 00:00:00'");
+            $queryBuilder->andWhere("m.fecha >= '{$fechaDesde} 00:00:00'");
         }
         if ($fechaHasta) {
-            $queryBuilder->andWhere("e.fecha <= '{$fechaHasta} 23:59:59'");
+            $queryBuilder->andWhere("m.fecha <= '{$fechaHasta} 23:59:59'");
         }
         switch ($estadoAutorizado) {
             case '0':
-                $queryBuilder->andWhere("e.estadoAutorizado = 0");
+                $queryBuilder->andWhere("m.estadoAutorizado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("e.estadoAutorizado = 1");
+                $queryBuilder->andWhere("m.estadoAutorizado = 1");
                 break;
         }
         switch ($estadoAprobado) {
             case '0':
-                $queryBuilder->andWhere("e.estadoAprobado = 0");
+                $queryBuilder->andWhere("m.estadoAprobado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("e.estadoAprobado = 1");
+                $queryBuilder->andWhere("m.estadoAprobado = 1");
                 break;
         }
         switch ($estadoAnulado) {
             case '0':
-                $queryBuilder->andWhere("e.estadoAnulado = 0");
+                $queryBuilder->andWhere("m.estadoAnulado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("e.estadoAnulado = 1");
+                $queryBuilder->andWhere("m.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->addOrderBy('e.estadoAprobado', 'ASC');
-        $queryBuilder->addOrderBy('e.codigoMovimientoPk', 'DESC');
+        $queryBuilder->addOrderBy('m.estadoAprobado', 'ASC');
+        $queryBuilder->addOrderBy('m.codigoMovimientoPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }
@@ -242,8 +244,11 @@ class TesMovimientoRepository extends ServiceEntityRepository
                 $em->persist($arMovimientoTipo);
             }
             $arMovimiento->setEstadoAprobado(1);
-            $this->getEntityManager()->persist($arMovimiento);
-            $this->getEntityManager()->flush();
+            $em->persist($arMovimiento);
+            if($arMovimiento->getMovimientoTipoRel()->getGeneraCuentaPagar()) {
+                $this->generarCuentaPagar($arMovimiento);
+            }
+            $em->flush();
         }
     }
 
@@ -303,7 +308,9 @@ class TesMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.estadoContabilizado')
             ->addSelect('m.codigoTerceroFk')
             ->addSelect('mt.codigoComprobanteFk')
+            ->addSelect('mt.codigoCuentaFk')
             ->addSelect('c.codigoCuentaContableFk')
+            ->addSelect('m.codigoMovimientoClaseFk')
             ->leftJoin('m.movimientoTipoRel', 'mt')
             ->leftJoin('m.cuentaRel', 'c')
             ->where('m.codigoMovimientoPk = ' . $codigo);
@@ -368,28 +375,57 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                 }
 
                                 //Cuenta banco
-                                $cuenta = $arMovimiento['codigoCuentaContableFk'];
-                                if ($cuenta) {
-                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
-                                    if (!$arCuenta) {
-                                        $error = "No se encuentra la cuenta  " . $cuenta;
+                                if($arMovimiento['codigoMovimientoClaseFk'] == 'EG') {
+                                    $cuenta = $arMovimiento['codigoCuentaContableFk'];
+                                    if ($cuenta) {
+                                        $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                        if (!$arCuenta) {
+                                            $error = "No se encuentra la cuenta  " . $cuenta;
+                                            break;
+                                        }
+                                        $arRegistro = new FinRegistro();
+                                        //$arRegistro->setTerceroRel($arTercero);
+                                        $arRegistro->setCuentaRel($arCuenta);
+                                        $arRegistro->setComprobanteRel($arComprobante);
+                                        $arRegistro->setNumero($arMovimiento['numero']);
+                                        $arRegistro->setFecha($fecha);
+                                        $arRegistro->setVrCredito($arMovimiento['vrTotalNeto']);
+                                        $arRegistro->setNaturaleza('C');
+                                        $arRegistro->setDescripcion("Movimiento");
+                                        $arRegistro->setCodigoModeloFk('TesMovimiento');
+                                        $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                        $em->persist($arRegistro);
+                                    } else {
+                                        $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arMovimiento['numero'];
                                         break;
                                     }
-                                    $arRegistro = new FinRegistro();
-                                    //$arRegistro->setTerceroRel($arTercero);
-                                    $arRegistro->setCuentaRel($arCuenta);
-                                    $arRegistro->setComprobanteRel($arComprobante);
-                                    $arRegistro->setNumero($arMovimiento['numero']);
-                                    $arRegistro->setFecha($fecha);
-                                    $arRegistro->setVrCredito($arMovimiento['vrTotalNeto']);
-                                    $arRegistro->setNaturaleza('C');
-                                    $arRegistro->setDescripcion("Movimiento");
-                                    $arRegistro->setCodigoModeloFk('TesMovimiento');
-                                    $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
-                                    $em->persist($arRegistro);
-                                } else {
-                                    $error = "El tipo no tiene configurada la cuenta contable para la cuenta bancaria en el recibo " . $arMovimiento['numero'];
-                                    break;
+                                }
+
+                                //Cuenta por pagar
+                                if($arMovimiento['codigoMovimientoClaseFk'] == 'CP') {
+                                    $cuenta = $arMovimiento['codigoCuentaFk'];
+                                    if ($cuenta) {
+                                        $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                        if (!$arCuenta) {
+                                            $error = "No se encuentra la cuenta  " . $cuenta;
+                                            break;
+                                        }
+                                        $arRegistro = new FinRegistro();
+                                        $arRegistro->setTerceroRel($arTercero);
+                                        $arRegistro->setCuentaRel($arCuenta);
+                                        $arRegistro->setComprobanteRel($arComprobante);
+                                        $arRegistro->setNumero($arMovimiento['numero']);
+                                        $arRegistro->setFecha($fecha);
+                                        $arRegistro->setVrCredito($arMovimiento['vrTotalNeto']);
+                                        $arRegistro->setNaturaleza('C');
+                                        $arRegistro->setDescripcion("Compra");
+                                        $arRegistro->setCodigoModeloFk('TesMovimiento');
+                                        $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                        $em->persist($arRegistro);
+                                    } else {
+                                        $error = "El tipo no tiene configurada la cuenta contable " . $arMovimiento['numero'];
+                                        break;
+                                    }
                                 }
 
                                 $arMovimientoAct = $em->getRepository(TesMovimiento::class)->find($arMovimiento['codigoMovimientoPk']);
@@ -418,6 +454,40 @@ class TesMovimientoRepository extends ServiceEntityRepository
 
         }
         return true;
+    }
+
+    /**
+     * @param $arMovimiento TesMovimiento
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function generarCuentaPagar($arMovimiento)
+    {
+        $em = $this->getEntityManager();
+        if ($arMovimiento->getMovimientoTipoRel()->getCodigoCuentaPagarTipoFk()) {
+            if($arMovimiento->getVrTotalNeto() > 0) {
+                $arCuentaPagar = New TesCuentaPagar();
+                $arCuentaPagar->setCuentaPagarTipoRel($arMovimiento->getMovimientoTipoRel()->getCuentaPagarTipoRel());
+                $arCuentaPagar->setTerceroRel($arMovimiento->getTerceroRel());
+                $arCuentaPagar->setModulo('tes');
+                $arCuentaPagar->setModelo('TesMovimiento');
+                $arCuentaPagar->setCodigoDocumento($arMovimiento->getCodigoMovimientoPk());
+                $arCuentaPagar->setNumeroDocumento($arMovimiento->getNumeroDocumento());
+                $arCuentaPagar->setNumeroReferencia($arMovimiento->getNumero());
+                $arCuentaPagar->setFecha($arMovimiento->getFecha());
+                $arCuentaPagar->setFechaVence($arMovimiento->getFecha());
+                $arCuentaPagar->setVrTotal($arMovimiento->getVrTotalNeto());
+                $arCuentaPagar->setVrSaldoOriginal($arMovimiento->getVrTotalNeto());
+                $arCuentaPagar->setVrSaldo($arMovimiento->getVrTotalNeto());
+                $arCuentaPagar->setVrSaldoOperado($arMovimiento->getVrTotalNeto() * $arMovimiento->getMovimientoTipoRel()->getCuentaPagarTipoRel()->getOperacion());
+                $arCuentaPagar->setEstadoAutorizado(1);
+                $arCuentaPagar->setEstadoAprobado(1);
+                $arCuentaPagar->setOperacion($arMovimiento->getMovimientoTipoRel()->getCuentaPagarTipoRel()->getOperacion());
+                $em->persist($arCuentaPagar);
+            }
+        } else {
+            Mensajes::error("El tipo de movimiento no tiene configurada un tipo de cuenta por pagar");
+        }
+
     }
 
 }

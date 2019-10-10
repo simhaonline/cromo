@@ -44,10 +44,31 @@ class TesMovimientoTipo
     private $codigoComprobanteFk = null;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_pagar_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoCuentaPagarTipoFk;
+
+    /**
+     * @ORM\Column(name="genera_cuenta_pagar", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $generaCuentaPagar = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesMovimientoClase" , inversedBy="movimientosTiposMovimientoClaseRel")
      * @ORM\JoinColumn(name="codigo_movimiento_clase_fk" , referencedColumnName="codigo_movimiento_clase_pk")
      */
     private $movimientoClaseRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesCuentaPagarTipo", inversedBy="movimientosTiposCuentaPagarTipoRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_pagar_tipo_fk", referencedColumnName="codigo_cuenta_pagar_tipo_pk")
+     */
+    private $cuentaPagarTipoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimiento" ,mappedBy="movimientoTipoRel")
@@ -164,6 +185,70 @@ class TesMovimientoTipo
     public function setMovimientoClaseRel($movimientoClaseRel): void
     {
         $this->movimientoClaseRel = $movimientoClaseRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaFk()
+    {
+        return $this->codigoCuentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaFk
+     */
+    public function setCodigoCuentaFk($codigoCuentaFk): void
+    {
+        $this->codigoCuentaFk = $codigoCuentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaPagarTipoFk()
+    {
+        return $this->codigoCuentaPagarTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaPagarTipoFk
+     */
+    public function setCodigoCuentaPagarTipoFk($codigoCuentaPagarTipoFk): void
+    {
+        $this->codigoCuentaPagarTipoFk = $codigoCuentaPagarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaPagarTipoRel()
+    {
+        return $this->cuentaPagarTipoRel;
+    }
+
+    /**
+     * @param mixed $cuentaPagarTipoRel
+     */
+    public function setCuentaPagarTipoRel($cuentaPagarTipoRel): void
+    {
+        $this->cuentaPagarTipoRel = $cuentaPagarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraCuentaPagar()
+    {
+        return $this->generaCuentaPagar;
+    }
+
+    /**
+     * @param mixed $generaCuentaPagar
+     */
+    public function setGeneraCuentaPagar($generaCuentaPagar): void
+    {
+        $this->generaCuentaPagar = $generaCuentaPagar;
     }
 
 

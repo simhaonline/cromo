@@ -109,6 +109,11 @@ class TesCuentaPagarTipo
     protected $comprasTiposCuentaPagarTipoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoTipo" , mappedBy="cuentaPagarTipoRel")
+     */
+    protected $movimientosTiposCuentaPagarTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPagarTipoPk()
@@ -394,6 +399,22 @@ class TesCuentaPagarTipo
     public function setComprasTiposCuentaPagarTipoRel($comprasTiposCuentaPagarTipoRel): void
     {
         $this->comprasTiposCuentaPagarTipoRel = $comprasTiposCuentaPagarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosTiposCuentaPagarTipoRel()
+    {
+        return $this->movimientosTiposCuentaPagarTipoRel;
+    }
+
+    /**
+     * @param mixed $movimientosTiposCuentaPagarTipoRel
+     */
+    public function setMovimientosTiposCuentaPagarTipoRel($movimientosTiposCuentaPagarTipoRel): void
+    {
+        $this->movimientosTiposCuentaPagarTipoRel = $movimientosTiposCuentaPagarTipoRel;
     }
 
 

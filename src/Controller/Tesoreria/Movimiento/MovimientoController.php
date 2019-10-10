@@ -2,8 +2,6 @@
 
 namespace App\Controller\Tesoreria\Movimiento;
 
-use App\Controller\BaseController;
-use App\Controller\Estructura\FuncionesController;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\General\GenBanco;
 use App\Entity\General\GenConfiguracion;
@@ -11,16 +9,15 @@ use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuEgresoDetalle;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
-use App\Entity\Tesoreria\TesEgreso;
-use App\Entity\Tesoreria\TesEgresoDetalle;
-use App\Entity\Tesoreria\TesEgresoTipo;
 use App\Entity\Tesoreria\TesMovimiento;
+use App\Entity\Tesoreria\TesMovimientoClase;
 use App\Entity\Tesoreria\TesMovimientoDetalle;
 use App\Entity\Tesoreria\TesMovimientoTipo;
 use App\Entity\Tesoreria\TesTercero;
-use App\Form\Type\Tesoreria\EgresoType;
+use App\Form\Type\Tesoreria\MovimientoCompraType;
 use App\Form\Type\Tesoreria\MovimientoType;
 use App\Formato\Tesoreria\Egreso;
+use App\Formato\Tesoreria\Movimiento;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -53,16 +50,17 @@ class MovimientoController extends AbstractController
      * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/tesoreria/movimiento/movimiento/movimiento/lista", name="tesoreria_movimiento_movimiento_movimiento_lista")
+     * @Route("/tesoreria/movimiento/movimiento/movimiento/lista/{clase}", name="tesoreria_movimiento_movimiento_movimiento_lista")
      */
-    public function lista(Request $request, PaginatorInterface $paginator)
+    public function lista(Request $request, PaginatorInterface $paginator, $clase)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('codigoMovimientoTipoFk', EntityType::class, [
                 'class' => TesMovimientoTipo::class,
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => function (EntityRepository $er) use ($clase) {
                     return $er->createQueryBuilder('mt')
+                        ->where("mt.codigoMovimientoClaseFk ='" . $clase . "'")
                         ->orderBy('mt.codigoMovimientoTipoPk', 'ASC');
                 },
                 'required' => false,
@@ -71,6 +69,7 @@ class MovimientoController extends AbstractController
                 'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('codigoMovimientoPk', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
             ->add('txtCodigoTercero', TextType::class, ['required' => false])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -85,20 +84,22 @@ class MovimientoController extends AbstractController
             ->getForm();
         $form->handleRequest($request);
         $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+            'limiteRegistros' => $form->get('limiteRegistros')->getData(),
+            'codigoMovimientoClase' => $clase
         ];
         if ($form->isSubmitted()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
-                $raw['filtros'] = $this->getFiltros($form);
+
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form, $clase);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                $raw['filtros'] = $this->getFiltros($form);
                 General::get()->setExportar($em->getRepository(TesMovimiento::class)->lista($raw), "Movimientos");
             }
         }
         $arMovimientos = $paginator->paginate($em->getRepository(TesMovimiento::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('tesoreria/movimiento/movimiento/lista.html.twig', [
             'arMovimientos' => $arMovimientos,
+            'clase' => $clase,
             'form' => $form->createView(),
         ]);
     }
@@ -107,21 +108,29 @@ class MovimientoController extends AbstractController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/tesoreria/movimiento/movimiento/movimiento/nuevo/{id}", name="tesoreria_movimiento_movimiento_movimiento_nuevo")
+     * @Route("/tesoreria/movimiento/movimiento/movimiento/nuevo/{id}/{clase}", name="tesoreria_movimiento_movimiento_movimiento_nuevo")
      */
-    public function nuevo(Request $request, $id)
+    public function nuevo(Request $request, $id, $clase)
     {
         $em = $this->getDoctrine()->getManager();
         $arMovimiento = new TesMovimiento();
         if ($id != 0) {
             $arMovimiento = $em->getRepository(TesMovimiento::class)->find($id);
-            if (!$arMovimiento) {
-                return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_lista'));
-            }
+
         } else {
-            $arMovimiento->setFechaPago(new \DateTime('now'));
+            $arMovimiento->setMovimientoClaseRel($em->getReference(TesMovimientoClase::class, $clase));
+            $arMovimiento->setFecha(new \DateTime('now'));
         }
-        $form = $this->createForm(MovimientoType::class, $arMovimiento);
+
+        switch ($clase) {
+            case 'EG':
+                $form = $this->createForm(MovimientoType::class, $arMovimiento);
+                break;
+            case 'CP':
+                $form = $this->createForm(MovimientoCompraType::class, $arMovimiento);
+                break;
+        }
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
@@ -129,23 +138,37 @@ class MovimientoController extends AbstractController
                 if ($txtCodigoTercero != '') {
                     $arTercero = $em->getRepository(TesTercero::class)->find($txtCodigoTercero);
                     if ($arTercero) {
-                        $arMovimiento->setTerceroRel($arTercero);
-                        if ($id == 0) {
-                            $arMovimiento->setFecha(new \DateTime('now'));
+                        if($arMovimiento->getMovimientoTipoRel()) {
+                            $arMovimiento->setTerceroRel($arTercero);
+                            $em->persist($arMovimiento);
+                            $em->flush();
+                            return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
+                        } else {
+                            Mensajes::error('Debe seleccionar un tipo');
                         }
-                        $em->persist($arMovimiento);
-                        $em->flush();
-                        return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
                     }
                 } else {
                     Mensajes::error('Debe seleccionar un tercero');
                 }
             }
         }
-        return $this->render('tesoreria/movimiento/movimiento/nuevo.html.twig', [
-            'arMovimiento' => $arMovimiento,
-            'form' => $form->createView()
-        ]);
+        switch ($clase) {
+            case 'EG':
+                return $this->render('tesoreria/movimiento/movimiento/nuevo.html.twig', [
+                    'arMovimiento' => $arMovimiento,
+                    'clase' => $clase,
+                    'form' => $form->createView()
+                ]);
+                break;
+            case 'CP':
+                return $this->render('tesoreria/movimiento/movimiento/nuevoCompra.html.twig', [
+                    'arMovimiento' => $arMovimiento,
+                    'clase' => $clase,
+                    'form' => $form->createView()
+                ]);
+                break;
+        }
+
     }
 
     /**
@@ -179,6 +202,7 @@ class MovimientoController extends AbstractController
             $arrControles = $request->request->All();
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TesMovimientoDetalle::class)->actualizar($arrControles, $id);
+                $em->getRepository(TesMovimiento::class)->liquidar($id);
                 $em->getRepository(TesMovimiento::class)->autorizar($arMovimiento);
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
             }
@@ -194,11 +218,8 @@ class MovimientoController extends AbstractController
                 $em->getRepository(TesMovimiento::class)->aprobar($arMovimiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                $formato = new Egreso();
+                $formato = new Movimiento();
                 $formato->Generar($em, $id);
-                $arMovimiento->setEstadoImpreso(1);
-                $em->persist($arMovimiento);
-                $em->flush();
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository(TesMovimiento::class)->anular($arMovimiento);
@@ -217,7 +238,13 @@ class MovimientoController extends AbstractController
                 $arMovimientoDetalle = new TesMovimientoDetalle();
                 $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                 $arMovimientoDetalle->setTerceroRel($arMovimiento->getTerceroRel());
-                $arMovimientoDetalle->setNaturaleza('C');
+                if($arMovimiento->getCodigoMovimientoClaseFk() == 'EG') {
+                    $arMovimientoDetalle->setNaturaleza('C');
+                } else {
+                    $arMovimientoDetalle->setNaturaleza('D');
+                    $arMovimientoDetalle->setNumero($arMovimiento->getNumeroDocumento());
+                }
+
                 $em->persist($arMovimientoDetalle);
                 $em->flush();
                 $em->getRepository(TesMovimiento::class)->liquidar($id);
@@ -507,6 +534,7 @@ class MovimientoController extends AbstractController
     {
         $filtro = [
             'codigoMovimiento' => $form->get('codigoMovimientoPk')->getData(),
+            'numero' => $form->get('numero')->getData(),
             'codigoTercero' => $form->get('txtCodigoTercero')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,

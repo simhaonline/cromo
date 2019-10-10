@@ -12,10 +12,6 @@ use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenImpuesto;
 use App\Entity\Tesoreria\TesCuentaPagar;
-use App\Entity\Tesoreria\TesEgreso;
-use App\Entity\Tesoreria\TesEgresoDetalle;
-use App\Entity\Tesoreria\TesEgresoTipo;
-use App\Entity\Tesoreria\TesTercero;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -266,10 +262,10 @@ class CarIngresoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $respuesta = [];
         if ($arIngreso->getEstadoAprobado() == 1) {
-            $arIngresosDetalle = $em->getRepository(ComIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
+            $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
             foreach ($arIngresosDetalle as $arIngresoDetalle) {
                 if ($arIngresoDetalle->getCodigoCuentaPagarFk()) {
-                    $arCuentaPagarAplicacion = $em->getRepository(ComCuentaPagar::class)->find($arIngresoDetalle->getCodigoCuentaPagarFk());
+                    $arCuentaPagarAplicacion = $em->getRepository(TesCuentaPagar::class)->find($arIngresoDetalle->getCodigoCuentaPagarFk());
                     if ($arCuentaPagarAplicacion->getVrSaldo() <= $arIngresoDetalle->getVrPagoAfectar() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
                         $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arIngresoDetalle->getVrPagoAfectar();
                         $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();

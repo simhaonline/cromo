@@ -72,6 +72,16 @@ class TesMovimientoDetalle
     private $cuenta;
 
     /**
+     * @ORM\Column(name="detalle", type="string", length=800, nullable=true)
+     */
+    private $detalle;
+
+    /**
+     * @ORM\Column(name="codigo_centro_costo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCentroCostoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesMovimiento" , inversedBy="movimientoDetallesMovimientoRel")
      * @ORM\JoinColumn(name="codigo_movimiento_fk" , referencedColumnName="codigo_movimiento_pk")
      */
@@ -100,6 +110,12 @@ class TesMovimientoDetalle
      * @ORM\JoinColumn(name="codigo_banco_fk",referencedColumnName="codigo_banco_pk")
      */
     protected $bancoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCentroCosto", inversedBy="movimientosDetallesCentroCostoRel")
+     * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
+     */
+    protected $centroCostoRel;
 
     /**
      * @return mixed
@@ -356,6 +372,55 @@ class TesMovimientoDetalle
     {
         $this->bancoRel = $bancoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDetalle()
+    {
+        return $this->detalle;
+    }
+
+    /**
+     * @param mixed $detalle
+     */
+    public function setDetalle($detalle): void
+    {
+        $this->detalle = $detalle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCentroCostoFk()
+    {
+        return $this->codigoCentroCostoFk;
+    }
+
+    /**
+     * @param mixed $codigoCentroCostoFk
+     */
+    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
+    {
+        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCentroCostoRel()
+    {
+        return $this->centroCostoRel;
+    }
+
+    /**
+     * @param mixed $centroCostoRel
+     */
+    public function setCentroCostoRel($centroCostoRel): void
+    {
+        $this->centroCostoRel = $centroCostoRel;
+    }
+
 
 
 }

@@ -188,26 +188,6 @@ class TesTercero
     protected $cuentasPagarTerceroRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgreso" , mappedBy="terceroRel")
-     */
-    protected $egresosTerceroRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgresoDetalle" , mappedBy="terceroRel")
-     */
-    protected $egresosDetallesTerceroRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCompra" , mappedBy="terceroRel")
-     */
-    protected $comprasTerceroRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCompraDetalle" , mappedBy="terceroRel")
-     */
-    protected $comprasDetallesTerceroRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimiento" , mappedBy="terceroRel")
      */
     protected $movimientosTerceroRel;
@@ -567,70 +547,6 @@ class TesTercero
     public function setCuentasPagarTerceroRel($cuentasPagarTerceroRel): void
     {
         $this->cuentasPagarTerceroRel = $cuentasPagarTerceroRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEgresosTerceroRel()
-    {
-        return $this->egresosTerceroRel;
-    }
-
-    /**
-     * @param mixed $egresosTerceroRel
-     */
-    public function setEgresosTerceroRel($egresosTerceroRel): void
-    {
-        $this->egresosTerceroRel = $egresosTerceroRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEgresosDetallesTerceroRel()
-    {
-        return $this->egresosDetallesTerceroRel;
-    }
-
-    /**
-     * @param mixed $egresosDetallesTerceroRel
-     */
-    public function setEgresosDetallesTerceroRel($egresosDetallesTerceroRel): void
-    {
-        $this->egresosDetallesTerceroRel = $egresosDetallesTerceroRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComprasTerceroRel()
-    {
-        return $this->comprasTerceroRel;
-    }
-
-    /**
-     * @param mixed $comprasTerceroRel
-     */
-    public function setComprasTerceroRel($comprasTerceroRel): void
-    {
-        $this->comprasTerceroRel = $comprasTerceroRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComprasDetallesTerceroRel()
-    {
-        return $this->comprasDetallesTerceroRel;
-    }
-
-    /**
-     * @param mixed $comprasDetallesTerceroRel
-     */
-    public function setComprasDetallesTerceroRel($comprasDetallesTerceroRel): void
-    {
-        $this->comprasDetallesTerceroRel = $comprasDetallesTerceroRel;
     }
 
     /**

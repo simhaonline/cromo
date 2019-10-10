@@ -12,13 +12,13 @@
                             <div class="input-group">
                                 <input id="txtCodigoTercero" name="txtCodigoTercero" type="text"
                                        class="form-control"
-                                       value="{{ arCompra.codigoTerceroFk|default('') }}"/>
+                                       value="{{ arMovimiento.codigoTerceroFk|default('') }}"/>
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
                                 <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
-                                       value="{{ arCompra.terceroRel.nombreCorto |default('') }}"
+                                       value="{{ arMovimiento.terceroRel.nombreCorto |default('') }}"
                                        readOnly="ReadOnly"/>
                                 <span class="input-group-btn">
                                         <a class="btn btn-default btn-sm"
@@ -30,26 +30,23 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Tipo de compra:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.compraTipoRel, { 'attr': {'class': 'form-control'} }) }}
-                    <div style="color:red;">{{ form_errors(form.compraTipoRel) }}</div>
+                    {{ form_widget(form.movimientoTipoRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label">Numero documento:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Cuenta:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroDocumento) }}
-                    {{ form_errors(form.numeroDocumento) }}
+                    {{ form_widget(form.cuentaRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Fecha pago:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Fecha:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fecha) }}
-                    <div style="color:red;">{{ form_errors(form.compraTipoRel) }}</div>
                 </div>
-                <label class="col-sm-2 control-label"></label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Numero documento:</label>
                 <div class="col-sm-4">
-
+                    {{ form_widget(form.numeroDocumento) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -63,7 +60,7 @@
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm"
-           href="{{ path('tesoreria_movimiento_compra_compra_lista') }}">Cancelar</a>
+           href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase' : clase}) }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

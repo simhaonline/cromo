@@ -5,7 +5,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista') }}">Volver</a>&nbsp;&nbsp;
+               href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase' : arMovimiento.codigoMovimientoClaseFk}) }}">Volver</a>&nbsp;&nbsp;
         </div>
     </div>
     <div class="btn-toolbar" style="float:left">
@@ -18,7 +18,6 @@
         {% if arMovimiento.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arMovimiento.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arMovimiento.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
-        {% if arMovimiento.estadoImpreso == true %}<span class="label label-success">Impreso</span>{% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
@@ -44,8 +43,8 @@
         <tr>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arMovimiento.fecha | date('Y-m-d') }}</td>
-            <td class="titulo">FECHA PAGO:</td>
-            <td class="td-in-well">{{ arMovimiento.fechaPago | date('Y-m-d') }}</td>
+            <td class="titulo">NUMERO DOC:</td>
+            <td class="td-in-well">{{ arMovimiento.numeroDocumento }}</td>
             <td class="titulo">NETO:</td>
             <td class="td-in-well"
                 style="text-align: right;">{{ arMovimiento.vrTotalNeto |number_format(2, '.', ',') }}</td>
@@ -66,16 +65,25 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>COD</th>
-                            <th>TIPO</th>
-                            <th>DOC</th>
+                            {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
+                                <th>COD</th>
+                                <th>TIPO</th>
+                                <th>DOC</th>
+                            {% endif %}
+                            {% if arMovimiento.codigoMovimientoClaseFk == 'CP' %}
+                                <th>NUMERO</th>
+                            {% endif %}
                             <th>COD</th>
                             <th>TERCERO</th>
                             <th>CTA_C</th>
                             <th title="Naturaleza">N</th>
                             <th style="width: 12%;">PAGO</th>
-                            <th>CUENTA</th>
-                            <th>BANCO</th>
+                            <th>DET</th>
+                            <th>C_C</th>
+                            {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
+                                <th>CUENTA</th>
+                                <th>BANCO</th>
+                            {% endif %}
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
@@ -84,10 +92,21 @@
                         {% for arMovimientoDetalle in arMovimientoDetalles %}
                             <tr>
                                 <td>{{ arMovimientoDetalle.codigoMovimientoDetallePk }}</td>
-                                <td>{{ arMovimientoDetalle.codigoCuentaPagarFk }}</td>
-                                <td>{{ arMovimientoDetalle.codigoCuentaPagarTipoFk }}</td>
-                                <td>{{ arMovimientoDetalle.numero }}</td>
+                                {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
+                                    <td>{{ arMovimientoDetalle.codigoCuentaPagarFk }}</td>
+                                    <td>{{ arMovimientoDetalle.codigoCuentaPagarTipoFk }}</td>
+                                    <td>{{ arMovimientoDetalle.numero }}</td>
+                                {% endif %}
                                 {% if arMovimiento.estadoAutorizado == false %}
+                                    {% if arMovimiento.codigoMovimientoClaseFk == 'CP' %}
+                                        <td>
+                                            <input type="text"
+                                                   name="arrNumero[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                   id="arrNumero[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                   value="{{ arMovimientoDetalle.numero }}"
+                                                   style="text-align: left; width:60px" size="20">
+                                        </td>
+                                    {% endif %}
                                     <td>
                                         <input type="text"
                                                name="arrTercero[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
@@ -122,15 +141,38 @@
                                                value="{{ arMovimientoDetalle.vrPago }}"
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
+                                    <td style="text-align: center">
+                                        <input type="text"
+                                               name="arrDetalle[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrDetalle[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.detalle }}"
+                                               style="text-align: left; width:120px" size="10">
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               name="arrCentroCosto[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrCentroCosto[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.codigoCentroCostoFk }}"
+                                               style="text-align: left; width:120px" size="20">
+                                        <a href="javascript:abrirVentana3('{{ path('financiero_buscar_centrocosto_asiento',{'campoCodigo' : 'arrCentroCosto['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarCentroCosto',600,900)"
+                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
                                 {% else %}
+                                    {% if arMovimiento.codigoMovimientoClaseFk == 'CP' %}
+                                        <td>{{ arMovimientoDetalle.numero }}</td>
+                                    {% endif %}
                                     <td>{{ arMovimientoDetalle.codigoTerceroFk }}</td>
                                     <td>{{ arMovimientoDetalle.terceroNombreCorto }}</td>
                                     <td>{{ arMovimientoDetalle.codigoCuentaFk }}</td>
                                     <td>{{ arMovimientoDetalle.naturaleza }}</td>
                                     <td style="text-align: right">{{ arMovimientoDetalle.vrPago | number_format(0, '.', ',') }}</td>
+                                    <td>{{ arMovimientoDetalle.detalle }}</td>
+                                    <td>{{ arMovimientoDetalle.codigoCentroCostoFk }}</td>
                                 {% endif %}
-                                <td>{{ arMovimientoDetalle.cuenta }}</td>
-                                <td>{{ arMovimientoDetalle.codigoBancoFk }}</td>
+                                {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
+                                    <td>{{ arMovimientoDetalle.cuenta }}</td>
+                                    <td>{{ arMovimientoDetalle.codigoBancoFk }}</td>
+                                {% endif %}
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/>
                                 </td>
@@ -142,12 +184,11 @@
                 {#<div class="separador-1"></div>#}
                 <div class="btn-toolbar" style="float: right">
                     <div class="btn-group">
-                        {% if arMovimiento.estadoAutorizado == true %}
-                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
-                                   value="Nuevo"/>
-                        {% else %}
-                            <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('tesoreria_movimiento_movimiento_movimiente_detalle_nuevo', {'id' : arMovimiento.codigoMovimientoPk }) }}', 'movimiento detalle', 600, 1200)">Nuevo</a>
+                        {% if arMovimiento.estadoAutorizado == false %}
+                            {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
+                                <a class="btn btn-default btn-sm"
+                                   href="javascript:abrirVentana3('{{ path('tesoreria_movimiento_movimiento_movimiente_detalle_nuevo', {'id' : arMovimiento.codigoMovimientoPk }) }}', 'movimiento detalle', 600, 1200)">Nuevo</a>
+                            {% endif %}
                         {% endif %}
                     </div>
                     <div class="btn-group">

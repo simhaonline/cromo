@@ -2,11 +2,7 @@
 
 namespace App\Controller\Tesoreria\Buscar;
 
-use App\Entity\Compra\ComProveedor;
-use App\Entity\Financiero\FinTercero;
-use App\Entity\Inventario\InvTercero;
 use App\Entity\Tesoreria\TesTercero;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;

@@ -39,13 +39,18 @@ class CarAplicacionRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarAplicacion::class, 'a')
             ->select('a.codigoAplicacionPk')
+            ->addSelect('cc.codigoCuentaCobrarTipoFk')
             ->addSelect('a.numeroDocumento')
+            ->addSelect('cca.codigoCuentaCobrarTipoFk as codigoCuentaCobrarAplicacionTipoFk')
             ->addSelect('a.numeroDocumentoAplicacion')
             ->addSelect('a.vrAplicacion')
             ->addSelect('a.usuario')
             ->addSelect('a.estadoAutorizado')
             ->addSelect('a.estadoAprobado')
-            ->addSelect('a.estadoAnulado');
+            ->addSelect('a.estadoAnulado')
+            ->leftJoin('a.cuentaCobrarRel', 'cc')
+            ->leftJoin('a.cuentaCobrarAplicacionRel', 'cca')
+        ;
         if ($codigoAplicacion) {
             $queryBuilder->andWhere("a.codigoAplicacionPk = '{$codigoAplicacion}'");
         }

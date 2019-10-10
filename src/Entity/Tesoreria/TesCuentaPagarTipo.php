@@ -104,9 +104,9 @@ class TesCuentaPagarTipo
     protected $tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCompraTipo" , mappedBy="cuentaPagarTipoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoTipo" , mappedBy="cuentaPagarTipoRel")
      */
-    protected $comprasTiposCuentaPagarTipoRel;
+    protected $movimientosTiposCuentaPagarTipoRel;
 
     /**
      * @return mixed
@@ -335,22 +335,6 @@ class TesCuentaPagarTipo
     /**
      * @return mixed
      */
-    public function getTteDespachosRecogidasTiposCuentaPagarTipoRel()
-    {
-        return $this->tteDespachosRecogidasTiposCuentaPagarTipoRel;
-    }
-
-    /**
-     * @param mixed $tteDespachosRecogidasTiposCuentaPagarTipoRel
-     */
-    public function setTteDespachosRecogidasTiposCuentaPagarTipoRel($tteDespachosRecogidasTiposCuentaPagarTipoRel): void
-    {
-        $this->tteDespachosRecogidasTiposCuentaPagarTipoRel = $tteDespachosRecogidasTiposCuentaPagarTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getTteDespachosTiposCuentaPagarTipoAnticipoRel()
     {
         return $this->tteDespachosTiposCuentaPagarTipoAnticipoRel;
@@ -362,6 +346,22 @@ class TesCuentaPagarTipo
     public function setTteDespachosTiposCuentaPagarTipoAnticipoRel($tteDespachosTiposCuentaPagarTipoAnticipoRel): void
     {
         $this->tteDespachosTiposCuentaPagarTipoAnticipoRel = $tteDespachosTiposCuentaPagarTipoAnticipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTteDespachosRecogidasTiposCuentaPagarTipoRel()
+    {
+        return $this->tteDespachosRecogidasTiposCuentaPagarTipoRel;
+    }
+
+    /**
+     * @param mixed $tteDespachosRecogidasTiposCuentaPagarTipoRel
+     */
+    public function setTteDespachosRecogidasTiposCuentaPagarTipoRel($tteDespachosRecogidasTiposCuentaPagarTipoRel): void
+    {
+        $this->tteDespachosRecogidasTiposCuentaPagarTipoRel = $tteDespachosRecogidasTiposCuentaPagarTipoRel;
     }
 
     /**
@@ -383,17 +383,17 @@ class TesCuentaPagarTipo
     /**
      * @return mixed
      */
-    public function getComprasTiposCuentaPagarTipoRel()
+    public function getMovimientosTiposCuentaPagarTipoRel()
     {
-        return $this->comprasTiposCuentaPagarTipoRel;
+        return $this->movimientosTiposCuentaPagarTipoRel;
     }
 
     /**
-     * @param mixed $comprasTiposCuentaPagarTipoRel
+     * @param mixed $movimientosTiposCuentaPagarTipoRel
      */
-    public function setComprasTiposCuentaPagarTipoRel($comprasTiposCuentaPagarTipoRel): void
+    public function setMovimientosTiposCuentaPagarTipoRel($movimientosTiposCuentaPagarTipoRel): void
     {
-        $this->comprasTiposCuentaPagarTipoRel = $comprasTiposCuentaPagarTipoRel;
+        $this->movimientosTiposCuentaPagarTipoRel = $movimientosTiposCuentaPagarTipoRel;
     }
 
 

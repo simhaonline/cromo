@@ -63,9 +63,9 @@ class GenCuenta
     protected $anticiposCuentaRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesEgreso" , mappedBy="cuentaRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimiento" , mappedBy="cuentaRel")
      */
-    protected $egresosCuentaRel;
+    protected $movimientosCuentaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngreso" , mappedBy="cuentaRel")
@@ -219,17 +219,17 @@ class GenCuenta
     /**
      * @return mixed
      */
-    public function getEgresosCuentaRel()
+    public function getMovimientosCuentaRel()
     {
-        return $this->egresosCuentaRel;
+        return $this->movimientosCuentaRel;
     }
 
     /**
-     * @param mixed $egresosCuentaRel
+     * @param mixed $movimientosCuentaRel
      */
-    public function setEgresosCuentaRel($egresosCuentaRel): void
+    public function setMovimientosCuentaRel($movimientosCuentaRel): void
     {
-        $this->egresosCuentaRel = $egresosCuentaRel;
+        $this->movimientosCuentaRel = $movimientosCuentaRel;
     }
 
     /**

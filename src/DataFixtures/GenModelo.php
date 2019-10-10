@@ -164,8 +164,7 @@ class GenModelo extends Fixture
             ['codigo' =>'RhuTipoCotizacion',        'modulo'=> 'RecursoHumano',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 
             ['codigo' => 'TesCuentaPagar',          'modulo'=> 'Tesoreria',     'funcion' => 'Movimiento',  'grupo' => 'Pagar'],
-            ['codigo' => 'TesEgreso',               'modulo'=> 'Tesoreria',     'funcion' => 'Movimiento',  'grupo' => 'Egreso'],
-            ['codigo' => 'TesCompra',               'modulo'=> 'Tesoreria',     'funcion' => 'Movimiento',  'grupo' => 'Compra'],
+            ['codigo' => 'TesMovimiento',           'modulo'=> 'Tesoreria',     'funcion' => 'Movimiento',  'grupo' => 'Movimiento'],
             ['codigo' => 'TesTercero',              'modulo'=> 'Tesoreria',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
             ['codigo' => 'TesCuentaPagarTipo',      'modulo'=> 'Tesoreria',     'funcion' => 'Administracion',  'grupo' => 'Varios'],
 

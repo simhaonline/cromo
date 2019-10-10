@@ -2,13 +2,10 @@
 
 namespace App\Repository\Cartera;
 
-use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarIngresoDetalle;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\General\GenImpuesto;
-use App\Entity\Tesoreria\TesEgresoDetalle;
-use App\Entity\Tesoreria\TesTercero;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;

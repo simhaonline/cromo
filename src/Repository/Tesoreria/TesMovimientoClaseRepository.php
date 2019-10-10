@@ -2,18 +2,18 @@
 
 namespace App\Repository\Tesoreria;
 
-use App\Entity\Tesoreria\TesEgresoTipo;
+use App\Entity\Tesoreria\TesMovimientoClase;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 
-class TesEgresoTipoRepository extends ServiceEntityRepository
+class TesMovimientoClaseRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, TesEgresoTipo::class);
+        parent::__construct($registry, TesMovimientoClase::class);
     }
 
 
@@ -24,7 +24,7 @@ class TesEgresoTipoRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $array = [
-            'class' => TesEgresoTipo::class,
+            'class' => TesMovimientoClase::class,
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('et')
                     ->orderBy('et.nombre', 'ASC');
@@ -35,18 +35,18 @@ class TesEgresoTipoRepository extends ServiceEntityRepository
             'placeholder' => "TODOS",
             'data' => ""
         ];
-        if ($session->get('filtroComEgresoTipo')) {
-            $array['data'] = $this->getEntityManager()->getReference(TesEgresoTipo::class, $session->get('filtroComEgresoTipo'));
+        if ($session->get('filtroComMovimientoClase')) {
+            $array['data'] = $this->getEntityManager()->getReference(TesMovimientoClase::class, $session->get('filtroComMovimientoClase'));
         }
         return $array;
     }
 
     public function camposPredeterminados()
     {
-        $queryBuilder = $this->_em->createQueryBuilder()->from(TesEgresoTipo::class, 'et')
-            ->select('et.codigoEgresoTipoPk as ID')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(TesMovimientoClase::class, 'et')
+            ->select('et.codigoMovimientoClasePk as ID')
             ->addSelect('et.nombre')
-            ->where('et.codigoEgresoTipoPk IS NOT NULL');
+            ->where('et.codigoMovimientoClasePk IS NOT NULL');
         return $queryBuilder->getQuery()->execute();
     }
 }

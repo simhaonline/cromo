@@ -2,7 +2,6 @@
 
 namespace App\Repository\Tesoreria;
 
-use App\Entity\Compra\ComProveedor;
 use App\Entity\Financiero\FinTercero;
 use App\Entity\Tesoreria\TesTercero;
 use App\Utilidades\Mensajes;

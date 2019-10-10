@@ -762,6 +762,7 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->addSelect('cc.vrSaldo')
             ->addSelect('cc.vrAbono')
             ->addSelect('cc.vrSaldoOriginal')
+            ->addSelect('cc.vrSaldoOperado')
             ->addSelect('cc.plazo')
             ->addSelect('cc.fecha')
             ->addSelect('cc.fechaVence')
@@ -771,7 +772,6 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             ->join('cc.clienteRel', 'c')
             ->join('cc.cuentaCobrarTipoRel', 'cct')
             ->where('cc.vrSaldo <> 0')
-            ->andWhere('cc.operacion = 1')
             ->orderBy('cc.codigoCuentaCobrarPk', 'ASC');
 
 

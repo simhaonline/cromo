@@ -3,17 +3,15 @@
 namespace App\Form\Type\Tesoreria;
 
 
-use App\Entity\Compra\ComProveedor;
+
 use App\Entity\General\GenCiudad;
 use App\Entity\General\GenIdentificacion;
 use App\Entity\Tesoreria\TesTercero;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

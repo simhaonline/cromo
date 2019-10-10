@@ -49,7 +49,11 @@
                         <div class="col-sm-2">
                             {{ form_widget(form.fechaDesde) }}
                         </div>
-                        <label class="col-sm-1 control-label col-sm-offset-6">Aprobado:</label>
+                        <label class="col-sm-1 control-label">Numero:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.numero) }}
+                        </div>
+                        <label class="col-sm-1 control-label col-sm-offset-3">Aprobado:</label>
                         <div class="col-sm-2">
                             {{ form_widget(form.estadoAprobado, { 'attr': {'class': 'form-control'} }) }}
                         </div>
@@ -79,9 +83,10 @@
             <th>ID</th>
             <th>NUMERO</th>
             <th>FECHA</th>
-            <th title="Fecha de pago">FECHA P</th>
             <th>TIPO</th>
+            <th>DOC</th>
             <th>TERCERO</th>
+            <th>NETO</th>
             <th title="Estado autorizado">AUT</th>
             <th title="Estado aprobado">APR</th>
             <th title="Estado anulado">ANU</th>
@@ -95,9 +100,10 @@
                 <td>{{ arMovimiento.codigoMovimientoPk }}</td>
                 <td>{{ arMovimiento.numero }}</td>
                 <td>{{ arMovimiento.fecha | date('Y-m-d') }}</td>
-                <td>{{ arMovimiento.fechaPago | date('Y-m-d') }}</td>
                 <td>{{ arMovimiento.tipo }}</td>
+                <td>{{ arMovimiento.numeroDocumento }}</td>
                 <td>{{ arMovimiento.tercero }}</td>
+                <td class="numero">{{ arMovimiento.vrTotalNeto | number_format() }}</td>
                 <td>{{ arMovimiento.estadoAutorizado ? 'SI':'NO' }}</td>
                 <td>{{ arMovimiento.estadoAprobado ? 'SI':'NO' }}</td>
                 <td>{{ arMovimiento.estadoAnulado ? 'SI':'NO' }}</td>
@@ -105,12 +111,12 @@
                     <td></td>
                 {% else %}
                     <td style="text-align: center;">
-                        <a href="{{ path('tesoreria_movimiento_movimiento_movimiento_nuevo',{'id': arMovimiento.codigoMovimientoPk }) }}"><i
+                        <a href="{{ path('tesoreria_movimiento_movimiento_movimiento_nuevo',{'id': arMovimiento.codigoMovimientoPk, 'clase' : clase }) }}"><i
                                     class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                     </td>
                 {% endif %}
                 <td style="text-align: center;">
-                    <a href="{{ path('tesoreria_movimiento_movimiento_movimiento_detalle',{'id' : arMovimiento.codigoMovimientoPk }) }}">
+                    <a href="{{ path('tesoreria_movimiento_movimiento_movimiento_detalle', {'id' : arMovimiento.codigoMovimientoPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
@@ -139,7 +145,7 @@
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('tesoreria_movimiento_movimiento_movimiento_nuevo', {'id': 0}) }}">Nuevo</a>
+           href="{{ path('tesoreria_movimiento_movimiento_movimiento_nuevo', {'id': 0, 'clase' : clase}) }}">Nuevo</a>
     </div>
     <br/><br/>
     {{ form_end(form) }}

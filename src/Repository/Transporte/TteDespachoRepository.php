@@ -3,14 +3,12 @@
 namespace App\Repository\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
-use App\Entity\Compra\ComProveedor;
 use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Inventario\InvTercero;
-use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Entity\Transporte\TteCosto;
@@ -18,7 +16,6 @@ use App\Entity\Transporte\TteVehiculoDisponible;
 use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
-use App\Entity\Transporte\TteConsecutivo;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDespachoTipo;

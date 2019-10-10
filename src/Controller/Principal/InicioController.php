@@ -37,6 +37,10 @@ class InicioController extends Controller
             'arTareas' => $arTareas,
             'form' => $form->createView()
         ]);
+        /*return $this->render('v2/general/inicio.html.twig',[
+            'arTareas' => $arTareas,
+            'form' => $form->createView()
+        ]);*/
     }
 
     /**

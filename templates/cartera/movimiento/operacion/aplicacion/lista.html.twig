@@ -53,7 +53,9 @@
         <thead>
         <tr>
             <th title="Codigo del registro">ID</th>
+            <th>TIPO</th>
             <th title="Numero documento">NUMERO</th>
+            <th>TIPO</th>
             <th title="Numedo del documento que esta aplicando">NUMERO_A</th>
             <th title="Valor de la aplicacion">VR_APLICADO</th>
             <th title="Usuario">USU</th>
@@ -70,14 +72,16 @@
         {% for arAplicacion in arAplicaciones %}
             <tr>
                 <td>{{ arAplicacion.codigoAplicacionPk }}</td>
+                <td>{{ arAplicacion.codigoCuentaCobrarTipoFk }}</td>
                 <td>{{ arAplicacion.numeroDocumento }}</td>
+                <td>{{ arAplicacion.codigoCuentaCobrarAplicacionTipoFk }}</td>
                 <td>{{ arAplicacion.numeroDocumentoAplicacion }}</td>
                 <td class="numero">{{ arAplicacion.vrAplicacion | number_format(0, '.', ',') }}</td>
                 <td>{{ arAplicacion.usuario }}</td>
                 <td>{{ arAplicacion.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arAplicacion.estadoAprobado ? "SI":"NO" }}</td>
                 <td>{{ arAplicacion.estadoAnulado ? "SI":"NO" }}</td>
-                {% if arIngreso.estadoAutorizado %}
+                {% if arAplicacion.estadoAutorizado %}
                     <td></td>
                 {% else %}
                     <td class="text-center">

@@ -93,7 +93,9 @@
             <th>IDENTIFICACION</th>
             <th>TERCERO</th>
             <th>BANCO</th>
-            <th>TOTAL</th>
+            <th>ORIGINAL</th>
+            <th>ABONO</th>
+            <th>SALDO</th>
             <th title="Estado autorizado">AUT</th>
             <th title="Estado aprobado">APR</th>
             <th title="Estado anulado">ANU</th>
@@ -104,7 +106,7 @@
         <tbody>
         {% for arCuentaPagar in arCuentasPagar %}
             <tr>
-                <td>{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
+                <td><a href="javascript:abrirVentana3('{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_referencia',{'id': arCuentaPagar.codigoCuentaPagarPk }) }}','referencia',600,900)">{{ arCuentaPagar.codigoCuentaPagarPk }}</a></td>
                 <td>{{ arCuentaPagar.numeroDocumento }}</td>
                 <td>{{ arCuentaPagar.tipo }}</td>
                 <td>{{ arCuentaPagar.fecha | date('Y-m-d') }}</td>
@@ -112,7 +114,9 @@
                 <td>{{ arCuentaPagar.numeroIdentificacion }}</td>
                 <td>{{ arCuentaPagar.tercero }}</td>
                 <td>{{ arCuentaPagar.banco }}</td>
-                <td class="numero">{{ arCuentaPagar.vrTotal | number_format }}</td>
+                <td class="numero">{{ arCuentaPagar.vrSaldoOriginal | number_format }}</td>
+                <td class="numero">{{ arCuentaPagar.vrAbono | number_format }}</td>
+                <td class="numero">{{ arCuentaPagar.vrSaldoOperado | number_format }}</td>
                 <td>{{ arCuentaPagar.estadoAutorizado ? 'SI':'NO' }}</td>
                 <td>{{ arCuentaPagar.estadoAprobado ? 'SI':'NO' }}</td>
                 <td>{{ arCuentaPagar.estadoAnulado ? 'SI':'NO' }}</td>

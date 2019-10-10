@@ -22,6 +22,11 @@ class TesMovimiento
     private $codigoMovimientoPk;
 
     /**
+     * @ORM\Column(name="codigo_movimiento_clase_fk" , type="string" , length=10, nullable=true)
+     */
+    private $codigoMovimientoClaseFk;
+
+    /**
      * @ORM\Column(name="codigo_movimiento_tipo_fk" , type="string" , length=10, nullable=true)
      */
     private $codigoMovimientoTipoFk;
@@ -42,14 +47,14 @@ class TesMovimiento
     private $fecha;
 
     /**
-     * @ORM\Column(name="fecha_pago", type="date", nullable=true)
-     */
-    private $fechaPago;
-
-    /**
      * @ORM\Column(name="numero" , type="integer")
      */
     private $numero = 0;
+
+    /**
+     * @ORM\Column(name="numero_documento" , type="string", length=30, nullable=true)
+     */
+    private $numeroDocumento;
 
     /**
      * @ORM\Column(name="comentarios" , type="string", nullable=true)
@@ -82,9 +87,16 @@ class TesMovimiento
     private $estadoContabilizado = false;
 
     /**
-     * @ORM\Column(name="estado_impreso", type="boolean",options={"default" : false}, nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesMovimientoClase" , inversedBy="movimientosMovimientoClaseRel")
+     * @ORM\JoinColumn(name="codigo_movimiento_clase_fk" , referencedColumnName="codigo_movimiento_clase_pk")
      */
-    private $estadoImpreso = false;
+    private $movimientoClaseRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesMovimientoTipo" , inversedBy="movimientosMovimientoTipoRel")
+     * @ORM\JoinColumn(name="codigo_movimiento_tipo_fk" , referencedColumnName="codigo_movimiento_tipo_pk")
+     */
+    private $movimientoTipoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesTercero" , inversedBy="movimientosTerceroRel")
@@ -93,10 +105,10 @@ class TesMovimiento
     private $terceroRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Tesoreria\TesMovimientoTipo" , inversedBy="movimientosMovimientoTipoRel")
-     * @ORM\JoinColumn(name="codigo_movimiento_tipo_fk" , referencedColumnName="codigo_movimiento_tipo_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCuenta" , inversedBy="movimientosCuentaRel")
+     * @ORM\JoinColumn(name="codigo_cuenta_fk" , referencedColumnName="codigo_cuenta_pk")
      */
-    private $movimientoTipoRel;
+    private $cuentaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoDetalle", mappedBy="movimientoRel")
@@ -117,6 +129,22 @@ class TesMovimiento
     public function setCodigoMovimientoPk($codigoMovimientoPk): void
     {
         $this->codigoMovimientoPk = $codigoMovimientoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoMovimientoClaseFk()
+    {
+        return $this->codigoMovimientoClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoMovimientoClaseFk
+     */
+    public function setCodigoMovimientoClaseFk($codigoMovimientoClaseFk): void
+    {
+        $this->codigoMovimientoClaseFk = $codigoMovimientoClaseFk;
     }
 
     /**
@@ -181,22 +209,6 @@ class TesMovimiento
     public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaPago()
-    {
-        return $this->fechaPago;
-    }
-
-    /**
-     * @param mixed $fechaPago
-     */
-    public function setFechaPago($fechaPago): void
-    {
-        $this->fechaPago = $fechaPago;
     }
 
     /**
@@ -314,33 +326,17 @@ class TesMovimiento
     /**
      * @return mixed
      */
-    public function getEstadoImpreso()
+    public function getMovimientoClaseRel()
     {
-        return $this->estadoImpreso;
+        return $this->movimientoClaseRel;
     }
 
     /**
-     * @param mixed $estadoImpreso
+     * @param mixed $movimientoClaseRel
      */
-    public function setEstadoImpreso($estadoImpreso): void
+    public function setMovimientoClaseRel($movimientoClaseRel): void
     {
-        $this->estadoImpreso = $estadoImpreso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTerceroRel()
-    {
-        return $this->terceroRel;
-    }
-
-    /**
-     * @param mixed $terceroRel
-     */
-    public function setTerceroRel($terceroRel): void
-    {
-        $this->terceroRel = $terceroRel;
+        $this->movimientoClaseRel = $movimientoClaseRel;
     }
 
     /**
@@ -362,6 +358,38 @@ class TesMovimiento
     /**
      * @return mixed
      */
+    public function getTerceroRel()
+    {
+        return $this->terceroRel;
+    }
+
+    /**
+     * @param mixed $terceroRel
+     */
+    public function setTerceroRel($terceroRel): void
+    {
+        $this->terceroRel = $terceroRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCuentaRel()
+    {
+        return $this->cuentaRel;
+    }
+
+    /**
+     * @param mixed $cuentaRel
+     */
+    public function setCuentaRel($cuentaRel): void
+    {
+        $this->cuentaRel = $cuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getMovimientoDetallesMovimientoRel()
     {
         return $this->movimientoDetallesMovimientoRel;
@@ -374,6 +402,23 @@ class TesMovimiento
     {
         $this->movimientoDetallesMovimientoRel = $movimientoDetallesMovimientoRel;
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroDocumento()
+    {
+        return $this->numeroDocumento;
+    }
+
+    /**
+     * @param mixed $numeroDocumento
+     */
+    public function setNumeroDocumento($numeroDocumento): void
+    {
+        $this->numeroDocumento = $numeroDocumento;
+    }
+
+
 
 }

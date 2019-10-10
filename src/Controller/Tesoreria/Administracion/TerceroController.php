@@ -3,9 +3,7 @@
 namespace App\Controller\Tesoreria\Administracion;
 
 use App\Controller\BaseController;
-use App\Entity\Compra\ComProveedor;
 use App\Entity\Tesoreria\TesTercero;
-use App\Form\Type\Compra\ProveedorType;
 use App\Form\Type\Tesoreria\TerceroType;
 use App\General\General;
 use App\Utilidades\Estandares;

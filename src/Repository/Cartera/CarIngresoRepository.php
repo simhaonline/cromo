@@ -264,7 +264,7 @@ class CarIngresoRepository extends ServiceEntityRepository
             $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
             foreach ($arIngresosDetalle as $arIngresoDetalle) {
                 if ($arIngresoDetalle->getCodigoCuentaCobrarFk()) {
-                    $arCuentaPagarAplicacion = $em->getRepository(TesCuentaPagar::class)->find($arIngresoDetalle->getCodigoCuentaPagarFk());
+                    $arCuentaPagarAplicacion = $em->getRepository(TesCuentaPagar::class)->find($arIngresoDetalle->getCodigoCuentaCobrarFk());
                     if ($arCuentaPagarAplicacion->getVrSaldo() <= $arIngresoDetalle->getVrPagoAfectar() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
                         $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arIngresoDetalle->getVrPagoAfectar();
                         $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();

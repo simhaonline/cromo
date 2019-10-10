@@ -35,8 +35,49 @@ class InvTerceroRepository extends ServiceEntityRepository
     }
 
     /**
+     * Esta función se crea con la idea de separar la lista del controlador de la lista del buscar avanzado
      * @return \Doctrine\ORM\QueryBuilder
      */
+    public function listaControlador($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoTercero = null;
+        $nombreTercero = null;
+
+        if ($filtros) {
+            $codigoTercero = $filtros['codigoTercero'] ?? null;
+            $nombreTercero = $filtros['nombreTercero'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvTercero::class, 't')
+            ->select('t.codigoTerceroPk')
+            ->addSelect('t.codigoIdentificacionFk')
+            ->addSelect('t.numeroIdentificacion')
+            ->addSelect('t.digitoVerificacion')
+            ->addSelect('t.nombreCorto')
+            ->addSelect('t.telefono')
+            ->addSelect('t.direccion')
+            ->addSelect('c.nombre AS ciudadNombre')
+            ->addSelect('t.cliente')
+            ->addSelect('t.proveedor')
+            ->addSelect('t.retencionFuente')
+            ->addSelect('t.retencionFuenteSinBase')
+            ->leftJoin('t.ciudadRel', 'c')
+            ->where('t.codigoTerceroPk <> 0');
+        if ($codigoTercero) {
+            $queryBuilder->andWhere("t.codigoTerceroPk = {$codigoTercero}");
+        }
+        if ($nombreTercero) {
+            $queryBuilder->andWhere("t.nombreCorto LIKE '%{$nombreTercero}%'");
+        }
+        $queryBuilder->addOrderBy('t.codigoTerceroPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+
+    }
+
     public function lista($terceroTipo)
     {
         $session = new Session();

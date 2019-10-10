@@ -265,14 +265,14 @@ class CarIngresoRepository extends ServiceEntityRepository
                 $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
                 foreach ($arIngresosDetalle as $arIngresoDetalle) {
                     if ($arIngresoDetalle->getCodigoCuentaCobrarFk()) {
-                        $arCuentaPagarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arIngresoDetalle->getCodigoCuentaCobrarFk());
-                        if ($arCuentaPagarAplicacion->getVrSaldo() <= $arIngresoDetalle->getVrPago() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
-                            $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arIngresoDetalle->getVrPago();
-                            $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();
-                            $arCuentaPagarAplicacion->setVrSaldo($saldo);
-                            $arCuentaPagarAplicacion->setvRSaldoOperado($saldoOperado);
-                            $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() - $arIngresoDetalle->getVrPago());
-                            $em->persist($arCuentaPagarAplicacion);
+                        $arCuentaCobrarAplicacion = $em->getRepository(CarCuentaCobrar::class)->find($arIngresoDetalle->getCodigoCuentaCobrarFk());
+                        if ($arCuentaCobrarAplicacion->getVrSaldo() <= $arIngresoDetalle->getVrPago() || $arCuentaCobrarAplicacion->getVrSaldo() == 0) {
+                            $saldo = $arCuentaCobrarAplicacion->getVrSaldo() + $arIngresoDetalle->getVrPago();
+                            $saldoOperado = $saldo * $arCuentaCobrarAplicacion->getOperacion();
+                            $arCuentaCobrarAplicacion->setVrSaldo($saldo);
+                            $arCuentaCobrarAplicacion->setvRSaldoOperado($saldoOperado);
+                            $arCuentaCobrarAplicacion->setVrAbono($arCuentaCobrarAplicacion->getVrAbono() - $arIngresoDetalle->getVrPago());
+                            $em->persist($arCuentaCobrarAplicacion);
                         }
                     }
                     $arIngresoDetalle->setVrPago(0);

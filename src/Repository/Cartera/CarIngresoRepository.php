@@ -65,8 +65,7 @@ class CarIngresoRepository extends ServiceEntityRepository
             ->addSelect('i.estadoAnulado')
             ->leftJoin('i.ingresoTipoRel', 'it')
             ->leftJoin('i.clienteRel', 'cl')
-            ->leftJoin('i.cuentaRel', 'cu')
-        ;
+            ->leftJoin('i.cuentaRel', 'cu');
         if ($codigoIngreso) {
             $queryBuilder->andWhere("i.codigoIngresoPk = '{$codigoIngreso}'");
         }
@@ -124,7 +123,7 @@ class CarIngresoRepository extends ServiceEntityRepository
         $arIngreso = $em->getRepository(CarIngreso::class)->find($id);
         $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $id));
         foreach ($arIngresosDetalle as $arIngresoDetalle) {
-            if($arIngresoDetalle->getNaturaleza() == 'D') {
+            if ($arIngresoDetalle->getNaturaleza() == 'D') {
                 $debito += $arIngresoDetalle->getVrPago();
             } else {
                 $credito += $arIngresoDetalle->getVrPago();
@@ -133,7 +132,7 @@ class CarIngresoRepository extends ServiceEntityRepository
             $retencionTotal += $arIngresoDetalle->getVrRetencion();
         }
         $totalBruto = $credito - $debito;
-        $totalNeto  = $totalBruto - $retencionTotal;
+        $totalNeto = $totalBruto - $retencionTotal;
         $arIngreso->setVrTotalBruto($totalBruto);
         $arIngreso->setVrRetencion($retencionTotal);
         $arIngreso->setVrTotalNeto($totalNeto);
@@ -177,7 +176,7 @@ class CarIngresoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arIngreso->getEstadoAutorizado() == 0) {
             $error = false;
-            if($arIngreso->getVrTotalNeto() >= 0) {
+            if ($arIngreso->getVrTotalNeto() >= 0) {
                 $arIngresosDetalles = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
                 if ($arIngresosDetalles) {
                     foreach ($arIngresosDetalles AS $arIngresoDetalle) {
@@ -196,7 +195,7 @@ class CarIngresoRepository extends ServiceEntityRepository
                                 break;
                             }
                         }
-                        if(!$arIngresoDetalle->getCodigoCuentaFk()) {
+                        if (!$arIngresoDetalle->getCodigoCuentaFk()) {
                             Mensajes::error('En detalle ' . $arIngresoDetalle->getCodigoIngresoDetallePk() . " no tiene asignada una cuenta");
                             $error = true;
                             break;
@@ -221,7 +220,7 @@ class CarIngresoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arIngresoDetalles = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
         foreach ($arIngresoDetalles AS $arIngresoDetalle) {
-            if($arIngresoDetalle->getCodigoCuentaCobrarFk()) {
+            if ($arIngresoDetalle->getCodigoCuentaCobrarFk()) {
                 $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($arIngresoDetalle->getCodigoCuentaCobrarFk());
                 $saldo = $arCuentaCobrar->getVrSaldo() + $arIngresoDetalle->getVrPago();
                 $saldoOperado = $saldo * $arCuentaCobrar->getOperacion();
@@ -264,7 +263,7 @@ class CarIngresoRepository extends ServiceEntityRepository
         if ($arIngreso->getEstadoAprobado() == 1) {
             $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(array('codigoIngresoFk' => $arIngreso->getCodigoIngresoPk()));
             foreach ($arIngresosDetalle as $arIngresoDetalle) {
-                if ($arIngresoDetalle->getCodigoCuentaPagarFk()) {
+                if ($arIngresoDetalle->getCodigoCuentaCobrarFk()) {
                     $arCuentaPagarAplicacion = $em->getRepository(TesCuentaPagar::class)->find($arIngresoDetalle->getCodigoCuentaPagarFk());
                     if ($arCuentaPagarAplicacion->getVrSaldo() <= $arIngresoDetalle->getVrPagoAfectar() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
                         $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arIngresoDetalle->getVrPagoAfectar();
@@ -337,10 +336,10 @@ class CarIngresoRepository extends ServiceEntityRepository
                                     //Cuenta proveedor
                                     if ($arIngresoDetalle['vrPago'] > 0) {
                                         $arClienteDetalle = null;
-                                        if($arIngresoDetalle['codigoClienteFk']) {
+                                        if ($arIngresoDetalle['codigoClienteFk']) {
                                             $arClienteDetalle = $em->getRepository(CarCliente::class)->terceroFinanciero($arIngresoDetalle['codigoClienteFk']);
                                         }
-                                        $descripcion = "CLIENTES DOC " . $arIngresoDetalle['numero'] ;
+                                        $descripcion = "CLIENTES DOC " . $arIngresoDetalle['numero'];
                                         $cuenta = $arIngresoDetalle['codigoCuentaFk'];
                                         if ($cuenta) {
                                             $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
@@ -357,7 +356,7 @@ class CarIngresoRepository extends ServiceEntityRepository
                                             $arRegistro->setNumeroReferencia($arIngresoDetalle['numero']);
                                             $arRegistro->setFecha($fecha);
                                             $arRegistro->setFechaVence($fecha);
-                                            if($arIngresoDetalle['naturaleza'] == 'D') {
+                                            if ($arIngresoDetalle['naturaleza'] == 'D') {
                                                 $arRegistro->setVrDebito($arIngresoDetalle['vrPago']);
                                             } else {
                                                 $arRegistro->setVrCredito($arIngresoDetalle['vrPago']);
@@ -368,8 +367,8 @@ class CarIngresoRepository extends ServiceEntityRepository
                                             $arRegistro->setCodigoDocumento($arIngreso['codigoIngresoPk']);
                                             $em->persist($arRegistro);
 
-                                            if($arIngresoDetalle['codigoImpuestoRetencionFk'] != "R00") {
-                                                if($arIngresoDetalle['vrRetencion'] > 0) {
+                                            if ($arIngresoDetalle['codigoImpuestoRetencionFk'] != "R00") {
+                                                if ($arIngresoDetalle['vrRetencion'] > 0) {
                                                     $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arIngresoDetalle['codigoImpuestoRetencionFk']);
                                                     $cuenta = $arImpuesto->getCodigoCuentaFk();
                                                     if ($cuenta) {
@@ -457,7 +456,6 @@ class CarIngresoRepository extends ServiceEntityRepository
         }
         return true;
     }
-
 
 
 }

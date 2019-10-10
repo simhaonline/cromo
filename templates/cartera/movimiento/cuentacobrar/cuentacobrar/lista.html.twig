@@ -105,13 +105,16 @@
             <th title="Anulado">ANU</th>
             <th></th>
             <th></th>
-            <th><input type="checkbox" name="ChkSeleccionar" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"></th>
+            <th><input type="checkbox" name="ChkSeleccionar" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]');">
+            </th>
         </tr>
         </thead>
         <tbody>
         {% for arCuentaCobrar in arCuentaCobrar %}
             <tr>
-                <td><a href="javascript:abrirVentana3('{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_referencia',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</a></td>
+                <td>
+                    <a href="javascript:abrirVentana3('{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_referencia',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}','referencia',600,900)">{{ arCuentaCobrar.codigoCuentaCobrarPk }}</a>
+                </td>
                 <td>{{ arCuentaCobrar.tipo }}</td>
                 <td>{{ arCuentaCobrar.numeroDocumento }}</td>
                 <td>{{ arCuentaCobrar.numeroReferencia }}</td>
@@ -125,16 +128,11 @@
                 <td class="numero">{{ arCuentaCobrar.vrSaldo | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arCuentaCobrar.vrSaldoOperado | number_format(0, '.', ',') }}</td>
                 <td>{{ arCuentaCobrar.estadoAutorizado ? "SI":"NO" }}</td>
-                <td>{{ arCuentaCobrar.estadoAprobado ? "SI":"NO"}}</td>
-                <td>{{ arCuentaCobrar.estadoAnulado ? "SI":"NO"}}</td>
-                {% if arCuentaCobrar.estadoAutorizado %}
-                    <td></td>
-                {% else %}
-                    <td class="text-center">
-                        <a href="{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_nuevo',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}"><i
-                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                    </td>
-                {% endif %}
+                <td>{{ arCuentaCobrar.estadoAprobado ? "SI":"NO" }}</td>
+                <td>{{ arCuentaCobrar.estadoAnulado ? "SI":"NO" }}</td>
+                <td class="text-center">
+                    <a href="{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_nuevo',{'id': arCuentaCobrar.codigoCuentaCobrarPk }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 <td class="text-center">
                     <a href="{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_detalle',{'id' : arCuentaCobrar.codigoCuentaCobrarPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
@@ -142,7 +140,7 @@
                     </a>
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arCuentaCobrar.codigoCuentaCobrarPk }}" />
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arCuentaCobrar.codigoCuentaCobrarPk }}"/>
                 </td>
             </tr>
         {% endfor %}

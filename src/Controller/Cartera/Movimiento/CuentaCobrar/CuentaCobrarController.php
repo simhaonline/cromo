@@ -11,8 +11,8 @@ use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarIngresoDetalle;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Form\Type\Cartera\CuentaCobrarEditarType;
 use App\Form\Type\Cartera\CuentaCobrarType;
-use App\Form\Type\Compra\CuentaPagarType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Doctrine\ORM\EntityRepository;
@@ -42,7 +42,7 @@ class CuentaCobrarController extends AbstractController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/cartera/movimiento/cartera/cuentacobrar/lista", name="cartera_movimiento_cuentacobrar_cuentacobrar_lista")
      */
-    public function lista(Request $request, PaginatorInterface $paginator )
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
@@ -60,8 +60,8 @@ class CuentaCobrarController extends AbstractController
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -105,43 +105,54 @@ class CuentaCobrarController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $objFunciones = new FuncionesController();
-        $arCuentaCobrar = new CarCuentaCobrar();
+        $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
         if ($id != 0) {
-            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->find($id);
-            if (!$arCuentaCobrar) {
-                return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_lista'));
-            }
-        } else {
-            $arCuentaCobrar->setFecha(new \DateTime('now'));
-        }
-        $form = $this->createForm(CuentaCobrarType::class, $arCuentaCobrar);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                $txtCodigoCliente = $request->request->get('txtCodigoCliente');
-                if ($txtCodigoCliente != '') {
-                    $arCliente = $em->getRepository(CarCliente::class)->find($txtCodigoCliente);
-                    if ($arCliente) {
-                        $arCuentaCobrar->setClienteRel($arCliente);
-                        $arCuentaCobrar->setModulo("CAR");
-                        $arCuentaCobrar->setFechaVence($objFunciones->sumarDiasFechaNumero($arCuentaCobrar->getPlazo(), $arCuentaCobrar->getFecha()));
-                        $arCuentaCobrar->setOperacion($arCuentaCobrar->getCuentaCobrarTipoRel()->getOperacion());
-                        $arCuentaCobrar->setVrSaldo($arCuentaCobrar->getVrTotal());
-                        $arCuentaCobrar->setVrSaldoOperado($arCuentaCobrar->getVrTotal() * $arCuentaCobrar->getOperacion());
-                        $arCuentaCobrar->setEstadoAutorizado(1);
-                        $arCuentaCobrar->setEstadoAprobado(1);
-                        $em->persist($arCuentaCobrar);
-                        $em->flush();
-                        return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_detalle', ['id' => $arCuentaCobrar->getCodigoCuentaCobrarPk()]));
-                    }
+            $form = $this->createForm(CuentaCobrarEditarType::class, $arCuentaCobrar);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                if ($form->get('guardar')->isClicked()) {
+                    $em->persist($arCuentaCobrar);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_detalle', ['id' => $arCuentaCobrar->getCodigoCuentaCobrarPk()]));
                 }
-
             }
+            return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/editarAsesor.html.twig', [
+                'arCuentaCobrar' => $arCuentaCobrar,
+                'form' => $form->createView()
+            ]);
+        } else {
+            $arCuentaCobrar = new CarCuentaCobrar();
+            $arCuentaCobrar->setFecha(new \DateTime('now'));
+            $form = $this->createForm(CuentaCobrarType::class, $arCuentaCobrar);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                if ($form->get('guardar')->isClicked()) {
+                    $txtCodigoCliente = $request->request->get('txtCodigoCliente');
+                    if ($txtCodigoCliente != '') {
+                        $arCliente = $em->getRepository(CarCliente::class)->find($txtCodigoCliente);
+                        if ($arCliente) {
+                            $arCuentaCobrar->setClienteRel($arCliente);
+                            $arCuentaCobrar->setModulo("CAR");
+                            $arCuentaCobrar->setFechaVence($objFunciones->sumarDiasFechaNumero($arCuentaCobrar->getPlazo(), $arCuentaCobrar->getFecha()));
+                            $arCuentaCobrar->setOperacion($arCuentaCobrar->getCuentaCobrarTipoRel()->getOperacion());
+                            $arCuentaCobrar->setVrSaldo($arCuentaCobrar->getVrTotal());
+                            $arCuentaCobrar->setVrSaldoOperado($arCuentaCobrar->getVrTotal() * $arCuentaCobrar->getOperacion());
+                            $arCuentaCobrar->setEstadoAutorizado(1);
+                            $arCuentaCobrar->setEstadoAprobado(1);
+                            $em->persist($arCuentaCobrar);
+                            $em->flush();
+                            return $this->redirect($this->generateUrl('cartera_movimiento_cuentacobrar_cuentacobrar_detalle', ['id' => $arCuentaCobrar->getCodigoCuentaCobrarPk()]));
+                        }
+                    }
+
+                }
+            }
+            return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/nuevo.html.twig', [
+                'arCuentaCobrar' => $arCuentaCobrar,
+                'form' => $form->createView()
+            ]);
         }
-        return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/nuevo.html.twig', [
-            'arCuentaCobrar' => $arCuentaCobrar,
-            'form' => $form->createView()
-        ]);
+
     }
 
     /**

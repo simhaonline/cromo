@@ -188,16 +188,6 @@ class TesTercero
     protected $cuentasPagarTerceroRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCompra" , mappedBy="terceroRel")
-     */
-    protected $comprasTerceroRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCompraDetalle" , mappedBy="terceroRel")
-     */
-    protected $comprasDetallesTerceroRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimiento" , mappedBy="terceroRel")
      */
     protected $movimientosTerceroRel;
@@ -557,38 +547,6 @@ class TesTercero
     public function setCuentasPagarTerceroRel($cuentasPagarTerceroRel): void
     {
         $this->cuentasPagarTerceroRel = $cuentasPagarTerceroRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComprasTerceroRel()
-    {
-        return $this->comprasTerceroRel;
-    }
-
-    /**
-     * @param mixed $comprasTerceroRel
-     */
-    public function setComprasTerceroRel($comprasTerceroRel): void
-    {
-        $this->comprasTerceroRel = $comprasTerceroRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComprasDetallesTerceroRel()
-    {
-        return $this->comprasDetallesTerceroRel;
-    }
-
-    /**
-     * @param mixed $comprasDetallesTerceroRel
-     */
-    public function setComprasDetallesTerceroRel($comprasDetallesTerceroRel): void
-    {
-        $this->comprasDetallesTerceroRel = $comprasDetallesTerceroRel;
     }
 
     /**

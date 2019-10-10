@@ -90,11 +90,6 @@ class FinCentroCosto
     protected $contratosCentroCostoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCompraDetalle", mappedBy="centroCostoRel")
-     */
-    protected $comprasDetallesCentroCostoRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoDetalle", mappedBy="centroCostoRel")
      */
     protected $movimientosDetallesCentroCostoRel;
@@ -273,22 +268,6 @@ class FinCentroCosto
     public function setContratosCentroCostoRel($contratosCentroCostoRel): void
     {
         $this->contratosCentroCostoRel = $contratosCentroCostoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComprasDetallesCentroCostoRel()
-    {
-        return $this->comprasDetallesCentroCostoRel;
-    }
-
-    /**
-     * @param mixed $comprasDetallesCentroCostoRel
-     */
-    public function setComprasDetallesCentroCostoRel($comprasDetallesCentroCostoRel): void
-    {
-        $this->comprasDetallesCentroCostoRel = $comprasDetallesCentroCostoRel;
     }
 
     /**

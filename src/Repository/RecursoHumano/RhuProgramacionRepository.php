@@ -2,10 +2,6 @@
 
 namespace App\Repository\RecursoHumano;
 
-use App\Controller\Estructura\FuncionesController;
-use App\Entity\Compra\ComCuentaPagar;
-use App\Entity\Compra\ComCuentaPagarTipo;
-use App\Entity\Compra\ComProveedor;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;

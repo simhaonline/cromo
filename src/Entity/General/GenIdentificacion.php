@@ -87,11 +87,6 @@ class GenIdentificacion
     protected $finTercerosIdentificacionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComProveedor", mappedBy="identificacionRel")
-     */
-    protected $comProveedoresIdentificacionRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Crm\CrmCliente", mappedBy="identificacionRel")
      */
     protected $crmClienteIdentificacionRel;
@@ -105,22 +100,6 @@ class GenIdentificacion
      * @ORM\OneToMany(targetEntity="GenConfiguracion", mappedBy="identificacionRel")
      */
     protected $configuracionesIdentificacionRel;
-
-    /**
-     * @return mixed
-     */
-    public function getComProveedoresIdentificacionRel()
-    {
-        return $this->comProveedoresIdentificacionRel;
-    }
-
-    /**
-     * @param mixed $comProveedoresIdentificacionRel
-     */
-    public function setComProveedoresIdentificacionRel($comProveedoresIdentificacionRel): void
-    {
-        $this->comProveedoresIdentificacionRel = $comProveedoresIdentificacionRel;
-    }
 
     /**
      * @return mixed
@@ -216,6 +195,22 @@ class GenIdentificacion
     public function setTteClientesIdentificacionRel($tteClientesIdentificacionRel): void
     {
         $this->tteClientesIdentificacionRel = $tteClientesIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurClientesIdentificacionRel()
+    {
+        return $this->turClientesIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $turClientesIdentificacionRel
+     */
+    public function setTurClientesIdentificacionRel($turClientesIdentificacionRel): void
+    {
+        $this->turClientesIdentificacionRel = $turClientesIdentificacionRel;
     }
 
     /**
@@ -331,38 +326,6 @@ class GenIdentificacion
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTurClientesIdentificacionRel()
-    {
-        return $this->turClientesIdentificacionRel;
-    }
-
-    /**
-     * @param mixed $turClientesIdentificacionRel
-     */
-    public function setTurClientesIdentificacionRel($turClientesIdentificacionRel): void
-    {
-        $this->turClientesIdentificacionRel = $turClientesIdentificacionRel;
-    }
-
-    /**
      * @return mixed
      */
     public function getCrmClienteIdentificacionRel()
@@ -381,6 +344,22 @@ class GenIdentificacion
     /**
      * @return mixed
      */
+    public function getRhuPoligrafiasIdentificacionRel()
+    {
+        return $this->rhuPoligrafiasIdentificacionRel;
+    }
+
+    /**
+     * @param mixed $rhuPoligrafiasIdentificacionRel
+     */
+    public function setRhuPoligrafiasIdentificacionRel($rhuPoligrafiasIdentificacionRel): void
+    {
+        $this->rhuPoligrafiasIdentificacionRel = $rhuPoligrafiasIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getConfiguracionesIdentificacionRel()
     {
         return $this->configuracionesIdentificacionRel;
@@ -393,7 +372,6 @@ class GenIdentificacion
     {
         $this->configuracionesIdentificacionRel = $configuracionesIdentificacionRel;
     }
-
 
 
 }

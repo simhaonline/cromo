@@ -2,9 +2,6 @@
 
 namespace App\Formato\Tesoreria;
 
-
-use App\Entity\Compra\ComMovimiento;
-use App\Entity\Compra\ComMovimientoDetalle;
 use App\Entity\Tesoreria\TesMovimiento;
 use App\Entity\Tesoreria\TesMovimientoDetalle;
 use App\Utilidades\Estandares;

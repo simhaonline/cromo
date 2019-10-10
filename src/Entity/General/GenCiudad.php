@@ -144,11 +144,6 @@ class GenCiudad
     protected $rhuContratosCiudadLaboraRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Compra\ComProveedor", mappedBy="ciudadRel")
-     */
-    protected $comProveedoresCiudadRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="GenConfiguracion", mappedBy="ciudadRel")
      */
     protected $configuracionesCiudadRel;
@@ -464,6 +459,38 @@ class GenCiudad
     /**
      * @return mixed
      */
+    public function getRhuAcademiaCiuidadRel()
+    {
+        return $this->rhuAcademiaCiuidadRel;
+    }
+
+    /**
+     * @param mixed $rhuAcademiaCiuidadRel
+     */
+    public function setRhuAcademiaCiuidadRel($rhuAcademiaCiuidadRel): void
+    {
+        $this->rhuAcademiaCiuidadRel = $rhuAcademiaCiuidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuEstudiosCiudadRel()
+    {
+        return $this->rhuEstudiosCiudadRel;
+    }
+
+    /**
+     * @param mixed $rhuEstudiosCiudadRel
+     */
+    public function setRhuEstudiosCiudadRel($rhuEstudiosCiudadRel): void
+    {
+        $this->rhuEstudiosCiudadRel = $rhuEstudiosCiudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getInvSucursalesCiuidadRel()
     {
         return $this->invSucursalesCiuidadRel;
@@ -544,22 +571,6 @@ class GenCiudad
     /**
      * @return mixed
      */
-    public function getComProveedoresCiudadRel()
-    {
-        return $this->comProveedoresCiudadRel;
-    }
-
-    /**
-     * @param mixed $comProveedoresCiudadRel
-     */
-    public function setComProveedoresCiudadRel($comProveedoresCiudadRel): void
-    {
-        $this->comProveedoresCiudadRel = $comProveedoresCiudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getConfiguracionesCiudadRel()
     {
         return $this->configuracionesCiudadRel;
@@ -635,54 +646,6 @@ class GenCiudad
     public function setCrmContactoCiuidadRel($crmContactoCiuidadRel): void
     {
         $this->crmContactoCiuidadRel = $crmContactoCiuidadRel;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRhuAcademiaCiuidadRel()
-    {
-        return $this->rhuAcademiaCiuidadRel;
-    }
-
-    /**
-     * @param mixed $rhuAcademiaCiuidadRel
-     */
-    public function setRhuAcademiaCiuidadRel($rhuAcademiaCiuidadRel): void
-    {
-        $this->rhuAcademiaCiuidadRel = $rhuAcademiaCiuidadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRhuEstudiosCiudadRel()
-    {
-        return $this->rhuEstudiosCiudadRel;
-    }
-
-    /**
-     * @param mixed $rhuEstudiosCiudadRel
-     */
-    public function setRhuEstudiosCiudadRel($rhuEstudiosCiudadRel): void
-    {
-        $this->rhuEstudiosCiudadRel = $rhuEstudiosCiudadRel;
     }
 
 

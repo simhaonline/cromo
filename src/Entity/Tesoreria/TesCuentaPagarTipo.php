@@ -104,11 +104,6 @@ class TesCuentaPagarTipo
     protected $tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesCompraTipo" , mappedBy="cuentaPagarTipoRel")
-     */
-    protected $comprasTiposCuentaPagarTipoRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoTipo" , mappedBy="cuentaPagarTipoRel")
      */
     protected $movimientosTiposCuentaPagarTipoRel;
@@ -340,22 +335,6 @@ class TesCuentaPagarTipo
     /**
      * @return mixed
      */
-    public function getTteDespachosRecogidasTiposCuentaPagarTipoRel()
-    {
-        return $this->tteDespachosRecogidasTiposCuentaPagarTipoRel;
-    }
-
-    /**
-     * @param mixed $tteDespachosRecogidasTiposCuentaPagarTipoRel
-     */
-    public function setTteDespachosRecogidasTiposCuentaPagarTipoRel($tteDespachosRecogidasTiposCuentaPagarTipoRel): void
-    {
-        $this->tteDespachosRecogidasTiposCuentaPagarTipoRel = $tteDespachosRecogidasTiposCuentaPagarTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getTteDespachosTiposCuentaPagarTipoAnticipoRel()
     {
         return $this->tteDespachosTiposCuentaPagarTipoAnticipoRel;
@@ -372,6 +351,22 @@ class TesCuentaPagarTipo
     /**
      * @return mixed
      */
+    public function getTteDespachosRecogidasTiposCuentaPagarTipoRel()
+    {
+        return $this->tteDespachosRecogidasTiposCuentaPagarTipoRel;
+    }
+
+    /**
+     * @param mixed $tteDespachosRecogidasTiposCuentaPagarTipoRel
+     */
+    public function setTteDespachosRecogidasTiposCuentaPagarTipoRel($tteDespachosRecogidasTiposCuentaPagarTipoRel): void
+    {
+        $this->tteDespachosRecogidasTiposCuentaPagarTipoRel = $tteDespachosRecogidasTiposCuentaPagarTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getTteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel()
     {
         return $this->tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel;
@@ -383,22 +378,6 @@ class TesCuentaPagarTipo
     public function setTteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel($tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel): void
     {
         $this->tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel = $tteDespachosRecogidasTiposCuentaPagarTipoAnticipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComprasTiposCuentaPagarTipoRel()
-    {
-        return $this->comprasTiposCuentaPagarTipoRel;
-    }
-
-    /**
-     * @param mixed $comprasTiposCuentaPagarTipoRel
-     */
-    public function setComprasTiposCuentaPagarTipoRel($comprasTiposCuentaPagarTipoRel): void
-    {
-        $this->comprasTiposCuentaPagarTipoRel = $comprasTiposCuentaPagarTipoRel;
     }
 
     /**

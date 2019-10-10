@@ -2,8 +2,6 @@
 
 namespace App\Form\Type\RecursoHumano;
 
-use App\Entity\Compra\ComCuentaPagar;
-use App\Entity\Compra\ComCuentaPagarTipo;
 use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use Doctrine\ORM\EntityRepository;

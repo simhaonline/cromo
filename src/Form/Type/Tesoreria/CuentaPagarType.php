@@ -2,7 +2,6 @@
 
 namespace App\Form\Type\Tesoreria;
 
-use App\Entity\Compra\ComCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

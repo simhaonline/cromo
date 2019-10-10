@@ -261,10 +261,10 @@ class TesMovimientoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $respuesta = [];
         if ($arMovimiento->getEstadoAprobado() == 1) {
-            $arMovimientosDetalle = $em->getRepository(ComMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
+            $arMovimientosDetalle = $em->getRepository(TesMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
             foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
                 if ($arMovimientoDetalle->getCodigoCuentaPagarFk()) {
-                    $arCuentaPagarAplicacion = $em->getRepository(ComCuentaPagar::class)->find($arMovimientoDetalle->getCodigoCuentaPagarFk());
+                    $arCuentaPagarAplicacion = $em->getRepository(TesCuentaPagar::class)->find($arMovimientoDetalle->getCodigoCuentaPagarFk());
                     if ($arCuentaPagarAplicacion->getVrSaldo() <= $arMovimientoDetalle->getVrPagoAfectar() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
                         $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arMovimientoDetalle->getVrPagoAfectar();
                         $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();

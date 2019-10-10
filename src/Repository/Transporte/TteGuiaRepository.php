@@ -112,6 +112,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.fechaIngreso')
             ->addSelect('tg.codigoOperacionIngresoFk')
             ->addSelect('tg.codigoOperacionCargoFk')
+            ->addSelect('c.numeroIdentificacion AS nit')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('co.nombre AS ciudadOrigen')

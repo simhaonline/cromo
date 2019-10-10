@@ -204,6 +204,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('g.fechaEntrega')
             ->addSelect('g.fechaIngreso')
             ->addSelect('g.fechaSoporte')
+            ->addSelect('c.numeroIdentificacion AS nit')
             ->addSelect('c.nombreCorto AS clienteNombreCorto')
             ->addSelect('fd.codigoGuiaFk')
             ->addSelect('g.numero')

@@ -5,10 +5,16 @@ namespace App\Controller\Tesoreria\Movimiento;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\Cartera\CarCliente;
+use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\General\GenBanco;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Entity\Tesoreria\TesMovimientoDetalle;
+use App\Entity\Tesoreria\TesTercero;
+use App\Form\Type\Cartera\CuentaCobrarEditarType;
+use App\Form\Type\Cartera\CuentaCobrarType;
+use App\Form\Type\Tesoreria\CuentaPagarType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Doctrine\ORM\EntityRepository;
@@ -100,14 +106,39 @@ class CuentaPagarController extends AbstractController
         ]);
     }
 
+
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @Route("/compra/movimiento/cuenta/pagar/lista", name="tesoreria_movimiento_cuentapagar_cuentapagar_nuevo")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Exception
+     * @Route("/compra/movimiento/cuenta/pagar/nuevo/{id}", name="tesoreria_movimiento_cuentapagar_cuentapagar_nuevo")
      */
-    public function nuevo(Request $request)
+    public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('tesoreria_movimiento_cuentapagar_cuentapagar_nuevo'));
+        $em = $this->getDoctrine()->getManager();
+        $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($id);
+        if ($id != 0) {
+            $form = $this->createForm(CuentaPagarType::class, $arCuentaPagar);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                if ($form->get('guardar')->isClicked()) {
+                    $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                    if ($txtCodigoTercero != '') {
+                        $arTercero = $em->getRepository(TesTercero::class)->find($txtCodigoTercero);
+                        if ($arTercero) {
+                            $arCuentaPagar->setTerceroRel($arTercero);
+                            $em->persist($arCuentaPagar);
+                            $em->flush();
+                            return $this->redirect($this->generateUrl('tesoreria_movimiento_cuentapagar_cuentapagar_detalle', ['id' => $arCuentaPagar->getCodigoCuentaPagarPk()]));
+                        }
+                    }
+                }
+            }
+            return $this->render('tesoreria/movimiento/cuentapagar/cuentapagar/editarTercero.html.twig', [
+                'arCuentaPagar' => $arCuentaPagar,
+                'form' => $form->createView()
+            ]);
+        }
     }
 
     /**
@@ -136,7 +167,7 @@ class CuentaPagarController extends AbstractController
             return $this->redirect($this->generateUrl('tesoreria_movimiento_cuentapagar_cuentapagar_detalle', ['id' => $id]));
         }
 
-        return $this->render('inventario/administracion/general/contacto/detalle.html.twig', [
+        return $this->render('tesoreria/movimiento/cuentapagar/cuentapagar/detalle.html.twig', [
             'arCuentaPagar' => $arCuentaPagar,
             'clase' => array('clase' => 'TesCuentaPagar', 'codigo' => $id),
             'form' => $form->createView()

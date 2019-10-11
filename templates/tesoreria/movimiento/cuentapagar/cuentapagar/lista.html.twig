@@ -106,7 +106,9 @@
         <tbody>
         {% for arCuentaPagar in arCuentasPagar %}
             <tr>
-                <td><a href="javascript:abrirVentana3('{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_referencia',{'id': arCuentaPagar.codigoCuentaPagarPk }) }}','referencia',600,900)">{{ arCuentaPagar.codigoCuentaPagarPk }}</a></td>
+                <td>
+                    <a href="javascript:abrirVentana3('{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_referencia',{'id': arCuentaPagar.codigoCuentaPagarPk }) }}','referencia',600,900)">{{ arCuentaPagar.codigoCuentaPagarPk }}</a>
+                </td>
                 <td>{{ arCuentaPagar.numeroDocumento }}</td>
                 <td>{{ arCuentaPagar.tipo }}</td>
                 <td>{{ arCuentaPagar.fecha | date('Y-m-d') }}</td>
@@ -120,14 +122,10 @@
                 <td>{{ arCuentaPagar.estadoAutorizado ? 'SI':'NO' }}</td>
                 <td>{{ arCuentaPagar.estadoAprobado ? 'SI':'NO' }}</td>
                 <td>{{ arCuentaPagar.estadoAnulado ? 'SI':'NO' }}</td>
-                {% if arCuentaPagar.estadoAutorizado %}
-                    <td></td>
-                {% else %}
-                    <td style="text-align: center;">
-                        <a href="{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_nuevo',{'id': arCuentaPagar.codigoCuentaPagarPk }) }}"><i
-                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                    </td>
-                {% endif %}
+                <td style="text-align: center;">
+                    <a href="{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_nuevo',{'id': arCuentaPagar.codigoCuentaPagarPk }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
                 <td style="text-align: center;">
                     <a href="{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_detalle',{'id' : arCuentaPagar.codigoCuentaPagarPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

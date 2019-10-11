@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
+            <td class="titulo">IDENTIFICACION:</td>
+            <td class="td-in-well">{{ arCuentaPagar.terceroRel.numeroIdentificacion | default ('') }}</td>
+            <td class="titulo">TERCERO:</td>
+            <td class="td-in-well">{{ arCuentaPagar.terceroRel.nombreCorto | default ('') }}</td>
+        </tr>
+    </table>
+{% endblock %}

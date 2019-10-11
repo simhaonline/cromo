@@ -24,9 +24,32 @@ class InvRemisionRepository extends ServiceEntityRepository
         parent::__construct($registry, InvRemision::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $numero = null;
+        $codigoRemision = null;
+        $codigoTercero = null;
+        $codigoRemisionTipo = null;
+        $codigoAsesor = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+
+            $numero = $filtros['numero'] ?? null;
+            $codigoRemision = $filtros['codigoRemision'] ?? null;
+            $codigoTercero = $filtros['codigoTercero'] ?? null;
+            $codigoRemisionTipo = $filtros['codigoRemisionTipo'] ?? null;
+            $codigoAsesor = $filtros['codigoAsesor'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvRemision::class, 'r')
             ->leftJoin('r.terceroRel', 't')
             ->leftJoin('r.remisionTipoRel', 'rt')
@@ -37,29 +60,30 @@ class InvRemisionRepository extends ServiceEntityRepository
             ->addSelect('r.vrIva')
             ->addSelect('r.vrNeto')
             ->addSelect('r.vrTotal')
-            ->addSelect('rt.nombre')
+            ->addSelect('rt.nombre as tipo')
             ->addSelect('r.estadoAutorizado')
             ->addSelect('r.estadoAprobado')
             ->addSelect('r.estadoAnulado')
-            ->addSelect('t.nombreCorto AS terceroNombreCorto')
+            ->addSelect('t.nombreCorto AS tercero')
             ->where('r.codigoRemisionPk <> 0')
             ->orderBy('r.codigoRemisionPk', 'DESC');
-        if ($session->get('InvRemision_codigoRemisionFk')) {
-            $queryBuilder->andWhere("r.codigoRemisionPk = '{$session->get('InvRemision_codigoRemisionFk')}'");
+
+        if ($codigoRemision) {
+            $queryBuilder->andWhere("r.codigoRemisionPk = '{$codigoRemision}'");
         }
-        if ($session->get('InvRemision_numero') != "") {
-            $queryBuilder->andWhere("r.numero = " . $session->get('InvRemision_numero'));
+        if ($numero) {
+            $queryBuilder->andWhere("r.numero = {$numero}");
         }
-        if ($session->get('InvRemision_codigoTerceroFk') != "") {
-            $queryBuilder->andWhere("r.codigoTerceroFk = " . $session->get('InvRemision_codigoTerceroFk'));
+        if ($codigoTercero) {
+            $queryBuilder->andWhere("r.codigoTerceroFk = {$codigoTercero}");
         }
-        if ($session->get('InvRemision_codigoRemisionTipoFk')) {
-            $queryBuilder->andWhere("r.codigoRemisionTipoFk = '{$session->get('InvRemision_codigoRemisionTipoFk')}'");
+        if ($codigoRemisionTipo) {
+            $queryBuilder->andWhere("r.codigoRemisionTipoFk = '{$codigoRemisionTipo}'");
         }
-        if ($session->get('InvRemision_codigoAsesorFk')) {
-            $queryBuilder->andWhere("r.codigoAsesorFk = '{$session->get('InvRemision_codigoAsesorFk')}'");
+        if ($codigoAsesor) {
+            $queryBuilder->andWhere("r.codigoAsesorFk = '{$codigoAsesor}'");
         }
-        switch ($session->get('InvRemision_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAutorizado = 0");
                 break;
@@ -67,7 +91,7 @@ class InvRemisionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('InvRemision_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAprobado = 0");
                 break;
@@ -75,7 +99,7 @@ class InvRemisionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAprobado = 1");
                 break;
         }
-        switch ($session->get('InvRemision_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("r.estadoAnulado = 0");
                 break;
@@ -83,7 +107,7 @@ class InvRemisionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("r.estadoAnulado = 1");
                 break;
         }
-
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
 
     }

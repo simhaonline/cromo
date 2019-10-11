@@ -80,19 +80,4 @@ class RemisionType extends AbstractType
         return $campos;
     }
 
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"numero",                  "tipo":"TextType",    "propiedades":{"label":"Numero"}},
-            {"child":"codigoRemisionPk",        "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
-            {"child":"codigoTerceroFk",         "tipo":"TextType",    "propiedades":{"label":"Codigo cliente"}},
-            {"child":"codigoRemisionTipoFk",    "tipo":"EntityType",  "propiedades":{"class":"InvRemisionTipo","choice_label":"nombre","label":"Tipo"}},
-            {"child":"codigoAsesorFk",          "tipo":"EntityType",  "propiedades":{"class":"GenAsesor","choice_label":"nombre","label":"Asesor"}},
-            {"child":"estadoAutorizado",        "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",    "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",          "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",    "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",           "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",     "choices":{"SI":true,"NO":false}}}
-            
-        ]';
-        return $campos;
-    }
 }

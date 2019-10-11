@@ -24,7 +24,10 @@ use App\Formato\Inventario\Remision2;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -34,7 +37,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\PedidoType;
 
-class RemisionController extends ControllerListenerGeneral
+class RemisionController extends AbstractController
 {
     protected $class = InvRemision::class;
     protected $claseNombre = "InvRemision";
@@ -51,35 +54,65 @@ class RemisionController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/comercial/remision/lista", name="inventario_movimiento_comercial_remision_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
+        $form = $this->createFormBuilder()
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoRemisionPk', TextType::class, array('required' => false))
+            ->add('codigoTerceroFk', TextType::class, array('required' => false))
+            ->add('codigoRemisionTipoFk', EntityType::class, [
+                'class' => InvRemisionTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('rt')
+                        ->orderBy('rt.codigoRemisionTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('codigoAsesorFk', EntityType::class, [
+                'class' => GenAsesor::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.codigoAsesorPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
 
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        if ($form->isSubmitted() ) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvRemision::class)->lista()->getQuery()->getResult(), "Remisiones");
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(InvRemision::class)->lista($raw)->getQuery()->getResult(), "Remisiones");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(InvRemision::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('inventario_movimiento_comercial_remision_lista'));
             }
         }
+        $arRemisiones = $paginator->paginate($em->getRepository(InvRemision::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('inventario/movimiento/comercial/remision/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arRemisiones' => $arRemisiones,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -136,9 +169,8 @@ class RemisionController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/comercial/remision/detalle/{id}", name="inventario_movimiento_comercial_remision_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator,$id)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arRemision = $em->getRepository(InvRemision::class)->find($id);
         $form = Estandares::botonera($arRemision->getEstadoAutorizado(), $arRemision->getEstadoAprobado(), $arRemision->getEstadoAnulado());
@@ -205,11 +237,10 @@ class RemisionController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/comercial/remision/detalle/nuevo/{codigoRemision}", name="inventario_movimiento_comercial_remision_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $codigoRemision)
+    public function detalleNuevo(Request $request, PaginatorInterface $paginator,$codigoRemision)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arRemision = $em->getRepository(InvRemision::class)->find($codigoRemision);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -220,17 +251,23 @@ class RemisionController extends ControllerListenerGeneral
             ->add('btnGuardarCerrar', SubmitType::class, ['label' => 'Guardar y cerrar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $raw = [
+            'limiteRegistros' =>null
+        ];
+        if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
+                $codigoItem = null;
                 if (is_numeric($form->get('txtCodigoItem')->getData())) {
-                    $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
+                    $codigoItem = $form->get('txtCodigoItem')->getData();
                 } else {
-                    $session->set('filtroInvBucarItemCodigo', null);
                     Mensajes::error("El codigo del item debe ser numerico");
                 }
 
-                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
-                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
+                $raw['filtros'] =[
+                    'codigoItem' => $codigoItem,
+                    'nombreItem' =>$form->get('txtNombreItem')->getData(),
+                    'marcaItem' => $form->get('txtReferenciaItem')->getData()
+                ];
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -281,7 +318,7 @@ class RemisionController extends ControllerListenerGeneral
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 50);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/comercial/remision/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
@@ -291,11 +328,10 @@ class RemisionController extends ControllerListenerGeneral
     /**
      * @Route("/inventario/movimiento/comercial/remision/detalle/pedido/nuevo/{id}", name="inventario_movimiento_comercial_remision_pedido_detalle_nuevo")
      */
-    public function detalleNuevoPedido(Request $request, $id)
+    public function detalleNuevoPedido(Request $request, PaginatorInterface $paginator,$id)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class, array('required' => false))
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
@@ -390,11 +426,10 @@ class RemisionController extends ControllerListenerGeneral
     /**
      * @Route("/inventario/movimiento/comercial/remision/detalle/remision/nuevo/{id}", name="inventario_movimiento_comercial_remision_remision_detalle_nuevo")
      */
-    public function detalleNuevoRemision(Request $request, $id)
+    public function detalleNuevoRemision(Request $request,  PaginatorInterface $paginator,$id)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class, array('required' => false))
             ->add('txtLote', TextType::class, array('required' => false))
@@ -465,4 +500,33 @@ class RemisionController extends ControllerListenerGeneral
         ]);
     }
 
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'numero' => $form->get('numero')->getData(),
+            'codigoRemision' => $form->get('codigoRemisionPk')->getData(),
+            'codigoTercero' => $form->get('codigoTerceroFk')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arRemisionTipo = $form->get('codigoRemisionTipoFk')->getData();
+        $arAsesor = $form->get('codigoAsesorFk')->getData();
+
+        if (is_object($arRemisionTipo)) {
+            $filtro['codigoRemisionTipo'] = $arRemisionTipo->getCodigoRemisionTipoPk();
+        } else {
+            $filtro['codigoRemisionTipo'] = $arRemisionTipo;
+        }
+
+        if (is_object($arAsesor)) {
+            $filtro['codigoAsesor'] = $arAsesor->getCodigoAsesorPk();
+        } else {
+            $filtro['codigoAsesor'] = $arAsesor;
+        }
+
+        return $filtro;
+
+    }
 }

@@ -265,7 +265,8 @@ class TesMovimientoRepository extends ServiceEntityRepository
             foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
                 if ($arMovimientoDetalle->getCodigoCuentaPagarFk()) {
                     $arCuentaPagarAplicacion = $em->getRepository(TesCuentaPagar::class)->find($arMovimientoDetalle->getCodigoCuentaPagarFk());
-                    if ($arCuentaPagarAplicacion->getVrSaldo() <= $arMovimientoDetalle->getVrPagoAfectar() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
+                    if ( $arCuentaPagarAplicacion->getVrSaldo() == 0) {
+                        //error
                         $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arMovimientoDetalle->getVrPagoAfectar();
                         $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();
                         $arCuentaPagarAplicacion->setVrSaldo($saldo);
@@ -291,7 +292,8 @@ class TesMovimientoRepository extends ServiceEntityRepository
             $arMovimiento->setVrTotalRetencionFuente(0);
             $arMovimiento->setEstadoAnulado(1);
             $this->_em->persist($arMovimiento);
-            $this->_em->flush();
+            dd("todo corrrecto");
+//            $this->_em->flush();
         }
         return $respuesta;
     }

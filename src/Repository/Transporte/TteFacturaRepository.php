@@ -1256,11 +1256,20 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 'consecutivo' => $arFactura->getNumero(),
                                 'fechaFacturacion' => $arFactura->getFecha()->format('Y-m-d'),
                                 'ad_tipoIdentificacion' => $arCliente->getIdentificacionRel()->getCodigoEntidad(),
+                                'ad_numeroIdentificacion' => $arCliente->getNumeroIdentificacion(),
+                                'ad_digitoVerificacion' => $arCliente->getDigitoVerificacion(),
+                                'ad_nombreCompleto' => $arCliente->getNombreExtendido(),
                                 'ad_tipoPersona' => $arCliente->getTipoPersonaRel()->getCodigoInterface(),
-                                'ad_regimen' => $arCliente->getRegimenRel()->getCodigoInterface()
+                                'ad_regimen' => $arCliente->getRegimenRel()->getCodigoInterface(),
+                                'ad_responsabilidadFiscal' => $arCliente->getResponsabilidadFiscalRel()->getCodigoInterface(),
+                                'ad_direccion' => $arCliente->getDireccion(),
+                                'ad_barrio' => $arCliente->getBarrio(),
+                                'ad_codigoPostal' => $arCliente->getCodigoPostal(),
+                                'ad_telefono' => $arCliente->getTelefono(),
+                                'ad_codigoCIUU' => $arCliente->getCodigoCIUU(),
                             ];
                             $facturaElectronica = new FacturaElectronica($em);
-                            $facturaElectronica->enviar($arrFactura);
+                            $facturaElectronica->enviarDispapeles($arrFactura);
                         } else {
                             Mensajes::error("La resolucion de la factura no existe");
                             break;

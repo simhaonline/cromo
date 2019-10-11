@@ -84,6 +84,16 @@ class TteCliente
     private $direccion;
 
     /**
+     * @ORM\Column(name="barrio", type="string", length=200, nullable=true)
+     */
+    private $barrio;
+
+    /**
+     * @ORM\Column(name="codigo_postal", type="string", length=20, nullable=true)
+     */
+    private $codigoPostal;
+
+    /**
      * @ORM\Column(name="telefono", type="string", length=30, nullable=true)
      */
     private $telefono;
@@ -169,6 +179,16 @@ class TteCliente
     private $codigoRegimenFk;
 
     /**
+     * @ORM\Column(name="codigo_responsabilidad_fiscal_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoResponsabilidadFiscalFk;
+
+    /**
+     * @ORM\Column(name="codigo_ciuu", type="string", length=20, nullable=true)
+     */
+    private $codigoCIUU;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -195,6 +215,12 @@ class TteCliente
      * @ORM\JoinColumn(name="codigo_regimen_fk", referencedColumnName="codigo_regimen_pk")
      */
     private $regimenRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenResponsabilidadFiscal", inversedBy="tteClientesResponsabilidadFiscalRel")
+     * @ORM\JoinColumn(name="codigo_responsabilidad_fiscal_fk", referencedColumnName="codigo_responsabilidad_fiscal_pk")
+     */
+    private $responsabilidadFiscalRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteCondicion", inversedBy="clientesCondicionRel")
@@ -1137,6 +1163,86 @@ class TteCliente
     public function setRegimenRel($regimenRel): void
     {
         $this->regimenRel = $regimenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoResponsabilidadFiscalFk()
+    {
+        return $this->codigoResponsabilidadFiscalFk;
+    }
+
+    /**
+     * @param mixed $codigoResponsabilidadFiscalFk
+     */
+    public function setCodigoResponsabilidadFiscalFk($codigoResponsabilidadFiscalFk): void
+    {
+        $this->codigoResponsabilidadFiscalFk = $codigoResponsabilidadFiscalFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResponsabilidadFiscalRel()
+    {
+        return $this->responsabilidadFiscalRel;
+    }
+
+    /**
+     * @param mixed $responsabilidadFiscalRel
+     */
+    public function setResponsabilidadFiscalRel($responsabilidadFiscalRel): void
+    {
+        $this->responsabilidadFiscalRel = $responsabilidadFiscalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBarrio()
+    {
+        return $this->barrio;
+    }
+
+    /**
+     * @param mixed $barrio
+     */
+    public function setBarrio($barrio): void
+    {
+        $this->barrio = $barrio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPostal()
+    {
+        return $this->codigoPostal;
+    }
+
+    /**
+     * @param mixed $codigoPostal
+     */
+    public function setCodigoPostal($codigoPostal): void
+    {
+        $this->codigoPostal = $codigoPostal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCIUU()
+    {
+        return $this->codigoCIUU;
+    }
+
+    /**
+     * @param mixed $codigoCIUU
+     */
+    public function setCodigoCIUU($codigoCIUU): void
+    {
+        $this->codigoCIUU = $codigoCIUU;
     }
 
 

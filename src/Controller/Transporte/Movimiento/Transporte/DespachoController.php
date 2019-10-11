@@ -163,33 +163,15 @@ class DespachoController extends AbstractController
                                     $arDespacho->setUsuario($this->getUser()->getUsername());
                                     $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
                                 }
-                                $arrConfiguracionLiquidarDespacho = $em->getRepository(TteConfiguracion::class)->liquidarDespacho();
+
                                 $arDespacho->setVehiculoRel($arVehiculo);
                                 $arDespacho->setPoseedorRel($arVehiculo->getPoseedorRel());
                                 $arDespacho->setConductorRel($arConductor);
-                                $descuentos = $arDespacho->getVrDescuentoPapeleria() + $arDespacho->getVrDescuentoSeguridad() + $arDespacho->getVrDescuentoCargue() + $arDespacho->getVrDescuentoEstampilla();
-                                $retencionFuente = 0;
-                                if ($arDespacho->getVrFletePago() > $arrConfiguracionLiquidarDespacho['vrBaseRetencionFuente']) {
-                                    $retencionFuente = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeRetencionFuente'] / 100;
-                                }
-                                $industriaComercio = 0;
-                                if($arDespacho->getOperacionRel()->getRetencionIndustriaComercio()) {
-                                    $industriaComercio = $arDespacho->getVrFletePago() * $arrConfiguracionLiquidarDespacho['porcentajeIndustriaComercio'] / 100;
-                                }
-
-
-                                $total = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio);
-                                $saldo = $total - $descuentos;
-                                $totalNeto = $arDespacho->getVrFletePago() - ($arDespacho->getVrAnticipo() + $retencionFuente + $industriaComercio + $descuentos);
-                                $arDespacho->setVrIndustriaComercio($industriaComercio);
-                                $arDespacho->setVrRetencionFuente($retencionFuente);
-                                $arDespacho->setVrTotal($total);
-                                $arDespacho->setVrSaldo($saldo);
-                                $arDespacho->setVrTotalNeto($totalNeto);
                                 if(!$arVehiculo->getPropio()) {
                                     $arDespacho->setVrCostoPago($arDespacho->getVrFletePago());
                                 }
                                 $em->persist($arDespacho);
+                                $em->getRepository(TteDespacho::class)->liquidar($arDespacho);
                                 $em->flush();
                                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $arDespacho->getCodigoDespachoPk())));
                             } else {
@@ -292,13 +274,13 @@ class DespachoController extends AbstractController
                 $arrDespachoDetalles = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TteDespacho::class)->retirarDetalle($arrDespachoDetalles);
                 if ($respuesta) {
-                    $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($id);
+                    $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($arDespacho);
                     $em->flush();
                 }
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnActualizar')->isClicked()) {
-                $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($id);
+                $this->getDoctrine()->getRepository(TteDespacho::class)->liquidar($arDespacho);
                 return $this->redirect($this->generateUrl('transporte_movimiento_transporte_despacho_detalle', array('id' => $id)));
             }
             if ($form->get('btnImprimir')->isClicked()) {
@@ -402,7 +384,7 @@ class DespachoController extends AbstractController
                         }
                     }
                     $em->flush();
-                    $em->getRepository(TteDespacho::class)->liquidar($id);
+                    $em->getRepository(TteDespacho::class)->liquidar($arDespacho);
                 }
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
@@ -555,7 +537,7 @@ class DespachoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arDespacho = $form->getData();
-                $em->getRepository(TteDespacho::class)->liquidar($id);
+                $em->getRepository(TteDespacho::class)->liquidar($arDespacho);
                 $em->getRepository(TteDespacho::class)->costos($arDespacho);
 
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";

@@ -302,7 +302,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         }
     }
 
-    public function liquidar($codigoDespacho): bool
+    public function liquidar($arDespacho): bool
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
@@ -310,10 +310,9 @@ class TteDespachoRepository extends ServiceEntityRepository
                   SUM(dd.vrFlete) as vrFlete, SUM(dd.vrManejo) as vrManejo, SUM(dd.vrCobroEntrega) as vrCobroEntrega, SUM(dd.vrDeclara) as vrDeclara
         FROM App\Entity\Transporte\TteDespachoDetalle dd
         WHERE dd.codigoDespachoFk = :codigoDespacho')
-            ->setParameter('codigoDespacho', $codigoDespacho);
+            ->setParameter('codigoDespacho', $arDespacho->getCodigoDespachoPk());
         $arrGuias = $query->getSingleResult();
         $total = intval($arrGuias['vrFlete']) + intval($arrGuias['vrManejo']);
-        $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         $margen = 0;
         if ($total > 0) {
             $margen = ($arDespacho->getVrFletepago() / $total) * 100;

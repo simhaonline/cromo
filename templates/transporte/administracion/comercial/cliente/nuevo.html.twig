@@ -61,6 +61,16 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_direccion" class="col-sm-2 control-label">Codigo postal:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoPostal) }}
+                </div>
+                <label for="form_telefono" class="col-sm-2 control-label">Barrio:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.barrio) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_movil" class="col-sm-2 control-label">Telefono:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.telefono, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
@@ -118,13 +128,23 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_condiciionRel" class="col-sm-2 control-label"></label>
+                <label for="form_condiciionRel" class="col-sm-2 control-label">Responsabilidad fiscal:</label>
                 <div class="col-sm-4">
-
+                    {{ form_widget(form.responsabilidadFiscalRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
                 </div>
                 <label for="form_condiciionRel" class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
                     {{ form_widget(form.retencionFuenteSinBase) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_condiciionRel" class="col-sm-2 control-label">CIUU:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoCIUU) }}
+                </div>
+                <label for="form_condiciionRel" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
                 </div>
             </div>
         </div>

@@ -50,6 +50,16 @@ class ClienteType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Regimen:'
             ])
+            ->add('responsabilidadFiscalRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenResponsabilidadFiscal',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('rf')
+                        ->orderBy('rf.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Responsabilidad fiscal:'
+            ])
             ->add('condicionRel',EntityType::class,[
                 'class' => 'App\Entity\Transporte\TteCondicion',
                 'query_builder' => function (EntityRepository $er) {
@@ -99,10 +109,13 @@ class ClienteType extends AbstractType
             ->add('apellido1',TextType::class,['required' => false,'label' => 'Primer apellido:'])
             ->add('apellido2',TextType::class,['required' => false,'label' => 'Segundo apellido:'])
             ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
+            ->add('barrio',TextType::class,['required' => true,'label' => 'Barrio:'])
+            ->add('codigoPostal',TextType::class,['required' => true,'label' => 'Codigo postal:'])
             ->add('telefono',TextType::class,['required' => false,'label' => 'Telefono:'])
             ->add('movil',TextType::class,['required' => false,'label' => 'Celular:'])
             ->add('plazoPago',NumberType::class,['required' => true,'label' => 'Plazo pago:'])
             ->add('correo',TextType::class,['required' => false,'label' => 'Correo:'])
+            ->add('codigoCIUU',TextType::class,['required' => false,'label' => 'CIUU:'])
             ->add('estadoInactivo', CheckboxType::class, array('required'  => false, 'label' => 'Inactivo'))
             ->add('retencionFuenteSinBase', CheckboxType::class, array('required'  => false, 'label' => 'Retencion fuente sin base'))
             ->add('facturaAgrupadaDestino', CheckboxType::class, array('required'  => false, 'label' => 'Factura agrupada destino'))

@@ -30,6 +30,26 @@ class ClienteType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Identificacion tipo:'
             ])
+            ->add('tipoPersonaRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenTipoPersona',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('tp')
+                        ->orderBy('tp.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Tipo persona:'
+            ])
+            ->add('regimenRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenRegimen',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->orderBy('r.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Regimen:'
+            ])
             ->add('condicionRel',EntityType::class,[
                 'class' => 'App\Entity\Transporte\TteCondicion',
                 'query_builder' => function (EntityRepository $er) {

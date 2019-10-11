@@ -32,6 +32,11 @@ class GenIdentificacion
     private $codigoInterface;
 
     /**
+     * @ORM\Column(name="codigo_entidad", type="string", length=10, nullable=true)
+     */
+    private $codigoEntidad;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TtePoseedor", mappedBy="identificacionRel")
      */
     protected $ttePoseedoresIdentificacionRel;
@@ -371,6 +376,22 @@ class GenIdentificacion
     public function setConfiguracionesIdentificacionRel($configuracionesIdentificacionRel): void
     {
         $this->configuracionesIdentificacionRel = $configuracionesIdentificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEntidad()
+    {
+        return $this->codigoEntidad;
+    }
+
+    /**
+     * @param mixed $codigoEntidad
+     */
+    public function setCodigoEntidad($codigoEntidad): void
+    {
+        $this->codigoEntidad = $codigoEntidad;
     }
 
 

@@ -159,6 +159,16 @@ class TteCliente
     private $codigoOperacionFk;
 
     /**
+     * @ORM\Column(name="codigo_tipo_persona_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoTipoPersonaFk;
+
+    /**
+     * @ORM\Column(name="codigo_regimen_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoRegimenFk;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -173,6 +183,18 @@ class TteCliente
      * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
      */
     private $identificacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenTipoPersona", inversedBy="tteClientesTipoPersonaRel")
+     * @ORM\JoinColumn(name="codigo_tipo_persona_fk", referencedColumnName="codigo_tipo_persona_pk")
+     */
+    private $tipoPersonaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenRegimen", inversedBy="tteClientesRegimenRel")
+     * @ORM\JoinColumn(name="codigo_regimen_fk", referencedColumnName="codigo_regimen_pk")
+     */
+    private $regimenRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteCondicion", inversedBy="clientesCondicionRel")
@@ -1051,6 +1073,70 @@ class TteCliente
     public function setCondicionesManejosClienteRel($condicionesManejosClienteRel): void
     {
         $this->condicionesManejosClienteRel = $condicionesManejosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoPersonaFk()
+    {
+        return $this->codigoTipoPersonaFk;
+    }
+
+    /**
+     * @param mixed $codigoTipoPersonaFk
+     */
+    public function setCodigoTipoPersonaFk($codigoTipoPersonaFk): void
+    {
+        $this->codigoTipoPersonaFk = $codigoTipoPersonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRegimenFk()
+    {
+        return $this->codigoRegimenFk;
+    }
+
+    /**
+     * @param mixed $codigoRegimenFk
+     */
+    public function setCodigoRegimenFk($codigoRegimenFk): void
+    {
+        $this->codigoRegimenFk = $codigoRegimenFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoPersonaRel()
+    {
+        return $this->tipoPersonaRel;
+    }
+
+    /**
+     * @param mixed $tipoPersonaRel
+     */
+    public function setTipoPersonaRel($tipoPersonaRel): void
+    {
+        $this->tipoPersonaRel = $tipoPersonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegimenRel()
+    {
+        return $this->regimenRel;
+    }
+
+    /**
+     * @param mixed $regimenRel
+     */
+    public function setRegimenRel($regimenRel): void
+    {
+        $this->regimenRel = $regimenRel;
     }
 
 

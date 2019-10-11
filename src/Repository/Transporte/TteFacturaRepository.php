@@ -14,12 +14,14 @@ use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenImpuesto;
+use App\Entity\General\GenResolucionFactura;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaDetalleConcepto;
 use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteOperacion;
+use App\Utilidades\FacturaElectronica;
 use App\Utilidades\Mensajes;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteGuia;
@@ -806,6 +808,57 @@ class TteFacturaRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->execute();
     }
 
+    public function listaFacturaElectronica()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFactura::class, 'f')
+            ->select('f.codigoFacturaPk')
+            ->addSelect('f.numero')
+            ->addSelect('f.fecha')
+            ->addSelect('f.guias')
+            ->addSelect('f.vrFlete')
+            ->addSelect('f.vrManejo')
+            ->addSelect('f.vrSubtotal')
+            ->addSelect('f.vrTotal')
+            ->addSelect('f.estadoAnulado')
+            ->addSelect('f.estadoAprobado')
+            ->addSelect('f.estadoAutorizado')
+            ->addSelect('f.codigoFacturaClaseFk')
+            ->addSelect('c.nombreCorto AS clienteNombre')
+            ->addSelect('ft.nombre AS facturaTipo')
+            ->leftJoin('f.clienteRel', 'c')
+            ->leftJoin('f.facturaTipoRel', 'ft')
+            ->where('f.estadoFacturaElectronica =  0')
+            ->andWhere('f.estadoAprobado = 1');
+        $fecha =  new \DateTime('now');
+        if($session->get('filtroTteFacturaNumero') != ''){
+            $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
+        }
+        if($session->get('filtroTteFacturaCodigo') != ''){
+            $queryBuilder->andWhere("f.codigoFacturaPk = {$session->get('filtroTteFacturaCodigo')}");
+        }
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("f.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("f.fecha >= '{$session->get('filtroFechaDesde')} 00:00:00'");
+            } else {
+                $queryBuilder->andWhere("f.fecha >='" . $fecha->format('Y-m-d') . " 00:00:00'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("f.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("f.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        if($session->get('filtroTteFacturaCodigoFacturaTipo')) {
+            $queryBuilder->andWhere("f.codigoFacturaTipoFk = '" . $session->get('filtroTteFacturaCodigoFacturaTipo') . "'");
+        }
+
+        return $queryBuilder->getQuery()->execute();
+    }
+
     public function registroContabilizar($codigo)
     {
         $session = new Session();
@@ -1182,6 +1235,47 @@ class TteFacturaRepository extends ServiceEntityRepository
         $arrResultado = $queryBuilder->getQuery()->getResult();
 
         return $arrResultado;
+    }
+
+    public function facturaElectronica($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            foreach ($arr AS $codigo) {
+                /** @var $arFactura TteFactura*/
+                $arFactura = $em->getRepository(TteFactura::class)->find($codigo);
+                if($arFactura->getEstadoAprobado() && !$arFactura->getEstadoFacturaElectronica()) {
+                    if($arFactura->getCodigoResolucionFacturaFk()) {
+                        /** @var $arResolucionFactura GenResolucionFactura */
+                        $arResolucionFactura = $em->getRepository(GenResolucionFactura::class)->find($arFactura->getCodigoResolucionFacturaFk());
+                        /** @var $arCliente TteCliente */
+                        $arCliente = $arFactura->getClienteRel();
+                        if($arResolucionFactura) {
+                            $arrFactura = [
+                                'prefijo' => $arResolucionFactura->getPrefijo(),
+                                'consecutivo' => $arFactura->getNumero(),
+                                'fechaFacturacion' => $arFactura->getFecha()->format('Y-m-d'),
+                                'ad_tipoIdentificacion' => $arCliente->getIdentificacionRel()->getCodigoEntidad(),
+                                'ad_tipoPersona' => $arCliente->getTipoPersonaRel()->getCodigoInterface(),
+                                'ad_regimen' => $arCliente->getRegimenRel()->getCodigoInterface()
+                            ];
+                            $facturaElectronica = new FacturaElectronica($em);
+                            $facturaElectronica->enviar($arrFactura);
+                        } else {
+                            Mensajes::error("La resolucion de la factura no existe");
+                            break;
+                        }
+                    } else {
+                        Mensajes::error("La factura no tiene una resolucion asignada");
+                        break;
+                    }
+                } else {
+                    Mensajes::error("El documento debe estar aprobado y sin enviar a facturacion electronica");
+                    break;
+                }
+            }
+        }
+        return true;
     }
 
 }

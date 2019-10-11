@@ -143,6 +143,11 @@ class TteFactura
     private $estadoContabilizado = false;
 
     /**
+     * @ORM\Column(name="estado_factura_electronica", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoFacturaElectronica = false;
+
+    /**
      * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
@@ -161,6 +166,11 @@ class TteFactura
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
+
+    /**
+     * @ORM\Column(name="codigo_resolucion_factura_fk", type="integer", nullable=true)
+     */
+    private $codigoResolucionFacturaFk;
 
     /**
      * @ORM\ManyToOne(targetEntity="TteFacturaTipo", inversedBy="facturasFacturaTipoRel")
@@ -833,6 +843,38 @@ class TteFactura
     public function setFacturasDetallesConcetosFacturaRel($facturasDetallesConcetosFacturaRel): void
     {
         $this->facturasDetallesConcetosFacturaRel = $facturasDetallesConcetosFacturaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoFacturaElectronica()
+    {
+        return $this->estadoFacturaElectronica;
+    }
+
+    /**
+     * @param mixed $estadoFacturaElectronica
+     */
+    public function setEstadoFacturaElectronica($estadoFacturaElectronica): void
+    {
+        $this->estadoFacturaElectronica = $estadoFacturaElectronica;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoResolucionFacturaFk()
+    {
+        return $this->codigoResolucionFacturaFk;
+    }
+
+    /**
+     * @param mixed $codigoResolucionFacturaFk
+     */
+    public function setCodigoResolucionFacturaFk($codigoResolucionFacturaFk): void
+    {
+        $this->codigoResolucionFacturaFk = $codigoResolucionFacturaFk;
     }
 
 

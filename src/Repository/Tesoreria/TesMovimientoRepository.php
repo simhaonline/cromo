@@ -253,7 +253,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arMovimiento ComMovimiento
+     * @param $arMovimiento TesMovimiento
      * @return array
      */
     public function anular($arMovimiento)
@@ -265,35 +265,21 @@ class TesMovimientoRepository extends ServiceEntityRepository
             foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
                 if ($arMovimientoDetalle->getCodigoCuentaPagarFk()) {
                     $arCuentaPagarAplicacion = $em->getRepository(TesCuentaPagar::class)->find($arMovimientoDetalle->getCodigoCuentaPagarFk());
-                    if ( $arCuentaPagarAplicacion->getVrSaldo() == 0) {
-                        //error
-                        $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arMovimientoDetalle->getVrPagoAfectar();
+                    if ($arCuentaPagarAplicacion->getVrSaldo() <= $arMovimientoDetalle->vrPago() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
+                        $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arMovimientoDetalle->vrPago();
                         $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();
                         $arCuentaPagarAplicacion->setVrSaldo($saldo);
-                        $arCuentaPagarAplicacion->setvRSaldoOperado($saldoOperado);
-                        $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() - $arMovimientoDetalle->getVrPagoAfectar());
+                        $arCuentaPagarAplicacion->setVrSaldoOperado($saldoOperado);
+                        $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() - $arMovimientoDetalle->vrPago());
                         $em->persist($arCuentaPagarAplicacion);
                     }
                 }
-                $arMovimientoDetalle->setVrDescuento(0);
-                $arMovimientoDetalle->setVrAjustePeso(0);
-                $arMovimientoDetalle->setVrRetencionIca(0);
-                $arMovimientoDetalle->setVrRetencionIva(0);
-                $arMovimientoDetalle->setVrRetencionFuente(0);
                 $arMovimientoDetalle->setVrPago(0);
-                $arMovimientoDetalle->setVrPagoAfectar(0);
             }
-            $arMovimiento->setVrPago(0);
-            $arMovimiento->setVrPagoTotal(0);
-            $arMovimiento->setVrTotalDescuento(0);
-            $arMovimiento->setVrTotalAjustePeso(0);
-            $arMovimiento->setVrTotalRetencionIca(0);
-            $arMovimiento->setVrTotalRetencionIva(0);
-            $arMovimiento->setVrTotalRetencionFuente(0);
+            $arMovimiento->setVrTotalNeto(0);
             $arMovimiento->setEstadoAnulado(1);
             $this->_em->persist($arMovimiento);
-            dd("todo corrrecto");
-//            $this->_em->flush();
+            $this->_em->flush();
         }
         return $respuesta;
     }

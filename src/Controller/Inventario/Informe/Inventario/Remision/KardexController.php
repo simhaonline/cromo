@@ -39,7 +39,6 @@ class KardexController extends AbstractController
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('txtLote', TextType::class, ['required' => false, 'data' => $session->get('filtroInvKardexLote')])

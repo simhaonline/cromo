@@ -38,32 +38,59 @@ class InvOrdenRepository extends ServiceEntityRepository
     /**
      * @return mixed
      */
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $numero = null;
+        $codigoOrden = null;
+        $codigoTercero = null;
+        $ordenTipo = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $numero = $filtros['numero'] ?? null;
+            $codigoOrden = $filtros['codigoOrden'] ?? null;
+            $codigoTercero = $filtros['codigoTercero'] ?? null;
+            $ordenTipo = $filtros['ordenTipo'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvOrden::class, 'o')
             ->select('o.codigoOrdenPk')
             ->addSelect('o.numero')
             ->addSelect('ot.nombre as nombreTipo')
             ->addSelect('o.fecha')
+            ->addSelect('o.fechaEntrega')
+            ->addSelect('o.vrSubtotal')
+            ->addSelect('o.vrDescuento')
+            ->addSelect('o.vrIva')
+            ->addSelect('o.vrNeto')
+            ->addSelect('o.vrTotal')
             ->addSelect('o.estadoAutorizado')
             ->addSelect('o.estadoAprobado')
             ->addSelect('o.estadoAnulado')
             ->join('o.ordenTipoRel', 'ot')
             ->where('o.codigoOrdenPk <> 0');
-        if ($session->get('InvOrden_numero') != "") {
-            $queryBuilder->andWhere("o.numero = " . $session->get('InvOrden_numero'));
+
+        if ($numero) {
+            $queryBuilder->andWhere("o.numero = {$numero}");
         }
-        if ($session->get('InvOrden_codigoOrdenPk') != "") {
-            $queryBuilder->andWhere("o.codigoOrdenPk = " . $session->get('InvOrden_codigoOrdenPk'));
+        if ($codigoOrden) {
+            $queryBuilder->andWhere("o.codigoOrdenPk = {$codigoOrden}" );
         }
-        if ($session->get('InvOrden_codigoOrdenTipoFk')) {
-            $queryBuilder->andWhere("o.codigoOrdenTipoFk = '{$session->get('InvOrden_codigoOrdenTipoFk')}'");
+        if ($ordenTipo) {
+            $queryBuilder->andWhere("o.codigoOrdenTipoFk = '{$ordenTipo}'");
         }
-        if ($session->get('InvOrden_codigoTerceroFk')) {
-            $queryBuilder->andWhere("o.codigoTerceroFk = '{$session->get('InvOrden_codigoTerceroFk')}'");
+        if ($codigoTercero) {
+            $queryBuilder->andWhere("o.codigoTerceroFk = '{$codigoTercero}'");
         }
-        switch ($session->get('InvOrden_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("o.estadoAprobado = 0");
                 break;
@@ -71,7 +98,7 @@ class InvOrdenRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("o.estadoAprobado = 1");
                 break;
         }
-        switch ($session->get('InvOrden_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("o.estadoAutorizado = 0");
                 break;
@@ -79,7 +106,7 @@ class InvOrdenRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("o.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('InvOrden_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("o.estadoAnulado = 0");
                 break;
@@ -87,6 +114,8 @@ class InvOrdenRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("o.estadoAnulado = 1");
                 break;
         }
+        $queryBuilder->addOrderBy('o.codigoOrdenPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }
 

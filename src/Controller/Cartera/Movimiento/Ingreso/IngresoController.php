@@ -135,7 +135,7 @@ class IngresoController extends BaseController
                         if ($id == 0) {
                             $arIngreso->setFecha(new \DateTime('now'));
                         }
-                        $arIngreso->setUsuario($this->getUser()->getName());
+                        $arIngreso->setUsuario($this->getUser()->getUsername());
                         $em->persist($arIngreso);
                         $em->flush();
                         return $this->redirect($this->generateUrl('cartera_movimiento_ingreso_ingreso_detalle', ['id' => $arIngreso->getCodigoIngresoPk()]));

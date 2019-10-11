@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('general_administracion_general_resolucion_lista') }}">Volver</a>
+        </div>
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arResolucionFactura.codigoResolucionFacturaPk }}</td>
+            <td class="titulo">NUMERO:</td>
+            <td class="td-in-well">{{ arResolucionFactura.numero }}</td>
+            <td class="titulo">PREFIJO:</td>
+            <td class="numero">{{ arResolucionFactura.prefijo }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA DESDE</td>
+            <td class="td-in-well">{{ arResolucionFactura.fechaDesde | date('Y-m-d') }}</td>
+            <td class="titulo">FECHA HASTA:</td>
+            <td class="td-in-well">{{ arResolucionFactura.fechaDesde | date('Y-m-d') }}</td>
+            <td class="titulo"></td>
+            <td class="numero"></td>
+        </tr>
+        <tr>
+            <td class="titulo">NUMERO DESDE</td>
+            <td class="td-in-well">{{ arResolucionFactura.numeroDesde }}</td>
+            <td class="titulo">NUMERO HASTA:</td>
+            <td class="td-in-well">{{ arResolucionFactura.numeroHasta }}</td>
+            <td class="titulo"></td>
+            <td class="numero"></td>
+        </tr>
+        </tbody>
+    </table>
+    <br/>
+    <br/>
+    {{ form_end(form) }}
+{% endblock %}

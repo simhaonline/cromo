@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label class=" col-sm-1 control-label">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoResolucionFacturaPk) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>NUMERO</th>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>PREFIJO</th>
+            <th>N.DESDE</th>
+            <th>N.HASTA</th>
+            <th></th>
+            <th></th>
+            <th><input type="checkbox" name="ChkSeleccionarTodos"
+                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arResolucionFactura in arResolucionFacturas %}
+            <tr>
+                <td>{{ arResolucionFactura.codigoResolucionFacturaPk }}</td>
+                <td>{{ arResolucionFactura.numero }}</td>
+                <td>{{ arResolucionFactura.fechaDesde | date ('Y-m-d')}}</td>
+                <td>{{ arResolucionFactura.fechaHasta | date ('Y-m-d')}}</td>
+                <td>{{ arResolucionFactura.prefijo }}</td>
+                <td>{{ arResolucionFactura.numeroDesde }}</td>
+                <td>{{ arResolucionFactura.numeroHasta }}</td>
+                <td style="text-align: center;">
+                    <a href="{{ path('general_administracion_general_resolucion_nuevo',{'id': arResolucionFactura.codigoResolucionFacturaPk }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
+                <td style="text-align: center;">
+                    <a href="{{ path('general_administracion_general_resolucion_detalle',{'id' : arResolucionFactura.codigoResolucionFacturaPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
+                                          value="{{ arResolucionFactura.codigoResolucionFacturaPk }}"/></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arResolucionFacturas.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arResolucionFacturas) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('general_administracion_general_resolucion_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    <br/><br/>
+    {{ form_end(form) }}
+{% endblock %}

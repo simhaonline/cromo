@@ -23,22 +23,27 @@ class ItemController extends AbstractController
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('txtCodigo', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBucarItemCodigo')])
-            ->add('txtNombre', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarItemNombre')])
-            ->add('txtMarca', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarItemMarca')])
-            ->add('txtReferencia', TextType::class, ['required'  => false,'data' => $session->get('filtroInvBuscarItemReferencia')])
+            ->add('txtCodigo', TextType::class, ['required'  => false])
+            ->add('txtNombre', TextType::class, ['required'  => false])
+            ->add('txtMarca', TextType::class, ['required'  => false])
+            ->add('txtReferencia', TextType::class, ['required'  => false])
             ->add('BtnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('BtnFiltrar')->isClicked()) {
-                $session->set('filtroInvBucarItemCodigo',$form->get('txtCodigo')->getData());
-                $session->set('filtroInvBuscarItemNombre',$form->get('txtNombre')->getData());
-                $session->set('filtroInvBuscarItemMarca',$form->get('txtMarca')->getData());
-                $session->set('filtroInvBuscarItemReferencia',$form->get('txtReferencia')->getData());
+                $raw['filtros'] =[
+                    'codigoItem'=> $form->get('txtCodigo')->getData(),
+                    'nombreItem'=> $form->get('txtNombre')->getData(),
+                    'marcaItem'=> $form->get('txtMarca')->getData(),
+                    'referenciaItem'=> $form->get('txtReferencia')->getData()
+                ];
             }
         }
-        $arItemes = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->get('page', 1), 20);
+        $arItemes = $paginator->paginate($em->getRepository(InvItem::class)->lista($raw), $request->query->get('page', 1), 20);
         return $this->render('inventario/buscar/item.html.twig', array(
             'arItemes' => $arItemes,
             'campoCodigo' => $campoCodigo,

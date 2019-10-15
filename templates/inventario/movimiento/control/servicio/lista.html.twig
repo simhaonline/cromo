@@ -79,10 +79,14 @@
                 <td>{{ arServicio.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arServicio.estadoAprobado ? "SI":"NO"}}</td>
                 <td>{{ arServicio.estadoAnulado ? "SI":"NO"}}</td>
-                <td class="text-center">
-                    <a href="{{ path('inventario_movimiento_control_servicio_nuevo',{'id': arServicio.codigoServicioPk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arServicio.estadoAutorizado %}
+                    <td></td>
+                {% else %}
+                    <td class="text-center">
+                        <a href="{{ path('inventario_movimiento_control_servicio_nuevo',{'id': arServicio.codigoServicioPk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
                 <td class="text-center">
                     <a href="{{ path('inventario_movimiento_control_servicio_detalle',{'id' : arServicio.codigoServicioPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

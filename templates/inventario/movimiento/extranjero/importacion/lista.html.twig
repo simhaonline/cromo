@@ -112,10 +112,15 @@
                 <td>{{ arImportacion.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arImportacion.estadoAprobado ? "SI":"NO"}}</td>
                 <td>{{ arImportacion.estadoAnulado ? "SI":"NO"}}</td>
-                <td class="text-center">
-                    <a href="{{ path('inventario_movimiento_extranjero_importacion_nuevo',{'id':arImportacion.codigoImportacionPk  }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arImportacion.estadoAutorizado %}
+                    <td></td>
+                {% else %}
+                    <td class="text-center">
+                        <a href="{{ path('inventario_movimiento_extranjero_importacion_nuevo',{'id':arImportacion.codigoImportacionPk  }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
+
                 <td class="text-center">
                     <a href="{{ path('inventario_movimiento_extranjero_importacion_detalle',{'id' : arImportacion.codigoImportacionPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

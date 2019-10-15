@@ -7,11 +7,15 @@ use App\Entity\Tesoreria\TesTercero;
 use App\Form\Type\Tesoreria\TerceroType;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TerceroController extends BaseController
+class TerceroController extends AbstractController
 {
     protected $clase = TesTercero::class;
     protected $claseNombre = "TesTercero";
@@ -28,25 +32,40 @@ class TerceroController extends BaseController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/tesoreria/administracion/tercero/tercero/lista", name="tesoreria_administracion_tercero_tercero_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
 
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Tercero");
+        $form = $this->createFormBuilder()
+            ->add('codigoTerceroPk', TextType::class, array('required' => false))
+            ->add('nombreCorto', TextType::class, array('required' => false))
+            ->add('numeroIdentificacion', IntegerType::class, array('required' => false))
+            ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltro')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeccion = $request->request->get('ChkSeleccionar');
-                $em->getRepository('App:Tesoreria\TesTercero')->eliminar($arrSeccion);
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(TesTercero::class)->lista($raw), "Terceros");
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
             }
         }
+        $arTerceros = $paginator->paginate($em->getRepository(TesTercero::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('tesoreria/administracion/tercero/lista.html.twig', [
-            'arrDatosLista' => $this->getDatosLista(),
-            'formBotonera' => $formBotonera->createView()
+            'arTerceros' => $arTerceros,
+            'form' => $form->createView()
         ]);
     }
 
@@ -87,7 +106,7 @@ class TerceroController extends BaseController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
-     * @Route("/compra/administracion/proveedor/proveedor/detalle/{id}", name="tesoreria_administracion_tercero_tercero_detalle")
+     * @Route("tesoreria/administracion/tercero/tercero/detalle/{id}", name="tesoreria_administracion_tercero_tercero_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -146,6 +165,15 @@ class TerceroController extends BaseController
 //            'arCotizacion' => $arCotizacion,
 //            'form' => $form->createView()
 //        ]);
+    }
+
+    public function getFiltros($form)
+    {
+        return $filtro = [
+            'codigoTerceroPk' => $form->get('codigoTerceroPk')->getData(),
+            'nombreCorto' => $form->get('nombreCorto')->getData(),
+            'numeroIdentificacion' => $form->get('numeroIdentificacion')->getData(),
+        ];
     }
 
 }

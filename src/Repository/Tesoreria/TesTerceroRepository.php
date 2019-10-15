@@ -17,26 +17,39 @@ class TesTerceroRepository extends ServiceEntityRepository
         parent::__construct($registry, TesTercero::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoTerceroPk = null;
+        $nombreCorto = null;
+        $numeroIdentificacion =null;
+        if ($filtros){
+            $codigoTerceroPk = $filtros['codigoTerceroPk']??null;
+            $nombreCorto = $filtros['nombreCorto']??null;
+            $numeroIdentificacion = $filtros['numeroIdentificacion']??null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesTercero::class, 't')
             ->select('t.codigoTerceroPk')
             ->addSelect('t.nombreCorto')
             ->addSelect('t.numeroIdentificacion')
+            ->addSelect('t.telefono')
+            ->addSelect('t.direccion')
+            ->addSelect('t.email')
             ->where('t.codigoTerceroPk <> 0')
             ->orderBy('t.codigoTerceroPk', 'DESC');
-        if ($session->get('filtroTesTerceroNombre') != '') {
-            $queryBuilder->andWhere("t.nombreCorto LIKE '%{$session->get('filtroTesTerceroNombre')}%' ");
+        if($codigoTerceroPk){
+            $queryBuilder->andWhere("t.codigoTerceroPk = {$codigoTerceroPk}");
         }
-        if ($session->get('filtroTesTerceroIdentificacion') != '') {
-            $queryBuilder->andWhere("t.numeroIdentificacion LIKE '%{$session->get('filtroTesTerceroIdentificacion')}%' ");
+        if($nombreCorto){
+            $queryBuilder->andWhere("t.nombreCorto LIKE '%{$nombreCorto}%'");
         }
-        if ($session->get('filtroTesTerceroCodigo') != '') {
-            $queryBuilder->andWhere("t.codigoTerceroPk LIKE '%{$session->get('filtroTesTerceroCodigo')}%' ");
+        if($numeroIdentificacion){
+            $queryBuilder->andWhere("t.numeroIdentificacion = '{$numeroIdentificacion}' ");
         }
-
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('t.codigoTerceroPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**

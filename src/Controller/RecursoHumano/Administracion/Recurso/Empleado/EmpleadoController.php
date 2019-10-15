@@ -13,6 +13,7 @@ use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class EmpleadoController extends BaseController
+class EmpleadoController extends AbstractController
 {
     protected $clase = RhuEmpleado::class;
     protected $claseFormulario = EmpleadoType::class;

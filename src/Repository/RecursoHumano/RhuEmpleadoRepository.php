@@ -97,7 +97,9 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("e.estadoContrato = 1");
                 break;
         }
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('e.codigoEmpleadoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function parametrosExcel()

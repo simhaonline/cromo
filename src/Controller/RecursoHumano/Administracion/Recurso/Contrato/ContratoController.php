@@ -21,6 +21,7 @@ use App\Form\Type\RecursoHumano\ContratoType;
 use App\General\General;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -31,7 +32,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContratoController extends BaseController
+class ContratoController extends AbstractController
 {
     protected $clase = RhuContrato::class;
     protected $claseFormulario = ContratoType::class;

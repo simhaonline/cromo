@@ -21,6 +21,7 @@ class TerceroType extends AbstractType
     {
         $builder
             ->add('numeroIdentificacion', TextType::class, ['required' => true , 'label' => 'Identificacion:'])
+            ->add('digitoVerificacion', TextType::class, ['required' => true , 'label' => 'Digito:'])
             ->add('nombre1', TextType::class, ['required' => false, 'label' => 'Primer nombre:'])
             ->add('nombre2', TextType::class, ['required' => false, 'label' => 'Segundo nombre:'])
             ->add('apellido1', TextType::class, ['required' => false, 'label' => 'Primer apellido:'])

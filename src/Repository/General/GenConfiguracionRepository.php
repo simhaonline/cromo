@@ -94,4 +94,13 @@ class GenConfiguracionRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
     }
 
+    public function facturaElectronica()
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenConfiguracion::class, 'c')
+            ->select('c.nit')
+            ->addSelect('c.feToken')
+            ->where('c.codigoConfiguracionPk = 1');
+
+        return $queryBuilder->getQuery()->getSingleResult();
+    }
 }

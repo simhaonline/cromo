@@ -132,6 +132,25 @@ class GenConfiguracion
      */
     private $codigoEmpresaOxigeno;
 
+    /**
+     * @ORM\Column(name="fe_token", type="string", length=200, nullable=true)
+     */
+    private $feToken;
+
+    /**
+     * @ORM\Column(name="fe_usuario", type="string", length=50, nullable=true)
+     */
+    private $feUsuario;
+
+    /**
+     * @ORM\Column(name="fe_clave", type="string", length=50, nullable=true)
+     */
+    private $feClave;
+
+    /**
+     * @ORM\Column(name="fe_codigo_empresa", type="string", length=10, nullable=true)
+     */
+    private $feCodigoEmpresa;
 
     /**
      * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
@@ -543,6 +562,70 @@ class GenConfiguracion
     public function setIdentificacionRel($identificacionRel): void
     {
         $this->identificacionRel = $identificacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFeToken()
+    {
+        return $this->feToken;
+    }
+
+    /**
+     * @param mixed $feToken
+     */
+    public function setFeToken($feToken): void
+    {
+        $this->feToken = $feToken;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFeUsuario()
+    {
+        return $this->feUsuario;
+    }
+
+    /**
+     * @param mixed $feUsuario
+     */
+    public function setFeUsuario($feUsuario): void
+    {
+        $this->feUsuario = $feUsuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFeClave()
+    {
+        return $this->feClave;
+    }
+
+    /**
+     * @param mixed $feClave
+     */
+    public function setFeClave($feClave): void
+    {
+        $this->feClave = $feClave;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFeCodigoEmpresa()
+    {
+        return $this->feCodigoEmpresa;
+    }
+
+    /**
+     * @param mixed $feCodigoEmpresa
+     */
+    public function setFeCodigoEmpresa($feCodigoEmpresa): void
+    {
+        $this->feCodigoEmpresa = $feCodigoEmpresa;
     }
 
 

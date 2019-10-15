@@ -69,6 +69,21 @@ class GenRespuestaFacturaElectronica
     private $listaMensajesProceso;
 
     /**
+     * @ORM\Column(name="status_code", type="string",length=10, nullable=true)
+     */
+    private $statusCode;
+
+    /**
+     * @ORM\Column(name="error_message", type="text", nullable=true)
+     */
+    private $errorMessage;
+
+    /**
+     * @ORM\Column(name="error_reason", type="text", nullable=true)
+     */
+    private $errorReason;
+
+    /**
      * @return mixed
      */
     public function getCodigoRespuestaFacturaElectronicaPk()
@@ -243,6 +258,55 @@ class GenRespuestaFacturaElectronica
     {
         $this->listaMensajesProceso = $listaMensajesProceso;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * @param mixed $statusCode
+     */
+    public function setStatusCode($statusCode): void
+    {
+        $this->statusCode = $statusCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getErrorMessage()
+    {
+        return $this->errorMessage;
+    }
+
+    /**
+     * @param mixed $errorMessage
+     */
+    public function setErrorMessage($errorMessage): void
+    {
+        $this->errorMessage = $errorMessage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getErrorReason()
+    {
+        return $this->errorReason;
+    }
+
+    /**
+     * @param mixed $errorReason
+     */
+    public function setErrorReason($errorReason): void
+    {
+        $this->errorReason = $errorReason;
+    }
+
 
 
 }

@@ -291,29 +291,37 @@ class FacturaElectronica
         );
 
         $resp = json_decode(curl_exec($ch), true);
+        if($resp) {
+            $arRespuesta = new GenRespuestaFacturaElectronica();
+            $arRespuesta->setStatusCode($resp['statusCode']);
+            $arRespuesta->setErrorMessage($resp['errorMessage']);
+            $arRespuesta->setErrorReason($resp['errorReason']);
+            $em->persist($arRespuesta);
+            $em->flush();
+        }
         curl_close($ch);
     }
 
     private function generarXmlCadena($arrFactura) {
         $em = $this->em;
-        /** @var $arMovimiento Movimiento */
-        $hora = "12:53:36-05:00";
+        $cufe = $arrFactura['doc_numero'].$arrFactura['doc_fecha'].$arrFactura['doc_hora'].$arrFactura['doc_subtotal'].'01'.$arrFactura['doc_iva'].'04'.$arrFactura['doc_inc'].'03'.$arrFactura['doc_ica'].$arrFactura['doc_total'].$arrFactura['dat_nitFacturador'].$arrFactura['ad_numeroIdentificacion'].$arrFactura['dat_claveTecnica'].$arrFactura['dat_tipoAmbiente'];
+        $cufeHash = hash('sha384', $cufe);
         $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<Invoice xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\" xmlns=\"urn:oasis:names:specification:ubl:schema:xsd:Invoice-2\" xmlns:cac=\"urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2\" xmlns:cbc=\"urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2\" xmlns:ext=\"urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2\" xmlns:sts=\"dian:gov:co:facturaelectronica:Structures-2-1\" xmlns:xades=\"http://uri.etsi.org/01903/v1.3.2#\" xmlns:xades141=\"http://uri.etsi.org/01903/v1.4.1#\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:oasis:names:specification:ubl:schema:xsd:Invoice-2     http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd\">
+<Invoice xmlns:ds='http://www.w3.org/2000/09/xmldsig#' xmlns='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2' xmlns:cac='urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2' xmlns:cbc='urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2' xmlns:ext='urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2' xmlns:sts='dian:gov:co:facturaelectronica:Structures-2-1' xmlns:xades='http://uri.etsi.org/01903/v1.3.2#' xmlns:xades141='http://uri.etsi.org/01903/v1.4.1#' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'>
 	<ext:UBLExtensions>
 		<ext:UBLExtension>
             <ext:ExtensionContent>
                 <sts:DianExtensions>
 					<sts:InvoiceControl>
-						<sts:InvoiceAuthorization>{$arMovimiento->getResolucionNumero()}</sts:InvoiceAuthorization>
+						<sts:InvoiceAuthorization>{$arrFactura['res_numero']}</sts:InvoiceAuthorization>
 						<sts:AuthorizationPeriod>
-							<cbc:StartDate>{$arMovimiento->getResolucionFechaDesde()}</cbc:StartDate>
-							<cbc:EndDate>{$arMovimiento->getResolucionFechaHasta()}</cbc:EndDate>
+							<cbc:StartDate>{$arrFactura['res_fechaDesde']}</cbc:StartDate>
+							<cbc:EndDate>{$arrFactura['res_fechaHasta']}</cbc:EndDate>
 						</sts:AuthorizationPeriod>
 						<sts:AuthorizedInvoices>
-							<sts:Prefix>{$arrFactura['prefijo']}2</sts:Prefix>
-							<sts:From>{$arMovimiento->getResolucionDesde()}</sts:From>
-							<sts:To>{$arMovimiento->getResolucionHasta()}</sts:To>
+							<sts:Prefix>{$arrFactura['res_prefijo']}</sts:Prefix>
+							<sts:From>{$arrFactura['res_desde']}</sts:From>
+							<sts:To>{$arrFactura['res_hasta']}</sts:To>
 						</sts:AuthorizedInvoices>
                    </sts:InvoiceControl>
 				</sts:DianExtensions>
@@ -322,10 +330,10 @@ class FacturaElectronica
 	</ext:UBLExtensions>	
 	<cbc:CustomizationID>05</cbc:CustomizationID>
 	<cbc:ProfileExecutionID>2</cbc:ProfileExecutionID>
-	<cbc:ID>{$numero}</cbc:ID>
-	<cbc:UUID schemeID=\"2\" schemeName=\"CUFE-SHA384\">f1c96d3ff4fc199817fa21ea2bc8a929b9b8c8b0fb50db6885ea48470e9ebabef994094272dbab11ddc93d8893dacb69</cbc:UUID>
-	<cbc:IssueDate>{$fecha}</cbc:IssueDate>
-	<cbc:IssueTime>{$hora}</cbc:IssueTime>
+	<cbc:ID>{$arrFactura['doc_numero']}</cbc:ID>
+	<cbc:UUID schemeID='2' schemeName='CUFE-SHA384'>{$cufeHash}</cbc:UUID>
+	<cbc:IssueDate>{$arrFactura['doc_fecha']}</cbc:IssueDate>
+	<cbc:IssueTime>{$arrFactura['doc_hora']}</cbc:IssueTime>
 	<cbc:InvoiceTypeCode>01</cbc:InvoiceTypeCode>
 	<cbc:Note>Prueba Factura Electronica Datos Reales 2</cbc:Note>
 	<cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>

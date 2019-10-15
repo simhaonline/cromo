@@ -1241,6 +1241,7 @@ class TteFacturaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arr) {
+            $arrConfiguracion = $em->getRepository(GenConfiguracion::class)->facturaElectronica();
             foreach ($arr AS $codigo) {
                 /** @var $arFactura TteFactura*/
                 $arFactura = $em->getRepository(TteFactura::class)->find($codigo);
@@ -1252,9 +1253,23 @@ class TteFacturaRepository extends ServiceEntityRepository
                         $arCliente = $arFactura->getClienteRel();
                         if($arResolucionFactura) {
                             $arrFactura = [
-                                'prefijo' => $arResolucionFactura->getPrefijo(),
-                                'consecutivo' => $arFactura->getNumero(),
-                                'fechaFacturacion' => $arFactura->getFecha()->format('Y-m-d'),
+                                'dat_nitFacturador' => $arrConfiguracion['nit'],
+                                'dat_claveTecnica' => $arrConfiguracion['feToken'],
+                                'dat_tipoAmbiente' => '2',
+                                'res_numero' => $arResolucionFactura->getNumero(),
+                                'res_prefijo' => $arResolucionFactura->getPrefijo(),
+                                'res_fechaDesde' => $arResolucionFactura->getFechaDesde()->format('Y-m-d'),
+                                'res_fechaHasta' => $arResolucionFactura->getFechaHasta()->format('Y-m-d'),
+                                'res_desde' => $arResolucionFactura->getNumeroDesde(),
+                                'res_hasta' => $arResolucionFactura->getNumeroHasta(),
+                                'doc_numero' => $arFactura->getNumero(),
+                                'doc_fecha' => $arFactura->getFecha()->format('Y-m-d'),
+                                'doc_hora' => '12:00:00-05:00',
+                                'doc_subtotal' => $arFactura->getVrSubtotal(),
+                                'doc_iva' => $arFactura->getVrIva(),
+                                'doc_inc' => 0,
+                                'doc_ica' => 0,
+                                'doc_total' => $arFactura->getVrTotal(),
                                 'ad_tipoIdentificacion' => $arCliente->getIdentificacionRel()->getCodigoEntidad(),
                                 'ad_numeroIdentificacion' => $arCliente->getNumeroIdentificacion(),
                                 'ad_digitoVerificacion' => $arCliente->getDigitoVerificacion(),
@@ -1269,7 +1284,8 @@ class TteFacturaRepository extends ServiceEntityRepository
                                 'ad_codigoCIUU' => $arCliente->getCodigoCIUU(),
                             ];
                             $facturaElectronica = new FacturaElectronica($em);
-                            $facturaElectronica->enviarDispapeles($arrFactura);
+                            //$facturaElectronica->enviarDispapeles($arrFactura);
+                            $facturaElectronica->enviarCadena($arrFactura);
                         } else {
                             Mensajes::error("La resolucion de la factura no existe");
                             break;

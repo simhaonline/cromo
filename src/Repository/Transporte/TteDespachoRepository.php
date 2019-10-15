@@ -215,7 +215,7 @@ class TteDespachoRepository extends ServiceEntityRepository
 
         $queryBuilder->orderBy('td.fechaSalida', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**

@@ -114,7 +114,7 @@ class DespachoController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltro($form);
-                General::get()->setExportar($em->getRepository(TteDespacho::class)->lista($raw)->getQuery()->execute(), "Despachos");
+                General::get()->setExportar($em->getRepository(TteDespacho::class)->lista($raw), "Despachos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');

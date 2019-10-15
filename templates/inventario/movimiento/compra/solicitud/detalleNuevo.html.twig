@@ -55,6 +55,9 @@
             {% endfor %}
             </tbody>
         </table>
+        <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+            {{ knp_pagination_render(arItems) }}
+        </div>
     </div>
     {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
     {{ form_end(form) }}

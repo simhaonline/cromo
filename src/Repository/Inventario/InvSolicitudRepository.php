@@ -44,6 +44,7 @@ class InvSolicitudRepository extends ServiceEntityRepository
             ->addSelect('i.numero')
             ->addSelect('it.nombre as nombreTipo')
             ->addSelect('i.fecha')
+            ->addSelect('i.usuario')
             ->addSelect('i.estadoAutorizado')
             ->addSelect('i.estadoAprobado')
             ->addSelect('i.estadoAnulado')

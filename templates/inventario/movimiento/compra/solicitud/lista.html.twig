@@ -1,10 +1,122 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
-    <div class="table-responsive" style="padding:0px;">
-        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-        {{ form_start(formBotonera) }}
-        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
-        {{ form_end(formBotonera) }}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1">Numero:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.numero) }}
+                        </div>
+                        <label for="" class="control-label col-sm-1">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoSolicitudPk) }}
+                        </div>
+                        <label for="" class="control-label col-sm-2">Tipo:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.codigoSolicitudTipoFk) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-offset-6 col-sm-2">Autorizado:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget((form.estadoAutorizado)) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-offset-6 col-sm-2">Aprobado:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget((form.estadoAprobado)) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-offset-6 col-sm-2">Anulado:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget((form.estadoAnulado)) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+            <tr>
+                <th title="Codigo del registro">ID</th>
+                <th title="Tipo de solicitud">SOLICITUD TIPO</th>
+                <th title="Numero del registro">NUMERO</th>
+                <th title="Fecha del registro">FECHA</th>
+                <th title="Usuario">USUARIO</th>
+                <th title="Autorizdo">AUT</th>
+                <th title="Aprobado">APR</th>
+                <th title="Anulado">ANU</th>
+                <th></th>
+                <th></th>
+                <th><input type="checkbox" name="ChkSeleccionar" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for arSolicitud in arSolicitudes %}
+            <tr>
+                <td>{{ arSolicitud.codigoSolicitudPk }}</td>
+                <td>{{ arSolicitud.nombreTipo }}</td>
+                <td>{{ arSolicitud.numero }}</td>
+                <td>{{ arSolicitud.fecha | date('Y-m-d') }}</td>
+                <td>{{ arSolicitud.usuario   }}</td>
+                <td>{{ arSolicitud.estadoAutorizado ? "SI":"NO" }}</td>
+                <td>{{ arSolicitud.estadoAprobado ? "SI":"NO"}}</td>
+                <td>{{ arSolicitud.estadoAnulado ? "SI":"NO"}}</td>
+                <td class="text-center">
+                    <a href="{{ path('inventario_movimiento_compra_solicitud_nuevo',{'id': arSolicitud.codigoSolicitudPk }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
+                <td class="text-center">
+                    <a href="{{ path('inventario_movimiento_compra_solicitud_detalle',{'id' : arSolicitud.codigoSolicitudPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arSolicitud.codigoSolicitudPk }}"/>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arSolicitudes.getTotalItemCount }}
+                </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arSolicitudes) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('inventario_movimiento_compra_solicitud_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    {{ form_end(form) }}
+    <br/><br/><br/>
 {% endblock %}

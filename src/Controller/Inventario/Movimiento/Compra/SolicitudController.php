@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Inventario\InvItem;
+use App\Entity\Inventario\InvOrdenTipo;
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Entity\Inventario\InvSolicitudTipo;
@@ -14,6 +15,8 @@ use App\Utilidades\BaseDatos;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use App\General\General;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -42,35 +45,55 @@ class SolicitudController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/compra/solicitud/lista", name="inventario_movimiento_compra_solicitud_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
+        $form = $this->createFormBuilder()
+            ->add('codigoSolicitudTipoFk', EntityType::class, [
+                'class' => InvOrdenTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('st')
+                        ->orderBy('st.codigoOrdenTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoSolicitudPk', TextType::class, array('required' => false))
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
 
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvSolicitud::class)->lista()->getQuery()->getResult(), "Solicitudes");
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(InvSolicitud::class)->lista($raw)->getQuery()->getResult(), "Solicitudes");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(InvSolicitud::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('inventario_movimiento_compra_solicitud_lista'));
             }
         }
+        $arSolicitudes = $paginator->paginate($em->getRepository(InvSolicitud::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('inventario/movimiento/compra/solicitud/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arSolicitudes' => $arSolicitudes,
+            'form' => $form->createView(),
+
         ]);
     }
 
@@ -117,11 +140,10 @@ class SolicitudController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/compra/solicitud/detalle/{id}", name="inventario_movimiento_compra_solicitud_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator,$id)
     {
         $em = $this->getDoctrine()->getManager();
         $arSolicitud = $em->getRepository(InvSolicitud::class)->find($id);
-        $paginator = $this->get('knp_paginator');
         $form = Estandares::botonera($arSolicitud->getEstadoAutorizado(),$arSolicitud->getEstadoAprobado(),$arSolicitud->getEstadoAnulado());
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         if($arSolicitud->getEstadoAutorizado()){
@@ -175,7 +197,7 @@ class SolicitudController extends ControllerListenerGeneral
      * @Route("/inventario/movimiento/compra/solicitud/detalle/nuevo/{id}", name="inventario_movimiento_compra_solicitud_detalle_nuevo")
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function detalleNuevo(Request $request, $id)
+    public function detalleNuevo(Request $request, PaginatorInterface $paginator,$id)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
@@ -188,10 +210,15 @@ class SolicitudController extends ControllerListenerGeneral
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
+                $raw['filtros'] =[
+                    'codigoItem'=> $form->get('txtCodigoItem')->getData(),
+                    'nombreItem'=> $form->get('txtNombreItem')->getData()
+                ];
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -212,10 +239,32 @@ class SolicitudController extends ControllerListenerGeneral
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 10);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($raw), $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/compra/solicitud/detalleNuevo.html.twig', [
             'arItems' => $arItems,
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'numero' => $form->get('numero')->getData(),
+            'codigoSolicitud' => $form->get('codigoSolicitudPk')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arSolicitudTipo = $form->get('codigoSolicitudTipoFk')->getData();
+
+        if (is_object($arSolicitudTipo)) {
+            $filtro['$arSolicitudTipo'] = $arSolicitudTipo->getCodigoIncidenteTipoPk();
+        } else {
+            $filtro['$arSolicitudTipo'] = $arSolicitudTipo;
+        }
+
+        return $filtro;
+
     }
 }

@@ -20,6 +20,80 @@ class InvServicioRepository extends ServiceEntityRepository
         parent::__construct($registry, InvServicio::class);
     }
 
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoServicio = null;
+        $servicioTipo = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoServicio = $filtros['codigoServicio'] ?? null;
+            $servicioTipo = $filtros['servicioTipo'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvServicio::class, 's')
+            ->select('s.codigoServicioPk')
+            ->addSelect('s.fecha')
+            ->addSelect('s.comentario')
+            ->addSelect('s.estadoAutorizado')
+            ->addSelect('s.estadoAprobado')
+            ->addSelect('s.estadoAnulado')
+            ->addSelect('st.nombre as servicioTipo')
+            ->leftJoin('s.servicioTipoRel', 'st');
+        if ($codigoServicio) {
+            $queryBuilder->andWhere("s.codigoServicioPk = '{$codigoServicio}'");
+        }
+
+        if ($servicioTipo) {
+            $queryBuilder->andWhere("s.codigoServicioTipoFk = '{$servicioTipo}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("s.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("s.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("s.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("s.estadoAnulado = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('s.codigoServicioPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+    }
+    
     public function eliminar($arrSeleccionados)
     {
         $respuesta = '';
@@ -45,32 +119,4 @@ class InvServicioRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return TurServicio[] Returns an array of TurServicio objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?TurServicio
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

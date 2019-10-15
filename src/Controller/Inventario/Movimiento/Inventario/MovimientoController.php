@@ -430,21 +430,27 @@ class MovimientoController extends ControllerListenerGeneral
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
-            ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemReferencia')])
-            ->add('itemConExistencia', CheckboxType::class, array('label' => ' ', 'required' => false, 'data' => $session->get('itemConExistencia')))
-            ->add('itemConDisponibilidad', CheckboxType::class, array('label' => ' ', 'required' => false, 'data' => $session->get('filtroItemConDisponibilidad')))
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
+            ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false])
+            ->add('itemConExistencia', CheckboxType::class, array('label' => ' ', 'required' => false))
+            ->add('itemConDisponibilidad', CheckboxType::class, array('label' => ' ', 'required' => false))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
-                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
-                $session->set('itemConExistencia', $form->get('itemConExistencia')->getData());
-                $session->set('filtroItemConDisponibilidad', $form->get('itemConDisponibilidad')->getData());
+
+                $raw['filtros'] =[
+                    'codigoItem'=> $form->get('txtCodigoItem')->getData(),
+                    'nombreItem'=> $form->get('txtNombreItem')->getData(),
+                    'referenciaItem'=> $form->get('txtReferenciaItem')->getData(),
+                    'existenciaItem'=> $form->get('itemConExistencia')->getData(),
+                    'disponibilidadItem'=> $form->get('itemConDisponibilidad')->getData()
+                ];
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -502,7 +508,7 @@ class MovimientoController extends ControllerListenerGeneral
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 50);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/inventario/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems

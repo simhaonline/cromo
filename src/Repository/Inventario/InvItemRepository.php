@@ -67,17 +67,17 @@ class InvItemRepository extends ServiceEntityRepository
         $codigoItem = null;
         $referenciaItem = null;
         $existenciaItem = null;
-        $disponibilidad = null;
+        $disponibilidadItem = null;
         $nombreItem = null;
         $marcaItem = null;
 
         if ($filtros) {
-            $codigoItem = $filtros['codigoItem'] ?? null; //este filtro llega desde itenController
+            $codigoItem = $filtros['codigoItem'] ?? null;
             $referenciaItem = $filtros['referenciaItem'] ?? null;
             $nombreItem = $filtros['nombreItem'] ?? null;
             $marcaItem = $filtros['marcaItem'] ?? null;
-            $existenciaItem = $filtros['existenciaItem'] ?? null; //este filtro llega desde factura
-            $disponibilidad = $filtros['$disponibilidad'] ?? null; //este filtro llega desde movimiento
+            $existenciaItem = $filtros['existenciaItem'] ?? null;
+            $disponibilidadItem = $filtros['disponibilidadItem'] ?? null;
         }
         $queryBuilder = $this->_em->createQueryBuilder()->from(InvItem::class, 'i')
             ->select('i.codigoItemPk')
@@ -104,7 +104,7 @@ class InvItemRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("i.cantidadExistencia > 0");
         }
 
-        if($disponibilidad == true){
+        if($disponibilidadItem){
             $queryBuilder->andWhere("i.cantidadDisponible > 0");
         }
 

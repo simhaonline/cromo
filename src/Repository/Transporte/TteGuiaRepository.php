@@ -326,6 +326,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->select('g.codigoGuiaPk')
             ->addSelect('g.numero')
             ->addSelect('g.fechaIngreso')
+            ->addSelect('g.fechaDespacho')
             ->addSelect('g.codigoOperacionIngresoFk')
             ->addSelect('g.codigoOperacionCargoFk')
             ->addSelect('c.nombreCorto AS clienteNombre')
@@ -1079,15 +1080,20 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
                     if ($arGuia->getEstadoDespachado() == 1 && $arGuia->getEstadoEntregado() == 0) {
                         if ($fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia])) {
-                            $arGuia->setFechaEntrega($fechaHora);
-                            $arGuia->setEstadoEntregado(1);
-                            if (isset($arrControles['chkSoporte']) && $arrControles['chkSoporte']) {
-                                if (!$arGuia->getEstadoSoporte()) {
-                                    $arGuia->setEstadoSoporte(1);
-                                    $arGuia->setFechaSoporte(new  \DateTime('now'));
+                            if($arGuia->getFechaDespacho() < $fechaHora) {
+                                $arGuia->setFechaEntrega($fechaHora);
+                                $arGuia->setEstadoEntregado(1);
+                                if (isset($arrControles['chkSoporte']) && $arrControles['chkSoporte']) {
+                                    if (!$arGuia->getEstadoSoporte()) {
+                                        $arGuia->setEstadoSoporte(1);
+                                        $arGuia->setFechaSoporte(new  \DateTime('now'));
+                                    }
                                 }
+                                $em->persist($arGuia);
+                            } else {
+                                Mensajes::error("No se puede entregar la guia " . $codigoGuia . " porque la fecha de despacho es superior a la fecha de entrega");
+                                break;
                             }
-                            $em->persist($arGuia);
                         }
                     }
                 }
@@ -1961,18 +1967,25 @@ class TteGuiaRepository extends ServiceEntityRepository
             if ($arGuia->getEstadoDespachado() == 1) {
                 if ($arGuia->getEstadoEntregado() == 0) {
                     $fechaHora = date_create($fecha . " " . $hora);
-                    $arGuia->setFechaEntrega($fechaHora);
-                    $arGuia->setEstadoEntregado(1);
-                    if ($soporte == "si") {
-                        $arGuia->setEstadoSoporte(1);
-                        $arGuia->setFechaSoporte(new \DateTime('now'));
+                    if($arGuia->getFechaDespacho() < $fechaHora) {
+                        $arGuia->setFechaEntrega($fechaHora);
+                        $arGuia->setEstadoEntregado(1);
+                        if ($soporte == "si") {
+                            $arGuia->setEstadoSoporte(1);
+                            $arGuia->setFechaSoporte(new \DateTime('now'));
+                        }
+                        $em->persist($arGuia);
+                        $em->flush();
+                        return [
+                            'error' => false,
+                            'mensaje' => '',
+                        ];
+                    } else {
+                        return [
+                            'error' => true,
+                            'mensaje' => "No se puede entregar la guia " . $codigoGuia . " porque la fecha de despacho es superior a la fecha de entrega",
+                        ];
                     }
-                    $em->persist($arGuia);
-                    $em->flush();
-                    return [
-                        'error' => false,
-                        'mensaje' => '',
-                    ];
                 } else {
                     return [
                         'error' => true,

@@ -136,15 +136,18 @@ class EntregaController extends Controller
                                 $arGuia = $em->find(TteGuia::class, $arrCarga['guia']);
                                 if ($arGuia) {
                                     if ($arGuia->getEstadoDespachado() && !$arGuia->getEstadoEntregado()) {
-                                        $arGuia->setEstadoEntregado(1);
-                                        $arGuia->setFechaEntrega(date_create($arrCarga['fecha'] . ' ' . $arrCarga['hora']));
-                                        if ($form->get('chkSoporte')->getData()) {
-                                            if(!$arGuia->getEstadoSoporte()){
-                                                $arGuia->setEstadoSoporte(1);
-                                                $arGuia->setFechaSoporte(new \DateTime('now'));
+                                        $fechaHora = date_create($arrCarga['fecha'] . ' ' . $arrCarga['hora']);
+                                        if($arGuia->getFechaDespacho() < $fechaHora) {
+                                            $arGuia->setEstadoEntregado(1);
+                                            $arGuia->setFechaEntrega($fechaHora);
+                                            if ($form->get('chkSoporte')->getData()) {
+                                                if(!$arGuia->getEstadoSoporte()){
+                                                    $arGuia->setEstadoSoporte(1);
+                                                    $arGuia->setFechaSoporte(new \DateTime('now'));
+                                                }
                                             }
+                                            $em->persist($arGuia);
                                         }
-                                        $em->persist($arGuia);
                                     }
                                 } else {
                                     $arrNoEncontrado[] = $arrCarga['guia'];

@@ -33,6 +33,7 @@
             <th>NUMERO</th>
             <th>DOC_CLIENTE</th>
             <th>FECHA</th>
+            <th title="Fecha despacho">F_DESP</th>
             <th>CLIENTE</th>
             <th>DESTINO</th>
             <th>UND</th>
@@ -53,6 +54,7 @@
                 <td>{{ arGuia.numero }}</td>
                 <td>{{ arGuia.documentoCliente }}</td>
                 <td>{{ arGuia.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arGuia.fechaDespacho | date('Y-m-d H:i') }}</td>
                 <td>{{ arGuia.clienteNombre }}</td>
                 <td>{{ arGuia.ciudadDestino }}</td>
                 <td class="numero">{{ arGuia.unidades }}</td>

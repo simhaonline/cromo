@@ -23,39 +23,66 @@ class InvImportacionRepository extends ServiceEntityRepository
         parent::__construct($registry, InvImportacion::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $numero = null;
+        $codigoImportacion = null;
+        $codigoTercero = null;
+        $importacionTipo  = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $numero = $filtros['numero'] ?? null;
+            $codigoImportacion = $filtros['codigoImportacion'] ?? null;
+            $importacionTipo = $filtros['importacionTipo'] ?? null;
+            $codigoTercero = $filtros['codigoTercero'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
+
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvImportacion::class, 'i')
             ->select('i.codigoImportacionPk')
+            ->addSelect('it.nombre as importacionTipo')
             ->addSelect('i.numero')
             ->addSelect('i.fecha')
-            ->addSelect('it.nombre')
+            ->addSelect('i.soporte')
+            ->addSelect('t.nombreCorto AS terceroNombreCorto')
+            ->addSelect('m.nombre AS moneda')
+            ->addSelect('i.tasaRepresentativaMercado')
+            ->addSelect('i.vrSubtotalExtranjero')
+            ->addSelect('i.vrTotalExtranjero')
+            ->addSelect('i.vrSubtotalExtranjero')
+            ->addSelect('i.vrSubtotalLocal')
+            ->addSelect('i.vrTotalLocal')
             ->addSelect('i.estadoAutorizado')
             ->addSelect('i.estadoAprobado')
             ->addSelect('i.estadoAnulado')
-            ->addSelect('i.vrSubtotalExtranjero')
-            ->addSelect('i.vrIvaExtranjero')
-            ->addSelect('i.vrNetoExtranjero')
-            ->addSelect('i.vrTotalExtranjero')
-            ->addSelect('t.nombreCorto AS terceroNombreCorto')
             ->leftJoin('i.terceroRel', 't')
             ->leftJoin('i.importacionTipoRel', 'it')
-            ->where('i.codigoImportacionPk <> 0')
-            ->orderBy('i.codigoImportacionPk', 'DESC');
-        if ($session->get('InvImportacion_codigoImportacionPk')) {
-            $queryBuilder->andWhere("r.codigoImportacionPk = '{$session->get('InvImportacion_codigoImportacionPk')}'");
+            ->leftJoin('i.monedaRel', 'm');
+
+        if ($codigoImportacion) {
+            $queryBuilder->andWhere("i.codigoImportacionPk = '{$codigoImportacion}'");
         }
-        if ($session->get('InvImportacion_numero')) {
-            $queryBuilder->andWhere("i.numero = {$session->get('InvImportacion_numero')}");
+        if ($numero) {
+            $queryBuilder->andWhere("i.numero = {$numero}");
         }
-        if ($session->get('InvImportacion_codigoImportacionTipoFk')) {
-            $queryBuilder->andWhere("i.codigoImportacionTipoFk = '{$session->get('InvImportacion_codigoImportacionTipoFk')}'");
+
+        if ($importacionTipo) {
+            $queryBuilder->andWhere("i.codigoImportacionTipoFk = '{$importacionTipo}'");
         }
-        if ($session->get('InvImportacion_codigoTerceroFk')) {
-            $queryBuilder->andWhere("i.codigoTerceroFk = {$session->get('InvImportacion_codigoTerceroFk')}");
+        if ($codigoTercero) {
+            $queryBuilder->andWhere("i.codigoTerceroFk = {$codigoTercero}");
         }
-        switch ($session->get('InvImportacion_estadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("i.estadoAutorizado = 0");
                 break;
@@ -63,7 +90,7 @@ class InvImportacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("i.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('InvImportacion_estadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("i.estadoAprobado = 0");
                 break;
@@ -71,7 +98,7 @@ class InvImportacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("i.estadoAprobado = 1");
                 break;
         }
-        switch ($session->get('InvImportacion_estadoAnulado')) {
+        switch ($estadoAnulado) {
             case '0':
                 $queryBuilder->andWhere("i.estadoAnulado = 0");
                 break;
@@ -79,7 +106,10 @@ class InvImportacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("i.estadoAnulado = 1");
                 break;
         }
-        return $queryBuilder;
+
+        $queryBuilder->addOrderBy('i.codigoImportacionPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
 
     }
 

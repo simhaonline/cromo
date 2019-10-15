@@ -16,7 +16,11 @@ use App\Formato\Inventario\Importacion;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +28,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Type\Inventario\ImportacionType;
 
-class ImportacionController extends ControllerListenerGeneral
+class ImportacionController extends AbstractController
 {
     protected $class = InvImportacion::class;
     protected $claseNombre = "InvImportacion";
@@ -40,35 +44,57 @@ class ImportacionController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/extranjero/importacion/lista", name="inventario_movimiento_extranjero_importacion_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
 
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoTerceroFk', TextType::class, array('required' => false))
+            ->add('codigoImportacionPk', TextType::class, array('required' => false))
+            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoImportacionTipoFk', EntityType::class, [
+                'class' => InvImportacionTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('it')
+                        ->orderBy('it.codigoImportacionTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvImportacion::class)->lista()->getQuery()->getResult(), "Importacion");
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(InvImportacion::class)->lista($raw), "Importacion");
+
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(InvImportacion::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('cartera_movimiento_recibo_recibo_lista'));
             }
         }
+        $arImportaciones = $paginator->paginate($em->getRepository(InvImportacion::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('inventario/movimiento/extranjero/importacion/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arImportaciones'=>$arImportaciones,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -126,9 +152,8 @@ class ImportacionController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/extranjero/importacion/detalle/{id}", name="inventario_movimiento_extranjero_importacion_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request,PaginatorInterface $paginator, $id)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arImportacion = $em->getRepository(InvImportacion::class)->find($id);
         $form = Estandares::botonera($arImportacion->getEstadoAutorizado(), $arImportacion->getEstadoAprobado(), $arImportacion->getEstadoAnulado());
@@ -200,11 +225,10 @@ class ImportacionController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/extranjero/importacion/detalle/nuevo/{codigoImportacion}", name="inventario_movimiento_extranjero_importacion_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $codigoImportacion)
+    public function detalleNuevo(Request $request,PaginatorInterface $paginator, $codigoImportacion)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arImportacion = $em->getRepository(InvImportacion::class)->find($codigoImportacion);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -304,5 +328,28 @@ class ImportacionController extends ControllerListenerGeneral
         return $this->render('inventario/movimiento/extranjero/importacion/costoNuevo.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'numero' => $form->get('numero')->getData(),
+            'codigoImportacion' => $form->get('codigoImportacionPk')->getData(),
+            'codigoTercero' => $form->get('codigoTerceroFk')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arImportacionTipo = $form->get('codigoImportacionTipoFk')->getData();
+
+        if (is_object($arImportacionTipo)) {
+            $filtro['importacionTipo'] = $arImportacionTipo->getCodigoImportacionTipoPk();
+        } else {
+            $filtro['importacionTipo'] = $arImportacionTipo;
+        }
+
+        return $filtro;
+
     }
 }

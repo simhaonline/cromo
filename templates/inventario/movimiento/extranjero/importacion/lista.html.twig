@@ -1,12 +1,158 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}
-    <div class="table-responsive" style="padding:0px;">
-        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-        {{ form_start(formBotonera) }}
-        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}
-        {{ form_end(formBotonera) }}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label for="txtCodigoCliente" class="col-sm-1 control-label">Cliente:</label>
+                        <div class="col-sm-11">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.codigoTerceroFk) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input id="form_txtNombreCorto" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('inventario_buscar_tercero', { 'campoCodigo': 'form_codigoTerceroFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1">Numero:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.numero) }}
+                        </div>
+                        <label for="" class="control-label col-sm-1">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoImportacionPk) }}
+                        </div>
+                        <label for="" class="control-label col-sm-1">Tipo:</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(form.codigoImportacionTipoFk) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1 col-sm-offset-6">Autorizado:</label>
+                        <div class="col-sm-5">
+                            {{ form_widget((form.estadoAutorizado)) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1 col-sm-offset-6">Aprobado:</label>
+                        <div class="col-sm-5">
+                            {{ form_widget((form.estadoAprobado)) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1 col-sm-offset-6">Anulado:</label>
+                        <div class="col-sm-5">
+                            {{ form_widget((form.estadoAnulado)) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+            <tr>
+                <th title="Codigo del registro">ID</th>
+                <th title="Tipo de importacion">IMPORTACION TIPO</th>
+                <th title="Numero del registro">NUMERO</th>
+                <th title="Fecha del registro">FECHA</th>
+                <th title="Soporte">SOPORTE</th>
+                <th title="Tercero">TERCERO</th>
+                <th title="Moneda en que se realizo el proceso">MONEDA</th>
+                <th title="TMR">TMR</th>
+                <th title="Subtotal extranjero">SUBTOTAL(E)</th>
+                <th title="Total extranjero">TOTAL(E)</th>
+                <th title="Subtotal local">SUBTOTAL(L)</th>
+                <th title="Total local">TOTAL(L)</th>
+                <th title="Autorizdo">AUT</th>
+                <th title="Aprobado">APR</th>
+                <th title="Anulado">ANU</th>
+                <th></th>
+                <th></th>
+                <th><input type="checkbox" name="ChkSeleccionar" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for arImportacion in arImportaciones %}
+            <tr>
+                <td>{{ arImportacion.codigoImportacionPk }}</td>
+                <td>{{ arImportacion.importacionTipo }}</td>
+                <td>{{ arImportacion.numero }}</td>
+                <td>{{ arImportacion.fecha | date('Y-m-d') }}</td>
+                <td>{{ arImportacion.soporte }}</td>
+                <td>{{ arImportacion.terceroNombreCorto }}</td>
+                <td>{{ arImportacion.moneda }}</td>
+                <td class="numero">{{ arImportacion.tasaRepresentativaMercado | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arImportacion.vrSubtotalExtranjero | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arImportacion.vrTotalExtranjero | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arImportacion.vrSubtotalLocal | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arImportacion.vrTotalLocal | number_format(0, '.', ',') }}</td>
+                <td>{{ arImportacion.estadoAutorizado ? "SI":"NO" }}</td>
+                <td>{{ arImportacion.estadoAprobado ? "SI":"NO"}}</td>
+                <td>{{ arImportacion.estadoAnulado ? "SI":"NO"}}</td>
+                <td class="text-center">
+                    <a href="{{ path('inventario_movimiento_extranjero_importacion_nuevo',{'id':arImportacion.codigoImportacionPk  }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
+                <td class="text-center">
+                    <a href="{{ path('inventario_movimiento_extranjero_importacion_detalle',{'id' : arImportacion.codigoImportacionPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arImportacion.codigoImportacionPk  }}" />
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arImportaciones.getTotalItemCount }}
+                </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arImportaciones) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('inventario_movimiento_extranjero_importacion_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    {{ form_end(form) }}
+    <br /><br /><br />
 {% endblock %}
 
 

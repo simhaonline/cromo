@@ -3,6 +3,7 @@
 namespace App\Controller\Tesoreria\Buscar;
 
 use App\Entity\Tesoreria\TesTercero;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,14 +28,19 @@ class TerceroController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTesTerceroCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroTesTerceroNombre', $form->get('txtNombre')->getData());
-                $session->set('filtroTesTerceroIdentificacion', $form->get('txtIdentificacion')->getData());
+                $raw['filtros'] =[
+                    'codigoTerceroPk'=>$form->get('txtCodigo')->getData(),
+                    'nombreCorto'=>$form->get('txtNombre')->getData(),
+                    'numeroIdentificacion'=>$form->get('txtIdentificacion')->getData()
+                ];
             }
         }
-        $arTerceros = $paginator->paginate($em->getRepository(TesTercero::class)->lista(), $request->query->get('page', 1), 20);
+        $arTerceros = $paginator->paginate($em->getRepository(TesTercero::class)->lista($raw), $request->query->get('page', 1), 20);
         return $this->render('tesoreria/buscar/tercero.html.twig', array(
             'arTerceros' => $arTerceros,
             'campoCodigo' => $campoCodigo,
@@ -46,24 +52,28 @@ class TerceroController extends Controller
     /**
      * @Route("/tesoreria/buscar/tercero/movimiento/{campoCodigo}", name="tesoreria_buscar_tercero_movimiento")
      */
-    public function buscarTerceroMovimiento(Request $request, $campoCodigo)
+    public function buscarTerceroMovimiento(Request $request,PaginatorInterface $paginator, $campoCodigo)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTesBuscarTerceroCodigo')])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroTesBuscarTerceroNombre')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTesBuscarTerceroCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroTesBuscarTerceroNombre', $form->get('txtNombre')->getData());
+                $raw['filtros'] =[
+                    'codigoTerceroPk'=>$form->get('txtCodigo')->getData(),
+                    'nombreCorto'=>$form->get('txtNombre')->getData(),
+                ];
             }
         }
-        $arTerceros = $paginator->paginate($em->getRepository(TesTercero::class)->lista(), $request->query->get('page', 1), 20);
+        $arTerceros = $paginator->paginate($em->getRepository(TesTercero::class)->lista($raw), $request->query->get('page', 1), 20);
         return $this->render('tesoreria/buscar/buscarTerceroMovimiento.html.twig', array(
             'arTerceros' => $arTerceros,
             'campoCodigo' => $campoCodigo,

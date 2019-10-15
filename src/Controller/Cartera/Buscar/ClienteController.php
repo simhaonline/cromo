@@ -45,11 +45,10 @@ class ClienteController extends AbstractController
     /**
      * @Route("/cartera/buscar/movimiento/cliente/{campoCodigo}", name="cartera_buscar_movimiento_cliente")
      */
-    public function buscarClienteMovimiento(Request $request, $campoCodigo)
+    public function buscarClienteMovimiento(Request $request, $campoCodigo, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroCarCodigoCliente')])
             ->add('txtNit', TextType::class, array('label'  => 'Nit'))

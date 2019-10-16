@@ -68,6 +68,9 @@
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arCorregirFacturas) }}
     </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
     <br/><br/><br/>
     {{ form_rest(form) }}
     {{ form_end(form) }}

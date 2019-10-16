@@ -1443,11 +1443,17 @@ class InvMovimientoRepository extends ServiceEntityRepository
         return $arrResultado['cantidad'];
     }
 
-    public function corregirFactura()
+    public function corregirFactura($raw)
     {
-        $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm');
-        $queryBuilder
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $nuemroFactura = null;
+
+        if ($filtros) {
+            $nuemroFactura = $filtros['nuemroFactura'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm')
             ->select('m.codigoMovimientoPk')
             ->addSelect('m.numero')
             ->addSelect('ase.nombre AS asesor')
@@ -1462,11 +1468,13 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->leftJoin('m.terceroRel', 't')
             ->where("m.codigoDocumentoTipoFk = 'FAC' ")
             ->andWhere('m.estadoAnulado = 0');
-        if ($session->get('filtroInvFacturaNumero') != "") {
-            $queryBuilder->andWhere("m.numero = " . $session->get('filtroInvFacturaNumero'));
+        if ($nuemroFactura) {
+            $queryBuilder->andWhere("m.numero = {$nuemroFactura}");
         }
 
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('m.codigoMovimientoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**

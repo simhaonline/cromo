@@ -129,9 +129,20 @@ class InvLoteRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function listaCorregirFechaVencimiento()
+    public function listaCorregirFechaVencimiento($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoItem = null;
+        $lote = null;
+        $fechaVencimiento = null;
+        $bodega = null;
+        if ($filtros) {
+            $codigoItem = $filtros['codigoItem'] ?? null;
+            $lote = $filtros['lote'] ?? null;
+            $fechaVencimiento = $filtros['fechaVencimiento'] ?? null;
+            $bodega = $filtros['bodega'] ?? null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvLote::class, 'l')
             ->select('l.codigoLotePk')
             ->addSelect('l.codigoItemFk')
@@ -149,22 +160,24 @@ class InvLoteRepository extends ServiceEntityRepository
             ->orderBy('l.codigoItemFk', "ASC")
             ->addOrderBy('l.codigoBodegaFk', "ASC")
             ->addOrderBy('l.codigoItemFk', "ASC");
-        if ($session->get('filtroInvInformeItemCodigo') != '') {
-            $queryBuilder->andWhere("l.codigoItemFk = {$session->get('filtroInvInformeItemCodigo')}");
+        if ($codigoItem) {
+            $queryBuilder->andWhere("l.codigoItemFk = {$codigoItem}");
         }
-        if ($session->get('filtroInvInformeItemReferencia') != '') {
-            $queryBuilder->andWhere("i.referencia = {$session->get('filtroInvInformeItemReferencia')}");
+        if ($lote) {
+            $queryBuilder->andWhere("l.loteFk  = {$lote}");
         }
-        if ($session->get('filtroInvInformeLote') != '') {
-            $queryBuilder->andWhere("l.loteFk = '{$session->get('filtroInvInformeLote')}' ");
+//        if ($session->get('filtroInvInformeLote') != '') {
+//            $queryBuilder->andWhere("l.referencia = '{$session->get('filtroInvInformeLote')}' ");
+//        }
+        if ($bodega) {
+            $queryBuilder->andWhere("l.codigoBodegaFk = '{$bodega}' ");
         }
-        if ($session->get('filtroInvInformeLoteBodega') != '') {
-            $queryBuilder->andWhere("l.codigoBodegaFk = '{$session->get('filtroInvInformeLoteBodega')}' ");
+        if ($fechaVencimiento) {
+            $queryBuilder->andWhere("l.fechaVencimiento <= '{$fechaVencimiento}'");
         }
-        if ($session->get('filtroInvInformeFechaVence') != null) {
-            $queryBuilder->andWhere("l.fechaVencimiento <= '{$session->get('filtroInvInformeFechaVence')}'");
-        }
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('l.codigoLotePk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function notificacionDiariaMercanciaVencidaBodega()

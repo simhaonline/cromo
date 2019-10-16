@@ -16,7 +16,11 @@ use App\Formato\Inventario\Costo;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +28,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Type\Inventario\CostoType;
 
-class CostoController extends ControllerListenerGeneral
+class CostoController extends AbstractController
 {
     protected $class = InvCosto::class;
     protected $claseNombre = "InvCosto";
@@ -41,35 +45,52 @@ class CostoController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/inventario/costo/lista", name="inventario_movimiento_inventario_costo_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('codigoCostoPk', TextType::class, array('required' => false))
+            ->add('codigoCostoTipoFk', EntityType::class, [
+                'class' => InvCostoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('ct')
+                        ->orderBy('ct.codigoCostoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Costo");
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(InvCosto::class)->lista($raw), "Costo");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(InvCosto::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('inventario_movimiento_inventario_costo_lista'));
             }
         }
+        $arCostos = $paginator->paginate($em->getRepository(InvCosto::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('inventario/movimiento/inventario/costo/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arCostos' => $arCostos,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -121,9 +142,8 @@ class CostoController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/inventario/costo/detalle/{id}", name="inventario_movimiento_inventario_costo_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request,PaginatorInterface $paginator ,$id)
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $arCosto = $em->getRepository(InvCosto::class)->find($id);
         $form = Estandares::botonera($arCosto->getEstadoAutorizado(), $arCosto->getEstadoAprobado(), $arCosto->getEstadoAnulado());
@@ -156,5 +176,26 @@ class CostoController extends ControllerListenerGeneral
             'clase' => array('clase'=>'InvCosto', 'codigo' => $id),
         ]);
     }
-    
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoCosto' => $form->get('codigoCostoPk')->getData(),
+            'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
+            'estadoAprobado' => $form->get('estadoAprobado')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+        ];
+
+        $arCostoTipo = $form->get('codigoCostoTipoFk')->getData();
+
+        if (is_object($arCostoTipo)) {
+            $filtro['incidenteTipo'] = $arCostoTipo->getCodigoCostoTipoPk();
+        } else {
+            $filtro['incidenteTipo'] = $arCostoTipo;
+        }
+
+        return $filtro;
+
+    }
+
 }

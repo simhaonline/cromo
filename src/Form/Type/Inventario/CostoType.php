@@ -54,32 +54,4 @@ class CostoType extends AbstractType {
         return 'App_costo';
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoCostoPk",             "tipo":"pk",        "ayuda":"Codigo del registro",                  "titulo":"ID"},
-            {"campo":"costoTipoRel.nombre",       "tipo":"texto",     "ayuda":"Tipo de costo",                  "titulo":"COSTO TIPO",         "relacion":""},
-            {"campo":"anio",                          "tipo":"entero",     "ayuda":"Anio",                  "titulo":"ANIO"},
-            {"campo":"mes",                          "tipo":"entero",     "ayuda":"Mes",                  "titulo":"MES"},
-            {"campo":"vrCosto",                    "tipo":"moneda",    "ayuda":"Total",                          "titulo":"TOTAL"},
-            {"campo":"estadoAutorizado",                "tipo":"bool",      "ayuda":"Autorizdo",                            "titulo":"AUT"},
-            {"campo":"estadoAprobado",                  "tipo":"bool",      "ayuda":"Aprobado",                             "titulo":"APR"},
-            {"campo":"estadoAnulado",                   "tipo":"bool",      "ayuda":"Anulado",                              "titulo":"ANU"}
-                                     
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[            
-            {"child":"codigoCostoPk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},            
-            {"child":"codigoCostoTipoFk", "tipo":"EntityType",  "propiedades":{"class":"InvCostoTipo","choice_label":"nombre","label":"Tipo"}},
-            {"child":"estadoAutorizado",        "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",    "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",          "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",    "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",           "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",     "choices":{"SI":true,"NO":false}}}
-        ]';
-        return $campos;
-    }
-
 }

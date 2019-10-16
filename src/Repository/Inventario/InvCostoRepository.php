@@ -23,6 +23,73 @@ class InvCostoRepository extends ServiceEntityRepository
         parent::__construct($registry, InvCosto::class);
     }
 
+
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCosto = null;
+        $codigoCostoTipo = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoCosto = $filtros['codigoCosto'] ?? null;
+            $codigoCostoTipo = $filtros['codigoCostoTipo'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvCosto::class, 'c')
+            ->select('c.codigoCostoPk')
+            ->addSelect('ct.nombre as costoTipo')
+            ->addSelect('c.anio')
+            ->addSelect('c.mes')
+            ->addSelect('c.vrCosto')
+            ->addSelect('c.estadoAutorizado')
+            ->addSelect('c.estadoAprobado')
+            ->addSelect('c.estadoAnulado')
+            ->leftJoin('c.costoTipoRel', 'ct');
+
+        if ($codigoCosto) {
+            $queryBuilder->andWhere("c.codigoCostoPk = '{$codigoCosto}'");
+        }
+        if ($codigoCostoTipo) {
+            $queryBuilder->andWhere("c.codigoCostoTipoFk = '{$codigoCostoTipo}'");
+        }
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAutorizado = 1");
+                break;
+        }
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAprobado = 1");
+                break;
+        }
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoAnulado = 1");
+                break;
+        }
+
+        $queryBuilder->addOrderBy('c.codigoCostoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
     /**
      * @param $codigoCosto
      * @throws \Doctrine\ORM\ORMException

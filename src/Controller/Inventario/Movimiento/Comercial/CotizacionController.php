@@ -224,11 +224,10 @@ class CotizacionController extends AbstractController
      * @Route("/inventario/movimiento/comercial/cotizacion/detalle/nuevo/{id}", name="inventario_movimiento_comercial_cotizacion_detalle_nuevo")
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function detalleNuevo(Request $request, $id)
+    public function detalleNuevo(Request $request,  PaginatorInterface $paginator,$id)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arCotizacion = $em->getRepository(InvCotizacion::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -236,11 +235,16 @@ class CotizacionController extends AbstractController
             ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
+        $raw = [
+            'limiteRegistros' => null
+        ];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
+                $raw['filtros'] = [
+                    'codigoItem' => $form->get('txtCodigoItem')->getData(),
+                    'nombreItem' => $form->get('txtNombreItem')->getData()
+                ];
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -262,7 +266,7 @@ class CotizacionController extends AbstractController
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 50);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/comercial/cotizacion/detalleNuevo.html.twig', [
             'arItems' => $arItems,
             'form' => $form->createView()

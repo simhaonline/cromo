@@ -257,16 +257,19 @@ class RemisionController extends AbstractController
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $codigoItem = null;
-                if (is_numeric($form->get('txtCodigoItem')->getData())) {
+                if (!is_null($form->get('txtCodigoItem')->getData())){
+
+                    if (is_numeric($form->get('txtCodigoItem')->getData() ) ){
                     $codigoItem = $form->get('txtCodigoItem')->getData();
-                } else {
-                    Mensajes::error("El codigo del item debe ser numerico");
+                    } else {
+                        Mensajes::error("El codigo del item debe ser numerico");
+                    }
                 }
 
                 $raw['filtros'] =[
                     'codigoItem' => $codigoItem,
                     'nombreItem' =>$form->get('txtNombreItem')->getData(),
-                    'marcaItem' => $form->get('txtReferenciaItem')->getData()
+                    'referenciaItem' => $form->get('txtReferenciaItem')->getData()
                 ];
             }
             if ($form->get('btnGuardar')->isClicked()) {

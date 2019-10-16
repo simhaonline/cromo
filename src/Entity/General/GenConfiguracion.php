@@ -153,6 +153,11 @@ class GenConfiguracion
     private $feCodigoEmpresa;
 
     /**
+     * @ORM\Column(name="codigo_tipo_persona_fk", type="string", length=3, nullable=true)
+     */
+    private $codigoTipoPersonaFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -626,6 +631,22 @@ class GenConfiguracion
     public function setFeCodigoEmpresa($feCodigoEmpresa): void
     {
         $this->feCodigoEmpresa = $feCodigoEmpresa;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoPersonaFk()
+    {
+        return $this->codigoTipoPersonaFk;
+    }
+
+    /**
+     * @param mixed $codigoTipoPersonaFk
+     */
+    public function setCodigoTipoPersonaFk($codigoTipoPersonaFk): void
+    {
+        $this->codigoTipoPersonaFk = $codigoTipoPersonaFk;
     }
 
 

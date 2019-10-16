@@ -339,7 +339,7 @@ class FacturaElectronica
 	<cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>
 	<cbc:LineCountNumeric>1</cbc:LineCountNumeric>
 	<cac:AccountingSupplierParty>
-		<cbc:AdditionalAccountID>1</cbc:AdditionalAccountID>
+		<cbc:AdditionalAccountID>{$arrFactura['em_tipoPersona']}</cbc:AdditionalAccountID>
 		<cac:Party>
 			<cac:PartyName>
 				<cbc:Name>Cadena S.A.</cbc:Name>
@@ -397,10 +397,10 @@ class FacturaElectronica
 		</cac:Party>
 	</cac:AccountingSupplierParty>
 	<cac:AccountingCustomerParty>
-		<cbc:AdditionalAccountID>1</cbc:AdditionalAccountID>
+		<cbc:AdditionalAccountID>{$arrFactura['ad_tipoPersona']}</cbc:AdditionalAccountID>
 		<cac:Party>
 			<cac:PartyName>
-				<cbc:Name>ADQUIRIENTE DE EJEMPLO</cbc:Name>
+				<cbc:Name>{$arrFactura['ad_nombreCompleto']}</cbc:Name>
 			</cac:PartyName>
 			<cac:PhysicalLocation>
 				<cac:Address>
@@ -419,8 +419,8 @@ class FacturaElectronica
 				</cac:Address>
 			</cac:PhysicalLocation>
 			<cac:PartyTaxScheme>
-				<cbc:RegistrationName>ADQUIRIENTE DE EJEMPLO</cbc:RegistrationName>
-				<cbc:CompanyID schemeID=\"3\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">1017173008</cbc:CompanyID>
+				<cbc:RegistrationName>{$arrFactura['ad_nombreCompleto']}</cbc:RegistrationName>
+				<cbc:CompanyID schemeID=\"3\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">{$arrFactura['ad_numeroIdentificacion']}</cbc:CompanyID>
 				<cbc:TaxLevelCode listName=\"05\">O-99</cbc:TaxLevelCode>
 				<cac:RegistrationAddress>
 					<cbc:ID>66001</cbc:ID>
@@ -442,8 +442,8 @@ class FacturaElectronica
 				</cac:TaxScheme>
 			</cac:PartyTaxScheme>
 			<cac:PartyLegalEntity>
-				<cbc:RegistrationName>ADQUIRIENTE DE EJEMPLO</cbc:RegistrationName>
-				<cbc:CompanyID schemeID=\"3\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">1017173008</cbc:CompanyID>
+				<cbc:RegistrationName>{$arrFactura['ad_nombreCompleto']}</cbc:RegistrationName>
+				<cbc:CompanyID schemeID=\"3\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">{$arrFactura['ad_numeroIdentificacion']}</cbc:CompanyID>
 				<cac:CorporateRegistrationScheme>
 					<cbc:Name>1485596</cbc:Name>
 				</cac:CorporateRegistrationScheme>
@@ -473,10 +473,10 @@ class FacturaElectronica
 		</cac:TaxSubtotal>
 	</cac:TaxTotal>
 	<cac:LegalMonetaryTotal>
-		<cbc:LineExtensionAmount currencyID=\"COP\">100000.00</cbc:LineExtensionAmount>
-		<cbc:TaxExclusiveAmount currencyID=\"COP\">100000.00</cbc:TaxExclusiveAmount>
-		<cbc:TaxInclusiveAmount currencyID=\"COP\">119000.00</cbc:TaxInclusiveAmount>
-		<cbc:PayableAmount currencyID=\"COP\">119000.00</cbc:PayableAmount>
+		<cbc:LineExtensionAmount currencyID=\"COP\">{$arrFactura['doc_subtotal']}</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID=\"COP\">{$arrFactura['doc_subtotal']}</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID=\"COP\">{$arrFactura['doc_total']}</cbc:TaxInclusiveAmount>
+		<cbc:PayableAmount currencyID=\"COP\">{$arrFactura['doc_total']}</cbc:PayableAmount>
 	</cac:LegalMonetaryTotal>
 	<cac:InvoiceLine>
 		<cbc:ID>1</cbc:ID>

@@ -335,14 +335,14 @@ class FacturaElectronica
 	<cbc:IssueDate>{$arrFactura['doc_fecha']}</cbc:IssueDate>
 	<cbc:IssueTime>{$arrFactura['doc_hora']}</cbc:IssueTime>
 	<cbc:InvoiceTypeCode>01</cbc:InvoiceTypeCode>
-	<cbc:Note>Prueba Factura Electronica Datos Reales 2</cbc:Note>
+	<cbc:Note>$cufe</cbc:Note>
 	<cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>
 	<cbc:LineCountNumeric>1</cbc:LineCountNumeric>
 	<cac:AccountingSupplierParty>
 		<cbc:AdditionalAccountID>{$arrFactura['em_tipoPersona']}</cbc:AdditionalAccountID>
 		<cac:Party>
 			<cac:PartyName>
-				<cbc:Name>Cadena S.A.</cbc:Name>
+				<cbc:Name>{$arrFactura['em_nombreCompleto']}</cbc:Name>
 			</cac:PartyName>
 			<cac:PhysicalLocation>
 				<cac:Address>
@@ -361,8 +361,8 @@ class FacturaElectronica
 				</cac:Address>
 			</cac:PhysicalLocation>
 			<cac:PartyTaxScheme>
-				<cbc:RegistrationName>Cadena S.A.</cbc:RegistrationName>
-				<cbc:CompanyID schemeID=\"0\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">890930534</cbc:CompanyID>
+				<cbc:RegistrationName>{$arrFactura['em_nombreCompleto']}</cbc:RegistrationName>
+				<cbc:CompanyID schemeID=\"0\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">{$arrFactura['em_numeroIdentificacion']}</cbc:CompanyID>
 				<cbc:TaxLevelCode listName=\"05\">O-99</cbc:TaxLevelCode>
 				<cac:RegistrationAddress>
 					<cbc:ID>05380</cbc:ID>
@@ -459,12 +459,12 @@ class FacturaElectronica
 		<cbc:PaymentID>Efectivo</cbc:PaymentID>
 	</cac:PaymentMeans>
 	<cac:TaxTotal>
-		<cbc:TaxAmount currencyID=\"COP\">19000.00</cbc:TaxAmount>
+		<cbc:TaxAmount currencyID=\"COP\">0.00</cbc:TaxAmount>
 		<cac:TaxSubtotal>
-			<cbc:TaxableAmount currencyID=\"COP\">100000.00</cbc:TaxableAmount>
-			<cbc:TaxAmount currencyID=\"COP\">19000.00</cbc:TaxAmount>
+			<cbc:TaxableAmount currencyID=\"COP\">0.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID=\"COP\">0.00</cbc:TaxAmount>
 			<cac:TaxCategory>
-				<cbc:Percent>19.00</cbc:Percent>
+				<cbc:Percent>0.00</cbc:Percent>
 				<cac:TaxScheme>
 					<cbc:ID>01</cbc:ID>
 					<cbc:Name>IVA</cbc:Name>
@@ -481,14 +481,14 @@ class FacturaElectronica
 	<cac:InvoiceLine>
 		<cbc:ID>1</cbc:ID>
 		<cbc:InvoicedQuantity>1.00</cbc:InvoicedQuantity>
-		<cbc:LineExtensionAmount currencyID=\"COP\">100000.00</cbc:LineExtensionAmount>
+		<cbc:LineExtensionAmount currencyID=\"COP\">717445.00</cbc:LineExtensionAmount>
 		<cac:TaxTotal>
-			<cbc:TaxAmount currencyID=\"COP\">19000.00</cbc:TaxAmount>			
+			<cbc:TaxAmount currencyID=\"COP\">0.00</cbc:TaxAmount>			
 			<cac:TaxSubtotal>
-				<cbc:TaxableAmount currencyID=\"COP\">100000.00</cbc:TaxableAmount>
-				<cbc:TaxAmount currencyID=\"COP\">19000.00</cbc:TaxAmount>
+				<cbc:TaxableAmount currencyID=\"COP\">0.00</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID=\"COP\">0.00</cbc:TaxAmount>
 				<cac:TaxCategory>
-					<cbc:Percent>19.00</cbc:Percent>
+					<cbc:Percent>0.00</cbc:Percent>
 					<cac:TaxScheme>
 						<cbc:ID>01</cbc:ID>
 						<cbc:Name>IVA</cbc:Name>
@@ -497,13 +497,13 @@ class FacturaElectronica
 			</cac:TaxSubtotal>
 		</cac:TaxTotal>
 		<cac:Item>
-			<cbc:Description>Frambuesas</cbc:Description>
+			<cbc:Description>Transporte</cbc:Description>
 			<cac:StandardItemIdentification>
 				<cbc:ID schemeID=\"999\">03222314-7</cbc:ID>
 			</cac:StandardItemIdentification>
 		</cac:Item>
 		<cac:Price>
-			<cbc:PriceAmount currencyID=\"COP\">100000.00</cbc:PriceAmount>
+			<cbc:PriceAmount currencyID=\"COP\">717445.00</cbc:PriceAmount>
 			<cbc:BaseQuantity unitCode=\"EA\">1.00</cbc:BaseQuantity>
 		</cac:Price>
 	</cac:InvoiceLine>

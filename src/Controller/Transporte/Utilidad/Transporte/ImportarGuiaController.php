@@ -36,9 +36,9 @@ class ImportarGuiaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('fechaIngresoDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date form-control',], 'required' => false,'data' => $session->get('filtroGuiaFechaIngresoDesde') != '' ? date_create($session->get('filtroGuiaFechaIngresoDesde')) : null ])
-            ->add('fechaIngresoHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date form-control',], 'required' => false,'data' => $session->get('filtroGuiaFechaIngresoHasta') != '' ? date_create($session->get('filtroGuiaFechaIngresoHasta')) : null ])
-            ->add('codigoClienteFk', TextType::class, ['required' => false,'data' => $session->get('filtroGuiaCodigoCliente')])
+            ->add('fechaIngresoDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date form-control',], 'required' => false, 'data' => $session->get('filtroGuiaFechaIngresoDesde') != '' ? date_create($session->get('filtroGuiaFechaIngresoDesde')) : null])
+            ->add('fechaIngresoHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date form-control',], 'required' => false, 'data' => $session->get('filtroGuiaFechaIngresoHasta') != '' ? date_create($session->get('filtroGuiaFechaIngresoHasta')) : null])
+            ->add('codigoClienteFk', TextType::class, ['required' => false, 'data' => $session->get('filtroGuiaCodigoCliente')])
             ->add('btnFiltrar', SubmitType::class, ['label' => "Filtro", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
             ->add('btnImportar', SubmitType::class, ['label' => "Importar", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
             ->add('btnMarcar', SubmitType::class, ['label' => "Marcar exportado", 'attr' => ['class' => 'filtrar btn btn-default btn-sm', 'style' => 'float:right']])
@@ -59,9 +59,9 @@ class ImportarGuiaController extends Controller
                 }
                 $em->getRepository(TteGuiaTemporal::class)->createQueryBuilder('t')->delete(TteGuiaTemporal::class)->getQuery()->execute();
             }
-            if($form->get('btnMarcar')->isClicked()){
+            if ($form->get('btnMarcar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                if($arrSeleccionados){
+                if ($arrSeleccionados) {
                     $this->marcarExportado($arrSeleccionados);
                 }
                 $em->getRepository(TteGuiaTemporal::class)->createQueryBuilder('t')->delete(TteGuiaTemporal::class)->getQuery()->execute();
@@ -84,7 +84,7 @@ class ImportarGuiaController extends Controller
         //$url = 'http://159.65.52.53/galio/public/index.php/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
         $url = $arConfiguracion->getWebServiceGalioUrl() . '/api/pendientes/guia/' . $arConfiguracionTransporte->getCodigoOperadorFk();
         $arCliente = $em->getRepository(TteCliente::class)->find($session->get('filtroGuiaCodigoCliente'));
-        if($arCliente) {
+        if ($arCliente) {
             $arrDatos['nit'] = $arCliente->getNumeroIdentificacion();
             $arrDatos['fechaHasta'] = $session->get('filtroGuiaFechaIngresoHasta');
             $arrDatos['fechaDesde'] = $session->get('filtroGuiaFechaIngresoDesde');
@@ -148,13 +148,13 @@ class ImportarGuiaController extends Controller
         foreach ($arrSeleccionados as $codigoGuiaTemporal) {
             $arGuiaTemporal = $em->find(TteGuiaTemporal::class, $codigoGuiaTemporal);
             $arGuiaTipo = $em->getRepository(TteGuiaTipo::class)->find("COR");
-            $arOperacion = $em->find(TteOperacion::class,$arGuiaTemporal->getOperacion());
-            $arProducto = $em->getRepository(TteProducto::class)->find('1');
+            $arOperacion = $em->find(TteOperacion::class, $arGuiaTemporal->getOperacion());
+            $arProducto = $em->getRepository(TteProducto::class)->find($arGuiaTemporal->getCodigoProductoFk());
             $arEmpaque = $em->getRepository(TteEmpaque::class)->find('VAR');
             $arServicio = $em->find(TteServicio::class, 'PAQ');
             if ($arGuiaTemporal) {
-                if(!$em->find(TteGuia::class,$arGuiaTemporal->getNumero())){
-                    if($arOperacion) {
+                if (!$em->find(TteGuia::class, $arGuiaTemporal->getNumero())) {
+                    if ($arOperacion) {
                         $arGuia = new TteGuia();
                         $arGuia->setCodigoGuiaPk((int)$arGuiaTemporal->getNumero());
                         $arGuia->setCiudadOrigenRel($arGuiaTemporal->getCiudadOrigenRel());
@@ -168,7 +168,7 @@ class ImportarGuiaController extends Controller
                         $arGuia->setEmpaqueRel($arEmpaque);
                         $arGuia->setCondicionRel($arGuiaTemporal->getClienteRel()->getCondicionRel());
                         $arGuia->setOperacionIngresoRel($arOperacion);
-                        if($arOperacion->getCodigoOperacionCargoFk()) {
+                        if ($arOperacion->getCodigoOperacionCargoFk()) {
                             $arGuia->setOperacionCargoRel($arOperacion->getOperacionCargoRel());
                         } else {
                             $arGuia->setOperacionCargoRel($arOperacion);
@@ -231,13 +231,14 @@ class ImportarGuiaController extends Controller
         }
     }
 
-    private function marcarExportado($arrNumeros){
+    private function marcarExportado($arrNumeros)
+    {
         $em = $this->getDoctrine()->getManager();
         $arConfiguracion = $em->find(GenConfiguracion::class, 1);
         $arConfiguracionTransporte = $em->find(TteConfiguracion::class, 1);
         $url = $arConfiguracion->getWebServiceGalioUrl() . '/api/importar/guia';
-        foreach ($arrNumeros as $codigoGuiaTemporal){
-            $arrNumeros[] = $em->find(TteGuiaTemporal::class,$codigoGuiaTemporal)->getNumero();
+        foreach ($arrNumeros as $codigoGuiaTemporal) {
+            $arrNumeros[] = $em->find(TteGuiaTemporal::class, $codigoGuiaTemporal)->getNumero();
         }
         $arrDatos['numeros'] = $arrNumeros;
         $arrDatos['codigoOperador'] = $arConfiguracionTransporte->getCodigoOperadorFk();

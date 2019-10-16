@@ -5,39 +5,35 @@
         <div class="panel-heading">Informacion general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Numero:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">nombre:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numero, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label for="form_fechaVence" class="col-sm-2 control-label">Prefijo:</label>
+                <label for="form_fechaVence" class="col-sm-2 control-label">fecha:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.prefijo) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Fecha desde:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.fechaDesde, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Fecha hasta:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.fecha) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_fechaVence" class="col-sm-2 control-label">Numero desde:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">version:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroDesde) }}
+                    {{ form_widget(form.version, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label for="form_fechaVence" class="col-sm-2 control-label">Numero hasta:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Modelo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.numeroHasta) }}
+                    {{ form_widget(form.codigoModeloFk, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaVence" class="col-sm-2 control-label">Código:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigo) }}
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('general_administracion_general_resolucion_lista') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('general_administracion_calidad_formato_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

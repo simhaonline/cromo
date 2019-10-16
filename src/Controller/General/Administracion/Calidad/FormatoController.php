@@ -5,6 +5,7 @@ namespace App\Controller\General\Administracion\Calidad;
 use App\Entity\General\GenCalidadFormato;
 use App\Form\Type\General\CalidadFormatoType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -31,20 +32,24 @@ class FormatoController extends ControllerListenerGeneral
     /**
      * @Route("/general/administracion/caldiad/formato/lista", name="general_administracion_calidad_formato_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtNombre', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroGenNombreCalidadFormato')])
+            ->add('txtNombre', TextType::class, ['label' => 'Nombre: ', 'required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
         if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroGenNombreCalidadFormato', $form->get('txtNombre')->getData());
+            $raw['filtros'] = $this->getFiltros($form);
         }
-        $arCalidadFormato = $paginator->paginate($em->getRepository(GenCalidadFormato::class)->lista(), $request->query->getInt('page', 1), 50);
+        $arCalidadFormato = $paginator->paginate($em->getRepository(GenCalidadFormato::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('general/administracion/calidad/lista.html.twig',
             ['arFormatos' => $arCalidadFormato,
                 'form' => $form->createView()]);
@@ -76,6 +81,14 @@ class FormatoController extends ControllerListenerGeneral
             'arCalidadFormato' => $arCalidadFormato,
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'nombre' => $form->get('txtNombre')->getData(),
+        ];
+        return $filtro;
     }
 
 }

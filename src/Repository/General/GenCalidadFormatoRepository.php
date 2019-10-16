@@ -16,9 +16,15 @@ class GenCalidadFormatoRepository extends ServiceEntityRepository
         parent::__construct($registry, GenCalidadFormato::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $nombre = null;
+        if ($filtros) {
+            $nombre = $filtros['nombre'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenCalidadFormato::class, 'cf')
             ->select('cf.codigoFormatoPk')
             ->addSelect('cf.nombre')
@@ -28,11 +34,13 @@ class GenCalidadFormatoRepository extends ServiceEntityRepository
             ->addSelect('cf.codigoModeloFk')
             ->where('cf.codigoFormatoPk IS NOT NULL')
             ->orderBy('cf.codigoFormatoPk', 'DESC');
-        if ($session->get('filtroGenNombreCalidadFormato') != '') {
-            $queryBuilder->andWhere("cf.nombre LIKE '%{$session->get('filtroGenNombreCalidadFormato')}%' ");
+        if ($nombre) {
+            $queryBuilder->andWhere("cf.nombre LIKE '%{$nombre}%' ");
         }
 
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('cf.codigoFormatoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
 }

@@ -31,6 +31,7 @@ class CondicionFleteType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Origen:',
                 'required' => false,
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('ciudadDestinoRel',EntityType::class,[
                 'class' => 'App\Entity\Transporte\TteCiudad',
@@ -41,6 +42,7 @@ class CondicionFleteType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Destino:',
                 'required' => false,
+                'attr' => ['class' => 'to-select-2'],
             ])
             ->add('zonaRel',EntityType::class,[
                 'class' => 'App\Entity\Transporte\TteZona',

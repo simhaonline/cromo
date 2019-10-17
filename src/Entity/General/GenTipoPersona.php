@@ -32,6 +32,11 @@ class GenTipoPersona
     protected $tteClientesTipoPersonaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvTercero", mappedBy="tipoPersonaRel")
+     */
+    protected $invTercerosTipoPersonaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTipoPersonaPk()

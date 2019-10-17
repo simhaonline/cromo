@@ -70,6 +70,26 @@ class TerceroType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => true
             ])
+            ->add('tipoPersonaRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenTipoPersona',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('tp')
+                        ->orderBy('tp.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Tipo persona:'
+            ])
+            ->add('regimenRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\General\GenRegimen',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->orderBy('r.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Regimen:'
+            ])
             ->add('digitoVerificacion', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('numeroIdentificacion', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
             ->add('nombreCorto', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
@@ -88,6 +108,7 @@ class TerceroType extends AbstractType
             ->add('retencionIva', CheckboxType::class, ['required' => false])
             ->add('retencionFuente', CheckboxType::class, ['required' => false])
             ->add('retencionFuenteSinBase', CheckboxType::class, ['required' => false])
+            ->add('codigoCIUU',TextType::class,['required' => false,'label' => 'CIUU:'])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

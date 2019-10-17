@@ -40,6 +40,14 @@
                 {% endif %}
             </td>
         </tr>
+        <tr>
+            <td class="titulo">TIPO PERSONA:</td>
+            <td class="td-in-well">{{ arTercero.tipoPersonaRel.nombre | default ('') }}</td>
+            <td class="titulo">REGIMEN:</td>
+            <td class="td-in-well">{{ arTercero.regimenRel.nombre | default('') }}</td>
+            <td class="titulo">CODIGO CIUU:</td>
+            <td>{{ arTercero.codigoCIUU }}</td>
+        </tr>
     </table>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#sucursales" data-toggle="tab">Sucursales</a></li>

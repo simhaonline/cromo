@@ -32,6 +32,11 @@ class GenRegimen
     protected $tteClientesRegimenRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvTercero", mappedBy="regimenRel")
+     */
+    protected $invTercerosRegimenRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoRegimenPk()

@@ -95,7 +95,7 @@ class LicenciaController extends AbstractController
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arLicenicasSeleccionados = $request->request->get('ChkSeleccionar');
-                $this->get("UtilidadesModelo")->eliminar(RhuLicencia::class, $arLicenicasSeleccionados);
+                $em->getRepository(RhuLicencia::class)->eliminar($arLicenicasSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_licencia_lista'));
             }
         }

@@ -6,6 +6,7 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuLicencia;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -230,6 +231,21 @@ class RhuLicenciaRepository extends ServiceEntityRepository
         $objQuery = $em->createQuery($dql);
         $arLicencias = $objQuery->getResult();
         return $arLicencias;
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        try{
+            foreach ($arrSeleccionados as $arrSeleccionado) {
+                $arRegistro = $this->getEntityManager()->getRepository(RhuLicencia::class)->find($arrSeleccionado);
+                if ($arRegistro) {
+                    $this->getEntityManager()->remove($arRegistro);
+                }
+            }
+            $this->getEntityManager()->flush();
+        } catch (\Exception $ex) {
+            Mensajes::error("El registro tiene registros relacionados");
+        }
     }
 
 }

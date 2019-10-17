@@ -210,11 +210,10 @@ class PedidoController extends AbstractController
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/comercial/pedido/detalle/nuevo/{codigoPedido}", name="inventario_movimiento_comercial_pedido_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $codigoPedido)
+    public function detalleNuevo(Request $request, PaginatorInterface $paginator,$codigoPedido)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arPedido = $em->getRepository(InvPedido::class)->find($codigoPedido);
         $form = $this->createFormBuilder()
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -224,11 +223,16 @@ class PedidoController extends AbstractController
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
-                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
+                $raw['filtros'] = [
+                    'codigoItem' => $form->get('txtCodigoItem')->getData(),
+                    'nombreItem' => $form->get('txtNombreItem')->getData(),
+                    'referenciaItem' => $form->get('txtReferenciaItem')->getData()
+                ];
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -253,7 +257,7 @@ class PedidoController extends AbstractController
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 50);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/comercial/pedido/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems

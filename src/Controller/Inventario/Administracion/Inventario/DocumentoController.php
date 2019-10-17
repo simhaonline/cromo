@@ -57,7 +57,7 @@ class DocumentoController extends AbstractController
             }
             if($form->get('btnExcel')->isClicked()){
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($this->getDoctrine()->getRepository(InvDocumento::class)->lista($raw)->getQuery()->execute(), 'Documentos inventario');
+                General::get()->setExportar($this->getDoctrine()->getRepository(InvDocumento::class)->lista($raw), 'Documentos inventario');
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');

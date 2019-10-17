@@ -51,7 +51,7 @@ class InvDocumentoRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("d.nombre like '%{$nombre}'");
         }
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function eliminar($arrSeleccionados)

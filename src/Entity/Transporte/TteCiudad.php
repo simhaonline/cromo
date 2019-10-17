@@ -140,6 +140,16 @@ class TteCiudad
     protected $departamentoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteFrecuencia", mappedBy="ciudadOrigenRel")
+     */
+    protected $frecuenciasCiudadOrigenRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteFrecuencia", mappedBy="ciudadDestinoRel")
+     */
+    protected $frecuenciasCiudadDestinoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="ciudadOrigenRel")
      */
     protected $guiasCiudadOrigenRel;
@@ -983,6 +993,54 @@ class TteCiudad
     public function setDomingo($domingo): void
     {
         $this->domingo = $domingo;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFrecuenciasCiudadOrigenRel()
+    {
+        return $this->frecuenciasCiudadOrigenRel;
+    }
+
+    /**
+     * @param mixed $frecuenciasCiudadOrigenRel
+     */
+    public function setFrecuenciasCiudadOrigenRel($frecuenciasCiudadOrigenRel): void
+    {
+        $this->frecuenciasCiudadOrigenRel = $frecuenciasCiudadOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFrecuenciasCiudadDestinoRel()
+    {
+        return $this->frecuenciasCiudadDestinoRel;
+    }
+
+    /**
+     * @param mixed $frecuenciasCiudadDestinoRel
+     */
+    public function setFrecuenciasCiudadDestinoRel($frecuenciasCiudadDestinoRel): void
+    {
+        $this->frecuenciasCiudadDestinoRel = $frecuenciasCiudadDestinoRel;
     }
 
 

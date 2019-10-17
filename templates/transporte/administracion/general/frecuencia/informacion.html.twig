@@ -1,0 +1,38 @@
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
+    <tr>
+        <td class="titulo">CODIGO FRECUENCIA:</td>
+        <td class="td-in-well">{{ arFrecuencia.codigoFrecuenciaPk }}</td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+    </tr>
+    <tr>
+        <td class="titulo">CIUDAD ORIGEN:</td>
+        <td class="td-in-well">{{ arFrecuencia.ciudadOrigenRel.nombre }}</td>
+        <td class="titulo">CIUDAD DESTNO:</td>
+        <td align="right">{{ arFrecuencia.ciudadDestinoRel.nombre }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">LUNES:</td>
+        <td class="td-in-well">{{ arFrecuencia.lunes ? 'SI':'NO' }}</td>
+        <td class="titulo">MARTES:</td>
+        <td align="right">{{ arFrecuencia.martes ? 'SI':'NO' }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">MIERCOLES:</td>
+        <td class="td-in-well">{{ arFrecuencia.miercoles ? 'SI':'NO' }}</td>
+        <td class="titulo">JUEVES:</td>
+        <td align="right">{{ arFrecuencia.jueves ? 'SI':'NO' }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">VIERNES:</td>
+        <td class="td-in-well">{{ arFrecuencia.viernes ? 'SI':'NO' }}</td>
+        <td class="titulo">SABADO:</td>
+        <td align="right">{{ arFrecuencia.sabado ? 'SI':'NO' }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">DOMINGO:</td>
+        <td class="td-in-well">{{ arFrecuencia.domingo ? 'SI':'NO' }}</td>
+        <td class="titulo"></td>
+        <td align="right"></td>
+    </tr>
+</table>

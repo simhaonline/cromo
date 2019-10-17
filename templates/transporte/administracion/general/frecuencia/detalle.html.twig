@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float: left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_administracion_general_frecuencia_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br/><br/>
+    {% include 'transporte/administracion/general/frecuencia/informacion.html.twig' %}
+{% endblock %}

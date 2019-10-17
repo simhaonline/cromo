@@ -58,7 +58,7 @@ class ContactoController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(InvContacto::class)->lista($raw)->getQuery()->getResult(), "Contactos");
+                General::get()->setExportar($em->getRepository(InvContacto::class)->lista($raw), "Contactos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');

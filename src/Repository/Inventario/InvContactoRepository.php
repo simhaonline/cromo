@@ -50,7 +50,7 @@ class InvContactoRepository extends ServiceEntityRepository
 
         $queryBuilder->addOrderBy('ct.codigoContactoPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function eliminar($arrSeleccionados)

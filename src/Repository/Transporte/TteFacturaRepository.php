@@ -824,6 +824,7 @@ class TteFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.estadoAprobado')
             ->addSelect('f.estadoAutorizado')
             ->addSelect('f.codigoFacturaClaseFk')
+            ->addSelect('c.numeroIdentificacion as clienteNumeroIdentificacion')
             ->addSelect('c.nombreCorto AS clienteNombre')
             ->addSelect('ft.nombre AS facturaTipo')
             ->leftJoin('f.clienteRel', 'c')
@@ -1255,6 +1256,7 @@ class TteFacturaRepository extends ServiceEntityRepository
                             $arrFactura = [
                                 'dat_nitFacturador' => $arrConfiguracion['nit'],
                                 'dat_claveTecnica' => $arrConfiguracion['feToken'],
+                                'dat_claveTecnicaCadena' => 'fc8eac422eba16e22ffd8c6f94b3f40a6e38162c',
                                 'dat_tipoAmbiente' => '2',
                                 'res_numero' => $arResolucionFactura->getNumero(),
                                 'res_prefijo' => $arResolucionFactura->getPrefijo(),

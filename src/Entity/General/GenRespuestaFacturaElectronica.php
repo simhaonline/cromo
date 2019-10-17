@@ -19,6 +19,11 @@ class GenRespuestaFacturaElectronica
     private $codigoRespuestaFacturaElectronicaPk;
 
     /**
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     */
+    private $fecha;
+
+    /**
      * @ORM\Column(name="tipo_documento", type="string",length=1, nullable=true)
      */
     private $tipoDocumento;
@@ -305,6 +310,22 @@ class GenRespuestaFacturaElectronica
     public function setErrorReason($errorReason): void
     {
         $this->errorReason = $errorReason;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
     }
 
 

@@ -11,6 +11,7 @@ use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenImpuesto;
+use App\Entity\General\GenResolucionFactura;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvBodegaUsuario;
 use App\Entity\Inventario\InvConfiguracion;
@@ -1562,4 +1563,125 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $arCuentaCobrar->setAsesorRel($arMovimiento->getAsesorRel());
         $em->persist($arCuentaCobrar);
     }
+
+    public function listaFacturaElectronica()
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm')
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.numero')
+            ->addSelect('m.fecha')
+            ->addSelect('m.vrSubtotal')
+            ->addSelect('m.vrTotal')
+            ->addSelect('m.vrIva')
+            ->addSelect('m.estadoAnulado')
+            ->addSelect('m.estadoAprobado')
+            ->addSelect('m.estadoAutorizado')
+            ->addSelect('t.numeroIdentificacion as clienteNumeroIdentificacion')
+            ->addSelect('t.nombreCorto AS clienteNombre')
+            ->leftJoin('m.terceroRel', 't')
+            ->where('m.estadoFacturaElectronica =  0')
+            ->andWhere('m.estadoAprobado = 1')
+            ->andWhere("m.codigoDocumentoTipoFk='FAC'")
+            ->andWhere("m.codigoDocumentoFk='FAC'")
+            ->orderBy('m.fecha', 'DESC');
+        $fecha =  new \DateTime('now');
+        /*if($session->get('filtroTteFacturaNumero') != ''){
+            $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
+        }
+        if($session->get('filtroTteFacturaCodigo') != ''){
+            $queryBuilder->andWhere("f.codigoFacturaPk = {$session->get('filtroTteFacturaCodigo')}");
+        }
+        if($session->get('filtroTteCodigoCliente')){
+            $queryBuilder->andWhere("f.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
+        }*/
+        if($session->get('filtroFecha') == true){
+            if ($session->get('filtroFechaDesde') != null) {
+                $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroFechaDesde')}'");
+            } else {
+                $queryBuilder->andWhere("m.fecha >='" . $fecha->format('Y-m-d') . "'");
+            }
+            if ($session->get('filtroFechaHasta') != null) {
+                $queryBuilder->andWhere("m.fecha <= '{$session->get('filtroFechaHasta')} 23:59:59'");
+            } else {
+                $queryBuilder->andWhere("m.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
+            }
+        }
+        /*if($session->get('filtroTteFacturaCodigoFacturaTipo')) {
+            $queryBuilder->andWhere("f.codigoFacturaTipoFk = '" . $session->get('filtroTteFacturaCodigoFacturaTipo') . "'");
+        }*/
+
+        return $queryBuilder->getQuery()->execute();
+    }
+
+    public function facturaElectronica($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $arrConfiguracion = $em->getRepository(GenConfiguracion::class)->facturaElectronica();
+            foreach ($arr AS $codigo) {
+                /** @var $arFactura InvMovimiento */
+                $arFactura = $em->getRepository(InvMovimiento::class)->find($codigo);
+                if($arFactura->getEstadoAprobado() && !$arFactura->getEstadoFacturaElectronica()) {
+                    if($arFactura->getCodigoResolucionFacturaFk()) {
+                        /** @var $arResolucionFactura GenResolucionFactura */
+                        $arResolucionFactura = $em->getRepository(GenResolucionFactura::class)->find($arFactura->getCodigoResolucionFacturaFk());
+                        /** @var $arCliente InvTercero */
+                        $arCliente = $arFactura->getTerceroRel();
+                        if($arResolucionFactura) {
+                            $arrFactura = [
+                                'dat_nitFacturador' => $arrConfiguracion['nit'],
+                                'dat_claveTecnica' => $arrConfiguracion['feToken'],
+                                'dat_claveTecnicaCadena' => 'fc8eac422eba16e22ffd8c6f94b3f40a6e38162c',
+                                'dat_tipoAmbiente' => '2',
+                                'res_numero' => $arResolucionFactura->getNumero(),
+                                'res_prefijo' => $arResolucionFactura->getPrefijo(),
+                                'res_fechaDesde' => $arResolucionFactura->getFechaDesde()->format('Y-m-d'),
+                                'res_fechaHasta' => $arResolucionFactura->getFechaHasta()->format('Y-m-d'),
+                                'res_desde' => $arResolucionFactura->getNumeroDesde(),
+                                'res_hasta' => $arResolucionFactura->getNumeroHasta(),
+                                'doc_numero' => $arFactura->getNumero(),
+                                'doc_fecha' => $arFactura->getFecha()->format('Y-m-d'),
+                                'doc_hora' => '12:00:00-05:00',
+                                'doc_subtotal' => number_format($arFactura->getVrSubtotal(), 2, '.', ''),
+                                'doc_iva' => number_format($arFactura->getVrIva(), 2, '.', ''),
+                                'doc_inc' => number_format(0, 2, '.', ''),
+                                'doc_ica' => number_format(0, 2, '.', ''),
+                                'doc_total' => number_format($arFactura->getVrTotal(), 2, '.', ''),
+                                'em_tipoPersona' => $arrConfiguracion['codigoTipoPersonaFk'],
+                                'em_numeroIdentificacion' => $arrConfiguracion['nit'],
+                                'em_nombreCompleto' => $arrConfiguracion['nombre'],
+                                'ad_tipoIdentificacion' => $arCliente->getIdentificacionRel()->getCodigoEntidad(),
+                                'ad_numeroIdentificacion' => $arCliente->getNumeroIdentificacion(),
+                                'ad_digitoVerificacion' => $arCliente->getDigitoVerificacion(),
+                                'ad_nombreCompleto' => $arCliente->getNombreCorto(),
+                                //'ad_tipoPersona' => $arCliente->getTipoPersonaRel()->getCodigoInterface(),
+                                //'ad_regimen' => $arCliente->getRegimenRel()->getCodigoInterface(),
+                                'ad_responsabilidadFiscal' => '',
+                                'ad_direccion' => $arCliente->getDireccion(),
+                                'ad_barrio' => $arCliente->getBarrio(),
+                                'ad_codigoPostal' => $arCliente->getCodigoPostal(),
+                                'ad_telefono' => $arCliente->getTelefono(),
+                                'ad_codigoCIUU' => $arCliente->getCodigoCIUU(),
+                            ];
+                            $facturaElectronica = new FacturaElectronica($em);
+                            //$facturaElectronica->enviarDispapeles($arrFactura);
+                            $facturaElectronica->enviarCadena($arrFactura);
+                        } else {
+                            Mensajes::error("La resolucion de la factura no existe");
+                            break;
+                        }
+                    } else {
+                        Mensajes::error("La factura no tiene una resolucion asignada");
+                        break;
+                    }
+                } else {
+                    Mensajes::error("El documento debe estar aprobado y sin enviar a facturacion electronica");
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
 }

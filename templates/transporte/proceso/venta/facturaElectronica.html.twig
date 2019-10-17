@@ -71,6 +71,7 @@
             <th>TIPO</th>
             <th>NUMERO</th>
             <th>FECHA</th>
+            <th>NIT</th>
             <th>CLIENTE</th>
             <th>CANT</th>
             <th>FLETE</th>
@@ -90,6 +91,7 @@
                 <td>{{ arFactura.facturaTipo }}</td>
                 <td>{{ arFactura.numero }}</td>
                 <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
+                <td>{{ arFactura.clienteNumeroIdentificacion }}</td>
                 <td>{{ arFactura.clienteNombre }}</td>
                 <td class="numero">{{ arFactura.guias | number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arFactura.vrFlete | number_format(0, '.', ',')}}</td>

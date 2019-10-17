@@ -28,6 +28,7 @@ class FacturaElectronica
             $arrReturn = $arrayRespuesta['S_Body']['ns2_enviarDocumentoResponse']['return'];
             if($arrReturn) {
                 $arRespuesta = new GenRespuestaFacturaElectronica();
+                $arRespuesta->setFecha(new \DateTime('now'));
                 $arRespuesta->setTipoDocumento($arrReturn['tipoDocumento']);
                 if(!is_array($arrReturn['prefijo'])) {
                     $arRespuesta->setPrefijo($arrReturn['prefijo']);
@@ -70,9 +71,9 @@ class FacturaElectronica
         <contrasenia>PwC0tr45c4l</contrasenia>
         <idEmpresa>892</idEmpresa>
         <token>9930ee169f99498ed4e036e9eb2812dfc8f1b39d</token>
-        <prefijo>{$arrFactura['prefijo']}</prefijo>
-        <consecutivo>{$arrFactura['consecutivo']}</consecutivo>
-        <fechafacturacion>{$arrFactura['fechaFacturacion']}</fechafacturacion>
+        <prefijo>{$arrFactura['res_prefijo']}</prefijo>
+        <consecutivo>{$arrFactura['doc_numero']}</consecutivo>
+        <fechafacturacion>{$arrFactura['doc_fecha']}</fechafacturacion>
         <tipodocumento>1</tipodocumento>
         <codigoPlantillaPdf>1</codigoPlantillaPdf>
         <aplicafel>SI</aplicafel>
@@ -293,6 +294,7 @@ class FacturaElectronica
         $resp = json_decode(curl_exec($ch), true);
         if($resp) {
             $arRespuesta = new GenRespuestaFacturaElectronica();
+            $arRespuesta->setFecha(new \DateTime('now'));
             $arRespuesta->setStatusCode($resp['statusCode']);
             $arRespuesta->setErrorMessage($resp['errorMessage']);
             $arRespuesta->setErrorReason($resp['errorReason']);
@@ -304,7 +306,7 @@ class FacturaElectronica
 
     private function generarXmlCadena($arrFactura) {
         $em = $this->em;
-        $cufe = $arrFactura['doc_numero'].$arrFactura['doc_fecha'].$arrFactura['doc_hora'].$arrFactura['doc_subtotal'].'01'.$arrFactura['doc_iva'].'04'.$arrFactura['doc_inc'].'03'.$arrFactura['doc_ica'].$arrFactura['doc_total'].$arrFactura['dat_nitFacturador'].$arrFactura['ad_numeroIdentificacion'].$arrFactura['dat_claveTecnica'].$arrFactura['dat_tipoAmbiente'];
+        $cufe = $arrFactura['doc_numero'].$arrFactura['doc_fecha'].$arrFactura['doc_hora'].$arrFactura['doc_subtotal'].'01'.$arrFactura['doc_iva'].'04'.$arrFactura['doc_inc'].'03'.$arrFactura['doc_ica'].$arrFactura['doc_total'].$arrFactura['dat_nitFacturador'].$arrFactura['ad_numeroIdentificacion'].$arrFactura['dat_claveTecnicaCadena'].$arrFactura['dat_tipoAmbiente'];
         $cufeHash = hash('sha384', $cufe);
         $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <Invoice xmlns:ds='http://www.w3.org/2000/09/xmldsig#' xmlns='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2' xmlns:cac='urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2' xmlns:cbc='urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2' xmlns:ext='urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2' xmlns:sts='dian:gov:co:facturaelectronica:Structures-2-1' xmlns:xades='http://uri.etsi.org/01903/v1.3.2#' xmlns:xades141='http://uri.etsi.org/01903/v1.4.1#' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'>
@@ -384,11 +386,11 @@ class FacturaElectronica
 				</cac:TaxScheme>
 			</cac:PartyTaxScheme>
 			<cac:PartyLegalEntity>
-				<cbc:RegistrationName>Cadena S.A.</cbc:RegistrationName>
-				<cbc:CompanyID schemeID=\"0\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">890930534</cbc:CompanyID>
+				<cbc:RegistrationName>{$arrFactura['em_nombreCompleto']}</cbc:RegistrationName>
+				<cbc:CompanyID schemeID=\"0\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">{$arrFactura['em_numeroIdentificacion']}</cbc:CompanyID>
 				<cac:CorporateRegistrationScheme>
-					<cbc:ID>SETP</cbc:ID>
-					<cbc:Name>1485596</cbc:Name>
+					<cbc:ID></cbc:ID>
+					<cbc:Name></cbc:Name>
 				</cac:CorporateRegistrationScheme>
 			</cac:PartyLegalEntity>
 			<cac:Contact>

@@ -173,6 +173,11 @@ class InvMovimiento
     private $estadoContabilizado = false;
 
     /**
+     * @ORM\Column(name="estado_factura_electronica", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoFacturaElectronica = false;
+
+    /**
      * @ORM\Column(name="operacion_inventario", type="smallint", nullable=true, options={"default" : 0})
      */
     private $operacionInventario = 0;
@@ -181,6 +186,11 @@ class InvMovimiento
      * @ORM\Column(name="operacion_comercial", type="smallint", nullable=true, options={"default" : 0})
      */
     private $operacionComercial = 0;
+
+    /**
+     * @ORM\Column(name="codigo_resolucion_factura_fk", type="integer", nullable=true)
+     */
+    private $codigoResolucionFacturaFk;
 
     /**
      * @internal Para saber si el documento genera costo promedio
@@ -907,6 +917,38 @@ class InvMovimiento
     public function setFechaDocumento($fechaDocumento): void
     {
         $this->fechaDocumento = $fechaDocumento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoFacturaElectronica()
+    {
+        return $this->estadoFacturaElectronica;
+    }
+
+    /**
+     * @param mixed $estadoFacturaElectronica
+     */
+    public function setEstadoFacturaElectronica($estadoFacturaElectronica): void
+    {
+        $this->estadoFacturaElectronica = $estadoFacturaElectronica;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoResolucionFacturaFk()
+    {
+        return $this->codigoResolucionFacturaFk;
+    }
+
+    /**
+     * @param mixed $codigoResolucionFacturaFk
+     */
+    public function setCodigoResolucionFacturaFk($codigoResolucionFacturaFk): void
+    {
+        $this->codigoResolucionFacturaFk = $codigoResolucionFacturaFk;
     }
 
 

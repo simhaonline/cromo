@@ -25,7 +25,7 @@ class InvRemisionRepository extends ServiceEntityRepository
         parent::__construct($registry, InvRemision::class);
     }
 
-    public function lista($raw, $asesor)
+    public function lista($raw)
     {
 
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
@@ -68,7 +68,6 @@ class InvRemisionRepository extends ServiceEntityRepository
             ->addSelect('r.estadoAnulado')
             ->addSelect('t.nombreCorto AS tercero')
             ->where('r.codigoRemisionPk <> 0')
-            ->where("r.codigoAsesorFk = {$asesor}")
             ->orderBy('r.codigoRemisionPk', 'DESC');
 
         if ($codigoRemision) {

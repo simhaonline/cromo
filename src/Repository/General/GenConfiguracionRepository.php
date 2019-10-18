@@ -98,9 +98,11 @@ class GenConfiguracionRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenConfiguracion::class, 'c')
             ->select('c.nit')
+            ->addSelect('c.digitoVerificacion')
             ->addSelect('c.nombre')
             ->addSelect('c.feToken')
             ->addSelect('c.codigoTipoPersonaFk')
+            ->addSelect('c.matriculaMercantil')
             ->where('c.codigoConfiguracionPk = 1');
 
         return $queryBuilder->getQuery()->getSingleResult();

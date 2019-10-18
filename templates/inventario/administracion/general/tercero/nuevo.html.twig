@@ -79,6 +79,17 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_fechaVence" class="col-sm-2 control-label">Codigo postal:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoPostal) }}
+                </div>
+                <label for="form_celular" class="col-sm-2 control-label">Barrio:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.barrio) }}
+                    {{ form_errors(form.barrio) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_fechaVence" class="col-sm-2 control-label">Telefono:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.telefono) }}
@@ -112,18 +123,6 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.cupoCompra) }}
                     {{ form_errors(form.cupoCompra) }}
-                </div>
-            </div>
-            <hr>
-            <div class="form-group form-group-sm">
-                <div class="col-sm-offset-2 col-sm-2">
-                    {{ form_widget(form.retencionIva) }}
-                </div>
-                <div class="col-sm-2">
-                    {{ form_widget(form.retencionFuente) }}
-                </div>
-                <div class="col-sm-2">
-                    {{ form_widget(form.retencionFuenteSinBase) }}
                 </div>
             </div>
         </div>
@@ -163,7 +162,9 @@
                 </div>
                 <label for="form_condiciionRel" class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
-
+                    {{ form_widget(form.retencionIva) }}
+                    {{ form_widget(form.retencionFuente) }}
+                    {{ form_widget(form.retencionFuenteSinBase) }}
                 </div>
             </div>
         </div>

@@ -29,6 +29,11 @@ class GenResolucionFactura
     private $numero;
 
     /**
+     * @ORM\Column(name="fecha", type="date", nullable=true)
+     */
+    private $fecha;
+
+    /**
      * @ORM\Column(name="fecha_desde", type="date", nullable=true)
      */
     private $fechaDesde;
@@ -52,6 +57,13 @@ class GenResolucionFactura
      * @ORM\Column(name="numero_hasta", type="float", nullable=true)
      */
     private $numeroHasta;
+
+    /**
+     * @ORM\Column(name="llave_tecnica", type="string",length=500, nullable=true)
+     */
+    private $llaveTecnica;
+
+
 
     /**
      * @return mixed
@@ -163,6 +175,38 @@ class GenResolucionFactura
     public function setNumeroHasta($numeroHasta): void
     {
         $this->numeroHasta = $numeroHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLlaveTecnica()
+    {
+        return $this->llaveTecnica;
+    }
+
+    /**
+     * @param mixed $llaveTecnica
+     */
+    public function setLlaveTecnica($llaveTecnica): void
+    {
+        $this->llaveTecnica = $llaveTecnica;
     }
 
 

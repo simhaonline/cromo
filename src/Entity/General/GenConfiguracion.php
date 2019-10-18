@@ -158,6 +158,11 @@ class GenConfiguracion
     private $codigoTipoPersonaFk;
 
     /**
+     * @ORM\Column(name="matricula_mercantil", type="string", length=100, nullable=true)
+     */
+    private $matriculaMercantil;
+
+    /**
      * @ORM\ManyToOne(targetEntity="GenCiudad", inversedBy="configuracionesCiudadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
@@ -647,6 +652,22 @@ class GenConfiguracion
     public function setCodigoTipoPersonaFk($codigoTipoPersonaFk): void
     {
         $this->codigoTipoPersonaFk = $codigoTipoPersonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMatriculaMercantil()
+    {
+        return $this->matriculaMercantil;
+    }
+
+    /**
+     * @param mixed $matriculaMercantil
+     */
+    public function setMatriculaMercantil($matriculaMercantil): void
+    {
+        $this->matriculaMercantil = $matriculaMercantil;
     }
 
 

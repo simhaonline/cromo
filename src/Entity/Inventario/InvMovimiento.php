@@ -173,9 +173,14 @@ class InvMovimiento
     private $estadoContabilizado = false;
 
     /**
-     * @ORM\Column(name="estado_factura_electronica", type="boolean",options={"default" : false}, nullable=true)
+     * @ORM\Column(name="estado_factura_electronica", type="boolean", options={"default" : false}, nullable=true)
      */
     private $estadoFacturaElectronica = false;
+
+    /**
+     * @ORM\Column(name="proceso_factura_electronica", type="string", length=2, nullable=true)
+     */
+    private $procesoFacturaElectronica;
 
     /**
      * @ORM\Column(name="operacion_inventario", type="smallint", nullable=true, options={"default" : 0})
@@ -949,6 +954,22 @@ class InvMovimiento
     public function setCodigoResolucionFacturaFk($codigoResolucionFacturaFk): void
     {
         $this->codigoResolucionFacturaFk = $codigoResolucionFacturaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProcesoFacturaElectronica()
+    {
+        return $this->procesoFacturaElectronica;
+    }
+
+    /**
+     * @param mixed $procesoFacturaElectronica
+     */
+    public function setProcesoFacturaElectronica($procesoFacturaElectronica): void
+    {
+        $this->procesoFacturaElectronica = $procesoFacturaElectronica;
     }
 
 

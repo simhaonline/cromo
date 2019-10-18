@@ -52,7 +52,7 @@ class FacturaElectronicaController extends AbstractController
 
             }
         }
-        $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->listaFacturaElectronica(), $request->query->getInt('page', 1),500);
+        $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->listaFacturaElectronica(), $request->query->getInt('page', 1),30);
         return $this->render('inventario/proceso/venta/facturaElectronica.html.twig',
             ['arMovimientos' => $arMovimientos,
                 'form' => $form->createView()]);

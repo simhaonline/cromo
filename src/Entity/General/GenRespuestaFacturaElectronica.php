@@ -24,54 +24,14 @@ class GenRespuestaFacturaElectronica
     private $fecha;
 
     /**
-     * @ORM\Column(name="tipo_documento", type="string",length=1, nullable=true)
+     * @ORM\Column(name="codigo_modelo_fk", type="string", length=80, nullable=true, options={"default" : NULL})
      */
-    private $tipoDocumento;
+    private $codigoModeloFk;
 
     /**
-     * @ORM\Column(name="prefijo", type="string",length=5, nullable=true)
+     * @ORM\Column(name="codigo_documento", type="integer", nullable=true)
      */
-    private $prefijo;
-
-    /**
-     * @ORM\Column(name="consecutivo", type="integer", nullable=true)
-     */
-    private $consecutivo=0;
-
-    /**
-     * @ORM\Column(name="cufe", type="string",length=500, nullable=true)
-     */
-    private $cufe;
-
-    /**
-     * @ORM\Column(name="codigo_qr", type="string",length=2000, nullable=true)
-     */
-    private $codigoQr;
-
-    /**
-     * @ORM\Column(name="fecha_expedicion", type="date", nullable=true)
-     */
-    private $fechaExpedicion;
-
-    /**
-     * @ORM\Column(name="fecha_respuesta", type="date", nullable=true)
-     */
-    private $fechaRespuesta;
-
-    /**
-     * @ORM\Column(name="descripcion_proceso", type="string",length=500, nullable=true)
-     */
-    private $descripcionProceso;
-
-    /**
-     * @ORM\Column(name="estado_proceso", type="integer", nullable=true)
-     */
-    private $estadoProceso=0;
-
-    /**
-     * @ORM\Column(name="lista_mensajes_proceso", type="text", nullable=true)
-     */
-    private $listaMensajesProceso;
+    private $codigoDocumento;
 
     /**
      * @ORM\Column(name="status_code", type="string",length=10, nullable=true)
@@ -107,161 +67,49 @@ class GenRespuestaFacturaElectronica
     /**
      * @return mixed
      */
-    public function getTipoDocumento()
+    public function getFecha()
     {
-        return $this->tipoDocumento;
+        return $this->fecha;
     }
 
     /**
-     * @param mixed $tipoDocumento
+     * @param mixed $fecha
      */
-    public function setTipoDocumento($tipoDocumento): void
+    public function setFecha($fecha): void
     {
-        $this->tipoDocumento = $tipoDocumento;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrefijo()
-    {
-        return $this->prefijo;
-    }
-
-    /**
-     * @param mixed $prefijo
-     */
-    public function setPrefijo($prefijo): void
-    {
-        $this->prefijo = $prefijo;
+        $this->fecha = $fecha;
     }
 
     /**
      * @return mixed
      */
-    public function getConsecutivo()
+    public function getCodigoModeloFk()
     {
-        return $this->consecutivo;
+        return $this->codigoModeloFk;
     }
 
     /**
-     * @param mixed $consecutivo
+     * @param mixed $codigoModeloFk
      */
-    public function setConsecutivo($consecutivo): void
+    public function setCodigoModeloFk($codigoModeloFk): void
     {
-        $this->consecutivo = $consecutivo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCufe()
-    {
-        return $this->cufe;
-    }
-
-    /**
-     * @param mixed $cufe
-     */
-    public function setCufe($cufe): void
-    {
-        $this->cufe = $cufe;
+        $this->codigoModeloFk = $codigoModeloFk;
     }
 
     /**
      * @return mixed
      */
-    public function getCodigoQr()
+    public function getCodigoDocumento()
     {
-        return $this->codigoQr;
+        return $this->codigoDocumento;
     }
 
     /**
-     * @param mixed $codigoQr
+     * @param mixed $codigoDocumento
      */
-    public function setCodigoQr($codigoQr): void
+    public function setCodigoDocumento($codigoDocumento): void
     {
-        $this->codigoQr = $codigoQr;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaExpedicion()
-    {
-        return $this->fechaExpedicion;
-    }
-
-    /**
-     * @param mixed $fechaExpedicion
-     */
-    public function setFechaExpedicion($fechaExpedicion): void
-    {
-        $this->fechaExpedicion = $fechaExpedicion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaRespuesta()
-    {
-        return $this->fechaRespuesta;
-    }
-
-    /**
-     * @param mixed $fechaRespuesta
-     */
-    public function setFechaRespuesta($fechaRespuesta): void
-    {
-        $this->fechaRespuesta = $fechaRespuesta;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescripcionProceso()
-    {
-        return $this->descripcionProceso;
-    }
-
-    /**
-     * @param mixed $descripcionProceso
-     */
-    public function setDescripcionProceso($descripcionProceso): void
-    {
-        $this->descripcionProceso = $descripcionProceso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoProceso()
-    {
-        return $this->estadoProceso;
-    }
-
-    /**
-     * @param mixed $estadoProceso
-     */
-    public function setEstadoProceso($estadoProceso): void
-    {
-        $this->estadoProceso = $estadoProceso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getListaMensajesProceso()
-    {
-        return $this->listaMensajesProceso;
-    }
-
-    /**
-     * @param mixed $listaMensajesProceso
-     */
-    public function setListaMensajesProceso($listaMensajesProceso): void
-    {
-        $this->listaMensajesProceso = $listaMensajesProceso;
+        $this->codigoDocumento = $codigoDocumento;
     }
 
     /**
@@ -311,23 +159,6 @@ class GenRespuestaFacturaElectronica
     {
         $this->errorReason = $errorReason;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getFecha()
-    {
-        return $this->fecha;
-    }
-
-    /**
-     * @param mixed $fecha
-     */
-    public function setFecha($fecha): void
-    {
-        $this->fecha = $fecha;
-    }
-
 
 
 }

@@ -26,6 +26,7 @@ use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvTercero;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
+use App\Utilidades\FacturaElectronica;
 use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimiento;
@@ -1577,6 +1578,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.estadoAnulado')
             ->addSelect('m.estadoAprobado')
             ->addSelect('m.estadoAutorizado')
+            ->addSelect('m.procesoFacturaElectronica')
             ->addSelect('t.numeroIdentificacion as clienteNumeroIdentificacion')
             ->addSelect('t.nombreCorto AS clienteNombre')
             ->leftJoin('m.terceroRel', 't')
@@ -1640,6 +1642,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 'res_fechaHasta' => $arResolucionFactura->getFechaHasta()->format('Y-m-d'),
                                 'res_desde' => $arResolucionFactura->getNumeroDesde(),
                                 'res_hasta' => $arResolucionFactura->getNumeroHasta(),
+                                'doc_codigo' => $arFactura->getCodigoMovimientoPk(),
                                 'doc_numero' => $arFactura->getNumero(),
                                 'doc_fecha' => $arFactura->getFecha()->format('Y-m-d'),
                                 'doc_hora' => '12:00:00-05:00',
@@ -1650,13 +1653,15 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 'doc_total' => number_format($arFactura->getVrTotal(), 2, '.', ''),
                                 'em_tipoPersona' => $arrConfiguracion['codigoTipoPersonaFk'],
                                 'em_numeroIdentificacion' => $arrConfiguracion['nit'],
+                                'em_digitoVerificacion' => $arrConfiguracion['digitoVerificacion'],
                                 'em_nombreCompleto' => $arrConfiguracion['nombre'],
+                                'em_matriculaMercantil' => $arrConfiguracion['matriculaMercantil'],
                                 'ad_tipoIdentificacion' => $arCliente->getIdentificacionRel()->getCodigoEntidad(),
                                 'ad_numeroIdentificacion' => $arCliente->getNumeroIdentificacion(),
                                 'ad_digitoVerificacion' => $arCliente->getDigitoVerificacion(),
                                 'ad_nombreCompleto' => $arCliente->getNombreCorto(),
-                                //'ad_tipoPersona' => $arCliente->getTipoPersonaRel()->getCodigoInterface(),
-                                //'ad_regimen' => $arCliente->getRegimenRel()->getCodigoInterface(),
+                                'ad_tipoPersona' => $arCliente->getTipoPersonaRel()->getCodigoInterface(),
+                                'ad_regimen' => $arCliente->getRegimenRel()->getCodigoInterface(),
                                 'ad_responsabilidadFiscal' => '',
                                 'ad_direccion' => $arCliente->getDireccion(),
                                 'ad_barrio' => $arCliente->getBarrio(),
@@ -1666,7 +1671,22 @@ class InvMovimientoRepository extends ServiceEntityRepository
                             ];
                             $facturaElectronica = new FacturaElectronica($em);
                             //$facturaElectronica->enviarDispapeles($arrFactura);
-                            $facturaElectronica->enviarCadena($arrFactura);
+                            $procesoFacturaElectronica = $facturaElectronica->enviarCadena($arrFactura);
+                            if($procesoFacturaElectronica['estado'] == 'CN') {
+                                break;
+                            }
+                            if($procesoFacturaElectronica['estado'] == 'ER') {
+                                $arFactura->setProcesoFacturaElectronica('ER');
+                                $em->persist($arFactura);
+                                $em->flush();
+                            }
+                            if($procesoFacturaElectronica['estado'] == 'EX') {
+                                $arFactura->setEstadoFacturaElectronica(1);
+                                $arFactura->setProcesoFacturaElectronica(null);
+                                $em->persist($arFactura);
+                                $em->flush();
+                            }
+
                         } else {
                             Mensajes::error("La resolucion de la factura no existe");
                             break;

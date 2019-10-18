@@ -278,6 +278,7 @@ class FacturaElectronica
 
     public function enviarCadena($arrFactura){
         $em = $this->em;
+        $procesoFacturaElectronica = ['estado' => 'NO'];
         $xml = $this->generarXmlCadena($arrFactura);
         $url = "https://api.efacturacadena.com/staging/vp-hab/documentos/proceso/alianzas";
         $datos = base64_encode($xml);
@@ -293,15 +294,33 @@ class FacturaElectronica
 
         $resp = json_decode(curl_exec($ch), true);
         if($resp) {
-            $arRespuesta = new GenRespuestaFacturaElectronica();
-            $arRespuesta->setFecha(new \DateTime('now'));
-            $arRespuesta->setStatusCode($resp['statusCode']);
-            $arRespuesta->setErrorMessage($resp['errorMessage']);
-            $arRespuesta->setErrorReason($resp['errorReason']);
-            $em->persist($arRespuesta);
-            $em->flush();
+            if(isset($resp['message'])) {
+                if($resp['message'] == 'Endpoint request timed out') {
+                    Mensajes::error("Endpoint request timed out");
+                    $procesoFacturaElectronica['estado'] = 'CN';
+                }
+            }
+            if(isset($resp['statusCode'])) {
+                $procesoFacturaElectronica['estado'] = 'ER';
+                $arRespuesta = new GenRespuestaFacturaElectronica();
+                $arRespuesta->setFecha(new \DateTime('now'));
+                $arRespuesta->setCodigoModeloFk('InvMovimiento');
+                $arRespuesta->setCodigoDocumento($arrFactura['doc_codigo']);
+                $arRespuesta->setStatusCode($resp['statusCode']);
+                $arRespuesta->setErrorMessage($resp['errorMessage']);
+                if(isset($resp['errorReason'])) {
+                    if(is_array($resp['errorReason'])) {
+                        $arRespuesta->setErrorReason(json_encode($resp['errorReason']));
+                    } else {
+                        $arRespuesta->setErrorReason("['Regla:" . $resp['errorReason'] . "']");
+                    }
+                }
+                $em->persist($arRespuesta);
+                $em->flush();
+            }
         }
         curl_close($ch);
+        return $procesoFacturaElectronica;
     }
 
     private function generarXmlCadena($arrFactura) {
@@ -364,7 +383,7 @@ class FacturaElectronica
 			</cac:PhysicalLocation>
 			<cac:PartyTaxScheme>
 				<cbc:RegistrationName>{$arrFactura['em_nombreCompleto']}</cbc:RegistrationName>
-				<cbc:CompanyID schemeID=\"0\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">{$arrFactura['em_numeroIdentificacion']}</cbc:CompanyID>
+				<cbc:CompanyID schemeID='{$arrFactura['em_digitoVerificacion']}' schemeName='31' schemeAgencyID='195' schemeAgencyName='CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)'>{$arrFactura['em_numeroIdentificacion']}</cbc:CompanyID>
 				<cbc:TaxLevelCode listName=\"05\">O-99</cbc:TaxLevelCode>
 				<cac:RegistrationAddress>
 					<cbc:ID>05380</cbc:ID>
@@ -387,10 +406,10 @@ class FacturaElectronica
 			</cac:PartyTaxScheme>
 			<cac:PartyLegalEntity>
 				<cbc:RegistrationName>{$arrFactura['em_nombreCompleto']}</cbc:RegistrationName>
-				<cbc:CompanyID schemeID=\"0\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">{$arrFactura['em_numeroIdentificacion']}</cbc:CompanyID>
+				<cbc:CompanyID schemeID='0' schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName='CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)'>{$arrFactura['em_numeroIdentificacion']}</cbc:CompanyID>
 				<cac:CorporateRegistrationScheme>
-					<cbc:ID></cbc:ID>
-					<cbc:Name></cbc:Name>
+					<cbc:ID>{$arrFactura['res_prefijo']}</cbc:ID>
+					<cbc:Name>{$arrFactura['em_matriculaMercantil']}</cbc:Name>
 				</cac:CorporateRegistrationScheme>
 			</cac:PartyLegalEntity>
 			<cac:Contact>
@@ -408,7 +427,7 @@ class FacturaElectronica
 				<cac:Address>
 					<cbc:ID>66001</cbc:ID>
 					<cbc:CityName>PEREIRA</cbc:CityName>
-					<cbc:PostalZone>54321</cbc:PostalZone>
+					<cbc:PostalZone>{$arrFactura['ad_codigoPostal']}</cbc:PostalZone>					
 					<cbc:CountrySubentity>Risaralda</cbc:CountrySubentity>
 					<cbc:CountrySubentityCode>66</cbc:CountrySubentityCode>
 					<cac:AddressLine>
@@ -422,12 +441,12 @@ class FacturaElectronica
 			</cac:PhysicalLocation>
 			<cac:PartyTaxScheme>
 				<cbc:RegistrationName>{$arrFactura['ad_nombreCompleto']}</cbc:RegistrationName>
-				<cbc:CompanyID schemeID=\"3\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">{$arrFactura['ad_numeroIdentificacion']}</cbc:CompanyID>
+				<cbc:CompanyID schemeID='3' schemeName='31' schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">{$arrFactura['ad_numeroIdentificacion']}</cbc:CompanyID>
 				<cbc:TaxLevelCode listName=\"05\">O-99</cbc:TaxLevelCode>
 				<cac:RegistrationAddress>
 					<cbc:ID>66001</cbc:ID>
 					<cbc:CityName>PEREIRA</cbc:CityName>
-					<cbc:PostalZone>54321</cbc:PostalZone>
+					<cbc:PostalZone>{$arrFactura['ad_codigoPostal']}</cbc:PostalZone>
 					<cbc:CountrySubentity>Risaralda</cbc:CountrySubentity>
 					<cbc:CountrySubentityCode>66</cbc:CountrySubentityCode>
 					<cac:AddressLine>
@@ -476,14 +495,14 @@ class FacturaElectronica
 	</cac:TaxTotal>
 	<cac:LegalMonetaryTotal>
 		<cbc:LineExtensionAmount currencyID=\"COP\">{$arrFactura['doc_subtotal']}</cbc:LineExtensionAmount>
-		<cbc:TaxExclusiveAmount currencyID=\"COP\">{$arrFactura['doc_subtotal']}</cbc:TaxExclusiveAmount>
+		<cbc:TaxExclusiveAmount currencyID=\"COP\">0.00</cbc:TaxExclusiveAmount>
 		<cbc:TaxInclusiveAmount currencyID=\"COP\">{$arrFactura['doc_total']}</cbc:TaxInclusiveAmount>
 		<cbc:PayableAmount currencyID=\"COP\">{$arrFactura['doc_total']}</cbc:PayableAmount>
 	</cac:LegalMonetaryTotal>
 	<cac:InvoiceLine>
 		<cbc:ID>1</cbc:ID>
 		<cbc:InvoicedQuantity>1.00</cbc:InvoicedQuantity>
-		<cbc:LineExtensionAmount currencyID=\"COP\">717445.00</cbc:LineExtensionAmount>
+		<cbc:LineExtensionAmount currencyID=\"COP\">{$arrFactura['doc_subtotal']}</cbc:LineExtensionAmount>
 		<cac:TaxTotal>
 			<cbc:TaxAmount currencyID=\"COP\">0.00</cbc:TaxAmount>			
 			<cac:TaxSubtotal>
@@ -505,7 +524,7 @@ class FacturaElectronica
 			</cac:StandardItemIdentification>
 		</cac:Item>
 		<cac:Price>
-			<cbc:PriceAmount currencyID=\"COP\">717445.00</cbc:PriceAmount>
+			<cbc:PriceAmount currencyID=\"COP\">{$arrFactura['doc_subtotal']}</cbc:PriceAmount>
 			<cbc:BaseQuantity unitCode=\"EA\">1.00</cbc:BaseQuantity>
 		</cac:Price>
 	</cac:InvoiceLine>
@@ -514,7 +533,7 @@ class FacturaElectronica
 		<Partnership>
 			<ID>901192048</ID>
 			<TechKey>fc8eac422eba16e22ffd8c6f94b3f40a6e38162c</TechKey>
-			<SetTestID>b9ca446f-395e-44e2-847d-300e1a0f61fe</SetTestID>
+			<SetTestID>82e4944b-1134-4e25-9e9e-4fdd115e70ef</SetTestID>
 		</Partnership>
 	</DATA>
 </Invoice>";

@@ -83,10 +83,22 @@ class InvTercero
      * @ORM\Column(name="direccion", type="string", length=80,nullable=true)
      */
     private $direccion;
+
+    /**
+     * @ORM\Column(name="barrio", type="string", length=80,nullable=true)
+     */
+    private $barrio;
+
+    /**
+     * @ORM\Column(name="codigo_postal", type="string", length=20, nullable=true)
+     */
+    private $codigoPostal;
+
     /**
      * @ORM\Column(name="telefono", type="string", length=20,nullable=true)
      */
     private $telefono;
+
     /**
      * @ORM\Column(name="celular", type="string", length=20, nullable=true)
      */
@@ -1004,6 +1016,38 @@ class InvTercero
     public function setRegimenRel($regimenRel): void
     {
         $this->regimenRel = $regimenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBarrio()
+    {
+        return $this->barrio;
+    }
+
+    /**
+     * @param mixed $barrio
+     */
+    public function setBarrio($barrio): void
+    {
+        $this->barrio = $barrio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPostal()
+    {
+        return $this->codigoPostal;
+    }
+
+    /**
+     * @param mixed $codigoPostal
+     */
+    public function setCodigoPostal($codigoPostal): void
+    {
+        $this->codigoPostal = $codigoPostal;
     }
 
 

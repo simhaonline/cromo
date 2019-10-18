@@ -100,7 +100,7 @@ class RemisionController extends AbstractController
                 $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvRemision::class)->lista($raw)->getQuery()->getResult(), "Remisiones");
+                General::get()->setExportar($em->getRepository(InvRemision::class)->lista($raw, $this->getUser()->getCodigoAsesorFk()), "Remisiones");
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');
@@ -108,7 +108,7 @@ class RemisionController extends AbstractController
                 return $this->redirect($this->generateUrl('inventario_movimiento_comercial_remision_lista'));
             }
         }
-        $arRemisiones = $paginator->paginate($em->getRepository(InvRemision::class)->lista($raw), $request->query->getInt('page', 1), 30);
+        $arRemisiones = $paginator->paginate($em->getRepository(InvRemision::class)->lista($raw, $this->getUser()->getCodigoAsesorFk()), $request->query->getInt('page', 1), 30);
 
         return $this->render('inventario/movimiento/comercial/remision/lista.html.twig', [
             'arRemisiones' => $arRemisiones,

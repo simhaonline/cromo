@@ -44,9 +44,29 @@ class InvMovimientoRepository extends ServiceEntityRepository
     }
 
 
-    public function lista($codigoDocumento, $usuario = null)
+    public function lista($raw, $codigoDocumento, $usuario = null)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoMovimineto = null;
+        $numero = null;
+        $asesor = null;
+        $codigoTercero = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+
+        if ($filtros) {
+            $numero = $filtros['numero'] ?? null;
+            $codigoMovimineto = $filtros['codigoMovimineto'] ?? null;
+            $codigoTercero = $filtros['codigoTercero'] ?? null;
+            $asesor = $filtros['asesor'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(InvMovimiento::class, 'm');
         $queryBuilder
             ->select('m.codigoMovimientoPk')
@@ -70,23 +90,24 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.estadoAutorizado')
             ->leftJoin('m.terceroRel', 't')
             ->leftJoin('t.ciudadRel', 'c')
-            ->where("m.codigoDocumentoFk = '" . $codigoDocumento . "'");
-        if ($session->get('filtroInvMovimientoFechaDesde') != null) {
-            $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroInvMovimientoFechaDesde')} 00:00:00'");
+            ->where("m.codigoDocumentoFk = '{$codigoDocumento}' ");
+
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("m.fecha >= '{$fechaDesde} 00:00:00'");
         }
-        if ($session->get('filtroInvMovimeintoFechaHasta') != null) {
-            $queryBuilder->andWhere("m.fecha <= '{$session->get('filtroInvMovimeintoFechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("m.fecha <= '{$fechaHasta} 23:59:59'");
         }
-        if ($session->get('filtroInvMovimientoNumero') != "") {
-            $queryBuilder->andWhere("m.numero = " . $session->get('filtroInvMovimientoNumero'));
+        if ($numero) {
+            $queryBuilder->andWhere("m.numero = {$numero}");
         }
-        if ($session->get('filtroInvMovimientoCodigo') != "") {
-            $queryBuilder->andWhere("m.codigoMovimientoPk = " . $session->get('filtroInvMovimientoCodigo'));
+        if ($codigoMovimineto) {
+            $queryBuilder->andWhere("m.codigoMovimientoPk = {$codigoMovimineto}");
         }
-        if ($session->get('filtroInvCodigoTercero')) {
-            $queryBuilder->andWhere("m.codigoTerceroFk = {$session->get('filtroInvCodigoTercero')}");
+        if ($codigoTercero) {
+            $queryBuilder->andWhere("m.codigoTerceroFk = {$codigoTercero}");
         }
-        switch ($session->get('filtroInvMovimientoEstadoAutorizado')) {
+        switch ($estadoAutorizado) {
             case '0':
                 $queryBuilder->andWhere("m.estadoAutorizado = 0");
                 break;
@@ -94,7 +115,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("m.estadoAutorizado = 1");
                 break;
         }
-        switch ($session->get('filtroInvMovimientoEstadoAprobado')) {
+        switch ($estadoAprobado) {
             case '0':
                 $queryBuilder->andWhere("m.estadoAprobado= 0");
                 break;
@@ -102,8 +123,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("m.estadoAprobado = 1");
                 break;
         }
-        if ($session->get('filtroGenAsesor')) {
-            $queryBuilder->andWhere("m.codigoAsesorFk = '{$session->get('filtroGenAsesor')}'");
+        if ($asesor) {
+            $queryBuilder->andWhere("m.codigoAsesorFk = '{$asesor}'");
         }
         if ($usuario) {
             if ($usuario->getRestringirMovimientos()) {

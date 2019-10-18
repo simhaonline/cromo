@@ -74,10 +74,17 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
         }
     }
 
-    public function listarDetallesPendientes()
+    public function listarDetallesPendientes($raw)
     {
         $em = $this->getEntityManager();
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoItem = null;
+        $numeroOrden = null;
+        if ($filtros) {
+            $codigoItem = $filtros['codigoItem'] ?? null;
+            $numeroOrden = $filtros['numeroOrden'] ?? null;
+        }
         $queryBuilder = $em->createQueryBuilder()->from(InvOrdenDetalle::class, 'od')
             ->select('od.codigoOrdenDetallePk')
             ->addSelect('it.codigoItemPk AS codigoItem')
@@ -94,14 +101,13 @@ class InvOrdenDetalleRepository extends ServiceEntityRepository
             ->where('o.estadoAnulado = 0')
             ->andWhere('od.cantidadPendiente > 0')
         ->orderBy('od.codigoOrdenDetallePk', 'ASC');
-        if ($session->get('filtroInvMovimientoItemCodigo') != '') {
-            $queryBuilder->andWhere("od.codigoItemFk = {$session->get('filtroInvMovimientoItemCodigo')}");
+        if ($codigoItem) {
+            $queryBuilder->andWhere("od.codigoItemFk = {$codigoItem}");
         }
-        if ($session->get('filtroInvNumeroOrden') != '') {
-            $queryBuilder->andWhere("o.numero = {$session->get('filtroInvNumeroOrden')}");
+        if ($numeroOrden) {
+            $queryBuilder->andWhere("o.numero = {$numeroOrden}");
         }
-        $query = $em->createQuery($queryBuilder->getDQL());
-        return $query->execute();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**

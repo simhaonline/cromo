@@ -18,6 +18,7 @@ use App\General\General;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -28,7 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\SolicitudType;
 
-class SolicitudController extends ControllerListenerGeneral
+class SolicitudController extends AbstractController
 {
     protected $class= InvSolicitud::class;
     protected $claseNombre = "InvSolicitud";

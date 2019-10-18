@@ -118,9 +118,22 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         }
     }
 
-    public function listarDetallesPendientes($codigoTercero)
+    public function listarDetallesPendientes($raw,$codigoTercero)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $tercero = null;
+        $numero = null;
+        $lote = null;
+        $bodega = null;
+        if ($filtros) {
+            $tercero =  $filtros['tercero'] ??null;
+            $numero =  $filtros['numero'] ??null;
+            $lote =  $filtros['lote'] ??null;
+            $bodega =  $filtros['bodega'] ??null;
+        }
+
         $queryBuilder = $this->_em->createQueryBuilder()->from(InvRemisionDetalle::class, 'rd')
             ->select('rd.codigoRemisionDetallePk')
             ->addSelect('rd.codigoItemFk')
@@ -143,20 +156,21 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
             ->andWhere('r.codigoTerceroFk = ' . $codigoTercero)
             ->andWhere('rt.devolucion = 0')
             ->orderBy('r.numero', 'ASC');
-        if($session->get('filtroInvRemisionNumero')){
-            $queryBuilder->andWhere("r.numero = '{$session->get('filtroInvRemisionNumero')}'");
+        if($numero){
+            $queryBuilder->andWhere("r.numero = '{$numero}'");
         }
-        if($session->get('filtroInvRemisionDetalleLote')){
-            $queryBuilder->andWhere("rd.loteFk = '{$session->get('filtroInvRemisionDetalleLote')}'");
+        if($lote){
+            $queryBuilder->andWhere("rd.loteFk = '{$lote}'");
         }
-        if($session->get('filtroInvBodega')) {
-            $queryBuilder->andWhere("rd.codigoBodegaFk = '{$session->get('filtroInvBodega')}'");
+        if($bodega) {
+            $queryBuilder->andWhere("rd.codigoBodegaFk = '{$bodega}'");
         }
-        if($session->get('filtroInvCodigoTercero')) {
-            $queryBuilder->andWhere("t.codigoTerceroPk = '{$session->get('filtroInvCodigoTercero')}'");
+        if($tercero) {
+            $queryBuilder->andWhere("t.codigoTerceroPk = '{$tercero}'");
         }
 
-        return $queryBuilder;
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function pendientes(){

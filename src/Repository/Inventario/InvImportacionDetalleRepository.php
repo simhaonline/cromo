@@ -93,10 +93,17 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
             ->where("imd.codigoImportacionFk = {$codigoImportacion}")->getQuery()->execute();
     }
 
-    public function listarDetallesPendientes()
+    public function listarDetallesPendientes($raw)
     {
         $em = $this->getEntityManager();
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigo = null;
+        $numero = null;
+        if ($filtros) {
+            $codigo = $filtros['codigo'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+        }
         $queryBuilder = $em->createQueryBuilder()->from(InvImportacionDetalle::class, 'id')
             ->select('id.codigoImportacionDetallePk')
             ->addSelect('id.codigoItemFk')
@@ -113,8 +120,15 @@ class InvImportacionDetalleRepository extends ServiceEntityRepository
             ->andWhere('id.cantidadPendiente > 0')
             ->orderBy('im.fecha', 'DESC')
             ->addOrderBy('id.codigoImportacionDetallePk', 'ASC');
-        $query = $em->createQuery($queryBuilder->getDQL());
-        return $query->execute();
+
+        if ($codigo) {
+            $queryBuilder->andWhere("id.codigoImportacionDetallePk = '{$codigo}'");
+        }
+        if ($numero) {
+            $queryBuilder->andWhere("im.numero = '{$numero}'");
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function cuentaCompra($codigo){

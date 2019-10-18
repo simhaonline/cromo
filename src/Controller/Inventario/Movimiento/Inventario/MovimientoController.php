@@ -34,7 +34,9 @@ use App\Formato\Inventario\Factura2;
 
 ;
 
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -46,7 +48,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use App\General\General;
 
-class MovimientoController extends ControllerListenerGeneral
+class MovimientoController extends AbstractController
 {
     protected $clase = InvMovimiento::class;
     protected $claseNombre = "InvMovimiento";
@@ -83,52 +85,55 @@ class MovimientoController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/inventario/movimiento/inventario/movimiento/lista/movimientos/{tipoDocumento}/{codigoDocumento}", name="inventario_movimiento_inventario_movimiento_lista")
      */
-    public function listaMovimientos(Request $request, $codigoDocumento, $tipoDocumento)
+    public function listaMovimientos(Request $request, PaginatorInterface $paginator,$codigoDocumento, $tipoDocumento)
     {
         $em = $this->getDoctrine()->getManager();
         $session = new Session();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvMovimientoFechaDesde') ? date_create($session->get('filtroInvMovimientoFechaDesde')) : null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvMovimeintoFechaHasta') ? date_create($session->get('filtroInvMovimeintoFechaHasta')) : null])
-            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoCodigo')))
             ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvMovimientoNumero')))
             ->add('cboAsesor', EntityType::class, $em->getRepository(GenAsesor::class)->llenarCombo())
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
-            ->add('chkEstadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvMovimientoEstadoAutorizado'), 'required' => false])
-            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroInvMovimientoEstadoAprobado'), 'required' => false])
+            ->add('chkEstadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('chkEstadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
         if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
-                    $session->set('filtroInvMovimientoFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
-                    $session->set('filtroInvMovimeintoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
-                    $session->set('filtroInvMovimientoNumero', $form->get('txtNumero')->getData());
-                    $session->set('filtroInvMovimientoCodigo', $form->get('txtCodigo')->getData());
-                    $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
-                    $session->set('filtroInvMovimientoEstadoAutorizado', $form->get('chkEstadoAutorizado')->getData());
-                    $session->set('filtroInvMovimientoEstadoAprobado', $form->get('chkEstadoAprobado')->getData());
-                    $arAsesor = $form->get('cboAsesor')->getData();
-                    if ($arAsesor != '') {
-                        $session->set('filtroGenAsesor', $form->get('cboAsesor')->getData()->getCodigoAsesorPk());
-                    } else {
-                        $session->set('filtroGenAsesor', null);
-                    }
-                }
-                if ($form->get('btnExcel')->isClicked()) {
-                    General::get()->setExportar($em->getRepository(InvMovimiento::class)->lista($codigoDocumento, $this->getUser())->getQuery()->getResult(), "Movimientos");
-                }
-                if ($form->get('btnEliminar')->isClicked()) {
-                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                    $em->getRepository(InvMovimiento::class)->eliminar($arrSeleccionados);
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] =[
+                    'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+                    'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+                    'numero' => $form->get('txtNumero')->getData(),
+                    'codigoMovimineto' => $form->get('txtCodigo')->getData(),
+                    'codigoTercero' => $form->get('txtCodigoTercero')->getData(),
+                    'estadoAutorizado' => $form->get('chkEstadoAutorizado')->getData(),
+                    'estadoAprobado' => $form->get('chkEstadoAprobado')->getData()
+                ];
+                $arAsesor = $form->get('cboAsesor')->getData();
+                if (is_object($arAsesor)) {
+                    $raw['filtros'] = array_merge($raw['filtros'], ['asesor' => $arAsesor->getCodigoAsesorPk()]);
+                } else {
+                    $raw['filtros'] = array_merge($raw['filtros'], ['asesor' => null]);
                 }
             }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(InvMovimiento::class)->lista($raw, $codigoDocumento, $this->getUser()), "Movimientos");
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(InvMovimiento::class)->eliminar($arrSeleccionados);
+            }
         }
-        $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->lista($codigoDocumento, $this->getUser()), $request->query->getInt('page', 1), 30);
+        $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->lista($raw, $codigoDocumento, $this->getUser()), $request->query->getInt('page', 1), 30);
         return $this->render('inventario/movimiento/inventario/listaMovimientos.html.twig', [
             'arMovimientos' => $arMovimientos,
             'codigoDocumento' => $codigoDocumento,
@@ -418,14 +423,9 @@ class MovimientoController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/inventario/movimiento/inventario/movimiento/detalle/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_detalle_nuevo")
      */
-    public function detalleNuevo(Request $request, $id)
+    public function detalleNuevo(Request $request, PaginatorInterface $paginator,$id)
     {
-        /**
-         * @var $arMovimiento InvMovimiento
-         */
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $respuesta = '';
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
         $form = $this->createFormBuilder()
@@ -518,25 +518,29 @@ class MovimientoController extends ControllerListenerGeneral
     /**
      * @Route("/inventario/movimiento/inventario/movimiento/detalle/orden/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_orden_detalle_nuevo")
      */
-    public function detalleNuevoOrden(Request $request, $id)
+    public function detalleNuevoOrden(Request $request, PaginatorInterface $paginator, $id)
     {
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoItemCodigo'), 'required' => false))
-            ->add('txtNombre', TextType::class, array('data' => $session->get('filtroInvMovimientoItemNombre'), 'required' => false, 'attr' => ['readonly' => 'readonly']))
-            ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvNumeroOrdenCompra'), 'required' => false))
+            ->add('txtCodigo', TextType::class, array('required' => false))
+            ->add('txtNombre', TextType::class, array('required' => false, 'attr' => ['readonly' => 'readonly']))
+            ->add('txtNumero', TextType::class, array('required' => false))
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $respuesta = '';
+        $raw = [
+            'limiteRegistros' => null
+        ];
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvMovimientoItemCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroInvNumeroOrden', $form->get('txtNumero')->getData());
+                $raw['filtros'] =[
+                    'codigoItem'=> $form->get('txtCodigo')->getData(),
+                    'numeroOrden'=> $form->get('txtNumero')->getData()
+                ];
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrOrdenDetalles = $request->request->get('itemCantidad');
@@ -588,7 +592,7 @@ class MovimientoController extends ControllerListenerGeneral
                 }
             }
         }
-        $arOrdenDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvOrdenDetalle::class)->listarDetallesPendientes(), $request->query->getInt('page', 1), 10);
+        $arOrdenDetalles = $paginator->paginate($em->getRepository(InvOrdenDetalle::class)->listarDetallesPendientes($raw), $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/inventario/detalleNuevoOrden.html.twig', [
             'form' => $form->createView(),
             'arOrdenDetalles' => $arOrdenDetalles
@@ -598,25 +602,29 @@ class MovimientoController extends ControllerListenerGeneral
     /**
      * @Route("/inventario/movimiento/inventario/movimiento/detalle/importacion/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_importacion_detalle_nuevo")
      */
-    public function detalleNuevoImportacion(Request $request, $id)
+    public function detalleNuevoImportacion(Request $request,PaginatorInterface $paginator, $id)
     {
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+        $raw = [
+            'limiteRegistros' => null
+        ];
         $form = $this->createFormBuilder()
-            ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroInvMovimientoItemCodigo'), 'required' => false))
-            ->add('txtNombre', TextType::class, array('data' => $session->get('filtroInvMovimientoItemNombre'), 'required' => false, 'attr' => ['readonly' => 'readonly']))
-            ->add('txtNumero', TextType::class, array('data' => $session->get('filtroInvNumeroImportacion'), 'required' => false))
+            ->add('txtCodigo', TextType::class, array('required' => false))
+            ->add('txtNombre', TextType::class, array('required' => false, 'attr' => ['readonly' => 'readonly']))
+            ->add('txtNumero', TextType::class, array('required' => false))
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $respuesta = '';
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvMovimientoItemCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroInvNumeroImportacion', $form->get('txtNumero')->getData());
+                $raw['filtros'] =[
+                    'codigo'=> $form->get('txtCodigo')->getData(),
+                    'numero'=> $form->get('txtNumero')->getData()
+                ];
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrImportacionDetalles = $request->request->get('itemCantidad');
@@ -668,7 +676,7 @@ class MovimientoController extends ControllerListenerGeneral
                 }
             }
         }
-        $arImportacionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvImportacionDetalle::class)->listarDetallesPendientes(), $request->query->getInt('page', 1), 10);
+        $arImportacionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvImportacionDetalle::class)->listarDetallesPendientes($raw), $request->query->getInt('page', 1), 10);
         return $this->render('inventario/movimiento/inventario/detalleNuevoImportacion.html.twig', [
             'form' => $form->createView(),
             'arImportacionDetalles' => $arImportacionDetalles
@@ -678,11 +686,12 @@ class MovimientoController extends ControllerListenerGeneral
     /**
      * @Route("/inventario/movimiento/inventario/movimiento/detalle/pedido/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_pedido_detalle_nuevo")
      */
-    public function detalleNuevoPedido(Request $request, $id)
+    public function detalleNuevoPedido(Request $request, PaginatorInterface $paginator,$id)
     {
-        $session = new Session();
+        $raw = [
+            'limiteRegistros' => null
+        ];
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNumero', TextType::class, array('required' => false))
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
@@ -690,9 +699,11 @@ class MovimientoController extends ControllerListenerGeneral
             ->getForm();
         $form->handleRequest($request);
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvPedidoNumero', $form->get('txtNumero')->getData());
+                $raw['filtros'] =[
+                    'numeroPedido'=>$form->get('txtNumero')->getData()
+                ];
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrDetalles = $request->request->get('itemCantidad');
@@ -747,13 +758,11 @@ class MovimientoController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/inventario/movimiento/detalle/remision/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_remision_detalle_nuevo")
      */
-    public function detalleNuevoRemision(Request $request, $id)
+    public function detalleNuevoRemision(Request $request, PaginatorInterface $paginator,$id)
     {
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
+            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('txtNumero', TextType::class, array('required' => false))
             ->add('txtLote', TextType::class, array('required' => false))
             ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
@@ -761,17 +770,22 @@ class MovimientoController extends ControllerListenerGeneral
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
-                $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
-                $session->set('filtroInvRemisionDetalleLote', $form->get('txtLote')->getData());
+                $raw['filtros'] =[
+                    'tercero'=>$form->get('txtCodigoTercero')->getData(),
+                    'numero'=>$form->get('txtNumero')->getData(),
+                    'lote'=>$form->get('txtLote')->getData()
+                ];
                 $arBodega = $form->get('cboBodega')->getData();
-                if ($arBodega != '') {
-                    $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
+                if (is_object($arBodega)) {
+                    $raw['filtros'] = array_merge($raw['filtros'], ['bodega' => $arBodega->getCodigoBodegaPk()]);
                 } else {
-                    $session->set('filtroInvBodega', null);
+                    $raw['filtros'] = array_merge($raw['filtros'], ['bodega' => null]);
                 }
             }
             if ($form->get('btnGuardar')->isClicked()) {
@@ -814,7 +828,7 @@ class MovimientoController extends ControllerListenerGeneral
                 }
             }
         }
-        $arRemisionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvRemisionDetalle::class)->listarDetallesPendientes($arMovimiento->getCodigoTerceroFk()), $request->query->getInt('page', 1), 500);
+        $arRemisionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvRemisionDetalle::class)->listarDetallesPendientes($raw,$arMovimiento->getCodigoTerceroFk()), $request->query->getInt('page', 1), 500);
         return $this->render('inventario/movimiento/inventario/detalleNuevoRemision.html.twig', [
             'form' => $form->createView(),
             'arRemisionDetalles' => $arRemisionDetalles
@@ -829,13 +843,11 @@ class MovimientoController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/inventario/movimiento/inventario/movimiento/movimiento/nuevo/{id}", name="inventario_movimiento_inventario_movimiento_movimiento_nuevo")
      */
-    public function detalleNuevoMovimiento(Request $request, $id)
+    public function detalleNuevoMovimiento(Request $request, PaginatorInterface $paginator,$id)
     {
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
+            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('txtNumero', TextType::class, array('required' => false))
             ->add('txtLote', TextType::class, array('required' => false))
             ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
@@ -846,14 +858,16 @@ class MovimientoController extends ControllerListenerGeneral
         $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvCodigoTercero', $form->get('txtCodigoTercero')->getData());
-                $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
-                $session->set('filtroInvRemisionDetalleLote', $form->get('txtLote')->getData());
+                $raw['filtros'] =[
+                    'tercero'=>$form->get('txtCodigoTercero')->getData(),
+                    'numero'=>$form->get('txtNumero')->getData(),
+                    'lote'=>$form->get('txtLote')->getData()
+                ];
                 $arBodega = $form->get('cboBodega')->getData();
-                if ($arBodega != '') {
-                    $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
+                if (is_object($arBodega)) {
+                    $raw['filtros'] = array_merge($raw['filtros'], ['bodega' => $arBodega->getCodigoBodegaPk()]);
                 } else {
-                    $session->set('filtroInvBodega', null);
+                    $raw['filtros'] = array_merge($raw['filtros'], ['bodega' => null]);
                 }
             }
             if ($form->get('btnGuardar')->isClicked()) {

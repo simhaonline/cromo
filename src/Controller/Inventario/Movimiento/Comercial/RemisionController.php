@@ -442,16 +442,21 @@ class RemisionController extends AbstractController
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         $arRemision = $em->getRepository(InvRemision::class)->find($id);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvRemisionNumero', $form->get('txtNumero')->getData());
-                $session->set('filtroInvRemisionDetalleLote', $form->get('txtLote')->getData());
+                $raw['filtros'] =[
+                    'numero'=>$form->get('txtNumero')->getData(),
+                    'lote'=>$form->get('txtLote')->getData()
+                ];
                 $arBodega = $form->get('cboBodega')->getData();
-                if ($arBodega != '') {
-                    $session->set('filtroInvBodega', $form->get('cboBodega')->getData()->getCodigoBodegaPk());
+                if (is_object($arBodega)) {
+                    $raw['filtros'] = array_merge($raw['filtros'], ['bodega' => $arBodega->getCodigoBodegaPk()]);
                 } else {
-                    $session->set('filtroInvBodega', null);
+                    $raw['filtros'] = array_merge($raw['filtros'], ['bodega' => null]);
                 }
             }
             if ($form->get('btnGuardar')->isClicked() || $form->get('btnGuardarCerrar')->isClicked()) {
@@ -496,7 +501,7 @@ class RemisionController extends AbstractController
                 }
             }
         }
-        $arRemisionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvRemisionDetalle::class)->listarDetallesPendientes($arRemision->getCodigoTerceroFk()), $request->query->getInt('page', 1), 50);
+        $arRemisionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvRemisionDetalle::class)->listarDetallesPendientes($raw,$arRemision->getCodigoTerceroFk()), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/comercial/remision/detalleNuevoRemision.html.twig', [
             'form' => $form->createView(),
             'arRemisionDetalles' => $arRemisionDetalles

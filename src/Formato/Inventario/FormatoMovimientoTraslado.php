@@ -63,7 +63,7 @@ class FormatoMovimientoTraslado extends \FPDF
             }
         } catch (\Exception $exception) {
         }
-
+        $intY = 40;
         $this->Cell(147, 7, utf8_decode('MOVIMIENTO'), 0, 0, 'C', 1);
         $this->SetXY(53, 18);
         $this->SetFont('Arial', 'B', 9);
@@ -78,6 +78,21 @@ class FormatoMovimientoTraslado extends \FPDF
         $this->SetXY(53, 30);
         $this->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
         $this->Cell(100, 4, $arMovimiento->getTerceroRel()->getTelefono() ?? '', 0, 0, 'L', 0);
+
+        $this->SetXY(160, 18);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(20, 4, "CODIGO:", 0, 0, 'L', 1);
+        $this->Cell(10, 4, utf8_decode('F-AL-15'), 0, 0, 'L', 0);
+        $this->SetXY(160, 22);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(20, 4, "VERSION:", 0, 0, 'L', 1);
+        $this->Cell(10, 4, utf8_decode(01), 0, 0, 'L', 0);
+        $this->SetXY(160, 26);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(20, 4, "FECHA:", 0, 0, 'L', 1);
+        $this->Cell(10, 4, '29/04/2019', 0, 0, 'L', 0);
+
+
         $intY = 40;
         $this->SetXY(10, $intY);
         $this->SetFont('Arial', 'B', 8);
@@ -162,8 +177,8 @@ class FormatoMovimientoTraslado extends \FPDF
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
             $pdf->SetX(10);
             $pdf->Cell(10, 6, $arMovimientoDetalle['codigoItemFk'], 1, 0, 'L');
-            $pdf->Cell(50, 6, substr(utf8_decode($arMovimientoDetalle['itemNombre']),1, 38 ), 1, 0, 'L');
-            $pdf->Cell(15, 6, substr($arMovimientoDetalle['itemReferencia'], 0, 10), 1, 0, 'R');
+            $pdf->Cell(50, 6, substr(utf8_decode($arMovimientoDetalle['itemNombre']),0, 38 ), 1, 0, 'L');
+            $pdf->Cell(15, 6, substr($arMovimientoDetalle['itemReferencia'], 0, 12), 1, 0, 'R');
             $pdf->Cell(15, 6, substr($arMovimientoDetalle['loteFk'], 0, 10), 1, 0, 'R');
             $pdf->Cell(15, 6, $arMovimientoDetalle['fechaVencimiento']->format('Y-m-d'), 1, 0, 'R');
             $pdf->Cell(10, 6, substr($arMovimientoDetalle['codigoBodegaFk'], 0, 4), 1, 0, 'R');

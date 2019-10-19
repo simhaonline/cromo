@@ -71,10 +71,10 @@ class PoseedorController extends BaseController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked() || $form->get('guardarnuevo')->isClicked()) {
-                $arPoseedor = $em->getRepository(TtePoseedor::class)->findOneBy(['numeroIdentificacion'=> $form->get('numeroIdentificacion')->getData()]);
+                /*$arPoseedor = $em->getRepository(TtePoseedor::class)->findOneBy(['numeroIdentificacion'=> $form->get('numeroIdentificacion')->getData()]);
                 if ($id == 0 and is_object($arPoseedor) ){
                     Mensajes::info("El número de identificación ya esta registrado");
-                }
+                }*/
                 $arPoseedor->setNombre1($form->get('nombre1')->getData());
                 $arPoseedor->setNombre2($form->get('nombre2')->getData());
                 $arPoseedor->setApellido1($form->get('apellido1')->getData());

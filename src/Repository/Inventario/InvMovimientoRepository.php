@@ -133,7 +133,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         }
         $queryBuilder->orderBy('m.estadoAprobado', 'ASC');
         $queryBuilder->addOrderBy('m.fecha', 'DESC');
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
 

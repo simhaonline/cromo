@@ -9,13 +9,13 @@ class RhuCargo extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $arCargo = $manager->getRepository(\App\Entity\RecursoHumano\RhuCargo::class)->find('0001');
+        /*$arCargo = $manager->getRepository(\App\Entity\RecursoHumano\RhuCargo::class)->find('0001');
         if(!$arCargo){
             $arCargo = new \App\Entity\RecursoHumano\RhuCargo();
             $arCargo->setCodigoCargoPk('0001');
             $arCargo->setNombre('AUXILIAR');
             $manager->persist($arCargo);
-        }
+        }*/
         //No se pueden generar por fixture los cargos porque cada compañia tiene sus propios cargos
         /*$arCargo = $manager->getRepository(\App\Entity\RecursoHumano\RhuCargo::class)->find('0002');
         if(!$arCargo){

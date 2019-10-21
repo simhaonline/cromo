@@ -28,8 +28,6 @@ class PruebaController extends Controller
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $trasladosSinAprobar = $em->getRepository(TteDespacho::class)->sinAprobar();
-        echo $trasladosSinAprobar;
         echo "prueba";
         exit;
     }

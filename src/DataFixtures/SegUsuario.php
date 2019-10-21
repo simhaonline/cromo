@@ -17,8 +17,8 @@ class SegUsuario extends Fixture
             $arUsuario->setNombreCorto('SEMANTICA');
             $arUsuario->setUsername('semantica');
             $arUsuario->setIsActive(1);
-            $arUsuario->setClaveEscritorio('smt489');
-            $arUsuario->setPassword('$2a$10$dw7SHL/z3.rH/Mr6Pqa9ZOQ7NG6Phb/7EzzHYhlNZ9YQsGJq3yw0K');
+            $arUsuario->setClaveEscritorio('smt48903');
+            $arUsuario->setPassword('$2y$10$6kDEFebYApgUPxwLTj4kfe1ZsBxok2iM/pKafXNuW2pyh4BYRPi8a');
             $arUsuario->setEmail('investigacion@semantica.com.co');
             $arUsuario->setRol('ROLE_ADMIN');
             $manager->persist($arUsuario);

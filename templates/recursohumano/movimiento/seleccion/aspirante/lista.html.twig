@@ -55,6 +55,7 @@
             <th>CORREO</th>
             <th title="AUTORIZADO">AUT</th>
             <th title="APROBADO">APRO</th>
+            <th title="ANULADO">ANU</th>
             <th></th>
             <th></th>
         </tr>
@@ -70,6 +71,7 @@
                 <td>{{ arAspirante.correo }}</td>
                 <td>{{ arAspirante.estadoAutorizado ? 'SI' : 'NO' }}</td>
                 <td>{{ arAspirante.estadoAprobado ? 'SI' : 'NO' }}</td>
+                <td>{{ arAspirante.estadoAnulado ? 'SI' : 'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_seleccion_aspirante_nuevo',{'id': arAspirante.codigoAspirantePk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

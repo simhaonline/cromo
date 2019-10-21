@@ -3,6 +3,7 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuAspirante;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -44,7 +45,8 @@ class RhuAspiranteRepository extends ServiceEntityRepository
             ->addSelect('a.correo')
             ->addSelect('a.direccion')
             ->addSelect('a.estadoAutorizado')
-            ->addSelect('a.estadoAprobado');
+            ->addSelect('a.estadoAprobado')
+            ->addSelect('a.estadoAnulado');
         if ($codigoAspirante) {
             $queryBuilder->andWhere("a.codigoAspirantePk = '{$codigoAspirante}'");
         }
@@ -80,6 +82,26 @@ class RhuAspiranteRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function Autorizar($arAspirante)
+    {
+        $em = $this->getEntityManager();
+        if (!$arAspirante->getEstadoAutorizado()) {
+            $arAspirante->setEstadoAutorizado(1);
+            $em->persist($arAspirante);
+            $em->flush();
+        } else {
+            Mensajes::error('El aspirante ya esta autorizado');
+        }
+    }
+
+    public function Anular($arAspirante)
+    {
+        $em = $this->getEntityManager();
+        $arAspirante->setEstadoAnulado(1);
+        $em->persist($arAspirante);
+        $em->flush();
+    }
+    
     public function camposPredeterminados()
     {
         $qb = $this->_em->createQueryBuilder()

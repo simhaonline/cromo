@@ -214,9 +214,9 @@ class RhuAspirante
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_cerrado", type="boolean", options={"default":false})
+     * @ORM\Column(name="estado_anulado", type="boolean", options={"default":false})
      */
-    private $estadoCerrado = false;
+    private $estadoAnulado = false;
 
     /**
      * @ORM\Column(name="estado_bloqueado", type="boolean", options={"default":false})
@@ -270,6 +270,22 @@ class RhuAspirante
      * @ORM\JoinColumn(name="codigo_cargo_fk", referencedColumnName="codigo_cargo_pk")
      */
     protected $cargoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -722,6 +738,22 @@ class RhuAspirante
     /**
      * @return mixed
      */
+    public function getEstadoAutorizado()
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param mixed $estadoAutorizado
+     */
+    public function setEstadoAutorizado($estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAprobado()
     {
         return $this->estadoAprobado;
@@ -738,33 +770,17 @@ class RhuAspirante
     /**
      * @return mixed
      */
-    public function getEstadoCerrado()
+    public function getEstadoAnulado()
     {
-        return $this->estadoCerrado;
+        return $this->estadoAnulado;
     }
 
     /**
-     * @param mixed $estadoCerrado
+     * @param mixed $estadoAnulado
      */
-    public function setEstadoCerrado($estadoCerrado): void
+    public function setEstadoAnulado($estadoAnulado): void
     {
-        $this->estadoCerrado = $estadoCerrado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAutorizado()
-    {
-        return $this->estadoAutorizado;
-    }
-
-    /**
-     * @param mixed $estadoAutorizado
-     */
-    public function setEstadoAutorizado($estadoAutorizado): void
-    {
-        $this->estadoAutorizado = $estadoAutorizado;
+        $this->estadoAnulado = $estadoAnulado;
     }
 
     /**

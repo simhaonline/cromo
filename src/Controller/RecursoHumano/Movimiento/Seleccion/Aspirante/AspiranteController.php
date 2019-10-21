@@ -10,6 +10,7 @@ use App\Entity\RecursoHumano\RhuAspirante;
 use App\Entity\RecursoHumano\RhuSolicitud;
 use App\Form\Type\RecursoHumano\AspiranteType;
 use App\General\General;
+use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -117,12 +118,25 @@ class AspiranteController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         if ($id != 0) {
             $arAspirante = $em->getRepository(RhuAspirante::class)->find($id);
+            $form = Estandares::botonera($arAspirante->getEstadoAutorizado(), $arAspirante->getEstadoAprobado(), $arAspirante->getEstadoAnulado());
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                if ($form->get('btnAutorizar')->isClicked()) {
+                    $em->getRepository(RhuAspirante::class)->autorizar($arAspirante);
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_aplicar', array('id' => $arAspirante->getCodigoAspirantePk())));
+                }
+                if ($form->get('btnAnular')->isClicked()) {
+                    $em->getRepository(RhuAspirante::class)->anular($arAspirante);
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_aplicar', array('id' => $arAspirante->getCodigoAspirantePk())));
+                }
+            }
             if (!$arAspirante) {
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
             }
         }
         return $this->render('recursohumano/movimiento/seleccion/aspirante/detalle.html.twig', [
-            'arAspirante' => $arAspirante
+            'arAspirante' => $arAspirante,
+            'form' =>$form->createView()
         ]);
     }
 

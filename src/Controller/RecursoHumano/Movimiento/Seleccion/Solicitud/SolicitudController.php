@@ -103,7 +103,8 @@ class SolicitudController extends AbstractController
                 }
                 $em->persist($arSolicitud);
                 $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_detalle', array('id' => $arSolicitud->getCodigoSolicitudPk())));
+
             }
         }
         return $this->render('recursohumano/movimiento/seleccion/solicitud/nuevo.html.twig', [

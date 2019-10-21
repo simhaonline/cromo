@@ -43,6 +43,8 @@ class RhuSolicitudRepository extends ServiceEntityRepository
             ->addSelect('s.edadMinima')
             ->addSelect('s.edadMaxima')
             ->addSelect('s.estadoAprobado')
+            ->addSelect('s.estadoAutorizado')
+            ->addSelect('s.estadoCerrado')
         ->leftJoin('s.solicitudMotivoRel', 'm');
         if ($codigoSolicitud) {
             $queryBuilder->andWhere("s.codigoSolicitudPk = '{$codigoSolicitud}'");

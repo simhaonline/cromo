@@ -49,13 +49,13 @@
         <tr>
             <th>ID</th>
             <th>MOTIVO</th>
-            <th>IDENTIFICACION</th>
             <th>NOMBRE</th>
-            <th>DIRECCION</th>
-            <th>TELEFONO</th>
-            <th>CORREO</th>
+            <th title="CANTIDAD SOLICITADA">SOL</th>
+            <th>FIJO</th>
+            <th>VARIBLE</th>
             <th title="AUTORIZADO">AUT</th>
             <th title="APROBADO">APRO</th>
+            <th title="ANULADO">Anu</th>
             <th></th>
             <th></th>
         </tr>
@@ -65,16 +65,15 @@
             <tr>
                 <td>{{ arSolicitud.codigoSolicitudPk }}</td>
                 <td>{{ arSolicitud.motivo }}</td>
-                <td>{{ arSolicitud.numeroIdentificacion }}</td>
-                <td>{{ arSolicitud.nombreCorto }}</td>
-                <td>{{ arSolicitud.direccion }}</td>
-                <td>{{ arSolicitud.telefono }}</td>
-                <td>{{ arSolicitud.correo }}</td>
+                <td>{{ arSolicitud.nombre }}</td>
+                <td>{{ arSolicitud.cantidadSolicitada }}</td>
+                <td>{{ arSolicitud.salarioFijo ? 'SI' : 'NO' }}</td>
+                <td>{{ arSolicitud.salarioVariable ? 'SI' : 'NO' }}</td>
                 <td>{{ arSolicitud.estadoAutorizado ? 'SI' : 'NO' }}</td>
                 <td>{{ arSolicitud.estadoAprobado ? 'SI' : 'NO' }}</td>
+                <td>{{ arSolicitud.estadoCerrado ? 'SI' : 'NO' }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_seleccion_solicitud_nuevo',{'id': arSolicitud.codigoSolicitudPk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    <a href="{{ path('recursohumano_movimiento_seleccion_solicitud_nuevo',{'id': arSolicitud.codigoSolicitudPk }) }}"><i class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_seleccion_solicitud_detalle',{'id' : arSolicitud.codigoSolicitudPk }) }}">

@@ -123,7 +123,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
         $arMovimiento = $em->getRepository(TesMovimiento::class)->find($id);
         $arMovimientosDetalle = $em->getRepository(TesMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $id));
         foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
-            if($arMovimientoDetalle->getNaturaleza() == 'D') {
+            if ($arMovimientoDetalle->getNaturaleza() == 'D') {
                 $debito += $arMovimientoDetalle->getVrPago();
             } else {
                 $credito += $arMovimientoDetalle->getVrPago();
@@ -135,6 +135,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
         $em->flush();
         return true;
     }
+
     /**
      * @param $arrSeleccionados
      * @throws \Doctrine\ORM\ORMException
@@ -178,7 +179,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arMovimiento->getEstadoAutorizado() == 0) {
             $error = false;
-            if($arMovimiento->getVrTotalNeto() >= 0) {
+            if ($arMovimiento->getVrTotalNeto() >= 0) {
                 $arMovimientosDetalles = $em->getRepository(TesMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
                 if ($arMovimientosDetalles) {
                     foreach ($arMovimientosDetalles AS $arMovimientoDetalle) {
@@ -218,7 +219,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arMovimientoDetalles = $em->getRepository(TesMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
         foreach ($arMovimientoDetalles AS $arMovimientoDetalle) {
-            if($arMovimientoDetalle->getCodigoCuentaPagarFk()) {
+            if ($arMovimientoDetalle->getCodigoCuentaPagarFk()) {
                 $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($arMovimientoDetalle->getCodigoCuentaPagarFk());
                 $saldo = $arCuentaPagar->getVrSaldo() + $arMovimientoDetalle->getVrPago();
                 $saldoOperado = $saldo * $arCuentaPagar->getOperacion();
@@ -245,7 +246,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
             }
             $arMovimiento->setEstadoAprobado(1);
             $em->persist($arMovimiento);
-            if($arMovimiento->getMovimientoTipoRel()->getGeneraCuentaPagar()) {
+            if ($arMovimiento->getMovimientoTipoRel()->getGeneraCuentaPagar()) {
                 $this->generarCuentaPagar($arMovimiento);
             }
             $em->flush();
@@ -265,12 +266,12 @@ class TesMovimientoRepository extends ServiceEntityRepository
             foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
                 if ($arMovimientoDetalle->getCodigoCuentaPagarFk()) {
                     $arCuentaPagarAplicacion = $em->getRepository(TesCuentaPagar::class)->find($arMovimientoDetalle->getCodigoCuentaPagarFk());
-                    if ($arCuentaPagarAplicacion->getVrSaldo() <= $arMovimientoDetalle->vrPago() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
-                        $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arMovimientoDetalle->vrPago();
+                    if ($arCuentaPagarAplicacion->getVrSaldo() <= $arMovimientoDetalle->getVrPago() || $arCuentaPagarAplicacion->getVrSaldo() == 0) {
+                        $saldo = $arCuentaPagarAplicacion->getVrSaldo() + $arMovimientoDetalle->getVrPago();
                         $saldoOperado = $saldo * $arCuentaPagarAplicacion->getOperacion();
                         $arCuentaPagarAplicacion->setVrSaldo($saldo);
                         $arCuentaPagarAplicacion->setVrSaldoOperado($saldoOperado);
-                        $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() - $arMovimientoDetalle->vrPago());
+                        $arCuentaPagarAplicacion->setVrAbono($arCuentaPagarAplicacion->getVrAbono() - $arMovimientoDetalle->getVrPago());
                         $em->persist($arCuentaPagarAplicacion);
                     }
                 }
@@ -326,7 +327,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                     //Cuenta proveedor
                                     if ($arMovimientoDetalle['vrPago'] > 0) {
                                         $arTerceroDetalle = null;
-                                        if($arMovimientoDetalle['codigoTerceroFk']) {
+                                        if ($arMovimientoDetalle['codigoTerceroFk']) {
                                             $arTerceroDetalle = $em->getRepository(TesTercero::class)->terceroFinanciero($arMovimientoDetalle['codigoTerceroFk']);
                                         }
                                         $descripcion = "DOC " . $arMovimientoDetalle['numeroDocumento'] . " " . $arMovimientoDetalle['detalle'];
@@ -345,7 +346,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                             $arRegistro->setNumeroReferencia($arMovimientoDetalle['numeroDocumento']);
                                             $arRegistro->setFecha($fecha);
                                             $arRegistro->setFechaVence($fecha);
-                                            if($arMovimientoDetalle['naturaleza'] == 'D') {
+                                            if ($arMovimientoDetalle['naturaleza'] == 'D') {
                                                 $arRegistro->setVrDebito($arMovimientoDetalle['vrPago']);
                                             } else {
                                                 $arRegistro->setVrCredito($arMovimientoDetalle['vrPago']);
@@ -363,7 +364,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                 }
 
                                 //Cuenta banco
-                                if($arMovimiento['codigoMovimientoClaseFk'] == 'EG') {
+                                if ($arMovimiento['codigoMovimientoClaseFk'] == 'EG') {
                                     $cuenta = $arMovimiento['codigoCuentaContableFk'];
                                     if ($cuenta) {
                                         $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
@@ -390,7 +391,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                 }
 
                                 //Cuenta por pagar
-                                if($arMovimiento['codigoMovimientoClaseFk'] == 'CP') {
+                                if ($arMovimiento['codigoMovimientoClaseFk'] == 'CP') {
                                     $cuenta = $arMovimiento['codigoCuentaFk'];
                                     if ($cuenta) {
                                         $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
@@ -452,7 +453,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arMovimiento->getMovimientoTipoRel()->getCodigoCuentaPagarTipoFk()) {
-            if($arMovimiento->getVrTotalNeto() > 0) {
+            if ($arMovimiento->getVrTotalNeto() > 0) {
                 $arCuentaPagar = New TesCuentaPagar();
                 $arCuentaPagar->setCuentaPagarTipoRel($arMovimiento->getMovimientoTipoRel()->getCuentaPagarTipoRel());
                 $arCuentaPagar->setTerceroRel($arMovimiento->getTerceroRel());

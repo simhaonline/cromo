@@ -1,28 +1,31 @@
 {% include('base_menu_inicio.html.twig') %}
 <nav>
     <ul>
+        <li>
+            <a href="#"><i class="fa fa-book fa-fw"></i>
+                <span class="menu-item-parent">Movimiento</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul>
                 <li>
-                    <a href="#"><i class="fa fa-book fa-fw"></i>
-                        <span class="menu-item-parent">Movimiento</span>
-                        <span class="fa arrow"></span>
-                    </a>
+                    <a href="#">Pagar <span class="fa arrow"></span></a>
                     <ul>
-                        <li>
-                            <a href="#">Pagar <span class="fa arrow"></span></a>
-                            <ul>
-                                <li><a href="{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_lista') }}">Cuentas por pagar</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Movimiento <span class="fa arrow"></span></a>
-                            <ul>
-                                <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'CP'}) }}">Compra</a></li>
-                                <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'EG'}) }}">Egreso</a></li>
-                            </ul>
+                        <li><a href="{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_lista') }}">Cuentas por
+                                pagar</a>
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="#">Movimiento <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'CP'}) }}">Compra</a>
+                        </li>
+                        <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'EG'}) }}">Egreso</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
         <li>
             <a href="#"><i class="fa fa-bars fa-fw"></i>
                 <span class="menu-item-parent">Administración</span>
@@ -34,7 +37,8 @@
                     <ul>
                         <li><a href="{{ path('tesoreria_administracion_tercero_tercero_lista') }}">Tercero</a></li>
                         <li>
-                            <a href="{{ path('administracion_lista',{'modulo':'tesoreria','entidad':'egresoTipo'}) }}">Tipo egreso</a></li>
+                            <a href="{{ path('administracion_lista',{'modulo':'tesoreria','entidad':'egresoTipo'}) }}">Tipo
+                                egreso</a></li>
                         <li>
                     </ul>
                 </li>
@@ -42,10 +46,27 @@
                     <a href="#">Cuenta pagar<span class="fa arrow"></span></a>
                     <ul>
                         <li>
-                            <a href="{{ path('administracion_lista',{'modulo':'tesoreria','entidad':'cuentaPagarTipo'}) }}">Tipo cuenta pagar</a></li>
+                            <a href="{{ path('administracion_lista',{'modulo':'tesoreria','entidad':'cuentaPagarTipo'}) }}">Tipo
+                                cuenta pagar</a></li>
                     </ul>
                 </li>
             </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-retweet fa-fw"></i>
+                <span class="menu-item-parent">Proceso</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul>
+                <li>
+                    <a href="#">General <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('tesoreria_proceso_general_unificarcliente_lista') }}">Unificar cliente</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
         </li>
         <li>
             <a href="#"><i class="fa fa-clipboard"></i>

@@ -3,6 +3,9 @@
 namespace App\Repository\Tesoreria;
 
 use App\Entity\Financiero\FinTercero;
+use App\Entity\Tesoreria\TesCuentaPagar;
+use App\Entity\Tesoreria\TesMovimiento;
+use App\Entity\Tesoreria\TesMovimientoDetalle;
 use App\Entity\Tesoreria\TesTercero;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -111,6 +114,49 @@ class TesTerceroRepository extends ServiceEntityRepository
         }
 
         return $arTercero;
+    }
+
+    public function unificar()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesTercero::class, 't')
+            ->select('COUNT(t.codigoTerceroPk) as cantidad')
+            ->addSelect('t.codigoIdentificacionFk')
+            ->addSelect('t.numeroIdentificacion')
+            ->groupBy('t.codigoIdentificacionFk')
+            ->addGroupBy('t.numeroIdentificacion');
+        $arTerceros = $queryBuilder->getQuery()->getResult();
+        foreach ($arTerceros as $arTercero) {
+            if($arTercero['cantidad']>1) {
+                $arTerceroFijo = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arTercero['codigoIdentificacionFk'], 'numeroIdentificacion' => $arTercero['numeroIdentificacion']), array('codigoTerceroPk' => 'ASC'));
+                $arTercerosActualizar = $em->getRepository(TesTercero::class)->findBy(array('codigoIdentificacionFk' => $arTercero['codigoIdentificacionFk'], 'numeroIdentificacion' => $arTercero['numeroIdentificacion']));
+                foreach ($arTercerosActualizar as $arTerceroActualizar) {
+                    if($arTerceroActualizar->getCodigoTerceroPk() != $arTerceroFijo->getCodigoTerceroPk()) {
+                        $arCuentasPagar = $em->getRepository(TesCuentaPagar::class)->findBy(array('codigoTerceroFk' => $arTerceroActualizar->getCodigoTerceroPk()));
+                        foreach ($arCuentasPagar as $arCuentaPagar) {
+                            $arCuentaPagar->setTerceroRel($arTerceroFijo);
+                            $em->persist($arCuentaPagar);
+                        }
+
+                        $arMovimientos = $em->getRepository(TesMovimiento::class)->findBy(array('codigoTerceroFk' => $arTerceroActualizar->getCodigoTerceroPk()));
+                        foreach ($arMovimientos as $arMovimiento) {
+                            $arMovimiento->setTerceroRel($arTerceroFijo);
+                            $em->persist($arMovimiento);
+                        }
+
+                        $arMovimientosDetalle = $em->getRepository(TesMovimientoDetalle::class)->findBy(array('codigoTerceroFk' => $arTerceroActualizar->getCodigoTerceroPk()));
+                        foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
+                            $arMovimientoDetalle->setTerceroRel($arTerceroFijo);
+                            $em->persist($arMovimientoDetalle);
+                        }
+
+                        $em->remove($arTerceroActualizar);
+                    }
+                }
+            }
+        }
+        $em->flush();
+        return true;
     }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuSolicitud;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -44,7 +45,7 @@ class RhuSolicitudRepository extends ServiceEntityRepository
             ->addSelect('s.edadMaxima')
             ->addSelect('s.estadoAprobado')
             ->addSelect('s.estadoAutorizado')
-            ->addSelect('s.estadoCerrado')
+            ->addSelect('s.estadoAnulado')
         ->leftJoin('s.solicitudMotivoRel', 'm');
         if ($codigoSolicitud) {
             $queryBuilder->andWhere("s.codigoSolicitudPk = '{$codigoSolicitud}'");
@@ -80,6 +81,39 @@ class RhuSolicitudRepository extends ServiceEntityRepository
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function Autorizar($arSolicitud)
+    {
+        $em = $this->getEntityManager();
+        if (!$arSolicitud->getEstadoAutorizado()) {
+            $arSolicitud->setEstadoAutorizado(1);
+            $em->persist($arSolicitud);
+            $em->flush();
+        } else {
+            Mensajes::error('El aspirante ya esta autorizado');
+        }
+    }
+
+    public function Aprobar($arSolicitud)
+    {
+        $em = $this->getEntityManager();
+        if (!$arSolicitud->getEstadoAprobado()) {
+            $arSolicitud->setEstadoAprobado(1);
+            $em->persist($arSolicitud);
+            $em->flush();
+        } else {
+            Mensajes::error('El aspirante ya esta aprobado');
+        }
+    }
+
+    public function Anular($arAspirante)
+    {
+        $em = $this->getEntityManager();
+        $arAspirante->setEstadoAnulado(1);
+        $em->persist($arAspirante);
+        $em->flush();
+    }
+
 
     public function camposPredeterminados()
     {

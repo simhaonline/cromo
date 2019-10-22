@@ -8,9 +8,11 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuAspirante;
 use App\Entity\RecursoHumano\RhuSolicitud;
+use App\Entity\Transporte\TteMonitoreo;
 use App\Form\Type\RecursoHumano\AspiranteType;
 use App\Form\Type\RecursoHumano\SolicitudType;
 use App\General\General;
+use App\Utilidades\Estandares;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -119,12 +121,20 @@ class SolicitudController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         if ($id != 0) {
             $arSolicitud = $em->getRepository(RhuSolicitud::class)->find($id);
+            $form = Estandares::botonera($arSolicitud->getEstadoAutorizado(), $arSolicitud->getEstadoAprobado(), $arSolicitud->getEstadoAnulado());
+            $form->handleRequest($request);
+            if ($form->isSubmitted()) {
+                if ($form->get('btnAutorizar')->isClicked()) {
+                    $em->getRepository(RhuSolicitud::class)->autorizar($arSolicitud);
+                }
+            }
             if (!$arSolicitud) {
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));
             }
         }
         return $this->render('recursohumano/movimiento/seleccion/solicitud/detalle.html.twig', [
-            'arSolicitud' => $arSolicitud
+            'arSolicitud' => $arSolicitud,
+            'form' =>$form->createView()
         ]);
     }
 

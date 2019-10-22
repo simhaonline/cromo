@@ -179,9 +179,9 @@ class RhuSolicitud
     private $estadoAprobado = false;
 
     /**
-     * @ORM\Column(name="estado_cerrado", type="boolean",options={"default":false})
+     * @ORM\Column(name="estado_anulado", type="boolean",options={"default":false})
      */
-    private $estadoCerrado = false;
+    private $estadoAnulado = false;
 
     /**
      * @ORM\Column(name="codigo_usuario", type="string", length=50, nullable=true)
@@ -746,17 +746,17 @@ class RhuSolicitud
     /**
      * @return mixed
      */
-    public function getEstadoCerrado()
+    public function getEstadoAnulado()
     {
-        return $this->estadoCerrado;
+        return $this->estadoAnulado;
     }
 
     /**
-     * @param mixed $estadoCerrado
+     * @param mixed $estadoAnulado
      */
-    public function setEstadoCerrado($estadoCerrado): void
+    public function setEstadoAnulado($estadoAnulado): void
     {
-        $this->estadoCerrado = $estadoCerrado;
+        $this->estadoAnulado = $estadoAnulado;
     }
 
     /**
@@ -906,17 +906,17 @@ class RhuSolicitud
     /**
      * @return mixed
      */
-    public function getRhuSeleccionSolicitudRel()
+    public function getSeleccionSolicitudRel()
     {
-        return $this->rhuSeleccionSolicitudRel;
+        return $this->seleccionSolicitudRel;
     }
 
     /**
-     * @param mixed $rhuSeleccionSolicitudRel
+     * @param mixed $seleccionSolicitudRel
      */
-    public function setRhuSeleccionSolicitudRel($rhuSeleccionSolicitudRel): void
+    public function setSeleccionSolicitudRel($seleccionSolicitudRel): void
     {
-        $this->rhuSeleccionSolicitudRel = $rhuSeleccionSolicitudRel;
+        $this->seleccionSolicitudRel = $seleccionSolicitudRel;
     }
 
     /**
@@ -934,5 +934,4 @@ class RhuSolicitud
     {
         $this->sexoRel = $sexoRel;
     }
-
 }

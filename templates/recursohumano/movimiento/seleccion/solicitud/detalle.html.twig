@@ -1,11 +1,24 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seleccion_solicitud_lista') }}"
                style="float:left">Volver</a>
         </div>
     </div>
+    <div class="btn-group">
+        {% include 'estructura/botonera.html.twig' %}
+    </div>
+    <div style="float:right">
+        {% if arSolicitud.estadoAutorizado == 1 %}<span
+                class="label label-default">Autorizado</span>{% endif %}
+        {% if arSolicitud.estadoAprobado == 1 %}<span
+                class="label label-default">Aprobado</span>{% endif %}
+        {% if arSolicitud.estadoAnulado == 1 %}<span
+                class="label label-default">Anulado</span>{% endif %}
+    </div>
+    <br/><br/>
     <br/><br/>
     <table widtd="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
@@ -13,8 +26,8 @@
             <td class="td-in-well">{{ arSolicitud.codigoSolicitudPk }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arSolicitud.fecha | date("Y-m-d") }}</td>
-            <td class="titulo">CERRADO:</td>
-            <td class="td-label" align="right">{{ arSolicitud.estadoCerrado }}</td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
             <td class="titulo">NOMBRE:</td>
@@ -78,4 +91,6 @@
         </tr>
     </table>
     <br/><br/><br/>
+    {{ form_end(form) }}
+
 {% endblock %}

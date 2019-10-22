@@ -153,7 +153,7 @@ class AspiranteController extends AbstractController
         $arrSolicitudesRel = array('class' => RhuSolicitud::class,
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('sr')
-                    ->where('sr.estadoCerrado = 0')
+                    ->where('sr.estadoAnulado = 0')
                     ->andWhere('sr.estadoAprobado = 1')
                     ->orderBy('sr.nombre', 'ASC');
             },
@@ -178,7 +178,7 @@ class AspiranteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $arSolicitud = $form->get('solicitudRel')->getData();
             if ($arAspirante->getBloqueado() == 0) {
-                if ($arSolicitud->getEstadoCerrado() == 0) {
+                if ($arSolicitud->getEstadoAnulado() == 0) {
                     //Calculo edad
                     $varFechaNacimientoAnio = $arAspirante->getFechaNacimiento()->format('Y');
                     $varFechaNacimientoMes = $arAspirante->getFechaNacimiento()->format('m');

@@ -64,6 +64,11 @@ class RhuConfiguracion
     private $vacacionesRecargoNocturnoUltimoAnio = false;
 
     /**
+     * @ORM\Column(name="vacaciones_recargo_nocturno_ultimo_anio_especial", type="boolean", nullable=true)
+     */
+    private $vacacionesRecargoNocturnoUltimoAnioEspecial = false;
+
+    /**
      * @ORM\Column(name="vacaciones_liquidar_recargo_nocturno_porcentaje_concepto", type="boolean", nullable=true)
      */
     private $vacacionesLiquidarRecargoNocturnoPorcentajeConcepto = false;
@@ -798,7 +803,37 @@ class RhuConfiguracion
         $this->entidadRiesgosRel = $entidadRiesgosRel;
     }
 
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
 
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacacionesRecargoNocturnoUltimoAnioEspecial()
+    {
+        return $this->vacacionesRecargoNocturnoUltimoAnioEspecial;
+    }
+
+    /**
+     * @param mixed $vacacionesRecargoNocturnoUltimoAnioEspecial
+     */
+    public function setVacacionesRecargoNocturnoUltimoAnioEspecial($vacacionesRecargoNocturnoUltimoAnioEspecial): void
+    {
+        $this->vacacionesRecargoNocturnoUltimoAnioEspecial = $vacacionesRecargoNocturnoUltimoAnioEspecial;
+    }
 
 
 }

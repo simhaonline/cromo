@@ -55,6 +55,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->addSelect('sc.horasRecargoFestivoDiurno')
             ->addSelect('sc.horasRecargoFestivoNocturno')
             ->addSelect('sc.horasRecargo')
+            ->addSelect('sc.codigoDistribucionFk')
             ->leftJoin('sc.contratoRel', 'c')
             ->leftJoin('sc.empleadoRel', 'e')
             ->where('sc.codigoSoporteFk = ' . $id);
@@ -71,7 +72,9 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->addSelect('sc.fechaHasta')
             ->addSelect('sc.anio')
             ->addSelect('sc.mes')
-            ->addSelect('sc.codigoEmpleadoFk');
+            ->addSelect('sc.codigoDistribucionFk')
+            ->addSelect('sc.codigoEmpleadoFk')
+            ->addSelect('sc.diasTransporte');
         if($codigoSoporteContrato) {
             $queryBuilder->where('sc.codigoSoporteContratoPk = ' . $codigoSoporteContrato);
         } else {
@@ -626,5 +629,80 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         $arSoporteHora->setHorasRecargoFestivoDiurno(0);
         $arSoporteHora->setHorasRecargoFestivoNocturno(0);
     }
+
+    public function distribucion($arSoporte, $arSoporteContrato) {
+        $em = $this->getEntityManager();
+        //19
+        if($arSoporteContrato['codigoDistribucionFk'] == 'DP001') {
+
+            $intDias = $arSoporteContrato['fechaDesde']->diff($arSoporteContrato['fechaHasta']);
+            $diasRealesPeriodo = $intDias->format('%a') + 1;
+            $arSoporteContratoAct = $em->getRepository(TurSoporteContrato::class)->find($arSoporteContrato['codigoSoporteContratoPk']);
+
+            $diasTransporte = $arSoporteContrato['diasTransporte'];
+            $dias = $arSoporteContrato['diasTransporte'];
+            /*if ($arSoportePagoPeriodo->getDiasAdicionalesFebrero() > 0) {
+                $novedades = $arSoportePagoAct->getIncapacidad() + $arSoportePagoAct->getIncapacidadNoLegalizada() + $arSoportePagoAct->getLicencia() + $arSoportePagoAct->getLicenciaNoRemunerada();
+                if ($arSoportePagoAct->getRetiro() <= 0 && $novedades < $diasRealesPeriodo) {
+                    $dias += $arSoportePagoPeriodo->getDiasAdicionalesFebrero();
+                    $diasTransporte += $arSoportePagoPeriodo->getDiasAdicionalesFebrero();
+                }
+            }*/
+            $horas = $dias * 8;
+            $arSoporteContratoAct->setHoras($horas);
+            $arSoporteContratoAct->setHorasDescanso(0);
+            $arSoporteContratoAct->setHorasDiurnas($horas);
+            $arSoporteContratoAct->setHorasNocturnas(0);
+            $arSoporteContratoAct->setHorasFestivasDiurnas(0);
+            $arSoporteContratoAct->setHorasFestivasNocturnas(0);
+            $arSoporteContratoAct->setHorasExtrasOrdinariasDiurnas(0);
+            $arSoporteContratoAct->setHorasExtrasOrdinariasNocturnas(0);
+            $arSoporteContratoAct->setHorasExtrasFestivasDiurnas(0);
+            $arSoporteContratoAct->setHorasExtrasFestivasNocturnas(0);
+            $arSoporteContratoAct->setHorasRecargoNocturno(0);
+            $arSoporteContratoAct->setHorasRecargoFestivoDiurno(0);
+            $arSoporteContratoAct->setHorasRecargoFestivoNocturno(0);
+            $arSoporteContratoAct->setDiasTransporte($diasTransporte);
+            $em->persist($arSoporteContratoAct);
+        }
+
+
+        /*if ($tipo == 19) {
+            $arSoportePagoPeriodo->setAjusteDevengado(1);
+            $intDias = $arSoportePagoPeriodo->getFechaDesde()->diff($arSoportePagoPeriodo->getFechaHasta());
+            $diasRealesPeriodo = $intDias->format('%a') + 1;
+            $arSoportesPago = $em->getRepository('BrasaTurnoBundle:TurSoportePago')->findBy(array('codigoSoportePagoPeriodoFk' => $codigoSoportePagoPeriodo));
+            foreach ($arSoportesPago as $arSoportePago) {
+                $arSoportePagoAct = $em->getRepository('BrasaTurnoBundle:TurSoportePago')->find($arSoportePago->getCodigoSoportePagoPk());
+                $diasTransporte = $arSoportePago->getDiasTransporteReal();
+                $dias = $arSoportePago->getDiasTransporteReal();
+                if ($arSoportePagoPeriodo->getDiasAdicionalesFebrero() > 0) {
+                    $novedades = $arSoportePagoAct->getIncapacidad() + $arSoportePagoAct->getIncapacidadNoLegalizada() + $arSoportePagoAct->getLicencia() + $arSoportePagoAct->getLicenciaNoRemunerada();
+                    if ($arSoportePagoAct->getRetiro() <= 0 && $novedades < $diasRealesPeriodo) {
+                        $dias += $arSoportePagoPeriodo->getDiasAdicionalesFebrero();
+                        $diasTransporte += $arSoportePagoPeriodo->getDiasAdicionalesFebrero();
+                    }
+                }
+                $horas = $dias * 8;
+                $arSoportePagoAct->setHoras($horas);
+                $arSoportePagoAct->setHorasDescanso(0);
+                $arSoportePagoAct->setHorasDiurnas($horas);
+                $arSoportePagoAct->setHorasNocturnas(0);
+                $arSoportePagoAct->setHorasFestivasDiurnas(0);
+                $arSoportePagoAct->setHorasFestivasNocturnas(0);
+                $arSoportePagoAct->setHorasExtrasOrdinariasDiurnas(0);
+                $arSoportePagoAct->setHorasExtrasOrdinariasNocturnas(0);
+                $arSoportePagoAct->setHorasExtrasFestivasDiurnas(0);
+                $arSoportePagoAct->setHorasExtrasFestivasNocturnas(0);
+                $arSoportePagoAct->setHorasRecargoNocturno(0);
+                $arSoportePagoAct->setHorasRecargoFestivoDiurno(0);
+                $arSoportePagoAct->setHorasRecargoFestivoNocturno(0);
+                $arSoportePagoAct->setDiasTransporte($diasTransporte);
+                $em->persist($arSoportePagoAct);
+            }
+        }*/
+
+    }
+
 }
 

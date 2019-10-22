@@ -4,6 +4,7 @@ namespace App\Repository\Turno;
 
 use App\Entity\General\GenInconsistencia;
 use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuDistribucion;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuLicencia;
@@ -168,7 +169,9 @@ class TurSoporteRepository extends ServiceEntityRepository
                         $arSoporteContrato->setSoporteRel($arSoporte);
                         $arSoporteContrato->setEmpleadoRel($em->getReference(RhuEmpleado::class, $arEmpleadoResumen['codigoEmpleadoFk']));
                         $arSoporteContrato->setContratoRel($em->getReference(RhuContrato::class, $arContrato['codigoContratoPk']));
-
+                        if($arContrato['codigoDistribucionFk']) {
+                            $arSoporteContrato->setDistribucionRel($em->getReference(RhuDistribucion::class, $arContrato['codigoDistribucionFk']));
+                        }
                         $arSoporteContrato->setVrSalario($arContrato['vrSalario']);
                         //$arSoportePago->setAuxilioTransporte($arContrato->getAuxilioTransporte());
                         //$arSoportePago->setVrDevengadoPactado($arContrato->getVrDevengadoPactado());
@@ -235,6 +238,14 @@ class TurSoporteRepository extends ServiceEntityRepository
             $em->getRepository(TurSoporteContrato::class)->generarHoras($arSoporte, $arSoportesContrato, $arrFestivos);
         }
         $arSoporte->setEstadoAutorizado(1);
+        $em->flush();
+
+        //Distribuir
+        foreach ($arSoportesContratos as $arSoportesContrato) {
+            if($arSoportesContrato['codigoDistribucionFk']) {
+                $em->getRepository(TurSoporteContrato::class)->distribucion($arSoporte, $arSoportesContrato);
+            }
+        }
         $em->flush();
 
         $em->getRepository(TurSoporte::class)->resumen($arSoporte);

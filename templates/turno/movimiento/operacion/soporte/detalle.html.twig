@@ -62,8 +62,7 @@
                             <th title="RECARGO FESTIVO DIRUNA">RFD</th>
                             <th title="RECARGO FESTIVO NOCTURNO">RFN</th>
                             <th title="RECARGO">R</th>
-                            <th></th>
-                            <th></th>
+                            <th title="Distribucion de pago">DSP</th>
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -100,8 +99,7 @@
                                 <td>{{ arSoporteContrato.horasRecargoFestivoDiurno | number_format(2, '.', ',') }}</td>
                                 <td>{{ arSoporteContrato.horasRecargoFestivoNocturno | number_format(2, '.', ',') }}</td>
                                 <td>{{ arSoporteContrato.horasRecargo | number_format(2, '.', ',') }}</td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ arSoporteContrato.codigoDistribucionFk }}</td>
                                 <td style="text-align: center;"><a
                                             href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_soportecontrato_resumen',{ 'id': arSoporteContrato.codigoSoporteContratoPk }) }}','resumen',900,1280)"><i
                                                 class="fa fa-table" style="color: black;font-size: large;"></i></a></td>

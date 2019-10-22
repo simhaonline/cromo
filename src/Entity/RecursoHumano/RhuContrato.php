@@ -269,6 +269,11 @@ class RhuContrato
     private $codigoCentroCostoFk;
 
     /**
+     * @ORM\Column(name="codigo_distribucion_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoDistribucionFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuSalarioTipo", inversedBy="contratosSalarioTipoRel")
      * @ORM\JoinColumn(name="codigo_salario_tipo_fk", referencedColumnName="codigo_salario_tipo_pk")
      */
@@ -411,6 +416,12 @@ class RhuContrato
      * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
      */
     protected $centroCostoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuDistribucion", inversedBy="contratosDistribucionRel")
+     * @ORM\JoinColumn(name="codigo_distribucion_fk",referencedColumnName="codigo_distribucion_pk")
+     */
+    protected $distribucionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuProgramacionDetalle", mappedBy="contratoRel")
@@ -1946,6 +1957,38 @@ class RhuContrato
     public function setCentroCostoRel($centroCostoRel): void
     {
         $this->centroCostoRel = $centroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDistribucionFk()
+    {
+        return $this->codigoDistribucionFk;
+    }
+
+    /**
+     * @param mixed $codigoDistribucionFk
+     */
+    public function setCodigoDistribucionFk($codigoDistribucionFk): void
+    {
+        $this->codigoDistribucionFk = $codigoDistribucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDistribucionRel()
+    {
+        return $this->distribucionRel;
+    }
+
+    /**
+     * @param mixed $distribucionRel
+     */
+    public function setDistribucionRel($distribucionRel): void
+    {
+        $this->distribucionRel = $distribucionRel;
     }
 
 

@@ -264,6 +264,16 @@ class TurSoporteContrato
     private $horasRecargoFestivoNocturnoReales = 0;
 
     /**
+     * @ORM\Column(name="codigo_distribucion_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoDistribucionFk;
+
+    /**
+     * @ORM\Column(name="vr_devengado_pactado", type="float", nullable=true, options={"default":0})
+     */
+    private $vrDevengadoPactado = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurSoporte", inversedBy="soportesContratosSoporteRel")
      * @ORM\JoinColumn(name="codigo_soporte_fk", referencedColumnName="codigo_soporte_pk")
      */
@@ -280,6 +290,12 @@ class TurSoporteContrato
      * @ORM\JoinColumn(name="codigo_empleado_fk", referencedColumnName="codigo_empleado_pk")
      */
     protected $empleadoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuDistribucion", inversedBy="soportesContratosDistribucionRel")
+     * @ORM\JoinColumn(name="codigo_distribucion_fk",referencedColumnName="codigo_distribucion_pk")
+     */
+    protected $distribucionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TurSoporteHora", mappedBy="soporteContratoRel")
@@ -1148,6 +1164,54 @@ class TurSoporteContrato
     public function setLicenciaNoRemunerada($licenciaNoRemunerada): void
     {
         $this->licenciaNoRemunerada = $licenciaNoRemunerada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDistribucionFk()
+    {
+        return $this->codigoDistribucionFk;
+    }
+
+    /**
+     * @param mixed $codigoDistribucionFk
+     */
+    public function setCodigoDistribucionFk($codigoDistribucionFk): void
+    {
+        $this->codigoDistribucionFk = $codigoDistribucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDistribucionRel()
+    {
+        return $this->distribucionRel;
+    }
+
+    /**
+     * @param mixed $distribucionRel
+     */
+    public function setDistribucionRel($distribucionRel): void
+    {
+        $this->distribucionRel = $distribucionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDevengadoPactado()
+    {
+        return $this->vrDevengadoPactado;
+    }
+
+    /**
+     * @param mixed $vrDevengadoPactado
+     */
+    public function setVrDevengadoPactado($vrDevengadoPactado): void
+    {
+        $this->vrDevengadoPactado = $vrDevengadoPactado;
     }
 
 

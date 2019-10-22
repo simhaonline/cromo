@@ -358,6 +358,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
             ->addselect('v.diasDisfrutados')
             ->addselect('v.diasDisfrutadosReales')
             ->addselect('v.vrTotal')
+            ->addSelect('v.vrValor')
             ->addselect('v.estadoAutorizado')
             ->addselect('v.estadoAprobado')
             ->addselect('v.estadoAnulado')

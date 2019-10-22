@@ -237,17 +237,22 @@ class OrdenController extends AbstractController
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' =>null
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
+                $raw['filtros'] =[
+                    'codigoItem'=> $form->get('txtCodigoItem')->getData(),
+                    'nombreItem'=> $form->get('txtNombreItem')->getData(),
+                    'referenciaItem'=> $form->get('txtReferenciaItem')->getData()
+                ];
                 $arMarca = $form->get('cboMarcaItem')->getData();
                 if ($arMarca != '') {
-                    $session->set('filtroInvMarcaItem', $form->get('cboMarcaItem')->getData()->getCodigoMarcaPk());
+                    $raw['filtros'] = array_merge($raw['filtros'], ['marcaItem' => $arMarca->getCodigoMarcaPk()]);
                 } else {
-                    $session->set('filtroInvMarcaItem', null);
+                    $raw['filtros'] = array_merge($raw['filtros'], ['marcaItem' => null]);
                 }
-                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
             }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -272,7 +277,7 @@ class OrdenController extends AbstractController
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 100);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($raw), $request->query->getInt('page', 1), 100);
         return $this->render('inventario/movimiento/compra/orden/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems

@@ -34,7 +34,6 @@ class RhuSeleccionRepository extends ServiceEntityRepository
             $estadoAnulado = $filtros['estadoAnulado'] ?? null;
         }
 
-
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuSeleccion::class, 's')
             ->select('s.codigoSeleccionPk')
             ->addSelect('s.numeroIdentificacion')
@@ -42,7 +41,10 @@ class RhuSeleccionRepository extends ServiceEntityRepository
             ->addSelect('s.telefono')
             ->addSelect('s.celular')
             ->addSelect('s.correo')
-            ->addSelect('s.direccion');
+            ->addSelect('s.direccion')
+            ->addSelect('s.estadoAutorizado')
+            ->addSelect('s.estadoAprobado')
+            ->addSelect('s.estadoAnulado');
         if ($codigoSeleccion) {
             $queryBuilder->andWhere("s.codigoSeleccionPk = '{$codigoSeleccion}'");
         }
@@ -76,6 +78,38 @@ class RhuSeleccionRepository extends ServiceEntityRepository
         $queryBuilder->addOrderBy('s.codigoSeleccionPk', 'ASC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function Autorizar($arSeleccionado)
+    {
+        $em = $this->getEntityManager();
+        if (!$arSeleccionado->getEstadoAutorizado()) {
+            $arSeleccionado->setEstadoAutorizado(1);
+            $em->persist($arSeleccionado);
+            $em->flush();
+        } else {
+            Mensajes::error('El seleccion ya esta autorizado');
+        }
+    }
+
+    public function Anular($arSeleccionado)
+    {
+        $em = $this->getEntityManager();
+        $arSeleccionado->setEstadoAnulado(1);
+        $em->persist($arSeleccionado);
+        $em->flush();
+    }
+
+    public function Aprobar($arSeleccionado)
+    {
+        $em = $this->getEntityManager();
+        if (!$arSeleccionado->getEstadoAprobado()) {
+            $arSeleccionado->setEstadoAprobado(1);
+            $em->persist($arSeleccionado);
+            $em->flush();
+        } else {
+            Mensajes::error('El seleccion ya esta aprobado');
+        }
     }
 
     public function camposPredeterminados()

@@ -139,7 +139,6 @@ class RhuSeleccion
      */
     private $telefono;
 
-
     /**
      * @ORM\Column(name="celular", type="string", length=20, nullable=true)
      * @Assert\Length(
@@ -215,6 +214,11 @@ class RhuSeleccion
      * @ORM\Column(name="estado_autorizado", type="boolean",options={"default":false})
      */
     private $estadoAutorizado = false;
+
+    /**
+     * @ORM\Column(name="estado_anulado", type="boolean",options={"default":false})
+     */
+    private $estadoAnulado = false;
 
     /**
      * @ORM\Column(name="fecha_cierre", type="date", nullable=true)
@@ -834,6 +838,22 @@ class RhuSeleccion
     /**
      * @return mixed
      */
+    public function getEstadoAnulado()
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param mixed $estadoAnulado
+     */
+    public function setEstadoAnulado($estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFechaCierre()
     {
         return $this->fechaCierre;
@@ -1022,7 +1042,4 @@ class RhuSeleccion
     {
         $this->sexoRel = $sexoRel;
     }
-
-
-
 }

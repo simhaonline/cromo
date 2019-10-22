@@ -1,10 +1,23 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seleccion_seleccion_lista') }}"
                style="float:left">Volver</a>
         </div>
+    </div>
+    <div class="btn-group">
+        {% include 'estructura/botonera.html.twig' %}
+    </div>
+    <div style="float:right">
+        {% if arSeleccionado.estadoAutorizado == 1 %}<span
+                class="label label-default">Autorizado</span>{% endif %}
+        {% if arSeleccionado.estadoAprobado == 1 %}<span
+                class="label label-default">Aprobado</span>{% endif %}
+        {% if arSeleccionado.estadoAnulado == 1 %}<span
+                class="label label-default">Anulado</span>{% endif %}
     </div>
     <br/><br/>
     <table widtd="100%" class="table table-condensed table-bordered tabla-informacion">
@@ -79,4 +92,5 @@
 
     </table>
     <br/><br/><br/>
+    {{ form_end(form) }}
 {% endblock %}

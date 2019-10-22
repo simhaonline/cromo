@@ -9,6 +9,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuSeleccion;
 use App\Form\Type\RecursoHumano\SeleccionType;
 use App\General\General;
+use App\Utilidades\Estandares;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -67,7 +68,6 @@ class SeleccionController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("recursohumano/movimiento/seleccion/seleccion/nuevo/{id}", name="recursohumano_movimiento_seleccion_seleccion_nuevo")
      */
@@ -110,14 +110,25 @@ class SeleccionController extends AbstractController
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $arSeleccionado = $em->getRepository(RhuSeleccion::class)->find($id);
         if ($id != 0) {
-            $arSeleccionado = $em->getRepository(RhuSeleccion::class)->find($id);
             if (!$arSeleccionado) {
                 return $this->redirect($this->generateUrl('crm_administracion_fase_fase_lista'));
             }
         }
+        $form = Estandares::botonera($arSeleccionado->getEstadoAutorizado(), $arSeleccionado->getEstadoAprobado(), $arSeleccionado->getEstadoAnulado());
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(RhuSeleccion::class)->autorizar($arSeleccionado);
+            }
+            if ($form->get('btnAnular')->isClicked()) {
+                $em->getRepository(RhuSeleccion::class)->anular($arSeleccionado);
+            }
+        }
         return $this->render('recursohumano/movimiento/seleccion/seleccion/detalle.html.twig', [
-            'arSeleccionado' => $arSeleccionado
+            'arSeleccionado' => $arSeleccionado,
+            'form' => $form->createView()
         ]);
 
     }

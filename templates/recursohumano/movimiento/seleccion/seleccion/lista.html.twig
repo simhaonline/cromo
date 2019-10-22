@@ -18,20 +18,20 @@
                         <div class="col-sm-2">
                             {{ form_widget(form.nombre) }}
                         </div>
-                        <label class="col-sm-1 col-sm-offset-3 control-label">Autorizado:</label>
-                        <div class="col-sm-2">
+                        <label class="col-sm-2 control-label">Autorizado:</label>
+                        <div class="col-sm-4">
                             {{ form_widget(form.estadoAutorizado) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="col-sm-1 col-sm-offset-9 control-label">Aprobado:</label>
-                        <div class="col-sm-2">
+                        <label class="col-sm-2 col-sm-offset-6 control-label">Aprobado:</label>
+                        <div class="col-sm-4">
                             {{ form_widget(form.estadoAprobado) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="col-sm-1 col-sm-offset-9 control-label">Anulado:</label>
-                        <div class="col-sm-2">
+                        <label class="col-sm-2 col-sm-offset-6 control-label">Anulado:</label>
+                        <div class="col-sm-4">
                             {{ form_widget(form.estadoAnulado) }}
                         </div>
                     </div>
@@ -55,6 +55,7 @@
             <th>CORREO</th>
             <th title="AUTORIZADO">AUT</th>
             <th title="APROBADO">APRO</th>
+            <th title="ANULADO">ANU</th>
             <th></th>
             <th></th>
         </tr>
@@ -62,7 +63,7 @@
         <tbody>
         {% for arSeleccion in arSelecciones %}
             <tr>
-                <td>{{ arSeleccion.codigoAspirantePk }}</td>
+                <td>{{ arSeleccion.codigoSeleccionPk }}</td>
                 <td>{{ arSeleccion.numeroIdentificacion }}</td>
                 <td>{{ arSeleccion.nombreCorto }}</td>
                 <td>{{ arSeleccion.direccion }}</td>
@@ -70,6 +71,7 @@
                 <td>{{ arSeleccion.correo }}</td>
                 <td>{{ arSeleccion.estadoAutorizado ? 'SI' : 'NO' }}</td>
                 <td>{{ arSeleccion.estadoAprobado ? 'SI' : 'NO' }}</td>
+                <td>{{ arSeleccion.estadoAnulado ? 'SI' : 'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_seleccion_seleccion_nuevo',{'id': arSeleccion.codigoSeleccionPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

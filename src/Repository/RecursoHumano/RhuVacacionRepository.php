@@ -507,8 +507,8 @@ class RhuVacacionRepository extends ServiceEntityRepository
         // Calcular fecha desde periodo y hasta periodo
 
         //Fecha ultimo anio
-        $fechaHastaUltimoAnio = date_create($arVacacion->getFechaDesdeDisfrute()->format('Y-m-d'));
         $fechaDesdeUltimoAnio = date_create($arVacacion->getFechaDesdeDisfrute()->format('Y-m-d'));
+        $fechaHastaUltimoAnio = date_create($arVacacion->getFechaDesdeDisfrute()->format('Y-m-d'));
         date_add($fechaDesdeUltimoAnio, date_interval_create_from_date_string('-365 days'));
         if ($fechaDesdeUltimoAnio < $arVacacion->getFechaDesdePeriodo()) {
             $fechaDesdeUltimoAnio = $arVacacion->getFechaDesdePeriodo();
@@ -585,6 +585,9 @@ class RhuVacacionRepository extends ServiceEntityRepository
         $recargosNocturnosTotal = $recargosNocturnos + $arContrato->getIbpRecargoNocturnoInicial();
         $promedioRecargosNocturnos = $recargosNocturnosTotal / $mesesPeriodo;
         $promedioRecargosNocturnos = round($promedioRecargosNocturnos);
+        if($arConfiguracion->getVacacionesRecargoNocturnoUltimoAnioEspecial()){
+            $promedioRecargosNocturnos = $promedioRecargosNocturnos * 25.92 / 100;
+        }
         $arVacacion->setVrPromedioRecargoNocturno($promedioRecargosNocturnos);
 
         if ($arContrato->getCodigoSalarioTipoFk() == 'FIJ') {
@@ -698,7 +701,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
         //Calcular el valor de fondo de solidaridad pensional.
         $duoFondo = 0;
         if ($basePrestaciones >= ($arConfiguracion->getVrSalarioMinimo() * 4)) {
-            $douPorcentajeFondo = $em->getRepository(RhuAporteDetalle::class)->porcentajeFondo($arConfiguracion->getVrSalario(), $basePrestaciones);
+            $douPorcentajeFondo = $em->getRepository(RhuAporteDetalle::class)->porcentajeFondo($arConfiguracion->getVrSalarioMinimo(), $basePrestaciones);
             $duoFondo = ($baseSeguridadSocial * $douPorcentajeFondo) / 100;
         }
         $duoFondo = round($duoFondo);

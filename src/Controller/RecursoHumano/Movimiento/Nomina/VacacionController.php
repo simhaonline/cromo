@@ -218,7 +218,7 @@ class VacacionController extends AbstractController
                                 }
                             }
                         } else {
-                            Mensajes::error("error", "El empleado no tiene contrato activo");
+                            Mensajes::error("El empleado no tiene contrato activo");
                         }
                     } else {
                         Mensajes::error("El empleado tiene una novedad registrada en este periodo.");

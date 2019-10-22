@@ -98,7 +98,7 @@ class TerceroType extends AbstractType
             ->add('apellido2', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('plazoPago', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
             ->add('direccion', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
-            ->add('barrio', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('barrio', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('telefono', TextType::class, ['required' => true, 'attr' => ['class' => 'form-control']])
             ->add('celular', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('email', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])

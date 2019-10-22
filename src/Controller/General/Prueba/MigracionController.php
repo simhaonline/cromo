@@ -118,7 +118,7 @@ class MigracionController extends Controller
                 //$this->turConcepto($conn);
                 //$this->turContrato($conn);
                 //$this->turContratoDetalle($conn);
-                $this->turProgramacion($conn);
+                //$this->turProgramacion($conn);
                 Mensajes::success("Se migro la informacion con exito");
 
             }

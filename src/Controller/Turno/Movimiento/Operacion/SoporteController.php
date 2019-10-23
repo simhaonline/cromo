@@ -27,6 +27,8 @@ use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -188,7 +190,8 @@ class SoporteController extends ControllerListenerGeneral
                 $respuesta = $this->getDoctrine()->getRepository(TurSoporteContrato::class)->retirarDetalle($arrDetalles);
             }
             if ($form->get('btnExcel')->isClicked()){
-                General::get()->setExportar($em->getRepository(TurSoporteContrato::class)->lista($id)->getQuery()->execute(), "Soporte");
+                $arSoportes = $em->getRepository(TurSoporteContrato::class)->lista($id)->getQuery()->execute();
+                $this->exportarExcel($arSoportes);
             }
             return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
         }
@@ -263,4 +266,66 @@ class SoporteController extends ControllerListenerGeneral
         return $filtro;
     }
 
+    public function exportarExcel($arSoportes)
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arSoportes) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->setTitle('guias');
+            $j = 0;
+            $arrColumnas = ['COD EMP','IDENT','EMPLEADO', 'D', 'DT', 'NOV','IND', 'ING','RET', 'INC', 'LIC', 'LNR', 'AUS', 'VAC', 'H', 'DS', 'HD', 'HN','HFD', 'HFN','HED','HEN','HEFD','HEFN','RN','RFD','RFN','R','DSP'];
+
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arSoportes as $soporte) {
+                $hoja->setCellValue('A' . $j, $soporte['codigoEmpleadoFk']);
+                $hoja->setCellValue('B' . $j, $soporte['numeroIdentificacion']);
+                $hoja->setCellValue('C' . $j, $soporte['empleado']);
+                $hoja->setCellValue('D' . $j, $soporte['codigoContratoFk']);
+                $hoja->setCellValue('E' . $j, $soporte['dias']);
+                $hoja->setCellValue('F' . $j, $soporte['diasTransporte']);
+                $hoja->setCellValue('G' . $j, $soporte['novedad']);
+                $hoja->setCellValue('H' . $j, $soporte['induccion']);
+                $hoja->setCellValue('I' . $j, $soporte['ingreso']);
+                $hoja->setCellValue('J' . $j, $soporte['retiro']);
+                $hoja->setCellValue('K' . $j, $soporte['incapacidad']);
+                $hoja->setCellValue('L' . $j, $soporte['licencia']);
+                $hoja->setCellValue('M' . $j, $soporte['licenciaNoRemunerada']);
+                $hoja->setCellValue('N' . $j, $soporte['ausentismo']);
+                $hoja->setCellValue('O' . $j, $soporte['vacacion']);
+                $hoja->setCellValue('P' . $j, $soporte['horas']);
+                $hoja->setCellValue('Q' . $j, $soporte['horasDescanso']);
+                $hoja->setCellValue('R' . $j, $soporte['horasDiurnas']);
+                $hoja->setCellValue('S' . $j, $soporte['horasNocturnas']);
+                $hoja->setCellValue('T' . $j, $soporte['horasFestivasDiurnas']);
+                $hoja->setCellValue('U' . $j, $soporte['horasFestivasNocturnas']);
+                $hoja->setCellValue('V' . $j, $soporte['horasExtrasOrdinariasDiurnas']);
+                $hoja->setCellValue('W' . $j, $soporte['horasExtrasOrdinariasNocturnas']);
+                $hoja->setCellValue('X' . $j, $soporte['horasExtrasFestivasDiurnas']);
+                $hoja->setCellValue('Y' . $j, $soporte['horasExtrasFestivasNocturnas']);
+                $hoja->setCellValue('Z' . $j, $soporte['horasRecargoNocturno']);
+                $hoja->setCellValue('AA' . $j, $soporte['horasRecargoFestivoDiurno']);
+                $hoja->setCellValue('AB' . $j, $soporte['horasRecargoFestivoNocturno']);
+                $hoja->setCellValue('AC' . $j, $soporte['horasRecargo']);
+                $hoja->setCellValue('AD' . $j, $soporte['codigoDistribucionFk']);
+                $j++;
+            }
+
+            $libro->setActiveSheetIndex(0);
+
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=soportes.xls");
+            header('Cache-Control: max-age=0');
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
+    }
 }

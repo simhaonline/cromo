@@ -150,7 +150,7 @@ class SoporteController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arSoporte = $em->getRepository(TurSoporte::class)->find($id);
         $form = Estandares::botonera($arSoporte->getEstadoAutorizado(), $arSoporte->getEstadoAprobado(), $arSoporte->getEstadoAnulado());
-
+        $form->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']));
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnCargarContratos = ['label' => 'Cargar contratos', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -186,6 +186,9 @@ class SoporteController extends ControllerListenerGeneral
             if ($form->get('btnEliminarDetalle')->isClicked()) {
                 $arrDetalles = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TurSoporteContrato::class)->retirarDetalle($arrDetalles);
+            }
+            if ($form->get('btnExcel')->isClicked()){
+                General::get()->setExportar($em->getRepository(TurSoporteContrato::class)->lista($id)->getQuery()->execute(), "Soporte");
             }
             return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
         }

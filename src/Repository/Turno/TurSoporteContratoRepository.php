@@ -28,6 +28,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         $queryBuilder
             ->select('sc.codigoSoporteContratoPk')
             ->addSelect('sc.codigoEmpleadoFk')
+            ->addSelect('sc.codigoContratoFk')
             ->addSelect('e.nombreCorto AS empleado')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('sc.dias')
@@ -326,7 +327,6 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                     //$arSoporteHora->setClienteRel($arProgramacionDetalle->getProgramacionRel()->getClienteRel());
                 }
                 $arSoporteHora->setFestivo($boolFestivo);
-
                 $em->persist($arSoporteHora);
 
                 if ($arrHoras1) {
@@ -630,17 +630,32 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         $arSoporteHora->setHorasRecargoFestivoNocturno(0);
     }
 
-    public function distribucion($arSoporte, $arSoporteContrato) {
+    public function distribucionSoporte($arSoporte) {
         $em = $this->getEntityManager();
+        $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->findBy(['codigoSoporteFk' => $arSoporte->getCodigoSoportePk()]);
+        foreach ($arSoportesContratos as $arSoporteContrato) {
+            if($arSoporteContrato->getCodigoDistribucionFk()) {
+                $this->distribucion($arSoporteContrato);
+            }
+        }
+
+    }
+
+    /**
+     * @param $arSoporteContrato TurSoporteContrato
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function distribucion($arSoporteContrato) {
+        $em = $this->getEntityManager();
+
         //19
-        if($arSoporteContrato['codigoDistribucionFk'] == 'DP001') {
+        if($arSoporteContrato->getCodigoDistribucionFk() == 'DP001') {
 
-            $intDias = $arSoporteContrato['fechaDesde']->diff($arSoporteContrato['fechaHasta']);
+            $intDias = $arSoporteContrato->getFechaDesde()->diff($arSoporteContrato->getFechaHasta());
             $diasRealesPeriodo = $intDias->format('%a') + 1;
-            $arSoporteContratoAct = $em->getRepository(TurSoporteContrato::class)->find($arSoporteContrato['codigoSoporteContratoPk']);
 
-            $diasTransporte = $arSoporteContrato['diasTransporte'];
-            $dias = $arSoporteContrato['diasTransporte'];
+            $diasTransporte = $arSoporteContrato->getDiasTransporte();
+            $dias = $arSoporteContrato->getDiasTransporte();
             /*if ($arSoportePagoPeriodo->getDiasAdicionalesFebrero() > 0) {
                 $novedades = $arSoportePagoAct->getIncapacidad() + $arSoportePagoAct->getIncapacidadNoLegalizada() + $arSoportePagoAct->getLicencia() + $arSoportePagoAct->getLicenciaNoRemunerada();
                 if ($arSoportePagoAct->getRetiro() <= 0 && $novedades < $diasRealesPeriodo) {
@@ -649,21 +664,31 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                 }
             }*/
             $horas = $dias * 8;
-            $arSoporteContratoAct->setHoras($horas);
-            $arSoporteContratoAct->setHorasDescanso(0);
-            $arSoporteContratoAct->setHorasDiurnas($horas);
-            $arSoporteContratoAct->setHorasNocturnas(0);
-            $arSoporteContratoAct->setHorasFestivasDiurnas(0);
-            $arSoporteContratoAct->setHorasFestivasNocturnas(0);
-            $arSoporteContratoAct->setHorasExtrasOrdinariasDiurnas(0);
-            $arSoporteContratoAct->setHorasExtrasOrdinariasNocturnas(0);
-            $arSoporteContratoAct->setHorasExtrasFestivasDiurnas(0);
-            $arSoporteContratoAct->setHorasExtrasFestivasNocturnas(0);
-            $arSoporteContratoAct->setHorasRecargoNocturno(0);
-            $arSoporteContratoAct->setHorasRecargoFestivoDiurno(0);
-            $arSoporteContratoAct->setHorasRecargoFestivoNocturno(0);
-            $arSoporteContratoAct->setDiasTransporte($diasTransporte);
-            $em->persist($arSoporteContratoAct);
+            $arSoporteContrato->setHoras($horas);
+            $arSoporteContrato->setHorasDescanso(0);
+            $arSoporteContrato->setHorasDiurnas($horas);
+            $arSoporteContrato->setHorasNocturnas(0);
+            $arSoporteContrato->setHorasFestivasDiurnas(0);
+            $arSoporteContrato->setHorasFestivasNocturnas(0);
+            $arSoporteContrato->setHorasExtrasOrdinariasDiurnas(0);
+            $arSoporteContrato->setHorasExtrasOrdinariasNocturnas(0);
+            $arSoporteContrato->setHorasExtrasFestivasDiurnas(0);
+            $arSoporteContrato->setHorasExtrasFestivasNocturnas(0);
+            $arSoporteContrato->setHorasRecargoNocturno(0);
+            $arSoporteContrato->setHorasRecargoFestivoDiurno(0);
+            $arSoporteContrato->setHorasRecargoFestivoNocturno(0);
+            $arSoporteContrato->setDiasTransporte($diasTransporte);
+            $em->getRepository(TurSoporteContrato::class)->valorizar($arSoporteContrato);
+            $vrDiaDevengadoPactado = $arSoporteContrato->getVrDevengadoPactado() / 30;
+            $vrDevengadoPactadoPeriodo = $vrDiaDevengadoPactado * $dias;
+            $vrAdicionalDevengadoPactado = $vrDevengadoPactadoPeriodo - ($arSoporteContrato->getVrHoras() + $arSoporteContrato->getVrAuxilioTransporte());
+            if($vrAdicionalDevengadoPactado > 0) {
+                $arSoporteContrato->setVrAdicionalDevengadoPactado($vrAdicionalDevengadoPactado);
+            } else {
+                $arSoporteContrato->setVrAdicionalDevengadoPactado(0);
+            }
+
+            $em->persist($arSoporteContrato);
         }
 
 
@@ -702,6 +727,54 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             }
         }*/
 
+    }
+
+    /**
+     * @param $arSoporteContrato TurSoporteContrato
+     */
+    public function valorizar($arSoporteContrato) {
+        $salario = $arSoporteContrato->getVrSalario();
+        $vrDia = $salario / 30;
+        $vrHora = $vrDia / 8;
+
+        $porHoraNocturna = 135;
+        $porRecargoNocturno = 35;
+        $porRecargoFestivoDiurno = 75;
+        $porRecargoFestivoNocturno = 110;
+        $porFestivaDiurna = 175;
+        $porFestivaNocturna = 210;
+        $porExtraOrdinariaDiurna = 125;
+        $porExtraOrdinariaNocturna = 175;
+        $porExtraFestivaDiurna = 200;
+        $porExtraFestivaNocturna = 250;
+
+        $vrDescanso = $arSoporteContrato->getHorasDescanso() * $vrHora;
+        $vrDiurna = $arSoporteContrato->getHorasDiurnas() * $vrHora;
+        $vrNocturna = (($vrHora * $porHoraNocturna) / 100) * $arSoporteContrato->getHorasNocturnas();
+        $vrFestivaDiurna = (($vrHora * $porFestivaDiurna) / 100) * $arSoporteContrato->getHorasFestivasDiurnas();
+        $vrFestivaNocturna = (($vrHora * $porFestivaNocturna) / 100) * $arSoporteContrato->getHorasFestivasNocturnas();
+        $vrExtraOrdinariaDiurna = (($vrHora * $porExtraOrdinariaDiurna) / 100) * $arSoporteContrato->getHorasExtrasOrdinariasDiurnas();
+        $vrExtraOrdinariaNocturna = (($vrHora * $porExtraOrdinariaNocturna) / 100) * $arSoporteContrato->getHorasExtrasOrdinariasNocturnas();
+        $vrExtraFestivaDiurna = (($vrHora * $porExtraFestivaDiurna) / 100) * $arSoporteContrato->getHorasExtrasFestivasDiurnas();
+        $vrExtraFestivaNocturna = (($vrHora * $porExtraFestivaNocturna) / 100) * $arSoporteContrato->getHorasExtrasFestivasNocturnas();
+        $vrRecargoNocturno = (($vrHora * $porRecargoNocturno) / 100) * $arSoporteContrato->getHorasRecargoNocturno();
+        $vrRecargoFestivoDiurno = (($vrHora * $porRecargoFestivoDiurno) / 100) * $arSoporteContrato->getHorasRecargoFestivoDiurno();
+        $vrRecargoFestivoNocturno = (($vrHora * $porRecargoFestivoNocturno) / 100) * $arSoporteContrato->getHorasRecargoFestivoNocturno();
+        $vrHoras = $vrDescanso + $vrDiurna + $vrNocturna + $vrFestivaDiurna + $vrFestivaNocturna + $vrExtraOrdinariaDiurna + $vrExtraOrdinariaNocturna + $vrExtraFestivaDiurna + $vrExtraFestivaNocturna + $vrRecargoNocturno + $vrRecargoFestivoDiurno + $vrRecargoFestivoNocturno;
+
+        $arSoporteContrato->setVrDescanso($vrDescanso);
+        $arSoporteContrato->setVrDiurna($vrDiurna);
+        $arSoporteContrato->setVrNocturna($vrNocturna);
+        $arSoporteContrato->setVrFestivaDiurna($vrFestivaDiurna);
+        $arSoporteContrato->setVrFestivaNocturna($vrFestivaNocturna);
+        $arSoporteContrato->setVrExtraOrdinariaDiurna($vrExtraOrdinariaDiurna);
+        $arSoporteContrato->setVrExtraOrdinariaNocturna($vrExtraOrdinariaNocturna);
+        $arSoporteContrato->setVrExtraFestivaDiurna($vrExtraFestivaDiurna);
+        $arSoporteContrato->setVrExtraFestivaNocturna($vrExtraFestivaNocturna);
+        $arSoporteContrato->setVrRecargoNocturno($vrRecargoNocturno);
+        $arSoporteContrato->setVrRecargoFestivoDiurno($vrRecargoFestivoDiurno);
+        $arSoporteContrato->setVrRecargoFestivoNocturno($vrRecargoFestivoNocturno);
+        $arSoporteContrato->setVrHoras($vrHoras);
     }
 
 }

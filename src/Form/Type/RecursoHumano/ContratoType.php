@@ -38,15 +38,6 @@ class ContratoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fechaDesde', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
-            ->add('fechaHasta', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
-            ->add('cargoDescripcion',TextType::class,['required' => false])
-            ->add('vrSalario',NumberType::class,['required' => true])
-            ->add('vrAdicional',NumberType::class,['required' => false])
-            ->add('vrAdicionalPrestacional',NumberType::class,['required' => false])
-            ->add('codigoCostoTipoFk',ChoiceType::class,['required' => true, 'choices' => ['FIJO' => 'FIJ', 'FIJO DISTRIBUIDO' => 'DIS', 'OPERATIVO' => 'OPE']])
-            ->add('salarioIntegral',CheckboxType::class,['required' => false, 'label' => 'Salario integral'])
-            ->add('auxilioTransporte',CheckboxType::class,['required' => false, 'label' => 'Auxilio transporte'])
             ->add('contratoTipoRel', EntityType::class, [
                 'class' => RhuContratoTipo::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -240,6 +231,17 @@ class ContratoType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => false
             ])
+            ->add('fechaDesde', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
+            ->add('fechaHasta', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
+            ->add('cargoDescripcion',TextType::class,['required' => false])
+            ->add('vrSalario',NumberType::class,['required' => true])
+            ->add('vrAdicional',NumberType::class,['required' => false])
+            ->add('vrAdicionalPrestacional',NumberType::class,['required' => false])
+            ->add('codigoCostoTipoFk',ChoiceType::class,['required' => true, 'choices' => ['FIJO' => 'FIJ', 'FIJO DISTRIBUIDO' => 'DIS', 'OPERATIVO' => 'OPE']])
+            ->add('salarioIntegral',CheckboxType::class,['required' => false, 'label' => 'Salario integral'])
+            ->add('auxilioTransporte',CheckboxType::class,['required' => false, 'label' => 'Auxilio transporte'])
+            ->add('vrDevengadoPactado',NumberType::class,['required' => false])
+            ->add('habilitadoTurno',CheckboxType::class,['required' => false, 'label' => 'Habilitado turno'])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

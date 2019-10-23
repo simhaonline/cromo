@@ -46,10 +46,11 @@ class TurSoporteHoraRepository extends ServiceEntityRepository
 
         return $arSoporteHoras;
     }
+
     public function retirarSoporteContrato($codigo)
     {
         $em = $this->getEntityManager();
-        $q = $em->createQuery('delete from App\Entity\Turno\TurSoporteHora sh where sh.codigoSoporteFk = ' . $codigo);
+        $q = $em->createQuery('delete from App\Entity\Turno\TurSoporteHora sh where sh.codigoSoporteContratoFk = ' . $codigo);
         $numeroRegistros = $q->execute();
         $em->flush();
     }

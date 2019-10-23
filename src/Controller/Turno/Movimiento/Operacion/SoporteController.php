@@ -221,6 +221,13 @@ class SoporteController extends ControllerListenerGeneral
                 }
                 $em->flush();
                 $em->getRepository(TurSoporte::class)->resumen($arSoporteContrato->getSoporteRel());
+
+                $arSoporteContrato = $em->getRepository(TurSoporteContrato::class)->find($id);
+                if($arSoporteContrato->getCodigoDistribucionFk()) {
+                    $em->getRepository(TurSoporteContrato::class)->distribucion($arSoporteContrato);
+                }
+                $em->flush();
+
             }
             return $this->redirect($this->generateUrl('turno_movimiento_operacion_soportecontrato_resumen', ['id' => $id]));
         }

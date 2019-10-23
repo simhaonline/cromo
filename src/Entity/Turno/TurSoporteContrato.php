@@ -197,6 +197,75 @@ class TurSoporteContrato
      */
     private $horasRecargoFestivoNocturno = 0;
 
+    /**
+     * @ORM\Column(name="vr_diurna", type="float", nullable=true)
+     */
+    private $vrDiurna = 0;
+
+    /**
+     * @ORM\Column(name="vr_nocturna", type="float", nullable=true)
+     */
+    private $vrNocturna = 0;
+
+    /**
+     * @ORM\Column(name="vr_descanso", type="float", nullable=true)
+     */
+    private $vrDescanso = 0;
+
+    /**
+     * @ORM\Column(name="vr_festiva_diurna", type="float", nullable=true)
+     */
+    private $vrFestivaDiurna = 0;
+
+    /**
+     * @ORM\Column(name="vr_festiva_nocturna", type="float", nullable=true)
+     */
+    private $vrFestivaNocturna = 0;
+
+    /**
+     * @ORM\Column(name="vr_extra_ordinaria_diurna", type="float", nullable=true)
+     */
+    private $vrExtraOrdinariaDiurna = 0;
+
+    /**
+     * @ORM\Column(name="vr_extra_ordinaria_nocturna", type="float", nullable=true)
+     */
+    private $vrExtraOrdinariaNocturna = 0;
+
+    /**
+     * @ORM\Column(name="vr_extra_festiva_diurna", type="float", nullable=true)
+     */
+    private $vrExtraFestivaDiurna = 0;
+
+    /**
+     * @ORM\Column(name="vr_extra_festiva_nocturna", type="float", nullable=true)
+     */
+    private $vrExtraFestivaNocturna = 0;
+
+    /**
+     * @ORM\Column(name="vr_recargo_nocturno", type="float", nullable=true)
+     */
+    private $vrRecargoNocturno = 0;
+
+    /**
+     * @ORM\Column(name="vr_recargo_festivo_diurno", type="float", nullable=true)
+     */
+    private $vrRecargoFestivoDiurno = 0;
+
+    /**
+     * @ORM\Column(name="vr_recargo_festivo_nocturno", type="float", nullable=true)
+     */
+    private $vrRecargoFestivoNocturno = 0;
+
+    /**
+     * @ORM\Column(name="vr_horas", type="float", nullable=true)
+     */
+    private $vrHoras = 0;
+
+    /**
+     * @ORM\Column(name="vr_auxilio_transporte", type="float", nullable=true)
+     */
+    private $vrAuxilioTransporte = 0;
 
     /**
      * @ORM\Column(name="horas_descanso_reales", type="float")
@@ -272,6 +341,16 @@ class TurSoporteContrato
      * @ORM\Column(name="vr_devengado_pactado", type="float", nullable=true, options={"default":0})
      */
     private $vrDevengadoPactado = 0;
+
+    /**
+     * @ORM\Column(name="vr_adicional_devengado_pactado", type="float", nullable=true, options={"default":0})
+     */
+    private $vrAdicionalDevengadoPactado = 0;
+
+    /**
+     * @ORM\Column(name="auxilio_transporte", type="boolean", options={"default":false})
+     */
+    private $auxilioTransporte = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurSoporte", inversedBy="soportesContratosSoporteRel")
@@ -1212,6 +1291,262 @@ class TurSoporteContrato
     public function setVrDevengadoPactado($vrDevengadoPactado): void
     {
         $this->vrDevengadoPactado = $vrDevengadoPactado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAdicionalDevengadoPactado()
+    {
+        return $this->vrAdicionalDevengadoPactado;
+    }
+
+    /**
+     * @param mixed $vrAdicionalDevengadoPactado
+     */
+    public function setVrAdicionalDevengadoPactado($vrAdicionalDevengadoPactado): void
+    {
+        $this->vrAdicionalDevengadoPactado = $vrAdicionalDevengadoPactado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDiurna()
+    {
+        return $this->vrDiurna;
+    }
+
+    /**
+     * @param mixed $vrDiurna
+     */
+    public function setVrDiurna($vrDiurna): void
+    {
+        $this->vrDiurna = $vrDiurna;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrNocturna()
+    {
+        return $this->vrNocturna;
+    }
+
+    /**
+     * @param mixed $vrNocturna
+     */
+    public function setVrNocturna($vrNocturna): void
+    {
+        $this->vrNocturna = $vrNocturna;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDescanso()
+    {
+        return $this->vrDescanso;
+    }
+
+    /**
+     * @param mixed $vrDescanso
+     */
+    public function setVrDescanso($vrDescanso): void
+    {
+        $this->vrDescanso = $vrDescanso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrFestivaDiurna()
+    {
+        return $this->vrFestivaDiurna;
+    }
+
+    /**
+     * @param mixed $vrFestivaDiurna
+     */
+    public function setVrFestivaDiurna($vrFestivaDiurna): void
+    {
+        $this->vrFestivaDiurna = $vrFestivaDiurna;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrFestivaNocturna()
+    {
+        return $this->vrFestivaNocturna;
+    }
+
+    /**
+     * @param mixed $vrFestivaNocturna
+     */
+    public function setVrFestivaNocturna($vrFestivaNocturna): void
+    {
+        $this->vrFestivaNocturna = $vrFestivaNocturna;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrExtraOrdinariaDiurna()
+    {
+        return $this->vrExtraOrdinariaDiurna;
+    }
+
+    /**
+     * @param mixed $vrExtraOrdinariaDiurna
+     */
+    public function setVrExtraOrdinariaDiurna($vrExtraOrdinariaDiurna): void
+    {
+        $this->vrExtraOrdinariaDiurna = $vrExtraOrdinariaDiurna;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrExtraOrdinariaNocturna()
+    {
+        return $this->vrExtraOrdinariaNocturna;
+    }
+
+    /**
+     * @param mixed $vrExtraOrdinariaNocturna
+     */
+    public function setVrExtraOrdinariaNocturna($vrExtraOrdinariaNocturna): void
+    {
+        $this->vrExtraOrdinariaNocturna = $vrExtraOrdinariaNocturna;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrExtraFestivaDiurna()
+    {
+        return $this->vrExtraFestivaDiurna;
+    }
+
+    /**
+     * @param mixed $vrExtraFestivaDiurna
+     */
+    public function setVrExtraFestivaDiurna($vrExtraFestivaDiurna): void
+    {
+        $this->vrExtraFestivaDiurna = $vrExtraFestivaDiurna;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrExtraFestivaNocturna()
+    {
+        return $this->vrExtraFestivaNocturna;
+    }
+
+    /**
+     * @param mixed $vrExtraFestivaNocturna
+     */
+    public function setVrExtraFestivaNocturna($vrExtraFestivaNocturna): void
+    {
+        $this->vrExtraFestivaNocturna = $vrExtraFestivaNocturna;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRecargoNocturno()
+    {
+        return $this->vrRecargoNocturno;
+    }
+
+    /**
+     * @param mixed $vrRecargoNocturno
+     */
+    public function setVrRecargoNocturno($vrRecargoNocturno): void
+    {
+        $this->vrRecargoNocturno = $vrRecargoNocturno;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRecargoFestivoDiurno()
+    {
+        return $this->vrRecargoFestivoDiurno;
+    }
+
+    /**
+     * @param mixed $vrRecargoFestivoDiurno
+     */
+    public function setVrRecargoFestivoDiurno($vrRecargoFestivoDiurno): void
+    {
+        $this->vrRecargoFestivoDiurno = $vrRecargoFestivoDiurno;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrRecargoFestivoNocturno()
+    {
+        return $this->vrRecargoFestivoNocturno;
+    }
+
+    /**
+     * @param mixed $vrRecargoFestivoNocturno
+     */
+    public function setVrRecargoFestivoNocturno($vrRecargoFestivoNocturno): void
+    {
+        $this->vrRecargoFestivoNocturno = $vrRecargoFestivoNocturno;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrHoras()
+    {
+        return $this->vrHoras;
+    }
+
+    /**
+     * @param mixed $vrHoras
+     */
+    public function setVrHoras($vrHoras): void
+    {
+        $this->vrHoras = $vrHoras;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAuxilioTransporte()
+    {
+        return $this->vrAuxilioTransporte;
+    }
+
+    /**
+     * @param mixed $vrAuxilioTransporte
+     */
+    public function setVrAuxilioTransporte($vrAuxilioTransporte): void
+    {
+        $this->vrAuxilioTransporte = $vrAuxilioTransporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuxilioTransporte()
+    {
+        return $this->auxilioTransporte;
+    }
+
+    /**
+     * @param mixed $auxilioTransporte
+     */
+    public function setAuxilioTransporte($auxilioTransporte): void
+    {
+        $this->auxilioTransporte = $auxilioTransporte;
     }
 
 

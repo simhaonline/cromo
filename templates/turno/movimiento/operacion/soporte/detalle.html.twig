@@ -28,7 +28,7 @@
                     <table class="table table-striped table-bordered table-condensed tabla-datos">
                         <thead>
                         <tr>
-                            <th colspan="3"></th>
+                            <th colspan="4"></th>
                             <th colspan="2"></th>
                             <th colspan="9" style="text-align: center">NOVEDADES</th>
                             <th colspan="6" style="text-align: center">TIEMPO</th>
@@ -36,7 +36,7 @@
                             <th colspan="4"></th>
                         </tr>
                         <tr>
-                            <th colspan="3">EMPLEADO</th>
+                            <th colspan="4">EMPLEADO</th>
                             <th title="DIAS">D</th>
                             <th title="DIAS TRANSPORTE">DT</th>
                             <th title="NOVEDAD">NOV</th>
@@ -74,6 +74,7 @@
                                 <td>{{ arSoporteContrato.codigoEmpleadoFk }}</td>
                                 <td>{{ arSoporteContrato.numeroIdentificacion }}</td>
                                 <td>{{ arSoporteContrato.empleado }}</td>
+                                <td>{{ arSoporteContrato.codigoContratoFk }}</td>
                                 <td>{{ arSoporteContrato.dias }}</td>
                                 <td>{{ arSoporteContrato.diasTransporte }}</td>
                                 <td style="text-align: right" {% if arSoporteContrato.novedad > 0 %} class="danger" {% endif %}>{{ arSoporteContrato.novedad | number_format(0, '.', ',') }}</td>

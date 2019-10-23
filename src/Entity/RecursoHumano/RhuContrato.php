@@ -142,7 +142,6 @@ class RhuContrato
      */
     private $vrDevengadoPactado = 0;
 
-
     /**
      * @ORM\Column(name="estado_terminado", type="boolean",options={"default":false})
      */
@@ -272,6 +271,11 @@ class RhuContrato
      * @ORM\Column(name="codigo_distribucion_fk", type="string", length=10, nullable=true)
      */
     private $codigoDistribucionFk;
+
+    /**
+     * @ORM\Column(name="habilitado_turno", type="boolean", nullable=false,options={"default":false})
+     */
+    private $habilitadoTurno = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuSalarioTipo", inversedBy="contratosSalarioTipoRel")
@@ -1989,6 +1993,22 @@ class RhuContrato
     public function setDistribucionRel($distribucionRel): void
     {
         $this->distribucionRel = $distribucionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHabilitadoTurno()
+    {
+        return $this->habilitadoTurno;
+    }
+
+    /**
+     * @param mixed $habilitadoTurno
+     */
+    public function setHabilitadoTurno($habilitadoTurno): void
+    {
+        $this->habilitadoTurno = $habilitadoTurno;
     }
 
 

@@ -1,10 +1,69 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
     {{ form_start(form) }}
-    <br>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <table width="100%" class="table table-condensed table-bordered tabla-datos">
+    <br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo">DIURNA:</td>
+            <td align="right">{{ arSoporteContrato.vrDiurna | number_format()}}</td>
+            <td class="titulo">DESCANSO:</td>
+            <td align="right">{{ arSoporteContrato.vrDescanso | number_format()}}</td>
+            <td class="titulo">FESTIVA DIURNA:</td>
+            <td align="right">{{ arSoporteContrato.vrFestivaDiurna | number_format()}}</td>
+            <td class="titulo">EXTRA DIURNA:</td>
+            <td align="right">{{ arSoporteContrato.vrExtraOrdinariaDiurna | number_format()}}</td>
+            <td class="titulo">EXTRA F_DIURNA:</td>
+            <td align="right">{{ arSoporteContrato.vrExtraFestivaDiurna | number_format()}}</td>
+            <td class="titulo">RECARGO F_DIURNO</td>
+            <td align="right">{{ arSoporteContrato.vrRecargoFestivoDiurno | number_format()}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NOCTURNA:</td>
+            <td align="right">{{ arSoporteContrato.vrNocturna | number_format()}}</td>
+            <td class="titulo">RECARGO NOCTURNO:</td>
+            <td align="right">{{ arSoporteContrato.vrRecargoNocturno | number_format()}}</td>
+            <td class="titulo">FESTIVA NOCTURNA:</td>
+            <td align="right">{{ arSoporteContrato.vrFestivaNocturna | number_format()}}</td>
+            <td class="titulo">EXTRA NOCTURNA:</td>
+            <td align="right">{{ arSoporteContrato.vrExtraOrdinariaNocturna | number_format()}}</td>
+            <td class="titulo">EXTRA F_NOCTURNA:</td>
+            <td align="right">{{ arSoporteContrato.vrExtraFestivaNocturna | number_format()}}</td>
+            <td class="titulo">RECARGO F_NOCTURNO</td>
+            <td align="right">{{ arSoporteContrato.vrRecargoFestivoNocturno | number_format()}}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td align="right"></td>
+            <td class="titulo"></td>
+            <td align="right"></td>
+            <td class="titulo"></td>
+            <td align="right"></td>
+            <td class="titulo"></td>
+            <td align="right"></td>
+            <td class="titulo"></td>
+            <td align="right"></td>
+            <td class="titulo">TOTAL:</td>
+            <td align="right">{{ arSoporteContrato.vrHoras | number_format()}}</td>
+        </tr>
+    </table>
+    <br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo">DEVENGADO PACTADO:</td>
+            <td align="right">{{ arSoporteContrato.vrDevengadoPactado | number_format()}}</td>
+            <td class="titulo">ADICIONAL PACTADO:</td>
+            <td align="right">{{ arSoporteContrato.vrAdicionalDevengadoPactado | number_format()}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">AUXILIO TRANSPORTE:</td>
+            <td align="right">{{ arSoporteContrato.vrAuxilioTransporte | number_format()}}</td>
+            <td class="titulo">SALARIO:</td>
+            <td align="right">{{ arSoporteContrato.vrSalario | number_format()}}</td>
+        </tr>
+    </table>
+    <br/>
+
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
                 <thead>
                 <th>ID</th>
                 {% for arrDiaSemana in arrDiaSemana %}
@@ -18,19 +77,12 @@
                     {% if intCodigoCliente != arProgramacionDetalle.puestoRel.codigoClienteFk %}
                         <tr>
                             <td id="suptipo" colspan="38">
-                                <b>{{ arProgramacionDetalle.puestoRel.clienteRel.nombreCorto | default('') }}</b></td>
+                                <b>{{ arProgramacionDetalle.puestoRel.clienteRel.nombreCorto | default('') }} |
+                                    {{ arProgramacionDetalle.puestoRel.codigoPuestoPk | default('') }} - {{ arProgramacionDetalle.puestoRel.nombre | default('') }} |
+                                    {{ arProgramacionDetalle.puestoRel.salarioFijoRel.nombre | default('') }} </b></td>
                         </tr>
                         {% set intCodigoCliente = arProgramacionDetalle.puestoRel.codigoClienteFk %}
                         {% set intCodigoPuesto = '' %}
-                    {% endif %}
-                    {% if intCodigoPuesto != arProgramacionDetalle.codigoPuestoFk %}
-                        <tr>
-                            <td colspan="2"></td>
-                            <td id="suptipo" colspan="38">{{ arProgramacionDetalle.puestoRel.codigoPuestoPk | default('') }}
-                                ~ {{ arProgramacionDetalle.puestoRel.nombre | default('') }} Salario
-                                Fijo: {{ arProgramacionDetalle.puestoRel.salarioFijoRel.nombre | default('') }}</td>
-                        </tr>
-                        {% set intCodigoPuesto = arProgramacionDetalle.codigoPuestoFk %}
                     {% endif %}
                     <tr>
                         <td> {{  arProgramacionDetalle.codigoProgramacionPk}}</td>
@@ -71,12 +123,8 @@
                 {% endfor %}
                 </tbody>
             </table>
-        </div>
-    </div>
-    <br>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <table  width="100%" class="table table-condensed table-bordered tabla-datos">
+    <br/>
+    <table  width="100%" class="table table-condensed table-bordered tabla-datos">
                 <thead>
                 <tr>
                     <th></th>
@@ -145,79 +193,62 @@
                             </tr>
                         </tbody>
             </table>
-        </div>
+    <div class="btn-group" style="float: right">
+        {{ form_widget(form.btnActualizar) }}
     </div>
-{#    <br>#}
-{#    <div class="panel panel-default">#}
-{#        <div class="panel-body">#}
-{#            <table width="100%" class="table table-condensed table-bordered tabla-informacion" style="margin-bottom: 0 !important;">#}
-{#                <tr>#}
-{#                    <td class="titulo">CODIGO:</td>#}
-{#                    <td class="td-in-well">{{ arSoporteContrato.codigoSoporteContratoPk | default('')}}</td>#}
-{#                    <td class="titulo"></td>#}
-{#                    <td class="td-in-well numero" style="text-transform: uppercase;"></td>#}
-{#                </tr>#}
-{#            </table>#}
-{#        </div>#}
-{#    </div>#}
-    <br>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <table width="100%" class="table table-condensed table-bordered tabla-datos">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>FECHA</th>
-                    <th>F_REAL</th>
-                    <th>TURNO</th>
-                    <th>DIAS</th>
-                    <th>DESCANSO</th>
-                    <th>HD</th>
-                    <th>HN</th>
-                    <th>HFD</th>
-                    <th>HFN</th>
-                    <th>HEOD</th>
-                    <th>HEON</th>
-                    <th>HEFD</th>
-                    <th>HEFN</th>
-                    <th>HRN</th>
-                    <th>HRFD</th>
-                    <th>HRFN</th>
-                    <th>H</th>
-                    <th>C</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for arSoporteHora in arSoporteHoras %}
-                    <tr>
-                        <td>{{ arSoporteHora.codigoSoporteHoraPk }}</td>
-                        <td>{{ arSoporteHora.fecha | date("Y-m-d") }}</td>
-                        <td>{{ arSoporteHora.fechaReal | date("Y-m-d") }}</td>
-                        <td>{{ arSoporteHora.turno }}</td>
-                        <td>{{ arSoporteHora.dias }}</td>
-                        <td>{{ arSoporteHora.descanso }}</td>
-                        <td>{{ arSoporteHora.horasDiurnas }}</td>
-                        <td>{{ arSoporteHora.horasNocturnas }}</td>
-                        <td>{{ arSoporteHora.horasFestivasDiurnas }}</td>
-                        <td>{{ arSoporteHora.horasFestivasNocturnas }}</td>
-                        <td>{{ arSoporteHora.horasExtrasOrdinariasDiurnas }}</td>
-                        <td>{{ arSoporteHora.horasExtrasOrdinariasNocturnas }}</td>
-                        <td>{{ arSoporteHora.horasExtrasFestivasDiurnas }}</td>
-                        <td>{{ arSoporteHora.horasExtrasFestivasNocturnas }}</td>
-                        <td>{{ arSoporteHora.horasRecargoNocturno }}</td>
-                        <td>{{ arSoporteHora.horasRecargoFestivoDiurno }}</td>
-                        <td>{{ arSoporteHora.horasRecargoFestivoNocturno }}</td>
-                        <td>{{ arSoporteHora.horas }}</td>
-                        <td>{{ arSoporteHora.complementario }}</td>
-                    </tr>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <div class="btn-group" style="float: right">
-                {{ form_widget(form.btnActualizar) }}
-            </div>
-        </div>
-    </div>
+    <br /><br />
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>FECHA</th>
+            <th>F_REAL</th>
+            <th>TURNO</th>
+            <th>DIAS</th>
+            <th>DESCANSO</th>
+            <th>HD</th>
+            <th>HN</th>
+            <th>HFD</th>
+            <th>HFN</th>
+            <th>HEOD</th>
+            <th>HEON</th>
+            <th>HEFD</th>
+            <th>HEFN</th>
+            <th>HRN</th>
+            <th>HRFD</th>
+            <th>HRFN</th>
+            <th>H</th>
+            <th>C</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arSoporteHora in arSoporteHoras %}
+            <tr>
+                <td>{{ arSoporteHora.codigoSoporteHoraPk }}</td>
+                <td>{{ arSoporteHora.fecha | date("Y-m-d") }}</td>
+                <td>{{ arSoporteHora.fechaReal | date("Y-m-d") }}</td>
+                <td>{{ arSoporteHora.turno }}</td>
+                <td>{{ arSoporteHora.dias }}</td>
+                <td>{{ arSoporteHora.descanso }}</td>
+                <td>{{ arSoporteHora.horasDiurnas }}</td>
+                <td>{{ arSoporteHora.horasNocturnas }}</td>
+                <td>{{ arSoporteHora.horasFestivasDiurnas }}</td>
+                <td>{{ arSoporteHora.horasFestivasNocturnas }}</td>
+                <td>{{ arSoporteHora.horasExtrasOrdinariasDiurnas }}</td>
+                <td>{{ arSoporteHora.horasExtrasOrdinariasNocturnas }}</td>
+                <td>{{ arSoporteHora.horasExtrasFestivasDiurnas }}</td>
+                <td>{{ arSoporteHora.horasExtrasFestivasNocturnas }}</td>
+                <td>{{ arSoporteHora.horasRecargoNocturno }}</td>
+                <td>{{ arSoporteHora.horasRecargoFestivoDiurno }}</td>
+                <td>{{ arSoporteHora.horasRecargoFestivoNocturno }}</td>
+                <td>{{ arSoporteHora.horas }}</td>
+                <td>{{ arSoporteHora.complementario }}</td>
+            </tr>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
     {{ form_end(form) }}
 {% endblock %}

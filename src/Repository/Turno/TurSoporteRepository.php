@@ -3,6 +3,7 @@
 namespace App\Repository\Turno;
 
 use App\Entity\General\GenInconsistencia;
+use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuDistribucion;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -150,14 +151,13 @@ class TurSoporteRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         set_time_limit(0);
         ini_set("memory_limit", -1);
-
+        $arrConfiguracionRecursoHumano = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
         $dateFechaDesde = $arSoporte->getFechaDesde();
         $dateFechaHasta = $arSoporte->getFechaHasta();
         $intDiaInicial = $dateFechaDesde->format('j');
         $intDiaFinal = $dateFechaHasta->format('j');
         //Genera los recursos del soporte pago
         $arEmpleadosResumen = $em->getRepository(TurProgramacion::class)->listaEmpleadoSoporte($arSoporte->getFechaDesde()->format('Y'), $arSoporte->getFechaDesde()->format('m'));
-
         $contratoTerminado = $arSoporte->getContratoTerminado();
         foreach ($arEmpleadosResumen as $arEmpleadoResumen) {
             $arContratos = $em->getRepository(RhuContrato::class)->soportePago($arEmpleadoResumen['codigoEmpleadoFk'], $dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $contratoTerminado, $arSoporte->getCodigoGrupoFk());
@@ -173,8 +173,13 @@ class TurSoporteRepository extends ServiceEntityRepository
                             $arSoporteContrato->setDistribucionRel($em->getReference(RhuDistribucion::class, $arContrato['codigoDistribucionFk']));
                         }
                         $arSoporteContrato->setVrSalario($arContrato['vrSalario']);
+                        $arSoporteContrato->setVrDevengadoPactado($arContrato['vrDevengadoPactado']);
+                        if($arContrato['auxilioTransporte']) {
+                            $arSoporteContrato->setAuxilioTransporte($arContrato['auxilioTransporte']);
+                            $arSoporteContrato->setVrAuxilioTransporte($arrConfiguracionRecursoHumano['vrAuxilioTransporte']);
+                        }
                         //$arSoportePago->setAuxilioTransporte($arContrato->getAuxilioTransporte());
-                        //$arSoportePago->setVrDevengadoPactado($arContrato->getVrDevengadoPactado());
+
                         $arSoporteContrato->setAnio($arSoporte->getFechaDesde()->format('Y'));
                         $arSoporteContrato->setMes($arSoporte->getFechaDesde()->format('m'));
 
@@ -235,17 +240,9 @@ class TurSoporteRepository extends ServiceEntityRepository
         $arrFestivos = $em->getRepository(TurFestivo::class)->fecha($arSoporte->getFechaDesde()->format('Y-m-') . '01', $arSoporte->getFechaHasta()->format('Y-m-t'));
         $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->listaHoras($arSoporte->getCodigoSoportePk(), null);
         foreach ($arSoportesContratos as $arSoportesContrato) {
-            $em->getRepository(TurSoporteContrato::class)->generarHoras($arSoporte, $arSoportesContrato, $arrFestivos);
+            $arrHoras = $em->getRepository(TurSoporteContrato::class)->generarHoras($arSoporte, $arSoportesContrato, $arrFestivos);
         }
         $arSoporte->setEstadoAutorizado(1);
-        $em->flush();
-
-        //Distribuir
-        foreach ($arSoportesContratos as $arSoportesContrato) {
-            if($arSoportesContrato['codigoDistribucionFk']) {
-                $em->getRepository(TurSoporteContrato::class)->distribucion($arSoporte, $arSoportesContrato);
-            }
-        }
         $em->flush();
 
         $em->getRepository(TurSoporte::class)->resumen($arSoporte);
@@ -254,6 +251,16 @@ class TurSoporteRepository extends ServiceEntityRepository
             $em->getRepository(TurProgramacionRespaldo::class)->generar($arSoporte, $arSoporteContrato);
         }
         $em->flush();
+
+        //Distribuir
+        foreach ($arSoportesContratos as $arSoportesContrato) {
+            if($arSoportesContrato['codigoDistribucionFk']) {
+                $em->getRepository(TurSoporteContrato::class)->distribucionSoporte($arSoporte);
+            }
+        }
+        $em->flush();
+
+
         //$em->getRepository('BrasaTurnoBundle:TurSoportePagoPeriodo')->analizarInconsistencias($codigoSoportePagoPeriodo);
         //$em->flush();
         //$em->getRepository('BrasaTurnoBundle:TurSoportePagoPeriodo')->liquidar($codigoSoportePagoPeriodo);
@@ -305,6 +312,7 @@ class TurSoporteRepository extends ServiceEntityRepository
 
         $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->findBy(array('codigoSoporteFk' => $arSoporte->getCodigoSoportePk()));
         foreach ($arSoportesContratos as $arSoporteContrato) {
+            /** @var $arSoporteContrato TurSoporteContrato */
             $dql = "SELECT "
                 . "SUM(sh.descanso) as descanso, "
                 . "SUM(sh.novedad) as novedad, "
@@ -402,11 +410,12 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $arSoporteContrato->setIngreso($arrayResultado[$i]['ingreso']?? 0);
                 $arSoporteContrato->setRetiro($arrayResultado[$i]['retiro']?? 0);
                 $arSoporteContrato->setAusentismo($arrayResultado[$i]['ausentismo']?? 0);
+
                 //$arSoporteContrato->setHorasPago($intHorasPago);
                 $arSoporteContrato->setHoras($intHoras);
                 //$arSoporteContrato->setHorasAdicionales($arrayResultado[$i]['horasAdicionalesFebrero']);
-                $arSoporteContrato->setHorasDescanso($arrayResultado[$i]['horasDescanso']?? 0);
                 $arSoporteContrato->setHorasNovedad($arrayResultado[$i]['horasNovedad']?? 0);
+                $arSoporteContrato->setHorasDescanso($arrayResultado[$i]['horasDescanso']?? 0);
                 $arSoporteContrato->setHorasDiurnas($arrayResultado[$i]['horasDiurnas']?? 0);
                 $arSoporteContrato->setHorasNocturnas($arrayResultado[$i]['horasNocturnas']?? 0);
                 $arSoporteContrato->setHorasFestivasDiurnas($arrayResultado[$i]['horasFestivasDiurnas']?? 0);
@@ -430,6 +439,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $arSoporteContrato->setHorasRecargoNocturnoReales($arrayResultado[$i]['horasRecargoNocturno']?? 0);
                 $arSoporteContrato->setHorasRecargoFestivoDiurnoReales($arrayResultado[$i]['horasRecargoFestivoDiurno']?? 0);
                 $arSoporteContrato->setHorasRecargoFestivoNocturnoReales($arrayResultado[$i]['horasRecargoFestivoNocturno']?? 0);
+                $em->getRepository(TurSoporteContrato::class)->valorizar($arSoporteContrato);
                 $em->persist($arSoporteContrato);
             }
 

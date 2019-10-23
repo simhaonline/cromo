@@ -55,7 +55,10 @@ class CrearReciboMasivoController extends AbstractController
         ];
         $arReciboInicial = new CarRecibo();
         $arReciboInicial->setFechaPago(new \DateTime('now'));
-        $formRecibo = $this->createForm(ReciboType::class, $arReciboInicial);
+        $formRecibo = $this->createForm(ReciboType::class, $arReciboInicial,[
+            'action' => $this->generateUrl('cartera_proceso_ingreso_recibomasivo_lista'),
+            'method' => 'GET',
+        ]);
         $formRecibo->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
@@ -66,9 +69,9 @@ class CrearReciboMasivoController extends AbstractController
                 General::get()->setExportar($em->getRepository(CarCuentaCobrar::class)->crearReciboMasivoLista($raw)->getQuery()->execute(), "cuenta cobrar");
             }
         }
-        if ($formRecibo->isSubmitted() && $formRecibo->isValid()) {
+        if ($formRecibo->isSubmitted()) {
             if ($formRecibo->get('guardar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 if ($arrSeleccionados) {
                     $arrRecibos = [];
                     foreach ($arrSeleccionados as $codigoCuentaCobrar) {

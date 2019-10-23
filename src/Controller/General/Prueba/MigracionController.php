@@ -51,6 +51,9 @@ use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurContratoTipo;
 use App\Entity\Turno\TurModalidad;
+use App\Entity\Turno\TurPedido;
+use App\Entity\Turno\TurPedidoDetalle;
+use App\Entity\Turno\TurPedidoTipo;
 use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurSector;
@@ -119,6 +122,8 @@ class MigracionController extends Controller
                 //$this->turContrato($conn);
                 //$this->turContratoDetalle($conn);
                 //$this->turProgramacion($conn);
+                //$this->turPedido($conn);
+                //$this->turPedidoDetalle($conn);
                 Mensajes::success("Se migro la informacion con exito");
 
             }
@@ -133,7 +138,8 @@ class MigracionController extends Controller
         ]);
     }
 
-    private function validarRhu($conn) {
+    private function validarRhu($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $arrEntidadSalud = $conn->query("SELECT
                     codigo_entidad_salud_fk, 
@@ -141,10 +147,10 @@ class MigracionController extends Controller
                   FROM rhu_contrato 
                   left join rhu_entidad_salud on rhu_contrato.codigo_entidad_salud_fk=rhu_entidad_salud.codigo_entidad_salud_pk 
                   group by codigo_entidad_salud_fk, codigo_interface");
-        while($row = mysqli_fetch_assoc($arrEntidadSalud)) {
-            if($row['codigo_entidad_salud_externo']) {
+        while ($row = mysqli_fetch_assoc($arrEntidadSalud)) {
+            if ($row['codigo_entidad_salud_externo']) {
                 $arEntidad = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_salud_externo']]);
-                if(!$arEntidad) {
+                if (!$arEntidad) {
                     Mensajes::error("La entidad de salud con el codigo {$row['codigo_entidad_salud_fk']} externo {$row['codigo_entidad_salud_externo']} no existe");
                 }
             } else {
@@ -158,10 +164,10 @@ class MigracionController extends Controller
                   FROM rhu_contrato 
                   left join rhu_entidad_pension on rhu_contrato.codigo_entidad_pension_fk=rhu_entidad_pension.codigo_entidad_pension_pk 
                   group by codigo_entidad_pension_fk, codigo_interface");
-        while($row = mysqli_fetch_assoc($arrEntidadPension)) {
-            if($row['codigo_entidad_pension_externo']) {
+        while ($row = mysqli_fetch_assoc($arrEntidadPension)) {
+            if ($row['codigo_entidad_pension_externo']) {
                 $arEntidad = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_pension_externo']]);
-                if(!$arEntidad) {
+                if (!$arEntidad) {
                     Mensajes::error("La entidad de pension con el codigo {$row['codigo_entidad_pension_fk']} externo {$row['codigo_entidad_pension_externo']} no existe");
                 }
             } else {
@@ -175,10 +181,10 @@ class MigracionController extends Controller
                   FROM rhu_contrato 
                   left join rhu_entidad_cesantia on rhu_contrato.codigo_entidad_cesantia_fk=rhu_entidad_cesantia.codigo_entidad_cesantia_pk 
                   group by codigo_entidad_cesantia_fk, codigo_interface");
-        while($row = mysqli_fetch_assoc($arrEntidadCesantia)) {
-            if($row['codigo_entidad_cesantia_externo']) {
+        while ($row = mysqli_fetch_assoc($arrEntidadCesantia)) {
+            if ($row['codigo_entidad_cesantia_externo']) {
                 $arEntidad = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_cesantia_externo']]);
-                if(!$arEntidad) {
+                if (!$arEntidad) {
                     Mensajes::error("La entidad de cesantia con el codigo {$row['codigo_entidad_cesantia_fk']} externo {$row['codigo_entidad_cesantia_externo']} no existe");
                 }
             } else {
@@ -192,22 +198,23 @@ class MigracionController extends Controller
                   FROM rhu_contrato 
                   left join rhu_entidad_caja on rhu_contrato.codigo_entidad_caja_fk=rhu_entidad_caja.codigo_entidad_caja_pk 
                   group by codigo_entidad_caja_fk, codigo_interface");
-        while($row = mysqli_fetch_assoc($arrEntidadCaja)) {
-            if($row['codigo_entidad_caja_externo']) {
+        while ($row = mysqli_fetch_assoc($arrEntidadCaja)) {
+            if ($row['codigo_entidad_caja_externo']) {
                 $arEntidad = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_caja_externo']]);
-                if(!$arEntidad) {
+                if (!$arEntidad) {
                     Mensajes::error("La entidad de caja con el codigo {$row['codigo_entidad_caja_fk']} externo {$row['codigo_entidad_caja_externo']} no existe");
                 }
             } else {
                 Mensajes::error("Existen contratos sin entidad de caja o la entidad de caja no tiene codigo externo");
             }
-        }        
+        }
     }
 
-    private function generalPais($conn) {
+    private function generalPais($conn)
+    {
         $em = $this->getDoctrine()->getManager();
-        $datos=$conn->query('SELECT codigo_pais_pk, pais FROM gen_pais');
-        foreach($datos as $row) {
+        $datos = $conn->query('SELECT codigo_pais_pk, pais FROM gen_pais');
+        foreach ($datos as $row) {
             $arPais = new GenPais();
             $arPais->setCodigoPaisPk($row['codigo_pais_pk']);
             $arPais->setNombre(utf8_decode($row['pais']));
@@ -217,22 +224,23 @@ class MigracionController extends Controller
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         }
 
-        if($em->flush()) {
+        if ($em->flush()) {
             return true;
         } else {
             return false;
         }
     }
 
-    private function generalDepartamento($conn) {
+    private function generalDepartamento($conn)
+    {
         $em = $this->getDoctrine()->getManager();
-        $datos=$conn->query('SELECT
+        $datos = $conn->query('SELECT
                   codigo_departamento_pk,
                   nombre,
                   codigo_pais_fk,
                   codigo_dane
                  FROM gen_departamento');
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arDepartamento = new GenDepartamento();
             $arDepartamento->setCodigoDepartamentoPk($row['codigo_departamento_pk']);
             $arDepartamento->setNombre(utf8_decode($row['nombre']));
@@ -244,14 +252,15 @@ class MigracionController extends Controller
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         }
 
-        if($em->flush()) {
+        if ($em->flush()) {
             return true;
         } else {
             return false;
         }
     }
 
-    private function generalCiudad($conn) {
+    private function generalCiudad($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query('SELECT
                                 codigo_ciudad_pk,
@@ -259,7 +268,7 @@ class MigracionController extends Controller
                                 codigo_departamento_fk,
                                 codigo_dane
                                 FROM gen_ciudad');
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arCiudad = new GenCiudad();
             $arCiudad->setCodigoCiudadPk($row['codigo_ciudad_pk']);
             $arCiudad->setNombre(utf8_decode($row['nombre']));
@@ -271,45 +280,47 @@ class MigracionController extends Controller
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         }
 
-        if($em->flush()) {
+        if ($em->flush()) {
             return true;
         } else {
             return false;
         }
     }
 
-    private function rhuGrupo($conn) {
+    private function rhuGrupo($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                   codigo_centro_costo_pk ,
                   nombre  
                  FROM rhu_centro_costo");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arGrupo = new RhuGrupo();
             $arGrupo->setCodigoGrupoPk($row['codigo_centro_costo_pk']);
             $arGrupo->setNombre(utf8_encode($row['nombre']));
             $em->persist($arGrupo);
         }
 
-        if($em->flush()) {
+        if ($em->flush()) {
             return true;
         } else {
             return false;
         }
     }
 
-    private function rhuCargo($conn) {
+    private function rhuCargo($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                 codigo_cargo_pk,
                 nombre,
                 codigo_cargo_supervigilancia_fk
                 FROM rhu_cargo");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arCargo = new RhuCargo();
             $arCargo->setCodigoCargoPk($row['codigo_cargo_pk']);
             $arCargo->setNombre(utf8_encode($row['nombre']));
-            if($row['codigo_cargo_supervigilancia_fk']) {
+            if ($row['codigo_cargo_supervigilancia_fk']) {
                 $arCargo->setCargoSupervigilanciaRel($em->getReference(RhuCargoSupervigilancia::class, $row['codigo_cargo_supervigilancia_fk']));
             }
 
@@ -318,7 +329,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function rhuEmpleado($conn) {
+    private function rhuEmpleado($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                 codigo_empleado_pk,
@@ -363,7 +375,7 @@ class MigracionController extends Controller
                 peso, 
                 pagado_entidad_salud
                 /*codigo_cargo_fk*/ FROM rhu_empleado");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arEmpleado = new RhuEmpleado();
             $arEmpleado->setCodigoEmpleadoPk($row['codigo_empleado_pk']);
             $arEmpleado->setIdentificacionRel($em->getReference(GenIdentificacion::class, 'CC'));
@@ -404,14 +416,15 @@ class MigracionController extends Controller
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         }
 
-        if($em->flush()) {
+        if ($em->flush()) {
             return true;
         } else {
             return false;
         }
     }
 
-    private function rhuContrato($conn) {
+    private function rhuContrato($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                     codigo_contrato_pk,
@@ -464,14 +477,14 @@ class MigracionController extends Controller
                   left join rhu_entidad_cesantia on rhu_entidad_cesantia.codigo_entidad_cesantia_pk=rhu_contrato.codigo_entidad_cesantia_fk
                   left join rhu_entidad_caja on rhu_entidad_caja.codigo_entidad_caja_pk=rhu_contrato.codigo_entidad_caja_fk
                   left join rhu_tipo_tiempo on rhu_contrato.codigo_tipo_tiempo_fk=rhu_tipo_tiempo.codigo_tipo_tiempo_pk");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arContrato = new RhuContrato();
             $arContrato->setCodigoContratoPk($row['codigo_contrato_pk']);
             $arContrato->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
             $arContrato->setContratoTipoRel($em->getReference(RhuContratoTipo::class, $row['codigo_contrato_tipo_externo']));
             $arContrato->setContratoClaseRel($em->getReference(RhuContratoClase::class, $row['codigo_contrato_clase_externo']));
             $arContrato->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_externo']));
-            if($row['codigo_motivo_terminacion_externo']) {
+            if ($row['codigo_motivo_terminacion_externo']) {
                 $arContrato->setContratoMotivoRel($em->getReference(RhuContratoMotivo::class, $row['codigo_motivo_terminacion_externo']));
             }
             $arContrato->setFecha(date_create($row['fecha']));
@@ -518,7 +531,8 @@ class MigracionController extends Controller
 
     }
 
-    private function rhuConcepto($conn) {
+    private function rhuConcepto($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                 codigo_pago_concepto_pk,
@@ -541,7 +555,7 @@ class MigracionController extends Controller
                 recargo_nocturno,
                 concepto_fondo_solidaridad_pensional
                  FROM rhu_pago_concepto");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arConcepto = new RhuConcepto();
             $arConcepto->setCodigoConceptoPk($row['codigo_pago_concepto_pk']);
             $arConcepto->setNombre(utf8_encode($row['nombre']));
@@ -569,7 +583,8 @@ class MigracionController extends Controller
 
     }
 
-    private function rhuAdicional($conn) {
+    private function rhuAdicional($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                         codigo_pago_adicional_pk,
@@ -586,12 +601,12 @@ class MigracionController extends Controller
                         estado_inactivo,
                         estado_inactivo_periodo
                  FROM rhu_pago_adicional");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arAdicional = new RhuAdicional();
             $arAdicional->setCodigoAdicionalPk($row['codigo_pago_adicional_pk']);
             $arAdicional->setConceptoRel($em->getReference(RhuConcepto::class, $row['codigo_pago_concepto_fk']));
             $arAdicional->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
-            if($row['codigo_contrato_fk']) {
+            if ($row['codigo_contrato_fk']) {
                 $arAdicional->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
             }
             $arAdicional->setFecha(date_create($row['fecha']));
@@ -612,7 +627,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function rhuEmbargoJuzgado($conn) {
+    private function rhuEmbargoJuzgado($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                     codigo_embargo_juzgado_pk,
@@ -620,7 +636,7 @@ class MigracionController extends Controller
                     oficina,
                     cuenta                                               
                  FROM rhu_embargo_juzgado");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arEmbargoJuzgado = new RhuEmbargoJuzgado();
             $arEmbargoJuzgado->setCodigoEmbargoJuzgadoPk($row['codigo_embargo_juzgado_pk']);
             $arEmbargoJuzgado->setNombre(utf8_encode($row['nombre']));
@@ -634,7 +650,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function rhuEmbargo($conn) {
+    private function rhuEmbargo($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                     codigo_embargo_pk,
@@ -690,7 +707,7 @@ class MigracionController extends Controller
                     apellidos_demandante, 
                     afecta_indemnizacion                                                                      
                  FROM rhu_embargo");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arEmbargo = new RhuEmbargo();
             $arEmbargo->setCodigoEmbargoPk($row['codigo_embargo_pk']);
             $arEmbargo->setEmbargoTipoRel($em->getReference(RhuEmbargoTipo::class, $row['tipo_embargo']));
@@ -754,7 +771,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function rhuCreditoTipo($conn) {
+    private function rhuCreditoTipo($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                         codigo_credito_tipo_pk,
@@ -762,7 +780,7 @@ class MigracionController extends Controller
                         cupo_maximo,
                         codigo_pago_concepto_fk
                  FROM rhu_credito_tipo ");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arCreditoTipo = new RhuCreditoTipo();
             $arCreditoTipo->setCodigoCreditoTipoPk($row['codigo_credito_tipo_pk']);
             $arCreditoTipo->setNombre(utf8_encode($row['nombre']));
@@ -773,7 +791,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function rhuCredito($conn) {
+    private function rhuCredito($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                         codigo_credito_pk,
@@ -800,7 +819,7 @@ class MigracionController extends Controller
                         rhu_credito_tipo_pago.codigo_externo as codigo_credito_pago_tipo_externo
                  FROM rhu_credito 
                  left join rhu_credito_tipo_pago ON rhu_credito.codigo_credito_tipo_pago_fk = rhu_credito_tipo_pago.codigo_credito_tipo_pago_pk");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arCredito = new RhuCredito();
             $arCredito->setCodigoCreditoPk($row['codigo_credito_pk']);
             $arCredito->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
@@ -812,7 +831,7 @@ class MigracionController extends Controller
             $arCredito->setFechaCredito(date_create($row['fecha_credito']));
             $arCredito->setFechaFinalizacion(date_create($row['fecha_finalizacion']));
             $arCredito->setCreditoTipoRel($em->getReference(RhuCreditoTipo::class, $row['codigo_credito_tipo_fk']));
-            if($row['codigo_centro_costo_fk']) {
+            if ($row['codigo_centro_costo_fk']) {
                 $arCredito->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
             }
             $arCredito->setNumeroCuotas($row['numero_cuotas']);
@@ -836,7 +855,8 @@ class MigracionController extends Controller
 
     }
 
-    private function rhuCreditoPago($conn) {
+    private function rhuCreditoPago($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                         codigo_credito_pago_pk,
@@ -848,11 +868,11 @@ class MigracionController extends Controller
                         fecha_pago                                                
                  FROM rhu_credito_pago
                  left join rhu_credito_tipo_pago ON rhu_credito_pago.codigo_credito_tipo_pago_fk = rhu_credito_tipo_pago.codigo_credito_tipo_pago_pk");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arCreditoPago = new RhuCreditoPago();
             $arCreditoPago->setCodigoCreditoPagoPk($row['codigo_credito_pago_pk']);
             $arCreditoPago->setCreditoRel($em->getReference(RhuCredito::class, $row['codigo_credito_fk']));
-            if($row['codigo_credito_pago_tipo_externo']) {
+            if ($row['codigo_credito_pago_tipo_externo']) {
                 $arCreditoPago->setCreditoPagoTipoRel($em->getReference(RhuCreditoPagoTipo::class, $row['codigo_credito_pago_tipo_externo']));
             }
             $arCreditoPago->setVrPago($row['vr_cuota']);
@@ -869,7 +889,8 @@ class MigracionController extends Controller
 
     }
 
-    private function rhuVacacion($conn) {
+    private function rhuVacacion($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                         codigo_vacacion_pk,
@@ -911,7 +932,7 @@ class MigracionController extends Controller
                         vr_promedio_recargo_nocturno,
                         comentarios
                  FROM rhu_vacacion");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arVacacion = new RhuVacacion();
             $arVacacion->setCodigoVacacionPk($row['codigo_vacacion_pk']);
             $arVacacion->setVacacionTipoRel($em->getReference(RhuVacacionTipo::class, 'GEN'));
@@ -961,12 +982,13 @@ class MigracionController extends Controller
 
     }
 
-    private function rhuLiquidacion($conn) {
+    private function rhuLiquidacion($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                         codigo_liquidacion_pk                       
                  FROM rhu_liquidacion");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arLiquidacion = new RhuLiquidacion();
             $arLiquidacion->setCodigoLiquidacionPk($row['codigo_liquidacion_pk']);
             $arLiquidacion->setLiquidacionTipoRel($em->getReference(RhuLiquidacionTipo::class, 'GEN'));
@@ -980,7 +1002,8 @@ class MigracionController extends Controller
 
     }
 
-    private function rhuPago($conn) {
+    private function rhuPago($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                 codigo_pago_pk,
@@ -1005,7 +1028,7 @@ class MigracionController extends Controller
                 codigo_liquidacion_fk
                  FROM rhu_pago  
                  left join rhu_pago_tipo on rhu_pago.codigo_pago_tipo_fk = rhu_pago_tipo.codigo_pago_tipo_pk");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arPago = new RhuPago();
             $arPago->setCodigoPagoPk($row['codigo_pago_pk']);
             $arPago->setPagoTipoRel($em->getReference(RhuPagoTipo::class, $row['codigo_pago_tipo_externo']));
@@ -1025,10 +1048,10 @@ class MigracionController extends Controller
             $arPago->setEstadoAnulado($row['estado_anulado']);
             $arPago->setComentario($row['comentarios']);
             $arPago->setUsuario($row['codigo_usuario']);
-            if($row['codigo_vacacion_fk']) {
+            if ($row['codigo_vacacion_fk']) {
                 $arPago->setVacacionRel($em->getReference(RhuVacacion::class, $row['codigo_vacacion_fk']));
             }
-            if($row['codigo_liquidacion_fk']) {
+            if ($row['codigo_liquidacion_fk']) {
                 $arPago->setLiquidacionRel($em->getReference(RhuLiquidacion::class, $row['codigo_liquidacion_fk']));
             }
             $em->persist($arPago);
@@ -1041,7 +1064,8 @@ class MigracionController extends Controller
 
     }
 
-    private function rhuPagoDetalle($conn) {
+    private function rhuPagoDetalle($conn)
+    {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
@@ -1050,7 +1074,7 @@ class MigracionController extends Controller
         $registros = $arr->num_rows;
         $totalPaginas = $registros / $rango;
         for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
-            $lote = $pagina*$rango;
+            $lote = $pagina * $rango;
             $datos = $conn->query("SELECT
                 codigo_pago_detalle_pk,
                 codigo_pago_fk,
@@ -1067,12 +1091,12 @@ class MigracionController extends Controller
                 vr_ingreso_base_cotizacion,
                 vr_ingreso_base_prestacion
                 FROM rhu_pago_detalle ORDER BY codigo_pago_detalle_pk limit {$lote},{$rango}");
-            foreach($datos as $row) {
+            foreach ($datos as $row) {
                 $arPagoDetalle = new RhuPagoDetalle();
                 $arPagoDetalle->setCodigoPagoDetallePk($row['codigo_pago_detalle_pk']);
                 $arPagoDetalle->setPagoRel($em->getReference(RhuPago::class, $row['codigo_pago_fk']));
                 $arPagoDetalle->setConceptoRel($em->getReference(RhuConcepto::class, $row['codigo_pago_concepto_fk']));
-                if($row['codigo_credito_fk']) {
+                if ($row['codigo_credito_fk']) {
                     $arPagoDetalle->setCreditoRel($em->getReference(RhuCredito::class, $row['codigo_credito_fk']));
                 }
                 $arPagoDetalle->setVrPago($row['vr_pago']);
@@ -1083,10 +1107,10 @@ class MigracionController extends Controller
                 $arPagoDetalle->setPorcentaje($row['porcentaje_aplicado']);
                 $arPagoDetalle->setDias($row['numero_dias']);
                 $arPagoDetalle->setDetalle(utf8_encode($row['detalle']));
-                if($row['operacion'] == 1) {
+                if ($row['operacion'] == 1) {
                     $arPagoDetalle->setVrDevengado($row['vr_pago']);
                 }
-                if($row['operacion'] == -1) {
+                if ($row['operacion'] == -1) {
                     $arPagoDetalle->setVrDeduccion($row['vr_pago']);
                 }
                 $arPagoDetalle->setVrIngresoBasePrestacion($row['vr_ingreso_base_prestacion']);
@@ -1101,7 +1125,8 @@ class MigracionController extends Controller
 
     }
 
-    private function rhuIncapacidadDiagnostico($conn) {
+    private function rhuIncapacidadDiagnostico($conn)
+    {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
@@ -1110,14 +1135,14 @@ class MigracionController extends Controller
         $registros = $arr->num_rows;
         $totalPaginas = $registros / $rango;
         for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
-            $lote = $pagina*$rango;
+            $lote = $pagina * $rango;
             $datos = $conn->query("SELECT
                     codigo_incapacidad_diagnostico_pk, 
                     nombre,
                     codigo,
                     codigo_grupo_enfermedad_fk                                                                          
                  FROM rhu_incapacidad_diagnostico ORDER BY codigo_incapacidad_diagnostico_pk limit {$lote},{$rango}");
-            foreach($datos as $row) {
+            foreach ($datos as $row) {
                 $arIncapacidadDiagnostico = new RhuIncapacidadDiagnostico();
                 $arIncapacidadDiagnostico->setCodigoIncapacidadDiagnosticoPk($row['codigo_incapacidad_diagnostico_pk']);
                 $arIncapacidadDiagnostico->setNombre(utf8_encode($row['nombre']));
@@ -1132,11 +1157,10 @@ class MigracionController extends Controller
         }
 
 
-
-
     }
 
-    private function rhuIncapacidad($conn) {
+    private function rhuIncapacidad($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                         codigo_incapacidad_pk,
@@ -1191,7 +1215,7 @@ class MigracionController extends Controller
                         rhu_entidad_salud.codigo_interface as codigo_entidad_salud_externo                                                                          
                  FROM rhu_incapacidad    
                  left join rhu_entidad_salud on rhu_entidad_salud.codigo_entidad_salud_pk=rhu_incapacidad.codigo_entidad_salud_fk");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arIncapacidad = new RhuIncapacidad();
             $arIncapacidad->setCodigoIncapacidadPk($row['codigo_incapacidad_pk']);
             $arIncapacidad->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
@@ -1202,7 +1226,7 @@ class MigracionController extends Controller
             $arIncapacidad->setFechaDesde(date_create($row['fecha_desde']));
             $arIncapacidad->setFechaHasta(date_create($row['fecha_hasta']));
             $arIncapacidad->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
-            if($row['codigo_incapacidad_tipo_fk'] == 1) {
+            if ($row['codigo_incapacidad_tipo_fk'] == 1) {
                 $arIncapacidad->setIncapacidadTipoRel($em->getReference(RhuIncapacidadTipo::class, 'GEN'));
             } else {
                 $arIncapacidad->setIncapacidadTipoRel($em->getReference(RhuIncapacidadTipo::class, 'LAB'));
@@ -1255,7 +1279,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function rhuLicenciaTipo($conn) {
+    private function rhuLicenciaTipo($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                     codigo_licencia_tipo_pk,  
@@ -1269,7 +1294,7 @@ class MigracionController extends Controller
                     tipo_novedad_turno, 
                     remunerada
                  FROM rhu_licencia_tipo");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arLicenciaTipo = new RhuLicenciaTipo();
             $arLicenciaTipo->setCodigoLicenciaTipoPk($row['codigo_licencia_tipo_pk']);
             $arLicenciaTipo->setConceptoRel($em->getReference(RhuConcepto::class, $row['codigo_pago_concepto_fk']));
@@ -1289,7 +1314,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function rhuLicencia($conn) {
+    private function rhuLicencia($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                     codigo_licencia_pk,
@@ -1331,11 +1357,11 @@ class MigracionController extends Controller
                     rhu_entidad_salud.codigo_interface as codigo_entidad_salud_externo
                  FROM rhu_licencia 
                  left join rhu_entidad_salud on rhu_entidad_salud.codigo_entidad_salud_pk=rhu_licencia.codigo_entidad_salud_fk");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arLicencia = new RhuLicencia();
             $arLicencia->setCodigoLicenciaPk($row['codigo_licencia_pk']);
             $arLicencia->setLicenciaTipoRel($em->getReference(RhuLicenciaTipo::class, $row['codigo_licencia_tipo_fk']));
-            if($row['codigo_centro_costo_fk']) {
+            if ($row['codigo_centro_costo_fk']) {
                 $arLicencia->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
             }
             $arLicencia->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
@@ -1380,7 +1406,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function turTurno($conn) {
+    private function turTurno($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                 codigo_turno_pk, 
@@ -1405,7 +1432,7 @@ class MigracionController extends Controller
                 dia, 
                 noche
                  FROM tur_turno");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arTurno = new TurTurno();
             $arTurno->setCodigoTurnoPk($row['codigo_turno_pk']);
             $arTurno->setNombre(utf8_encode($row['nombre']));
@@ -1436,7 +1463,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function turSecuencia($conn) {
+    private function turSecuencia($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                                 codigo_secuencia_pk,
@@ -1485,7 +1513,7 @@ class MigracionController extends Controller
                                 dias,
                                 homologar                                
                                     FROM tur_secuencia");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arSecuencia = new TurSecuencia();
             $arSecuencia->setCodigoSecuenciaPk($row['codigo_secuencia_pk']);
             $arSecuencia->setNombre(utf8_encode($row['nombre']));
@@ -1538,7 +1566,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function turCliente($conn) {
+    private function turCliente($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                 codigo_cliente_pk,
@@ -1550,7 +1579,7 @@ class MigracionController extends Controller
                 direccion,
                 telefono
                  FROM tur_cliente");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arCliente = new TurCliente();
             $arCliente->setCodigoClientePk($row['codigo_cliente_pk']);
             $arCliente->setNumeroIdentificacion($row['nit']);
@@ -1568,7 +1597,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function turPuesto($conn) {
+    private function turPuesto($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                 codigo_puesto_pk,
@@ -1580,7 +1610,7 @@ class MigracionController extends Controller
                 contacto,
                 codigo_ciudad_fk
                  FROM tur_puesto");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arPuesto = new TurPuesto();
             $arPuesto->setCodigoPuestoPk($row['codigo_puesto_pk']);
             $arPuesto->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
@@ -1598,7 +1628,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function turConcepto($conn) {
+    private function turConcepto($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                 codigo_concepto_servicio_pk,
@@ -1608,7 +1639,7 @@ class MigracionController extends Controller
                 horas_nocturnas,
                 por_iva
                  FROM tur_concepto_servicio");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arConcepto = new TurConcepto();
             $arConcepto->setCodigoConceptoPk($row['codigo_concepto_servicio_pk']);
             $arConcepto->setNombre(utf8_encode($row['nombre']));
@@ -1624,7 +1655,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function turContrato($conn) {
+    private function turContrato($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                 codigo_servicio_pk,
@@ -1649,7 +1681,7 @@ class MigracionController extends Controller
                 estrato 
                  FROM tur_servicio 
                  left join tur_sector on tur_servicio.codigo_sector_fk = tur_sector.codigo_sector_pk");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arContrato = new TurContrato();
             $arContrato->setCodigoContratoPk($row['codigo_servicio_pk']);
             $arContrato->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
@@ -1680,7 +1712,8 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function turContratoDetalle($conn) {
+    private function turContratoDetalle($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                     codigo_servicio_detalle_pk,
@@ -1716,7 +1749,7 @@ class MigracionController extends Controller
                     porcentaje_base_iva
                  FROM tur_servicio_detalle 
                  left join tur_modalidad_servicio on tur_servicio_detalle.codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arContratoDetalle = new TurContratoDetalle();
             $arContratoDetalle->setCodigoContratoDetallePk($row['codigo_servicio_detalle_pk']);
             $arContratoDetalle->setContratoRel($em->getReference(TurContrato::class, $row['codigo_servicio_fk']));
@@ -1757,7 +1790,169 @@ class MigracionController extends Controller
         $em->flush();
     }
 
-    private function turProgramacion($conn) {
+    private function turPedido($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $datos = $conn->query("SELECT
+                codigo_pedido_pk,
+                codigo_cliente_fk,  
+                tur_sector.codigo_externo as codigo_sector_externo,
+                numero,              
+                fecha,
+                estado_autorizado,
+                horas,
+                horas_diurnas,
+                horas_nocturnas,
+                vr_total_servicio,
+                vr_total_precio_ajustado,
+                vr_total_precio_minimo,
+                vr_subtotal,
+                vr_iva,
+                vr_base_aiu,
+                vr_total,
+                usuario,
+                tur_pedido.comentarios,
+                vr_salario_base,
+                estrato 
+                 FROM tur_pedido
+                 left join tur_sector on tur_pedido.codigo_sector_fk = tur_sector.codigo_sector_pk");
+        foreach ($datos as $row) {
+            $arPedido = new TurPedido();
+            $arPedido->setCodigoPedidoPk($row['codigo_pedido_pk']);
+            $arPedido->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+            $arPedido->setSectorRel($em->getReference(TurSector::class, $row['codigo_sector_externo']));
+            $arPedido->setPedidoTipoRel($em->getReference(TurPedidoTipo::class, 'CON'));
+            $arPedido->setFechaGeneracion(date_create($row['fecha']));
+            $arPedido->setNumero($row['numero']);
+            $arPedido->setEstadoAutorizado($row['estado_autorizado']);
+            $arPedido->setHoras($row['horas']);
+            $arPedido->setHorasDiurnas($row['horas_diurnas']);
+            $arPedido->setHorasNocturnas($row['horas_nocturnas']);
+            $arPedido->setVrTotalServicio($row['vr_total_servicio']);
+            $arPedido->setVrTotalPrecioAjustado($row['vr_total_precio_ajustado']);
+            $arPedido->setVrTotalPrecioMinimo($row['vr_total_precio_minimo']);
+            $arPedido->setVrSubtotal($row['vr_subtotal']);
+            $arPedido->setVrIva($row['vr_iva']);
+            $arPedido->setVrBaseAiu($row['vr_base_aiu']);
+            $arPedido->setVrTotal($row['vr_total']);
+            $arPedido->setUsuario($row['usuario']);
+            $arPedido->setComentario(utf8_encode($row['comentarios']));
+            $arPedido->setVrSalarioBase($row['vr_salario_base']);
+            $arPedido->setEstrato($row['estrato']);
+            $em->persist($arPedido);
+            $metadata = $em->getClassMetaData(get_class($arPedido));
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        }
+        $em->flush();
+    }
+
+    private function turPedidoDetalle($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $datos = $conn->query("SELECT
+                    codigo_pedido_detalle_pk,
+                    codigo_pedido_fk,
+                    codigo_puesto_fk,
+                    codigo_concepto_servicio_fk,
+                    codigo_periodo_fk,
+                    tur_modalidad_servicio.codigo_externo as codigo_modalidad_servicio_externo,
+                    dia_desde,
+                    dia_hasta,
+                    anio,
+                    mes,
+                    dias,
+                    horas,
+                    horas_diurnas,
+                    horas_nocturnas,
+                    horas_programadas,
+                    horas_diurnas_programadas,
+                    horas_nocturnas_programadas,
+                    cantidad,
+                    vr_precio_ajustado,
+                    vr_precio_minimo,
+                    vr_precio,
+                    vr_subtotal,
+                    vr_iva,
+                    vr_base_aiu,
+                    vr_total_detalle,
+                    vr_total_detalle_afectado,
+                    vr_total_detalle_pendiente,
+                    vr_total_detalle_devolucion,
+                    vr_total_detalle_adicion,
+                    lunes,
+                    martes,
+                    miercoles,
+                    jueves,
+                    viernes,
+                    sabado,
+                    domingo,
+                    festivo,
+                    compuesto,
+                    vr_salario_base,
+                    porcentaje_iva,
+                    porcentaje_base_iva,
+                    estado_programado
+                 FROM tur_pedido_detalle 
+                 left join tur_modalidad_servicio on codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk");
+        foreach ($datos as $row) {
+            $arPedidoDetalle = new TurPedidoDetalle();
+            $arPedidoDetalle->setCodigoPedidoDetallePk($row['codigo_pedido_detalle_pk']);
+            $arPedidoDetalle->setPedidoRel($em->getReference(TurPedido::class, $row['codigo_pedido_fk']));
+            $arPedidoDetalle->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
+            $arPedidoDetalle->setConceptoRel($em->getReference(TurConcepto::class, $row['codigo_concepto_servicio_fk']));
+            $arPedidoDetalle->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
+            if ($row['codigo_periodo_fk'] == 1) {
+                $arPedidoDetalle->setPeriodo("M");
+            } else {
+                $arPedidoDetalle->setPeriodo("D");
+            }
+            $arPedidoDetalle->setAnio($row['anio']);
+            $arPedidoDetalle->setMes($row['mes']);
+            $arPedidoDetalle->setDiaDesde(date_create($row['dia_desde']));
+            $arPedidoDetalle->setDiaHasta(date_create($row['dia_hasta']));
+            $arPedidoDetalle->setDias($row['dias']);
+            $arPedidoDetalle->setHoras($row['horas']);
+            $arPedidoDetalle->setHorasDiurnas($row['horas_diurnas']);
+            $arPedidoDetalle->setHorasNocturnas($row['horas_nocturnas']);
+            $arPedidoDetalle->setHorasProgramadas($row['horas_programadas']);
+            $arPedidoDetalle->setHorasDiurnasProgramadas($row['horas_diurnas_programadas']);
+            $arPedidoDetalle->setHorasNocturnasProgramadas($row['horas_nocturnas_programadas']);
+            $arPedidoDetalle->setCantidad($row['cantidad']);
+            $arPedidoDetalle->setVrPrecioAjustado($row['vr_precio_ajustado']);
+            $arPedidoDetalle->setVrPrecioMinimo($row['vr_precio_minimo']);
+            $arPedidoDetalle->setVrPrecio($row['vr_precio']);
+            $arPedidoDetalle->setVrSubtotal($row['vr_subtotal']);
+            $arPedidoDetalle->setVrIva($row['vr_iva']);
+            $arPedidoDetalle->setVrBaseAiu($row['vr_base_aiu']);
+            $arPedidoDetalle->setVrTotalDetalle($row['vr_total_detalle']);
+            $arPedidoDetalle->setVrTotalDetalleAfectado($row['vr_total_detalle_afectado']);
+            $arPedidoDetalle->setVrTotalDetallePendiente($row['vr_total_detalle_pendiente']);
+            $arPedidoDetalle->setVrTotalDetalleDevolucion($row['vr_total_detalle_devolucion']);
+            $arPedidoDetalle->setVrTotalDetalleAdicion($row['vr_total_detalle_adicion']);
+            $arPedidoDetalle->setLunes($row['lunes']);
+            $arPedidoDetalle->setMartes($row['martes']);
+            $arPedidoDetalle->setMiercoles($row['miercoles']);
+            $arPedidoDetalle->setJueves($row['jueves']);
+            $arPedidoDetalle->setViernes($row['viernes']);
+            $arPedidoDetalle->setSabado($row['sabado']);
+            $arPedidoDetalle->setDomingo($row['domingo']);
+            $arPedidoDetalle->setFestivo($row['festivo']);
+            $arPedidoDetalle->setCompuesto($row['compuesto']);
+            $arPedidoDetalle->setEstadoProgramado($row['estado_programado']);
+            $arPedidoDetalle->setVrSalarioBase($row['vr_salario_base']);
+            $arPedidoDetalle->setPorcentajeIva($row['porcentaje_iva']);
+            $arPedidoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
+            $em->persist($arPedidoDetalle);
+            $metadata = $em->getClassMetaData(get_class($arPedidoDetalle));
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        }
+        $em->flush();
+    }
+
+    private function turProgramacion($conn)
+    {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
@@ -1810,10 +2005,10 @@ class MigracionController extends Controller
                     complementario,
                     adicional
                  FROM tur_programacion_detalle  ORDER BY codigo_programacion_detalle_pk limit {$lote},{$rango}");
-            foreach($datos as $row) {
+            foreach ($datos as $row) {
                 $arProgramacion = new TurProgramacion();
                 $arProgramacion->setCodigoProgramacionPk($row['codigo_programacion_detalle_pk']);
-                if($row['codigo_recurso_fk']) {
+                if ($row['codigo_recurso_fk']) {
                     $arProgramacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_recurso_fk']));
                 }
                 $arProgramacion->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));

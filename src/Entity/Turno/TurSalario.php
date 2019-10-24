@@ -29,6 +29,11 @@ class TurSalario
     private $nombre;
 
     /**
+     * @ORM\Column(name="vr_salario", type="float", nullable=true)
+     */
+    private $vrSalario = 0;
+
+    /**
      * @ORM\Column(name="vr_hora_diurna", type="float", nullable=true)
      */
     private $vrHoraDiurna = 0;
@@ -163,6 +168,22 @@ class TurSalario
     public function setPuestosSalariosRel($puestosSalariosRel): void
     {
         $this->puestosSalariosRel = $puestosSalariosRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSalario()
+    {
+        return $this->vrSalario;
+    }
+
+    /**
+     * @param mixed $vrSalario
+     */
+    public function setVrSalario($vrSalario): void
+    {
+        $this->vrSalario = $vrSalario;
     }
 
 

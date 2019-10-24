@@ -177,6 +177,11 @@ class TurPuesto
     protected $costosServiciosPuestoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurSoporteHora", mappedBy="puestoRel")
+     */
+    protected $soportesHorasPuestoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPuestoPk()
@@ -606,6 +611,22 @@ class TurPuesto
     public function setSalarioRel($salarioRel): void
     {
         $this->salarioRel = $salarioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoportesHorasPuestoRel()
+    {
+        return $this->soportesHorasPuestoRel;
+    }
+
+    /**
+     * @param mixed $soportesHorasPuestoRel
+     */
+    public function setSoportesHorasPuestoRel($soportesHorasPuestoRel): void
+    {
+        $this->soportesHorasPuestoRel = $soportesHorasPuestoRel;
     }
 
 

@@ -37,6 +37,11 @@ class TurSoporteHora
      */
     private $codigoProgramacionFk;
 
+
+    /**
+     * @ORM\Column(name="codigo_puesto_fk", type="integer", nullable=true)
+     */
+    private $codigoPuestoFk;
     /**
      * @ORM\Column(name="anio", type="integer")
      */
@@ -229,6 +234,12 @@ class TurSoporteHora
      * @ORM\JoinColumn(name="codigo_programacion_fk", referencedColumnName="codigo_programacion_pk")
      */
     protected $programacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurPuesto", inversedBy="soportesHorasPuestoRel")
+     * @ORM\JoinColumn(name="codigo_puesto_fk", referencedColumnName="codigo_puesto_pk")
+     */
+    protected $puestoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurTurno", inversedBy="soportesHorasTurnoRel")
@@ -922,6 +933,38 @@ class TurSoporteHora
     public function setTurnoRel($turnoRel): void
     {
         $this->turnoRel = $turnoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPuestoFk()
+    {
+        return $this->codigoPuestoFk;
+    }
+
+    /**
+     * @param mixed $codigoPuestoFk
+     */
+    public function setCodigoPuestoFk($codigoPuestoFk): void
+    {
+        $this->codigoPuestoFk = $codigoPuestoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPuestoRel()
+    {
+        return $this->puestoRel;
+    }
+
+    /**
+     * @param mixed $puestoRel
+     */
+    public function setPuestoRel($puestoRel): void
+    {
+        $this->puestoRel = $puestoRel;
     }
 
 

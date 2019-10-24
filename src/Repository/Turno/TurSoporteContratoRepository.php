@@ -5,6 +5,7 @@ namespace App\Repository\Turno;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Turno\TurContratoTipo;
 use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurSector;
 use App\Entity\Turno\TurSoporte;
 use App\Entity\Turno\TurSoporteContrato;
@@ -172,6 +173,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                             'incapacidad' => $arTurno->getIncapacidad(),
                             'ingreso' => $arTurno->getIngreso(),
                             'codigoProgramacionPk' => $arProgramacion['codigoProgramacionPk'],
+                            'codigoPuestoFk' => $arProgramacion['codigoPuestoFk'],
                             'complementario' => $complementario,
                         ];
                         if (!$arTurno->getNovedad() && !$arTurno->getDescanso()) {
@@ -323,7 +325,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                 if ($arrTurno['codigoProgramacionPk']) {
                     $arSoporteHora->setProgramacionRel($em->getReference(TurProgramacion::class, $arrTurno['codigoProgramacionPk']));
                     //$arSoporteHora->setPedidoDetalleRel($arProgramacionDetalle->getPedidoDetalleRel());
-                    //$arSoporteHora->setPuestoRel($arProgramacionDetalle->getPuestoRel());
+                    $arSoporteHora->setPuestoRel($em->getReference(TurPuesto::class, $arrTurno['codigoPuestoFk']));
                     //$arSoporteHora->setAdicional($arProgramacionDetalle->getAdicional());
                     //$arSoporteHora->setClienteRel($arProgramacionDetalle->getProgramacionRel()->getClienteRel());
                 }
@@ -368,7 +370,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                     if ($arrTurno['codigoProgramacionPk']) {
                         $arSoporteHora->setProgramacionRel($em->getReference(TurProgramacion::class, $arrTurno['codigoProgramacionPk']));
                         //$arSoporteHora->setPedidoDetalleRel($arProgramacionDetalle->getPedidoDetalleRel());
-                        //$arSoporteHora->setPuestoRel($arProgramacionDetalle->getPuestoRel());
+                        $arSoporteHora->setPuestoRel($em->getReference(TurPuesto::class, $arrTurno['codigoPuestoFk']));
                         //$arSoporteHora->setAdicional($arProgramacionDetalle->getAdicional());
                         //$arSoporteHora->setClienteRel($arProgramacionDetalle->getProgramacionRel()->getClienteRel());
                     }
@@ -692,41 +694,25 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             $em->persist($arSoporteContrato);
         }
 
-
-        /*if ($tipo == 19) {
-            $arSoportePagoPeriodo->setAjusteDevengado(1);
-            $intDias = $arSoportePagoPeriodo->getFechaDesde()->diff($arSoportePagoPeriodo->getFechaHasta());
-            $diasRealesPeriodo = $intDias->format('%a') + 1;
-            $arSoportesPago = $em->getRepository('BrasaTurnoBundle:TurSoportePago')->findBy(array('codigoSoportePagoPeriodoFk' => $codigoSoportePagoPeriodo));
-            foreach ($arSoportesPago as $arSoportePago) {
-                $arSoportePagoAct = $em->getRepository('BrasaTurnoBundle:TurSoportePago')->find($arSoportePago->getCodigoSoportePagoPk());
-                $diasTransporte = $arSoportePago->getDiasTransporteReal();
-                $dias = $arSoportePago->getDiasTransporteReal();
-                if ($arSoportePagoPeriodo->getDiasAdicionalesFebrero() > 0) {
-                    $novedades = $arSoportePagoAct->getIncapacidad() + $arSoportePagoAct->getIncapacidadNoLegalizada() + $arSoportePagoAct->getLicencia() + $arSoportePagoAct->getLicenciaNoRemunerada();
-                    if ($arSoportePagoAct->getRetiro() <= 0 && $novedades < $diasRealesPeriodo) {
-                        $dias += $arSoportePagoPeriodo->getDiasAdicionalesFebrero();
-                        $diasTransporte += $arSoportePagoPeriodo->getDiasAdicionalesFebrero();
+        if($arSoporteContrato->getCodigoDistribucionFk() == 'IN001') {
+            $arSoporteHoras = $em->getRepository(TurSoporteHora::class)->findBy(['codigoSoporteContratoFk' => $arSoporteContrato->getCodigoSoporteContratoPk()]);
+            $pagoDia = 0;
+            $pagoNoche = 0;
+            foreach ($arSoporteHoras as $arSoporteHora) {
+                if ($arSoporteHora->getDias() > 0 && $arSoporteHora->getComplementario() == 0 && $arSoporteHora->getAdicional() == 0 && $arSoporteHora->getFechaReal()->format('j') != 31) {
+                    if ($arSoporteHora->getTurnoRel()->getDia()) {
+                        if ($arSoporteHora->getPuestoRel()->getSalarioRel()) {
+                            $horasDia = $arSoporteHora->getPuestoRel()->getSalarioRel()->getVrHoraDia();
+                        }
                     }
+                    /*if ($arSoporteHora->getTurnoRel()->getNoche()) {
+                        if ($arSoporteHora->getPuestoRel()->getSalarioFijoRel()) {
+                            $vrSalarioNoche += $arSoporteHora->getPuestoRel()->getSalarioRel()->getVrTurnoNoche();
+                        }
+                    }*/
                 }
-                $horas = $dias * 8;
-                $arSoportePagoAct->setHoras($horas);
-                $arSoportePagoAct->setHorasDescanso(0);
-                $arSoportePagoAct->setHorasDiurnas($horas);
-                $arSoportePagoAct->setHorasNocturnas(0);
-                $arSoportePagoAct->setHorasFestivasDiurnas(0);
-                $arSoportePagoAct->setHorasFestivasNocturnas(0);
-                $arSoportePagoAct->setHorasExtrasOrdinariasDiurnas(0);
-                $arSoportePagoAct->setHorasExtrasOrdinariasNocturnas(0);
-                $arSoportePagoAct->setHorasExtrasFestivasDiurnas(0);
-                $arSoportePagoAct->setHorasExtrasFestivasNocturnas(0);
-                $arSoportePagoAct->setHorasRecargoNocturno(0);
-                $arSoportePagoAct->setHorasRecargoFestivoDiurno(0);
-                $arSoportePagoAct->setHorasRecargoFestivoNocturno(0);
-                $arSoportePagoAct->setDiasTransporte($diasTransporte);
-                $em->persist($arSoportePagoAct);
             }
-        }*/
+        }
 
     }
 

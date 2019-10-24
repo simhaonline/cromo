@@ -323,6 +323,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
             ->select('p.codigoProgramacionPk')
             ->addSelect('p.complementario')
             ->addSelect('p.adicional')
+            ->addSelect('p.codigoPuestoFk')
             ->where("p.codigoEmpleadoFk = {$codigoEmpleado}")
             ->andWhere("p.anio={$anio}")
             ->andWhere("p.mes={$mes}");

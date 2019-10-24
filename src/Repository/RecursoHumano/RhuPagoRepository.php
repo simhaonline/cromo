@@ -241,7 +241,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $fechaHasta = $arIncapacidad->getFechaHastaEmpresa();
             }
 
-            $vrHoraIncapacidad = $arIncapacidad->getVrHora();
+            $vrHoraIncapacidad = $arIncapacidad->getVrHoraEmpresa();
             /*if ($arConfiguracion->getPagarIncapacidadEmpresaCompleto()) {
                 $vrHoraIncapacidad = $arIncapacidad->getVrHoraEmpresa();
                 if ($vrHoraIncapacidad == 0) {

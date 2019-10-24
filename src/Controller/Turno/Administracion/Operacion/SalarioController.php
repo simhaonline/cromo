@@ -5,7 +5,7 @@ namespace App\Controller\Turno\Administracion\Operacion;
 
 use App\Entity\Turno\TurSalario;
 use App\Entity\Turno\TurSecuencia;
-use App\Form\Type\Turno\salarioType;
+use App\Form\Type\Turno\SalarioType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -49,7 +49,6 @@ class SalarioController extends AbstractController
                 General::get()->setExportar($em->getRepository(TurSalario::class)->lista($raw), "SALARIOS");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                //NO APLICA
             }
         }
         $arSalarios = $paginator->paginate($em->getRepository(TurSalario::class)->lista($raw), $request->query->getInt('page', 1), 30);

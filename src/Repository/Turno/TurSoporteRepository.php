@@ -366,28 +366,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 if ($diasTransporte > $arSoporte->getDias()) {
                     $diasTransporte = $arSoporte->getDias();
                 }
-                //Adiciones mes de febrero
-                $arrayResultado[$i]['horasAdicionalesFebrero'] = 0;
-                /*if ($arSoportePago->getSoportePagoPeriodoRel()->getDiasAdicionalesFebrero() > 0) {
-                    //Ajustar las horas de los turnos fijos
-                    if ($arSoportePago->getTurnoFijo()) {
-                        if ($arSoportePago->getNovedad() == 0) {
-                            $arrayResultado[$i]['horasDiurnas'] += $arSoportePagoPeriodoActualizar->getDiasAdicionalesFebrero() * 8;
-                            $diasTransporte += $arSoportePago->getSoportePagoPeriodoRel()->getDiasAdicionalesFebrero();
-                        }
-                    } else {//Ajustar los dias de transporte
-                        if ($arSoportePago->getSoportePagoPeriodoRel()->getDiasPeriodo() == $diasTransporte) {
-                            $diasTransporte += $arSoportePago->getSoportePagoPeriodoRel()->getDiasAdicionalesFebrero();
-                            $arrayResultado[$i]['horasAdicionalesFebrero'] += $arSoportePago->getSoportePagoPeriodoRel()->getDiasAdicionalesFebrero() * 8;
-                        }
-                    }
 
-
-                }*/
-                /*if ($arSoportePago->getSoportePagoPeriodoRel()->getDiasAdicionalesFijo() > 0) {
-                    $diasTransporte += $arSoportePago->getSoportePagoPeriodoRel()->getDiasAdicionalesFijo();
-                    $arrayResultado[$i]['dias'] += $arSoportePago->getSoportePagoPeriodoRel()->getDiasAdicionalesFijo();
-                }*/
                 if ($diasTransporte == $arSoporte->getDias()) {
                     $diasTransporte -= ($arrayResultado[$i]['incapacidad'] + $arrayResultado[$i]['ausentismo'] + $arrayResultado[$i]['vacacion'] + $arrayResultado[$i]['ingreso'] + $arrayResultado[$i]['retiro'] + $arrayResultado[$i]['licenciaNoRemunerada'] + $arrayResultado[$i]['licencia'] + $arrayResultado[$i]['induccion']);
                     if ($diasTransporte < 0) {

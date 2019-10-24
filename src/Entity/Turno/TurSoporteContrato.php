@@ -348,6 +348,11 @@ class TurSoporteContrato
     private $vrAdicionalDevengadoPactado = 0;
 
     /**
+     * @ORM\Column(name="vr_adicional_1", type="float", nullable=true, options={"default":0})
+     */
+    private $vrAdicional1 = 0;
+
+    /**
      * @ORM\Column(name="auxilio_transporte", type="boolean", options={"default":false})
      */
     private $auxilioTransporte = false;
@@ -1547,6 +1552,22 @@ class TurSoporteContrato
     public function setAuxilioTransporte($auxilioTransporte): void
     {
         $this->auxilioTransporte = $auxilioTransporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAdicional1()
+    {
+        return $this->vrAdicional1;
+    }
+
+    /**
+     * @param mixed $vrAdicional1
+     */
+    public function setVrAdicional1($vrAdicional1): void
+    {
+        $this->vrAdicional1 = $vrAdicional1;
     }
 
 

@@ -128,7 +128,11 @@ class SoporteController extends ControllerListenerGeneral
                 if ($id == 0) {
                     $arSoporte->setUsuario($this->getUser()->getUserName());
                 }
-                $arSoporte->setDias(($arSoporte->getFechaDesde()->diff($arSoporte->getFechaHasta()))->days + 1);
+                $dias = ($arSoporte->getFechaDesde()->diff($arSoporte->getFechaHasta()))->days + 1;
+                if($dias >=31) {
+                    $dias = 30;
+                }
+                $arSoporte->setDias($dias);
                 $em->persist($arSoporte);
                 $em->flush();
                 return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $arSoporte->getCodigoSoportePk()]));
@@ -275,7 +279,11 @@ class SoporteController extends ControllerListenerGeneral
             $hoja = $libro->getActiveSheet();
             $hoja->setTitle('guias');
             $j = 0;
-            $arrColumnas = ['COD EMP','IDENT','EMPLEADO', 'D', 'DT', 'NOV','IND', 'ING','RET', 'INC', 'LIC', 'LNR', 'AUS', 'VAC', 'H', 'DS', 'HD', 'HN','HFD', 'HFN','HED','HEN','HEFD','HEFN','RN','RFD','RFN','R','DSP'];
+            $arrColumnas = ['COD', 'NIT', 'EMPLEADO', 'CT',
+                'D', 'DT', 'NOV','IND', 'ING','RET', 'INC', 'LIC', 'LNR', 'AUS', 'VAC',
+                'H', 'DS', 'HD', 'HN','HFD', 'HFN','HED','HEN','HEFD','HEFN','RN','RFD','RFN','R',
+                'DSP',
+                'SALARIO', 'DEV_PAC', 'VR_SALARIO','TTE', 'A_DP', 'A1', 'TOTAL'];
 
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
@@ -285,6 +293,7 @@ class SoporteController extends ControllerListenerGeneral
             }
             $j = 2;
             foreach ($arSoportes as $soporte) {
+                $total = $soporte['vrHoras'] + $soporte['vrAuxilioTransporte'] + $soporte['vrAdicionalDevengadoPactado'] + $soporte['vrAdicional1'];
                 $hoja->setCellValue('A' . $j, $soporte['codigoEmpleadoFk']);
                 $hoja->setCellValue('B' . $j, $soporte['numeroIdentificacion']);
                 $hoja->setCellValue('C' . $j, $soporte['empleado']);
@@ -315,6 +324,14 @@ class SoporteController extends ControllerListenerGeneral
                 $hoja->setCellValue('AB' . $j, $soporte['horasRecargoFestivoNocturno']);
                 $hoja->setCellValue('AC' . $j, $soporte['horasRecargo']);
                 $hoja->setCellValue('AD' . $j, $soporte['codigoDistribucionFk']);
+                $hoja->setCellValue('AE' . $j, $soporte['vrSalario']);
+                $hoja->setCellValue('AF' . $j, $soporte['vrDevengadoPactado']);
+                $hoja->setCellValue('AG' . $j, $soporte['vrHoras']);
+                $hoja->setCellValue('AH' . $j, $soporte['vrAuxilioTransporte']);
+                $hoja->setCellValue('AI' . $j, $soporte['vrAdicionalDevengadoPactado']);
+                $hoja->setCellValue('AJ' . $j, $soporte['vrAdicional1']);
+                $hoja->setCellValue('AK' . $j, $total);
+
                 $j++;
             }
 

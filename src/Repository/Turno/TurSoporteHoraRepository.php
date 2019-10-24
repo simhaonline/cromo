@@ -24,6 +24,7 @@ class TurSoporteHoraRepository extends ServiceEntityRepository
             ->select('sh.codigoSoporteHoraPk')
             ->addSelect('sh.fecha')
             ->addSelect('sh.fechaReal')
+            ->addSelect('sh.codigoTurnoFk')
             ->addSelect('t.nombre as turno')
             ->addSelect('sh.dias')
             ->addSelect('sh.descanso')

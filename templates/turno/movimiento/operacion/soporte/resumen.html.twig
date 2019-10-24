@@ -55,6 +55,12 @@
             <td align="right">{{ arSoporteContrato.vrAdicionalDevengadoPactado | number_format()}}</td>
         </tr>
         <tr>
+            <td class="titulo">DIAS TRANSPORTE:</td>
+            <td align="right">{{ arSoporteContrato.diasTransporte }}</td>
+            <td class="titulo">ADICIONAL 1:</td>
+            <td align="right">{{ arSoporteContrato.vrAdicional1 | number_format()}}</td>
+        </tr>
+        <tr>
             <td class="titulo">AUXILIO TRANSPORTE:</td>
             <td align="right">{{ arSoporteContrato.vrAuxilioTransporte | number_format()}}</td>
             <td class="titulo">SALARIO:</td>
@@ -203,6 +209,7 @@
             <th>ID</th>
             <th>FECHA</th>
             <th>F_REAL</th>
+            <th>COD</th>
             <th>TURNO</th>
             <th>DIAS</th>
             <th>DESCANSO</th>
@@ -227,6 +234,7 @@
                 <td>{{ arSoporteHora.codigoSoporteHoraPk }}</td>
                 <td>{{ arSoporteHora.fecha | date("Y-m-d") }}</td>
                 <td>{{ arSoporteHora.fechaReal | date("Y-m-d") }}</td>
+                <td>{{ arSoporteHora.codigoTurnoFk }}</td>
                 <td>{{ arSoporteHora.turno }}</td>
                 <td>{{ arSoporteHora.dias }}</td>
                 <td>{{ arSoporteHora.descanso }}</td>

@@ -22,6 +22,7 @@ class RhuConfiguracionRepository extends ServiceEntityRepository
             ->addSelect('c.codigoConceptoAuxilioTransporteFk')
             ->addSelect('c.codigoConceptoFondoSolidaridadPensionFk')
             ->addSelect('c.codigoConceptoAdicionalDevengadoPactadoFk')
+            ->addSelect('c.codigoConceptoVacacionFk')
             ->addSelect('c.provisionPorcentajeCesantia')
             ->addSelect('c.provisionPorcentajeInteres')
             ->addSelect('c.provisionPorcentajePrima')

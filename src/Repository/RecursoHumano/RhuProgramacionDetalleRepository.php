@@ -191,4 +191,20 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
         return $arEmpleados;
     }
 
+    /**
+     * @param $arProgramacion RhuProgramacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function eliminarTodoDetalles($arProgramacion){
+        $this->_em->createQueryBuilder()
+            ->delete(RhuProgramacionDetalle::class,'pd')
+            ->where("pd.codigoProgramacionFk = {$arProgramacion->getCodigoProgramacionPk()}")->getQuery()->execute();
+        $arProgramacion->setEmpleadosGenerados(0);
+        $cantidad = $this->_em->getRepository(RhuProgramacion::class)->getCantidadRegistros($arProgramacion->getCodigoProgramacionPk());
+        $arProgramacion->setCantidad($cantidad);
+        $this->_em->persist($arProgramacion);
+        $this->_em->flush();
+    }
+
 }

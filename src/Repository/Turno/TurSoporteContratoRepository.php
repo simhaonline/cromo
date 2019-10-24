@@ -746,7 +746,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             $arSoporteContrato->setDiasTransporte($dias);
             $em->getRepository(TurSoporteContrato::class)->valorizar($arSoporteContrato);
 
-            $vrAdicional = $vrDevengado - ($arSoporteContrato->getVrHoras() + $arSoporteContrato->getVrAuxilioTransporte());
+            $vrAdicional = $vrDevengado - ($arSoporteContrato->getVrHoras() + $arSoporteContrato->getVrAuxilioTransportePago());
             $vrAdicional = round($vrAdicional);
             if($vrAdicional > 0) {
                 $arSoporteContrato->setVrAdicional1($vrAdicional);
@@ -767,7 +767,9 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         $salario = $arSoporteContrato->getVrSalario();
         $vrDia = $salario / 30;
         $vrHora = $vrDia / 8;
-
+        $vrDiaAuxilioTransporte = $arSoporteContrato->getVrAuxilioTransporte();
+        $vrHoraAuxilioTransporte = $vrDiaAuxilioTransporte / 30;
+        $vrAuxilioTransporte = $arSoporteContrato->getDiasTransporte() * $vrHoraAuxilioTransporte;
         $porHoraNocturna = 135;
         $porRecargoNocturno = 35;
         $porRecargoFestivoDiurno = 75;
@@ -806,6 +808,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         $arSoporteContrato->setVrRecargoFestivoDiurno($vrRecargoFestivoDiurno);
         $arSoporteContrato->setVrRecargoFestivoNocturno($vrRecargoFestivoNocturno);
         $arSoporteContrato->setVrHoras($vrHoras);
+        $arSoporteContrato->setVrAuxilioTransportePago($vrAuxilioTransporte);
     }
 
 }

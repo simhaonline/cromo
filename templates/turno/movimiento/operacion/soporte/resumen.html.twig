@@ -55,16 +55,28 @@
             <td align="right">{{ arSoporteContrato.vrAdicionalDevengadoPactado | number_format()}}</td>
         </tr>
         <tr>
-            <td class="titulo">DIAS TRANSPORTE:</td>
-            <td align="right">{{ arSoporteContrato.diasTransporte }}</td>
+            <td class="titulo"></td>
+            <td align="right"></td>
             <td class="titulo">ADICIONAL 1:</td>
             <td align="right">{{ arSoporteContrato.vrAdicional1 | number_format()}}</td>
+        </tr>}
+        <tr>
+            <td class="titulo">DIAS TRANSPORTE:</td>
+            <td align="right">{{ arSoporteContrato.diasTransporte }}</td>
+            <td class="titulo">AUX TTE:</td>
+            <td align="right">{{ arSoporteContrato.vrAuxilioTransportePago | number_format()}}</td>
         </tr>
         <tr>
-            <td class="titulo">AUXILIO TRANSPORTE:</td>
+            <td class="titulo">AUX TTE CONTRATO:</td>
             <td align="right">{{ arSoporteContrato.vrAuxilioTransporte | number_format()}}</td>
             <td class="titulo">SALARIO:</td>
+            <td align="right">{{ arSoporteContrato.vrHoras | number_format()}}</td>
+        </tr>
+        <tr>
+            <td class="titulo">SALARIO CONTRATO:</td>
             <td align="right">{{ arSoporteContrato.vrSalario | number_format()}}</td>
+            <td class="titulo"></td>
+            <td align="right"></td>
         </tr>
     </table>
     <br/>

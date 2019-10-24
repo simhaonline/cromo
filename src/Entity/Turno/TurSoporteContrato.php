@@ -268,6 +268,11 @@ class TurSoporteContrato
     private $vrAuxilioTransporte = 0;
 
     /**
+     * @ORM\Column(name="vr_auxilio_transporte_pago", type="float", nullable=true)
+     */
+    private $vrAuxilioTransportePago = 0;
+
+    /**
      * @ORM\Column(name="horas_descanso_reales", type="float")
      */
     private $horasDescansoReales = 0;
@@ -1568,6 +1573,22 @@ class TurSoporteContrato
     public function setVrAdicional1($vrAdicional1): void
     {
         $this->vrAdicional1 = $vrAdicional1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAuxilioTransportePago()
+    {
+        return $this->vrAuxilioTransportePago;
+    }
+
+    /**
+     * @param mixed $vrAuxilioTransportePago
+     */
+    public function setVrAuxilioTransportePago($vrAuxilioTransportePago): void
+    {
+        $this->vrAuxilioTransportePago = $vrAuxilioTransportePago;
     }
 
 

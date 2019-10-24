@@ -165,6 +165,11 @@ class RhuConcepto
     protected $configuracionConceptoAuxilioTransporteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuConfiguracion", mappedBy="conceptoVacacionRel")
+     */
+    protected $configuracionConceptoVacacionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuConfiguracion", mappedBy="conceptoFondoSolidaridadRel")
      */
     protected $configuracionConceptoFondoSolidaridadRel;
@@ -831,6 +836,22 @@ class RhuConcepto
     public function setGeneraIngresoBasePrestacionVacacion($generaIngresoBasePrestacionVacacion): void
     {
         $this->generaIngresoBasePrestacionVacacion = $generaIngresoBasePrestacionVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfiguracionConceptoVacacionRel()
+    {
+        return $this->configuracionConceptoVacacionRel;
+    }
+
+    /**
+     * @param mixed $configuracionConceptoVacacionRel
+     */
+    public function setConfiguracionConceptoVacacionRel($configuracionConceptoVacacionRel): void
+    {
+        $this->configuracionConceptoVacacionRel = $configuracionConceptoVacacionRel;
     }
 
 

@@ -34,6 +34,11 @@ class RhuConfiguracion
     private $codigoConceptoAuxilioTransporteFk;
 
     /**
+     * @ORM\Column(name="codigo_concepto_vacacion_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoVacacionFk;
+
+    /**
      * @ORM\Column(name="vr_auxilio_transporte", type="float", nullable=true)
      */
     private $vrAuxilioTransporte;
@@ -203,6 +208,12 @@ class RhuConfiguracion
      * @ORM\JoinColumn(name="codigo_concepto_auxilio_transporte_fk", referencedColumnName="codigo_concepto_pk")
      */
     protected $conceptoAuxilioTransporteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoAuxilioTransporteRel")
+     * @ORM\JoinColumn(name="codigo_concepto_vacacion_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoVacacionRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoFondoSolidaridadRel")
@@ -855,6 +866,39 @@ class RhuConfiguracion
     {
         $this->codigoConceptoAdicionalDevengadoPactadoFk = $codigoConceptoAdicionalDevengadoPactadoFk;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoVacacionFk()
+    {
+        return $this->codigoConceptoVacacionFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoVacacionFk
+     */
+    public function setCodigoConceptoVacacionFk($codigoConceptoVacacionFk): void
+    {
+        $this->codigoConceptoVacacionFk = $codigoConceptoVacacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoVacacionRel()
+    {
+        return $this->conceptoVacacionRel;
+    }
+
+    /**
+     * @param mixed $conceptoVacacionRel
+     */
+    public function setConceptoVacacionRel($conceptoVacacionRel): void
+    {
+        $this->conceptoVacacionRel = $conceptoVacacionRel;
+    }
+
 
 
 }

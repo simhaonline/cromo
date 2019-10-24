@@ -200,7 +200,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arVacaciones = $em->getRepository(RhuVacacion::class)->periodo($arProgramacionDetalle->getFechaDesdeContrato(), $arProgramacionDetalle->getFechaHastaContrato(), $arProgramacionDetalle->getCodigoEmpleadoFk());
         foreach ($arVacaciones as $arVacacion) {
             if ($arVacacion['diasDisfrutadosReales'] > 0) {
-                $arConcepto = $em->getRepository(RhuConcepto::class)->find('51');
+                $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion->getCodigoConceptoVacacionFk());
                 $arPagoDetalle = new RhuPagoDetalle();
                 $fechaDesde = $arProgramacionDetalle->getFechaDesdeContrato();
                 $fechaHasta = $arProgramacionDetalle->getFechaHasta();

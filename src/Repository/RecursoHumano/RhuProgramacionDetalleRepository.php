@@ -2,6 +2,7 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEgreso;
@@ -27,35 +28,23 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function eliminar($arrSeleccionados, $arProgramacion){
+    public function eliminar($arrSeleccionados){
         $em = $this->getEntityManager();
         foreach ($arrSeleccionados as $codigoProgramacionDetalle){
             $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($codigoProgramacionDetalle);
             if($arProgramacionDetalle){
+                if($arProgramacionDetalle->getCodigoSoporteContratoFk()) {
+                    $arAdicionales = $em->getRepository(RhuAdicional::class)->findBy(['codigoSoporteContratoFk' => $arProgramacionDetalle->getCodigoSoporteContratoFk()]);
+                    foreach ($arAdicionales as $arAdicional) {
+                        $em->remove($arAdicional);
+                    }
+                }
                 $em->remove($arProgramacionDetalle);
             }
         }
-        $cantidad = $em->getRepository(RhuProgramacion::class)->getCantidadRegistros($arProgramacion->getCodigoProgramacionPk());
-        $arProgramacion->setCantidad($cantidad);
-        $em->persist($arProgramacion);
         $em->flush();
     }
 
-    /**
-     * @param $arProgramacion RhuProgramacion
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function eliminarTodoDetalles($arProgramacion){
-        $this->_em->createQueryBuilder()
-        ->delete(RhuProgramacionDetalle::class,'pd')
-        ->where("pd.codigoProgramacionFk = {$arProgramacion->getCodigoProgramacionPk()}")->getQuery()->execute();
-        $arProgramacion->setEmpleadosGenerados(0);
-        $cantidad = $this->_em->getRepository(RhuProgramacion::class)->getCantidadRegistros($arProgramacion->getCodigoProgramacionPk());
-        $arProgramacion->setCantidad($cantidad);
-        $this->_em->persist($arProgramacion);
-        $this->_em->flush();
-    }
 
     public function contarDetalles($codigoProgramacion){
         $this->_em->createQueryBuilder()->from(RhuProgramacionDetalle::class,'pd')
@@ -104,6 +93,12 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.horasRecargoFestivoNocturno')
             ->addSelect('pd.codigoEmpleadoFk')
             ->leftJoin('pd.empleadoRel','e')
+            ->where("pd.codigoProgramacionFk = {$id}")->getQuery()->execute();
+    }
+
+    public function listaEliminarTodo($id){
+        return $this->_em->createQueryBuilder()->from(RhuProgramacionDetalle::class,'pd')
+            ->select('pd.codigoProgramacionDetallePk')
             ->where("pd.codigoProgramacionFk = {$id}")->getQuery()->execute();
     }
 

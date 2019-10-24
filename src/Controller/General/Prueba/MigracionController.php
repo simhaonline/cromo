@@ -121,7 +121,7 @@ class MigracionController extends Controller
                 //$this->turConcepto($conn);
                 //$this->turContrato($conn);
                 //$this->turContratoDetalle($conn);
-                //$this->turProgramacion($conn);
+                $this->turProgramacion($conn);
                 //$this->turPedido($conn);
                 //$this->turPedidoDetalle($conn);
                 Mensajes::success("Se migro la informacion con exito");
@@ -423,8 +423,7 @@ class MigracionController extends Controller
         }
     }
 
-    private function rhuContrato($conn)
-    {
+    private function rhuContrato($conn) {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                     codigo_contrato_pk,
@@ -445,6 +444,7 @@ class MigracionController extends Controller
                     cargo_descripcion,
                     vr_salario,
                     vr_salario_pago,
+                    vr_devengado_pactado,
                     estado_terminado,
                     rhu_contrato.indefinido,
                     comentarios_terminacion,
@@ -477,14 +477,14 @@ class MigracionController extends Controller
                   left join rhu_entidad_cesantia on rhu_entidad_cesantia.codigo_entidad_cesantia_pk=rhu_contrato.codigo_entidad_cesantia_fk
                   left join rhu_entidad_caja on rhu_entidad_caja.codigo_entidad_caja_pk=rhu_contrato.codigo_entidad_caja_fk
                   left join rhu_tipo_tiempo on rhu_contrato.codigo_tipo_tiempo_fk=rhu_tipo_tiempo.codigo_tipo_tiempo_pk");
-        foreach ($datos as $row) {
+        foreach($datos as $row) {
             $arContrato = new RhuContrato();
             $arContrato->setCodigoContratoPk($row['codigo_contrato_pk']);
             $arContrato->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
             $arContrato->setContratoTipoRel($em->getReference(RhuContratoTipo::class, $row['codigo_contrato_tipo_externo']));
             $arContrato->setContratoClaseRel($em->getReference(RhuContratoClase::class, $row['codigo_contrato_clase_externo']));
             $arContrato->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_externo']));
-            if ($row['codigo_motivo_terminacion_externo']) {
+            if($row['codigo_motivo_terminacion_externo']) {
                 $arContrato->setContratoMotivoRel($em->getReference(RhuContratoMotivo::class, $row['codigo_motivo_terminacion_externo']));
             }
             $arContrato->setFecha(date_create($row['fecha']));
@@ -503,6 +503,7 @@ class MigracionController extends Controller
             $arContrato->setCargoDescripcion(utf8_encode($row['cargo_descripcion']));
             $arContrato->setVrSalario($row['vr_salario']);
             $arContrato->setVrSalarioPago($row['vr_salario_pago']);
+            $arContrato->setVrDevengadoPactado($row['vr_devengado_pactado']);
             $arContrato->setComentarioTerminacion(utf8_encode($row['comentarios_terminacion']));
             $arContrato->setEstadoTerminado($row['estado_terminado']);
             $arContrato->setIndefinido($row['indefinido']);
@@ -1822,6 +1823,7 @@ class MigracionController extends Controller
             $arPedido->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
             $arPedido->setSectorRel($em->getReference(TurSector::class, $row['codigo_sector_externo']));
             $arPedido->setPedidoTipoRel($em->getReference(TurPedidoTipo::class, 'CON'));
+            $arPedido->setFecha(date_create($row['fecha']));
             $arPedido->setFechaGeneracion(date_create($row['fecha']));
             $arPedido->setNumero($row['numero']);
             $arPedido->setEstadoAutorizado($row['estado_autorizado']);
@@ -1855,6 +1857,7 @@ class MigracionController extends Controller
                     codigo_pedido_fk,
                     codigo_puesto_fk,
                     codigo_concepto_servicio_fk,
+                    codigo_servicio_detalle_fk,
                     codigo_periodo_fk,
                     tur_modalidad_servicio.codigo_externo as codigo_modalidad_servicio_externo,
                     dia_desde,
@@ -1906,6 +1909,9 @@ class MigracionController extends Controller
                 $arPedidoDetalle->setPeriodo("M");
             } else {
                 $arPedidoDetalle->setPeriodo("D");
+            }
+            if($row['codigo_servicio_detalle_fk']) {
+                $arPedidoDetalle->setContratoDetalleRel($em->getReference(TurContratoDetalle::class, $row['codigo_servicio_detalle_fk']));
             }
             $arPedidoDetalle->setAnio($row['anio']);
             $arPedidoDetalle->setMes($row['mes']);
@@ -1966,6 +1972,7 @@ class MigracionController extends Controller
                     codigo_programacion_detalle_pk,
                     codigo_recurso_fk,
                     codigo_puesto_fk,
+                    codigo_pedido_detalle_fk,
                     anio,
                     mes,
                     dia_1,
@@ -2011,6 +2018,7 @@ class MigracionController extends Controller
                 if ($row['codigo_recurso_fk']) {
                     $arProgramacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_recurso_fk']));
                 }
+                $arProgramacion->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
                 $arProgramacion->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
                 $arProgramacion->setAnio($row['anio']);
                 $arProgramacion->setMes($row['mes']);

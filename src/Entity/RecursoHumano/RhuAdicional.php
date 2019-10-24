@@ -112,6 +112,11 @@ class RhuAdicional
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="codigo_soporte_contrato_fk", type="integer", nullable=true)
+     */
+    private $codigoSoporteContratoFk = null;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="adicionalesConceptoRel")
      * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
      */
@@ -501,6 +506,22 @@ class RhuAdicional
     public function setAdicionalPeriodoRel($adicionalPeriodoRel): void
     {
         $this->adicionalPeriodoRel = $adicionalPeriodoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSoporteContratoFk()
+    {
+        return $this->codigoSoporteContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoSoporteContratoFk
+     */
+    public function setCodigoSoporteContratoFk($codigoSoporteContratoFk): void
+    {
+        $this->codigoSoporteContratoFk = $codigoSoporteContratoFk;
     }
 
 

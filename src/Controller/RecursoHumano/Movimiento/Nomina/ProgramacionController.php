@@ -196,7 +196,10 @@ class ProgramacionController extends AbstractController
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados, $arProgramacion);
+                $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados);
+                $cantidad = $em->getRepository(RhuProgramacion::class)->getCantidadRegistros($id);
+                $arProgramacion->setCantidad($cantidad);
+                $em->persist($arProgramacion);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
@@ -231,7 +234,15 @@ class ProgramacionController extends AbstractController
             }
             if ($form->get('btnEliminarTodos')->isClicked()) {
                 if (!$arProgramacion->getEstadoAutorizado()) {
-                    $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);
+                    $arrSeleccionados = [];
+                    $arrProgramacionesDetalles = $em->getRepository(RhuProgramacionDetalle::class)->listaEliminarTodo($id);
+                    foreach ($arrProgramacionesDetalles as $arrProgramacionDetalle) {
+                        $arrSeleccionados[] = $arrProgramacionDetalle['codigoProgramacionDetallePk'];
+                    }
+                    $em->getRepository(RhuProgramacionDetalle::class)->eliminar($arrSeleccionados);
+                    $cantidad = $em->getRepository(RhuProgramacion::class)->getCantidadRegistros($id);
+                    $arProgramacion->setCantidad($cantidad);
+                    $em->persist($arProgramacion);
                     return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
                 }
             }

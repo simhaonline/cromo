@@ -111,6 +111,11 @@ class TurPuesto
     private $estadoInactivo = false;
 
     /**
+     * @ORM\Column(name="codigo_salario_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoSalarioFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurCliente", inversedBy="PuestosClienteRel")
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
@@ -139,6 +144,12 @@ class TurPuesto
      * @ORM\JoinColumn(name="codigo_puesto_tipo_fk", referencedColumnName="codigo_puesto_tipo_pk")
      */
     protected $puestoTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurSalario", inversedBy="puestosSalariosRel")
+     * @ORM\JoinColumn(name="codigo_salario_fk", referencedColumnName="codigo_salario_pk")
+     */
+    protected $salarioRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TurPedidoDetalle", mappedBy="puestoRel")
@@ -563,6 +574,38 @@ class TurPuesto
     public function setCostosServiciosPuestoRel($costosServiciosPuestoRel): void
     {
         $this->costosServiciosPuestoRel = $costosServiciosPuestoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSalarioFk()
+    {
+        return $this->codigoSalarioFk;
+    }
+
+    /**
+     * @param mixed $codigoSalarioFk
+     */
+    public function setCodigoSalarioFk($codigoSalarioFk): void
+    {
+        $this->codigoSalarioFk = $codigoSalarioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalarioRel()
+    {
+        return $this->salarioRel;
+    }
+
+    /**
+     * @param mixed $salarioRel
+     */
+    public function setSalarioRel($salarioRel): void
+    {
+        $this->salarioRel = $salarioRel;
     }
 
 

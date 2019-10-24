@@ -44,6 +44,11 @@ class RhuConfiguracion
     private $codigoConceptoFondoSolidaridadPensionFk;
 
     /**
+     * @ORM\Column(name="codigo_concepto_adicional_devengado_pactado_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoAdicionalDevengadoPactadoFk;
+
+    /**
      * @ORM\Column(name="auxilio_transporte_no_prestacional", type="boolean", nullable=true)
      */
     private $auxilioTransporteNoPrestacional = false;
@@ -833,6 +838,22 @@ class RhuConfiguracion
     public function setVacacionesRecargoNocturnoUltimoAnioEspecial($vacacionesRecargoNocturnoUltimoAnioEspecial): void
     {
         $this->vacacionesRecargoNocturnoUltimoAnioEspecial = $vacacionesRecargoNocturnoUltimoAnioEspecial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoAdicionalDevengadoPactadoFk()
+    {
+        return $this->codigoConceptoAdicionalDevengadoPactadoFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoAdicionalDevengadoPactadoFk
+     */
+    public function setCodigoConceptoAdicionalDevengadoPactadoFk($codigoConceptoAdicionalDevengadoPactadoFk): void
+    {
+        $this->codigoConceptoAdicionalDevengadoPactadoFk = $codigoConceptoAdicionalDevengadoPactadoFk;
     }
 
 

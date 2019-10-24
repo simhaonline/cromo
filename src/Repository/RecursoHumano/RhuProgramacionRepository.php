@@ -6,6 +6,7 @@ use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
+use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoCuenta;
 use App\Entity\RecursoHumano\RhuConceptoHora;
@@ -560,6 +561,11 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         set_time_limit(0);
         ini_set("memory_limit", -1);
+        $arrConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
+        $arConceptoDevengadoPactado = null;
+        if($arrConfiguracion['codigoConceptoAdicionalDevengadoPactadoFk']) {
+            $arConceptoDevengadoPactado = $em->getRepository(RhuConcepto::class)->find($arrConfiguracion['codigoConceptoAdicionalDevengadoPactadoFk']);
+        }
 
         $arSoporte = $em->getRepository(TurSoporte::class)->find($codigoSoporte);
         if ($arSoporte->getEstadoAprobado()) {
@@ -568,7 +574,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arrInconsistencias = array();
             $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->cargarNomina($codigoSoporte);
             foreach ($arSoportesContratos as $arSoporteContrato) {
-
+                /** @var $arSoporteContrato TurSoporteContrato */
                 $salario = $arSoporteContrato['vrSalario'];
                 /*if ($arSoportePago->getVrSalarioCompensacion() > 0) {
                     $salario = $arSoportePago->getVrSalarioCompensacion();
@@ -679,6 +685,19 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     $arProgramacionDetalle->setVrAjusteComplementario($arSoportePago->getVrComplementarioCompensacion());
                 }*/
                 $em->persist($arProgramacionDetalle);
+                if($arSoporteContrato['vrAdicionalDevengadoPactado'] > 0) {
+                    if($arConceptoDevengadoPactado) {
+                        $arAdicional = new RhuAdicional();
+                        $arAdicional->setFecha($arProgramacion->getFechaDesde());
+                        $arAdicional->setAplicaNomina(1);
+                        $arAdicional->setConceptoRel($arConceptoDevengadoPactado);
+                        $arAdicional->setVrValor($arSoporteContrato['vrAdicionalDevengadoPactado']);
+                        $arAdicional->setEmpleadoRel($em->getReference(RhuEmpleado::class, $arSoporteContrato['codigoEmpleadoFk']));
+                        $arAdicional->setContratoRel($em->getReference(RhuContrato::class, $arSoporteContrato['codigoContratoFk']));
+                        $arAdicional->setCodigoSoporteContratoFk($arSoporteContrato['codigoSoporteContratoPk']);
+                        $em->persist($arAdicional);
+                    }
+                }
             }
 
             /*$arProgramacionPago->setInconsistencias(0);

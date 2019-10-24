@@ -61,6 +61,7 @@ use App\Entity\Turno\TurSecuencia;
 use App\Entity\Turno\TurTurno;
 use App\Utilidades\Mensajes;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -76,6 +77,8 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
+            ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
+            ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Iniciar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -83,8 +86,8 @@ class MigracionController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $servername = "localhost";
             $database = "bdinsepltdav1";
-            $username = "root";
-            $password = "70143086";
+            $username = $form->get('usuario')->getData();
+            $password = $form->get('clave')->getData();
             // Create connection
             $conn = mysqli_connect($servername, $username, $password, $database);
             // Check connection
@@ -121,9 +124,9 @@ class MigracionController extends Controller
                 //$this->turConcepto($conn);
                 //$this->turContrato($conn);
                 //$this->turContratoDetalle($conn);
-                $this->turProgramacion($conn);
                 //$this->turPedido($conn);
                 //$this->turPedidoDetalle($conn);
+                $this->turProgramacion($conn);
                 Mensajes::success("Se migro la informacion con exito");
 
             }

@@ -2053,7 +2053,7 @@ class MigracionController extends Controller
                 $arProgramacion->setDia26($row['dia_26']);
                 $arProgramacion->setDia27($row['dia_27']);
                 $arProgramacion->setDia28($row['dia_28']);
-                $arProgramacion->setDia28($row['dia_29']);
+                $arProgramacion->setDia29($row['dia_29']);
                 $arProgramacion->setDia30($row['dia_30']);
                 $arProgramacion->setDia31($row['dia_31']);
                 $arProgramacion->setHoras($row['horas']);

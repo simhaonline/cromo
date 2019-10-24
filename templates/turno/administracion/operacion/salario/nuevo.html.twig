@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Nombre</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.nombre,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.nombre) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Código de salario</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoSalarioPk,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.codigoSalarioPk) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Salario</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrSalario,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.vrSalario) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Valor hora diurna</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrHoraDiurna,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.vrHoraDiurna) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Valor hora nocturna</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrHoraNocturna, { 'attr': {'class' : 'form-control'} }) }}
+                    <div style="color:red;">{{ form_errors(form.vrHoraNocturna) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Valor turno día</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrTurnoDia,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.vrTurnoDia) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Valor turno noche</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrTurnoNoche, { 'attr': {'class' : 'form-control'} }) }}
+                    <div style="color:red;">{{ form_errors(form.vrTurnoNoche) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('turno_administracion_operacion_salario_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

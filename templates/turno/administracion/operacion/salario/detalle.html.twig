@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_administracion_operacion_salario_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arSalario.codigoSalarioPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arSalario.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">SALARIO:</td>
+            <td class="td-in-well">{{ arSalario.vrSalario  | number_format(0, '.', ',') }}</td>
+            <td class="titulo">HORA DIURNA:</td>
+            <td class="td-in-well">{{ arSalario.vrHoraDiurna  | number_format(0, '.', ',')  }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">HORA NOCTURNO:</td>
+            <td class="td-in-well">{{ arSalario.vrHoraNocturna  }}</td>
+            <td class="titulo">TURNO DIA:</td>
+            <td class="td-in-well">{{ arSalario.vrTurnoDia  }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">TURNO NOCHE:</td>
+            <td class="td-in-well">{{ arSalario.vrTurnoNoche}}</td>
+
+        </tr>
+  </tbody>
+    </table>
+{% endblock %}

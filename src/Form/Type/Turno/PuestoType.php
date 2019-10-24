@@ -8,6 +8,7 @@ use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Turno\TurProgramador;
 use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurPuestoTipo;
+use App\Entity\Turno\TurSalario;
 use Doctrine\ORM\EntityRepository;
 
 use Proxies\__CG__\App\Entity\General\GenCiudad;
@@ -56,6 +57,14 @@ class PuestoType  extends AbstractType
                 'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('pt')
                         ->orderBy('pt.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+            ])
+            ->add('salarioRel',EntityType::class,[
+                'class' => TurSalario::class,
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('s')
+                        ->orderBy('s.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
             ])

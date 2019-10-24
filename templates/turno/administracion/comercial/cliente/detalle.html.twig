@@ -81,6 +81,7 @@
                             <th>DIRRECCIÓN</th>
                             <th>CIUDAD</th>
                             <th title="CENTRO COSTRO">C_C</th>
+                            <th>SALARIO</th>
                             <th></th>
                             <th></th>
                             <th class="text-center" title="SELECCIONAR TODOS LOS PUESTOS"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
@@ -95,6 +96,7 @@
                                     <td>{{ arPuesto.direccion }}</td>
                                     <td>{{ arPuesto.ciudadNombre }}</td>
                                     <td>{{ arPuesto.codigoCentroCostoFk }}</td>
+                                    <td>{{ arPuesto.salario }}</td>
                                     <td style="text-align: center;">
                                         <a  href="javascript:abrirVentana3('{{ path('turno_administracion_comercial_puesto_nuevo', {'id': arPuesto.codigoPuestoPk, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Editar puesto', 600, 1200) "><i class="fa fa-edit" style="color: black;font-size: large;"></i>
                                         </a>

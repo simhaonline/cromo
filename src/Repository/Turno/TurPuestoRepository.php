@@ -28,8 +28,10 @@ class TurPuestoRepository extends ServiceEntityRepository
             ->addSelect('p.comunicacion')
             ->addSelect('c.nombre as ciudadNombre')
             ->addSelect('p.codigoCentroCostoFk')
+            ->addSelect('s.nombre as salario')
             ->leftJoin('p.programadorRel', 'pro')
             ->leftJoin('p.ciudadRel', 'c')
+            ->leftJoin('p.salarioRel', 's')
             ->where('p.codigoClienteFk = ' . $id);
         $arPuestos = $queryBuilder->getQuery()->getResult();
         return $arPuestos;

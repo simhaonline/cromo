@@ -1,0 +1,44 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    <section class="content-header">
+        <h1>
+            Recurso humano
+            <small>Acreditacion: acreditar</small>
+        </h1>
+    </section>
+    <section class="content">
+        {{ form_start(form, { 'attr': {'class': 'form-horizontal','novalidate': 'novalidate'} }) }}
+        <div class="panel panel-default">
+            <div class="panel-heading">Informacion general</div>
+            <div class="panel-body">
+                <div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-3 control-label">Numero:</label>
+                        <div class="col-sm-9">
+                            {{ form_widget(form.numero, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-3 control-label">Fecha Validaci&oacute;n:</label>
+                        <div class="col-sm-9">
+                            {{ form_widget(form.fecha, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-3 control-label">Detalle:</label>
+                        <div class="col-sm-9">
+                            {{ form_widget(form.detalle, { 'attr': {'class': 'form-control','rows':'5'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+            {{ form_widget(form.BtnEliminar, { 'attr': {'class': 'btn btn-sm btn-danger'} }) }}
+            {{ form_widget(form.BtnGuardar, { 'attr': {'class': 'btn btn-sm btn-primary'} }) }}
+        </div>
+        {{ form_end(form) }}
+        <br/><br/><br/><br/>
+    </section>
+{% endblock %}

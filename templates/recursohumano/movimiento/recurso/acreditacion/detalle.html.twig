@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-sm btn-default"
                href="{{ path('recursohumano_movimiento_recurso_acreditacion_lista') }}">Volver</a>
         </div>
-        <div class="btn-group">
-            {% include 'estructura/botonera.html.twig' %}
+        <div class="btn-group"  style=" margin-right: 5px">
+            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_recurso_acreditacion_detalle_validar', {'id':arAcreditacion.codigoAcreditacionPk}) }}', 'Validar', 600, 900)" >Validar</a>
+            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_recurso_acreditacion_detalle_acreditar', {'id':arAcreditacion.codigoAcreditacionPk}) }}', 'Acreditar', 600, 900)" >Acreditar</a>
         </div>
     </div>
     <br/><br/>
@@ -41,8 +41,6 @@
             <td class="td-in-well" colspan="5">{{ arAcreditacion.comentarios }}</td>
         </tr>
     </table>
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
     <br>
     <br>
 {% endblock %}

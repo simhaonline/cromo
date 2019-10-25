@@ -50,6 +50,8 @@ use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurContratoTipo;
+use App\Entity\Turno\TurFactura;
+use App\Entity\Turno\TurFacturaDetalle;
 use App\Entity\Turno\TurModalidad;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
@@ -126,7 +128,9 @@ class MigracionController extends Controller
                 //$this->turContratoDetalle($conn);
                 //$this->turPedido($conn);
                 //$this->turPedidoDetalle($conn);
-                $this->turProgramacion($conn);
+                //$this->turFactura($conn);
+                //$this->turProgramacion($conn);
+//                $this->turFacturaDetalle($conn);
                 Mensajes::success("Se migro la informacion con exito");
 
             }
@@ -426,7 +430,8 @@ class MigracionController extends Controller
         }
     }
 
-    private function rhuContrato($conn) {
+    private function rhuContrato($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
                     codigo_contrato_pk,
@@ -480,14 +485,14 @@ class MigracionController extends Controller
                   left join rhu_entidad_cesantia on rhu_entidad_cesantia.codigo_entidad_cesantia_pk=rhu_contrato.codigo_entidad_cesantia_fk
                   left join rhu_entidad_caja on rhu_entidad_caja.codigo_entidad_caja_pk=rhu_contrato.codigo_entidad_caja_fk
                   left join rhu_tipo_tiempo on rhu_contrato.codigo_tipo_tiempo_fk=rhu_tipo_tiempo.codigo_tipo_tiempo_pk");
-        foreach($datos as $row) {
+        foreach ($datos as $row) {
             $arContrato = new RhuContrato();
             $arContrato->setCodigoContratoPk($row['codigo_contrato_pk']);
             $arContrato->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
             $arContrato->setContratoTipoRel($em->getReference(RhuContratoTipo::class, $row['codigo_contrato_tipo_externo']));
             $arContrato->setContratoClaseRel($em->getReference(RhuContratoClase::class, $row['codigo_contrato_clase_externo']));
             $arContrato->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_externo']));
-            if($row['codigo_motivo_terminacion_externo']) {
+            if ($row['codigo_motivo_terminacion_externo']) {
                 $arContrato->setContratoMotivoRel($em->getReference(RhuContratoMotivo::class, $row['codigo_motivo_terminacion_externo']));
             }
             $arContrato->setFecha(date_create($row['fecha']));
@@ -1913,7 +1918,7 @@ class MigracionController extends Controller
             } else {
                 $arPedidoDetalle->setPeriodo("D");
             }
-            if($row['codigo_servicio_detalle_fk']) {
+            if ($row['codigo_servicio_detalle_fk']) {
                 $arPedidoDetalle->setContratoDetalleRel($em->getReference(TurContratoDetalle::class, $row['codigo_servicio_detalle_fk']));
             }
             $arPedidoDetalle->setAnio($row['anio']);
@@ -1954,6 +1959,90 @@ class MigracionController extends Controller
             $arPedidoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
             $em->persist($arPedidoDetalle);
             $metadata = $em->getClassMetaData(get_class($arPedidoDetalle));
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        }
+        $em->flush();
+    }
+
+    private function TurFactura($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $datos = $conn->query("SELECT
+                codigo_factura_pk,
+                codigo_cliente_fk,  
+                numero,              
+                fecha,
+                fecha_vence,
+                soporte,
+                plazo_pago,
+                vr_total,
+                vr_total_neto,
+                vr_subtotal, 
+                vr_iva,
+                vr_base_aiu,
+                vr_base_retencion_fuente,
+                vr_retencion_fuente,
+                vr_retencion_iva,
+                vr_retencion_renta,
+                vr_total,
+                usuario,
+                comentarios,
+                estado_autorizado
+                 FROM tur_factura");
+        foreach ($datos as $row) {
+            $arFactura = new TurFactura();
+            $arFactura->setCodigoFacturaPk($row['codigo_factura_pk']);
+            $arFactura->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+//            $arFactura->setSectorRel($em->getReference(TurSector::class, $row['codigo_sector_externo']));
+//            $arFactura->setPedidoTipoRel($em->getReference(TurPedidoTipo::class, 'CON'));
+            $arFactura->setFecha(date_create($row['fecha']));
+            $arFactura->setFechaVence(date_create($row['fecha_vence']));
+            $arFactura->setPlazoPago($row['plazo_pago']);
+            $arFactura->setNumero($row['numero']);
+            $arFactura->setVrIva($row['vr_iva']);
+            $arFactura->setVrTotal($row['vr_total']);
+            $arFactura->setVrNeto($row['vr_total_neto']);
+            $arFactura->setVrSubtotal($row['vr_subtotal']);
+            $arFactura->setVrRetencionFuente($row['vr_retencion_fuente']);
+            $arFactura->setVrRetencionIva($row['vr_retencion_iva']);
+            $arFactura->setUsuario($row['usuario']);
+            $arFactura->setEstadoAutorizado($row['estado_autorizado']);
+            $arFactura->setComentarios(utf8_encode($row['comentarios']));
+            $em->persist($arFactura);
+            $metadata = $em->getClassMetaData(get_class($arFactura));
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        }
+        $em->flush();
+    }
+
+    private function turFacturaDetalle($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $datos = $conn->query("SELECT
+                    codigo_factura_detalle_pk,
+                    codigo_factura_fk,
+                    cantidad,
+                    por_iva,
+                    iva,
+                    vr_precio,
+                    subtotal,
+                    total
+                 FROM tur_factura_detalle");
+        foreach ($datos as $row) {
+            $arFacturaDetalle = new TurFacturaDetalle();
+            $arFacturaDetalle->setCodigoFacturaDetallePk($row['codigo_factura_detalle_pk']);
+            $arFacturaDetalle->setFacturaRel($em->getReference(TurFactura::class, $row['codigo_factura_fk']));
+            $arFacturaDetalle->setCantidad($row['cantidad']);
+            $arFacturaDetalle->setVrPrecio($row['vr_precio']);
+            $arFacturaDetalle->setVrSubtotal($row['subtotal']);
+            $arFacturaDetalle->setPorcentajeIva($row['por_iva']);
+            $arFacturaDetalle->setVrIva($row['iva']);
+            $arFacturaDetalle->setVrTotal($row['total']);
+            $arFacturaDetalle->setVrNeto($row['total']);
+            $em->persist($arFacturaDetalle);
+            $metadata = $em->getClassMetaData(get_class($arFacturaDetalle));
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         }

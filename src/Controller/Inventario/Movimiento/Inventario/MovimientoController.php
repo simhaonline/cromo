@@ -628,7 +628,7 @@ class MovimientoController extends AbstractController
                 ];
             }
             if ($form->get('btnGuardar')->isClicked()) {
-                $arrImportacionDetalles = $request->request->get('itemCantidad');
+                $arrImportacionDetalles = $request->query->get('itemCantidad');
                 if ($arrImportacionDetalles) {
                     if (count($arrImportacionDetalles) > 0) {
                         foreach ($arrImportacionDetalles as $codigoImportacionDetalle => $cantidad) {

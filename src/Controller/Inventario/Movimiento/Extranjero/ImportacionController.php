@@ -239,11 +239,16 @@ class ImportacionController extends AbstractController
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvBucarItemCodigo', $form->get('txtCodigoItem')->getData());
-                $session->set('filtroInvBuscarItemNombre', $form->get('txtNombreItem')->getData());
-                $session->set('filtroInvBuscarItemReferencia', $form->get('txtReferenciaItem')->getData());
+                $raw['filtros'] = [
+                    'codigoItem' => $form->get('txtCodigoItem')->getData(),
+                    'nombreItem' => $form->get('txtNombreItem')->getData(),
+                    'referenciaItem' => $form->get('txtReferenciaItem')->getData(),
+                ];
             }
             if ($form->get('btnGuardarCerrar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -284,7 +289,7 @@ class ImportacionController extends AbstractController
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista(), $request->query->getInt('page', 1), 50);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('inventario/movimiento/extranjero/importacion/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems

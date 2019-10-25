@@ -129,6 +129,9 @@ class MovimientoController extends AbstractController
             case 'CP':
                 $form = $this->createForm(MovimientoCompraType::class, $arMovimiento);
                 break;
+            case 'NC':
+                $form = $this->createForm(MovimientoCompraType::class, $arMovimiento);
+                break;
         }
 
         $form->handleRequest($request);
@@ -161,6 +164,13 @@ class MovimientoController extends AbstractController
                 ]);
                 break;
             case 'CP':
+                return $this->render('tesoreria/movimiento/movimiento/nuevoCompra.html.twig', [
+                    'arMovimiento' => $arMovimiento,
+                    'clase' => $clase,
+                    'form' => $form->createView()
+                ]);
+                break;
+            case 'NC':
                 return $this->render('tesoreria/movimiento/movimiento/nuevoCompra.html.twig', [
                     'arMovimiento' => $arMovimiento,
                     'clase' => $clase,

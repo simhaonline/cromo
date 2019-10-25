@@ -24,6 +24,13 @@ class TesMovimientoClase extends Fixture
             $arMovimientoClase->setNombre('COMPRA');
             $manager->persist($arMovimientoClase);
         }
+        $arMovimientoClase = $manager->getRepository(\App\Entity\Tesoreria\TesMovimientoClase::class)->find('NC');
+        if(!$arMovimientoClase){
+            $arMovimientoClase = new \App\Entity\Tesoreria\TesMovimientoClase();
+            $arMovimientoClase->setCodigoMovimientoClasePk('NC');
+            $arMovimientoClase->setNombre('NOTA CREDITO');
+            $manager->persist($arMovimientoClase);
+        }
         $manager->flush();
     }
 }

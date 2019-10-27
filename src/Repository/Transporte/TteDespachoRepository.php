@@ -1939,5 +1939,37 @@ class TteDespachoRepository extends ServiceEntityRepository
 
     }
 
+    public function tableroResumen($raw)
+    {
+        $em = $this->getEntityManager();
+        $filtros = $raw['filtros'] ?? null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+
+        if ($filtros) {
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+        }
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
+            ->select('d.codigoOperacionFk')
+            ->addSelect('o.nombre as operacionNombre')
+            ->addSelect('COUNT(d.codigoDespachoPk) as registros')
+            ->addSelect('SUM(d.unidades) as unidades')
+            ->addSelect('SUM(d.vrFlete) as vrFlete')
+            ->addSelect('SUM(d.vrManejo) as vrManejo')
+            ->addSelect('SUM(d.pesoReal) as pesoReal')
+            ->addSelect('SUM(d.pesoVolumen) as pesoVolumen')
+            ->leftJoin('d.operacionRel', 'o')
+            ->groupBy('d.codigoOperacionFk');
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("d.fechaSalida >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("d.fechaSalida <= '{$fechaHasta} 23:59:59'");
+        }
+        $arrGuias = $queryBuilder->getQuery()->getResult();
+        return $arrGuias;
+    }
+
 }
 

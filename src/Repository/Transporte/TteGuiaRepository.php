@@ -3691,5 +3691,37 @@ class TteGuiaRepository extends ServiceEntityRepository
         $arrDevolver['pesoFacturado'] = $pesoFacturado;
         return $arrDevolver;
     }
+
+    public function tableroResumen($raw)
+    {
+        $em = $this->getEntityManager();
+        $filtros = $raw['filtros'] ?? null;
+        $fechaIngresoDesde = null;
+        $fechaIngresoHasta = null;
+
+        if ($filtros) {
+            $fechaIngresoDesde = $filtros['fechaIngresoDesde'] ?? null;
+            $fechaIngresoHasta = $filtros['fechaIngresoHasta'] ?? null;
+        }
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuia::class, 'g')
+            ->select('g.codigoOperacionIngresoFk')
+            ->addSelect('oi.nombre as operacionIngresoNombre')
+            ->addSelect('COUNT(g.codigoGuiaPk) as registros')
+            ->addSelect('SUM(g.unidades) as unidades')
+            ->addSelect('SUM(g.pesoReal) as pesoReal')
+            ->addSelect('SUM(g.pesoVolumen) as pesoVolumen')
+            ->addSelect('SUM(g.vrFlete) as vrFlete')
+            ->addSelect('SUM(g.vrManejo) as vrManejo')
+            ->leftJoin('g.operacionIngresoRel', 'oi')
+            ->groupBy('g.codigoOperacionIngresoFk');
+        if ($fechaIngresoDesde) {
+            $queryBuilder->andWhere("g.fechaIngreso >= '{$fechaIngresoDesde} 00:00:00'");
+        }
+        if ($fechaIngresoHasta) {
+            $queryBuilder->andWhere("g.fechaIngreso <= '{$fechaIngresoHasta} 23:59:59'");
+        }
+        $arrGuias = $queryBuilder->getQuery()->getResult();
+        return $arrGuias;
+    }
 }
 

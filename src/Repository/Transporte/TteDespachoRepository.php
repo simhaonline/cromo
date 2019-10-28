@@ -1954,6 +1954,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->select('d.codigoOperacionFk')
             ->addSelect('o.nombre as operacionNombre')
             ->addSelect('COUNT(d.codigoDespachoPk) as registros')
+            ->addSelect('SUM(d.cantidad) as guias')
             ->addSelect('SUM(d.unidades) as unidades')
             ->addSelect('SUM(d.vrFlete) as vrFlete')
             ->addSelect('SUM(d.vrManejo) as vrManejo')

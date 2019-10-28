@@ -32,7 +32,7 @@ class RhuAporteEntidad
     private $tipo;
 
     /**
-     * @ORM\Column(name="codigo_entidad", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_entidad_fk", type="integer", nullable=true)
      */
     private $codigoEntidadFk;
 

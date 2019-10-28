@@ -657,9 +657,6 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                 }*/
                 $em->persist($arAporteSoporte);
             }
-            $arAporteContratoActualizar->setCodigoEntidadSaludPertenece($arAporteContrato['entidadSaludCodigo']);
-            $arAporteContratoActualizar->setCodigoEntidadPensionPertenece($arAporteContrato['entidadPensionCodigo']);
-            $arAporteContratoActualizar->setCodigoEntidadCajaPertenece($arAporteContrato['entidadCajaCodigo']);
             $arAporteContratoActualizar->setVrSalario($salario);
             $arAporteContratoActualizar->setDias($diasCotizar);
             $arAporteContratoActualizar->setIbc($ibc);

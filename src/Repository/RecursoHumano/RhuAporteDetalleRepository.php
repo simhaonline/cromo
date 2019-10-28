@@ -108,6 +108,7 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
                 $arAporteSoporte = $em->getRepository(RhuAporteSoporte::class)->find($arAporteSoporteConsulta['codigoAporteSoportePk']);
                 $arAporteDetalle = new RhuAporteDetalle();
                 $arAporteDetalle->setAporteRel($arAporte);
+                $arAporteDetalle->setAporteContratoRel($arAporteContrato);
                 $arAporteDetalle->setSucursalRel($arAporte->getSucursalRel());
                 $arAporteDetalle->setEmpleadoRel($arEmpleado);
                 $arAporteDetalle->setContratoRel($arContrato);
@@ -208,13 +209,11 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
                 }
                 $arAporteDetalle->setSalarioIntegral($arAporteContrato->getSalarioIntegral());
                 $arAporteDetalle->setSalarioBasico($salario);
-                $arAporteDetalle->setCodigoEntidadPensionPertenece($arAporteContrato->getCodigoEntidadPensionPertenece());
-                $arAporteDetalle->setCodigoEntidadSaludPertenece($arAporteContrato->getCodigoEntidadSaludPertenece());
-                $arAporteDetalle->setCodigoEntidadCajaPertenece($arAporteContrato->getCodigoEntidadCajaPertenece());
-                $arAporteDetalle->setEntidadPensionRel($arContrato->getEntidadPensionRel());
-                $arAporteDetalle->setEntidadSaludRel($arContrato->getEntidadSaludRel());
-                $arAporteDetalle->setEntidadCajaRel($arContrato->getEntidadCajaRel());
-                $arAporteDetalle->setEntidadRiesgosRel($arEntidadRiesgos);
+
+                $arAporteDetalle->setEntidadPensionRel($arAporteContrato->getEntidadPensionRel());
+                $arAporteDetalle->setEntidadSaludRel($arAporteContrato->getEntidadSaludRel());
+                $arAporteDetalle->setEntidadCajaRel($arAporteContrato->getEntidadCajaRel());
+                $arAporteDetalle->setEntidadRiesgosRel($arAporteContrato->getEntidadRiesgosRel());
 
                 $diasPension = $dias;
                 $diasRiesgos = $dias;
@@ -324,8 +323,8 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
                 //1 Dependiente pensionado por vejez activo (SI no es pensionado es = a 00)
                 //3 Cotizante no obligado a cotización a pensiones por edad.
                 if ($arAporteContrato->getContratoRel()->getCodigoSubtipoCotizanteFk() == 1 || $arAporteContrato->getContratoRel()->getCodigoSubtipoCotizanteFk() == 3) {
-                    $arAporteDetalle->setEntidadPensionRel(NULL);
-                    $arAporteDetalle->setCodigoEntidadPensionPertenece(NULL);
+                    //$arAporteDetalle->setEntidadPensionRel(NULL);
+                    //$arAporteDetalle->setCodigoEntidadPensionPertenece(NULL);
                     $diasPension = 0;
                     $ibcPension = 0;
                     $tarifaPension = 0;

@@ -25,12 +25,20 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporteContrato::class, 'ac')
             ->select('ac.codigoAporteContratoPk')
+            ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
             ->addSelect('ac.codigoContratoFk')
             ->addSelect('ac.vrSalario')
             ->addSelect('ac.dias')
             ->addSelect('ac.ibc')
-            ->addSelect('e.nombreCorto as empleadoNombreCorto')
-            ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
+            ->addSelect('ac.vrPensionCotizacion')
+            ->addSelect('ac.vrSaludCotizacion')
+            ->addSelect('ac.vrCaja')
+            ->addSelect('ac.vrRiesgos')
+            ->addSelect('ac.vrPensionEmpleado')
+            ->addSelect('ac.vrSaludEmpleado')
+            ->addSelect('ac.vrPension')
+            ->addSelect('ac.vrSalud')
             ->leftJoin('ac.empleadoRel', 'e')
         ->where('ac.codigoAporteFk = ' . $codigoAporte);
         return $queryBuilder;
@@ -94,6 +102,10 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
                         $arAporteContrato->setContratoRel($arContratoProceso);
                         $arAporteContrato->setEmpleadoRel($arContratoProceso->getEmpleadoRel());
                         $arAporteContrato->setSucursalRel($arAporte->getSucursalRel());
+                        $arAporteContrato->setEntidadPensionRel($arContratoProceso->getEntidadPensionRel());
+                        $arAporteContrato->setEntidadSaludRel($arContratoProceso->getEntidadSaludRel());
+                        $arAporteContrato->setEntidadCajaRel($arContratoProceso->getEntidadCajaRel());
+                        $arAporteContrato->setEntidadRiesgosRel($arEntidadRiesgos);
                         $em->persist($arAporteContrato);
                     }
                 }

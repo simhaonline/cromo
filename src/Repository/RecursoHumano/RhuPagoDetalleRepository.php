@@ -155,6 +155,8 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.vrIngresoBaseCotizacion')
             ->addSelect('pd.vrIngresoBasePrestacion')
             ->addSelect('pd.codigoCreditoFk')
+            ->addSelect('c.pension as pen')
+            ->addSelect('c.salud as sal')
             ->leftJoin('pd.conceptoRel', 'c')
             ->leftJoin('pd.pagoRel', 'p')
             ->leftJoin('p.empleadoRel', 'e')
@@ -520,5 +522,53 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
 
        return $queryBuilder->getQuery()->getArrayResult();
 
+    }
+
+    public function descuentoSalud($codigoContrato, $fechaDesde, $fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('SUM(pd.vrPago) AS valor')
+            ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.pagoRel', 'p')
+        ->where("p.codigoContratoFk = {$codigoContrato}")
+        ->andWhere("c.salud = 1")
+        ->andWhere("p.fechaDesdeContrato >='{$fechaDesde}'")
+        ->andWhere("p.fechaDesdeContrato <='{$fechaHasta}'");
+
+        $arrPagoDetalle = $queryBuilder->getQuery()->getSingleResult();
+        if($arrPagoDetalle) {
+            if($arrPagoDetalle['valor']) {
+                return $arrPagoDetalle['valor'];
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public function descuentoPension($codigoContrato, $fechaDesde, $fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('SUM(pd.vrPago) AS valor')
+            ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.pagoRel', 'p')
+            ->where("p.codigoContratoFk = {$codigoContrato}")
+            ->andWhere("c.pension = 1")
+            ->andWhere("p.fechaDesdeContrato >='{$fechaDesde}'")
+            ->andWhere("p.fechaDesdeContrato <='{$fechaHasta}'");
+
+        $arrPagoDetalle = $queryBuilder->getQuery()->getSingleResult();
+        if($arrPagoDetalle) {
+            if($arrPagoDetalle['valor']) {
+                return $arrPagoDetalle['valor'];
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 }

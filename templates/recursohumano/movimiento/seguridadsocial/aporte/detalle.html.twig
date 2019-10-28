@@ -22,8 +22,8 @@
         <tr>
             <td class="titulo">ID:</td>
             <td class="td-in-well">{{ arAporte.codigoAportePk }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">NUMERO:</td>
+            <td class="td-in-well">{{ arAporte.numero }}</td>
             <td class="titulo">EMPLEADOS:</td>
             <td class="numero">{{ arAporte.cantidadEmpleados }}</td>
         </tr>
@@ -71,6 +71,10 @@
                             <th>D</th>
                             <th>SALARIO</th>
                             <th>IBC</th>
+                            <th>PENSION</th>
+                            <th>SALUD</th>
+                            <th>CAJA</th>
+                            <th>RIESGOS</th>
                             <th></th>
                             <th class="text-center" title="seleccionar todo"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
                         </tr>
@@ -85,6 +89,10 @@
                                 <td>{{ arAporteContrato.dias }}</td>
                                 <td class="numero">{{ arAporteContrato.vrSalario  | number_format(0, '.', ',')}}</td>
                                 <td class="numero">{{ arAporteContrato.ibc  | number_format(0, '.', ',')}}</td>
+                                <td class="numero">{{ arAporteContrato.vrPensionCotizacion  | number_format(0, '.', ',')}}</td>
+                                <td class="numero">{{ arAporteContrato.vrSaludCotizacion  | number_format(0, '.', ',')}}</td>
+                                <td class="numero">{{ arAporteContrato.vrCaja  | number_format(0, '.', ',')}}</td>
+                                <td class="numero">{{ arAporteContrato.vrRiesgos  | number_format(0, '.', ',')}}</td>
                                 <td style="text-align: center;"><a
                                             href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seguridadsocial_soporte_aporte_detalle',{ 'id': arAporteContrato.codigoAporteContratoPk }) }}','resumen',600,1000)"><i
                                                 class="fa fa-table" style="color: black;font-size: large;"></i></a></td>

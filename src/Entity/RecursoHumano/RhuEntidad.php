@@ -133,6 +133,26 @@ class RhuEntidad
     protected $aportesDetallesEntidadRiesgosRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="entidadPensionRel")
+     */
+    protected $aportesContratosEntidadPensionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="entidadSaludRel")
+     */
+    protected $aportesContratosEntidadSaludRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="entidadCajaRel")
+     */
+    protected $aportesContratosEntidadCajaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="entidadRiesgosRel")
+     */
+    protected $aportesContratosEntidadRiesgosRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuConfiguracion", mappedBy="entidadRiesgosRel")
      */
     protected $configuracionesEntidadRiesgosRel;
@@ -667,6 +687,71 @@ class RhuEntidad
     {
         $this->aportesEntidadesEntidadRel = $aportesEntidadesEntidadRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosEntidadPensionRel()
+    {
+        return $this->aportesContratosEntidadPensionRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosEntidadPensionRel
+     */
+    public function setAportesContratosEntidadPensionRel($aportesContratosEntidadPensionRel): void
+    {
+        $this->aportesContratosEntidadPensionRel = $aportesContratosEntidadPensionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosEntidadSaludRel()
+    {
+        return $this->aportesContratosEntidadSaludRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosEntidadSaludRel
+     */
+    public function setAportesContratosEntidadSaludRel($aportesContratosEntidadSaludRel): void
+    {
+        $this->aportesContratosEntidadSaludRel = $aportesContratosEntidadSaludRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosEntidadCajaRel()
+    {
+        return $this->aportesContratosEntidadCajaRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosEntidadCajaRel
+     */
+    public function setAportesContratosEntidadCajaRel($aportesContratosEntidadCajaRel): void
+    {
+        $this->aportesContratosEntidadCajaRel = $aportesContratosEntidadCajaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportesContratosEntidadRiesgosRel()
+    {
+        return $this->aportesContratosEntidadRiesgosRel;
+    }
+
+    /**
+     * @param mixed $aportesContratosEntidadRiesgosRel
+     */
+    public function setAportesContratosEntidadRiesgosRel($aportesContratosEntidadRiesgosRel): void
+    {
+        $this->aportesContratosEntidadRiesgosRel = $aportesContratosEntidadRiesgosRel;
+    }
+
 
 
 }

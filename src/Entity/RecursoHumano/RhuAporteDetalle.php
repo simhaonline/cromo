@@ -27,6 +27,11 @@ class RhuAporteDetalle
     private $codigoAporteFk;
 
     /**
+     * @ORM\Column(name="codigo_aporte_contrato_fk", type="integer", nullable=true)
+     */
+    private $codigoAporteContratoFk;
+
+    /**
      * @ORM\Column(name="codigo_contrato_fk", type="integer")
      */
     private $codigoContratoFk;
@@ -607,6 +612,12 @@ class RhuAporteDetalle
      * @ORM\JoinColumn(name="codigo_aporte_fk",referencedColumnName="codigo_aporte_pk")
      */
     protected $aporteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuAporteContrato", inversedBy="aportesDetallesAporteContratoRel")
+     * @ORM\JoinColumn(name="codigo_aporte_contrato_fk",referencedColumnName="codigo_aporte_contrato_pk")
+     */
+    protected $aporteContratoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuContrato", inversedBy="aportesDetallesContratoRel")
@@ -2648,6 +2659,38 @@ class RhuAporteDetalle
     public function setEntidadCajaRel($entidadCajaRel): void
     {
         $this->entidadCajaRel = $entidadCajaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAporteContratoFk()
+    {
+        return $this->codigoAporteContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoAporteContratoFk
+     */
+    public function setCodigoAporteContratoFk($codigoAporteContratoFk): void
+    {
+        $this->codigoAporteContratoFk = $codigoAporteContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAporteContratoRel()
+    {
+        return $this->aporteContratoRel;
+    }
+
+    /**
+     * @param mixed $aporteContratoRel
+     */
+    public function setAporteContratoRel($aporteContratoRel): void
+    {
+        $this->aporteContratoRel = $aporteContratoRel;
     }
 
 

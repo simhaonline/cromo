@@ -91,7 +91,17 @@ class DespachoController extends AbstractController
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-            ->add('codigoOperacionFk', TextType::class, array('required' => false))
+            ->add('codigoOperacionFk', EntityType::class, [
+                'class' => TteOperacion::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.codigoOperacionPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
+            //operacion guia
             ->add('fechaSalidaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('fechaSalidaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -601,7 +611,6 @@ class DespachoController extends AbstractController
             'numero' => $form->get('numero')->getData(),
             'codigoCiudadOrigenFk' => $form->get('codigoCiudadOrigenFk')->getData(),
             'codigoCiudadDestinoFk' => $form->get('codigoCiudadDestinoFk')->getData(),
-            'codigoOperacionFk' => $form->get('codigoOperacionFk')->getData(),
             'fechaSalidaDesde' => $form->get('fechaSalidaDesde')->getData() ?$form->get('fechaSalidaDesde')->getData()->format('Y-m-d'): null,
             'fechaSalidaHasta' => $form->get('fechaSalidaHasta')->getData() ?$form->get('fechaSalidaHasta')->getData()->format('Y-m-d'): null,
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
@@ -610,11 +619,18 @@ class DespachoController extends AbstractController
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
         ];
         $arDespachoTipo = $form->get('codigoDespachoTipoFk')->getData();
+        $arOperacion = $form->get('codigoOperacionFk')->getData();
 
         if (is_object($arDespachoTipo)) {
             $filtro['codigoDespachoTipo'] = $arDespachoTipo->getCodigoDespachoTipoPk();
         } else {
             $filtro['codigoDespachoTipo'] = $arDespachoTipo;
+        }
+
+        if (is_object($arOperacion)) {
+            $filtro['codigoOperacionFk'] = $arOperacion->getCodigoOperacionPk();
+        } else {
+            $filtro['codigoOperacionFk'] = $arOperacion;
         }
 
         return $filtro;

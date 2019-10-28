@@ -101,7 +101,6 @@ class DespachoController extends AbstractController
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-            //operacion guia
             ->add('fechaSalidaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('fechaSalidaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])

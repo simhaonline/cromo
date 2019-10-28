@@ -75,6 +75,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         $nombreDestinatario = null;
         $guiaTipo = null;
         $operacionCargo = null;
+        $operacionCargoIngreso = null;
         $servicio = null;
         $ciudadDestino = null;
         $remitente = null;
@@ -97,6 +98,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             $nombreDestinatario = $filtros['nombreDestinatario'] ?? null;
             $guiaTipo = $filtros['guiaTipo'] ?? null;
             $operacionCargo = $filtros['operacionCargo'] ?? null;
+            $operacionCargoIngreso = $filtros['operacionCargoIngreso'] ?? null;
             $servicio = $filtros['servicio'] ?? null;
             $ciudadDestino = $filtros['ciudadDestino'] ?? null;
             $remitente = $filtros['remitente'] ?? null;
@@ -170,6 +172,10 @@ class TteGuiaRepository extends ServiceEntityRepository
 
         if ($operacionCargo) {
             $queryBuilder->andWhere("tg.codigoOperacionCargoFk = '{$operacionCargo}'");
+        }
+
+        if ($operacionCargoIngreso) {
+            $queryBuilder->andWhere("tg.codigoOperacionCargoFk = '{$operacionCargoIngreso}'");
         }
 
         if ($codigoDespacho) {

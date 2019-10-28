@@ -83,6 +83,16 @@ class GuiaController extends ControllerListenerGeneral
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
+            ->add('codigoOperacionCargoIngreso', EntityType::class, [
+                'class' => TteOperacion::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.codigoOperacionPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
             ->add('codigoCiudadDestinoFk', EntityType::class, [
                 'class' => TteCiudad::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -341,6 +351,7 @@ class GuiaController extends ControllerListenerGeneral
 
         $arGuiaTipo = $form->get('codigoGuiaTipoFk')->getData();
         $arOperacionCargo = $form->get('codigoOperacionCargoFk')->getData();
+        $arOperacionCargoIngreso = $form->get('codigoOperacionCargoIngreso')->getData();
         $arServicio = $form->get('codigoServicioFk')->getData();
         $arCiudadDestino = $form->get('codigoCiudadDestinoFk')->getData();
 
@@ -367,6 +378,13 @@ class GuiaController extends ControllerListenerGeneral
         } else {
             $filtro['ciudadDestino'] = $arCiudadDestino;
         }
+
+        if (is_object($arOperacionCargoIngreso)) {
+            $filtro['operacionCargoIngreso'] =  $arOperacionCargoIngreso->getCodigoOperacionPk();
+        } else {
+            $filtro['operacionCargoIngreso'] = $arOperacionCargoIngreso;
+        }
+
 
         return $filtro;
 

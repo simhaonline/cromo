@@ -64,6 +64,7 @@ class AporteController extends AbstractController
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
         $raw = [
@@ -77,6 +78,11 @@ class AporteController extends AbstractController
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(RhuAporte::class, $arrSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
+            }
+            if ($form->get('btnContabilizar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuAporte::class)->contabilizar($arrSeleccionados);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);

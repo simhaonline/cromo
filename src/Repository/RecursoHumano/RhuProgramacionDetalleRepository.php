@@ -207,4 +207,25 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
         $this->_em->flush();
     }
 
+    public function actualizarDetalles($arrHoras)
+    {
+        $em = $this->getEntityManager();
+        foreach ($arrHoras as $clave => $valor){
+            if ($clave != "form"){
+                $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($clave);
+                $arProgramacionDetalle->setHorasDiurnas($valor['horasDiurnas']);
+                $arProgramacionDetalle->setHorasDescanso($valor['horasDescanso']);
+                $arProgramacionDetalle->setHorasNocturnas($valor['horasNocturnas']);
+                $arProgramacionDetalle->setHorasFestivasDiurnas($valor['horasFestivasDiurnas']);
+                $arProgramacionDetalle->setHorasFestivasNocturnas($valor['horasFestivasNocturnas']);
+                $arProgramacionDetalle->setHorasExtrasOrdinariasDiurnas($valor['horasExtrasOrdinariasDiurnas']);
+                $arProgramacionDetalle->setHorasExtrasOrdinariasNocturnas($valor['horasExtrasOrdinariasNocturnas']);
+                $arProgramacionDetalle->setHorasExtrasFestivasDiurnas($valor['horasExtrasFestivasDiurnas']);
+                $arProgramacionDetalle->setHorasExtrasFestivasNocturnas($valor['horasExtrasFestivasNocturnas']);
+                $em->persist($arProgramacionDetalle);
+            }
+        }
+        $em->flush();
+    }
+
 }

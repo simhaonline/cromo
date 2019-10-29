@@ -1,0 +1,46 @@
+{% extends "base_sin_menu.html.twig" %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>DOC</th>
+                <th>NOMBRE</th>
+                <th title="Horas diurnas">D</th>
+                <th title="Horas descanso">DS</th>
+                <th title="Horas nocturnas">N</th>
+                <th title="Horas festivas diurnas">FD</th>
+                <th title="Horas festivas nocturnas">FN</th>
+                <th title="Horas extras diurnas">ED</th>
+                <th title="Horas extras nocturnas">EN</th>
+                <th title="Horas extras festivas diurnas">EFD</th>
+                <th title="Horas extras festivas nocturnas">EFN</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for arProgramacionDetalle in arProgramacionDetalles %}
+            <tr>
+                <td>{{ arProgramacionDetalle.codigoProgramacionDetallePk }}</td>
+                <td>{{ arProgramacionDetalle.numeroIdentificacion }}</td>
+                <td>{{ arProgramacionDetalle.nombreCorto }}</td>
+                <td><input type="number" name="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}[horasDiurnas]" value="{{ arProgramacionDetalle.horasDiurnas}}" style="width:55px"></td>
+                <td><input type="number" name="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}[horasDescanso]" value="{{ arProgramacionDetalle.horasDescanso}}" style="width:55px"></td>
+                <td><input type="number" name="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}[horasNocturnas]" value="{{ arProgramacionDetalle.horasNocturnas}}" style="width:55px"></td>
+                <td><input type="number" name="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}[horasFestivasDiurnas]"  value="{{ arProgramacionDetalle.horasFestivasDiurnas}}" style="width:55px"></td>
+                <td><input type="number" name={{ arProgramacionDetalle.codigoProgramacionDetallePk }}[horasFestivasNocturnas]"  value="{{ arProgramacionDetalle.horasFestivasNocturnas}}" style="width:55px"></td>
+                <td><input type="number" name="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}[horasExtrasOrdinariasDiurnas]"  value="{{ arProgramacionDetalle.horasExtrasOrdinariasDiurnas}}" style="width:55px"></td>
+                <td><input type="number" name="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}[horasExtrasOrdinariasNocturnas]"  value="{{ arProgramacionDetalle.horasExtrasOrdinariasNocturnas}}" style="width:55px"></td>
+                <td><input type="number" name="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}[horasExtrasFestivasDiurnas]"  value="{{ arProgramacionDetalle.horasExtrasFestivasDiurnas}}" style="width:55px"></td>
+                <td><input type="number" name="{{ arProgramacionDetalle.codigoProgramacionDetallePk }}[horasExtrasFestivasNocturnas]"  value="{{ arProgramacionDetalle.horasExtrasFestivasNocturnas}}" style="width:55px"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="form-group form-group-sm">
+        <div class="col-sm-offset-2 col-sm-10">
+            {{ form_widget(form.btnActualizar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

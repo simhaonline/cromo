@@ -328,6 +328,31 @@ class ProgramacionController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("recursohumano/movimiento/nomina/programacion/extras/{id}", name="recursohumano_movimiento_nomina_programacion_extra")
+     */
+    public function extras(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arProgramacion = $em->getRepository($this->clase)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('btnActualizar', SubmitType::class, array('label' => 'Actualizar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnActualizar')->isClicked()) {
+                $arrHoras = $request->request->all();
+                $em->getRepository(RhuProgramacionDetalle::class)->actualizarDetalles($arrHoras);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk());
+        return $this->render('recursohumano/movimiento/nomina/programacion/extras.html.twig', [
+            'arProgramacionDetalles' => $arProgramacionDetalles,
+            'form'=>$form->createView()
+        ]);
+    }
+
     private function generarExcelDetalle($codigoProgramacionPago)
     {
         $em = $this->getDoctrine()->getManager();

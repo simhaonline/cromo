@@ -10,6 +10,18 @@
             {{ form_widget(form.btnLiberarSoporte) }}
             {{ form_widget(form.btnImprimirResumen) }}
         </div>
+        {% if arProgramacion.estadoAutorizado == false %}
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Utilidades <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>  <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_extra',
+                           { 'id': arProgramacion.codigoProgramacionPk }) }}', 'Extas', 800, 1200)">Extras</a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">

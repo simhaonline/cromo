@@ -48,6 +48,7 @@ class RhuAporteRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporte::class, 'a')
             ->select('a.codigoAportePk')
+            ->addSelect('a.numero')
             ->addSelect('a.anio')
             ->addSelect('a.mes')
             ->addSelect('s.nombre as sucursalNombre')
@@ -58,6 +59,7 @@ class RhuAporteRepository extends ServiceEntityRepository
             ->addSelect('a.estadoAutorizado')
             ->addSelect('a.estadoAprobado')
             ->addSelect('a.estadoAnulado')
+            ->addSelect('a.estadoContabilizado')
             ->leftJoin('a.sucursalRel', 's')
             ->orderBy('a.codigoAportePk', 'DESC');
         if ($anio) {

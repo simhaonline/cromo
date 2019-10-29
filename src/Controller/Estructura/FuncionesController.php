@@ -567,4 +567,14 @@ final class FuncionesController
         return $festivo;
     }
 
+    public static function boolTexto($dato) {
+        $resultado = "";
+        if($dato == 1) {
+            $resultado = "SI";
+        }
+        if($dato == 0) {
+            $resultado = "NO";
+        }
+        return $resultado;
+    }
 }

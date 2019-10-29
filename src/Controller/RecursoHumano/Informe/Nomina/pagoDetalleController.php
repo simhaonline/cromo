@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Informe\Nomina;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenModulo;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
@@ -114,14 +115,15 @@ class pagoDetalleController extends  Controller
 
     public function exportarExcelPersonalizado($arPagoDetalles)
     {
+        ob_clean();
         set_time_limit(0);
         ini_set("memory_limit", -1);
         if ($arPagoDetalles) {
             $libro = new Spreadsheet();
             $hoja = $libro->getActiveSheet();
-            $hoja->setTitle('guias');
+            $hoja->setTitle('PagoDetalle');
             $j = 0;
-            $arrColumnas = ['ID', 'TIPO', 'NUMERO', 'COD', 'IDENTIFICACION', 'EMPLEADO', 'GRUPO', 'COD', 'CONCEPTO', 'DESDE', 'HASTA', 'VR_PAGO', 'H', 'D', '%', 'IBC', 'IBP', 'CRE'];
+            $arrColumnas = ['ID', 'TIPO', 'NUMERO', 'COD', 'NI', 'EMPLEADO', 'GRUPO', 'COD', 'CONCEPTO', 'DESDE', 'HASTA', 'VR_PAGO', 'VR_PAGO_O', 'H', 'D', '%', 'IBC', 'IBP', 'CRE', 'PEN', 'SAL'];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
                 $hoja->getStyle(1)->getFont()->setBold(true);;
@@ -139,21 +141,24 @@ class pagoDetalleController extends  Controller
                 $hoja->setCellValue('G' . $j, $arPagoDetalle['grupoNombre']);
                 $hoja->setCellValue('H' . $j, $arPagoDetalle['codigoConceptoFk']);
                 $hoja->setCellValue('I' . $j, $arPagoDetalle['conceptoNombre']);
-                $hoja->setCellValue('J' . $j, $arPagoDetalle['pagoFechaDesde']);
-                $hoja->setCellValue('K' . $j, $arPagoDetalle['pagoFechaHasta']);
-                $hoja->setCellValue('L' . $j, $arPagoDetalle['vrPagoOperado']);
-                $hoja->setCellValue('M' . $j, $arPagoDetalle['horas']);
-                $hoja->setCellValue('N' . $j, $arPagoDetalle['dias']);
-                $hoja->setCellValue('O' . $j, $arPagoDetalle['porcentaje']);
-                $hoja->setCellValue('P' . $j, $arPagoDetalle['vrIngresoBaseCotizacion']);
-                $hoja->setCellValue('Q' . $j, $arPagoDetalle['vrIngresoBasePrestacion']);
-                $hoja->setCellValue('R' . $j, $arPagoDetalle['codigoCreditoFk']);
+                $hoja->setCellValue('J' . $j, $arPagoDetalle['pagoFechaDesde']->format('Y-m-d'));
+                $hoja->setCellValue('K' . $j, $arPagoDetalle['pagoFechaHasta']->format('Y-m-d'));
+                $hoja->setCellValue('L' . $j, $arPagoDetalle['vrPago']);
+                $hoja->setCellValue('M' . $j, $arPagoDetalle['vrPagoOperado']);
+                $hoja->setCellValue('N' . $j, $arPagoDetalle['horas']);
+                $hoja->setCellValue('O' . $j, $arPagoDetalle['dias']);
+                $hoja->setCellValue('P' . $j, $arPagoDetalle['porcentaje']);
+                $hoja->setCellValue('Q' . $j, $arPagoDetalle['vrIngresoBaseCotizacion']);
+                $hoja->setCellValue('R' . $j, $arPagoDetalle['vrIngresoBasePrestacion']);
+                $hoja->setCellValue('S' . $j, $arPagoDetalle['codigoCreditoFk']);
+                $hoja->setCellValue('T' . $j, FuncionesController::boolTexto($arPagoDetalle['pension']));
+                $hoja->setCellValue('U' . $j, FuncionesController::boolTexto($arPagoDetalle['salud']));
                 $j++;
             }
 
             $libro->setActiveSheetIndex(0);
             header('Content-Type: application/vnd.ms-excel');
-            header("Content-Disposition: attachment;filename=soportes.xls");
+            header("Content-Disposition: attachment;filename=PagoDetalle.xls");
             header('Cache-Control: max-age=0');
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
             $writer->save('php://output');

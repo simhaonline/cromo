@@ -426,7 +426,7 @@ class RhuAporteRepository extends ServiceEntityRepository
                             //Caja
                             if ($arAporteContrato->getVrCaja() > 0) {
                                 $arTercero = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arAporteContrato->getCodigoEntidadPensionFk());
-                                $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'PEN', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
+                                $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'CAJ', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
                                 if ($arConfiguracionProvision) {
                                     $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
                                     $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());

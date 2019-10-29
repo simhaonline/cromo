@@ -12,7 +12,6 @@ use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuRequisito;
 use App\General\General;
 use Doctrine\ORM\EntityRepository;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -22,6 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class pagoDetalleController extends  Controller
 {
@@ -93,7 +94,9 @@ class pagoDetalleController extends  Controller
                 $session->set('filtroRhuInformePagoDetalleFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(RhuPagoDetalle::class)->informe()->getQuery()->getResult(), "Pagos detalle");
+                $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->informe()->getQuery()->getResult();
+                $this->exportarExcelPersonalizado($arPagoDetalles);
+
             }
             if ($form->get('btnExcelEmpleado')->isClicked()) {
                 General::get()->setExportar($em->getRepository(RhuPagoDetalle::class)->excelResumenEmpleado()->getQuery()->getArrayResult(), "pagoDetalleEmpleado");
@@ -108,4 +111,53 @@ class pagoDetalleController extends  Controller
             'form' => $form->createView()
         ]);
 	}
+
+    public function exportarExcelPersonalizado($arPagoDetalles)
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arPagoDetalles) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->setTitle('guias');
+            $j = 0;
+            $arrColumnas = ['ID', 'TIPO', 'NUMERO', 'COD', 'IDENTIFICACION', 'EMPLEADO', 'GRUPO', 'COD', 'CONCEPTO', 'DESDE', 'HASTA', 'VR_PAGO', 'H', 'D', '%', 'IBC', 'IBP', 'CRE'];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arPagoDetalles as $arPagoDetalle) {
+                $hoja->setCellValue('A' . $j, $arPagoDetalle['codigoPagoDetallePk']);
+                $hoja->setCellValue('B' . $j, $arPagoDetalle['pagoTipoNombre']);
+                $hoja->setCellValue('C' . $j, $arPagoDetalle['pagoNumero']);
+                $hoja->setCellValue('D' . $j, $arPagoDetalle['pagoCodigoEmpleadoFk']);
+                $hoja->setCellValue('E' . $j, $arPagoDetalle['empleadoNumeroIdentificacion']);
+                $hoja->setCellValue('F' . $j, $arPagoDetalle['empleadoNombreCorto']);
+                $hoja->setCellValue('G' . $j, $arPagoDetalle['grupoNombre']);
+                $hoja->setCellValue('H' . $j, $arPagoDetalle['codigoConceptoFk']);
+                $hoja->setCellValue('I' . $j, $arPagoDetalle['conceptoNombre']);
+                $hoja->setCellValue('J' . $j, $arPagoDetalle['pagoFechaDesde']);
+                $hoja->setCellValue('K' . $j, $arPagoDetalle['pagoFechaHasta']);
+                $hoja->setCellValue('L' . $j, $arPagoDetalle['vrPagoOperado']);
+                $hoja->setCellValue('M' . $j, $arPagoDetalle['horas']);
+                $hoja->setCellValue('N' . $j, $arPagoDetalle['dias']);
+                $hoja->setCellValue('O' . $j, $arPagoDetalle['porcentaje']);
+                $hoja->setCellValue('P' . $j, $arPagoDetalle['vrIngresoBaseCotizacion']);
+                $hoja->setCellValue('Q' . $j, $arPagoDetalle['vrIngresoBasePrestacion']);
+                $hoja->setCellValue('R' . $j, $arPagoDetalle['codigoCreditoFk']);
+                $j++;
+            }
+
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=soportes.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+
+        }
+    }
 }

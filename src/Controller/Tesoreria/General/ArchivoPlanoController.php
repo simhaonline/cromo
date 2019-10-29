@@ -95,7 +95,7 @@ class ArchivoPlanoController extends AbstractController
             fputs($ar, "6"); //(1)Tipo registro
             fputs($ar, $this->RellenarNr($arMovimientoDetalle->getTerceroRel()->getNumeroIdentificacion(), "0", 15)); //(15) Nit del beneficiario
             fputs($ar, $this->RellenarNr(utf8_decode(substr($arMovimientoDetalle->getTerceroRel()->getNombreCorto(), 0, 18)), "0", 18)); // (18) Nombre del beneficiario
-            fputs($ar, $arMovimientoDetalle->getTerceroRel()->getBancoRel()->getCodigoInterface() != "" ? $this->RellenarNr($arMovimientoDetalle->getTerceroRel()->getBancoRel()->getCodigoInterface(), "0", 9) : "005600078"); // (9) Banco cuenta del beneficiario
+            fputs($ar, $arMovimientoDetalle->getTerceroRel()->getBancoRel()->getCodigoBancolombia() != "" ? $this->RellenarNr($arMovimientoDetalle->getTerceroRel()->getBancoRel()->getCodigoBancolombia(), "0", 9) : "005600078"); // (9) Banco cuenta del beneficiario
             fputs($ar, $this->RellenarNr($arMovimientoDetalle->getCuenta(), "0", 17)); // (17) Nro cuenta beneficiario
             fputs($ar, "S37"); // (3) Indicador de lugar de pago (S) y tipo de transacción (37)
             $duoValorNetoPagar = round($arMovimientoDetalle->getVrPago()); // (17) Valor transacción

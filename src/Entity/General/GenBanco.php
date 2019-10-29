@@ -37,6 +37,11 @@ class GenBanco
     private $codigoDian;
 
     /**
+     * @ORM\Column(name="codigo_bancolombia", type="string", length=10, nullable=true)
+     */
+    private $codigoBancolombia;
+
+    /**
      * @ORM\OneToMany(targetEntity="GenCuenta", mappedBy="bancoRel")
      */
     protected $cuentasBancoRel;
@@ -65,6 +70,22 @@ class GenBanco
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoDetalle", mappedBy="bancoRel")
      */
     protected $movimientosDetallesBancoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -128,6 +149,22 @@ class GenBanco
     public function setCodigoDian($codigoDian): void
     {
         $this->codigoDian = $codigoDian;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoBancolombia()
+    {
+        return $this->codigoBancolombia;
+    }
+
+    /**
+     * @param mixed $codigoBancolombia
+     */
+    public function setCodigoBancolombia($codigoBancolombia): void
+    {
+        $this->codigoBancolombia = $codigoBancolombia;
     }
 
     /**
@@ -225,8 +262,5 @@ class GenBanco
     {
         $this->movimientosDetallesBancoRel = $movimientosDetallesBancoRel;
     }
-
-
-
 }
 

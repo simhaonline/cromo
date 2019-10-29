@@ -52,6 +52,7 @@ use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurContratoTipo;
 use App\Entity\Turno\TurFactura;
 use App\Entity\Turno\TurFacturaDetalle;
+use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurModalidad;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
@@ -62,10 +63,10 @@ use App\Entity\Turno\TurSector;
 use App\Entity\Turno\TurSecuencia;
 use App\Entity\Turno\TurTurno;
 use App\Utilidades\Mensajes;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MigracionController extends Controller
@@ -112,7 +113,7 @@ class MigracionController extends Controller
                 //$this->rhuCredito($conn);
                 //$this->rhuCreditoPago($conn);
                 //$this->rhuVacacion($conn);
-                //$this->rhuLiquidacion($conn);
+//                $this->rhuLiquidacion($conn);
                 //$this->rhuPago($conn);
                 //$this->rhuPagoDetalle($conn);
                 //$this->rhuIncapacidadDiagnostico($conn);
@@ -995,12 +996,177 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query("SELECT
-                        codigo_liquidacion_pk                       
-                 FROM rhu_liquidacion");
+                        codigo_liquidacion_pk,
+                        codigo_empleado_fk,
+                        codigo_contrato_fk,
+                        rhu_motivo_terminacion_contrato.codigo_externo as codigo_contrato_motivo_externo,
+                        codigo_motivo_terminacion_contrato_fk,
+                        fecha,
+                        numero,
+                        fecha_desde,
+                        fecha_hasta,
+                        numero_dias,
+                        vr_cesantias,
+                        vr_intereses_cesantias,
+                        vr_cesantias_anterior,
+                        vr_intereses_cesantias_anterior,
+                        vr_prima,
+                        vr_deduccion_prima,
+                        vr_vacaciones,
+                        vr_indemnizacion,
+                        comentarios,
+                        dias_cesantias,
+                        dias_cesantias_ausentismo,
+                        dias_cesantias_anterior,
+                        dias_cesantias_ausentismo_anterior,
+                        dias_vacaciones,
+                        dias_vacaciones_ausentismo,
+                        dias_primas,
+                        dias_primas_ausentismo,
+                        dias_laborados,
+                        fecha_ultimo_pago,
+                        vr_ingreso_base_prestacion_adicional,
+                        vr_ingreso_base_prestacion_cesantias,
+                        vr_ingreso_base_prestacion_primas,
+                        vr_ingreso_base_prestacion_cesantias_inicial,
+                        vr_ingreso_base_prestacion_primas_inicial,
+                        dias_adicionales_ibp,
+                        vr_base_prestaciones,
+                        vr_base_prestaciones_total,
+                        vr_auxilio_transporte,
+                        vr_salario,
+                        vr_salario_promedio_cesantias,
+                        vr_salario_promedio_cesantias_anterior,
+                        vr_salario_promedio_primas,
+                        vr_salario_vacaciones,
+                        vr_total,
+                        liquidar_cesantias,
+                        liquidar_vacaciones,
+                        liquidar_prima,
+                        fecha_ultimo_pago_primas,
+                        fecha_ultimo_pago_vacaciones,
+                        fecha_ultimo_pago_cesantias,
+                        fecha_ultimo_pago_cesantias_anterior,
+                        vr_deducciones,
+                        vr_bonificaciones,
+                        estado_autorizado,
+                        estado_generado,
+                        estado_anulado,
+                        fecha_inicio_contrato,
+                        codigo_usuario,
+                        liquidar_manual,
+                        estado_pago_banco,
+                        liquidar_salario,
+                        porcentaje_ibp,
+                        estado_contabilizado,
+                        dias_ausentismo_adicional,
+                        vr_salario_vacacion_propuesto,
+                        vr_salario_prima_propuesto,
+                        vr_salario_cesantias_propuesto,
+                        eliminar_ausentismo,
+                        dias_ausentismo_propuesto,
+                        codigo_programacion_pago_detalle_fk,
+                        codigo_pago_fk,
+                        omitir_cesantias_anterior,
+                        eliminar_ausentismo_cesantia,
+                        eliminar_ausentismo_primas,
+                        eliminar_ausentismo_vacacion,
+                        dias_ausentismo_propuesto_cesantias,
+                        dias_ausentismo_propuesto_primas,
+                        dias_ausentismo_propuesto_vacaciones,
+                        vr_suplementario_censatias,
+                        vr_suplementario_primas,
+                        vr_suplementario_vacaciones,
+                        porcentaje_intereses_cesantias,
+                        vr_deduccion_prima_propuesto,
+                        dias_deduccion_primas_,
+                        omitir_interes_cesantias_anterior,
+                        codigo_programacion_pago_detalle_interes_fk,
+                        codigo_pago_interes_fk,
+                        estado_indemnizacion,
+                        fecha_hasta_contrato_fijo,
+                        vr_indemnizacion_propuesto,
+                        vr_intereses_propuesto
+                 FROM rhu_liquidacion
+                 left join rhu_motivo_terminacion_contrato on codigo_motivo_terminacion_contrato_fk = rhu_motivo_terminacion_contrato.codigo_motivo_terminacion_contrato_pk");
         foreach ($datos as $row) {
             $arLiquidacion = new RhuLiquidacion();
             $arLiquidacion->setCodigoLiquidacionPk($row['codigo_liquidacion_pk']);
+            $arLiquidacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+            $arLiquidacion->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
             $arLiquidacion->setLiquidacionTipoRel($em->getReference(RhuLiquidacionTipo::class, 'GEN'));
+            $arLiquidacion->setMotivoTerminacionRel($em->getReference(RhuContratoMotivo::class, $row['codigo_contrato_motivo_externo']));
+            $arLiquidacion->setFecha(date_create($row['fecha']));
+            $arLiquidacion->setNumero($row['numero']);
+            $arLiquidacion->setFechaDesde(date_create($row['fecha_desde']));
+            $arLiquidacion->setFechaHasta(date_create($row['fecha_hasta']));
+            $arLiquidacion->setFechaInicioContrato(date_create($row['fecha_inicio_contrato']));
+            $arLiquidacion->setNumeroDias($row['numero_dias']);
+            $arLiquidacion->setVrCesantias($row['vr_cesantias']);
+            $arLiquidacion->setVrInteresesCesantias($row['vr_intereses_cesantias']);
+            $arLiquidacion->setVrPrima($row['vr_prima']);
+            $arLiquidacion->setVrVacacion($row['vr_vacaciones']);
+            $arLiquidacion->setVrIndemnizacion($row['vr_indemnizacion']);
+            $arLiquidacion->setVrDeducciones($row['vr_deducciones']);
+            $arLiquidacion->setVrBonificaciones($row['vr_bonificaciones']);
+            $arLiquidacion->setVrAuxilioTransporte($row['vr_auxilio_transporte']);
+            $arLiquidacion->setVrSalario($row['vr_salario']);
+            $arLiquidacion->setVrTotal($row['vr_total']);
+            $arLiquidacion->setVrIngresoBasePrestacionCesantias($row['vr_ingreso_base_prestacion_cesantias']);
+            $arLiquidacion->setVrIngresoBasePrestacionCesantiasInicial($row['vr_ingreso_base_prestacion_cesantias_inicial']);
+            $arLiquidacion->setVrSalarioPromedioCesantiasAnterior($row['vr_salario_promedio_cesantias_anterior']);
+            $arLiquidacion->setVrIngresoBasePrestacionPrimas($row['vr_ingreso_base_prestacion_primas']);
+            $arLiquidacion->setVrIngresoBasePrestacionPrimasInicial($row['vr_ingreso_base_prestacion_primas_inicial']);
+            $arLiquidacion->setVrSalarioPromedioPrimas($row['vr_salario_promedio_primas']);
+            $arLiquidacion->setVrSalarioVacacionPropuesto($row['vr_salario_vacacion_propuesto']);
+            $arLiquidacion->setDiasCesantias($row['dias_cesantias']);
+            $arLiquidacion->setDiasCesantiasAusentismo($row['dias_cesantias_ausentismo']);
+            $arLiquidacion->setDiasVacacion($row['dias_vacaciones']);
+            $arLiquidacion->setDiasVacacionAusentismo($row['dias_vacaciones_ausentismo']);
+            $arLiquidacion->setDiasPrima($row['dias_primas']);
+            $arLiquidacion->setDiasPrimaAusentismo($row['dias_primas_ausentismo']);
+            $arLiquidacion->setDiasCesantiasAnterior($row['dias_cesantias_anterior']);
+            $arLiquidacion->setDiasAusentismoPropuestoPrimas($row['dias_ausentismo_propuesto_primas']);
+            $arLiquidacion->setDiasAusentismoAdicional($row['dias_ausentismo_adicional']);
+            $arLiquidacion->setVrCesantiasAnterior($row['vr_cesantias_anterior']);
+            $arLiquidacion->setVrInteresesCesantiasAnterior($row['vr_intereses_cesantias_anterior']);
+            $arLiquidacion->setDiasCesantiasAusentismoAnterior($row['dias_cesantias_ausentismo_anterior']);
+            $arLiquidacion->setDiasAusentismoPropuestoCesantias($row['dias_ausentismo_propuesto_cesantias']);
+            $arLiquidacion->setPorcentajeInteresesCesantias($row['porcentaje_intereses_cesantias']);
+            $arLiquidacion->setVrInteresesPropuesto($row['vr_intereses_propuesto']);
+            $arLiquidacion->setVrDeduccionPrima($row['vr_deduccion_prima']);
+            $arLiquidacion->setVrDeduccionPrimaPropuesto($row['vr_deduccion_prima_propuesto']);
+            $arLiquidacion->setDiasDeduccionPrimas($row['dias_deduccion_primas_']);
+            $arLiquidacion->setEstadoIndemnizacion($row['estado_indemnizacion']);
+            $arLiquidacion->setPorcentajeIbp($row['porcentaje_ibp']);
+            $arLiquidacion->setDiasDeduccionPrimas($row['dias_deduccion_primas_']);
+            $arLiquidacion->setDiasAdicionalesIBP($row['dias_adicionales_ibp']);
+            $arLiquidacion->setVrIndemnizacionPropuesto($row['vr_indemnizacion_propuesto']);
+            $arLiquidacion->setVrIngresoBasePrestacionAdicional($row['vr_ingreso_base_prestacion_adicional']);
+            $arLiquidacion->setVrSalarioCesantiasPropuesto($row['vr_salario_cesantias_propuesto']);
+            $arLiquidacion->setVrSalarioPrimaPropuesto($row['vr_salario_prima_propuesto']);
+            $arLiquidacion->setDiasAusentismoPropuestoVacaciones($row['dias_ausentismo_propuesto_vacaciones']);
+            $arLiquidacion->setLiquidarCesantias($row['liquidar_cesantias']);
+            $arLiquidacion->setLiquidarVacaciones($row['liquidar_vacaciones']);
+            $arLiquidacion->setLiquidarPrima($row['liquidar_prima']);
+            $arLiquidacion->setLiquidarSalario($row['liquidar_salario']);
+            $arLiquidacion->setLiquidarManual($row['liquidar_manual']);
+            $arLiquidacion->setVrSalarioVacaciones($row['vr_salario_vacaciones']);
+            $arLiquidacion->setFechaUltimoPago(date_create($row['fecha_ultimo_pago']));
+            $arLiquidacion->setFechaUltimoPagoPrima(date_create($row['fecha_ultimo_pago_primas']));
+            $arLiquidacion->setFechaUltimoPagoVacacion(date_create($row['fecha_ultimo_pago_vacaciones']));
+            $arLiquidacion->setFechaUltimoPagoCesantias(date_create($row['fecha_ultimo_pago_cesantias']));
+            $arLiquidacion->setFechaUltimoPagoCesantiasAnterior(date_create($row['fecha_ultimo_pago_cesantias_anterior']));
+            $arLiquidacion->setEliminarAusentismo($row['eliminar_ausentismo']);
+            $arLiquidacion->setEliminarAusentismoCesantia($row['eliminar_ausentismo_cesantia']);
+            $arLiquidacion->setEliminarAusentismoPrima($row['eliminar_ausentismo_primas']);
+            $arLiquidacion->setEliminarAusentismoVacacion($row['eliminar_ausentismo_vacacion']);
+            $arLiquidacion->setEstadoAutorizado($row['estado_autorizado']);
+            $arLiquidacion->setEstadoAprobado(1);
+            $arLiquidacion->setEstadoAnulado($row['estado_anulado']);
+            $arLiquidacion->setEstadoContabilizado($row['estado_contabilizado']);
+            $arLiquidacion->setOmitirCesantiasAnterior($row['omitir_cesantias_anterior']);
+            $arLiquidacion->setOmitirInteresCesantiasAnterior($row['omitir_interes_cesantias_anterior']);
             $em->persist($arLiquidacion);
             $metadata = $em->getClassMetaData(get_class($arLiquidacion));
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -2023,17 +2189,26 @@ class MigracionController extends Controller
         $datos = $conn->query("SELECT
                     codigo_factura_detalle_pk,
                     codigo_factura_fk,
+                    tur_concepto_servicio.codigo_concepto_servicio_pk as codigo_concepto_servicio_fk,
+                    codigo_pedido_detalle_fk,
                     cantidad,
-                    por_iva,
+                    tur_factura_detalle.por_iva,
                     iva,
                     vr_precio,
                     subtotal,
                     total
-                 FROM tur_factura_detalle");
+                 FROM tur_factura_detalle
+                 left join tur_concepto_servicio on codigo_concepto_servicio_fk = tur_concepto_servicio.codigo_concepto_servicio_pk");
         foreach ($datos as $row) {
             $arFacturaDetalle = new TurFacturaDetalle();
             $arFacturaDetalle->setCodigoFacturaDetallePk($row['codigo_factura_detalle_pk']);
             $arFacturaDetalle->setFacturaRel($em->getReference(TurFactura::class, $row['codigo_factura_fk']));
+            $arFacturaDetalle->setItemRel($em->getReference(TurItem::class, $row['codigo_concepto_servicio_fk']));
+            if ($row['codigo_pedido_detalle_fk']) {
+                $arFacturaDetalle->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
+            } else {
+                $arFacturaDetalle->setPedidoDetalleRel(null);
+            }
             $arFacturaDetalle->setCantidad($row['cantidad']);
             $arFacturaDetalle->setVrPrecio($row['vr_precio']);
             $arFacturaDetalle->setVrSubtotal($row['subtotal']);

@@ -57,15 +57,16 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
                 $arFacturaDetalle->setCantidad($arrCantidad[$codigoFacturaDetalle]);
                 $arFacturaDetalle->setVrPrecio($arrPrecio[$codigoFacturaDetalle]);
                 $codigoImpuestoIva = $arrImpuestoIva[$codigoFacturaDetalle];
-                if($arFacturaDetalle->getCodigoImpuestoIvaFk() != $codigoImpuestoIva) {
+                if($arFacturaDetalle->getCodigoImpuestoIvaFk()) {
                     $arImpuestoIva = $em->getRepository(GenImpuesto::class)->find($codigoImpuestoIva);
                     $arFacturaDetalle->setPorcentajeIva($arImpuestoIva->getPorcentaje());
+                    $arFacturaDetalle->setPorcentajeBaseAiu($arImpuestoIva->getBase());
                 }
                 $arFacturaDetalle->setCodigoImpuestoIvaFk($codigoImpuestoIva);
                 $codigoImpuestoRetencion = $arrImpuestoRetencion[$codigoFacturaDetalle];
                 if($arFacturaDetalle->getCodigoImpuestoRetencionFk() != $codigoImpuestoRetencion) {
                     $arImpuestoRetencion = $em->getRepository(GenImpuesto::class)->find($codigoImpuestoRetencion);
-                    //$arMovimientoDetalle->setPorcentajeRetencion($arImpuestoRetencion->getPorcentaje());
+//                    $arFacturaDetalle->setPorcentajeRetencion($arImpuestoRetencion->getPorcentaje());
                 }
                 $arFacturaDetalle->setCodigoImpuestoRetencionFk($codigoImpuestoRetencion);
                 $em->persist($arFacturaDetalle);
@@ -165,4 +166,5 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
 }

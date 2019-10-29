@@ -5,7 +5,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('turno_movimiento_comercial_factura_lista') }}">Volver</a>
+               href="{{ path('turno_movimiento_venta_factura_lista') }}">Volver</a>
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
@@ -17,7 +17,7 @@
         {% if arFactura.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
     </div>
     <br/><br/>
-    {% include 'turno/movimiento/comercial/factura/informacion.html.twig' %}
+    {% include 'turno/movimiento/venta/factura/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
@@ -67,17 +67,17 @@
                                 <td style="text-align: right;">{{ arFacturaDetalle.vrIva | number_format(0,'.',',') }}</td>
                                 <td>{{ arFacturaDetalle.codigoImpuestoRetencionFk }}</td>
                             {% else %}
-                                <td style="text-align: left">
+                                <td style="text-align: center">
                                     <select name="cboImpuestoIva[{{ arFacturaDetalle.codigoFacturaDetallePk }}]">
                                         {% for arImpuestoIva in arImpuestosIva %}
-                                            <option value="{{ arImpuestoIva.codigoImpuestoPk }}" {% if arFacturaDetalle.codigoImpuestoIvaFk == arImpuestoIva.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoIva.nombre }}</option>
+                                            <option value="{{ arImpuestoIva.codigoImpuestoPk }}" {% if arFacturaDetalle.codigoImpuestoIvaFk == arImpuestoIva.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoIva.codigoImpuestoPk }}</option>
                                         {% endfor %}
                                     </select></td>
                                 <td style="text-align: right;">{{ arFacturaDetalle.vrIva | number_format(0,'.',',') }}</td>
-                                <td style="text-align: left">
+                                <td style="text-align: center">
                                     <select name="cboImpuestoRetencion[{{ arFacturaDetalle.codigoFacturaDetallePk }}]">
                                         {% for arImpuestoRetencion in arImpuestosRetencion %}
-                                            <option value="{{ arImpuestoRetencion.codigoImpuestoPk }}" {% if arFacturaDetalle.codigoImpuestoRetencionFk == arImpuestoRetencion.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoRetencion.nombre }}</option>
+                                            <option value="{{ arImpuestoRetencion.codigoImpuestoPk }}" {% if arFacturaDetalle.codigoImpuestoRetencionFk == arImpuestoRetencion.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoRetencion.codigoImpuestoPk }}</option>
                                         {% endfor %}
                                     </select></td>
                             {% endif %}
@@ -97,7 +97,7 @@
                                    value="Nuevo"/>
                         {% else %}
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('turno_movimiento_comercial_factura_detalle_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">

@@ -11,13 +11,13 @@
                         <div class="col-lg-2">
                             <div class="input-group">
                                 <input id="txtCodigoCliente" name="txtCodigoCliente" type="number" class="form-control"
-                                       value="{{ arContratos.codigoClienteFk |default('') }}"/>
+                                       value="{{ arFactura.codigoClienteFk |default('') }}"/>
                             </div>
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
                                 <input id="txtNombreCorto" name="txtNombreCorto" type="text" class="form-control"
-                                       value="{{ arContratos.clienteRel.nombreCorto |default('') }}"
+                                       value="{{ arFactura.clienteRel.nombreCorto |default('') }}"
                                        readOnly="ReadOnly"/>
                                 <span class="input-group-btn">
                                         <a class="btn btn-default btn-sm"
@@ -26,6 +26,13 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.facturaTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.facturaTipoRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -50,7 +57,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('turno_movimiento_comercial_factura_lista') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('turno_movimiento_venta_factura_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

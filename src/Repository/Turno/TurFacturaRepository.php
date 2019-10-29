@@ -28,9 +28,27 @@ class TurFacturaRepository extends ServiceEntityRepository
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
+        $codigoClienteFk = null;
+        $numero = null;
         $codigoFacturaPk = null;
-        if ($filtros){
-            $codigoFacturaPk = $filtros['codigoFacturaPk']??null;
+        $codigoFacturaTipoFk = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+
+        if ($filtros) {
+            $codigoFacturaPk = $filtros['codigoFacturaPk'] ?? null;
+            $codigoClienteFk = $filtros['codigoClienteFk'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $codigoFacturaTipoFk = $filtros['codigoPedidoTipoFk'] ?? null;
+            $fechaDesde = $filtros['$fechaDesde'] ?? null;
+            $fechaHasta = $filtros['$fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
         }
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFactura::class, 'f')
@@ -49,12 +67,55 @@ class TurFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.estadoAnulado')
             ->leftJoin('f.clienteRel', 'c');
 
-        if ($codigoFacturaPk){
+        if ($codigoFacturaPk) {
             $queryBuilder->andWhere("f.codigoFacturaPk = {$codigoFacturaPk}");
+        }
+        if ($codigoClienteFk) {
+            $queryBuilder->andWhere("f.codigoClienteFk  = '{$codigoClienteFk}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("f.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("f.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        if ($numero) {
+            $queryBuilder->andWhere("f.numero  = '{$numero}'");
+        }
+        if ($codigoFacturaTipoFk) {
+            $queryBuilder->andWhere("f.codigoFacturaTipoFk  = '{$codigoFacturaTipoFk}'");
+        }
+
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAutorizado = 1");
+                break;
+        }
+
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAprobado = 1");
+                break;
+        }
+
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAnulado = 1");
+                break;
         }
 
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('f.codigoFacturaPk', 'DESC');
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function liquidar($arFactura)
@@ -71,6 +132,7 @@ class TurFacturaRepository extends ServiceEntityRepository
         $vrTotalNetoGlobal = 0;
         $vrDescuentoGlobal = 0;
         $vrIvaGlobal = 0;
+        $vrBaseAiuGlobal = 0;
         $vrSubtotalGlobal = 0;
         $vrRetencionFuenteGlobal = 0;
         $vrRetencionIvaGlobal = 0;
@@ -81,7 +143,8 @@ class TurFacturaRepository extends ServiceEntityRepository
             $vrPrecio = $arFacturaDetalle->getVrPrecio();
             $vrSubtotal = $vrPrecio * $arFacturaDetalle->getCantidad();
             $vrDescuento = ($arFacturaDetalle->getVrPrecio() * $arFacturaDetalle->getCantidad()) - $vrSubtotal;
-            $vrIva = ($vrSubtotal * ($arFacturaDetalle->getPorcentajeIva()) / 100);
+            $vrBaseAiu = ($vrSubtotal * ($arFacturaDetalle->getPorcentajeBaseAiu()) / 100);
+            $vrIva = $vrBaseAiu * ($arFacturaDetalle->getPorcentajeIva() / 100);
             $vrTotalBruto = $vrSubtotal;
             $vrTotal = $vrTotalBruto + $vrIva;
             $vrRetencionFuente = 0;
@@ -89,11 +152,12 @@ class TurFacturaRepository extends ServiceEntityRepository
             $vrTotalBrutoGlobal += $vrTotalBruto;
             $vrDescuentoGlobal += $vrDescuento;
             $vrIvaGlobal += $vrIva;
+            $vrBaseAiuGlobal += $vrBaseAiu;
             $vrSubtotalGlobal += $vrSubtotal;
             if ($arFacturaDetalle->getCodigoImpuestoRetencionFk()) {
                 if ($retencionFuente) {
-                    if ($arrImpuestoRetenciones[$arFacturaDetalle->getCodigoImpuestoRetencionFk()]['base'] == true || $retencionFuenteSinBase) {
-                        $vrRetencionFuente = $vrSubtotal * $arrImpuestoRetenciones[$arFacturaDetalle->getCodigoImpuestoRetencionFk()]['porcentaje'] / 100;
+                    if ($arrImpuestoRetenciones[$arFacturaDetalle->getCodigoImpuestoRetencionFk()]['generaBase'] == true || $retencionFuenteSinBase) {
+                        $vrRetencionFuente = ($vrSubtotal * $arrImpuestoRetenciones[$arFacturaDetalle->getCodigoImpuestoRetencionFk()]['base'] / 100) * $arrImpuestoRetenciones[$arFacturaDetalle->getCodigoImpuestoRetencionFk()]['porcentaje'] / 100;
                     }
                 }
             }
@@ -107,6 +171,7 @@ class TurFacturaRepository extends ServiceEntityRepository
 
         $vrTotalNetoGlobal = $vrTotalGlobal - $vrRetencionFuenteGlobal - $vrRetencionIvaGlobal;
         $arFactura->setVrIva($vrIvaGlobal);
+        $arFactura->setVrBaseAiu($vrBaseAiuGlobal);
         $arFactura->setVrSubtotal($vrSubtotalGlobal);
         $arFactura->setVrTotal($vrTotalGlobal);
         $arFactura->setVrNeto($vrTotalNetoGlobal);
@@ -144,7 +209,8 @@ class TurFacturaRepository extends ServiceEntityRepository
                 $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrImpuestoRetencion['codigo']);
                 if ($arImpuesto) {
                     if ($arrImpuestoRetencion['valor'] >= $arImpuesto->getBase() || $retencionFuenteSinBase) {
-                        $arrImpuestoRetenciones[$arrImpuestoRetencion['codigo']]['base'] = true;
+                        $arrImpuestoRetenciones[$arrImpuestoRetencion['codigo']]['generaBase'] = true;
+                        $arrImpuestoRetenciones[$arrImpuestoRetencion['codigo']]['base'] = $arImpuesto->getBase();
                         $arrImpuestoRetenciones[$arrImpuestoRetencion['codigo']]['porcentaje'] = $arImpuesto->getPorcentaje();
                     }
                 }
@@ -178,14 +244,15 @@ class TurFacturaRepository extends ServiceEntityRepository
         }
     }
 
-    public function aprobar($arFactura){
+    public function aprobar($arFactura)
+    {
         $em = $this->getEntityManager();
-        if($arFactura->getEstadoAutorizado() == 1 ) {
-            if($arFactura->getEstadoAprobado() == 0){
+        if ($arFactura->getEstadoAutorizado() == 1) {
+            if ($arFactura->getEstadoAprobado() == 0) {
                 $arFactura->setEstadoAprobado(1);
                 $em->persist($arFactura);
                 $em->flush();
-            }else{
+            } else {
                 Mensajes::error('La factura ya esta aprobada');
             }
 

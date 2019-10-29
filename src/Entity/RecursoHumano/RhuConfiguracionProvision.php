@@ -17,7 +17,6 @@ class RhuConfiguracionProvision
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_configuracion_provision_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $codigoConfiguracionProvisionPk;
 

@@ -42,9 +42,19 @@ class TurFacturaDetalle
     private $codigoImpuestoIvaFk;
 
     /**
+     * @ORM\Column(name="codigo_pedido_detalle_fk", type="integer", nullable=true)
+     */
+    private $codigoPedidoDetalleFk;
+
+    /**
      * @ORM\Column(name="porcentaje_iva", type="float", nullable=true, options={"default" : 0})
      */
     private $porcentajeIva = 0;
+
+    /**
+     * @ORM\Column(name="porcentaje_base_aiu", type="float", nullable=true, options={"default" : 0})
+     */
+    private $porcentajeBaseAiu = 0;
 
     /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
@@ -92,6 +102,12 @@ class TurFacturaDetalle
      * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
     protected $itemRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurPedidoDetalle", inversedBy="facturasDetallesPedidoDetalleRel")
+     * @ORM\JoinColumn(name="codigo_pedido_detalle_fk", referencedColumnName="codigo_pedido_detalle_pk")
+     */
+    protected $pedidoDetalleRel;
 
     /**
      * @return mixed
@@ -348,5 +364,54 @@ class TurFacturaDetalle
     {
         $this->cantidad = $cantidad;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPedidoDetalleFk()
+    {
+        return $this->codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoPedidoDetalleFk
+     */
+    public function setCodigoPedidoDetalleFk($codigoPedidoDetalleFk): void
+    {
+        $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidoDetalleRel()
+    {
+        return $this->pedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $pedidoDetalleRel
+     */
+    public function setPedidoDetalleRel($pedidoDetalleRel): void
+    {
+        $this->pedidoDetalleRel = $pedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeBaseAiu()
+    {
+        return $this->porcentajeBaseAiu;
+    }
+
+    /**
+     * @param mixed $porcentajeBaseAiu
+     */
+    public function setPorcentajeBaseAiu($porcentajeBaseAiu): void
+    {
+        $this->porcentajeBaseAiu = $porcentajeBaseAiu;
+    }
+
 
 }

@@ -34,6 +34,11 @@ class TurConfiguracion
     private $vrAuxilioTransporte = 0;
 
     /**
+     * @ORM\Column(name="codigo_formato_factura", type="integer", nullable=true)
+     */
+    private $codigoFormatoFactura;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -80,6 +85,39 @@ class TurConfiguracion
     {
         $this->vrAuxilioTransporte = $vrAuxilioTransporte;
     }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFormatoFactura()
+    {
+        return $this->codigoFormatoFactura;
+    }
+
+    /**
+     * @param mixed $codigoFormatoFactura
+     */
+    public function setCodigoFormatoFactura($codigoFormatoFactura): void
+    {
+        $this->codigoFormatoFactura = $codigoFormatoFactura;
+    }
+
 
 
 }

@@ -23,6 +23,11 @@ class TurFactura
     private $codigoFacturaPk;
 
     /**
+     * @ORM\Column(name="codigo_factura_tipo_fk", type="integer", nullable=true)
+     */
+    private $codigoFacturaTipoFk;
+
+    /**
      * @ORM\Column(name="numero", type="integer", nullable=true)
      */
     private $numero = 0;
@@ -56,6 +61,11 @@ class TurFactura
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
      */
     private $vrIva;
+
+    /**
+     * @ORM\Column(name="vr_base_aiu", type="float", nullable=true)
+     */
+    private $vrBaseAiu = 0;
 
     /**
      * @ORM\Column(name="vr_subtotal", type="float")
@@ -129,6 +139,12 @@ class TurFactura
     protected $clienteRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="TurFacturaTipo", inversedBy="facturasFacturaTipoRel")
+     * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
+     */
+    protected $facturaTipoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -158,6 +174,22 @@ class TurFactura
     public function setCodigoFacturaPk($codigoFacturaPk): void
     {
         $this->codigoFacturaPk = $codigoFacturaPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaTipoFk()
+    {
+        return $this->codigoFacturaTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaTipoFk
+     */
+    public function setCodigoFacturaTipoFk($codigoFacturaTipoFk): void
+    {
+        $this->codigoFacturaTipoFk = $codigoFacturaTipoFk;
     }
 
     /**
@@ -419,38 +451,6 @@ class TurFactura
     /**
      * @return mixed
      */
-    public function getFacturasDetallesFacturaRel()
-    {
-        return $this->facturasDetallesFacturaRel;
-    }
-
-    /**
-     * @param mixed $facturasDetallesFacturaRel
-     */
-    public function setFacturasDetallesFacturaRel($facturasDetallesFacturaRel): void
-    {
-        $this->facturasDetallesFacturaRel = $facturasDetallesFacturaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClienteRel()
-    {
-        return $this->clienteRel;
-    }
-
-    /**
-     * @param mixed $clienteRel
-     */
-    public function setClienteRel($clienteRel): void
-    {
-        $this->clienteRel = $clienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -495,6 +495,71 @@ class TurFactura
     {
         $this->estadoAnulado = $estadoAnulado;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesFacturaRel()
+    {
+        return $this->facturasDetallesFacturaRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesFacturaRel
+     */
+    public function setFacturasDetallesFacturaRel($facturasDetallesFacturaRel): void
+    {
+        $this->facturasDetallesFacturaRel = $facturasDetallesFacturaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaTipoRel()
+    {
+        return $this->facturaTipoRel;
+    }
+
+    /**
+     * @param mixed $facturaTipoRel
+     */
+    public function setFacturaTipoRel($facturaTipoRel): void
+    {
+        $this->facturaTipoRel = $facturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrBaseAiu()
+    {
+        return $this->vrBaseAiu;
+    }
+
+    /**
+     * @param mixed $vrBaseAiu
+     */
+    public function setVrBaseAiu($vrBaseAiu): void
+    {
+        $this->vrBaseAiu = $vrBaseAiu;
+    }
+
 
 
 }

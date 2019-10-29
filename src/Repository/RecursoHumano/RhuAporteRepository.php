@@ -479,7 +479,7 @@ class RhuAporteRepository extends ServiceEntityRepository
 
                             //Riesgos
                             if ($arAporteContrato->getVrRiesgos() > 0) {
-                                $arTercero = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arAporteContrato->getCodigoEntidadRiesgosFk());
+                                $arTercero = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arAporteContrato->getCodigoEntidadRiesgoFk());
                                 $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'RIE', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
                                 if ($arConfiguracionProvision) {
                                     $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());

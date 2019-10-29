@@ -371,7 +371,7 @@ class RhuAporteRepository extends ServiceEntityRepository
 
                             //Salud
                             if ($arAporteContrato->getVrSalud() > 0) {
-                                $arTercero = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arAporteContrato->getCodigoEntidadPensionFk());
+                                $arTercero = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arAporteContrato->getCodigoEntidadSaludFk());
                                 $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'SAL', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
                                 if ($arConfiguracionProvision) {
                                     $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
@@ -425,7 +425,7 @@ class RhuAporteRepository extends ServiceEntityRepository
 
                             //Caja
                             if ($arAporteContrato->getVrCaja() > 0) {
-                                $arTercero = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arAporteContrato->getCodigoEntidadPensionFk());
+                                $arTercero = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arAporteContrato->getCodigoEntidadCajaFk());
                                 $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'CAJ', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
                                 if ($arConfiguracionProvision) {
                                     $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
@@ -479,7 +479,7 @@ class RhuAporteRepository extends ServiceEntityRepository
 
                             //Riesgos
                             if ($arAporteContrato->getVrRiesgos() > 0) {
-                                $arTercero = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arAporteContrato->getCodigoEntidadPensionFk());
+                                $arTercero = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arAporteContrato->getCodigoEntidadRiesgosFk());
                                 $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'RIE', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
                                 if ($arConfiguracionProvision) {
                                     $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
@@ -588,7 +588,7 @@ class RhuAporteRepository extends ServiceEntityRepository
                             //Icbf
                             if ($arAporteContrato->getVrIcbf() > 0) {
                                 $arTercero = $em->getRepository(RhuEntidad::class)->terceroFinanciero($arAporteContrato->getCodigoEntidadPensionFk());
-                                $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'PEN', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
+                                $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'ICB', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
                                 if ($arConfiguracionProvision) {
                                     $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
                                     $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());

@@ -1222,6 +1222,10 @@ class TteDespachoRepository extends ServiceEntityRepository
         if ($session->get('filtroTteDespachoCodigoVehiculo')) {
             $queryBuilder->andWhere("d.codigoVehiculoFk = '{$session->get('filtroTteDespachoCodigoVehiculo')}'");
         }
+        if ($session->get('filtroTteDespachoCodigoCentroOperacion')) {
+            $queryBuilder->andWhere("d.codigoOperacionFk = '{$session->get('filtroTteDespachoCodigoCentroOperacion')}'");
+        }
+
         return $queryBuilder;
 
     }

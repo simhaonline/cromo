@@ -44,7 +44,8 @@ class DesembarcoController extends Controller
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 if($arrSeleccionados){
                     $arOperacion = $this->getUser()->getOperacionRel();
-                    $em->getRepository(TteGuia::class)->desembarco($arrSeleccionados, $arOperacion);
+                    $usuario = $this->getUser()->getUserName();
+                    $em->getRepository(TteGuia::class)->desembarco($arrSeleccionados, $arOperacion, $usuario);
                 }
             }
         }

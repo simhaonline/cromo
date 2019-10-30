@@ -124,6 +124,16 @@ class TteOperacion
     protected $guiasOperacionCargoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteDesembarco", mappedBy="operacionOrigenRel")
+     */
+    protected $desembarcosOperacionOrigenRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TteDesembarco", mappedBy="operacionDestinoRel")
+     */
+    protected $desembarcosOperacionDestinoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteRecogida", mappedBy="operacionRel")
      */
     protected $recogidasOperacionRel;
@@ -174,6 +184,22 @@ class TteOperacion
     protected $operacionesOperacionCargoRel;
 
     /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
      * @return mixed
      */
     public function getCodigoOperacionPk()
@@ -184,7 +210,7 @@ class TteOperacion
     /**
      * @param mixed $codigoOperacionPk
      */
-    public function setCodigoOperacionPk( $codigoOperacionPk ): void
+    public function setCodigoOperacionPk($codigoOperacionPk): void
     {
         $this->codigoOperacionPk = $codigoOperacionPk;
     }
@@ -200,9 +226,25 @@ class TteOperacion
     /**
      * @param mixed $nombre
      */
-    public function setNombre( $nombre ): void
+    public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionCargoFk()
+    {
+        return $this->codigoOperacionCargoFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionCargoFk
+     */
+    public function setCodigoOperacionCargoFk($codigoOperacionCargoFk): void
+    {
+        $this->codigoOperacionCargoFk = $codigoOperacionCargoFk;
     }
 
     /**
@@ -216,7 +258,7 @@ class TteOperacion
     /**
      * @param mixed $codigoCiudadFk
      */
-    public function setCodigoCiudadFk( $codigoCiudadFk ): void
+    public function setCodigoCiudadFk($codigoCiudadFk): void
     {
         $this->codigoCiudadFk = $codigoCiudadFk;
     }
@@ -232,7 +274,7 @@ class TteOperacion
     /**
      * @param mixed $codigoCuentaIngresoFleteFk
      */
-    public function setCodigoCuentaIngresoFleteFk( $codigoCuentaIngresoFleteFk ): void
+    public function setCodigoCuentaIngresoFleteFk($codigoCuentaIngresoFleteFk): void
     {
         $this->codigoCuentaIngresoFleteFk = $codigoCuentaIngresoFleteFk;
     }
@@ -248,7 +290,7 @@ class TteOperacion
     /**
      * @param mixed $codigoCuentaIngresoManejoFk
      */
-    public function setCodigoCuentaIngresoManejoFk( $codigoCuentaIngresoManejoFk ): void
+    public function setCodigoCuentaIngresoManejoFk($codigoCuentaIngresoManejoFk): void
     {
         $this->codigoCuentaIngresoManejoFk = $codigoCuentaIngresoManejoFk;
     }
@@ -264,201 +306,9 @@ class TteOperacion
     /**
      * @param mixed $codigoCentroCostoFk
      */
-    public function setCodigoCentroCostoFk( $codigoCentroCostoFk ): void
+    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
     {
         $this->codigoCentroCostoFk = $codigoCentroCostoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCiudadRel()
-    {
-        return $this->ciudadRel;
-    }
-
-    /**
-     * @param mixed $ciudadRel
-     */
-    public function setCiudadRel( $ciudadRel ): void
-    {
-        $this->ciudadRel = $ciudadRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiasOperacionIngresoRel()
-    {
-        return $this->guiasOperacionIngresoRel;
-    }
-
-    /**
-     * @param mixed $guiasOperacionIngresoRel
-     */
-    public function setGuiasOperacionIngresoRel( $guiasOperacionIngresoRel ): void
-    {
-        $this->guiasOperacionIngresoRel = $guiasOperacionIngresoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGuiasOperacionCargoRel()
-    {
-        return $this->guiasOperacionCargoRel;
-    }
-
-    /**
-     * @param mixed $guiasOperacionCargoRel
-     */
-    public function setGuiasOperacionCargoRel( $guiasOperacionCargoRel ): void
-    {
-        $this->guiasOperacionCargoRel = $guiasOperacionCargoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRecogidasOperacionRel()
-    {
-        return $this->recogidasOperacionRel;
-    }
-
-    /**
-     * @param mixed $recogidasOperacionRel
-     */
-    public function setRecogidasOperacionRel( $recogidasOperacionRel ): void
-    {
-        $this->recogidasOperacionRel = $recogidasOperacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRecogidasProgramadasOperacionRel()
-    {
-        return $this->recogidasProgramadasOperacionRel;
-    }
-
-    /**
-     * @param mixed $recogidasProgramadasOperacionRel
-     */
-    public function setRecogidasProgramadasOperacionRel( $recogidasProgramadasOperacionRel ): void
-    {
-        $this->recogidasProgramadasOperacionRel = $recogidasProgramadasOperacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachosRecogidasOperacionRel()
-    {
-        return $this->despachosRecogidasOperacionRel;
-    }
-
-    /**
-     * @param mixed $despachosRecogidasOperacionRel
-     */
-    public function setDespachosRecogidasOperacionRel( $despachosRecogidasOperacionRel ): void
-    {
-        $this->despachosRecogidasOperacionRel = $despachosRecogidasOperacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRutasRecogidasOperacionRel()
-    {
-        return $this->rutasRecogidasOperacionRel;
-    }
-
-    /**
-     * @param mixed $rutasRecogidasOperacionRel
-     */
-    public function setRutasRecogidasOperacionRel( $rutasRecogidasOperacionRel ): void
-    {
-        $this->rutasRecogidasOperacionRel = $rutasRecogidasOperacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachosOperacionRel()
-    {
-        return $this->despachosOperacionRel;
-    }
-
-    /**
-     * @param mixed $despachosOperacionRel
-     */
-    public function setDespachosOperacionRel( $despachosOperacionRel ): void
-    {
-        $this->despachosOperacionRel = $despachosOperacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUsuariosOperacionRel()
-    {
-        return $this->usuariosOperacionRel;
-    }
-
-    /**
-     * @param mixed $usuariosOperacionRel
-     */
-    public function setUsuariosOperacionRel( $usuariosOperacionRel ): void
-    {
-        $this->usuariosOperacionRel = $usuariosOperacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRecibosOperacionRel()
-    {
-        return $this->recibosOperacionRel;
-    }
-
-    /**
-     * @param mixed $recibosOperacionRel
-     */
-    public function setRecibosOperacionRel( $recibosOperacionRel ): void
-    {
-        $this->recibosOperacionRel = $recibosOperacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturasOperacionRel()
-    {
-        return $this->facturasOperacionRel;
-    }
-
-    /**
-     * @param mixed $facturasOperacionRel
-     */
-    public function setFacturasOperacionRel( $facturasOperacionRel ): void
-    {
-        $this->facturasOperacionRel = $facturasOperacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClientesOperacionRel()
-    {
-        return $this->clientesOperacionRel;
-    }
-
-    /**
-     * @param mixed $clientesOperacionRel
-     */
-    public function setClientesOperacionRel($clientesOperacionRel): void
-    {
-        $this->clientesOperacionRel = $clientesOperacionRel;
     }
 
     /**
@@ -624,17 +474,17 @@ class TteOperacion
     /**
      * @return mixed
      */
-    public function getCodigoOperacionCargoFk()
+    public function getCiudadRel()
     {
-        return $this->codigoOperacionCargoFk;
+        return $this->ciudadRel;
     }
 
     /**
-     * @param mixed $codigoOperacionCargoFk
+     * @param mixed $ciudadRel
      */
-    public function setCodigoOperacionCargoFk($codigoOperacionCargoFk): void
+    public function setCiudadRel($ciudadRel): void
     {
-        $this->codigoOperacionCargoFk = $codigoOperacionCargoFk;
+        $this->ciudadRel = $ciudadRel;
     }
 
     /**
@@ -656,6 +506,214 @@ class TteOperacion
     /**
      * @return mixed
      */
+    public function getGuiasOperacionIngresoRel()
+    {
+        return $this->guiasOperacionIngresoRel;
+    }
+
+    /**
+     * @param mixed $guiasOperacionIngresoRel
+     */
+    public function setGuiasOperacionIngresoRel($guiasOperacionIngresoRel): void
+    {
+        $this->guiasOperacionIngresoRel = $guiasOperacionIngresoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGuiasOperacionCargoRel()
+    {
+        return $this->guiasOperacionCargoRel;
+    }
+
+    /**
+     * @param mixed $guiasOperacionCargoRel
+     */
+    public function setGuiasOperacionCargoRel($guiasOperacionCargoRel): void
+    {
+        $this->guiasOperacionCargoRel = $guiasOperacionCargoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDesembarcosOperacionOrigenRel()
+    {
+        return $this->desembarcosOperacionOrigenRel;
+    }
+
+    /**
+     * @param mixed $desembarcosOperacionOrigenRel
+     */
+    public function setDesembarcosOperacionOrigenRel($desembarcosOperacionOrigenRel): void
+    {
+        $this->desembarcosOperacionOrigenRel = $desembarcosOperacionOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDesembarcosOperacionDestinoRel()
+    {
+        return $this->desembarcosOperacionDestinoRel;
+    }
+
+    /**
+     * @param mixed $desembarcosOperacionDestinoRel
+     */
+    public function setDesembarcosOperacionDestinoRel($desembarcosOperacionDestinoRel): void
+    {
+        $this->desembarcosOperacionDestinoRel = $desembarcosOperacionDestinoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasOperacionRel()
+    {
+        return $this->recogidasOperacionRel;
+    }
+
+    /**
+     * @param mixed $recogidasOperacionRel
+     */
+    public function setRecogidasOperacionRel($recogidasOperacionRel): void
+    {
+        $this->recogidasOperacionRel = $recogidasOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecogidasProgramadasOperacionRel()
+    {
+        return $this->recogidasProgramadasOperacionRel;
+    }
+
+    /**
+     * @param mixed $recogidasProgramadasOperacionRel
+     */
+    public function setRecogidasProgramadasOperacionRel($recogidasProgramadasOperacionRel): void
+    {
+        $this->recogidasProgramadasOperacionRel = $recogidasProgramadasOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosRecogidasOperacionRel()
+    {
+        return $this->despachosRecogidasOperacionRel;
+    }
+
+    /**
+     * @param mixed $despachosRecogidasOperacionRel
+     */
+    public function setDespachosRecogidasOperacionRel($despachosRecogidasOperacionRel): void
+    {
+        $this->despachosRecogidasOperacionRel = $despachosRecogidasOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRutasRecogidasOperacionRel()
+    {
+        return $this->rutasRecogidasOperacionRel;
+    }
+
+    /**
+     * @param mixed $rutasRecogidasOperacionRel
+     */
+    public function setRutasRecogidasOperacionRel($rutasRecogidasOperacionRel): void
+    {
+        $this->rutasRecogidasOperacionRel = $rutasRecogidasOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDespachosOperacionRel()
+    {
+        return $this->despachosOperacionRel;
+    }
+
+    /**
+     * @param mixed $despachosOperacionRel
+     */
+    public function setDespachosOperacionRel($despachosOperacionRel): void
+    {
+        $this->despachosOperacionRel = $despachosOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuariosOperacionRel()
+    {
+        return $this->usuariosOperacionRel;
+    }
+
+    /**
+     * @param mixed $usuariosOperacionRel
+     */
+    public function setUsuariosOperacionRel($usuariosOperacionRel): void
+    {
+        $this->usuariosOperacionRel = $usuariosOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosOperacionRel()
+    {
+        return $this->recibosOperacionRel;
+    }
+
+    /**
+     * @param mixed $recibosOperacionRel
+     */
+    public function setRecibosOperacionRel($recibosOperacionRel): void
+    {
+        $this->recibosOperacionRel = $recibosOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasOperacionRel()
+    {
+        return $this->facturasOperacionRel;
+    }
+
+    /**
+     * @param mixed $facturasOperacionRel
+     */
+    public function setFacturasOperacionRel($facturasOperacionRel): void
+    {
+        $this->facturasOperacionRel = $facturasOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientesOperacionRel()
+    {
+        return $this->clientesOperacionRel;
+    }
+
+    /**
+     * @param mixed $clientesOperacionRel
+     */
+    public function setClientesOperacionRel($clientesOperacionRel): void
+    {
+        $this->clientesOperacionRel = $clientesOperacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getOperacionesOperacionCargoRel()
     {
         return $this->operacionesOperacionCargoRel;
@@ -668,8 +726,6 @@ class TteOperacion
     {
         $this->operacionesOperacionCargoRel = $operacionesOperacionCargoRel;
     }
-
-
 
 
 

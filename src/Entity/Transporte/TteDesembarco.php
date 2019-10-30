@@ -39,6 +39,16 @@ class TteDesembarco
     private $codigoDespachoFk;
 
     /**
+     * @ORM\Column(name="codigo_operacion_origen_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoOperacionOrigenFk;
+
+    /**
+     * @ORM\Column(name="codigo_operacion_destino_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoOperacionDestinoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TteGuia", inversedBy="desembarcosGuiaRel")
      * @ORM\JoinColumn(name="codigo_guia_fk", referencedColumnName="codigo_guia_pk")
      */
@@ -49,6 +59,18 @@ class TteDesembarco
      * @ORM\JoinColumn(name="codigo_despacho_fk", referencedColumnName="codigo_despacho_pk")
      */
     private $despachoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteOperacion", inversedBy="desembarcosOperacionOrigenRel")
+     * @ORM\JoinColumn(name="codigo_operacion_origen_fk", referencedColumnName="codigo_operacion_pk")
+     */
+    private $operacionOrigenRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteOperacion", inversedBy="desembarcosOperacionDestinoRel")
+     * @ORM\JoinColumn(name="codigo_operacion_destino_fk", referencedColumnName="codigo_operacion_pk")
+     */
+    private $operacionDestinoRel;
 
     /**
      * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
@@ -138,6 +160,38 @@ class TteDesembarco
     /**
      * @return mixed
      */
+    public function getCodigoOperacionOrigenFk()
+    {
+        return $this->codigoOperacionOrigenFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionOrigenFk
+     */
+    public function setCodigoOperacionOrigenFk($codigoOperacionOrigenFk): void
+    {
+        $this->codigoOperacionOrigenFk = $codigoOperacionOrigenFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionDestinoFk()
+    {
+        return $this->codigoOperacionDestinoFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionDestinoFk
+     */
+    public function setCodigoOperacionDestinoFk($codigoOperacionDestinoFk): void
+    {
+        $this->codigoOperacionDestinoFk = $codigoOperacionDestinoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getGuiaRel()
     {
         return $this->guiaRel;
@@ -165,6 +219,38 @@ class TteDesembarco
     public function setDespachoRel($despachoRel): void
     {
         $this->despachoRel = $despachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionOrigenRel()
+    {
+        return $this->operacionOrigenRel;
+    }
+
+    /**
+     * @param mixed $operacionOrigenRel
+     */
+    public function setOperacionOrigenRel($operacionOrigenRel): void
+    {
+        $this->operacionOrigenRel = $operacionOrigenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionDestinoRel()
+    {
+        return $this->operacionDestinoRel;
+    }
+
+    /**
+     * @param mixed $operacionDestinoRel
+     */
+    public function setOperacionDestinoRel($operacionDestinoRel): void
+    {
+        $this->operacionDestinoRel = $operacionDestinoRel;
     }
 
     /**

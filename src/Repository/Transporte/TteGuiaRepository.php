@@ -1086,7 +1086,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
                     if ($arGuia->getEstadoDespachado() == 1 && $arGuia->getEstadoEntregado() == 0) {
                         if ($fechaHora = date_create($arrControles['txtFechaEntrega' . $codigoGuia] . " " . $arrControles['txtHoraEntrega' . $codigoGuia])) {
-                            if($arGuia->getFechaDespacho() < $fechaHora) {
+                            if ($arGuia->getFechaDespacho() < $fechaHora) {
                                 $arGuia->setFechaEntrega($fechaHora);
                                 $arGuia->setEstadoEntregado(1);
                                 if (isset($arrControles['chkSoporte']) && $arrControles['chkSoporte']) {
@@ -1973,7 +1973,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             if ($arGuia->getEstadoDespachado() == 1) {
                 if ($arGuia->getEstadoEntregado() == 0) {
                     $fechaHora = date_create($fecha . " " . $hora);
-                    if($arGuia->getFechaDespacho() < $fechaHora) {
+                    if ($arGuia->getFechaDespacho() < $fechaHora) {
                         $arGuia->setFechaEntrega($fechaHora);
                         $arGuia->setEstadoEntregado(1);
                         if ($soporte == "si") {
@@ -2794,7 +2794,7 @@ class TteGuiaRepository extends ServiceEntityRepository
     /**
      * @param $arrCodigoGuia array
      */
-    public function desembarco($arrCodigoGuia, $arOperacion)
+    public function desembarco($arrCodigoGuia, $arOperacion, $usuario)
     {
         $em = $this->_em;
 
@@ -2804,6 +2804,11 @@ class TteGuiaRepository extends ServiceEntityRepository
                 if ($arGuia) {
                     if ($arGuia->getEstadoDespachado() && $arGuia->getCodigoDespachoFk() && !$arGuia->getEstadoAnulado() && !$arGuia->getEstadoSoporte() && !$arGuia->getEstadoEntregado()) {
                         $arDesembarco = new TteDesembarco();
+                        $arDesembarco->setDespachoRel($arGuia->getDespachoRel());
+                        $arDesembarco->setGuiaRel($arGuia);
+                        $arDesembarco->setOperacionOrigenRel($arGuia->getOperacionCargoRel());
+                        $arDesembarco->setOperacionDestinoRel($arOperacion);
+                        $arDesembarco->setFecha(new \DateTime('now'));
                         $arGuia->setFechaDespacho(null);
                         $arGuia->setFechaCumplido(null);
                         $arGuia->setFechaEntrega(null);
@@ -2814,10 +2819,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                         $arGuia->setEstadoEntregado(0);
                         $arGuia->setEstadoSoporte(0);
                         $arGuia->setOperacionCargoRel($arOperacion);
-                        $arDesembarco->setDespachoRel($arGuia->getDespachoRel());
-                        $arDesembarco->setGuiaRel($arGuia);
-                        $arDesembarco->setFecha(new \DateTime('now'));
-//                        $arDesembarco->setUsuario($this->getUser()->getUsername());
+                        $arDesembarco->setUsuario($usuario);
                         $arGuia->setCodigoDespachoFk(null);
                         $em->persist($arGuia);
                         $em->persist($arDesembarco);
@@ -3651,7 +3653,7 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($pesoFacturado < $pesoMinimoUnidad * $unidades) {
             $pesoFacturado = $pesoMinimoUnidad * $unidades;
         }
-        if($pesoFacturado < $pesoMinimoDespacho) {
+        if ($pesoFacturado < $pesoMinimoDespacho) {
             $pesoFacturado = $pesoMinimoDespacho;
         }
         $raw = ['precio' => $precio, 'origen' => $origen, 'destino' => $destino, 'producto' => $producto, 'zona' => $zona];
@@ -3671,10 +3673,10 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $flete = $pesoFacturado * $arrPrecioDetalle['vrPeso'];
                     break;
             }
-            if($fleteMinimoUnidad > $flete / $unidades) {
+            if ($fleteMinimoUnidad > $flete / $unidades) {
                 $flete = $fleteMinimoUnidad * $unidades;
             }
-            if($fleteMinimoDespacho > $flete) {
+            if ($fleteMinimoDespacho > $flete) {
                 $flete = $fleteMinimoDespacho;
             }
         }

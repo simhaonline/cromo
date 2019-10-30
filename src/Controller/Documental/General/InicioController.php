@@ -76,37 +76,42 @@ class InicioController extends Controller
             if ($form->get('BtnCargar')->isClicked()) {
                 $objArchivo = $form['attachment']->getData();
                 if ($objArchivo->getClientSize()) {
-                    $arArchivo = new DocArchivo();
-                    $arArchivo->setNombre($objArchivo->getClientOriginalName());
-                    $arArchivo->setExtensionOriginal($objArchivo->getClientOriginalExtension());
-                    $arArchivo->setTamano($objArchivo->getClientSize());
-                    $arArchivo->setTipo($objArchivo->getClientMimeType());
-                    $arArchivo->setCodigoArchivoTipoFk($tipo);
-                    $arArchivo->setCodigo($codigo);
-                    $arArchivo->setUsuario($this->getUser()->getUsername());
-                    $dateFecha = new \DateTime('now');
-                    $arArchivo->setFecha($dateFecha);
-                    $arArchivo->setDescripcion($form->get('descripcion')->getData());
-                    $arArchivo->setComentarios($form->get('comentarios')->getData());
-                    $directorio = $em->getRepository(DocDirectorio::class)->devolverDirectorio("A", $tipo);
-                    $arArchivo->setDirectorio($directorio);
-                    $arArchivo->setCodigoArchivoTipoFk($tipo);
-                    $error = false;
-                    $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
-                    $directorioDestino = $arrConfiguracion['rutaAlmacenamiento'] . "/archivo/" . $tipo . "/" . $directorio . "/";
-                    if (!file_exists($directorioDestino)) {
-                        if (!mkdir($directorioDestino, 0777, true)) {
-                            Mensajes::error('Fallo al crear directorio...' . $directorioDestino);
-                            $error = true;
+                    $peso = $objArchivo->getClientSize() / 1000000;
+                    if($peso <= 6) {
+                        $arArchivo = new DocArchivo();
+                        $arArchivo->setNombre($objArchivo->getClientOriginalName());
+                        $arArchivo->setExtensionOriginal($objArchivo->getClientOriginalExtension());
+                        $arArchivo->setTamano($objArchivo->getClientSize());
+                        $arArchivo->setTipo($objArchivo->getClientMimeType());
+                        $arArchivo->setCodigoArchivoTipoFk($tipo);
+                        $arArchivo->setCodigo($codigo);
+                        $arArchivo->setUsuario($this->getUser()->getUsername());
+                        $dateFecha = new \DateTime('now');
+                        $arArchivo->setFecha($dateFecha);
+                        $arArchivo->setDescripcion($form->get('descripcion')->getData());
+                        $arArchivo->setComentarios($form->get('comentarios')->getData());
+                        $directorio = $em->getRepository(DocDirectorio::class)->devolverDirectorio("A", $tipo);
+                        $arArchivo->setDirectorio($directorio);
+                        $arArchivo->setCodigoArchivoTipoFk($tipo);
+                        $error = false;
+                        $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+                        $directorioDestino = $arrConfiguracion['rutaAlmacenamiento'] . "/archivo/" . $tipo . "/" . $directorio . "/";
+                        if (!file_exists($directorioDestino)) {
+                            if (!mkdir($directorioDestino, 0777, true)) {
+                                Mensajes::error('Fallo al crear directorio...' . $directorioDestino);
+                                $error = true;
+                            }
                         }
+                        if ($error == false) {
+                            $em->persist($arArchivo);
+                            $em->flush();
+                            $strArchivo = $arArchivo->getCodigoArchivoPk() . "_" . $objArchivo->getClientOriginalName();
+                            $form['attachment']->getData()->move($directorioDestino, $strArchivo);
+                        }
+                        return $this->redirect($this->generateUrl('documental_general_general_lista', array('tipo' => $tipo, 'codigo' => $codigo)));
+                    } else {
+                        Mensajes::error("El archivo tiene un tamaño mayor al permitido");
                     }
-                    if ($error == false) {
-                        $em->persist($arArchivo);
-                        $em->flush();
-                        $strArchivo = $arArchivo->getCodigoArchivoPk() . "_" . $objArchivo->getClientOriginalName();
-                        $form['attachment']->getData()->move($directorioDestino, $strArchivo);
-                    }
-                    return $this->redirect($this->generateUrl('documental_general_general_lista', array('tipo' => $tipo, 'codigo' => $codigo)));
                 } else {
                     Mensajes::error("El archivo tiene un tamaño mayor al permitido");
                 }

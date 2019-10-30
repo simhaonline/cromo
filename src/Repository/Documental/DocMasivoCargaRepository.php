@@ -24,12 +24,16 @@ class DocMasivoCargaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function eliminar($arrDetallesSeleccionados)
+    public function eliminar($arrDetallesSeleccionados, $directorioBandeja)
     {
         if (count($arrDetallesSeleccionados)) {
             foreach ($arrDetallesSeleccionados as $codigo) {
                 $ar = $this->getEntityManager()->getRepository(DocMasivoCarga::class)->find($codigo);
                 if ($ar) {
+                    $archivo = $directorioBandeja . "/" . $ar->getArchivo();
+                    if(file_exists($archivo)) {
+                        unlink($archivo);
+                    }
                     $this->getEntityManager()->remove($ar);
                 }
             }

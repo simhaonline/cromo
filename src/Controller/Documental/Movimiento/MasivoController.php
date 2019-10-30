@@ -3,11 +3,14 @@
 namespace App\Controller\Documental\Movimiento;
 
 
+use App\Entity\Documental\DocArchivo;
 use App\Entity\Documental\DocConfiguracion;
 use App\Entity\Documental\DocDirectorio;
 use App\Entity\Documental\DocMasivo;
 use App\Entity\Documental\DocMasivoCarga;
 use App\Entity\Documental\DocMasivoTipo;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -66,38 +69,13 @@ class MasivoController extends Controller
                 $session->set('filtroDocMasivoIdentificador', $form->get('txtNumero')->getData());
             }
             if ($form->get('btnAnalizarBandeja')->isClicked()) {
-                $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
-                $directorioBandeja = $arrConfiguracion['rutaBandeja'];
-                $ficheros  = scandir($directorioBandeja);
-                foreach ($ficheros as $fichero) {
-                    if($fichero != "." && $fichero != "..") {
-                        $partes = explode(".", $fichero);
-                        if(count($partes) == 2 ) {
-                            $nombre = $partes[0];
-                            $extension = $partes[1];
-                            $archivo = $directorioBandeja . "/" . $fichero;
-                            $tamano = filesize($archivo);
-                            if($tamano < 8000000) {
-                                if($extension == 'pdf') {
-                                    $arMasivoCarga = new DocMasivoCarga();
-                                    $arMasivoCarga->setIdentificador($nombre);
-                                    $arMasivoCarga->setExtension($extension);
-                                    $arMasivoCarga->setArchivo($fichero);
-                                    $arMasivoCarga->setTamano($tamano);
-                                    $em->persist($arMasivoCarga);
-                                }
-                            }
-                            else {
-                                Mensajes::info("El archivo " . $fichero . " no fue procesado por que excede los 8M");
-                            }
-                        }
-                    }
-                }
-                $em->flush();
+                $this->analizarBandeja();
             }
             if ($form->get('btnEliminarDetalle')->isClicked()) {
+                $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+                $directorioBandeja = $arrConfiguracion['rutaBandeja'];
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(DocMasivoCarga::class)->eliminar($arrDetallesSeleccionados);
+                $em->getRepository(DocMasivoCarga::class)->eliminar($arrDetallesSeleccionados, $directorioBandeja);
                 return $this->redirect($this->generateUrl('documental_movimiento_masivo_masivo_carga'));
             }
             if ($form->get('btnCargar')->isClicked()) {
@@ -196,5 +174,102 @@ class MasivoController extends Controller
 
     }
 
+    /**
+     * @Route("/documental/movimiento/masivo/masivo/paquete", name="documental_movimiento_masivo_masivo_paquete")
+     */
+    public function alizarPaqueteAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+        $directorioBandeja = $arrConfiguracion['rutaBandeja'];
+        $directorioTemporal = $arrConfiguracion['rutaTemporal'];
+        $form = $this->createFormBuilder()
+            ->add('attachment', fileType::class)
+            ->add('BtnCargar', SubmitType::class, array('label' => 'Cargar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('BtnCargar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                if(file_exists($directorioBandeja)) {
+                    if(file_exists($directorioBandeja)) {
+                        $objArchivo = $form['attachment']->getData();
+                        if ($objArchivo->getClientSize()) {
+                            $directorioTemporalPaquete = $directorioTemporal . "/paquete/";
+                            if (!file_exists($directorioTemporalPaquete)) {
+                                if (!mkdir($directorioTemporalPaquete, 0777, true)) {
+                                    Mensajes::error('Fallo al crear directorio...' . $directorioTemporalPaquete);
+                                    $error = true;
+                                }
+                            }
+                            $form['attachment']->getData()->move($directorioTemporal, "paquete.zip");
+                            $zip = new \ZipArchive();
+                            if ($zip->open($directorioTemporal . '/paquete.zip') === TRUE) {
+                                $zip->extractTo($directorioTemporalPaquete);
+                                $zip->close();
+                            } else {
+                                Mensajes::error("Fallo la descompesion");
+                            }
+
+                            $ficheros  = scandir($directorioTemporalPaquete);
+                            foreach ($ficheros as $fichero) {
+                                if($fichero != "." && $fichero != "..") {
+                                    copy($directorioTemporalPaquete . $fichero, $directorioBandeja . "/" . $fichero);
+                                    unlink($directorioTemporalPaquete . $fichero);
+                                }
+                            }
+                            rmdir($directorioTemporalPaquete);
+                            unlink($directorioTemporal . '/paquete.zip');
+                            $this->analizarBandeja();
+                            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                        } else {
+                            Mensajes::error("El archivo tiene un tamaño mayor al permitido");
+                        }
+                    } else {
+                        Mensajes::error("No existe el directorio temporal" . $directorioTemporal);
+                    }
+                } else {
+                    Mensajes::error("No existe el directorio de bandeja" . $directorioBandeja);
+                }
+            }
+        }
+        return $this->render('documental/movimiento/masivo/masivo/paquete.html.twig', array(
+            'directorioBandeja' => $directorioBandeja,
+            'directorioTemporal' => $directorioTemporal,
+            'form' => $form->createView()
+        ));
+    }
+
+    private function analizarBandeja() {
+        $em = $this->getDoctrine()->getManager();
+        $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
+        $directorioBandeja = $arrConfiguracion['rutaBandeja'];
+        $ficheros  = scandir($directorioBandeja);
+        foreach ($ficheros as $fichero) {
+            if($fichero != "." && $fichero != "..") {
+                $partes = explode(".", $fichero);
+                if(count($partes) == 2 ) {
+                    $nombre = $partes[0];
+                    $extension = $partes[1];
+                    $archivo = $directorioBandeja . "/" . $fichero;
+                    $tamano = filesize($archivo);
+                    if($tamano < 8000000) {
+                        if($extension == 'pdf' || $extension == 'tif') {
+                            $arMasivoCarga = new DocMasivoCarga();
+                            $arMasivoCarga->setIdentificador($nombre);
+                            $arMasivoCarga->setExtension($extension);
+                            $arMasivoCarga->setArchivo($fichero);
+                            $arMasivoCarga->setTamano($tamano);
+                            $em->persist($arMasivoCarga);
+                        }
+                    }
+                    else {
+                        Mensajes::info("El archivo " . $fichero . " no fue procesado por que excede los 8M");
+                    }
+                }
+            }
+        }
+        $em->flush();
+    }
 }
 

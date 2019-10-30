@@ -18,6 +18,7 @@ class DocConfiguracionRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(DocConfiguracion::class, 'c')
             ->select('c.rutaBandeja')
             ->addSelect('c.rutaAlmacenamiento')
+            ->addSelect('c.rutaTemporal')
             ->where('c.codigoConfiguracionPk = 1');
         return $queryBuilder->getQuery()->getSingleResult();
     }

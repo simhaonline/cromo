@@ -33,6 +33,11 @@ class DocConfiguracion
     private $rutaAlmacenamiento;
 
     /**
+     * @ORM\Column(name="ruta_temporal", type="string", length=1000, nullable=true)
+     */
+    private $rutaTemporal;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -78,6 +83,22 @@ class DocConfiguracion
     public function setRutaAlmacenamiento($rutaAlmacenamiento): void
     {
         $this->rutaAlmacenamiento = $rutaAlmacenamiento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRutaTemporal()
+    {
+        return $this->rutaTemporal;
+    }
+
+    /**
+     * @param mixed $rutaTemporal
+     */
+    public function setRutaTemporal($rutaTemporal): void
+    {
+        $this->rutaTemporal = $rutaTemporal;
     }
 
 

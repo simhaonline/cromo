@@ -30,13 +30,17 @@
             </div>
         </div>
     </div>
-    <table class="table table-striped table-bordered table-hover">
+    <table class="table table-striped table-bordered table-hover tabla-datos">
         <thead>
         <tr>
             <th>ID</th>
             <th>FECHA</th>
-            <th>ID GUIA</th>
-            <th>ID DESPACHO</th>
+            <th>GUIA</th>
+            <th>DESPACHO</th>
+            <th>COD</th>
+            <th>ORIGEN</th>
+            <th>COD</th>
+            <th>DESTINO</th>
         </tr>
         </thead>
         <tbody>
@@ -46,6 +50,10 @@
                 <td>{{ arDesembarco.fecha | date('Y-m-d') }}</td>
                 <td>{{ arDesembarco.codigoGuiaFk }}</td>
                 <td>{{ arDesembarco.codigoDespachoFk }}</td>
+                <td>{{ arDesembarco.codigoOperacionOrigenFk }}</td>
+                <td>{{ arDesembarco.origen }}</td>
+                <td>{{ arDesembarco.codigoOperacionDestinoFk }}</td>
+                <td>{{ arDesembarco.destino }}</td>
             </tr>
         {% endfor %}
         </tbody>

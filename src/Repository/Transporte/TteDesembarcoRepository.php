@@ -17,12 +17,17 @@ class TteDesembarcoRepository extends ServiceEntityRepository
     public function lista()
     {
         $session = new Session();
-        $qb = $this->_em->createQueryBuilder()
+        $qb = $this->_em->createQueryBuilder()->from(TteDesembarco::class, 'd')
             ->select('d.codigoDesembarcoPk')
             ->addSelect('d.codigoDespachoFk')
             ->addSelect('d.codigoGuiaFk')
             ->addSelect('d.fecha')
-            ->from(TteDesembarco::class, 'd')
+            ->addSelect('d.codigoOperacionOrigenFk')
+            ->addSelect('oo.nombre AS origen')
+            ->addSelect('d.codigoOperacionDestinoFk')
+            ->addSelect('od.nombre AS destino')
+            ->leftJoin('d.operacionOrigenRel', 'oo')
+            ->leftJoin('d.operacionDestinoRel', 'od')
             ->where('d.codigoDesembarcoPk <> 0');
         if ($session->get('filtroTteDesembarcoFiltrarFecha')) {
             if ($session->get('filtroTteDesembarcoFechaDesde')) {

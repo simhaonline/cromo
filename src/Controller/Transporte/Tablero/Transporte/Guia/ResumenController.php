@@ -6,6 +6,7 @@ namespace App\Controller\Transporte\Tablero\Transporte\Guia;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteNovedad;
+use App\General\General;
 use App\Utilidades\Mensajes;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -30,6 +31,7 @@ class ResumenController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('fechaIngresoDesde', DateType::class, ['widget' => 'single_text', 'required' => false, 'data' => $fecha])
             ->add('fechaIngresoHasta', DateType::class, ['widget' => 'single_text', 'required' => false, 'data' => $fecha])
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
@@ -40,6 +42,12 @@ class ResumenController extends AbstractController
                     $raw['filtros'] = $this->getFiltros($form);
                     $arResumen = $em->getRepository(TteGuia::class)->tableroResumen($raw);
 
+                }
+                if ($form->get('btnExcel')->isClicked()) {
+                    set_time_limit(0);
+                    ini_set("memory_limit", -1);
+                    $raw['filtros'] = $this->getFiltros($form);
+                    General::get()->setExportar($em->getRepository(TteGuia::class)->tableroResumen($raw), "Resumen guias");
                 }
             }
         }

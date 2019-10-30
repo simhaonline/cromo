@@ -357,7 +357,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $intDias = $intDias->format('%a');
             $intDias += 1;
             $douVrHora = 0;
-            if ($arLicencia->getPaternidad() || $arLicencia->getMaternidad()) {
+            if ($arLicencia->getLicenciaTipoRel()->getPaternidad() || $arLicencia->getLicenciaTipoRel()->getMaternidad() || $arLicencia->getLicenciaTipoRel()->getRemunerada()) {
                 $douVrHora = ($arLicencia->getVrLicencia() / $arLicencia->getCantidad()) / $factorHorasDia;
             }
 

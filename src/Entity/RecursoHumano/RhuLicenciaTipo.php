@@ -44,6 +44,7 @@ class RhuLicenciaTipo
      * @ORM\Column(name="paternidad", type="boolean")
      */
     private $paternidad = false;
+
     /**
      * @ORM\Column(name="remunerada", type="boolean", nullable=true)
      */

@@ -29,6 +29,7 @@
             <tr>
                 <th>COD</th>
                 <th>OPERACION</th>
+                <th>TIPO</th>
                 <th>DESPACHOS</th>
                 <th>GUIAS</th>
                 <th>UNIDAD</th>
@@ -43,6 +44,7 @@
                 <tr>
                     <td>{{ arResumen.codigoOperacionFk }}</td>
                     <td>{{ arResumen.operacionNombre }}</td>
+                    <td>{{ arResumen.tipo }}</td>
                     <td class="numero">{{ arResumen.registros | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arResumen.guias | number_format(0, '.', ',') }}</td>
                     <td class="numero">{{ arResumen.unidades | number_format(0, '.', ',') }}</td>

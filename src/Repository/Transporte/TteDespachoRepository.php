@@ -1957,6 +1957,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
             ->select('d.codigoOperacionFk')
             ->addSelect('o.nombre as operacionNombre')
+            ->addSelect('dt.nombre AS tipo')
             ->addSelect('COUNT(d.codigoDespachoPk) as registros')
             ->addSelect('SUM(d.cantidad) as guias')
             ->addSelect('SUM(d.unidades) as unidades')
@@ -1965,7 +1966,9 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('SUM(d.pesoReal) as pesoReal')
             ->addSelect('SUM(d.pesoVolumen) as pesoVolumen')
             ->leftJoin('d.operacionRel', 'o')
-            ->groupBy('d.codigoOperacionFk');
+            ->leftJoin('d.despachoTipoRel', 'dt')
+            ->groupBy('d.codigoOperacionFk')
+            ->addGroupBy('d.codigoDespachoTipoFk');
         if ($fechaDesde) {
             $queryBuilder->andWhere("d.fechaSalida >= '{$fechaDesde} 00:00:00'");
         }

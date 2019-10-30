@@ -384,10 +384,7 @@ class GuiaController extends ControllerListenerGeneral
         } else {
             $filtro['operacionCargoIngreso'] = $arOperacionCargoIngreso;
         }
-
-
         return $filtro;
-
     }
 }
 

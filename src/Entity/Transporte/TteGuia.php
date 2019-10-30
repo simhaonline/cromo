@@ -284,6 +284,11 @@ class TteGuia
     private $estadoContabilizado = false;
 
     /**
+     * @ORM\Column(name="estado_digitalizado", type="boolean",options={"default":false})
+     */
+    private $estadoDigitalizado = false;
+
+    /**
      * @ORM\Column(name="codigo_despacho_fk", type="integer", nullable=true)
      */
     private $codigoDespachoFk;
@@ -2220,6 +2225,22 @@ class TteGuia
     public function setZonaRel($zonaRel): void
     {
         $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoDigitalizado()
+    {
+        return $this->estadoDigitalizado;
+    }
+
+    /**
+     * @param mixed $estadoDigitalizado
+     */
+    public function setEstadoDigitalizado($estadoDigitalizado): void
+    {
+        $this->estadoDigitalizado = $estadoDigitalizado;
     }
 
 

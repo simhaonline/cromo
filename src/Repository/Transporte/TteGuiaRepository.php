@@ -154,6 +154,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.estadoEmbarcado')
             ->addSelect('tg.estadoCumplido')
             ->addSelect('tg.estadoAnulado')
+            ->addSelect('tg.estadoDigitalizado')
             ->addSelect('tg.comentario')
             ->addSelect('tg.usuario')
             ->addSelect('ase.nombre')

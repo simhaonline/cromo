@@ -9,9 +9,21 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.txtIdentificador, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label class="col-sm-2 control-label"></label>
+                <label class="col-sm-3 control-label"></label>
+                <label class="col-sm-2 control-label">Existe:</label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.existe) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-4">
-                    
+
+                </div>
+                <label class="col-sm-3 control-label"></label>
+                <label class="col-sm-2 control-label">Estado digitalizado:</label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.estadoDigitalizado) }}
                 </div>
             </div>
         </div>
@@ -26,6 +38,8 @@
                 <th>ID</th>
                 <th>IDENTIFICADOR</th>
                 <th>ARCHIVO</th>
+                <th title="Si el registro existe o no">EXI</th>
+                <th title="Estado digitalizado">DIG</th>
                 <th><input type="checkbox" name="ChkSeleccionar" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
             </tr>
             </thead>
@@ -35,6 +49,8 @@
                     <td>{{ arMasivoCarga.codigoMasivoCargaPk }}</td>
                     <td>{{ arMasivoCarga.identificador }}</td>
                     <td>{{ arMasivoCarga.archivo }}</td>
+                    <td class="estado">{{ arMasivoCarga.existe?'SI':'NO' }}</td>
+                    <td class="estado">{{ arMasivoCarga.estadoDigitalizado?'SI':'NO' }}</td>
                     <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{  arMasivoCarga.codigoMasivoCargaPk }}" /></td>
                 </tr>
             {% endfor %}

@@ -43,6 +43,16 @@ class DocMasivoCarga
     private $tamano = 0;
 
     /**
+     * @ORM\Column(name="estado_digitalizado", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $estadoDigitalizado = false;
+
+    /**
+     * @ORM\Column(name="existe", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $existe = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoMasivoCargaPk()
@@ -120,6 +130,38 @@ class DocMasivoCarga
     public function setTamano($tamano): void
     {
         $this->tamano = $tamano;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoDigitalizado()
+    {
+        return $this->estadoDigitalizado;
+    }
+
+    /**
+     * @param mixed $estadoDigitalizado
+     */
+    public function setEstadoDigitalizado($estadoDigitalizado): void
+    {
+        $this->estadoDigitalizado = $estadoDigitalizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExiste()
+    {
+        return $this->existe;
+    }
+
+    /**
+     * @param mixed $existe
+     */
+    public function setExiste($existe): void
+    {
+        $this->existe = $existe;
     }
 
 

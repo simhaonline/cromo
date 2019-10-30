@@ -9,6 +9,9 @@ use App\Entity\Documental\DocDirectorio;
 use App\Entity\Documental\DocMasivo;
 use App\Entity\Documental\DocMasivoCarga;
 use App\Entity\Documental\DocMasivoTipo;
+use App\Entity\Financiero\FinRegistroInconsistencia;
+use App\Entity\Transporte\TteGuia;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,16 +60,21 @@ class MasivoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtIdentificador', TextType::class, ['required' => false, 'data' => $session->get('filtroDocMasivoIdentificador')])
+            ->add('txtIdentificador', TextType::class, ['required' => false])
+            ->add('estadoDigitalizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('existe', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEliminarDetalle', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnAnalizarBandeja', SubmitType::class, ['label' => 'Analizar bandeja', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnCargar', SubmitType::class, ['label' => 'Cargar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => '100000'
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroDocMasivoIdentificador', $form->get('txtNumero')->getData());
+                $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnAnalizarBandeja')->isClicked()) {
                 $this->analizarBandeja();
@@ -79,6 +87,8 @@ class MasivoController extends Controller
                 return $this->redirect($this->generateUrl('documental_movimiento_masivo_masivo_carga'));
             }
             if ($form->get('btnCargar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
                 $tipo = "TteGuia";
                 $arMasivoTipo = $em->getRepository(DocMasivoTipo::class)->find($tipo);
                 $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
@@ -129,6 +139,13 @@ class MasivoController extends Controller
                                 $arDirectorio->setNumeroArchivos($arDirectorio->getNumeroArchivos()+1);
                                 $em->persist($arDirectorio);
                                 $em->remove($arMasivoCarga);
+                                if($arMasivoCarga->getIdentificador()){
+                                    $arGuia = $em->getRepository(TteGuia::class)->find($arMasivoCarga->getIdentificador());
+                                    if($arGuia) {
+                                        $arGuia->setEstadoDigitalizado(1);
+                                        $em->persist($arGuia);
+                                    }
+                                }
                                 $em->flush();
                                 copy($origen, $destino);
                                 unlink($origen);
@@ -141,7 +158,7 @@ class MasivoController extends Controller
                 return $this->redirect($this->generateUrl('documental_movimiento_masivo_masivo_carga'));
             }
         }
-        $arMasivosCargas = $paginator->paginate($em->getRepository(DocMasivoCarga::class)->lista(), $request->query->getInt('page', 1), 50);
+        $arMasivosCargas = $paginator->paginate($em->getRepository(DocMasivoCarga::class)->lista($raw), $request->query->getInt('page', 1), 500);
         return $this->render('documental/movimiento/masivo/masivo/carga.html.twig', [
             'arMasivosCargas' => $arMasivosCargas,
             'form' => $form->createView()
@@ -242,6 +259,7 @@ class MasivoController extends Controller
 
     private function analizarBandeja() {
         $em = $this->getDoctrine()->getManager();
+        $em->createQueryBuilder()->delete(DocMasivoCarga::class, 'mc')->getQuery()->execute();
         $arrConfiguracion = $em->getRepository(DocConfiguracion::class)->archivoMasivo();
         $directorioBandeja = $arrConfiguracion['rutaBandeja'];
         $ficheros  = scandir($directorioBandeja);
@@ -260,6 +278,15 @@ class MasivoController extends Controller
                             $arMasivoCarga->setExtension($extension);
                             $arMasivoCarga->setArchivo($fichero);
                             $arMasivoCarga->setTamano($tamano);
+                            if($nombre) {
+                                $arGuia = $em->getRepository(TteGuia::class)->find($nombre);
+                                if($arGuia) {
+                                    $arMasivoCarga->setEstadoDigitalizado($arGuia->getEstadoDigitalizado());
+                                    $arMasivoCarga->setExiste(1);
+                                } else {
+                                    $arMasivoCarga->setExiste(0);
+                                }
+                            }
                             $em->persist($arMasivoCarga);
                         }
                     }
@@ -270,6 +297,16 @@ class MasivoController extends Controller
             }
         }
         $em->flush();
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'estadoDigitalizado' => $form->get('estadoDigitalizado')->getData(),
+            'existe' => $form->get('existe')->getData(),
+            'identificador' => $form->get('txtIdentificador')->getData()
+        ];
+        return $filtro;
     }
 }
 

@@ -164,6 +164,7 @@
             <th title="Facturado">F</th>
             <th title="Con novedad">N</th>
             <th title="Anulado">A</th>
+            <th title="Digitalizado">G</th>
             <th></th>
         </tr>
         </thead>
@@ -199,6 +200,7 @@
                 <td>{{ arGuia.estadoFacturado? "SI":"NO" }}</td>
                 <td>{{ arGuia.estadoNovedad? "SI":"NO" }}</td>
                 <td>{{ arGuia.estadoAnulado? "SI":"NO" }}</td>
+                <td>{{ arGuia.estadoDigitalizado? "SI":"NO" }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('transporte_movimiento_transporte_guia_detalle',{'id' : arGuia.codigoGuiaPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

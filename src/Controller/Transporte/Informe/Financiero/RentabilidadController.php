@@ -10,6 +10,8 @@ use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteOperacion;
 use App\Formato\Transporte\Rentabilidad;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +23,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class RentabilidadController extends Controller
+class RentabilidadController extends AbstractController
 {
     /**
      * @param Request $request
@@ -30,11 +32,10 @@ class RentabilidadController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/financiero/despacho/rentabilidad", name="transporte_informe_financiero_despacho_rentabilidad")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])
@@ -51,10 +52,10 @@ class RentabilidadController extends Controller
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-        ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
-        ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-        ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-        ->getForm();
+            ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->getForm();
         $form->handleRequest($request);
         $arDespachos = null;
         if ($form->isSubmitted()) {
@@ -71,7 +72,7 @@ class RentabilidadController extends Controller
                             $session->set('filtroTteDespachoCodigoDespachoTipo', null);
                         }
                         if ($arCentroOperacion) {
-                            $session->set('filtroTteDespachoCodigoCentroOperacion', $arDespachoTipo->getCodigoOperacionPk());
+                            $session->set('filtroTteDespachoCodigoCentroOperacion', $arCentroOperacion->getCodigoOperacionPk());
                         } else {
                             $session->set('filtroTteDespachoCodigoCentroOperacion', null);
                         }

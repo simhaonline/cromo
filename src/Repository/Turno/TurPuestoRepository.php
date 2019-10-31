@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteCondicionFlete;
 use App\Entity\Turno\TurPuesto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TurPuestoRepository extends ServiceEntityRepository
 {
@@ -40,6 +41,7 @@ class TurPuestoRepository extends ServiceEntityRepository
 
     public function lista()
     {
+        $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPuesto::class, 'p')
             ->select('p.codigoPuestoPk')
             ->addSelect("p.nombre")
@@ -53,6 +55,15 @@ class TurPuestoRepository extends ServiceEntityRepository
             ->leftJoin('p.programadorRel', 'pro')
             ->leftJoin('p.ciudadRel', 'c')
         ->leftJoin('p.clienteRel', 'cl');
+
+        if ($session->get('filtroTurPuestoCodigoPuesto') !=null){
+            $queryBuilder->andWhere("p.codigoPuestoPk = '{$session->get('filtroTurPuestoCodigoPuesto')}'");
+        }
+
+        if ($session->get('filtroTurPuestoNombreCliente') !=null){
+            $queryBuilder->andWhere("cl.nombreCorto like '%{$session->get('filtroTurPuestoNombreCliente')}%'");
+        }
+
         return $queryBuilder;
     }
 

@@ -3422,6 +3422,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                             $manejoFactura = 0;
                             $totalFactura = 0;
                             $tituloFactura = "";
+                            $tituloFacturaVenta = "";
                             $resolucionFactura = "";
                             if ($arGuia['factura']) {
                                 if ($arGuia['codigoFacturaTipoFk']) {
@@ -3429,6 +3430,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                                     if ($arFacturaTipo) {
                                         $numeroFactura = $arFacturaTipo->getPrefijo() . $arGuia['numeroFactura'];
                                         $tituloFactura = $arFacturaTipo->getNombre();
+                                        $tituloFacturaVenta = "FACTURA VENTA";
                                     }
                                 }
                                 $fleteFactura = $arGuia['vrFlete'];
@@ -3446,6 +3448,7 @@ class TteGuiaRepository extends ServiceEntityRepository
                                 "numero" => $arGuia['numero'],
                                 "codigoBarras" => "*" . $arGuia['codigoGuiaPk'] . "*",
                                 "numeroFactura" => $numeroFactura,
+                                "tituloFacturaVenta" => $tituloFacturaVenta,
                                 "tituloFactura" => $tituloFactura,
                                 "resolucionFactura" => $resolucionFactura,
                                 "codigoFacturaTipoFk" => $arGuia['codigoFacturaTipoFk'],

@@ -3,15 +3,14 @@
 namespace App\Controller\Tesoreria\Informe\CuentaPagar\CuentaPagar;
 
 
-
-
-
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Formato\Tesoreria\CarteraEdad;
 use App\Formato\Tesoreria\CuentaPagar;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,18 +23,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class CuentaPagarController extends Controller
+class CuentaPagarController extends AbstractController
 {
     /**
      * @Route("/tesoreria/informe/cuentapagar/cuentapagar/pendiente", name="tesoreria_informe_cuentapagar_cuentapagar_pendiente")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnEstadoCuenta', SubmitType::class, array('label' => 'Estado cuenta'))
             ->add('btnGenerarVencimientos', SubmitType::class, array('label' => 'Generar rango'))
@@ -52,14 +50,14 @@ class CuentaPagarController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->get('btnFiltrar')->isClicked() || $form->get('btnEstadoCuenta')->isClicked() || $form->get('btnCarteraEdadesCliente')->isClicked() || $form->get('btnExcel')->isClicked()) {
-            if ($request->get('cboTipoCuentaRel')){
+            if ($request->get('cboTipoCuentaRel')) {
                 $codigosCuenta = null;
-                foreach ($request->get('cboTipoCuentaRel') as $codigo){
+                foreach ($request->get('cboTipoCuentaRel') as $codigo) {
                     $codigosCuenta .= "'{$codigo}',";
                 }
                 $session->set('filtroTesCuentaPagarTipo', substr($codigosCuenta, 0, -1));
                 $session->set('selectCuentaPagarTipo', $request->get('cboTipoCuentaRel'));
-            }else{
+            } else {
                 $session->set('filtroTesCuentaPagarTipo', null);
                 $session->set('selectCuentaPagarTipo', null);
 
@@ -97,10 +95,9 @@ class CuentaPagarController extends Controller
         $cboTipoCuentaRel = $em->getRepository(TesCuentaPagarTipo::class)->selectCodigoNombre();
         return $this->render('tesoreria/informe/cuentapagar/pendientes.html.twig', [
             'arCuentasPagar' => $arCuentasPagar,
-            'cboTipoCuentaRel'=>$cboTipoCuentaRel,
+            'cboTipoCuentaRel' => $cboTipoCuentaRel,
             'form' => $form->createView()]);
     }
-    
 
 
 }

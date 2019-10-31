@@ -69,6 +69,16 @@ class TurPedido
     private $estadoContabilizado = false;
 
     /**
+     * @ORM\Column(name="estado_programado", type="boolean", options={"default":false})
+     */
+    private $estadoProgramado = false;
+
+    /**
+     * @ORM\Column(name="estado_facturado", type="boolean", options={"default":false})
+     */
+    private $estadoFacturado = false;
+
+    /**
      * @ORM\Column(name="fecha_generacion", type="date", nullable=true)
      */
     private $fechaGeneracion;

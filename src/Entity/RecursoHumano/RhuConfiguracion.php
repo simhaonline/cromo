@@ -54,6 +54,11 @@ class RhuConfiguracion
     private $codigoConceptoAdicionalDevengadoPactadoFk;
 
     /**
+     * @ORM\Column(name="codigo_concepto_adicional_1_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoAdicional1Fk;
+
+    /**
      * @ORM\Column(name="auxilio_transporte_no_prestacional", type="boolean", nullable=true)
      */
     private $auxilioTransporteNoPrestacional = false;
@@ -897,6 +902,22 @@ class RhuConfiguracion
     public function setConceptoVacacionRel($conceptoVacacionRel): void
     {
         $this->conceptoVacacionRel = $conceptoVacacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoAdicional1Fk()
+    {
+        return $this->codigoConceptoAdicional1Fk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoAdicional1Fk
+     */
+    public function setCodigoConceptoAdicional1Fk($codigoConceptoAdicional1Fk): void
+    {
+        $this->codigoConceptoAdicional1Fk = $codigoConceptoAdicional1Fk;
     }
 
 

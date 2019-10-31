@@ -566,6 +566,10 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         if($arrConfiguracion['codigoConceptoAdicionalDevengadoPactadoFk']) {
             $arConceptoDevengadoPactado = $em->getRepository(RhuConcepto::class)->find($arrConfiguracion['codigoConceptoAdicionalDevengadoPactadoFk']);
         }
+        $arConceptoAdicional1 = null;
+        if($arrConfiguracion['codigoConceptoAdicional1Fk']) {
+            $arConceptoAdicional1 = $em->getRepository(RhuConcepto::class)->find($arrConfiguracion['codigoConceptoAdicional1Fk']);
+        }
 
         $arSoporte = $em->getRepository(TurSoporte::class)->find($codigoSoporte);
         if ($arSoporte->getEstadoAprobado()) {
@@ -690,6 +694,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         $arAdicional = new RhuAdicional();
                         $arAdicional->setFecha($arProgramacion->getFechaDesde());
                         $arAdicional->setAplicaNomina(1);
+                        $arAdicional->setPermanente(0);
                         $arAdicional->setConceptoRel($arConceptoDevengadoPactado);
                         $arAdicional->setVrValor($arSoporteContrato['vrAdicionalDevengadoPactado']);
                         $arAdicional->setEmpleadoRel($em->getReference(RhuEmpleado::class, $arSoporteContrato['codigoEmpleadoFk']));
@@ -698,6 +703,22 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         $em->persist($arAdicional);
                     }
                 }
+
+                if($arSoporteContrato['vrAdicional1'] > 0) {
+                    if($arConceptoAdicional1) {
+                        $arAdicional = new RhuAdicional();
+                        $arAdicional->setFecha($arProgramacion->getFechaDesde());
+                        $arAdicional->setAplicaNomina(1);
+                        $arAdicional->setPermanente(0);
+                        $arAdicional->setConceptoRel($arConceptoAdicional1);
+                        $arAdicional->setVrValor($arSoporteContrato['vrAdicional1']);
+                        $arAdicional->setEmpleadoRel($em->getReference(RhuEmpleado::class, $arSoporteContrato['codigoEmpleadoFk']));
+                        $arAdicional->setContratoRel($em->getReference(RhuContrato::class, $arSoporteContrato['codigoContratoFk']));
+                        $arAdicional->setCodigoSoporteContratoFk($arSoporteContrato['codigoSoporteContratoPk']);
+                        $em->persist($arAdicional);
+                    }
+                }
+
             }
 
             /*$arProgramacionPago->setInconsistencias(0);

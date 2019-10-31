@@ -125,6 +125,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->addSelect('sc.horasRecargoFestivoNocturno')
             ->addSelect('sc.novedad')
             ->addSelect('sc.vrAdicionalDevengadoPactado')
+            ->addSelect('sc.vrAdicional1')
             ->leftJoin('sc.contratoRel', 'c')
             ->where('sc.codigoSoporteFk = ' . $id);
         $arSoporteContratos = $queryBuilder->getQuery()->getResult();

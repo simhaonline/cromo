@@ -13,6 +13,8 @@ use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
+use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurProgramacionRespaldo;
 use App\Entity\Turno\TurSoporte;
 use App\Form\Type\RecursoHumano\ProgramacionType;
 use App\Formato\RecursoHumano\Programacion;
@@ -292,11 +294,13 @@ class ProgramacionController extends AbstractController
         } else {
             $arPagoDetalles = null;
         }
+        $arProgramaciones = $em->getRepository(TurProgramacionRespaldo::class)->findBy(['codigoSoporteContratoFk' =>$arProgramacionDetalle->getCodigoSoporteContratoFk()]);
 
         return $this->render('recursohumano/movimiento/nomina/programacion/resumen.html.twig', [
             'arProgramacionDetalle' => $arProgramacionDetalle,
             'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles,
+            'arProgramaciones'=>$arProgramaciones,
             'form' => $form->createView()
         ]);
     }

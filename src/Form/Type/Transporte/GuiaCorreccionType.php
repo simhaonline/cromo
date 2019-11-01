@@ -95,14 +95,6 @@ class GuiaCorreccionType extends AbstractType {
                 },'choice_label' => 'nombre',
                 'required' => true
             ])
-            ->add('guiaTipoRel',EntityType::class,[
-                'class' => TteGuiaTipo::class,
-                'query_builder' => function(EntityRepository $er){
-                    return $er->createQueryBuilder('gt')
-                        ->orderBy('gt.nombre');
-                },'choice_label' => 'nombre',
-                'required' => true
-            ])
             ->add('tipoLiquidacion', TextType::class)
             ->add('estadoEntregado', CheckboxType::class, array('required'  => false))
             ->add('estadoSoporte', CheckboxType::class, array('required'  => false))

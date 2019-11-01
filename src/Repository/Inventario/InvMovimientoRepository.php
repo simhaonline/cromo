@@ -44,7 +44,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
     }
 
 
-    public function lista($raw, $codigoDocumento, $usuario = null)
+    public function lista($raw, $codigoDocumento, $usuario)
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;

@@ -108,7 +108,7 @@ class RemisionController extends AbstractController
                 return $this->redirect($this->generateUrl('inventario_movimiento_comercial_remision_lista'));
             }
         }
-        $arRemisiones = $paginator->paginate($em->getRepository(InvRemision::class)->lista($raw), $request->query->getInt('page', 1), 30);
+        $arRemisiones = $paginator->paginate($em->getRepository(InvRemision::class)->lista($raw, $this->getUser()), $request->query->getInt('page', 1), 30);
 
         return $this->render('inventario/movimiento/comercial/remision/lista.html.twig', [
             'arRemisiones' => $arRemisiones,

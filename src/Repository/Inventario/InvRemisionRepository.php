@@ -13,7 +13,6 @@ use App\Entity\Inventario\InvRemision;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvRemisionTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use http\Client\Curl\User;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Mensajes;
@@ -25,7 +24,7 @@ class InvRemisionRepository extends ServiceEntityRepository
         parent::__construct($registry, InvRemision::class);
     }
 
-    public function lista($raw)
+    public function lista($raw, $usuario)
     {
 
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
@@ -108,6 +107,11 @@ class InvRemisionRepository extends ServiceEntityRepository
             case '1':
                 $queryBuilder->andWhere("r.estadoAnulado = 1");
                 break;
+        }
+        if ($usuario) {
+            if ($usuario->getRestringirMovimientos()) {
+                $queryBuilder->andWhere("r.usuario='" . $usuario->getUsername() . "'");
+            }
         }
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();

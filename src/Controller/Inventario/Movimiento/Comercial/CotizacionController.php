@@ -92,7 +92,7 @@ class CotizacionController extends AbstractController
                 return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_lista'));
             }
         }
-        $arCotizaciones = $paginator->paginate($em->getRepository(InvCotizacion::class)->lista($raw), $request->query->getInt('page', 1), 30);
+        $arCotizaciones = $paginator->paginate($em->getRepository(InvCotizacion::class)->lista($raw, $this->getUser()), $request->query->getInt('page', 1), 30);
 
         return $this->render('inventario/movimiento/comercial/cotizacion/lista.html.twig', [
             'arCotizaciones' => $arCotizaciones,

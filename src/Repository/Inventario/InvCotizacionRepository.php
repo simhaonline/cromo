@@ -20,7 +20,7 @@ class InvCotizacionRepository extends ServiceEntityRepository
     /**
      * @return mixed
      */
-    public function lista($raw)
+    public function lista($raw, $usuario)
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
@@ -95,7 +95,11 @@ class InvCotizacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("i.estadoAnulado = 1");
                 break;
         }
-
+        if ($usuario) {
+            if ($usuario->getRestringirMovimientos()) {
+                $queryBuilder->andWhere("i.usuario='" . $usuario->getUsername() . "'");
+            }
+        }
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
     }

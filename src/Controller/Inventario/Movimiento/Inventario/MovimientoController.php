@@ -130,7 +130,7 @@ class MovimientoController extends AbstractController
                 General::get()->setExportar($em->getRepository(InvMovimiento::class)->lista($raw, $codigoDocumento, $this->getUser()), "Movimientos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(InvMovimiento::class)->eliminar($arrSeleccionados);
             }
         }

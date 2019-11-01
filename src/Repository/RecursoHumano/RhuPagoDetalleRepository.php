@@ -572,4 +572,21 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             return 0;
         }
     }
+
+    public function embargos($raw)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->select('pd')
+            ->leftJoin('pd.pagoRel', 'p')
+            ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.embargoRel', 'e')
+            ->where('c.embargo = 1')
+            ->andWhere("e.estadoActivo = 1")
+            ->andWhere("p.fechaDesde >= '{$raw['fechaDesde']} 00:00:00'")
+            ->andWhere("p.fechaHasta <= '{$raw['fechaHasta']} 23:59:59'")
+            ->orderBy('pd.codigoPagoDetallePk','DESC');
+
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

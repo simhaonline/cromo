@@ -105,6 +105,16 @@ class RhuConcepto
     private $cesantia = false;
 
     /**
+     * @ORM\Column(name="credito",options={"default":false} , type="boolean", nullable=true)
+     */
+    private $credito = false;
+
+    /**
+     * @ORM\Column(name="embargo",options={"default":false} , type="boolean", nullable=true)
+     */
+    private $embargo = false;
+
+    /**
      * @ORM\Column(name="numero_dian", type="integer", nullable=true)
      */
     private $numeroDian;
@@ -854,6 +864,37 @@ class RhuConcepto
         $this->configuracionConceptoVacacionRel = $configuracionConceptoVacacionRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCredito()
+    {
+        return $this->credito;
+    }
 
+    /**
+     * @param mixed $credito
+     */
+    public function setCredito($credito): void
+    {
+        $this->credito = $credito;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getEmbargo()
+    {
+        return $this->embargo;
+    }
+
+    /**
+     * @param mixed $embargo
+     */
+    public function setEmbargo($embargo): void
+    {
+        $this->embargo = $embargo;
+    }
+
+    
 }

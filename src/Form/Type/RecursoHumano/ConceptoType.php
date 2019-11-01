@@ -35,6 +35,9 @@ class ConceptoType extends AbstractType
             ->add('comision',CheckboxType::class,['required'=> false])
             ->add('cesantia',CheckboxType::class,['required'=> false])
             ->add('adicional',CheckboxType::class,['required'=> false])
+            ->add('credito',CheckboxType::class,['required'=> false])
+            ->add('embargo',CheckboxType::class,['required'=> false])
+            ->add('adicional',CheckboxType::class,['required'=> false])
             ->add('recargoNocturno',CheckboxType::class,['required'=> false])
             ->add('fondoSolidaridadPensional',CheckboxType::class,['required'=> false])
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);

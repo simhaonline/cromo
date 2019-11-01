@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <h2>Filtro</h2>
+            </header>
+            <div class="widget-body">
+                <div class="form-group form-group-sm">
+                    <label for="form_cboGuiaTipoRel" class="col-sm-1 control-label">Desde:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.fechaDesde, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="form_cboGuiaTipoRel" class="col-sm-1 control-label">Hasta:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

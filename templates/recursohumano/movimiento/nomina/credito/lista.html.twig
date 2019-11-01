@@ -68,8 +68,9 @@
             <th>CUOTA ACTUAL</th>
             <th>ABONOS</th>
             <th>SALDO</th>
-            <th title="Estado inactivo">PAG</th>
-            <th title="Estado inactivo">SUS</th>
+            <th title="Estado pagado">PAG</th>
+            <th title="Estado suspendio">SUS</th>
+            <th title="Inactivo periodo">INP</th>
             <th></th>
             <th></th>
         </tr>
@@ -91,6 +92,7 @@
                 <td class="numero">{{ arCredito.vrSaldo | number_format(0, '.', ',') }}</td>
                 <td>{{ arCredito.estadoPagado ? 'SI':'NO' }}</td>
                 <td>{{ arCredito.estadoSuspendido ? 'SI':'NO' }}</td>
+                <td>{{ arCredito.inactivoPeriodo ? 'SI':'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_nomina_credito_nuevo',{'id': arCredito.codigoCreditoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

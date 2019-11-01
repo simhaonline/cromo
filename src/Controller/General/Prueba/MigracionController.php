@@ -117,7 +117,7 @@ class MigracionController extends Controller
                 //$this->rhuPago($conn);
                 //$this->rhuPagoDetalle($conn);
                 //$this->rhuIncapacidadDiagnostico($conn);
-                //$this->rhuIncapacidad($conn);
+//                $this->rhuIncapacidad($conn);
                 //$this->rhuLicenciaTipo($conn);
                 //$this->rhuLicencia($conn);
                 //$this->turTurno($conn);
@@ -824,6 +824,7 @@ class MigracionController extends Controller
                         aplicar_cuota_cesantia,
                         validar_cuotas,
                         estado_suspendido,
+                        estado_inactivo_periodo,
                         saldo,
                         estado_pagado,
                         rhu_credito_tipo_pago.codigo_externo as codigo_credito_pago_tipo_externo
@@ -854,6 +855,7 @@ class MigracionController extends Controller
             $arCredito->setValidarCuotas($row['validar_cuotas']);
             $arCredito->setEstadoSuspendido($row['estado_suspendido']);
             $arCredito->setEstadoPagado($row['estado_pagado']);
+            $arCredito->setInactivoPeriodo($row['estado_inactivo_periodo']);
             $arCredito->setCreditoPagoTipoRel($em->getReference(RhuCreditoPagoTipo::class, $row['codigo_credito_pago_tipo_externo']));
             $em->persist($arCredito);
             $metadata = $em->getClassMetaData(get_class($arCredito));
@@ -1428,8 +1430,16 @@ class MigracionController extends Controller
             /*if($row['codigo_incapacidad_prorroga_fk']) {
                 $arIncapacidad->setIncapacidadProrrogaRel($em->getReference(RhuIncapacidad::class, $row['codigo_incapacidad_prorroga_fk']));
             }*/
-            $arIncapacidad->setFechaDesdeEmpresa(date_create($row['fecha_desde_empresa']));
-            $arIncapacidad->setFechaHastaEmpresa(date_create($row['fecha_hasta_empresa']));
+            if ($row['fecha_desde_empresa'] == null) {
+                $arIncapacidad->setFechaDesdeEmpresa(null);
+            } else {
+                $arIncapacidad->setFechaDesdeEmpresa(date_create($row['fecha_desde_empresa']));
+            }
+            if ($row['fecha_hasta_empresa'] == null) {
+                $arIncapacidad->setFechaHastaEmpresa(null);
+            } else {
+                $arIncapacidad->setFechaHastaEmpresa(date_create($row['fecha_hasta_empresa']));
+            }
             $arIncapacidad->setFechaDesdeEntidad(date_create($row['fecha_desde_entidad']));
             $arIncapacidad->setFechaHastaEntidad(date_create($row['fecha_hasta_entidad']));
             $arIncapacidad->setVrPropuesto($row['vr_propuesto']);

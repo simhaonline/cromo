@@ -136,7 +136,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
      */
     public function eliminar($arrSeleccionados)
     {
-        try{
+        try {
             foreach ($arrSeleccionados as $arrSeleccionado) {
                 $arRegistro = $this->getEntityManager()->getRepository(RhuProgramacion::class)->find($arrSeleccionado);
                 if ($arRegistro) {
@@ -324,6 +324,12 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $arPago->setEstadoAprobado(1);
                 $em->persist($arPago);
                 $arConsecutivo->setConsecutivo($arConsecutivo->getConsecutivo() + 1);
+                //Validar los creditos que se encuentran inactivos por periodo para activarlos automaticamente
+                $arCreditos = $em->getRepository(RhuCredito::class)->findBy(array('codigoEmpleadoFk' => $arPago->getCodigoEmpleadoFk(), 'codigoCreditoPagoTipoFk' => 'NOM', 'estadoPagado' => 0, 'estadoSuspendido' => 0, "inactivoPeriodo" => 1));
+                foreach ($arCreditos as $arCredito) {
+                    $arCredito->setInactivoPeriodo(0);
+                    $em->persist($arCredito);
+                }
             }
             $em->persist($arConsecutivo);
 
@@ -563,11 +569,11 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         ini_set("memory_limit", -1);
         $arrConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
         $arConceptoDevengadoPactado = null;
-        if($arrConfiguracion['codigoConceptoAdicionalDevengadoPactadoFk']) {
+        if ($arrConfiguracion['codigoConceptoAdicionalDevengadoPactadoFk']) {
             $arConceptoDevengadoPactado = $em->getRepository(RhuConcepto::class)->find($arrConfiguracion['codigoConceptoAdicionalDevengadoPactadoFk']);
         }
         $arConceptoAdicional1 = null;
-        if($arrConfiguracion['codigoConceptoAdicional1Fk']) {
+        if ($arrConfiguracion['codigoConceptoAdicional1Fk']) {
             $arConceptoAdicional1 = $em->getRepository(RhuConcepto::class)->find($arrConfiguracion['codigoConceptoAdicional1Fk']);
         }
 
@@ -689,8 +695,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     $arProgramacionDetalle->setVrAjusteComplementario($arSoportePago->getVrComplementarioCompensacion());
                 }*/
                 $em->persist($arProgramacionDetalle);
-                if($arSoporteContrato['vrAdicionalDevengadoPactado'] > 0) {
-                    if($arConceptoDevengadoPactado) {
+                if ($arSoporteContrato['vrAdicionalDevengadoPactado'] > 0) {
+                    if ($arConceptoDevengadoPactado) {
                         $arAdicional = new RhuAdicional();
                         $arAdicional->setFecha($arProgramacion->getFechaDesde());
                         $arAdicional->setAplicaNomina(1);
@@ -704,8 +710,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     }
                 }
 
-                if($arSoporteContrato['vrAdicional1'] > 0) {
-                    if($arConceptoAdicional1) {
+                if ($arSoporteContrato['vrAdicional1'] > 0) {
+                    if ($arConceptoAdicional1) {
                         $arAdicional = new RhuAdicional();
                         $arAdicional->setFecha($arProgramacion->getFechaDesde());
                         $arAdicional->setAplicaNomina(1);

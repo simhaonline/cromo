@@ -5,31 +5,31 @@
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo">DIURNA:</td>
-            <td align="right">{{ arSoporteContrato.vrDiurna | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrDiurna | number_format() }}</td>
             <td class="titulo">DESCANSO:</td>
-            <td align="right">{{ arSoporteContrato.vrDescanso | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrDescanso | number_format() }}</td>
             <td class="titulo">FESTIVA DIURNA:</td>
-            <td align="right">{{ arSoporteContrato.vrFestivaDiurna | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrFestivaDiurna | number_format() }}</td>
             <td class="titulo">EXTRA DIURNA:</td>
-            <td align="right">{{ arSoporteContrato.vrExtraOrdinariaDiurna | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrExtraOrdinariaDiurna | number_format() }}</td>
             <td class="titulo">EXTRA F_DIURNA:</td>
-            <td align="right">{{ arSoporteContrato.vrExtraFestivaDiurna | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrExtraFestivaDiurna | number_format() }}</td>
             <td class="titulo">RECARGO F_DIURNO</td>
-            <td align="right">{{ arSoporteContrato.vrRecargoFestivoDiurno | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrRecargoFestivoDiurno | number_format() }}</td>
         </tr>
         <tr>
             <td class="titulo">NOCTURNA:</td>
-            <td align="right">{{ arSoporteContrato.vrNocturna | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrNocturna | number_format() }}</td>
             <td class="titulo">RECARGO NOCTURNO:</td>
-            <td align="right">{{ arSoporteContrato.vrRecargoNocturno | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrRecargoNocturno | number_format() }}</td>
             <td class="titulo">FESTIVA NOCTURNA:</td>
-            <td align="right">{{ arSoporteContrato.vrFestivaNocturna | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrFestivaNocturna | number_format() }}</td>
             <td class="titulo">EXTRA NOCTURNA:</td>
-            <td align="right">{{ arSoporteContrato.vrExtraOrdinariaNocturna | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrExtraOrdinariaNocturna | number_format() }}</td>
             <td class="titulo">EXTRA F_NOCTURNA:</td>
-            <td align="right">{{ arSoporteContrato.vrExtraFestivaNocturna | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrExtraFestivaNocturna | number_format() }}</td>
             <td class="titulo">RECARGO F_NOCTURNO</td>
-            <td align="right">{{ arSoporteContrato.vrRecargoFestivoNocturno | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrRecargoFestivoNocturno | number_format() }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
@@ -43,38 +43,38 @@
             <td class="titulo"></td>
             <td align="right"></td>
             <td class="titulo">TOTAL:</td>
-            <td align="right">{{ arSoporteContrato.vrHoras | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrHoras | number_format() }}</td>
         </tr>
     </table>
     <br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo">DEVENGADO PACTADO:</td>
-            <td align="right">{{ arSoporteContrato.vrDevengadoPactado | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrDevengadoPactado | number_format() }}</td>
             <td class="titulo">ADICIONAL PACTADO:</td>
-            <td align="right">{{ arSoporteContrato.vrAdicionalDevengadoPactado | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrAdicionalDevengadoPactado | number_format() }}</td>
         </tr>
         <tr>
             <td class="titulo"></td>
             <td align="right"></td>
             <td class="titulo">ADICIONAL 1:</td>
-            <td align="right">{{ arSoporteContrato.vrAdicional1 | number_format()}}</td>
-        </tr>}
+            <td align="right">{{ arSoporteContrato.vrAdicional1 | number_format() }}</td>
+        </tr>
         <tr>
             <td class="titulo">DIAS TRANSPORTE:</td>
             <td align="right">{{ arSoporteContrato.diasTransporte }}</td>
             <td class="titulo">AUX TTE:</td>
-            <td align="right">{{ arSoporteContrato.vrAuxilioTransportePago | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrAuxilioTransportePago | number_format() }}</td>
         </tr>
         <tr>
             <td class="titulo">AUX TTE CONTRATO:</td>
-            <td align="right">{{ arSoporteContrato.vrAuxilioTransporte | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrAuxilioTransporte | number_format() }}</td>
             <td class="titulo">SALARIO:</td>
-            <td align="right">{{ arSoporteContrato.vrHoras | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrHoras | number_format() }}</td>
         </tr>
         <tr>
             <td class="titulo">SALARIO CONTRATO:</td>
-            <td align="right">{{ arSoporteContrato.vrSalario | number_format()}}</td>
+            <td align="right">{{ arSoporteContrato.vrSalario | number_format() }}</td>
             <td class="titulo"></td>
             <td align="right"></td>
         </tr>
@@ -82,139 +82,140 @@
     <br/>
 
     <table width="100%" class="table table-condensed table-bordered tabla-datos">
-                <thead>
-                <th>ID</th>
-                {% for arrDiaSemana in arrDiaSemana %}
-                    <th  {{ arrDiaSemana.festivo? 'class="dia-festivo"' :'' }}">{{ arrDiaSemana.dia }}{{ arrDiaSemana.diaSemana }}</th>
-                {% endfor %}
-                <th>C</th>
-                </thead>
-                <tbody>
-                {% set intCodigoCliente = '' %}
-                {% for arProgramacionDetalle in arProgramacionDetalles %}
-                    {% if intCodigoCliente != arProgramacionDetalle.puestoRel.codigoClienteFk %}
-                        <tr>
-                            <td id="suptipo" colspan="38">
-                                <b>{{ arProgramacionDetalle.puestoRel.clienteRel.nombreCorto | default('') }} |
-                                    {{ arProgramacionDetalle.puestoRel.codigoPuestoPk | default('') }} - {{ arProgramacionDetalle.puestoRel.nombre | default('') }} |
-                                    {{ arProgramacionDetalle.puestoRel.salarioFijoRel.nombre | default('') }} </b></td>
-                        </tr>
-                        {% set intCodigoCliente = arProgramacionDetalle.puestoRel.codigoClienteFk %}
-                        {% set intCodigoPuesto = '' %}
-                    {% endif %}
-                    <tr>
-                        <td> {{  arProgramacionDetalle.codigoProgramacionPk}}</td>
-                        <td>{{ arProgramacionDetalle.dia1 }}</td>
-                        <td>{{ arProgramacionDetalle.dia2 }}</td>
-                        <td>{{ arProgramacionDetalle.dia3 }}</td>
-                        <td>{{ arProgramacionDetalle.dia4 }}</td>
-                        <td>{{ arProgramacionDetalle.dia5 }}</td>
-                        <td>{{ arProgramacionDetalle.dia6 }}</td>
-                        <td>{{ arProgramacionDetalle.dia7 }}</td>
-                        <td>{{ arProgramacionDetalle.dia8 }}</td>
-                        <td>{{ arProgramacionDetalle.dia9 }}</td>
-                        <td>{{ arProgramacionDetalle.dia10 }}</td>
-                        <td>{{ arProgramacionDetalle.dia11 }}</td>
-                        <td>{{ arProgramacionDetalle.dia12 }}</td>
-                        <td>{{ arProgramacionDetalle.dia13 }}</td>
-                        <td>{{ arProgramacionDetalle.dia14 }}</td>
-                        <td>{{ arProgramacionDetalle.dia15 }}</td>
-                        <td>{{ arProgramacionDetalle.dia16 }}</td>
-                        <td>{{ arProgramacionDetalle.dia17 }}</td>
-                        <td>{{ arProgramacionDetalle.dia18 }}</td>
-                        <td>{{ arProgramacionDetalle.dia19 }}</td>
-                        <td>{{ arProgramacionDetalle.dia20 }}</td>
-                        <td>{{ arProgramacionDetalle.dia21 }}</td>
-                        <td>{{ arProgramacionDetalle.dia22 }}</td>
-                        <td>{{ arProgramacionDetalle.dia23 }}</td>
-                        <td>{{ arProgramacionDetalle.dia24 }}</td>
-                        <td>{{ arProgramacionDetalle.dia25 }}</td>
-                        <td>{{ arProgramacionDetalle.dia26 }}</td>
-                        <td>{{ arProgramacionDetalle.dia27 }}</td>
-                        <td>{{ arProgramacionDetalle.dia28 }}</td>
-                        <td>{{ arProgramacionDetalle.dia29 }}</td>
-                        <td>{{ arProgramacionDetalle.dia30 }}</td>
-                        <td>{{ arProgramacionDetalle.dia31 }}</td>
-                        <td>{% if arProgramacionDetalle.complementario == 1 %}C{% endif %} {% if arProgramacionDetalle.adicional == 1 %}A{% endif %}</td>
-
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-    <br/>
-    <table  width="100%" class="table table-condensed table-bordered tabla-datos">
-                <thead>
+        <thead>
+        <th>ID</th>
+        {% for arrDiaSemana in arrDiaSemana %}
+            <th {{ arrDiaSemana.festivo? 'class="dia-festivo"' :'' }}>{{ arrDiaSemana.dia }}{{ arrDiaSemana.diaSemana }}</th>
+        {% endfor %}
+        <th>C</th>
+        </thead>
+        <tbody>
+        {% set intCodigoCliente = '' %}
+        {% for arProgramacionDetalle in arProgramacionDetalles %}
+            {% if intCodigoCliente != arProgramacionDetalle.puestoRel.codigoClienteFk %}
                 <tr>
-                    <th></th>
-                    <th title="Horas descanso">HDS</th>
-                    <th title="Horas diurnas">HD</th>
-                    <th title="Horas nocturnas">HN</th>
-                    <th title="Horas festivas diurnas">HFD</th>
-                    <th title="Horas festivas nocturnas">HFN</th>
-                    <th title="Horas extras ordinarias diurnas">HEOD</th>
-                    <th title="Horas extras ordinarias nocturnas">HEON</th>
-                    <th title="Horas extras festivas diurnas">HEFD</th>
-                    <th title="Horas extras festivas nocturnas">HEFN</th>
-                    <th title="Horas recargo nocturno">RN</th>
-                    <th title="Horas recargo festivo diurno">RFD</th>
-                    <th title="Horas recargo festivo nocturno">RFN</th>
-                    <th title="Horas recargo">R</th>
-{#                    <th title="Horas adicionales">A</th>#}
-{#                    <th title="Horas domingo">DM</th>#}
-{#                    <th title="Dias periodo compensar">DPC</th>#}
-{#                    <th title="Dias periodo descanso compensar">DDPC</th>#}
-{#                    <th title="Dias transporte">DT</th>#}
+                    <td id="suptipo" colspan="33">
+                        <b>{{ arProgramacionDetalle.puestoRel.clienteRel.nombreCorto | default('') }} |
+                            {{ arProgramacionDetalle.puestoRel.codigoPuestoPk | default('') }}
+                            - {{ arProgramacionDetalle.puestoRel.nombre | default('') }} |
+                            {{ arProgramacionDetalle.puestoRel.salarioFijoRel.nombre | default('') }} </b></td>
                 </tr>
-                </thead>
-                        <tbody>
-                        <tr>
-                            <th>REALES</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasDescansoReales | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasDiurnasReales | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasNocturnasReales | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasFestivasDiurnasReales | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasFestivasNocturnasReales | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasExtrasOrdinariasDiurnasReales | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasExtrasOrdinariasNocturnasReales | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasExtrasFestivasDiurnasReales | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasExtrasFestivasNocturnasReales | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasRecargoNocturno | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasRecargoFestivoDiurno | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasRecargoFestivoNocturno | number_format(2, '.', ',') }}</th>
-                            <th style="text-align: right">{{ arSoporteContrato.horasRecargoReales | number_format(2, '.', ',') }}</th>
-{#                            <th style="text-align: right">{{ arSoporteContrato.horasAdicionales | number_format(2, '.', ',') }}</th>#}
-{#                            <th style="text-align: right">{{ arSoporteContrato.horasDomingo | number_format(2, '.', ',') }}</th>#}
-{#                            <th style="text-align: right">{{ arSoporteContrato.diasPeriodoCompensar | number_format(0, '.', ',') }}</th>#}
-{#                            <th style="text-align: right">{{ arSoporteContrato.diasPeriodoDescansoCompensar | number_format(0, '.', ',') }}</th>#}
-{#                            <th style="text-align: right">{{ arSoporteContrato.diasTransporteReal | number_format(0, '.', ',') }}</th>#}
-                        </tr>
-                            <tr>
-                                <td>COMPENSADAS</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasDescanso | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasDiurnas | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasNocturnas | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasFestivasDiurnas | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasFestivasNocturnas | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasExtrasOrdinariasDiurnas | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasExtrasOrdinariasNocturnas | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasExtrasFestivasDiurnas | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasExtrasFestivasNocturnas | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasRecargoNocturno | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasRecargoFestivoDiurno | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasRecargoFestivoNocturno | number_format(2, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arSoporteContrato.horasRecargo | number_format(2, '.', ',') }}</td>
-{#                                <td style="text-align: right">{{ arSoporteContrato.horasAdicionales | number_format(2, '.', ',') }}</td>#}
-{#                                <td style="text-align: right">{{ arSoporteContrato.horasDomingo | number_format(2, '.', ',') }}</td>#}
-{#                                <td style="text-align: right">{{ arSoporteContrato.diasPeriodoCompensar | number_format(0, '.', ',') }}</td>#}
-{#                                <td style="text-align: right">{{ arSoporteContrato.diasPeriodoDescansoCompensar | number_format(0, '.', ',') }}</td>#}
-{#                                <td style="text-align: right">{{ arSoporteContrato.diasTransporte | number_format(0, '.', ',') }}</td>#}
-                            </tr>
-                        </tbody>
-            </table>
+                {% set intCodigoCliente = arProgramacionDetalle.puestoRel.codigoClienteFk %}
+                {% set intCodigoPuesto = '' %}
+            {% endif %}
+            <tr>
+                <td> {{ arProgramacionDetalle.codigoProgramacionPk }}</td>
+                <td>{{ arProgramacionDetalle.dia1 }}</td>
+                <td>{{ arProgramacionDetalle.dia2 }}</td>
+                <td>{{ arProgramacionDetalle.dia3 }}</td>
+                <td>{{ arProgramacionDetalle.dia4 }}</td>
+                <td>{{ arProgramacionDetalle.dia5 }}</td>
+                <td>{{ arProgramacionDetalle.dia6 }}</td>
+                <td>{{ arProgramacionDetalle.dia7 }}</td>
+                <td>{{ arProgramacionDetalle.dia8 }}</td>
+                <td>{{ arProgramacionDetalle.dia9 }}</td>
+                <td>{{ arProgramacionDetalle.dia10 }}</td>
+                <td>{{ arProgramacionDetalle.dia11 }}</td>
+                <td>{{ arProgramacionDetalle.dia12 }}</td>
+                <td>{{ arProgramacionDetalle.dia13 }}</td>
+                <td>{{ arProgramacionDetalle.dia14 }}</td>
+                <td>{{ arProgramacionDetalle.dia15 }}</td>
+                <td>{{ arProgramacionDetalle.dia16 }}</td>
+                <td>{{ arProgramacionDetalle.dia17 }}</td>
+                <td>{{ arProgramacionDetalle.dia18 }}</td>
+                <td>{{ arProgramacionDetalle.dia19 }}</td>
+                <td>{{ arProgramacionDetalle.dia20 }}</td>
+                <td>{{ arProgramacionDetalle.dia21 }}</td>
+                <td>{{ arProgramacionDetalle.dia22 }}</td>
+                <td>{{ arProgramacionDetalle.dia23 }}</td>
+                <td>{{ arProgramacionDetalle.dia24 }}</td>
+                <td>{{ arProgramacionDetalle.dia25 }}</td>
+                <td>{{ arProgramacionDetalle.dia26 }}</td>
+                <td>{{ arProgramacionDetalle.dia27 }}</td>
+                <td>{{ arProgramacionDetalle.dia28 }}</td>
+                <td>{{ arProgramacionDetalle.dia29 }}</td>
+                <td>{{ arProgramacionDetalle.dia30 }}</td>
+                <td>{{ arProgramacionDetalle.dia31 }}</td>
+                <td>{% if arProgramacionDetalle.complementario == 1 %}C{% endif %} {% if arProgramacionDetalle.adicional == 1 %}A{% endif %}</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-datos">
+        <thead>
+        <tr>
+            <th></th>
+            <th title="Horas descanso">HDS</th>
+            <th title="Horas diurnas">HD</th>
+            <th title="Horas nocturnas">HN</th>
+            <th title="Horas festivas diurnas">HFD</th>
+            <th title="Horas festivas nocturnas">HFN</th>
+            <th title="Horas extras ordinarias diurnas">HEOD</th>
+            <th title="Horas extras ordinarias nocturnas">HEON</th>
+            <th title="Horas extras festivas diurnas">HEFD</th>
+            <th title="Horas extras festivas nocturnas">HEFN</th>
+            <th title="Horas recargo nocturno">RN</th>
+            <th title="Horas recargo festivo diurno">RFD</th>
+            <th title="Horas recargo festivo nocturno">RFN</th>
+            <th title="Horas recargo">R</th>
+            {#                    <th title="Horas adicionales">A</th>#}
+            {#                    <th title="Horas domingo">DM</th>#}
+            {#                    <th title="Dias periodo compensar">DPC</th>#}
+            {#                    <th title="Dias periodo descanso compensar">DDPC</th>#}
+            {#                    <th title="Dias transporte">DT</th>#}
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>REALES</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasDescansoReales | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasDiurnasReales | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasNocturnasReales | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasFestivasDiurnasReales | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasFestivasNocturnasReales | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasExtrasOrdinariasDiurnasReales | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasExtrasOrdinariasNocturnasReales | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasExtrasFestivasDiurnasReales | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasExtrasFestivasNocturnasReales | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasRecargoNocturno | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasRecargoFestivoDiurno | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasRecargoFestivoNocturno | number_format(2, '.', ',') }}</th>
+            <th style="text-align: right">{{ arSoporteContrato.horasRecargoReales | number_format(2, '.', ',') }}</th>
+            {#                            <th style="text-align: right">{{ arSoporteContrato.horasAdicionales | number_format(2, '.', ',') }}</th>#}
+            {#                            <th style="text-align: right">{{ arSoporteContrato.horasDomingo | number_format(2, '.', ',') }}</th>#}
+            {#                            <th style="text-align: right">{{ arSoporteContrato.diasPeriodoCompensar | number_format(0, '.', ',') }}</th>#}
+            {#                            <th style="text-align: right">{{ arSoporteContrato.diasPeriodoDescansoCompensar | number_format(0, '.', ',') }}</th>#}
+            {#                            <th style="text-align: right">{{ arSoporteContrato.diasTransporteReal | number_format(0, '.', ',') }}</th>#}
+        </tr>
+        <tr>
+            <td>COMPENSADAS</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasDescanso | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasDiurnas | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasNocturnas | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasFestivasDiurnas | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasFestivasNocturnas | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasExtrasOrdinariasDiurnas | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasExtrasOrdinariasNocturnas | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasExtrasFestivasDiurnas | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasExtrasFestivasNocturnas | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasRecargoNocturno | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasRecargoFestivoDiurno | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasRecargoFestivoNocturno | number_format(2, '.', ',') }}</td>
+            <td style="text-align: right">{{ arSoporteContrato.horasRecargo | number_format(2, '.', ',') }}</td>
+            {#                                <td style="text-align: right">{{ arSoporteContrato.horasAdicionales | number_format(2, '.', ',') }}</td>#}
+            {#                                <td style="text-align: right">{{ arSoporteContrato.horasDomingo | number_format(2, '.', ',') }}</td>#}
+            {#                                <td style="text-align: right">{{ arSoporteContrato.diasPeriodoCompensar | number_format(0, '.', ',') }}</td>#}
+            {#                                <td style="text-align: right">{{ arSoporteContrato.diasPeriodoDescansoCompensar | number_format(0, '.', ',') }}</td>#}
+            {#                                <td style="text-align: right">{{ arSoporteContrato.diasTransporte | number_format(0, '.', ',') }}</td>#}
+        </tr>
+        </tbody>
+    </table>
     <div class="btn-group" style="float: right">
         {{ form_widget(form.btnActualizar) }}
     </div>
-    <br /><br />
+    <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-datos">
         <thead>
         <tr>

@@ -15,11 +15,10 @@
                         </div>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <input id="txtNombre" name="txtNombre" type="text" class="form-control" value=""
-                                       readOnly="ReadOnly"/>
+                                {{ form_widget(form.txtNombreItem,{'attr':{'class':'form-control'}}) }}
                                 <span class="input-group-btn">
                                         <a class="btn btn-default btn-sm"
-                                           href="javascript:abrirVentana3('{{ path('inventario_buscar_item', { 'campoCodigo': 'txtCodigoItem', 'campoNombre': 'txtNombre' }) }}', 'buscarItem', 600, 900)">Buscar</a>
+                                           href="javascript:abrirVentana3('{{ path('inventario_buscar_item', { 'campoCodigo': 'form_txtCodigoItem', 'campoNombre': 'form_txtNombreItem'}) }}', 'buscarItem', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -27,10 +26,6 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-4">
-
-                </div>
                 <label class="col-sm-2 control-label">Fecha hasta:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaHasta) }}

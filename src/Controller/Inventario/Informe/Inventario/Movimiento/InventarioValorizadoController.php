@@ -33,7 +33,8 @@ class InventarioValorizadoController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('fechaHasta', DateType::class, array('label' => 'Fecha hasta: ', 'required' => false, 'data' => new \DateTime('now')))
-            ->add('txtCodigoItem', TextType::class, ['required' => false, 'data' => $session->get('filtroInvItemCodigo'), 'attr' => ['class' => 'form-control']])
+            ->add('txtCodigoItem', TextType::class, array('data' => $session->get('filtroInvInformeItemValorizadoCodigo'), 'required' => false))
+            ->add('txtNombreItem', TextType::class, array('data' => $session->get('filtroInvInformeItemValorizadoNombre'), 'required' => false , 'attr' => ['readonly' => 'readonly']))
             ->add('btnGenerar', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -41,10 +42,10 @@ class InventarioValorizadoController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvInformeItemValorizadoCodigo', $form->get('txtCodigoItem')->getData());
             }
             if ($form->get('btnGenerar')->isClicked()) {
-                $session->set('filtroInvItemCodigo', $form->get('txtCodigoItem')->getData());
+                $session->set('filtroInvInformeItemValorizadoCodigo', $form->get('txtCodigoItem')->getData());
                 $em->getRepository(InvInventarioValorizado::class)->generar($form->get('fechaHasta')->getData()->format('Y-m-d'));
 
             }

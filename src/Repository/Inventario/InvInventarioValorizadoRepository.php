@@ -34,8 +34,8 @@ class InvInventarioValorizadoRepository extends ServiceEntityRepository
             ->addSelect('iv.vrCosto')
             ->addSelect('iv.vrCostoTotal')
             ->leftJoin('iv.itemRel', 'i');
-        if ($session->get('filtroInvItemCodigo')) {
-            $queryBuilder->andWhere("iv.codigoItemFk = '{$session->get('filtroInvItemCodigo')}'");
+        if ($session->get('filtroInvInformeItemValorizadoCodigo')) {
+            $queryBuilder->andWhere("iv.codigoItemFk = '{$session->get('filtroInvInformeItemValorizadoCodigo')}'");
         }
         return $queryBuilder;
     }

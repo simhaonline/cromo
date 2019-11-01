@@ -250,7 +250,6 @@ class Pago extends \FPDF
                 $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia16(), 1, 0, 'L');
                 $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia17(), 1, 0, 'L');
                 $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia18(), 1, 0, 'L');
-                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia18(), 1, 0, 'L');
                 $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia19(), 1, 0, 'L');
                 $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia20(), 1, 0, 'L');
                 $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia21(), 1, 0, 'L');

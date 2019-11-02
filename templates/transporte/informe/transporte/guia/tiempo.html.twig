@@ -50,6 +50,9 @@
         <tr>
             <th>ID</th>
             <th>GUIA</th>
+            <th>ING</th>
+            <th>COD</th>
+            <th>ORIGEN</th>
             <th>COD</th>
             <th>DESTINO</th>
             <th>ING</th>
@@ -66,6 +69,9 @@
             <tr>
                 <td>{{ arInformeTiempo.codigoInformeTiempoPk }}</td>
                 <td>{{ arInformeTiempo.codigoGuiaFk }}</td>
+                <td>{{ arInformeTiempo.codigoOperacionIngresoFk }}</td>
+                <td>{{ arInformeTiempo.codigoCiudadOrigenFk }}</td>
+                <td>{{ arInformeTiempo.ciudadOrigenNombre }}</td>
                 <td>{{ arInformeTiempo.codigoCiudadDestinoFk }}</td>
                 <td>{{ arInformeTiempo.ciudadDestinoNombre }}</td>
                 <td>{{ arInformeTiempo.fechaIngreso | date('Y-m-d') }}</td>

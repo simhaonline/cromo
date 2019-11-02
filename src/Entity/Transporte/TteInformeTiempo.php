@@ -23,6 +23,21 @@ class TteInformeTiempo
     private $codigoGuiaFk;
 
     /**
+     * @ORM\Column(name="codigo_operacion_ingreso_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoOperacionIngresoFk;
+
+    /**
+     * @ORM\Column(name="codigo_ciudad_origen_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCiudadOrigenFk;
+
+    /**
+     * @ORM\Column(name="ciudad_origen_nombre", type="string", length=150, nullable=true)
+     */
+    private $ciudadOrigenNombre;
+
+    /**
      * @ORM\Column(name="codigo_ciudad_destino_fk", type="string", length=20, nullable=true)
      */
     private $codigoCiudadDestinoFk;
@@ -241,6 +256,54 @@ class TteInformeTiempo
     public function setEstadoNovedadSolucion($estadoNovedadSolucion): void
     {
         $this->estadoNovedadSolucion = $estadoNovedadSolucion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionIngresoFk()
+    {
+        return $this->codigoOperacionIngresoFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionIngresoFk
+     */
+    public function setCodigoOperacionIngresoFk($codigoOperacionIngresoFk): void
+    {
+        $this->codigoOperacionIngresoFk = $codigoOperacionIngresoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCiudadOrigenFk()
+    {
+        return $this->codigoCiudadOrigenFk;
+    }
+
+    /**
+     * @param mixed $codigoCiudadOrigenFk
+     */
+    public function setCodigoCiudadOrigenFk($codigoCiudadOrigenFk): void
+    {
+        $this->codigoCiudadOrigenFk = $codigoCiudadOrigenFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadOrigenNombre()
+    {
+        return $this->ciudadOrigenNombre;
+    }
+
+    /**
+     * @param mixed $ciudadOrigenNombre
+     */
+    public function setCiudadOrigenNombre($ciudadOrigenNombre): void
+    {
+        $this->ciudadOrigenNombre = $ciudadOrigenNombre;
     }
 
 

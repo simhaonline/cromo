@@ -60,7 +60,9 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->_em->createQueryBuilder()->from(TteGuia::class, 'g')
             ->select('g.codigoGuiaPk')
+            ->addSelect('g.codigoOperacionIngresoFk')
             ->addSelect('g.codigoClienteFk')
+            ->addSelect('g.codigoCiudadOrigenFk')
             ->addSelect('g.codigoCiudadDestinoFk')
             ->addSelect('c.nombreCorto AS cliente')
             ->addSelect('g.documentoCliente')
@@ -77,6 +79,7 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             ->addSelect('g.vrManejo')
             ->addSelect('g.unidades')
             ->addSelect('cd.nombre as ciudadDestinoNombre')
+            ->addSelect('co.nombre as ciudadOrigenNombre')
             ->addSelect('cd.lunes')
             ->addSelect('cd.martes')
             ->addSelect('cd.miercoles')
@@ -86,6 +89,7 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             ->addSelect('cd.domingo')
             ->leftJoin('g.clienteRel', 'c')
             ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.ciudadOrigenRel', 'co')
             ->orderBy('g.fechaIngreso', 'DESC')
             ->andWhere('g.estadoAnulado = 0');
         if ($session->get('filtroTteCodigoCliente')) {
@@ -125,17 +129,7 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             $fechaIngreso = date("Y-m-d", strtotime($arGuia['fechaIngreso']->format('Y-m-d') . "+ 1 days"));
             $fechaIngreso = date_create($fechaIngreso);
             $diaIngreso = $fechaIngreso->format('N');
-            /*$dif = 0;
-            foreach ($arrDias as $dia) {
-                if ($dia >= $diaIngreso) {
-                    $dif = $dia - $diaIngreso;
-                    break;
-                }
-            }*/
 
-            if($arGuia['codigoGuiaPk'] == 3008073) {
-                echo "hola mundo";
-            }
             $diaTemporal = $diaIngreso;
             $dif = 0;
             for ($i=1;$i<=7;$i++) {
@@ -171,6 +165,9 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             $arInformeTiempo->setFechaRuta($fechaRuta);
             $arInformeTiempo->setFechaEntrega($arGuia['fechaEntrega']);
             $arInformeTiempo->setCodigoGuiaFk($arGuia['codigoGuiaPk']);
+            $arInformeTiempo->setCodigoOperacionIngresoFk($arGuia['codigoOperacionIngresoFk']);
+            $arInformeTiempo->setCodigoCiudadOrigenFk($arGuia['codigoCiudadOrigenFk']);
+            $arInformeTiempo->setCiudadOrigenNombre($arGuia['ciudadOrigenNombre']);
             $arInformeTiempo->setCodigoCiudadDestinoFk($arGuia['codigoCiudadDestinoFk']);
             $arInformeTiempo->setCiudadDestinoNombre($arGuia['ciudadDestinoNombre']);
             $arInformeTiempo->setEstadoEntregado($arGuia['estadoEntregado']);
@@ -192,6 +189,9 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             ->addSelect('it.estadoNovedad')
             ->addSelect('it.estadoNovedadSolucion')
             ->addSelect('it.codigoGuiaFk')
+            ->addSelect('it.codigoOperacionIngresoFk')
+            ->addSelect('it.codigoCiudadOrigenFk')
+            ->addSelect('it.ciudadOrigenNombre')
             ->addSelect('it.codigoCiudadDestinoFk')
             ->addSelect('it.ciudadDestinoNombre');
         return $queryBuilder;
@@ -207,6 +207,9 @@ class TteInformeTiempoRepository extends ServiceEntityRepository
             ->addSelect('it.dias')
             ->addSelect('it.estadoEntregado')
             ->addSelect('it.codigoGuiaFk')
+            ->addSelect('it.codigoOperacionIngresoFk')
+            ->addSelect('it.codigoCiudadOrigenFk')
+            ->addSelect('it.ciudadOrigenNombre')
             ->addSelect('it.codigoCiudadDestinoFk')
             ->addSelect('it.ciudadDestinoNombre');
         return $queryBuilder->getQuery()->getResult();

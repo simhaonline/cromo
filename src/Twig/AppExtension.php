@@ -40,6 +40,7 @@ class AppExtension extends AbstractExtension
             new \Twig_Function('obtenerFormView', [$this, "obtenerFormView"]),
             new \Twig_Function('validarRuta', [$this, "validarRuta"]),
             new \Twig_Function('componerDiaProgramacionEmpleado', [$this, "componerDiaProgramacionEmpleado"]),
+            new \Twig_Function('menu', [$this, "menu"]),
         ];
     }
 
@@ -370,5 +371,18 @@ class AppExtension extends AbstractExtension
         }
 
         return $valorDia;
+    }
+
+    public function menu($modulo)
+    {
+        $menu = [
+            'movimiento' => [
+
+            ],
+            'administracion' => [
+
+            ]
+        ];
+        return "hola mundo";
     }
 }

@@ -17,6 +17,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+
 class VerMovimientoController extends Controller
 {
     /**
@@ -44,6 +47,8 @@ class VerMovimientoController extends Controller
         $form = $this->createFormBuilder()
             ->add('btnContabilizar', SubmitType::class, $arrBotonContabilizar)
             ->add('btnDescontabilizar', SubmitType::class, $arrBotonDescontabilizar)
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnPdf', SubmitType::class, array('label' => 'Imprimir'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -64,6 +69,10 @@ class VerMovimientoController extends Controller
                 $em->flush();
                 return $this->redirect($this->generateUrl('financiero_utilidad_general_vermovimiento', array('clase' => $clase, 'id' => $id)));
             }
+            if ($form->get('btnExcel')->isClicked()){
+                $arMovimientos = $this->getDoctrine()->getRepository(FinRegistro::class)->listaVerMovimiento($clase, $id)->getQuery()->getResult();
+                $this->exportarExcelPersonalizado($arMovimientos);
+            }
         }
         $query = $this->getDoctrine()->getRepository(FinRegistro::class)->listaVerMovimiento($clase, $id);
         $arRegistros = $paginator->paginate($query, $request->query->getInt('page', 1),500);
@@ -71,6 +80,51 @@ class VerMovimientoController extends Controller
             'arRegistros' => $arRegistros,
             'form' => $form->createView()
         ));
+    }
+
+    public function exportarExcelPersonalizado($arMovimientos){
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arMovimientos) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->setTitle('Movimientos');
+            $j = 0;
+            $arrColumnas=[ 'ID','P','NUMERO','P','NUM_REF','FECHA','VENCE','COMPRABANTE','CUENTA','C_C','NIT','TERCERO','DEBITO','CREDITO','BASE','DETALLE',
+            ];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arMovimientos as $arMovimiento) {
+                $hoja->setCellValue('A' . $j, $arMovimiento['id']);
+                $hoja->setCellValue('C' . $j, $arMovimiento['numeroPrefijo']);
+                $hoja->setCellValue('B' . $j, $arMovimiento['numero']);
+                $hoja->setCellValue('E' . $j, $arMovimiento['numeroReferenciaPrefijo']);
+                $hoja->setCellValue('D' . $j, $arMovimiento['numeroReferencia']);
+                $hoja->setCellValue('F' . $j, $arMovimiento['fecha']->format('Y/m/d'));
+                $hoja->setCellValue('G' . $j, $arMovimiento['fechaVence']);
+                $hoja->setCellValue('H' . $j, "{$arMovimiento['idComprobante']} - {$arMovimiento['comprobante']}");
+                $hoja->setCellValue('I' . $j, $arMovimiento['cuenta']);
+                $hoja->setCellValue('J' . $j, $arMovimiento['c_c']);
+                $hoja->setCellValue('K' . $j, $arMovimiento['nit']);
+                $hoja->setCellValue('L' . $j, $arMovimiento['tercero']);
+                $hoja->setCellValue('M' . $j, number_format($arMovimiento['vrDebito'], 0,'.', ','));
+                $hoja->setCellValue('N' . $j, number_format($arMovimiento['vrCredito'], 0,'.', ','));
+                $hoja->setCellValue('O' . $j, number_format($arMovimiento['vrBase'], 0,'.', ','));
+                $hoja->setCellValue('P' . $j, $arMovimiento['descripcion']);
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=soportes.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
     }
 
 }

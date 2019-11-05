@@ -189,10 +189,12 @@ class ContratoController extends AbstractController
                 //Generar liquidacion
                 if ($arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() != 'APR' && $arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() != 'PRA') {
                     $arLiquidacion = new RhuLiquidacion();
+                    $arLiquidacionTipo = $em->getRepository(RhuLiquidacionTipo::class)->find(1);
                     $arLiquidacion->setFecha(new \DateTime('now'));
                     $arLiquidacion->setEmpleadoRel($arContrato->getEmpleadoRel());
                     $arLiquidacion->setContratoRel($arContrato);
                     $arLiquidacion->setMotivoTerminacionRel($codigoMotivoContrato);
+                    $arLiquidacion->setLiquidacionTipoRel($arLiquidacionTipo);
                     if ($arContrato->getFechaUltimoPagoCesantias() > $arContrato->getFechaDesde()) {
                         $arLiquidacion->setFechaDesde($arContrato->getFechaUltimoPagoCesantias());
                     } else {

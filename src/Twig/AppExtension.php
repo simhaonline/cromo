@@ -377,7 +377,24 @@ class AppExtension extends AbstractExtension
     {
         $menu = [
             'movimiento' => [
+                'grupo' => [
+                    'recoleccion' => [
+                        'titulo' => 'Recogida',
+                        'titulo' => 'Despacho'
+                    ],
+                    'logistica' => [
 
+                    ],
+                    'Monitoreo' => [
+
+                    ],
+                    'Venta' => [
+
+                    ],
+                    'Financiero' => [
+
+                    ]
+                ]
             ],
             'administracion' => [
 

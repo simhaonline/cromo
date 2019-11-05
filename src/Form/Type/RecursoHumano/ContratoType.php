@@ -108,7 +108,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('grupoRel', EntityType::class, [
                 'class' => RhuGrupo::class,
@@ -184,7 +184,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('ciudadLaboraRel', EntityType::class, [
                 'class' => GenCiudad::class,
@@ -193,7 +193,7 @@ class ContratoType extends AbstractType
                         ->orderBy('r.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'required' => false
+                'required' => true
             ])
             ->add('centroTrabajoRel', EntityType::class, [
                 'class' => RhuCentroTrabajo::class,

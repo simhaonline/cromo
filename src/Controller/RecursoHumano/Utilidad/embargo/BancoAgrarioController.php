@@ -51,14 +51,13 @@ class BancoAgrarioController extends AbstractController
                 }
                 if ($respuesta == '') {
                     $arEmbargoPagos = $em->getRepository(RhuPagoDetalle::class)->embargos($raw);
-                    $arEmbargoPagos = $em->getRepository(RhuPagoDetalle::class)->embargos($raw);
                     if (count($arEmbargoPagos) > 0) {
                         $this->generarArchivoBancoAgrario($arEmbargoPagos, $fechasDesde, $fechasHasta);
                     } else {
-                        Mensajes::error('error', 'No se encontraron pagos a embargos entre las fechas ingresadas');
+                        Mensajes::error('No se encontraron pagos a embargos entre las fechas ingresadas');
                     }
                 } else {
-                    Mensajes::error('error', $respuesta);
+                    Mensajes::error($respuesta);
                 }
             }
         }

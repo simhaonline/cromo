@@ -35,7 +35,8 @@ class Manifiesto extends \FPDF {
         $arDespacho = self::$em->getRepository(TteDespacho::class)->find(self::$codigoDespacho);
         /** @var  $arConfiguracion GenConfiguracion */
         $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
-        $this->Image('../public/img/recursos/transporte/logo_min_transporte.jpg', 15, 10, 70, 38);
+        $this->Image('../public/img/recursos/transporte/mintransporte.png', 15, 15, 62, 15);
+        $this->Image('../public/img/recursos/transporte/supertransporte.jpeg', 15, 32, 62, 15);
         try {
             if (self::$imagen) {
                 $this->Image(self::$imagen, 90, 30, 40, 15, self::$extension);

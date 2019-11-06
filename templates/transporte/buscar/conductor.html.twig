@@ -1,8 +1,7 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
     <script language="javascript">
-        function selTercero(codigo, nombre, campoCodigo, campoNombre)
-        {
+        function selTercero(codigo, nombre, campoCodigo, campoNombre) {
             opener.document.getElementById(campoCodigo).value = codigo;
             opener.document.getElementById(campoNombre).value = nombre;
             opener.document.getElementById(campoCodigo).focus();
@@ -32,13 +31,19 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_txtNombre" class="col-sm-2 control-label">Inactivos:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.chkEstadoInactivo) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-10">
                     {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                 </div>
             </div>
         </div>
     </div>
-    <table  class="table table-striped table-bordered table-condensed table-hover tabla-datos">
+    <table class="table table-striped table-bordered table-condensed table-hover tabla-datos">
         <tr>
             <th>{{ knp_pagination_sortable(arConductores, 'CÓDIGO', 'e.codigoConductorPk') }}</th>
             <th>IDENTIFICACION</th>
@@ -47,23 +52,26 @@
         </tr>
         {% for arConductores in arConductores %}
             <tr>
-                <td><input type="hidden" name="LblCodigo[]" value="{{ arConductores.codigoConductorPk }}">{{ arConductores.codigoConductorPk }} </td>
-                <td>{{ arConductores.numeroIdentificacion  }}</td>
+                <td><input type="hidden" name="LblCodigo[]"
+                           value="{{ arConductores.codigoConductorPk }}">{{ arConductores.codigoConductorPk }} </td>
+                <td>{{ arConductores.numeroIdentificacion }}</td>
                 <td>{{ arConductores.nombreCorto }}</td>
-                <td style="text-align: center"><a href="javascript:selTercero('{{ arConductores.codigoConductorPk }}','{{ arConductores.nombreCorto }}','{{ campoCodigo }}','{{ campoNombre }}')" ><i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a></td>
+                <td style="text-align: center"><a
+                            href="javascript:selTercero('{{ arConductores.codigoConductorPk }}','{{ arConductores.nombreCorto }}','{{ campoCodigo }}','{{ campoNombre }}')"><i
+                                class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a></td>
             </tr>
         {% endfor %}
     </table>
 
 
     <!-- Botones Menu Items -->
-    <div class="btn-toolbar">
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arConductores.getTotalItemCount }}</span></div>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">
+            <span class="badge">{{ arConductores.getTotalItemCount }}</span>
         </div>
-        <div class="btn-group btn-sm" style="float: left;margin-left: 0px;padding-top: 0px;">
-            {{ knp_pagination_render(arConductores) }}
-        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arConductores) }}
     </div>
     <!-- Fin Botones Menu Items -->
     {{ form_rest(form) }}

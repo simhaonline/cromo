@@ -2,34 +2,41 @@
 
 namespace App\Controller\Transporte\Buscar;
 
+use App\Controller\BaseController;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteConductor;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
-class ConductorController extends Controller
+
+class ConductorController extends BaseController
 {
-   /**
-    * @Route("/transporte/bus/conductor/{campoCodigo}/{campoNombre}", name="transporte_bus_conductor")
-    */    
-    public function lista(Request $request, $campoCodigo, $campoNombre)
+    /**
+     * @Route("/transporte/bus/conductor/{campoCodigo}/{campoNombre}", name="transporte_bus_conductor")
+     */
+    public function lista(Request $request, PaginatorInterface $paginator, $campoCodigo, $campoNombre)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('TxtNombre', TextType::class, array('label'  => 'Nombre', 'data' => $session->get('filtroTteConductorNombre')))
-            ->add('TxtCodigo', TextType::class, array('label'  => 'Codigo'))
-            ->add('TxtNumeroIdentificacion', TextType::class, array('label'  => 'Numero identificacion'))
-            ->add('BtnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
+            ->add('TxtNombre', TextType::class, array('label' => 'Nombre', 'data' => $session->get('filtroTteConductorNombre')))
+            ->add('TxtCodigo', TextType::class, array('label' => 'Codigo', 'data' => $session->get('filtroTteConductorCodigo')))
+            ->add('TxtNumeroIdentificacion', TextType::class, array('label' => 'Nombre', 'data' => $session->get('filtroTteConductorNumeroIdentificacion')))
+            ->add('chkEstadoInactivo', CheckboxType::class, ['label' => ' ', 'required' => false, 'data' => $session->get('filtroTteConductorEstadoInactivo')])
+            ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('BtnFiltrar')->isClicked()) {
+            if ($form->get('BtnFiltrar')->isClicked()) {
                 $session->set('filtroTteConductorNombre', $form->get('TxtNombre')->getData());
+                $session->set('filtroTteConductorEstadoInactivo', $form->get('chkEstadoInactivo')->getData());
+                $session->set('filtroTteConductorCodigo', $form->get('TxtCodigo')->getData());
+                $session->set('filtroTteConductorNumeroIdentificacion', $form->get('TxtNumeroIdentificacion')->getData());
             }
         }
         $arConductores = $paginator->paginate($em->getRepository(TteConductor::class)->listaDql(), $request->query->get('page', 1), 20);
@@ -49,16 +56,16 @@ class ConductorController extends Controller
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('TxtCodigo', TextType::class, array('label'  => 'Codigo', 'data' => $session->get('filtroTteCiudadCodigo')))
-            ->add('TxtNombre', TextType::class, array('label'  => 'Nombre', 'data' => $session->get('filtroTteCiudadNombre')))
+            ->add('TxtCodigo', TextType::class, array('label' => 'Codigo', 'data' => $session->get('filtroTteCiudadCodigo')))
+            ->add('TxtNombre', TextType::class, array('label' => 'Nombre', 'data' => $session->get('filtroTteCiudadNombre')))
 //            ->add('TxtNumeroIdentificacion', TextType::class, array('label'  => 'Numero identificacion'))
-            ->add('BtnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
+            ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('BtnFiltrar')->isClicked()) {
+            if ($form->get('BtnFiltrar')->isClicked()) {
                 $session->set('filtroTteCiudadNombre', $form->get('TxtNombre')->getData());
                 $session->set('filtroTteCiudadCodigo', $form->get('TxtCodigo')->getData());
             }
@@ -80,15 +87,15 @@ class ConductorController extends Controller
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('TxtCodigoCiudadDestino', TextType::class, array('label'  => 'Codigo', 'data' => $session->get('filtroTteCiudadCodigoDestino')))
-            ->add('TxtNombreCiudadDestino', TextType::class, array('label'  => 'Nombre', 'data' => $session->get('filtroTteCiudadNombreDestino')))
-            ->add('BtnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
+            ->add('TxtCodigoCiudadDestino', TextType::class, array('label' => 'Codigo', 'data' => $session->get('filtroTteCiudadCodigoDestino')))
+            ->add('TxtNombreCiudadDestino', TextType::class, array('label' => 'Nombre', 'data' => $session->get('filtroTteCiudadNombreDestino')))
+            ->add('BtnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('BtnFiltrar')->isClicked()) {
+            if ($form->get('BtnFiltrar')->isClicked()) {
                 $session->set('filtroTteCiudadCodigoDestino', $form->get('TxtCodigoCiudadDestino')->getData());
                 $session->set('filtroTteCiudadNombreDestino', $form->get('TxtNombreCiudadDestino')->getData());
             }
@@ -103,4 +110,5 @@ class ConductorController extends Controller
     }
 
 }
+
 

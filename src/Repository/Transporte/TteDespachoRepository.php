@@ -367,73 +367,77 @@ class TteDespachoRepository extends ServiceEntityRepository
         /** @var $arDespacho TteDespacho */
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigoDespacho);
         if (!$arDespacho->getEstadoAprobado()) {
-            if ($arDespacho->getCantidad() > 0) {
-                if ($arDespacho->getVrTotal() >= 0) {
-                    $fechaActual = new \DateTime('now');
-                    if ($arDespacho->getConductorRel()->getFechaVenceLicencia() > $fechaActual) {
-                        if ($arDespacho->getVehiculoRel()->getFechaVencePoliza() > $fechaActual) {
-                            if ($arDespacho->getVehiculoRel()->getFechaVenceTecnicomecanica() > $fechaActual) {
-                                $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
-                                if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
-                                    $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
-                                    $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
-                                    $em->persist($arDespachoTipo);
-                                } else {
-                                    Mensajes::error("El despacho ya tenia numero, por favor notifique el caso al administrador del sistema");
-                                }
-                                $arDespacho->setFechaSalida($fechaActual);
-                                $arDespacho->setEstadoAprobado(1);
+            if ($arDespacho->getConductorRel()->getEstadoInactivo() == 0) {
+                if ($arDespacho->getCantidad() > 0) {
+                    if ($arDespacho->getVrTotal() >= 0) {
+                        $fechaActual = new \DateTime('now');
+                        if ($arDespacho->getConductorRel()->getFechaVenceLicencia() > $fechaActual) {
+                            if ($arDespacho->getVehiculoRel()->getFechaVencePoliza() > $fechaActual) {
+                                if ($arDespacho->getVehiculoRel()->getFechaVenceTecnicomecanica() > $fechaActual) {
+                                    $arDespachoTipo = $em->getRepository(TteDespachoTipo::class)->find($arDespacho->getCodigoDespachoTipoFk());
+                                    if ($arDespacho->getNumero() == 0 || $arDespacho->getNumero() == NULL) {
+                                        $arDespacho->setNumero($arDespachoTipo->getConsecutivo());
+                                        $arDespachoTipo->setConsecutivo($arDespachoTipo->getConsecutivo() + 1);
+                                        $em->persist($arDespachoTipo);
+                                    } else {
+                                        Mensajes::error("El despacho ya tenia numero, por favor notifique el caso al administrador del sistema");
+                                    }
+                                    $arDespacho->setFechaSalida($fechaActual);
+                                    $arDespacho->setEstadoAprobado(1);
 
-                                $vehiculoDisponible = $em->getRepository(TteVehiculoDisponible::class)->findOneBy([('codigoVehiculoFk') => $arDespacho->getCodigoVehiculoFk(), 'estadoDespachado' => 0, 'estadoDescartado' => 0]);
-                                if ($vehiculoDisponible) {
-                                    $vehiculoDisponible->setEstadoDespachado(1);
-                                    $vehiculoDisponible->setFechaDespacho($fechaActual);
-                                    $em->persist($vehiculoDisponible);
-                                }
+                                    $vehiculoDisponible = $em->getRepository(TteVehiculoDisponible::class)->findOneBy([('codigoVehiculoFk') => $arDespacho->getCodigoVehiculoFk(), 'estadoDespachado' => 0, 'estadoDescartado' => 0]);
+                                    if ($vehiculoDisponible) {
+                                        $vehiculoDisponible->setEstadoDespachado(1);
+                                        $vehiculoDisponible->setFechaDespacho($fechaActual);
+                                        $em->persist($vehiculoDisponible);
+                                    }
 
-                                $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 1, g.fechaDespacho=:fecha 
+                                    $query = $em->createQuery('UPDATE App\Entity\Transporte\TteGuia g set g.estadoDespachado = 1, g.fechaDespacho=:fecha 
                                                                 WHERE g.codigoDespachoFk = :codigoDespacho')
-                                    ->setParameter('codigoDespacho', $codigoDespacho)
-                                    ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
-                                $query->execute();
+                                        ->setParameter('codigoDespacho', $codigoDespacho)
+                                        ->setParameter('fecha', $fechaActual->format('Y-m-d H:i'));
+                                    $query->execute();
 
-                                //Generar monitoreo
-                                if ($arDespachoTipo->getGeneraMonitoreo()) {
-                                    $arMonitoreo = new TteMonitoreo();
-                                    $arMonitoreo->setVehiculoRel($arDespacho->getVehiculoRel());
-                                    $arMonitoreo->setDespachoRel($arDespacho);
-                                    $arMonitoreo->setCiudadDestinoRel($arDespacho->getCiudadDestinoRel());
-                                    $arMonitoreo->setFechaRegistro(new \DateTime('now'));
-                                    $arMonitoreo->setFechaInicio(new \DateTime('now'));
-                                    $arMonitoreo->setFechaFin(new \DateTime('now'));
-                                    $em->persist($arMonitoreo);
-                                }
-                                $em->persist($arDespacho);
+                                    //Generar monitoreo
+                                    if ($arDespachoTipo->getGeneraMonitoreo()) {
+                                        $arMonitoreo = new TteMonitoreo();
+                                        $arMonitoreo->setVehiculoRel($arDespacho->getVehiculoRel());
+                                        $arMonitoreo->setDespachoRel($arDespacho);
+                                        $arMonitoreo->setCiudadDestinoRel($arDespacho->getCiudadDestinoRel());
+                                        $arMonitoreo->setFechaRegistro(new \DateTime('now'));
+                                        $arMonitoreo->setFechaInicio(new \DateTime('now'));
+                                        $arMonitoreo->setFechaFin(new \DateTime('now'));
+                                        $em->persist($arMonitoreo);
+                                    }
+                                    $em->persist($arDespacho);
 
-                                //Generar cuenta por pagar
-                                if ($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
-                                    $this->generarCuentaPagar($arDespacho);
-                                }
+                                    //Generar cuenta por pagar
+                                    if ($arDespacho->getDespachoTipoRel()->getGeneraCuentaPagar()) {
+                                        $this->generarCuentaPagar($arDespacho);
+                                    }
 
-                                $em->flush();
-                                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
-                                if ($arConfiguracion['contabilidadAutomatica']) {
-                                    $this->contabilizar(array($arDespacho->getCodigoDespachoPk()));
+                                    $em->flush();
+                                    $arConfiguracion = $em->getRepository(GenConfiguracion::class)->contabilidadAutomatica();
+                                    if ($arConfiguracion['contabilidadAutomatica']) {
+                                        $this->contabilizar(array($arDespacho->getCodigoDespachoPk()));
+                                    }
+                                } else {
+                                    Mensajes::error('El vehículo tiene la revisión tecnicomecanica vencida');
                                 }
                             } else {
-                                Mensajes::error('El vehículo tiene la revisión tecnicomecanica vencida');
+                                Mensajes::error('El vehículo tiene la póliza vencida');
                             }
                         } else {
-                            Mensajes::error('El vehículo tiene la póliza vencida');
+                            Mensajes::error('El conductor tiene la licencia de conducción vencida');
                         }
                     } else {
-                        Mensajes::error('El conductor tiene la licencia de conducción vencida');
+                        Mensajes::error("El total del despacho no puede ser negativo");
                     }
                 } else {
-                    Mensajes::error("El total del despacho no puede ser negativo");
+                    Mensajes::error("El despacho debe tener guias asignadas");
                 }
             } else {
-                Mensajes::error("El despacho debe tener guias asignadas");
+                Mensajes::error("El conductor {$arDespacho->getConductorRel()->getNombreCorto()} se encuentra inactivo");
             }
         } else {
             Mensajes::error("El despacho debe estar generado");

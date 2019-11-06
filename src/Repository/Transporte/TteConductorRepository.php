@@ -46,17 +46,33 @@ class TteConductorRepository extends ServiceEntityRepository
             ->addSelect('c.numeroIdentificacion')
             ->addSelect('c.nombreCorto')
             ->where('c.codigoConductorPk <> 0')
+            ->andWhere('c.estadoInactivo = 0')
             ->orderBy('c.nombreCorto');
+        if ($session->get('filtroTteConductorCodigo')) {
+            $queryBuilder->andWhere("c.codigoConductorPk = {$session->get('filtroTteConductorCodigo')}");
+        }
         if ($session->get('filtroTteConductorNombre') != '') {
             $queryBuilder->andWhere("c.nombreCorto LIKE '%{$session->get('filtroTteConductorNombre')}%'");
+        }
+        if ($session->get('filtroTteConductorNumeroIdentificacion')) {
+            $queryBuilder->andWhere("c.numeroIdentificacion = '{$session->get('filtroTteConductorNumeroIdentificacion')}' ");
+        }
+        switch ($session->get('filtroTteConductorEstadoInactivo')) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoInactivo = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoInactivo = 1");
+                break;
         }
         return $queryBuilder;
     }
 
 
-    public function camposPredeterminados(){
-        $qb = $this-> _em->createQueryBuilder()
-            ->from('App:Transporte\TteConductor','c')
+    public function camposPredeterminados()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->from('App:Transporte\TteConductor', 'c')
             ->select('c.codigoConductorPk AS ID')
             ->addSelect('c.numeroIdentificacion AS NUMERO_IDENTIFICACION')
             ->addSelect('c.nombreCorto AS NOMBRE');
@@ -87,7 +103,7 @@ class TteConductorRepository extends ServiceEntityRepository
         LEFT JOIN c.ciudadRel cd 
         WHERE c.codigoConductorPk = :codigoConductor'
         )->setParameter('codigoConductor', $codigoConductor);
-        $arConductor =  $query->getSingleResult();
+        $arConductor = $query->getSingleResult();
         return $arConductor;
 
     }
@@ -104,7 +120,7 @@ class TteConductorRepository extends ServiceEntityRepository
         LEFT JOIN c.identificacionRel i          
         WHERE c.codigoConductorPk = :codigoConductor'
         )->setParameter('codigoConductor', $codigoConductor);
-        $arConductor =  $query->getSingleResult();
+        $arConductor = $query->getSingleResult();
         return $arConductor;
 
     }
@@ -113,7 +129,8 @@ class TteConductorRepository extends ServiceEntityRepository
      * @return array
      * @throws \Doctrine\ORM\ORMException
      */
-    public function llenarCombo(){
+    public function llenarCombo()
+    {
         $session = new Session();
         $array = [
             'class' => TteConductor::class,

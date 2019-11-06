@@ -27,6 +27,7 @@ class GuiaCorreccionValoresType extends AbstractType {
             ->add('unidades', NumberType::class)
             ->add('pesoReal', NumberType::class)
             ->add('pesoVolumen', NumberType::class)
+            ->add('pesoFacturado', NumberType::class)
             ->add('vrCobroEntrega', NumberType::class)
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

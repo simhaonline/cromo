@@ -2582,6 +2582,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.unidades')
             ->addSelect('tg.pesoReal')
             ->addSelect('tg.pesoVolumen')
+            ->addSelect('tg.pesoFacturado')
             ->addSelect('tg.vrFlete')
             ->addSelect('tg.vrManejo')
             ->addSelect('tg.vrRecaudo')

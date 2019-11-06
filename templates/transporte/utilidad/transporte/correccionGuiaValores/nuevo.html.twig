@@ -31,7 +31,7 @@
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Unidades:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-1">
                     {{ form_widget(form.unidades, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.unidades) }}
                 </div>
@@ -44,6 +44,11 @@
                 <div class="col-sm-1">
                     {{ form_widget(form.pesoVolumen, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.pesoVolumen) }}
+                </div>
+                <label class="col-sm-2 control-label">Peso fact:</label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.pesoFacturado, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.pesoFacturado) }}
                 </div>
             </div>
         </div>

@@ -75,12 +75,14 @@ class MovimientoController extends AbstractController
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoContabilizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         $raw = [
@@ -89,11 +91,15 @@ class MovimientoController extends AbstractController
         ];
         if ($form->isSubmitted()) {
 
-            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked() || $form->get('btnContabilizar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form, $clase);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TesMovimiento::class)->lista($raw), "Movimientos");
+            }
+            if ($form->get('btnContabilizar')->isClicked()) {
+                $arr = $request->request->get('ChkSeleccionar');
+                $respuesta = $this->getDoctrine()->getRepository(TesMovimiento::class)->contabilizar($arr);
             }
         }
         $arMovimientos = $paginator->paginate($em->getRepository(TesMovimiento::class)->lista($raw), $request->query->getInt('page', 1), 30);
@@ -551,6 +557,7 @@ class MovimientoController extends AbstractController
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'estadoContabilizado' => $form->get('estadoContabilizado')->getData(),
         ];
 
         $arMovimientoTipo = $form->get('codigoMovimientoTipoFk')->getData();

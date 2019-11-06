@@ -38,6 +38,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
         $estadoAutorizado = null;
         $estadoAprobado = null;
         $estadoAnulado = null;
+        $estadoContabilizado = null;
 
         if ($filtros) {
             $codigoMovimiento = $filtros['codigoMovimiento'] ?? null;
@@ -49,6 +50,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
             $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
             $estadoAprobado = $filtros['estadoAprobado'] ?? null;
             $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+            $estadoContabilizado = $filtros['estadoContabilizado'] ?? null;
         }
 
         $em = $this->getEntityManager();
@@ -64,6 +66,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.estadoAnulado')
             ->addSelect('m.estadoAprobado')
             ->addSelect('m.estadoAutorizado')
+            ->addSelect('m.estadoContabilizado')
             ->leftJoin('m.movimientoTipoRel', 'mt')
             ->leftJoin('m.terceroRel', 't')
             ->where("m.codigoMovimientoClaseFk = '{$clase}'");
@@ -107,6 +110,14 @@ class TesMovimientoRepository extends ServiceEntityRepository
                 break;
             case '1':
                 $queryBuilder->andWhere("m.estadoAnulado = 1");
+                break;
+        }
+        switch ($estadoContabilizado) {
+            case '0':
+                $queryBuilder->andWhere("m.estadoContabilizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("m.estadoContabilizado = 1");
                 break;
         }
         $queryBuilder->addOrderBy('m.estadoAprobado', 'ASC');
@@ -357,7 +368,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                             $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
                                             $em->persist($arRegistro);
                                         } else {
-                                            $error = "La cuenta no existe" . $descripcion;
+                                            $error = "La cuenta " . $cuenta . " no existe movimiento " . $arMovimiento['numero'];
                                             break;
                                         }
                                     }

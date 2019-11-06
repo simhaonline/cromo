@@ -22,7 +22,8 @@
                                     <div class="input-group">
                                         <input id="form_txtNombreCorto" class="form-control" readonly>
                                         <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_conductor', { 'campoCodigo': 'form_codigoConductorFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('transporte_bus_conductor', { 'campoCodigo': 'form_codigoConductorFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                     </span>
                                     </div>
                                 </div>
@@ -30,7 +31,7 @@
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="col-sm-1 control-label" >Codigo:</label>
+                        <label class="col-sm-1 control-label">Codigo:</label>
                         <div class="col-sm-2">
                             {{ form_widget(form.codigoDespachoPk, { 'attr': {'class': 'form-control'} }) }}
                         </div>
@@ -58,7 +59,8 @@
                                             <div class="input-group">
                                                 <input id="form_txtNombreCiudad" class="form-control" readonly>
                                                 <span class="input-group-btn">
-                                                    <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_ciudad', {'campoNombre': 'form_txtNombreCiudad','campoCodigo':'form_codigoCiudadOrigenFk' }) }}', 'buscarCiudadOrigen', 600, 900)">Buscar</a>
+                                                    <a class="btn btn-default btn-sm"
+                                                       href="javascript:abrirVentana3('{{ path('transporte_bus_ciudad', {'campoNombre': 'form_txtNombreCiudad','campoCodigo':'form_codigoCiudadOrigenFk' }) }}', 'buscarCiudadOrigen', 600, 900)">Buscar</a>
                                                 </span>
                                             </div>
                                         </div>
@@ -79,18 +81,19 @@
                                     <div class="row">
                                         <div class="col-lg-2">
                                             <div class="input-group">
-                                            {{ form_widget(form.codigoCiudadDestinoFk) }}
+                                                {{ form_widget(form.codigoCiudadDestinoFk) }}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-10">
-                                        <div class="input-group">
-                                            <input id="form_txtNombreCiudadDestino" class="form-control" readonly>
-                                            <span class="input-group-btn">
-                                                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('transporte_bus_ciudad_destino', {'campoNombre': 'form_txtNombreCiudadDestino','campoCodigo':'form_codigoCiudadDestinoFk' }) }}', 'buscarCiudadDestino', 600, 900)">Buscar</a>
+                                        <div class="col-lg-10">
+                                            <div class="input-group">
+                                                <input id="form_txtNombreCiudadDestino" class="form-control" readonly>
+                                                <span class="input-group-btn">
+                                                <a class="btn btn-default btn-sm"
+                                                   href="javascript:abrirVentana3('{{ path('transporte_bus_ciudad_destino', {'campoNombre': 'form_txtNombreCiudadDestino','campoCodigo':'form_codigoCiudadDestinoFk' }) }}', 'buscarCiudadDestino', 600, 900)">Buscar</a>
                                             </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 </div>
                             </div>
                         </div>
@@ -140,32 +143,34 @@
     </div>
     <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
         <thead>
-            <tr>
-                <td title="Codigo de despacho">ID</td>
-                <td title="Codigo de operacion">OP</td>
-                <td title="Despacho tipo">TIPO</td>
-                <td title="Numero">NUMERO</td>
-                <td title="Fecha salida">FECHA</td>
-                <td title="Vehiculo">VEH</td>
-                <td title="Conductor">CONDUCTOR</td>
-                <td title="Codigo ruta">RUTA</td>
-                <td title="Ciudad origen">ORIGEN</td>
-                <td title="Ciudad destino">DESTINO</td>
-                <td title="Valor flete pago">FLETE</td>
-                <td title="Valor anticipo pago">ANTICIPO</td>
-                <td title="Cantidad">          CANT</td>
-                <td title="Unidades">          UND</td>
-                <td title="Peso real">         PES</td>
-                <td title="Valor declarado">  DECLARADO</td>
-                <td title="Autorizado">        AUT</td>
-                <td title="Aprobado">          APR</td>
-                <td title="Soporte">          SOP</td>
-                <td title="Anulado">           ANU</td>
-                <td title="Usuario">           USUARIO</td>
-                <th></th>
-                <th></th>
-                <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
-            </tr>
+        <tr>
+            <td title="Codigo de despacho">ID</td>
+            <td title="Codigo de operacion">OP</td>
+            <td title="Despacho tipo">TIPO</td>
+            <td title="Numero">NUMERO</td>
+            <td title="Fecha salida">FECHA</td>
+            <td title="Vehiculo">VEH</td>
+            <td title="Conductor">CONDUCTOR</td>
+            <td title="Codigo ruta">RUTA</td>
+            <td title="Ciudad origen">ORIGEN</td>
+            <td title="Ciudad destino">DESTINO</td>
+            <td title="Valor flete pago">FLETE</td>
+            <td title="Valor anticipo pago">ANTICIPO</td>
+            <td title="Cantidad"> CANT</td>
+            <td title="Unidades"> UND</td>
+            <td title="Peso real"> PES</td>
+            <td title="Valor declarado"> DECLARADO</td>
+            <td title="Autorizado"> AUT</td>
+            <td title="Aprobado"> APR</td>
+            <td title="Soporte"> SOP</td>
+            <td title="Anulado"> ANU</td>
+            <td title="Usuario"> USUARIO</td>
+            <th></th>
+            <th></th>
+            <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
+                                                                     onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')">
+            </th>
+        </tr>
         </thead>
         <tbody>
         {% for arDespacho in arDespachos %}
@@ -193,8 +198,8 @@
                 <td>{{ arDespacho.usuario }}</td>
                 <td class="text-center">
                     {% if arDespacho.estadoAutorizado == 0 %}
-                    <a href="{{ path('transporte_movimiento_transporte_despacho_nuevo',{'id': arDespacho.codigoDespachoPk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                        <a href="{{ path('transporte_movimiento_transporte_despacho_nuevo',{'clase': arDespacho.codigoDespachoClaseFk, 'id': arDespacho.codigoDespachoPk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                     {% endif %}
                 </td>
                 <td class="text-center">
@@ -204,7 +209,7 @@
                     </a>
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arDespacho.codigoDespachoPk  }}"/>
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arDespacho.codigoDespachoPk }}"/>
                 </td>
             </tr>
         {% endfor %}
@@ -229,7 +234,11 @@
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('transporte_movimiento_transporte_despacho_nuevo', {'id': 0}) }}">Nuevo</a>
+           href="{{ path('transporte_movimiento_transporte_despacho_nuevo', {'clase': 'V', 'id': 0}) }}">Viaje</a>
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('transporte_movimiento_transporte_despacho_nuevo', {'clase': 'R', 'id': 0}) }}">Reparto</a>
     </div>
     {{ form_end(form) }}
     <br/><br/><br/>

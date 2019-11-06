@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteOperacion;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -40,6 +41,13 @@ class DestinatarioType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad:'
+            ])
+            ->add('codigoDespachoClaseFk', ChoiceType::class, [
+                'choices' => array(
+                    'VIAJE' => 'V', 'REPARTO' => 'R',
+                ),
+                'required' => true,
+                'label' => 'Clase:'
             ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('digitoVerificacion',NumberType::class,['required' => true,'label' => 'Digito:'])

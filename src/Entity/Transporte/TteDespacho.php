@@ -89,6 +89,11 @@ class TteDespacho
     private $codigoRutaFk;
 
     /**
+     * @ORM\Column(name="codigo_despacho_clase_fk", type="string", length=5, nullable=true)
+     */
+    private $codigoDespachoClaseFk;
+
+    /**
      * @ORM\Column(name="cantidad", type="float", options={"default" : 0})
      */
     private $cantidad = 0;
@@ -1468,6 +1473,22 @@ class TteDespacho
     public function setVrCostoPago($vrCostoPago): void
     {
         $this->vrCostoPago = $vrCostoPago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoClaseFk()
+    {
+        return $this->codigoDespachoClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoClaseFk
+     */
+    public function setCodigoDespachoClaseFk($codigoDespachoClaseFk): void
+    {
+        $this->codigoDespachoClaseFk = $codigoDespachoClaseFk;
     }
 
 

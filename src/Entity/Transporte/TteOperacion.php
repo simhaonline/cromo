@@ -119,6 +119,11 @@ class TteOperacion
     protected $guiasOperacionIngresoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TteRuta", mappedBy="operacionRel")
+     */
+    protected $rutasOperacionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteGuia", mappedBy="operacionCargoRel")
      */
     protected $guiasOperacionCargoRel;

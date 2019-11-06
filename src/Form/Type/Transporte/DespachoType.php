@@ -17,19 +17,22 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
-class DespachoType extends AbstractType {
+class DespachoType extends AbstractType
+{
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
             ->add('despachoTipoRel', EntityType::class, array(
                 'class' => TteDespachoTipo::class,
                 'required' => true,
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('dt')
-                        ->orderBy('dt.nombre', 'ASC');
+                        ->orderBy('dt.nombre', 'ASC')
+                        ->andWhere("dt.codigoDespachoClaseFk = '" . $options['data']->getCodigoDespachoClaseFk() . "'");
                 },
                 'choice_label' => 'nombre',
                 'placeholder' => ''
@@ -57,9 +60,11 @@ class DespachoType extends AbstractType {
             ->add('rutaRel', EntityType::class, array(
                 'class' => TteRuta::class,
                 'required' => true,
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('rr')
-                        ->orderBy('rr.nombre', 'ASC');
+                        ->orderBy('rr.nombre', 'ASC')
+                        ->where("rr.codigoOperacionFk = '" . $options['data']->getOperacionRel()->getCodigoOperacionPk() . "'")
+                        ->andWhere("rr.codigoDespachoClaseFk = '" . $options['data']->getCodigoDespachoClaseFk() . "'");
                 },
                 'choice_label' => 'nombre',
                 'placeholder' => ''
@@ -71,14 +76,15 @@ class DespachoType extends AbstractType {
             ->add('vrDescuentoSeguridad', NumberType::class)
             ->add('vrDescuentoCargue', NumberType::class)
             ->add('vrDescuentoEstampilla', NumberType::class)
-            ->add('comentario',TextareaType::class, array('required' => false))
-            ->add('guardar', SubmitType::class,array('label'=>'Guardar'));
+            ->add('comentario', TextareaType::class, array('required' => false))
+            ->add('guardar', SubmitType::class, array('label' => 'Guardar'));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults(array(
             'data_class' => 'App\Entity\Transporte\TteDespacho'
         ));
@@ -88,7 +94,8 @@ class DespachoType extends AbstractType {
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix() {
+    public function getBlockPrefix()
+    {
         return 'App_despacho';
     }
 

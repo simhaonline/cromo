@@ -62,6 +62,11 @@ class TteDespachoTipo
     private $codigoCuentaFleteFk;
 
     /**
+     * @ORM\Column(name="codigo_despacho_clase_fk", type="string", length=5, nullable=true)
+     */
+    private $codigoDespachoClaseFk;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_flete_pago_intermediacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaFletePagoIntermediacionFk;
@@ -583,6 +588,38 @@ class TteDespachoTipo
     public function setIntermediacion($intermediacion): void
     {
         $this->intermediacion = $intermediacion;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoClaseFk()
+    {
+        return $this->codigoDespachoClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoClaseFk
+     */
+    public function setCodigoDespachoClaseFk($codigoDespachoClaseFk): void
+    {
+        $this->codigoDespachoClaseFk = $codigoDespachoClaseFk;
     }
 
 

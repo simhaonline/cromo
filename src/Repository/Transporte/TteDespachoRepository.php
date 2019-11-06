@@ -110,6 +110,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('td.codigoOperacionFk')
             ->addSelect('td.codigoVehiculoFk')
             ->addSelect('td.codigoRutaFk')
+            ->addSelect('td.codigoDespachoClaseFk')
             ->addSelect('co.nombre AS ciudadOrigen')
             ->addSelect('cd.nombre AS ciudadDestino')
             ->addSelect('td.cantidad')

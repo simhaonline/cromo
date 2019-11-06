@@ -27,6 +27,22 @@ class TteRuta
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_despacho_clase_fk", type="string", length=5, nullable=true)
+     */
+    private $codigoDespachoClaseFk;
+
+    /**
+     * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoOperacionFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TteOperacion", inversedBy="rutasOperacionRel")
+     * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
+     */
+    private $operacionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TteCiudad", mappedBy="rutaRel")
      */
     protected $ciudadesRutaRel;
@@ -40,6 +56,22 @@ class TteRuta
      * @ORM\OneToMany(targetEntity="TteDespacho", mappedBy="rutaRel")
      */
     protected $despachosRutaRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -71,6 +103,54 @@ class TteRuta
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDespachoClaseFk()
+    {
+        return $this->codigoDespachoClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoDespachoClaseFk
+     */
+    public function setCodigoDespachoClaseFk($codigoDespachoClaseFk): void
+    {
+        $this->codigoDespachoClaseFk = $codigoDespachoClaseFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionFk()
+    {
+        return $this->codigoOperacionFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionFk
+     */
+    public function setCodigoOperacionFk($codigoOperacionFk): void
+    {
+        $this->codigoOperacionFk = $codigoOperacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionRel()
+    {
+        return $this->operacionRel;
+    }
+
+    /**
+     * @param mixed $operacionRel
+     */
+    public function setOperacionRel($operacionRel): void
+    {
+        $this->operacionRel = $operacionRel;
     }
 
     /**

@@ -144,14 +144,20 @@ class DespachoController extends AbstractController
      * @param $id
      * @return Response
      * @throws \Exception
-     * @Route("/transporte/movimiento/transporte/despacho/nuevo/{id}", name="transporte_movimiento_transporte_despacho_nuevo")
+     * @Route("/transporte/movimiento/transporte/despacho/nuevo/{clase}/{id}", name="transporte_movimiento_transporte_despacho_nuevo")
      */
-    public function nuevo(Request $request, $id)
+    public function nuevo(Request $request, $clase, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arDespacho = new TteDespacho();
         if ($id != 0) {
             $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
+        }else {
+            $arDespacho->setFechaRegistro(new \DateTime('now'));
+            $arDespacho->setFechaSalida(new \DateTime('now'));
+            $arDespacho->setUsuario($this->getUser()->getUsername());
+            $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
+            $arDespacho->setCodigoDespachoClaseFk($clase);
         }
         $form = $this->createForm(DespachoType::class, $arDespacho);
         $form->handleRequest($request);
@@ -166,13 +172,6 @@ class DespachoController extends AbstractController
                         if ($txtCodigoVehiculo != '') {
                             $arVehiculo = $em->getRepository(TteVehiculo::class)->find($txtCodigoVehiculo);
                             if ($arVehiculo) {
-                                if ($id == 0) {
-                                    $arDespacho->setFechaRegistro(new \DateTime('now'));
-                                    $arDespacho->setFechaSalida(new \DateTime('now'));
-                                    $arDespacho->setUsuario($this->getUser()->getUsername());
-                                    $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
-                                }
-
                                 $arDespacho->setVehiculoRel($arVehiculo);
                                 $arDespacho->setPoseedorRel($arVehiculo->getPoseedorRel());
                                 $arDespacho->setConductorRel($arConductor);

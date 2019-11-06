@@ -2,8 +2,12 @@
 
 namespace App\Form\Type\Transporte;
 
+use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TteRuta;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -14,11 +18,25 @@ class RutaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoRutaPk',TextType::class,['required' => true,'label' => 'Codigo ruta:'])
-            ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
-        ;
+            ->add('codigoRutaPk', TextType::class, ['required' => true, 'label' => 'Codigo ruta:'])
+            ->add('codigoDespachoClaseFk', ChoiceType::class, [
+                'choices' => array(
+                    'VIAJE' => 'V', 'REPARTO' => 'R',
+                ),
+                'required' => true,
+                'label' => 'Clase:'
+            ])
+            ->add('operacionRel', EntityType::class, array(
+                'class' => TteOperacion::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.nombre', 'ASC');
+                },
+                'label' => 'Operacion:',
+                'choice_label' => 'nombre',
+            ))
+            ->add('nombre', TextType::class, ['required' => true, 'label' => 'Nombre:'])
+            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -28,14 +46,18 @@ class RutaType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
+    public function getEstructuraPropiedadesLista()
+    {
         return '[
             {"campo":"codigoRutaPk",                "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
+            {"campo":"codigoDespachoClaseFk",                      "tipo":"texto",     "ayuda":"V: viajaes - R: reparto",     "titulo":"CLASE"},
+            {"campo":"operacionRel.nombre","tipo":"texto",     "ayuda":"Codigo operacin",     "titulo":"OPERACION","relacion":""}
         ]';
     }
 
-    public function getEstructuraPropiedadesExportar(){
+    public function getEstructuraPropiedadesExportar()
+    {
         return '[
             {"campo":"codigoRutaPk",                "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
             {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}

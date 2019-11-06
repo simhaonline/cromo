@@ -65,7 +65,7 @@ class MonitoreoController extends AbstractController
                 $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteMonitoreo::class)->lista($raw)->getQuery()->execute(), "Monitoreo");
+                General::get()->setExportar($em->getRepository(TteMonitoreo::class)->lista($raw), "Monitoreos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

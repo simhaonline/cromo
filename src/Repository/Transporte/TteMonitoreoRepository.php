@@ -21,17 +21,17 @@ class TteMonitoreoRepository extends ServiceEntityRepository
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
-        $codigoVehiculoFk =   null;
-        $fechaInicioDesde =   null;
-        $fechaFinHasta =   null;
-        $estadoAnulado =   null;
-        $estadoAprobado =   null;
-        $estadoAutorizado =   null;
+        $codigoVehiculoFk = null;
+        $fechaInicioDesde = null;
+        $fechaFinHasta = null;
+        $estadoAnulado = null;
+        $estadoAprobado = null;
+        $estadoAutorizado = null;
 
-        if($filtros){
+        if ($filtros) {
             $codigoVehiculoFk = $filtros['codigoVehiculoFk'];
-            $fechaInicioDesde =  $filtros['fechaInicioDesde'];
-            $fechaFinHasta =  $filtros['fechaFinHasta'];
+            $fechaInicioDesde = $filtros['fechaInicioDesde'];
+            $fechaFinHasta = $filtros['fechaFinHasta'];
             $estadoAnulado = $filtros['estadoAnulado'];
             $estadoAprobado = $filtros['estadoAprobado'];
             $estadoAutorizado = $filtros['estadoAutorizado'];
@@ -56,7 +56,7 @@ class TteMonitoreoRepository extends ServiceEntityRepository
             ->leftJoin('d.conductorRel', 'c')
             ->leftJoin('d.ciudadDestinoRel', 'cd')
             ->where('m.codigoMonitoreoPk <> 0')
-        ->orderBy('m.fechaRegistro', 'DESC');
+            ->orderBy('m.fechaRegistro', 'DESC');
 
         if ($codigoVehiculoFk) {
             $queryBuilder->andWhere("v.codigoVehiculoPk = '{$codigoVehiculoFk}'");
@@ -97,7 +97,7 @@ class TteMonitoreoRepository extends ServiceEntityRepository
         }
 
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function generar($codigoVehiculo): bool
@@ -151,7 +151,7 @@ class TteMonitoreoRepository extends ServiceEntityRepository
      */
     public function aprobar($arMonitoreo)
     {
-        if($arMonitoreo->getEstadoAutorizado() == 1 && $arMonitoreo->getEstadoAprobado() == 0) {
+        if ($arMonitoreo->getEstadoAutorizado() == 1 && $arMonitoreo->getEstadoAprobado() == 0) {
             $arMonitoreo->setEstadoAprobado(1);
             $this->getEntityManager()->persist($arMonitoreo);
             $this->getEntityManager()->flush();

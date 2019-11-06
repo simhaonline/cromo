@@ -116,13 +116,23 @@
             </thead>
             <tbody>
             {% set intCodigoCliente = '' %}
+            {% set intCodigoPuesto = '' %}
             {% for arProgramacion in arProgramaciones %}
-
                 {% if intCodigoCliente != arProgramacion.codigoClienteFk %}
                     <tr>
                         <td colspan="36"> {{ arProgramacion.cliente }}</td>
                     </tr>
                     {% set intCodigoCliente =  arProgramacion.codigoClienteFk %}
+                {% endif %}
+                {% if intCodigoPuesto != arProgramacion.codigoPuestoFk %}
+                    <td colspan="3">
+                        COD.PUESTO:
+                        {{ arProgramacion.codigoPuestoFk }}
+                    </td>
+                    <td id="suptipo" colspan="38">
+                        {{ arProgramacion.puestoNombre | default('')}}
+                    </td>
+                    {% set intCodigoPuesto = arProgramacion.codigoPuestoFk  %}
                 {% endif %}
                 <tr>
                     <td>{{ arProgramacion.codigoProgramacionPk }}</td>

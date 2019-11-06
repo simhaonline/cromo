@@ -376,30 +376,25 @@ class AppExtension extends AbstractExtension
     public function menu($modulo)
     {
         $menu = [
-            'movimiento' => [
+            [
+                'nombre' => 'movimiento',
                 'grupo' => [
-                    'recoleccion' => [
-                        'titulo' => 'Recogida',
-                        'titulo' => 'Despacho'
-                    ],
-                    'logistica' => [
-
-                    ],
-                    'Monitoreo' => [
-
-                    ],
-                    'Venta' => [
-
-                    ],
-                    'Financiero' => [
-
+                    ['nombre' => 'recogida',
+                        'item' => [
+                            ['nombre' => 'recogida', 'entidad' => 'TteRecogida']
+                        ]
                     ]
                 ]
             ],
-            'administracion' => [
+            [
+                'nombre' => 'Administracion',
+                'grupo' => [
+
+
+                ]
 
             ]
         ];
-        return "hola mundo";
+        return $menu;
     }
 }

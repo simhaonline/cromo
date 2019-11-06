@@ -74,18 +74,19 @@ class IngresoController extends BaseController
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoContabilizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
-            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $raw = [
             'limiteRegistros' => $form->get('limiteRegistros')->getData()
         ];
         if ($form->isSubmitted()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnContabilizar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnExcel')->isClicked()) {
@@ -95,6 +96,10 @@ class IngresoController extends BaseController
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(CarIngreso::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('cartera_movimiento_ingreso_ingreso_lista'));
+            }
+            if ($form->get('btnContabilizar')->isClicked()) {
+                $arr = $request->request->get('ChkSeleccionar');
+                $respuesta = $this->getDoctrine()->getRepository(CarIngreso::class)->contabilizar($arr);
             }
         }
         $arIngresos = $paginator->paginate($em->getRepository(CarIngreso::class)->lista($raw), $request->query->getInt('page', 1), 30);
@@ -341,6 +346,7 @@ class IngresoController extends BaseController
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'estadoContabilizado' => $form->get('estadoContabilizado')->getData(),
         ];
 
         $codigoIngresoTipo = $form->get('codigoIngresoTipoFk')->getData();

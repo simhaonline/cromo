@@ -41,28 +41,33 @@
                             <div class="col-sm-2">
                                 {{ form_widget(form.codigoIngresoPk) }}
                             </div>
-                            <label for="" class="control-label col-sm-1">Autorizado</label>
-                            <div class="col-sm-5">
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-1">Autorizado:</label>
+                            <div class="col-sm-2">
                                 {{ form_widget(form.estadoAutorizado) }}
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
                             <label for="" class="control-label col-sm-1">Desde</label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-2">
                                 {{ form_widget(form.fechaPagoDesde) }}
                             </div>
-                            <label for="" class="control-label col-sm-1">Aprobado</label>
-                            <div class="col-sm-5">
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-1">Aprobado:</label>
+                            <div class="col-sm-2">
                                 {{ form_widget(form.estadoAprobado) }}
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
                             <label for="" class="control-label col-sm-1">Hasta</label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-2">
                                 {{ form_widget(form.fechaPagoHasta) }}
                             </div>
-                            <label for="" class="control-label col-sm-1">Anulado</label>
-                            <div class="col-sm-5">
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-1">Anulado:</label>
+                            <div class="col-sm-2">
                                 {{ form_widget(form.estadoAnulado) }}
                             </div>
                         </div>
@@ -71,8 +76,10 @@
                             <div class="col-sm-5">
                                 {{ form_widget(form.codigoIngresoTipoFk) }}
                             </div>
-                            <label for="" class="control-label col-sm-1"></label>
-                            <div class="col-sm-5">
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-1">Contabilizado:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.estadoContabilizado) }}
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
@@ -101,9 +108,10 @@
                 <th title="Autorizado">AUT</th>
                 <th title="Aprobado">APR</th>
                 <th title="Anulado">ANU</th>
+                <th title="Contabilizado">CON</th>
                 <th></th>
                 <th></th>
-                <th><input type="checkbox" name="ChkSeleccionar" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"></th>
+                <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
             </tr>
         </thead>
         <tbody>
@@ -121,6 +129,7 @@
                 <td>{{ arIngreso.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arIngreso.estadoAprobado ? "SI":"NO"}}</td>
                 <td>{{ arIngreso.estadoAnulado ? "SI":"NO"}}</td>
+                <td>{{ arIngreso.estadoContabilizado ? "SI":"NO"}}</td>
                 {% if arIngreso.estadoAutorizado %}
                     <td></td>
                 {% else %}
@@ -136,9 +145,7 @@
                         </i>
                     </a>
                 </td>
-                <td class="text-center">
-                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arIngreso.codigoIngresoPk   }}" />
-                </td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arIngreso.codigoIngresoPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -159,6 +166,9 @@
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnContabilizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"

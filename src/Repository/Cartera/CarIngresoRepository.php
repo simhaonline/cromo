@@ -38,6 +38,7 @@ class CarIngresoRepository extends ServiceEntityRepository
         $estadoAutorizado = null;
         $estadoAprobado = null;
         $estadoAnulado = null;
+        $estadoContabilizado = null;
 
         if ($filtros) {
             $codigoCliente = $filtros['codigoCliente'] ?? null;
@@ -49,6 +50,7 @@ class CarIngresoRepository extends ServiceEntityRepository
             $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
             $estadoAprobado = $filtros['estadoAprobado'] ?? null;
             $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+            $estadoContabilizado = $filtros['estadoContabilizado'] ?? null;
         }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarIngreso::class, 'i')
             ->select('i.codigoIngresoPk')
@@ -63,6 +65,7 @@ class CarIngresoRepository extends ServiceEntityRepository
             ->addSelect('i.estadoAutorizado')
             ->addSelect('i.estadoAprobado')
             ->addSelect('i.estadoAnulado')
+            ->addSelect('i.estadoContabilizado')
             ->leftJoin('i.ingresoTipoRel', 'it')
             ->leftJoin('i.clienteRel', 'cl')
             ->leftJoin('i.cuentaRel', 'cu');
@@ -106,6 +109,14 @@ class CarIngresoRepository extends ServiceEntityRepository
                 break;
             case '1':
                 $queryBuilder->andWhere("i.estadoAnulado = 1");
+                break;
+        }
+        switch ($estadoContabilizado) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoContabilizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoContabilizado = 1");
                 break;
         }
         $queryBuilder->addOrderBy('i.estadoAprobado', 'ASC');

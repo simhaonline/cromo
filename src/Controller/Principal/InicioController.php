@@ -39,13 +39,18 @@ class InicioController extends Controller
         ]);
     }
 
-    /*public function inicio(Request $request)
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/general/general/inicio", name="inicio2")
+     */
+    public function inicio2(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         return $this->render('v2/general/inicio.html.twig',[
 
         ]);
-    }*/
+    }
 
     /**
      * @param Request $request

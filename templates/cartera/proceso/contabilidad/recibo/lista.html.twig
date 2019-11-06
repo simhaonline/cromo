@@ -17,7 +17,8 @@
                             <div class="input-group">
                                 {{ form_widget(form.nombreCorto) }}
                                 <span class="input-group-btn">
-                                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente', { 'campoCodigo': 'form_codigoCliente', 'campoNombre': 'form_nombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente', { 'campoCodigo': 'form_codigoCliente', 'campoNombre': 'form_nombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                     </span>
                             </div>
                         </div>
@@ -61,7 +62,8 @@
             <th>ANU</th>
             <th>AUT</th>
             <th>APR</th>
-            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
+                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
         <tbody>
@@ -80,30 +82,32 @@
                 <td>{{ arRecibo.estadoAnulado }}</td>
                 <td>{{ arRecibo.estadoAutorizado }}</td>
                 <td>{{ arRecibo.estadoAprobado }}</td>
-                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecibo.codigoReciboPk }}" /></td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                       value="{{ arRecibo.codigoReciboPk }}"/></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <div>
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arRecibos.getTotalItemCount }}</span></div>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">
+            <span class="badge">{{ arRecibos.getTotalItemCount }}</span>
         </div>
-        <div class="btn-group btn-xs" style="float: left;margin-left: 0px;padding-top: 0px;">
-            {{ knp_pagination_render(arRecibos) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arRecibos) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group" style="float: right">
+            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
-        <div class="btn-group btn-xs" style="float: left; width: 60px">
-            {{ form_widget(form.limiteRegistros) }}
-        </div>
-        <div class="btn-group" style="float: right; margin-right: 5px !important;">
-            {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
-        </div>
-        <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <div class="btn-group" style="float: right">
             {{ form_widget(form.btnContabilizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
         </div>
-
     </div>
     {{ form_end(form) }}
-    <br /> <br />
+    <br/> <br/>
 {% endblock %}
 

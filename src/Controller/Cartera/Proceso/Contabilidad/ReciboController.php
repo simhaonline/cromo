@@ -55,7 +55,7 @@ class ReciboController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(CarRecibo::class)->listaContabilizar($raw)->getQuery()->execute(), "resibos");
+                General::get()->setExportar($em->getRepository(CarRecibo::class)->listaContabilizar($raw), "recibos");
             }
             if ($form->get('btnContabilizar')->isClicked()) {
                 $arr = $request->request->get('ChkSeleccionar');

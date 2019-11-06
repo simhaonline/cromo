@@ -403,7 +403,7 @@ class CarReciboRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("cr.codigoClientePk = {$codigoCliente}");
         }
         if ($reciboTipo) {
-            $queryBuilder->andWhere("r.codigoReciboTipoFk = {$reciboTipo}");
+            $queryBuilder->andWhere("r.codigoReciboTipoFk = '{$reciboTipo}'");
         }
         if ($fechaDesde) {
             $queryBuilder->andWhere("r.fecha >= '{$fechaDesde} 00:00:00'");
@@ -412,7 +412,7 @@ class CarReciboRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("r.fecha <= '{$fechaHasta} 23:59:59'");
         }
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function registroContabilizar($codigo)

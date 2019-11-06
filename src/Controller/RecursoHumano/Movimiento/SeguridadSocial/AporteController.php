@@ -369,15 +369,15 @@ class AporteController extends AbstractController
             //30	2	152	153	N	IRL:Dias de  Incapacidad por accidente de trabajo o enfermedad laboral	Puede ser cero o el número de días (entre 01 y 30). Lo suministra el aportante.
             fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getIncapacidadAccidenteTrabajoEnfermedadProfesional(), "0", 2, "I"));
             //31	6	154	159	A	Código de la Administradora de Fondo de Pensiones a la cual pertenece el afiliado	Es un campo obligatorio y solo se permite blanco, si el tipo de cotizante o el subtipo de cotizante no es obligado a aportar al Sistema General de Pensiones. Se debe utilizar un código válido y este lo suministra el aportante.
-            fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getCodigoEntidadPensionPertenece(), " ", 6, "D"));
+            fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getEntidadPensionRel()->getCodigoInterface(), " ", 6, "D"));
             //32	6	160	165	A	Código de la Administradora de Fondo de Pensiones a la cual se tralada el afiliado	Obligatorio si la novedad es traslado a otra administradora de fondo de pensiones. Lo suministra el aportante.
             fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getCodigoEntidadPensionTraslada(), " ", 6, "D"));
             //33	6	166	171	A	Código EPS ó EOC a la cual pertenece el afiliado	Es un campo obligatorio. Se debe utilizar un código válido y éste lo suministra el aportante.
-            fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getCodigoEntidadSaludPertenece(), " ", 6, "D"));
+            fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getEntidadSaludRel()->getCodigoInterface(), " ", 6, "D"));
             //34	6	172	177	A	Código EPS ó EOC a la cual se traslada el afiliado	Obligatorio si en el campo 18 del registro tipo 2 se marca X. Lo suministra el aportante.
             fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getCodigoEntidadSaludTraslada(), " ", 6, "D"));
             //35	6	178	183	A	Código CCF a la que pertenece el afiliado	Obligatorio y solo se permite blanco, si el tipo de cotizante no es obligado a aportar a CCF. Se debe utilizar un código válido y este lo suministra el aportante.
-            fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getCodigoEntidadCajaPertenece(), " ", 6, "D"));
+            fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getEntidadCajaRel()->getCodigoInterface(), " ", 6, "D"));
             //36	2	184	185	N	Número de días cotizados a pensión	Obligatorio y debe permitir valores entre 0 y 30. Solo se permite 0, si el tipo de cotizante o subtipo de cotizante no está obligado a aportar pensiones. Si es menor que 30 debe haber marcado una novedad de ingreso o retiro. Lo suministra el aportante.
             fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getDiasCotizadosPension(), "0", 2, "I"));
             //37	2	186	187	N	Número de días cotizados a salud	Obligatorio y debe permitir valores entre 0 y 30. Si es menor que 30 debe haber marcado  una  novedad  de ingreso o retiro. Lo suministra el aportante.

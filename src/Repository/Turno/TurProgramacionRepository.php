@@ -272,7 +272,9 @@ class TurProgramacionRepository extends ServiceEntityRepository
             ->addSelect('ped.codigoClienteFk')
             ->leftJoin('p.empleadoRel', 'e')
             ->leftJoin('p.pedidoRel', 'ped')
-            ->leftJoin('ped.clienteRel', 'cl');
+            ->leftJoin('ped.clienteRel', 'cl')
+            ->orderBy('ped.codigoClienteFk', 'ASC')
+            ->orderBy('p.codigoPuestoFk', 'ASC');
         for ($i = 1; $i <= 31; $i++) {
             $queryBuilder->addSelect("p.dia{$i}");
         }

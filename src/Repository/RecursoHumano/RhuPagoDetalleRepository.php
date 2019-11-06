@@ -589,4 +589,41 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function creditosPago($raw)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPagoDetalle::class, 'pd')
+            ->addSelect('pd.codigoPagoDetallePk')
+            ->addSelect('pt.nombre as pagoTipoNombre')
+            ->addSelect('p.numero as pagoNumero')
+            ->addSelect('p.codigoEmpleadoFk as pagoCodigoEmpleadoFk')
+            ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('g.nombre as grupoNombre')
+            ->addSelect('pd.codigoConceptoFk')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('p.fechaDesde as pagoFechaDesde')
+            ->addSelect('p.fechaHasta as pagoFechaHasta')
+            ->addSelect('pd.vrPagoOperado')
+            ->addSelect('pd.vrPago')
+            ->addSelect('pd.horas')
+            ->addSelect('pd.dias')
+            ->addSelect('pd.porcentaje')
+            ->addSelect('pd.vrIngresoBaseCotizacion')
+            ->addSelect('pd.vrIngresoBasePrestacion')
+            ->addSelect('pd.codigoCreditoFk')
+            ->addSelect('c.pension')
+            ->addSelect('c.salud')
+            ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.pagoRel', 'p')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('p.pagoTipoRel', 'pt')
+            ->leftJoin('p.grupoRel', 'g')
+            ->where('c.credito = 1')
+            ->andWhere("p.fechaDesde >= '{$raw['fechaDesde']} 00:00:00'")
+            ->andWhere("p.fechaHasta <= '{$raw['fechaHasta']} 23:59:59'")
+            ->orderBy('pd.codigoPagoDetallePk','DESC');
+        return $queryBuilder->getQuery()->getResult();
+
+    }
 }

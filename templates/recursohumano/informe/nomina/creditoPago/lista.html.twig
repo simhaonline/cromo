@@ -1,0 +1,88 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Desde:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.fechaDesde) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="form_txtDocumento" class="col-sm-1 control-label">Hasta:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                </div>
+                <div class="widget-body">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>TIPO</th>
+                <th>NUMERO</th>
+                <th>COD</th>
+                <th>IDENTIFICACION</th>
+                <th>EMPLEADO</th>
+                <th>GRUPO</th>
+                <th>COD</th>
+                <th>CONCEPTO</th>
+                <th>DESDE</th>
+                <th>HASTA</th>
+                <th>VR_PAGO</th>
+                <th title="Horas">H</th>
+                <th title="Dias">D</th>
+                <th>%</th>
+                <th>IBC</th>
+                <th>IBP</th>
+                <th title="Codigo del credito">CRE</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for arPagoDetalle in arPagoDetalles %}
+            <tr>
+                <td>{{ arPagoDetalle.codigoPagoDetallePk }}</td>
+                <td>{{ arPagoDetalle.pagoTipoNombre }}</td>
+                <td>{{ arPagoDetalle.pagoNumero }}</td>
+                <td>{{ arPagoDetalle.pagoCodigoEmpleadoFk }}</td>
+                <td>{{ arPagoDetalle.empleadoNumeroIdentificacion }}</td>
+                <td>{{ arPagoDetalle.empleadoNombreCorto }}</td>
+                <td>{{ arPagoDetalle.grupoNombre }}</td>
+                <td>{{ arPagoDetalle.codigoConceptoFk }}</td>
+                <td>{{ arPagoDetalle.conceptoNombre }}</td>
+                <td>{{ arPagoDetalle.pagoFechaDesde | date('Y-m-d') }}</td>
+                <td>{{ arPagoDetalle.pagoFechaHasta | date('Y-m-d') }}</td>
+                <td class="numero">{{ arPagoDetalle.vrPagoOperado | number_format(0, '.', ',') }}</td>
+                <td>{{ arPagoDetalle.horas }}</td>
+                <td>{{ arPagoDetalle.dias }}</td>
+                <td>{{ arPagoDetalle.porcentaje }}</td>
+                <td class="numero">{{ arPagoDetalle.vrIngresoBaseCotizacion | number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arPagoDetalle.vrIngresoBasePrestacion | number_format(0, '.', ',')}}</td>
+                <td>{{ arPagoDetalle.codigoCreditoFk }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arPagoDetalles.getTotalItemCount }}
+                </span>
+        </div>
+    </div>
+    {{ form_end(form) }}
+    <br><br>
+{% endblock %}

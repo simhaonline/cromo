@@ -115,11 +115,12 @@
             </tr>
             </thead>
             <tbody>
+            {% set intCodigoCliente = '' %}
             {% for arProgramacion in arProgramaciones %}
-                {% set intCodigoCliente = '' %}
+
                 {% if intCodigoCliente != arProgramacion.codigoClienteFk %}
                     <tr>
-                        <td colspan="36">{{ arProgramacion.cliente }}</td>
+                        <td colspan="36"> {{ arProgramacion.cliente }}</td>
                     </tr>
                     {% set intCodigoCliente =  arProgramacion.codigoClienteFk %}
                 {% endif %}

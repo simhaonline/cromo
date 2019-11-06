@@ -307,6 +307,142 @@ class TurPedidoRepository extends ServiceEntityRepository
             if ($registros['registros'] > 0) {
                 $arPedido->setEstadoAutorizado(1);
                 $em->persist($arPedido);
+                $arPedidoDetalles = $em->getRepository( TurPedidoDetalle::class)->findBy(['codigoPedidoFk'=>$arPedido->getCodigoPedidoPk()]);
+                /**@var $arPedidoDetalle TurPedidoDetalle**/
+                $diasFestivos = 0;
+                $diasOrdinarios = 0;
+                $diasSabados = 0;
+                $horasRealesDiurnas =0;
+                $horasRealesNocturnas =0;
+                $diasDominicales =0;
+                foreach ($arPedidoDetalles as $arPedidoDetalle)
+                {
+                    $arConcepto = $arPedidoDetalle->getConceptoRel();
+
+                    if ($arPedidoDetalle->getPeriodo() == "M") {
+                        if ($arPedidoDetalle->getLunes()) {
+                            $diasOrdinarios += 4;
+                        }
+                        if ($arPedidoDetalle->getMartes()) {
+                            $diasOrdinarios += 4;
+                        }
+                        if ($arPedidoDetalle->getMiercoles()) {
+                            $diasOrdinarios += 4;
+                        }
+                        if ($arPedidoDetalle->getJueves()) {
+                            $diasOrdinarios += 4;
+                        }
+                        if ($arPedidoDetalle->getViernes()) {
+                            $diasOrdinarios += 4;
+                        }
+                        if ($arPedidoDetalle->getSabado()) {
+                            $diasSabados = 4;
+                        }
+                        if ($arPedidoDetalle->getDomingo()) {
+                            $diasDominicales = 4;
+                        }
+                        if ($arPedidoDetalle->getFestivo()) {
+                            $diasFestivos = 2;
+                        }
+                        $totalDias = $diasOrdinarios + $diasSabados + $diasDominicales + $diasFestivos;
+                        $horasRealesDiurnas = $arConcepto->getHorasDiurnas() * $totalDias;
+                        $horasRealesNocturnas = $arConcepto->getHorasNocturnas() * $totalDias;
+                    } else {
+                        $arFestivos = $em->getRepository(TurFestivo::class)->fecha($arPedidoDetalle->getFechaDesde()->format('Y-m-d'), $arPedidoDetalle->getFechaHasta()->format('Y-m-d'));
+                        $fecha = $arPedidoDetalle->getFechaDesde()->format('Y-m-j');
+                        for ($i = 0; $i < $dias; $i++) {
+                            $nuevafecha = strtotime('+' . $i . ' day', strtotime($fecha));
+                            $nuevafecha = date('Y-m-j', $nuevafecha);
+                            $dateNuevaFecha = date_create($nuevafecha);
+                            $diaSemana = $dateNuevaFecha->format('N');
+                            if ($this->festivo($arFestivos, $dateNuevaFecha) == 1) {
+                                $diasFestivos += 1;
+                            } else {
+                                if ($diaSemana == 1) {
+                                    $diasOrdinarios += 1;
+                                    if ($arPedidoDetalle->getLunes() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 2) {
+                                    $diasOrdinarios += 1;
+                                    if ($arPedidoDetalle->getMartes() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 3) {
+                                    $diasOrdinarios += 1;
+                                    if ($arPedidoDetalle->getMiercoles() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 4) {
+                                    $diasOrdinarios += 1;
+                                    if ($arPedidoDetalle->getJueves() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 5) {
+                                    $diasOrdinarios += 1;
+                                    if ($arPedidoDetalle->getViernes() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 6) {
+                                    $diasSabados += 1;
+                                    if ($arPedidoDetalle->getSabado() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 7) {
+                                    $diasDominicales += 1;
+                                    if ($arPedidoDetalle->getDomingo() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    $valorBaseServicio = $arPedidoDetalle->getVrSalarioBase() * $arPedido->getSectorRel()->getPorcentaje();
+                    if ($arPedido->getCodigoSectorFk() == "D" && $arPedido->getEstrato() >= 4) {
+                        //Cambiar porcentaje para residencial mayor a estrato 4
+                        //$porcentajeModalidad = $arContratoDetalle->getModalidadServicioRel()->getPorcentajeEspecial();
+                        $porcentajeModalidad = $arPedidoDetalle->getModalidadRel()->getPorcentaje();
+                    } else {
+                        $porcentajeModalidad = $arPedidoDetalle->getModalidadRel()->getPorcentaje();
+                    }
+
+
+                    $horasRealesDiurnas =  $horasRealesDiurnas * $arPedidoDetalle->getCantidad();
+                    $horasRealesNocturnas = $horasRealesNocturnas * $arPedidoDetalle->getCantidad();
+                    $valorBaseServicioMes = $valorBaseServicio + ($valorBaseServicio * $porcentajeModalidad / 100);
+
+                    $valorHoraDiurna = ((($valorBaseServicioMes * 55.97) / 100) / 30) / 15;
+                    $valorHoraNocturna = ((($valorBaseServicioMes * 44.03) / 100) / 30) / 9;
+
+                    $precio = ($horasRealesDiurnas * $valorHoraDiurna) + ($horasRealesNocturnas * $valorHoraNocturna);
+                    $valorMinimoServicio = $precio;
+
+                    if ($arPedidoDetalle->getVrPrecioAjustado() != 0) {
+                        $valorServicio = $arPedidoDetalle->getVrPrecioAjustado() * $arPedidoDetalle->getCantidad();
+                        $precio = $arPedidoDetalle->getVrPrecioAjustado();
+                    } else {
+                        $valorServicio = $valorMinimoServicio;
+                    }
+                    $subTotalDetalle = $valorServicio;
+
+                    $vrTotalDetallePendiente = $subTotalDetalle-$arPedidoDetalle->getVrAbono();
+                    $arPedidoDetalle->setVrTotalDetallePendiente($vrTotalDetallePendiente);
+                    $em->persist($arPedidoDetalle);
+                }
                 $em->flush();
             } else {
                 Mensajes::error("El registro no tiene detalles");
@@ -513,6 +649,7 @@ class TurPedidoRepository extends ServiceEntityRepository
         return $queryBuilder;
 
     }
+
     public function listaSinAprobar(){
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedido::class, 'p')

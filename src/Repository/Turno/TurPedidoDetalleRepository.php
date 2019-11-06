@@ -282,7 +282,8 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->leftJoin("pd.puestoRel", "pu")
             ->leftJoin("pd.conceptoRel", "cs")
             ->leftJoin("pd.modalidadRel", "m")
-            ->where("pd.vrTotalDetallePendiente > 0");
+            ->where("pd.vrTotalDetallePendiente > 0")
+            ->andWhere('p.estadoAutorizado = 1');
 
         if ($codigoCliente) {
             $queryBuilder->andWhere("c.codigoClientePk = '{$codigoCliente}'");

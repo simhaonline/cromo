@@ -144,6 +144,11 @@ class TurPedidoDetalle
     private $porcentajeBaseIva = 0;
 
     /**
+     * @ORM\Column(name="vr_abono", type="float")
+     */
+    private $vrAbono = 0;
+
+    /**
      * @ORM\Column(name="vr_subtotal", type="float")
      */
     private $vrSubtotal = 0;
@@ -1324,6 +1329,22 @@ class TurPedidoDetalle
     public function setLiquidarDiasReales($liquidarDiasReales): void
     {
         $this->liquidarDiasReales = $liquidarDiasReales;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAbono()
+    {
+        return $this->vrAbono;
+    }
+
+    /**
+     * @param mixed $vrAbono
+     */
+    public function setVrAbono($vrAbono): void
+    {
+        $this->vrAbono = $vrAbono;
     }
 
 }

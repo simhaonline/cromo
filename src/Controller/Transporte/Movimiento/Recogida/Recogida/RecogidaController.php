@@ -73,7 +73,7 @@ class RecogidaController extends AbstractController
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
                 $fechaActual = new \DateTime('now');
-                General::get()->setExportar($em->getRepository(TteRecogida::class)->lista($raw)->getQuery()->execute(), "recogida {$fechaActual->format('ymd')}");
+                General::get()->setExportar($em->getRepository(TteRecogida::class)->lista($raw), "recogida {$fechaActual->format('ymd')}");
             }
         }
         $arRecogidas = $paginator->paginate($em->getRepository(TteRecogida::class)->lista($raw), $request->query->getInt('page', 1), 30);

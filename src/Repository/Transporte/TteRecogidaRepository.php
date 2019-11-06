@@ -20,23 +20,23 @@ class TteRecogidaRepository extends ServiceEntityRepository
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
-        $codigoClienteFk =  null;
-        $codigoRecogidaPk =  null;
-        $fechaDesde =  null;
+        $codigoClienteFk = null;
+        $codigoRecogidaPk = null;
+        $fechaDesde = null;
         $fechaHasta = null;
-        $estadoAutorizado =null;
+        $estadoAutorizado = null;
         $estadoAprobado = null;
         $estadoAnulado = null;
-        $estadoProgramado =null;
-        if ($filtros){
+        $estadoProgramado = null;
+        if ($filtros) {
             $codigoClienteFk = $filtros['codigoClienteFk'] ?? null;
             $codigoRecogidaPk = $filtros['codigoRecogidaPk'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
-            $fechaHasta =$filtros['fechaHasta'] ?? null;
-            $estadoProgramado =$filtros['estadoProgramado'] ?? null;
-            $estadoAutorizado =$filtros['estadoAutorizado'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoProgramado = $filtros['estadoProgramado'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
             $estadoAprobado = $filtros['estadoAprobado'] ?? null;
-            $estadoAnulado =$filtros['estadoAnulado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
         }
 
 
@@ -112,7 +112,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
         $queryBuilder->orderBy('r.fecha', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
 
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
 
     }
 
@@ -571,7 +571,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->addSelect('r.fecha')
             ->where("r.fecha >= '$fechaRegistro 00:00:00' AND r.fecha <= '$fechaRegistro 23:59:59'")
             ->andWhere("r.codigoClienteFk = {$cliente}")
-        ->andWhere("r.codigoRutaRecogidaFk = '{$ruta}'");
+            ->andWhere("r.codigoRutaRecogidaFk = '{$ruta}'");
         $arrResultado = $queryBuilder->getQuery()->getResult();
 
         return $arrResultado;

@@ -80,6 +80,8 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
+            ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdinsepsasv1', 'attr' => ['class' => 'form-control']])
             ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
             ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Iniciar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -87,58 +89,65 @@ class MigracionController extends Controller
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $servername = "localhost";
-            $database = "bdinsepltdav1";
+            $servername = $form->get('servidor')->getData();
+            $database = $form->get('basedatos')->getData();
             $username = $form->get('usuario')->getData();
             $password = $form->get('clave')->getData();
-            // Create connection
-            $conn = mysqli_connect($servername, $username, $password, $database);
-            // Check connection
-            if (!$conn) {
-                die("Connection failed: " . mysqli_connect_error());
-            }
-            if ($form->get('btnIniciar')->isClicked()) {
-                //$this->generalPais($conn);
-                //$this->generalDepartamento($conn);
-                //$this->generalCiudad($conn);
-                //$this->rhuGrupo($conn);
-                //$this->rhuCargo($conn);
-                //$this->rhuEmpleado($conn);
-                //$this->rhuContrato($conn);
-                //$this->rhuConcepto($conn);
-                //$this->rhuAdicional($conn);
-                //$this->rhuEmbargoJuzgado($conn);
-                //$this->rhuEmbargo($conn);
-                //$this->rhuCreditoTipo($conn);
-                //$this->rhuCredito($conn);
-                //$this->rhuCreditoPago($conn);
-                //$this->rhuVacacion($conn);
-//                $this->rhuLiquidacion($conn);
-                //$this->rhuPago($conn);
-                //$this->rhuPagoDetalle($conn);
-                //$this->rhuIncapacidadDiagnostico($conn);
-//                $this->rhuIncapacidad($conn);
-                //$this->rhuLicenciaTipo($conn);
-                //$this->rhuLicencia($conn);
-                //$this->turTurno($conn);
-                //$this->turSecuencia($conn);
-                //$this->turCliente($conn);
-                //$this->turPuesto($conn);
-                //$this->turConcepto($conn);
-                //$this->turContrato($conn);
-                //$this->turContratoDetalle($conn);
-                //$this->turPedido($conn);
-                //$this->turPedidoDetalle($conn);
-                //$this->turFactura($conn);
-                //$this->turProgramacion($conn);
-//                $this->turFacturaDetalle($conn);
-                Mensajes::success("Se migro la informacion con exito");
 
+            if($servername && $database && $username && $password) {
+                // Create connection
+                $conn = mysqli_connect($servername, $username, $password, $database);
+                // Check connection
+                if (!$conn) {
+                    die("Connection failed: " . mysqli_connect_error());
+                }
+                if ($form->get('btnIniciar')->isClicked()) {
+                    set_time_limit(0);
+                    ini_set("memory_limit", -1);
+//                $this->generalPais($conn);
+//                $this->generalDepartamento($conn);
+//                $this->generalCiudad($conn);
+//                $this->rhuGrupo($conn);
+//                $this->rhuCargo($conn);
+//                $this->rhuEmpleado($conn);
+//                $this->rhuContrato($conn);
+//                $this->rhuConcepto($conn);
+//                $this->rhuAdicional($conn);
+//                $this->rhuEmbargoJuzgado($conn);
+//                $this->rhuEmbargo($conn);
+//                $this->rhuCreditoTipo($conn);
+//                $this->rhuCredito($conn);
+//                $this->rhuCreditoPago($conn);
+//                $this->rhuVacacion($conn);
+//                $this->rhuLiquidacion($conn);
+//                $this->rhuPago($conn);
+//                $this->rhuPagoDetalle($conn);
+//                $this->rhuIncapacidadDiagnostico($conn);
+//                $this->rhuIncapacidad($conn);
+//                $this->rhuLicenciaTipo($conn);
+//                $this->rhuLicencia($conn);
+//                $this->turTurno($conn);
+//                $this->turSecuencia($conn);
+//                $this->turCliente($conn);
+//                $this->turPuesto($conn);
+//                $this->turConcepto($conn);
+//                $this->turContrato($conn);
+//                $this->turContratoDetalle($conn);
+//                $this->turPedido($conn);
+//                $this->turPedidoDetalle($conn);
+//                $this->turFactura($conn);
+//                $this->turFacturaDetalle($conn);
+//                $this->turProgramacion($conn);
+                    Mensajes::success("Se migro la informacion con exito");
+
+                }
+                if ($form->get('btnValidar')->isClicked()) {
+                    $this->validarRhu($conn);
+                }
+                mysqli_close($conn);
+            } else {
+                Mensajes::error("Debe seleccionar los parametros de conexion");
             }
-            if ($form->get('btnValidar')->isClicked()) {
-                $this->validarRhu($conn);
-            }
-            mysqli_close($conn);
         }
 
         return $this->render('general/migracion/migracion.html.twig', [

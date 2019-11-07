@@ -1,0 +1,83 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br/>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4> Filtros de búsqueda</h4>
+        </div>
+        <div class="panel-body">
+{#            <div class="form-group form-group-sm">#}
+{#                <label class="col-sm-2 control-label">Codigo:</label>#}
+{#                <div class="col-sm-4">#}
+{#                    {{ form_widget(form.txtCodigoItem) }}#}
+{#                </div>#}
+{#                <label class="col-sm-2 control-label">Nombre:</label>#}
+{#                <div class="col-sm-4">#}
+{#                    {{ form_widget(form.txtNombreItem) }}#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="form-group form-group-sm">#}
+{#                <label class="col-sm-2 control-label">Referencia:</label>#}
+{#                <div class="col-sm-4">#}
+{#                    {{ form_widget(form.txtReferenciaItem) }}#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="form-group form-group-sm">#}
+{#                <label class="col-sm-2 control-label">Item con existencia:</label>#}
+{#                <div class="col-sm-1">#}
+{#                    {{ form_widget(form.itemConExistencia) }}#}
+{#                </div>#}
+{#                <label class="col-sm-3 control-label">Item con disponibilidad:</label>#}
+{#                <div class="col-sm-1">#}
+{#                    {{ form_widget(form.itemConDisponibilidad) }}#}
+{#                </div>#}
+{#            </div>#}
+        </div>
+        <div class="panel-footer">
+            {{ form_widget(form.btnFiltrar,{'attr':{'style':'float: right;'}}) }}
+            <br/>
+            <br/>
+        </div>
+    </div>
+    <div>
+        <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>TIPO</th>
+                <th>FECHA</th>
+                <th>PUESTO</th>
+                <th>ITEM</th>
+                <th>H</th>
+                <th>HD</th>
+                <th>HN</th>
+                <th>VALOR</th>
+                <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
+                                                                         onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')">
+            </tr>
+            </thead>
+            <tbody>
+            {% for arPedidoDetalle in arPedidoDetalles %}
+                <tr>
+                    <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
+                    <td>{{ arPedidoDetalle.pedidoTipoNombre }}</td>
+                    <td>{{ arPedidoDetalle.pedidoFecha | date('Y-m-d') }}</td>
+                    <td>{{ arPedidoDetalle.puestoNombre }}</td>
+                    <td>{{ arPedidoDetalle.itemNombre }}</td>
+                    <td class="numeo">{{ arPedidoDetalle.horas }}</td>
+                    <td class="numero">{{ arPedidoDetalle.horasDiurnas }}</td>
+                    <td class="numero">{{ arPedidoDetalle.horasNocturnas }}</td>
+                    <td class="numero">{{ arPedidoDetalle.vrTotalDetallePendiente | number_format() }}</td>
+                    <td class="text-center">
+                        <input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+    {{ form_end(form) }}
+    <br /><br />
+{% endblock %}

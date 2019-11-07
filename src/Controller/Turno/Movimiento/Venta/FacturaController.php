@@ -286,6 +286,12 @@ class FacturaController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * @Route("/turno/movimiento/comercial/factura/detalle/pedido/nuevo/{id}", name="turno_movimiento_venta_factura_detalle_pedido_nuevo")
+     */
     public function detalleNuevoPedido(Request $request, PaginatorInterface $paginator, $id)
     {
         $session = new Session();
@@ -296,6 +302,7 @@ class FacturaController extends AbstractController
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
+        $raw['filtros'] = ['codigoCliente' => $arFactura->getCodigoClienteFk()];
         if ($form->isSubmitted() && $form->isValid()) {
 //            if ($form->get('btnFiltrar')->isClicked()) {
 //                $arCuentaCobrarTipo = $form->get('cboCuentaCobrarTipo')->getData();
@@ -312,14 +319,15 @@ class FacturaController extends AbstractController
 //                $session->set('filtroCarFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
 //                $session->set('filtroCarCuentaCobrarTodosClientes', $form->get('todosClientes')->getData());
 //            }
-            if ($form->get('btnGuardar')->isClicked() || $form->get('btnGuardarNuevo')->isClicked()) {
-                $arrPedidosDetalle = $request->request->get('ChkSeleccionar');
-                if ($arrPedidosDetalle) {
-                    foreach ($arrPedidosDetalle as $codigoPedidoDetalle) {
-                        $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados as $codigo) {
+                        $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigo);
                         $arFacturaDetalle = new TurFacturaDetalle();
                         $arFacturaDetalle->setFacturaRel($arFactura);
-                        $arFacturaDetalle->setPorcentajeIva($arPedidoDetalle->getPorcentajeIva());
+                        $arFacturaDetalle->setItemRel($arPedidoDetalle->getItemRel());
+                        //$arFacturaDetalle->setPorcentajeIva($arPedidoDetalle->getPorcentajeIva());
                         $arFacturaDetalle->setVrIva($arPedidoDetalle->getVrIva());
                         $arFacturaDetalle->setVrSubtotal($arPedidoDetalle->getVrSubtotal());
                         $arFacturaDetalle->setVrNeto($arPedidoDetalle->getVrTotalDetalle());
@@ -327,19 +335,16 @@ class FacturaController extends AbstractController
                         $em->persist($arFacturaDetalle);
                     }
                     $em->flush();
-                    $em->getRepository(TurFactura::class)->liquidar($id);
+                    $em->getRepository(TurFactura::class)->liquidar($arFactura);
                     if ($form->get('btnGuardar')->isClicked()) {
                         echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                    }
-                    if ($form->get('btnGuardarNuevo')->isClicked()) {
-                        echo "<script languaje='javascript' type='text/javascript'>window.opener.location.reload();</script>";
                     }
                 }
             }
         }
-//        $arCuentasCobrar = $paginator->paginate($em->getRepository(CarCuentaCobrar::class)->cuentasCobrarDetalleNuevo($arIngreso->getCodigoClienteFk()), $request->query->getInt('page', 1), 500);
-        return $this->render('', [
-//            'arCuentasCobrar' => $arCuentasCobrar,
+        $arPedidoDetalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->pendienteFacturar($raw), $request->query->getInt('page', 1), 500);
+        return $this->render('turno/movimiento/venta/factura/detalleNuevoPedido.html.twig', [
+            'arPedidoDetalles' => $arPedidoDetalles,
             'form' => $form->createView()
         ]);
     }
@@ -366,5 +371,6 @@ class FacturaController extends AbstractController
         }
         return $fitro;
     }
+
 }
 

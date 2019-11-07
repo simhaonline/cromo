@@ -45,12 +45,12 @@ class PendiendeFacturaraController extends AbstractController
         if ($form->isSubmitted()) {
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                $arPendientesFacturas = $em->getRepository(TurPedidoDetalle::class)->pendienteFacturar($raw);
+                $arPendientesFacturas = $em->getRepository(TurPedidoDetalle::class)->pendienteFacturarInforme($raw);
                 $this->exportarExcelPersonalizado($arPendientesFacturas);
             }
         }
 
-        $arPedidoDestalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->pendienteFacturar($raw), $request->query->getInt('page', 1), 30);
+        $arPedidoDestalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->pendienteFacturarInforme($raw), $request->query->getInt('page', 1), 30);
         return $this->render('turno/informe/comercial/pendienteFacturar.html.twig', [
             'arPedidoDestalles' => $arPedidoDestalles,
             'form' => $form->createView(),

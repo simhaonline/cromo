@@ -125,8 +125,10 @@ class TurFacturaRepository extends ServiceEntityRepository
          */
         $em = $this->getEntityManager();
         $respuesta = '';
-        $retencionFuente = $arFactura->getClienteRel()->getRetencionFuente();
-        $retencionFuenteSinBase = $arFactura->getClienteRel()->getRetencionFuenteSinBase();
+//        $retencionFuente = $arFactura->getClienteRel()->getRetencionFuente();
+//        $retencionFuenteSinBase = $arFactura->getClienteRel()->getRetencionFuenteSinBase();
+        $retencionFuente = 1;
+        $retencionFuenteSinBase = 0;
         $vrTotalBrutoGlobal = 0;
         $vrTotalGlobal = 0;
         $vrTotalNetoGlobal = 0;

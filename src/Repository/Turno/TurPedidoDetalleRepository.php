@@ -215,6 +215,77 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         $filtros = $raw['filtros'] ?? null;
 
         $codigoCliente = null;
+
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd')
+            ->select('pd.codigoPedidoDetallePk')
+            ->addSelect('pd.diaDesde')
+            ->addSelect('pd.diaHasta')
+            ->addSelect('pd.cantidad')
+            ->addSelect('pd.lunes')
+            ->addSelect('pd.martes')
+            ->addSelect('pd.miercoles')
+            ->addSelect('pd.jueves')
+            ->addSelect('pd.viernes')
+            ->addSelect('pd.sabado')
+            ->addSelect('pd.domingo')
+            ->addSelect('pd.festivo')
+            ->addSelect('pd.horas')
+            ->addSelect('pd.horasDiurnas')
+            ->addSelect('pd.horasNocturnas')
+            ->addSelect('pd.horasDiurnasProgramadas')
+            ->addSelect('pd.horasNocturnasProgramadas')
+            ->addSelect('pd.horasProgramadas')
+            ->addSelect('pd.liquidarDiasReales')
+            ->addSelect('pd.dias')
+            ->addSelect('pd.vrIva')
+            ->addSelect('pd.vrSubtotal')
+            ->addSelect('pd.vrTotalDetallePendiente')
+            ->addSelect('pd.vrTotalDetalle')
+            ->addSelect('p.numero')
+            ->addSelect('p.fecha as pedidoFecha')
+            ->addSelect('p.fechaGeneracion')
+            ->addSelect('p.estadoAutorizado as pedidoEstadoAutorizado')
+            ->addSelect('p.estadoProgramado as pedidoEstadoProgramado')
+            ->addSelect('p.estadoFacturado as pedidoEstadoFacturado')
+            ->addSelect('p.estadoAnulado as pedidoEstadoAnulado')
+            ->addSelect('c.nombreCorto')
+            ->addSelect('c.codigoClientePk')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.digitoVerificacion')
+            ->addSelect('pu.nombre as puestoNombre')
+            ->addSelect('cs.nombre as conceptoNombre')
+            ->addSelect('m.nombre as modalidadNombre')
+            ->addSelect('pt.nombre as pedidoTipoNombre')
+            ->addSelect('s.nombre as sectorNombre')
+            ->addSelect('i.nombre as itemNombre')
+            ->leftJoin("pd.pedidoRel", "p")
+            ->leftJoin("p.clienteRel", "c")
+            ->leftJoin("p.pedidoTipoRel", "pt")
+            ->leftJoin("p.sectorRel", "s")
+            ->leftJoin("pd.puestoRel", "pu")
+            ->leftJoin("pd.conceptoRel", "cs")
+            ->leftJoin("pd.itemRel", 'i')
+            ->leftJoin("pd.modalidadRel", "m")
+            ->where("pd.vrTotalDetallePendiente > 0")
+            ->andWhere('p.estadoAutorizado = 1');
+
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("c.codigoClientePk = '{$codigoCliente}'");
+        }
+        $queryBuilder->orderBy('pd.anio', 'DESC');
+        $queryBuilder->addOrderBy('pd.mes', 'DESC');
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function pendienteFacturarInforme($raw)
+    {
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCliente = null;
         $numero = null;
         $fechaDesde = null;
         $fechaHasta = null;

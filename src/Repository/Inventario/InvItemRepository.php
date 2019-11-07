@@ -122,7 +122,7 @@ class InvItemRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("m.nombre LIKE '%{$marcaItem}%'");
         }
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function listaRegenerar($codigoItem = null){

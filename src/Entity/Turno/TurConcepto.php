@@ -45,11 +45,6 @@ class TurConcepto
     private $horasNocturnas = 0;
 
     /**
-     * @ORM\Column(name="porcentaje_iva", type="float", nullable=true)
-     */
-    private $porcentajeIva = 0;
-
-    /**
      * @ORM\OneToMany(targetEntity="TurContratoDetalle", mappedBy="conceptoRel")
      */
     protected $contratosDetallesConceptoRel;
@@ -147,22 +142,6 @@ class TurConcepto
     /**
      * @return mixed
      */
-    public function getPorcentajeIva()
-    {
-        return $this->porcentajeIva;
-    }
-
-    /**
-     * @param mixed $porcentajeIva
-     */
-    public function setPorcentajeIva($porcentajeIva): void
-    {
-        $this->porcentajeIva = $porcentajeIva;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getContratosDetallesConceptoRel()
     {
         return $this->contratosDetallesConceptoRel;
@@ -207,7 +186,6 @@ class TurConcepto
     {
         $this->costosServiciosConceptoRel = $costosServiciosConceptoRel;
     }
-
 
 
 }

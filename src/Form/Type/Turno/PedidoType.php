@@ -39,6 +39,7 @@ class PedidoType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Tipo pedido:'
             ])
+            ->add('fecha', DateType::class, array('widget' => 'single_text', 'format' => 'yyyy-MM-dd'))
             ->add('estrato', NumberType::class, array('required' => false))
             ->add('vrSalarioBase', NumberType::class)
             ->add('comentario', TextareaType::class, array('required' => false))

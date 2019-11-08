@@ -42,6 +42,11 @@ class GenImpuesto
     private $base = 0;
 
     /**
+     * @ORM\Column(name="porcentaje_base", type="float", nullable=true, options={"default" : 100})
+     */
+    private $porcentajeBase = 0;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaFk;
@@ -350,6 +355,22 @@ class GenImpuesto
     public function setItemsImpuestoRetencionCompraRel($itemsImpuestoRetencionCompraRel): void
     {
         $this->itemsImpuestoRetencionCompraRel = $itemsImpuestoRetencionCompraRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeBase()
+    {
+        return $this->porcentajeBase;
+    }
+
+    /**
+     * @param mixed $porcentajeBase
+     */
+    public function setPorcentajeBase($porcentajeBase): void
+    {
+        $this->porcentajeBase = $porcentajeBase;
     }
 
 

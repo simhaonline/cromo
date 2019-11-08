@@ -32,7 +32,8 @@ class PedidoDetalleType extends AbstractType
                         ->orderBy('coc.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'nombre:'
+                'label' => 'nombre:',
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('itemRel', EntityType::class, [
                 'required' => true,

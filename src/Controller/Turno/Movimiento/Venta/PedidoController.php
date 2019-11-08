@@ -118,8 +118,12 @@ class PedidoController extends AbstractController
         } else {
             $arrConfiguracion = $em->getRepository(TurConfiguracion::class)->comercialNuevo();
             $arPedido->setVrSalarioBase($arrConfiguracion['vrSalarioMinimo']);
+            $arPedido->setFecha(new \DateTime('now'));
             $arPedido->setUsuario($this->getUser()->getUserName());
             $arPedido->setEstrato(6);
+            $nuevafecha = date('Y/m/', strtotime('-1 month', strtotime(date('Y/m/j'))));
+            $dateFechaGeneracion = date_create($nuevafecha . '01');
+            $arPedido->setFechaGeneracion($dateFechaGeneracion);
         }
         $form = $this->createForm(PedidoType::class, $arPedido);
         $form->handleRequest($request);
@@ -130,13 +134,6 @@ class PedidoController extends AbstractController
                     $arCliente = $em->getRepository(TurCliente::class)->find($txtCodigoCliente);
                     if ($arCliente) {
                         $arPedido->setClienteRel($arCliente);
-                        $arPedido->setFecha(new \DateTime('now'));
-                        if ($id == 0) {
-                            $nuevafecha = date('Y/m/', strtotime('-1 month', strtotime(date('Y/m/j'))));
-                            $dateFechaGeneracion = date_create($nuevafecha . '01');
-                            $arPedido->setFechaGeneracion($dateFechaGeneracion);
-                            $arPedido->setUsuario($this->getUser()->getUserName());
-                        }
                         $em->persist($arPedido);
                         $em->flush();
                         return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_detalle', ['id' => $arPedido->getCodigoPedidoPk()]));
@@ -253,8 +250,8 @@ class PedidoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 if ($id == 0) {
-                    $arPedidoDetalle->setPorcentajeIva($arPedidoDetalle->getConceptoRel()->getPorcentajeIva());
-                    $arPedidoDetalle->setPorcentajeBaseIva(100);
+                    $arPedidoDetalle->setPorcentajeIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentaje());
+                    $arPedidoDetalle->setPorcentajeBaseIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentajeBase());
                 }
                 $arPedidoDetalle->setAnio($arPedido->getFecha()->format('Y'));
                 $arPedidoDetalle->setMes($arPedido->getFecha()->format('n'));

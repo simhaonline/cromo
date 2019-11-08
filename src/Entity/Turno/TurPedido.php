@@ -124,9 +124,9 @@ class TurPedido
     private $vrIva = 0;
 
     /**
-     * @ORM\Column(name="vr_base_aiu", type="float")
+     * @ORM\Column(name="vr_base_iva", type="float")
      */
-    private $vrBaseAiu = 0;
+    private $vrBaseIva = 0;
 
     /**
      * @ORM\Column(name="vr_total", type="float", nullable=true)
@@ -349,6 +349,54 @@ class TurPedido
     /**
      * @return mixed
      */
+    public function getEstadoProgramado()
+    {
+        return $this->estadoProgramado;
+    }
+
+    /**
+     * @param mixed $estadoProgramado
+     */
+    public function setEstadoProgramado($estadoProgramado): void
+    {
+        $this->estadoProgramado = $estadoProgramado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoFacturado()
+    {
+        return $this->estadoFacturado;
+    }
+
+    /**
+     * @param mixed $estadoFacturado
+     */
+    public function setEstadoFacturado($estadoFacturado): void
+    {
+        $this->estadoFacturado = $estadoFacturado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaGeneracion()
+    {
+        return $this->fechaGeneracion;
+    }
+
+    /**
+     * @param mixed $fechaGeneracion
+     */
+    public function setFechaGeneracion($fechaGeneracion): void
+    {
+        $this->fechaGeneracion = $fechaGeneracion;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getHoras()
     {
         return $this->horas;
@@ -477,17 +525,17 @@ class TurPedido
     /**
      * @return mixed
      */
-    public function getVrBaseAiu()
+    public function getVrBaseIva()
     {
-        return $this->vrBaseAiu;
+        return $this->vrBaseIva;
     }
 
     /**
-     * @param mixed $vrBaseAiu
+     * @param mixed $vrBaseIva
      */
-    public function setVrBaseAiu($vrBaseAiu): void
+    public function setVrBaseIva($vrBaseIva): void
     {
-        $this->vrBaseAiu = $vrBaseAiu;
+        $this->vrBaseIva = $vrBaseIva;
     }
 
     /**
@@ -504,6 +552,22 @@ class TurPedido
     public function setVrTotal($vrTotal): void
     {
         $this->vrTotal = $vrTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrTotalCosto()
+    {
+        return $this->vrTotalCosto;
+    }
+
+    /**
+     * @param mixed $vrTotalCosto
+     */
+    public function setVrTotalCosto($vrTotalCosto): void
+    {
+        $this->vrTotalCosto = $vrTotalCosto;
     }
 
     /**
@@ -635,54 +699,6 @@ class TurPedido
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaGeneracion()
-    {
-        return $this->fechaGeneracion;
-    }
-
-    /**
-     * @param mixed $fechaGeneracion
-     */
-    public function setFechaGeneracion($fechaGeneracion): void
-    {
-        $this->fechaGeneracion = $fechaGeneracion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalCosto()
-    {
-        return $this->vrTotalCosto;
-    }
-
-    /**
-     * @param mixed $vrTotalCosto
-     */
-    public function setVrTotalCosto($vrTotalCosto): void
-    {
-        $this->vrTotalCosto = $vrTotalCosto;
-    }
-
-    /**
      * @return mixed
      */
     public function getProgramacionesPedidoRel()
@@ -697,7 +713,6 @@ class TurPedido
     {
         $this->programacionesPedidoRel = $programacionesPedidoRel;
     }
-
 
 
 }

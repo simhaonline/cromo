@@ -250,7 +250,7 @@ class TurPedidoRepository extends ServiceEntityRepository
                 $totalDetalle = $subTotalDetalle + $ivaDetalle;
 
                 $arPedidoDetalle->setVrSubtotal($subTotalDetalle);
-                $arPedidoDetalle->setVrBaseAiu($baseAiuDetalle);
+                $arPedidoDetalle->setVrBaseIva($baseAiuDetalle);
                 $arPedidoDetalle->setVrIva($ivaDetalle);
                 $arPedidoDetalle->setVrTotalDetalle($totalDetalle);
                 $arPedidoDetalle->setVrPrecioMinimo($valorMinimoServicio);
@@ -282,7 +282,7 @@ class TurPedidoRepository extends ServiceEntityRepository
         $arPedido->setVrTotalPrecioMinimo($totalMinimoServicio);
         $arPedido->setVrTotalCosto($totalCostoCalculado);
         $arPedido->setVrSubtotal($subtotalGeneral);
-        $arPedido->setVrBaseAiu($baseAuiGeneral);
+        $arPedido->setVrBaseIva($baseAuiGeneral);
         $arPedido->setVrIva($ivaGeneral);
         $arPedido->setVrTotal($totalGeneral);
         $em->persist($arPedido);
@@ -644,7 +644,8 @@ class TurPedidoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("p.estadoAnulado = 1");
                 break;
         }
-
+        $queryBuilder->orderBy('p.estadoAprobado', 'ASC');
+        $queryBuilder->addOrderBy('p.numero', 'ASC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder;
 

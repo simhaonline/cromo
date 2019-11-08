@@ -40,15 +40,26 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Salario base (Liquidacion):</label>
+                <label class="col-sm-2 control-label">Fecha:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.vrSalarioBase, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.vrSalarioBase) }}
+                    {{ form_widget(form.fecha, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.fecha) }}
                 </div>
                 <label class="col-sm-2 control-label">Estrato:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.estrato, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.estrato) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+                <label class="col-sm-2 control-label">Salario base (Liquidacion):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrSalarioBase, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.vrSalarioBase) }}
                 </div>
             </div>
             <div class="form-group">

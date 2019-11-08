@@ -159,9 +159,9 @@ class TurPedidoDetalle
     private $vrIva = 0;
 
     /**
-     * @ORM\Column(name="vr_base_aiu", type="float")
+     * @ORM\Column(name="vr_base_iva", type="float")
      */
-    private $vrBaseAiu = 0;
+    private $vrBaseIva = 0;
 
     /**
      * @ORM\Column(name="vr_total_detalle", type="float")
@@ -390,6 +390,22 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
+    public function getCodigoItemFk()
+    {
+        return $this->codigoItemFk;
+    }
+
+    /**
+     * @param mixed $codigoItemFk
+     */
+    public function setCodigoItemFk($codigoItemFk): void
+    {
+        $this->codigoItemFk = $codigoItemFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoModalidadFk()
     {
         return $this->codigoModalidadFk;
@@ -417,6 +433,22 @@ class TurPedidoDetalle
     public function setCodigoPuestoFk($codigoPuestoFk): void
     {
         $this->codigoPuestoFk = $codigoPuestoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoDetalleFk()
+    {
+        return $this->codigoContratoDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoDetalleFk
+     */
+    public function setCodigoContratoDetalleFk($codigoContratoDetalleFk): void
+    {
+        $this->codigoContratoDetalleFk = $codigoContratoDetalleFk;
     }
 
     /**
@@ -710,6 +742,22 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
+    public function getVrAbono()
+    {
+        return $this->vrAbono;
+    }
+
+    /**
+     * @param mixed $vrAbono
+     */
+    public function setVrAbono($vrAbono): void
+    {
+        $this->vrAbono = $vrAbono;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrSubtotal()
     {
         return $this->vrSubtotal;
@@ -742,17 +790,17 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
-    public function getVrBaseAiu()
+    public function getVrBaseIva()
     {
-        return $this->vrBaseAiu;
+        return $this->vrBaseIva;
     }
 
     /**
-     * @param mixed $vrBaseAiu
+     * @param mixed $vrBaseIva
      */
-    public function setVrBaseAiu($vrBaseAiu): void
+    public function setVrBaseIva($vrBaseIva): void
     {
-        $this->vrBaseAiu = $vrBaseAiu;
+        $this->vrBaseIva = $vrBaseIva;
     }
 
     /**
@@ -1078,6 +1126,38 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
+    public function getEstadoProgramado()
+    {
+        return $this->estadoProgramado;
+    }
+
+    /**
+     * @param mixed $estadoProgramado
+     */
+    public function setEstadoProgramado($estadoProgramado): void
+    {
+        $this->estadoProgramado = $estadoProgramado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLiquidarDiasReales()
+    {
+        return $this->liquidarDiasReales;
+    }
+
+    /**
+     * @param mixed $liquidarDiasReales
+     */
+    public function setLiquidarDiasReales($liquidarDiasReales): void
+    {
+        $this->liquidarDiasReales = $liquidarDiasReales;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPedidoRel()
     {
         return $this->pedidoRel;
@@ -1105,6 +1185,22 @@ class TurPedidoDetalle
     public function setConceptoRel($conceptoRel): void
     {
         $this->conceptoRel = $conceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemRel()
+    {
+        return $this->itemRel;
+    }
+
+    /**
+     * @param mixed $itemRel
+     */
+    public function setItemRel($itemRel): void
+    {
+        $this->itemRel = $itemRel;
     }
 
     /**
@@ -1142,54 +1238,6 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
-    public function getProgramacionesPedidoDetalleRel()
-    {
-        return $this->programacionesPedidoDetalleRel;
-    }
-
-    /**
-     * @param mixed $programacionesPedidoDetalleRel
-     */
-    public function setProgramacionesPedidoDetalleRel($programacionesPedidoDetalleRel): void
-    {
-        $this->programacionesPedidoDetalleRel = $programacionesPedidoDetalleRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoProgramado()
-    {
-        return $this->estadoProgramado;
-    }
-
-    /**
-     * @param mixed $estadoProgramado
-     */
-    public function setEstadoProgramado($estadoProgramado): void
-    {
-        $this->estadoProgramado = $estadoProgramado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoContratoDetalleFk()
-    {
-        return $this->codigoContratoDetalleFk;
-    }
-
-    /**
-     * @param mixed $codigoContratoDetalleFk
-     */
-    public function setCodigoContratoDetalleFk($codigoContratoDetalleFk): void
-    {
-        $this->codigoContratoDetalleFk = $codigoContratoDetalleFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getContratoDetalleRel()
     {
         return $this->contratoDetalleRel;
@@ -1206,6 +1254,22 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
+    public function getProgramacionesPedidoDetalleRel()
+    {
+        return $this->programacionesPedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $programacionesPedidoDetalleRel
+     */
+    public function setProgramacionesPedidoDetalleRel($programacionesPedidoDetalleRel): void
+    {
+        $this->programacionesPedidoDetalleRel = $programacionesPedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSimulacionesPedidoDetalleRel()
     {
         return $this->simulacionesPedidoDetalleRel;
@@ -1217,38 +1281,6 @@ class TurPedidoDetalle
     public function setSimulacionesPedidoDetalleRel($simulacionesPedidoDetalleRel): void
     {
         $this->simulacionesPedidoDetalleRel = $simulacionesPedidoDetalleRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoItemFk()
-    {
-        return $this->codigoItemFk;
-    }
-
-    /**
-     * @param mixed $codigoItemFk
-     */
-    public function setCodigoItemFk($codigoItemFk): void
-    {
-        $this->codigoItemFk = $codigoItemFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getItemRel()
-    {
-        return $this->itemRel;
-    }
-
-    /**
-     * @param mixed $itemRel
-     */
-    public function setItemRel($itemRel): void
-    {
-        $this->itemRel = $itemRel;
     }
 
     /**
@@ -1284,22 +1316,6 @@ class TurPedidoDetalle
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
     public function getFacturasDetallesPedidoDetalleRel()
@@ -1315,37 +1331,6 @@ class TurPedidoDetalle
         $this->facturasDetallesPedidoDetalleRel = $facturasDetallesPedidoDetalleRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLiquidarDiasReales()
-    {
-        return $this->liquidarDiasReales;
-    }
-
-    /**
-     * @param mixed $liquidarDiasReales
-     */
-    public function setLiquidarDiasReales($liquidarDiasReales): void
-    {
-        $this->liquidarDiasReales = $liquidarDiasReales;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrAbono()
-    {
-        return $this->vrAbono;
-    }
-
-    /**
-     * @param mixed $vrAbono
-     */
-    public function setVrAbono($vrAbono): void
-    {
-        $this->vrAbono = $vrAbono;
-    }
 
 }
 

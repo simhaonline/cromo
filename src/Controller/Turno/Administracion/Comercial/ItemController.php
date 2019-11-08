@@ -5,54 +5,55 @@ namespace App\Controller\Turno\Administracion\Comercial;
 
 
 use App\Controller\BaseController;
-use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Turno\TurItem;
 use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\Form\Type\Turno\ItemType;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ItemController extends ControllerListenerGeneral
+class ItemController extends  AbstractController
 {
-    protected $clase = TurItem::class;
-    protected $claseFormulario = ItemType::class;
-    protected $claseNombre = "TurItem";
-    protected $modulo = "Turno";
-    protected $funcion = "Administracion";
-    protected $grupo = "comercial";
-    protected $nombre = "Item";
-
     /**
      * @Route("/turno/administracion/comercial/item/lista", name="turno_administracion_comercial_item_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $session = new Session();
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('itemCodigo', TextType::class, array('required' => false))
+            ->add('itemNombre', TextType::class, array('required' => false))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
             }
-        }
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $this->get("UtilidadesModelo")->eliminar(TurItem::class, $arrSeleccionados);
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
+                $em->getRepository(TurItem::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_administracion_comercial_item_lista'));
             }
         }
-        $datos = $this->getDatosLista(true);
+
+        $arItems = $paginator->paginate($em->getRepository(TurItem::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
         return $this->render('turno/administracion/comercial/item/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+            'arItems' => $arItems,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -104,6 +105,18 @@ class ItemController extends ControllerListenerGeneral
             'form' => $form->createView(),
             'arItem' => $arItem,
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'itemCodigo' => $form->get('itemCodigo')->getData(),
+            'itemNombre' => $form->get('itemNombre')->getData(),
+        ];
+
+
+        return $filtro;
+
     }
 
 

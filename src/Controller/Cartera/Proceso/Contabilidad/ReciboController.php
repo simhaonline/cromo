@@ -42,15 +42,13 @@ class ReciboController extends AbstractController
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
-            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
-            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $raw = [
             'limiteRegistros' => $form->get('limiteRegistros')->getData()
         ];
         if ($form->isSubmitted()) {
-            if ($form->get('btnFiltrar')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnContabilizar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnExcel')->isClicked()) {

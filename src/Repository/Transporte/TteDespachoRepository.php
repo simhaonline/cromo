@@ -1068,7 +1068,7 @@ class TteDespachoRepository extends ServiceEntityRepository
                                     <HORAENTRADADESCARGUECUMPLIDO>19:00</HORAENTRADADESCARGUECUMPLIDO>
                                     <FECHASALIDADESCARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHASALIDADESCARGUE>
                                     <HORASALIDADESCARGUECUMPLIDO>20:00</HORASALIDADESCARGUECUMPLIDO>                                    
-                                    <CANTIDADENTREGADA>" . $arDespacho->getCantidad() . "</CANTIDADENTREGADA>";
+                                    <CANTIDADENTREGADA>" . $arDespacho->getPesoReal() . "</CANTIDADENTREGADA>";
                 $strXML .= "</variables>
                               </root>";
                 $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strXML));

@@ -4,6 +4,7 @@
 namespace App\Form\Type\Turno;
 
 
+use App\Entity\General\GenImpuesto;
 use App\Entity\Turno\TurItem;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -20,7 +21,7 @@ class ItemType extends AbstractType
         $builder
             ->add('nombre', TextType::class, ['required' => true])
             ->add('impuestoRetencionRel', EntityType::class, [
-                'class' => 'App\Entity\General\GenImpuesto',
+                'class' => GenImpuesto::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
                         ->where("i.codigoImpuestoTipoFk = 'R'")
@@ -30,7 +31,7 @@ class ItemType extends AbstractType
                 'label' => 'Retencion:'
                 , 'required' => true])
             ->add('impuestoIvaVentaRel', EntityType::class, [
-                'class' => 'App\Entity\General\GenImpuesto',
+                'class' => GenImpuesto::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
                         ->where("i.codigoImpuestoTipoFk = 'I'")
@@ -48,25 +49,5 @@ class ItemType extends AbstractType
         $resolver->setDefaults([
             'data_class' => TurItem::class,
         ]);
-    }
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoItemPk",      "tipo":"pk"      ,"ayuda":"Codigo del registro"                      ,"titulo":"ID"},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre del aspirante",           "titulo":"NOMBRE CORTO"},          
-            {"campo":"impuestoRetencionRel.codigoImpuestoPk",                     "tipo":"texto"   ,"ayuda":""                     ,              "titulo":"CARGO", "relacion":""},
-            {"campo":"impuestoIvaVentaRel.codigoImpuestoPk",                     "tipo":"texto"   ,"ayuda":""                     ,              "titulo":"CARGO", "relacion":""}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoItemPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
-            {"child":"nombre",                              "tipo":"TextType",      "propiedades":{"label":"Nombre"},     "operador":"like"}
-        ]';
-        return $campos;
     }
 }

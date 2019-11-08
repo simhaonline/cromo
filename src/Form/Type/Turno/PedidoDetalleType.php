@@ -7,6 +7,7 @@ use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurModalidad;
 use App\Entity\Turno\TurPedidoDetalle;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -67,6 +68,13 @@ class PedidoDetalleType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'nombre:'
             ])
+            ->add('periodo', ChoiceType::class, [
+                'choices' => array(
+                    'MES' => 'M', 'DIA' => 'D',
+                ),
+                'required' => true,
+                'label' => 'Periodo:'
+            ])
             ->add('cantidad', NumberType::class)
             ->add('vrPrecioAjustado', NumberType::class, array('required' => false))
             ->add('porcentajeBaseIva', NumberType::class, array('required' => false))
@@ -81,6 +89,7 @@ class PedidoDetalleType extends AbstractType
             ->add('domingo', CheckboxType::class, array('required' => false))
             ->add('festivo', CheckboxType::class, array('required' => false))
             ->add('compuesto', CheckboxType::class, array('required' => false))
+            ->add('diasReales', CheckboxType::class, array('required' => false))
             ->add('vrSalarioBase', NumberType::class)
             ->add('guardar', SubmitType::class);
     }

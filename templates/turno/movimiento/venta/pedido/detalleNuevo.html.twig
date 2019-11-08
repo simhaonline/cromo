@@ -58,9 +58,13 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Dia desde:</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-2 control-label">Desde:</label>
+                    <div class="col-sm-1">
                         {{ form_widget(form.diaDesde) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Hasta:</label>
+                    <div class="col-sm-1">
+                        {{ form_widget(form.diaHasta) }}
                     </div>
                     <label class="col-sm-2 control-label">Salario (Liquidacion):</label>
                     <div class="col-sm-4">
@@ -70,9 +74,10 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Dia hasta:</label>
+                    <label class="col-sm-2 control-label">Periodo:</label>
                     <div class="col-sm-4">
-                        {{ form_widget(form.diaHasta) }}
+                        {{ form_widget(form.periodo) }}
+                        {{ form_errors(form.periodo) }}
                     </div>
                     <label class="col-sm-2 control-label">Precio (Ajustado):</label>
                     <div class="col-sm-4">
@@ -81,29 +86,24 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <div class="col-sm-offset-2 col-sm-9">
-                        <div class="col-sm-4">{{ form_widget(form.lunes) }}
-                            {{ form_errors(form.lunes) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.martes) }}
-                            {{ form_errors(form.martes) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.miercoles) }}
-                            {{ form_errors(form.miercoles) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.jueves) }}
-                            {{ form_errors(form.jueves) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.viernes) }}
-                            {{ form_errors(form.viernes) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.sabado) }}
-                            {{ form_errors(form.sabado) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.domingo) }}
-                            {{ form_errors(form.domingo) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.festivo) }}
-                            {{ form_errors(form.festivo) }}</div>
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
                     <label class="col-sm-2 control-label"></label>
-                    <div class="col-sm-4">
-                        <div class="col-sm-4">{{ form_widget(form.compuesto) }}</div>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.lunes) }}
+                        {{ form_widget(form.martes) }}
+                        {{ form_widget(form.miercoles) }}
+                        {{ form_widget(form.jueves) }}
+                    </div>
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.viernes) }}
+                        {{ form_widget(form.sabado) }}
+                        {{ form_widget(form.domingo) }}
+                        {{ form_widget(form.festivo) }}
+                    </div>
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.compuesto) }}
+                        {{ form_widget(form.diasReales) }}
                     </div>
                 </div>
             </div>

@@ -274,9 +274,9 @@ class TurPedidoDetalle
     private $estadoProgramado = false;
 
     /**
-     * @ORM\Column(name="liquidar_dias_reales", type="boolean")
+     * @ORM\Column(name="dias_reales", type="boolean", options={"default":false})
      */
-    private $liquidarDiasReales = false;
+    private $diasReales = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="pedidosDetallesPedidoRel")
@@ -1142,17 +1142,17 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
-    public function getLiquidarDiasReales()
+    public function getDiasReales()
     {
-        return $this->liquidarDiasReales;
+        return $this->diasReales;
     }
 
     /**
-     * @param mixed $liquidarDiasReales
+     * @param mixed $diasReales
      */
-    public function setLiquidarDiasReales($liquidarDiasReales): void
+    public function setDiasReales($diasReales): void
     {
-        $this->liquidarDiasReales = $liquidarDiasReales;
+        $this->diasReales = $diasReales;
     }
 
     /**
@@ -1330,6 +1330,7 @@ class TurPedidoDetalle
     {
         $this->facturasDetallesPedidoDetalleRel = $facturasDetallesPedidoDetalleRel;
     }
+
 
 
 }

@@ -243,7 +243,6 @@ class PedidoController extends AbstractController
             $arPedidoDetalle->setFestivo(true);
             $arPedidoDetalle->setCantidad(1);
             $arPedidoDetalle->setVrSalarioBase($arPedido->getVrSalarioBase());
-            $arPedidoDetalle->setPeriodo('M');
         }
         $form = $this->createForm(PedidoDetalleType::class, $arPedidoDetalle);
         $form->handleRequest($request);
@@ -255,6 +254,12 @@ class PedidoController extends AbstractController
                 }
                 $arPedidoDetalle->setAnio($arPedido->getFecha()->format('Y'));
                 $arPedidoDetalle->setMes($arPedido->getFecha()->format('n'));
+                if($arPedidoDetalle->getPeriodo() == 'M') {
+                    $diaFinalMes = date("d", (mktime(0, 0, 0, $arPedido->getFecha()->format('n') + 1, 1, $arPedido->getFecha()->format('Y')) - 1));
+                    $arPedidoDetalle->setDiaDesde(1);
+                    $arPedidoDetalle->setDiaHasta($diaFinalMes);
+                }
+
                 $em->persist($arPedidoDetalle);
                 $em->flush();
                 $em->getRepository(TurPedido::class)->liquidar($arPedido);

@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    <style>
+        .ui-menu {
+            width: 500px !important ;
+        }
+    </style>
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     {{ notificar()|raw }}
     <div class="btn-toolbar" style="float:left">
@@ -78,6 +83,7 @@
                                 <th>NUMERO</th>
                             {% endif %}
                             <th>COD</th>
+                            <th title="número identificación">N I</th>
                             <th>TERCERO</th>
                             <th>CTA_C</th>
                             <th title="Naturaleza">N</th>
@@ -116,10 +122,14 @@
                                                name="arrTercero[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                id="arrTercero[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                value="{{ arMovimientoDetalle.codigoTerceroFk }}"
-                                               style="text-align: left; width:60px" size="20">
+                                               autocomplete="off"
+                                               class="AutoCompletado"
+                                               onfocus="javascript:this.value=this.value.toUpperCase()"
+                                               style="text-align: left; width:80px;text-transform:uppercase;" size="20 ">
                                         <a href="javascript:abrirVentana3('{{ path('tesoreria_buscar_tercero_movimiento',{'campoCodigo' : 'arrTercero['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarTercero',600,900)"
                                            class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
+                                    <td>{{ arMovimientoDetalle.numeroIdentificacion }}</td>
                                     <td>{{ arMovimientoDetalle.terceroNombreCorto }}</td>
                                     <td>
                                         <input type="text"
@@ -221,4 +231,32 @@
     <br/> <br/>
     {{ form_end(form) }}
 {% endblock %}
-
+{% block javascriptsPersonales %}
+    <script>
+        $(document).ready(function () {
+            $('.AutoCompletado').keyup((evento)=>   {
+                rawText = evento.target.value;
+                inputId = evento.target.id;
+                $.ajax({
+                    dataType: 'json',
+                    type: 'GET',
+                    url: "{{ path('tesoreriaAutocompletarTercero') }}",
+                    data: {'rawText': rawText}
+                }).done( (respuesta)  => {
+                    if (respuesta != null) {
+                        var availableTags = respuesta;
+                        $( ".AutoCompletado" ).autocomplete({
+                            source: availableTags,
+                        });
+                    }
+                }).fail(function () {});
+            });
+            nodes = document.querySelectorAll(".AutoCompletado");
+            if (nodes.length > 0){
+                var last = nodes[nodes.length- 1];
+                id=last.getAttribute("id");
+                document.getElementById(id).focus();
+            }
+        });
+    </script>
+{% endblock %}

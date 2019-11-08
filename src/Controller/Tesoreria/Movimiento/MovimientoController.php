@@ -251,6 +251,11 @@ class MovimientoController extends AbstractController
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
             }
             if ($form->get('btnAdicionar')->isClicked()) {
+                $cantidadMovimientoDetalles = $em->getRepository(TesMovimientoDetalle::class)->findBy(['codigoMovimientoFk'=>$arMovimiento->getCodigoMovimientoPk()]);
+                if (count($cantidadMovimientoDetalles) >0){
+                    $em->getRepository(TesMovimientoDetalle::class)->actualizar($arrControles, $id);
+                    $em->getRepository(TesMovimientoDetalle::class)->actualizar($arrControles, $id);
+                }
                 $arMovimientoDetalle = new TesMovimientoDetalle();
                 $arMovimientoDetalle->setMovimientoRel($arMovimiento);
                 $arMovimientoDetalle->setTerceroRel($arMovimiento->getTerceroRel());
@@ -263,6 +268,7 @@ class MovimientoController extends AbstractController
 
                 $em->persist($arMovimientoDetalle);
                 $em->flush();
+
                 $em->getRepository(TesMovimiento::class)->liquidar($id);
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
             }
@@ -279,7 +285,8 @@ class MovimientoController extends AbstractController
             return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
         }
         $arMovimientoDetalles = $paginator->paginate($em->getRepository(TesMovimientoDetalle::class)->lista($arMovimiento->getCodigoMovimientoPk()), $request->query->getInt('page', 1), 500);
-        return $this->render('tesoreria/movimiento/movimiento/detalle.html.twig', [
+
+        return $this->render(   'tesoreria/movimiento/movimiento/detalle.html.twig', [
             'arMovimientoDetalles' => $arMovimientoDetalles,
             'arMovimiento' => $arMovimiento,
             'clase' => array('clase' => 'TesMovimiento', 'codigo' => $id),

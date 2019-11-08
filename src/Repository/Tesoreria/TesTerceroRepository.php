@@ -159,4 +159,28 @@ class TesTerceroRepository extends ServiceEntityRepository
         return true;
     }
 
+    public function autoCompletar($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $nombreCorto = null;
+        $numeroIdentificacion = null;
+        if ($filtros){
+            $nombreCorto = $filtros['nombreCorto']??null;
+            $numeroIdentificacion = $filtros['numeroIdentificacion']??null;
+        }
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesTercero::class, 't')
+            ->select('t.codigoTerceroPk as value')
+            ->addSelect("CONCAT(t.nombreCorto, ' ', t.numeroIdentificacion)  as label")
+            ->orderBy('t.nombreCorto', 'ASC');
+        if($nombreCorto){
+            $queryBuilder->orWhere("t.nombreCorto LIKE '%{$nombreCorto}%'");
+        }
+        if($numeroIdentificacion){
+            $queryBuilder->orWhere("t.numeroIdentificacion LIKE '%{$numeroIdentificacion}%'");
+        }
+        $queryBuilder->addOrderBy('t.codigoTerceroPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

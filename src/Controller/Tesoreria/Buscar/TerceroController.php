@@ -59,6 +59,7 @@ class TerceroController extends Controller
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTesBuscarTerceroCodigo')])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroTesBuscarTerceroNombre')])
+            ->add('txtNumeroIdentificacion', TextType::class, ['required' => false, 'data' => $session->get('filtroTesBuscarTerceroNumeroIdentificacion')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
@@ -70,6 +71,7 @@ class TerceroController extends Controller
                 $raw['filtros'] =[
                     'codigoTerceroPk'=>$form->get('txtCodigo')->getData(),
                     'nombreCorto'=>$form->get('txtNombre')->getData(),
+                    'numeroIdentificacion'=>$form->get('txtNumeroIdentificacion')->getData(),
                 ];
             }
         }

@@ -24,6 +24,12 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_TxtNombre" class="col-sm-2 control-label">Número Identificación:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNumeroIdentificacion, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-10">
                     {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                 </div>
@@ -33,12 +39,14 @@
     <table  class="table table-striped table-bordered table-condensed table-hover tabla-datos">
         <tr>
             <th>CODIGO</th>
+            <th title="número identificación">N I</th>
             <th>NOMBRE</th>
             <th></th>
         </tr>
         {% for arTercero in arTerceros %}
             <tr>
                 <td>{{ arTercero.codigoTerceroPk }}</td>
+                <td>{{ arTercero.numeroIdentificacion  }}</td>
                 <td>{{ arTercero.nombreCorto  }}</td>
                 <td style="text-align: center"><a href="javascript:selRegistro('{{ arTercero.codigoTerceroPk }}','{{ campoCodigo }}')" >
                         <i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i>

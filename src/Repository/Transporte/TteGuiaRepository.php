@@ -3179,6 +3179,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             if ($validarNumero['mensaje'] == "") {
                 $numero = $validarNumero['numero'];
                 $arOperacion = $em->getRepository(TteOperacion::class)->find($raw['codigoOperacionIngresoFk']);
+                $arOperacionCargo = $em->getRepository(TteOperacion::class)->find($raw['codigoOperacionCargoFk']);
                 $arCliente = $em->getRepository(TteCliente::class)->find($raw['codigoClienteFk']);
                 $arCondicion = $em->getRepository(TteCondicion::class)->find($raw['codigoCondicionFk']);
                 $arCiudadOrigen = $em->getRepository(TteCiudad::class)->find($raw['codigoCiudadOrigenFk']);
@@ -3212,16 +3213,12 @@ class TteGuiaRepository extends ServiceEntityRepository
                     $arConsecutivo->setGuia($arConsecutivo->getGuia() + 1);
                     $em->persist($arConsecutivo);
                 }
-                /*if (!$arGuiaTipo->getExigeNumero()) {
-                    $arGuiaTipo->setConsecutivo($arGuiaTipo->getConsecutivo() + 1);
-                    $em->persist($arGuiaTipo);
-                }*/
                 if ($arCiudadDestino->getReexpedicion()) {
                     $arGuia->setReexpedicion(1);
                 }
                 $arGuia->setGuiaTipoRel($arGuiaTipo);
                 $arGuia->setOperacionIngresoRel($arOperacion);
-                $arGuia->setOperacionCargoRel($arOperacion);
+                $arGuia->setOperacionCargoRel($arOperacionCargo);
                 $arGuia->setClienteRel($arCliente);
                 $arGuia->setCondicionRel($arCondicion);
                 $arGuia->setCiudadOrigenRel($arCiudadOrigen);

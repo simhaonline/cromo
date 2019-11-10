@@ -207,7 +207,7 @@ class PedidoController extends AbstractController
             }
             return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_detalle', ['id' => $id]));
         }
-        $arPedidoDetalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);
+        $arPedidoDetalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->lista($id), $request->query->getInt('page', 1), 1000);
         return $this->render('turno/movimiento/venta/pedido/detalle.html.twig', [
             'form' => $form->createView(),
             'arPedidoDetalles' => $arPedidoDetalles,

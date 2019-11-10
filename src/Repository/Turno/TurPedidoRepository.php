@@ -80,9 +80,8 @@ class TurPedidoRepository extends ServiceEntityRepository
     public function liquidar($arPedido)
     {
         $em = $this->getEntityManager();
-        $arConfiguracion = $em->getRepository('BrasaTurnoBundle:TurConfiguracion')->find(1);
-        $arConfiguracionTurno = $em->getRepository('BrasaTurnoBundle:TurConfiguracion')->find(1);
-        $arPedido = $em->getRepository('BrasaTurnoBundle:TurPedido')->find($codigoPedido);
+        //$arConfiguracion = $em->getRepository('BrasaTurnoBundle:TurConfiguracion')->find(1);
+        //$arConfiguracionTurno = $em->getRepository('BrasaTurnoBundle:TurConfiguracion')->find(1);
         $intCantidad = 0;
         $douTotalHoras = 0;
         $douTotalHorasDiurnas = 0;
@@ -94,28 +93,21 @@ class TurPedidoRepository extends ServiceEntityRepository
         $baseAuiGeneral = 0;
         $ivaGeneral = 0;
         $totalGeneral = 0;
-        $acuSubDetalle = 0;
-        $arPedidosDetalle = new \Brasa\TurnoBundle\Entity\TurPedidoDetalle();
-        $arPedidosDetalle = $em->getRepository('BrasaTurnoBundle:TurPedidoDetalle')->findBy(array('codigoPedidoFk' => $codigoPedido));
+        $arPedidosDetalle = $em->getRepository(TurPedidoDetalle::class)->findBy(array('codigoPedidoFk' => $arPedido->getCodigoPedidoPk()));
         foreach ($arPedidosDetalle as $arPedidoDetalle) {
             if ($arPedidoDetalle->getCompuesto() == 0) {
-                $intDiasFacturar = 0;
-                if ($arPedidoDetalle->getPeriodoRel()->getCodigoPeriodoPk() == 2 || $arPedidoDetalle->getLiquidarDiasReales() == 1) {
+                if ($arPedidoDetalle->getPeriodo() == "D" || $arPedidoDetalle->getDiasReales() == 1) {
                     $intDias = $arPedidoDetalle->getDiaHasta() - $arPedidoDetalle->getDiaDesde();
                     $intDias += 1;
                     if ($arPedidoDetalle->getDiaHasta() == 0 || $arPedidoDetalle->getDiaDesde() == 0) {
                         $intDias = 0;
                     }
-                    $intDiasFacturar = $intDias;
                 } else {
-                    $intDias = date("d", (mktime(0, 0, 0, $arPedido->getFechaProgramacion()->format('m') + 1, 1, $arPedido->getFechaProgramacion()->format('Y')) - 1));
-                    $intDiasFacturar = 30;
+                    $intDias = date("d", (mktime(0, 0, 0, $arPedido->getFecha()->format('m') + 1, 1, $arPedido->getFecha()->format('Y')) - 1));
                 }
 
                 $intHorasRealesDiurnas = 0;
                 $intHorasRealesNocturnas = 0;
-                $intHorasDiurnasLiquidacion = 0;
-                $intHorasNocturnasLiquidacion = 0;
                 $intDiasOrdinarios = 0;
                 $intDiasSabados = 0;
                 $intDiasDominicales = 0;
@@ -125,9 +117,9 @@ class TurPedidoRepository extends ServiceEntityRepository
                 } else {
                     $diasDesde = $arPedidoDetalle->getDiaDesde();
                 }
-                $strFechaDesde = $arPedido->getFechaProgramacion()->format('Y-m') . "-" . $diasDesde;
-                $strFechaHasta = $arPedido->getFechaProgramacion()->format('Y-m') . "-" . $arPedidoDetalle->getDiaHasta();
-                $arFestivos = $em->getRepository('BrasaGeneralBundle:GenFestivo')->festivos($strFechaDesde, $strFechaHasta);
+                $strFechaDesde = $arPedido->getFecha()->format('Y-m') . "-" . $diasDesde;
+                $strFechaHasta = $arPedido->getFecha()->format('Y-m') . "-" . $arPedidoDetalle->getDiaHasta();
+                $arFestivos = $em->getRepository(TurFestivo::class)->festivos($strFechaDesde, $strFechaHasta);
                 $fecha = $strFechaDesde;
                 for ($i = 0; $i < $intDias; $i++) {
                     $nuevafecha = strtotime('+' . $i . ' day', strtotime($fecha));
@@ -137,63 +129,63 @@ class TurPedidoRepository extends ServiceEntityRepository
                     if ($this->festivo($arFestivos, $dateNuevaFecha) == 1) {
                         $intDiasFestivos += 1;
                         if ($arPedidoDetalle->getFestivo() == 1) {
-                            $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasDiurnas();
-                            $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasNocturnas();
+                            $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoRel()->getHorasDiurnas();
+                            $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoRel()->getHorasNocturnas();
                         }
                     } else {
                         if ($diaSemana == 1) {
                             $intDiasOrdinarios += 1;
                             if ($arPedidoDetalle->getLunes() == 1) {
-                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasDiurnas();
-                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasNocturnas();
+                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoRel()->getHorasDiurnas();
+                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoRel()->getHorasNocturnas();
                             }
                         }
                         if ($diaSemana == 2) {
                             $intDiasOrdinarios += 1;
                             if ($arPedidoDetalle->getMartes() == 1) {
-                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasDiurnas();
-                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasNocturnas();
+                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoRel()->getHorasDiurnas();
+                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoRel()->getHorasNocturnas();
                             }
                         }
                         if ($diaSemana == 3) {
                             $intDiasOrdinarios += 1;
                             if ($arPedidoDetalle->getMiercoles() == 1) {
-                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasDiurnas();
-                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasNocturnas();
+                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoRel()->getHorasDiurnas();
+                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoRel()->getHorasNocturnas();
                             }
                         }
                         if ($diaSemana == 4) {
                             $intDiasOrdinarios += 1;
                             if ($arPedidoDetalle->getJueves() == 1) {
-                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasDiurnas();
-                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasNocturnas();
+                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoRel()->getHorasDiurnas();
+                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoRel()->getHorasNocturnas();
                             }
                         }
                         if ($diaSemana == 5) {
                             $intDiasOrdinarios += 1;
                             if ($arPedidoDetalle->getViernes() == 1) {
-                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasDiurnas();
-                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasNocturnas();
+                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoRel()->getHorasDiurnas();
+                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoRel()->getHorasNocturnas();
                             }
                         }
                         if ($diaSemana == 6) {
                             $intDiasSabados += 1;
                             if ($arPedidoDetalle->getSabado() == 1) {
-                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasDiurnas();
-                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasNocturnas();
+                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoRel()->getHorasDiurnas();
+                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoRel()->getHorasNocturnas();
                             }
                         }
                         if ($diaSemana == 7) {
                             $intDiasDominicales += 1;
                             if ($arPedidoDetalle->getDomingo() == 1) {
-                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasDiurnas();
-                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoServicioRel()->getHorasNocturnas();
+                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoRel()->getHorasDiurnas();
+                                $intHorasRealesNocturnas += $arPedidoDetalle->getConceptoRel()->getHorasNocturnas();
                             }
                         }
                     }
                 }
-                if ($arPedidoDetalle->getPeriodoRel()->getCodigoPeriodoPk() == 1) {
-                    if ($arPedidoDetalle->getLiquidarDiasReales() == 0) {
+                if ($arPedidoDetalle->getPeriodo() == 'M') {
+                    if ($arPedidoDetalle->getDiasReales() == 0) {
                         $intDiasOrdinarios = 0;
                         $intDiasSabados = 0;
                         $intDiasDominicales = 0;
@@ -223,8 +215,8 @@ class TurPedidoRepository extends ServiceEntityRepository
                             $intDiasFestivos = 2;
                         }
                         $intTotalDias = $intDiasOrdinarios + $intDiasSabados + $intDiasDominicales + $intDiasFestivos;
-                        $intHorasDiurnasLiquidacion = $arPedidoDetalle->getConceptoServicioRel()->getHorasDiurnas() * $intTotalDias;
-                        $intHorasNocturnasLiquidacion = $arPedidoDetalle->getConceptoServicioRel()->getHorasNocturnas() * $intTotalDias;
+                        $intHorasDiurnasLiquidacion = $arPedidoDetalle->getConceptoRel()->getHorasDiurnas() * $intTotalDias;
+                        $intHorasNocturnasLiquidacion = $arPedidoDetalle->getConceptoRel()->getHorasNocturnas() * $intTotalDias;
                     } else {
                         $intHorasDiurnasLiquidacion = $intHorasRealesDiurnas;
                         $intHorasNocturnasLiquidacion = $intHorasRealesNocturnas;
@@ -234,25 +226,19 @@ class TurPedidoRepository extends ServiceEntityRepository
                     $intHorasNocturnasLiquidacion = $intHorasRealesNocturnas;
                 }
                 $douHoras = ($intHorasRealesDiurnas + $intHorasRealesNocturnas) * $arPedidoDetalle->getCantidad();
-                $douCostoCalculado = $arPedidoDetalle->getCantidad() * $arPedidoDetalle->getConceptoServicioRel()->getVrCosto();
-                $douCostoCalculado = $douCostoCalculado;
-                $arPedidoDetalleActualizar = new \Brasa\TurnoBundle\Entity\TurPedidoDetalle();
-                $arPedidoDetalleActualizar = $em->getRepository('BrasaTurnoBundle:TurPedidoDetalle')->find($arPedidoDetalle->getCodigoPedidoDetallePk());
+                $arPedidoDetalleActualizar = $em->getRepository(TurPedidoDetalle::class)->find($arPedidoDetalle->getCodigoPedidoDetallePk());
                 $floValorBaseServicio = $arPedidoDetalle->getVrSalarioBase() * $arPedido->getSectorRel()->getPorcentaje();
                 $porcentajeModalidad = 0;
-                if ($arPedido->getSectorRel()->getCodigoSectorPk() == 2 && intval($arPedido->getEstrato()) >= 4) {
-                    $porcentajeModalidad = $arPedidoDetalle->getModalidadServicioRel()->getPorcentajeEspecial();
+                if ($arPedido->getSectorRel()->getCodigoSectorPk() == "R" && intval($arPedido->getEstrato()) >= 4) {
+                    $porcentajeModalidad = $arPedidoDetalle->getModalidadRel()->getPorcentajeEspecial();
                 } else {
-                    $porcentajeModalidad = $arPedidoDetalle->getModalidadServicioRel()->getPorcentaje();
+                    $porcentajeModalidad = $arPedidoDetalle->getModalidadRel()->getPorcentaje();
                 }
-                // validacion para liquidar todos los servicios residensiales
-                if ($arConfiguracionTurno->getLiquidarServicioResidencialTarifaIgual() && $arPedido->getCodigoSectorFk() == 2) {
-                    $porcentajeModalidad = $arPedidoDetalle->getModalidadServicioRel()->getPorcentajeEspecial();
-                }
+
                 $floValorBaseServicioMes = $floValorBaseServicio + ($floValorBaseServicio * $porcentajeModalidad / 100);
                 $floVrHoraDiurna = ((($floValorBaseServicioMes * 55.97) / 100) / 30) / 15;
                 $floVrHoraNocturna = ((($floValorBaseServicioMes * 44.03) / 100) / 30) / 9;
-                if ($arPedidoDetalle->getPeriodoRel()->getCodigoPeriodoPk() == 1) {
+                if ($arPedidoDetalle->getPeriodo() == "M") {
                     $precio = ($intHorasDiurnasLiquidacion * $floVrHoraDiurna) + ($intHorasNocturnasLiquidacion * $floVrHoraNocturna);
                 } else {
                     $precio = ($intHorasRealesDiurnas * $floVrHoraDiurna) + ($intHorasRealesNocturnas * $floVrHoraNocturna);
@@ -269,24 +255,6 @@ class TurPedidoRepository extends ServiceEntityRepository
                 } else {
                     $floVrServicio = $floVrMinimoServicio * $arPedidoDetalle->getCantidad();
                 }
-                if ($arPedidoDetalle->getNoFacturar()) {
-                    $floVrServicio = 0;
-                    $precio = 0;
-                }
-                //Si se liquida por precio de lista
-                if ($arConfiguracionTurno->getAsignarPrecioLista() == 1) {
-                    $intCodigoLista = $arPedido->getClienteRel()->getCodigoListaPrecioFk();
-                    $intConceptoServicio = $arPedidoDetalleActualizar->getConceptoServicioRel()->getCodigoConceptoServicioPk();
-                    $arListaPrecioDetalle = new \Brasa\TurnoBundle\Entity\TurListaPrecioDetalle();
-                    $arListaPrecioDetalle = $em->getRepository('BrasaTurnoBundle:TurListaPrecioDetalle')->findOneBy(array('codigoListaPrecioFk' => $intCodigoLista, 'codigoConceptoServicioFk' => $intConceptoServicio));
-                    if ($arListaPrecioDetalle) {
-                        $arPedidoDetalleActualizar->setVrPrecioAjustado($arListaPrecioDetalle->getVrPrecio());
-                        $precio = $arPedidoDetalleActualizar->getVrPrecioAjustado();
-                    }
-                    if ($arPedidoDetalleActualizar->getVrPrecioAjustado() != 0) {
-                        $floVrServicio = $arPedidoDetalleActualizar->getVrPrecioAjustado();
-                    }
-                }
 
                 $subTotalDetalle = $floVrServicio;
                 $subtotalGeneral += $subTotalDetalle;
@@ -294,49 +262,14 @@ class TurPedidoRepository extends ServiceEntityRepository
                 $ivaDetalle = $baseAiuDetalle * $arPedidoDetalle->getPorcentajeIva() / 100;
                 $ivaGeneral += $ivaDetalle;
                 $totalDetalle = $subTotalDetalle + $ivaDetalle;
-                if ($arPedidoDetalle->getSumarBaseIva()) {
-                    $totalDetalle += $baseAiuDetalle;
-                }
+
                 $vrTotalDetalleAfectado = $arPedidoDetalle->getVrTotalDetalleAfectado();
                 $vrTotalDetalleDevolucion = $arPedidoDetalle->getVrTotalDetalleDevolucion();
-                if ($arConfiguracion->getRedondearValorFactura()) {
-                    $subTotalDetalle = round($subTotalDetalle);
-                    $vrTotalDetalleAfectado = round($vrTotalDetalleAfectado);
-                    $vrTotalDetalleDevolucion = round($vrTotalDetalleDevolucion);
-                }
                 $baseAuiGeneral += $baseAiuDetalle;
-//                $totalDetalle = round($totalDetalle);
                 $totalGeneral += $totalDetalle;
 
-                // validacion para factura distribuida
-                if ($arPedidoDetalle->getFacturaDistribuida()) {
-                    $subTotalDetalle = 0;
-                    $baseAiuDetalle = 0;
-                    $ivaDetalle = 0;
-                    $totalDetalle = 0;
-                    $precio = 0;
-                    $floVrServicio = 0;
-                    $serviciosDetallesConceptoDistribuido = $em->getRepository('BrasaTurnoBundle:TurPedidoDetalleConceptoDistribuido')->findBy(array('codigoPedidoDetalleFk' => $arPedidoDetalle->getCodigoPedidoDetallePk()));
-                    foreach ($serviciosDetallesConceptoDistribuido as $servicioDetalleConceptoDistribuido) {
-                        $subtotal = $servicioDetalleConceptoDistribuido->getVrPrecio() * $servicioDetalleConceptoDistribuido->getCantidad();
-                        $subTotalDetalle += $subtotal;
-                        $baseAiu = $subtotal * ($servicioDetalleConceptoDistribuido->getPorBaseAiu() / 100);
-                        $baseAiuDetalle += $baseAiu;
-                        $iva = $baseAiu * ($servicioDetalleConceptoDistribuido->getPorIva() / 100);
-                        $ivaDetalle += $iva;
-                        $totalDetalle += $subtotal + $iva;
-                        $precio = $subTotalDetalle;
-                    }
-                    $acuSubDetalle += $subTotalDetalle;
-                    $baseAuiGeneral = $baseAiuDetalle;
-                    $ivaGeneral = $ivaDetalle;
-                    $subtotalGeneral = $acuSubDetalle;
-                    $floVrServicio = $subTotalDetalle;
-                    $totalGeneral = $acuSubDetalle;
-                }
-
                 $arPedidoDetalleActualizar->setVrSubtotal($subTotalDetalle);
-                $arPedidoDetalleActualizar->setVrBaseAiu($baseAiuDetalle);
+                $arPedidoDetalleActualizar->setVrBaseIva($baseAiuDetalle);
                 $arPedidoDetalleActualizar->setVrIva($ivaDetalle);
                 $arPedidoDetalleActualizar->setVrTotalDetalle($totalDetalle);
                 $vrTotalDetalleAdicion = $arPedidoDetalleActualizar->getVrTotalDetalleAdicion();
@@ -344,7 +277,6 @@ class TurPedidoRepository extends ServiceEntityRepository
                 $arPedidoDetalleActualizar->setVrTotalDetallePendiente($pendienteFacturar);
                 $arPedidoDetalleActualizar->setVrPrecioMinimo($floVrMinimoServicio);
                 $arPedidoDetalleActualizar->setVrPrecio($precio);
-                $arPedidoDetalleActualizar->setVrCosto($douCostoCalculado);
 
                 $intHorasRealesDiurnas = $intHorasRealesDiurnas * $arPedidoDetalle->getCantidad();
                 $intHorasRealesNocturnas = $intHorasRealesNocturnas * $arPedidoDetalle->getCantidad();
@@ -358,7 +290,6 @@ class TurPedidoRepository extends ServiceEntityRepository
                 $douTotalHorasDiurnas += $intHorasRealesDiurnas;
                 $douTotalHorasNocturnas += $intHorasRealesNocturnas;
                 $douTotalMinimoServicio += $floVrMinimoServicio;
-                $douTotalCostoCalculado += $douCostoCalculado;
                 $douTotalServicio += $floVrServicio;
                 $intCantidad++;
             } else {
@@ -374,52 +305,36 @@ class TurPedidoRepository extends ServiceEntityRepository
             }
         }
 
-        //Otros conceptos
-        $floSubTotalConceptos = 0;
-        $floTotalConceptos = 0;
-        $floIvaTotalConceptos = 0;
-        $arPedidoDetalleConceptos = $em->getRepository('BrasaTurnoBundle:TurPedidoDetalleConcepto')->findBy(array('codigoPedidoFk' => $codigoPedido));
-        foreach ($arPedidoDetalleConceptos as $arPedidoDetalleConcepto) {
-            $arPedidoDetalleConceptoAct = $em->getRepository('BrasaTurnoBundle:TurPedidoDetalleConcepto')->find($arPedidoDetalleConcepto->getCodigoPedidoDetalleConceptoPk());
-            $subtotal = $arPedidoDetalleConcepto->getCantidad() * $arPedidoDetalleConcepto->getPrecio();
-            if ($arPedidoDetalleConceptoAct->getNoFacturar()) {
-                $subtotal = 0;
-            }
-            $subtotalAIU = $subtotal * $arPedidoDetalleConcepto->getConceptoServicioRel()->getPorBaseIva() / 100;
-            $iva = ($subtotalAIU * $arPedidoDetalleConcepto->getPorIva()) / 100;
-            $total = $subtotal + $iva;
-            $arPedidoDetalleConceptoAct->setSubtotal($subtotal);
-            $arPedidoDetalleConceptoAct->setIva($iva);
-            $arPedidoDetalleConceptoAct->setBaseIva($subtotalAIU);
-            $arPedidoDetalleConceptoAct->setTotal($total);
-            $em->persist($arPedidoDetalleConceptoAct);
-            $floSubTotalConceptos += $subtotal;
-            $floTotalConceptos += $total;
-            $floIvaTotalConceptos += $iva;
-            $baseAuiGeneral += $subtotalAIU;
-        }
-
-
         $arPedido->setHoras($douTotalHoras);
         $arPedido->setHorasDiurnas($douTotalHorasDiurnas);
         $arPedido->setHorasNocturnas($douTotalHorasNocturnas);
 
         $arPedido->setVrTotalServicio($douTotalServicio);
         $arPedido->setVrTotalPrecioMinimo($douTotalMinimoServicio);
-        $arPedido->setVrTotalOtros($floSubTotalConceptos);
         $arPedido->setVrTotalCosto($douTotalCostoCalculado);
-        $subtotal = $subtotalGeneral + $floSubTotalConceptos;
-        $total = $totalGeneral + $floTotalConceptos;
-        $iva = $ivaGeneral + $floIvaTotalConceptos;
+        $subtotal = $subtotalGeneral + 0;
+        $total = $totalGeneral + 0;
+        $iva = $ivaGeneral + 0;
 
         $arPedido->setVrSubtotal($subtotal);
-        $arPedido->setVrBaseAiu($baseAuiGeneral);
+        $arPedido->setVrBaseIva($baseAuiGeneral);
         $arPedido->setVrIva($iva);
         $arPedido->setVrTotal(round($total));
 
         $em->persist($arPedido);
         $em->flush();
         return true;
+    }
+
+    public function festivo($arFestivos, $dateFecha)
+    {
+        $boolFestivo = 0;
+        foreach ($arFestivos as $arFestivo) {
+            if ($arFestivo['fecha'] == $dateFecha) {
+                $boolFestivo = 1;
+            }
+        }
+        return $boolFestivo;
     }
 
     /**

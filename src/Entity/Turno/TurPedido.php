@@ -79,11 +79,6 @@ class TurPedido
     private $estadoFacturado = false;
 
     /**
-     * @ORM\Column(name="fecha_generacion", type="date", nullable=true)
-     */
-    private $fechaGeneracion;
-
-    /**
      * @ORM\Column(name="horas", type="integer")
      */
     private $horas = 0;
@@ -109,11 +104,6 @@ class TurPedido
     private $vrTotalPrecioMinimo = 0;
 
     /**
-     * @ORM\Column(name="vr_total_servicio", type="float")
-     */
-    private $vrTotalServicio = 0;
-
-    /**
      * @ORM\Column(name="vr_subtotal", type="float")
      */
     private $vrSubtotal = 0;
@@ -132,11 +122,6 @@ class TurPedido
      * @ORM\Column(name="vr_total", type="float", nullable=true)
      */
     private $vrTotal = 0;
-
-    /**
-     * @ORM\Column(name="vr_total_costo", type="float", options={"default":0})
-     */
-    private $vrTotalCosto = 0;
 
     /**
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
@@ -381,22 +366,6 @@ class TurPedido
     /**
      * @return mixed
      */
-    public function getFechaGeneracion()
-    {
-        return $this->fechaGeneracion;
-    }
-
-    /**
-     * @param mixed $fechaGeneracion
-     */
-    public function setFechaGeneracion($fechaGeneracion): void
-    {
-        $this->fechaGeneracion = $fechaGeneracion;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getHoras()
     {
         return $this->horas;
@@ -477,22 +446,6 @@ class TurPedido
     /**
      * @return mixed
      */
-    public function getVrTotalServicio()
-    {
-        return $this->vrTotalServicio;
-    }
-
-    /**
-     * @param mixed $vrTotalServicio
-     */
-    public function setVrTotalServicio($vrTotalServicio): void
-    {
-        $this->vrTotalServicio = $vrTotalServicio;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVrSubtotal()
     {
         return $this->vrSubtotal;
@@ -552,22 +505,6 @@ class TurPedido
     public function setVrTotal($vrTotal): void
     {
         $this->vrTotal = $vrTotal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalCosto()
-    {
-        return $this->vrTotalCosto;
-    }
-
-    /**
-     * @param mixed $vrTotalCosto
-     */
-    public function setVrTotalCosto($vrTotalCosto): void
-    {
-        $this->vrTotalCosto = $vrTotalCosto;
     }
 
     /**

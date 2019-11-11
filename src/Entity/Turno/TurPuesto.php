@@ -157,6 +157,11 @@ class TurPuesto
     protected $pedidosDetallesPuestoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurFacturaDetalle", mappedBy="puestoRel")
+     */
+    protected $facturasDetallesPuestoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurContratoDetalle", mappedBy="puestoRel")
      */
     protected $contratosDetallesPuestoRel;
@@ -627,6 +632,22 @@ class TurPuesto
     public function setSoportesHorasPuestoRel($soportesHorasPuestoRel): void
     {
         $this->soportesHorasPuestoRel = $soportesHorasPuestoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesPuestoRel()
+    {
+        return $this->facturasDetallesPuestoRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesPuestoRel
+     */
+    public function setFacturasDetallesPuestoRel($facturasDetallesPuestoRel): void
+    {
+        $this->facturasDetallesPuestoRel = $facturasDetallesPuestoRel;
     }
 
 

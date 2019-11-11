@@ -32,12 +32,22 @@ class TurFacturaDetalle
     private $codigoItemFk;
 
     /**
+     * @ORM\Column(name="codigo_puesto_fk", type="integer", nullable=true)
+     */
+    private $codigoPuestoFk;
+
+    /**
+     * @ORM\Column(name="codigo_concepto_fk", type="integer", nullable=true)
+     */
+    private $codigoConceptoFk;
+
+    /**
      * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=3, nullable=true)
      */
     private $codigoImpuestoRetencionFk;
 
     /**
-     * @ORM\Column(name="codigo_impuesto_iva_fk", type="string", length=3, nullable=true)
+     * @ORM\Column(name="codigo_impuesto_iva_fk", type="string", length=5, nullable=true)
      */
     private $codigoImpuestoIvaFk;
 
@@ -52,9 +62,14 @@ class TurFacturaDetalle
     private $porcentajeIva = 0;
 
     /**
-     * @ORM\Column(name="porcentaje_base_aiu", type="float", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="porcentaje_base_iva", type="float", nullable=true, options={"default" : 0})
      */
-    private $porcentajeBaseAiu = 0;
+    private $porcentajeBaseIva = 0;
+
+    /**
+     * @ORM\Column(name="vr_base_iva", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrBaseIva = 0;
 
     /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
@@ -75,11 +90,6 @@ class TurFacturaDetalle
      * @ORM\Column(name="vr_subtotal", type="float", options={"default" : 0})
      */
     private $vrSubtotal = 0;
-
-    /**
-     * @ORM\Column(name="vr_neto", type="float", options={"default" : 0})
-     */
-    private $vrNeto = 0;
 
     /**
      * @ORM\Column(name="vr_total", type="float", options={"default" : 0})
@@ -108,6 +118,18 @@ class TurFacturaDetalle
      * @ORM\JoinColumn(name="codigo_pedido_detalle_fk", referencedColumnName="codigo_pedido_detalle_pk")
      */
     protected $pedidoDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurPuesto", inversedBy="facturasDetallesPuestoRel")
+     * @ORM\JoinColumn(name="codigo_puesto_fk", referencedColumnName="codigo_puesto_pk")
+     */
+    protected $puestoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurConcepto", inversedBy="facturasDetallesConceptoRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoRel;
 
     /**
      * @return mixed
@@ -160,6 +182,38 @@ class TurFacturaDetalle
     /**
      * @return mixed
      */
+    public function getCodigoPuestoFk()
+    {
+        return $this->codigoPuestoFk;
+    }
+
+    /**
+     * @param mixed $codigoPuestoFk
+     */
+    public function setCodigoPuestoFk($codigoPuestoFk): void
+    {
+        $this->codigoPuestoFk = $codigoPuestoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoFk()
+    {
+        return $this->codigoConceptoFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoFk
+     */
+    public function setCodigoConceptoFk($codigoConceptoFk): void
+    {
+        $this->codigoConceptoFk = $codigoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoImpuestoRetencionFk()
     {
         return $this->codigoImpuestoRetencionFk;
@@ -192,6 +246,22 @@ class TurFacturaDetalle
     /**
      * @return mixed
      */
+    public function getCodigoPedidoDetalleFk()
+    {
+        return $this->codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @param mixed $codigoPedidoDetalleFk
+     */
+    public function setCodigoPedidoDetalleFk($codigoPedidoDetalleFk): void
+    {
+        $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPorcentajeIva()
     {
         return $this->porcentajeIva;
@@ -208,6 +278,38 @@ class TurFacturaDetalle
     /**
      * @return mixed
      */
+    public function getPorcentajeBaseIva()
+    {
+        return $this->porcentajeBaseIva;
+    }
+
+    /**
+     * @param mixed $porcentajeBaseIva
+     */
+    public function setPorcentajeBaseIva($porcentajeBaseIva): void
+    {
+        $this->porcentajeBaseIva = $porcentajeBaseIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrBaseIva()
+    {
+        return $this->vrBaseIva;
+    }
+
+    /**
+     * @param mixed $vrBaseIva
+     */
+    public function setVrBaseIva($vrBaseIva): void
+    {
+        $this->vrBaseIva = $vrBaseIva;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrIva()
     {
         return $this->vrIva;
@@ -219,6 +321,22 @@ class TurFacturaDetalle
     public function setVrIva($vrIva): void
     {
         $this->vrIva = $vrIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * @param mixed $cantidad
+     */
+    public function setCantidad($cantidad): void
+    {
+        $this->cantidad = $cantidad;
     }
 
     /**
@@ -251,22 +369,6 @@ class TurFacturaDetalle
     public function setVrSubtotal($vrSubtotal): void
     {
         $this->vrSubtotal = $vrSubtotal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrNeto()
-    {
-        return $this->vrNeto;
-    }
-
-    /**
-     * @param mixed $vrNeto
-     */
-    public function setVrNeto($vrNeto): void
-    {
-        $this->vrNeto = $vrNeto;
     }
 
     /**
@@ -318,22 +420,6 @@ class TurFacturaDetalle
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
     public function getItemRel()
@@ -347,38 +433,6 @@ class TurFacturaDetalle
     public function setItemRel($itemRel): void
     {
         $this->itemRel = $itemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCantidad()
-    {
-        return $this->cantidad;
-    }
-
-    /**
-     * @param mixed $cantidad
-     */
-    public function setCantidad($cantidad): void
-    {
-        $this->cantidad = $cantidad;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoPedidoDetalleFk()
-    {
-        return $this->codigoPedidoDetalleFk;
-    }
-
-    /**
-     * @param mixed $codigoPedidoDetalleFk
-     */
-    public function setCodigoPedidoDetalleFk($codigoPedidoDetalleFk): void
-    {
-        $this->codigoPedidoDetalleFk = $codigoPedidoDetalleFk;
     }
 
     /**
@@ -400,18 +454,35 @@ class TurFacturaDetalle
     /**
      * @return mixed
      */
-    public function getPorcentajeBaseAiu()
+    public function getPuestoRel()
     {
-        return $this->porcentajeBaseAiu;
+        return $this->puestoRel;
     }
 
     /**
-     * @param mixed $porcentajeBaseAiu
+     * @param mixed $puestoRel
      */
-    public function setPorcentajeBaseAiu($porcentajeBaseAiu): void
+    public function setPuestoRel($puestoRel): void
     {
-        $this->porcentajeBaseAiu = $porcentajeBaseAiu;
+        $this->puestoRel = $puestoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoRel()
+    {
+        return $this->conceptoRel;
+    }
+
+    /**
+     * @param mixed $conceptoRel
+     */
+    public function setConceptoRel($conceptoRel): void
+    {
+        $this->conceptoRel = $conceptoRel;
+    }
+
 
 
 }

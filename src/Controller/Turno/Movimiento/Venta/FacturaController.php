@@ -326,12 +326,12 @@ class FacturaController extends AbstractController
                         $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigo);
                         $arFacturaDetalle = new TurFacturaDetalle();
                         $arFacturaDetalle->setFacturaRel($arFactura);
+                        $arFacturaDetalle->setPedidoDetalleRel($arPedidoDetalle);
                         $arFacturaDetalle->setItemRel($arPedidoDetalle->getItemRel());
-                        //$arFacturaDetalle->setPorcentajeIva($arPedidoDetalle->getPorcentajeIva());
-                        $arFacturaDetalle->setVrIva($arPedidoDetalle->getVrIva());
-                        $arFacturaDetalle->setVrSubtotal($arPedidoDetalle->getVrSubtotal());
-                        $arFacturaDetalle->setVrNeto($arPedidoDetalle->getVrTotalDetalle());
-                        $arFacturaDetalle->setVrTotal($arPedidoDetalle->getVrTotalDetalle());
+                        $arFacturaDetalle->setConceptoRel($arPedidoDetalle->getConceptoRel());
+                        $arFacturaDetalle->setPuestoRel($arPedidoDetalle->getPuestoRel());
+                        $arFacturaDetalle->setCantidad($arPedidoDetalle->getCantidad());
+                        $arFacturaDetalle->setVrPrecio($arPedidoDetalle->getVrPendiente());
                         $em->persist($arFacturaDetalle);
                     }
                     $em->flush();

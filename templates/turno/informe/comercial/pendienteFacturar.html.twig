@@ -87,7 +87,6 @@
                 <th>TURNO</th>
                 <th>MODALIDAD</th>
                 <th>PERIODO</th>
-                <th title="Liquidar dias reales">LDR</th>
                 <th>DES</th>
                 <th>HAS</th>
                 <th>CANT</th>
@@ -121,12 +120,11 @@
                 <tr>
                     <td><a href="javascript:abrirVentana3('{{ path('turno_informe_comercial_pedienteFacturar_referencia', {'codigoPedidoDetalle': arPedidoDestalle.codigoPedidoDetallePk }) }}', 'pedidoDetalleResumen', 1200, 1200)">{{ arPedidoDestalle.codigoPedidoDetallePk }}</a><input type="hidden" name="LblCodigo[]" value="{{ arPedidoDestalle.codigoPedidoDetallePk }}"></td>
                     <td>{{ arPedidoDestalle.numero }}</td>
-                    <td>{{ arPedidoDestalle.fechaGeneracion | date('Y/m/d') }}</td>
+                    <td>{{ arPedidoDestalle.fecha | date('Y/m/d') }}</td>
                     <td>{{ arPedidoDestalle.puesto | default('') }}</td>
                     <td>{{ arPedidoDestalle.conceptoNombre | default('') }}</td>
                     <td>{{ arPedidoDestalle.modalidadNombre | default('') }}</td>
                     <td>{{ arPedidoDestalle.numero  }}</td>
-                    <td>{{ arPedidoDestalle.liquidarDiasReales? "SI": "NO" }} </td>
                     <td>{{ arPedidoDestalle.diaDesde }} </td>
                     <td>{{ arPedidoDestalle.diaHasta }} </td>
                     <td>{{ arPedidoDestalle.cantidad }} </td>
@@ -144,8 +142,8 @@
                     <td  class="numero">{{ arPedidoDestalle.dias | number_format(0, '.', ',') }}</td>
                     <td  class="numero">{{ arPedidoDestalle.vrIva | number_format(0, '.', ',') }}</td>
                     <td  class="numero">{{ arPedidoDestalle.vrSubtotal | number_format(0, '.', ',') }}</td>
-                    <td  class="numero">{{ arPedidoDestalle.vrTotalDetallePendiente | number_format(0, '.', ',') }}</td>
-                    <td  class="numero">{{ arPedidoDestalle.vrTotalDetalle | number_format(0, '.', ',') }}</td>
+                    <td  class="numero">{{ arPedidoDestalle.vrPendiente | number_format(0, '.', ',') }}</td>
+                    <td  class="numero">{{ arPedidoDestalle.vrTotal | number_format(0, '.', ',') }}</td>
                 </tr>
         {% endfor %}
         </tbody>

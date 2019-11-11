@@ -23,7 +23,7 @@ class TurFactura
     private $codigoFacturaPk;
 
     /**
-     * @ORM\Column(name="codigo_factura_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_factura_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoFacturaTipoFk;
 
@@ -143,22 +143,6 @@ class TurFactura
      * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
      */
     protected $facturaTipoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -302,6 +286,22 @@ class TurFactura
     public function setVrIva($vrIva): void
     {
         $this->vrIva = $vrIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrBaseAiu()
+    {
+        return $this->vrBaseAiu;
+    }
+
+    /**
+     * @param mixed $vrBaseAiu
+     */
+    public function setVrBaseAiu($vrBaseAiu): void
+    {
+        $this->vrBaseAiu = $vrBaseAiu;
     }
 
     /**
@@ -543,23 +543,6 @@ class TurFactura
     {
         $this->facturaTipoRel = $facturaTipoRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getVrBaseAiu()
-    {
-        return $this->vrBaseAiu;
-    }
-
-    /**
-     * @param mixed $vrBaseAiu
-     */
-    public function setVrBaseAiu($vrBaseAiu): void
-    {
-        $this->vrBaseAiu = $vrBaseAiu;
-    }
-
 
 
 }

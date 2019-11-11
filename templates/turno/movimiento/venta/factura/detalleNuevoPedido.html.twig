@@ -68,7 +68,7 @@
                     <td class="numeo">{{ arPedidoDetalle.horas }}</td>
                     <td class="numero">{{ arPedidoDetalle.horasDiurnas }}</td>
                     <td class="numero">{{ arPedidoDetalle.horasNocturnas }}</td>
-                    <td class="numero">{{ arPedidoDetalle.vrTotalDetallePendiente | number_format() }}</td>
+                    <td class="numero">{{ arPedidoDetalle.vrPendiente | number_format() }}</td>
                     <td class="text-center">
                         <input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/>
                     </td>

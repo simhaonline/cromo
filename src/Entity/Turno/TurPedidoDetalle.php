@@ -164,29 +164,29 @@ class TurPedidoDetalle
     private $vrBaseIva = 0;
 
     /**
-     * @ORM\Column(name="vr_total_detalle", type="float")
+     * @ORM\Column(name="vr_total", type="float")
      */
-    private $vrTotalDetalle = 0;
+    private $vrTotal = 0;
 
     /**
-     * @ORM\Column(name="vr_total_detalle_afectado", type="float")
+     * @ORM\Column(name="vr_afectado", type="float")
      */
-    private $vrTotalDetalleAfectado = 0;
+    private $vrAfectado = 0;
 
     /**
-     * @ORM\Column(name="vr_total_detalle_pendiente", type="float")
+     * @ORM\Column(name="vr_pendiente", type="float")
      */
-    private $vrTotalDetallePendiente = 0;
+    private $vrPendiente = 0;
 
     /**
-     * @ORM\Column(name="vr_total_detalle_devolucion", type="float")
+     * @ORM\Column(name="vr_devolucion", type="float")
      */
-    private $vrTotalDetalleDevolucion = 0;
+    private $vrDevolucion = 0;
 
     /**
-     * @ORM\Column(name="vr_total_detalle_adicion", type="float")
+     * @ORM\Column(name="vr_adicion", type="float")
      */
-    private $vrTotalDetalleAdicion = 0;
+    private $vrAdicion = 0;
 
     /**
      * @ORM\Column(name="lunes", type="boolean")
@@ -806,81 +806,81 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
-    public function getVrTotalDetalle()
+    public function getVrTotal()
     {
-        return $this->vrTotalDetalle;
+        return $this->vrTotal;
     }
 
     /**
-     * @param mixed $vrTotalDetalle
+     * @param mixed $vrTotal
      */
-    public function setVrTotalDetalle($vrTotalDetalle): void
+    public function setVrTotal($vrTotal): void
     {
-        $this->vrTotalDetalle = $vrTotalDetalle;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalDetalleAfectado()
-    {
-        return $this->vrTotalDetalleAfectado;
-    }
-
-    /**
-     * @param mixed $vrTotalDetalleAfectado
-     */
-    public function setVrTotalDetalleAfectado($vrTotalDetalleAfectado): void
-    {
-        $this->vrTotalDetalleAfectado = $vrTotalDetalleAfectado;
+        $this->vrTotal = $vrTotal;
     }
 
     /**
      * @return mixed
      */
-    public function getVrTotalDetallePendiente()
+    public function getVrAfectado()
     {
-        return $this->vrTotalDetallePendiente;
+        return $this->vrAfectado;
     }
 
     /**
-     * @param mixed $vrTotalDetallePendiente
+     * @param mixed $vrAfectado
      */
-    public function setVrTotalDetallePendiente($vrTotalDetallePendiente): void
+    public function setVrAfectado($vrAfectado): void
     {
-        $this->vrTotalDetallePendiente = $vrTotalDetallePendiente;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalDetalleDevolucion()
-    {
-        return $this->vrTotalDetalleDevolucion;
-    }
-
-    /**
-     * @param mixed $vrTotalDetalleDevolucion
-     */
-    public function setVrTotalDetalleDevolucion($vrTotalDetalleDevolucion): void
-    {
-        $this->vrTotalDetalleDevolucion = $vrTotalDetalleDevolucion;
+        $this->vrAfectado = $vrAfectado;
     }
 
     /**
      * @return mixed
      */
-    public function getVrTotalDetalleAdicion()
+    public function getVrPendiente()
     {
-        return $this->vrTotalDetalleAdicion;
+        return $this->vrPendiente;
     }
 
     /**
-     * @param mixed $vrTotalDetalleAdicion
+     * @param mixed $vrPendiente
      */
-    public function setVrTotalDetalleAdicion($vrTotalDetalleAdicion): void
+    public function setVrPendiente($vrPendiente): void
     {
-        $this->vrTotalDetalleAdicion = $vrTotalDetalleAdicion;
+        $this->vrPendiente = $vrPendiente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDevolucion()
+    {
+        return $this->vrDevolucion;
+    }
+
+    /**
+     * @param mixed $vrDevolucion
+     */
+    public function setVrDevolucion($vrDevolucion): void
+    {
+        $this->vrDevolucion = $vrDevolucion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAdicion()
+    {
+        return $this->vrAdicion;
+    }
+
+    /**
+     * @param mixed $vrAdicion
+     */
+    public function setVrAdicion($vrAdicion): void
+    {
+        $this->vrAdicion = $vrAdicion;
     }
 
     /**
@@ -1330,7 +1330,6 @@ class TurPedidoDetalle
     {
         $this->facturasDetallesPedidoDetalleRel = $facturasDetallesPedidoDetalleRel;
     }
-
 
 
 }

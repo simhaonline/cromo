@@ -17,8 +17,7 @@ class TurFacturaTipo
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_factura_tipo_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_factura_tipo_pk", type="string", length=10)
      */
     private $codigoFacturaTipoPk;
 
@@ -186,22 +185,6 @@ class TurFacturaTipo
      * @ORM\OneToMany(targetEntity="TurFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -746,6 +729,7 @@ class TurFacturaTipo
     {
         $this->facturasFacturaTipoRel = $facturasFacturaTipoRel;
     }
+
 
 
 }

@@ -145,7 +145,7 @@ class TurFacturaRepository extends ServiceEntityRepository
             $vrPrecio = $arFacturaDetalle->getVrPrecio();
             $vrSubtotal = $vrPrecio * $arFacturaDetalle->getCantidad();
             $vrDescuento = ($arFacturaDetalle->getVrPrecio() * $arFacturaDetalle->getCantidad()) - $vrSubtotal;
-            $vrBaseAiu = ($vrSubtotal * ($arFacturaDetalle->getPorcentajeBaseAiu()) / 100);
+            $vrBaseAiu = ($vrSubtotal * ($arFacturaDetalle->getPorcentajeBaseIva()) / 100);
             $vrIva = $vrBaseAiu * ($arFacturaDetalle->getPorcentajeIva() / 100);
             $vrTotalBruto = $vrSubtotal;
             $vrTotal = $vrTotalBruto + $vrIva;
@@ -225,9 +225,28 @@ class TurFacturaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($em->getRepository(TurFacturaDetalle::class)->contarDetalles($arFactura->getCodigoFacturaPk()) > 0) {
-            $arFactura->setEstadoAutorizado(1);
-            $em->persist($arFactura);
-            $em->flush();
+            $error = false;
+            $arFacturaDetalles = $em->getRepository(TurFacturaDetalle::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()]);
+            /** @var TurFacturaDetalle $arFacturaDetalle */
+            foreach ($arFacturaDetalles as $arFacturaDetalle) {
+                if($arFacturaDetalle->getCodigoPedidoDetalleFk()) {
+                    /** @var TurPedidoDetalle $arPedidoDetalle */
+                    $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($arFacturaDetalle->getCodigoPedidoDetalleFk());
+                    if (round($arPedidoDetalle->getVrPendiente()) >= round($arFacturaDetalle->getVrSubtotal())) {
+                        $arPedidoDetalle->setVrAfectado($arPedidoDetalle->getVrAfectado() + $arFacturaDetalle->getVrSubtotal());
+                        $arPedidoDetalle->setVrPendiente($arPedidoDetalle->getVrPendiente() - $arFacturaDetalle->getVrSubtotal());
+                        $em->persist($arPedidoDetalle);
+                    } else {
+                        Mensajes::error("El valor supera el pedido pendiente");
+                        $error = true;
+                    }
+                }
+            }
+            if($error == false) {
+                $arFactura->setEstadoAutorizado(1);
+                $em->persist($arFactura);
+                $em->flush();
+            }
         } else {
             Mensajes::error('La factura no contiene detalles');
         }
@@ -237,6 +256,18 @@ class TurFacturaRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arFactura->getEstadoAutorizado()) {
+            $arFacturaDetalles = $em->getRepository(TurFacturaDetalle::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()]);
+            /** @var TurFacturaDetalle $arFacturaDetalle */
+            foreach ($arFacturaDetalles as $arFacturaDetalle) {
+                if($arFacturaDetalle->getCodigoPedidoDetalleFk()) {
+                    /** @var TurPedidoDetalle $arPedidoDetalle */
+                    $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($arFacturaDetalle->getCodigoPedidoDetalleFk());
+                    $arPedidoDetalle->setVrAfectado($arPedidoDetalle->getVrAfectado() - $arFacturaDetalle->getVrSubtotal());
+                    $arPedidoDetalle->setVrPendiente($arPedidoDetalle->getVrPendiente() + $arFacturaDetalle->getVrSubtotal());
+                    $em->persist($arPedidoDetalle);
+
+                }
+            }
             $arFactura->setEstadoAutorizado(0);
             $em->persist($arFactura);
             $em->flush();

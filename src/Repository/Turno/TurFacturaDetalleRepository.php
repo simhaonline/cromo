@@ -35,7 +35,10 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('fd.vrTotal')
             ->addSelect('fd.codigoImpuestoIvaFk')
             ->addSelect('fd.codigoImpuestoRetencionFk')
+            ->addSelect('p.nombre as puestoNombre')
+            ->addSelect('fd.codigoPedidoDetalleFk')
             ->leftJoin('fd.itemRel', 'i')
+            ->leftJoin('fd.puestoRel', 'p')
             ->where('fd.codigoFacturaFk = ' . $id);
 
         return $queryBuilder;
@@ -60,7 +63,7 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
                 if($arFacturaDetalle->getCodigoImpuestoIvaFk()) {
                     $arImpuestoIva = $em->getRepository(GenImpuesto::class)->find($codigoImpuestoIva);
                     $arFacturaDetalle->setPorcentajeIva($arImpuestoIva->getPorcentaje());
-                    $arFacturaDetalle->setPorcentajeBaseAiu($arImpuestoIva->getBase());
+                    $arFacturaDetalle->setPorcentajeBaseIva($arImpuestoIva->getPorcentajeBase());
                 }
                 $arFacturaDetalle->setCodigoImpuestoIvaFk($codigoImpuestoIva);
                 $codigoImpuestoRetencion = $arrImpuestoRetencion[$codigoFacturaDetalle];

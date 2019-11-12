@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\General\GenCalidadFormatoRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
-class GenCalidadFormato
+class GenFormato
 {
     public $infoLog = [
         "primaryKey" => "codigoFormatoPk",
@@ -17,8 +17,7 @@ class GenCalidadFormato
     ];
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="codigo_formato_pk", type="integer")
      */
     private $codigoFormatoPk;
 
@@ -28,9 +27,29 @@ class GenCalidadFormato
     private $nombre;
 
     /**
+     * @ORM\Column(name="titulo", type="string", length=300, nullable=true)
+     */
+    private $titulo;
+
+    /**
+     * @ORM\Column(name="contenido", type="text", nullable=true)
+     */
+    private $contenido;
+
+    /**
      * @ORM\Column(name="fecha", type="datetime", nullable=false)
      */
     private $fecha;
+
+    /**
+     * @ORM\Column(name="nombre_firma", type="string", length=50, nullable=true)
+     */
+    private $nombreFirma;
+
+    /**
+     * @ORM\Column(name="cargo_firma", type="string", length=150, nullable=true)
+     */
+    private $cargoFirma;
 
     /**
      * @ORM\Column(name="version", type="string", length=20, nullable=true)
@@ -98,6 +117,38 @@ class GenCalidadFormato
     /**
      * @return mixed
      */
+    public function getTitulo()
+    {
+        return $this->titulo;
+    }
+
+    /**
+     * @param mixed $titulo
+     */
+    public function setTitulo($titulo): void
+    {
+        $this->titulo = $titulo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContenido()
+    {
+        return $this->contenido;
+    }
+
+    /**
+     * @param mixed $contenido
+     */
+    public function setContenido($contenido): void
+    {
+        $this->contenido = $contenido;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFecha()
     {
         return $this->fecha;
@@ -109,6 +160,38 @@ class GenCalidadFormato
     public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreFirma()
+    {
+        return $this->nombreFirma;
+    }
+
+    /**
+     * @param mixed $nombreFirma
+     */
+    public function setNombreFirma($nombreFirma): void
+    {
+        $this->nombreFirma = $nombreFirma;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargoFirma()
+    {
+        return $this->cargoFirma;
+    }
+
+    /**
+     * @param mixed $cargoFirma
+     */
+    public function setCargoFirma($cargoFirma): void
+    {
+        $this->cargoFirma = $cargoFirma;
     }
 
     /**

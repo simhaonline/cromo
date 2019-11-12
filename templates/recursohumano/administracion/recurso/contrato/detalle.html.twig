@@ -1,17 +1,34 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm" href="{{ path('recursohumano_administracion_recurso_contrato_lista') }}">Volver</a>&nbsp;&nbsp;
         </div>
         <div class="btn-group">
-            <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Parámetros iniciales</a>
+            <a class="btn btn-sm btn-default abrir-modal"
+               href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Parámetros
+                iniciales</a>
         </div>
         {% if arContrato.estadoTerminado == false %}
-        <div class="btn-group">
-            <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_terminar',{'id' : arContrato.codigoContratoPk }) }}','terminar',600,900)">Terminar</a>
-        </div>
+            <div class="btn-group">
+                <a class="btn btn-sm btn-default abrir-modal"
+                   href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_terminar',{'id' : arContrato.codigoContratoPk }) }}','terminar',600,900)">Terminar</a>
+            </div>
         {% endif %}
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                Formatos <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <div>
+                        {{ form_widget(form.btnCartaLaboral) }}
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
@@ -37,7 +54,7 @@
             <td class="titulo">GRUPO PAGO:</td>
             <td class="td-in-well">{{ arContrato.grupoRel.nombre|default('SIN GRUPO PAGO') }}</td>
             <td class="titulo">SALARIO</td>
-            <td class="td-in-well numero" >{{ arContrato.vrSalario |  number_format(0, '.', ',')  }}</td>
+            <td class="td-in-well numero">{{ arContrato.vrSalario |  number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">CLASIFICACIÓN RIESGO:</td>
@@ -45,7 +62,7 @@
             <td class="titulo">FACTOR HORAS DÍA:</td>
             <td class="td-in-well">{{ arContrato.factorHorasDia }}</td>
             <td class="titulo">ADICIONAL</td>
-            <td class="td-in-well numero" >{{ arContrato.vrAdicional |  number_format(0, '.', ',')  }}</td>
+            <td class="td-in-well numero">{{ arContrato.vrAdicional |  number_format(0, '.', ',') }}</td>
 
         </tr>
         <tr>
@@ -54,7 +71,7 @@
             <td class="titulo">CONTRATO INDEFINIDO:</td>
             <td class="td-in-well">{{ arContrato.indefinido ? "SI" : "NO" }}</td>
             <td class="titulo">ADICIONAL</td>
-            <td class="td-in-well numero" >{{ arContrato.vrAdicionalPrestacional |  number_format(0, '.', ',')  }}</td>
+            <td class="td-in-well numero">{{ arContrato.vrAdicionalPrestacional |  number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">NÚMERO:</td>
@@ -84,7 +101,7 @@
             <td class="titulo">ULTIMA PRIMA:</td>
             <td class="td-in-well">{{ arContrato.fechaUltimoPagoPrimas | date('Y-m-d') }}</td>
             <td class="titulo">CENTRO TRABAJO:</td>
-            <td>{{  arContrato.centroTrabajoRel.nombre|default('SIN CENTRO TRABAJO') }}</td>
+            <td>{{ arContrato.centroTrabajoRel.nombre|default('SIN CENTRO TRABAJO') }}</td>
             <td class="titulo">SUBTIPO COTIZANTE:</td>
             <td class="td-in-well">{{ arContrato.subtipoCotizanteRel.nombre|default('') }}</td>
         </tr>
@@ -94,15 +111,15 @@
             <td class="titulo">ENTIDAD PENSIÓN:</td>
             <td class="td-in-well">{{ arContrato.entidadPensionRel.nombre|default('SIN CONTRATO') }}</td>
             <td class="titulo"></td>
-            <td class="td-in-well numero" ></td>
+            <td class="td-in-well numero"></td>
         </tr>
         <tr>
             <td class="titulo">ULTIMA VACACION:</td>
-            <td class="td-in-well">{{ arContrato.fechaUltimoPagoVacaciones | date('Y-m-d')}}</td>
+            <td class="td-in-well">{{ arContrato.fechaUltimoPagoVacaciones | date('Y-m-d') }}</td>
             <td class="titulo">ENTIDAD SALUD:</td>
             <td class="td-in-well">{{ arContrato.entidadSaludRel.nombre|default('SIN CONTRATO') }}</td>
             <td class="titulo"></td>
-            <td class="td-in-well numero" ></td>
+            <td class="td-in-well numero"></td>
         </tr>
         <tr>
             <td class="titulo">COSTO TIPO</td>
@@ -110,7 +127,7 @@
             <td class="titulo">ENTIDAD CAJA:</td>
             <td class="td-in-well">{{ arContrato.entidadCajaRel.nombre|default('SIN CONTRATO') }}</td>
             <td class="titulo"></td>
-            <td class="td-in-well numero" ></td>
+            <td class="td-in-well numero"></td>
         </tr>
         <tr>
             <td class="titulo">AUX. TRANSPORTE</td>
@@ -118,15 +135,15 @@
             <td class="titulo">ENTIDAD CESANTIA:</td>
             <td class="td-in-well">{{ arContrato.entidadCesantiaRel.nombre|default('') }}</td>
             <td class="titulo"></td>
-            <td class="td-in-well numero" ></td>
+            <td class="td-in-well numero"></td>
         </tr>
         <tr>
             <td class="titulo">CARGO:</td>
-            <td class="td-in-well">{{  arContrato.cargoRel.nombre|default('SIN CARGO') }}</td>
+            <td class="td-in-well">{{ arContrato.cargoRel.nombre|default('SIN CARGO') }}</td>
             <td class="titulo">CARGO DESCRIPCIÓN:</td>
-            <td class="td-in-well">{{  arContrato.cargoDescripcion |default('SIN DESCRIPCIÓN') }}</td>
+            <td class="td-in-well">{{ arContrato.cargoDescripcion |default('SIN DESCRIPCIÓN') }}</td>
             <td class="titulo"></td>
-            <td class="td-in-well numero" ></td>
+            <td class="td-in-well numero"></td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -147,4 +164,5 @@
             </div>
         </div>
     </div>
+    {{ form_end(form) }}
 {% endblock %}

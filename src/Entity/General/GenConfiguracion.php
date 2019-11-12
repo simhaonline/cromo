@@ -13,7 +13,7 @@ class GenConfiguracion
 {
     public $infoLog = [
         "primaryKey" => "codigoConfiguracionPk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id
@@ -126,6 +126,11 @@ class GenConfiguracion
      * @ORM\Column(name="codigo_empresa", type="integer", options={"default" : 0})
      */
     private $codigoEmpresa = 0;
+
+    /**
+     * @ORM\Column(name="correo", type="string", length=50, nullable=true)
+     */
+    private $correo;
 
     /**
      * @ORM\Column(name="codigo_empresa_oxigeno", type="integer", options={"default" : null}, nullable=true)
@@ -670,6 +675,37 @@ class GenConfiguracion
         $this->matriculaMercantil = $matriculaMercantil;
     }
 
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCorreo()
+    {
+        return $this->correo;
+    }
+
+    /**
+     * @param mixed $correo
+     */
+    public function setCorreo($correo): void
+    {
+        $this->correo = $correo;
+    }
 
 
 }

@@ -4,6 +4,8 @@ namespace App\Controller\RecursoHumano\Administracion\Recurso\Contrato;
 
 
 use App\Controller\BaseController;
+use App\Controller\Estructura\FuncionesController;
+use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
@@ -19,8 +21,10 @@ use App\Entity\RecursoHumano\RhuParametroPrestacion;
 use App\Form\Type\RecursoHumano\ContratoParametrosInicialesType;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\General\General;
+use App\Utilidades\Formato;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpParser\Node\Expr\New_;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -51,7 +55,7 @@ class ContratoController extends AbstractController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/administracion/recurso/contrato/lista", name="recursohumano_administracion_recurso_contrato_lista")
      */
-    public function lista(Request $request,  PaginatorInterface $paginator)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
@@ -102,8 +106,28 @@ class ContratoController extends AbstractController
                 return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
             }
         }
+        $form = $this->createFormBuilder()
+            ->add('btnCartaLaboral', SubmitType::class, ['label' => 'Carta laboral', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnCartaLaboral')->isClicked()) {
+            $fechaActual =$dateNow = new \DateTime('now');
+            $salarioLetras = $em->getRepository(RhuContrato::class)->numtoletras($arContrato->getVrSalario());
+            $formato = New Formato($em);
+            $formato->generarFormatoCarta(4, [
+                '#1' => $arContrato->getEmpleadoRel()->getNombreCorto(),
+                '#2' => $arContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                '#3' => $arContrato->getFechaDesde()->format('Y-m-d'),
+                '#4' => $arContrato->getFechaHasta()->format('y-m-d'),
+                '#5' => $arContrato->getContratoTipoRel()->getNombre(),
+                '#6' => $arContrato->getCargoRel()->getNombre(),
+                '#7' => number_format($arContrato->getVrSalario(), 0, '.', ','),
+                '#8' => $fechaActual->format('Y-m-d'),
+                '#9' => $salarioLetras]);
+        }
         return $this->render('recursohumano/administracion/recurso/contrato/detalle.html.twig', [
-            'arContrato' => $arContrato
+            'arContrato' => $arContrato,
+            'form' => $form->createView()
         ]);
     }
 
@@ -144,7 +168,7 @@ class ContratoController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $arContrato = $em->getRepository(RhuContrato::class)->find($id);
         $form = $this->createFormBuilder()
-            ->add('liquidacionTipoRel',EntityType::class,[
+            ->add('liquidacionTipoRel', EntityType::class, [
                 'class' => RhuLiquidacionTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('lt')
@@ -278,4 +302,47 @@ class ContratoController extends AbstractController
     {
         return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
     }
+
+    public static function MesesEspañol($mes) {
+
+        if ($mes == '01'){
+            $mesEspañol = "Enero";
+        }
+        if ($mes == '02'){
+            $mesEspañol = "Febrero";
+        }
+        if ($mes == '03'){
+            $mesEspañol = "Marzo";
+        }
+        if ($mes == '04'){
+            $mesEspañol = "Abril";
+        }
+        if ($mes == '05'){
+            $mesEspañol = "Mayo";
+        }
+        if ($mes == '06'){
+            $mesEspañol = "Junio";
+        }
+        if ($mes == '07'){
+            $mesEspañol = "Julio";
+        }
+        if ($mes == '08'){
+            $mesEspañol = "Agosto";
+        }
+        if ($mes == '09'){
+            $mesEspañol = "Septiembre";
+        }
+        if ($mes == '10'){
+            $mesEspañol = "Octubre";
+        }
+        if ($mes == '11'){
+            $mesEspañol = "Noviembre";
+        }
+        if ($mes == '12'){
+            $mesEspañol = "Diciembre";
+        }
+
+        return $mesEspañol;
+    }
+
 }

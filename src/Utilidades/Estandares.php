@@ -9,7 +9,7 @@
 namespace App\Utilidades;
 
 
-use App\Entity\General\GenCalidadFormato;
+use App\Entity\General\GenFormato;
 use App\Entity\General\GenConfiguracion;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -130,7 +130,7 @@ final class Estandares
         $pdf->Cell(100, 4, $arConfiguracion ? $arConfiguracion->getTelefono() : '', 0, 0, 'L', 0);
 
         if($codigoCalidadFormato){
-            $arFormatoCalidad = BaseDatos::getEm()->getRepository(GenCalidadFormato::class)->find($codigoCalidadFormato);
+            $arFormatoCalidad = BaseDatos::getEm()->getRepository(GenFormato::class)->find($codigoCalidadFormato);
             if($arFormatoCalidad){
                 $pdf->SetXY(160, 18);
                 $pdf->SetFont('Arial', 'B', 9);

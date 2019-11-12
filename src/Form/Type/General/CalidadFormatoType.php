@@ -2,7 +2,7 @@
 
 namespace App\Form\Type\General;
 
-use App\Entity\General\GenCalidadFormato;
+use App\Entity\General\GenFormato;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -27,7 +27,7 @@ class CalidadFormatoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => GenCalidadFormato::class,
+            'data_class' => GenFormato::class,
         ]);
     }
 }

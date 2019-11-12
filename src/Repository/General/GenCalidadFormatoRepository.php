@@ -2,7 +2,7 @@
 
 namespace App\Repository\General;
 
-use App\Entity\General\GenCalidadFormato;
+use App\Entity\General\GenFormato;
 use App\Entity\General\GenCubo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -13,7 +13,7 @@ class GenCalidadFormatoRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, GenCalidadFormato::class);
+        parent::__construct($registry, GenFormato::class);
     }
 
     public function lista($raw)
@@ -25,7 +25,7 @@ class GenCalidadFormatoRepository extends ServiceEntityRepository
             $nombre = $filtros['nombre'] ?? null;
         }
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenCalidadFormato::class, 'cf')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenFormato::class, 'cf')
             ->select('cf.codigoFormatoPk')
             ->addSelect('cf.nombre')
             ->addSelect('cf.fecha')

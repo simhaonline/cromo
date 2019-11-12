@@ -2,7 +2,7 @@
 
 namespace App\Controller\General\Administracion\Calidad;
 
-use App\Entity\General\GenCalidadFormato;
+use App\Entity\General\GenFormato;
 use App\Form\Type\General\CalidadFormatoType;
 use App\General\General;
 use Knp\Component\Pager\PaginatorInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class FormatoController extends ControllerListenerGeneral
 {
-    protected $class = GenCalidadFormato::class;
+    protected $class = GenFormato::class;
     protected $claseNombre = "GenCalidadFormato";
     protected $modulo = "General";
     protected $funcion = "Administracion";
@@ -49,7 +49,7 @@ class FormatoController extends ControllerListenerGeneral
         if ($form->get('btnFiltrar')->isClicked()) {
             $raw['filtros'] = $this->getFiltros($form);
         }
-        $arCalidadFormato = $paginator->paginate($em->getRepository(GenCalidadFormato::class)->lista($raw), $request->query->getInt('page', 1), 50);
+        $arCalidadFormato = $paginator->paginate($em->getRepository(GenFormato::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('general/administracion/calidad/lista.html.twig',
             ['arFormatos' => $arCalidadFormato,
                 'form' => $form->createView()]);
@@ -61,9 +61,9 @@ class FormatoController extends ControllerListenerGeneral
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arCalidadFormato = new GenCalidadFormato();
+        $arCalidadFormato = new GenFormato();
         if ($id != '0') {
-            $arCalidadFormato = $em->getRepository(GenCalidadFormato::class)->find($id);
+            $arCalidadFormato = $em->getRepository(GenFormato::class)->find($id);
             if (!$arCalidadFormato) {
                 return $this->redirect($this->generateUrl('general_administracion_calidad_formato_lista'));
             }

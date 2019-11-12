@@ -91,7 +91,7 @@ class PedidoController extends AbstractController
                 General::get()->setExportar($em->getRepository(TurPedido::class)->listaPedido($raw)->getQuery()->execute(), "Pedidos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TurPedido::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_lista'));
             }

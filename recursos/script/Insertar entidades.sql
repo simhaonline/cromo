@@ -116,3 +116,9 @@ INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF67','','800219488','Comfiar Caja de Compensacion Familiar de Arauca','',0,1,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF68','','800231969','Comcaja','',0,1,0,0,0);
 INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'CCF69','','844003392','Comfacasanare','',0,1,0,0,0);
+INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'EPS041','','900156264','Nueva EPS S.A. Movilidad','',0,0,1,0,0);
+INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'EPS045','','901097473','Medimás EPS S.A.S','',0,0,1,0,0);
+INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'EPSC33','','830074184','Saludvida S.A. EPS Movilidad ','',0,0,1,0,0);
+INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'EPS042','','900226715','Cooperativa de Salud y Desarrollo Integral de la Zona
+Sur Oriental de Cartagena aLtda. Coosalud E.S.S.','',0,0,1,0,0);
+INSERT INTO rhu_entidad (codigo_entidad_pk,codigo_interface,direccion,nit,nombre,telefono,arl,ccf,eps,ces,pen) VALUES (0,'1','','1','Sin fondo','',0,0,0,1,0);

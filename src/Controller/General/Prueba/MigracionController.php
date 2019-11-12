@@ -80,10 +80,10 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdinsepsasv1', 'attr' => ['class' => 'form-control']])
-            ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
-            ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
+            ->add('servidor', TextType::class, ['required' => false, 'data' => '192.168.2.199', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracis', 'attr' => ['class' => 'form-control']])
+            ->add('usuario', TextType::class, ['required' => false, 'data' => 'consulta', 'attr' => ['class' => 'form-control']])
+            ->add('clave', TextType::class, ['required' => false, 'data' => 'SoporteErp2018@', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Iniciar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -109,8 +109,8 @@ class MigracionController extends Controller
 //                $this->generalCiudad($conn);
 //                $this->rhuGrupo($conn);
 //                $this->rhuCargo($conn);
-//                $this->rhuEmpleado($conn);
-//                $this->rhuContrato($conn);
+//                $this->rhuEmpleado($conn);*
+//                $this->rhuContrato($conn);*
 //                $this->rhuConcepto($conn);
 //                $this->rhuAdicional($conn);
 //                $this->rhuEmbargoJuzgado($conn);
@@ -605,7 +605,13 @@ class MigracionController extends Controller
     private function rhuAdicional($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_pago_adicional_pk FROM rhu_pago_adicional ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                         codigo_pago_adicional_pk,
                         codigo_pago_concepto_fk,
                         codigo_empleado_fk,
@@ -619,31 +625,34 @@ class MigracionController extends Controller
                         detalle,
                         estado_inactivo,
                         estado_inactivo_periodo
-                 FROM rhu_pago_adicional");
-        foreach ($datos as $row) {
-            $arAdicional = new RhuAdicional();
-            $arAdicional->setCodigoAdicionalPk($row['codigo_pago_adicional_pk']);
-            $arAdicional->setConceptoRel($em->getReference(RhuConcepto::class, $row['codigo_pago_concepto_fk']));
-            $arAdicional->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
-            if ($row['codigo_contrato_fk']) {
-                $arAdicional->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
+                 FROM rhu_pago_adicional ORDER BY codigo_pago_adicional_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arAdicional = new RhuAdicional();
+                $arAdicional->setCodigoAdicionalPk($row['codigo_pago_adicional_pk']);
+                $arAdicional->setConceptoRel($em->getReference(RhuConcepto::class, $row['codigo_pago_concepto_fk']));
+                $arAdicional->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+                if ($row['codigo_contrato_fk']) {
+                    $arAdicional->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
+                }
+                $arAdicional->setFecha(date_create($row['fecha']));
+                $arAdicional->setVrValor($row['valor']);
+                $arAdicional->setAplicaNomina(1);
+                $arAdicional->setAplicaCesantia($row['aplica_cesantia']);
+                $arAdicional->setAplicaPrima($row['aplica_prima']);
+                $arAdicional->setAplicaDiaLaborado($row['aplica_dia_laborado']);
+                $arAdicional->setPermanente($row['permanente']);
+                $arAdicional->setDetalle(utf8_encode($row['detalle']));
+                $arAdicional->setEstadoInactivo($row['estado_inactivo']);
+                $arAdicional->setEstadoInactivoPeriodo($row['estado_inactivo_periodo']);
+                $em->persist($arAdicional);
+                $metadata = $em->getClassMetaData(get_class($arAdicional));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
-            $arAdicional->setFecha(date_create($row['fecha']));
-            $arAdicional->setVrValor($row['valor']);
-            $arAdicional->setAplicaNomina(1);
-            $arAdicional->setAplicaCesantia($row['aplica_cesantia']);
-            $arAdicional->setAplicaPrima($row['aplica_prima']);
-            $arAdicional->setAplicaDiaLaborado($row['aplica_dia_laborado']);
-            $arAdicional->setPermanente($row['permanente']);
-            $arAdicional->setDetalle(utf8_encode($row['detalle']));
-            $arAdicional->setEstadoInactivo($row['estado_inactivo']);
-            $arAdicional->setEstadoInactivoPeriodo($row['estado_inactivo_periodo']);
-            $em->persist($arAdicional);
-            $metadata = $em->getClassMetaData(get_class($arAdicional));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            $em->flush();
+
         }
-        $em->flush();
+
     }
 
     private function rhuEmbargoJuzgado($conn)
@@ -1252,8 +1261,6 @@ class MigracionController extends Controller
 
     private function rhuPagoDetalle($conn)
     {
-        set_time_limit(0);
-        ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
         $rango = 5000;
         $arr = $conn->query("SELECT codigo_pago_detalle_pk FROM rhu_pago_detalle ");

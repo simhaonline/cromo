@@ -30,6 +30,8 @@ class CorregirSaldosController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGenerar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
                 $em->getRepository(CarCuentaCobrar::class)->corregirSaldos();
                 Mensajes::success("Proceso terminado");
                 return $this->redirect($this->generateUrl('cartera_proceso_cuentacobrar_corregirsaldos_lista'));

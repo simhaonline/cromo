@@ -6,6 +6,7 @@ namespace App\Repository\Cartera;
 use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCompromisoDetalle;
 use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarIngresoDetalle;
 use App\Entity\Cartera\CarNotaCreditoDetalle;
 use App\Entity\Cartera\CarNotaDebitoDetalle;
 use App\Entity\Cartera\CarReciboDetalle;
@@ -634,6 +635,16 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             if ($arrResultado) {
                 if ($arrResultado['vrAplicacion']) {
                     $abonos += $arrResultado['vrAplicacion'];
+                }
+            }
+
+            $queryBuilder = $em->createQueryBuilder()->from(CarIngresoDetalle::class, 'id')
+                ->Select("SUM(id.vrPago) as vrPago")
+                ->where("id.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk']);
+            $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+            if ($arrResultado) {
+                if ($arrResultado['vrPago']) {
+                    $abonos += $arrResultado['vrPago'];
                 }
             }
 

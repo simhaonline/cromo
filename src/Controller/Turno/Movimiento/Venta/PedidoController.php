@@ -31,6 +31,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class PedidoController extends AbstractController
 {
@@ -88,7 +90,8 @@ class PedidoController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(TurPedido::class)->listaPedido($raw)->getQuery()->execute(), "Pedidos");
+                $arPedidos=$em->getRepository(TurPedido::class)->listaPedido($raw);
+                $this->exportarExcelPersonalizado($arPedidos);
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');
@@ -123,7 +126,6 @@ class PedidoController extends AbstractController
             $arPedido->setEstrato(6);
             $nuevafecha = date('Y/m/', strtotime('-1 month', strtotime(date('Y/m/j'))));
             $dateFechaGeneracion = date_create($nuevafecha . '01');
-            $arPedido->setFechaGeneracion($dateFechaGeneracion);
         }
         $form = $this->createForm(PedidoType::class, $arPedido);
         $form->handleRequest($request);
@@ -270,6 +272,49 @@ class PedidoController extends AbstractController
             'arPedido' => $arPedido,
             'form' => $form->createView()
         ]);
+    }
+
+
+    public function exportarExcelPersonalizado($arPedidos){
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arPedidos) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->setTitle('Pedidos');
+            $j = 0;
+            $arrColumnas=['ID','TIPO','NÚMERO','FECHA','CLIENTE','SECTOR','H','HD','HN','TOTAL','USUARIO','AUT','APR','ANU'];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arPedidos as $arPedido) {
+                $hoja->setCellValue('A' . $j, $arPedido['codigoPedidoPk']);
+                $hoja->setCellValue('B' . $j, $arPedido['pedidoTipoNombre']);
+                $hoja->setCellValue('C' . $j, $arPedido['numero']);
+                $hoja->setCellValue('D' . $j, $arPedido['fecha']->format('Y/m/d'));
+                $hoja->setCellValue('E' . $j, $arPedido['clienteNombreCorto']);
+                $hoja->setCellValue('F' . $j, $arPedido['sectorNombre']);
+                $hoja->setCellValue('G' . $j, $arPedido['horas']);
+                $hoja->setCellValue('H' . $j, $arPedido['horasDiurnas']);
+                $hoja->setCellValue('I' . $j, $arPedido['horasNocturnas']);
+                $hoja->setCellValue('J' . $j, number_format($arPedido['vrTotal'], 0,'.', ','));
+                $hoja->setCellValue('K' . $j, $arPedido['usuario']);
+                $hoja->setCellValue('L' . $j, $arPedido['estadoAutorizado']?"SI":"NO");
+                $hoja->setCellValue('M' . $j, $arPedido['estadoAprobado']?"SI":"NO");
+                $hoja->setCellValue('N' . $j, $arPedido['estadoAnulado']?"SI":"NO");
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=soportes.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
     }
 
     public function getFiltros($form)

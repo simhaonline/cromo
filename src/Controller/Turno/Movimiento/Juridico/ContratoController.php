@@ -69,7 +69,7 @@ class ContratoController extends AbstractController
                 $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TurContrato::class)->lista($raw)->getQuery()->execute(), "Contratos");
+                General::get()->setExportar($em->getRepository(TurContrato::class)->lista($raw), "Contratos");
 
             }
             if ($form->get('btnEliminar')->isClicked()) {

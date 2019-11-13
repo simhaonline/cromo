@@ -31,7 +31,7 @@ class TurContratoRepository extends ServiceEntityRepository
         $estadoAutorizado = null;
         $estadoCerrado = null;
 
-        if ($filtros){
+        if ($filtros) {
             $codigoContratoPk = $filtros['codigoContratoPk'] ?? null;
             $codigoClienteFk = $filtros['codigoClienteFk'] ?? null;
             $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
@@ -80,7 +80,7 @@ class TurContratoRepository extends ServiceEntityRepository
         }
 
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function autorizar($arContrato)
@@ -162,7 +162,7 @@ class TurContratoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd')
             ->select("COUNT(cd.codigoContratoDetallePk)")
             ->where("cd.codigoContratoFk = {$codigoContrato} ")
-        ->andWhere("cd.estadoCerrado = 0");
+            ->andWhere("cd.estadoCerrado = 0");
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
     }
@@ -308,7 +308,7 @@ class TurContratoRepository extends ServiceEntityRepository
                     }
                 }
 
-                $horasRealesDiurnas =  $horasRealesDiurnas * $arContratoDetalle->getCantidad();
+                $horasRealesDiurnas = $horasRealesDiurnas * $arContratoDetalle->getCantidad();
                 $horasRealesNocturnas = $horasRealesNocturnas * $arContratoDetalle->getCantidad();
                 $horas = $horasRealesDiurnas + $horasRealesNocturnas;
                 $valorBaseServicio = $arContratoDetalle->getVrSalarioBase() * $arContrato->getSectorRel()->getPorcentaje();
@@ -382,7 +382,8 @@ class TurContratoRepository extends ServiceEntityRepository
         $em->flush();
     }
 
-    public function listaGenerarPedido($fecha){
+    public function listaGenerarPedido($fecha)
+    {
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContrato::class, 'c')
             ->select('c.codigoContratoPk')
@@ -406,18 +407,19 @@ class TurContratoRepository extends ServiceEntityRepository
 
     }
 
-    public function generarPedido($arrSeleccionados, $fecha, $usuario) {
+    public function generarPedido($arrSeleccionados, $fecha, $usuario)
+    {
         $em = $this->getEntityManager();
         $fechaDesde = date_create($fecha);
         $anio = $fechaDesde->format('Y');
         $mes = $fechaDesde->format('m');
         $ultimoDiaMes = date("d", (mktime(0, 0, 0, $mes + 1, 1, $anio) - 1));
         $fechaHasta = date_create($fechaDesde->format('Y') . "/" . $fechaDesde->format('m') . "/" . $ultimoDiaMes);
-        if($arrSeleccionados) {
+        if ($arrSeleccionados) {
             foreach ($arrSeleccionados as $codigo) {
                 /** @var $arContrato TurContrato */
                 $arContrato = $em->getRepository(TurContrato::class)->find($codigo);
-                if($arContrato) {
+                if ($arContrato) {
                     /** @var $arPedidoTipo TurPedidoTipo */
                     $arPedidoTipo = $em->getRepository(TurPedidoTipo::class)->find('CON');
                     $arPedido = new TurPedido();
@@ -580,7 +582,8 @@ class TurContratoRepository extends ServiceEntityRepository
         }
     }
 
-    public function listaPrototipo(){
+    public function listaPrototipo()
+    {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContrato::class, 'c')
             ->select('c.codigoContratoPk');
@@ -592,7 +595,7 @@ class TurContratoRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContrato::class, 'c')
             ->select('c');
-        if($session->get('filtroTurInformeContratoCodigoCliente') != ''){
+        if ($session->get('filtroTurInformeContratoCodigoCliente') != '') {
             $queryBuilder->andWhere("c.codigoClienteFk  = '{$session->get('filtroTurInformeContratoCodigoCliente')}'");
         }
         if ($session->get('filtroTurInformeContratoFechaDesde') != null) {

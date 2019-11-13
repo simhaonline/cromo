@@ -9,6 +9,8 @@ use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
+use App\Entity\Turno\TurContratoDetalleCompuesto;
+use App\Form\Type\Turno\ContratoDetalleCompuestoType;
 use App\Form\Type\Turno\ContratoType;
 use App\Form\Type\Turno\ContratoDetalleType;
 use App\General\General;
@@ -309,6 +311,69 @@ class ContratoController extends AbstractController
         }
         return $this->render('turno/movimiento/juridico/contrato/detalleNuevo.html.twig', [
             'arContrato' => $arContrato,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/turno/movimiento/juridico/contrato/detalle/compuesto/{codigoContratoDetalle}", name="turno_movimiento_juridico_contrato_detalle_compuesto")
+     */
+    public function detalleCompuesto(Request $request,PaginatorInterface $paginator,$codigoContratoDetalle){
+        $em = $this->getDoctrine()->getManager();
+        $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
+        $form = $this->createFormBuilder()
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('btnActualizar', SubmitType::class, array('label' => 'Actualizar'))
+            ->getForm();
+        $form->handleRequest($request);
+        $raw=[];
+        if ($form->isSubmitted()) {
+
+        }
+        $arContratoCompuestos = $paginator->paginate($em->getRepository(TurContratoDetalleCompuesto::class)->lista($codigoContratoDetalle), $request->query->getInt('page', 1), 30);
+        return $this->render('turno/movimiento/juridico/contrato/contratoCompuesto.html.twig', [
+            'arContratoDetalle' => $arContratoDetalle,
+            'arContratoCompuestos' => $arContratoCompuestos,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/tur/movimiento/servicio/compuesto/detalle/nuevo/{codigoContratoDetalle}/{codigoContratoDetalleCompuesto}", name="turno_movimiento_juridico_contrato_detalle_compuesto_nuevo")
+     */
+    public function detalleCompuestoNuevo(Request $request, $codigoContratoDetalle, $codigoContratoDetalleCompuesto = 0)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $tipo = ($codigoContratoDetalleCompuesto == 0 ? 2 : 3);
+        $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
+        $arContratoDetalleCompuesto = new TurContratoDetalleCompuesto();
+        if ($codigoContratoDetalleCompuesto != 0) {
+            $arContratoDetalleCompuesto =  $em->getRepository(TurContratoDetalleCompuesto::class)->find($codigoContratoDetalleCompuesto);
+        }else {
+            $arContratoDetalleCompuesto->setlunes(true);
+            $arContratoDetalleCompuesto->setMartes(true);
+            $arContratoDetalleCompuesto->setMiercoles(true);
+            $arContratoDetalleCompuesto->setJueves(true);
+            $arContratoDetalleCompuesto->setViernes(true);
+            $arContratoDetalleCompuesto->setSabado(true);
+            $arContratoDetalleCompuesto->setDomingo(true);
+            $arContratoDetalleCompuesto->setFestivo(true);
+            $arContratoDetalleCompuesto->setCantidad(1);
+            $arContratoDetalleCompuesto->setContratoDetalleRel($arContratoDetalle);
+        }
+        $form = $this->createForm(ContratoDetalleCompuestoType::class, $arContratoDetalleCompuesto);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+                $arContratoDetalleCompuesto = $form->getData();
+                $arContratoDetalleCompuesto->setPorcentajeIva($arContratoDetalleCompuesto->getConceptoRel()->getPorIva());
+                $em->persist($arContratoDetalleCompuesto);
+                $em->flush();
+                $em->getRepository(TurContratoDetalle::class)->liquidar($codigoServicioDetalle);
+                $em->getRepository(TurContrato::class)->liquidar($arContratoDetalle->getCodigoContraloFk());
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('turno/movimiento/juridico/contrato/contratoCompuestoNuevo.html.twig', [
+            'arContratoDetalleCompuesto' => $arContratoDetalleCompuesto,
             'form' => $form->createView()
         ]);
     }

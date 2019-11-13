@@ -44,6 +44,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->addSelect('cd.horas')
             ->addSelect('cd.horasDiurnas')
             ->addSelect('cd.horasNocturnas')
+            ->addSelect('cd.compuesto')
             ->addSelect('con.nombre as conceptoNombre')
             ->addSelect('i.nombre as itemNombre')
             ->addSelect('mod.nombre as modalidadNombre')

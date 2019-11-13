@@ -49,6 +49,11 @@ class TurModalidad
     protected $costosServiciosModalidadServicioRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurContratoDetalleCompuesto", mappedBy="modalidadRel")
+     */
+    protected $contratoDetallesCompuestosModalidadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoModalidadPk()

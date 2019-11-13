@@ -232,6 +232,11 @@ class TurContratoDetalle
     protected $pedidosDetallesContratoDetalleRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurContratoDetalleCompuesto", mappedBy="contratoDetalleRel")
+     */
+    protected $contratoDetallesCompuestosContratoDetalleRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array

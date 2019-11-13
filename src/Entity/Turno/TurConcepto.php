@@ -65,6 +65,11 @@ class TurConcepto
     protected $costosServiciosConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurContratoDetalleCompuesto", mappedBy="conceptoRel")
+     */
+    protected $contratoDetallesCompuestosConceptoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()

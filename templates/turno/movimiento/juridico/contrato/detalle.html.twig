@@ -56,7 +56,8 @@
                             <th title="Porcentaje iva">%IVA</th>
                             <th title="Iva">IVA</th>
                             <th>SUBTOTAL</th>
-                            <td></td>
+                            <th title="Contrato compuesto">CON C</th>
+                            <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
@@ -103,7 +104,15 @@
                             {% endif %}
 
                             <td class="numero">{{ arContratoDetalle.vrIva | number_format(0, '.', ',') }}</td>
-                            <td class="numero">{{ arContratoDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
+                            <td class="numero">{{ arContratoDetalle.vrSubtotal | number_format(0, '.', ',') }}
+                                {% if arContratoDetalle.compuesto %}
+                                    <td class="text-center">
+                                        <a href="{{ path('turno_movimiento_juridico_contrato_detalle_compuesto',{'codigoContratoDetalle': arContratoDetalle.codigoContratoDetallePk}) }}"><i
+                                            <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                                    </td>
+                                {% else %}
+                                    <td class="text-center">NO</td>
+                                {% endif %}
                             {% if arContrato.estadoAutorizado == 0 %}
                                 <td style="text-align: center;">
                                     <a href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato': arContrato.codigoContratoPk, 'id': arContratoDetalle.codigoContratoDetallePk }) }}', 'contratoDetalle', 600, 900)"><i

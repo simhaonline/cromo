@@ -37,7 +37,7 @@
                         <td class="titulo"></td>
                         <td class="td-in-well"></td>
                         <td class="titulo">VALOR:</td>
-                        <td align="right">{{ arContratoDetalle.vrTotalDetalle | number_format(0, '.', ',') }}</td>
+                        <td align="right">{{ arContratoDetalle.vrTotal | number_format(0, '.', ',') }}</td>
                     </tr>
                 </table>
             {% else %}
@@ -56,7 +56,7 @@
                     <td class="titulo">CODIGO DETALLE:</td>
                     <td class="td-in-well">{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
                     <td class="titulo">PENDIENTE FACTURAR:</td>
-                    <td align="right">{{ arPedidoDetalle.vrTotalDetallePendiente | number_format(0, '.', ',') }}</td>
+                    <td align="right">{{ arPedidoDetalle.vrPendiente | number_format(0, '.', ',') }}</td>
                 </tr>
             </table>
         </div>
@@ -135,7 +135,7 @@
                 <thead>
                 <tr>
                     <th>COD</th>
-                    <th>RECURSO</th>
+                    <th>EMPLEADO</th>
                     <th>1</th>
                     <th>2</th>
                     <th>3</th>

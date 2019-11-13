@@ -4,6 +4,7 @@ namespace App\Repository\Turno;
 
 use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
+use App\Entity\Turno\TurFacturaDetalle;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Utilidades\Mensajes;
@@ -400,5 +401,35 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         }
         $queryBuilder->addOrderBy('pd.codigoPedidoDetallePk', 'DESC');
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function corregirSaldos()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd')
+            ->select('pd.codigoPedidoDetallePk')
+            ->addSelect('pd.vrSubtotal');
+        $arPedidoDetalles = $queryBuilder->getQuery()->getResult();
+        foreach ($arPedidoDetalles as $arPedidoDetalle) {
+            $abonos = 0;
+            $queryBuilder = $em->createQueryBuilder()->from(TurFacturaDetalle::class, 'fd')
+                ->Select("SUM(fd.vrSubtotal) as vrSubtotal")
+                ->where("fd.codigoPedidoDetalleFk = " . $arPedidoDetalle['codigoPedidoDetallePk']);
+            $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+            if ($arrResultado) {
+                if ($arrResultado['vrSubtotal']) {
+                    $abonos += $arrResultado['vrSubtotal'];
+                }
+            }
+
+            $saldo = $arPedidoDetalle['vrSubtotal'] - $abonos;
+            /** @var $arPedidoDetalleAct TurPedidoDetalle */
+            $arPedidoDetalleAct = $em->getRepository(TurPedidoDetalle::class)->find($arPedidoDetalle['codigoPedidoDetallePk']);
+            $arPedidoDetalleAct->setVrPendiente($saldo);
+            $arPedidoDetalleAct->setVrAfectado($abonos);
+            $em->persist($arPedidoDetalleAct);
+        }
+        $em->flush();
+        return true;
     }
 }

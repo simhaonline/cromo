@@ -53,7 +53,7 @@ class ContratoController extends AbstractController
             ->add('codigoClienteFk', TextType::class, array('required' => false))
             ->add('codigoClienteFk', TextType::class, array('required' => false))
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SIN CERRAR' => '0', 'CERRADO' =>  '1'], 'required' => false])
+            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SIN CERRAR' => '0', 'CERRADO' => '1'], 'required' => false])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -64,7 +64,7 @@ class ContratoController extends AbstractController
         $raw = [
             'limiteRegistros' => $form->get('limiteRegistros')->getData()
         ];
-        if ($form->isSubmitted() ) {
+        if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
             }
@@ -151,7 +151,7 @@ class ContratoController extends AbstractController
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/turno/movimiento/juridico/contrato/detalle/{id}", name="turno_movimiento_juridico_contrato_detalle")
      */
-    public function detalle(Request $request, PaginatorInterface $paginator,$id)
+    public function detalle(Request $request, PaginatorInterface $paginator, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arContrato = $em->getRepository(TurContrato::class)->find($id);
@@ -301,9 +301,6 @@ class ContratoController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if ($id == 0) {
-                    $arContratoDetalle->setPorcentajeIva($arContratoDetalle->getConceptoRel()->getPorcentajeIva());
-                }
                 $em->persist($arContratoDetalle);
                 $em->flush();
                 $em->getRepository(TurContrato::class)->liquidar($arContrato);

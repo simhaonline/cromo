@@ -12,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TurContratoDetalleCompuesto
 {
+    public $infoLog = [
+        "primaryKey" => "codigoContratoDetalleCompuestoPk",
+        "todos" => true,
+    ];
+
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_contrato_detalle_compuesto_pk", type="integer")
@@ -42,7 +47,7 @@ class TurContratoDetalleCompuesto
     /**
      * @ORM\Column(name="liquidar_dias_reales", type="boolean")
      */
-    private $DiasReales = false;
+    private $diasReales = false;
 
     /**
      * @ORM\Column(name="dias", type="integer")
@@ -262,15 +267,15 @@ class TurContratoDetalleCompuesto
      */
     public function getDiasReales()
     {
-        return $this->DiasReales;
+        return $this->diasReales;
     }
 
     /**
-     * @param mixed $DiasReales
+     * @param mixed $diasReales
      */
-    public function setDiasReales($DiasReales): void
+    public function setDiasReales($diasReales): void
     {
-        $this->DiasReales = $DiasReales;
+        $this->diasReales = $diasReales;
     }
 
     /**
@@ -688,5 +693,8 @@ class TurContratoDetalleCompuesto
     {
         $this->modalidadRel = $modalidadRel;
     }
+
+
+
 
 }

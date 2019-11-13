@@ -321,19 +321,32 @@ class ContratoController extends AbstractController
     public function detalleCompuesto(Request $request,PaginatorInterface $paginator,$codigoContratoDetalle){
         $em = $this->getDoctrine()->getManager();
         $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
+        $arContrato = $em->getRepository(TurContrato::class)->find($arContratoDetalle->getCodigoContratoFk());
         $form = $this->createFormBuilder()
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('btnActualizar', SubmitType::class, array('label' => 'Actualizar'))
             ->getForm();
         $form->handleRequest($request);
-        $raw=[];
-        if ($form->isSubmitted()) {
 
+        if ($form->isSubmitted()) {
+            if ($form->get('btnActualizar')->isClicked()) {
+                $arrControles = $request->request->All();
+                $this->actualizarDetalleCompuesto($arrControles, $codigoContratoDetalle, $arContratoDetalle->getCodigoContratoFk());
+                return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle_compuesto', array('codigoContratoDetalle' => $codigoContratoDetalle)));
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TurContratoDetalleCompuesto::class)->eliminar($arrSeleccionados);
+                $em->getRepository(TurContratoDetalle::class)->liquidar($codigoContratoDetalle);
+                $em->getRepository(TurContrato::class)->liquidar($arContrato);
+                return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle_compuesto', array('codigoContratoDetalle' => $codigoContratoDetalle)));
+            }
         }
-        $arContratoCompuestos = $paginator->paginate($em->getRepository(TurContratoDetalleCompuesto::class)->lista($codigoContratoDetalle), $request->query->getInt('page', 1), 30);
+        $arContratoDetallesCompuestos = $paginator->paginate($em->getRepository(TurContratoDetalleCompuesto::class)->lista($codigoContratoDetalle), $request->query->getInt('page', 1), 30);
         return $this->render('turno/movimiento/juridico/contrato/contratoCompuesto.html.twig', [
+            'arContrato' => $arContrato,
             'arContratoDetalle' => $arContratoDetalle,
-            'arContratoCompuestos' => $arContratoCompuestos,
+            'arContratoDetallesCompuestos' => $arContratoDetallesCompuestos,
             'form' => $form->createView(),
         ]);
     }
@@ -344,12 +357,12 @@ class ContratoController extends AbstractController
     public function detalleCompuestoNuevo(Request $request, $codigoContratoDetalle, $codigoContratoDetalleCompuesto = 0)
     {
         $em = $this->getDoctrine()->getManager();
-        $tipo = ($codigoContratoDetalleCompuesto == 0 ? 2 : 3);
         $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
         $arContratoDetalleCompuesto = new TurContratoDetalleCompuesto();
         if ($codigoContratoDetalleCompuesto != 0) {
             $arContratoDetalleCompuesto =  $em->getRepository(TurContratoDetalleCompuesto::class)->find($codigoContratoDetalleCompuesto);
         }else {
+            $arContratoDetalleCompuesto->setPeriodo('M');
             $arContratoDetalleCompuesto->setlunes(true);
             $arContratoDetalleCompuesto->setMartes(true);
             $arContratoDetalleCompuesto->setMiercoles(true);
@@ -365,11 +378,10 @@ class ContratoController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
                 $arContratoDetalleCompuesto = $form->getData();
-                $arContratoDetalleCompuesto->setPorcentajeIva($arContratoDetalleCompuesto->getConceptoRel()->getPorIva());
                 $em->persist($arContratoDetalleCompuesto);
                 $em->flush();
-                $em->getRepository(TurContratoDetalle::class)->liquidar($codigoServicioDetalle);
-                $em->getRepository(TurContrato::class)->liquidar($arContratoDetalle->getCodigoContraloFk());
+                $em->getRepository(TurContratoDetalle::class)->liquidar($codigoContratoDetalle);
+                $em->getRepository(TurContrato::class)->liquidar($arContratoDetalle->getContratoRel());
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         return $this->render('turno/movimiento/juridico/contrato/contratoCompuestoNuevo.html.twig', [
@@ -389,5 +401,24 @@ class ContratoController extends AbstractController
 
         return $filtro;
     }
+
+    private function actualizarDetalleCompuesto($arrControles, $codigoContratoDetalle, $codigoContrato)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arContrato = $em->getRepository(TurContrato::class)->find($codigoContrato);
+        $arrPrecioAjustado = $arrControles['arrPrecioAjustado'];
+        $arrCodigo = $arrControles['arrCodigo'];
+        foreach ($arrCodigo as $codigoContratoDetalleCompuesto) {
+            $arContratoDetalleCompuesto = $em->getRepository(TurContratoDetalleCompuesto::class)->find($codigoContratoDetalleCompuesto);
+            $arContratoDetalleCompuesto->setVrPrecioAjustado($arrPrecioAjustado[$codigoContratoDetalleCompuesto]);
+            $em->persist($arContratoDetalleCompuesto);
+
+        }
+        $em->flush();
+        $em->getRepository(TurContratoDetalle::class)->liquidar($codigoContratoDetalle);
+        $em->getRepository(TurContrato::class)->liquidar($arContrato);
+    }
+
+
 }
 

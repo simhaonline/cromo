@@ -1,5 +1,6 @@
 {% extends "base.html.twig" %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <section class="content">
         <a href="{{ path('turno_movimiento_juridico_contrato_detalle', {'id':arContratoDetalle.codigoContratoFk}) }}"
            class="btn btn-default btn-sm">
@@ -7,7 +8,7 @@
         </a>
         <br><br>
         <!-- Encabezado Movimiento -->
-        <table width="100%" class="table table-condensed table-bordered">
+        <table width="100%" class="table table-condensed table-bordered tabla-informacion">
             <tr>
                 <td class="titulo">CODIGO:</td>
                 <td class="td-in-well">{{ arContratoDetalle.codigoContratoDetallePk }}</td>
@@ -84,46 +85,41 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arContratoCompuesto in arContratoCompuestos %}
+                        {% for arContratoDetalleCompuesto in arContratoDetallesCompuestos %}
                             <tr>
-                                <td>{{ arContratoCompuestos.conceptoRel.nombre }}</td>
-                                <td>{{ arContratoCompuestos.modalidadRel.nombre }}</td>
-                                <td>{{ arContratoCompuestos.periodo }}</td>
-                                <td>{{ arContratoCompuestos.liquidarDiasReales?"SI" :"NO" }}</td>
-                                <td>{{ arContratoCompuestos.cantidad }}</td>
-                                <td>{{ arContratoCompuestos.lunes?"SI" :"NO" }}</td>
-                                <td>{{ arContratoCompuestos.martes?"SI" :"NO" }}</td>
-                                <td>{{ arContratoCompuestos.miercoles?"SI" :"NO" }}</td>
-                                <td>{{ arContratoCompuestos.jueves?"SI" :"NO" }}</td>
-                                <td>{{ arContratoCompuestos.viernes?"SI" :"NO" }}</td>
-                                <td>{{ arContratoCompuestos.sabado?"SI" :"NO" }}</td>
-                                <td>{{ arContratoCompuestos.domingo?"SI" :"NO" }}</td>
-                                <td>{{ arContratoCompuestos.festivo?"SI" :"NO" }}</td>
-                                <td class="test-right">
-                                {{ arContratoCompuestos.horas | number_format(0, '.', ',') }}</td>
-                                <td class="test-right">
-                                {{ arContratoCompuestos.horasDiurnas | number_format(0, '.', ',') }}</td>
-                                <td class="test-right">
-                                {{ arContratoCompuestos.horasNocturnas | number_format(0, '.', ',') }}</td>
-                                <td class="test-right">
-                                {{ arContratoCompuestos.dias | number_format(0, '.', ',') }}</td>
-                                <td class="test-right">
-                                {{ arContratoCompuestos.vrPrecioMinimo | number_format(0, '.', ',') }}</td>
-{#                                {% if arContratoCompuestos.servicioRel.estadoAutorizado == 0 %}#}
-{#                                    <td style="text-align: right"><input class="input-grid" type="text"#}
-{#                                                                         name="TxtValorAjustado{{ arServiciosDetalleCompuesto.codigoServicioDetalleCompuestoPk }}"#}
-{#                                                                         value="{{ arServiciosDetalleCompuesto.vrPrecioAjustado }}"#}
-{#                                                                         size="10" style="text-align: right; width:60px"#}
-{#                                                                         onkeypress="return validarNumeros(event)"#}
-{#                                                                         onclick="this.select()"/></td>#}
-{#                                {% else %}#}
-{#                                    <td style="text-align: right">{{ arContratoCompuestos.vrPrecioAjustado | number_format(0, '.', ',') }}</td>#}
-{#                                {% endif %}#}
-{#                                <td style="text-align: right">{{ arContratoCompuestos.vrSubTotal | number_format(0, '.', ',') }}</td>#}
-                                {#                                <td>{% if arServicioDetalle.servicioRel.estadoAutorizado == 0 %}<a href="javascript:abrirVentana3('{{ path('brs_tur_movimiento_servicio_compuesto_detalle_nuevo', {'codigoServicioDetalle': arServicioDetalle.codigoServicioDetallePk, 'codigoServicioDetalleCompuesto': arServiciosDetalleCompuesto.codigoServicioDetalleCompuestoPk }) }}', 'AgregarNuevoDetalle', 600, 900)"><img src="{{ asset('imagenes/bootstrap/glyphicons_151_edit.png') }}" width=20 height=20 title="Editar el registro"></a>{% endif %}</td>#}
-                                <td></td>
+                                <td>{{ arContratoDetalleCompuesto.codigoContratoDetalleCompuestoPk }} <input type="hidden" name="arrCodigo[]" value="{{ arContratoDetalleCompuesto.codigoContratoDetalleCompuestoPk }}"></td>
+                                <td>{{ arContratoDetalleCompuesto.conceptoNombre }}</td>
+                                <td>{{ arContratoDetalleCompuesto.modalidadNombre }}</td>
+                                <td>{{ arContratoDetalleCompuesto.periodo }}</td>
+                                <td>{{ arContratoDetalleCompuesto.diasReales?"SI" :"NO" }}</td>
+                                <td>{{ arContratoDetalleCompuesto.cantidad }}</td>
+                                <td>{{ arContratoDetalleCompuesto.lunes?"SI" :"NO" }}</td>
+                                <td>{{ arContratoDetalleCompuesto.martes?"SI" :"NO" }}</td>
+                                <td>{{ arContratoDetalleCompuesto.miercoles?"SI" :"NO" }}</td>
+                                <td>{{ arContratoDetalleCompuesto.jueves?"SI" :"NO" }}</td>
+                                <td>{{ arContratoDetalleCompuesto.viernes?"SI" :"NO" }}</td>
+                                <td>{{ arContratoDetalleCompuesto.sabado?"SI" :"NO" }}</td>
+                                <td>{{ arContratoDetalleCompuesto.domingo?"SI" :"NO" }}</td>
+                                <td>{{ arContratoDetalleCompuesto.festivo?"SI" :"NO" }}</td>
+                                <td class="test-right">{{ arContratoDetalleCompuesto.horas | number_format(0, '.', ',') }}</td>
+                                <td class="test-right">{{ arContratoDetalleCompuesto.horasDiurnas | number_format(0, '.', ',') }}</td>
+                                <td class="test-right">{{ arContratoDetalleCompuesto.horasNocturnas | number_format(0, '.', ',') }}</td>
+                                <td class="test-right">{{ arContratoDetalleCompuesto.dias | number_format(0, '.', ',') }}</td>
+                                <td class="test-right">{{ arContratoDetalleCompuesto.vrPrecioMinimo | number_format(0, '.', ',') }}</td>
+                                {% if arContrato.estadoAutorizado == 0 %}
+                                    <td style="text-align: center;"><input type="number"
+                                                                           name="arrPrecioAjustado[{{ arContratoDetalleCompuesto.codigoContratoDetalleCompuestoPk }}]"
+                                                                           value="{{ arContratoDetalleCompuesto.vrPrecioAjustado }}"
+                                                                           style="text-align: right; width:60px"
+                                                                           size="10"></td>
+                                {% else %}
+                                    <td style="text-align: right">{{ arContratoDetalleCompuesto.vrPrecioAjustado | number_format(0, '.', ',') }}</td>
+                                {% endif %}
+                                <td style="text-align: right">{{ arContratoDetalleCompuesto.vrSubtotal | number_format(0, '.', ',') }}</td>
+                                                                <td>{% if arContrato.estadoAutorizado == 0 %}<a href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_compuesto_nuevo', {'codigoContratoDetalle': arContratoDetalleCompuesto.codigoContratoDetalleFk, 'codigoContratoDetalleCompuesto': arContratoDetalleCompuesto.codigoContratoDetalleCompuestoPk }) }}', 'AgregarNuevoDetalle', 600, 900)"><i
+                                                                                title="Editar el registro" class="fa fa-edit" style="font-size: large;color: black;"></i></a>{% endif %}</td>
                                 <td><input type="checkbox" name="ChkSeleccionar[]"
-                                           value="{{ arServiciosDetalleCompuesto.codigoServicioDetalleCompuestoPk }}"/>
+                                           value="{{ arContratoDetalleCompuesto.codigoContratoDetalleCompuestoPk }}"/>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -131,12 +127,12 @@
                     </table>
                     <div class="btn-group" style="float: left">
                         <div class="btn btn-default btn-sm">Registros
-                            <span class="badge">{{ arContratoCompuestos.getTotalItemCount }}
+                            <span class="badge">{{ arContratoDetallesCompuestos.getTotalItemCount }}
                     </span>
                         </div>
                     </div>
                     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-                        {{ knp_pagination_render(arContratoCompuestos) }}
+                        {{ knp_pagination_render(arContratoDetallesCompuestos) }}
                     </div>
                     <div class="btn-group" style="float: right; margin-right: 5px !important;">
                         {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
@@ -156,4 +152,5 @@
         </div>
         <br/><br/><br/><br/>
     </section>
+    {{ form_end(form) }}
 {% endblock %}

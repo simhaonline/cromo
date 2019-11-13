@@ -125,6 +125,7 @@
                             <th title="Porcentaje iva">%IVA</th>
                             <th title="Iva">IVA</th>
                             <th>SUBTOTAL</th>
+                            <th title="Compuesto">COM</th>
                             <th title="Contrato detalle">CD</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -180,6 +181,18 @@
                                 {% endif %}
                                 <td class="numero">{{ arPedidoDetalle.vrIva | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
+                                {% if arPedidoDetalle.compuesto %}
+                                    <td class="text-center">
+                                        {% if arPedido.estadoAutorizado == 0 %}
+                                            <a href="{{ path('turno_movimiento_venta_pedido_detalle_compuesto',{'codigoPedidoDetalle': arPedidoDetalle.codigoPedidoDetallePk}) }}">
+                                                <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i></a>
+                                        {% else %}
+                                            SI
+                                        {% endif %}
+                                    </td>
+                                {% else %}
+                                    <td class="text-center">NO</td>
+                                {% endif %}
                                 <td class="numero">{{ arPedidoDetalle.codigoContratoDetalleFk }}</td>
                                 <td><input type="checkbox" name="ChkSeleccionar[]"
                                            value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/></td>

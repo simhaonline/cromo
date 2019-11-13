@@ -56,7 +56,7 @@
                             <th title="Porcentaje iva">%IVA</th>
                             <th title="Iva">IVA</th>
                             <th>SUBTOTAL</th>
-                            <th title="Contrato compuesto">CON C</th>
+                            <th title="Compuesto">COM</th>
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -91,11 +91,16 @@
                                 <td class="numero">{{ arContratoDetalle.vrPrecioAjustado | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arContratoDetalle.porcentajeIva | number_format(0, '.', ',') }}</td>
                             {% else %}
-                                <td style="text-align: center;"><input type="number"
+                                {% if arContratoDetalle.compuesto == 0 %}
+                                    <td style="text-align: center;"><input type="number"
                                                                        name="arrPrecioAjustado[{{ arContratoDetalle.codigoContratoDetallePk }}]"
                                                                        value="{{ arContratoDetalle.vrPrecioAjustado }}"
                                                                        style="text-align: right; width:60px"
                                                                        size="10"></td>
+                                {% else %}
+                                    <td class="numero">{{ arContratoDetalle.vrPrecioAjustado | number_format(0, '.', ',') }}</td>
+                                {% endif %}
+
                                 <td style="text-align: center;"><input type="number"
                                                                        name="arrPorcentajeIva[{{ arContratoDetalle.codigoContratoDetallePk }}]"
                                                                        value="{{ arContratoDetalle.porcentajeIva }}"
@@ -104,24 +109,30 @@
                             {% endif %}
 
                             <td class="numero">{{ arContratoDetalle.vrIva | number_format(0, '.', ',') }}</td>
-                            <td class="numero">{{ arContratoDetalle.vrSubtotal | number_format(0, '.', ',') }}
-                                {% if arContratoDetalle.compuesto %}
-                                    <td class="text-center">
-                                        <a href="{{ path('turno_movimiento_juridico_contrato_detalle_compuesto',{'codigoContratoDetalle': arContratoDetalle.codigoContratoDetallePk}) }}"><i
-                                            <i class="fa fa-share-square-o" style="font-size: large;color: black;">
-                                    </td>
-                                {% else %}
-                                    <td class="text-center">NO</td>
-                                {% endif %}
-                            {% if arContrato.estadoAutorizado == 0 %}
-                                <td style="text-align: center;">
+                            <td class="numero">{{ arContratoDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
+                            {% if arContratoDetalle.compuesto %}
+                                <td class="text-center">
+                                    {% if arContrato.estadoAutorizado == 0 %}
+                                    <a href="{{ path('turno_movimiento_juridico_contrato_detalle_compuesto',{'codigoContratoDetalle': arContratoDetalle.codigoContratoDetallePk}) }}">
+                                        <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i></a>
+                                    {% else %}
+                                        SI
+                                    {% endif %}
+                                </td>
+                            {% else %}
+                                <td class="text-center">NO</td>
+                            {% endif %}
+
+                            <td style="text-align: center;">
+                                {% if arContrato.estadoAutorizado == 0 %}
                                     <a href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato': arContrato.codigoContratoPk, 'id': arContratoDetalle.codigoContratoDetallePk }) }}', 'contratoDetalle', 600, 900)"><i
                                                 title="Editar el registro" class="fa fa-edit"
                                                 style="font-size: large;color: black;"></i></a>
-                                </td>
-                            {% else %}
-                                <td></td>
-                            {% endif %}
+                                {% endif %}
+                            </td>
+
+
+
                             <td><input type="checkbox" name="ChkSeleccionar[]"
                                        value="{{ arContratoDetalle.codigoContratoDetallePk }}"/></td>
                             </tr>

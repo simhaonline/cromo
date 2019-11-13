@@ -300,9 +300,9 @@ class TurPedidoRepository extends ServiceEntityRepository
                 $douTotalMinimoServicio += $arPedidoDetalle->getVrPrecioMinimo();
                 $subtotalGeneral += $arPedidoDetalle->getVrSubtotal();
                 $douTotalServicio += $arPedidoDetalle->getVrSubtotal();
-                $baseAuiGeneral += $arPedidoDetalle->getVrBaseAiu();
+                $baseAuiGeneral += $arPedidoDetalle->getVrBaseIva();
                 $ivaGeneral += $arPedidoDetalle->getVrIva();
-                $totalGeneral += $arPedidoDetalle->getVrTotalDetalle();
+                $totalGeneral += $arPedidoDetalle->getVrTotal();
             }
         }
 

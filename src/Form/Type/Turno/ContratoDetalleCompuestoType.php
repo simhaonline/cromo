@@ -38,7 +38,6 @@ class ContratoDetalleCompuestoType extends AbstractType
                 'choice_label' => 'nombre',
                 'required' => true))
             ->add('cantidad', NumberType::class)
-            ->add('periodo', TextType::class)
             ->add('lunes', CheckboxType::class, array('required'  => false))
             ->add('martes', CheckboxType::class, array('required'  => false))
             ->add('miercoles', CheckboxType::class, array('required'  => false))

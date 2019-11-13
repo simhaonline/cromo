@@ -50,6 +50,7 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.vrIva')
             ->addSelect('pd.vrSubtotal')
             ->addSelect('pd.periodo')
+            ->addSelect('pd.compuesto')
             ->addSelect('pd.codigoContratoDetalleFk')
             ->addSelect('pd.codigoModalidadFk')
             ->addSelect('c.nombre as conceptoNombre')

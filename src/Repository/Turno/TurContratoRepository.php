@@ -191,181 +191,196 @@ class TurContratoRepository extends ServiceEntityRepository
         $arContratoDetalles = $this->getEntityManager()->getRepository(TurContratoDetalle::class)->findBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk()));
         /** @var $arContratoDetalle TurContratoDetalle */
         foreach ($arContratoDetalles as $arContratoDetalle) {
-            if ($arContratoDetalle->getEstadoCerrado() == 0) {
-                /** @var $arConcepto TurConcepto */
-                $arConcepto = $arContratoDetalle->getConceptoRel();
-                if ($arContratoDetalle->getPeriodo() == "D") {
-                    $dias = $arContratoDetalle->getFechaDesde()->diff($arContratoDetalle->getFechaHasta());
-                    $dias = $dias->format('%a');
-                    $dias += 1;
-                    if ($arContratoDetalle->getFechaHasta()->format('d') == '31') {
-                        $dias = $dias - 1;
-                    }
-                    if ($arContratoDetalle->getDia31() == 1) {
+            if ($arContratoDetalle->getCompuesto() == 0) {
+                if ($arContratoDetalle->getEstadoCerrado() == 0) {
+                    /** @var $arConcepto TurConcepto */
+                    $arConcepto = $arContratoDetalle->getConceptoRel();
+                    if ($arContratoDetalle->getPeriodo() == "D") {
+                        $dias = $arContratoDetalle->getFechaDesde()->diff($arContratoDetalle->getFechaHasta());
+                        $dias = $dias->format('%a');
+                        $dias += 1;
                         if ($arContratoDetalle->getFechaHasta()->format('d') == '31') {
-                            $dias = $dias + 1;
+                            $dias = $dias - 1;
                         }
-                    }
-                } else {
-                    $dias = 30;
-                }
-
-                $horasRealesDiurnas = 0;
-                $horasRealesNocturnas = 0;
-                $diasOrdinarios = 0;
-                $diasSabados = 0;
-                $diasDominicales = 0;
-                $diasFestivos = 0;
-                if ($arContratoDetalle->getPeriodo() == "M") {
-                    if ($arContratoDetalle->getLunes()) {
-                        $diasOrdinarios += 4;
-                    }
-                    if ($arContratoDetalle->getMartes()) {
-                        $diasOrdinarios += 4;
-                    }
-                    if ($arContratoDetalle->getMiercoles()) {
-                        $diasOrdinarios += 4;
-                    }
-                    if ($arContratoDetalle->getJueves()) {
-                        $diasOrdinarios += 4;
-                    }
-                    if ($arContratoDetalle->getViernes()) {
-                        $diasOrdinarios += 4;
-                    }
-                    if ($arContratoDetalle->getSabado()) {
-                        $diasSabados = 4;
-                    }
-                    if ($arContratoDetalle->getDomingo()) {
-                        $diasDominicales = 4;
-                    }
-                    if ($arContratoDetalle->getFestivo()) {
-                        $diasFestivos = 2;
-                    }
-                    $totalDias = $diasOrdinarios + $diasSabados + $diasDominicales + $diasFestivos;
-                    $horasRealesDiurnas = $arConcepto->getHorasDiurnas() * $totalDias;
-                    $horasRealesNocturnas = $arConcepto->getHorasNocturnas() * $totalDias;
-                } else {
-                    $arFestivos = $em->getRepository(TurFestivo::class)->fecha($arContratoDetalle->getFechaDesde()->format('Y-m-d'), $arContratoDetalle->getFechaHasta()->format('Y-m-d'));
-                    $fecha = $arContratoDetalle->getFechaDesde()->format('Y-m-j');
-                    for ($i = 0; $i < $dias; $i++) {
-                        $nuevafecha = strtotime('+' . $i . ' day', strtotime($fecha));
-                        $nuevafecha = date('Y-m-j', $nuevafecha);
-                        $dateNuevaFecha = date_create($nuevafecha);
-                        $diaSemana = $dateNuevaFecha->format('N');
-                        if ($this->festivo($arFestivos, $dateNuevaFecha) == 1) {
-                            $diasFestivos += 1;
-                        } else {
-                            if ($diaSemana == 1) {
-                                $diasOrdinarios += 1;
-                                if ($arContratoDetalle->getLunes() == 1) {
-                                    $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
-                                    $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
-                                }
-                            }
-                            if ($diaSemana == 2) {
-                                $diasOrdinarios += 1;
-                                if ($arContratoDetalle->getMartes() == 1) {
-                                    $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
-                                    $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
-                                }
-                            }
-                            if ($diaSemana == 3) {
-                                $diasOrdinarios += 1;
-                                if ($arContratoDetalle->getMiercoles() == 1) {
-                                    $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
-                                    $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
-                                }
-                            }
-                            if ($diaSemana == 4) {
-                                $diasOrdinarios += 1;
-                                if ($arContratoDetalle->getJueves() == 1) {
-                                    $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
-                                    $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
-                                }
-                            }
-                            if ($diaSemana == 5) {
-                                $diasOrdinarios += 1;
-                                if ($arContratoDetalle->getViernes() == 1) {
-                                    $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
-                                    $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
-                                }
-                            }
-                            if ($diaSemana == 6) {
-                                $diasSabados += 1;
-                                if ($arContratoDetalle->getSabado() == 1) {
-                                    $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
-                                    $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
-                                }
-                            }
-                            if ($diaSemana == 7) {
-                                $diasDominicales += 1;
-                                if ($arContratoDetalle->getDomingo() == 1) {
-                                    $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
-                                    $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
-                                }
+                        if ($arContratoDetalle->getDia31() == 1) {
+                            if ($arContratoDetalle->getFechaHasta()->format('d') == '31') {
+                                $dias = $dias + 1;
                             }
                         }
+                    } else {
+                        $dias = 30;
                     }
+
+                    $horasRealesDiurnas = 0;
+                    $horasRealesNocturnas = 0;
+                    $diasOrdinarios = 0;
+                    $diasSabados = 0;
+                    $diasDominicales = 0;
+                    $diasFestivos = 0;
+                    if ($arContratoDetalle->getPeriodo() == "M") {
+                        if ($arContratoDetalle->getLunes()) {
+                            $diasOrdinarios += 4;
+                        }
+                        if ($arContratoDetalle->getMartes()) {
+                            $diasOrdinarios += 4;
+                        }
+                        if ($arContratoDetalle->getMiercoles()) {
+                            $diasOrdinarios += 4;
+                        }
+                        if ($arContratoDetalle->getJueves()) {
+                            $diasOrdinarios += 4;
+                        }
+                        if ($arContratoDetalle->getViernes()) {
+                            $diasOrdinarios += 4;
+                        }
+                        if ($arContratoDetalle->getSabado()) {
+                            $diasSabados = 4;
+                        }
+                        if ($arContratoDetalle->getDomingo()) {
+                            $diasDominicales = 4;
+                        }
+                        if ($arContratoDetalle->getFestivo()) {
+                            $diasFestivos = 2;
+                        }
+                        $totalDias = $diasOrdinarios + $diasSabados + $diasDominicales + $diasFestivos;
+                        $horasRealesDiurnas = $arConcepto->getHorasDiurnas() * $totalDias;
+                        $horasRealesNocturnas = $arConcepto->getHorasNocturnas() * $totalDias;
+                    } else {
+                        $arFestivos = $em->getRepository(TurFestivo::class)->fecha($arContratoDetalle->getFechaDesde()->format('Y-m-d'), $arContratoDetalle->getFechaHasta()->format('Y-m-d'));
+                        $fecha = $arContratoDetalle->getFechaDesde()->format('Y-m-j');
+                        for ($i = 0; $i < $dias; $i++) {
+                            $nuevafecha = strtotime('+' . $i . ' day', strtotime($fecha));
+                            $nuevafecha = date('Y-m-j', $nuevafecha);
+                            $dateNuevaFecha = date_create($nuevafecha);
+                            $diaSemana = $dateNuevaFecha->format('N');
+                            if ($this->festivo($arFestivos, $dateNuevaFecha) == 1) {
+                                $diasFestivos += 1;
+                            } else {
+                                if ($diaSemana == 1) {
+                                    $diasOrdinarios += 1;
+                                    if ($arContratoDetalle->getLunes() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 2) {
+                                    $diasOrdinarios += 1;
+                                    if ($arContratoDetalle->getMartes() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 3) {
+                                    $diasOrdinarios += 1;
+                                    if ($arContratoDetalle->getMiercoles() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 4) {
+                                    $diasOrdinarios += 1;
+                                    if ($arContratoDetalle->getJueves() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 5) {
+                                    $diasOrdinarios += 1;
+                                    if ($arContratoDetalle->getViernes() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 6) {
+                                    $diasSabados += 1;
+                                    if ($arContratoDetalle->getSabado() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                                if ($diaSemana == 7) {
+                                    $diasDominicales += 1;
+                                    if ($arContratoDetalle->getDomingo() == 1) {
+                                        $horasRealesDiurnas += $arConcepto->getHorasDiurnas();
+                                        $horasRealesNocturnas += $arConcepto->getHorasNocturnas();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    $horasRealesDiurnas = $horasRealesDiurnas * $arContratoDetalle->getCantidad();
+                    $horasRealesNocturnas = $horasRealesNocturnas * $arContratoDetalle->getCantidad();
+                    $horas = $horasRealesDiurnas + $horasRealesNocturnas;
+                    $valorBaseServicio = $arContratoDetalle->getVrSalarioBase() * $arContrato->getSectorRel()->getPorcentaje();
+                    if ($arContrato->getCodigoSectorFk() == "D" && $arContrato->getEstrato() >= 4) {
+                        //Cambiar porcentaje para residencial mayor a estrato 4
+                        //$porcentajeModalidad = $arContratoDetalle->getModalidadServicioRel()->getPorcentajeEspecial();
+                        $porcentajeModalidad = $arContratoDetalle->getModalidadRel()->getPorcentaje();
+                    } else {
+                        $porcentajeModalidad = $arContratoDetalle->getModalidadRel()->getPorcentaje();
+                    }
+
+
+                    $valorBaseServicioMes = $valorBaseServicio + ($valorBaseServicio * $porcentajeModalidad / 100);
+                    $valorHoraDiurna = ((($valorBaseServicioMes * 55.97) / 100) / 30) / 15;
+                    $valorHoraNocturna = ((($valorBaseServicioMes * 44.03) / 100) / 30) / 9;
+
+                    $precio = ($horasRealesDiurnas * $valorHoraDiurna) + ($horasRealesNocturnas * $valorHoraNocturna);
+                    $valorMinimoServicio = $precio;
+
+
+                    if ($arContratoDetalle->getVrPrecioAjustado() != 0) {
+                        $valorServicio = $arContratoDetalle->getVrPrecioAjustado() * $arContratoDetalle->getCantidad();
+                        $precio = $arContratoDetalle->getVrPrecioAjustado();
+                    } else {
+                        $valorServicio = $valorMinimoServicio;
+                    }
+
+
+                    $subTotalDetalle = $valorServicio;
+                    $baseAiuDetalle = $subTotalDetalle * ($arContratoDetalle->getPorcentajeBaseIva() / 100);
+                    $ivaDetalle = $baseAiuDetalle * ($arContratoDetalle->getPorcentajeIva() / 100);
+                    $totalDetalle = $subTotalDetalle + $ivaDetalle;
+
+                    $arContratoDetalle->setVrSubtotal($subTotalDetalle);
+                    $arContratoDetalle->setVrBaseAiu($baseAiuDetalle);
+                    $arContratoDetalle->setVrIva($ivaDetalle);
+                    $arContratoDetalle->setVrTotalDetalle($totalDetalle);
+                    $arContratoDetalle->setVrPrecioMinimo($valorMinimoServicio);
+                    $arContratoDetalle->setVrPrecio($precio);
+                    $arContratoDetalle->setHoras($horas);
+                    $arContratoDetalle->setHorasDiurnas($horasRealesDiurnas);
+                    $arContratoDetalle->setHorasNocturnas($horasRealesNocturnas);
+                    $arContratoDetalle->setDias($dias);
+                    $em->persist($arContratoDetalle);
+
+                    $subtotalGeneral += $subTotalDetalle;
+                    $baseAuiGeneral += $baseAiuDetalle;
+                    $ivaGeneral += $ivaDetalle;
+                    $totalGeneral += $totalDetalle;
+
+                    $totalHoras += $horas;
+                    $totalHorasDiurnas += $horasRealesDiurnas;
+                    $totalHorasNocturnas += $horasRealesNocturnas;
+                    $totalMinimoServicio += $valorMinimoServicio;
+                    $totalServicio += $valorServicio;
+                    $intCantidad++;
                 }
-
-                $horasRealesDiurnas = $horasRealesDiurnas * $arContratoDetalle->getCantidad();
-                $horasRealesNocturnas = $horasRealesNocturnas * $arContratoDetalle->getCantidad();
-                $horas = $horasRealesDiurnas + $horasRealesNocturnas;
-                $valorBaseServicio = $arContratoDetalle->getVrSalarioBase() * $arContrato->getSectorRel()->getPorcentaje();
-                if ($arContrato->getCodigoSectorFk() == "D" && $arContrato->getEstrato() >= 4) {
-                    //Cambiar porcentaje para residencial mayor a estrato 4
-                    //$porcentajeModalidad = $arContratoDetalle->getModalidadServicioRel()->getPorcentajeEspecial();
-                    $porcentajeModalidad = $arContratoDetalle->getModalidadRel()->getPorcentaje();
-                } else {
-                    $porcentajeModalidad = $arContratoDetalle->getModalidadRel()->getPorcentaje();
+            } else {
+                if ($arContratoDetalle->getEstadoCerrado() == 0) {
+                    $totalHoras += $arContratoDetalle->getHoras();
+                    $totalHorasDiurnas += $arContratoDetalle->getHorasDiurnas();
+                    $totalHorasNocturnas += $arContratoDetalle->getHorasNocturnas();
+                    $totalMinimoServicio += $arContratoDetalle->getVrPrecioMinimo();
+                    $subtotalGeneral += $arContratoDetalle->getVrSubtotal();
+                    $totalServicio += $arContratoDetalle->getVrSubtotal();
+                    $baseAuiGeneral += $arContratoDetalle->getVrBaseAiu();
+                    $ivaGeneral += $arContratoDetalle->getVrIva();
+                    $totalGeneral += $arContratoDetalle->getVrTotalDetalle();
                 }
-
-
-                $valorBaseServicioMes = $valorBaseServicio + ($valorBaseServicio * $porcentajeModalidad / 100);
-                $valorHoraDiurna = ((($valorBaseServicioMes * 55.97) / 100) / 30) / 15;
-                $valorHoraNocturna = ((($valorBaseServicioMes * 44.03) / 100) / 30) / 9;
-
-                $precio = ($horasRealesDiurnas * $valorHoraDiurna) + ($horasRealesNocturnas * $valorHoraNocturna);
-                $valorMinimoServicio = $precio;
-
-
-                if ($arContratoDetalle->getVrPrecioAjustado() != 0) {
-                    $valorServicio = $arContratoDetalle->getVrPrecioAjustado() * $arContratoDetalle->getCantidad();
-                    $precio = $arContratoDetalle->getVrPrecioAjustado();
-                } else {
-                    $valorServicio = $valorMinimoServicio;
-                }
-
-
-                $subTotalDetalle = $valorServicio;
-                $baseAiuDetalle = $subTotalDetalle * ($arContratoDetalle->getPorcentajeBaseIva() / 100);
-                $ivaDetalle = $baseAiuDetalle * ($arContratoDetalle->getPorcentajeIva() / 100);
-                $totalDetalle = $subTotalDetalle + $ivaDetalle;
-
-                $arContratoDetalle->setVrSubtotal($subTotalDetalle);
-                $arContratoDetalle->setVrBaseAiu($baseAiuDetalle);
-                $arContratoDetalle->setVrIva($ivaDetalle);
-                $arContratoDetalle->setVrTotalDetalle($totalDetalle);
-                $arContratoDetalle->setVrPrecioMinimo($valorMinimoServicio);
-                $arContratoDetalle->setVrPrecio($precio);
-                $arContratoDetalle->setHoras($horas);
-                $arContratoDetalle->setHorasDiurnas($horasRealesDiurnas);
-                $arContratoDetalle->setHorasNocturnas($horasRealesNocturnas);
-                $arContratoDetalle->setDias($dias);
-                $em->persist($arContratoDetalle);
-
-                $subtotalGeneral += $subTotalDetalle;
-                $baseAuiGeneral += $baseAiuDetalle;
-                $ivaGeneral += $ivaDetalle;
-                $totalGeneral += $totalDetalle;
-
-                $totalHoras += $horas;
-                $totalHorasDiurnas += $horasRealesDiurnas;
-                $totalHorasNocturnas += $horasRealesNocturnas;
-                $totalMinimoServicio += $valorMinimoServicio;
-                $totalServicio += $valorServicio;
-                $intCantidad++;
             }
+
         }
 
         $arContrato->setHoras($totalHoras);

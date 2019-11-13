@@ -4,6 +4,7 @@ namespace App\Repository\Turno;
 
 use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
+use App\Entity\Turno\TurContratoDetalleCompuesto;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -111,20 +112,21 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
 
         if ($this->getEntityManager()->getRepository(TurContrato::class)->contarDetalles($arContratos->getCodigoContratoPk()) > 0) {
-            $arrPrecioAjustado = $arrControles['arrPrecioAjustado'];
+            if(isset($arrControles['arrPrecioAjustado'])) {
+                $arrPrecioAjustado = $arrControles['arrPrecioAjustado'];
+            } else {
+                $arrPrecioAjustado = [];
+            }
+
             $arrPorcentajeIva = $arrControles['arrPorcentajeIva'];
             $arrCodigo = $arrControles['arrCodigo'];
             foreach ($arrCodigo as $codigoContratoDetalle) {
+
                 $arContratoDetalle = $this->getEntityManager()->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
-                $arContratoDetalle->setHoras($arContratoDetalle->getConceptoRel()->getHoras());
-                $arContratoDetalle->setHorasDiurnas($arContratoDetalle->getConceptoRel()->getHorasDiurnas());
-                $arContratoDetalle->setHorasNocturnas($arContratoDetalle->getConceptoRel()->getHorasNocturnas());
-                $arContratoDetalle->setVrSalarioBase($arContratoDetalle->getVrSalarioBase());
-                $arContratoDetalle->setVrPrecioAjustado($arrPrecioAjustado[$codigoContratoDetalle]);
+                if(isset($arrPrecioAjustado[$codigoContratoDetalle])){
+                    $arContratoDetalle->setVrPrecioAjustado($arrPrecioAjustado[$codigoContratoDetalle]);
+                }
                 $arContratoDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoContratoDetalle]);
-                $arContratoDetalle->setVrSubtotal($arContratoDetalle->getVrPrecioAjustado() * $arContratoDetalle->getCantidad());
-                $arContratoDetalle->setVrIva($arContratoDetalle->getVrSubtotal() * $arContratoDetalle->getPorcentajeIva() / 100);
-                $arContratoDetalle->setVrTotalDetalle($arContratoDetalle->getVrSubtotal() + $arContratoDetalle->getVrIva());
                 $em->persist($arContratoDetalle);
                 $em->flush();
             }
@@ -208,6 +210,124 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             }
             $em->flush();
         }
+    }
+
+    public function liquidar($codigoContratoDetalle)
+    {
+        $em = $this->getEntityManager();
+        $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
+        $intCantidad = 0;
+        $precio = 0;
+        $douTotalHoras = 0;
+        $douTotalHorasDiurnas = 0;
+        $douTotalHorasNocturnas = 0;
+        $douTotalServicio = 0;
+        $douTotalMinimoServicio = 0;
+
+        $duoTotalBaseAiuDetalle = 0;
+        $duoTotalIvaDetalle = 0;
+        $arContratosDetalleCompuesto = $em->getRepository(TurContratoDetalleCompuesto::class)->findBy(array('codigoContratoDetalleFk' => $codigoContratoDetalle));
+        foreach ($arContratosDetalleCompuesto as $arContratoDetalleCompuesto) {
+            $intDias = 30;
+            $intHorasRealesDiurnas = 0;
+            $intHorasRealesNocturnas = 0;
+            $intDiasOrdinarios = 0;
+            $intDiasSabados = 0;
+            $intDiasDominicales = 0;
+            $intDiasFestivos = 0;
+            if ($arContratoDetalleCompuesto->getPeriodo() == 'M') {
+                if ($arContratoDetalleCompuesto->getLunes() == 1) {
+                    $intDiasOrdinarios += 4;
+                }
+                if ($arContratoDetalleCompuesto->getMartes() == 1) {
+                    $intDiasOrdinarios += 4;
+                }
+                if ($arContratoDetalleCompuesto->getMiercoles() == 1) {
+                    $intDiasOrdinarios += 4;
+                }
+                if ($arContratoDetalleCompuesto->getJueves() == 1) {
+                    $intDiasOrdinarios += 4;
+                }
+                if ($arContratoDetalleCompuesto->getViernes() == 1) {
+                    $intDiasOrdinarios += 4;
+                }
+                if ($arContratoDetalleCompuesto->getSabado() == 1) {
+                    $intDiasSabados = 4;
+                }
+                if ($arContratoDetalleCompuesto->getDomingo() == 1) {
+                    $intDiasDominicales = 4;
+                }
+                if ($arContratoDetalleCompuesto->getFestivo() == 1) {
+                    $intDiasFestivos = 2;
+                }
+                $intTotalDias = $intDiasOrdinarios + $intDiasSabados + $intDiasDominicales + $intDiasFestivos;
+                $intHorasRealesDiurnas = $arContratoDetalleCompuesto->getConceptoRel()->getHorasDiurnas() * $intTotalDias;
+                $intHorasRealesNocturnas = $arContratoDetalleCompuesto->getConceptoRel()->getHorasNocturnas() * $intTotalDias;
+            }
+
+            $douHoras = ($intHorasRealesDiurnas + $intHorasRealesNocturnas) * $arContratoDetalleCompuesto->getCantidad();
+            $arContratoDetalleCompuestoActualizar = $em->getRepository(TurContratoDetalleCompuesto::class)->find($arContratoDetalleCompuesto->getCodigoContratoDetalleCompuestoPk());
+            $floValorBaseServicio = $arContratoDetalle->getVrSalarioBase() * $arContratoDetalle->getContratoRel()->getSectorRel()->getPorcentaje();
+            if ($arContratoDetalle->getContratoRel()->getCodigoSectorFk() == 'RES' && $arContratoDetalle->getContratoRel()->getEstrato() >= 4) {
+                $porcentajeModalidad = $arContratoDetalleCompuesto->getModalidadRel()->getPorcentajeEspecial();
+            } else {
+                $porcentajeModalidad = $arContratoDetalleCompuesto->getModalidadRel()->getPorcentaje();
+            }
+            $floValorBaseServicioMes = $floValorBaseServicio + ($floValorBaseServicio * $porcentajeModalidad / 100);
+            $floVrHoraDiurna = ((($floValorBaseServicioMes * 55.97) / 100) / 30) / 15;
+            $floVrHoraNocturna = ((($floValorBaseServicioMes * 44.03) / 100) / 30) / 9;
+
+            $precio = ($intHorasRealesDiurnas * $floVrHoraDiurna) + ($intHorasRealesNocturnas * $floVrHoraNocturna);
+            $precio = round($precio);
+            $floVrMinimoServicio = $precio;
+            if ($arContratoDetalleCompuestoActualizar->getVrPrecioAjustado() != 0) {
+                $floVrServicio = $arContratoDetalleCompuestoActualizar->getVrPrecioAjustado() * $arContratoDetalleCompuesto->getCantidad();
+                $precio = $arContratoDetalleCompuestoActualizar->getVrPrecioAjustado();
+            } else {
+                $floVrServicio = $floVrMinimoServicio * $arContratoDetalleCompuestoActualizar->getCantidad();
+            }
+            $subTotalDetalle = $floVrServicio;
+            $baseAiuDetalle = $subTotalDetalle * $arContratoDetalle->getPorcentajeBaseIva() / 100;
+            $duoTotalBaseAiuDetalle += $baseAiuDetalle;
+            $ivaDetalle = $baseAiuDetalle * $arContratoDetalleCompuesto->getPorcentajeIva() / 100;
+            $duoTotalIvaDetalle += $ivaDetalle;
+            $totalDetalle = $subTotalDetalle + $ivaDetalle;
+
+
+            $arContratoDetalleCompuestoActualizar->setVrSubtotal($subTotalDetalle);
+            $arContratoDetalleCompuestoActualizar->setVrBaseAiu($baseAiuDetalle);
+            $arContratoDetalleCompuestoActualizar->setVrIva($ivaDetalle);
+            $arContratoDetalleCompuestoActualizar->setVrTotalDetalle($totalDetalle);
+            $arContratoDetalleCompuestoActualizar->setVrPrecioMinimo($floVrMinimoServicio);
+            $arContratoDetalleCompuestoActualizar->setVrPrecio($precio);
+
+            $arContratoDetalleCompuestoActualizar->setHoras($douHoras);
+            $arContratoDetalleCompuestoActualizar->setHorasDiurnas($intHorasRealesDiurnas);
+            $arContratoDetalleCompuestoActualizar->setHorasNocturnas($intHorasRealesNocturnas);
+            $arContratoDetalleCompuestoActualizar->setDias($intDias);
+
+            $em->persist($arContratoDetalleCompuestoActualizar);
+            $douTotalHoras += $douHoras;
+            $douTotalHorasDiurnas += $intHorasRealesDiurnas;
+            $douTotalHorasNocturnas += $intHorasRealesNocturnas;
+            $douTotalMinimoServicio += $floVrMinimoServicio;
+            $douTotalServicio += $floVrServicio;
+            $intCantidad++;
+        }
+
+        $arContratoDetalle->setHoras($douTotalHoras);
+        $arContratoDetalle->setHorasDiurnas($douTotalHorasDiurnas);
+        $arContratoDetalle->setHorasNocturnas($douTotalHorasNocturnas);
+        $arContratoDetalle->setVrPrecioMinimo($douTotalMinimoServicio);
+        $subtotal = $douTotalServicio;
+        $total = $subtotal + $duoTotalIvaDetalle;
+        $arContratoDetalle->setVrSubtotal($subtotal);
+        $arContratoDetalle->setVrBaseAiu($duoTotalBaseAiuDetalle);
+        $arContratoDetalle->setVrIva($duoTotalIvaDetalle);
+        $arContratoDetalle->setVrTotalDetalle($total);
+        $em->persist($arContratoDetalle);
+        $em->flush();
+        return true;
     }
 
 }

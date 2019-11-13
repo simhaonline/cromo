@@ -274,6 +274,41 @@ class PedidoController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/turno/movimiento/venta/pedido/detalle/compuesto/{codigoPedidoDetalle}", name="turno_movimiento_venta_pedido_detalle_compuesto")
+     */
+    public function detalleCompuesto(Request $request,PaginatorInterface $paginator,$codigoPedidoDetalle){
+        $em = $this->getDoctrine()->getManager();
+        $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
+        $arPedido = $em->getRepository(TurPedido::class)->find($arPedidoDetalle->getCodigoPedidoFk());
+        $form = $this->createFormBuilder()
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('btnActualizar', SubmitType::class, array('label' => 'Actualizar'))
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->get('btnActualizar')->isClicked()) {
+                $arrControles = $request->request->All();
+                $this->actualizarDetalleCompuesto($arrControles, $codigoPedidoDetalle, $arPedidoDetalle->getCodigoPedidoFk());
+                return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle_compuesto', array('codigoPedidoDetalle' => $codigoPedidoDetalle)));
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TurPedidoDetalleCompuesto::class)->eliminar($arrSeleccionados);
+                $em->getRepository(TurPedidoDetalle::class)->liquidar($codigoPedidoDetalle);
+                $em->getRepository(TurPedido::class)->liquidar($arPedido);
+                return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle_compuesto', array('codigoPedidoDetalle' => $codigoPedidoDetalle)));
+            }
+        }
+        $arPedidoDetallesCompuestos = $paginator->paginate($em->getRepository(TurPedidoDetalleCompuesto::class)->lista($codigoPedidoDetalle), $request->query->getInt('page', 1), 30);
+        return $this->render('turno/movimiento/juridico/contrato/contratoCompuesto.html.twig', [
+            'arPedido' => $arPedido,
+            'arPedidoDetalle' => $arPedidoDetalle,
+            'arPedidoDetallesCompuestos' => $arPedidoDetallesCompuestos,
+            'form' => $form->createView(),
+        ]);
+    }
 
     public function exportarExcelPersonalizado($arPedidos){
         set_time_limit(0);

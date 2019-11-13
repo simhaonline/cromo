@@ -1,0 +1,147 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label for="txtCodigoConductor" class="col-sm-1 control-label">Empleado:</label>
+                        <div class="col-sm-11">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.codigoEmpleadoFk) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        {{ form_widget(form.txtNombreCorto) }}
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado',
+                                                   { 'campoCodigo': 'form_codigoEmpleadoFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="col-sm-1 control-label">Fecha:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.fecha, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnValidar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>COD</th>
+            <th>EMPLADO</th>
+            <th>TIPO</th>
+            <th>AÑO</th>
+            <th>MES</th>
+            <th>D.PRO</th>
+            <th>D.RHU</th>
+            <th class="col-sm-1"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arInconsistencia in arInconsistencias %}
+            <tr>
+                <td class="col-sm-1">{{ arInconsistencia.codigoNovedadInconsistenciaPk }}</td>
+                <td class="col-sm-1 text-center">{{ arInconsistencia.codigoEmpleado }}</td>
+                <td>{{ arInconsistencia.nombreCorto  ~ " (" ~  arInconsistencia.numeroIdentificacion ~ ") "}}</td>
+                <td class="col-sm-1">{{ arInconsistencia.tipo }}</td>
+                <td class="col-sm-1">{{ arInconsistencia.fechaDesde|date("Y") }}</td>
+                <td class="col-sm-1">{{ arInconsistencia.fechaHasta|date("m") }}</td>
+                <td class="col-sm-1 text-center">
+                    <a href="javascript:abrirVentana3('{{ path('turno_utilidad_importar_programacion_empleado',
+                        {'codigoEmpleado': arInconsistencia.codigoEmpleado,
+                        'fechaDesde' : arInconsistencia.fechaDesde|date("Y-m-d") }) }}', 'Consultar programacionRecurso', 600, 600)">
+                        {{ arInconsistencia.diasProgramacion }}
+                    </a>
+                </td>
+                <td class="col-sm-1 text-center">
+                    {% if  arInconsistencia.diasRHU > 0 and arInconsistencia.tipo == tipoIncapacidad %}
+                        <a href="javascript:abrirVentana3('{{ path('turno_utilidad_importar_incapacidades_novedades_contrato',
+                            {'codigoEmpleado': arInconsistencia.codigoEmpleado,
+                                'desde': arInconsistencia.fechaDesde|date("Y-m-d") ,
+                                'hasta': arInconsistencia.fechaDesde|date("Y-m-d") ,
+                                'contrato': arInconsistencia.codigoContrato,
+                            }) }}', 'Consultar contrato recurso', 600, 1200)">
+                            {{ arInconsistencia.diasRHU }}
+                        </a>
+                    {% elseif arInconsistencia.diasRHU > 0 and arInconsistencia.tipo == tipoLicencia %}
+                            <a href="javascript:abrirVentana3('{{ path('turno_utilidad_importar_licencias_novedades_contrato',
+                                {'codigoEmpleado': arInconsistencia.codigoEmpleado,
+                                    'desde': arInconsistencia.fechaDesde|date("Y-m-d") ,
+                                    'hasta': arInconsistencia.fechaDesde|date("Y-m-d") ,
+                                    'contrato': arInconsistencia.codigoContrato,
+                                }) }}', 'Consultar contrato recurso', 600, 1200)">
+                                {{ arInconsistencia.diasRHU }}
+                            </a>
+
+                    {% elseif arInconsistencia.diasRHU > 0 and arInconsistencia.tipo == tipoVacacion %}
+                        <a href="javascript:abrirVentana3('{{ path('turno_utilidad_importar_vacaciones_novedades_contrato',
+                            {'codigoEmpleado': arInconsistencia.codigoEmpleado,
+                                'desde': arInconsistencia.fechaDesde|date("Y-m-d") ,
+                                'hasta': arInconsistencia.fechaDesde|date("Y-m-d") ,
+                                'contrato': arInconsistencia.codigoContrato,
+                            }) }}', 'Consultar contrato recurso', 600, 1200)">
+                            {{ arInconsistencia.diasRHU }}
+                        </a>
+                    {% elseif arInconsistencia.tipo == tipoIngreso %}
+                        <a href="javascript:abrirVentana3('{{ path('turno_utilidad_programacion_importar_novadades_empleado_contrato', {'codigoEmpleado': arInconsistencia.codigoEmpleado }) }}', 'Consultar contrato recurso', 600, 1200)">
+                            {{ arInconsistencia.diasRHU }}
+                        </a>
+                        <a href="">{{ arInconsistencia.diasRHU }}</a>
+                    {% elseif arInconsistencia.tipo == tipoRetiro %}
+                        <a href="javascript:abrirVentana3('{{ path('turno_utilidad_programacion_importar_novadades_empleado_contrato', {'codigoEmpleado': arInconsistencia.codigoEmpleado }) }}', 'Consultar contrato recurso', 600, 1200)">
+                            {{ arInconsistencia.diasRHU }}
+                        </a>
+                    {% else %}
+                        {{ arInconsistencia.diasRHU }}
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if arInconsistencia.diasRHU > arInconsistencia.diasProgramacion and arInconsistencia.bloquearImportacion == false %}
+                        <button class="btn-default btn btn-xs"
+                                value="{{ arInconsistencia.codigoNovedadInconsistenciaPk }}" name="btnImportar">
+                            Importar
+                        </button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arInconsistencias.getTotalItemCount }}
+                </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arInconsistencias) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    {{ form_end(form) }}
+    <br/><br/><br/>
+{% endblock %}

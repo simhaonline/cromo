@@ -5,9 +5,16 @@ namespace App\Repository\Turno;
 
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Crm\CrmVisita;
+use App\Entity\RecursoHumano\RhuContrato;
+use App\Entity\RecursoHumano\RhuIncapacidad;
+use App\Entity\RecursoHumano\RhuLicencia;
+use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Turno\TurConcepto;
+use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurFestivo;
+use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\Turno\TurNovedadInconsistencia;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurProgramacion;
@@ -461,5 +468,822 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
         }
         return $arrValidacionTurnos;
     }
+
+    /**
+     * @param \DateTime $fecha
+     * @param $recurso
+     * @param $tipoFiltro
+     * @param FormInterface $form
+     * @param $username
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function validarNovedadesRecursoHumano($fecha, $recurso, $tipoFiltro, $form, $username)
+    {
+        # filtros
+        $conVacaciones = $tipoFiltro['vacacion'];
+        $conIncapacidades = $tipoFiltro['incapacidad'];
+        $conLicencias = $tipoFiltro['licencia'];
+        $conIngresos = $tipoFiltro['ingresosRetiros'] ? $form->get("ChkIngresos")->getData() : false;
+        $conRetiros = $tipoFiltro['ingresosRetiros'] ? $form->get("ChkRetiros")->getData() : false;
+
+        $session = new Session();
+        $session->set("chk-ingresos", $conIngresos);
+        $session->set("chk-retiros", $conRetiros);
+
+        $session->set("txt-recurso", $recurso);
+        $session->set("fecha-novedad", $fecha);
+        $session->set("txt-nombre-recurso", $form->get("txtNombreCorto")->getData());
+
+        $anio = $fecha->format("Y");
+        $mes = $fecha->format("m");
+
+        $em = $this->getEntityManager();
+        # Limpiamos la tabla.
+        $qb = $em->createQueryBuilder();
+        $qb->delete(TurNovedadInconsistencia::class, "n")
+            ->where("n.usuario='{$username}'");
+
+        if ($tipoFiltro['vacacion']) {
+            $qb->andWhere("n.tipo = 'vacacion'");
+        } else if ($tipoFiltro["licencia"]) {
+            $qb->andWhere("n.tipo = 'licencia'");
+        } else if ($tipoFiltro['incapacidad']) {
+            $qb->andWhere("n.tipo = 'incapacidad'");
+        } else {
+            $qb->andWhere("n.tipo = 'ingreso' OR n.tipo = 'retiro'");
+        }
+        $qb->getQuery()->execute();
+        # Construimos la consulta que se encargará de traernos todos los turnos.
+        $diasTurnos = [];
+        $joins = [];
+        for ($i = 1; $i <= 31; $i++) {
+            $diasTurnos[] = "SUM(rel_dia{$i}.vacacion) AS es_vacacion_d_{$i}";
+            $diasTurnos[] = "SUM(rel_dia{$i}.incapacidad) AS es_incapacidad_d_{$i}";
+            $diasTurnos[] = "SUM(rel_dia{$i}.licencia) AS es_licencia_d_{$i}";
+            $diasTurnos[] = "SUM(rel_dia{$i}.licencia_no_remunerada) AS es_licencia_nr_d_{$i}";
+            $diasTurnos[] = "SUM(rel_dia{$i}.ingreso) AS es_ingreso_d_{$i}";
+            $diasTurnos[] = "SUM(rel_dia{$i}.retiro) AS es_retiro_d_{$i}";
+            $diasTurnos[] = "SUM(rel_dia{$i}.ausentismo) AS es_ausentismo_d_{$i}";
+            $joins[] = "LEFT JOIN tur_turno rel_dia{$i} ON rel_dia{$i}.codigo_turno_pk = p.dia_{$i}";
+        }
+        $sql = "SELECT p.codigo_empleado_fk, " . implode(', ', $diasTurnos) . " FROM " .
+            " tur_programacion p " .
+            " " . implode(' ', $joins) . " " .
+            " LEFT JOIN rhu_empleado e ON e.codigo_empleado_pk = p.codigo_empleado_fk" .
+            " WHERE p.anio = '{$anio}' AND p.mes = '{$mes}'";
+        if (!empty($recurso)) {
+            $sql .= " AND (e.codigo_empleado_pk = '{$recurso}' OR e.numero_identificacion = '{$recurso}') ";
+        } else {
+            $session->remove("txt-nombre-recurso");
+            $session->remove("txt-recurso");
+        }
+        $sql .= " GROUP BY p.codigo_empleado_fk ORDER BY p.codigo_empleado_fk ";
+        $connection = $em->getConnection();
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+        $programaciones = $statement->fetchAll();
+        set_time_limit(0);
+        ini_set('memory_limit', -1);
+        $fechaDesde = date_create($fecha->format("Y-m-01"));
+        $fechaHasta = date_create($fecha->format("Y-m-t"));
+        $mensajesError = [];
+
+        foreach ($programaciones AS $programacion) {
+            $diasIncapacidad = 0;
+            $diasVacaciones = 0;
+            $diasLicencias = 0;
+            $diasIngreso = 0;
+            $diasIncapacidadRHU = 0;
+            $diasVacacionesRHU = 0;
+            $diasLicenciasRHU = 0;
+            $diasIngresosRHU = 0;
+            $diasRetiro = 0;
+            $diasRetiroRHU = 0;
+
+            # Si la programación no tiene recurso.
+            if ($programacion['codigo_empleado_fk'] == "") {
+                continue;
+            }
+
+            $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($programacion['codigo_empleado_fk']);
+            $arContrato = $em->getRepository(RhuContrato::class)->findOneBy([
+                'codigoEmpleadoFk' => $arEmpleado->getCodigoEmpleadoPk(),
+                'estadoTerminado' => false
+            ]);
+            # Analizamos los días en programación.
+            for ($i = 1; $i <= 31; $i++) {
+                if ($conIncapacidades) {
+                    $diasIncapacidad += $programacion["es_incapacidad_d_{$i}"] != 0 ? $programacion["es_incapacidad_d_{$i}"] : 0;
+                }
+                if ($conVacaciones) {
+                    $diasVacaciones += $programacion["es_vacacion_d_{$i}"] != 0 ? $programacion["es_vacacion_d_{$i}"] : 0;
+                }
+                if ($conLicencias) {
+                    $diasLicencias += $programacion["es_licencia_d_{$i}"] != 0 ? $programacion["es_licencia_d_{$i}"] : 0;
+                    $diasLicencias += $programacion["es_licencia_nr_d_{$i}"] != 0 ? $programacion["es_licencia_nr_d_{$i}"] : 0;
+                    $diasLicencias += $programacion["es_ausentismo_d_{$i}"] != 0 ? $programacion["es_ausentismo_d_{$i}"] : 0;
+                }
+                if ($conIngresos) {
+                    $diasIngreso += $programacion["es_ingreso_d_{$i}"] != 0 ? $programacion["es_ingreso_d_{$i}"] : 0;
+                }
+                if ($conRetiros) {
+                    $diasRetiro += $programacion["es_retiro_d_{$i}"] != 0 ? $programacion["es_retiro_d_{$i}"] : 0;
+                }
+            }
+
+            if ($arContrato == null && $arEmpleado->getCodigoContratoUltimoFk()) {
+                $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoUltimoFk());
+            }
+
+            # Si definitivamente el recurso no tiene contrato, entonces no continuamos
+            # con las validaciones y lo reportamos como error.
+            if ($arContrato == null) {
+                $mensajesError[] = $arEmpleado->getNumeroIdentificacion() . " Sin contrato";
+                continue; # Se detiene la ejecucion del loop.
+            }
+            $arNovedadInconsistencia = new TurNovedadInconsistencia();
+            $arNovedadInconsistencia->setCodigoEmpleado($arEmpleado->getCodigoEmpleadoPK());
+            $arNovedadInconsistencia->setNombreCorto($arEmpleado->getNombreCorto());
+            $arNovedadInconsistencia->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
+            $arNovedadInconsistencia->setUsuario($username);
+            $arNovedadInconsistencia->setBloquearImportacion(false);
+            $arNovedadInconsistencia->setFechaDesde($fechaDesde);
+            $arNovedadInconsistencia->setFechaHasta($fechaHasta);
+            $arNovedadInconsistencia->setCodigoContrato($arContrato->getCodigoContratoPk());
+
+            # Analizamos los días en rhu
+            if ($conIncapacidades) {
+                $this->getDiasRecurso(TurNovedadInconsistencia::TP_INCAPACIDAD, $arEmpleado, $arContrato, $fecha, $diasIncapacidadRHU, $arNovedadInconsistencia);
+            }
+            if ($conVacaciones) {
+                $this->getDiasRecurso(TurNovedadInconsistencia::TP_VACACION, $arEmpleado, $arContrato, $fecha, $diasVacacionesRHU, $arNovedadInconsistencia);
+            }
+            if ($conLicencias) {
+                 $this->getDiasRecurso(TurNovedadInconsistencia::TP_LICENCIA, $arEmpleado, $arContrato, $fecha, $diasLicenciasRHU, $arNovedadInconsistencia);
+            }
+            if ($conIngresos) {
+                $this->getDiasRecurso(TurNovedadInconsistencia::TP_INGRESO, $arEmpleado, $arContrato, $fecha, $diasIngresosRHU, $arNovedadInconsistencia);
+            }
+            if ($conRetiros) {
+                $bloquear = !$this->getDiasRecurso(TurNovedadInconsistencia::TP_RETIRO, $arEmpleado, $arContrato, $fecha, $diasRetiroRHU, $arNovedadInconsistencia);
+                $arNovedadInconsistencia->setBloquearImportacion($bloquear);
+            }
+            if ($conLicencias && ($diasLicencias > 0 || $diasLicenciasRHU > 0) && ($diasLicenciasRHU != $diasLicencias)) {
+                $arNovedadInconsistencia->setTipo(TurNovedadInconsistencia::TP_LICENCIA);
+                $arNovedadInconsistencia->setDiasProgramacion($diasLicencias);
+                $arNovedadInconsistencia->setDiasRHU($diasLicenciasRHU);
+                $em->persist($arNovedadInconsistencia);
+            }
+
+            if ($conVacaciones && ($diasVacaciones > 0 || $diasVacacionesRHU > 0) && ($diasVacaciones != $diasVacacionesRHU)) {
+                $arNovedadInconsistencia->setTipo(TurNovedadInconsistencia::TP_VACACION);
+                $arNovedadInconsistencia->setDiasProgramacion($diasVacaciones);
+                $arNovedadInconsistencia->setDiasRHU($diasVacacionesRHU);
+                $em->persist($arNovedadInconsistencia);
+            }
+
+            if ($conIncapacidades && ($diasIncapacidad > 0 || $diasIncapacidadRHU > 0) && ($diasIncapacidadRHU != $diasIncapacidad)) {
+                $arNovedadInconsistencia->setTipo(TurNovedadInconsistencia::TP_INCAPACIDAD);
+                $arNovedadInconsistencia->setDiasProgramacion($diasIncapacidad);
+                $arNovedadInconsistencia->setDiasRHU($diasIncapacidadRHU);
+                $em->persist($arNovedadInconsistencia);
+            }
+
+            if ($conIngresos && ($diasIngreso > 0 || $diasIngresosRHU > 0) && ($diasIngresosRHU != $diasIngreso)) {
+                $arNovedadInconsistencia->setTipo(TurNovedadInconsistencia::TP_INGRESO);
+                $arNovedadInconsistencia->setDiasProgramacion($diasIngreso);
+                $arNovedadInconsistencia->setDiasRHU($diasIngresosRHU);
+                $em->persist($arNovedadInconsistencia);
+            }
+
+            if ($conRetiros && ($diasRetiro > 0 || $diasRetiroRHU > 0) && ($diasRetiroRHU != $diasRetiro)) {
+                $arNovedadInconsistencia->setTipo(TurNovedadInconsistencia::TP_RETIRO);
+                $arNovedadInconsistencia->setDiasProgramacion($diasRetiro);
+                $arNovedadInconsistencia->setDiasRHU($diasRetiroRHU);
+                $em->persist($arNovedadInconsistencia);
+            }
+        }
+        $em->flush();
+        # Validamos si hubo algun error.
+        if (count($mensajesError) > 0) {
+            Mensajes::error( implode("<br>", $mensajesError));
+        }
+    }
+
+    /**
+     * @param string $tipo
+     * @param RhuContrato $arContrato
+     * @param \DateTime $fecha Periodo para el cual se esta ejecutando el analisis.
+     * @param TurNovedadInconsistencia $arNovedadInconsistencia
+     * @var $arRecurso TurRecurso
+     */
+    private function getDiasRecurso($tipo, $arEmpleado, $arContrato, $fecha, &$dias, &$arNovedadInconsistencia)
+    {
+        $em = $this->getEntityManager();
+        # Si no hay contrato impedimos que la función continue.
+        if ($arContrato == null && $tipo != TurNovedadInconsistencia::TP_RETIRO) {
+            return false;
+        }
+
+        $fechaIngreso = $arContrato->getFechaDesde();
+        $fechaDesde = date_create($fecha->format("Y-m-01"));
+        $fechaHasta = date_create($fecha->format("Y-m-t"));
+        if ($tipo == TurNovedadInconsistencia::TP_INCAPACIDAD) {
+            $intDiasIncapacidad = intval($em->getRepository(RhuIncapacidad::class)->diasIncapacidadPeriodo31($fechaDesde, $fechaHasta, $arEmpleado->getCodigoEmpleadoPk()));
+            $dias += $intDiasIncapacidad;
+        } else if ($tipo == TurNovedadInconsistencia::TP_LICENCIA) {
+            $intDiasLicencia = intval($em->getRepository(RhuLicencia::class)->diasLicenciaPeriodo31($fechaDesde, $fechaHasta, $arEmpleado->getCodigoEmpleadoPk()));
+            $dias += $intDiasLicencia;
+        } else if ($tipo == TurNovedadInconsistencia::TP_VACACION) {
+            $arrVacaciones = $em->getRepository(RhuVacacion::class)->dias($arEmpleado->getCodigoEmpleadoPk(), "", $fechaDesde, $fechaHasta);
+            $dias += intval($arrVacaciones['dias']);
+        } else if ($tipo == TurNovedadInconsistencia::TP_INGRESO) {
+            if ($fechaIngreso == "") {
+                return false;
+            }
+            $intFechaIngreso = strtotime($fechaIngreso->format("Y-m-d"));
+            $intFechaActual = strtotime($fecha->format("Y-m-01"));
+            if ($intFechaIngreso > $intFechaActual) {
+                $fechaA = new \DateTime($fechaIngreso->format("Y-m-d"));
+                $fechaB = new \DateTime($fecha->format("Y-m-01"));
+                $codigoUltimoContrato = $arEmpleado->getCodigoContratoUltimoFk();
+                if ($codigoUltimoContrato) {
+                    $arContratoUltimo = $em->getRepository(RhuContrato::class)->find($codigoUltimoContrato);
+                    if ($fecha->format("Y-m") == $arContratoUltimo->getFechaHasta()->format("Y-m")) {
+                        $diaInicio = (string)($arContratoUltimo->getFechaHasta()->format("d") + 1);
+                        $diaInicio = $diaInicio > 31 ? 31 : $diaInicio;
+                        $fechaB = new \DateTime($fecha->format("Y-m-{$diaInicio}"));
+                        $arNovedadInconsistencia->setFechaDesde($fechaB);
+                    }
+                }
+                $dias += intval($fechaA->diff($fechaB)->format("%a"));
+            }
+        } else if ($tipo == TurNovedadInconsistencia::TP_RETIRO && ($arContrato->getEstadoTerminado())) {
+            $fechaRetiro = $arContrato->getFechaHasta();
+            $mesActual = new \DateTime($fecha->format("Y-m-01"));
+            $fechaFinMes = new \DateTime($fecha->format("Y-m-t"));
+            $mesAVerificar = intval($fecha->format("m"));
+            $mesRetiro = intval($fechaRetiro->format("m"));
+
+            # Solucion error al importar retiros que no corresponden al mes actual.
+            if ($mesRetiro > $mesAVerificar) {
+                return false;
+            }
+            if ($fechaRetiro < $mesActual) { # Pendiente validar si el dia del retiro se marca o no
+                return false;
+            }
+            $diferencia = $fechaRetiro->diff($fechaFinMes);
+            $dias = intval($diferencia->format("%a"));
+        }
+        return true;
+    }
+
+    /**
+     * @param integer $idNovedadInconsistencia
+     */
+    public function importarNovedad($idNovedadInconsistencia)
+    {
+        $respuesta = "";
+        $em = $this->getEntityManager();
+        $arNovedadInconsistencia = $em->getRepository(TurNovedadInconsistencia::class)->find($idNovedadInconsistencia);
+        if ($arNovedadInconsistencia) {
+            $fechaDesde = $arNovedadInconsistencia->getFechaDesde();
+            $fechaHasta = $arNovedadInconsistencia->getFechaHasta();
+            $desde = $fechaDesde->format("Y-m-d");
+            $hasta = $fechaHasta->format("Y-m-d");
+            $mes = $fechaDesde->format("m");
+            $anio = $fechaDesde->format("Y");
+
+            $tipo = $arNovedadInconsistencia->getTipo();
+            if ($tipo == TurNovedadInconsistencia::TP_INCAPACIDAD) {
+                $this->importarIncapacidad($arNovedadInconsistencia, $desde, $hasta, $mes, $anio);
+            } else if ($tipo == TurNovedadInconsistencia::TP_VACACION) {
+                $this->importarVacacion($arNovedadInconsistencia, $desde, $hasta, $mes, $anio);
+            } else if ($tipo == TurNovedadInconsistencia::TP_LICENCIA) {
+                $this->importarLicencia($arNovedadInconsistencia, $desde, $hasta, $mes, $anio);
+            } else if ($tipo == TurNovedadInconsistencia::TP_INGRESO) {
+                $this->importarIngresos($arNovedadInconsistencia, $desde, $hasta, $mes, $anio);
+            } else if ($tipo == TurNovedadInconsistencia::TP_RETIRO) {
+                $this->importarRetiros($arNovedadInconsistencia, $desde, $hasta, $mes, $anio);
+            }
+        } else {
+            $respuesta = "Ha ocurrido un error con la inconsistencia, porfavor verifique los filtros";
+        }
+        return $respuesta;
+    }
+
+    /**
+     * @param TurNovedadInconsistencia $arNovedadInconsistencia
+     * @param $desde
+     * @param $hasta
+     * @param $mes
+     * @param $anio
+     * @return bool
+     */
+    private function importarIngresos($arNovedadInconsistencia, $desde, $hasta, $mes, $anio)
+    {
+        $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
+//        $diaBloqueoPeriodoProgramacion = $em->getRepository(TurCierreProgramacionPeriodo::class)->getDiaHastaBloqueo($anio, $mes);
+        $turnoIngreso = $arConfiguracion->getTurnoIngreso();
+
+        # Listamos las programaciones
+        $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy([
+            'codigoEmpleadoFk' => $arNovedadInconsistencia->getCodigoRecursoFk(),
+            'mes' => $mes,
+            'anio' => $anio,
+        ], ['horas' => 'DESC']);
+
+        $primeraFila = true;
+        $diaIni = $arNovedadInconsistencia->getFechaDesde()->format("j");
+        $diaFin = $arNovedadInconsistencia->getDiasRHU();
+        if ($diaIni > $diaFin) {
+            $arContrato = $em->getRepository(RhuContrato::class)->find($arNovedadInconsistencia->getCodigoContratoFK());
+            $diaFin = $arContrato->getFechaDesde()->format("j") - 1;
+        }
+
+        foreach ($arProgramaciones AS $arProgramacion) {
+            $horasDiurnas = $arProgramacion->getHorasDiurnas();
+            $horasNocturnas = $arProgramacion->getHorasNocturnas();
+            $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($arProgramacion->getCodigoPedidoDetalleFk());
+            $horasDP = $arPedidoDetalle->getHorasDiurnasProgramadas();
+            $horasNP = $arPedidoDetalle->getHorasNocturnasProgramadas();
+            for ($i = $diaIni; $i <= $diaFin; $i++) {
+                if ($i > $diaBloqueoPeriodoProgramacion) {
+                    $codigoTurnoActual = call_user_func_array([$arProgramacion, "getDia{$i}"], []);
+                    if ($codigoTurnoActual != "") {
+                        $arTurno = $em->getRepository("BrasaTurnoBundle:TurTurno")->find($codigoTurnoActual);
+                        if ($arTurno) {
+                            $horasNocturnas -= $arTurno->getHorasNocturnas();
+                            $horasDiurnas -= $arTurno->getHorasDiurnas();
+                            $horasDP -= $arTurno->getHorasDiurnas();
+                            $horasNP -= $arTurno->getHorasNocturnas();
+                        }
+                    }
+                    if ($primeraFila) {
+                        call_user_func_array([$arProgramacion, "setDia{$i}"], [$turnoIngreso]);
+                    } else {
+                        call_user_func_array([$arProgramacion, "setDia{$i}"], [null]);
+                    }
+                    if ($codigoTurnoActual != $turnoIngreso) {
+                        call_user_func_array([$arProgramacion, "setDiaN{$i}"], [$codigoTurnoActual]);
+                    }
+                }
+            }
+            $primeraFila = false;
+
+            # Almacenamos la programación.
+            $arPedidoDetalle->setHorasDiurnasProgramadas($horasDP);
+            $arPedidoDetalle->setHorasNocturnasProgramadas($horasNP);
+            $arPedidoDetalle->setHorasProgramadas($horasDP + $horasNP);
+
+            $arProgramacion->setHorasDiurnas($horasDiurnas);
+            $arProgramacion->setHorasNocturnas($horasNocturnas);
+            $arProgramacion->setHoras($horasDiurnas + $horasNocturnas);
+
+            $em->persist($arPedidoDetalle);
+            $em->persist($arProgramacion);
+        }
+        $em->remove($arNovedadInconsistencia);
+        $em->flush();
+        return true;
+    }
+
+    /**
+     * @param \Brasa\TurnoBundle\Entity\TurNovedadInconsistencia $arNovedadInconsistencia
+     * @param $desde
+     * @param $hasta
+     * @param $mes
+     * @param $anio
+     * @return bool
+     */
+    private function importarRetiros($arNovedadInconsistencia, $desde, $hasta, $mes, $anio)
+    {
+        $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
+        $diaBloqueoPeriodoProgramacion = $em->getRepository(TurCierreProgramacionPeriodo::class)->getDiaHastaBloqueo($anio, $mes);
+        $turnoRetiro = $arConfiguracion->getTurnoRetiro();
+
+        # Listamos las programaciones
+        $arProgramaciones = $em->getRepository("BrasaTurnoBundle:TurProgramacionDetalle")->findBy([
+            'codigoRecursoFk' => $arNovedadInconsistencia->getCodigoRecursoFk(),
+            'mes' => $mes,
+            'anio' => $anio,
+        ], ['horas' => 'DESC']);
+
+        $primeraFila = true;
+        $arContrato = $em->getRepository(RhuContrato::class)->find($arNovedadInconsistencia->getCodigoContratoFK());
+        $fechaRetiro = $arContrato->getFechaHasta();
+        $arRecurso = $arNovedadInconsistencia->getRecursoRel();
+        foreach ($arProgramaciones AS $arProgramacion) {
+            $intFechaRet = strtotime($fechaRetiro->format("Y-m-d"));
+            $intFechaConsulta = strtotime($desde);
+            $intFechaRetHasta = strtotime($arNovedadInconsistencia->getFechaHasta()->format('Y-m-d'));
+            $intFechaConsultaHasta = strtotime($hasta);
+
+            $fechaRetiro = $arContrato->getFechaHasta();
+
+            if ($intFechaRet < $intFechaConsulta) {
+                $diaIni = $arNovedadInconsistencia->getFechaDesde()->format("j");
+            } else {
+                $diaIni = intval($arContrato->getFechaHasta()->format('d')) + 1;
+            }
+            if ($intFechaRetHasta > $intFechaConsultaHasta) {
+                $diaFin = $arNovedadInconsistencia->getFechaHasta()->format("j");
+            } else {
+                $diaFin = intval($arNovedadInconsistencia->getFechaHasta()->format('d'));
+            }
+
+            $horasDiurnas = $arProgramacion->getHorasDiurnas();
+            $horasNocturnas = $arProgramacion->getHorasNocturnas();
+            $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($arProgramacion->getCodigoPedidoDetalleFk());
+            $horasDP = $arPedidoDetalle->getHorasDiurnasProgramadas();
+            $horasNP = $arPedidoDetalle->getHorasNocturnasProgramadas();
+
+            for ($i = $diaIni; $i <= $diaFin; $i++) {
+                if ($i > $diaBloqueoPeriodoProgramacion) {//Si el periodo esta bloqueado no se hace nada
+                    $codigoTurnoActual = call_user_func_array([$arProgramacion, "getDia{$i}"], []);
+                    if ($turnoRetiro == "") {
+                        continue;
+                    }
+                    if ($codigoTurnoActual != "") {
+                        $arTurno = $em->getRepository(TurTurno::class)->find($codigoTurnoActual);
+                        if ($arTurno) {
+                            $horasNocturnas -= $arTurno->getHorasNocturnas();
+                            $horasDiurnas -= $arTurno->getHorasDiurnas();
+                            $horasDP -= $arTurno->getHorasDiurnas();
+                            $horasNP -= $arTurno->getHorasNocturnas();
+                        }
+                    }
+                    if ($primeraFila) {
+                        call_user_func_array([$arProgramacion, "setDia{$i}"], [$turnoRetiro]);
+                    } else {
+                        call_user_func_array([$arProgramacion, "setDia{$i}"], [null]);
+                    }
+                    call_user_func_array([$arProgramacion, "setDiaN{$i}"], [$codigoTurnoActual]);
+                }
+            }
+
+            $primeraFila = false;
+            # Almacenamos la programación.
+            $arPedidoDetalle->setHorasDiurnasProgramadas($horasDP);
+            $arPedidoDetalle->setHorasNocturnasProgramadas($horasNP);
+            $arPedidoDetalle->setHorasProgramadas($horasDP + $horasNP);
+
+            $arProgramacion->setHorasDiurnas($horasDiurnas);
+            $arProgramacion->setHorasNocturnas($horasNocturnas);
+            $arProgramacion->setHoras($horasDiurnas + $horasNocturnas);
+            $em->persist($arPedidoDetalle);
+            $em->persist($arProgramacion);
+        }
+        $em->remove($arNovedadInconsistencia);
+        $em->flush();
+        return true;
+    }
+
+    /**
+     * @param TurNovedadInconsistencia $arNovedadInconsistencia
+     * @param $desde
+     * @param $hasta
+     * @param $mes
+     * @param $anio
+     * @return bool
+     */
+    private function importarIncapacidad($arNovedadInconsistencia, $desde, $hasta, $mes, $anio)
+    {
+        $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
+        $diaBloqueoPeriodoProgramacion = $em->getRepository(TurCierreProgramacionPeriodo::class)->getDiaHastaBloqueo($anio, $mes);
+        $turnoIncapacidad = $arConfiguracion->getTurnoIncapacidad();
+        $qb = $em->createQueryBuilder();
+        $qb->from("App\Entity\RecursoHumano\RhuIncapacidad", "i")
+            ->select("i.fechaDesde")
+            ->addSelect("i.fechaHasta")
+            ->addSelect("it.tipoNovedadTurno AS turnoIncapacidad")
+            ->leftJoin("i.incapacidadTipoRel", "it")
+            ->where("(i.fechaDesde >= '{$desde}' AND i.fechaDesde <= '{$hasta}') OR " .
+                "(i.fechaHasta >= '{$desde}' AND i.fechaHasta <= '{$hasta}') OR " .
+                "('{$desde}' >= i.fechaDesde AND '{$desde}' <= i.fechaHasta)")
+            ->andWhere("i.codigoEmpleadoFk = {$arNovedadInconsistencia->getCodigoRecursoFk()}");
+
+        $incapacidades = $qb->getQuery()->getResult();
+        if (count($incapacidades) == 0) {
+            return false;
+        }
+        # Recorremos cada una de las incapacidades.
+        foreach ($incapacidades AS $incapacidad) {
+            # Listamos las programaciones
+            $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy([
+                'codigoEmpleadoFk' => $arNovedadInconsistencia->getCodigoRecursoFk(),
+                'mes' => $mes,
+                'anio' => $anio,
+            ], ['horas' => 'DESC']);
+            # Si no hay programaciones pasamos a la siguiente iteración.
+            if (!$arProgramaciones) {
+                continue;
+            }
+            $primeraFila = true;
+            foreach ($arProgramaciones AS $arProgramacion) {
+                $intFechaInc = strtotime($incapacidad['fechaDesde']->format('Y-m-d'));
+                $intFechaConsulta = strtotime($desde);
+                $intFechaIncHasta = strtotime($incapacidad['fechaHasta']->format('Y-m-d'));
+                $intFechaConsultaHasta = strtotime($hasta);
+                if ($intFechaInc < $intFechaConsulta) {
+                    $diaIniInc = $arNovedadInconsistencia->getFechaDesde()->format("j");
+                } else {
+                    $diaIniInc = intval($incapacidad['fechaDesde']->format('d'));
+                }
+                if ($intFechaIncHasta > $intFechaConsultaHasta) {
+                    $diaFinInc = $arNovedadInconsistencia->getFechaHasta()->format("j");
+                } else {
+                    $diaFinInc = intval($incapacidad['fechaHasta']->format('d'));
+                }
+
+                $horasDiurnas = $arProgramacion->getHorasDiurnas();
+                $horasNocturnas = $arProgramacion->getHorasNocturnas();
+                $arPedidoDetalle = $em->getRepository("BrasaTurnoBundle:TurPedidoDetalle")->find($arProgramacion->getCodigoPedidoDetalleFk());
+                $horasDP = $arPedidoDetalle->getHorasDiurnasProgramadas();
+                $horasNP = $arPedidoDetalle->getHorasNocturnasProgramadas();
+
+                $turnoInc = $incapacidad['turnoIncapacidad'] == "" ? $turnoIncapacidad : $incapacidad['turnoIncapacidad'];
+                for ($i = $diaIniInc; $i <= $diaFinInc; $i++) {
+                    $turnoActual = call_user_func_array([$arProgramacion, "getDia{$i}"], []);
+                    # Si el turno ya está marcado como incapacidad no lo tocamos o si el periodo esta bloqueado no tocamos el turno actual
+                    if ($turnoActual == $turnoInc || $i <= $diaBloqueoPeriodoProgramacion) {
+                        continue;
+                    }
+
+                    # Asignamos el turno de incapacidad
+                    if ($primeraFila) {
+                        call_user_func_array([$arProgramacion, "setDia{$i}"], [$turnoInc]);
+                    }
+
+                    if ($turnoActual != $turnoInc) {
+                        call_user_func_array([$arProgramacion, "setDiaN{$i}"], [$turnoActual]);
+                    }
+                    # Recalculamos las horas
+                    if ($turnoActual != null) {
+                        $arTurnoActual = $em->getRepository("BrasaTurnoBundle:TurTurno")->find($turnoActual);
+                        $horasNocturnas -= $arTurnoActual->getHorasNocturnas() != null ? $arTurnoActual->getHorasNocturnas() : 0;
+                        $horasDiurnas -= $arTurnoActual->getHorasDiurnas() != null ? $arTurnoActual->getHorasDiurnas() : 0;
+                        $horasDP -= $arTurnoActual->getHorasDiurnas() != null ? $arTurnoActual->getHorasDiurnas() : 0;
+                        $horasNP -= $arTurnoActual->getHorasNocturnas() != null ? $arTurnoActual->getHorasNocturnas() : 0;
+                    }
+                }
+                $primeraFila = false;
+                # Almacenamos la programación.
+                $arPedidoDetalle->setHorasDiurnasProgramadas($horasDP);
+                $arPedidoDetalle->setHorasNocturnasProgramadas($horasNP);
+                $arPedidoDetalle->setHorasProgramadas($horasDP + $horasNP);
+
+                $arProgramacion->setHorasDiurnas($horasDiurnas);
+                $arProgramacion->setHorasNocturnas($horasNocturnas);
+                $arProgramacion->setHoras($horasDiurnas + $horasNocturnas);
+
+                $em->persist($arPedidoDetalle);
+                $em->persist($arProgramacion);
+            }
+        }
+        $em->remove($arNovedadInconsistencia);
+        $em->flush();
+        return true;
+    }
+
+
+    /**
+     * @param TurNovedadInconsistencia $arNovedadInconsistencia
+     * @param $desde
+     * @param $hasta
+     * @param $mes
+     * @param $anio
+     * @return bool
+     */
+    private function importarVacacion($arNovedadInconsistencia, $desde, $hasta, $mes, $anio)
+    {
+
+        $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
+        $diaBloqueoPeriodoProgramacion = $em->getRepository(TurCierreProgramacionPeriodo::class)->getDiaHastaBloqueo($anio, $mes);
+        $arContrato = $em->getRepository(RhuContrato::class)->find($arNovedadInconsistencia->getCodigoContratoFK());
+        $turnoVacacion = $arConfiguracion->getTurnoVacacion();
+
+        # Encontramos las vacaciones del recurso.
+        $query = $em->createQueryBuilder()->from("App\Entity\RecursoHumano\RhuVacacion", "v")->select("v.fechaDesdeDisfrute, v.fechaHastaDisfrute")
+//            ->where("v.codigoContratoFk = {$arNovedadInconsistencia->getCodigoContratoFK()}")
+            ->andWhere("v.codigoEmpleadoFk = {$arContrato->getCodigoEmpleadoFk()}")
+            ->andWhere("v.diasDisfrutados > 0")
+            ->andWhere("v.estadoAnulado = 0")
+            ->andWhere("((v.fechaDesdeDisfrute BETWEEN '{$desde}' AND '{$hasta}') OR (v.fechaHastaDisfrute BETWEEN '{$desde}' AND '{$hasta}')) 
+            OR (v.fechaDesdeDisfrute >= '{$desde}' AND v.fechaDesdeDisfrute <= '{$hasta}') 
+            OR (v.fechaHastaDisfrute >= '{$hasta}' AND v.fechaDesdeDisfrute <= '{$desde}')");
+        $arrVacaciones = $query->getQuery()->getResult();
+        if (count($arrVacaciones) == 0) {
+            return false;
+        }
+        # Recorremos cada una de las vacaciones.
+        foreach ($arrVacaciones AS $arrVacacion) {
+            # Listamos las programaciones
+            $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy([
+                'codigoRecursoFk' => $arNovedadInconsistencia->getCodigoRecursoFk(),
+                'mes' => $mes,
+                'anio' => $anio,
+            ], ['horas' => 'DESC']);
+
+            $primeraFila = true;
+
+            # Si no hay programaciones pasamos a la siguiente iteración.
+            if (!$arProgramaciones) {
+                continue;
+            }
+
+            foreach ($arProgramaciones AS $arProgramacion) {
+
+                $intFechaVacacion = strtotime($arrVacacion['fechaDesdeDisfrute']->format('Y-m-d'));
+                $intFechaConsulta = strtotime($desde);
+                $intFechaVacacionHasta = strtotime($arrVacacion['fechaHastaDisfrute']->format('Y-m-d'));
+                $intFechaConsultaHasta = strtotime($hasta);
+                if ($intFechaVacacion < $intFechaConsulta) {
+                    $diaIniVac = $arNovedadInconsistencia->getFechaDesde()->format("j");
+                } else {
+                    $diaIniVac = intval($arrVacacion['fechaDesdeDisfrute']->format('d'));
+                }
+                if ($intFechaVacacionHasta > $intFechaConsultaHasta) {
+                    $diaFinVac = $arNovedadInconsistencia->getFechaHasta()->format("j");
+                } else {
+                    $diaFinVac = intval($arrVacacion['fechaHastaDisfrute']->format('d'));
+                }
+
+                $horasDiurnas = $arProgramacion->getHorasDiurnas();
+                $horasNocturnas = $arProgramacion->getHorasNocturnas();
+                $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($arProgramacion->getCodigoPedidoDetalleFk());
+                $horasDP = $arPedidoDetalle->getHorasDiurnasProgramadas();
+                $horasNP = $arPedidoDetalle->getHorasNocturnasProgramadas();
+
+                for ($i = $diaIniVac; $i <= $diaFinVac; $i++) {
+                    $turnoActual = call_user_func_array([$arProgramacion, "getDia{$i}"], []);
+                    # Si el turno ya está marcado como incapacidad no lo tocamos o si el periodo esta bloqueado no tocamos el turno
+                    if ($turnoActual == $turnoVacacion || $i <= $diaBloqueoPeriodoProgramacion) {
+                        continue;
+                    }
+
+                    if ($primeraFila) {
+                        # Asignamos el turno de incapacidad
+                        call_user_func_array([$arProgramacion, "setDia{$i}"], [$turnoVacacion]);
+                    } else {
+                        call_user_func_array([$arProgramacion, "setDia{$i}"], [null]);
+                    }
+
+                    if ($turnoActual != $turnoVacacion) {
+                        call_user_func_array([$arProgramacion, "setDiaN{$i}"], [$turnoActual]);
+                    }
+
+                    # Recalculamos las horas
+                    if ($turnoActual != null) {
+                        $arTurnoActual = $em->getRepository("BrasaTurnoBundle:TurTurno")->find($turnoActual);
+                        $horasNocturnas -= $arTurnoActual->getHorasNocturnas();
+                        $horasDiurnas -= $arTurnoActual->getHorasDiurnas();
+                        $horasDP -= $arTurnoActual->getHorasDiurnas();
+                        $horasNP -= $arTurnoActual->getHorasNocturnas();
+                    }
+                }
+
+                $primeraFila = false;
+
+                # Almacenamos la programación.
+                $arPedidoDetalle->setHorasDiurnasProgramadas($horasDP);
+                $arPedidoDetalle->setHorasNocturnasProgramadas($horasNP);
+                $arPedidoDetalle->setHorasProgramadas($horasDP + $horasNP);
+
+                $arProgramacion->setHorasDiurnas($horasDiurnas);
+                $arProgramacion->setHorasNocturnas($horasNocturnas);
+                $arProgramacion->setHoras($horasDiurnas + $horasNocturnas);
+
+                $em->persist($arPedidoDetalle);
+                $em->persist($arProgramacion);
+            }
+        }
+        $em->remove($arNovedadInconsistencia);
+        $em->flush();
+        return true;
+    }
+
+    /**
+     * @param TurNovedadInconsistencia $arNovedadInconsistencia
+     * @param $desde
+     * @param $hasta
+     * @param $mes
+     * @param $anio
+     * @return bool
+     */
+    private function importarLicencia($arNovedadInconsistencia, $desde, $hasta, $mes, $anio)
+    {
+        $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
+//        $diaBloqueoPeriodoProgramacion = $em->getRepository(TurCierreProgramacionPeriodo::class)->getDiaHastaBloqueo($anio, $mes);
+        $arContrato = $em->getRepository(RhuContrato::class)->find($arNovedadInconsistencia->getCodigoContratoFK());
+        $turnoLicencia = $arConfiguracion->getTurnoLicencia();  # Esto es para capturar un turno de licencia por defecto.
+        # Encontramos las incapacidades del recurso.
+        $qb = $em->createQueryBuilder();
+        $qb->from("App\Entity\RecursoHumano\RhuLicencia", "i")
+            ->select("i.fechaDesde")
+            ->addSelect("i.fechaHasta")
+            ->addSelect("lt.tipoNovedadTurno AS turnoLicencia")
+            ->leftJoin("i.licenciaTipoRel", "lt")
+            ->where("i.codigoEmpleadoFk = '{$arContrato->getCodigoEmpleadoFk()}'" .
+                " AND (((i.fechaDesde BETWEEN '$desde' AND '$hasta') OR (i.fechaHasta BETWEEN '$desde' AND '$hasta')) "
+                . "OR (i.fechaDesde >= '$desde' AND i.fechaDesde <= '$hasta') "
+                . "OR (i.fechaHasta >= '$hasta' AND i.fechaDesde <= '$desde')) ");
+
+        $licencias = $qb->getQuery()->getResult();
+        if (count($licencias) == 0) {
+            return false;
+        }
+
+        # Recorremos cada una de las incapacidades.
+        foreach ($licencias AS $licencia) {
+            # Listamos las programaciones
+            $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy([
+                'codigoEmpleadoFk' => $arNovedadInconsistencia->getCodigoRecursoFk(),
+                'mes' => $mes,
+                'anio' => $anio,
+            ], ['horas' => 'DESC']);
+            # Si no hay programaciones pasamos a la siguiente iteración.
+            if (!$arProgramaciones) {
+                continue;
+            }
+            $primeraFila = true;
+            foreach ($arProgramaciones AS $arProgramacion) {
+                $diaIniVac = intval($licencia['fechaDesde']->format('d'));
+                $diaFinVac = intval($licencia['fechaHasta']->format('d'));
+                //Validacion para verioficar si el rango de fecha de la licencia es mayor al del periodo actual en programacion
+                if ($licencia['fechaDesde']->format('Y-m-d') < $desde) {//Se valida si la fecha de la licencia es menor a la del periodo actual para poner el primer dia del mes
+                    $desdeLic = date_create($desde);
+                    $fechaInicial = date_create($licencia['fechaDesde']->format('Y') . '-' . $desdeLic->format('m') . '-1');
+                    $diaIniVac = intval($fechaInicial->format('d'));
+                }
+                if ($licencia['fechaHasta']->format('Y-m-d') > $hasta) {//Se valida si la fecha es mayor al periodo actual para poner el ultimo dia del mes
+                    $hastaLic = date_create($hasta);
+                    $fechaFinal = date_create($licencia['fechaDesde']->format('Y') . '-' . $hastaLic->format('m') . '-' . $hastaLic->format('d'));
+                    $diaFinVac = intval($fechaFinal->format('d'));
+                }
+                $horasDiurnas = $arProgramacion->getHorasDiurnas();
+                $horasNocturnas = $arProgramacion->getHorasNocturnas();
+                $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($arProgramacion->getCodigoPedidoDetalleFk());
+                $horasDP = $arPedidoDetalle->getHorasDiurnasProgramadas();
+                $horasNP = $arPedidoDetalle->getHorasNocturnasProgramadas();
+
+                $turnoLic = $licencia['turnoLicencia'] == "" ? $turnoLicencia : $licencia['turnoLicencia'];
+                for ($i = $diaIniVac; $i <= $diaFinVac; $i++) {
+                    $turnoActual = call_user_func_array([$arProgramacion, "getDia{$i}"], []);
+                    # Si el turno ya está marcado como incapacidad no lo tocamos o si el periodo esta bloqueado no tocamos el turno
+//                    if ($turnoActual == $turnoLic || $i <= $diaBloqueoPeriodoProgramacion) {
+//                        continue;
+//                    }
+                    if ($turnoActual == $turnoLic ) {
+                        continue;
+                    }
+
+                    # Asignamos el turno de incapacidad
+                    if ($primeraFila) {
+                        call_user_func_array([$arProgramacion, "setDia{$i}"], [$turnoLic]);
+                    } else {
+                        call_user_func_array([$arProgramacion, "setDia{$i}"], [null]);
+                    }
+                    # Con esto evitamos sobreescribir si el turno ya fue ingresado.
+                    if ($turnoActual != $turnoLic) {
+                        call_user_func_array([$arProgramacion, "setDiaN{$i}"], [$turnoActual]);
+                    }
+                    # Recalculamos las horas
+                    if ($turnoActual != null) {
+                        $arTurnoActual = $em->getRepository(TurTurno::class)->find($turnoActual);
+                        $horasNocturnas -= $arTurnoActual->getHorasNocturnas();
+                        $horasDiurnas -= $arTurnoActual->getHorasDiurnas();
+                        $horasDP -= $arTurnoActual->getHorasDiurnas();
+                        $horasNP -= $arTurnoActual->getHorasNocturnas();
+                    }
+                }
+                $primeraFila = false;
+                # Almacenamos la programación.
+                $arPedidoDetalle->setHorasDiurnasProgramadas($horasDP);
+                $arPedidoDetalle->setHorasNocturnasProgramadas($horasNP);
+                $arPedidoDetalle->setHorasProgramadas($horasDP + $horasNP);
+
+
+                $arProgramacion->setHorasDiurnas($horasDiurnas);
+                $arProgramacion->setHorasNocturnas($horasNocturnas);
+                $arProgramacion->setHoras($horasDiurnas + $horasNocturnas);
+
+                $em->persist($arPedidoDetalle);
+                $em->persist($arProgramacion);
+            }
+        }
+
+        $em->remove($arNovedadInconsistencia);
+        $em->flush();
+        return true;
+    }
+
 }
 

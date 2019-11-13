@@ -1,0 +1,27 @@
+{% extends "base_sin_menu.html.twig" %}
+{% block content %}
+    <div class="table-responsive" style="padding:0px;">
+        <table class="table table-striped table-bordered table-condensed tabla-datos">
+            <thead>
+            <tr>
+                {% for arrDiaSemana in arrDiaSemana %}
+                    <th>{{ arrDiaSemana.dia }}{{ arrDiaSemana.diaSemana }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for arProgramacion in arProgramaciones %}
+                <tr>
+                    <td colspan="31">{{ arProgramacion.puestoRel.clienteRel.nombreCorto }}| {{ arProgramacion.puestoRel.nombre }} | {{ arProgramacion.pedidoDetalleRel.conceptoRel.nombre }}</td>
+                </tr>
+                <tr>
+                    {% for i in range(1,31) %}
+                        {% set valorDia = componerDiaProgramacionEmpleado(arProgramacion, i) %}
+                        <td class="text-center  "> {{ valorDia }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

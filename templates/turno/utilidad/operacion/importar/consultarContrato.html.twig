@@ -1,0 +1,117 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    <section class="content-header">
+        <h1>
+            Programacion turnos
+            <small>Programación : Importar novedades - Consultar contrato </small>
+        </h1>
+    </section>
+    <section class="content">
+        <div class="panel panel-default">
+            <div class="panel-heading">Información del contrato</div>
+            <div class="panel-body">
+                {% if arContrato == null %}
+                    <div class="alert alert-danger">
+                        El recurso no posee contrato
+                    </div>
+                {% else %}
+                    <table width="100%" class="table table-condensed table-bordered">
+                        <tr>
+                            <td class="titulo">CÓDIGO:</td>
+                            <td class="td-in-well">{{ arContrato.codigoContratoPk }}</td>
+                            <td class="titulo">TIPO:</td>
+                            <td class="td-in-well">{{ arContrato.contratoTipoRel.nombre|default('SIN TIPO') }}</td>
+                            <td class="titulo">TIEMPO:</td>
+                            <td class="td-in-well">{{ arContrato.tipoTiempoRel.nombre|default('SIN TIEMPO') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="titulo">FECHA INICIO:</td>
+                            <td class="td-in-well">{{ arContrato.fechaDesde|date("Y/m/d") }}</td>
+                            <td class="titulo">TIPO SALARIO:</td>
+                            <td class="td-in-well">{{ arContrato.salarioTipoRel.nombre|default('') }}</td>
+                            <td class="titulo">SALARIO:</td>
+                            <td class="td-in-well-numerico" align="right">$ {% if arContrato.CodigoTipoTiempoFk == 2 %} {{arContrato.vrSalarioPago | number_format(0, '.', ',') }} {% else %} {{arContrato.vrSalario | number_format(0, '.', ',') }} {% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td class="titulo">FECHA TERMINA:</td>
+                            <td>{% if arContrato.estadoActivo == 0 or arContrato.contratoTipoRel.codigoContratoClaseFk == 2%} {{ arContrato.fechaHasta |date("Y/m/d")  }}
+                                {% else %}
+                                    INDEFINIDO
+                                {% endif %}</td>
+                            <td class="titulo">GRUPO PAGO:</td>
+                            <td class="td-in-well">{{ arContrato.centroCostoRel.nombre|default('SIN GRUPO PAGO') }}</td>
+                            <td class="titulo">IBP CESANTIAS INICIAL:</td>
+                            <td class="td-in-well-numerico" align="right">{{ arContrato.ibpCesantiasInicial | number_format(2, '.', ',') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="titulo">CLASIFICACIÓN RIESGO:</td>
+                            <td class="td-in-well">{{ arContrato.clasificacionRiesgoRel.nombre|default('') }}</td>
+                            <td class="titulo">IDENTIFICACIÓN:</td>
+                            <td class="td-in-well">{{ arContrato.empleadoRel.numeroIdentificacion }}</td>
+                            <td class="titulo">IBP PRIMAS INICIAL:</td>
+                            <td class="td-in-well-numerico" align="right">{{ arContrato.ibpPrimasInicial | number_format(2, '.', ',') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="titulo">ÚLTIMO PAGO:</td>
+                            <td>{{ arContrato.fechaUltimoPago|date("Y/m/d") }}</td>
+                            <td class="titulo">EMPLEADO:</td>
+                            <td class="td-in-well">{{ arContrato.empleadoRel.nombreCorto }}</td>
+                            <td class="titulo">IBP RECARGO NOCTURNO INICIAL:</td>
+                            <td class="td-in-well-numerico" align="right">{{ arContrato.IbpRecargoNocturnoInicial | number_format(2, '.', ',') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="titulo">ÚLTIMA PRIMA:</td>
+                            <td>{{ arContrato.fechaUltimoPagoPrimas|date("Y/m/d") }}</td>
+                            <td class="titulo">CENTRO TRABAJO:</td>
+                            <td>{{ arContrato.centroTrabajoRel.nombre|default('SIN CENTRO TRABAJO')}}</td>
+                            <td class="titulo">CARGO:</td>
+                            <td class="td-in-well">{{ arContrato.cargoRel.nombre|default('SIN CARGO') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="titulo">ÚLTIMA CESANTIA:</td>
+                            <td>{{ arContrato.fechaUltimoPagoCesantias|date("Y/m/d") }}</td>
+                            <td class="titulo">ENTIDAD PENSIÓN:</td>
+                            <td class="td-in-well">{{ arContrato.entidadPensionRel.nombre|default('SIN CONTRATO') }}</td>
+                            <td class="titulo">TIPO PENSIÓN:</td>
+                            <td class="td-in-well">{{ arContrato.tipoPensionRel.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <td class="titulo">ÚLTIMA VACACIÓN:</td>
+                            <td>{{ arContrato.fechaUltimoPagoVacaciones|date("Y/m/d") }}</td>
+                            <td class="titulo">ENTIDAD SALUD:</td>
+                            <td class="td-in-well">{{ arContrato.entidadSaludRel.nombre|default('SIN CONTRATO') }}</td>
+                            <td class="titulo">TIPO SALUD:</td>
+                            <td class="td-in-well">{{ arContrato.tipoSaludRel.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <td class="titulo"></td>
+                            <td></td>
+                            <td class="titulo">ENTIDAD CAJA:</td>
+                            <td class="td-in-well">{{ arContrato.entidadCajaRel.nombre|default('SIN CONTRATO') }}</td>
+                            <td class="titulo">TIPO COTIZANTE:</td>
+                            <td class="td-in-well">{{ arContrato.ssoTipoCotizanteRel.nombre|default('') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="titulo">AUX. TRANSPORTE</td>
+                            <td>{% if arContrato.auxilioTransporte == 1 %} SI {% else %} NO {% endif %}</td>
+                            <td class="titulo">ENTIDAD CESANTIA:</td>
+                            <td class="td-in-well">{{ arContrato.entidadCesantiaRel.nombre|default('') }}</td>
+                            <td class="titulo">SUBTIPO COTIZANTE:</td>
+                            <td class="td-in-well">{{ arContrato.ssoSubtipoCotizanteRel.nombre|default('') }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">RAZON DE TERMINACION: {{ arContrato.terminacionContratoRel.motivo | default('')}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">COMENTARIOS: {{ arContrato.comentarios }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">COMENTARIOS TERMINACION: {{ arContrato.comentariosTerminacion }}</td>
+                        </tr>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+        <br/><br/><br/><br/>
+    </section>
+{% endblock %}

@@ -5,6 +5,7 @@ namespace App\Controller\Turno\Utilidad\Operacion\Programacion;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;

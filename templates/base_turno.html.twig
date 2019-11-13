@@ -124,8 +124,18 @@
                     <ul>
                         <li><a href="{{ path('turno_utilidad_operacion_prototipo') }}">Prototipo</a></li>
                         <li><a href="{{ path('turno_utilidad_operacion_programacion') }}">Programacion</a></li>
+                        <li>
+                            <a href="#">Importar <span class="fa arrow"></span></a>
+                            <ul>
+                                <li><a href="{{ path('turno_utilidad_importar_licencias') }}">Licencias</a></li>
+                                <li><a href="{{ path('turno_utilidad_importar_incapacidades') }}">Incapacidades</a></li>
+                                <li><a href="{{ path('turno_utilidad_importar_vacaciones') }}">Vacaciones</a></li>
+                            </ul>
+                        </li>
                     </ul>
+
                 </li>
+
             </ul>
         </li>
         <li {% if arrRuta.1 == 'tablero' %}class="open" {% endif %}>

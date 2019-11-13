@@ -248,4 +248,39 @@ class RhuLicenciaRepository extends ServiceEntityRepository
         }
     }
 
+    public function diasLicenciaPeriodo31($fechaDesde, $fechaHasta, $codigoEmpleado)
+    {
+        $em = $this->getEntityManager();
+        $strFechaDesde = $fechaDesde->format('Y-m-d');
+        $strFechaHasta = $fechaHasta->format('Y-m-d');
+
+        $dql = "SELECT licencia FROM App\Entity\RecursoHumano\RhuLicencia licencia "
+            . "WHERE (((licencia.fechaDesde BETWEEN '$strFechaDesde' AND '$strFechaHasta') OR (licencia.fechaHasta BETWEEN '$strFechaDesde' AND '$strFechaHasta')) "
+            . "OR (licencia.fechaDesde >= '$strFechaDesde' AND licencia.fechaDesde <= '$strFechaHasta') "
+            . "OR (licencia.fechaHasta >= '$strFechaHasta' AND licencia.fechaDesde <= '$strFechaDesde')) "
+            . "AND licencia.codigoEmpleadoFk = " . $codigoEmpleado . " ";
+        $objQuery = $em->createQuery($dql);
+        $arLicencias = $objQuery->getResult();
+        $intDiasLicencia = 0;
+
+        foreach ($arLicencias as $arLicencia) {
+            $intDiaInicio = 1;
+            $intDiaFin = 30;
+            if ($arLicencia->getFechaDesde() < $fechaDesde) {
+                $intDiaInicio = $fechaDesde->format('j');
+            } else {
+                $intDiaInicio = $arLicencia->getFechaDesde()->format('j');
+            }
+            if ($arLicencia->getFechaHasta() > $fechaHasta) {
+                $intDiaFin = $fechaHasta->format('j');
+            } else {
+                $intDiaFin = $arLicencia->getFechaHasta()->format('j');
+            }
+
+            $intDiasLicencia += (($intDiaFin - $intDiaInicio) + 1);
+        }
+
+        return $intDiasLicencia;
+    }
+
 }

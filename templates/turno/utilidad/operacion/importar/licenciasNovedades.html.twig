@@ -1,0 +1,24 @@
+{% extends "base_sin_menu.html.twig" %}
+{% block content %}
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+        <tr>
+            <th>tipo</th>
+            <th>entidad</th>
+            <th>desde</th>
+            <th>hasta</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arLicencia in arLicencias %}
+            <tr>
+                <td>{{ arLicencias.tipo }}</td>
+                <td>{{ arLicencias.entidad }}</td>
+                <td>{{ arLicencias.desde }}</td>
+                <td>{{ arLicencias.hasta }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br /><br /><br />
+{% endblock %}

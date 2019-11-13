@@ -130,6 +130,11 @@ class RhuConcepto
     private $fondoSolidaridadPensional = false;
 
     /**
+     * @ORM\Column(name="porcentaje_vacaciones", type="float", nullable=true)
+     */
+    private $porcentajeVacaciones = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuNovedadTipo", mappedBy="conceptoRel")
      */
     protected $novedadesConceptoRel;
@@ -896,5 +901,22 @@ class RhuConcepto
         $this->embargo = $embargo;
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeVacaciones()
+    {
+        return $this->porcentajeVacaciones;
+    }
+
+    /**
+     * @param mixed $porcentajeVacaciones
+     */
+    public function setPorcentajeVacaciones($porcentajeVacaciones): void
+    {
+        $this->porcentajeVacaciones = $porcentajeVacaciones;
+    }
+
+
+
 }

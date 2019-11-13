@@ -586,9 +586,9 @@ class RhuVacacionRepository extends ServiceEntityRepository
         $recargosNocturnosTotal = $recargosNocturnos + $arContrato->getIbpRecargoNocturnoInicial();
         $promedioRecargosNocturnos = $recargosNocturnosTotal / $mesesPeriodo;
         $promedioRecargosNocturnos = round($promedioRecargosNocturnos);
-        if($arConfiguracion->getVacacionesRecargoNocturnoUltimoAnioEspecial()){
-            $promedioRecargosNocturnos = $promedioRecargosNocturnos * 25.92 / 100;
-        }
+//        if($arConfiguracion->getVacacionesRecargoNocturnoUltimoAnioEspecial()){
+//            $promedioRecargosNocturnos = $promedioRecargosNocturnos * 25.92 / 100;
+//        }
         $arVacacion->setVrPromedioRecargoNocturno($promedioRecargosNocturnos);
 
         if ($arContrato->getCodigoSalarioTipoFk() == 'FIJ') {

@@ -84,7 +84,7 @@ class TteClienteRepository extends ServiceEntityRepository
                 $arTercero = new FinTercero();
                 $arTercero->setIdentificacionRel($arCliente->getIdentificacionRel());
                 $arTercero->setNumeroIdentificacion($arCliente->getNumeroIdentificacion());
-                $arTercero->setNombreCorto($arCliente->getNombreCorto());
+                $arTercero->setNombreCorto($arCliente->getNombreExtendido());
                 $arTercero->setDireccion($arCliente->getDireccion());
                 $arTercero->setTelefono($arCliente->getTelefono());
                 $arTercero->setCiudadRel($arCliente->getCiudadRel());

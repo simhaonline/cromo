@@ -738,36 +738,40 @@ class RhuPagoRepository extends ServiceEntityRepository
 
     private function getValoresPagoDetalle(&$arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle)
     {
-        $pagoDetalle = round($pagoDetalle);
-        $arPagoDetalle->setPagoRel($arrDatosGenerales['pago']);
-        $arPagoDetalle->setVrPago($pagoDetalle);
-        if ($arConcepto) {
-            $arPagoDetalle->setConceptoRel($arConcepto);
-        }
-        $pagoDetalleOperado = $pagoDetalle * $arConcepto->getOperacion();
-        $arPagoDetalle->setVrPagoOperado($pagoDetalleOperado);
-        $arPagoDetalle->setOperacion($arConcepto->getOperacion());
-        if ($arConcepto->getOperacion() == -1) {
-            $arPagoDetalle->setVrDeduccion($pagoDetalle);
-            $arrDatosGenerales['deduccion'] += $pagoDetalle;
+        if($arConcepto) {
+            $pagoDetalle = round($pagoDetalle);
+            $arPagoDetalle->setPagoRel($arrDatosGenerales['pago']);
+            $arPagoDetalle->setVrPago($pagoDetalle);
+            if ($arConcepto) {
+                $arPagoDetalle->setConceptoRel($arConcepto);
+            }
+            $pagoDetalleOperado = $pagoDetalle * $arConcepto->getOperacion();
+            $arPagoDetalle->setVrPagoOperado($pagoDetalleOperado);
+            $arPagoDetalle->setOperacion($arConcepto->getOperacion());
+            if ($arConcepto->getOperacion() == -1) {
+                $arPagoDetalle->setVrDeduccion($pagoDetalle);
+                $arrDatosGenerales['deduccion'] += $pagoDetalle;
+            } else {
+                $arPagoDetalle->setVrDevengado($pagoDetalle);
+                $arrDatosGenerales['devengado'] += $pagoDetalle;
+            }
+            $arrDatosGenerales['neto'] += $pagoDetalleOperado;
+
+            if ($arConcepto->getGeneraIngresoBaseCotizacion()) {
+                $arrDatosGenerales['ingresoBaseCotizacion'] += $pagoDetalleOperado;
+                $arPagoDetalle->setVrIngresoBaseCotizacion($pagoDetalleOperado);
+            }
+
+            if ($arConcepto->getGeneraIngresoBasePrestacion()) {
+                $arrDatosGenerales['ingresoBasePrestacion'] += $pagoDetalleOperado;
+                $arPagoDetalle->setVrIngresoBasePrestacion($pagoDetalleOperado);
+            }
+            if ($arConcepto->getGeneraIngresoBasePrestacionVacacion()) {
+                $arrDatosGenerales['ingresoBasePrestacionVacacion'] += $pagoDetalleOperado;
+                $arPagoDetalle->setVrIngresoBasePrestacionVacacion($pagoDetalleOperado);
+            }
         } else {
-            $arPagoDetalle->setVrDevengado($pagoDetalle);
-            $arrDatosGenerales['devengado'] += $pagoDetalle;
-        }
-        $arrDatosGenerales['neto'] += $pagoDetalleOperado;
-
-        if ($arConcepto->getGeneraIngresoBaseCotizacion()) {
-            $arrDatosGenerales['ingresoBaseCotizacion'] += $pagoDetalleOperado;
-            $arPagoDetalle->setVrIngresoBaseCotizacion($pagoDetalleOperado);
-        }
-
-        if ($arConcepto->getGeneraIngresoBasePrestacion()) {
-            $arrDatosGenerales['ingresoBasePrestacion'] += $pagoDetalleOperado;
-            $arPagoDetalle->setVrIngresoBasePrestacion($pagoDetalleOperado);
-        }
-        if ($arConcepto->getGeneraIngresoBasePrestacionVacacion()) {
-            $arrDatosGenerales['ingresoBasePrestacionVacacion'] += $pagoDetalleOperado;
-            $arPagoDetalle->setVrIngresoBasePrestacionVacacion($pagoDetalleOperado);
+            Mensajes::error("El concepto tiene un error en el pago del contrato " . $arrDatosGenerales['pago']->getContratoRel()->getCodigoContratoPk());
         }
     }
 

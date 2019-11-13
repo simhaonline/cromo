@@ -1540,10 +1540,8 @@ class MigracionController extends Controller
                 if($row['codigo_centro_costo_fk']) {
                     $arIncapacidad->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
                 }
-                if ($row['codigo_incapacidad_tipo_fk'] == 1) {
-                    $arIncapacidad->setIncapacidadTipoRel($em->getReference(RhuIncapacidadTipo::class, 'GEN'));
-                } else {
-                    $arIncapacidad->setIncapacidadTipoRel($em->getReference(RhuIncapacidadTipo::class, 'LAB'));
+                if ($row['codigo_incapacidad_tipo_fk']) {
+                    $arIncapacidad->setIncapacidadTipoRel($em->getReference(RhuIncapacidadTipo::class, $row['codigo_incapacidad_tipo_fk']));
                 }
                 $arIncapacidad->setIncapacidadDiagnosticoRel($em->getReference(RhuIncapacidadDiagnostico::class, $row['codigo_incapacidad_diagnostico_fk']));
                 $arIncapacidad->setCantidad($row['cantidad']);
@@ -1577,8 +1575,18 @@ class MigracionController extends Controller
                 } else {
                     $arIncapacidad->setFechaHastaEmpresa(date_create($row['fecha_hasta_empresa']));
                 }
-                $arIncapacidad->setFechaDesdeEntidad(date_create($row['fecha_desde_entidad']));
-                $arIncapacidad->setFechaHastaEntidad(date_create($row['fecha_hasta_entidad']));
+                if($row['fecha_desde_entidad'] == null) {
+                    $arIncapacidad->setFechaDesdeEntidad(null);
+                } else {
+                    $arIncapacidad->setFechaDesdeEntidad(date_create($row['fecha_desde_entidad']));
+                }
+                if($row['fecha_hasta_entidad'] == null) {
+                    $arIncapacidad->setFechaHastaEntidad(null);
+                } else {
+                    $arIncapacidad->setFechaHastaEntidad(date_create($row['fecha_hasta_entidad']));
+                }
+
+
                 $arIncapacidad->setVrPropuesto($row['vr_propuesto']);
                 $arIncapacidad->setVrHoraEmpresa($row['vr_hora_empresa']);
                 $arIncapacidad->setFechaDocumentoFisico(date_create($row['fecha_documento_fisico']));

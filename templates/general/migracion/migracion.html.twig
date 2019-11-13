@@ -9,6 +9,22 @@
         {{ form_start(form,{'attr':{'class' : 'form-horizontal'}}) }}
         {{ form_widget(form.btnIniciar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         {{ form_widget(form.btnValidar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        <br /><br />
+        <table class="tabla-datos">
+            <tr>
+                <td>Proceso</td>
+                <td>Registros</td>
+                <td></td>
+            </tr>
+            {% for arrProceso in arrProcesos %}
+            <tr>
+                <td>{{ arrProceso.clase }}</td>
+                <td>{{ arrProceso.registros }}</td>
+                <td><button class="btn btn-default btn-xs" type="submit" name="OpGenerar" value="{{ arrProceso.clase }}">Migrar</button></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br /><br />
         {{ form_end(form) }}
     </article>
 {% endblock %}

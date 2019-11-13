@@ -80,11 +80,11 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('servidor', TextType::class, ['required' => false, 'data' => '192.168.2.199', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracis', 'attr' => ['class' => 'form-control']])
-            ->add('usuario', TextType::class, ['required' => false, 'data' => 'consulta', 'attr' => ['class' => 'form-control']])
-            ->add('clave', TextType::class, ['required' => false, 'data' => 'SoporteErp2018@', 'attr' => ['class' => 'form-control']])
-            ->add('btnIniciar', SubmitType::class, ['label' => 'Iniciar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracisv1', 'attr' => ['class' => 'form-control']])
+            ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
+            ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
+            ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -95,62 +95,129 @@ class MigracionController extends Controller
             $password = $form->get('clave')->getData();
 
             if($servername && $database && $username && $password) {
-                // Create connection
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
                 $conn = mysqli_connect($servername, $username, $password, $database);
-                // Check connection
                 if (!$conn) {
                     die("Connection failed: " . mysqli_connect_error());
                 }
                 if ($form->get('btnIniciar')->isClicked()) {
-                    set_time_limit(0);
-                    ini_set("memory_limit", -1);
-//                $this->generalPais($conn);
-//                $this->generalDepartamento($conn);
-//                $this->generalCiudad($conn);
-//                $this->rhuGrupo($conn);
-//                $this->rhuCargo($conn);
-//                $this->rhuEmpleado($conn);*
-//                $this->rhuContrato($conn);*
-//                $this->rhuConcepto($conn);
-//                $this->rhuAdicional($conn);
-//                $this->rhuEmbargoJuzgado($conn);
-//                $this->rhuEmbargo($conn);
-//                $this->rhuCreditoTipo($conn);
-//                $this->rhuCredito($conn);
-//                $this->rhuCreditoPago($conn);
-//                $this->rhuVacacion($conn);
-//                $this->rhuLiquidacion($conn);
-//                $this->rhuPago($conn);
-//                $this->rhuPagoDetalle($conn);
-//                $this->rhuIncapacidadDiagnostico($conn);
-//                $this->rhuIncapacidad($conn);
-//                $this->rhuLicenciaTipo($conn);
-//                $this->rhuLicencia($conn);
-//                $this->turTurno($conn);
-//                $this->turSecuencia($conn);
-//                $this->turCliente($conn);
-//                $this->turPuesto($conn);
-//                $this->turConcepto($conn);
-//                $this->turContrato($conn);
-//                $this->turContratoDetalle($conn);
-//                $this->turPedido($conn);
-//                $this->turPedidoDetalle($conn);
-//                $this->turFactura($conn);
-//                $this->turFacturaDetalle($conn);
-//                $this->turProgramacion($conn);
+                    $this->generalPais($conn);
+                    $this->generalDepartamento($conn);
+                    $this->generalCiudad($conn);
+                    $this->rhuGrupo($conn);
+                    $this->rhuCargo($conn);
+                    $this->rhuConcepto($conn);
+                    $this->rhuEmbargoJuzgado($conn);
+                    $this->rhuCreditoTipo($conn);
+                    $this->rhuIncapacidadDiagnostico($conn);
+                    $this->rhuLicenciaTipo($conn);
+                    $this->turTurno($conn);
+                    $this->turSecuencia($conn);
+                    $this->turConcepto($conn);
                     Mensajes::success("Se migro la informacion con exito");
-
                 }
                 if ($form->get('btnValidar')->isClicked()) {
                     $this->validarRhu($conn);
+                }
+                if ($request->request->get('OpGenerar')) {
+                    $codigo = $request->request->get('OpGenerar');
+                    switch ($codigo) {
+                        case 'rhu_empleado':
+                            $this->rhuEmpleado($conn);
+                            break;
+                        case 'rhu_contrato':
+                            $this->rhuContrato($conn);
+                            break;
+                        case 'rhu_adicional':
+                            $this->rhuAdicional($conn);
+                            break;
+                        case 'rhu_embargo':
+                            $this->rhuEmbargo($conn);
+                            break;
+                        case 'rhu_credito':
+                            $this->rhuCredito($conn);
+                            break;
+                        case 'rhu_credito_pago':
+                            $this->rhuCreditoPago($conn);
+                            break;
+                        case 'rhu_vacacion':
+                            $this->rhuVacacion($conn);
+                            break;
+                        case 'rhu_liquidacion':
+                            $this->rhuLiquidacion($conn);
+                            break;
+                        case 'rhu_pago':
+                            $this->rhuPago($conn);
+                            break;
+                        case 'rhu_pago_detalle':
+                            $this->rhuPagoDetalle($conn);
+                            break;
+                        case 'rhu_incapacidad':
+                            $this->rhuIncapacidad($conn);
+                            break;
+                        case 'rhu_licencia':
+                            $this->rhuLicencia($conn);
+                            break;
+                        case 'tur_cliente':
+                            $this->turCliente($conn);
+                            break;
+                        case 'tur_puesto':
+                            $this->turPuesto($conn);
+                            break;
+                        case 'tur_contrato':
+                            $this->turContrato($conn);
+                            break;
+                        case 'tur_contrato_detalle':
+                            $this->turContratoDetalle($conn);
+                            break;
+                        case 'tur_pedido':
+                            $this->turPedido($conn);
+                            break;
+                        case 'tur_pedido_detalle':
+                            $this->turPedidoDetalle($conn);
+                            break;
+                        case 'tur_factura':
+                            $this->turFactura($conn);
+                            break;
+                        case 'tur_factura_detalle':
+                            $this->turFacturaDetalle($conn);
+                            break;
+                        case 'tur_programacion':
+                            $this->turProgramacion($conn);
+                            break;
+                    }
                 }
                 mysqli_close($conn);
             } else {
                 Mensajes::error("Debe seleccionar los parametros de conexion");
             }
         }
-
+        $arrProcesos = [
+            ['clase' => 'rhu_empleado',         'registros' => $this->contarRegistros('RhuEmpleado','RecursoHumano', 'codigoEmpleadoPk')],
+            ['clase' => 'rhu_contrato',         'registros' => $this->contarRegistros('RhuContrato','RecursoHumano', 'codigoContratoPk')],
+            ['clase' => 'rhu_adicional',        'registros' => $this->contarRegistros('RhuAdicional','RecursoHumano', 'codigoAdicionalPk')],
+            ['clase' => 'rhu_embargo',          'registros' => $this->contarRegistros('RhuEmbargo','RecursoHumano', 'codigoEmbargoPk')],
+            ['clase' => 'rhu_credito',          'registros' => $this->contarRegistros('RhuCredito','RecursoHumano', 'codigoCreditoPk')],
+            ['clase' => 'rhu_credito_pago',     'registros' => $this->contarRegistros('RhuCreditoPago','RecursoHumano', 'codigoCreditoPagoPk')],
+            ['clase' => 'rhu_vacacion',         'registros' => $this->contarRegistros('RhuVacacion','RecursoHumano', 'codigoVacacionPk')],
+            ['clase' => 'rhu_liquidacion',      'registros' => $this->contarRegistros('RhuLiquidacion','RecursoHumano', 'codigoLiquidacionPk')],
+            ['clase' => 'rhu_pago',             'registros' => $this->contarRegistros('RhuPago','RecursoHumano', 'codigoPagoPk')],
+            ['clase' => 'rhu_pago_detalle',     'registros' => $this->contarRegistros('RhuPagoDetalle','RecursoHumano', 'codigoPagoDetallePk')],
+            ['clase' => 'rhu_incapacidad',      'registros' => $this->contarRegistros('RhuIncapacidad','RecursoHumano', 'codigoIncapacidadPk')],
+            ['clase' => 'rhu_licencia',         'registros' => $this->contarRegistros('RhuLicencia','RecursoHumano', 'codigoLicenciaPk')],
+            ['clase' => 'tur_cliente',          'registros' => $this->contarRegistros('TurCliente','Turno', 'codigoClientePk')],
+            ['clase' => 'tur_puesto',           'registros' => $this->contarRegistros('TurPuesto','Turno', 'codigoPuestoPk')],
+            ['clase' => 'tur_contrato',         'registros' => $this->contarRegistros('TurContrato','Turno', 'codigoContratoPk')],
+            ['clase' => 'tur_contrato_detalle', 'registros' => $this->contarRegistros('TurContratoDetalle','Turno', 'codigoContratoDetallePk')],
+            ['clase' => 'tur_pedido',           'registros' => $this->contarRegistros('TurPedido','Turno', 'codigoPedidoPk')],
+            ['clase' => 'tur_pedido_detalle',   'registros' => $this->contarRegistros('TurPedidoDetalle','Turno', 'codigoPedidoDetallePk')],
+            ['clase' => 'tur_factura',          'registros' => $this->contarRegistros('TurFactura','Turno', 'codigoFacturaPk')],
+            ['clase' => 'tur_factura_detalle',  'registros' => $this->contarRegistros('TurFacturaDetalle','Turno', 'codigoFacturaDetallePk')],
+            ['clase' => 'tur_programacion',     'registros' => $this->contarRegistros('TurProgramacion','Turno', 'codigoProgramacionPk')]
+        ];
         return $this->render('general/migracion/migracion.html.twig', [
+            'arrProcesos' => $arrProcesos,
             'form' => $form->createView()
         ]);
     }
@@ -349,7 +416,13 @@ class MigracionController extends Controller
     private function rhuEmpleado($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_empleado_pk FROM rhu_empleado ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                 codigo_empleado_pk,
                 numero_identificacion,
                 codigo_ciudad_fk,
@@ -391,59 +464,66 @@ class MigracionController extends Controller
                 estatura,
                 peso, 
                 pagado_entidad_salud
-                /*codigo_cargo_fk*/ FROM rhu_empleado");
-        foreach ($datos as $row) {
-            $arEmpleado = new RhuEmpleado();
-            $arEmpleado->setCodigoEmpleadoPk($row['codigo_empleado_pk']);
-            $arEmpleado->setIdentificacionRel($em->getReference(GenIdentificacion::class, 'CC'));
-            $arEmpleado->setNumeroIdentificacion($row['numero_identificacion']);
-            $arEmpleado->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
-            $arEmpleado->setDiscapacidad($row['discapacidad']);
-            $arEmpleado->setEstadoContrato($row['estado_contrato_activo']);
-            $arEmpleado->setPadreFamilia($row['padre_familia']);
-            $arEmpleado->setCabezaHogar($row['cabeza_hogar']);
-            $arEmpleado->setNombreCorto(utf8_encode($row['nombre_corto']));
-            $arEmpleado->setNombre1(utf8_encode($row['nombre1']));
-            $arEmpleado->setNombre2(utf8_encode($row['nombre2']));
-            $arEmpleado->setApellido1(utf8_encode($row['apellido1']));
-            $arEmpleado->setApellido2(utf8_encode($row['apellido2']));
-            $arEmpleado->setTelefono($row['telefono']);
-            $arEmpleado->setCelular($row['celular']);
-            $arEmpleado->setDireccion(utf8_encode($row['direccion']));
-            $arEmpleado->setBarrio(utf8_encode($row['barrio']));
-            $arEmpleado->setCiudadExpedicionRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_expedicion_fk']));
-            $arEmpleado->setFechaExpedicionIdentificacion(date_create($row['fecha_expedicion_identificacion']));
-            $arEmpleado->setRhRel($em->getReference(RhuRh::class, $row['codigo_rh_fk']));
-            $arEmpleado->setSexoRel($em->getReference(GenSexo::class, $row['codigo_sexo_fk']));
-            $arEmpleado->setCorreo(utf8_encode($row['correo']));
-            $arEmpleado->setFechaNacimiento(date_create($row['fecha_nacimiento']));
-            $arEmpleado->setCodigoCuentaTipoFk($row['tipo_cuenta']);
-            $arEmpleado->setCiudadNacimientoRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_nacimiento_fk']));
-            $arEmpleado->setEstadoCivilRel($em->getReference(GenEstadoCivil::class, $row['codigo_estado_civil_fk']));
-            $arEmpleado->setCuenta($row['cuenta']);
-            $arEmpleado->setTallaCamisa($row['camisa']);
-            $arEmpleado->setTallaPantalon($row['jeans']);
-            $arEmpleado->setTallaCalzado($row['calzado']);
-            $arEmpleado->setEstatura($row['estatura']);
-            $arEmpleado->setPeso($row['peso']);
-            $arEmpleado->setPagadoEntidad($row['pagado_entidad_salud']);
-            $em->persist($arEmpleado);
-            $metadata = $em->getClassMetaData(get_class($arEmpleado));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+                /*codigo_cargo_fk*/ FROM rhu_empleado 
+                ORDER BY codigo_empleado_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arEmpleado = new RhuEmpleado();
+                $arEmpleado->setCodigoEmpleadoPk($row['codigo_empleado_pk']);
+                $arEmpleado->setIdentificacionRel($em->getReference(GenIdentificacion::class, 'CC'));
+                $arEmpleado->setNumeroIdentificacion($row['numero_identificacion']);
+                $arEmpleado->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+                $arEmpleado->setDiscapacidad($row['discapacidad']);
+                $arEmpleado->setEstadoContrato($row['estado_contrato_activo']);
+                $arEmpleado->setPadreFamilia($row['padre_familia']);
+                $arEmpleado->setCabezaHogar($row['cabeza_hogar']);
+                $arEmpleado->setNombreCorto(utf8_encode($row['nombre_corto']));
+                $arEmpleado->setNombre1(utf8_encode($row['nombre1']));
+                $arEmpleado->setNombre2(utf8_encode($row['nombre2']));
+                $arEmpleado->setApellido1(utf8_encode($row['apellido1']));
+                $arEmpleado->setApellido2(utf8_encode($row['apellido2']));
+                $arEmpleado->setTelefono($row['telefono']);
+                $arEmpleado->setCelular($row['celular']);
+                $arEmpleado->setDireccion(utf8_encode($row['direccion']));
+                $arEmpleado->setBarrio(utf8_encode($row['barrio']));
+                $arEmpleado->setCiudadExpedicionRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_expedicion_fk']));
+                $arEmpleado->setFechaExpedicionIdentificacion(date_create($row['fecha_expedicion_identificacion']));
+                $arEmpleado->setRhRel($em->getReference(RhuRh::class, $row['codigo_rh_fk']));
+                $arEmpleado->setSexoRel($em->getReference(GenSexo::class, $row['codigo_sexo_fk']));
+                $arEmpleado->setCorreo(utf8_encode($row['correo']));
+                $arEmpleado->setFechaNacimiento(date_create($row['fecha_nacimiento']));
+                $arEmpleado->setCodigoCuentaTipoFk($row['tipo_cuenta']);
+                $arEmpleado->setCiudadNacimientoRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_nacimiento_fk']));
+                $arEmpleado->setEstadoCivilRel($em->getReference(GenEstadoCivil::class, $row['codigo_estado_civil_fk']));
+                $arEmpleado->setCuenta($row['cuenta']);
+                $arEmpleado->setTallaCamisa($row['camisa']);
+                $arEmpleado->setTallaPantalon($row['jeans']);
+                $arEmpleado->setTallaCalzado($row['calzado']);
+                $arEmpleado->setEstatura($row['estatura']);
+                $arEmpleado->setPeso($row['peso']);
+                $arEmpleado->setPagadoEntidad($row['pagado_entidad_salud']);
+                $em->persist($arEmpleado);
+                $metadata = $em->getClassMetaData(get_class($arEmpleado));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
 
-        if ($em->flush()) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     private function rhuContrato($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_contrato_pk FROM rhu_contrato ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                     codigo_contrato_pk,
                     rhu_contrato_tipo.codigo_externo as codigo_contrato_tipo_externo,
                     rhu_contrato_clase.codigo_externo as codigo_contrato_clase_externo,
@@ -494,58 +574,64 @@ class MigracionController extends Controller
                   left join rhu_entidad_pension on rhu_entidad_pension.codigo_entidad_pension_pk=rhu_contrato.codigo_entidad_pension_fk
                   left join rhu_entidad_cesantia on rhu_entidad_cesantia.codigo_entidad_cesantia_pk=rhu_contrato.codigo_entidad_cesantia_fk
                   left join rhu_entidad_caja on rhu_entidad_caja.codigo_entidad_caja_pk=rhu_contrato.codigo_entidad_caja_fk
-                  left join rhu_tipo_tiempo on rhu_contrato.codigo_tipo_tiempo_fk=rhu_tipo_tiempo.codigo_tipo_tiempo_pk");
-        foreach ($datos as $row) {
-            $arContrato = new RhuContrato();
-            $arContrato->setCodigoContratoPk($row['codigo_contrato_pk']);
-            $arContrato->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
-            $arContrato->setContratoTipoRel($em->getReference(RhuContratoTipo::class, $row['codigo_contrato_tipo_externo']));
-            $arContrato->setContratoClaseRel($em->getReference(RhuContratoClase::class, $row['codigo_contrato_clase_externo']));
-            $arContrato->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_externo']));
-            if ($row['codigo_motivo_terminacion_externo']) {
-                $arContrato->setContratoMotivoRel($em->getReference(RhuContratoMotivo::class, $row['codigo_motivo_terminacion_externo']));
+                  left join rhu_tipo_tiempo on rhu_contrato.codigo_tipo_tiempo_fk=rhu_tipo_tiempo.codigo_tipo_tiempo_pk
+                  ORDER BY codigo_contrato_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arContrato = new RhuContrato();
+                $arContrato->setCodigoContratoPk($row['codigo_contrato_pk']);
+                $arContrato->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+                $arContrato->setContratoTipoRel($em->getReference(RhuContratoTipo::class, $row['codigo_contrato_tipo_externo']));
+                $arContrato->setContratoClaseRel($em->getReference(RhuContratoClase::class, $row['codigo_contrato_clase_externo']));
+                $arContrato->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_externo']));
+                if ($row['codigo_motivo_terminacion_externo']) {
+                    $arContrato->setContratoMotivoRel($em->getReference(RhuContratoMotivo::class, $row['codigo_motivo_terminacion_externo']));
+                }
+                $arContrato->setFecha(date_create($row['fecha']));
+                $arContrato->setFechaDesde(date_create($row['fecha_desde']));
+                $arContrato->setFechaHasta(date_create($row['fecha_hasta']));
+                $arContrato->setFechaUltimoPago(date_create($row['fecha_ultimo_pago']));
+                $arContrato->setFechaUltimoPagoCesantias(date_create($row['fecha_ultimo_pago_cesantias']));
+                $arContrato->setFechaUltimoPagoPrimas(date_create($row['fecha_ultimo_pago_primas']));
+                $arContrato->setFechaUltimoPagoVacaciones(date_create($row['fecha_ultimo_pago_vacaciones']));
+                $arContrato->setNumero($row['numero']);
+                $arContrato->setTiempoRel($em->getReference(RhuTiempo::class, $row['codigo_tipo_tiempo_externo']));
+                $arContrato->setPensionRel($em->getReference(RhuPension::class, $row['codigo_tipo_pension_externo']));
+                $arContrato->setSaludRel($em->getReference(RhuSalud::class, $row['codigo_tipo_salud_externo']));
+                $arContrato->setFactorHorasDia($row['factor_horas_dia']);
+                $arContrato->setCargoRel($em->getReference(RhuCargo::class, $row['codigo_cargo_fk']));
+                $arContrato->setCargoDescripcion(utf8_encode($row['cargo_descripcion']));
+                $arContrato->setVrSalario($row['vr_salario']);
+                $arContrato->setVrSalarioPago($row['vr_salario_pago']);
+                $arContrato->setVrDevengadoPactado($row['vr_devengado_pactado']);
+                $arContrato->setComentarioTerminacion(utf8_encode($row['comentarios_terminacion']));
+                $arContrato->setEstadoTerminado($row['estado_terminado']);
+                $arContrato->setIndefinido($row['indefinido']);
+                $arContrato->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
+                $arContrato->setTipoCotizanteRel($em->getReference(RhuTipoCotizante::class, $row['codigo_tipo_cotizante_fk']));
+                $arContrato->setSubtipoCotizanteRel($em->getReference(RhuSubtipoCotizante::class, $row['codigo_subtipo_cotizante_fk']));
+                $arContrato->setSalarioIntegral($row['salario_integral']);
+                $arContrato->setAuxilioTransporte($row['auxilio_transporte']);
+                $arContrato->setCiudadLaboraRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_labora_fk']));
+                $arContrato->setCiudadContratoRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_contrato_fk']));
+                $arEntidadSalud = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_salud_externo']]);
+                $arContrato->setEntidadSaludRel($arEntidadSalud);
+                $arEntidadPension = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_pension_externo']]);
+                $arContrato->setEntidadPensionRel($arEntidadPension);
+                $arEntidadCaja = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_caja_externo']]);
+                $arContrato->setEntidadCajaRel($arEntidadCaja);
+                $arEntidadCesantia = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_cesantia_externo']]);
+                $arContrato->setEntidadCesantiaRel($arEntidadCesantia);
+                $em->persist($arContrato);
+                $metadata = $em->getClassMetaData(get_class($arContrato));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
-            $arContrato->setFecha(date_create($row['fecha']));
-            $arContrato->setFechaDesde(date_create($row['fecha_desde']));
-            $arContrato->setFechaHasta(date_create($row['fecha_hasta']));
-            $arContrato->setFechaUltimoPago(date_create($row['fecha_ultimo_pago']));
-            $arContrato->setFechaUltimoPagoCesantias(date_create($row['fecha_ultimo_pago_cesantias']));
-            $arContrato->setFechaUltimoPagoPrimas(date_create($row['fecha_ultimo_pago_primas']));
-            $arContrato->setFechaUltimoPagoVacaciones(date_create($row['fecha_ultimo_pago_vacaciones']));
-            $arContrato->setNumero($row['numero']);
-            $arContrato->setTiempoRel($em->getReference(RhuTiempo::class, $row['codigo_tipo_tiempo_externo']));
-            $arContrato->setPensionRel($em->getReference(RhuPension::class, $row['codigo_tipo_pension_externo']));
-            $arContrato->setSaludRel($em->getReference(RhuSalud::class, $row['codigo_tipo_salud_externo']));
-            $arContrato->setFactorHorasDia($row['factor_horas_dia']);
-            $arContrato->setCargoRel($em->getReference(RhuCargo::class, $row['codigo_cargo_fk']));
-            $arContrato->setCargoDescripcion(utf8_encode($row['cargo_descripcion']));
-            $arContrato->setVrSalario($row['vr_salario']);
-            $arContrato->setVrSalarioPago($row['vr_salario_pago']);
-            $arContrato->setVrDevengadoPactado($row['vr_devengado_pactado']);
-            $arContrato->setComentarioTerminacion(utf8_encode($row['comentarios_terminacion']));
-            $arContrato->setEstadoTerminado($row['estado_terminado']);
-            $arContrato->setIndefinido($row['indefinido']);
-            $arContrato->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
-            $arContrato->setTipoCotizanteRel($em->getReference(RhuTipoCotizante::class, $row['codigo_tipo_cotizante_fk']));
-            $arContrato->setSubtipoCotizanteRel($em->getReference(RhuSubtipoCotizante::class, $row['codigo_subtipo_cotizante_fk']));
-            $arContrato->setSalarioIntegral($row['salario_integral']);
-            $arContrato->setAuxilioTransporte($row['auxilio_transporte']);
-            $arContrato->setCiudadLaboraRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_labora_fk']));
-            $arContrato->setCiudadContratoRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_contrato_fk']));
-            $arEntidadSalud = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_salud_externo']]);
-            $arContrato->setEntidadSaludRel($arEntidadSalud);
-            $arEntidadPension = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_pension_externo']]);
-            $arContrato->setEntidadPensionRel($arEntidadPension);
-            $arEntidadCaja = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_caja_externo']]);
-            $arContrato->setEntidadCajaRel($arEntidadCaja);
-            $arEntidadCesantia = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_cesantia_externo']]);
-            $arContrato->setEntidadCesantiaRel($arEntidadCesantia);
-            $em->persist($arContrato);
-            $metadata = $em->getClassMetaData(get_class($arContrato));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
+
 
 
     }
@@ -650,7 +736,9 @@ class MigracionController extends Controller
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
             $em->flush();
-
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
 
     }
@@ -888,7 +976,13 @@ class MigracionController extends Controller
     private function rhuCreditoPago($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_credito_pago_pk FROM rhu_credito_pago ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                         codigo_credito_pago_pk,
                         codigo_credito_fk,
                         rhu_credito_tipo_pago.codigo_externo as codigo_credito_pago_tipo_externo, 
@@ -897,26 +991,29 @@ class MigracionController extends Controller
                         numero_cuota_actual,
                         fecha_pago                                                
                  FROM rhu_credito_pago
-                 left join rhu_credito_tipo_pago ON rhu_credito_pago.codigo_credito_tipo_pago_fk = rhu_credito_tipo_pago.codigo_credito_tipo_pago_pk");
-        foreach ($datos as $row) {
-            $arCreditoPago = new RhuCreditoPago();
-            $arCreditoPago->setCodigoCreditoPagoPk($row['codigo_credito_pago_pk']);
-            $arCreditoPago->setCreditoRel($em->getReference(RhuCredito::class, $row['codigo_credito_fk']));
-            if ($row['codigo_credito_pago_tipo_externo']) {
-                $arCreditoPago->setCreditoPagoTipoRel($em->getReference(RhuCreditoPagoTipo::class, $row['codigo_credito_pago_tipo_externo']));
+                 left join rhu_credito_tipo_pago ON rhu_credito_pago.codigo_credito_tipo_pago_fk = rhu_credito_tipo_pago.codigo_credito_tipo_pago_pk 
+                 ORDER BY codigo_credito_pago_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arCreditoPago = new RhuCreditoPago();
+                $arCreditoPago->setCodigoCreditoPagoPk($row['codigo_credito_pago_pk']);
+                $arCreditoPago->setCreditoRel($em->getReference(RhuCredito::class, $row['codigo_credito_fk']));
+                if ($row['codigo_credito_pago_tipo_externo']) {
+                    $arCreditoPago->setCreditoPagoTipoRel($em->getReference(RhuCreditoPagoTipo::class, $row['codigo_credito_pago_tipo_externo']));
+                }
+                $arCreditoPago->setVrPago($row['vr_cuota']);
+                $arCreditoPago->setVrSaldo($row['saldo']);
+                $arCreditoPago->setNumeroCuotaActual($row['numero_cuota_actual']);
+                $arCreditoPago->setFechaPago(date_create($row['fecha_pago']));
+                $em->persist($arCreditoPago);
+                $metadata = $em->getClassMetaData(get_class($arCreditoPago));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
-            $arCreditoPago->setVrPago($row['vr_cuota']);
-            $arCreditoPago->setVrSaldo($row['saldo']);
-            $arCreditoPago->setNumeroCuotaActual($row['numero_cuota_actual']);
-            $arCreditoPago->setFechaPago(date_create($row['fecha_pago']));
-            $em->persist($arCreditoPago);
-            $metadata = $em->getClassMetaData(get_class($arCreditoPago));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
-
-
     }
 
     private function rhuVacacion($conn)
@@ -1200,7 +1297,13 @@ class MigracionController extends Controller
     private function rhuPago($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_pago_pk FROM rhu_pago ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                 codigo_pago_pk,
                 rhu_pago_tipo.codigo_externo as codigo_pago_tipo_externo,
                 codigo_centro_costo_fk,
@@ -1222,41 +1325,44 @@ class MigracionController extends Controller
                 codigo_vacacion_fk,
                 codigo_liquidacion_fk
                  FROM rhu_pago  
-                 left join rhu_pago_tipo on rhu_pago.codigo_pago_tipo_fk = rhu_pago_tipo.codigo_pago_tipo_pk");
-        foreach ($datos as $row) {
-            $arPago = new RhuPago();
-            $arPago->setCodigoPagoPk($row['codigo_pago_pk']);
-            $arPago->setPagoTipoRel($em->getReference(RhuPagoTipo::class, $row['codigo_pago_tipo_externo']));
-            $arPago->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
-            $arPago->setCodigoPeriodoFk($row['codigo_periodo_pago_fk']);
-            $arPago->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
-            $arPago->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
-            $arPago->setNumero($row['numero']);
-            $arPago->setFechaDesde(date_create($row['fecha_desde']));
-            $arPago->setFechaHasta(date_create($row['fecha_hasta']));
-            $arPago->setFechaDesdeContrato(date_create($row['fecha_desde_pago']));
-            $arPago->setFechaHastaContrato(date_create($row['fecha_hasta_pago']));
-            $arPago->setVrSalarioContrato($row['vr_salario_empleado']);
-            $arPago->setVrDevengado($row['vr_devengado']);
-            $arPago->setVrDeduccion($row['vr_deducciones']);
-            $arPago->setVrNeto($row['vr_neto']);
-            $arPago->setEstadoAnulado($row['estado_anulado']);
-            $arPago->setComentario($row['comentarios']);
-            $arPago->setUsuario($row['codigo_usuario']);
-            if ($row['codigo_vacacion_fk']) {
-                $arPago->setVacacionRel($em->getReference(RhuVacacion::class, $row['codigo_vacacion_fk']));
+                 left join rhu_pago_tipo on rhu_pago.codigo_pago_tipo_fk = rhu_pago_tipo.codigo_pago_tipo_pk 
+                 ORDER BY codigo_pago_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arPago = new RhuPago();
+                $arPago->setCodigoPagoPk($row['codigo_pago_pk']);
+                $arPago->setPagoTipoRel($em->getReference(RhuPagoTipo::class, $row['codigo_pago_tipo_externo']));
+                $arPago->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
+                $arPago->setCodigoPeriodoFk($row['codigo_periodo_pago_fk']);
+                $arPago->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+                $arPago->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
+                $arPago->setNumero($row['numero']);
+                $arPago->setFechaDesde(date_create($row['fecha_desde']));
+                $arPago->setFechaHasta(date_create($row['fecha_hasta']));
+                $arPago->setFechaDesdeContrato(date_create($row['fecha_desde_pago']));
+                $arPago->setFechaHastaContrato(date_create($row['fecha_hasta_pago']));
+                $arPago->setVrSalarioContrato($row['vr_salario_empleado']);
+                $arPago->setVrDevengado($row['vr_devengado']);
+                $arPago->setVrDeduccion($row['vr_deducciones']);
+                $arPago->setVrNeto($row['vr_neto']);
+                $arPago->setEstadoAnulado($row['estado_anulado']);
+                $arPago->setComentario($row['comentarios']);
+                $arPago->setUsuario(utf8_encode($row['codigo_usuario']));
+                if ($row['codigo_vacacion_fk']) {
+                    $arPago->setVacacionRel($em->getReference(RhuVacacion::class, $row['codigo_vacacion_fk']));
+                }
+                if ($row['codigo_liquidacion_fk']) {
+                    $arPago->setLiquidacionRel($em->getReference(RhuLiquidacion::class, $row['codigo_liquidacion_fk']));
+                }
+                $em->persist($arPago);
+                $metadata = $em->getClassMetaData(get_class($arPago));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
-            if ($row['codigo_liquidacion_fk']) {
-                $arPago->setLiquidacionRel($em->getReference(RhuLiquidacion::class, $row['codigo_liquidacion_fk']));
-            }
-            $em->persist($arPago);
-            $metadata = $em->getClassMetaData(get_class($arPago));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
-
-
     }
 
     private function rhuPagoDetalle($conn)
@@ -1314,6 +1420,9 @@ class MigracionController extends Controller
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
             $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
 
     }
@@ -1355,7 +1464,13 @@ class MigracionController extends Controller
     private function rhuIncapacidad($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_incapacidad_pk FROM rhu_incapacidad ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                         codigo_incapacidad_pk,
                         numero,
                         fecha,
@@ -1407,77 +1522,85 @@ class MigracionController extends Controller
                         estado_cobrar_cliente,
                         rhu_entidad_salud.codigo_interface as codigo_entidad_salud_externo                                                                          
                  FROM rhu_incapacidad    
-                 left join rhu_entidad_salud on rhu_entidad_salud.codigo_entidad_salud_pk=rhu_incapacidad.codigo_entidad_salud_fk");
-        foreach ($datos as $row) {
-            $arIncapacidad = new RhuIncapacidad();
-            $arIncapacidad->setCodigoIncapacidadPk($row['codigo_incapacidad_pk']);
-            $arIncapacidad->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
-            $arIncapacidad->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
-            $arIncapacidad->getNumero($row['numero']);
-            $arIncapacidad->setNumeroEps($row['numero_eps']);
-            $arIncapacidad->setFecha(date_create($row['fecha']));
-            $arIncapacidad->setFechaDesde(date_create($row['fecha_desde']));
-            $arIncapacidad->setFechaHasta(date_create($row['fecha_hasta']));
-            $arIncapacidad->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
-            if ($row['codigo_incapacidad_tipo_fk'] == 1) {
-                $arIncapacidad->setIncapacidadTipoRel($em->getReference(RhuIncapacidadTipo::class, 'GEN'));
-            } else {
-                $arIncapacidad->setIncapacidadTipoRel($em->getReference(RhuIncapacidadTipo::class, 'LAB'));
-            }
-            $arIncapacidad->setIncapacidadDiagnosticoRel($em->getReference(RhuIncapacidadDiagnostico::class, $row['codigo_incapacidad_diagnostico_fk']));
-            $arIncapacidad->setCantidad($row['cantidad']);
-            $arIncapacidad->setDiasCobro($row['dias_cobro']);
-            $arIncapacidad->setEstadoTranscripcion($row['estado_transcripcion']);
-            $arIncapacidad->setEstadoLegalizado($row['estado_legalizado']);
-            $arIncapacidad->setVrIncapacidad($row['vr_incapacidad']);
-            $arIncapacidad->setVrPagado($row['vr_pagado']);
-            $arIncapacidad->setVrSaldo($row['vr_saldo']);
-            $arIncapacidad->setPorcentajePago($row['porcentaje_pago']);
-            $arIncapacidad->setCodigoUsuario($row['codigo_usuario']);
-            $arIncapacidad->setVrCobro($row['vr_cobro']);
-            $arIncapacidad->setVrIbcPropuesto($row['vr_ibc_propuesto']);
-            $arIncapacidad->setDiasEntidad($row['dias_entidad']);
-            $arIncapacidad->setDiasEmpresa($row['dias_empresa']);
-            $arIncapacidad->setDiasAcumulados($row['dias_acumulados']);
-            $arIncapacidad->setPagarEmpleado($row['pagar_empleado']);
-            $arIncapacidad->setVrIbcMesAnterior($row['vr_ibc_mes_anterior']);
-            $arIncapacidad->setDiasIbcMesAnterior($row['dias_ibc_mes_anterior']);
-            $arIncapacidad->setVrHora($row['vr_hora']);
-            /*if($row['codigo_incapacidad_prorroga_fk']) {
-                $arIncapacidad->setIncapacidadProrrogaRel($em->getReference(RhuIncapacidad::class, $row['codigo_incapacidad_prorroga_fk']));
-            }*/
-            if ($row['fecha_desde_empresa'] == null) {
-                $arIncapacidad->setFechaDesdeEmpresa(null);
-            } else {
-                $arIncapacidad->setFechaDesdeEmpresa(date_create($row['fecha_desde_empresa']));
-            }
-            if ($row['fecha_hasta_empresa'] == null) {
-                $arIncapacidad->setFechaHastaEmpresa(null);
-            } else {
-                $arIncapacidad->setFechaHastaEmpresa(date_create($row['fecha_hasta_empresa']));
-            }
-            $arIncapacidad->setFechaDesdeEntidad(date_create($row['fecha_desde_entidad']));
-            $arIncapacidad->setFechaHastaEntidad(date_create($row['fecha_hasta_entidad']));
-            $arIncapacidad->setVrPropuesto($row['vr_propuesto']);
-            $arIncapacidad->setVrHoraEmpresa($row['vr_hora_empresa']);
-            $arIncapacidad->setFechaDocumentoFisico(date_create($row['fecha_documento_fisico']));
-            $arIncapacidad->setAplicarAdicional($row['aplicar_adicional']);
-            $arIncapacidad->setFechaAplicacion(date_create($row['fecha_aplicacion']));
-            $arIncapacidad->setVrAbono($row['vr_abono']);
-            $arIncapacidad->setMedico(utf8_encode($row['medico']));
-            $arIncapacidad->setVrSalario($row['vr_salario']);
-            $arIncapacidad->setComentarios(utf8_encode($row['comentarios']));
-            $arIncapacidad->setEstadoCobrar($row['estado_cobrar']);
-            $arIncapacidad->setEstadoProrroga($row['estado_prorroga']);
-            $arEntidadSalud = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_salud_externo']]);
-            $arIncapacidad->setEntidadSaludRel($arEntidadSalud);
+                 left join rhu_entidad_salud on rhu_entidad_salud.codigo_entidad_salud_pk=rhu_incapacidad.codigo_entidad_salud_fk 
+                 ORDER BY codigo_incapacidad_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arIncapacidad = new RhuIncapacidad();
+                $arIncapacidad->setCodigoIncapacidadPk($row['codigo_incapacidad_pk']);
+                $arIncapacidad->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+                if($row['codigo_contrato_fk']) {
+                    $arIncapacidad->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
+                }
+                $arIncapacidad->getNumero($row['numero']);
+                $arIncapacidad->setNumeroEps($row['numero_eps']);
+                $arIncapacidad->setFecha(date_create($row['fecha']));
+                $arIncapacidad->setFechaDesde(date_create($row['fecha_desde']));
+                $arIncapacidad->setFechaHasta(date_create($row['fecha_hasta']));
 
-            $em->persist($arIncapacidad);
-            $metadata = $em->getClassMetaData(get_class($arIncapacidad));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+                if($row['codigo_centro_costo_fk']) {
+                    $arIncapacidad->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
+                }
+                if ($row['codigo_incapacidad_tipo_fk'] == 1) {
+                    $arIncapacidad->setIncapacidadTipoRel($em->getReference(RhuIncapacidadTipo::class, 'GEN'));
+                } else {
+                    $arIncapacidad->setIncapacidadTipoRel($em->getReference(RhuIncapacidadTipo::class, 'LAB'));
+                }
+                $arIncapacidad->setIncapacidadDiagnosticoRel($em->getReference(RhuIncapacidadDiagnostico::class, $row['codigo_incapacidad_diagnostico_fk']));
+                $arIncapacidad->setCantidad($row['cantidad']);
+                $arIncapacidad->setDiasCobro($row['dias_cobro']);
+                $arIncapacidad->setEstadoTranscripcion($row['estado_transcripcion']);
+                $arIncapacidad->setEstadoLegalizado($row['estado_legalizado']);
+                $arIncapacidad->setVrIncapacidad($row['vr_incapacidad']);
+                $arIncapacidad->setVrPagado($row['vr_pagado']);
+                $arIncapacidad->setVrSaldo($row['vr_saldo']);
+                $arIncapacidad->setPorcentajePago($row['porcentaje_pago']);
+                $arIncapacidad->setCodigoUsuario($row['codigo_usuario']);
+                $arIncapacidad->setVrCobro($row['vr_cobro']);
+                $arIncapacidad->setVrIbcPropuesto($row['vr_ibc_propuesto']);
+                $arIncapacidad->setDiasEntidad($row['dias_entidad']);
+                $arIncapacidad->setDiasEmpresa($row['dias_empresa']);
+                $arIncapacidad->setDiasAcumulados($row['dias_acumulados']);
+                $arIncapacidad->setPagarEmpleado($row['pagar_empleado']);
+                $arIncapacidad->setVrIbcMesAnterior($row['vr_ibc_mes_anterior']);
+                $arIncapacidad->setDiasIbcMesAnterior($row['dias_ibc_mes_anterior']);
+                $arIncapacidad->setVrHora($row['vr_hora']);
+                /*if($row['codigo_incapacidad_prorroga_fk']) {
+                    $arIncapacidad->setIncapacidadProrrogaRel($em->getReference(RhuIncapacidad::class, $row['codigo_incapacidad_prorroga_fk']));
+                }*/
+                if ($row['fecha_desde_empresa'] == null) {
+                    $arIncapacidad->setFechaDesdeEmpresa(null);
+                } else {
+                    $arIncapacidad->setFechaDesdeEmpresa(date_create($row['fecha_desde_empresa']));
+                }
+                if ($row['fecha_hasta_empresa'] == null) {
+                    $arIncapacidad->setFechaHastaEmpresa(null);
+                } else {
+                    $arIncapacidad->setFechaHastaEmpresa(date_create($row['fecha_hasta_empresa']));
+                }
+                $arIncapacidad->setFechaDesdeEntidad(date_create($row['fecha_desde_entidad']));
+                $arIncapacidad->setFechaHastaEntidad(date_create($row['fecha_hasta_entidad']));
+                $arIncapacidad->setVrPropuesto($row['vr_propuesto']);
+                $arIncapacidad->setVrHoraEmpresa($row['vr_hora_empresa']);
+                $arIncapacidad->setFechaDocumentoFisico(date_create($row['fecha_documento_fisico']));
+                $arIncapacidad->setAplicarAdicional($row['aplicar_adicional']);
+                $arIncapacidad->setFechaAplicacion(date_create($row['fecha_aplicacion']));
+                $arIncapacidad->setVrAbono($row['vr_abono']);
+                $arIncapacidad->setMedico(utf8_encode($row['medico']));
+                $arIncapacidad->setVrSalario($row['vr_salario']);
+                $arIncapacidad->setComentarios(utf8_encode($row['comentarios']));
+                $arIncapacidad->setEstadoCobrar($row['estado_cobrar']);
+                $arIncapacidad->setEstadoProrroga($row['estado_prorroga']);
+                $arEntidadSalud = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_salud_externo']]);
+                $arIncapacidad->setEntidadSaludRel($arEntidadSalud);
+
+                $em->persist($arIncapacidad);
+                $metadata = $em->getClassMetaData(get_class($arIncapacidad));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
         }
-        $em->flush();
+
     }
 
     private function rhuLicenciaTipo($conn)
@@ -1518,7 +1641,13 @@ class MigracionController extends Controller
     private function rhuLicencia($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_licencia_pk FROM rhu_licencia ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                     codigo_licencia_pk,
                     codigo_licencia_tipo_fk,
                     codigo_centro_costo_fk,
@@ -1557,54 +1686,60 @@ class MigracionController extends Controller
                     vr_propuesto,
                     rhu_entidad_salud.codigo_interface as codigo_entidad_salud_externo
                  FROM rhu_licencia 
-                 left join rhu_entidad_salud on rhu_entidad_salud.codigo_entidad_salud_pk=rhu_licencia.codigo_entidad_salud_fk");
-        foreach ($datos as $row) {
-            $arLicencia = new RhuLicencia();
-            $arLicencia->setCodigoLicenciaPk($row['codigo_licencia_pk']);
-            $arLicencia->setLicenciaTipoRel($em->getReference(RhuLicenciaTipo::class, $row['codigo_licencia_tipo_fk']));
-            if ($row['codigo_centro_costo_fk']) {
-                $arLicencia->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
+                 left join rhu_entidad_salud on rhu_entidad_salud.codigo_entidad_salud_pk=rhu_licencia.codigo_entidad_salud_fk 
+                 ORDER BY codigo_licencia_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arLicencia = new RhuLicencia();
+                $arLicencia->setCodigoLicenciaPk($row['codigo_licencia_pk']);
+                $arLicencia->setLicenciaTipoRel($em->getReference(RhuLicenciaTipo::class, $row['codigo_licencia_tipo_fk']));
+                if ($row['codigo_centro_costo_fk']) {
+                    $arLicencia->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
+                }
+                $arLicencia->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+                $arLicencia->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
+                $arLicencia->setFecha(date_create($row['fecha']));
+                $arLicencia->setFechaDesde(date_create($row['fecha_desde']));
+                $arLicencia->setFechaHasta(date_create($row['fecha_hasta']));
+                $arLicencia->setCantidad($row['cantidad']);
+                $arLicencia->setComentarios(utf8_encode($row['comentarios']));
+                $arLicencia->setAfectaTransporte($row['afecta_transporte']);
+                $arLicencia->setCodigoUsuario(utf8_encode($row['codigo_usuario']));
+                $arLicencia->setMaternidad($row['maternidad']);
+                $arEntidadSalud = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_salud_externo']]);
+                $arLicencia->setEntidadSaludRel($arEntidadSalud);
+                $arLicencia->setPaternidad($row['paternidad']);
+                $arLicencia->setEstadoCobrar($row['estado_cobrar']);
+                $arLicencia->setEstadoCobrarCliente($row['estado_cobrar_cliente']);
+                $arLicencia->setDiasCobro($row['dias_cobro']);
+                $arLicencia->setEstadoProrroga($row['estado_prorroga']);
+                $arLicencia->setEstadoTranscripcion($row['estado_transcripcion']);
+                $arLicencia->setEstadoLegalizado($row['estado_legalizado']);
+                $arLicencia->setPorcentajePago($row['porcentaje_pago']);
+                $arLicencia->setVrCobro($row['vr_cobro']);
+                $arLicencia->setVrLicencia($row['vr_licencia']);
+                $arLicencia->setVrSaldo($row['vr_saldo']);
+                $arLicencia->setVrPagado($row['vr_pagado']);
+                $arLicencia->setPagarEmpleado($row['pagar_empleado']);
+                $arLicencia->setVrIbcMesAnterior($row['vr_ibc_mes_anterior']);
+                $arLicencia->setDiasIbcMesAnterior($row['dias_ibc_mes_anterior']);
+                $arLicencia->setVrHora($row['vr_hora']);
+                $arLicencia->setCodigoNovedadProgramacion($row['codigo_novedad_programacion']);
+                $arLicencia->setAplicarAdicional($row['aplicar_adicional']);
+                $arLicencia->setFechaAplicacion(date_create($row['fecha_aplicacion']));
+                $arLicencia->setVrAbono($row['vr_abono']);
+                $arLicencia->setVrIbcPropuesto($row['vr_ibc_propuesto']);
+                $arLicencia->setVrPropuesto($row['vr_propuesto']);
+                $em->persist($arLicencia);
+                $metadata = $em->getClassMetaData(get_class($arLicencia));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
-            $arLicencia->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
-            $arLicencia->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
-            $arLicencia->setFecha(date_create($row['fecha']));
-            $arLicencia->setFechaDesde(date_create($row['fecha_desde']));
-            $arLicencia->setFechaHasta(date_create($row['fecha_hasta']));
-            $arLicencia->setCantidad($row['cantidad']);
-            $arLicencia->setComentarios(utf8_encode($row['comentarios']));
-            $arLicencia->setAfectaTransporte($row['afecta_transporte']);
-            $arLicencia->setCodigoUsuario($row['codigo_usuario']);
-            $arLicencia->setMaternidad($row['maternidad']);
-            $arEntidadSalud = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_salud_externo']]);
-            $arLicencia->setEntidadSaludRel($arEntidadSalud);
-            $arLicencia->setPaternidad($row['paternidad']);
-            $arLicencia->setEstadoCobrar($row['estado_cobrar']);
-            $arLicencia->setEstadoCobrarCliente($row['estado_cobrar_cliente']);
-            $arLicencia->setDiasCobro($row['dias_cobro']);
-            $arLicencia->setEstadoProrroga($row['estado_prorroga']);
-            $arLicencia->setEstadoTranscripcion($row['estado_transcripcion']);
-            $arLicencia->setEstadoLegalizado($row['estado_legalizado']);
-            $arLicencia->setPorcentajePago($row['porcentaje_pago']);
-            $arLicencia->setVrCobro($row['vr_cobro']);
-            $arLicencia->setVrLicencia($row['vr_licencia']);
-            $arLicencia->setVrSaldo($row['vr_saldo']);
-            $arLicencia->setVrPagado($row['vr_pagado']);
-            $arLicencia->setPagarEmpleado($row['pagar_empleado']);
-            $arLicencia->setVrIbcMesAnterior($row['vr_ibc_mes_anterior']);
-            $arLicencia->setDiasIbcMesAnterior($row['dias_ibc_mes_anterior']);
-            $arLicencia->setVrHora($row['vr_hora']);
-            $arLicencia->setCodigoNovedadProgramacion($row['codigo_novedad_programacion']);
-            $arLicencia->setAplicarAdicional($row['aplicar_adicional']);
-            $arLicencia->setFechaAplicacion(date_create($row['fecha_aplicacion']));
-            $arLicencia->setVrAbono($row['vr_abono']);
-            $arLicencia->setVrIbcPropuesto($row['vr_ibc_propuesto']);
-            $arLicencia->setVrPropuesto($row['vr_propuesto']);
-            $em->persist($arLicencia);
-            $metadata = $em->getClassMetaData(get_class($arLicencia));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
+
     }
 
     private function turTurno($conn)
@@ -1770,7 +1905,13 @@ class MigracionController extends Controller
     private function turCliente($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_cliente_pk FROM tur_cliente ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                 codigo_cliente_pk,
                 nit,
                 digito_verificacion,
@@ -1779,29 +1920,41 @@ class MigracionController extends Controller
                 estrato,
                 direccion,
                 telefono
-                 FROM tur_cliente");
-        foreach ($datos as $row) {
-            $arCliente = new TurCliente();
-            $arCliente->setCodigoClientePk($row['codigo_cliente_pk']);
-            $arCliente->setNumeroIdentificacion($row['nit']);
-            $arCliente->setDigitoVerificacion($row['digito_verificacion']);
-            $arCliente->setNombreCorto(utf8_encode($row['nombre_corto']));
-            $arCliente->setNombreExtendido(utf8_encode($row['nombre_completo']));
-            $arCliente->setEstrato($row['estrato']);
-            $arCliente->setDireccion(utf8_encode($row['direccion']));
-            $arCliente->setTelefono($row['telefono']);
-            $em->persist($arCliente);
-            $metadata = $em->getClassMetaData(get_class($arCliente));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+                 FROM tur_cliente 
+                 ORDER BY codigo_cliente_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arCliente = new TurCliente();
+                $arCliente->setCodigoClientePk($row['codigo_cliente_pk']);
+                $arCliente->setNumeroIdentificacion($row['nit']);
+                $arCliente->setDigitoVerificacion($row['digito_verificacion']);
+                $arCliente->setNombreCorto(utf8_encode($row['nombre_corto']));
+                $arCliente->setNombreExtendido(utf8_encode($row['nombre_completo']));
+                $arCliente->setEstrato($row['estrato']);
+                $arCliente->setDireccion(utf8_encode($row['direccion']));
+                $arCliente->setTelefono($row['telefono']);
+                $em->persist($arCliente);
+                $metadata = $em->getClassMetaData(get_class($arCliente));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
+
     }
 
     private function turPuesto($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_puesto_pk FROM tur_puesto ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                 codigo_puesto_pk,
                 codigo_cliente_fk,
                 nombre,
@@ -1810,23 +1963,29 @@ class MigracionController extends Controller
                 celular,
                 contacto,
                 codigo_ciudad_fk
-                 FROM tur_puesto");
-        foreach ($datos as $row) {
-            $arPuesto = new TurPuesto();
-            $arPuesto->setCodigoPuestoPk($row['codigo_puesto_pk']);
-            $arPuesto->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
-            $arPuesto->setNombre(utf8_encode($row['nombre']));
-            $arPuesto->setDireccion(utf8_encode($row['direccion']));
-            $arPuesto->setTelefono(utf8_encode($row['telefono']));
-            $arPuesto->setCelular(utf8_encode($row['celular']));
-            $arPuesto->setContacto(utf8_encode($row['contacto']));
-            $arPuesto->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
-            $em->persist($arPuesto);
-            $metadata = $em->getClassMetaData(get_class($arPuesto));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+                 FROM tur_puesto 
+                 ORDER BY codigo_puesto_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arPuesto = new TurPuesto();
+                $arPuesto->setCodigoPuestoPk($row['codigo_puesto_pk']);
+                $arPuesto->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+                $arPuesto->setNombre(utf8_encode($row['nombre']));
+                $arPuesto->setDireccion(utf8_encode($row['direccion']));
+                $arPuesto->setTelefono(utf8_encode($row['telefono']));
+                $arPuesto->setCelular(utf8_encode($row['celular']));
+                $arPuesto->setContacto(utf8_encode($row['contacto']));
+                $arPuesto->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+                $em->persist($arPuesto);
+                $metadata = $em->getClassMetaData(get_class($arPuesto));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
+
     }
 
     private function turConcepto($conn)
@@ -1847,7 +2006,6 @@ class MigracionController extends Controller
             $arConcepto->setHoras($row['horas']);
             $arConcepto->setHorasDiurnas($row['horas_diurnas']);
             $arConcepto->setHorasNocturnas($row['horas_nocturnas']);
-            $arConcepto->setPorcentajeIva($row['por_iva']);
             $em->persist($arConcepto);
             $metadata = $em->getClassMetaData(get_class($arConcepto));
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -1859,7 +2017,13 @@ class MigracionController extends Controller
     private function turContrato($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_servicio_pk FROM tur_servicio ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                 codigo_servicio_pk,
                 codigo_cliente_fk,  
                 tur_sector.codigo_externo as codigo_sector_externo,              
@@ -1881,42 +2045,54 @@ class MigracionController extends Controller
                 vr_salario_base,
                 estrato 
                  FROM tur_servicio 
-                 left join tur_sector on tur_servicio.codigo_sector_fk = tur_sector.codigo_sector_pk");
-        foreach ($datos as $row) {
-            $arContrato = new TurContrato();
-            $arContrato->setCodigoContratoPk($row['codigo_servicio_pk']);
-            $arContrato->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
-            $arContrato->setSectorRel($em->getReference(TurSector::class, $row['codigo_sector_externo']));
-            $arContrato->setContratoTipoRel($em->getReference(TurContratoTipo::class, 'PER'));
-            $arContrato->setFechaGeneracion(date_create($row['fecha_generacion']));
-            $arContrato->setSoporte($row['soporte']);
-            $arContrato->setEstadoAutorizado($row['estado_autorizado']);
-            $arContrato->setHoras($row['horas']);
-            $arContrato->setHorasDiurnas($row['horas_diurnas']);
-            $arContrato->setHorasNocturnas($row['horas_nocturnas']);
-            $arContrato->setVrTotalServicio($row['vr_total_servicio']);
-            $arContrato->setVrTotalPrecioAjustado($row['vr_total_precio_ajustado']);
-            $arContrato->setVrTotalPrecioMinimo($row['vr_total_precio_minimo']);
-            $arContrato->setVrSubtotal($row['vr_subtotal']);
-            $arContrato->setVrIva($row['vr_iva']);
-            $arContrato->setVrBaseAiu($row['vr_base_aiu']);
-            $arContrato->setVrTotal($row['vr_total']);
-            $arContrato->setUsuario($row['usuario']);
-            $arContrato->setComentarios(utf8_encode($row['comentarios']));
-            $arContrato->setVrSalarioBase($row['vr_salario_base']);
-            $arContrato->setEstrato($row['estrato']);
-            $em->persist($arContrato);
-            $metadata = $em->getClassMetaData(get_class($arContrato));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+                 left join tur_sector on tur_servicio.codigo_sector_fk = tur_sector.codigo_sector_pk 
+                 ORDER BY codigo_servicio_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arContrato = new TurContrato();
+                $arContrato->setCodigoContratoPk($row['codigo_servicio_pk']);
+                $arContrato->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+                $arContrato->setSectorRel($em->getReference(TurSector::class, $row['codigo_sector_externo']));
+                $arContrato->setContratoTipoRel($em->getReference(TurContratoTipo::class, 'PER'));
+                $arContrato->setFechaGeneracion(date_create($row['fecha_generacion']));
+                $arContrato->setSoporte($row['soporte']);
+                $arContrato->setEstadoAutorizado($row['estado_autorizado']);
+                $arContrato->setHoras($row['horas']);
+                $arContrato->setHorasDiurnas($row['horas_diurnas']);
+                $arContrato->setHorasNocturnas($row['horas_nocturnas']);
+                $arContrato->setVrTotalServicio($row['vr_total_servicio']);
+                $arContrato->setVrTotalPrecioAjustado($row['vr_total_precio_ajustado']);
+                $arContrato->setVrTotalPrecioMinimo($row['vr_total_precio_minimo']);
+                $arContrato->setVrSubtotal($row['vr_subtotal']);
+                $arContrato->setVrIva($row['vr_iva']);
+                $arContrato->setVrBaseAiu($row['vr_base_aiu']);
+                $arContrato->setVrTotal($row['vr_total']);
+                $arContrato->setUsuario($row['usuario']);
+                $arContrato->setComentarios(utf8_encode($row['comentarios']));
+                $arContrato->setVrSalarioBase($row['vr_salario_base']);
+                $arContrato->setEstrato($row['estrato']);
+                $em->persist($arContrato);
+                $metadata = $em->getClassMetaData(get_class($arContrato));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
+
     }
 
     private function turContratoDetalle($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_servicio_detalle_pk FROM tur_servicio_detalle ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                     codigo_servicio_detalle_pk,
                     codigo_servicio_fk,
                     codigo_puesto_fk,
@@ -1949,52 +2125,64 @@ class MigracionController extends Controller
                     porcentaje_iva,
                     porcentaje_base_iva
                  FROM tur_servicio_detalle 
-                 left join tur_modalidad_servicio on tur_servicio_detalle.codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk");
-        foreach ($datos as $row) {
-            $arContratoDetalle = new TurContratoDetalle();
-            $arContratoDetalle->setCodigoContratoDetallePk($row['codigo_servicio_detalle_pk']);
-            $arContratoDetalle->setContratoRel($em->getReference(TurContrato::class, $row['codigo_servicio_fk']));
-            $arContratoDetalle->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
-            $arContratoDetalle->setConceptoRel($em->getReference(TurConcepto::class, $row['codigo_concepto_servicio_fk']));
-            $arContratoDetalle->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
-            $arContratoDetalle->setFechaDesde(date_create($row['fecha_desde']));
-            $arContratoDetalle->setFechaHasta(date_create($row['fecha_hasta']));
-            $arContratoDetalle->setLiquidarDiasReales($row['liquidar_dias_reales']);
-            $arContratoDetalle->setDias($row['dias']);
-            $arContratoDetalle->setHoras($row['horas']);
-            $arContratoDetalle->setHorasDiurnas($row['horas_diurnas']);
-            $arContratoDetalle->setHorasNocturnas($row['horas_nocturnas']);
-            $arContratoDetalle->setCantidad($row['cantidad']);
-            $arContratoDetalle->setVrPrecioMinimo($row['vr_precio_minimo']);
-            $arContratoDetalle->setVrPrecio($row['vr_precio']);
-            $arContratoDetalle->setVrSubtotal($row['vr_subtotal']);
-            $arContratoDetalle->setVrIva($row['vr_iva']);
-            $arContratoDetalle->setVrBaseAiu($row['vr_base_aiu']);
-            $arContratoDetalle->setVrTotalDetalle($row['vr_total_detalle']);
-            $arContratoDetalle->setLunes($row['lunes']);
-            $arContratoDetalle->setMartes($row['martes']);
-            $arContratoDetalle->setMiercoles($row['miercoles']);
-            $arContratoDetalle->setJueves($row['jueves']);
-            $arContratoDetalle->setViernes($row['viernes']);
-            $arContratoDetalle->setSabado($row['sabado']);
-            $arContratoDetalle->setDomingo($row['domingo']);
-            $arContratoDetalle->setFestivo($row['festivo']);
-            $arContratoDetalle->setEstadoCerrado($row['estado_cerrado']);
-            $arContratoDetalle->setVrSalarioBase($row['vr_salario_base']);
-            $arContratoDetalle->setPorcentajeIva($row['porcentaje_iva']);
-            $arContratoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
-            $em->persist($arContratoDetalle);
-            $metadata = $em->getClassMetaData(get_class($arContratoDetalle));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+                 left join tur_modalidad_servicio on tur_servicio_detalle.codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk 
+                 ORDER BY codigo_servicio_detalle_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arContratoDetalle = new TurContratoDetalle();
+                $arContratoDetalle->setCodigoContratoDetallePk($row['codigo_servicio_detalle_pk']);
+                $arContratoDetalle->setContratoRel($em->getReference(TurContrato::class, $row['codigo_servicio_fk']));
+                $arContratoDetalle->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
+                $arContratoDetalle->setConceptoRel($em->getReference(TurConcepto::class, $row['codigo_concepto_servicio_fk']));
+                $arContratoDetalle->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
+                $arContratoDetalle->setFechaDesde(date_create($row['fecha_desde']));
+                $arContratoDetalle->setFechaHasta(date_create($row['fecha_hasta']));
+                $arContratoDetalle->setLiquidarDiasReales($row['liquidar_dias_reales']);
+                $arContratoDetalle->setDias($row['dias']);
+                $arContratoDetalle->setHoras($row['horas']);
+                $arContratoDetalle->setHorasDiurnas($row['horas_diurnas']);
+                $arContratoDetalle->setHorasNocturnas($row['horas_nocturnas']);
+                $arContratoDetalle->setCantidad($row['cantidad']);
+                $arContratoDetalle->setVrPrecioMinimo($row['vr_precio_minimo']);
+                $arContratoDetalle->setVrPrecio($row['vr_precio']);
+                $arContratoDetalle->setVrSubtotal($row['vr_subtotal']);
+                $arContratoDetalle->setVrIva($row['vr_iva']);
+                $arContratoDetalle->setVrBaseAiu($row['vr_base_aiu']);
+                $arContratoDetalle->setVrTotalDetalle($row['vr_total_detalle']);
+                $arContratoDetalle->setLunes($row['lunes']);
+                $arContratoDetalle->setMartes($row['martes']);
+                $arContratoDetalle->setMiercoles($row['miercoles']);
+                $arContratoDetalle->setJueves($row['jueves']);
+                $arContratoDetalle->setViernes($row['viernes']);
+                $arContratoDetalle->setSabado($row['sabado']);
+                $arContratoDetalle->setDomingo($row['domingo']);
+                $arContratoDetalle->setFestivo($row['festivo']);
+                $arContratoDetalle->setEstadoCerrado($row['estado_cerrado']);
+                $arContratoDetalle->setVrSalarioBase($row['vr_salario_base']);
+                $arContratoDetalle->setPorcentajeIva($row['porcentaje_iva']);
+                $arContratoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
+                $em->persist($arContratoDetalle);
+                $metadata = $em->getClassMetaData(get_class($arContratoDetalle));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
+
     }
 
     private function turPedido($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_pedido_pk FROM tur_pedido ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                 codigo_pedido_pk,
                 codigo_cliente_fk,  
                 tur_sector.codigo_externo as codigo_sector_externo,
@@ -2016,43 +2204,53 @@ class MigracionController extends Controller
                 vr_salario_base,
                 estrato 
                  FROM tur_pedido
-                 left join tur_sector on tur_pedido.codigo_sector_fk = tur_sector.codigo_sector_pk");
-        foreach ($datos as $row) {
-            $arPedido = new TurPedido();
-            $arPedido->setCodigoPedidoPk($row['codigo_pedido_pk']);
-            $arPedido->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
-            $arPedido->setSectorRel($em->getReference(TurSector::class, $row['codigo_sector_externo']));
-            $arPedido->setPedidoTipoRel($em->getReference(TurPedidoTipo::class, 'CON'));
-            $arPedido->setFecha(date_create($row['fecha']));
-            $arPedido->setFechaGeneracion(date_create($row['fecha']));
-            $arPedido->setNumero($row['numero']);
-            $arPedido->setEstadoAutorizado($row['estado_autorizado']);
-            $arPedido->setHoras($row['horas']);
-            $arPedido->setHorasDiurnas($row['horas_diurnas']);
-            $arPedido->setHorasNocturnas($row['horas_nocturnas']);
-            $arPedido->setVrTotalServicio($row['vr_total_servicio']);
-            $arPedido->setVrTotalPrecioAjustado($row['vr_total_precio_ajustado']);
-            $arPedido->setVrTotalPrecioMinimo($row['vr_total_precio_minimo']);
-            $arPedido->setVrSubtotal($row['vr_subtotal']);
-            $arPedido->setVrIva($row['vr_iva']);
-            $arPedido->setVrBaseAiu($row['vr_base_aiu']);
-            $arPedido->setVrTotal($row['vr_total']);
-            $arPedido->setUsuario($row['usuario']);
-            $arPedido->setComentario(utf8_encode($row['comentarios']));
-            $arPedido->setVrSalarioBase($row['vr_salario_base']);
-            $arPedido->setEstrato($row['estrato']);
-            $em->persist($arPedido);
-            $metadata = $em->getClassMetaData(get_class($arPedido));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+                 left join tur_sector on tur_pedido.codigo_sector_fk = tur_sector.codigo_sector_pk 
+                 ORDER BY codigo_pedido_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arPedido = new TurPedido();
+                $arPedido->setCodigoPedidoPk($row['codigo_pedido_pk']);
+                $arPedido->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+                $arPedido->setSectorRel($em->getReference(TurSector::class, $row['codigo_sector_externo']));
+                $arPedido->setPedidoTipoRel($em->getReference(TurPedidoTipo::class, 'CON'));
+                $arPedido->setFecha(date_create($row['fecha']));
+                $arPedido->setNumero($row['numero']);
+                $arPedido->setEstadoAutorizado($row['estado_autorizado']);
+                $arPedido->setHoras($row['horas']);
+                $arPedido->setHorasDiurnas($row['horas_diurnas']);
+                $arPedido->setHorasNocturnas($row['horas_nocturnas']);
+                $arPedido->setVrTotalPrecioAjustado($row['vr_total_precio_ajustado']);
+                $arPedido->setVrTotalPrecioMinimo($row['vr_total_precio_minimo']);
+                $arPedido->setVrSubtotal($row['vr_subtotal']);
+                $arPedido->setVrIva($row['vr_iva']);
+                $arPedido->setVrBaseIva($row['vr_base_aiu']);
+                $arPedido->setVrTotal($row['vr_total']);
+                $arPedido->setUsuario($row['usuario']);
+                $arPedido->setComentario(utf8_encode($row['comentarios']));
+                $arPedido->setVrSalarioBase($row['vr_salario_base']);
+                $arPedido->setEstrato($row['estrato']);
+                $em->persist($arPedido);
+                $metadata = $em->getClassMetaData(get_class($arPedido));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
+
     }
 
     private function turPedidoDetalle($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_pedido_detalle_pk FROM tur_pedido_detalle ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                     codigo_pedido_detalle_pk,
                     codigo_pedido_fk,
                     codigo_puesto_fk,
@@ -2097,70 +2295,82 @@ class MigracionController extends Controller
                     porcentaje_base_iva,
                     estado_programado
                  FROM tur_pedido_detalle 
-                 left join tur_modalidad_servicio on codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk");
-        foreach ($datos as $row) {
-            $arPedidoDetalle = new TurPedidoDetalle();
-            $arPedidoDetalle->setCodigoPedidoDetallePk($row['codigo_pedido_detalle_pk']);
-            $arPedidoDetalle->setPedidoRel($em->getReference(TurPedido::class, $row['codigo_pedido_fk']));
-            $arPedidoDetalle->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
-            $arPedidoDetalle->setConceptoRel($em->getReference(TurConcepto::class, $row['codigo_concepto_servicio_fk']));
-            $arPedidoDetalle->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
-            if ($row['codigo_periodo_fk'] == 1) {
-                $arPedidoDetalle->setPeriodo("M");
-            } else {
-                $arPedidoDetalle->setPeriodo("D");
+                 left join tur_modalidad_servicio on codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk 
+                 ORDER BY codigo_pedido_detalle_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arPedidoDetalle = new TurPedidoDetalle();
+                $arPedidoDetalle->setCodigoPedidoDetallePk($row['codigo_pedido_detalle_pk']);
+                $arPedidoDetalle->setPedidoRel($em->getReference(TurPedido::class, $row['codigo_pedido_fk']));
+                $arPedidoDetalle->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
+                $arPedidoDetalle->setConceptoRel($em->getReference(TurConcepto::class, $row['codigo_concepto_servicio_fk']));
+                $arPedidoDetalle->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
+                if ($row['codigo_periodo_fk'] == 1) {
+                    $arPedidoDetalle->setPeriodo("M");
+                } else {
+                    $arPedidoDetalle->setPeriodo("D");
+                }
+                if ($row['codigo_servicio_detalle_fk']) {
+                    $arPedidoDetalle->setContratoDetalleRel($em->getReference(TurContratoDetalle::class, $row['codigo_servicio_detalle_fk']));
+                }
+                $arPedidoDetalle->setAnio($row['anio']);
+                $arPedidoDetalle->setMes($row['mes']);
+                $arPedidoDetalle->setDiaDesde(date_create($row['dia_desde']));
+                $arPedidoDetalle->setDiaHasta(date_create($row['dia_hasta']));
+                $arPedidoDetalle->setDias($row['dias']);
+                $arPedidoDetalle->setHoras($row['horas']);
+                $arPedidoDetalle->setHorasDiurnas($row['horas_diurnas']);
+                $arPedidoDetalle->setHorasNocturnas($row['horas_nocturnas']);
+                $arPedidoDetalle->setHorasProgramadas($row['horas_programadas']);
+                $arPedidoDetalle->setHorasDiurnasProgramadas($row['horas_diurnas_programadas']);
+                $arPedidoDetalle->setHorasNocturnasProgramadas($row['horas_nocturnas_programadas']);
+                $arPedidoDetalle->setCantidad($row['cantidad']);
+                $arPedidoDetalle->setVrPrecioAjustado($row['vr_precio_ajustado']);
+                $arPedidoDetalle->setVrPrecioMinimo($row['vr_precio_minimo']);
+                $arPedidoDetalle->setVrPrecio($row['vr_precio']);
+                $arPedidoDetalle->setVrSubtotal($row['vr_subtotal']);
+                $arPedidoDetalle->setVrIva($row['vr_iva']);
+                $arPedidoDetalle->setVrBaseIva($row['vr_base_aiu']);
+                $arPedidoDetalle->setVrTotal($row['vr_total_detalle']);
+                $arPedidoDetalle->setVrAfectado($row['vr_total_detalle_afectado']);
+                $arPedidoDetalle->setVrPendiente($row['vr_total_detalle_pendiente']);
+                $arPedidoDetalle->setVrDevolucion($row['vr_total_detalle_devolucion']);
+                $arPedidoDetalle->setVrAdicion($row['vr_total_detalle_adicion']);
+                $arPedidoDetalle->setLunes($row['lunes']);
+                $arPedidoDetalle->setMartes($row['martes']);
+                $arPedidoDetalle->setMiercoles($row['miercoles']);
+                $arPedidoDetalle->setJueves($row['jueves']);
+                $arPedidoDetalle->setViernes($row['viernes']);
+                $arPedidoDetalle->setSabado($row['sabado']);
+                $arPedidoDetalle->setDomingo($row['domingo']);
+                $arPedidoDetalle->setFestivo($row['festivo']);
+                $arPedidoDetalle->setCompuesto($row['compuesto']);
+                $arPedidoDetalle->setEstadoProgramado($row['estado_programado']);
+                $arPedidoDetalle->setVrSalarioBase($row['vr_salario_base']);
+                $arPedidoDetalle->setPorcentajeIva($row['porcentaje_iva']);
+                $arPedidoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
+                $em->persist($arPedidoDetalle);
+                $metadata = $em->getClassMetaData(get_class($arPedidoDetalle));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
-            if ($row['codigo_servicio_detalle_fk']) {
-                $arPedidoDetalle->setContratoDetalleRel($em->getReference(TurContratoDetalle::class, $row['codigo_servicio_detalle_fk']));
-            }
-            $arPedidoDetalle->setAnio($row['anio']);
-            $arPedidoDetalle->setMes($row['mes']);
-            $arPedidoDetalle->setDiaDesde(date_create($row['dia_desde']));
-            $arPedidoDetalle->setDiaHasta(date_create($row['dia_hasta']));
-            $arPedidoDetalle->setDias($row['dias']);
-            $arPedidoDetalle->setHoras($row['horas']);
-            $arPedidoDetalle->setHorasDiurnas($row['horas_diurnas']);
-            $arPedidoDetalle->setHorasNocturnas($row['horas_nocturnas']);
-            $arPedidoDetalle->setHorasProgramadas($row['horas_programadas']);
-            $arPedidoDetalle->setHorasDiurnasProgramadas($row['horas_diurnas_programadas']);
-            $arPedidoDetalle->setHorasNocturnasProgramadas($row['horas_nocturnas_programadas']);
-            $arPedidoDetalle->setCantidad($row['cantidad']);
-            $arPedidoDetalle->setVrPrecioAjustado($row['vr_precio_ajustado']);
-            $arPedidoDetalle->setVrPrecioMinimo($row['vr_precio_minimo']);
-            $arPedidoDetalle->setVrPrecio($row['vr_precio']);
-            $arPedidoDetalle->setVrSubtotal($row['vr_subtotal']);
-            $arPedidoDetalle->setVrIva($row['vr_iva']);
-            $arPedidoDetalle->setVrBaseAiu($row['vr_base_aiu']);
-            $arPedidoDetalle->setVrTotalDetalle($row['vr_total_detalle']);
-            $arPedidoDetalle->setVrTotalDetalleAfectado($row['vr_total_detalle_afectado']);
-            $arPedidoDetalle->setVrTotalDetallePendiente($row['vr_total_detalle_pendiente']);
-            $arPedidoDetalle->setVrTotalDetalleDevolucion($row['vr_total_detalle_devolucion']);
-            $arPedidoDetalle->setVrTotalDetalleAdicion($row['vr_total_detalle_adicion']);
-            $arPedidoDetalle->setLunes($row['lunes']);
-            $arPedidoDetalle->setMartes($row['martes']);
-            $arPedidoDetalle->setMiercoles($row['miercoles']);
-            $arPedidoDetalle->setJueves($row['jueves']);
-            $arPedidoDetalle->setViernes($row['viernes']);
-            $arPedidoDetalle->setSabado($row['sabado']);
-            $arPedidoDetalle->setDomingo($row['domingo']);
-            $arPedidoDetalle->setFestivo($row['festivo']);
-            $arPedidoDetalle->setCompuesto($row['compuesto']);
-            $arPedidoDetalle->setEstadoProgramado($row['estado_programado']);
-            $arPedidoDetalle->setVrSalarioBase($row['vr_salario_base']);
-            $arPedidoDetalle->setPorcentajeIva($row['porcentaje_iva']);
-            $arPedidoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
-            $em->persist($arPedidoDetalle);
-            $metadata = $em->getClassMetaData(get_class($arPedidoDetalle));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
+
     }
 
-    private function TurFactura($conn)
+    private function turFactura($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_factura_pk FROM tur_factura ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                 codigo_factura_pk,
                 codigo_cliente_fk,  
                 numero,              
@@ -2181,38 +2391,48 @@ class MigracionController extends Controller
                 usuario,
                 comentarios,
                 estado_autorizado
-                 FROM tur_factura");
-        foreach ($datos as $row) {
-            $arFactura = new TurFactura();
-            $arFactura->setCodigoFacturaPk($row['codigo_factura_pk']);
-            $arFactura->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+                 FROM tur_factura ORDER BY codigo_factura_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arFactura = new TurFactura();
+                $arFactura->setCodigoFacturaPk($row['codigo_factura_pk']);
+                $arFactura->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
 //            $arFactura->setSectorRel($em->getReference(TurSector::class, $row['codigo_sector_externo']));
 //            $arFactura->setPedidoTipoRel($em->getReference(TurPedidoTipo::class, 'CON'));
-            $arFactura->setFecha(date_create($row['fecha']));
-            $arFactura->setFechaVence(date_create($row['fecha_vence']));
-            $arFactura->setPlazoPago($row['plazo_pago']);
-            $arFactura->setNumero($row['numero']);
-            $arFactura->setVrIva($row['vr_iva']);
-            $arFactura->setVrTotal($row['vr_total']);
-            $arFactura->setVrNeto($row['vr_total_neto']);
-            $arFactura->setVrSubtotal($row['vr_subtotal']);
-            $arFactura->setVrRetencionFuente($row['vr_retencion_fuente']);
-            $arFactura->setVrRetencionIva($row['vr_retencion_iva']);
-            $arFactura->setUsuario($row['usuario']);
-            $arFactura->setEstadoAutorizado($row['estado_autorizado']);
-            $arFactura->setComentarios(utf8_encode($row['comentarios']));
-            $em->persist($arFactura);
-            $metadata = $em->getClassMetaData(get_class($arFactura));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+                $arFactura->setFecha(date_create($row['fecha']));
+                $arFactura->setFechaVence(date_create($row['fecha_vence']));
+                $arFactura->setPlazoPago($row['plazo_pago']);
+                $arFactura->setNumero($row['numero']);
+                $arFactura->setVrIva($row['vr_iva']);
+                $arFactura->setVrTotal($row['vr_total']);
+                $arFactura->setVrNeto($row['vr_total_neto']);
+                $arFactura->setVrSubtotal($row['vr_subtotal']);
+                $arFactura->setVrRetencionFuente($row['vr_retencion_fuente']);
+                $arFactura->setVrRetencionIva($row['vr_retencion_iva']);
+                $arFactura->setUsuario($row['usuario']);
+                $arFactura->setEstadoAutorizado($row['estado_autorizado']);
+                $arFactura->setComentarios(utf8_encode($row['comentarios']));
+                $em->persist($arFactura);
+                $metadata = $em->getClassMetaData(get_class($arFactura));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
     }
 
     private function turFacturaDetalle($conn)
     {
         $em = $this->getDoctrine()->getManager();
-        $datos = $conn->query("SELECT
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_factura_detalle_pk FROM tur_factura_detalle ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
                     codigo_factura_detalle_pk,
                     codigo_factura_fk,
                     tur_concepto_servicio.codigo_concepto_servicio_pk as codigo_concepto_servicio_fk,
@@ -2224,30 +2444,35 @@ class MigracionController extends Controller
                     subtotal,
                     total
                  FROM tur_factura_detalle
-                 left join tur_concepto_servicio on codigo_concepto_servicio_fk = tur_concepto_servicio.codigo_concepto_servicio_pk");
-        foreach ($datos as $row) {
-            $arFacturaDetalle = new TurFacturaDetalle();
-            $arFacturaDetalle->setCodigoFacturaDetallePk($row['codigo_factura_detalle_pk']);
-            $arFacturaDetalle->setFacturaRel($em->getReference(TurFactura::class, $row['codigo_factura_fk']));
-            $arFacturaDetalle->setItemRel($em->getReference(TurItem::class, $row['codigo_concepto_servicio_fk']));
-            if ($row['codigo_pedido_detalle_fk']) {
-                $arFacturaDetalle->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
-            } else {
-                $arFacturaDetalle->setPedidoDetalleRel(null);
+                 left join tur_concepto_servicio on codigo_concepto_servicio_fk = tur_concepto_servicio.codigo_concepto_servicio_pk 
+                 ORDER BY codigo_factura_detalle_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arFacturaDetalle = new TurFacturaDetalle();
+                $arFacturaDetalle->setCodigoFacturaDetallePk($row['codigo_factura_detalle_pk']);
+                $arFacturaDetalle->setFacturaRel($em->getReference(TurFactura::class, $row['codigo_factura_fk']));
+                $arFacturaDetalle->setItemRel($em->getReference(TurItem::class, $row['codigo_concepto_servicio_fk']));
+                if ($row['codigo_pedido_detalle_fk']) {
+                    $arFacturaDetalle->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
+                } else {
+                    $arFacturaDetalle->setPedidoDetalleRel(null);
+                }
+                $arFacturaDetalle->setCantidad($row['cantidad']);
+                $arFacturaDetalle->setVrPrecio($row['vr_precio']);
+                $arFacturaDetalle->setVrSubtotal($row['subtotal']);
+                $arFacturaDetalle->setPorcentajeIva($row['por_iva']);
+                $arFacturaDetalle->setVrIva($row['iva']);
+                $arFacturaDetalle->setVrTotal($row['total']);
+                //$arFacturaDetalle->setVrNeto($row['total']);
+                $em->persist($arFacturaDetalle);
+                $metadata = $em->getClassMetaData(get_class($arFacturaDetalle));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
-            $arFacturaDetalle->setCantidad($row['cantidad']);
-            $arFacturaDetalle->setVrPrecio($row['vr_precio']);
-            $arFacturaDetalle->setVrSubtotal($row['subtotal']);
-            $arFacturaDetalle->setPorcentajeIva($row['por_iva']);
-            $arFacturaDetalle->setVrIva($row['iva']);
-            $arFacturaDetalle->setVrTotal($row['total']);
-            $arFacturaDetalle->setVrNeto($row['total']);
-            $em->persist($arFacturaDetalle);
-            $metadata = $em->getClassMetaData(get_class($arFacturaDetalle));
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
-        $em->flush();
     }
 
     private function turProgramacion($conn)
@@ -2255,7 +2480,7 @@ class MigracionController extends Controller
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
-        $rango = 3000;
+        $rango = 5000;
         $arr = $conn->query("SELECT codigo_pago_detalle_pk FROM rhu_pago_detalle ");
         $registros = $arr->num_rows;
         $totalPaginas = $registros / $rango;
@@ -2311,8 +2536,12 @@ class MigracionController extends Controller
                 if ($row['codigo_recurso_fk']) {
                     $arProgramacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_recurso_fk']));
                 }
-                $arProgramacion->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
-                $arProgramacion->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
+                if($row['codigo_pedido_detalle_fk']) {
+                    $arProgramacion->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
+                }
+                if($row['codigo_puesto_fk']) {
+                    $arProgramacion->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
+                }
                 $arProgramacion->setAnio($row['anio']);
                 $arProgramacion->setMes($row['mes']);
                 $arProgramacion->setDia1($row['dia_1']);
@@ -2357,8 +2586,21 @@ class MigracionController extends Controller
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
             $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
         }
 
+    }
+
+    private function contarRegistros($entidad, $modulo, $key) {
+        $em = $this->getDoctrine()->getManager();
+        $repoArticles = $em->getRepository("App\\Entity\\{$modulo}\\{$entidad}");
+        $totalArticles = $repoArticles->createQueryBuilder('e')
+            ->select("count(e.$key)")
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $totalArticles;
     }
 
 }

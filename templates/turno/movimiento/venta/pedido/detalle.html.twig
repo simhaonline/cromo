@@ -127,6 +127,7 @@
                             <th>SUBTOTAL</th>
                             <th title="Compuesto">COM</th>
                             <th title="Contrato detalle">CD</th>
+                            <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
@@ -154,17 +155,20 @@
                                 <td>{{ arPedidoDetalle.domingo ? 'S':'N' }}</td>
                                 <td>{{ arPedidoDetalle.festivo ? 'S':'N' }}</td>
                                 <td>{{ arPedidoDetalle.horas }}({{ arPedidoDetalle.horasProgramadas }})</td>
-                                <td>{{ arPedidoDetalle.horasDiurnas }}({{ arPedidoDetalle.horasDiurnasProgramadas }})</td>
-                                <td>{{ arPedidoDetalle.horasNocturnas }}({{ arPedidoDetalle.horasNocturnasProgramadas }})</td>
-                                <td class="numero">{{ arPedidoDetalle.vrSalarioBase | number_format()}}</td>
+                                <td>{{ arPedidoDetalle.horasDiurnas }}({{ arPedidoDetalle.horasDiurnasProgramadas }})
+                                </td>
+                                <td>{{ arPedidoDetalle.horasNocturnas }}({{ arPedidoDetalle.horasNocturnasProgramadas }}
+                                    )
+                                </td>
+                                <td class="numero">{{ arPedidoDetalle.vrSalarioBase | number_format() }}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrPrecioMinimo | number_format() }}</td>
                                 {% if arPedido.estadoAutorizado == 0 %}
                                     {% if arPedidoDetalle.compuesto == 0 %}
-                                    <td style="text-align: center;"><input type="number"
-                                                                           name="arrPrecioAjustado[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
-                                                                           value="{{ arPedidoDetalle.vrPrecioAjustado | default('0') }}"
-                                                                           style="text-align: right; width:60px"
-                                                                           size="10"></td>
+                                        <td style="text-align: center;"><input type="number"
+                                                                               name="arrPrecioAjustado[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
+                                                                               value="{{ arPedidoDetalle.vrPrecioAjustado | default('0') }}"
+                                                                               style="text-align: right; width:60px"
+                                                                               size="10"></td>
                                     {% else %}
                                         <td class="numero">{{ arPedidoDetalle.vrPrecioAjustado | number_format(0, '.', ',') }}</td>
                                     {% endif %}
@@ -189,7 +193,8 @@
                                     <td class="text-center">
                                         {% if arPedido.estadoAutorizado == 0 %}
                                             <a href="{{ path('turno_movimiento_venta_pedido_detalle_compuesto',{'codigoPedidoDetalle': arPedidoDetalle.codigoPedidoDetallePk}) }}">
-                                                <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i></a>
+                                                <i class="fa fa-share-square-o"
+                                                   style="font-size: large;color: black;"></i></a>
                                         {% else %}
                                             SI
                                         {% endif %}
@@ -198,6 +203,15 @@
                                     <td class="text-center">NO</td>
                                 {% endif %}
                                 <td class="numero">{{ arPedidoDetalle.codigoContratoDetalleFk }}</td>
+                                {% if arPedido.estadoAutorizado %}
+                                    <td></td>
+                                {% else %}
+                                    <td class="text-center">
+                                        <a href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_pedido_detalle_nuevo', {'codigoPedido': arPedido.codigoPedidoPk, 'id': arPedidoDetalle.codigoPedidoDetallePk }) }}', 'pedidoDetalle', 600, 900)"><i
+                                                    title="Editar el registro" class="fa fa-edit"
+                                                    style="font-size: large;color: black;"></i></a>
+                                    </td>
+                                {% endif %}
                                 <td><input type="checkbox" name="ChkSeleccionar[]"
                                            value="{{ arPedidoDetalle.codigoPedidoDetallePk }}"/></td>
                             </tr>

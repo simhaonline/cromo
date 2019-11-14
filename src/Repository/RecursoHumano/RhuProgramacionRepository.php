@@ -11,7 +11,6 @@ use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoCuenta;
 use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuConfiguracion;
-use App\Entity\RecursoHumano\RhuConsecutivo;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
@@ -20,6 +19,7 @@ use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuLicencia;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\RecursoHumano\RhuVacacion;
@@ -316,14 +316,32 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         if ($arProgramacion->getEstadoAutorizado() == 1 && $arProgramacion->getEstadoAprobado() == 0) {
             $arProgramacion->setEstadoAprobado(1);
             $em->persist($arProgramacion);
-            $arConsecutivo = $em->getRepository(RhuConsecutivo::class)->find(1);
+
+
+            $arPagoTipo = $em->getRepository(RhuPagoTipo::class)->find($arProgramacion->getCodigoPagoTipoFk());
             $arPagos = $em->getRepository(RhuPago::class)->findBy(array('codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()));
             foreach ($arPagos as $arPago) {
-                $arPago->setNumero($arConsecutivo->getConsecutivo());
+                if($arPago->getNumero() == 0) {
+                    $arPago->setNumero($arPagoTipo->getConsecutivo());
+                    $arPagoTipo->setConsecutivo($arPagoTipo->getConsecutivo() + 1);
+                    $em->persist($arPagoTipo);
+                }
+
                 $arPago->setEstadoAutorizado(1);
                 $arPago->setEstadoAprobado(1);
                 $em->persist($arPago);
-                $arConsecutivo->setConsecutivo($arConsecutivo->getConsecutivo() + 1);
+
+                //Actualizar contrato
+                if($arPago->getCodigoContratoFk()) {
+                    $arContrato = $em->getRepository(RhuContrato::class)->find($arPago->getCodigoContratoFk());
+                    if($arContrato) {
+                        if ($arProgramacion->getCodigoPagoTipoFk() == 'NOM') {
+                            $arContrato->setFechaUltimoPago($arProgramacion->getFechaHasta());
+                            $em->persist($arContrato);
+                        }
+                    }
+                }
+
                 //Validar los creditos que se encuentran inactivos por periodo para activarlos automaticamente
                 $arCreditos = $em->getRepository(RhuCredito::class)->findBy(array('codigoEmpleadoFk' => $arPago->getCodigoEmpleadoFk(), 'codigoCreditoPagoTipoFk' => 'NOM', 'estadoPagado' => 0, 'estadoSuspendido' => 0, "inactivoPeriodo" => 1));
                 foreach ($arCreditos as $arCredito) {
@@ -331,7 +349,6 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     $em->persist($arCredito);
                 }
             }
-            $em->persist($arConsecutivo);
 
             //Procesar creditos
             $arPagoDetalleCreditos = $em->getRepository(RhuPagoDetalle::class)->creditos($arProgramacion->getCodigoProgramacionPk());
@@ -361,7 +378,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             }
 
             //Verificar tercero en cuenta por pagar
-            if ($arPago->getPagoTipoRel()->getGeneraTesoreria()) {
+            if ($arProgramacion->getPagoTipoRel()->getGeneraTesoreria()) {
                 foreach ($arPagos as $arPago) {
                     $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arPago->getCodigoEmpleadoFk());
                     $arTerceroCuentaPagar = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPago->getEmpleadoRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPago->getEmpleadoRel()->getNumeroIdentificacion()));
@@ -414,8 +431,6 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 }
             }
             $em->flush();
-
-
         } else {
             Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
         }

@@ -59,6 +59,11 @@ class RhuConfiguracion
     private $codigoConceptoAdicional1Fk;
 
     /**
+     * @ORM\Column(name="codigo_concepto_anticipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoAnticipoFk;
+
+    /**
      * @ORM\Column(name="auxilio_transporte_no_prestacional", type="boolean", nullable=true)
      */
     private $auxilioTransporteNoPrestacional = false;
@@ -918,6 +923,22 @@ class RhuConfiguracion
     public function setCodigoConceptoAdicional1Fk($codigoConceptoAdicional1Fk): void
     {
         $this->codigoConceptoAdicional1Fk = $codigoConceptoAdicional1Fk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoAnticipoFk()
+    {
+        return $this->codigoConceptoAnticipoFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoAnticipoFk
+     */
+    public function setCodigoConceptoAnticipoFk($codigoConceptoAnticipoFk): void
+    {
+        $this->codigoConceptoAnticipoFk = $codigoConceptoAnticipoFk;
     }
 
 

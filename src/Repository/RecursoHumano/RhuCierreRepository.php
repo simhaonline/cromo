@@ -11,7 +11,6 @@ use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoCuenta;
 use App\Entity\RecursoHumano\RhuConceptoHora;
 use App\Entity\RecursoHumano\RhuConfiguracion;
-use App\Entity\RecursoHumano\RhuConsecutivo;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCosto;
 use App\Entity\RecursoHumano\RhuCredito;
@@ -138,110 +137,7 @@ class RhuCierreRepository extends ServiceEntityRepository
      */
     public function aprobar($arCierre)
     {
-        /**
-         * @var $arPago
-         */
-        $em = $this->getEntityManager();
-        if ($arCierre->getEstadoAutorizado() == 1 && $arCierre->getEstadoAprobado() == 0) {
-            $arCierre->setEstadoAprobado(1);
-            $em->persist($arCierre);
-            $arConsecutivo = $em->getRepository(RhuConsecutivo::class)->find(1);
-            $arPagos = $em->getRepository(RhuPago::class)->findBy(array('codigoCierreFk' => $arCierre->getCodigoCierrePk()));
-            foreach ($arPagos as $arPago) {
-                $arPago->setNumero($arConsecutivo->getConsecutivo());
-                $arPago->setEstadoAutorizado(1);
-                $arPago->setEstadoAprobado(1);
-                $em->persist($arPago);
-                $arConsecutivo->setConsecutivo($arConsecutivo->getConsecutivo() + 1);
-            }
-            $em->persist($arConsecutivo);
 
-            //Procesar creditos
-            $arPagoDetalleCreditos = $em->getRepository(RhuPagoDetalle::class)->creditos($arCierre->getCodigoCierrePk());
-            foreach ($arPagoDetalleCreditos as $arPagoDetalleCredito) {
-                $arPagoDetalle = $em->getRepository(RhuPagoDetalle::class)->find($arPagoDetalleCredito['codigoPagoDetallePk']);
-                /** @var  $arCredito RhuCredito */
-                $arCredito = $arPagoDetalle->getCreditoRel();
-                //Crear credito pago, se guarda el pago en la tabla rhu_pago_credito
-                $arPagoCredito = new RhuCreditoPago();
-                $arPagoCredito->setCreditoRel($arCredito);
-                $arPagoCredito->setPagoDetalleRel($arPagoDetalle);
-                $arPagoCredito->setfechaPago(new \ DateTime("now"));
-                $arPagoCredito->setCreditoPagoTipoRel($arCredito->getCreditoPagoTipoRel());
-                $arPagoCredito->setVrPago($arPagoDetalle->getVrPago());
-
-                //Actualizar el saldo del credito
-                $arCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual() + 1);
-                $arCredito->setVrSaldo($arCredito->getVrSaldo() - $arPagoDetalleCredito['vrPago']);
-                $arCredito->setVrAbonos($arCredito->getVrAbonos() + $arPagoDetalleCredito['vrPago']);
-                if ($arCredito->getVrSaldo() <= 0) {
-                    $arCredito->setEstadoPagado(1);
-                }
-                $arPagoCredito->setVrSaldo($arCredito->getVrSaldo());
-                $arPagoCredito->setNumeroCuotaActual($arCredito->getNumeroCuotaActual());
-                $em->persist($arPagoCredito);
-                $em->persist($arCredito);
-            }
-
-            //Verificar tercero en cuenta por pagar
-            if ($arPago->getPagoTipoRel()->getGeneraTesoreria()) {
-                foreach ($arPagos as $arPago) {
-                    $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arPago->getCodigoEmpleadoFk());
-                    $arTerceroCuentaPagar = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPago->getEmpleadoRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPago->getEmpleadoRel()->getNumeroIdentificacion()));
-                    if ($arTerceroCuentaPagar) {
-                        $bancoActual = $arTerceroCuentaPagar->getCodigoBancoFk();
-                        $cuentaActual = $arTerceroCuentaPagar->getCuenta();
-                        if ($bancoActual != $arPago->getEmpleadoRel()->getCodigoBancoFk()) {
-                            $arTerceroCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
-                        }
-                        if ($cuentaActual != $arEmpleado->getCuenta()) {
-                            $arTerceroCuentaPagar->setCuenta($arEmpleado->getCuenta());
-                        }
-                    }
-                    if (!$arTerceroCuentaPagar) {
-                        $arTerceroCuentaPagar = new TesTercero();
-                        $arTerceroCuentaPagar->setIdentificacionRel($arEmpleado->getIdentificacionRel());
-                        $arTerceroCuentaPagar->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
-                        $arTerceroCuentaPagar->setNombre1($arEmpleado->getNombre1());
-                        $arTerceroCuentaPagar->setNombre2($arEmpleado->getNombre2());
-                        $arTerceroCuentaPagar->setApellido1($arEmpleado->getApellido1());
-                        $arTerceroCuentaPagar->setApellido2($arEmpleado->getApellido2());
-                        $arTerceroCuentaPagar->setNombreCorto($arEmpleado->getNombreCorto());
-                        $arTerceroCuentaPagar->setCiudadRel($arEmpleado->getCiudadRel());
-                        $arTerceroCuentaPagar->setCelular($arEmpleado->getCelular());
-                        $arTerceroCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
-                        $arTerceroCuentaPagar->setCuenta($arEmpleado->getCuenta());
-                        $arTerceroCuentaPagar->setCodigoCuentaTipoFk($arEmpleado->getCodigoCuentaTipoFk());
-                    }
-                    $em->persist($arTerceroCuentaPagar);
-
-                    $arCuentaPagarTipo = $em->getRepository(TesCuentaPagarTipo::class)->find($arPago->getPagoTipoRel()->getCodigoCuentaPagarTipoFk());
-                    $arCuentaPagar = New TesCuentaPagar();
-                    $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
-                    $arCuentaPagar->setTerceroRel($arTerceroCuentaPagar);
-                    $arCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
-                    $arCuentaPagar->setCuenta($arEmpleado->getCuenta());
-                    $arCuentaPagar->setNumeroDocumento($arPago->getNumero());
-                    $arCuentaPagar->setNumeroReferencia($arPago->getCodigoCierreFk());
-                    $arCuentaPagar->setFecha($arPago->getFechaDesde());
-                    $arCuentaPagar->setFechaVence($arPago->getFechaDesde());
-                    $arCuentaPagar->setVrSubtotal($arPago->getVrNeto());
-                    $arCuentaPagar->setVrTotal($arPago->getVrNeto());
-                    $arCuentaPagar->setVrSaldo($arPago->getVrNeto());
-                    $arCuentaPagar->setVrSaldoOperado($arPago->getVrNeto());
-                    $arCuentaPagar->setVrSaldoOriginal($arPago->getVrNeto());
-                    $arCuentaPagar->setEstadoAutorizado(1);
-                    $arCuentaPagar->setEstadoAprobado(1);
-                    $arCuentaPagar->setOperacion(1);
-                    $em->persist($arCuentaPagar);
-                }
-            }
-            $em->flush();
-
-
-        } else {
-            Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
-        }
     }
 
     /**

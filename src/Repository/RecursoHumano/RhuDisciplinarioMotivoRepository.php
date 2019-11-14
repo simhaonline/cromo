@@ -13,7 +13,6 @@ use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoCuenta;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuConfiguracionCuenta;
-use App\Entity\RecursoHumano\RhuConsecutivo;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;

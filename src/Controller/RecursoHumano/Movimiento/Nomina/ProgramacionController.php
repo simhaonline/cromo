@@ -357,6 +357,37 @@ class ProgramacionController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("recursohumano/movimiento/nomina/programacion/anticipo/{id}", name="recursohumano_movimiento_nomina_programacion_anticipo")
+     */
+    public function anticipo(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arProgramacion = $em->getRepository($this->clase)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('valor', TextType::class, ['required' => false, 'data' => 0])
+            ->add('btnGenerar', SubmitType::class, array('label' => 'Generar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGenerar')->isClicked()) {
+                $valor = $form->get('valor')->getData();
+                if($valor > 0) {
+                    $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk'=> $id]);
+                    foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
+                        $arProgramacionDetalle->setVrAnticipo($valor);
+                        $em->persist($arProgramacionDetalle);
+                    }
+                    $em->flush();
+                }
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('recursohumano/movimiento/nomina/programacion/anticipo.html.twig', [
+            'form'=>$form->createView()
+        ]);
+    }
+
     private function generarExcelDetalle($codigoProgramacionPago)
     {
         $em = $this->getDoctrine()->getManager();

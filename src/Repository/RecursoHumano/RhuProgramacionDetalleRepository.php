@@ -78,6 +78,7 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.fechaHastaContrato')
             ->addSelect('pd.vrSalario')
             ->addSelect('pd.vrNeto')
+            ->addSelect('pd.vrAnticipo')
             ->addSelect('pd.horasDiurnas')
             ->addSelect('pd.horasDescanso')
             ->addSelect('pd.horasNocturnas')

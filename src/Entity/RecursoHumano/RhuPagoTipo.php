@@ -39,6 +39,11 @@ class RhuPagoTipo
     private $nombre;
 
     /**
+     * @ORM\Column(name="consecutivo", type="integer", nullable=true, options={"default":0})
+     */
+    private $consecutivo = 0;
+
+    /**
      * @ORM\Column(name="orden", type="integer", nullable=true)
      */
     private $orden;
@@ -243,6 +248,22 @@ class RhuPagoTipo
     public function setCodigoComprobanteFk($codigoComprobanteFk): void
     {
         $this->codigoComprobanteFk = $codigoComprobanteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConsecutivo()
+    {
+        return $this->consecutivo;
+    }
+
+    /**
+     * @param mixed $consecutivo
+     */
+    public function setConsecutivo($consecutivo): void
+    {
+        $this->consecutivo = $consecutivo;
     }
 
 

@@ -83,6 +83,11 @@ class RhuProgramacionDetalle
     private $vrHora = 0;
 
     /**
+     * @ORM\Column(name="vr_anticipo", type="float", options={"default": true})
+     */
+    private $vrAnticipo = 0;
+
+    /**
      * @ORM\Column(name="fecha_desde", type="date", nullable=true)
      */
     private $fechaDesde;
@@ -879,6 +884,22 @@ class RhuProgramacionDetalle
     public function setCodigoSoporteContratoFk($codigoSoporteContratoFk): void
     {
         $this->codigoSoporteContratoFk = $codigoSoporteContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAnticipo()
+    {
+        return $this->vrAnticipo;
+    }
+
+    /**
+     * @param mixed $vrAnticipo
+     */
+    public function setVrAnticipo($vrAnticipo): void
+    {
+        $this->vrAnticipo = $vrAnticipo;
     }
 
 

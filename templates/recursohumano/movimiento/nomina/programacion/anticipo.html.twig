@@ -1,0 +1,24 @@
+{% extends "base_sin_menu.html.twig" %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="control-label col-sm-2">Valor:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.valor) }}
+                </div>
+                <label for="form_nombre" class="control-label col-sm-2"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}

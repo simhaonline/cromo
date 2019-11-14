@@ -1285,5 +1285,63 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
         return true;
     }
 
+    public function programacionesEmpleadoFechaInconsistencia($codigoEmpleado, $anio, $mes)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurProgramacion::class, "p")
+            ->select("p.codigoProgramacionPk")
+            ->where("p.anio = '{$anio}'")
+            ->andWhere("p.mes = '{$mes}'")
+            ->andWhere("p.codigoEmpleadoFk = '{$codigoEmpleado}'");
+        for ($i = 1; $i <= 31; $i++) {
+            $turno = "tDia{$i}";
+            $queryBuilder->addSelect("{$turno}.horaDesde AS desdeDia{$i}");
+            $queryBuilder->addSelect("{$turno}.horaHasta AS hastaDia{$i}");
+            $queryBuilder->addSelect("p.dia{$i} AS turnoDia{$i}");
+            $queryBuilder->addSelect("{$turno}.descanso AS turnoDiaDescanso{$i}");
+            $queryBuilder->leftJoin(TurTurno::class, "{$turno}", "WITH", "{$turno}.codigoTurnoPk = p.dia{$i}");
+        }
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * Esta función permite obtener todos los turnos dobles ( un recurso que realice dos turnos el mismo día) de todos los recursos.
+     * @param string $anio
+     * @param string $mes
+     * @param string $ultimoDia
+     * @param string $primerDia
+     * @param integer $codigoGrupoPagoFk
+     * @param integer $codigoClienteFk
+     * @return TurProgramacionDetalle[]
+     */
+    public function EmpleadosTurnosDobles($anio, $mes, $primerDia, $ultimoDia, $codigoGrupo = "", $codigoClienteFk = "", $codigoEmpleado = "")
+    {
+        $turnos = [];
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurProgramacion::class, "p")
+            ->leftJoin( "p.empleadoRel", 'e')
+            ->where("p.anio = '{$anio}'")
+            ->andWhere("p.mes = '{$mes}'")
+            ->andWhere("p.complementario = 0")
+            ->andWhere("p.adicional = 0")
+            ->orderBy("p.codigoEmpleadoFk");
+        if ($codigoGrupo) {//Validacion cuando se filtre por grupo de pago en el soporte de pago
+            $queryBuilder->leftJoin( "e.contratoRel", 'c');
+            $queryBuilder->andWhere("c.CodigoGrupoFk ={$codigoGrupo}");
+        }
+        if ($codigoClienteFk) {
+            $queryBuilder->andWhere("p.codigoClienteFk ={$codigoClienteFk}");
+        }
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("p.codigoEmpleadoFk = {$codigoEmpleado}");
+        }
+
+        for ($i = $primerDia; $i <= $ultimoDia; $i++) {
+            $queryBuilder->leftJoin(TurTurno::class, "relTurnoDia{$i}", 'WITH', "p.dia{$i} = relTurnoDia{$i}.codigoTurnoPk");
+            $turnos[] = "p.dia{$i} AS turnoDia{$i}";
+            $turnos[] = "relTurnoDia{$i}.complementario AS dia{$i}EsComplementario";
+        }
+        $queryBuilder->select("p.codigoProgramacionPk, p.codigoEmpleadoFk, " . implode(", ", $turnos));
+
+        return $queryBuilder->getQuery()->execute();
+    }
 }
 

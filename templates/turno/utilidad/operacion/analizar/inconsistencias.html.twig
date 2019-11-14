@@ -1,0 +1,129 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                        <div class="col-sm-11">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.txtEmpleado) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input id="form_txtNombreCorto" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado',
+                                                   { 'campoCodigo': 'form_txtEmpleado', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="form_cboServicioRel" class="col-sm-1 control-label">Desde:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaDesde, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <label for="form_cboServicioRel" class="col-sm-1 col-sm-offset-2 control-label">Grupo:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.grupo, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="form_cboServicioRel" class="col-sm-1 control-label">Hasta:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            {{ form_widget(form.turnosDobles) }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.sinProgramacion) }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.horariosCruzados) }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.turnosRepetidos) }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.sinTurno) }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.novedad) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>INCONSISTENCIA</th>
+                <th>DETALLE</th>
+                <th>DOCUMENTO</th>
+                <th>GRUPO</th>
+                <th>DIA</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for arProgramacionInconsistencia in arProgramacionInconsistencias %}
+            <tr>
+                <td>{{ arProgramacionInconsistencia.codigoProgramacionInconsistenciaPk }}</td>
+                <td>{{ arProgramacionInconsistencia.inconsistencia }}</td>
+                <td>{{ arProgramacionInconsistencia.detalle }}</td>
+                {% if arProgramacionInconsistencia.codigoEmpleadoFk is not null %}
+                    <td>
+{#                        <a href="javascript:abrirVentana3('{{ path('brs_tur_utilidad_recurso_programacion_masiva',#}
+{#                            { 'anio': arProgramacionInconsistencia.anio,#}
+{#                                'mes': arProgramacionInconsistencia.mes,#}
+{#                                'codigoRecurso': arProgramacionInconsistencia.codigoEmpleadoFk }) }}', 'VerProgramaciones', 600, 1200)">#}
+{#                            {{ arProgramacionInconsistencia.numeroIdentificacion }}#}
+{#                        </a>                            #}
+                        {{ arProgramacionInconsistencia.numeroIdentificacion }}
+                    </td>
+                {% else %}
+                    <td>{{ arProgramacionInconsistencia.numeroIdentificacion }}</td>
+                {% endif %}
+                <td>{{ arProgramacionInconsistencia.codigoRecursoGrupoFk}}</td>
+                <td>{{ arProgramacionInconsistencia.dia }}</td>
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arProgramacionInconsistencias.getTotalItemCount }}</span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arProgramacionInconsistencias) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+    <br /><br /><br />
+{% endblock %}

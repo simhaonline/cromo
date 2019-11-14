@@ -640,7 +640,9 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
 
             $queryBuilder = $em->createQueryBuilder()->from(CarIngresoDetalle::class, 'id')
                 ->Select("SUM(id.vrPago) as vrPago")
-                ->where("id.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk']);
+                ->leftJoin('id.ingresoRel', 'i')
+                ->where("id.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
+                ->andWhere('i.estadoAutorizado = 1');
             $arrResultado = $queryBuilder->getQuery()->getSingleResult();
             if ($arrResultado) {
                 if ($arrResultado['vrPago']) {

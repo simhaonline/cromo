@@ -20,8 +20,8 @@ class TurItemRepository extends ServiceEntityRepository
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
-        $codigoIncidente = null;
-        $codigoEmpleado = null;
+        $itemCodigo = null;
+        $itemNombre = null;
         if ($filtros) {
             $itemCodigo = $filtros['itemCodigo'] ?? null;
             $itemNombre = $filtros['itemNombre'] ?? null;
@@ -36,7 +36,7 @@ class TurItemRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("i.codigoItemPk = '{$itemCodigo}'");
         }
         if ($itemNombre) {
-            $queryBuilder->andWhere("i.nombre = '{$itemNombre}'");
+            $queryBuilder->andWhere("i.nombre like '%{$itemNombre}%' ");
         }
 
         $queryBuilder->addOrderBy('i.codigoItemPk', 'DESC');

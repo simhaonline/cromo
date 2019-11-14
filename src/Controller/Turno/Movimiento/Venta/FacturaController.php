@@ -243,15 +243,16 @@ class FacturaController extends AbstractController
         $respuesta = '';
         $arFactura = $em->getRepository(TurFactura::class)->find($id);
         $form = $this->createFormBuilder()
-            //            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
-            //            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
-            //            ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemReferencia')])
-            //            ->add('itemConExistencia', CheckboxType::class, array('label' => ' ', 'required' => false, 'data' => $session->get('itemConExistencia')))
-            //            ->add('itemConDisponibilidad', CheckboxType::class, array('label' => ' ', 'required' => false, 'data' => $session->get('filtroItemConDisponibilidad')))
+            ->add('txtCodigoItem', TextType::class, ['label' => 'Codigo: ', 'required' => false])
+            ->add('txtNombreItem', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroInvBuscarItemNombre')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
+
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrItems = $request->request->get('itemCantidad');
@@ -278,8 +279,11 @@ class FacturaController extends AbstractController
                     }
                 }
             }
+            if($form->get('btnFiltrar')){
+                $raw['filtros']=['itemCodigo'=> $form->get('txtCodigoItem')->getData(),'itemNombre'=> $form->get('txtNombreItem')->getData()];
+            }
         }
-        $arItems = $paginator->paginate($em->getRepository(TurItem::class)->lista(), $request->query->getInt('page', 1), 50);
+        $arItems = $paginator->paginate($em->getRepository(TurItem::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('turno/movimiento/venta/factura/detalleNuevo.html.twig', [
             'arItems' => $arItems,
             'form' => $form->createView()

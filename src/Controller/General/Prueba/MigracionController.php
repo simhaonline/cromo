@@ -82,7 +82,7 @@ class MigracionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdinsepltdav1', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracisv1', 'attr' => ['class' => 'form-control']])
             ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
             ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -1217,7 +1217,9 @@ class MigracionController extends Controller
             $arLiquidacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
             $arLiquidacion->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
             $arLiquidacion->setLiquidacionTipoRel($em->getReference(RhuLiquidacionTipo::class, 'GEN'));
-            $arLiquidacion->setMotivoTerminacionRel($em->getReference(RhuContratoMotivo::class, $row['codigo_contrato_motivo_externo']));
+            if($row['codigo_contrato_motivo_externo']) {
+                $arLiquidacion->setMotivoTerminacionRel($em->getReference(RhuContratoMotivo::class, $row['codigo_contrato_motivo_externo']));
+            }
             $arLiquidacion->setFecha(date_create($row['fecha']));
             $arLiquidacion->setNumero($row['numero']);
             $arLiquidacion->setFechaDesde(date_create($row['fecha_desde']));
@@ -1328,7 +1330,7 @@ class MigracionController extends Controller
                 comentarios,
                 codigo_usuario,
                 codigo_vacacion_fk,
-                codigo_liquidacion_fk
+                codigo_liquidacion_fk 
                  FROM rhu_pago  
                  left join rhu_pago_tipo on rhu_pago.codigo_pago_tipo_fk = rhu_pago_tipo.codigo_pago_tipo_pk 
                  ORDER BY codigo_pago_pk limit {$lote},{$rango}");

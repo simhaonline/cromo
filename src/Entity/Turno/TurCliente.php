@@ -146,6 +146,12 @@ class TurCliente
     protected $ciudadRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="turClienteAsesorRel")
+     * @ORM\JoinColumn(name="codigo_asesor_fk", referencedColumnName="codigo_asesor_pk")
+     */
+    protected $asesorRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurFactura", mappedBy="clienteRel")
      */
     protected $facturasClienteRel;
@@ -680,6 +686,22 @@ class TurCliente
     public function setCostosServiciosClienteRel($costosServiciosClienteRel): void
     {
         $this->costosServiciosClienteRel = $costosServiciosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAsesorRel()
+    {
+        return $this->asesorRel;
+    }
+
+    /**
+     * @param mixed $asesorRel
+     */
+    public function setAsesorRel($asesorRel): void
+    {
+        $this->asesorRel = $asesorRel;
     }
 
 

@@ -83,6 +83,11 @@ class GenAsesor
     protected $recibosDetallesAsesorRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCliente",mappedBy="asesorRel")
+     */
+    protected $turClienteAsesorRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarAnticipo",mappedBy="asesorRel")
      */
     protected $anticipoAsesorRel;
@@ -340,6 +345,70 @@ class GenAsesor
     public function setUsuario( $usuario ): void
     {
         $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecibosDetallesAsesorRel()
+    {
+        return $this->recibosDetallesAsesorRel;
+    }
+
+    /**
+     * @param mixed $recibosDetallesAsesorRel
+     */
+    public function setRecibosDetallesAsesorRel($recibosDetallesAsesorRel): void
+    {
+        $this->recibosDetallesAsesorRel = $recibosDetallesAsesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurClienteAsesorRel()
+    {
+        return $this->turClienteAsesorRel;
+    }
+
+    /**
+     * @param mixed $turClienteAsesorRel
+     */
+    public function setTurClienteAsesorRel($turClienteAsesorRel): void
+    {
+        $this->turClienteAsesorRel = $turClienteAsesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuariosAsesorRel()
+    {
+        return $this->usuariosAsesorRel;
+    }
+
+    /**
+     * @param mixed $usuariosAsesorRel
+     */
+    public function setUsuariosAsesorRel($usuariosAsesorRel): void
+    {
+        $this->usuariosAsesorRel = $usuariosAsesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCotizacionesAsesorRel()
+    {
+        return $this->cotizacionesAsesorRel;
+    }
+
+    /**
+     * @param mixed $cotizacionesAsesorRel
+     */
+    public function setCotizacionesAsesorRel($cotizacionesAsesorRel): void
+    {
+        $this->cotizacionesAsesorRel = $cotizacionesAsesorRel;
     }
 
 

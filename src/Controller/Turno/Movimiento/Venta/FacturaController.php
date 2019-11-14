@@ -279,8 +279,8 @@ class FacturaController extends AbstractController
                     }
                 }
             }
-            if($form->get('btnFiltrar')){
-                $raw['filtros']=['itemCodigo'=> $form->get('txtCodigoItem')->getData(),'itemNombre'=> $form->get('txtNombreItem')->getData()];
+            if ($form->get('btnFiltrar')) {
+                $raw['filtros'] = ['itemCodigo' => $form->get('txtCodigoItem')->getData(), 'itemNombre' => $form->get('txtNombreItem')->getData()];
             }
         }
         $arItems = $paginator->paginate($em->getRepository(TurItem::class)->lista($raw), $request->query->getInt('page', 1), 50);
@@ -332,6 +332,9 @@ class FacturaController extends AbstractController
                         $arFacturaDetalle->setFacturaRel($arFactura);
                         $arFacturaDetalle->setPedidoDetalleRel($arPedidoDetalle);
                         $arFacturaDetalle->setItemRel($arPedidoDetalle->getItemRel());
+                        $arFacturaDetalle->setCodigoImpuestoIvaFk($arPedidoDetalle->getItemRel()->getCodigoImpuestoIvaVentaFk());
+                        $arFacturaDetalle->setPorcentajeIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentaje());
+                        $arFacturaDetalle->setPorcentajeBaseIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getBase());
                         $arFacturaDetalle->setConceptoRel($arPedidoDetalle->getConceptoRel());
                         $arFacturaDetalle->setPuestoRel($arPedidoDetalle->getPuestoRel());
                         $arFacturaDetalle->setCantidad($arPedidoDetalle->getCantidad());

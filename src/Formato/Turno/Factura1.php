@@ -91,6 +91,7 @@ class Factura1 extends \FPDF
          * @var $arFacturaDetalle TurFacturaDetalle
          * @var $arFactura TurFactura
          */
+        $pdf->SetFont('Arial', '', 10);
         $arFactura = self::$em->getRepository(TurFactura::class)->find(self::$codigoFactura);
         $arFacturaDetalles = self::$em->getRepository(TurFacturaDetalle::class)->findBy(array('codigoFacturaFk' => self::$codigoFactura));
         self::$numeroRegistros = count($arFacturaDetalles);
@@ -141,7 +142,7 @@ class Factura1 extends \FPDF
          */
         $arUsuario = self::$arUsuario;
         $arFactura = self::$em->getRepository(TurFactura::class)->find(self::$codigoFactura);
-        $arFacturaTipo = self::$em->getRepository(TurFacturaTipo::class)->find(1);
+        $arFacturaTipo = self::$em->getRepository(TurFacturaTipo::class)->find($arFactura->getCodigoFacturaTipoFk());
         $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
         $vrTotalLetras = self::devolverNumeroLetras($arFactura->getVrTotal());
 
@@ -651,8 +652,8 @@ class Factura1 extends \FPDF
         $em = self::$em;
         $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
         $arConfiguracionTurno = self::$em->getRepository(TurConfiguracion::class)->find(1);
-        $arFacturaTipo = self::$em->getRepository(TurFacturaTipo::class)->find(1);
         $arFactura = self::$em->getRepository(TurFactura::class)->find(self::$codigoFactura);
+        $arFacturaTipo = self::$em->getRepository(TurFacturaTipo::class)->find($arFactura->getCodigoFacturaTipoFk());
         $fechaImpresion = new \DateTime('now');
         $fechaImpresion = $fechaImpresion->format('Y/m/d');
         $this->SetFillColor(200, 200, 200);

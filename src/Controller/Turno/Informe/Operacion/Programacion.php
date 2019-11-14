@@ -55,7 +55,7 @@ class Programacion extends AbstractController
                 $session->set('filtroTurProgramacionNuemeroPedido', $form->get('nuemeroPedido')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                $arProgramaciones = $em->getRepository(TurProgramacion::class)->programaciones()->execute();
+                $arProgramaciones = $em->getRepository(TurProgramacion::class)->programaciones()->getResult();
                 $this->exportarExcelPersonalizado($arProgramaciones);
             }
         }
@@ -77,7 +77,7 @@ class Programacion extends AbstractController
             $hoja = $libro->getActiveSheet();
             $hoja->setTitle('Programaciones');
             $j = 0;
-            $arrColumnas=[ 'cliente','programación','empleado','número identificación','nombre empleado','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','H','P.D',];
+            $arrColumnas=[ 'cliente', 'puesto','programacion','empleado','numero identificacion','nombre empleado','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','H','P.D',];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
                 $hoja->getStyle(1)->getFont()->setBold(true);;
@@ -87,43 +87,44 @@ class Programacion extends AbstractController
             $j = 2;
             foreach ($arProgramaciones as $arProgramacion) {
                 $hoja->setCellValue('A' . $j, $arProgramacion['cliente']);
-                $hoja->setCellValue('B' . $j, $arProgramacion['codigoProgramacionPk']);
-                $hoja->setCellValue('C' . $j, $arProgramacion['codigoEmpleadoFk']);
-                $hoja->setCellValue('D' . $j, $arProgramacion['numeroIdentificacion']);
-                $hoja->setCellValue('E' . $j, $arProgramacion['empleadoNombreCorto']);
-                $hoja->setCellValue('F' . $j, $arProgramacion['dia1']);
-                $hoja->setCellValue('G' . $j, $arProgramacion['dia2']);
-                $hoja->setCellValue('H' . $j, $arProgramacion['dia3']);
-                $hoja->setCellValue('I' . $j, $arProgramacion['dia4']);
-                $hoja->setCellValue('J' . $j, $arProgramacion['dia5']);
-                $hoja->setCellValue('K' . $j, $arProgramacion['dia6']);
-                $hoja->setCellValue('L' . $j, $arProgramacion['dia7']);
-                $hoja->setCellValue('M' . $j, $arProgramacion['dia8']);
-                $hoja->setCellValue('N' . $j, $arProgramacion['dia9']);
-                $hoja->setCellValue('O' . $j, $arProgramacion['dia10']);
-                $hoja->setCellValue('P' . $j, $arProgramacion['dia11']);
-                $hoja->setCellValue('Q' . $j, $arProgramacion['dia12']);
-                $hoja->setCellValue('R' . $j, $arProgramacion['dia13']);
-                $hoja->setCellValue('S' . $j, $arProgramacion['dia14']);
-                $hoja->setCellValue('T' . $j, $arProgramacion['dia15']);
-                $hoja->setCellValue('U' . $j, $arProgramacion['dia16']);
-                $hoja->setCellValue('V' . $j, $arProgramacion['dia17']);
-                $hoja->setCellValue('W' . $j, $arProgramacion['dia18']);
-                $hoja->setCellValue('X' . $j, $arProgramacion['dia19']);
-                $hoja->setCellValue('Y' . $j, $arProgramacion['dia20']);
-                $hoja->setCellValue('Z' . $j, $arProgramacion['dia21']);
-                $hoja->setCellValue('AA' . $j, $arProgramacion['dia22']);
-                $hoja->setCellValue('AB' . $j, $arProgramacion['dia23']);
-                $hoja->setCellValue('AC' . $j, $arProgramacion['dia24']);
-                $hoja->setCellValue('AD' . $j, $arProgramacion['dia25']);
-                $hoja->setCellValue('AE' . $j, $arProgramacion['dia26']);
-                $hoja->setCellValue('AF' . $j, $arProgramacion['dia27']);
+                $hoja->setCellValue('B' . $j, $arProgramacion['puestoNombre']);
+                $hoja->setCellValue('C' . $j, $arProgramacion['codigoProgramacionPk']);
+                $hoja->setCellValue('D' . $j, $arProgramacion['codigoEmpleadoFk']);
+                $hoja->setCellValue('E' . $j, $arProgramacion['numeroIdentificacion']);
+                $hoja->setCellValue('F' . $j, $arProgramacion['empleadoNombreCorto']);
+                $hoja->setCellValue('G' . $j, $arProgramacion['dia1']);
+                $hoja->setCellValue('H' . $j, $arProgramacion['dia2']);
+                $hoja->setCellValue('I' . $j, $arProgramacion['dia3']);
+                $hoja->setCellValue('J' . $j, $arProgramacion['dia4']);
+                $hoja->setCellValue('K' . $j, $arProgramacion['dia5']);
+                $hoja->setCellValue('L' . $j, $arProgramacion['dia6']);
+                $hoja->setCellValue('M' . $j, $arProgramacion['dia7']);
+                $hoja->setCellValue('N' . $j, $arProgramacion['dia8']);
+                $hoja->setCellValue('O' . $j, $arProgramacion['dia9']);
+                $hoja->setCellValue('P' . $j, $arProgramacion['dia10']);
+                $hoja->setCellValue('Q' . $j, $arProgramacion['dia11']);
+                $hoja->setCellValue('R' . $j, $arProgramacion['dia12']);
+                $hoja->setCellValue('S' . $j, $arProgramacion['dia13']);
+                $hoja->setCellValue('T' . $j, $arProgramacion['dia14']);
+                $hoja->setCellValue('U' . $j, $arProgramacion['dia15']);
+                $hoja->setCellValue('V' . $j, $arProgramacion['dia16']);
+                $hoja->setCellValue('W' . $j, $arProgramacion['dia17']);
+                $hoja->setCellValue('X' . $j, $arProgramacion['dia18']);
+                $hoja->setCellValue('Y' . $j, $arProgramacion['dia19']);
+                $hoja->setCellValue('Z' . $j, $arProgramacion['dia20']);
+                $hoja->setCellValue('AA' . $j, $arProgramacion['dia21']);
+                $hoja->setCellValue('AB' . $j, $arProgramacion['dia22']);
+                $hoja->setCellValue('AC' . $j, $arProgramacion['dia23']);
+                $hoja->setCellValue('AD' . $j, $arProgramacion['dia24']);
+                $hoja->setCellValue('AE' . $j, $arProgramacion['dia25']);
+                $hoja->setCellValue('AF' . $j, $arProgramacion['dia26']);
+                $hoja->setCellValue('AG' . $j, $arProgramacion['dia27']);
                 $hoja->setCellValue('AG' . $j, $arProgramacion['dia28']);
-                $hoja->setCellValue('AH' . $j, $arProgramacion['dia29']);
-                $hoja->setCellValue('AI' . $j, $arProgramacion['dia30']);
-                $hoja->setCellValue('AJ' . $j, $arProgramacion['dia31']);
-                $hoja->setCellValue('AK' . $j, $arProgramacion['horasDiurnas']);
-                $hoja->setCellValue('AL' . $j, $arProgramacion['horasNocturnas']);
+                $hoja->setCellValue('AI' . $j, $arProgramacion['dia29']);
+                $hoja->setCellValue('AJ' . $j, $arProgramacion['dia30']);
+                $hoja->setCellValue('AK' . $j, $arProgramacion['dia31']);
+                $hoja->setCellValue('AL' . $j, $arProgramacion['horasDiurnas']);
+                $hoja->setCellValue('AM' . $j, $arProgramacion['horasNocturnas']);
                 $j++;
             }
             $libro->setActiveSheetIndex(0);

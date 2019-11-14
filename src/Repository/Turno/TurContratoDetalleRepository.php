@@ -121,7 +121,6 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             $arrPorcentajeIva = $arrControles['arrPorcentajeIva'];
             $arrCodigo = $arrControles['arrCodigo'];
             foreach ($arrCodigo as $codigoContratoDetalle) {
-
                 $arContratoDetalle = $this->getEntityManager()->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
                 if(isset($arrPrecioAjustado[$codigoContratoDetalle])){
                     $arContratoDetalle->setVrPrecioAjustado($arrPrecioAjustado[$codigoContratoDetalle]);

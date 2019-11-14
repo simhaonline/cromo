@@ -70,6 +70,11 @@ class TurConcepto
     protected $contratoDetallesCompuestosConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurPedidoDetalleCompuesto", mappedBy="conceptoRel")
+     */
+    protected $pedidosDetallesCompuestosConceptoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()
@@ -211,6 +216,38 @@ class TurConcepto
     public function setFacturasDetallesConceptoRel($facturasDetallesConceptoRel): void
     {
         $this->facturasDetallesConceptoRel = $facturasDetallesConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoDetallesCompuestosConceptoRel()
+    {
+        return $this->contratoDetallesCompuestosConceptoRel;
+    }
+
+    /**
+     * @param mixed $contratoDetallesCompuestosConceptoRel
+     */
+    public function setContratoDetallesCompuestosConceptoRel($contratoDetallesCompuestosConceptoRel): void
+    {
+        $this->contratoDetallesCompuestosConceptoRel = $contratoDetallesCompuestosConceptoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesCompuestosConceptoRel()
+    {
+        return $this->pedidosDetallesCompuestosConceptoRel;
+    }
+
+    /**
+     * @param mixed $pedidosDetallesCompuestosConceptoRel
+     */
+    public function setPedidosDetallesCompuestosConceptoRel($pedidosDetallesCompuestosConceptoRel): void
+    {
+        $this->pedidosDetallesCompuestosConceptoRel = $pedidosDetallesCompuestosConceptoRel;
     }
 
 

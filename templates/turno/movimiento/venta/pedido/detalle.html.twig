@@ -159,11 +159,15 @@
                                 <td class="numero">{{ arPedidoDetalle.vrSalarioBase | number_format()}}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrPrecioMinimo | number_format() }}</td>
                                 {% if arPedido.estadoAutorizado == 0 %}
+                                    {% if arPedidoDetalle.compuesto == 0 %}
                                     <td style="text-align: center;"><input type="number"
                                                                            name="arrPrecioAjustado[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
                                                                            value="{{ arPedidoDetalle.vrPrecioAjustado | default('0') }}"
                                                                            style="text-align: right; width:60px"
                                                                            size="10"></td>
+                                    {% else %}
+                                        <td class="numero">{{ arPedidoDetalle.vrPrecioAjustado | number_format(0, '.', ',') }}</td>
+                                    {% endif %}
                                     <td style="text-align: center;"><input type="number"
                                                                            name="arrPorcentajeBaseIva[{{ arPedidoDetalle.codigoPedidoDetallePk }}]"
                                                                            value="{{ arPedidoDetalle.porcentajeBaseIva }}"

@@ -11,8 +11,10 @@ use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
+use App\Entity\Turno\TurPedidoDetalleCompuesto;
 use App\Entity\Turno\TurPedidoTipo;
 use App\Form\Type\Turno\ContratoDetalleType;
+use App\Form\Type\Turno\PedidoDetalleCompuestoType;
 use App\Form\Type\Turno\PedidoType;
 use App\Form\Type\Turno\PedidoDetalleType;
 use App\Formato\Inventario\Pedido;
@@ -291,23 +293,81 @@ class PedidoController extends AbstractController
             if ($form->get('btnActualizar')->isClicked()) {
                 $arrControles = $request->request->All();
                 $this->actualizarDetalleCompuesto($arrControles, $codigoPedidoDetalle, $arPedidoDetalle->getCodigoPedidoFk());
-                return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle_compuesto', array('codigoPedidoDetalle' => $codigoPedidoDetalle)));
+                return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_detalle_compuesto', array('codigoPedidoDetalle' => $codigoPedidoDetalle)));
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurPedidoDetalleCompuesto::class)->eliminar($arrSeleccionados);
                 $em->getRepository(TurPedidoDetalle::class)->liquidar($codigoPedidoDetalle);
                 $em->getRepository(TurPedido::class)->liquidar($arPedido);
-                return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle_compuesto', array('codigoPedidoDetalle' => $codigoPedidoDetalle)));
+                return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_detalle_compuesto', array('codigoPedidoDetalle' => $codigoPedidoDetalle)));
             }
         }
         $arPedidoDetallesCompuestos = $paginator->paginate($em->getRepository(TurPedidoDetalleCompuesto::class)->lista($codigoPedidoDetalle), $request->query->getInt('page', 1), 30);
-        return $this->render('turno/movimiento/juridico/contrato/contratoCompuesto.html.twig', [
+        return $this->render('turno/movimiento/venta/pedido/pedidoCompuesto.html.twig', [
             'arPedido' => $arPedido,
             'arPedidoDetalle' => $arPedidoDetalle,
             'arPedidoDetallesCompuestos' => $arPedidoDetallesCompuestos,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/tur/movimiento/pedido/compuesto/detalle/nuevo/{codigoPedidoDetalle}/{codigoPedidoDetalleCompuesto}", name="turno_movimiento_venta_pedido_detalle_compuesto_nuevo")
+     */
+    public function detalleCompuestoNuevo(Request $request, $codigoPedidoDetalle, $codigoPedidoDetalleCompuesto = 0)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
+        $arPedidoDetalleCompuesto = new TurPedidoDetalleCompuesto();
+        if ($codigoPedidoDetalleCompuesto != 0) {
+            $arPedidoDetalleCompuesto =  $em->getRepository(TurPedidoDetalleCompuesto::class)->find($codigoPedidoDetalleCompuesto);
+        }else {
+            $arPedidoDetalleCompuesto->setPeriodo($arPedidoDetalle->getPeriodo());
+            $arPedidoDetalleCompuesto->setDiaDesde($arPedidoDetalle->getDiaDesde());
+            $arPedidoDetalleCompuesto->setDiaHasta($arPedidoDetalle->getDiaHasta());
+            $arPedidoDetalleCompuesto->setlunes(true);
+            $arPedidoDetalleCompuesto->setMartes(true);
+            $arPedidoDetalleCompuesto->setMiercoles(true);
+            $arPedidoDetalleCompuesto->setJueves(true);
+            $arPedidoDetalleCompuesto->setViernes(true);
+            $arPedidoDetalleCompuesto->setSabado(true);
+            $arPedidoDetalleCompuesto->setDomingo(true);
+            $arPedidoDetalleCompuesto->setFestivo(true);
+            $arPedidoDetalleCompuesto->setCantidad(1);
+            $arPedidoDetalleCompuesto->setPedidoDetalleRel($arPedidoDetalle);
+        }
+        $form = $this->createForm(PedidoDetalleCompuestoType::class, $arPedidoDetalleCompuesto);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $arPedidoDetalleCompuesto = $form->getData();
+            $em->persist($arPedidoDetalleCompuesto);
+            $em->flush();
+            $em->getRepository(TurPedidoDetalle::class)->liquidar($codigoPedidoDetalle);
+            $em->getRepository(TurPedido::class)->liquidar($arPedidoDetalle->getPedidoRel());
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('turno/movimiento/venta/pedido/pedidoCompuestoNuevo.html.twig', [
+            'arPedidoDetalleCompuesto' => $arPedidoDetalleCompuesto,
+            'form' => $form->createView()
+        ]);
+    }
+
+    private function actualizarDetalleCompuesto($arrControles, $codigoPedidoDetalle, $codigoPedido)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arPedido = $em->getRepository(TurPedido::class)->find($codigoPedido);
+        $arrPrecioAjustado = $arrControles['arrPrecioAjustado'];
+        $arrCodigo = $arrControles['arrCodigo'];
+        foreach ($arrCodigo as $codigoPedidoDetalleCompuesto) {
+            $arPedidoDetalleCompuesto = $em->getRepository(TurPedidoDetalleCompuesto::class)->find($codigoPedidoDetalleCompuesto);
+            $arPedidoDetalleCompuesto->setVrPrecioAjustado($arrPrecioAjustado[$codigoPedidoDetalleCompuesto]);
+            $em->persist($arPedidoDetalleCompuesto);
+
+        }
+        $em->flush();
+        $em->getRepository(TurPedidoDetalle::class)->liquidar($codigoPedidoDetalle);
+        $em->getRepository(TurPedido::class)->liquidar($arPedido);
     }
 
     public function exportarExcelPersonalizado($arPedidos){

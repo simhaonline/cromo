@@ -54,6 +54,11 @@ class TurModalidad
     protected $contratoDetallesCompuestosModalidadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurPedidoDetalleCompuesto", mappedBy="modalidadRel")
+     */
+    protected $pedidosDetallesCompuestosModalidadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoModalidadPk()
@@ -131,6 +136,54 @@ class TurModalidad
     public function setPedidosDetallesModalidadRel($pedidosDetallesModalidadRel): void
     {
         $this->pedidosDetallesModalidadRel = $pedidosDetallesModalidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCostosServiciosModalidadServicioRel()
+    {
+        return $this->costosServiciosModalidadServicioRel;
+    }
+
+    /**
+     * @param mixed $costosServiciosModalidadServicioRel
+     */
+    public function setCostosServiciosModalidadServicioRel($costosServiciosModalidadServicioRel): void
+    {
+        $this->costosServiciosModalidadServicioRel = $costosServiciosModalidadServicioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoDetallesCompuestosModalidadRel()
+    {
+        return $this->contratoDetallesCompuestosModalidadRel;
+    }
+
+    /**
+     * @param mixed $contratoDetallesCompuestosModalidadRel
+     */
+    public function setContratoDetallesCompuestosModalidadRel($contratoDetallesCompuestosModalidadRel): void
+    {
+        $this->contratoDetallesCompuestosModalidadRel = $contratoDetallesCompuestosModalidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesCompuestosModalidadRel()
+    {
+        return $this->pedidosDetallesCompuestosModalidadRel;
+    }
+
+    /**
+     * @param mixed $pedidosDetallesCompuestosModalidadRel
+     */
+    public function setPedidosDetallesCompuestosModalidadRel($pedidosDetallesCompuestosModalidadRel): void
+    {
+        $this->pedidosDetallesCompuestosModalidadRel = $pedidosDetallesCompuestosModalidadRel;
     }
 
 

@@ -340,6 +340,11 @@ class TurPedidoDetalle
     protected $facturasDetallesPedidoDetalleRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurPedidoDetalleCompuesto", mappedBy="pedidoDetalleRel")
+     */
+    protected $pedidosDetallesCompuestosPedidoDetalleRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPedidoDetallePk()
@@ -1329,6 +1334,22 @@ class TurPedidoDetalle
     public function setFacturasDetallesPedidoDetalleRel($facturasDetallesPedidoDetalleRel): void
     {
         $this->facturasDetallesPedidoDetalleRel = $facturasDetallesPedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPedidosDetallesCompuestosPedidoDetalleRel()
+    {
+        return $this->pedidosDetallesCompuestosPedidoDetalleRel;
+    }
+
+    /**
+     * @param mixed $pedidosDetallesCompuestosPedidoDetalleRel
+     */
+    public function setPedidosDetallesCompuestosPedidoDetalleRel($pedidosDetallesCompuestosPedidoDetalleRel): void
+    {
+        $this->pedidosDetallesCompuestosPedidoDetalleRel = $pedidosDetallesCompuestosPedidoDetalleRel;
     }
 
 

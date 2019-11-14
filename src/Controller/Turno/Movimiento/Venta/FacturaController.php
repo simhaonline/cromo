@@ -267,7 +267,7 @@ class FacturaController extends AbstractController
                             $arFacturaDetalle->setCodigoImpuestoRetencionFk($arItem->getCodigoImpuestoRetencionFk());
                             $arFacturaDetalle->setCodigoImpuestoIvaFk($arItem->getCodigoImpuestoIvaVentaFk());
                             $arFacturaDetalle->setPorcentajeIva($arItem->getImpuestoIvaVentaRel()->getPorcentaje());
-                            $arFacturaDetalle->setPorcentajeBaseAiu($arItem->getImpuestoIvaVentaRel()->getBase());
+                            $arFacturaDetalle->setPorcentajeBaseIva($arItem->getImpuestoIvaVentaRel()->getBase());
                             $em->persist($arFacturaDetalle);
                         }
                     }

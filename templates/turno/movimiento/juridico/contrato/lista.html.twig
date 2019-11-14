@@ -91,10 +91,14 @@
                 <td class="numero">{{ arContrato.vrTotal | number_format(0, '.', ',') }}</td>
                 <td>{{ arContrato.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arContrato.estadoCerrado ? "SI":"NO" }}</td>
-                <td class="text-center">
-                    <a href="{{ path('turno_movimiento_juridico_contrato_nuevo',{'id': arContrato.codigoContratoPk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arContrato.estadoAutorizado %}
+                    <td></td>
+                {% else %}
+                    <td class="text-center">
+                        <a href="{{ path('turno_movimiento_juridico_contrato_nuevo',{'id': arContrato.codigoContratoPk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
                 <td class="text-center">
                     <a
                             href="{{ path('turno_movimiento_juridico_contrato_detalle',{'id' : arContrato.codigoContratoPk }) }}">

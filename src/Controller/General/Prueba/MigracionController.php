@@ -56,6 +56,7 @@ use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurModalidad;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
+use App\Entity\Turno\TurPedidoDetalleCompuesto;
 use App\Entity\Turno\TurPedidoTipo;
 use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurPuesto;
@@ -81,7 +82,7 @@ class MigracionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracisv1', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdinsepltdav1', 'attr' => ['class' => 'form-control']])
             ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
             ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -177,6 +178,9 @@ class MigracionController extends Controller
                         case 'tur_pedido_detalle':
                             $this->turPedidoDetalle($conn);
                             break;
+                        case 'tur_pedido_detalle_compuesto':
+                            $this->turPedidoDetalleCompuesto($conn);
+                            break;
                         case 'tur_factura':
                             $this->turFactura($conn);
                             break;
@@ -212,6 +216,7 @@ class MigracionController extends Controller
             ['clase' => 'tur_contrato_detalle', 'registros' => $this->contarRegistros('TurContratoDetalle','Turno', 'codigoContratoDetallePk')],
             ['clase' => 'tur_pedido',           'registros' => $this->contarRegistros('TurPedido','Turno', 'codigoPedidoPk')],
             ['clase' => 'tur_pedido_detalle',   'registros' => $this->contarRegistros('TurPedidoDetalle','Turno', 'codigoPedidoDetallePk')],
+            ['clase' => 'tur_pedido_detalle_compuesto',   'registros' => $this->contarRegistros('TurPedidoDetalleCompuesto','Turno', 'codigoPedidoDetalleCompuestoPk')],
             ['clase' => 'tur_factura',          'registros' => $this->contarRegistros('TurFactura','Turno', 'codigoFacturaPk')],
             ['clase' => 'tur_factura_detalle',  'registros' => $this->contarRegistros('TurFacturaDetalle','Turno', 'codigoFacturaDetallePk')],
             ['clase' => 'tur_programacion',     'registros' => $this->contarRegistros('TurProgramacion','Turno', 'codigoProgramacionPk')]
@@ -2358,6 +2363,98 @@ class MigracionController extends Controller
                 $arPedidoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
                 $em->persist($arPedidoDetalle);
                 $metadata = $em->getClassMetaData(get_class($arPedidoDetalle));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+
+    }
+
+    private function turPedidoDetalleCompuesto($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_pedido_detalle_compuesto_pk FROM tur_pedido_detalle_compuesto ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                    codigo_pedido_detalle_compuesto_pk,
+                    codigo_pedido_detalle_fk,
+                    codigo_concepto_servicio_fk,
+                    codigo_modalidad_servicio_fk,
+                    tur_modalidad_servicio.codigo_externo as codigo_modalidad_servicio_externo,
+                    codigo_periodo_fk,
+                    dia_desde,
+                    dia_hasta,
+                    liquidar_dias_reales,
+                    dias,
+                    horas,
+                    horas_diurnas,
+                    horas_nocturnas,
+                    cantidad,
+                    vr_precio_ajustado,
+                    vr_precio_minimo,
+                    vr_precio,
+                    vr_subtotal,  
+                    vr_iva,                    
+                    vr_base_aiu,       
+                    vr_total_detalle,       
+                    porcentaje_iva,   
+                    lunes,
+                    martes,
+                    miercoles,
+                    jueves,
+                    viernes,
+                    sabado,
+                    domingo,
+                    festivo,
+                    detalle,
+                    no_facturar             
+                 FROM tur_pedido_detalle_compuesto 
+                 left join tur_modalidad_servicio on codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk 
+                 ORDER BY codigo_pedido_detalle_compuesto_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arPedidoDetalleCompuesto = new TurPedidoDetalleCompuesto();
+                $arPedidoDetalleCompuesto->setCodigoPedidoDetalleCompuestoPk($row['codigo_pedido_detalle_compuesto_pk']);
+                $arPedidoDetalleCompuesto->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
+                $arPedidoDetalleCompuesto->setConceptoRel($em->getReference(TurConcepto::class, $row['codigo_concepto_servicio_fk']));
+                $arPedidoDetalleCompuesto->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
+                if ($row['codigo_periodo_fk'] == 1) {
+                    $arPedidoDetalleCompuesto->setPeriodo("M");
+                } else {
+                    $arPedidoDetalleCompuesto->setPeriodo("D");
+                }
+                $arPedidoDetalleCompuesto->setDiaDesde(date_create($row['dia_desde']));
+                $arPedidoDetalleCompuesto->setDiaHasta(date_create($row['dia_hasta']));
+                $arPedidoDetalleCompuesto->setDias($row['dias']);
+                $arPedidoDetalleCompuesto->setHoras($row['horas']);
+                $arPedidoDetalleCompuesto->setHorasDiurnas($row['horas_diurnas']);
+                $arPedidoDetalleCompuesto->setHorasNocturnas($row['horas_nocturnas']);
+                $arPedidoDetalleCompuesto->setCantidad($row['cantidad']);
+                $arPedidoDetalleCompuesto->setVrPrecioAjustado($row['vr_precio_ajustado']);
+                $arPedidoDetalleCompuesto->setVrPrecioMinimo($row['vr_precio_minimo']);
+                $arPedidoDetalleCompuesto->setVrPrecio($row['vr_precio']);
+                $arPedidoDetalleCompuesto->setVrSubtotal($row['vr_subtotal']);
+                $arPedidoDetalleCompuesto->setVrIva($row['vr_iva']);
+                $arPedidoDetalleCompuesto->setVrBaseIva($row['vr_base_aiu']);
+                $arPedidoDetalleCompuesto->setVrTotal($row['vr_total_detalle']);
+                $arPedidoDetalleCompuesto->setLunes($row['lunes']);
+                $arPedidoDetalleCompuesto->setMartes($row['martes']);
+                $arPedidoDetalleCompuesto->setMiercoles($row['miercoles']);
+                $arPedidoDetalleCompuesto->setJueves($row['jueves']);
+                $arPedidoDetalleCompuesto->setViernes($row['viernes']);
+                $arPedidoDetalleCompuesto->setSabado($row['sabado']);
+                $arPedidoDetalleCompuesto->setDomingo($row['domingo']);
+                $arPedidoDetalleCompuesto->setFestivo($row['festivo']);
+                $arPedidoDetalleCompuesto->setPorcentajeIva($row['porcentaje_iva']);
+                $em->persist($arPedidoDetalleCompuesto);
+                $metadata = $em->getClassMetaData(get_class($arPedidoDetalleCompuesto));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }

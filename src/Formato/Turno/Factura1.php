@@ -664,7 +664,7 @@ class Factura1 extends \FPDF
         try {
             $logo = $em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
             if ($logo) {
-                $this->Image("data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen())), 15, 8, 32, 24, $logo->getExtension());
+                $this->Image("data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen())), 15, 8, 50, 24, $logo->getExtension());
             }
         } catch (\Exception $exception) {
         }

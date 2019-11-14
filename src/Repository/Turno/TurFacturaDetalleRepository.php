@@ -37,6 +37,7 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('fd.codigoImpuestoRetencionFk')
             ->addSelect('p.nombre as puestoNombre')
             ->addSelect('fd.codigoPedidoDetalleFk')
+            ->addSelect('fd.detalle')
             ->leftJoin('fd.itemRel', 'i')
             ->leftJoin('fd.puestoRel', 'p')
             ->where('fd.codigoFacturaFk = ' . $id);
@@ -54,6 +55,7 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
             $arrCodigo = $arrControles['arrCodigo'];
             $arrImpuestoIva = $arrControles['cboImpuestoIva'];
             $arrImpuestoRetencion = $arrControles['cboImpuestoRetencion'];
+            $arrDetalle = $arrControles['arrDetalle'];
             $mensajeError = "";
             foreach ($arrCodigo as $codigoFacturaDetalle) {
                 $arFacturaDetalle = $this->getEntityManager()->getRepository(TurFacturaDetalle::class)->find($codigoFacturaDetalle);
@@ -72,6 +74,7 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
 //                    $arFacturaDetalle->setPorcentajeRetencion($arImpuestoRetencion->getPorcentaje());
                 }
                 $arFacturaDetalle->setCodigoImpuestoRetencionFk($codigoImpuestoRetencion);
+                $arFacturaDetalle->setDetalle($arrDetalle[$codigoFacturaDetalle]);
                 $em->persist($arFacturaDetalle);
             }
             if ($mensajeError == "") {

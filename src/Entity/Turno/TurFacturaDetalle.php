@@ -102,6 +102,11 @@ class TurFacturaDetalle
     private $vrRetencionFuente = 0;
 
     /**
+     * @ORM\Column(name="detalle", type="string", length=300, nullable=true)
+     */
+    private $detalle;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurFactura", inversedBy="facturasDetallesFacturaRel")
      * @ORM\JoinColumn(name="codigo_factura_fk", referencedColumnName="codigo_factura_pk")
      */
@@ -481,6 +486,38 @@ class TurFacturaDetalle
     public function setConceptoRel($conceptoRel): void
     {
         $this->conceptoRel = $conceptoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDetalle()
+    {
+        return $this->detalle;
+    }
+
+    /**
+     * @param mixed $detalle
+     */
+    public function setDetalle($detalle): void
+    {
+        $this->detalle = $detalle;
     }
 
 

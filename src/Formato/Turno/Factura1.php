@@ -122,7 +122,12 @@ class Factura1 extends \FPDF
             $pdf->Ln(0);
             $pdf->SetX(12);
             $pdf->Cell(20, 0, '', 0, 0, 'L');
-            $pdf->MultiCell(82, 4, utf8_decode($arFacturaDetalle->getItemRel()->getNombre()), 0, 'L');
+            if($arFacturaDetalle->getDetalle() != null){
+                $descripcion = substr($arFacturaDetalle->getDetalle(),0,70);
+            } else {
+                $descripcion = $arFacturaDetalle->getItemRel()->getNombre();
+            }
+            $pdf->MultiCell(82, 4, utf8_decode($descripcion), 0, 'L');
             $pdf->Cell(22, 2, '', 0, 0, 'R');
             $pdf->Cell(22, 2, '', 0, 0, 'R');
             $pdf->SetAutoPageBreak(true, 120);

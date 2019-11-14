@@ -115,6 +115,7 @@
                             <th>RET</th>
                             <th>TOTAL</th>
                             <th>PD</th>
+                            <th>DETALLE</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
                         </tr>
@@ -162,6 +163,15 @@
                             {% endif %}
                             <td class="numero">{{ arFacturaDetalle.vrTotal  | number_format(0,'.',',') }}</td>
                             <td class="numero">{{ arFacturaDetalle.codigoPedidoDetalleFk }}</td>
+                            {% if arFactura.estadoAutorizado == 0 %}
+                                <td style="text-align: center"><input class="input-grid" type="text"
+                                                                      name="arrDetalle[{{ arFacturaDetalle.codigoFacturaDetallePk }}]"
+                                                                      value="{{ arFacturaDetalle.detalle }}"
+                                                                      size="20" style="width:240px;"
+                                                                      ></td>
+                            {% else %}
+                                <td>{{ arFacturaDetalle.detalle }}</td>
+                            {% endif %}
                             <td style="text-align: center;"><input type="checkbox" style="text-align: right;"
                                                                    name="ChkSeleccionar[]"
                                                                    value="{{ arFacturaDetalle.codigoFacturaDetallePk }}"/>

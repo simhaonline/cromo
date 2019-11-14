@@ -734,7 +734,7 @@ class Factura1 extends \FPDF
         $this->SetFont('Arial', '', 10);
         $this->Cell(31, 4, 'VENDEDOR', 1, 0, 'L');
         $this->SetFont('Arial', '', 7);
-//        $this->Cell(70,4,utf8_decode($arFactura->getClienteRel()->getAsesorRel() != null ? $arFactura->getClienteRel()->getAsesorRel()->getNombre():""),1,0,'L');
+        $this->Cell(70,4,utf8_decode($arFactura->getClienteRel()->getAsesorRel() != null ? $arFactura->getClienteRel()->getAsesorRel()->getNombre():""),1,0,'L');
         $this->SetFont('Arial', '', 10);
         $this->Cell(31, 4, 'ZONA', 1, 0, 'L');
         $this->Cell(60, 4, 'CARTAGENA', 1, 0, 'L');

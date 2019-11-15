@@ -53,7 +53,8 @@ class   TurProgramacionInconsistenciaRepository extends ServiceEntityRepository
         $queryBuilder->from(RhuEmpleado::class, "e")
             ->select("e")
             ->leftJoin("e.contratoRel", "c")
-            ->where("e.estadoContrato = 1 OR (c.fechaDesde <= '{$fechaDesde}' AND c.fechaHasta >= '{$fechaHasta}' AND e.estadoContrato = 0 )");
+            ->where("e.estadoContrato = 1 OR (c.fechaDesde <= '{$fechaDesde}' AND c.fechaHasta >= '{$fechaHasta}' AND e.estadoContrato = 0 )")
+            ->andWhere('c.habilitadoTurno = 1');
         if ($codigoEmpleado != "") {
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$codigoEmpleado}");
         }

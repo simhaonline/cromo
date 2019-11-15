@@ -83,7 +83,7 @@
                                 <th>NUMERO</th>
                             {% endif %}
                             <th>COD</th>
-                            <th title="número identificación">N I</th>
+                            <th title="número identificación">NI</th>
                             <th>TERCERO</th>
                             <th>CTA_C</th>
                             <th title="Naturaleza">N</th>
@@ -176,6 +176,7 @@
                                         <td>{{ arMovimientoDetalle.numero }}</td>
                                     {% endif %}
                                     <td>{{ arMovimientoDetalle.codigoTerceroFk }}</td>
+                                    <td>{{ arMovimientoDetalle.numeroIdentificacion }}</td>
                                     <td>{{ arMovimientoDetalle.terceroNombreCorto }}</td>
                                     <td>{{ arMovimientoDetalle.codigoCuentaFk }}</td>
                                     <td>{{ arMovimientoDetalle.naturaleza }}</td>

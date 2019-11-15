@@ -191,9 +191,10 @@ class   TurProgramacionInconsistenciaRepository extends ServiceEntityRepository
             ->groupBy("e.codigoEmpleadoPk")
             ->addGroupBy("e.nombreCorto")
             ->addGroupBy("e.numeroIdentificacion");
-//        if ($codigoGrupo) {
-//            $queryBuilder->andWhere("e.codigoGrupoFk = '{$codigoGrupo}'");
-//        }
+        if ($codigoGrupo) {
+            $queryBuilder->leftJoin("e.contratoRel", 'c');
+            $queryBuilder->andWhere("c.codigoGrupoFk = '{$codigoGrupo}'");
+        }
         if ($codigoEmpleado != "") {
             $queryBuilder->andWhere("e.codigoEmpleadoPk = '{$codigoEmpleado}'");
         }

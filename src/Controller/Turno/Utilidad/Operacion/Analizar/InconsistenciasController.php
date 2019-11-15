@@ -85,7 +85,7 @@ class InconsistenciasController extends AbstractController
                     if ($arEmpleado) {
                         $codigoEmpleado = $arEmpleado->getCodigoEmpleadoPk();
                     } else {
-                        $codigoEmpleado = $arEmpleado->getCodigoEmpleadoPk();
+                        $codigoEmpleado = null;
                     }
                 }
                 $em->getRepository(TurProgramacionInconsistencia::class)->limpiarInconsistenciasUsuario($this->getUser()->getUserName());
@@ -214,13 +214,15 @@ class InconsistenciasController extends AbstractController
         return true;
     }
 
-    private function validarCrucehorarios($dia, $mes, $anio, $recurso, $arrProgramaciones, $usuario)
+    private function validarCrucehorarios($dia, $mes, $anio, $empleado, $arrProgramaciones, $usuario)
     {
         $hoy = date("Y-m-d");
         $horaEntrada = new \DateTime(date("Y-m-d 00:00:00", strtotime($hoy . " + 1 days")));
         $horaSalida = new \DateTime(date("Y-m-d 00:00:00", strtotime(" 1900-01-01 00:00:00 - 1 days")));
         $turnosAnteriores = [];
         $cruce = false;
+        $primeraIteracion = true;
+
         foreach ($arrProgramaciones AS $programacion) {
             if (!$programacion["desdeDia{$dia}"] || !$programacion["hastaDia{$dia}"] || $programacion["turnoDiaDescanso{$dia}"]) {
                 continue;
@@ -232,17 +234,18 @@ class InconsistenciasController extends AbstractController
                 $horaFinal = new \DateTime(date("Y-m-d H:i:s", strtotime($fechaTmp . " +1 day")));
             }
             # Aqui evaluamos el cruce de horarios.
+            if (!$primeraIteracion) {
             # si la hora de inicio esta entre la hora inicial y final del turno anterior, entonces hay cruce.
-            if(($horaInicial > $horaEntrada && $horaInicial < $horaSalida) || ($horaInicial == $horaEntrada && $horaFinal == $horaSalida)) {
+//            if(($horaInicial > $horaEntrada && $horaInicial < $horaSalida) || ($horaInicial == $horaEntrada && $horaFinal == $horaSalida)) {
                 $cruce = $this->validarTurnosDia([
                     'horaInicial' => $horaInicial,
                     'horaFinal' => $horaFinal,
                 ], $turnosAnteriores);
                 if ($cruce) {
-                    $identificacion = $recurso['numeroIdentificacion'];
-                    $nombre = $recurso['nombreCorto'];
-                    $mensaje = "El empleado con código: {$recurso['codigoRecursoPk']}, Identificacion: {$identificacion}, {$nombre} dia {$dia}";
-                    $this->reportarEmpleado($dia, $mes, $anio, "Horario cruzado", $mensaje, $recurso, $usuario);
+                    $identificacion = $empleado['numeroIdentificacion'];
+                    $nombre = $empleado['nombreCorto'];
+                    $mensaje = "El empleado con código: {$empleado['codigoRecursoPk']}, Identificacion: {$identificacion}, {$nombre} dia {$dia}";
+                    $this->reportarEmpleado($dia, $mes, $anio, "Horario cruzado", $mensaje, $empleado, $usuario);
                     break; # Se hay un solo cruce de horario para el día no continuamos validando.
                 }
             } else {
@@ -253,12 +256,6 @@ class InconsistenciasController extends AbstractController
                 ];
             }
 
-//            if($horaInicial < $horaEntrada) {
-//                $horaEntrada = $horaInicial;
-//            }
-//            if($horaFinal > $horaSalida) {
-//                $horaSalida = $horaFinal;
-//            }
         }
     }
 

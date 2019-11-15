@@ -51,30 +51,15 @@
                 </div>
                 <div class="col-sm-1">
                 </div>
-                <label class="col-sm-2 control-label"></label>
+                <label class="col-sm-2 control-label">Rol</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.cboRol, {'attr':{'class':'form-control'}}) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Asesor:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     {{ form_widget(form.asesorRel, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-                <div class="col-sm-1">
-
-                </div>
-                <div class="col-sm-1">
-                </div>
-                <label class="col-sm-2 control-label">Rol:</label>
-                <div class="col-sm-4">
-
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Activo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.boolActivo) }}
                 </div>
                 <label class="col-sm-2 control-label">Clave escritorio:</label>
                 <div class="col-sm-4">
@@ -82,24 +67,13 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Activo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.boolActivo) }}
+                </div>
                 <label class="col-sm-2 control-label">Retringir movimientos:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.restringirMovimientos) }}
-                </div>
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-
-                </div>
-            </div>
-            <hr>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Contraseña:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtNuevaClave) }}
-                </div>
-                <label class="col-sm-2 control-label">Confirmar contraseña:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.txtConfirmacionClave) }}
                 </div>
             </div>
         </div>

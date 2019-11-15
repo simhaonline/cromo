@@ -4,11 +4,14 @@ namespace App\Controller\General\Seguridad;
 
 use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteOperacion;
+use App\Form\Type\General\UsuarioType;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -22,17 +25,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class SeguridadController extends Controller
+class SeguridadController extends AbstractController
 {
     /**
      * @Route("/general/seguridad/usuario/lista", name="general_seguridad_usuario_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
+            ->add('nombre', TextType::class, array('required' => false))
+            ->add('usuario', TextType::class, array('required' => false))
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcelPermiso', SubmitType::class, ['label' => 'Excel permiso', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -113,6 +118,7 @@ class SeguridadController extends Controller
         if($arUsuario->getAsesorRel()){
             $arrPropiedadesAsesorRel["data"] = $em->getReference(Usuario::class, $arUsuario->getCodigoAsesorFk());
         }
+        //se crea el formulario acá por que el campo rol genera error con el core de symfony
         $form = $this->createFormBuilder()
             ->add('operacionRel',EntityType::class, $arrPropiedadesOperacionRel)
             ->add('asesorRel',EntityType::class, $arrPropiedadesAsesorRel)
@@ -134,14 +140,11 @@ class SeguridadController extends Controller
             ->add('txtExtension', TextType::class, ['data' => $arUsuario->getExtension(),'required' => false])
             ->add('txtClaveEscritorio', TextType::class, ['data' => $arUsuario->getClaveEscritorio(),'required' => false])
             ->add('cboRol', ChoiceType::class, ['data' => $arUsuario->getRoles()[0],'required' => true, 'choices'=>array('Usuario'=>"ROLE_USER",'Administrador'=>"ROLE_ADMIN")])
-            ->add('txtNuevaClave', PasswordType::class, $arrPropiedadesClaves)
-            ->add('txtConfirmacionClave', PasswordType::class, $arrPropiedadesClaves)
             ->add('boolActivo', CheckboxType::class, ['data' => $arUsuario->getisActive(), 'label' => ' ', 'required' => false])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('restringirMovimientos', CheckboxType::class, ['data' => $arUsuario->getRestringirMovimientos(), 'label' => ' ', 'required' => false])
             ->getForm();
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $userName = $form->get('txtUser')->getData();

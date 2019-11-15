@@ -135,13 +135,19 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
 
     public function listaBuscarTurno(){
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class,'e')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class,'c')
             ->select('e.codigoContratoFk')
             ->addSelect('e.codigoEmpleadoPk')
             ->addSelect('e.nombreCorto')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('e.estadoContrato')
-            ->where('e.habilitadoTurno = 1');
+            ->addSelect('c.codigoContratoPk')
+            ->addSelect('c.fechaDesde')
+            ->addSelect('c.fechaHasta')
+            ->addSelect('ca.nombre as cargo')
+            ->where('c.habilitadoTurno = 1')
+            ->leftJoin('c.empleadoRel', 'e')
+            ->leftJoin('e.cargoRel', 'ca');
         if($session->get('filtroTurEmpleadoCodigo')){
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$session->get('filtroTurEmpleadoCodigo')}");
         }
@@ -156,14 +162,19 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
 
     public function listaBuscarProgramacion(){
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class,'e')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class,'c')
             ->select('e.codigoContratoFk')
             ->addSelect('e.codigoEmpleadoPk')
             ->addSelect('e.nombreCorto')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('e.estadoContrato')
+            ->addSelect('c.codigoContratoPk')
+            ->addSelect('c.fechaDesde')
+            ->addSelect('c.fechaHasta')
+            ->addSelect('ca.nombre as cargo')
             ->where('c.habilitadoTurno = 1')
-            ->leftJoin('e.contratoRel', 'c');
+            ->leftJoin('c.empleadoRel', 'e')
+            ->leftJoin('e.cargoRel', 'ca');
         if($session->get('filtroTurPedidoDetalleCodigo')){
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$session->get('filtroTurPedidoDetalleCodigo')}");
         }

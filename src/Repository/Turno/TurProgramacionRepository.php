@@ -127,6 +127,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
                 $arProgramacion->setPuestoRel($arPedidoDetalle->getPuestoRel());
                 $arProgramacion->setAnio($arPedidoDetalle->getAnio());
                 $arProgramacion->setMes($arPedidoDetalle->getMes());
+                $arProgramacion->setContratoRel($arPrototipo->getEmpleadoRel()->getContratoRel());
                 $arProgramacion->setEmpleadoRel($arPrototipo->getEmpleadoRel());
                 //$arProgramacion->setSecuenciaRel($arPrototipo->getSecuenciaRel());
                 $fechaInicial = $arPrototipo->getFechaInicioSecuencia()->format('Y-m-d'); # Por cada recurso capturamos cual es la fecha en que inicia su programacion

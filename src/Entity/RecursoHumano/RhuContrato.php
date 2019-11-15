@@ -508,6 +508,11 @@ class RhuContrato
     protected $empleadosContratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurProgramacion", mappedBy="contratoRel")
+     */
+    protected $programacionesContratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoPk()

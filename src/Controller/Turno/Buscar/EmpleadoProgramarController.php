@@ -2,6 +2,7 @@
 
 namespace App\Controller\Turno\Buscar;
 
+use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurContratoDetalle;
@@ -99,12 +100,14 @@ class EmpleadoProgramarController extends Controller
                         $fechaActual = new \DateTime('now');
                         $mesActual =$fechaActual->format('m');
                         $anioActual =$fechaActual->format('Y');
+                        $arContrato= $em->getRepository(RhuContrato::class)->find($codigo);
                         $arTurProgramacion = new TurProgramacion();
                         $arTurProgramacion->setPedidoRel($arPedidoDetalle->getPedidoRel());
                         $arTurProgramacion->setPedidoDetalleRel($arPedidoDetalle);
                         $arTurProgramacion->setAnio($anioActual);
                         $arTurProgramacion->setMes($mesActual);
-                        $arTurProgramacion->setEmpleadoRel($em->getRepository(RhuEmpleado::class)->find($codigo));
+                        $arTurProgramacion->setContratoRel($arContrato);
+                        $arTurProgramacion->setEmpleadoRel($em->getRepository(RhuEmpleado::class)->find($arContrato->getCodigoEmpleadoFk()));
                         $arTurProgramacion->setPuestoRel($em->getRepository(TurPuesto::class)->find($arPedidoDetalle->getCodigoPuestoFk()));
                         $em->persist($arTurProgramacion);
                     }

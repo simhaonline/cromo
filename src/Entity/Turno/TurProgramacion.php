@@ -44,6 +44,11 @@ class TurProgramacion
     private $codigoEmpleadoFk;
 
     /**
+     * @ORM\Column(name="codigo_contrato_fk", type="integer", nullable=true)
+     */
+    private $codigoContratoFk;
+
+    /**
      * @ORM\Column(name="anio", type="integer")
      */
     private $anio = 0;
@@ -258,9 +263,31 @@ class TurProgramacion
     protected $empleadoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuContrato", inversedBy="programacionesContratoRel")
+     * @ORM\JoinColumn(name="codigo_contrato_fk",referencedColumnName="codigo_contrato_pk")
+     */
+    protected $contratoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurSoporteHora", mappedBy="programacionRel")
      */
     protected $soportesHorasProgramacionRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -313,6 +340,22 @@ class TurProgramacion
     /**
      * @return mixed
      */
+    public function getCodigoPuestoFk()
+    {
+        return $this->codigoPuestoFk;
+    }
+
+    /**
+     * @param mixed $codigoPuestoFk
+     */
+    public function setCodigoPuestoFk($codigoPuestoFk): void
+    {
+        $this->codigoPuestoFk = $codigoPuestoFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoEmpleadoFk()
     {
         return $this->codigoEmpleadoFk;
@@ -324,6 +367,22 @@ class TurProgramacion
     public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
     {
         $this->codigoEmpleadoFk = $codigoEmpleadoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoContratoFk()
+    {
+        return $this->codigoContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoContratoFk
+     */
+    public function setCodigoContratoFk($codigoContratoFk): void
+    {
+        $this->codigoContratoFk = $codigoContratoFk;
     }
 
     /**
@@ -969,6 +1028,22 @@ class TurProgramacion
     /**
      * @return mixed
      */
+    public function getPuestoRel()
+    {
+        return $this->puestoRel;
+    }
+
+    /**
+     * @param mixed $puestoRel
+     */
+    public function setPuestoRel($puestoRel): void
+    {
+        $this->puestoRel = $puestoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEmpleadoRel()
     {
         return $this->empleadoRel;
@@ -985,6 +1060,22 @@ class TurProgramacion
     /**
      * @return mixed
      */
+    public function getContratoRel()
+    {
+        return $this->contratoRel;
+    }
+
+    /**
+     * @param mixed $contratoRel
+     */
+    public function setContratoRel($contratoRel): void
+    {
+        $this->contratoRel = $contratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSoportesHorasProgramacionRel()
     {
         return $this->soportesHorasProgramacionRel;
@@ -996,38 +1087,6 @@ class TurProgramacion
     public function setSoportesHorasProgramacionRel($soportesHorasProgramacionRel): void
     {
         $this->soportesHorasProgramacionRel = $soportesHorasProgramacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoPuestoFk()
-    {
-        return $this->codigoPuestoFk;
-    }
-
-    /**
-     * @param mixed $codigoPuestoFk
-     */
-    public function setCodigoPuestoFk($codigoPuestoFk): void
-    {
-        $this->codigoPuestoFk = $codigoPuestoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPuestoRel()
-    {
-        return $this->puestoRel;
-    }
-
-    /**
-     * @param mixed $puestoRel
-     */
-    public function setPuestoRel($puestoRel): void
-    {
-        $this->puestoRel = $puestoRel;
     }
 
 

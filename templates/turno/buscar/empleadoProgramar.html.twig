@@ -31,17 +31,23 @@
     </div>
     <table  class="table table-striped table-bordered table-condensed table-hover tabla-datos">
         <tr>
-            <th>{{ knp_pagination_sortable(arEmpleados, 'CÓDIGO', 'c.codigoEmpleadoPk') }}</th>
-            <th>NIT</th>
-            <th>{{ knp_pagination_sortable(arEmpleados, 'NOMBRE', 'c.nombreCorto') }}</th>
+            <th>ID</th>
+            <th>CODIGO EMPLEADO</th>
+            <th>DESDE</th>
+            <th class="Número identificación">N I</th>
+            <th>EMPLEADO</th>
+            <th>CARGO</th>
             <th></th>
         </tr>
         {% for arEmpleado in arEmpleados %}
             <tr>
-                <td><input type="hidden" name="LblCodigo[]" value="{{ arEmpleado.codigoEmpleadoPk }}">{{ arEmpleado.codigoEmpleadoPk }} </td>
+                <td><input type="hidden" name="LblCodigo[]" value="{{ arEmpleado.codigoContratoPk }}">{{ arEmpleado.codigoContratoPk }} </td>
+                <td>{{ arEmpleado.codigoEmpleadoPk  }}</td>
+                <td>{{ arEmpleado.fechaDesde|date('Y-m-d')  }}</td>
                 <td>{{ arEmpleado.numeroIdentificacion  }}</td>
                 <td>{{ arEmpleado.nombreCorto }}</td>
-                <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arEmpleado.codigoEmpleadoPk  }}"/></td>
+                <td>{{ arEmpleado.cargo }}</td>
+                <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arEmpleado.codigoContratoPk  }}"/></td>
             </tr>
         {% endfor %}
     </table>

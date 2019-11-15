@@ -217,7 +217,7 @@ class FacturaController extends AbstractController
         }
         $arImpuestosIva = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'I'));
         $arImpuestosRetencion = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'R'));
-        $arFacturaDetalles = $paginator->paginate($em->getRepository(TurFacturaDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);
+        $arFacturaDetalles = $paginator->paginate($em->getRepository(TurFacturaDetalle::class)->lista($id), $request->query->getInt('page', 1), 50);
         return $this->render('turno/movimiento/venta/factura/detalle.html.twig', [
             'form' => $form->createView(),
             'arFacturaDetalles' => $arFacturaDetalles,

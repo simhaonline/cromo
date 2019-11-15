@@ -210,8 +210,7 @@ class MovimientoController extends AbstractController
         $form
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
-            ->add('btnAdicionar', SubmitType::class, $arrBtnAdicionar)
-            ->add('btnArchivoPlanoBbva', SubmitType::class, ['label' => 'Archivo bbva', 'attr' => ['class' => 'btn btn-sm btn-default']]);
+            ->add('btnAdicionar', SubmitType::class, $arrBtnAdicionar);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

@@ -17,7 +17,6 @@
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
         </div>
-        {{ form_widget(form.btnArchivoPlanoBbva ) }}
         {% if arMovimiento.estadoAutorizado %}
             <a class="btn btn-default btn-sm"
                href="javascript:abrirVentana3('{{ path('tesoreria_general_archivoPlano',{ 'id': arMovimiento.codigoMovimientoPk}) }}', 'archivo plano', 600, 900)">Archivo plano</a>

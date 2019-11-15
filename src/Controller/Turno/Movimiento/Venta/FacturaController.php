@@ -198,6 +198,10 @@ class FacturaController extends AbstractController
                 $em->getRepository(TurFactura::class)->aprobar($arFactura);
                 return $this->redirect($this->generateUrl('turno_movimiento_venta_factura_detalle', ['id' => $id]));
             }
+            if ($form->get('btnAnular')->isClicked()) {
+                $em->getRepository(TurFactura::class)->anular($arFactura);
+                return $this->redirect($this->generateUrl('turno_movimiento_venta_factura_detalle', ['id' => $id]));
+            }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(TurFacturaDetalle::class)->eliminar($arFactura, $arrDetallesSeleccionados);
                 $em->getRepository(TurFactura::class)->liquidar($arFactura);

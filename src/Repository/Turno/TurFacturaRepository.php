@@ -401,4 +401,80 @@ class TurFacturaRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    /**
+     * @param $arFactura TurFactura
+     * @param $arPedido TurPedido
+     * @return string
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function anular($arFactura)
+    {
+        $em = $this->getEntityManager();
+        if ($arFactura->getEstadoAutorizado() == 1 && $arFactura->getEstadoAnulado() == 0 && $arFactura->getNumero() != 0) {
+            $arFacturaDetalles = $em->getRepository(TurFacturaDetalle::class)->findBy(array('codigoFacturaFk' => $arFactura->getCodigoFacturaPk()));
+
+            //Devolver saldo a los pedidos
+            foreach ($arFacturaDetalles as $arFacturaDetalle) {
+                if ($arFacturaDetalle->getCodigoPedidoDetalleFk()) {
+                    $arPedidoDetalleAct = $em->getRepository(TurPedidoDetalle::class)->find($arFacturaDetalle->getCodigoPedidoDetalleFk());
+                    $floValorTotalPendiente = $arPedidoDetalleAct->getVrPendiente() + $arFacturaDetalle->getVrPrecio();
+                    $arPedidoDetalleAct->setVrPendiente($floValorTotalPendiente);
+                    $arPedido = $arPedidoDetalleAct->getPedidoRel();
+                    $arPedido->setEstadoFacturado(0);
+                    $em->persist($arPedido);
+                    $em->persist($arPedidoDetalleAct);
+                }
+//                if ($arFacturaDetalle->getCodigoPedidoDetalleConceptoFk()) {
+//                    $arPedidoDetalleConceptoAct = $em->getRepository('BrasaTurnoBundle:TurPedidoDetalleConcepto')->find($arFacturaDetalle->getCodigoPedidoDetalleConceptoFk());
+//                    $floValorTotalPendiente = $arPedidoDetalleConceptoAct->getVrTotalPendiente() + $arFacturaDetalle->getVrPrecio();
+//                    $arPedidoDetalleConceptoAct->setVrTotalPendiente($floValorTotalPendiente);
+//                    $arPedidoDetalleConceptoAct->setEstadoFacturado(0);
+//                    $arPedido = $arPedidoDetalleConceptoAct->getPedidoRel();
+//                    $arPedido->setEstadoFacturado(0);
+//                    $em->persist($arPedido);
+//                    $em->persist($arPedidoDetalleConceptoAct);
+//                }
+
+            }
+            //Actualizar los detalles de la factura a cero
+            foreach ($arFacturaDetalles as $arFacturaDetalle) {
+                $arFacturaDetalleAct = $em->getRepository(TurFacturaDetalle::class)->find($arFacturaDetalle->getCodigoFacturaDetallePk());
+                $arFacturaDetalle->setVrPrecio(0);
+                $arFacturaDetalle->setCantidad(0);
+                $arFacturaDetalle->setVrSubtotal(0);
+                $arFacturaDetalle->setVrBaseIva(0);
+                $arFacturaDetalle->setVrIva(0);
+                $arFacturaDetalle->setVrTotal(0);
+                $em->persist($arFacturaDetalle);
+            }
+
+            $arFactura->setVrSubtotal(0);
+            $arFactura->setVrRetencionFuente(0);
+//            $arFactura->setVrRetencionRenta(0);
+            $arFactura->setVrRetencionIva(0);
+            $arFactura->setVrBaseAIU(0);
+            $arFactura->setVrIva(0);
+            $arFactura->setVrTotal(0);
+            $arFactura->setVrNeto(0);
+            $arFactura->setEstadoAnulado(1);
+            $arFactura->setVrBaseAiu(0);;
+            $em->persist($arFactura);
+
+            //Anular cuenta por cobrar
+            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->findOneBy(array('codigoCuentaCobrarTipoFk' => $arFactura->getFacturaTipoRel()->getCodigoDocumentoCartera(), 'numeroDocumento' => $arFactura->getNumero()));
+            if ($arCuentaCobrar) {
+                $arCuentaCobrar->setValorOriginal(0);
+                $arCuentaCobrar->setAbono(0);
+                $arCuentaCobrar->setSaldo(0);
+                $arCuentaCobrar->setSaldoOperado(0);
+                $arCuentaCobrar->setSubtotal(0);
+                $em->persist($arCuentaCobrar);
+            }
+            $em->flush();
+        } else {
+            Mensajes::error('La factura debe estar autorizada y aprobada y no puede estar previamente anulada');
+        }
+    }
 }

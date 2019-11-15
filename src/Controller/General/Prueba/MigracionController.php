@@ -49,6 +49,7 @@ use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurContratoDetalle;
+use App\Entity\Turno\TurContratoDetalleCompuesto;
 use App\Entity\Turno\TurContratoTipo;
 use App\Entity\Turno\TurFactura;
 use App\Entity\Turno\TurFacturaDetalle;
@@ -172,6 +173,10 @@ class MigracionController extends Controller
                         case 'tur_contrato_detalle':
                             $this->turContratoDetalle($conn);
                             break;
+                            break;
+                        case 'tur_contrato_detalle_compuesto':
+                            $this->turContratoDetalleCompuesto($conn);
+                            break;
                         case 'tur_pedido':
                             $this->turPedido($conn);
                             break;
@@ -214,6 +219,7 @@ class MigracionController extends Controller
             ['clase' => 'tur_puesto',           'registros' => $this->contarRegistros('TurPuesto','Turno', 'codigoPuestoPk')],
             ['clase' => 'tur_contrato',         'registros' => $this->contarRegistros('TurContrato','Turno', 'codigoContratoPk')],
             ['clase' => 'tur_contrato_detalle', 'registros' => $this->contarRegistros('TurContratoDetalle','Turno', 'codigoContratoDetallePk')],
+            ['clase' => 'tur_contrato_detalle_compuesto',   'registros' => $this->contarRegistros('TurContratoDetalleCompuesto','Turno', 'codigoContratoDetalleCompuestoPk')],
             ['clase' => 'tur_pedido',           'registros' => $this->contarRegistros('TurPedido','Turno', 'codigoPedidoPk')],
             ['clase' => 'tur_pedido_detalle',   'registros' => $this->contarRegistros('TurPedidoDetalle','Turno', 'codigoPedidoDetallePk')],
             ['clase' => 'tur_pedido_detalle_compuesto',   'registros' => $this->contarRegistros('TurPedidoDetalleCompuesto','Turno', 'codigoPedidoDetalleCompuestoPk')],
@@ -2177,6 +2183,91 @@ class MigracionController extends Controller
                 $arContratoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
                 $em->persist($arContratoDetalle);
                 $metadata = $em->getClassMetaData(get_class($arContratoDetalle));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+
+    }
+
+    private function turContratoDetalleCompuesto($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_servicio_detalle_compuesto_pk FROM tur_servicio_detalle_compuesto ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                    codigo_servicio_detalle_compuesto_pk,
+                    codigo_servicio_detalle_fk,
+                    codigo_concepto_servicio_fk,
+                    codigo_modalidad_servicio_fk,
+                    tur_modalidad_servicio.codigo_externo as codigo_modalidad_servicio_externo,
+                    codigo_periodo_fk,
+                    liquidar_dias_reales,
+                    dias,
+                    horas,
+                    horas_diurnas,
+                    horas_nocturnas,
+                    cantidad,
+                    vr_precio_ajustado,
+                    vr_precio_minimo,
+                    vr_precio,
+                    vr_subtotal,  
+                    vr_iva,                    
+                    vr_base_aiu,       
+                    vr_total_detalle,       
+                    porcentaje_iva,   
+                    lunes,
+                    martes,
+                    miercoles,
+                    jueves,
+                    viernes,
+                    sabado,
+                    domingo,
+                    festivo,
+                    no_facturar             
+                 FROM tur_servicio_detalle_compuesto 
+                 left join tur_modalidad_servicio on codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk 
+                 ORDER BY codigo_servicio_detalle_compuesto_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arContratoDetalleCompuesto = new TurContratoDetalleCompuesto();
+                $arContratoDetalleCompuesto->setCodigoContratoDetalleCompuestoPk($row['codigo_servicio_detalle_compuesto_pk']);
+                $arContratoDetalleCompuesto->setContratoDetalleRel($em->getReference(TurContratoDetalle::class, $row['codigo_servicio_detalle_fk']));
+                $arContratoDetalleCompuesto->setConceptoRel($em->getReference(TurConcepto::class, $row['codigo_concepto_servicio_fk']));
+                $arContratoDetalleCompuesto->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
+                if ($row['codigo_periodo_fk'] == 1) {
+                    $arContratoDetalleCompuesto->setPeriodo("M");
+                } else {
+                    $arContratoDetalleCompuesto->setPeriodo("D");
+                }
+                $arContratoDetalleCompuesto->setDias($row['dias']);
+                $arContratoDetalleCompuesto->setHoras($row['horas']);
+                $arContratoDetalleCompuesto->setHorasDiurnas($row['horas_diurnas']);
+                $arContratoDetalleCompuesto->setHorasNocturnas($row['horas_nocturnas']);
+                $arContratoDetalleCompuesto->setCantidad($row['cantidad']);
+                $arContratoDetalleCompuesto->setVrPrecioAjustado($row['vr_precio_ajustado']);
+                $arContratoDetalleCompuesto->setVrPrecioMinimo($row['vr_precio_minimo']);
+                $arContratoDetalleCompuesto->setVrPrecio($row['vr_precio']);
+                $arContratoDetalleCompuesto->setVrSubtotal($row['vr_subtotal']);
+                $arContratoDetalleCompuesto->setVrIva($row['vr_iva']);
+                $arContratoDetalleCompuesto->setLunes($row['lunes']);
+                $arContratoDetalleCompuesto->setMartes($row['martes']);
+                $arContratoDetalleCompuesto->setMiercoles($row['miercoles']);
+                $arContratoDetalleCompuesto->setJueves($row['jueves']);
+                $arContratoDetalleCompuesto->setViernes($row['viernes']);
+                $arContratoDetalleCompuesto->setSabado($row['sabado']);
+                $arContratoDetalleCompuesto->setDomingo($row['domingo']);
+                $arContratoDetalleCompuesto->setFestivo($row['festivo']);
+                $arContratoDetalleCompuesto->setPorcentajeIva($row['porcentaje_iva']);
+                $em->persist($arContratoDetalleCompuesto);
+                $metadata = $em->getClassMetaData(get_class($arContratoDetalleCompuesto));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }

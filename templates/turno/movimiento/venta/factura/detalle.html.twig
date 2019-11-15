@@ -122,61 +122,63 @@
                         </thead>
                         <tbody>
                         {% for arFacturaDetalle in arFacturaDetalles %}
-                        <tr>
-                            <td> {{ arFacturaDetalle.codigoFacturaDetallePk }} <input type="hidden" name="arrCodigo[]" value="{{ arFacturaDetalle.codigoFacturaDetallePk }}">
-                            <td>{{ arFacturaDetalle.item }}</td>
-                            <td>{{ arFacturaDetalle.puestoNombre }}</td>
-                            {% if arFactura.estadoAutorizado %}
-                                <td style="text-align: right;">{{ arFacturaDetalle.cantidad }}</td>
-                                <td style="text-align: right;">{{ arFacturaDetalle.vrPrecio | number_format(0,'.',',') }}</td>
-                            {% else %}
-                                <td style="text-align: center;"><input type="number"
-                                                                       name="arrCantidad[{{ arFacturaDetalle.codigoFacturaDetallePk }}]"
-                                                                       value="{{ arFacturaDetalle.cantidad }}"
-                                                                       style="text-align: right; width:60px"
-                                                                       size="10"></td>
-                                <td style="text-align: center;"><input type="text"
-                                                                       name="arrValor[{{ arFacturaDetalle.codigoFacturaDetallePk }}]"
-                                                                       value="{{ arFacturaDetalle.vrPrecio }}"
-                                                                       style="text-align: right; width:90px"
-                                                                       size="10"></td>
-                            {% endif %}
-                            <td class="numero">{{ arFacturaDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
-                            {% if arFactura.estadoAutorizado %}
-                                <td>{{ arFacturaDetalle.codigoImpuestoIvaFk }}</td>
-                                <td style="text-align: right;">{{ arFacturaDetalle.vrIva | number_format(0,'.',',') }}</td>
-                                <td>{{ arFacturaDetalle.codigoImpuestoRetencionFk }}</td>
-                            {% else %}
-                                <td style="text-align: center">
-                                    <select name="cboImpuestoIva[{{ arFacturaDetalle.codigoFacturaDetallePk }}]">
-                                        {% for arImpuestoIva in arImpuestosIva %}
-                                            <option value="{{ arImpuestoIva.codigoImpuestoPk }}" {% if arFacturaDetalle.codigoImpuestoIvaFk == arImpuestoIva.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoIva.codigoImpuestoPk }}</option>
-                                        {% endfor %}
-                                    </select></td>
-                                <td style="text-align: right;">{{ arFacturaDetalle.vrIva | number_format(0,'.',',') }}</td>
-                                <td style="text-align: center">
-                                    <select name="cboImpuestoRetencion[{{ arFacturaDetalle.codigoFacturaDetallePk }}]">
-                                        {% for arImpuestoRetencion in arImpuestosRetencion %}
-                                            <option value="{{ arImpuestoRetencion.codigoImpuestoPk }}" {% if arFacturaDetalle.codigoImpuestoRetencionFk == arImpuestoRetencion.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoRetencion.codigoImpuestoPk }}</option>
-                                        {% endfor %}
-                                    </select></td>
-                            {% endif %}
-                            <td class="numero">{{ arFacturaDetalle.vrTotal  | number_format(0,'.',',') }}</td>
-                            <td class="numero">{{ arFacturaDetalle.codigoPedidoDetalleFk }}</td>
-                            {% if arFactura.estadoAutorizado == 0 %}
-                                <td style="text-align: center"><input class="input-grid" type="text"
-                                                                      name="arrDetalle[{{ arFacturaDetalle.codigoFacturaDetallePk }}]"
-                                                                      value="{{ arFacturaDetalle.detalle }}"
-                                                                      size="20" style="width:240px;"
-                                                                      ></td>
-                            {% else %}
-                                <td>{{ arFacturaDetalle.detalle }}</td>
-                            {% endif %}
-                            <td style="text-align: center;"><input type="checkbox" style="text-align: right;"
-                                                                   name="ChkSeleccionar[]"
-                                                                   value="{{ arFacturaDetalle.codigoFacturaDetallePk }}"/>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td> {{ arFacturaDetalle.codigoFacturaDetallePk }} <input type="hidden"
+                                                                                          name="arrCodigo[]"
+                                                                                          value="{{ arFacturaDetalle.codigoFacturaDetallePk }}">
+                                <td>{{ arFacturaDetalle.item }}</td>
+                                <td>{{ arFacturaDetalle.puestoNombre }}</td>
+                                {% if arFactura.estadoAutorizado %}
+                                    <td style="text-align: right;">{{ arFacturaDetalle.cantidad }}</td>
+                                    <td style="text-align: right;">{{ arFacturaDetalle.vrPrecio | number_format(0,'.',',') }}</td>
+                                {% else %}
+                                    <td style="text-align: center;"><input type="number"
+                                                                           name="arrCantidad[{{ arFacturaDetalle.codigoFacturaDetallePk }}]"
+                                                                           value="{{ arFacturaDetalle.cantidad }}"
+                                                                           style="text-align: right; width:60px"
+                                                                           size="10"></td>
+                                    <td style="text-align: center;"><input type="text"
+                                                                           name="arrValor[{{ arFacturaDetalle.codigoFacturaDetallePk }}]"
+                                                                           value="{{ arFacturaDetalle.vrPrecio }}"
+                                                                           style="text-align: right; width:90px"
+                                                                           size="10"></td>
+                                {% endif %}
+                                <td class="numero">{{ arFacturaDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
+                                {% if arFactura.estadoAutorizado %}
+                                    <td>{{ arFacturaDetalle.codigoImpuestoIvaFk }}</td>
+                                    <td style="text-align: right;">{{ arFacturaDetalle.vrIva | number_format(0,'.',',') }}</td>
+                                    <td>{{ arFacturaDetalle.codigoImpuestoRetencionFk }}</td>
+                                {% else %}
+                                    <td style="text-align: center">
+                                        <select name="cboImpuestoIva[{{ arFacturaDetalle.codigoFacturaDetallePk }}]">
+                                            {% for arImpuestoIva in arImpuestosIva %}
+                                                <option value="{{ arImpuestoIva.codigoImpuestoPk }}" {% if arFacturaDetalle.codigoImpuestoIvaFk == arImpuestoIva.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoIva.codigoImpuestoPk }}</option>
+                                            {% endfor %}
+                                        </select></td>
+                                    <td style="text-align: right;">{{ arFacturaDetalle.vrIva | number_format(0,'.',',') }}</td>
+                                    <td style="text-align: center">
+                                        <select name="cboImpuestoRetencion[{{ arFacturaDetalle.codigoFacturaDetallePk }}]">
+                                            {% for arImpuestoRetencion in arImpuestosRetencion %}
+                                                <option value="{{ arImpuestoRetencion.codigoImpuestoPk }}" {% if arFacturaDetalle.codigoImpuestoRetencionFk == arImpuestoRetencion.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoRetencion.codigoImpuestoPk }}</option>
+                                            {% endfor %}
+                                        </select></td>
+                                {% endif %}
+                                <td class="numero">{{ arFacturaDetalle.vrTotal  | number_format(0,'.',',') }}</td>
+                                <td class="numero">{{ arFacturaDetalle.codigoPedidoDetalleFk }}</td>
+                                {% if arFactura.estadoAutorizado == 0 %}
+                                    <td style="text-align: center"><input class="input-grid" type="text"
+                                                                          name="arrDetalle[{{ arFacturaDetalle.codigoFacturaDetallePk }}]"
+                                                                          value="{{ arFacturaDetalle.detalle }}"
+                                                                          size="20" style="width:240px;"
+                                        ></td>
+                                {% else %}
+                                    <td>{{ arFacturaDetalle.detalle }}</td>
+                                {% endif %}
+                                <td style="text-align: center;"><input type="checkbox" style="text-align: right;"
+                                                                       name="ChkSeleccionar[]"
+                                                                       value="{{ arFacturaDetalle.codigoFacturaDetallePk }}"/>
+                                </td>
+                            </tr>
                         {% endfor %}
                         </tbody>
                     </table>
@@ -184,10 +186,13 @@
                 <div class="btn-toolbar" style="float: right">
                     {% if arFactura.estadoAutorizado == 0 %}
                         <div class="btn-group">
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 600, 900)">Nuevo</a>
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 600, 900)">Nuevo</a>
                         </div>
                         <div class="btn-group">
-                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_pedido_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 600, 900)">Nuevo pedido</a>
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_pedido_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 600, 900)">Nuevo
+                                pedido</a>
                         </div>
                     {% endif %}
                     <div class="btn-group">
@@ -200,5 +205,6 @@
             </div>
         </div>
     </div>
+    <br/><br/><br>
     {{ form_end(form) }}
 {% endblock %}

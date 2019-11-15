@@ -216,7 +216,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
                 }
 
             } else {
-                $arrError[] = ["error" => "El recurso {$arPrototipo->getRecursoRel()->getNumeroIdentificacion()} no tiene asignada una secuencia del cliente {$arPedidoDetalle->getPedidoRel()->getClienteRel()->getNombreCorto()} en el puesto {$arPedidoDetalle->getPuestoRel()->getNombreCorto()}"];
+                $arrError[] = ["error" => "El recurso {$arPrototipo->getEmpleadoRel()->getNumeroIdentificacion()} no tiene asignada una secuencia del cliente {$arPedidoDetalle->getPedidoRel()->getClienteRel()->getNombreCorto()} en el puesto {$arPedidoDetalle->getPuestoRel()->getNombre()}"];
             }
         }
         if ($arrError == null) {

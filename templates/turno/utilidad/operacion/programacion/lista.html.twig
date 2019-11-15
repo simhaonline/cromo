@@ -7,6 +7,7 @@
             <th>ID</th>
             <th>CLIENTE</th>
             <th>CONCEPTO</th>
+            <th>PUESTO</th>
             <th>AÑO</th>
             <th>MES</th>
             <th>MOD</th>
@@ -35,6 +36,7 @@
                 <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
                 <td>{{ arPedidoDetalle.cliente }}</td>
                 <td>{{ arPedidoDetalle.conceptoNombre }}</td>
+                <td>{{ arPedidoDetalle.puestoNombre }}</td>
                 <td>{{ arPedidoDetalle.anio }}</td>
                 <td>{{ arPedidoDetalle.mes }}</td>
                 <td>{{ arPedidoDetalle.modalidadNombre }}</td>
@@ -53,9 +55,13 @@
                 <td>{{ arPedidoDetalle.horasDiurnas }}({{ arPedidoDetalle.horasDiurnasProgramadas }})</td>
                 <td>{{ arPedidoDetalle.horasNocturnas }}({{ arPedidoDetalle.horasNocturnasProgramadas }})</td>
                 <td class="numero">{{ arPedidoDetalle.codigoContratoDetalleFk }}</td>
-                <td style="text-align: center;"><a
+                <td style="text-align: center;">
+                    {% if arPedidoDetalle.codigoContratoDetalleFk is not null %}
+                    <a
                             href="javascript:abrirVentana3('{{ path('turno_utilidad_operacion_programacion_detalle',{ 'id': arPedidoDetalle.codigoPedidoDetallePk }) }}','resumen',800,1200)"><i
-                                class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
+                                class="fa fa-table" style="color: black;font-size: large;"></i></a>
+                    {% endif %}
+                </td>
                 <td class="text-center">
                     <input type="checkbox" name="ChkSeleccionar[]" value="{{ arPedidoDetalle.codigoPedidoDetallePk  }}"/>
                 </td>

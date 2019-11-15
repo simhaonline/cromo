@@ -145,6 +145,7 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->addSelect('c.fechaDesde')
             ->addSelect('c.fechaHasta')
             ->addSelect('ca.nombre as cargo')
+            ->addSelect('c.estadoTerminado')
             ->where('c.habilitadoTurno = 1')
             ->leftJoin('c.empleadoRel', 'e')
             ->leftJoin('e.cargoRel', 'ca');
@@ -171,6 +172,7 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->addSelect('c.codigoContratoPk')
             ->addSelect('c.fechaDesde')
             ->addSelect('c.fechaHasta')
+            ->addSelect('c.estadoTerminado')
             ->addSelect('ca.nombre as cargo')
             ->where('c.habilitadoTurno = 1')
             ->leftJoin('c.empleadoRel', 'e')

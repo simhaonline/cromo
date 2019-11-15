@@ -100,15 +100,15 @@ class EmpleadoProgramarController extends Controller
                         $fechaActual = new \DateTime('now');
                         $mesActual =$fechaActual->format('m');
                         $anioActual =$fechaActual->format('Y');
-                        $arContrato= $em->getRepository(RhuContrato::class)->find($codigo);
+                        $arContrato = $em->getRepository(RhuContrato::class)->find($codigo);
                         $arTurProgramacion = new TurProgramacion();
                         $arTurProgramacion->setPedidoRel($arPedidoDetalle->getPedidoRel());
                         $arTurProgramacion->setPedidoDetalleRel($arPedidoDetalle);
                         $arTurProgramacion->setAnio($anioActual);
                         $arTurProgramacion->setMes($mesActual);
                         $arTurProgramacion->setContratoRel($arContrato);
-                        $arTurProgramacion->setEmpleadoRel($em->getRepository(RhuEmpleado::class)->find($arContrato->getCodigoEmpleadoFk()));
-                        $arTurProgramacion->setPuestoRel($em->getRepository(TurPuesto::class)->find($arPedidoDetalle->getCodigoPuestoFk()));
+                        $arTurProgramacion->setEmpleadoRel($arContrato->getEmpleadoRel());
+                        $arTurProgramacion->setPuestoRel($arPedidoDetalle->getPuestoRel());
                         $em->persist($arTurProgramacion);
                     }
                     $em->flush();

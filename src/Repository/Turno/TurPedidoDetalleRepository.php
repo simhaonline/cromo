@@ -100,10 +100,12 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.codigoContratoDetalleFk')
             ->addSelect('c.nombre as conceptoNombre')
             ->addSelect('m.nombre as modalidadNombre')
+            ->addSelect('pu.nombre as puestoNombre')
             ->leftJoin('pd.conceptoRel', 'c')
             ->leftJoin('pd.modalidadRel', 'm')
             ->leftJoin('pd.pedidoRel', 'p')
             ->leftJoin('p.clienteRel', 'cl')
+            ->leftJoin('pd.puestoRel', 'pu')
             ->where('pd.estadoProgramado = 0')
         ->orderBy('p.codigoPedidoPk', 'DESC');
 

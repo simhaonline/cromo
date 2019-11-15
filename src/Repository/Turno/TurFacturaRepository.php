@@ -3,12 +3,16 @@
 namespace App\Repository\Turno;
 
 
+use App\Entity\Cartera\CarCliente;
+use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Crm\CrmVisita;
 use App\Entity\General\GenImpuesto;
 use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurFactura;
 use App\Entity\Turno\TurFacturaDetalle;
+use App\Entity\Turno\TurFacturaTipo;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
@@ -229,7 +233,7 @@ class TurFacturaRepository extends ServiceEntityRepository
             $arFacturaDetalles = $em->getRepository(TurFacturaDetalle::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()]);
             /** @var TurFacturaDetalle $arFacturaDetalle */
             foreach ($arFacturaDetalles as $arFacturaDetalle) {
-                if($arFacturaDetalle->getCodigoPedidoDetalleFk()) {
+                if ($arFacturaDetalle->getCodigoPedidoDetalleFk()) {
                     /** @var TurPedidoDetalle $arPedidoDetalle */
                     $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($arFacturaDetalle->getCodigoPedidoDetalleFk());
                     if (round($arPedidoDetalle->getVrPendiente()) >= round($arFacturaDetalle->getVrSubtotal())) {
@@ -242,7 +246,7 @@ class TurFacturaRepository extends ServiceEntityRepository
                     }
                 }
             }
-            if($error == false) {
+            if ($error == false) {
                 $arFactura->setEstadoAutorizado(1);
                 $em->persist($arFactura);
                 $em->flush();
@@ -259,7 +263,7 @@ class TurFacturaRepository extends ServiceEntityRepository
             $arFacturaDetalles = $em->getRepository(TurFacturaDetalle::class)->findBy(['codigoFacturaFk' => $arFactura->getCodigoFacturaPk()]);
             /** @var TurFacturaDetalle $arFacturaDetalle */
             foreach ($arFacturaDetalles as $arFacturaDetalle) {
-                if($arFacturaDetalle->getCodigoPedidoDetalleFk()) {
+                if ($arFacturaDetalle->getCodigoPedidoDetalleFk()) {
                     /** @var TurPedidoDetalle $arPedidoDetalle */
                     $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($arFacturaDetalle->getCodigoPedidoDetalleFk());
                     $arPedidoDetalle->setVrAfectado($arPedidoDetalle->getVrAfectado() - $arFacturaDetalle->getVrSubtotal());
@@ -277,20 +281,64 @@ class TurFacturaRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $arFactura TurFactura
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function aprobar($arFactura)
     {
         $em = $this->getEntityManager();
-        if ($arFactura->getEstadoAutorizado() == 1) {
-            if ($arFactura->getEstadoAprobado() == 0) {
-                $arFactura->setEstadoAprobado(1);
-                $em->persist($arFactura);
-                $em->flush();
-            } else {
-                Mensajes::error('La factura ya esta aprobada');
+        $arFacturaTipo = $em->getRepository(TurFacturaTipo::class)->find($arFactura->getCodigoFacturaTipoFk());
+        if ($arFactura->getEstadoAutorizado() == 1 && $arFactura->getEstadoAprobado() == 0) {
+            if ($arFactura->getNumero() == 0) {
+                $arFactura->setNumero($arFacturaTipo->getConsecutivo());
+                $arFacturaTipo->setConsecutivo($arFacturaTipo->getConsecutivo() + 1);
+                $em->persist($arFacturaTipo);
+            }
+            $arFactura->setEstadoAprobado(1);
+            $em->persist($arFactura);
+            if ($arFacturaTipo->getGeneraCartera()) {
+
+                $arClienteCartera = $em->getRepository(CarCliente::class)->findOneBy(['codigoIdentificacionFk' => $arFactura->getClienteRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arFactura->getClienteRel()->getNumeroIdentificacion()]);
+                if (!$arClienteCartera) {
+                    $arClienteCartera = new CarCliente();
+                    $arClienteCartera->setFormaPagoRel($arFactura->getClienteRel()->getFormaPagoRel());
+                    $arClienteCartera->setIdentificacionRel($arFactura->getClienteRel()->getIdentificacionRel());
+                    $arClienteCartera->setNumeroIdentificacion($arFactura->getClienteRel()->getNumeroIdentificacion());
+                    $arClienteCartera->setDigitoVerificacion($arFactura->getClienteRel()->getDigitoVerificacion());
+                    $arClienteCartera->setNombreCorto($arFactura->getClienteRel()->getNombreCorto());
+                    $arClienteCartera->setPlazoPago($arFactura->getClienteRel()->getPlazoPago());
+                    $arClienteCartera->setDireccion($arFactura->getClienteRel()->getDireccion());
+                    $arClienteCartera->setTelefono($arFactura->getClienteRel()->getTelefono());
+                    $arClienteCartera->setCorreo($arFactura->getClienteRel()->getCorreo());
+                    $em->persist($arClienteCartera);
+                }
+
+                $arCuentaCobrarTipo = $em->getRepository(CarCuentaCobrarTipo::class)->find($arFactura->getFacturaTipoRel()->getCodigoCuentaCobrarTipoFk());
+                $arCuentaCobrar = new CarCuentaCobrar();
+                $arCuentaCobrar->setClienteRel($arClienteCartera);
+                $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
+                $arCuentaCobrar->setFecha($arFactura->getFecha());
+                $arCuentaCobrar->setFechaVence($arFactura->getFechaVence());
+                $arCuentaCobrar->setModulo("TUR");
+                $arCuentaCobrar->setCodigoDocumento($arFactura->getCodigoFacturaPk());
+                $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
+                $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());
+                $arCuentaCobrar->setVrTotal($arFactura->getVrTotal());
+                $arCuentaCobrar->setVrSaldoOriginal($arFactura->getVrTotal());
+                $arCuentaCobrar->setVrRetencionFuente($arFactura->getVrRetencionFuente());
+                $arCuentaCobrar->setVrSaldo($arFactura->getVrTotal());
+                $arCuentaCobrar->setVrSaldoOperado($arFactura->getVrTotal() * $arCuentaCobrarTipo->getOperacion());
+                $arCuentaCobrar->setPlazo($arFactura->getPlazoPago());
+                $arCuentaCobrar->setOperacion($arCuentaCobrarTipo->getOperacion());
+                $arCuentaCobrar->setAsesorRel($arFactura->getClienteRel()->getAsesorRel());
+                $em->persist($arCuentaCobrar);
             }
 
+            $em->flush();
         } else {
-            Mensajes::error('La factura ya esta desautorizada');
+            Mensajes::error('El documento debe estar autorizado y no puede estar previamente aprobado');
         }
     }
 

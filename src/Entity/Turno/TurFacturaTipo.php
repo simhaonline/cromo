@@ -22,6 +22,11 @@ class TurFacturaTipo
     private $codigoFacturaTipoPk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaCobrarTipoFk;
+
+    /**
      * @ORM\Column(name="nombre", type="string", length=50)
      */
     private $nombre;
@@ -100,6 +105,11 @@ class TurFacturaTipo
      * @ORM\Column(name="tipo_cuenta_ingreso", type="bigint")
      */
     private $tipoCuentaIngreso = 1;
+
+    /**
+     * @ORM\Column(name="genera_cartera", type="boolean", options={"default":false})
+     */
+    private $generaCartera = false;
 
     /**
      * @ORM\Column(name="codigo_interfaz_dian", type="string", length=10, nullable=true)
@@ -728,6 +738,54 @@ class TurFacturaTipo
     public function setFacturasFacturaTipoRel($facturasFacturaTipoRel): void
     {
         $this->facturasFacturaTipoRel = $facturasFacturaTipoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCobrarTipoFk()
+    {
+        return $this->codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCobrarTipoFk
+     */
+    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    {
+        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraCartera()
+    {
+        return $this->generaCartera;
+    }
+
+    /**
+     * @param mixed $generaCartera
+     */
+    public function setGeneraCartera($generaCartera): void
+    {
+        $this->generaCartera = $generaCartera;
     }
 
 

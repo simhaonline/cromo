@@ -229,9 +229,11 @@ class MovimientoController extends AbstractController
                 } else {
                     Mensajes::error("El movimiento debe estar autorizado y no puede estar aprobado");
                 }
+                return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TesMovimiento::class)->aprobar($arMovimiento);
+                return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $formato = new Movimiento();
@@ -244,6 +246,7 @@ class MovimientoController extends AbstractController
                         Mensajes::error($error);
                     }
                 }
+                return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TesMovimientoDetalle::class)->actualizar($arrControles, $id);
@@ -276,13 +279,14 @@ class MovimientoController extends AbstractController
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TesMovimientoDetalle::class)->eliminar($arMovimiento, $arrDetallesSeleccionados);
                 $em->getRepository(TesMovimiento::class)->liquidar($id);
+                return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
             }
             if ($form->get('btnArchivoPlanoBbva')->isClicked()) {
                 $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
                 $numero = $arMovimiento->getNumero();
                 $this->generarArchivoBBVA($arMovimiento, $numero, $arrDetallesSeleccionados);
             }
-            return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
+
         }
         $arMovimientoDetalles = $paginator->paginate($em->getRepository(TesMovimientoDetalle::class)->lista($arMovimiento->getCodigoMovimientoPk()), $request->query->getInt('page', 1), 500);
 

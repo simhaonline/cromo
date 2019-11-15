@@ -89,7 +89,9 @@ class ProgramacionController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(RhuProgramacion::class)->lista($raw), "Programaciones");
+                $arProgramaciones = $em->getRepository(RhuProgramacion::class)->lista($raw);
+                $this->exportarExcelPersonalizado($arProgramaciones);
+//                General::get()->setExportar($em->getRepository(RhuProgramacion::class)->lista($raw), "Programaciones");
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -662,5 +664,75 @@ class ProgramacionController extends AbstractController
 
         return $filtro;
 
+    }
+
+    public function exportarExcelPersonalizado($arProgramaciones)
+    {
+        $em = $this->getDoctrine()->getManager();
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arProgramaciones) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->setTitle('ProgramacionesPago');
+            $j = 0;
+            $arrColumnas = ['ID', 'TIPO', 'GRUPO', 'DESDE', 'HASTA', 'DIAS', 'EMPLEADOS', 'NETO'];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arProgramaciones as $arProgramacion) {
+                $hoja->setCellValue('A' . $j, $arProgramacion['codigoProgramacionPk']);
+                $hoja->setCellValue('B' . $j, $arProgramacion['tipo']);
+                $hoja->setCellValue('C' . $j, $arProgramacion['grupo']);
+                $hoja->setCellValue('D' . $j, $arProgramacion['fechaDesde']);
+                $hoja->setCellValue('E' . $j, $arProgramacion['fechaHasta']);
+                $hoja->setCellValue('F' . $j, $arProgramacion['dias']);
+                $hoja->setCellValue('G' . $j, $arProgramacion['cantidad']);
+                $hoja->setCellValue('H' . $j, $arProgramacion['vrNeto']);
+                $j++;
+            }
+            $hoja = $libro->createSheet(1);
+            $hoja->setTitle('ProgramacionesPagoDetalle');
+            $j = 0;
+            $arrColumnas = ['COD EMPLEADO', 'IDENTIFICACION', 'NOMBRE', 'CONTRATO', 'FECHA DESDE', 'VIGENTE', 'BANCO', 'CUENTA', 'SALARIO', 'DEVENGADO', 'DEDUCCIONES', 'NETO', 'GRUPO'];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arProgramaciones as $arProgramacion) {
+                $arPagos = $em->getRepository(RhuPago::class)->findBy(array('codigoProgramacionFk' => $arProgramacion['codigoProgramacionPk']));
+                foreach ($arPagos as $arPago) {
+
+                    $hoja->setCellValue('A' . $j, $arPago->getCodigoEmpleadoFk());
+                    $hoja->setCellValue('B' . $j, $arPago->getEmpleadoRel()->getNumeroIdentificacion());
+                    $hoja->setCellValue('C' . $j, $arPago->getEmpleadoRel()->getNombreCorto());
+                    $hoja->setCellValue('D' . $j, $arPago->getCodigoContratoFk());
+                    $hoja->setCellValue('E' . $j, $arPago->getContratoRel()->getFechaDesde()->format('Y-m-d'));
+                    $hoja->setCellValue('F' . $j, $arPago->getContratoRel()->getEstadoTerminado() == 1 ? "NO" : "SI");
+                    $hoja->setCellValue('G' . $j, $arPago->getBancoRel() ? $arPago->getBnacoRel()->getNombre() : '');
+                    $hoja->setCellValue('H' . $j, $arPago->getCuenta());
+                    $hoja->setCellValue('I' . $j, $arPago->getContratoRel()->getVrSalario());
+                    $hoja->setCellValue('J' . $j, $arPago->getVrDevengado());
+                    $hoja->setCellValue('K' . $j, $arPago->getVrDeduccion());
+                    $hoja->setCellValue('L' . $j, $arPago->getVrNeto());
+                    $hoja->setCellValue('M' . $j, $arProgramacion['grupo']);
+                    $j++;
+                }
+            }
+
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=programaciones.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
     }
 }

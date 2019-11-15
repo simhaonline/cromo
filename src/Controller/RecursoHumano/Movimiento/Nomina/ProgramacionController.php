@@ -294,13 +294,13 @@ class ProgramacionController extends AbstractController
         } else {
             $arPagoDetalles = null;
         }
-        $arProgramaciones = $em->getRepository(TurProgramacionRespaldo::class)->findBy(['codigoSoporteContratoFk' =>$arProgramacionDetalle->getCodigoSoporteContratoFk()]);
+        $arProgramaciones = $em->getRepository(TurProgramacionRespaldo::class)->findBy(['codigoSoporteContratoFk' => $arProgramacionDetalle->getCodigoSoporteContratoFk()]);
 
         return $this->render('recursohumano/movimiento/nomina/programacion/resumen.html.twig', [
             'arProgramacionDetalle' => $arProgramacionDetalle,
             'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles,
-            'arProgramaciones'=>$arProgramaciones,
+            'arProgramaciones' => $arProgramaciones,
             'form' => $form->createView()
         ]);
     }
@@ -353,7 +353,7 @@ class ProgramacionController extends AbstractController
         $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk());
         return $this->render('recursohumano/movimiento/nomina/programacion/extras.html.twig', [
             'arProgramacionDetalles' => $arProgramacionDetalles,
-            'form'=>$form->createView()
+            'form' => $form->createView()
         ]);
     }
 
@@ -372,19 +372,24 @@ class ProgramacionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGenerar')->isClicked()) {
                 $valor = $form->get('valor')->getData();
-                if($valor > 0) {
-                    $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk'=> $id]);
-                    foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
-                        $arProgramacionDetalle->setVrAnticipo($valor);
-                        $em->persist($arProgramacionDetalle);
+                if ($arProgramacion->getDias() > 0) {
+                    $vrDia = $valor / $arProgramacion->getDias();
+                    if ($valor > 0) {
+                        $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->findBy(['codigoProgramacionFk' => $id]);
+                        foreach ($arProgramacionDetalles as $arProgramacionDetalle) {
+                            $vrAnticipo = $vrDia * $arProgramacionDetalle->getDias();
+                            $arProgramacionDetalle->setVrAnticipo($vrAnticipo);
+                            $em->persist($arProgramacionDetalle);
+                        }
+                        $em->flush();
                     }
-                    $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
-                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+
             }
         }
         return $this->render('recursohumano/movimiento/nomina/programacion/anticipo.html.twig', [
-            'form'=>$form->createView()
+            'form' => $form->createView()
         ]);
     }
 

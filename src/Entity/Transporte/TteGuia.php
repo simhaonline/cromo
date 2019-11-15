@@ -384,6 +384,11 @@ class TteGuia
     private $usuario;
 
     /**
+     * @ORM\Column(name="usuario_entrega", type="string", length=25, nullable=true)
+     */
+    private $usuarioEntrega;
+
+    /**
      * @ORM\Column(name="empaque_referencia", type="string", length=80, nullable=true)
      */
     private $empaqueReferencia;
@@ -2242,6 +2247,23 @@ class TteGuia
     {
         $this->estadoDigitalizado = $estadoDigitalizado;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuarioEntrega()
+    {
+        return $this->usuarioEntrega;
+    }
+
+    /**
+     * @param mixed $usuarioEntrega
+     */
+    public function setUsuarioEntrega($usuarioEntrega): void
+    {
+        $this->usuarioEntrega = $usuarioEntrega;
+    }
+
 
 
 }

@@ -1890,7 +1890,7 @@ class TteDespachoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arTercero = $em->getRepository(InvTercero::class)->terceroTesoreria($arDespacho->getVehiculoRel()->getPoseedorRel());
         if ($arDespacho->getDespachoTipoRel()->getCodigoCuentaPagarTipoFk()) {
-            if ($arDespacho->getVrSaldo() > 0) {
+            if ($arDespacho->getVrTotalNeto() > 0) {
                 /** @var $arCuentaPagarTipo TesCuentaPagarTipo */
                 $arCuentaPagarTipo = $arDespacho->getDespachoTipoRel()->getCuentaPagarTipoRel();
                 $arCuentaPagar = New TesCuentaPagar();

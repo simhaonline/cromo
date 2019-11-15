@@ -108,12 +108,14 @@ class ApiCesioController extends FOSRestController
             $raw = json_decode($request->getContent(), true);
             $guia = $raw['guia']??null;
             $imagen = $raw['imageString']??null;
+            $usuario = $raw['usuario']??null;
             $arGuia = $em->getRepository(TteGuia::class)->find($guia);
             if ($arGuia) {
                 if ($arGuia->getEstadoDespachado() == 1) {
                     if ($arGuia->getEstadoEntregado() == 0) {
                         $arGuia->setFechaEntrega(new \DateTime('now'));
                         $arGuia->setEstadoEntregado(1);
+                        $arGuia->setUsuarioEntrega($usuario);
                         $em->persist($arGuia);
                         $em->flush();
 
@@ -186,4 +188,21 @@ class ApiCesioController extends FOSRestController
         }
     }
 
+    /**
+     * @Rest\Post("/transporte/api/cesio/despacho/ubicacion", name="transporte_api_cesio_despacho_ubicacion")
+     */
+    public function ubicacion(Request $request) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $raw = json_decode($request->getContent(), true);
+            $guia = $raw['guia']??null;
+            $imagen = $raw['imageString']??null;
+            $usuario = $raw['usuario']??null;
+            return ['estado' => 'ok'];
+        } catch (\Exception $e) {
+            return [
+                'error' => "Ocurrio un error en la api " . $e->getMessage(),
+            ];
+        }
+    }
 }

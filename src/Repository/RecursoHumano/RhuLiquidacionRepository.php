@@ -1005,7 +1005,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                                 }
                                 $intDiasVacacionesRecargo = $this->diasPrestaciones($dateFechaDesde, $dateFechaHasta);
                                 $intDiasVacacionesRecargo = $intDiasVacacionesRecargo - $intDiasAusentismo;
-                                $recargosNocturnos = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoDetalle')->recargosNocturnosIbp($fechaDesdeUltimoAnio->format('Y-m-d'), $fechaHastaUltimoAnio->format('Y-m-d'), $arContrato->getCodigoContratoPk());
+                                $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($fechaDesdeUltimoAnio->format('Y-m-d'), $fechaHastaUltimoAnio->format('Y-m-d'), $arContrato->getCodigoContratoPk());
                                 // calcular el promedio mensual de recargos nocturnos
                                 if ($intDiasVacacionesRecargo > 360) {
                                     $recargosNocturnos = $recargosNocturnos / 360 * 30;
@@ -1016,7 +1016,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             } else {
                                 $intDiasVacacionesRecargo = $this->diasPrestaciones($dateFechaDesde, $dateFechaHasta);
                                 $intDiasVacacionesRecargo = $intDiasVacacionesRecargo - $intDiasAusentismo;
-                                $recargosNocturnos = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoDetalle')->recargosNocturnosIbp($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
+                                $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
                                 $salarioVacaciones = $arContrato->getVrSalario() + ($recargosNocturnos / $intDiasVacacionesRecargo * 30);
                             }
                         }
@@ -1109,9 +1109,9 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
             if ($arLiquidacion->getEstadoAprobado() == 0) {
                 $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
                 $arrConceptos = $this->conceptos($arLiquidacion);
-                if($arrConceptos['error'] == '') {
+                if ($arrConceptos['error'] == '') {
                     $numero = $arLiquidacion->getNumero();
-                    if($arLiquidacion->getNumero() == 0 || $arLiquidacion->getNumero() == null) {
+                    if ($arLiquidacion->getNumero() == 0 || $arLiquidacion->getNumero() == null) {
                         $arLiquidacionTipo = $em->getRepository(RhuLiquidacionTipo::class)->find($arLiquidacion->getCodigoLiquidacionTipoFk());
                         $arLiquidacion->setNumero($arLiquidacionTipo->getConsecutivo());
                         $arLiquidacionTipo->setConsecutivo($arLiquidacionTipo->getConsecutivo() + 1);
@@ -1273,7 +1273,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                     $ingresoBasePrestacionVacacionTotal = 0;
                     $arAdicionales = $em->getRepository(RhuLiquidacionAdicional::class)->findBy(array('codigoLiquidacionFk' => $arLiquidacion->getCodigoLiquidacionPk()));
                     foreach ($arAdicionales as $arAdicional) {
-                        $arConcepto =  $arAdicional->getConceptoRel();
+                        $arConcepto = $arAdicional->getConceptoRel();
                         if ($arAdicional->getVrBonificacion() > 0) {
                             $pago = $arAdicional->getVrBonificacion();
                             $devengado += $pago;
@@ -1306,7 +1306,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                         $em->persist($arPagoDetalle);
                         //Generar pago credito
                         if ($arAdicional->getCodigoCreditoFk() != null) {
-                            $em->getRepository(RhuCreditoPago::class)->generar($arAdicional->getCodigoCreditoFk(),'LIQ', $arAdicional->getVrDeduccion());
+                            $em->getRepository(RhuCreditoPago::class)->generar($arAdicional->getCodigoCreditoFk(), 'LIQ', $arAdicional->getVrDeduccion());
                         }
                         //Validar si algun adicional corresponde a un embargo para generar el pago en RhuEmbargoPago.
                         if ($arAdicional->getCodigoEmbargoFk() != "") {
@@ -1763,7 +1763,8 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
      * @param $arLiquidacion RhuLiquidacion
      * @return mixed
      */
-    private function conceptos($arLiquidacion) {
+    private function conceptos($arLiquidacion)
+    {
         $em = $this->getEntityManager();
         $respuesta = [
             'error' => '',
@@ -1775,27 +1776,27 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
             'vacacion' => null,
             'indemnizacion' => null
         ];
-        if($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoCesantiaFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoInteresFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoCesantiaAnteriorFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoInteresAnteriorFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoPrimaFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoVacacionFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoIndemnizacionFk()) {
+        if ($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoCesantiaFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoInteresFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoCesantiaAnteriorFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoInteresAnteriorFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoPrimaFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoVacacionFk() && $arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoIndemnizacionFk()) {
             $arConceptoCesantia = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoCesantiaFk());
-            if($arConceptoCesantia) {
+            if ($arConceptoCesantia) {
                 $respuesta['cesantia'] = $arConceptoCesantia;
                 $arConceptoInteres = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoInteresFk());
-                if($arConceptoInteres) {
+                if ($arConceptoInteres) {
                     $respuesta['interes'] = $arConceptoInteres;
                     $arConceptoCesantiaAnterior = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoCesantiaAnteriorFk());
-                    if($arConceptoCesantiaAnterior) {
+                    if ($arConceptoCesantiaAnterior) {
                         $respuesta['cesantiaAnterior'] = $arConceptoCesantiaAnterior;
                         $arConceptoInteresAnterior = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoInteresAnteriorFk());
-                        if($arConceptoInteresAnterior) {
+                        if ($arConceptoInteresAnterior) {
                             $respuesta['interesAnterior'] = $arConceptoInteresAnterior;
                             $arConceptoPrima = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoPrimaFk());
-                            if($arConceptoPrima) {
+                            if ($arConceptoPrima) {
                                 $respuesta['prima'] = $arConceptoPrima;
                                 $arConceptoVacacion = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoVacacionFk());
-                                if($arConceptoVacacion) {
+                                if ($arConceptoVacacion) {
                                     $respuesta['vacacion'] = $arConceptoVacacion;
                                     $arConceptoIndemnizacion = $em->getRepository(RhuConcepto::class)->find($arLiquidacion->getLiquidacionTipoRel()->getCodigoConceptoIndemnizacionFk());
-                                    if($arConceptoIndemnizacion) {
+                                    if ($arConceptoIndemnizacion) {
                                         $respuesta['indemnizacion'] = $arConceptoIndemnizacion;
                                     } else {
                                         $respuesta['error'] = "El concepto indemnizacion configurado en el tipo de liquidacion no existe";

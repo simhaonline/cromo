@@ -265,11 +265,6 @@ class RhuEmpleado
     private $pagadoEntidad = false;
 
     /**
-     * @ORM\Column(name="habilitado_turno", type="boolean", nullable=false,options={"default":false})
-     */
-    private $habilitadoTurno = false;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadosIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
@@ -1318,6 +1313,22 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getContratoRel()
+    {
+        return $this->contratoRel;
+    }
+
+    /**
+     * @param mixed $contratoRel
+     */
+    public function setContratoRel($contratoRel): void
+    {
+        $this->contratoRel = $contratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getContratosEmpleadoRel()
     {
         return $this->contratosEmpleadoRel;
@@ -1398,6 +1409,70 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getVisitasEmpleadoRel()
+    {
+        return $this->visitasEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $visitasEmpleadoRel
+     */
+    public function setVisitasEmpleadoRel($visitasEmpleadoRel): void
+    {
+        $this->visitasEmpleadoRel = $visitasEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPruebasEmpleadoRel()
+    {
+        return $this->pruebasEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $pruebasEmpleadoRel
+     */
+    public function setPruebasEmpleadoRel($pruebasEmpleadoRel): void
+    {
+        $this->pruebasEmpleadoRel = $pruebasEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInduccionesEmpleadoRel()
+    {
+        return $this->induccionesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $induccionesEmpleadoRel
+     */
+    public function setInduccionesEmpleadoRel($induccionesEmpleadoRel): void
+    {
+        $this->induccionesEmpleadoRel = $induccionesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcreditacionesEmpleadoRel()
+    {
+        return $this->acreditacionesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $acreditacionesEmpleadoRel
+     */
+    public function setAcreditacionesEmpleadoRel($acreditacionesEmpleadoRel): void
+    {
+        $this->acreditacionesEmpleadoRel = $acreditacionesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAdicionalesEmpleadoRel()
     {
         return $this->adicionalesEmpleadoRel;
@@ -1430,6 +1505,38 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getCostosEmpleadoRel()
+    {
+        return $this->costosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $costosEmpleadoRel
+     */
+    public function setCostosEmpleadoRel($costosEmpleadoRel): void
+    {
+        $this->costosEmpleadoRel = $costosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisciplinariosEmpleadoRel()
+    {
+        return $this->disciplinariosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $disciplinariosEmpleadoRel
+     */
+    public function setDisciplinariosEmpleadoRel($disciplinariosEmpleadoRel): void
+    {
+        $this->disciplinariosEmpleadoRel = $disciplinariosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getProgramacionesPagosDetallesEmpleadoRel()
     {
         return $this->programacionesPagosDetallesEmpleadoRel;
@@ -1457,6 +1564,22 @@ class RhuEmpleado
     public function setReclamosEmpleadoRel($reclamosEmpleadoRel): void
     {
         $this->reclamosEmpleadoRel = $reclamosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncidentesEmpleadoRel()
+    {
+        return $this->incidentesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $incidentesEmpleadoRel
+     */
+    public function setIncidentesEmpleadoRel($incidentesEmpleadoRel): void
+    {
+        $this->incidentesEmpleadoRel = $incidentesEmpleadoRel;
     }
 
     /**
@@ -1606,6 +1729,22 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getIncapacidadesEmpleadoRel()
+    {
+        return $this->incapacidadesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $incapacidadesEmpleadoRel
+     */
+    public function setIncapacidadesEmpleadoRel($incapacidadesEmpleadoRel): void
+    {
+        $this->incapacidadesEmpleadoRel = $incapacidadesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getTrasladosPensionesEmpleadoRel()
     {
         return $this->trasladosPensionesEmpleadoRel;
@@ -1636,118 +1775,6 @@ class RhuEmpleado
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIncapacidadesEmpleadoRel()
-    {
-        return $this->incapacidadesEmpleadoRel;
-    }
-
-    /**
-     * @param mixed $incapacidadesEmpleadoRel
-     */
-    public function setIncapacidadesEmpleadoRel($incapacidadesEmpleadoRel): void
-    {
-        $this->incapacidadesEmpleadoRel = $incapacidadesEmpleadoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHabilitadoTurno()
-    {
-        return $this->habilitadoTurno;
-    }
-
-    /**
-     * @param mixed $habilitadoTurno
-     */
-    public function setHabilitadoTurno($habilitadoTurno): void
-    {
-        $this->habilitadoTurno = $habilitadoTurno;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContratoRel()
-    {
-        return $this->contratoRel;
-    }
-
-    /**
-     * @param mixed $contratoRel
-     */
-    public function setContratoRel($contratoRel): void
-    {
-        $this->contratoRel = $contratoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVisitasEmpleadoRel()
-    {
-        return $this->visitasEmpleadoRel;
-    }
-
-    /**
-     * @param mixed $visitasEmpleadoRel
-     */
-    public function setVisitasEmpleadoRel($visitasEmpleadoRel): void
-    {
-        $this->visitasEmpleadoRel = $visitasEmpleadoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAcreditacionesEmpleadoRel()
-    {
-        return $this->acreditacionesEmpleadoRel;
-    }
-
-    /**
-     * @param mixed $acreditacionesEmpleadoRel
-     */
-    public function setAcreditacionesEmpleadoRel($acreditacionesEmpleadoRel): void
-    {
-        $this->acreditacionesEmpleadoRel = $acreditacionesEmpleadoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCostosEmpleadoRel()
-    {
-        return $this->costosEmpleadoRel;
-    }
-
-    /**
-     * @param mixed $costosEmpleadoRel
-     */
-    public function setCostosEmpleadoRel($costosEmpleadoRel): void
-    {
-        $this->costosEmpleadoRel = $costosEmpleadoRel;
-    }
-
-    /**
      * @return mixed
      */
     public function getPermisosEmpleadoRel()
@@ -1761,6 +1788,22 @@ class RhuEmpleado
     public function setPermisosEmpleadoRel($permisosEmpleadoRel): void
     {
         $this->permisosEmpleadoRel = $permisosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstudiosEmpleadoRel()
+    {
+        return $this->estudiosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $estudiosEmpleadoRel
+     */
+    public function setEstudiosEmpleadoRel($estudiosEmpleadoRel): void
+    {
+        $this->estudiosEmpleadoRel = $estudiosEmpleadoRel;
     }
 
     /**
@@ -1825,70 +1868,6 @@ class RhuEmpleado
     public function setCostosEmpleadosServiciosEmpleadoRel($costosEmpleadosServiciosEmpleadoRel): void
     {
         $this->costosEmpleadosServiciosEmpleadoRel = $costosEmpleadosServiciosEmpleadoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPruebasEmpleadoRel()
-    {
-        return $this->pruebasEmpleadoRel;
-    }
-
-    /**
-     * @param mixed $pruebasEmpleadoRel
-     */
-    public function setPruebasEmpleadoRel($pruebasEmpleadoRel): void
-    {
-        $this->pruebasEmpleadoRel = $pruebasEmpleadoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInduccionesEmpleadoRel()
-    {
-        return $this->induccionesEmpleadoRel;
-    }
-
-    /**
-     * @param mixed $induccionesEmpleadoRel
-     */
-    public function setInduccionesEmpleadoRel($induccionesEmpleadoRel): void
-    {
-        $this->induccionesEmpleadoRel = $induccionesEmpleadoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIncidentesEmpleadoRel()
-    {
-        return $this->incidentesEmpleadoRel;
-    }
-
-    /**
-     * @param mixed $incidentesEmpleadoRel
-     */
-    public function setIncidentesEmpleadoRel($incidentesEmpleadoRel): void
-    {
-        $this->incidentesEmpleadoRel = $incidentesEmpleadoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstudiosEmpleadoRel()
-    {
-        return $this->estudiosEmpleadoRel;
-    }
-
-    /**
-     * @param mixed $estudiosEmpleadoRel
-     */
-    public function setEstudiosEmpleadoRel($estudiosEmpleadoRel): void
-    {
-        $this->estudiosEmpleadoRel = $estudiosEmpleadoRel;
     }
 
 

@@ -104,19 +104,19 @@ class MigracionController extends Controller
                     die("Connection failed: " . mysqli_connect_error());
                 }
                 if ($form->get('btnIniciar')->isClicked()) {
-                    $this->generalPais($conn);
-                    $this->generalDepartamento($conn);
-                    $this->generalCiudad($conn);
-                    $this->rhuGrupo($conn);
-                    $this->rhuCargo($conn);
-                    $this->rhuConcepto($conn);
-                    $this->rhuEmbargoJuzgado($conn);
-                    $this->rhuCreditoTipo($conn);
-                    $this->rhuIncapacidadDiagnostico($conn);
-                    $this->rhuLicenciaTipo($conn);
-                    $this->turTurno($conn);
-                    $this->turSecuencia($conn);
-                    $this->turConcepto($conn);
+                    //$this->generalPais($conn);
+                    //$this->generalDepartamento($conn);
+                    //$this->generalCiudad($conn);
+                    //$this->rhuGrupo($conn);
+                    //$this->rhuCargo($conn);
+                    //$this->rhuConcepto($conn);
+                    //$this->rhuEmbargoJuzgado($conn);
+                    //$this->rhuCreditoTipo($conn);
+                    //$this->rhuIncapacidadDiagnostico($conn);
+                    //$this->rhuLicenciaTipo($conn);
+                    //$this->turTurno($conn);
+                    //$this->turSecuencia($conn);
+                    //$this->turConcepto($conn);
                     Mensajes::success("Se migro la informacion con exito");
                 }
                 if ($form->get('btnValidar')->isClicked()) {

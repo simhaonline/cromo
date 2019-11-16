@@ -197,7 +197,7 @@ class ApiCesioController extends FOSRestController
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            $despacho = $raw['guia']??null;
+            $despacho = $raw['despacho']??null;
             $usuario = $raw['usuario']??null;
             $latitud = $raw['latitud']??null;
             $longitud = $raw['longitud']??null;
@@ -205,6 +205,7 @@ class ApiCesioController extends FOSRestController
                 $arDespacho = $em->getRepository(TteDespacho::class)->find($despacho);
                 if($arDespacho) {
                     $arUbicacion = new TteUbicacion();
+                    $arUbicacion->setFecha(new \DateTime('now'));
                     $arUbicacion->setDespachoRel($arDespacho);
                     $arUbicacion->setLatitud($latitud);
                     $arUbicacion->setLongitud($longitud);

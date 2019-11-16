@@ -372,6 +372,11 @@ class TteDespacho
     protected $desembarcosDespachoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteUbicacion", mappedBy="despachoRel")
+     */
+    protected $ubicacionesDespachoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -1489,6 +1494,22 @@ class TteDespacho
     public function setCodigoDespachoClaseFk($codigoDespachoClaseFk): void
     {
         $this->codigoDespachoClaseFk = $codigoDespachoClaseFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUbicacionesDespachoRel()
+    {
+        return $this->ubicacionesDespachoRel;
+    }
+
+    /**
+     * @param mixed $ubicacionesDespachoRel
+     */
+    public function setUbicacionesDespachoRel($ubicacionesDespachoRel): void
+    {
+        $this->ubicacionesDespachoRel = $ubicacionesDespachoRel;
     }
 
 

@@ -7,8 +7,10 @@ use App\Entity\Documental\DocDirectorio;
 use App\Entity\Documental\DocMasivo;
 use App\Entity\Documental\DocMasivoTipo;
 use App\Entity\Transporte\TteCiudad;
+use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TtePrecioDetalle;
+use App\Entity\Transporte\TteUbicacion;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -195,9 +197,22 @@ class ApiCesioController extends FOSRestController
         try {
             $em = $this->getDoctrine()->getManager();
             $raw = json_decode($request->getContent(), true);
-            $guia = $raw['guia']??null;
-            $imagen = $raw['imageString']??null;
+            $despacho = $raw['guia']??null;
             $usuario = $raw['usuario']??null;
+            $latitud = $raw['latitud']??null;
+            $longitud = $raw['longitud']??null;
+            if($despacho) {
+                $arDespacho = $em->getRepository(TteDespacho::class)->find($despacho);
+                if($arDespacho) {
+                    $arUbicacion = new TteUbicacion();
+                    $arUbicacion->setDespachoRel($arDespacho);
+                    $arUbicacion->setLatitud($latitud);
+                    $arUbicacion->setLongitud($longitud);
+                    $arUbicacion->setUsuario($usuario);
+                    $em->persist($arUbicacion);
+                    $em->flush();
+                }
+            }
             return ['estado' => 'ok'];
         } catch (\Exception $e) {
             return [

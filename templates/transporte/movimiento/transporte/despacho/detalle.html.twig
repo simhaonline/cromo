@@ -7,8 +7,7 @@
                     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
                     <div class="btn-toolbar" style="float:left">
                         <div class="btn-group">
-                            <a class="btn btn-default btn-sm"
-                               href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Volver</a>
+                            <a class="btn btn-default btn-sm" href="{{ path('transporte_movimiento_transporte_despacho_lista') }}">Volver</a>
                         </div>
                         <div class="btn-group">
                             {% include 'estructura/botonera.html.twig' %}
@@ -21,6 +20,10 @@
                                 <a class="btn btn-default btn-sm"
                                    href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_liquidar', {'id': arDespacho.codigoDespachoPk }) }}', 'DespachoLiquidar', 600, 1200)">Liquidar</a>
                             {% endif %}
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('transporte_movimiento_transporte_despacho_mapa', {'codigoDespacho': arDespacho.codigoDespachoPk }) }} ', 'Mapa', 600, 1200)">MAP</a>
                         </div>
                     </div>
                     <div style="float:right">

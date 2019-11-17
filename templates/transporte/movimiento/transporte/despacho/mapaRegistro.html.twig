@@ -1,0 +1,61 @@
+{% block estilosPersonalizados %}
+    <style>
+        #map {
+            height: 100%;
+            margin-bottom: 50px;
+        }
+
+        body, html, .content, #wrapper, #page-wrapper {
+            height: 100% !important;
+        }
+    </style>
+{% endblock %}
+{% extends 'base_sin_menu.html.twig' %}
+{% block title %}Ver puntos registro{% endblock %}
+{% block content %}
+    <section class="content-header">
+        <h1>
+            Ver
+            <small>Mapa</small>
+        </h1>
+    </section>
+    <section class="content">
+        <div id="map"></div>
+    </section>
+    <script>
+        var map;
+        function initMap() {
+            var bounds = new google.maps.LatLngBounds();
+            var info = new google.maps.InfoWindow();
+            var puntos = {{ datos|json_encode|raw }};
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 6.2365238, lng: -75.5573587},
+                zoom: 11
+            });
+
+            var construirContenido = function(punto) {
+                return '<p><b>' + punto.fecha + '</b><p/>' +
+                    '<p>(' + punto.cliente + ')</p>';
+            };
+
+            for(var i = 0; i < puntos.length; i ++) {
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(puntos[i].lat, puntos[i].lng),
+                    map: map,
+                    animation: google.maps.Animation.DROP,
+                });
+                google.maps.event.addListener(marker, 'mouseover', (function(marker, i){
+                    return function(){
+                        info.setContent(construirContenido(puntos[i]));
+                        info.open(map, marker);
+                    };
+                })(marker, i));
+                bounds.extend(marker.position);
+            }
+            map.fitBounds(bounds);
+        }
+    </script>
+    {#{% if not error %}#}
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ apikey }}&callback=initMap" async defer></script>
+    {#{% endif %}#}
+{% endblock %}

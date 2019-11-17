@@ -18,10 +18,12 @@ use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDespachoTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
+use App\Entity\Transporte\TteMonitoreoRegistro;
 use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TtePoseedor;
 use App\Entity\Transporte\TteRuta;
+use App\Entity\Transporte\TteUbicacion;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoLiquidarType;
 use App\Form\Type\Transporte\DespachoType;
@@ -598,6 +600,23 @@ class DespachoController extends AbstractController
         }
         return $this->render('transporte/movimiento/transporte/despacho/novedadSolucion.html.twig', array(
             'form' => $form->createView()));
+    }
+
+    /**
+     * @Route("/transporte/movimiento/transporte/despacho/mapa/{codigoDespacho}", name="transporte_movimiento_transporte_despacho_mapa")
+     */
+    public function verMapa(Request $request, $codigoDespacho)
+    {
+        $em = $this->getDoctrine()->getManager();
+        //$googleMapsApiKey = $arConfiguracion->getGoogleMapsApiKey();
+        //$googleMapsApiKey = "AIzaSyBXwGxeTtvba8Uset2XFjuwAxdRmJlkdcY";
+        //Esta es la key de alejandro
+        $googleMapsApiKey = "AIzaSyBXwGxeTtvba8Uset2XFjuwAxdRmJlkdcY";
+        $arrDatos = $em->getRepository(TteUbicacion::class)->datosMapa($codigoDespacho);
+
+        return $this->render('transporte/movimiento/transporte/despacho/mapaRegistro.html.twig', [
+            'datos' => $arrDatos ?? [],
+            'apikey' => $googleMapsApiKey]);
     }
 
     public function getFiltro($form){

@@ -152,7 +152,7 @@ class RhuPagoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $neto = 0;
-        if($arProgramacion->getCodigoPagoTipoFk() == 'NOM') {
+        if ($arProgramacion->getCodigoPagoTipoFk() == 'NOM') {
             $arPago = new RhuPago();
             $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
             $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
@@ -281,7 +281,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $arPagoDetalle->setHoras($intHorasProcesarIncapacidad);
                 $arPagoDetalle->setDias($intDias);
                 $arPagoDetalle->setVrHora($vrHoraIncapacidad);
-                if($arPagoDetalle->getVrHora() == null) {
+                if ($arPagoDetalle->getVrHora() == null) {
                     echo "hola";
                 }
                 //$arPagoDetalle->setVrDia($douVrDia);
@@ -688,10 +688,10 @@ class RhuPagoRepository extends ServiceEntityRepository
             $neto = $arrDatosGenerales['neto'];
         }
 
-        if($arProgramacion->getCodigoPagoTipoFk() == 'ANT') {
-            if($arProgramacionDetalle->getVrAnticipo() > 0) {
+        if ($arProgramacion->getCodigoPagoTipoFk() == 'ANT') {
+            if ($arProgramacionDetalle->getVrAnticipo() > 0) {
                 $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAnticipoFk']);
-                if($arConcepto) {
+                if ($arConcepto) {
                     $arPago = new RhuPago();
                     $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
                     $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
@@ -755,6 +755,262 @@ class RhuPagoRepository extends ServiceEntityRepository
             }
         }
 
+//        if ($arProgramacion->getCodigoPagoTipoFk() == 'PRI') {
+//            $arPago = new RhuPago();
+//            $arContrato = $em->getRepository(RhuContrato::class)->find($arProgramacionDetalle->getCodigoContratoFk());
+//            $arPago->setPagoTipoRel($arProgramacion->getPagoTipoRel());
+//            $arPago->setEmpleadoRel($arProgramacionDetalle->getEmpleadoRel());
+//            $arPago->setContratoRel($arProgramacionDetalle->getContratoRel());
+//            $arPago->setGrupoRel($arProgramacionDetalle->getContratoRel()->getGrupoRel());
+//            $arPago->setProgramacionDetalleRel($arProgramacionDetalle);
+//            $arPago->setProgramacionRel($arProgramacion);
+//            $arPago->setVrSalarioContrato($arContrato->getVrSalario());
+//            $arPago->setCuenta($arContrato->getEmpleadoRel()->getCuenta());
+//            $arPago->setCuentaTipo($arContrato->getEmpleadoRel()->getCodigoCuentaTipoFk());
+//            $arPago->setBancoRel($arContrato->getEmpleadoRel()->getBancoRel());
+//            $arPago->setUsuario($usuario);
+//            $arPago->setEntidadPensionRel($arContrato->getEntidadPensionRel());
+//            $arPago->setEntidadSaludRel($arContrato->getEntidadSaludRel());
+//            $arPago->setFechaDesde($arProgramacion->getFechaDesde());
+//            $arPago->setFechaHasta($arProgramacion->getFechaHasta());
+//            $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaDesdeContrato());
+//            $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaHastaContrato());
+//            $arPago->setCodigoSoporteContratoFk($arProgramacionDetalle->getCodigoSoporteContratoFk());
+//
+//            $arrDatosGenerales = array(
+//                'pago' => $arPago,
+//                'devengado' => 0,
+//                'deduccion' => 0,
+//                'ingresoBaseCotizacion' => 0,
+//                'ingresoBasePrestacion' => 0,
+//                'ingresoBasePrestacionVacacion' => 0,
+//                'neto' => 0);
+//            $valorDia = $arProgramacionDetalle->getVrDia();
+//            $valorHora = $arProgramacionDetalle->getVrHora();
+//            $factorHorasDia = $arProgramacionDetalle->getFactorHorasDia();
+//            $auxilioTransporte = $arConfiguracion['vrAuxilioTransporte'];
+//            $diaAuxilioTransporte = $auxilioTransporte / 30;
+//            $salarioMinimo = $arConfiguracion['vrSalarioMinimo'];
+//            $ibcVacaciones = 0;
+//            $vrPagoIncapacidad = 0;
+//            $vrPagoLicencia = 0;
+//            $devengado = 0;
+//            $devengadoPrestacional = 0;
+//            $salud = 0;
+//            $pension = 0;
+//            $transporte = 0;
+//
+//            //Prima
+//            $dias = $arProgramacionDetalle->getDias();
+//
+//            if ($arConfiguracion->getDiasAusentismoPrimas()) {
+//                $dias = $arProgramacionDetalle->getDias() - $arProgramacionDetalle->getDiasAusentismo();
+////                if ($arProgramacionDetalle->getDiasAusentismoPropuesto() > 0) {
+////                    $dias = $arProgramacionDetalle->getDias() - $arProgramacionDetalle->getDiasAusentismoPropuesto();
+////                }
+//            }
+//
+//            $salarioPrima = $arProgramacionPagoDetalle->getVrSalarioPrima();
+//            if ($arProgramacionPagoDetalle->getVrSalarioPrimaPropuesto() > 0) {
+//                $salarioPrima = $arProgramacionPagoDetalle->getVrSalarioPrimaPropuesto();
+//            }
+//
+//            $douPrima = ($salarioPrima * $dias) / 360;
+//            $douPrima = round($douPrima);
+//            $devengado = $douPrima;
+//            $arPagoConcepto = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoConcepto')->find($arConfiguracion->getCodigoPrima());
+//            $arPagoDetalle = new \Brasa\RecursoHumanoBundle\Entity\RhuPagoDetalle();
+//            $arPagoDetalle->setPagoRel($arPago);
+//            $arPagoDetalle->setPagoConceptoRel($arPagoConcepto);
+//            $arPagoDetalle->setDetalle('');
+//            $arPagoDetalle->setVrPago($douPrima);
+//            $arPagoDetalle->setNumeroDias($dias);
+//            $arPagoDetalle->setOperacion($arPagoConcepto->getOperacion());
+//            $arPagoDetalle->setVrPagoOperado($douPrima * $arPagoConcepto->getOperacion());
+//            $arPagoDetalle->setProgramacionPagoDetalleRel($arProgramacionPagoDetalle);
+//            $em->persist($arPagoDetalle);
+//            $devengadoPrestacional = $douPrima;
+//            //Procesar los conceptos de pagos adicionales
+//            if ($arProgramacionPagoProcesar->getAplicarAdicional()) {
+//                $arPagosAdicionales = new \Brasa\RecursoHumanoBundle\Entity\RhuPagoAdicional();
+//                $arPagosAdicionales = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoAdicional')->programacionPago($arProgramacionPagoDetalle->getCodigoEmpleadoFk(), $arProgramacionPagoProcesar->getFechaDesde()->format('Y/m/d'), $arProgramacionPagoProcesar->getFechaHasta()->format('Y/m/d'), $arProgramacionPagoProcesar->getCodigoPagoTipoFk(), $arProgramacionPagoProcesar->getAplicarAdicionalesPagoPermanentes(), $arProgramacionPagoProcesar->getAplicarAdicional(), $arProgramacionPagoDetalle->getCodigoContratoFk());
+//                foreach ($arPagosAdicionales as $arPagoAdicional) {
+//                    $arPagoDetalle = new \Brasa\RecursoHumanoBundle\Entity\RhuPagoDetalle();
+//                    $arPagoDetalle->setPagoRel($arPago);
+//                    $arPagoDetalle->setPagoConceptoRel($arPagoAdicional->getPagoConceptoRel());
+//                    $arPagoDetalle->setAdicional(1);
+//                    $douPagoDetalle = $arPagoAdicional->getValor();
+//                    if ($arPagoAdicional->getAplicaDiaLaborado() == 1) {
+//                        $diasPeriodo = $arCentroCosto->getPeriodoPagoRel()->getDias();
+//                        $valorDia = $arPagoAdicional->getValor() / $diasPeriodo;
+//                        $douPagoDetalle = $valorDia * $arProgramacionPagoDetalle->getDias();
+//                    }
+//                    if ($arPagoAdicional->getAplicaDiaLaboradoSinDescanso() == 1) {
+//                        $diasPeriodo = $arCentroCosto->getPeriodoPagoRel()->getDias();
+//                        $valorDia = $arPagoAdicional->getValor() / $diasPeriodo;
+//                        $douPagoDetalle = $valorDia * ($arProgramacionPagoDetalle->getDias() - ($arProgramacionPagoDetalle->getHorasDescanso() / 8));
+//                    }
+//                    $douPagoDetalle = round($douPagoDetalle);
+//                    if ($arPagoAdicional->getPagoConceptoRel()->getOperacion() == 1) {
+//                        $devengado += $douPagoDetalle;
+//                        if ($arPagoAdicional->getPagoConceptoRel()->getPrestacional() == 1) {
+//                            $devengadoPrestacional += $douPagoDetalle;
+//                        }
+//                    }
+//                    $arPagoDetalle->setNumeroHoras($arPagoAdicional->getHoras());
+//                    $arPagoDetalle->setDetalle($arPagoAdicional->getDetalle());
+//                    $arPagoDetalle->setVrPago($douPagoDetalle);
+//                    $arPagoDetalle->setOperacion($arPagoAdicional->getPagoConceptoRel()->getOperacion());
+//                    $arPagoDetalle->setVrPagoOperado($douPagoDetalle * $arPagoAdicional->getPagoConceptoRel()->getOperacion());
+//                    $arPagoDetalle->setDetalle($arPagoAdicional->getDetalle());
+//                    $arPagoDetalle->setProgramacionPagoDetalleRel($arProgramacionPagoDetalle);
+//                    $douPagoDetalleOperado = $douPagoDetalle * $arPagoAdicional->getPagoConceptoRel()->getOperacion();
+//                    if ($arPagoAdicional->getPagoConceptoRel()->getGeneraIngresoBaseCotizacion() == 1) {
+//                        $douIngresoBaseCotizacion += $douPagoDetalleOperado;
+//                        $douIngresoBaseCotizacionSalud += $douPagoDetalleOperado;
+//                        $arPagoDetalle->setVrIngresoBaseCotizacion($douPagoDetalleOperado);
+//                        $arPagoDetalle->setVrIngresoBaseCotizacionAdicional($douPagoDetalleOperado);
+//                        $arPagoDetalle->setCotizacion(1);
+//                    }
+//                    if ($arPagoAdicional->getPagoConceptoRel()->getGeneraIngresoBasePrestacion() == 1) {
+//                        $douIngresoBasePrestacional += $douPagoDetalleOperado;
+//                        $devengadoPrestacional += $douPagoDetalleOperado;
+//                        $arPagoDetalle->setVrIngresoBasePrestacion($douPagoDetalleOperado);
+//                        $arPagoDetalle->setPrestacional(1);
+//                    }
+//                    if ($arPagoAdicional->getPagoConceptoRel()->getOperacion() > 0) {
+//                        if ($arPagoAdicional->getPagoConceptoRel()->getGeneraIngresoBasePrestacion()) {
+//                            $arPagoDetalle->setVrAdicionalPrestacional($douPagoDetalle);
+//                        } else {
+//                            $arPagoDetalle->setVrAdicionalNoPrestacional($douPagoDetalle);
+//                        }
+//                    }
+//                    $em->persist($arPagoDetalle);
+//                }
+//            }
+//            //Procesar creditos
+//            $arCreditos = new \Brasa\RecursoHumanoBundle\Entity\RhuCredito();
+//            $arCreditos = $em->getRepository('BrasaRecursoHumanoBundle:RhuCredito')->findBy(array('codigoEmpleadoFk' => $arProgramacionPagoDetalle->getCodigoEmpleadoFk(), 'codigoCreditoTipoPagoFk' => 1, 'estadoPagado' => 0, 'estadoSuspendido' => 0, 'aplicarCuotaPrima' => 1));
+//            foreach ($arCreditos as $arCredito) {
+//                if ($arCredito->getSaldo() > 0) {
+//                    $descontarCuota = true;
+//                    $numeroCuotas = $arCredito->getNumeroCuotas();
+//                    $numeroCuotaActual = $arCredito->getNumeroCuotaActual();
+//                    if ($arCredito->getValidarCuotas() == 1) {
+//                        if ($numeroCuotaActual > $numeroCuotas) {
+//                            $descontarCuota = false;
+//                        }
+//                    }
+//                    if ($descontarCuota) {
+//                        $arPagoConceptoCredito = $arCredito->getCreditoTipoRel()->getPagoConceptoRel();
+//                        $arCreditoProcesar = new \Brasa\RecursoHumanoBundle\Entity\RhuCredito();
+//                        $arCreditoProcesar = $em->getRepository('BrasaRecursoHumanoBundle:RhuCredito')->find($arCredito->getCodigoCreditoPk());
+//                        $douCuota = 0;
+//                        if ($arCreditoProcesar->getSaldo() >= $arCreditoProcesar->getVrCuotaPrima()) {
+//                            $douCuota = $arCreditoProcesar->getVrCuotaPrima();
+//                        } else {
+//                            $douCuota = $arCreditoProcesar->getSaldo();
+//                        }
+//                        $arPagoDetalle = new \Brasa\RecursoHumanoBundle\Entity\RhuPagoDetalle();
+//                        $arPagoDetalle->setPagoRel($arPago);
+//                        $arPagoDetalle->setPagoConceptoRel($arPagoConceptoCredito);
+//                        $douPagoDetalle = $douCuota; //Falta afectar credito
+//                        $douPagoDetalle = round($douPagoDetalle);
+//                        $arPagoDetalle->setDetalle($arCredito->getCreditoTipoRel()->getNombre());
+//                        $arPagoDetalle->setVrPago($douPagoDetalle);
+//                        $arPagoDetalle->setOperacion($arPagoConceptoCredito->getOperacion());
+//                        $arPagoDetalle->setVrPagoOperado($douPagoDetalle * $arPagoConceptoCredito->getOperacion());
+//                        $arPagoDetalle->setProgramacionPagoDetalleRel($arProgramacionPagoDetalle);
+//                        $arPagoDetalle->setCreditoRel($arCredito);
+//                        $em->persist($arPagoDetalle);
+//                    }
+//                }
+//            }
+//            //Embargos
+//            if (!$arConfiguracion->getOmitirDescuentoEmbargoPrimas()) {
+//                //Embargos
+//                if ($arProgramacionPagoProcesar->getAplicarEmbargos()) {
+//                    $arEmbargos = new \Brasa\RecursoHumanoBundle\Entity\RhuEmbargo();
+//                    $arEmbargos = $em->getRepository('BrasaRecursoHumanoBundle:RhuEmbargo')->findBy(array('codigoEmpleadoFk' => $arProgramacionPagoDetalle->getCodigoEmpleadoFk(), 'estadoActivo' => 1, 'afectaPrima' => 1));
+//                    foreach ($arEmbargos as $arEmbargo) {
+//                        $douPagoDetalle = 0;
+//                        $detalle = "";
+//                        if ($arEmbargo->getValorFijo()) {
+//                            $douPagoDetalle = $arEmbargo->getValor();
+//                        }
+//                        if ($arEmbargo->getPorcentajeDevengado()) {
+//                            $douPagoDetalle = ($devengado * $arEmbargo->getPorcentaje()) / 100;
+//                            $douPagoDetalle = round($douPagoDetalle);
+//                            $detalle = $arEmbargo->getPorcentaje() . "% devengado";
+//                        }
+//                        if ($arEmbargo->getPorcentajeDevengadoPrestacional()) {
+//                            $douPagoDetalle = ($devengadoPrestacional * $arEmbargo->getPorcentaje()) / 100;
+//                            $douPagoDetalle = round($douPagoDetalle);
+//                            $detalle = $arEmbargo->getPorcentaje() . "% prestacional";
+//                        }
+//                        if ($arEmbargo->getPorcentajeDevengadoPrestacionalMenosDescuentoLey()) {
+//                            $douPagoDetalle = (($devengadoPrestacional) * $arEmbargo->getPorcentaje()) / 100;
+//                            $douPagoDetalle = round($douPagoDetalle);
+//                            $detalle = $arEmbargo->getPorcentaje() . "% prestacional (menos dcto ley)";
+//                        }
+//                        if ($arEmbargo->getPorcentajeDevengadoPrestacionalMenosDescuentoLeyTransporte()) {
+//                            $douPagoDetalle = (($devengadoPrestacional) * $arEmbargo->getPorcentaje()) / 100;
+//                            $douPagoDetalle = round($douPagoDetalle);
+//                            $detalle = $arEmbargo->getPorcentaje() . "% prestacional (menos dcto ley + tte)";
+//                        }
+//                        if ($arEmbargo->getPorcentajeDevengadoMenosDescuentoLey()) {
+//                            $douPagoDetalle = (($devengado) * $arEmbargo->getPorcentaje()) / 100;
+//                            $douPagoDetalle = round($douPagoDetalle);
+//                            $detalle = $arEmbargo->getPorcentaje() . "% devengado (menos dcto ley)";
+//                        }
+//                        if ($arEmbargo->getPorcentajeDevengadoMenosDescuentoLeyTransporte()) {
+//                            $douPagoDetalle = (($devengado) * $arEmbargo->getPorcentaje()) / 100;
+//                            $douPagoDetalle = round($douPagoDetalle);
+//                            $detalle = $arEmbargo->getPorcentaje() . "% devengado (menos dcto ley + tte)";
+//                        }
+//                        if ($arEmbargo->getPorcentajeExcedaSalarioMinimo()) {
+//                            $salarioMinimoDevengado = ($douVrSalarioMinimo / 30) * $arProgramacionPagoDetalle->getDiasTransporte();
+//                            $baseDescuento = $devengado - $salarioMinimoDevengado;
+//                            if ($baseDescuento > 0) {
+//                                $douPagoDetalle = ($baseDescuento * $arEmbargo->getPorcentaje()) / 100;
+//                                $douPagoDetalle = round($douPagoDetalle);
+//                            }
+//                            $detalle = $arEmbargo->getPorcentaje() . "% exceda el salario minimo";
+//                        }
+//                        if ($arEmbargo->getPartesExcedaSalarioMinimo()) {
+//                            $salarioMinimoDevengado = ($douVrSalarioMinimo / 30) * $arProgramacionPagoDetalle->getDiasTransporte();
+//                            $baseDescuento = $devengado - $salarioMinimoDevengado;
+//                            if ($baseDescuento > 0) {
+//                                $douPagoDetalle = $baseDescuento / $arEmbargo->getPartes();
+//                            }
+//                            $detalle = $arEmbargo->getPartes() . " partes exceda el salario minimo";
+//                        }
+//                        if ($arEmbargo->getPartesExcedaSalarioMinimoMenosDescuentoLey()) {
+//                            $salarioMinimoDevengado = ($douVrSalarioMinimo / 30) * $arProgramacionPagoDetalle->getDiasTransporte();
+//                            $baseDescuento = ($devengado) - $salarioMinimoDevengado;
+//                            if ($baseDescuento > 0) {
+//                                $douPagoDetalle = $baseDescuento / $arEmbargo->getPartes();
+//                            }
+//                            $detalle = $arEmbargo->getPartes() . " partes exceda el salario minimo";
+//                        }
+//                        if ($douPagoDetalle > 0) {
+//                            $arPagoConcepto = $arEmbargo->getEmbargoTipoRel()->getPagoConceptoRel();
+//                            $arPagoDetalle = new \Brasa\RecursoHumanoBundle\Entity\RhuPagoDetalle();
+//                            $arPagoDetalle->setPagoRel($arPago);
+//                            $arPagoDetalle->setPagoConceptoRel($arPagoConcepto);
+//                            $douPagoDetalle = round($douPagoDetalle);
+//                            $arPagoDetalle->setVrPago($douPagoDetalle);
+//                            $arPagoDetalle->setOperacion($arPagoConcepto->getOperacion());
+//                            $arPagoDetalle->setVrPagoOperado($douPagoDetalle * $arPagoConcepto->getOperacion());
+//                            $arPagoDetalle->setProgramacionPagoDetalleRel($arProgramacionPagoDetalle);
+//                            $arPagoDetalle->setDetalle($detalle);
+//                            $em->persist($arPagoDetalle);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
         return $neto;
     }
 
@@ -809,7 +1065,7 @@ class RhuPagoRepository extends ServiceEntityRepository
 
     private function getValoresPagoDetalle(&$arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle)
     {
-        if($arConcepto) {
+        if ($arConcepto) {
             $pagoDetalle = round($pagoDetalle);
             $arPagoDetalle->setPagoRel($arrDatosGenerales['pago']);
             $arPagoDetalle->setVrPago($pagoDetalle);
@@ -1054,9 +1310,8 @@ class RhuPagoRepository extends ServiceEntityRepository
             if (!$arPagoDetalles) {
                 $arPagoDetalles = [];
             }
-            if (is_null($arPago['codigoSoporteContratoFk']))
-            {
-                $arPago['codigoSoporteContratoFk']= 0;
+            if (is_null($arPago['codigoSoporteContratoFk'])) {
+                $arPago['codigoSoporteContratoFk'] = 0;
             }
             $queryBuilder = $em->createQueryBuilder()->from(TurProgramacionRespaldo::class, 'pr')
                 ->select('pr.codigoProgramacionRespaldoPk')
@@ -1093,7 +1348,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                 ->addSelect('pr.dia31')
                 ->where("pr.codigoSoporteContratoFk = {$arPago['codigoSoporteContratoFk']}");
             $arProgramacionesRespaldo = $queryBuilder->getQuery()->getResult();
-                if (!$arProgramacionesRespaldo) {
+            if (!$arProgramacionesRespaldo) {
                 $arProgramacionesRespaldo = [];
             }
 

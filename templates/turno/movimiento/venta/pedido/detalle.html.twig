@@ -134,6 +134,15 @@
                         </thead>
                         <tbody>
                         {% for arPedidoDetalle in arPedidoDetalles %}
+                            <tr style="background-color: #c8c8c8">
+                                <td colspan="30">
+                                    <b>
+                                        ({{ arPedidoDetalle.codigoPuestoFk | default('') }})
+                                        {{ arPedidoDetalle.puesto }}
+                                    </b>
+                                </td>
+
+                            </tr>
                             <tr>
                                 <td> {{ arPedidoDetalle.codigoPedidoDetallePk }} <input type="hidden"
                                                                                         name="arrCodigo[]"

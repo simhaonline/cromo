@@ -53,15 +53,18 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.vrSubtotal')
             ->addSelect('pd.periodo')
             ->addSelect('pd.compuesto')
+            ->addSelect('pd.codigoPuestoFk')
+            ->addSelect('p.nombre AS puesto')
             ->addSelect('pd.codigoContratoDetalleFk')
             ->addSelect('pd.codigoModalidadFk')
             ->addSelect('c.nombre as conceptoNombre')
             ->addSelect('i.nombre as itemNombre')
             ->leftJoin('pd.conceptoRel', 'c')
             ->leftJoin('pd.itemRel', 'i')
+            ->leftJoin('pd.puestoRel', 'p')
             ->where('pd.codigoPedidoFk = ' . $id);
 
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function pendienteProgramar()

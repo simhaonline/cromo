@@ -66,16 +66,37 @@
                     {{ form_widget(form.txtClaveEscritorio, { 'attr': {'class': 'form-control','placeholder':'Clave escritorio'} }) }}
                 </div>
             </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">Activo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.boolActivo) }}
+                <div class="form-group form-group-sm">
+                    {% if editarContrasenas == false %}
+                        <label class="col-sm-2 control-label"  style="display: none">Contraseña:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.txtNuevaClave , {'attr': {'style': 'display: none'}}) }}
+                        </div>
+                        <label class="col-sm-2 control-label" style="display: none">Confirmar contraseña:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.txtConfirmacionClave, {'attr': {'style': 'display: none'}} ) }}
+                        </div>
+                    {% else %}
+                        <label class="col-sm-2 control-label">Contraseña:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.txtNuevaClave) }}
+                        </div>
+                        <label class="col-sm-2 control-label">Confirmar contraseña:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.txtConfirmacionClave) }}
+                        </div>
+                    {% endif %}
                 </div>
-                <label class="col-sm-2 control-label">Retringir movimientos:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.restringirMovimientos) }}
+                <div class="form group form-group-sm">
+                    <label class="col-sm-2 control-label">Activo:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.boolActivo) }}
+                    </div>
+                        <label class="col-sm-2 control-label">Retringir movimientos:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.restringirMovimientos) }}
+                        </div>
                 </div>
-            </div>
         </div>
     </div>
     <div style="float: right;">

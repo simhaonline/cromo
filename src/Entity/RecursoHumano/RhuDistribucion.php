@@ -43,6 +43,11 @@ class RhuDistribucion
     protected $contratosDistribucionRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuGrupo", mappedBy="distribucionRel")
+     */
+    protected $gruposDistribucionRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurSoporteContrato", mappedBy="distribucionRel")
      */
     protected $soportesContratosDistribucionRel;
@@ -141,6 +146,22 @@ class RhuDistribucion
     public function setSoportesContratosDistribucionRel($soportesContratosDistribucionRel): void
     {
         $this->soportesContratosDistribucionRel = $soportesContratosDistribucionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGruposDistribucionRel()
+    {
+        return $this->gruposDistribucionRel;
+    }
+
+    /**
+     * @param mixed $gruposDistribucionRel
+     */
+    public function setGruposDistribucionRel($gruposDistribucionRel): void
+    {
+        $this->gruposDistribucionRel = $gruposDistribucionRel;
     }
 
 

@@ -78,6 +78,11 @@ class TurSoporteContrato
     private $incapacidad = 0;
 
     /**
+     * @ORM\Column(name="incapacidad_no_legalizada", type="integer")
+     */
+    private $incapacidadNoLegalizada = 0;
+
+    /**
      * @ORM\Column(name="licencia", type="integer")
      */
     private $licencia = 0;
@@ -1589,6 +1594,22 @@ class TurSoporteContrato
     public function setVrAuxilioTransportePago($vrAuxilioTransportePago): void
     {
         $this->vrAuxilioTransportePago = $vrAuxilioTransportePago;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncapacidadNoLegalizada()
+    {
+        return $this->incapacidadNoLegalizada;
+    }
+
+    /**
+     * @param mixed $incapacidadNoLegalizada
+     */
+    public function setIncapacidadNoLegalizada($incapacidadNoLegalizada): void
+    {
+        $this->incapacidadNoLegalizada = $incapacidadNoLegalizada;
     }
 
 

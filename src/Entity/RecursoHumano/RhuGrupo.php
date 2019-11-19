@@ -28,6 +28,11 @@ class RhuGrupo
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_distribucion_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoDistribucionFk;
+
+    /**
      * @ORM\Column(name="cargar_contrato", type="boolean",options={"default" : false}, nullable=true)
      */
     private $cargarContrato = false;
@@ -36,6 +41,12 @@ class RhuGrupo
      * @ORM\Column(name="cargar_soporte", type="boolean",options={"default" : false}, nullable=true)
      */
     private $cargarSoporte = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuDistribucion", inversedBy="gruposDistribucionRel")
+     * @ORM\JoinColumn(name="codigo_distribucion_fk",referencedColumnName="codigo_distribucion_pk")
+     */
+    protected $distribucionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="grupoRel")
@@ -325,6 +336,38 @@ class RhuGrupo
     public function setLicenciasGrupoRel($licenciasGrupoRel): void
     {
         $this->licenciasGrupoRel = $licenciasGrupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDistribucionFk()
+    {
+        return $this->codigoDistribucionFk;
+    }
+
+    /**
+     * @param mixed $codigoDistribucionFk
+     */
+    public function setCodigoDistribucionFk($codigoDistribucionFk): void
+    {
+        $this->codigoDistribucionFk = $codigoDistribucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDistribucionRel()
+    {
+        return $this->distribucionRel;
+    }
+
+    /**
+     * @param mixed $distribucionRel
+     */
+    public function setDistribucionRel($distribucionRel): void
+    {
+        $this->distribucionRel = $distribucionRel;
     }
 
 

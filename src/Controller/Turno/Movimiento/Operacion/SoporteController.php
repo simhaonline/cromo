@@ -232,9 +232,10 @@ class SoporteController extends ControllerListenerGeneral
                 $em->flush();
                 $em->getRepository(TurSoporte::class)->resumen($arSoporteContrato->getSoporteRel());
 
+                $arrSemanas = $em->getRepository(TurSoporte::class)->semanas($arSoporteContrato->getSoporteRel());
                 $arSoporteContrato = $em->getRepository(TurSoporteContrato::class)->find($id);
                 if($arSoporteContrato->getCodigoDistribucionFk()) {
-                    $em->getRepository(TurSoporteContrato::class)->distribucion($arSoporteContrato);
+                    $em->getRepository(TurSoporteContrato::class)->distribucion($arSoporteContrato->getSoporteRel(), $arSoporteContrato, $arrSemanas);
                 }
                 $em->flush();
 

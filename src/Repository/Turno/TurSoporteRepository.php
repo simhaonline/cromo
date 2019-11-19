@@ -169,6 +169,10 @@ class TurSoporteRepository extends ServiceEntityRepository
                         $arSoporteContrato->setSoporteRel($arSoporte);
                         $arSoporteContrato->setEmpleadoRel($em->getReference(RhuEmpleado::class, $arEmpleadoResumen['codigoEmpleadoFk']));
                         $arSoporteContrato->setContratoRel($em->getReference(RhuContrato::class, $arContrato['codigoContratoPk']));
+
+                        if($arSoporte->getGrupoRel()->getCodigoDistribucionFk()) {
+                            $arSoporteContrato->setDistribucionRel($em->getReference(RhuDistribucion::class, $arSoporte->getGrupoRel()->getCodigoDistribucionFk()));
+                        }
                         if($arContrato['codigoDistribucionFk']) {
                             $arSoporteContrato->setDistribucionRel($em->getReference(RhuDistribucion::class, $arContrato['codigoDistribucionFk']));
                         }
@@ -183,18 +187,6 @@ class TurSoporteRepository extends ServiceEntityRepository
                         $arSoporteContrato->setAnio($arSoporte->getFechaDesde()->format('Y'));
                         $arSoporteContrato->setMes($arSoporte->getFechaDesde()->format('m'));
 
-                        /*$arSoporteContrato->setSecuencia($arContrato->getSecuencia());
-                        if ($arRecurso->getCodigoClienteFk()) {
-                            $arSoporteContrato->setPagarTransporteCompletoRecurso($arRecurso->getClienteRel()->getPagarTransporteCompletoRecurso());
-                            $arSoporteContrato->setPagar31Completo($arRecurso->getClienteRel()->getPagar31CompletoRecurso());
-                        }*/
-
-                        /*if ($arCentroCosto->getCompensacionRecurso()) {
-                            $arSoporteContrato->setCompensacionTipoRel($arRecurso->getCompensacionTipoRel());
-                            $arSoporteContrato->setSalarioFijoRel($arRecurso->getSalarioFijoRel());
-                        } else {
-                            $arSoporteContrato->setCompensacionTipoRel($arCentroCosto->getCompensacionTipoRel());
-                        }*/
                         if ($numeroContratos > 1) {
                             $arSoporte->setContratoMultiple(1);
                             if ($arContrato->getFechaDesde() > $arSoporte->getFechaDesde()) {
@@ -251,6 +243,10 @@ class TurSoporteRepository extends ServiceEntityRepository
             $em->getRepository(TurProgramacionRespaldo::class)->generar($arSoporte, $arSoporteContrato);
         }
         $em->flush();
+
+
+
+
 
         //Distribuir
         foreach ($arSoportesContratos as $arSoportesContrato) {
@@ -317,6 +313,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 . "SUM(sh.descanso) as descanso, "
                 . "SUM(sh.novedad) as novedad, "
                 . "SUM(sh.incapacidad) as incapacidad, "
+                . "SUM(sh.incapacidadNoLegalizada) as incapacidadNoLegalizada, "
                 . "SUM(sh.licencia) as licencia, "
                 . "SUM(sh.licenciaNoRemunerada) as licenciaNoRemunerada, "
                 . "SUM(sh.vacacion) as vacacion, "
@@ -381,7 +378,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                 $arSoporteContrato->setDescanso($arrayResultado[$i]['descanso']?? 0);
                 $arSoporteContrato->setNovedad($arrayResultado[$i]['novedad']?? 0);
                 $arSoporteContrato->setIncapacidad($arrayResultado[$i]['incapacidad']?? 0);
-                //$arSoporteContrato->setIncapacidadNoLegalizada($arrayResultado[$i]['incapacidadNoLegalizada']);
+                $arSoporteContrato->setIncapacidadNoLegalizada($arrayResultado[$i]['incapacidadNoLegalizada']);
                 $arSoporteContrato->setLicencia($arrayResultado[$i]['licencia'] ?? 0);
                 $arSoporteContrato->setLicenciaNoRemunerada($arrayResultado[$i]['licenciaNoRemunerada']??0);
                 $arSoporteContrato->setVacacion($arrayResultado[$i]['vacacion']?? 0);
@@ -635,6 +632,39 @@ class TurSoporteRepository extends ServiceEntityRepository
 
 
         return $diasIncapacidad;
+    }
+
+    /**
+     * @param $arSoporte TurSoporte
+     */
+    public function semanas($arSoporte) {
+        $arrSemanas = array();
+        $arrDomingos = array();
+        $dateFechaDesde = $arSoporte->getFechaDesde();
+        $dateFechaHasta = $arSoporte->getFechaHasta();
+        $intDiaInicial = $dateFechaDesde->format('j');
+        $intDiaFinal = $dateFechaHasta->format('j');
+        $diaInicialSemana = $intDiaInicial;
+        $diasCorte = 0;
+        for ($i = $intDiaInicial; $i <= $intDiaFinal; $i++) {
+            $diasCorte++;
+            $strFecha = $dateFechaDesde->format('Y/m/') . $i;
+            $dateFecha = date_create($strFecha);
+            $diaSemana = $dateFecha->format('N');
+            if ($diaSemana == 7 || ($diasCorte > 0 && $i == $intDiaFinal)) {
+                $diasCorte = 0;
+                $dias = ($i - $diaInicialSemana) + 1;
+                $arrSemanas[] = array('diaInicial' => $diaInicialSemana,
+                    'diaFinal' => $i,
+                    'fechaInicial' => $dateFechaDesde->format('Y/m/') . $diaInicialSemana,
+                    'fechaFinal' => $dateFechaDesde->format('Y/m/') . $i,
+                    'dias' => $dias,
+                    'descanso' => '0');
+                $diaInicialSemana = $i + 1;
+                $arrDomingos[] = array('domingo' => $dateFecha);
+            }
+        }
+        return $arrSemanas;
     }
 
 }

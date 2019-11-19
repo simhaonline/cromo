@@ -55,5 +55,47 @@ class TurSoporteHoraRepository extends ServiceEntityRepository
         $numeroRegistros = $q->execute();
         $em->flush();
     }
+
+    public function numeroLicencias($codigoSoporteContrato, $fechaDesde, $fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $intLicencia = 0;
+        $novedades = 0;
+        $dql = "SELECT SUM(sh.licenciaNoRemunerada + sh.incapacidadNoLegalizada + sh.licencia + sh.ausentismo) as licencia "
+            . "FROM App\Entity\Turno\TurSoporteHora sh "
+            . "WHERE sh.codigoSoporteContratoFk =  " . $codigoSoporteContrato . " AND (sh.fecha >='" . $fechaDesde . "' AND sh.fecha <= '" . $fechaHasta . "')";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        if ($arrayResultado) {
+            $intLicencia = $arrayResultado[0]['licencia'];
+            if ($intLicencia == null) {
+                $intLicencia = 0;
+            }
+        }
+        $novedades = $intLicencia;
+        return $novedades;
+    }
+
+    public function numeroLicenciasNoRemunerada($codigoSoporteContrato, $fechaDesde, $fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $intLicenciaNoRemunerada = 0;
+        $novedades = 0;
+        $dql = "SELECT SUM(sh.licenciaNoRemunerada + sh.incapacidadNoLegalizada + sh.ausentismo) as licenciaNoRemunerada "
+            . "FROM App\Entity\Turno\TurSoporteHora sh "
+            . "WHERE sh.codigoSoporteContratoFk =  " . $codigoSoporteContrato . " AND (sh.fecha >='" . $fechaDesde . "' AND sh.fecha <= '" . $fechaHasta . "')";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        if ($arrayResultado) {
+            $intLicenciaNoRemunerada = $arrayResultado[0]['licenciaNoRemunerada'];
+            if ($intLicenciaNoRemunerada == null) {
+                $intLicenciaNoRemunerada = 0;
+            }
+        }
+        $novedades = $intLicenciaNoRemunerada;
+        return $novedades;
+    }
+
+
 }
 

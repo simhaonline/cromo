@@ -2,7 +2,10 @@
 
 namespace App\Form\Type\RecursoHumano;
 
+use App\Entity\RecursoHumano\RhuDistribucion;
 use App\Entity\RecursoHumano\RhuGrupo;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -17,6 +20,16 @@ class GrupoType extends AbstractType
         $builder
             ->add('codigoGrupoPk',TextType::class,['label' => 'Codigo grupo:', 'required' => true])
             ->add('nombre',TextType::class,['label' => 'Nombre:', 'required' => true])
+            ->add('distribucionRel', EntityType::class, [
+                'class' => RhuDistribucion::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('d')
+                        ->orderBy('d.orden', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => false,
+                'label' => 'Distribucion:'
+            ])
             ->add('cargarContrato', CheckboxType::class, ['required' => false])
             ->add('cargarSoporte', CheckboxType::class, ['required' => false])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
@@ -34,7 +47,7 @@ class GrupoType extends AbstractType
     {
         $campos = '[
             {"campo":"codigoGrupoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
+            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
         ]';
         return $campos;
     }

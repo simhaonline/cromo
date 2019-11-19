@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transporte;
 
+use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -280,5 +281,49 @@ class TteDespachoDetalleRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("d.fechaRegistro <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
         }
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function tableroDetalle($raw)
+    {
+        $em = $this->getEntityManager();
+        $filtros = $raw['filtros'] ?? null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $codigoCiudadOrigenFk = null;
+        $codigoCiudadDestinoFk = null;
+
+        if ($filtros) {
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $codigoCiudadOrigenFk = $filtros['codigoCiudadOrigenFk'] ?? null;
+            $codigoCiudadDestinoFk = $filtros['codigoCiudadDestinoFk'] ?? null;
+        }
+        $queryBuilder = $em->createQueryBuilder()->from(TteDespachoDetalle::class, 'dd')
+            ->select('g.codigoCiudadDestinoFk')
+            ->addSelect('cd.nombre as ciudadDestinoNombre')
+            ->addSelect('COUNT(dd.codigoDespachoDetallePk) as registros')
+            ->addSelect('SUM(dd.unidades) as unidades')
+            ->addSelect('SUM(dd.vrFlete) as vrFlete')
+            ->addSelect('SUM(dd.vrManejo) as vrManejo')
+            ->addSelect('SUM(dd.pesoReal) as pesoReal')
+            ->addSelect('SUM(dd.pesoVolumen) as pesoVolumen')
+            ->leftJoin('dd.despachoRel', 'd')
+            ->leftJoin('dd.guiaRel', 'g')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->groupBy('g.codigoCiudadDestinoFk');
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("d.fechaSalida >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("d.fechaSalida <= '{$fechaHasta} 23:59:59'");
+        }
+        if ($codigoCiudadOrigenFk) {
+            $queryBuilder->andWhere("d.codigoCiudadOrigenFk = {$codigoCiudadOrigenFk}");
+        }
+        if ($codigoCiudadDestinoFk) {
+            $queryBuilder->andWhere("d.codigoCiudadDestinoFk = {$codigoCiudadDestinoFk}");
+        }
+        $arrGuias = $queryBuilder->getQuery()->getResult();
+        return $arrGuias;
     }
 }

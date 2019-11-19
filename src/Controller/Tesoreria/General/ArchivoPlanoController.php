@@ -31,7 +31,10 @@ class ArchivoPlanoController extends AbstractController
             ->add('banco', ChoiceType::class, ['choices' => ['SELECCIONAR BANCO' => '',
                                                                         'BBVA' => 'bbva',
                                                                         'BANCOLOMBIA SAP' => 'BancolombiaSap',
-                                                                        'BANCOLOMBIA PAB' => 'BancolombiaPab']
+                                                                        'BANCOLOMBIA PAB' => 'BancolombiaPab',
+                                                                        'AD VILLAS'=>'AdVillasInterno',
+                                                                        'AD VILLAS AGRUPADO'=>'AdVillasInternoAgrupado',
+                                                                        'AD VILLAS OTROS'=>'AvvillasOtros']
             ])
             ->add('secuencia', TextType::class, array('required' => false))
             ->add('fechaTrasmision', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
@@ -56,6 +59,12 @@ class ArchivoPlanoController extends AbstractController
                         break;
                     case 'BancolombiaPab':
                         $this->generarArchivoBancolombiaPab($arMovimiento, $rawDataForm);
+                        break;
+                    case 'AdVillasInterno':
+                        $this->generarArchivoAdVillasInterno($arMovimiento);
+                        break;
+                    case 'AdVillasInternoAgrupado':
+                        $this->generarArchivoAdVillasInternoAgrupedo($arMovimiento);
                         break;
                     default:
                        Mensajes::error("seleccionar banco");
@@ -305,6 +314,14 @@ class ArchivoPlanoController extends AbstractController
         header('Content-Length: ' . filesize($strArchivo));
         readfile($strArchivo);
         exit;
+    }
+
+    /**
+     *
+     * @param $arMovimiento TesMovimiento
+     */
+    private function generarArchivoAdVillas($arMovimiento){
+
     }
 
     //Rellenar numeros

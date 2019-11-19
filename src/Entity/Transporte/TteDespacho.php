@@ -54,6 +54,11 @@ class TteDespacho
     private $fechaSoporte;
 
     /**
+     * @ORM\Column(name="fecha_entrega", type="datetime", nullable=true)
+     */
+    private $fechaEntrega;
+
+    /**
      * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
@@ -237,6 +242,11 @@ class TteDespacho
      * @ORM\Column(name="estado_cerrado", type="boolean", nullable=true, options={"default" : false})
      */
     private $estadoCerrado = false;
+
+    /**
+     * @ORM\Column(name="estado_entregado", type="boolean",options={"default":false})
+     */
+    private $estadoEntregado = false;
 
     /**
      * @ORM\Column(name="estado_soporte", type="boolean", nullable=true, options={"default" : false})
@@ -1510,6 +1520,38 @@ class TteDespacho
     public function setUbicacionesDespachoRel($ubicacionesDespachoRel): void
     {
         $this->ubicacionesDespachoRel = $ubicacionesDespachoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoEntregado()
+    {
+        return $this->estadoEntregado;
+    }
+
+    /**
+     * @param mixed $estadoEntregado
+     */
+    public function setEstadoEntregado($estadoEntregado): void
+    {
+        $this->estadoEntregado = $estadoEntregado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaEntrega()
+    {
+        return $this->fechaEntrega;
+    }
+
+    /**
+     * @param mixed $fechaEntrega
+     */
+    public function setFechaEntrega($fechaEntrega): void
+    {
+        $this->fechaEntrega = $fechaEntrega;
     }
 
 

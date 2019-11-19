@@ -32,6 +32,7 @@
             <th>TIPO</th>
             <th>NUMERO</th>
             <th>FECHA</th>
+            <th>F_ENT</th>
             <th>F_SOP</th>
             <th>VEH</th>
             <th>CONDUCTOR</th>
@@ -45,6 +46,7 @@
             <th>USUARIO</th>
             <th>AUT</th>
             <th title="Aprobado">APR</th>
+            <th title="Entrega">ENT</th>
             <th title="Soportes de entrega">SOP</th>
             <th>ANU</th>
             <th></th>
@@ -58,7 +60,8 @@
                 <td>{{ arDespacho.despachoTipo }}</td>
                 <td>{{ arDespacho.numero }}</td>
                 <td>{{ arDespacho.fechaSalida | date('Y-m-d H:i') }}</td>
-                <td>{{ arDespacho.fechaSoporte | date('Y-m-d') }}</td>
+                <td>{{ arDespacho.fechaEntrega? arDespacho.fechaEntrega| date('Y-m-d'): '' }}</td>
+                <td>{{ arDespacho.fechaSoporte? arDespacho.fechaSoporte| date('Y-m-d'): '' }}</td>
                 <td>{{ arDespacho.codigoVehiculoFk }}</td>
                 <td>{{ arDespacho.conductorNombre }}</td>
                 <td>{{ arDespacho.codigoRutaFk }}</td>
@@ -71,7 +74,8 @@
                 <td>{{ arDespacho.usuario }}</td>
                 <td class="estado">{{ arDespacho.estadoAutorizado?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespacho.estadoAprobado?'SI':'NO' }}</td>
-                <td {% if arDespacho.estadoSoporte == 0 %} class="danger" {% endif %}>{{ arDespacho.estadoSoporte?'SI':'NO' }}</td>
+                <td {% if arDespacho.estadoEntregado == 0 %} class="danger" {% endif %}>{{ arDespacho.estadoEntregado?'SI':'NO' }}</td>
+                <td>{{ arDespacho.estadoSoporte?'SI':'NO' }}</td>
                 <td class="estado">{{ arDespacho.estadoAnulado?'SI':'NO' }}</td>
                 <td>
                     <button class="btn btn-default btn-xs" type="submit" name="OpCumplir" value="{{ arDespacho.codigoDespachoPk }}">Cumplir</button>

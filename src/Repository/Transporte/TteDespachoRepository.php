@@ -1037,10 +1037,11 @@ class TteDespachoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arDespacho = $em->getRepository(TteDespacho::class)->find($codigo);
         if ($arDespacho->getEstadoCumplirRndc() == 0) {
-            try {
-                $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
-                $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
-                $strXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+            if($arDespacho->getEstadoEntregado() == 1) {
+                try {
+                    $cliente = new \SoapClient("http://rndcws.mintransporte.gov.co:8080/ws/svr008w.dll/wsdl/IBPMServices");
+                    $arConfiguracionTransporte = $em->getRepository(TteConfiguracion::class)->find(1);
+                    $strXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
                             <root>
                                 <acceso>
                                     <username>" . $arConfiguracionTransporte->getUsuarioRndc() . "</username>
@@ -1062,24 +1063,24 @@ class TteDespachoRepository extends ServiceEntityRepository
                                     <FECHASALIDACARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHASALIDACARGUE>
                                     <HORASALIDACARGUEREMESA>17:00</HORASALIDACARGUEREMESA>
                                                                         
-                                    <FECHALLEGADADESCARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHALLEGADADESCARGUE>
-                                    <HORALLEGADADESCARGUECUMPLIDO>18:00</HORALLEGADADESCARGUECUMPLIDO>
-                                    <FECHAENTRADADESCARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHAENTRADADESCARGUE>
-                                    <HORAENTRADADESCARGUECUMPLIDO>19:00</HORAENTRADADESCARGUECUMPLIDO>
-                                    <FECHASALIDADESCARGUE>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHASALIDADESCARGUE>
-                                    <HORASALIDADESCARGUECUMPLIDO>20:00</HORASALIDADESCARGUECUMPLIDO>                                    
+                                    <FECHALLEGADADESCARGUE>" . $arDespacho->getFechaEntrega()->format('d/m/Y') . "</FECHALLEGADADESCARGUE>
+                                    <HORALLEGADADESCARGUECUMPLIDO>" . $arDespacho->getFechaEntrega()->format('H:i') . "</HORALLEGADADESCARGUECUMPLIDO>
+                                    <FECHAENTRADADESCARGUE>" . $arDespacho->getFechaEntrega()->format('d/m/Y') . "</FECHAENTRADADESCARGUE>
+                                    <HORAENTRADADESCARGUECUMPLIDO>" . $arDespacho->getFechaEntrega()->format('H:i') . "</HORAENTRADADESCARGUECUMPLIDO>
+                                    <FECHASALIDADESCARGUE>" . $arDespacho->getFechaEntrega()->format('d/m/Y') . "</FECHASALIDADESCARGUE>
+                                    <HORASALIDADESCARGUECUMPLIDO>" . $arDespacho->getFechaEntrega()->format('H:i') . "</HORASALIDADESCARGUECUMPLIDO>                                    
                                     <CANTIDADENTREGADA>" . $arDespacho->getPesoReal() . "</CANTIDADENTREGADA>";
-                $strXML .= "</variables>
+                    $strXML .= "</variables>
                               </root>";
-                $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strXML));
-                $cadena_xml = simplexml_load_string($respuesta);
-                $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
-                if ($cadena_xml->ErrorMSG != "" && substr($errorRespuesta, 0, 9) != "DUPLICADO") {
+                    $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strXML));
+                    $cadena_xml = simplexml_load_string($respuesta);
                     $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
-                    Mensajes::error($errorRespuesta);
-                } else {
-                    if ($cadena_xml->ingresoid || substr($errorRespuesta, 0, 9) == "DUPLICADO") {
-                        $strXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
+                    if ($cadena_xml->ErrorMSG != "" && substr($errorRespuesta, 0, 9) != "DUPLICADO") {
+                        $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
+                        Mensajes::error($errorRespuesta);
+                    } else {
+                        if ($cadena_xml->ingresoid || substr($errorRespuesta, 0, 9) == "DUPLICADO") {
+                            $strXML = "<?xml version='1.0' encoding='ISO-8859-1' ?>
                             <root>
                                 <acceso>
                                     <username>" . $arConfiguracionTransporte->getUsuarioRndc() . "</username>
@@ -1093,30 +1094,34 @@ class TteDespachoRepository extends ServiceEntityRepository
                                     <NUMNITEMPRESATRANSPORTE>" . $arConfiguracionTransporte->getEmpresaRndc() . "</NUMNITEMPRESATRANSPORTE>
                                     <NUMMANIFIESTOCARGA>" . $arDespacho->getNumero() . "</NUMMANIFIESTOCARGA>
                                     <TIPOCUMPLIDOMANIFIESTO>C</TIPOCUMPLIDOMANIFIESTO>
-                                    <FECHAENTREGADOCUMENTOS>" . $arDespacho->getFechaSalida()->format('d/m/Y') . "</FECHAENTREGADOCUMENTOS>
+                                    <FECHAENTREGADOCUMENTOS>" . $arDespacho->getFechaEntrega()->format('d/m/Y') . "</FECHAENTREGADOCUMENTOS>
                                     <VALORADICIONALHORASCARGUE>0</VALORADICIONALHORASCARGUE>                                    
                                     <VALORSOBREANTICIPO>0</VALORSOBREANTICIPO>";
 
-                        $strXML .= "</variables>
+                            $strXML .= "</variables>
                                                         </root>";
 
-                        $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strXML));
-                        $cadena_xml = simplexml_load_string($respuesta);
-                        if ($cadena_xml->ErrorMSG != "") {
-                            $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
-                            Mensajes::error($errorRespuesta);
-                        } else {
-                            if ($cadena_xml->ingresoid) {
-                                $arDespacho->setEstadoCumplirRndc(1);
-                                $em->persist($arDespacho);
-                                $em->flush();
+                            $respuesta = $cliente->__soapCall('AtenderMensajeRNDC', array($strXML));
+                            $cadena_xml = simplexml_load_string($respuesta);
+                            if ($cadena_xml->ErrorMSG != "") {
+                                $errorRespuesta = utf8_decode($cadena_xml->ErrorMSG);
+                                Mensajes::error($errorRespuesta);
+                            } else {
+                                if ($cadena_xml->ingresoid) {
+                                    $arDespacho->setEstadoCumplirRndc(1);
+                                    $em->persist($arDespacho);
+                                    $em->flush();
+                                }
                             }
                         }
                     }
+                } catch (Exception $e) {
+                    return "Error al conectar el control: " . $e;
                 }
-            } catch (Exception $e) {
-                return "Error al conectar el control: " . $e;
+            } else {
+                Mensajes::error("El viaje no ha sido entregado");
             }
+
         } else {
             Mensajes::error("El viaje ya fue cumplidor en el rndc");
         }
@@ -1148,6 +1153,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->select('d.codigoDespachoPk')
             ->addSelect('d.fechaSalida')
             ->addSelect('d.fechaSoporte')
+            ->addSelect('d.fechaEntrega')
             ->addSelect('d.numero')
             ->addSelect('d.codigoOperacionFk')
             ->addSelect('d.codigoVehiculoFk')
@@ -1168,6 +1174,7 @@ class TteDespachoRepository extends ServiceEntityRepository
             ->addSelect('d.estadoAutorizado')
             ->addSelect('d.estadoAnulado')
             ->addSelect('d.estadoSoporte')
+            ->addSelect('d.estadoEntregado')
             ->addSelect('dt.nombre AS despachoTipo')
             ->addSelect('d.usuario')
             ->leftJoin('d.despachoTipoRel', 'dt')
@@ -1812,6 +1819,32 @@ class TteDespachoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function listaEntrega($codigoDespacho)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
+            ->select('d.codigoDespachoPk')
+            ->addSelect('d.codigoOperacionFk')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('d.codigoVehiculoFk')
+            ->addSelect('con.nombreCorto AS conductor')
+            ->addSelect('d.cantidad')
+            ->addSelect('d.unidades')
+            ->addSelect('d.pesoReal')
+            ->addSelect('d.pesoVolumen')
+            ->addSelect('d.fechaRegistro')
+            ->leftJoin('d.ciudadOrigenRel', 'co')
+            ->leftJoin('d.ciudadDestinoRel', 'cd')
+            ->leftJoin('d.conductorRel', 'con')
+            ->where('d.codigoDespachoPk = ' . $codigoDespacho)
+            ->andWhere('d.estadoAprobado = 1')
+            ->andWhere('d.estadoEntregado = 0')
+            ->andWhere('d.estadoAnulado = 0');
+        $queryBuilder->orderBy('d.codigoDespachoPk', 'DESC');
+        return $queryBuilder;
+    }
+
     /**
      * @param $codigoDespacho
      * @throws \Doctrine\ORM\ORMException
@@ -1837,6 +1870,33 @@ class TteDespachoRepository extends ServiceEntityRepository
             $strErrores = implode('-', $arrGuiasSinSoporte);
             Mensajes::error('Las siguientes guias no cuentan con soporte: ' . $strErrores);
         }
+    }
+
+    public function entrega($arrDespachos, $arrControles): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arrDespachos) {
+            foreach ($arrDespachos AS $codigo) {
+                $arDespacho = $em->getRepository(TteDespacho::class)->find($codigo);
+                if ($arDespacho->getEstadoAprobado() == 1) {
+                    if ($fechaHora = date_create($arrControles['txtFechaEntrega' . $codigo] . " " . $arrControles['txtHoraEntrega' . $codigo])) {
+                        if ($arDespacho->getFechaSalida() < $fechaHora) {
+                            $arDespacho->setFechaEntrega($fechaHora);
+                            $arDespacho->setEstadoEntregado(1);
+                            $em->persist($arDespacho);
+                        } else {
+                            Mensajes::error("No se puede entregar el despacho " . $codigo . " porque la fecha de salida es superior a la fecha de entrega");
+                            break;
+                        }
+                    }
+                } else {
+                    Mensajes::error("El despacho debe estar aprobado");
+                    break;
+                }
+            }
+            $em->flush();
+        }
+        return true;
     }
 
     public function fletePago($fechaDesde, $fechaHasta)

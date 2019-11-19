@@ -183,29 +183,29 @@ class RegistroController extends Controller
             $j = 2;
             /** @var  $arRegistro FinRegistro */
             foreach ($arRegistros as $arRegistro) {
-                $sheet->setCellValue('A'.$j, $arrConfiguracion['codigoEmpresaIntercambio']);
-                $sheet->setCellValue('B'.$j, $arRegistro['codigoComprobanteFk']);
-                $sheet->setCellValue('C'.$j,$arRegistro['numeroPrefijo']);
-                $sheet->setCellValue('D'.$j,$arRegistro['numero']);
-                $sheet->setCellValue('E'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
-                $sheet->setCellValue('F'.$j,$arRegistro['numeroIdentificacion']);
-                $sheet->setCellValue('G'.$j, $arRegistro['nombre']);
-                $sheet->setCellValue('H'.$j, '0');
-                $sheet->setCellValue('I'.$j, '');
-                $sheet->setCellValue('J'.$j, '0');
-                $sheet->setCellValue('K'.$j, '0');
+                $sheet->setCellValue('A' . $j, $arrConfiguracion['codigoEmpresaIntercambio']);
+                $sheet->setCellValue('B' . $j, $arRegistro['codigoComprobanteFk']);
+                $sheet->setCellValue('C' . $j, $arRegistro['numeroPrefijo']);
+                $sheet->setCellValue('D' . $j, $arRegistro['numero']);
+                $sheet->setCellValue('E' . $j, $arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+                $sheet->setCellValue('F' . $j, $arRegistro['numeroIdentificacion']);
+                $sheet->setCellValue('G' . $j, $arRegistro['nombre']);
+                $sheet->setCellValue('H' . $j, '0');
+                $sheet->setCellValue('I' . $j, '');
+                $sheet->setCellValue('J' . $j, '0');
+                $sheet->setCellValue('K' . $j, '0');
 
-                $sheet->setCellValue('L'.$j,$arRegistro['codigoCuentaFk']);
-                $sheet->setCellValue('M'.$j, $arRegistro['descripcion']);
-                $sheet->setCellValue('N'.$j,$arRegistro['numeroIdentificacion']);
-                $sheet->setCellValue('O'.$j, '');
-                $sheet->setCellValue('P'.$j, '');
-                $sheet->setCellValue('Q'.$j,$arRegistro['vrDebito']);
-                $sheet->setCellValue('R'.$j,$arRegistro['vrCredito']);
-                $sheet->setCellValue('S'.$j, '');
-                $sheet->setCellValue('T'.$j, '');
-                $sheet->setCellValue('U'.$j,$arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
-                $sheet->setCellValue('V'.$j, '');
+                $sheet->setCellValue('L' . $j, $arRegistro['codigoCuentaFk']);
+                $sheet->setCellValue('M' . $j, $arRegistro['descripcion']);
+                $sheet->setCellValue('N' . $j, $arRegistro['numeroIdentificacion']);
+                $sheet->setCellValue('O' . $j, '');
+                $sheet->setCellValue('P' . $j, '');
+                $sheet->setCellValue('Q' . $j, $arRegistro['vrDebito']);
+                $sheet->setCellValue('R' . $j, $arRegistro['vrCredito']);
+                $sheet->setCellValue('S' . $j, '');
+                $sheet->setCellValue('T' . $j, '');
+                $sheet->setCellValue('U' . $j, $arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+                $sheet->setCellValue('V' . $j, '');
 
                 $j++;
             }
@@ -235,7 +235,7 @@ class RegistroController extends Controller
         $numeroAnterior = 0;
         $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
         foreach ($arRegistros as $arRegistro) {
-            if($numeroAnterior != $arRegistro['numero']) {
+            if ($numeroAnterior != $arRegistro['numero']) {
                 $consecutivo = 0;
             }
             $numeroAnterior = $arRegistro['numero'];
@@ -246,7 +246,7 @@ class RegistroController extends Controller
             if ($arRegistro['codigoTerceroFk']) {
                 $nit = $arRegistro['numeroIdentificacion'];
             }
-            if($arRegistro['naturaleza'] == 'D') {
+            if ($arRegistro['naturaleza'] == 'D') {
                 $valor = $arRegistro['vrDebito'];
             } else {
                 $valor = $arRegistro['vrCredito'];
@@ -254,12 +254,12 @@ class RegistroController extends Controller
             $valor = number_format($valor, 2, '', '');
 
 
-            if($arRegistro['numeroReferencia']) {
+            if ($arRegistro['numeroReferencia']) {
                 $fechaVence = '00000000';
-                if($arRegistro['fechaVence']) {
+                if ($arRegistro['fechaVence']) {
                     $fechaVence = $arRegistro['fechaVence']->format('Ymd');
                 }
-                $documentoCruce =  $this->RellenarDato($arRegistro['codigoComprobanteReferenciaFk'],'0', 4, 'I') . $this->RellenarDato($arRegistro['numeroReferencia'],'0', 11, 'I') . $this->RellenarDato($consecutivo,'0', 3, 'I') . $fechaVence . '0001' . '00';
+                $documentoCruce = $this->RellenarDato($arRegistro['codigoComprobanteReferenciaFk'], '0', 4, 'I') . $this->RellenarDato($arRegistro['numeroReferencia'], '0', 11, 'I') . $this->RellenarDato($consecutivo, '0', 3, 'I') . $fechaVence . '0001' . '00';
             } else {
                 $documentoCruce = ' ' . '000' . '00000000000' . '000' . '00000000' . '0000' . '00';
             }
@@ -275,18 +275,18 @@ Print #1, "F" & strComprobante & strNumero & Rellenar(J & "", 5, "0", 1) & Relle
             */
 
             fputs($ar, $arRegistro['codigoComprobanteFk']);
-            fputs($ar, $this->RellenarDato($arRegistro['numero'],'0', 11, 'I'));
-            fputs($ar, $this->RellenarDato($consecutivo,'0', 5, 'I'));
-            fputs($ar, $this->RellenarDato($nit,'0', 13, 'I'));
+            fputs($ar, $this->RellenarDato($arRegistro['numero'], '0', 11, 'I'));
+            fputs($ar, $this->RellenarDato($consecutivo, '0', 5, 'I'));
+            fputs($ar, $this->RellenarDato($nit, '0', 13, 'I'));
             fputs($ar, '000');
-            fputs($ar, $this->RellenarDato($arRegistro['codigoCuentaFk'],'0', 8, 'I'));
+            fputs($ar, $this->RellenarDato($arRegistro['codigoCuentaFk'], '0', 8, 'I'));
             fputs($ar, '000000000000000');
             fputs($ar, $arRegistro['fecha']->format('Ymd'));
-            fputs($ar, $this->RellenarDato($arRegistro['codigoCentroCostoFk'],'0', 4, 'I'));
+            fputs($ar, $this->RellenarDato($arRegistro['codigoCentroCostoFk'], '0', 4, 'I'));
             fputs($ar, '000');
-            fputs($ar, $this->RellenarDato($arRegistro['descripcion'],' ', 50, 'D'));
+            fputs($ar, $this->RellenarDato($arRegistro['descripcion'], ' ', 50, 'D'));
             fputs($ar, $arRegistro['naturaleza']);
-            fputs($ar, $this->RellenarDato($valor,'0', 15, 'I'));
+            fputs($ar, $this->RellenarDato($valor, '0', 15, 'I'));
             fputs($ar, '000000000000000');
             fputs($ar, $vendedor);
             fputs($ar, '0001');
@@ -310,7 +310,89 @@ Print #1, "F" & strComprobante & strNumero & Rellenar(J & "", 5, "0", 1) & Relle
 
     }
 
-    public function RellenarDato($dato, $caracterRelleno, $cantidadCaracteres, $ladoDeRelleno = 'I') {
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/financiero/utilidad/contabilidad/intercambio/registro/zeus", name="financiero_utilidad_contabilidad_intercambio_registro_zeus")
+     */
+    public function zeus()
+    {
+        $em = $this->getDoctrine()->getManager();
+//        $arrConfiguracion = $em->getRepository(FinConfiguracion::class)->intercambioDatos();
+        $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
+        if (count($arRegistros) > 0) {
+            $spreadsheet = new Spreadsheet();
+            $campos = [
+                'CUENTA',
+                'FECHA',
+                'DESCRIPCION',
+                'VALOR DEBITO',
+                'VALOR CREDITO',
+                'NIT',
+                'CCOSTO',
+                'FACTURA',
+                'NOMBRE COMPLETO',
+                'DIRECCION',
+            ];
+            $sheet = $spreadsheet->getActiveSheet();
+            $i = 0;
+            for ($j = 'A'; $j != 'K'; $j++) {
+                $spreadsheet->getActiveSheet()->getColumnDimension($j)->setAutoSize(true);
+                $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
+                $sheet->setCellValue($j . '1', strtoupper($campos[$i]));
+                $i++;
+            }
+            $j = 2;
+            /** @var  $arRegistro FinRegistro */
+            foreach ($arRegistros as $arRegistro) {
+                $sheet->setCellValue('A' . $j, $arRegistro['codigoCuenta']);
+                $sheet->setCellValue('B' . $j, $arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+                $sheet->setCellValue('C' . $j, $arRegistro['descripcion']);
+                $sheet->setCellValue('D' . $j, $arRegistro['vrDebito']);
+                $sheet->setCellValue('E' . $j, $arRegistro['vrCredito']);
+                $sheet->setCellValue('F' . $j, $arRegistro['numeroIdentificacion']);
+                $sheet->setCellValue('G' . $j, '0');
+                $sheet->setCellValue('H' . $j, $arRegistro['numero']);
+                $sheet->setCellValue('I' . $j, $arRegistro['nombreCorto']);
+                $sheet->setCellValue('J' . $j, $arRegistro['direccion']);
+//                $sheet->setCellValue('B' . $j, $arRegistro['codigoComprobanteFk']);
+//                $sheet->setCellValue('C' . $j, $arRegistro['numeroPrefijo']);
+//                $sheet->setCellValue('D' . $j, $arRegistro['numero']);
+//                $sheet->setCellValue('E' . $j, $arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+//                $sheet->setCellValue('F' . $j, $arRegistro['numeroIdentificacion']);
+//                $sheet->setCellValue('G' . $j, $arRegistro['nombre']);
+//                $sheet->setCellValue('H' . $j, '0');
+//                $sheet->setCellValue('I' . $j, '');
+//                $sheet->setCellValue('J' . $j, '0');
+//                $sheet->setCellValue('K' . $j, '0');
+//
+//                $sheet->setCellValue('L' . $j, $arRegistro['codigoCuentaFk']);
+//                $sheet->setCellValue('M' . $j, $arRegistro['descripcion']);
+//                $sheet->setCellValue('N' . $j, $arRegistro['numeroIdentificacion']);
+//                $sheet->setCellValue('O' . $j, '');
+//                $sheet->setCellValue('P' . $j, '');
+//                $sheet->setCellValue('Q' . $j, $arRegistro['vrDebito']);
+//                $sheet->setCellValue('R' . $j, $arRegistro['vrCredito']);
+//                $sheet->setCellValue('S' . $j, '');
+//                $sheet->setCellValue('T' . $j, '');
+//                $sheet->setCellValue('U' . $j, $arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+//                $sheet->setCellValue('V' . $j, '');
+
+                $j++;
+            }
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=DetallesContables.xls");
+            header('Cache-Control: max-age=0');
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
+            $writer->save('php://output');
+        } else {
+            Mensajes::error('El listado esta vacío, no hay nada que exportar');
+        }
+    }
+
+    public function RellenarDato($dato, $caracterRelleno, $cantidadCaracteres, $ladoDeRelleno = 'I')
+    {
         $dato = utf8_decode($dato);
         $Longitud = strlen($dato);
         $cantidadCaracteres = $cantidadCaracteres - $Longitud;
@@ -322,7 +404,7 @@ Print #1, "F" & strComprobante & strNumero & Rellenar(J & "", 5, "0", 1) & Relle
             }
         }
 
-        return (string) $dato;
+        return (string)$dato;
     }
 
 }

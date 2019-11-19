@@ -18,6 +18,7 @@ use App\Entity\RecursoHumano\RhuCreditoPagoTipo;
 use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Entity\RecursoHumano\RhuEmbargoPago;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuLicencia;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
 use App\Entity\RecursoHumano\RhuLiquidacionTipo;
@@ -500,7 +501,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             //$arLiquidacion->setCodigoProgramacionPagoDetalleInteresFk(null);
                             // validacion y liquidacion de cesantias año anterior
                             if ($arLiquidacion->getOmitirCesantiasAnterior() == false) { // validacion y liquidacion de cesantias año anterior
-                                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 3, 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoAprobado' => 0));
+                                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 'CES', 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoAprobado' => 0));
                                 if ($arPago) {
                                     $arProgramacionPagoDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($arPago->getCodigoProgramacionDetalleFk());
                                     if ($arProgramacionPagoDetalle) {
@@ -568,7 +569,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             $ibpCesantias += $ibpCesantiasInicial + $douIBPAdicional;
                             $ibpCesantias = round($ibpCesantias);
                             if ($arConfiguracion->getDescontarAusentismosDeLicencias()) {
-                                $intDiasAusentismo = $em->getRepository(RhuNovedad::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+                                $intDiasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
                             } else {
                                 $intDiasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
                             }
@@ -782,7 +783,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
 
                         $diasAusentismo = 0;
                         if ($arConfiguracion->getDescontarAusentismosDeLicencias()) {
-                            $diasAusentismo = $em->getRepository(RhuNovedad::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+                            $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
                         } else {
                             $diasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
                         }
@@ -921,7 +922,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                         }
 
                         if ($arConfiguracion->getDescontarAusentismosDeLicencias()) {
-                            $intDiasAusentismo = $em->getRepository(RhuNovedad::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+                            $intDiasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
                         } else {
                             $intDiasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
                         }

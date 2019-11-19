@@ -283,4 +283,32 @@ class RhuLicenciaRepository extends ServiceEntityRepository
         return $intDiasLicencia;
     }
 
+    public function diasAusentismoMovimiento($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $diasAusentismoMovimiento = 0;
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from(RhuLicencia::class, "l")->select("l.fechaDesde")->addSelect("l.fechaHasta")
+            ->join("l.licenciaTipoRel", "lt")
+            ->where("l.codigoContratoFk = {$codigoContrato}")
+            ->andWhere("l.fechaDesde >= '{$fechaDesde}'")
+            ->andWhere("l.fechaDesde <= '{$fechaHasta}'")
+            ->andWhere("lt.ausentismo = 1");
+        $arrLicencias = $qb->getQuery()->getResult();
+        foreach ($arrLicencias as $arrLicencia) {
+            $fechaDesdeLicencia = $arrLicencia['fechaDesde'];
+            $fechaHastaLicencia = $arrLicencia['fechaHasta'];
+            if ($fechaDesdeLicencia->format('Y-m-d') < $fechaDesde) {
+                $fechaDesdeLicencia = new \DateTime($fechaDesde);
+            }
+            if ($fechaHastaLicencia->format('Y-m-d') > $fechaHasta) {
+                $fechaHastaLicencia = new \DateTime($fechaHasta);
+            }
+            $intDias = $fechaDesdeLicencia->diff($fechaHastaLicencia);
+            $intDias = $intDias->format('%a');
+            $intDias = $intDias + 1;
+            $diasAusentismoMovimiento += $intDias;
+        }
+        return (int)$diasAusentismoMovimiento;
+    }
+
 }

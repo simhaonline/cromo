@@ -175,6 +175,7 @@ class FinRegistroRepository extends ServiceEntityRepository
             ->addSelect('r.codigoTerceroFk')
             ->addSelect('t.numeroIdentificacion')
             ->addSelect('t.nombreCorto')
+            ->addSelect('t.direccion')
             ->addSelect('ct.codigoCuentaPk AS codigoCuenta')
             ->leftJoin('r.terceroRel', 't')
             ->leftJoin('r.comprobanteRel', 'c')

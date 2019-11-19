@@ -1359,6 +1359,8 @@ class MigracionController extends Controller
                 $arPago->setVrNeto($row['vr_neto']);
                 $arPago->setEstadoAnulado($row['estado_anulado']);
                 $arPago->setComentario($row['comentarios']);
+                $arPago->setEstadoAutorizado(1);
+                $arPago->setEstadoAprobado(1);
                 $arPago->setUsuario(utf8_encode($row['codigo_usuario']));
                 if ($row['codigo_vacacion_fk']) {
                     $arPago->setVacacionRel($em->getReference(RhuVacacion::class, $row['codigo_vacacion_fk']));

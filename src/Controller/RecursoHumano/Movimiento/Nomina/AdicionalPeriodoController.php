@@ -161,8 +161,13 @@ class AdicionalPeriodoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arAdicional->getCodigoEmpleadoFk());
+                $arContrato = null;
                 if ($arEmpleado->getCodigoContratoFk()) {
-                    $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
+                    $arContrato = $arEmpleado->getCodigoContratoFk();
+                } elseif ($arEmpleado->getCodigoContratoUltimoFk()) {
+                    $arContrato = $em->getReference(RhuContrato::class, $arEmpleado->getCodigoContratoUltimoFk());
+                }
+                if ($arContrato) {
                     $arAdicional->setFecha($arAdicionalPerido->getFecha());
                     $arAdicional->setEmpleadoRel($arEmpleado);
                     $arAdicional->setContratoRel($arContrato);

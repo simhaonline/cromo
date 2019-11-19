@@ -1824,6 +1824,8 @@ class TteDespachoRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespacho::class, 'd')
             ->select('d.codigoDespachoPk')
+            ->addSelect('d.numero')
+            ->addSelect('d.fechaSalida')
             ->addSelect('d.codigoOperacionFk')
             ->addSelect('co.nombre AS ciudadOrigen')
             ->addSelect('cd.nombre AS ciudadDestino')

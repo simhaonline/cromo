@@ -28,6 +28,8 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>NUMERO</th>
+            <th>FECHA</th>
             <th>OP</th>
             <th>ORIGEN</th>
             <th>DESTINO</th>
@@ -46,6 +48,8 @@
         {% for arDespacho in arDespachos %}
             <tr>
                 <td>{{ arDespacho.codigoDespachoPk }}</td>
+                <td>{{ arDespacho.numero }}</td>
+                <td>{{ arDespacho.fechaSalida | date('Y-m-d') }}</td>
                 <td>{{ arDespacho.codigoOperacionFk }}</td>
                 <td>{{ arDespacho.ciudadOrigen }}</td>
                 <td>{{ arDespacho.ciudadDestino }}</td>

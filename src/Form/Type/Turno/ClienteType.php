@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\Turno;
 
+use App\Entity\General\GenAsesor;
 use App\Entity\Turno\TurCliente;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -43,6 +44,15 @@ class ClienteType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.nombre');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'ciudad:'
+            ])
+            ->add('asesorRel', EntityType::class, [
+                'class' => GenAsesor::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.nombre');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'ciudad:'

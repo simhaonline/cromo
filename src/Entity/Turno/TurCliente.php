@@ -33,6 +33,11 @@ class TurCliente
     private $codigoCiudadFk;
 
     /**
+     * @ORM\Column(name="codigo_asesor_fk", type="integer", nullable=true)
+     */
+    private $codigoAsesorFk;
+
+    /**
      * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=true)
      */
     private $numeroIdentificacion;

@@ -161,23 +161,27 @@ class AdicionalPeriodoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arAdicional->getCodigoEmpleadoFk());
-                $arContrato = null;
-                if ($arEmpleado->getCodigoContratoFk()) {
-                    $arContrato = $arEmpleado->getContratoRel();
-                } elseif ($arEmpleado->getCodigoContratoUltimoFk()) {
-                    $arContrato = $em->getReference(RhuContrato::class, $arEmpleado->getCodigoContratoUltimoFk());
-                }
-                if ($arContrato) {
-                    $arAdicional->setFecha($arAdicionalPerido->getFecha());
-                    $arAdicional->setEmpleadoRel($arEmpleado);
-                    $arAdicional->setContratoRel($arContrato);
-                    $arAdicional->setAdicionalPeriodoRel($arAdicionalPerido);
-                    $em->persist($arAdicional);
-                    $em->flush();
+                if($arEmpleado) {
+                    $arContrato = null;
+                    if ($arEmpleado->getCodigoContratoFk()) {
+                        $arContrato = $arEmpleado->getContratoRel();
+                    } elseif ($arEmpleado->getCodigoContratoUltimoFk()) {
+                        $arContrato = $em->getReference(RhuContrato::class, $arEmpleado->getCodigoContratoUltimoFk());
+                    }
+                    if ($arContrato) {
+                        $arAdicional->setFecha($arAdicionalPerido->getFecha());
+                        $arAdicional->setEmpleadoRel($arEmpleado);
+                        $arAdicional->setContratoRel($arContrato);
+                        $arAdicional->setAdicionalPeriodoRel($arAdicionalPerido);
+                        $em->persist($arAdicional);
+                        $em->flush();
 
-                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_detalle', ['id' => $arAdicionalPerido->getCodigoAdicionalPeriodoPk()]));
+                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_detalle', ['id' => $arAdicionalPerido->getCodigoAdicionalPeriodoPk()]));
+                    } else {
+                        Mensajes::error('El empleado no tiene un contrato activo en el sistema');
+                    }
                 } else {
-                    Mensajes::error('El empleado no tiene un contrato activo en el sistema');
+                    Mensajes::error('El empleado no existe');
                 }
             }
         }

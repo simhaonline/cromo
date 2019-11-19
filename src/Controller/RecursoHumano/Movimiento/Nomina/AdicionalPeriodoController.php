@@ -163,7 +163,7 @@ class AdicionalPeriodoController extends AbstractController
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arAdicional->getCodigoEmpleadoFk());
                 $arContrato = null;
                 if ($arEmpleado->getCodigoContratoFk()) {
-                    $arContrato = $arEmpleado->getCodigoContratoFk();
+                    $arContrato = $arEmpleado->getContratoRel();
                 } elseif ($arEmpleado->getCodigoContratoUltimoFk()) {
                     $arContrato = $em->getReference(RhuContrato::class, $arEmpleado->getCodigoContratoUltimoFk());
                 }

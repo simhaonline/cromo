@@ -170,7 +170,12 @@ class PagoMasivo extends \FPDF
             $pdf->Cell(25, 4, "CARGO:", 1, 0, 'L', 1);
             $pdf->SetFont('Arial', '', 7);
             $pdf->SetFillColor(272, 272, 272);
-            $pdf->Cell(50, 4, utf8_decode($arPago->getContratoRel()->getCargoRel()->getNombre()), 1, 0, 'L', 1);
+            if (is_null($arPago->getContratoRel()->getCargoRel())){
+                $pdf->Cell(50, 4, utf8_decode(""), 1, 0, 'L', 1);
+            }else{
+                $pdf->Cell(50, 4, utf8_decode($arPago->getContratoRel()->getCargoRel()->getNombre()), 1, 0, 'L', 1);
+
+            }
             $pdf->SetFont('Arial', 'B', 7);
             $pdf->SetFillColor(200, 200, 200);
             $pdf->Cell(30, 4, "DESDE:", 1, 0, 'L', 1);

@@ -31,33 +31,9 @@ class FormatoPagoMasivoController extends Controller
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $arrayPropiedadesTipo = array(
-            'class' => RhuPagoTipo::class,
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('cc')
-                    ->orderBy('cc.nombre', 'ASC');
-            },
-            'choice_label' => 'nombre',
-            'required' => false,
-            'empty_data' => "",
-            'placeholder' => "TODOS",
-            'data' => ""
-        );
         if ($session->get('filtroCodigoPagoTipo')) {
             $arrayPropiedadesTipo['data'] = $em->getReference(RhuPagoTipo::class, $session->get('filtroCodigoPagoTipo'));
         }
-        $arrayPropiedadesTipo = array(
-            'class' => RhuGrupo::class,
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('g')
-                    ->orderBy('g.nombre', 'ASC');
-            },
-            'choice_label' => 'nombre',
-            'required' => false,
-            'empty_data' => "",
-            'placeholder' => "TODOS",
-            'data' => ""
-        );
         if ($session->get('filtroCodigoGrupo')) {
             $arrayPropiedadesTipo['data'] = $em->getReference(RhuGrupo::class, $session->get('filtroCodigoGrupo'));
         }
@@ -74,8 +50,30 @@ class FormatoPagoMasivoController extends Controller
         $dateFechaDesde = date_create($strFechaDesde);
         $dateFechaHasta = date_create($strFechaHasta);
         $form = $this->createFormBuilder()
-            ->add('pagoTipoRel', EntityType::class, $arrayPropiedadesTipo)
-            ->add('grupoRel', EntityType::class, $arrayPropiedadesTipo)
+            ->add('pagoTipoRel', EntityType::class, array(
+                'class' => RhuPagoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('cc')
+                        ->orderBy('cc.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => false,
+                'empty_data' => "",
+                'placeholder' => "TODOS",
+                'data' => ""
+            ))
+            ->add('grupoRel', EntityType::class, array(
+                'class' => RhuGrupo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('g')
+                        ->orderBy('g.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => false,
+                'empty_data' => "",
+                'placeholder' => "TODOS",
+                'data' => ""
+            ))
             ->add('codigoProgramacion', IntegerType::class, array('required' => false, 'data' => 0))
             ->add('fechaDesde', DateType::class, array('format' => 'yyyyMMdd', 'data' => $dateFechaDesde))
             ->add('fechaHasta', DateType::class, array('format' => 'yyyyMMdd', 'data' => $dateFechaHasta))

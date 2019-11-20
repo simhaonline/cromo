@@ -50,7 +50,7 @@ class Programacion extends AbstractController
                 $session->set('filtroTurProgramacionAnio', $form->get('txtAnio')->getData());
                 $session->set('filtroTurProgramacionMes', $form->get('txtMes')->getData());
                 $session->set('filtroRhuEmpleadoCodigoEmpleado', $form->get('txtEmpleado')->getData());
-                $session->set('filtroRhuEmpleadoCodigoCliente', $form->get('codigoClienteFk')->getData());
+                $session->set('filtroTurCodigoCliente', $form->get('codigoClienteFk')->getData());
                 $session->set('filtroTurProgramacionCodigoPuesto', $form->get('codigoPuesto')->getData());
                 $session->set('filtroTurProgramacionNuemeroPedido', $form->get('nuemeroPedido')->getData());
             }

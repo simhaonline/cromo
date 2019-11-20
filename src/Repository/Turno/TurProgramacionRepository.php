@@ -299,6 +299,9 @@ class TurProgramacionRepository extends ServiceEntityRepository
         if ($session->get('filtroRhuEmpleadoCodigoEmpleado') != null) {
             $queryBuilder->andWhere("p.codigoEmpleadoFk = '{$session->get('filtroRhuEmpleadoCodigoEmpleado')}'");
         }
+        if ($session->get('filtroTurCodigoCliente') != null) {
+            $queryBuilder->andWhere("ped.codigoClienteFk = '{$session->get('filtroTurCodigoCliente')}'");
+        }
         if ($session->get('filtroTurProgramacionCodigoPuesto') !=null){
             $queryBuilder->andWhere("p.codigoPuestoFk = '{$session->get('filtroTurProgramacionCodigoPuesto')}'");
         }

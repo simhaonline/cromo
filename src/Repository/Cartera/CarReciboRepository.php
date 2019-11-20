@@ -106,7 +106,7 @@ class CarReciboRepository extends ServiceEntityRepository
         }
 
         if ($codigoReciboTipo) {
-            $queryBuilder->andWhere("r.codigoReciboTipoFk = {$codigoReciboTipo}");
+            $queryBuilder->andWhere("r.codigoReciboTipoFk = '{$codigoReciboTipo}'");
         }
         switch ($estadoAutorizado) {
             case '0':
@@ -134,7 +134,7 @@ class CarReciboRepository extends ServiceEntityRepository
         }
 
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function autorizar($arRecibo)

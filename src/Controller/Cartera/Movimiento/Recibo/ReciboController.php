@@ -11,6 +11,7 @@ use App\Entity\Cartera\CarDescuentoConcepto;
 use App\Entity\Cartera\CarIngresoConcepto;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
+use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\Financiero\FinTercero;
 use App\Entity\General\GenAsesor;
 use App\Entity\Transporte\TteGuiaTipo;
@@ -56,10 +57,10 @@ class ReciboController extends AbstractController
             ->add('numero', TextType::class, array('required' => false))
             ->add('codigoReciboPk', TextType::class, array('required' => false))
             ->add('codigoReciboTipoFk', EntityType::class, [
-                'class' => TteGuiaTipo::class,
+                'class' => CarReciboTipo::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('gt')
-                        ->orderBy('gt.codigoGuiaTipoPk', 'ASC');
+                    return $er->createQueryBuilder('rt')
+                        ->orderBy('rt.codigoReciboTipoPk', 'ASC');
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
@@ -96,7 +97,7 @@ class ReciboController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(CarRecibo::class)->lista($raw)->getQuery()->getResult(), "Recibos");
+                General::get()->setExportar($em->getRepository(CarRecibo::class)->lista($raw), "Recibos");
             }
 
             if ($form->get('btnEliminar')->isClicked()) {
@@ -356,7 +357,7 @@ class ReciboController extends AbstractController
         $arAsesor = $form->get('codigoAsesorFk')->getData();
 
         if (is_object($arReciboTipo)) {
-            $filtro['codigoReciboTipo'] = $arReciboTipo->getCodigoIncidenteTipoPk();
+            $filtro['codigoReciboTipo'] = $arReciboTipo->getCodigoReciboTipoPk();
         } else {
             $filtro['codigoReciboTipo'] = $arReciboTipo;
         }

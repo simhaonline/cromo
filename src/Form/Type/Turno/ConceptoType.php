@@ -23,7 +23,6 @@ class ConceptoType extends AbstractType
         $builder
 
             ->add('nombre', TextType::class, array('required' => true))
-            ->add('porcentajeIva', NumberType::class)
             ->add('horas', NumberType::class, array('required' => true))
             ->add('horasDiurnas', NumberType::class, array('required' => true))
             ->add('horasNocturnas', NumberType::class, array('required' => true))

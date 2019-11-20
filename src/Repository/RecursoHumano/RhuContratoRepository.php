@@ -154,7 +154,7 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->andWhere("c.fechaHasta >= '{$fechaDesde}' OR c.indefinido = 1")
             ->andWhere("c.codigoGrupoFk = '{$codigoGrupo}'");
         if ($contratoTerminado) {
-            $queryBuilder->andWhere("c.estadoActivo = 0");
+            $queryBuilder->andWhere("c.estadoTerminado = 1");
         }
         $arContratos = $queryBuilder->getQuery()->getResult();
 

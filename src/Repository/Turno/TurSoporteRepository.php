@@ -511,6 +511,9 @@ class TurSoporteRepository extends ServiceEntityRepository
             ->andWhere("c.fechaUltimoPago < '{$fechaHastaSoportePagoPeriodo}'")
             ->andWhere("c.fechaDesde <= '{$arSoporte->getFechaHasta()->format('Y-m-d')}'")
             ->andWhere("c.fechaHasta >= '{$arSoporte->getFechaDesde()->format('Y-m-d')}' OR c.indefinido = 1");
+        if ($arSoporte->getContratoTerminado() == 1) {
+            $qb->andWhere("c.estadoTerminado = 1");
+        }
         $arContratos = $qb->getQuery()->getResult();
 
         foreach ($arContratos as $arContrato) {

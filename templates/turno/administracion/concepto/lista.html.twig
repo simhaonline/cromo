@@ -35,7 +35,6 @@
         <tr>
             <th>ID</th>
             <th>NOMBRE</th>
-            <th title="Porcentaje iva">% IVA</th>
             <th>H</th>
             <th>HD</th>
             <th>HN</th>
@@ -49,7 +48,6 @@
             <tr>
                 <td>{{ arConcepto.codigoConceptoPk }}</td>
                 <td>{{ arConcepto.nombre }}</td>
-                <td>{{ arConcepto.porcentajeIva }}</td>
                 <td>{{ arConcepto.horas }}</td>
                 <td>{{ arConcepto.horasDiurnas }}</td>
                 <td>{{ arConcepto.horasNocturnas }}</td>
@@ -86,4 +84,5 @@
     </div>
     {{ form_end(form) }}
     {{ form_rest(form) }}
+    <br><br>
 {% endblock %}

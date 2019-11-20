@@ -36,7 +36,8 @@ class ArchivoPlanoController extends AbstractController
                                                                         'AV VILLAS INTERNO'=>'AvVillasInterno',
                                                                         'AV VILLAS INTERNO OTROS'=>'AvVillasInternoOtros',
                                                                         'AV VILLAS INTERNO AGRUPADO'=>'AvVillasInternoAgrupado',
-                                                                        'AV VILLAS OTROS'=>'AvvillasOtrosAgrupado']
+                                                                        'AV VILLAS OTROS'=>'AvvillasOtrosAgrupado',
+                                                                        'BANCO AGRARIO'=>'BancoAgrario']
             ])
             ->add('secuencia', TextType::class, array('required' => false))
             ->add('fechaTrasmision', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
@@ -73,6 +74,9 @@ class ArchivoPlanoController extends AbstractController
                         break;
                     case 'AvvillasOtrosAgrupado':
                         $this->generarArchivoAvvillasOtrosAgrupado($arMovimiento,$rawDataForm);
+                        break;
+                    case 'BancoAgrario':
+                        $this->generarArchivoBancoAgrario($arMovimiento,$rawDataForm);
                         break;
                     default:
                        Mensajes::error("seleccionar banco");
@@ -618,6 +622,48 @@ class ArchivoPlanoController extends AbstractController
         readfile($strArchivo);
         exit;
     }
+
+    /**
+     * Funcion que imprime bancolombia sap agrupado por empleado
+     * @var $arMovimiento TesMovimiento
+     * @var $arPagoBancoDetalle RhuPagoBancoDetalle
+     */
+    private function generarArchivoBancoAgrario($arMovimiento, $rawDataForm)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arConfiguracionGeneral = $em->getRepository(GenConfiguracion::class)->find(1);
+        $strNombreArchivo = "pagoBancoAgrario" . date('YmdHis') . ".txt";
+        $strArchivo = $arConfiguracionGeneral->getRutaTemporal() . $strNombreArchivo;
+        ob_clean();
+        $ar = fopen($strArchivo, "a") or die("Problemas en la creacion del archivo plano");
+        //Inicio cuerpo
+        $arMovimientoDetalles = $em->getRepository(TesMovimientoDetalle::class)->findBy(['codigoMovimientoFk'=>$arMovimiento->getCodigoMovimientoPk()]);
+        foreach ($arMovimientoDetalles AS $arMovimientoDetalle) {
+            //Codigo del banco de destino (4)
+            fputs($ar, $this->RellenarNr('40', 0, 4)); //Agrario
+//            fputs($ar,'23'); //Occidente
+            fputs($ar, $this->RellenarNr($arMovimientoDetalle->getTerceroRel()->getNumeroIdentificacion(), 0, 15));
+            fputs($ar, '1');
+            fputs($ar, $this->RellenarNr($arMovimientoDetalle->getTerceroRel()->getCuenta(), 0, 17));
+            fputs($ar, $arMovimientoDetalle->getTerceroRel()->codigoCuentaTipoFk() == 'S' ? '4' : '3');
+            fputs($ar, $this->RellenarNr2($arMovimientoDetalle->getTerceroRel()->getNombreCorto(), ' ', 30, 'R'));
+            fputs($ar, $this->RellenarNr($arMovimientoDetalle->getVrPago() . '.00', 0, 15));
+            fputs($ar, $this->RellenarNr2('TRANSACCION BANCO AGRARIO', 0, 42, 'R') . "\n");
+        }
+        fclose($ar);
+        $em->flush();
+        //Fin cuerpo
+        header('Content-Description: File Transfer');
+        header('Content-Type: text/csv; charset=ISO-8859-15');
+        header('Content-Disposition: attachment; filename=' . basename($strArchivo));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($strArchivo));
+        readfile($strArchivo);
+        exit;
+    }
+
 
     //Rellenar numeros
     public static function RellenarNr($Nro, $Str, $NroCr): string

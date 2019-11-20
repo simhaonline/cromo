@@ -92,16 +92,25 @@ class AdicionalController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arAdicional->getCodigoEmpleadoFk());
-                if ($arEmpleado->getCodigoContratoFk()) {
-                    $arContrato = $em->getRepository(RhuContrato::class)->find($arEmpleado->getCodigoContratoFk());
-                    $arAdicional->setEmpleadoRel($arEmpleado);
-                    $arAdicional->setContratoRel($arContrato);
-                    $arAdicional->setPermanente(1);
-                    $em->persist($arAdicional);
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicional_lista'));
+                if($arEmpleado) {
+                    $arContrato = null;
+                    if ($arEmpleado->getCodigoContratoFk()) {
+                        $arContrato = $arEmpleado->getContratoRel();
+                    } elseif ($arEmpleado->getCodigoContratoUltimoFk()) {
+                        $arContrato = $em->getReference(RhuContrato::class, $arEmpleado->getCodigoContratoUltimoFk());
+                    }
+                    if ($arContrato) {
+                        $arAdicional->setEmpleadoRel($arEmpleado);
+                        $arAdicional->setContratoRel($arContrato);
+                        $arAdicional->setPermanente(1);
+                        $em->persist($arAdicional);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicional_lista'));
+                    } else {
+                        Mensajes::error('El empleado no tiene un contrato activo en el sistema');
+                    }
                 } else {
-                    Mensajes::error('El empleado no tiene un contrato activo en el sistema');
+                    Mensajes::error('El empleado no existe');
                 }
             }
         }

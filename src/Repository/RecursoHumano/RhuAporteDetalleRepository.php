@@ -610,6 +610,7 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
             ->addSelect('ad.aportesFondoSolidaridadPensionalSolidaridad')
             ->addSelect('ad.aportesFondoSolidaridadPensionalSubsistencia')
             ->addSelect('ad.diasLicencia')
+            ->addSelect('ad.diasIncapacidadGeneral')
             ->leftJoin('ad.aporteRel', 'a')
             ->leftJoin('ad.empleadoRel', 'e')
             ->orderBy('a.codigoAportePk', 'DESC');

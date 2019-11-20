@@ -189,4 +189,30 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function listaImprimirAgrupado($codigoMovimiento)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT t.numeroIdentificacion, 
+                       t.codigoIdentificacionFk,
+                       t.codigoCuentaTipoFk,
+                       t.nombreCorto,
+                       b.codigoBancolombia,
+                       b.codigoInterface,
+                       pbd.cuenta,
+                       SUM(pbd.vrPago) AS vrPago 
+                       FROM App\Entity\Tesoreria\TesMovimientoDetalle pbd JOIN pbd.terceroRel t JOIN t.bancoRel b 
+                       WHERE pbd.codigoMovimientoFk = {$codigoMovimiento}";
+        $dql .= " GROUP BY   t.numeroIdentificacion,   
+                             t.codigoIdentificacionFk,
+                             t.codigoCuentaTipoFk,
+                             t.nombreCorto,
+                             b.codigoBancolombia,
+                             b.codigoInterface,
+                             pbd.cuenta";
+        $dql .= " ORDER  BY  t.numeroIdentificacion DESC";
+        $query = $em->createQuery($dql);
+        $arMovimientoDetalles = $query->getResult();
+        return $arMovimientoDetalles;
+
+    }
 }

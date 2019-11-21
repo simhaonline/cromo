@@ -101,6 +101,11 @@ class MovimientoController extends AbstractController
                 $arr = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TesMovimiento::class)->contabilizar($arr);
             }
+            if($form->get('btnEliminar')->isClicked()){
+	            $arrSeleccionados = $request->request->get('ChkSeleccionar');
+	            $em->getRepository(TesMovimiento::class)->eliminar($arrSeleccionados);
+	            return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_lista', ['clase'=>$clase]));
+            }
         }
         $arMovimientos = $paginator->paginate($em->getRepository(TesMovimiento::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('tesoreria/movimiento/movimiento/lista.html.twig', [

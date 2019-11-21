@@ -15,6 +15,50 @@ class RhuGrupoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuGrupo::class);
     }
+
+	public function lista($raw)
+	{
+		$limiteRegistros = $raw['limiteRegistros'] ?? 100;
+		$filtros = $raw['filtros'] ?? null;
+		$codigoGrupo = null;
+		$nombre = null;
+		if ($filtros) {
+			$codigoGrupo = $filtros['codigoGrupo'] ?? null;
+			$nombre = $filtros['nombre'] ?? null;
+		}
+
+		$queryBuilder = $this->getEntityManager ()->createQueryBuilder ()->from (RhuGrupo::class, 'g')
+			->select ('g.codigoGrupoPk')
+			->addSelect ('g.nombre')
+			->addSelect ('g.cargarContrato')
+			->addSelect ('g.cargarSoporte')
+			->addSelect ('g.codigoDistribucionFk');
+		if ($codigoGrupo) {
+			$queryBuilder->andWhere ("g.codigoGrupoPk = '{$codigoGrupo}'");
+		}
+		if ($nombre) {
+			$queryBuilder->andWhere ("g.nombre LIKE '%{$nombre}%'");
+		}
+		$queryBuilder->addOrderBy('g.codigoGrupoPk', 'ASC');
+		$queryBuilder->setMaxResults($limiteRegistros);
+		return $queryBuilder->getQuery()->getResult();
+	}
+
+	/**
+	 * @param $arrSeleccionados
+	 * @throws \Doctrine\ORM\ORMException
+	 */
+	public function eliminar($arrSeleccionados)
+	{
+		foreach ($arrSeleccionados as $arrSeleccionado) {
+			$ar = $this->getEntityManager()->getRepository(RhuGrupo::class)->find($arrSeleccionado);
+			if ($ar) {
+				$this->getEntityManager()->remove($ar);
+			}
+		}
+		$this->getEntityManager()->flush();
+	}
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from(RhuGrupo::class,'gp')

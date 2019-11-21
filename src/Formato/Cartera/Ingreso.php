@@ -163,7 +163,7 @@ class Ingreso extends \FPDF
                 $pdf->Cell(20, 4, $arIngresoDetalle['codigoCuentaCobrarTipoFk'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arIngresoDetalle['numero'], 1, 0, 'L');
                 $pdf->Cell(25, 4, $arIngresoDetalle['clienteNumeroIdentificacion'], 1, 0, 'L');
-                $pdf->Cell(60, 4, $arIngresoDetalle['clienteNombreCorto'], 1, 0, 'L');
+                $pdf->Cell(60, 4, substr ($arIngresoDetalle['clienteNombreCorto'], 0,30) , 1, 0, 'L');
                 $pdf->Cell(20, 4, $arIngresoDetalle['codigoCuentaFk'], 1, 0, 'L');
                 $pdf->Cell(5, 4, $arIngresoDetalle['naturaleza'], 1, 0, 'L');
                 $pdf->Cell(20, 4, number_format($arIngresoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');

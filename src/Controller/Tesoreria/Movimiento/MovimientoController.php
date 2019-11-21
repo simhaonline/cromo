@@ -258,6 +258,8 @@ class MovimientoController extends AbstractController
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
             }
             if ($form->get('btnAdicionar')->isClicked()) {
+	            $em->getRepository(TesMovimientoDetalle::class)->actualizar($arrControles, $id);
+	            $em->getRepository(TesMovimiento::class)->liquidar($id);
                 $cantidadMovimientoDetalles = $em->getRepository(TesMovimientoDetalle::class)->findBy(['codigoMovimientoFk'=>$arMovimiento->getCodigoMovimientoPk()]);
                 if (count($cantidadMovimientoDetalles) >0){
                     $em->getRepository(TesMovimientoDetalle::class)->actualizar($arrControles, $id);

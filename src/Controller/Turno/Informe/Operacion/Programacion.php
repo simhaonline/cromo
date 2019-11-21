@@ -119,7 +119,7 @@ class Programacion extends AbstractController
                 $hoja->setCellValue('AE' . $j, $arProgramacion['dia25']);
                 $hoja->setCellValue('AF' . $j, $arProgramacion['dia26']);
                 $hoja->setCellValue('AG' . $j, $arProgramacion['dia27']);
-                $hoja->setCellValue('AG' . $j, $arProgramacion['dia28']);
+                $hoja->setCellValue('AH' . $j, $arProgramacion['dia28']);
                 $hoja->setCellValue('AI' . $j, $arProgramacion['dia29']);
                 $hoja->setCellValue('AJ' . $j, $arProgramacion['dia30']);
                 $hoja->setCellValue('AK' . $j, $arProgramacion['dia31']);

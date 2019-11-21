@@ -138,8 +138,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
     public function listaFormato($codigoMovimiento)
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesMovimientoDetalle::class, 'md');
-        $queryBuilder
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesMovimientoDetalle::class, 'md')
             ->select('md.codigoMovimientoDetallePk')
             ->addSelect('md.codigoCuentaPagarFk')
             ->addSelect('md.codigoCuentaFk')
@@ -148,10 +147,12 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('ter.numeroIdentificacion as terceroNumeroIdentificacion')
             ->addSelect('md.vrPago')
             ->addSelect('cp.numeroDocumento')
+            ->addSelect('b.nombre as banco')
             ->addSelect('cp.codigoCuentaPagarTipoFk')
             ->leftJoin('md.cuentaPagarRel', 'cp')
             ->leftJoin('md.terceroRel', 'ter')
             ->leftJoin('cp.cuentaPagarTipoRel', 'cpt')
+            ->leftJoin('md.bancoRel', 'b')
             ->where('md.codigoMovimientoFk = ' . $codigoMovimiento);
         $queryBuilder->orderBy('md.codigoMovimientoDetallePk', 'ASC');
 

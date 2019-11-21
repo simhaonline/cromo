@@ -130,14 +130,14 @@ class Movimiento extends \FPDF
     public function EncabezadoDetalles()
     {
         $this->Ln(12);
-        $header = array('ID', 'TIPO', 'DOC', 'NIT', 'TERCERO','CTA', 'N', 'VALOR');
+        $header = array('ID', 'TIPO', 'DOC', 'NIT', 'TERCERO','CTA', 'N','BANCO','VALOR');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(15, 20, 20, 25, 60, 20, 5, 20);
+        $w = array(15, 20, 20, 25, 55, 20, 5, 16,19);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -161,11 +161,12 @@ class Movimiento extends \FPDF
                 $pdf->Cell(20, 4, $arMovimientoDetalle['codigoCuentaPagarTipoFk'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arMovimientoDetalle['numeroDocumento'], 1, 0, 'L');
                 $pdf->Cell(25, 4, $arMovimientoDetalle['terceroNumeroIdentificacion'], 1, 0, 'L');
-                $pdf->Cell(60, 4, $arMovimientoDetalle['terceroNombreCorto'], 1, 0, 'L');
+                $pdf->Cell(55, 4, $arMovimientoDetalle['terceroNombreCorto'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arMovimientoDetalle['codigoCuentaFk'], 1, 0, 'L');
                 $pdf->Cell(5, 4, $arMovimientoDetalle['naturaleza'], 1, 0, 'L');
-                $pdf->Cell(20, 4, number_format($arMovimientoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');
-                $pdf->Ln();
+	            $pdf->Cell(16, 4, substr($arMovimientoDetalle['banco'],0, 10), 1, 0, 'L');
+	            $pdf->Cell(19, 4, number_format($arMovimientoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');
+	            $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 85);
             }
             $pdf->Ln();

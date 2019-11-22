@@ -245,14 +245,16 @@ class TurSoporteRepository extends ServiceEntityRepository
         $em->flush();
 
 
-
-
-
         //Distribuir
+        $arrDistribuir = [];
         foreach ($arSoportesContratos as $arSoportesContrato) {
             if($arSoportesContrato['codigoDistribucionFk']) {
-                $em->getRepository(TurSoporteContrato::class)->distribucionSoporte($arSoporte);
+                $arrDistribuir[] = $arSoportesContrato['codigoSoporteContratoPk'];
+                //$em->getRepository(TurSoporteContrato::class)->distribucionSoporte($arSoporte);
             }
+        }
+        if($arrDistribuir) {
+            $em->getRepository(TurSoporteContrato::class)->distribuir($arSoporte, $arrDistribuir);
         }
         $em->flush();
 

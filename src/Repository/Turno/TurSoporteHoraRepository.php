@@ -96,6 +96,30 @@ class TurSoporteHoraRepository extends ServiceEntityRepository
         return $novedades;
     }
 
+    public function numeroIngresoRetiros($codigoSoporteContrato, $fechaDesde, $fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $intIngresoRetiro = 0;
+        $novedades = 0;
+        $dql = "SELECT SUM(spd.ingreso) as ingreso, SUM(spd.retiro) as retiro "
+            . "FROM App\Entity\Turno\TurSoporteHora spd "
+            . "WHERE spd.codigoSoporteContratoFk =  " . $codigoSoporteContrato . " AND (spd.fecha >='" . $fechaDesde . "' AND spd.fecha <= '" . $fechaHasta . "')";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        if ($arrayResultado) {
+            $intIngreso = $arrayResultado[0]['ingreso'];
+            if ($intIngreso == null) {
+                $intIngreso = 0;
+            }
+            $intRetiro = $arrayResultado[0]['retiro'];
+            if ($intRetiro == null) {
+                $intRetiro = 0;
+            }
+            $intIngresoRetiro = $intIngreso + $intRetiro;
+        }
+        $novedades = $intIngresoRetiro;
+        return $novedades;
+    }
 
 }
 

@@ -133,6 +133,10 @@ class SoporteController extends ControllerListenerGeneral
                     $dias = 30;
                 }
                 $arSoporte->setDias($dias);
+                $arFestivos = $em->getRepository(TurFestivo::class)->festivos($arSoporte->getFechaDesde()->format('Y-m-d'), $arSoporte->getFechaHasta()->format('Y-m-d'));
+                $arrDias = $this->festivosDomingos($arSoporte->getFechaDesde(), $arSoporte->getFechaHasta(), $arFestivos);
+                $arSoporte->setDomingos($arrDias['domingos']);
+                $arSoporte->setFestivos($arrDias['festivos']);
                 $em->persist($arSoporte);
                 $em->flush();
                 return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $arSoporte->getCodigoSoportePk()]));
@@ -232,10 +236,8 @@ class SoporteController extends ControllerListenerGeneral
                 $em->flush();
                 $em->getRepository(TurSoporte::class)->resumen($arSoporteContrato->getSoporteRel());
 
-                $arrSemanas = $em->getRepository(TurSoporte::class)->semanas($arSoporteContrato->getSoporteRel());
-                $arSoporteContrato = $em->getRepository(TurSoporteContrato::class)->find($id);
                 if($arSoporteContrato->getCodigoDistribucionFk()) {
-                    $em->getRepository(TurSoporteContrato::class)->distribucion($arSoporteContrato->getSoporteRel(), $arSoporteContrato, $arrSemanas);
+                    $em->getRepository(TurSoporteContrato::class)->distribuir($arSoporteContrato->getSoporteRel(), array($arSoporteContrato->getCodigoSoporteContratoPk()));
                 }
                 $em->flush();
 
@@ -345,5 +347,36 @@ class SoporteController extends ControllerListenerGeneral
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
             $writer->save('php://output');
         }
+    }
+
+    private function festivosDomingos($desde, $hasta, $arFestivos)
+    {
+        $arrDias = array('festivos' => 0, 'domingos' => 0);
+        $fechaDesde = date_create($desde->format('Y-m-d'));
+        $domingos = 0;
+        $festivos = 0;
+        while ($fechaDesde <= $hasta) {
+            if ($fechaDesde->format('N') == 7) {
+                $domingos++;
+            }
+            if ($this->festivo($arFestivos, $fechaDesde) == true) {
+                $festivos++;
+            }
+            $fechaDesde->modify('+1 day');
+        }
+        $arrDias['domingos'] = $domingos;
+        $arrDias['festivos'] = $festivos;
+        return $arrDias;
+    }
+
+    public function festivo($arFestivos, $dateFecha)
+    {
+        $boolFestivo = 0;
+        foreach ($arFestivos as $arFestivo) {
+            if ($arFestivo['fecha'] == $dateFecha) {
+                $boolFestivo = 1;
+            }
+        }
+        return $boolFestivo;
     }
 }

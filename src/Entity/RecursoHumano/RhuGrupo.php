@@ -28,6 +28,11 @@ class RhuGrupo
     private $nombre;
 
     /**
+     * @ORM\Column(name="descanso_distribucion", type="integer", nullable=true, options={"default":0})
+     */
+    private $descansoDistribucion = false;
+
+    /**
      * @ORM\Column(name="codigo_distribucion_fk", type="string", length=10, nullable=true)
      */
     private $codigoDistribucionFk;
@@ -368,6 +373,22 @@ class RhuGrupo
     public function setDistribucionRel($distribucionRel): void
     {
         $this->distribucionRel = $distribucionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescansoDistribucion()
+    {
+        return $this->descansoDistribucion;
+    }
+
+    /**
+     * @param mixed $descansoDistribucion
+     */
+    public function setDescansoDistribucion($descansoDistribucion): void
+    {
+        $this->descansoDistribucion = $descansoDistribucion;
     }
 
 

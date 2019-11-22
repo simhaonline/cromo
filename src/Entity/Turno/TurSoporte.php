@@ -48,6 +48,16 @@ class TurSoporte
     private $dias;
 
     /**
+     * @ORM\Column(name="domingos", type="integer", nullable=true, options={"default":0})
+     */
+    private $domingos = 0;
+
+    /**
+     * @ORM\Column(name="festivos", type="integer", nullable=true, options={"default":0})
+     */
+    private $festivos = 0;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=500, nullable=true)
      */
     private $comentario;
@@ -352,6 +362,38 @@ class TurSoporte
     public function setCargadoNomina($cargadoNomina): void
     {
         $this->cargadoNomina = $cargadoNomina;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDomingos()
+    {
+        return $this->domingos;
+    }
+
+    /**
+     * @param mixed $domingos
+     */
+    public function setDomingos($domingos): void
+    {
+        $this->domingos = $domingos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFestivos()
+    {
+        return $this->festivos;
+    }
+
+    /**
+     * @param mixed $festivos
+     */
+    public function setFestivos($festivos): void
+    {
+        $this->festivos = $festivos;
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Repository\Turno;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\Turno\TurContratoTipo;
 use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurPuesto;
@@ -642,28 +643,59 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         $arSoporteHora->setHorasRecargoFestivoNocturno(0);
     }
 
-    public function distribucionSoporte($arSoporte) {
+    public function distribuir($arSoporte, $arrSoporteContratos) {
         $em = $this->getEntityManager();
-        $arrSemanas = $em->getRepository(TurSoporte::class)->semanas($arSoporte);
-        $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->findBy(['codigoSoporteFk' => $arSoporte->getCodigoSoportePk()]);
-        foreach ($arSoportesContratos as $arSoporteContrato) {
-            if($arSoporteContrato->getCodigoDistribucionFk()) {
-                $this->distribucion($arSoporte, $arSoporteContrato, $arrSemanas);
+        $arrSemanasCompensacion = array();
+        $arrDomingos = array();
+        $arrFestivos = array();
+        $dateFechaDesde = $arSoporte->getFechaDesde();
+        $dateFechaHasta = $arSoporte->getFechaHasta();
+        $intDiaInicial = $dateFechaDesde->format('j');
+        $intDiaFinal = $dateFechaHasta->format('j');
+        $diaInicialSemana = $intDiaInicial;
+        $diasCorte = 0;
+        for ($i = $intDiaInicial; $i <= $intDiaFinal; $i++) {
+            $diasCorte++;
+            $strFecha = $dateFechaDesde->format('Y/m/') . $i;
+            $dateFecha = date_create($strFecha);
+            $diaSemana = $dateFecha->format('N');
+            if ($diaSemana == 7 || ($diasCorte > 0 && $i == $intDiaFinal)) {
+                $diasCorte = 0;
+                $dias = ($i - $diaInicialSemana) + 1;
+                $arrSemanas[] = array('diaInicial' => $diaInicialSemana,
+                    'diaFinal' => $i,
+                    'fechaInicial' => $dateFechaDesde->format('Y/m/') . $diaInicialSemana,
+                    'fechaFinal' => $dateFechaDesde->format('Y/m/') . $i,
+                    'dias' => $dias,
+                    'descanso' => '0');
+                $diaInicialSemana = $i + 1;
+                $arrDomingos[] = array('domingo' => $dateFecha);
             }
         }
-
+        $arrFestivos = $arrDomingos;
+        $arrSemanasCompensacion[] = array('diaInicial' => 1, 'diaFinal' => 7, 'fechaInicial' => $dateFechaDesde->format('Y/m/') . 1, 'fechaFinal' => $dateFechaDesde->format('Y/m/') . 7);
+        $arrSemanasCompensacion[] = array('diaInicial' => 8, 'diaFinal' => 15, 'fechaInicial' => $dateFechaDesde->format('Y/m/') . 8, 'fechaFinal' => $dateFechaDesde->format('Y/m/') . 15);
+        $arrSemanasCompensacion[] = array('diaInicial' => 16, 'diaFinal' => 22, 'fechaInicial' => $dateFechaDesde->format('Y/m/') . 16, 'fechaFinal' => $dateFechaDesde->format('Y/m/') . 22);
+        $arrSemanasCompensacion[] = array('diaInicial' => 23, 'diaFinal' => 30, 'fechaInicial' => $dateFechaDesde->format('Y/m/') . 23, 'fechaFinal' => $dateFechaDesde->format('Y/m/') . 30);
+        $arrSemanas = $em->getRepository(TurSoporte::class)->semanas($arSoporte);
+        foreach ($arrSoporteContratos as $codigo) {
+            $arSoporteContrato = $em->getRepository(TurSoporteContrato::class)->find($codigo);
+            if($arSoporteContrato->getCodigoDistribucionFk()) {
+                $this->distribucion($arSoporte, $arSoporte->getGrupoRel(), $arSoporteContrato, $arrSemanas, $arrSemanasCompensacion, $arrDomingos);
+            }
+        }
     }
 
     /**
      * @param $arSoporte TurSoporte
+     * @param $arGrupo RhuGrupo
      * @param $arSoporteContrato TurSoporteContrato
      * @param $arrSemanas
      * @throws \Doctrine\ORM\ORMException
      */
-    public function distribucion($arSoporte, $arSoporteContrato, $arrSemanas) {
+    public function distribucion($arSoporte, $arGrupo, $arSoporteContrato, $arrSemanas, $arrSemanasCompensacion, $arrDomingos) {
         $em = $this->getEntityManager();
 
-        //19
         if($arSoporteContrato->getCodigoDistribucionFk() == 'DP001') {
 
             $dias = $arSoporteContrato->getDiasTransporte();
@@ -909,6 +941,222 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             $em->persist($arSoporteContratoAct);
         }
 
+        if($arSoporteContrato->getCodigoDistribucionFk() == 'SER01') {
+            $descanso = $arGrupo->getDescansoDistribucion();
+            $diasPeriodo = $arSoporte->getDias();
+            $diasDescansoSoportePago = $arSoporte->getDomingos() + $arSoporte->getFestivos();
+            //Descansos de compensacion
+            $descansoCompensacion = $arSoporte->getDomingos() + $arSoporte->getFestivos();
+
+            //Si son propuestos por el usuario prevalece
+            if ($descanso > 0) {
+                $diasDescansoSoportePago = $descanso;
+                $descansoCompensacion = $descanso;
+            }
+
+            $novedadesIngresoRetiro = $arSoporteContrato->getIngreso() + $arSoporteContrato->getRetiro();
+            if ($novedadesIngresoRetiro > 0) {
+                $descansoDescontar = 0;
+                foreach ($arrSemanasCompensacion as $arrSemana) {
+                    $numeroIngresoRetiro = $em->getRepository(TurSoporteHora::class)->numeroIngresoRetiros($arSoporteContrato->getCodigoSoporteContratoPk(), $arrSemana['fechaInicial'], $arrSemana['fechaFinal']);
+                    if ($numeroIngresoRetiro > 0) {
+                        $descansoDescontar++;
+                    }
+                }
+                if ($descansoDescontar <= $descansoCompensacion) {
+                    $descansoCompensacion = $descansoCompensacion - $descansoDescontar;
+                } else {
+                    $descansoCompensacion = 0;
+                }
+                if ($descansoDescontar <= $diasDescansoSoportePago) {
+                    $diasDescansoSoportePago = $diasDescansoSoportePago - $descansoDescontar;
+                } else {
+                    $diasDescansoSoportePago = 0;
+                }
+            }
+            //Descanso por sln
+            $novedadesAfectaDescanso = $arSoporteContrato->getLicenciaNoRemunerada();
+            if ($novedadesAfectaDescanso > 0) {
+                $descansoDescontar = 0;
+                foreach ($arrSemanas as $arrSemana) {
+                    $numeroLicenciasNoRemuneradas = $em->getRepository(TurSoporteHora::class)->numeroLicenciasNoRemunerada($arSoporteContrato->getCodigoSoporteContratoPk(), $arrSemana['fechaInicial'], $arrSemana['fechaFinal']);
+                    if ($numeroLicenciasNoRemuneradas > 0) {
+                        $descansoDescontar++;
+                    }
+                }
+                if ($descansoDescontar <= $diasDescansoSoportePago) {
+                    $diasDescansoSoportePago = $diasDescansoSoportePago - $descansoDescontar;
+                } else {
+                    $diasDescansoSoportePago = 0;
+                }
+            }
+            if ($diasDescansoSoportePago > 0) {
+                $domingosPagados = $this->domingosNovedad($arrDomingos, $arSoporteContrato->getCodigoSoporteContratoPk());
+                if ($domingosPagados <= $diasDescansoSoportePago) {
+                    $diasDescansoSoportePago = $diasDescansoSoportePago - $domingosPagados;
+                } else {
+                    $diasDescansoSoportePago = 0;
+                }
+            }
+
+            $diasPeriodoCompensar = $diasPeriodo;
+            /*if ($arSoporte->getDiasAdicionalesFebrero() > 0) {
+                $diasPeriodoCompensar = $diasPeriodo - $arSoporte->getDiasAdicionalesFebrero();
+            }*/
+
+            $horasPeriodo = $diasPeriodoCompensar * 8;
+            $horasDescansoSoportePago = $diasDescansoSoportePago * 8;
+            $horasTopeSoportePago = $horasPeriodo - ($descanso * 8);
+            $horasDia = $arSoporteContrato->getHorasDiurnasReales();
+            $horasNoche = $arSoporteContrato->getHorasNocturnasReales();
+            $horasFestivasDia = $arSoporteContrato->getHorasFestivasDiurnasReales();
+            $horasFestivasNoche = $arSoporteContrato->getHorasFestivasNocturnasReales();
+            $horasExtraDia = $arSoporteContrato->getHorasExtrasOrdinariasDiurnasReales();
+            $horasExtraNoche = $arSoporteContrato->getHorasExtrasOrdinariasNocturnasReales();
+            $horasExtraFestivasDia = $arSoporteContrato->getHorasExtrasFestivasDiurnasReales();
+            $horasExtraFestivasNoche = $arSoporteContrato->getHorasExtrasFestivasNocturnasReales();
+            $totalHoras = $horasDia + $horasNoche + $horasFestivasDia + $horasFestivasNoche;
+            $horasPorCompensar = $horasTopeSoportePago - $totalHoras;
+            if ($horasPorCompensar > 0) {
+                $totalExtras = $horasExtraDia + $horasExtraNoche + $horasExtraFestivasDia + $horasExtraFestivasNoche;
+                if ($horasPorCompensar > $totalExtras) {
+                    $horasPorCompensar = $totalExtras;
+                }
+                $porExtraDiurna = 0;
+                $porExtraNocturna = 0;
+                $porExtraFestivaDiurna = 0;
+                $porExtraFestivaNocturna = 0;
+                if ($totalExtras > 0) {
+                    $porExtraDiurna = $horasExtraDia / $totalExtras;
+                    $porExtraNocturna = $horasExtraNoche / $totalExtras;
+                    $porExtraFestivaDiurna = $horasExtraFestivasDia / $totalExtras;
+                    $porExtraFestivaNocturna = $horasExtraFestivasNoche / $totalExtras;
+                }
+
+                $horasCompensarDia = round($porExtraDiurna * $horasPorCompensar);
+                $horasCompensarNoche = round($porExtraNocturna * $horasPorCompensar);
+                $horasCompensadas = $horasCompensarDia + $horasCompensarNoche;
+                if ($horasCompensadas > $horasPorCompensar) {
+                    $horasCompensarNoche -= 1;
+                }
+                $horasCompensarFestivaDia = round($porExtraFestivaDiurna * $horasPorCompensar);
+                $horasCompensadas = $horasCompensarDia + $horasCompensarNoche + $horasCompensarFestivaDia;
+                if ($horasCompensadas > $horasPorCompensar) {
+                    $horasCompensarFestivaDia -= 1;
+                }
+                $horasCompensarFestivaNoche = round($porExtraFestivaNocturna * $horasPorCompensar);
+                $horasCompensadas = $horasCompensarDia + $horasCompensarNoche + $horasCompensarFestivaDia + $horasCompensarFestivaNoche;
+                if ($horasCompensadas > $horasPorCompensar) {
+                    $horasCompensarFestivaNoche -= 1;
+                }
+                //Para tema de redondeo
+                $horasCompensadas = $horasCompensarDia + $horasCompensarNoche + $horasCompensarFestivaDia + $horasCompensarFestivaNoche;
+                if ($horasCompensadas < $horasPorCompensar) {
+                    if ($horasExtraFestivasNoche > 0) {
+                        $horasCompensarFestivaNoche += 1;
+                    } else {
+                        $horasCompensarFestivaDia += 1;
+                    }
+                }
+                $horasDia += $horasCompensarDia;
+                $horasNoche += $horasCompensarNoche;
+                $horasFestivasDia += $horasCompensarFestivaDia;
+                $horasFestivasNoche += $horasCompensarFestivaNoche;
+                $horasExtraDia -= $horasCompensarDia;
+                $horasExtraNoche -= $horasCompensarNoche;
+                $horasExtraFestivasDia -= $horasCompensarFestivaDia;
+                $horasExtraFestivasNoche -= $horasCompensarFestivaNoche;
+            } else {
+                $horasPorCompensar = $horasPorCompensar * -1;
+                $totalOrdinarias = $horasDia + $horasNoche + $horasFestivasDia + $horasFestivasNoche;
+                if ($horasPorCompensar > $totalOrdinarias) {
+                    $horasPorCompensar = $totalOrdinarias;
+                }
+                $porDiurna = 0;
+                $porNocturna = 0;
+                $porFestivaDiurna = 0;
+                $porFestivaNocturna = 0;
+                if ($totalOrdinarias > 0) {
+                    $porDiurna = $horasDia / $totalOrdinarias;
+                    $porNocturna = $horasNoche / $totalOrdinarias;
+                    $porFestivaDiurna = $horasFestivasDia / $totalOrdinarias;
+                    $porFestivaNocturna = $horasFestivasNoche / $totalOrdinarias;
+                }
+
+                $horasCompensarDia = round($porDiurna * $horasPorCompensar);
+                $horasCompensarNoche = round($porNocturna * $horasPorCompensar);
+                $horasCompensadas = $horasCompensarDia + $horasCompensarNoche;
+                if ($horasCompensadas > $horasPorCompensar) {
+                    $horasCompensarNoche -= 1;
+                }
+                $horasCompensarFestivaDia = round($porFestivaDiurna * $horasPorCompensar);
+                $horasCompensadas = $horasCompensarDia + $horasCompensarNoche + $horasCompensarFestivaDia;
+                if ($horasCompensadas > $horasPorCompensar) {
+                    $horasCompensarFestivaDia -= 1;
+                }
+                $horasCompensarFestivaNoche = round($porFestivaNocturna * $horasPorCompensar);
+                $horasCompensadas = $horasCompensarDia + $horasCompensarNoche + $horasCompensarFestivaDia + $horasCompensarFestivaNoche;
+                if ($horasCompensadas > $horasPorCompensar) {
+                    $horasCompensarFestivaNoche -= 1;
+                }
+                //Para tema de redondeo
+                $horasCompensadas = $horasCompensarDia + $horasCompensarNoche + $horasCompensarFestivaDia + $horasCompensarFestivaNoche;
+                if ($horasCompensadas < $horasPorCompensar) {
+                    $horasCompensarFestivaNoche += 1;
+                }
+                $horasExtraDia += $horasCompensarDia;
+                $horasExtraNoche += $horasCompensarNoche;
+                $horasExtraFestivasDia += $horasCompensarFestivaDia;
+                $horasExtraFestivasNoche += $horasCompensarFestivaNoche;
+                $horasDia -= $horasCompensarDia;
+                $horasNoche -= $horasCompensarNoche;
+                $horasFestivasDia -= $horasCompensarFestivaDia;
+                $horasFestivasNoche -= $horasCompensarFestivaNoche;
+            }
+
+            //$arSoporteContrato = $em->getRepository('BrasaTurnoBundle:TurSoportePago')->find($arSoporteContrato->getCodigoSoportePagoPk());
+            $arSoporteContrato->setHorasDiurnas($horasDia);
+            $arSoporteContrato->setHorasNocturnas($horasNoche);
+            $arSoporteContrato->setHorasFestivasDiurnas($horasFestivasDia);
+            $arSoporteContrato->setHorasFestivasNocturnas($horasFestivasNoche);
+            $arSoporteContrato->setHorasExtrasOrdinariasDiurnas($horasExtraDia);
+            $arSoporteContrato->setHorasExtrasOrdinariasNocturnas($horasExtraNoche);
+            $arSoporteContrato->setHorasExtrasFestivasDiurnas($horasExtraFestivasDia);
+            $arSoporteContrato->setHorasExtrasFestivasNocturnas($horasExtraFestivasNoche);
+            //$arSoporteContrato->setDiasPeriodoCompensar($diasPeriodoCompensar);
+            //$arSoporteContrato->setDiasPeriodoDescansoCompensar($descansoCompensacion);
+            $horasDescansoRecurso = $horasDescansoSoportePago;
+            if ($diasPeriodo == $arSoporteContrato->getNovedad()) {
+                $horasDescansoRecurso = 0;
+            }
+            $arSoporteContrato->setHorasDescanso($horasDescansoRecurso);
+            $horas = $horasDia + $horasNoche + $horasFestivasDia + $horasFestivasNoche + $horasDescansoRecurso;
+            $arSoporteContrato->setHoras($horas);
+            /*if ($arSoporteContrato->getPagarTransporteSinDescanso()) {
+                if ($arSoporteContrato->getFechaHasta()->format('d') == "31") {
+                    $arSoporteContratoDetalles = $em->getRepository('BrasaTurnoBundle:TurSoportePagoDetalle')->findBy(array('codigoSoportePagoFk' => $arSoporteContrato->getCodigoSoportePagoPk()));
+                    foreach ($arSoporteContratoDetalles as $arSoporteContratoDetalle) {
+                        if ($arSoporteContratoDetalle->getFecha()->format('d') == "31" && $arSoporteContratoDetalle->getDescanso()) {
+                            $arSoporteContrato->setDiasTransporte($arSoporteContrato->getDias() - ($arSoporteContrato->getDescanso() - 1));
+                        } else {
+                            $arSoporteContrato->setDiasTransporte($arSoporteContrato->getDias() - $arSoporteContrato->getDescanso());
+                        }
+                    }
+                } else {
+                    $arSoporteContrato->setDiasTransporte($arSoporteContrato->getDias() - $arSoporteContrato->getDescanso());
+                }
+            }*/
+            /*if ($arSoporte->getDiasAdicionalesFebrero() > 0) {
+                $novedades = $arSoporteContrato->getIncapacidad() + $arSoporteContrato->getIncapacidadNoLegalizada() + $arSoporteContrato->getLicencia() + $arSoporteContrato->getLicenciaNoRemunerada();
+                if ($arSoporteContrato->getRetiro() <= 0 && $novedades < $diasRealesPeriodo) {
+                    $arSoporteContrato->setHorasAdicionales($arSoporte->getDiasAdicionalesFebrero() * 8);
+                    $arSoporteContrato->setDiasTransporte($arSoporteContrato->getDiasTransporteReal() + $arSoporte->getDiasAdicionalesFebrero());
+                } else {
+                    $arSoporteContrato->setHorasAdicionales(0);
+                }
+            }*/
+            $em->persist($arSoporteContrato);
+        }
     }
 
     /**
@@ -960,6 +1208,25 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         $arSoporteContrato->setVrRecargoFestivoNocturno($vrRecargoFestivoNocturno);
         $arSoporteContrato->setVrHoras($vrHoras);
         $arSoporteContrato->setVrAuxilioTransportePago($vrAuxilioTransporte);
+    }
+
+    private function domingosNovedad($arrDomingos, $codigoSoporteContrato)
+    {
+        $em = $this->getEntityManager();
+        $descansosPagados = 0;
+        foreach ($arrDomingos as $arrDomingo) {
+            $descansoPagado = false;
+            $arSoportePagoDetalles = $em->getRepository(TurSoporteHora::class)->findBy(array('codigoSoporteContratoFk' => $codigoSoporteContrato, 'fecha' => $arrDomingo['domingo']));
+            foreach ($arSoportePagoDetalles as $arSoportePagoDetalle) {
+                if ($arSoportePagoDetalle->getIncapacidad() || $arSoportePagoDetalle->getVacacion() || $arSoportePagoDetalle->getRetiro() || $arSoportePagoDetalle->getIngreso()) {
+                    $descansoPagado = true;
+                }
+            }
+            if ($descansoPagado == true) {
+                $descansosPagados++;
+            }
+        }
+        return $descansosPagados;
     }
 
 }

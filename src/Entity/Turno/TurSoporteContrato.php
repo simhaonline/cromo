@@ -78,7 +78,7 @@ class TurSoporteContrato
     private $incapacidad = 0;
 
     /**
-     * @ORM\Column(name="incapacidad_no_legalizada", type="integer")
+     * @ORM\Column(name="incapacidad_no_legalizada", type="integer", nullable=true, options={"default":0})
      */
     private $incapacidadNoLegalizada = 0;
 

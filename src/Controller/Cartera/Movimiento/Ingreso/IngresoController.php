@@ -221,6 +221,9 @@ class IngresoController extends BaseController
                 return $this->redirect($this->generateUrl('cartera_movimiento_ingreso_ingreso_detalle', ['id' => $id]));
             }
             if ($form->get('btnAdicionar')->isClicked()) {
+                $em->getRepository(CarIngresoDetalle::class)->actualizar($arrControles, $id);
+                $em->getRepository(CarIngreso::class)->liquidar($id);
+                $em->getRepository(CarIngreso::class)->autorizar($arIngreso);
                 $arIngresoDetalle = new CarIngresoDetalle();
                 $arIngresoDetalle->setIngresoRel($arIngreso);
                 $arIngresoDetalle->setClienteRel($arIngreso->getClienteRel());

@@ -17,17 +17,12 @@
                     {{ form_widget(form.fechaDesde, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.fechaDesde) }}
                 </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Hasta:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.fechaHasta) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.contratoTerminado) }}
-                    {{ form_errors(form.contratoTerminado) }}
                 </div>
             </div>
             <div class="form-group">
@@ -44,9 +39,9 @@
         <div class="panel-body">
             <div class="form-group form-group-sm">
                 <label for="form_pedidoTipoRel" class="col-sm-2 control-label"></label>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     {{ form_widget(form.dia31SoloExtra) }}
-
+                    {{ form_widget(form.contratoTerminado) }}
                 </div>
             </div>
         </div>

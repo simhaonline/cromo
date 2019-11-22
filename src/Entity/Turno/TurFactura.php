@@ -128,6 +128,11 @@ class TurFactura
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="estado_contabilizado", type="boolean", options={"default":false})
+     */
+    private $estadoContabilizado = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurFacturaDetalle", mappedBy="facturaRel")
      */
     protected $facturasDetallesFacturaRel;
@@ -543,6 +548,39 @@ class TurFactura
     {
         $this->facturaTipoRel = $facturaTipoRel;
     }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstadoContabilizado()
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param mixed $estadoContabilizado
+     */
+    public function setEstadoContabilizado($estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
 
 
 }

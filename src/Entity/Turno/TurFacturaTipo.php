@@ -67,9 +67,9 @@ class TurFacturaTipo
     private $codigoCentroCostoContabilidad;
 
     /**
-     * @ORM\Column(name="codigo_comprobante", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_comprobante_fk", type="integer", nullable=true)
      */
-    private $codigoComprobante;
+    private $codigoComprobanteFk;
 
     /**
      * @ORM\Column(name="tipo_cuenta_cartera", type="bigint")
@@ -187,14 +187,45 @@ class TurFacturaTipo
     private $numeracionHasta;
 
     /**
+     * @ORM\Column(name="nota_credito", type="boolean", nullable=true, options={"default":false})
+     */
+    private $notaCredito = 0;
+
+    /**
      * @ORM\Column(name="numero_resolucion_dian_factura", type="bigint", nullable=true)
      */
     private $numeroResolucionDianFactura;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_proveedor_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaProveedorFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_cliente_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaClienteFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -210,6 +241,22 @@ class TurFacturaTipo
     public function setCodigoFacturaTipoPk($codigoFacturaTipoPk): void
     {
         $this->codigoFacturaTipoPk = $codigoFacturaTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaCobrarTipoFk()
+    {
+        return $this->codigoCuentaCobrarTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaCobrarTipoFk
+     */
+    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    {
+        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
     }
 
     /**
@@ -343,17 +390,17 @@ class TurFacturaTipo
     /**
      * @return mixed
      */
-    public function getCodigoComprobante()
+    public function getCodigoComprobanteFk()
     {
-        return $this->codigoComprobante;
+        return $this->codigoComprobanteFk;
     }
 
     /**
-     * @param mixed $codigoComprobante
+     * @param mixed $codigoComprobanteFk
      */
-    public function setCodigoComprobante($codigoComprobante): void
+    public function setCodigoComprobanteFk($codigoComprobanteFk): void
     {
-        $this->codigoComprobante = $codigoComprobante;
+        $this->codigoComprobanteFk = $codigoComprobanteFk;
     }
 
     /**
@@ -466,6 +513,22 @@ class TurFacturaTipo
     public function setTipoCuentaIngreso($tipoCuentaIngreso): void
     {
         $this->tipoCuentaIngreso = $tipoCuentaIngreso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraCartera()
+    {
+        return $this->generaCartera;
+    }
+
+    /**
+     * @param mixed $generaCartera
+     */
+    public function setGeneraCartera($generaCartera): void
+    {
+        $this->generaCartera = $generaCartera;
     }
 
     /**
@@ -727,6 +790,38 @@ class TurFacturaTipo
     /**
      * @return mixed
      */
+    public function getCodigoCuentaProveedorFk()
+    {
+        return $this->codigoCuentaProveedorFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaProveedorFk
+     */
+    public function setCodigoCuentaProveedorFk($codigoCuentaProveedorFk): void
+    {
+        $this->codigoCuentaProveedorFk = $codigoCuentaProveedorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaClienteFk()
+    {
+        return $this->codigoCuentaClienteFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaClienteFk
+     */
+    public function setCodigoCuentaClienteFk($codigoCuentaClienteFk): void
+    {
+        $this->codigoCuentaClienteFk = $codigoCuentaClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFacturasFacturaTipoRel()
     {
         return $this->facturasFacturaTipoRel;
@@ -741,53 +836,20 @@ class TurFacturaTipo
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
-    public function getCodigoCuentaCobrarTipoFk()
+    public function getNotaCredito()
     {
-        return $this->codigoCuentaCobrarTipoFk;
+        return $this->notaCredito;
     }
 
     /**
-     * @param mixed $codigoCuentaCobrarTipoFk
+     * @param mixed $notaCredito
      */
-    public function setCodigoCuentaCobrarTipoFk($codigoCuentaCobrarTipoFk): void
+    public function setNotaCredito($notaCredito): void
     {
-        $this->codigoCuentaCobrarTipoFk = $codigoCuentaCobrarTipoFk;
+        $this->notaCredito = $notaCredito;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getGeneraCartera()
-    {
-        return $this->generaCartera;
-    }
-
-    /**
-     * @param mixed $generaCartera
-     */
-    public function setGeneraCartera($generaCartera): void
-    {
-        $this->generaCartera = $generaCartera;
-    }
-
 
 
 }

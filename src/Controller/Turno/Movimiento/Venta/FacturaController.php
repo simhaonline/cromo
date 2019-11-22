@@ -227,7 +227,8 @@ class FacturaController extends AbstractController
             'arFacturaDetalles' => $arFacturaDetalles,
             'arFactura' => $arFactura,
             'arImpuestosIva' => $arImpuestosIva,
-            'arImpuestosRetencion' => $arImpuestosRetencion
+            'arImpuestosRetencion' => $arImpuestosRetencion,
+            'clase' => array('clase' => 'TurFactura', 'codigo' => $id)
         ]);
     }
 

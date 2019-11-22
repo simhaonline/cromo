@@ -173,4 +173,40 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function retencionFacturaContabilizar($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFacturaDetalle::class, 'fd')
+            ->select('fd.codigoImpuestoRetencionFk')
+            ->addSelect('SUM(fd.vrRetencionFuente) as vrRetencionFuente')
+            ->where('fd.codigoFacturaFk = ' . $codigo)
+            ->andWhere('fd.vrRetencionFuente > 0')
+            ->groupBy('fd.codigoImpuestoRetencionFk');
+        $arrCuentas = $queryBuilder->getQuery()->getResult();
+        return $arrCuentas;
+    }
+
+    public function ivaFacturaContabilizar($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFacturaDetalle::class, 'fd')
+            ->select('fd.codigoImpuestoIvaFk')
+            ->addSelect('SUM(fd.vrIva) as vrIva')
+            ->where('fd.codigoFacturaFk = ' . $codigo)
+            ->andWhere('fd.vrIva > 0')
+            ->groupBy('fd.codigoImpuestoIvaFk');
+        $arrCuentas = $queryBuilder->getQuery()->getResult();
+        return $arrCuentas;
+    }
+
+    public function ventaFacturaContabilizar($codigo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFacturaDetalle::class, 'fd')
+            ->select('i.codigoCuentaVentaFk as codigoCuentaFk')
+            ->addSelect('SUM(fd.vrSubtotal) as vrSubtotal')
+            ->leftJoin('fd.itemRel', 'i')
+            ->where('fd.codigoFacturaFk = ' . $codigo)
+            ->groupBy('i.codigoCuentaVentaFk');
+        $arrCuentas = $queryBuilder->getQuery()->getResult();
+        return $arrCuentas;
+    }
+
 }

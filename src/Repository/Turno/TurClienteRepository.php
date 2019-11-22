@@ -3,6 +3,7 @@
 namespace App\Repository\Turno;
 
 
+use App\Entity\Financiero\FinTercero;
 use App\Entity\Turno\TurCliente;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -39,6 +40,27 @@ class TurClienteRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTurClienteCodigo')} ");
         }
         return $queryBuilder;
+    }
+
+    public function terceroFinanciero($codigo)
+    {
+        $em = $this->getEntityManager();
+        $arTercero = null;
+        $arClienteInventario = $em->getRepository(TurCliente::class)->find($codigo);
+        if ($arClienteInventario) {
+            $arTercero = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arClienteInventario->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arClienteInventario->getNumeroIdentificacion()));
+            if (!$arTercero) {
+                $arTercero = new FinTercero();
+                $arTercero->setIdentificacionRel($arClienteInventario->getIdentificacionRel());
+                $arTercero->setNumeroIdentificacion($arClienteInventario->getNumeroIdentificacion());
+                $arTercero->setNombreCorto($arClienteInventario->getNombreCorto());
+                $arTercero->setDireccion($arClienteInventario->getDireccion());
+                $arTercero->setTelefono($arClienteInventario->getTelefono());
+                $em->persist($arTercero);
+            }
+        }
+
+        return $arTercero;
     }
 
 }

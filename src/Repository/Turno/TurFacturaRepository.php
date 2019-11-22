@@ -7,7 +7,12 @@ use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Crm\CrmVisita;
+use App\Entity\Financiero\FinComprobante;
+use App\Entity\Financiero\FinCuenta;
+use App\Entity\Financiero\FinRegistro;
+use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenImpuesto;
+use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurFactura;
@@ -476,5 +481,302 @@ class TurFacturaRepository extends ServiceEntityRepository
         } else {
             Mensajes::error('La factura debe estar autorizada y aprobada y no puede estar previamente anulada');
         }
+    }
+
+    public function registroContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFactura::class, 'f')
+            ->select('f.codigoFacturaPk')
+            ->addSelect('f.codigoFacturaTipoFk')
+            ->addSelect('f.codigoClienteFk')
+            ->addSelect('f.numero')
+            ->addSelect('f.soporte')
+            ->addSelect('f.fecha')
+            ->addSelect('f.fechaVence')
+            ->addSelect('f.estadoAprobado')
+            ->addSelect('f.estadoContabilizado')
+            ->addSelect('f.vrSubtotal')
+            ->addSelect('f.vrTotal')
+            ->addSelect('f.vrNeto')
+            ->addSelect('f.vrAutoretencion')
+            ->addSelect('ft.codigoComprobanteFk')
+            ->addSelect('ft.codigoCuentaProveedorFk')
+            ->addSelect('ft.codigoCuentaClienteFk')
+            ->addSelect('ft.notaCredito')
+            ->addSelect('ft.prefijo')
+            ->leftJoin('f.facturaTipoRel', 'ft')
+            ->where('f.codigoFacturaPk = ' . $codigo);
+        $arFactura = $queryBuilder->getQuery()->getSingleResult();
+        return $arFactura;
+    }
+
+    public function clienteContabilizar($codigo)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFactura::class, 'f')
+            ->select('f.codigoClienteFk')
+            ->where('f.codigoFacturaPk = ' . $codigo);
+        $arFactura = $queryBuilder->getQuery()->getSingleResult();
+        return $arFactura;
+    }
+
+    /**
+     * @param $arr
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function contabilizar($arr): bool
+    {
+        $em = $this->getEntityManager();
+        if ($arr) {
+            $error = "";
+            //Crear los terceros antes del proceso
+            foreach ($arr AS $codigo) {
+                $arFactura = $em->getRepository(TurFactura::class)->clienteContabilizar($codigo);
+                if ($arFactura) {
+                    $em->getRepository(TurCliente::class)->terceroFinanciero($arFactura['codigoClienteFk']);
+                }
+            }
+            $em->flush();
+
+            foreach ($arr AS $codigo) {
+                $arFactura = $em->getRepository(TurFactura::class)->registroContabilizar($codigo);
+                if ($arFactura) {
+                    if ($arFactura['estadoAprobado'] == 1 && $arFactura['estadoContabilizado'] == 0) {
+                        if (!$arFactura['codigoComprobanteFk']) {
+                            $error = "El comprobante no esta configurado";
+                            break;
+                        }
+                        $arComprobante = $em->getRepository(FinComprobante::class)->find($arFactura['codigoComprobanteFk']);
+                        $arTercero = $em->getRepository(TurCliente::class)->terceroFinanciero($arFactura['codigoClienteFk']);
+
+                        //Contabilizar facturas
+                        if ($arFactura['codigoFacturaTipoFk']) {
+                            //Cliente
+                            if ($arFactura['codigoCuentaClienteFk']) {
+                                $arCuenta = $em->getRepository(FinCuenta::class)->find($arFactura['codigoCuentaClienteFk']);
+                                if (!$arCuenta) {
+                                    $error = "No se encuentra la cuenta " . $arFactura['codigoCuentaClienteFk'];
+                                    break;
+                                }
+                                $arRegistro = new FinRegistro();
+                                $arRegistro->setTerceroRel($arTercero);
+                                $arRegistro->setCuentaRel($arCuenta);
+                                $arRegistro->setComprobanteRel($arComprobante);
+                                $arRegistro->setNumero($arFactura['numero']);
+                                $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
+                                $arRegistro->setFecha($arFactura['fecha']);
+                                if ($arFactura['notaCredito']) {
+                                    $arRegistro->setVrCredito($arFactura['vrNeto']);
+                                    $arRegistro->setNaturaleza('C');
+                                } else {
+                                    $arRegistro->setVrDebito($arFactura['vrNeto']);
+                                    $arRegistro->setNaturaleza('D');
+                                }
+
+                                $arRegistro->setDescripcion('CLIENTE');
+                                $arRegistro->setCodigoModeloFk('TurFactura');
+                                $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
+                                $em->persist($arRegistro);
+                            } else {
+                                $error = "No tiene configurada la cuenta de cliente en el documento";
+                                break;
+                            }
+
+                            //Retenciones
+                            $arrRetenciones = $em->getRepository(TurFacturaDetalle::class)->retencionFacturaContabilizar($codigo);
+                            foreach ($arrRetenciones as $arrRetencion) {
+                                if ($arrRetencion['codigoImpuestoRetencionFk']) {
+                                    $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrRetencion['codigoImpuestoRetencionFk']);
+                                    if ($arImpuesto) {
+                                        if ($arImpuesto->getCodigoCuentaFk()) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arImpuesto->getCodigoCuentaFk());
+                                            if (!$arCuenta) {
+                                                $error = "No se encuentra la cuenta " . $arImpuesto->getCodigoCuentaFk();
+                                                break 2;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            $arRegistro->setNumero($arFactura['numero']);
+                                            $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
+                                            $arRegistro->setFecha($arFactura['fecha']);
+                                            if ($arFactura['notaCredito']) {
+                                                $arRegistro->setVrCredito($arrRetencion['vrRetencionFuente']);
+                                                $arRegistro->setNaturaleza('C');
+                                            } else {
+                                                $arRegistro->setVrDebito($arrRetencion['vrRetencionFuente']);
+                                                $arRegistro->setNaturaleza('D');
+                                            }
+
+                                            $arRegistro->setDescripcion('IMPUESTO RETENCION FUENTE');
+                                            $arRegistro->setCodigoModeloFk('TurFactura');
+                                            $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "No tiene configurada la cuenta del impuesto de retencion";
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            //Autoretencion
+//                            if ($arFactura['vrAutoretencion'] > 0) {
+//                                $arrConfiguracionGeneral = $em->getRepository(GenConfiguracion::class)->invLiquidarMovimiento();
+//                                if ($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'] && $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']) {
+//                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk']);
+//                                    if (!$arCuenta) {
+//                                        $error = "No se encuentra la cuenta " . $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaFk'];
+//                                        break;
+//                                    }
+//                                    $arRegistro = new FinRegistro();
+//                                    $arRegistro->setTerceroRel($arTercero);
+//                                    $arRegistro->setCuentaRel($arCuenta);
+//                                    $arRegistro->setComprobanteRel($arComprobante);
+//                                    $arRegistro->setNumero($arMovimiento['numero']);
+//                                    $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
+//                                    $arRegistro->setFecha($arMovimiento['fecha']);
+//                                    if ($arMovimiento['notaCredito']) {
+//                                        $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
+//                                        $arRegistro->setNaturaleza('C');
+//                                    } else {
+//                                        $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
+//                                        $arRegistro->setNaturaleza('D');
+//                                    }
+//
+//                                    $arRegistro->setDescripcion('AUTORETENCION');
+//                                    $arRegistro->setCodigoModeloFk('InvMovimiento');
+//                                    $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+//                                    $em->persist($arRegistro);
+//
+//                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk']);
+//                                    if (!$arCuenta) {
+//                                        $error = "No se encuentra la cuenta " . $arrConfiguracionGeneral['codigoCuentaAutoretencionVentaValorFk'];
+//                                        break;
+//                                    }
+//                                    $arRegistro = new FinRegistro();
+//                                    $arRegistro->setTerceroRel($arTercero);
+//                                    $arRegistro->setCuentaRel($arCuenta);
+//                                    $arRegistro->setComprobanteRel($arComprobante);
+//                                    $arRegistro->setNumero($arMovimiento['numero']);
+//                                    $arRegistro->setNumeroPrefijo($arMovimiento['prefijo']);
+//                                    $arRegistro->setFecha($arMovimiento['fecha']);
+//                                    if ($arMovimiento['notaCredito']) {
+//                                        $arRegistro->setVrDebito($arMovimiento['vrAutoretencion']);
+//                                        $arRegistro->setNaturaleza('D');
+//                                    } else {
+//                                        $arRegistro->setVrCredito($arMovimiento['vrAutoretencion']);
+//                                        $arRegistro->setNaturaleza('C');
+//                                    }
+//
+//                                    $arRegistro->setDescripcion('AUTORETENCION');
+//                                    $arRegistro->setCodigoModeloFk('InvMovimiento');
+//                                    $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+//                                    $em->persist($arRegistro);
+//
+//                                } else {
+//                                    $error = "No tiene cuentas para autoretencion en configuracion general";
+//                                    break;
+//                                }
+//                            }
+
+                            //Iva
+                            $arrIvas = $em->getRepository(TurFacturaDetalle::class)->ivaFacturaContabilizar($codigo);
+                            foreach ($arrIvas as $arrIva) {
+                                if ($arrIva['codigoImpuestoIvaFk']) {
+                                    $arImpuesto = $em->getRepository(GenImpuesto::class)->find($arrIva['codigoImpuestoIvaFk']);
+                                    if ($arImpuesto) {
+                                        if ($arImpuesto->getCodigoCuentaFk()) {
+                                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arImpuesto->getCodigoCuentaFk());
+                                            if (!$arCuenta) {
+                                                $error = "No se encuentra la cuenta " . $arImpuesto->getCodigoCuentaFk();
+                                                break 2;
+                                            }
+                                            $arRegistro = new FinRegistro();
+                                            $arRegistro->setTerceroRel($arTercero);
+                                            $arRegistro->setCuentaRel($arCuenta);
+                                            $arRegistro->setComprobanteRel($arComprobante);
+                                            $arRegistro->setNumero($arFactura['numero']);
+                                            $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
+                                            $arRegistro->setFecha($arFactura['fecha']);
+                                            if ($arFactura['notaCredito']) {
+                                                $arRegistro->setVrDebito($arrIva['vrIva']);
+                                                $arRegistro->setNaturaleza('D');
+                                            } else {
+                                                $arRegistro->setVrCredito($arrIva['vrIva']);
+                                                $arRegistro->setNaturaleza('C');
+                                            }
+
+                                            $arRegistro->setDescripcion('IVA');
+                                            $arRegistro->setCodigoModeloFk('TurFactura');
+                                            $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
+                                            $em->persist($arRegistro);
+                                        } else {
+                                            $error = "No tiene configurada la cuenta del impuesto de retencion";
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            //Cuenta de ingreso / ventas
+//                            if ($arFactura['notaCredito']) {
+//                                $arrVentas = $em->getRepository(TurFacturaDetalle::class)->ventaDevolucionFacturaContabilizar($codigo);
+//                            } else {
+                            $arrVentas = $em->getRepository(TurFacturaDetalle::class)->ventaFacturaContabilizar($codigo);
+                            foreach ($arrVentas as $arrVenta) {
+                                if ($arrVenta['codigoCuentaFk']) {
+                                    $arCuenta = $em->getRepository(FinCuenta::class)->find($arrVenta['codigoCuentaFk']);
+                                    if (!$arCuenta) {
+                                        $error = "No se encuentra la cuenta " . $arrVenta['codigoCuentaFk'];
+                                        break 2;
+                                    }
+                                    $arRegistro = new FinRegistro();
+                                    $arRegistro->setTerceroRel($arTercero);
+                                    $arRegistro->setCuentaRel($arCuenta);
+                                    $arRegistro->setComprobanteRel($arComprobante);
+                                    $arRegistro->setNumero($arFactura['numero']);
+                                    $arRegistro->setNumeroPrefijo($arFactura['prefijo']);
+                                    $arRegistro->setFecha($arFactura['fecha']);
+                                    if ($arFactura['notaCredito']) {
+                                        $arRegistro->setVrDebito($arrVenta['vrSubtotal']);
+                                        $arRegistro->setNaturaleza('D');
+                                    } else {
+                                        $arRegistro->setVrCredito($arrVenta['vrSubtotal']);
+                                        $arRegistro->setNaturaleza('C');
+                                    }
+
+                                    $arRegistro->setDescripcion('SERVICIO');
+                                    $arRegistro->setCodigoModeloFk('TurFactura');
+                                    $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);
+                                    $em->persist($arRegistro);
+                                } else {
+                                    $error = "No tiene configurada la cuenta de venta en item";
+                                    break;
+                                }
+                            }
+                        }
+
+                        $arFacturaAct = $em->getRepository(TurFactura::class)->find($arFactura['codigoFacturaPk']);
+                        $arFacturaAct->setEstadoContabilizado(1);
+                        $em->persist($arFacturaAct);
+                    }
+                } else {
+                    $error = "La importacion codigo " . $codigo . " no existe";
+                    break;
+                }
+            }
+            if ($error == "") {
+                $em->flush();
+            } else {
+                Mensajes::error($error);
+            }
+
+        }
+        return true;
     }
 }

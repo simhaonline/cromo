@@ -30,6 +30,11 @@ class TurItem
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_venta_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaVentaFk;
+
+    /**
      * @ORM\Column(name="codigo_impuesto_retencion_fk", type="string", length=5, nullable=true)
      */
     private $codigoImpuestoRetencionFk;
@@ -227,6 +232,21 @@ class TurItem
         $this->pedidosDetallesItemRel = $pedidosDetallesItemRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaVentaFk()
+    {
+        return $this->codigoCuentaVentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaVentaFk
+     */
+    public function setCodigoCuentaVentaFk($codigoCuentaVentaFk): void
+    {
+        $this->codigoCuentaVentaFk = $codigoCuentaVentaFk;
+    }
 
 
 

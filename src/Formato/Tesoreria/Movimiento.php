@@ -161,7 +161,7 @@ class Movimiento extends \FPDF
                 $pdf->Cell(20, 4, $arMovimientoDetalle['codigoCuentaPagarTipoFk'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arMovimientoDetalle['numeroDocumento'], 1, 0, 'L');
                 $pdf->Cell(25, 4, $arMovimientoDetalle['terceroNumeroIdentificacion'], 1, 0, 'L');
-                $pdf->Cell(55, 4, $arMovimientoDetalle['terceroNombreCorto'], 1, 0, 'L');
+                $pdf->Cell(55, 4, substr($arMovimientoDetalle['terceroNombreCorto'], 0, 25) , 1, 0, 'L');
                 $pdf->Cell(20, 4, $arMovimientoDetalle['codigoCuentaFk'], 1, 0, 'L');
                 $pdf->Cell(5, 4, $arMovimientoDetalle['naturaleza'], 1, 0, 'L');
 	            $pdf->Cell(16, 4, substr($arMovimientoDetalle['banco'],0, 10), 1, 0, 'L');

@@ -13,9 +13,12 @@ use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
+use App\Entity\Turno\TurConfiguracion;
+use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurProgramacionRespaldo;
 use App\Entity\Turno\TurSoporte;
+use App\Entity\Turno\TurSoporteContrato;
 use App\Form\Type\RecursoHumano\ProgramacionType;
 use App\Formato\RecursoHumano\Programacion;
 use App\Formato\RecursoHumano\ResumenConceptos;
@@ -269,20 +272,142 @@ class ProgramacionController extends AbstractController
     /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
+     * @var $arSoportePago TurSoporteContrato
+     * @var $arProgramacionDetalle RhuProgramacionDetalle
      * @Route("recursohumano/movimiento/nomina/programacion/detalle/resumen/{id}", name="recursohumano_movimiento_nomina_programacion_detalle_resumen")
      */
     public function resumenPagoDetalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($id);
-        $arrBtnActualizar = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar'];
         $form = $this->createFormBuilder()
-            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
+            ->add('btnActualizar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar'])
+            ->add('BtnActualizarHoras', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar horas'])
+            ->add('BtnActualizarHorasSoporteContrato', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar horas soporte contrato'])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(RhuProgramacionDetalle::class)->actualizar($arProgramacionDetalle, $this->getUser()->getUsername());
+            }
+            if ($form->get('BtnActualizarHoras')->isClicked()){
+                $arrControles = $request->request->All();
+                if ($arrControles['TxtDiasTransporte'] != "") {
+                    $arProgramacionDetalle->setDiasTransporte($arrControles['TxtDiasTransporte']);
+                }
+                if ($arrControles['TxtHorasDescanso'] != "") {
+                    $arProgramacionDetalle->setHorasDescanso($arrControles['TxtHorasDescanso']);
+                }
+                if ($arrControles['TxtHorasDiurnas'] != "") {
+                    $arProgramacionDetalle->setHorasDiurnas($arrControles['TxtHorasDiurnas']);
+                }
+                if ($arrControles['TxtHorasNocturnas'] != "") {
+                    $arProgramacionDetalle->setHorasNocturnas($arrControles['TxtHorasNocturnas']);
+                }
+                if ($arrControles['TxtHorasFestivasDiurnas'] != "") {
+                    $arProgramacionDetalle->setHorasFestivasDiurnas($arrControles['TxtHorasFestivasDiurnas']);
+                }
+                if ($arrControles['TxtHorasFestivasNocturnas'] != "") {
+                    $arProgramacionDetalle->setHorasFestivasNocturnas($arrControles['TxtHorasFestivasNocturnas']);
+                }
+                if ($arrControles['TxtHorasExtrasOrdinariasDiurnas'] != "") {
+                    $arProgramacionDetalle->setHorasExtrasOrdinariasDiurnas($arrControles['TxtHorasExtrasOrdinariasDiurnas']);
+                }
+                if ($arrControles['TxtHorasExtrasOrdinariasNocturnas'] != "") {
+                    $arProgramacionDetalle->setHorasExtrasOrdinariasNocturnas($arrControles['TxtHorasExtrasOrdinariasNocturnas']);
+                }
+                if ($arrControles['TxtHorasExtrasFestivasDiurnas'] != "") {
+                    $arProgramacionDetalle->setHorasExtrasFestivasDiurnas($arrControles['TxtHorasExtrasFestivasDiurnas']);
+                }
+                if ($arrControles['TxtHorasExtrasFestivasNocturnas'] != "") {
+                    $arProgramacionDetalle->setHorasExtrasFestivasNocturnas($arrControles['TxtHorasExtrasFestivasNocturnas']);
+                }
+                if ($arrControles['TxtHorasRecargoFestivoDiurno'] != "") {
+                    $arProgramacionDetalle->setHorasRecargoFestivoDiurno($arrControles['TxtHorasRecargoFestivoDiurno']);
+                }
+                if ($arrControles['TxtHorasRecargoFestivoNocturno'] != "") {
+                    $arProgramacionDetalle->setHorasRecargoFestivoNocturno($arrControles['TxtHorasRecargoFestivoNocturno']);
+                }
+                if ($arrControles['TxtHorasRecargo'] != "") {
+                    $arProgramacionDetalle->setHorasRecargo($arrControles['TxtHorasRecargo']);
+                }
+                if ($arrControles['TxtHorasRecargoNocturno'] != "") {
+                    $arProgramacionDetalle->setHorasRecargoNocturno($arrControles['TxtHorasRecargoNocturno']);
+                }
+                $em->persist($arProgramacionDetalle);
+                $em->flush();
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle_resumen', array('id' => $arProgramacionDetalle->getCodigoProgramacionDetallePK())));
+            }
+            if($form->get('BtnActualizarHorasSoporteContrato')->isClicked() ){
+//                if ($arProgramacionDetalle->getCodigoSoporteContratoFk()) {
+//                    $codigoSoporteContrato = $arProgramacionDetalle->getCodigoSoporteContratoFk();
+//                    $arSoporteContrato = $em->getRepository(TurSoporteContrato::class)->find($codigoSoporteContrato);
+//                    if ($arSoporteContrato) {
+//                        set_time_limit(0);
+//                        ini_set("memory_limit", -1);
+//                        $arSoporteContrato->setHorasDescansoReales(0);
+//                        $arSoporteContrato->setHorasDiurnasReales(0);
+//                        $arSoporteContrato->setHorasNocturnasReales(0);
+//                        $arSoporteContrato->setHorasFestivasDiurnasReales(0);
+//                        $arSoporteContrato->setHorasFestivasNocturnasReales(0);
+//                        $arSoporteContrato->setHorasExtrasOrdinariasDiurnasReales(0);
+//                        $arSoporteContrato->setHorasExtrasOrdinariasNocturnasReales(0);
+//                        $arSoporteContrato->setHorasExtrasFestivasDiurnasReales(0);
+//                        $arSoporteContrato->setHorasExtrasFestivasNocturnasReales(0);
+//                        $strSql = "DELETE FROM tur_soporte_hora WHERE codigo_soporte_contrato_fk = " . $codigoSoporteContrato;
+////                        $em->getConnection()->executeQuery($strSql);
+//
+//                        $arSoporte = $arSoporteContrato->getSoporteRel();
+//                        $dateFechaDesde = $arSoporteContrato->getFechaDesde();
+//                        $dateFechaHasta = $arSoporteContrato->getFechaHasta();
+//                        $intDiaInicial = $dateFechaDesde->format('j');
+//                        $intDiaFinal = $dateFechaHasta->format('j');
+//                        $arFestivos = $em->getRepository(TurFestivo::class)->festivos($dateFechaDesde->format('Y-m-') . '01', $dateFechaHasta->format('Y-m-t'));
+//                        $arTurConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
+//                        $em->getRepository(TurSoporteContrato::class)->generar($arSoporte, $arFestivos, $arTurConfiguracion);
+//                        $em->flush();
+//                        $em->getRepository(TurSoporteContrato::class)->resumenSoportePago($dateFechaDesde, $dateFechaHasta, $arSoporte->getCodigoSoportePk());
+//                        $em->getRepository(TurSoporteContrato::class)->compensar($arSoportePago->getCodigoSoportePagoPk(), $arSoporte->getCodigoSoportePagoPeriodoPk());
+//
+//                        if (!$arSoporte->getHorasRecargoAgrupadas()) {
+//                            $em->getRepository('BrasaTurnoBundle:TurSoportePagoPeriodo')->desagregarHoras($arSoportePago->getCodigoSoportePagoPk(), null);
+//                        }
+//                        $em->flush();
+//                        $arSoportePago = $em->getRepository('BrasaTurnoBundle:TurSoportePago')->find($codigoSoporteContrato);
+//                        $arProgramacionDetalle->setDiasTransporte($arSoportePago->getDiasTransporte());
+//                        $arProgramacionDetalle->setHorasDescanso($arSoportePago->getHorasDescanso());
+//                        $arProgramacionDetalle->setHorasDiurnas($arSoportePago->getHorasDiurnas());
+//                        $arProgramacionDetalle->setHorasNocturnas($arSoportePago->getHorasNocturnas());
+//                        $arProgramacionDetalle->setHorasFestivasDiurnas($arSoportePago->getHorasFestivasDiurnas());
+//                        $arProgramacionDetalle->setHorasFestivasNocturnas($arSoportePago->getHorasFestivasNocturnas());
+//                        $arProgramacionDetalle->setHorasExtrasOrdinariasDiurnas($arSoportePago->getHorasExtrasOrdinariasDiurnas());
+//                        $arProgramacionDetalle->setHorasExtrasOrdinariasNocturnas($arSoportePago->getHorasExtrasOrdinariasNocturnas());
+//                        $arProgramacionDetalle->setHorasExtrasFestivasDiurnas($arSoportePago->getHorasExtrasFestivasDiurnas());
+//                        $arProgramacionDetalle->setHorasExtrasFestivasNocturnas($arSoportePago->getHorasExtrasFestivasNocturnas());
+//                        $arProgramacionDetalle->setHorasRecargoFestivoDiurno($arSoportePago->getHorasRecargoFestivoDiurno());
+//                        $arProgramacionDetalle->setHorasRecargoFestivoNocturno($arSoportePago->getHorasRecargoFestivoNocturno());
+//                        $arProgramacionDetalle->setHorasRecargo($arSoportePago->getHorasRecargo());
+//                        $arProgramacionDetalle->setCodigoCompensacionTipoFk($arSoportePago->getCodigoCompensacionTipoFk());
+//                        $arProgramacionDetalle->setCodigoSalarioFijoFk($arSoportePago->getCodigoSalarioFijoFk());
+//                        if ($arProgramacionDetalle->getAjusteDevengado()) {
+//                            if ($arSoportePago->getVrAjusteDevengadoPactado() > 0) {
+//                                $arProgramacionDetalle->setVrAjusteDevengado($arSoportePago->getVrAjusteDevengadoPactado());
+//                            }
+//                        }
+//                        if ($arSoportePago->getVrAjusteCompensacion() > 0) {
+//                            $arProgramacionDetalle->setVrAjusteDevengado($arSoportePago->getVrAjusteCompensacion());
+//                        }
+//                        if ($arSoportePago->getVrRecargoCompensacion() > 0) {
+//                            $arProgramacionDetalle->setVrAjusteRecargo($arSoportePago->getVrRecargoCompensacion());
+//                        }
+//                        if ($arSoportePago->getVrComplementarioCompensacion() > 0) {
+//                            $arProgramacionDetalle->setVrAjusteComplementario($arSoportePago->getVrComplementarioCompensacion());
+//                        }
+//                        $em->persist($arProgramacionDetalle);
+//                        $em->flush();
+//                    }
+//                }
+//                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle_resumen', array('id' => $arProgramacionDetalle->getCodigoProgramacionDetallePK())));
             }
         }
 

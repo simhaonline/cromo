@@ -20,6 +20,7 @@ use App\Entity\RecursoHumano\RhuLiquidacionTipo;
 use App\Entity\RecursoHumano\RhuParametroPrestacion;
 use App\Form\Type\RecursoHumano\ContratoParametrosInicialesType;
 use App\Form\Type\RecursoHumano\ContratoType;
+use App\Formato\RecursoHumano\Contrato;
 use App\General\General;
 use App\Utilidades\Formato;
 use Doctrine\ORM\EntityRepository;
@@ -107,23 +108,78 @@ class ContratoController extends AbstractController
             }
         }
         $form = $this->createFormBuilder()
-            ->add('btnCartaLaboral', SubmitType::class, ['label' => 'Carta laboral', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnCartaLaboral', SubmitType::class, ['label' => 'Carta laboral', 'attr' => ['class' => 'btn btn-link']])
+            ->add('btnPdf', SubmitType::class, ['label' => 'Imprimir', 'attr' => ['class' => 'btn btn-link']])
             ->getForm();
         $form->handleRequest($request);
-        if ($form->get('btnCartaLaboral')->isClicked()) {
-            $fechaActual =$dateNow = new \DateTime('now');
-            $salarioLetras = $em->getRepository(RhuContrato::class)->numtoletras($arContrato->getVrSalario());
-            $formato = New Formato($em);
-            $formato->generarFormatoCarta(4, [
-                '#1' => $arContrato->getEmpleadoRel()->getNombreCorto(),
-                '#2' => $arContrato->getEmpleadoRel()->getNumeroIdentificacion(),
-                '#3' => $arContrato->getFechaDesde()->format('Y-m-d'),
-                '#4' => $arContrato->getFechaHasta()->format('y-m-d'),
-                '#5' => $arContrato->getContratoTipoRel()->getNombre(),
-                '#6' => $arContrato->getCargoRel()->getNombre(),
-                '#7' => number_format($arContrato->getVrSalario(), 0, '.', ','),
-                '#8' => $fechaActual->format('Y-m-d'),
-                '#9' => $salarioLetras]);
+        if ($form->isSubmitted()) {
+            if ($form->get('btnCartaLaboral')->isClicked()) {
+                $fechaActual =$dateNow = new \DateTime('now');
+                $salarioLetras = $em->getRepository(RhuContrato::class)->numtoletras($arContrato->getVrSalario());
+                $formato = New Formato($em);
+                $formato->generarFormatoCarta(4, [
+                    '#1' => $arContrato->getEmpleadoRel()->getNombreCorto(),
+                    '#2' => $arContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                    '#3' => $arContrato->getFechaDesde()->format('Y-m-d'),
+                    '#4' => $arContrato->getFechaHasta()->format('y-m-d'),
+                    '#5' => $arContrato->getContratoTipoRel()->getNombre(),
+                    '#6' => $arContrato->getCargoRel()->getNombre(),
+                    '#7' => number_format($arContrato->getVrSalario(), 0, '.', ','),
+                    '#8' => $fechaActual->format('Y-m-d'),
+                    '#9' => $salarioLetras]);
+            }
+            if($form->get('btnPdf')->isClicked()){
+                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
+
+                $interval = $arContrato->getFechaDesde()->diff($arContrato->getFechaHasta());
+                $interval = round($interval->format('%a%') / 30);
+                $salarioLetras =$em->getRepository(RhuContrato::class)->numtoletras($arContrato->getVrSalario());
+                $formato = New Formato($em);
+                $formato->generarFormatoContrato(5, [
+                    '#1' => $arContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                    '#2' => $arContrato->getEmpleadoRel()->getNombreCorto(),
+                    '#3' => $arConfiguracion->getNit(),
+                    '#4' => $arConfiguracion->getNombre(),
+                    '#5' => $arContrato->getEmpleadoRel()->getDireccion(),
+                    '#6' => $arConfiguracion->getDireccion(),
+                    '#7' => $arContrato->getEmpleadoRel()->getBarrio(),
+                    '#8' => $arContrato->getEmpleadoRel()->getFechaNacimiento()->format('Y/m/d'),
+                    '#9' => $arContrato->getEmpleadoRel()->getCiudadNacimientoRel()->getNombre()??"",
+                    '#a' => $arContrato->getEmpleadoRel()->getCiudadRel()->getNombre(),
+                    '#b' => $arContrato->getCargoRel()->getNombre(),
+                    '#c' => number_format($arContrato->getVrSalario(), 2, '.', ','),
+                    '#d' => $arContrato->getCentroCostoRel()->getNombre(),
+                    '#e' => "",
+                    '#f' => $arContrato->getFechaDesde()->format('Y/m/d'),
+                    '#g' => $arContrato->getFechaDesde()->format('Y/m/d'),
+                    '#h' => $arContrato->getCiudadContratoRel()->getNombre(),
+                    '#i' => $arContrato->getEmpleadoRel()->getCiudadExpedicionRel()->getNombre()??"",
+                    '#j' => strftime("%d de " . $this->MesesEspañol($arContrato->getFechaDesde()->format('m')) . " de %Y", strtotime($arContrato->getFechaDesde()->format('Y/m/d'))),
+                    '#k' => $arContrato->getTiempoRel()->getNombre(),
+                    '#l' => strftime("%d de " . $this->MesesEspañol($arContrato->getFechaHasta()->format('m')) . " de %Y", strtotime($arContrato->getFechaDesde()->format('Y/m/d'))),
+                    '#m' => $interval,
+                    '#n' => $arContrato->getFechaHasta()->format('Y/m/d'),
+                    '#o' => strftime("%d de " . $this->MesesEspañol    ($arContrato->getFechaHasta()->format('m')) . " de %Y", strtotime($arContrato->getFechaHasta()->format('Y/m/d'))),
+                    '#p' =>  " - " . $arConfiguracion->getDigitoVerificacion(),
+                    '#q' => $salarioLetras,
+                    '#r' => $salarioLetras . " $(",
+                    '#s' => number_format($arContrato->getVrSalario(), 2, '.', ','),
+                    '#t' => ")",
+                    '#u' => $arContrato->getCiudadContratoRel()->getNombre(),
+                    '#v' => $arContrato->getCiudadLaboraRel()->getNombre(),
+                    '#w' => date('Y-m-d'),
+                    '#x' => $arContrato->getCentroCostoRel()->getNombre(),
+                    '#y' => number_format($arContrato->getVrSalarioPago(), 2, '.', ','),
+                    '#z' => $arContrato->getEntidadCesantiaRel() ? $arContrato->getEntidadCesantiaRel()->getNombre() : '',
+                    '##' => $arContrato->getEntidadPensionRel() ? $arContrato->getEntidadPensionRel()->getNombre() : '',
+                    '#.' => $arContrato->getEntidadSaludRel()->getNombre(),
+                    '#-' => $arContrato->getEmpleadoRel()->getTelefono(),
+                    'dp' =>  $arContrato->getCiudadContratoRel()->getDepartamentoRel()->getNombre(),
+                    '#_' => "Sin puesto",
+                    '#,' => "Sin cliente",
+                    '#@' => "",
+                ], $id);
+            }
         }
         return $this->render('recursohumano/administracion/recurso/contrato/detalle.html.twig', [
             'arContrato' => $arContrato,

@@ -46,6 +46,7 @@ use App\Entity\RecursoHumano\RhuTiempo;
 use App\Entity\RecursoHumano\RhuTipoCotizante;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
+use App\Entity\Seguridad\Usuario;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContrato;
@@ -197,6 +198,9 @@ class MigracionController extends Controller
                         case 'tur_programacion':
                             $this->turProgramacion($conn);
                             break;
+                        case 'usuarios':
+                            $this->usuarios($conn);
+                            break;
                     }
                 }
                 mysqli_close($conn);
@@ -227,7 +231,8 @@ class MigracionController extends Controller
             ['clase' => 'tur_pedido_detalle_compuesto',   'registros' => $this->contarRegistros('TurPedidoDetalleCompuesto','Turno', 'codigoPedidoDetalleCompuestoPk')],
             ['clase' => 'tur_factura',          'registros' => $this->contarRegistros('TurFactura','Turno', 'codigoFacturaPk')],
             ['clase' => 'tur_factura_detalle',  'registros' => $this->contarRegistros('TurFacturaDetalle','Turno', 'codigoFacturaDetallePk')],
-            ['clase' => 'tur_programacion',     'registros' => $this->contarRegistros('TurProgramacion','Turno', 'codigoProgramacionPk')]
+            ['clase' => 'tur_programacion',     'registros' => $this->contarRegistros('TurProgramacion','Turno', 'codigoProgramacionPk')],
+            ['clase' => 'usuarios',              'registros' => $this->contarRegistros('Usuario','Seguridad', 'username')]
         ];
         return $this->render('general/migracion/migracion.html.twig', [
             'arrProcesos' => $arrProcesos,
@@ -2812,6 +2817,35 @@ class MigracionController extends Controller
             $arCuenta->setPorcentajeBaseRetencion($row['porcentaje_retencion']);
             $em->persist($arCuenta);
             $metadata = $em->getClassMetaData(get_class($arCuenta));
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        }
+
+        if ($em->flush()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function usuarios ($conn){
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $em = $this->getDoctrine()->getManager();
+        $datos = $conn->query('SELECT username, nombre_corto,numero_identificacion, cargo, is_active,roles,email,notificaciones_pendientes FROM users');
+        foreach ($datos as $row) {
+            $arUsuario = new Usuario();
+            $arUsuario->setUsername($row['username']);
+            $arUsuario->setNombreCorto(utf8_decode($row['nombre_corto']));
+            $arUsuario->setNumeroIdentificacion($row['numero_identificacion']);
+            $arUsuario->setCargo($row['cargo']);
+            $arUsuario->setPassword(password_hash($row['username'], PASSWORD_BCRYPT));
+            $arUsuario->setEmail($row['email']);
+            $arUsuario->setIsActive($row['is_active']);
+            $arUsuario->setRol($row['roles']);
+            $arUsuario->setNotificacionesPendientes($row['notificaciones_pendientes']);
+            $em->persist($arUsuario);
+            $metadata = $em->getClassMetaData(get_class($arUsuario));
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         }

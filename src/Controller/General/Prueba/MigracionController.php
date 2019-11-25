@@ -2,6 +2,7 @@
 
 namespace App\Controller\General\Prueba;
 
+use App\Entity\Financiero\FinCuenta;
 use App\Entity\General\GenCiudad;
 use App\Entity\General\GenDepartamento;
 use App\Entity\General\GenEstadoCivil;
@@ -117,6 +118,7 @@ class MigracionController extends Controller
                     //$this->turTurno($conn);
                     //$this->turSecuencia($conn);
                     //$this->turConcepto($conn);
+                    //$this->finCuenta($conn);
                     Mensajes::success("Se migro la informacion con exito");
                 }
                 if ($form->get('btnValidar')->isClicked()) {
@@ -2793,6 +2795,32 @@ class MigracionController extends Controller
             ob_clean();
         }
 
+    }
+
+    private function finCuenta($conn){
+        $em = $this->getDoctrine()->getManager();
+        $datos = $conn->query('SELECT codigo_cuenta_pk, nombre_cuenta, codigo_cuenta_padre_fk, permite_movimientos, exige_centro_costos, exige_base, exige_nit, porcentaje_retencion FROM ctb_cuenta');
+        foreach ($datos as $row) {
+            $arCuenta = new FinCuenta();
+            $arCuenta->setCodigoCuentaPk($row['codigo_cuenta_pk']);
+            $arCuenta->setNombre(utf8_decode($row['nombre_cuenta']));
+            $arCuenta->setCodigoCuentaPadreFk($row['codigo_cuenta_padre_fk']);
+            $arCuenta->setPermiteMovimiento($row['permite_movimientos']);
+            $arCuenta->setExigeCentroCosto($row['exige_centro_costos']);
+            $arCuenta->setExigeBase($row['exige_base']);
+            $arCuenta->setExigeTercero($row['exige_nit']);
+            $arCuenta->setPorcentajeBaseRetencion($row['porcentaje_retencion']);
+            $em->persist($arCuenta);
+            $metadata = $em->getClassMetaData(get_class($arCuenta));
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        }
+
+        if ($em->flush()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private function contarRegistros($entidad, $modulo, $key) {

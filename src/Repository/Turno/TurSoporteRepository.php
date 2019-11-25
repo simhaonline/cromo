@@ -208,9 +208,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                             $arSoporteContrato->setFechaDesde($arSoporte->getFechaDesde());
                             $arSoporteContrato->setFechaHasta($arSoporte->getFechaHasta());
                         }
-                        /*if ($arContrato->getTurnoFijoOrdinario()) {
-                            $arSoportePago->setTurnoFijo(1);
-                        }*/
+                        $arSoporteContrato->setTurnoFijo($arContrato['turnoFijo']);
                         $em->persist($arSoporteContrato);
                     }
                 }

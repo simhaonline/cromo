@@ -278,6 +278,11 @@ class RhuContrato
     private $habilitadoTurno = false;
 
     /**
+     * @ORM\Column(name="turno_fijo", type="boolean",options={"default":false})
+     */
+    private $turnoFijo = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuSalarioTipo", inversedBy="contratosSalarioTipoRel")
      * @ORM\JoinColumn(name="codigo_salario_tipo_fk", referencedColumnName="codigo_salario_tipo_pk")
      */
@@ -2014,6 +2019,38 @@ class RhuContrato
     public function setHabilitadoTurno($habilitadoTurno): void
     {
         $this->habilitadoTurno = $habilitadoTurno;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurnoFijo()
+    {
+        return $this->turnoFijo;
+    }
+
+    /**
+     * @param mixed $turnoFijo
+     */
+    public function setTurnoFijo($turnoFijo): void
+    {
+        $this->turnoFijo = $turnoFijo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramacionesContratoRel()
+    {
+        return $this->programacionesContratoRel;
+    }
+
+    /**
+     * @param mixed $programacionesContratoRel
+     */
+    public function setProgramacionesContratoRel($programacionesContratoRel): void
+    {
+        $this->programacionesContratoRel = $programacionesContratoRel;
     }
 
 

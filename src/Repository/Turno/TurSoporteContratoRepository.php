@@ -65,6 +65,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->addSelect('sc.vrDevengadoPactado')
             ->addSelect('sc.vrAdicionalDevengadoPactado')
             ->addSelect('sc.vrAdicional1')
+            ->addSelect('sc.turnoFijo')
             ->leftJoin('sc.contratoRel', 'c')
             ->leftJoin('sc.empleadoRel', 'e')
             ->where('sc.codigoSoporteFk = ' . $id);

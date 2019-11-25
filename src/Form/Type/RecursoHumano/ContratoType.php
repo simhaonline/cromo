@@ -242,6 +242,7 @@ class ContratoType extends AbstractType
             ->add('auxilioTransporte',CheckboxType::class,['required' => false, 'label' => 'Auxilio transporte'])
             ->add('vrDevengadoPactado',NumberType::class,['required' => false])
             ->add('habilitadoTurno',CheckboxType::class,['required' => false, 'label' => 'Habilitado turno'])
+            ->add('turnoFijo',CheckboxType::class,['required' => false, 'label' => 'Turno fijo'])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

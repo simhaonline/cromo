@@ -368,6 +368,11 @@ class TurSoporteContrato
     private $auxilioTransporte = false;
 
     /**
+     * @ORM\Column(name="turno_fijo", type="boolean", options={"default":false})
+     */
+    private $turnoFijo = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurSoporte", inversedBy="soportesContratosSoporteRel")
      * @ORM\JoinColumn(name="codigo_soporte_fk", referencedColumnName="codigo_soporte_pk")
      */
@@ -1610,6 +1615,22 @@ class TurSoporteContrato
     public function setIncapacidadNoLegalizada($incapacidadNoLegalizada): void
     {
         $this->incapacidadNoLegalizada = $incapacidadNoLegalizada;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurnoFijo()
+    {
+        return $this->turnoFijo;
+    }
+
+    /**
+     * @param mixed $turnoFijo
+     */
+    public function setTurnoFijo($turnoFijo): void
+    {
+        $this->turnoFijo = $turnoFijo;
     }
 
 

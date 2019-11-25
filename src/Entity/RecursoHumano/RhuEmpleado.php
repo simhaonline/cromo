@@ -420,6 +420,11 @@ class RhuEmpleado
     protected $programacionesEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurAdicional", mappedBy="empleadoRel")
+     */
+    protected $adicionalesTurnoEmpleadoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuAporteContrato", mappedBy="empleadoRel")
      */
     protected $aportesContratosEmpleadoRel;
@@ -1868,6 +1873,38 @@ class RhuEmpleado
     public function setCostosEmpleadosServiciosEmpleadoRel($costosEmpleadosServiciosEmpleadoRel): void
     {
         $this->costosEmpleadosServiciosEmpleadoRel = $costosEmpleadosServiciosEmpleadoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdicionalesTurnoEmpleadoRel()
+    {
+        return $this->adicionalesTurnoEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $adicionalesTurnoEmpleadoRel
+     */
+    public function setAdicionalesTurnoEmpleadoRel($adicionalesTurnoEmpleadoRel): void
+    {
+        $this->adicionalesTurnoEmpleadoRel = $adicionalesTurnoEmpleadoRel;
     }
 
 

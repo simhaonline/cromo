@@ -90,7 +90,8 @@
                     <ul>
                         <li><a href="{{ path('turno_administracion_operacion_turno_lista') }}">Turno</a></li>
                         <li><a href="{{ path('turno_administracion_operacion_secuencia_lista') }}">Secuencia</a></li>
-                        <li><a href="{{ path('turno_administracion_concepto_concepto_lista') }}">Concepto deservicio</a></li>
+                        <li><a href="{{ path('turno_administracion_concepto_concepto_lista') }}">Concepto deservicio</a>
+                        </li>
                         <li><a href="{{ path('turno_administracion_operacion_salario_lista') }}">Salario</a></li>
                     </ul>
                 </li>
@@ -108,7 +109,8 @@
                     <a href="#">Ventas <span class="fa arrow"></span></a>
                     <ul>
                         <li><a href="{{ path('turno_proceso_venta_generarpedido') }}">Generar pedido</a></li>
-                        <li><a href="{{ path('turno_proceso_venta_corregirsaldopedido_lista') }}">Regenerar saldo pedido</a></li>
+                        <li><a href="{{ path('turno_proceso_venta_corregirsaldopedido_lista') }}">Regenerar saldo
+                                pedido</a></li>
                     </ul>
                 </li>
             </ul>
@@ -125,7 +127,8 @@
                     <ul>
                         <li><a href="{{ path('turno_utilidad_operacion_prototipo') }}">Prototipo</a></li>
                         <li><a href="{{ path('turno_utilidad_operacion_programacion') }}">Programacion</a></li>
-                        <li><a href="{{ path('turno_utilidad_operacion_analizar_inconsistencias') }}"> Analizar inconsistencias</a></li>
+                        <li><a href="{{ path('turno_utilidad_operacion_analizar_inconsistencias') }}"> Analizar
+                                inconsistencias</a></li>
                         <li>
                             <a href="#">Importar <span class="fa arrow"></span></a>
                             <ul>
@@ -134,6 +137,16 @@
                                 <li><a href="{{ path('turno_utilidad_importar_vacaciones') }}">Vacaciones</a></li>
                             </ul>
                         </li>
+                    </ul>
+
+                </li>
+                <li>
+                    <a href="#">Adicional <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('turno_utilidad_operacion_adicional_adicional') }}">Adicional puesto</a>
+                        </li>
+
+
                     </ul>
 
                 </li>
@@ -173,7 +186,8 @@
                                         detalle</a></li>
                                 <li><a href="{{ path('turno_informe_comercial_pedidoSinAprobar_lista') }}">Pedido sin
                                         aprobar</a></li>
-                                <li><a href="{{ path('turno_informe_comercial_pedienteFacturar_lista') }}">Pendiente por facturar</a></li>
+                                <li><a href="{{ path('turno_informe_comercial_pedienteFacturar_lista') }}">Pendiente por
+                                        facturar</a></li>
                             </ul>
                         </li>
                         <li>
@@ -203,8 +217,10 @@
                 <li>
                     <a href="#">Financiero <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('turno_informe_financiero_costo_empleado_lista') }}">Costo empleado</a></li>
-                        <li><a href="{{ path('turno_informe_financiero_costo_servicio_lista') }}">Costo servicio</a></li>
+                        <li><a href="{{ path('turno_informe_financiero_costo_empleado_lista') }}">Costo empleado</a>
+                        </li>
+                        <li><a href="{{ path('turno_informe_financiero_costo_servicio_lista') }}">Costo servicio</a>
+                        </li>
                     </ul>
                 </li>
             </ul>

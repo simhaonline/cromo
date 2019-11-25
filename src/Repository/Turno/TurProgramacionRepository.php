@@ -1347,5 +1347,32 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
 
         return $queryBuilder->getQuery()->execute();
     }
+
+    public function listaPagoAdicionalPuesto($anio, $mes)
+    {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from(TurProgramacion::class, "pd")
+            ->select("pd.codigoEmpleadoFk")
+            ->where("pd.anio = '{$anio}'")
+            ->andWhere("pd.mes = '{$mes}'")
+            ->andWhere("pd.codigoEmpleadoFk <> ''")
+            ->groupBy("pd.codigoEmpleadoFk");
+        return $qb->getQuery()->getResult();
+    }
+
+    public function listaProgramacionAdicionalPagoPuesto($anio, $mes, $codigoEmpleadoFk)
+    {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder()->from(TurProgramacion::class, "pd")
+            ->select("pd.codigoPuestoFk, pd.dia1, pd.dia2, pd.dia3, pd.dia4, pd.dia5, pd.dia6, pd.dia7, pd.dia8, pd.dia9 
+                    , pd.dia10, pd.dia11, pd.dia12, pd.dia13, pd.dia14, pd.dia15, pd.dia16, pd.dia17, pd.dia18, pd.dia19, pd.dia20, pd.dia21
+                    , pd.dia22, pd.dia23, pd.dia24, pd.dia25, pd.dia26, pd.dia27, pd.dia28, pd.dia29, pd.dia30, pd.dia31")
+            ->where("pd.codigoEmpleadoFk = {$codigoEmpleadoFk}")
+            ->andWhere("pd.anio = {$anio}")
+            ->andWhere("pd.mes = {$mes}")
+            ->andWhere("pd.complementario IS NULL OR pd.complementario = 0");
+        $arrProgramacionDetalle = $qb->getQuery()->getResult();
+        return $arrProgramacionDetalle;
+    }
 }
 

@@ -1,0 +1,87 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label for="form_cboServicioRel" class="col-sm-1 control-label">Desde:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaDesde, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="form_cboServicioRel" class="col-sm-1 control-label">Hasta:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+            <tr>
+                <th>NI</th>
+                <th>CLIENTE</th>
+                <th>PUESTO</th>
+                <th data-toggle="tooltip" title="Documento">DOC</th>
+                <th>RECURSO</th>
+                <th>AÑO</th>
+                <th>MES</th>
+                <th data-toggle="tooltip" title="Desde">D</th>
+                <th data-toggle="tooltip" title="Hasta">H</th>
+                <th>CONCEPTO</th>
+                <th>NOMBRE</th>
+                <th data-toggle="tooltip" title="Numero de turnos">NUM</th>
+                <th>VALOR</th>
+                <th>TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for arAdicional in arAdicionales %}
+            <tr>
+                <td>{{ arAdicional.puestoRel.clienteRel.numeroIdentificacion }}</td>
+                <td>{{ arAdicional.puestoRel.clienteRel.nombreCorto }}</td>
+                <td>{{ arAdicional.puestoRel.nombre }}</td>
+                <td>{{ arAdicional.empleadoRel.numeroIdentificacion | default('') }}</td>
+                <td>{{ arAdicional.empleadoRel.nombreCorto | default('') }}</td>
+                <td>{{ arAdicional.anio }}</td>
+                <td>{{ arAdicional.mes }}</td>
+                <td>{{ arAdicional.desde }}</td>
+                <td>{{ arAdicional.hasta }}</td>
+                <td>{{ arAdicional.codigoConceptoFk }}</td>
+                <td>{{ arAdicional.conceptoRel.nombre | default('') }}</td>
+                <td>{{ arAdicional.numeroTurnos }}</td>
+                <td style="text-align: right">{{ arAdicional.vrTurno | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAdicional.vrPago | number_format(0, '.', ',') }}</td>
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arAdicionales.getTotalItemCount }}</span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arAdicionales) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {#{{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}#}
+    </div>
+    {{ form_end(form) }}
+    <br /><br /><br />
+{% endblock %}

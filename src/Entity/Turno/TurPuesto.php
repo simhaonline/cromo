@@ -187,6 +187,11 @@ class TurPuesto
     protected $soportesHorasPuestoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurPuestoAdicional", mappedBy="puestoRel")
+     */
+    protected $puestosAdicionalesPuestoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPuestoPk()

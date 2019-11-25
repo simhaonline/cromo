@@ -230,6 +230,11 @@ class RhuConcepto
     protected $vacacionesTiposConceptoDineroRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurPuestoAdicional", mappedBy="conceptoRel")
+     */
+    protected $puestoAdicionalConceptoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -915,6 +920,22 @@ class RhuConcepto
     public function setPorcentajeVacaciones($porcentajeVacaciones): void
     {
         $this->porcentajeVacaciones = $porcentajeVacaciones;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPuestoAdicionalConceptoRel()
+    {
+        return $this->puestoAdicionalConceptoRel;
+    }
+
+    /**
+     * @param mixed $puestoAdicionalConceptoRel
+     */
+    public function setPuestoAdicionalConceptoRel($puestoAdicionalConceptoRel): void
+    {
+        $this->puestoAdicionalConceptoRel = $puestoAdicionalConceptoRel;
     }
 
 

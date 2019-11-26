@@ -134,7 +134,9 @@ class ProgramacionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 if ($arProgramacion->getGrupoRel()) {
-                    $arProgramacion->setDias(($arProgramacion->getFechaDesde()->diff($arProgramacion->getFechaHasta()))->days + 1);
+                    //$arProgramacion->setDias(($arProgramacion->getFechaDesde()->diff($arProgramacion->getFechaHasta()))->days + 1);
+                    $dias = FuncionesController::diasPrestaciones($arProgramacion->getFechaDesde(), $arProgramacion->getFechaHasta());
+                    $arProgramacion->setDias($dias);
                     $em->persist($arProgramacion);
                     $em->flush();
                     return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $arProgramacion->getCodigoProgramacionPk()]));

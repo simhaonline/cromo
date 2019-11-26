@@ -135,9 +135,10 @@ class RhuPagoRepository extends ServiceEntityRepository
             return $v['codigoPagoPk'];
         }, $subQuery->getQuery()->execute()));
 
-
-        $em->createQueryBuilder()->delete(RhuPago::class, 'p')
-            ->where("p.codigoPagoPk IN ({$codigosPagos})")->getQuery()->execute();
+        if($codigosPagos) {
+            $em->createQueryBuilder()->delete(RhuPago::class, 'p')
+                ->where("p.codigoPagoPk IN ({$codigosPagos})")->getQuery()->execute();
+        }
     }
 
     /**

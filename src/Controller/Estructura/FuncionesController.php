@@ -336,7 +336,7 @@ final class FuncionesController
         return $mesTexto;
     }
 
-    public function diasPrestaciones($dateFechaDesde, $dateFechaHasta)
+    public static function diasPrestaciones($dateFechaDesde, $dateFechaHasta)
     {
         $objFunciones = new FuncionesController();
         $intDias = 0;

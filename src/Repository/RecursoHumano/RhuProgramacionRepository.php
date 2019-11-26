@@ -185,6 +185,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $em->getRepository(RhuProgramacionDetalle::class)->eliminarTodoDetalles($arProgramacion);
+
         $arContratos = $em->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select("c")
             ->where("c.codigoGrupoFk = '{$arProgramacion->getCodigoGrupoFk()}'")

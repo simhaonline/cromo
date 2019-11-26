@@ -381,7 +381,6 @@ class PedidoController extends AbstractController
             $arrColumnas=['ID','TIPO','NÚMERO','FECHA','CLIENTE','SECTOR','H','HD','HN','TOTAL','USUARIO','AUT','APR','ANU'];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
-                $hoja->getStyle(1)->getFont()->setBold(true);
                 $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
                 $hoja->getStyle(1)->getFont()->setBold(true);
                 $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));

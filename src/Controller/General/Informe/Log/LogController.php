@@ -200,7 +200,8 @@ class LogController extends Controller {
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $sheet->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
                 $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
-                $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
+                $spreadsheet->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $spreadsheet->getStyle(1)->getFont()->setBold(true);
                 $j++;
             }
             $j = 1;
@@ -212,7 +213,7 @@ class LogController extends Controller {
                     if ($dato instanceof \DateTime) {
                         $dato = $dato->format('Y-m-d');
                     }
-                    $spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setBold(false);
+                    $spreadsheet->getStyle($i)->getFont()->setName('Arial')->setSize(9);
 
                     $sheet->setCellValue($i . $j, $dato);
                     if($arrColumnas[$col]==="fecha" || $arrColumnas[$col]==="accion"){

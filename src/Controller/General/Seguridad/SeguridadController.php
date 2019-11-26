@@ -271,7 +271,8 @@ class SeguridadController extends AbstractController
         $sheet = $spreadsheet->getActiveSheet();
         $i = 'A';
         do {
-            $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
+            $sheet->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+            $sheet->getStyle(1)->getFont()->setBold(true);
             $i++;
         } while ($i !== 'Z');
         $sheet->setCellValue('A1', 'USUARIO');
@@ -286,6 +287,7 @@ class SeguridadController extends AbstractController
         $j = 2;
         $arUsuarios = $this->getDoctrine()->getManager()->getRepository('App:Seguridad\Usuario')->findAll();
         foreach ($arUsuarios as $arUsuario) {
+            $sheet->getStyle($j)->getFont()->setName('Arial')->setSize(9);
             $sheet->setCellValue('A' . $j, $arUsuario->getUsername());
             $sheet->setCellValue('B' . $j, $arUsuario->getNombreCorto());
             $sheet->setCellValue('C' . $j, $arUsuario->getNumeroIdentificacion());

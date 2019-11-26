@@ -136,13 +136,14 @@ class EstadoGuiasController extends Controller
             $arrColumnas = ['GUIA', 'FECHA', 'DOCUMENTO', 'CLIENTE', 'DESTINATARIO', 'DESTINO', 'DESPACHO', 'ENTREGA', 'SOPORTE', 'UND', 'FLETE', 'MANEJO', 'DES', 'ENT', 'NOV'];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
-                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
                 $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
                 $j++;
             }
             $j = 2;
             foreach ($arrGuias as $arrGuia) {
-                //$spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setBold(false);
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
                 $hoja->setCellValue('A' . $j, $arrGuia['codigoGuiaPk']);
                 $hoja->setCellValue('B' . $j, $arrGuia['fechaIngreso']->format('Y-m-d'));
                 $hoja->setCellValue('C' . $j, $arrGuia['documentoCliente']);

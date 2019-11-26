@@ -96,7 +96,7 @@ class AdicionalController extends AbstractController
                                     $arAdicional->setConceptoRel($arPuestoAdicional->getConceptoRel());
                                     $arAdicional->setNumeroTurnos($numeroTurnos);
                                     $arAdicional->setVrTurno($vrTurno);
-                                    $arAdicional->setVrPago($vrPago);
+                                    $arAdicional->setVrPago(round($vrPago));
                                     $em->persist($arAdicional);
                                 }
                             }

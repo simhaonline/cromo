@@ -201,85 +201,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $arProgramacionDetalle->setEmpleadoRel($arContrato->getEmpleadoRel());
                 $arProgramacionDetalle->setContratoRel($arContrato);
                 $arProgramacionDetalle->setVrSalario($arContrato->getVrSalarioPago());
-
-                if ($arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() == 'APR' || $arContrato->getContratoTipoRel()->getCodigoContratoClaseFk() == 'PRA') {
-                    $arProgramacionDetalle->setDescuentoPension(0);
-                    $arProgramacionDetalle->setDescuentoSalud(0);
-                    $arProgramacionDetalle->setPagoAuxilioTransporte(0);
-                }
-                if ($arContrato->getCodigoPensionFk() == 'PEN') {
-                    $arProgramacionDetalle->setDescuentoPension(0);
-                }
-
-                $fechaDesde = $this->fechaDesdeContrato($arProgramacion->getFechaDesde(), $arContrato->getFechaDesde());
-                $fechaHasta = $this->fechaHastaContrato($arProgramacion->getFechaHasta(), $arContrato->getFechaHasta(), $arContrato->getIndefinido());
-                $dias = $fechaDesde->diff($fechaHasta)->days + 1;
-                $arProgramacionDetalle->setFechaDesde($arProgramacion->getFechaDesde());
-                $arProgramacionDetalle->setFechaHasta($arProgramacion->getFechaHasta());
-                $arProgramacionDetalle->setFechaDesdeContrato($fechaDesde);
-                $arProgramacionDetalle->setFechaHastaContrato($fechaHasta);
-                $arrIbc = $em->getRepository(RhuPagoDetalle::class)->ibcMes($fechaDesde->format('Y'), $fechaDesde->format('m'), $arContrato->getCodigoContratoPk());
-                $arProgramacionDetalle->setVrIbcAcumulado($arrIbc['ibc']);
-                $arProgramacionDetalle->setVrDeduccionFondoPensionAnterior($arrIbc['deduccionAnterior']);
-
-                //dias vacaciones
-                $arrVacaciones = $em->getRepository(RhuVacacion::class)->dias($arContrato->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getFechaDesde(), $arProgramacion->getFechaHasta());
-                $diasVacaciones = $arrVacaciones['dias'];
-                if ($diasVacaciones > 0) {
-                    $arProgramacionDetalle->setDiasVacaciones($diasVacaciones);
-                }
-
-                $diasLicencia = 0;
-                $arLicencias = $em->getRepository(RhuLicencia::class)->periodo($arProgramacionDetalle->getFechaDesdeContrato(), $arProgramacionDetalle->getFechaHasta(), $arContrato->getCodigoEmpleadoFk());
-                foreach ($arLicencias as $arLicencia) {
-                    $fechaDesde = $arProgramacionDetalle->getFechaDesdeContrato();
-                    $fechaHasta = $arProgramacionDetalle->getFechaHasta();
-                    if ($arLicencia->getFechaDesde() > $fechaDesde) {
-                        $fechaDesde = $arLicencia->getFechaDesde();
-                    }
-                    if ($arLicencia->getFechaHasta() < $fechaHasta) {
-                        $fechaHasta = $arLicencia->getFechaHasta();
-                    }
-                    $intDias = $fechaDesde->diff($fechaHasta);
-                    $intDias = $intDias->format('%a');
-                    $intDias += 1;
-                    $diasLicencia += $intDias;
-                }
-                if ($diasLicencia > 0) {
-                    $arProgramacionDetalle->setDiasLicencia($diasLicencia);
-                }
-
-                $diasIncapacidad = 0;
-                $arIncapacidades = $em->getRepository(RhuIncapacidad::class)->periodo($arProgramacionDetalle->getFechaDesdeContrato(), $arProgramacionDetalle->getFechaHasta(), $arContrato->getCodigoEmpleadoFk());
-                foreach ($arIncapacidades as $arIncapacidad) {
-                    $fechaDesde = $arProgramacionDetalle->getFechaDesdeContrato();
-                    $fechaHasta = $arProgramacionDetalle->getFechaHasta();
-                    if ($arIncapacidad->getFechaDesde() > $fechaDesde) {
-                        $fechaDesde = $arIncapacidad->getFechaDesde();
-                    }
-                    if ($arIncapacidad->getFechaHasta() < $fechaHasta) {
-                        $fechaHasta = $arIncapacidad->getFechaHasta();
-                    }
-                    $intDias = $fechaDesde->diff($fechaHasta);
-                    $intDias = $intDias->format('%a');
-                    $intDias += 1;
-                    $diasIncapacidad += $intDias;
-                }
-                if ($diasIncapacidad > 0) {
-                    $arProgramacionDetalle->setDiasIncapacidad($diasIncapacidad);
-                }
-
-                $diasNovedad = $diasIncapacidad + $diasLicencia + $diasVacaciones;
-                $dias = $dias - $diasNovedad;
-                $horas = $dias * $arContrato->getFactorHorasDia();
-                $arProgramacionDetalle->setDias($dias);
-                $arProgramacionDetalle->setDiasTransporte($dias);
-                $arProgramacionDetalle->setHorasDiurnas($horas);
-                $vrDia = $arContrato->getVrSalarioPago() / 30;
-                $vrHora = $vrDia / $arContrato->getFactorHorasDia();
-                $arProgramacionDetalle->setFactorHorasDia($arContrato->getFactorHorasDia());
-                $arProgramacionDetalle->setVrDia($vrDia);
-                $arProgramacionDetalle->setVrHora($vrHora);
+                $em->getRepository(RhuProgramacionDetalle::class)->asignarValores($arProgramacionDetalle, $arProgramacion, $arContrato);
                 $em->persist($arProgramacionDetalle);
             }
         }
@@ -668,7 +590,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         }
     }
 
-    private function fechaHastaContrato($fechaHastaPeriodo, $fechaHastaContrato, $indefinido)
+    public function fechaHastaContrato($fechaHastaPeriodo, $fechaHastaContrato, $indefinido)
     {
         $fechaHasta = $fechaHastaContrato;
         if ($indefinido) {
@@ -682,7 +604,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         return $fechaHasta;
     }
 
-    private function fechaDesdeContrato($fechaDesdePeriodo, $fechaDesdeContrato)
+    public function fechaDesdeContrato($fechaDesdePeriodo, $fechaDesdeContrato)
     {
         $fechaDesde = $fechaDesdeContrato;
         if ($fechaDesdeContrato < $fechaDesdePeriodo) {

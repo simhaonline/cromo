@@ -339,6 +339,22 @@ class ContratoController extends AbstractController
     /**
      * @param Request $request
      * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     * @Route("recursohumano/administracion/recurso/contrato/informacion/{codigoContrato}", name="recursohumano_administracion_recurso_contrato_informacion")
+     */
+    public function informacionContrato(Request $request, $codigoContrato)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arContrato = $em->getRepository(RhuContrato::class)->find($codigoContrato);
+        return $this->render('recursohumano/administracion/recurso/contrato/informacion.html.twig', [
+            'arContrato' => $arContrato,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @Route("recursohumano/administracion/recurso/contrato/nuevo/{id}", name="recursohumano_administracion_recurso_contrato_nuevo")
      */

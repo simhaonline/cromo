@@ -117,7 +117,10 @@
                                 <td>{{ arProgramacionDetalle.codigoEmpleadoFk }}</td>
                                 <td>{{ arProgramacionDetalle.numeroIdentificacion }}</td>
                                 <td>{{ arProgramacionDetalle.nombreCorto }}</td>
-                                <td>{{ arProgramacionDetalle.codigoContratoFk }}</td>
+                                <td>
+                                    <a href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_informacion',
+                                           { 'codigoContrato':arProgramacionDetalle.codigoContratoFk  }) }}', 'Información contrato', 600, 900)" title="información contrato">{{ arProgramacionDetalle.codigoContratoFk }}</a>
+                                </td>
                                 <td>{{ arProgramacionDetalle.fechaDesdeContrato | date('Y-m-d') }}</td>
                                 <td>{{ arProgramacionDetalle.fechaHastaContrato | date('Y-m-d') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>

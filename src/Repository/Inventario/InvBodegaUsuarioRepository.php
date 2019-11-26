@@ -3,6 +3,7 @@
 namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvBodegaUsuario;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -36,5 +37,19 @@ class InvBodegaUsuarioRepository extends ServiceEntityRepository
             ->addSelect('bd.codigoBodegaFk')
             ->addSelect('bd.usuario')
             ->where('bd.codigoBodegaUsuarioPk IS NOT NULL');
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $respuesta = '';
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $this->getEntityManager()->getRepository(InvBodegaUsuario::class)->find($codigo);
+                if ($arRegistro) {
+                    $this->getEntityManager()->remove($arRegistro);
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
     }
 }

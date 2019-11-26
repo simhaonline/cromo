@@ -26,17 +26,23 @@ class BodegaUsuarioController extends AbstractController
     /**
      * @Route("/inventario/administracion/inventario/bodegausuario/lista", name="inventario_administracion_inventario_bodegausuario_lista")
      */
-    public function lista(Request $request,PaginatorInterface $paginator)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
+        $em = $this->getDoctrine()->getManager();
         $session = new Session();
         $form = $this->createFormBuilder()
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $session->set('filtroInvNombrePrecio', $form->get('txtNombre')->getData());
-            $session->set('filtroInvTipoPrecio', $form->get('chkTipoPrecio')->getData());
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(InvBodegaUsuario::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('inventario_administracion_inventario_bodegausuario_lista'));
+            }
         }
+
         $query = $this->getDoctrine()->getRepository(InvBodegaUsuario::class)->lista();
         $arBodegaUsuario = $paginator->paginate($query, $request->query->getInt('page', 1), 50);
         return $this->render('inventario/administracion/inventario/bodegaUsuario/lista.html.twig', [
@@ -54,7 +60,7 @@ class BodegaUsuarioController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $arBodegaUsuario = new InvBodegaUsuario();
-        if($id != 0){
+        if ($id != 0) {
             $arBodegaUsuario = $em->getRepository(InvBodegaUsuario::class)->find($id);
         }
         $arrUsuarioRel = ['class' => Usuario::class,
@@ -69,11 +75,11 @@ class BodegaUsuarioController extends AbstractController
                     ->orderBy('er.nombre');
             }, 'required' => true,
             'choice_label' => 'nombre'];
-        if($id != 0){
+        if ($id != 0) {
             $arUser = $em->getRepository(Usuario::class)->findOneBy(['username' => $arBodegaUsuario->getUsuario()]);
             $arrUsuarioRel['data'] = $em->getReference(Usuario::class, $arUser->getId());
         }
-        if($id != 0){
+        if ($id != 0) {
             $arrBodegaRel['data'] = $em->getReference(InvBodega::class, $arBodegaUsuario->getCodigoBodegaFk());
         }
         $form = $this->createFormBuilder()

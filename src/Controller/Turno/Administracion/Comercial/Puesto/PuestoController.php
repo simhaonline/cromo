@@ -12,6 +12,7 @@ use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurPuestoAdicional;
 use App\Form\Type\Turno\PuestoAdicionalType;
 use App\Form\Type\Turno\PuestoType;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -30,15 +31,11 @@ class PuestoController extends AbstractController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/turno/administracion/comercial/puesto/lista", name="turno_administracion_comercial_puesto_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-//            ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroInvCodigoTercero'), 'attr' => ['class' => 'form-control']])
-//            ->add('cboBodega', EntityType::class, $em->getRepository(InvBodega::class)->llenarCombo())
-//            ->add('txtLote', TextType::class, array('required' => false))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->getForm();

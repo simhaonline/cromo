@@ -1,12 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-    </script>
-    <div class="row">
-        <!-- /.col-lg-12 -->
+    {#{{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}#}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_administracion_comercial_puesto_lista') }}">Volver</a>&nbsp;&nbsp;
+        </div>
     </div>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
@@ -39,7 +38,7 @@
             <td class="titulo"><b>ESTADO INACTIVO: </b></td>
             <td class="td-in-well">{{ arPuesto.estadoInactivo ?"INACTIVO": "ACTIVO" }}</td>
         </tr>
-
+        <br/><br/>
     </table>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#puestos" data-toggle="tab">Puestos</a></li>
@@ -54,7 +53,7 @@
                             <th>COD</th>
                             <th>CONCEPTO</th>
                             <th>INCLUIR DESCANSO</th>
-                            <th nu>VALOR</th>
+                            <th>VALOR</th>
                             <th></th>
                             <th class="text-center" title="SELECCIONAR TODOS LOS PUESTOS"><input type="checkbox"
                                                                                                  name="ChkSeleccionarTodos"
@@ -69,23 +68,15 @@
                                 <td>{{ arPuestoAdicional.concepto }}</td>
                                 <td>{{ arPuestoAdicional.incluirDescanso?"SI":"NO" }}</td>
                                 <td class="numero">{{ arPuestoAdicional.valor }}</td>
-                                <td></td>
-                                <td></td>
-                                {#<td style="text-align: center;">#}
-                                    {#<a href="javascript:abrirVentana3('{{ path('turno_administracion_comercial_puesto_nuevo', {'id': arPuesto.codigoPuestoPk, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Editar puesto', 600, 1200) "><i#}
-                                                {#class="fa fa-edit" style="color: black;font-size: large;"></i>#}
-                                    {#</a>#}
-                                {#</td>#}
-                                {#<td style="text-align: center">#}
-                                    {#<a href="{{ path('turno_administracion_comercial_puesto_detalle', { 'id': arPuesto.codigoPuestoPk }) }}"#}
-                                       {#target="_blank">#}
-                                        {#<i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>#}
-                                    {#</a>#}
-                                {#</td>#}
-                                {#<td class="text-center">#}
-                                    {#<input type="checkbox" name="ChkSeleccionar[]"#}
-                                           {#value="{{ arPuesto.codigoPuestoPk }}"/>#}
-                                {#</td>#}
+                                <td style="text-align: center;">
+                                    <a href="javascript:abrirVentana3('{{ path('turno_administracion_comercial_puesto_adicional_nuevo', {'codigoPuesto': arPuesto.codigoPuestoPk, 'id': arPuestoAdicional.codigoPuestoAdicionalPk}) }}', 'Editar adicional', 600, 1200) "><i
+                                                class="fa fa-edit" style="color: black;font-size: large;"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="ChkSeleccionar[]"
+                                           value="{{ arPuestoAdicional.codigoPuestoAdicionalPk }}"/>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tr>

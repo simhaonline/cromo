@@ -1,0 +1,20 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Adicional nuevo</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_apellido1" class="col-sm-2 control-label">Periodo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.adicionalPeriodo, { 'attr': {'class': 'form-control to-select-2'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-toolbar" style="float: right">
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

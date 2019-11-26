@@ -79,8 +79,8 @@
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arAdicionales) }}
     </div>
-    <div class="btn-group" style="float: right; margin-right: 5px !important;">
-        {#{{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}#}
+    <div class="btn-group" style="float: right">
+        <a href="javascript:abrirVentana3('{{ path('turno_utilidad_operacion_adicional_adicional_transferir') }}', 'transferirPagoAdicional', 600, 900)"class="btn btn-default btn-sm">Transferir</a>
     </div>
     {{ form_end(form) }}
     <br /><br /><br />

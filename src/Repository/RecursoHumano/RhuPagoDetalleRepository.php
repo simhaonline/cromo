@@ -85,7 +85,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->select('SUM(pd.vrIngresoBaseCotizacion) as ibc')
             ->addSelect('SUM(pd.horas) as horas')
             ->leftJoin('pd.pagoRel', 'p')
-            ->where("p.estadoEgreso = 1")
+            ->where("p.estadoAprobado = 1")
             ->andWhere('p.codigoContratoFk = ' . $codigoContrato)
             ->andWhere("p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaHasta <= '" . $fechaHasta . "'");
         $arrayResultado = $query->getQuery()->getSingleResult();
@@ -101,7 +101,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->select('SUM(pd.vrPago) as deduccionFondo')
             ->leftJoin('pd.pagoRel', 'p')
             ->leftJoin('pd.conceptoRel', 'c')
-            ->where("p.estadoEgreso = 1")
+            ->where("p.estadoAprobado = 1")
             ->andWhere('p.codigoContratoFk = ' . $codigoContrato)
             ->andWhere("p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaHasta <= '" . $fechaHasta . "'")
             ->andWhere("c.fondoSolidaridadPensional = 1");

@@ -77,8 +77,10 @@ class FormatoController extends ControllerListenerGeneral
                 return $this->redirect($this->generateUrl('general_administracion_calidad_formato_lista'));
             }
         }
+        $etiquetas = json_decode($arCalidadFormato->getEtiquetas());
         return $this->render('general/administracion/calidad/nuevo.html.twig', [
             'arCalidadFormato' => $arCalidadFormato,
+            'etiquetas'=>$etiquetas,
             'form' => $form->createView()
         ]);
     }

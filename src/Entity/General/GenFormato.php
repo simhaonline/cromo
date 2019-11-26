@@ -67,6 +67,11 @@ class GenFormato
     private $codigo;
 
     /**
+     * @ORM\Column(name="etiquetas", type="text", nullable=true)
+     */
+    private $etiquetas;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -242,7 +247,21 @@ class GenFormato
         $this->codigo = $codigo;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEtiquetas()
+    {
+        return $this->etiquetas;
+    }
 
+    /**
+     * @param mixed $etiquetas
+     */
+    public function setEtiquetas($etiquetas): void
+    {
+        $this->etiquetas = $etiquetas;
+    }
 
 }
 

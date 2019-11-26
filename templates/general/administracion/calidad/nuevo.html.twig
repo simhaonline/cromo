@@ -19,15 +19,22 @@
                 <div class="col-sm-4">
                     {{ form_widget(form.version, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Modelo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.codigoModeloFk, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
                 <label for="form_fechaVence" class="col-sm-2 control-label">Código:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigo) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Contedido:</label>
+                <div class="col-sm-8">
+                    {{ form_widget(form.contenido) }}
+                </div>
+                <div class="col-sm-2">
+                    <strong class="control-label">Etiquetas:</strong>
+                    <br>
+                    {% for etiqueta in etiquetas %}
+                        <spam><em>{{ etiqueta.etiqueta }}</em> <small>{{ etiqueta.descripcion }}</small></spam><br>
+                    {% endfor %}
                 </div>
             </div>
         </div>

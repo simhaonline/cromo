@@ -115,25 +115,9 @@ class Contrato extends \FPDF
         $patron28 = '/#s/';
         $patron29 = '/#t/';
         $patron30 = '/#u/';
-        $patron31 = '/#v/';
-        $patron32 = '/#w/';
-        $patron33 = '/#x/';
-        $patron34 = '/#y/';
-        $patron35 = '/#z/';
-        $patron36 = '/##/';
-        $patron37 = '/#./';
-        $patron38 = '/#-/';
-        $patron39 = '/dp/';
-        $patron40 = '/#_/';
-        $patron41 = '/#,/';
-        $patron42 = '/#@/';
 
         //reemplazar en la cadena
         $cadenaCambiada = preg_replace($patron1,    self::$parametros['#1'], $cadena);
-        $cadenaCambiada = preg_replace($patron38,   self::$parametros['#-'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron40,   self::$parametros['#_'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron41,   self::$parametros['#,'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron42,   self::$parametros['#@'], $cadenaCambiada);
         $cadenaCambiada = preg_replace($patron2,    self::$parametros['#2'], $cadenaCambiada);
         $cadenaCambiada = preg_replace($patron3,    self::$parametros['#3'], $cadenaCambiada);
         $cadenaCambiada = preg_replace($patron4,    self::$parametros['#4'], $cadenaCambiada);
@@ -163,14 +147,6 @@ class Contrato extends \FPDF
         $cadenaCambiada = preg_replace($patron28,   self::$parametros['#s'], $cadenaCambiada);
         $cadenaCambiada = preg_replace($patron29,   self::$parametros['#t'], $cadenaCambiada);
         $cadenaCambiada = preg_replace($patron30,   self::$parametros['#u'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron31,   self::$parametros['#v'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron32,   self::$parametros['#w'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron33,   self::$parametros['#x'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron34,   self::$parametros['#y'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron35,   self::$parametros['#z'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron36,   self::$parametros['##'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron37,   self::$parametros['#.'], $cadenaCambiada);
-        $cadenaCambiada = preg_replace($patron39,   self::$parametros['dp'], $cadenaCambiada);
 
         $pdf->MultiCell(0, 5, $cadenaCambiada);
     }

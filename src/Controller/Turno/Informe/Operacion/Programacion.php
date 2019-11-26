@@ -80,12 +80,14 @@ class Programacion extends AbstractController
             $arrColumnas=[ 'cliente', 'puesto','programacion','empleado','numero identificacion','nombre empleado','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','H','P.D',];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
-                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
                 $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
                 $j++;
             }
             $j = 2;
             foreach ($arProgramaciones as $arProgramacion) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
                 $hoja->setCellValue('A' . $j, $arProgramacion['cliente']);
                 $hoja->setCellValue('B' . $j, $arProgramacion['puestoNombre']);
                 $hoja->setCellValue('C' . $j, $arProgramacion['codigoProgramacionPk']);

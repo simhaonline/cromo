@@ -97,12 +97,14 @@ class PendiendeFacturaraController extends AbstractController
             $arrColumnas = ['CÓDIG0','NUMERO PEDIDO','FECHA PEDIDO', 'FECHA PROG', 'NIT', 'CLIENTE', 'SECTOR', 'AUT', 'PRO','FAC','ANU','C_COSTO','PUESTO','SERVICIO','MODALIDAD','PERIODO','PLANTILLA','DESDE','HASTA','CANT','LU','MA','MI'.'JU','VI','SA','DO','FE', 'H','HD','HN','HP','HDP','HNP','DIAS','IVA','VALOR','VR.PEND','TOTAL' ];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
-                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
                 $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
                 $j++;
             }
             $j = 2;
             foreach ($arPendientesFacturas as $arPendientesFactura) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
                 $hoja->setCellValue('A' . $j, $arPendientesFactura['codigoPedidoDetallePk']);
                 $hoja->setCellValue('B' . $j, $arPendientesFactura['pedidoTipoNombre']);
                 $hoja->setCellValue('C' . $j, $arPendientesFactura['pedidoFecha']);

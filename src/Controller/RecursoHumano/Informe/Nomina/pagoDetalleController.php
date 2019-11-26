@@ -126,12 +126,14 @@ class pagoDetalleController extends  Controller
             $arrColumnas = ['ID', 'TIPO', 'NUMERO', 'COD', 'NI', 'EMPLEADO', 'GRUPO', 'COD', 'CONCEPTO', 'DESDE', 'HASTA', 'VR_PAGO', 'VR_PAGO_O', 'H', 'D', '%', 'IBC', 'IBP', 'CRE', 'PEN', 'SAL'];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
-                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
                 $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
                 $j++;
             }
             $j = 2;
             foreach ($arPagoDetalles as $arPagoDetalle) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
                 $hoja->setCellValue('A' . $j, $arPagoDetalle['codigoPagoDetallePk']);
                 $hoja->setCellValue('B' . $j, $arPagoDetalle['pagoTipoNombre']);
                 $hoja->setCellValue('C' . $j, $arPagoDetalle['pagoNumero']);

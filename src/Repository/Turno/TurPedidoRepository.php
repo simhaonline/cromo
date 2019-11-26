@@ -560,7 +560,7 @@ class TurPedidoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("p.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->orderBy('p.estadoAprobado', 'ASC');
+        $queryBuilder->orderBy('p.fecha', 'DESC');
         $queryBuilder->addOrderBy('p.numero', 'ASC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();

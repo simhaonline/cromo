@@ -588,6 +588,10 @@ class TurContratoRepository extends ServiceEntityRepository
                     }
 
                     $em->flush();
+                    $arPedidoDetalles = $em->getRepository(TurPedidoDetalle::class)->findBy(array('codigoPedidoFk' => $arPedido->getCodigoPedidoPk(), 'compuesto' => 1));
+                    foreach ($arPedidoDetalles as $arPedidoDetalle) {
+                        $em->getRepository(TurPedidoDetalle::class)->liquidar($arPedidoDetalle->getCodigoPedidoDetallePk());
+                    }
                     $em->getRepository(TurPedido::class)->liquidar($arPedido);
                 }
             }

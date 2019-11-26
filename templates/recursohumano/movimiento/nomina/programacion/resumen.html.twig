@@ -10,11 +10,15 @@
                     <td class="titulo">CODIGO:</td>
                     <td class="td-in-well">{{ arPago.codigoPagoPk | default('') }}</td>
                     <td class="titulo"></td>
+                    <td class="td-in-well"></td>
+                    <td class="titulo"></td>
                     <td class="td-in-well numero" style="text-transform: uppercase;"></td>
                 </tr>
                 <tr>
                     <td class="titulo">EMPLEADO:</td>
                     <td class="td-in-well">{{ arProgramacionDetalle.empleadoRel.nombreCorto }}</td>
+                    <td class="titulo">TIEMPO:</td>
+                    <td class="td-in-well">{{ arPago.tiempoRel.nombre | default() }}</td>
                     <td class="titulo">SALARIO:</td>
                     <td class="td-in-well numero"
                         style="text-transform: uppercase;">{{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
@@ -29,6 +33,8 @@
                             / {{ arProgramacionDetalle.fechaHastaContrato | date('Y-m-d') }}
                         {% endif %}
                     </td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well"></td>
                     <td class="titulo">CARGO:</td>
                     <td class="td-in-well"
                         style="text-transform: uppercase;">{{ arProgramacionDetalle.contratoRel.cargoRel.nombre | default('') }}</td>
@@ -36,6 +42,8 @@
                 <tr>
                     <td class="titulo">PERIODO:</td>
                     <td class="td-in-well">{{ arProgramacionDetalle.fechaDesde | date('Y-m-d') ~ ' / ' ~ arProgramacionDetalle.fechaHasta | date('Y-m-d') }}</td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well"></td>
                     <td class="titulo">NETO:</td>
                     <td class="td-in-well numero"
                         style="text-transform: uppercase;">{{ arProgramacionDetalle.vrNeto | number_format(0, '.', ',') }}</td>
@@ -47,13 +55,12 @@
     <table width="100%" class="table table-condensed table-bordered tabla-datos">
         <thead>
         <tr>
-            <th>ID</th>
-            <th title="Codigo del concepto">COD</th>
+            <th title="">COD</th>
             <th title="Nombre del concepto">CONCEPTO</th>
             <th title="Mensaje opciones del pago">DETALLE</th>
-            <th>%</th>
-            <th>H</th>
-            <th>D</th>
+            <th title="Porcentaje">%</th>
+            <th title="Horas">H</th>
+            <th title="Dias">D</th>
             <th title="Valor de la hora">VR.HORA</th>
             <th title="Operación">OP</th>
             <th>DEVENGADO</th>
@@ -69,7 +76,6 @@
         {% set deduccion = 0 %}
         {% for arPagoDetalle in arPagoDetalles %}
             <tr>
-                <td>{{ arPagoDetalle.codigoPagoDetallePk }}</td>
                 <td>{{ arPagoDetalle.codigoConceptoFk }}</td>
                 <td>{{ arPagoDetalle.nombre }}</td>
                 <td>{{ arPagoDetalle.detalle }}</td>
@@ -89,7 +95,7 @@
             {% set deduccion = deduccion + arPagoDetalle.vrDeduccion %}
         {% endfor %}
         <tr>
-            <td colspan="9"></td>
+            <td colspan="8"></td>
             <td class="numero">{{ devengado |number_format(0, '.', ',') }} </td>
             <td class="numero">{{ deduccion |number_format(0, '.', ',') }} </td>
             <td class="numero">{{ ibp |number_format(0, '.', ',') }} </td>

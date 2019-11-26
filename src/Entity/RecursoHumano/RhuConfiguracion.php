@@ -39,6 +39,11 @@ class RhuConfiguracion
     private $codigoConceptoVacacionFk;
 
     /**
+     * @ORM\Column(name="codigo_concepto_prima_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoPrimaFk;
+
+    /**
      * @ORM\Column(name="vr_auxilio_transporte", type="float", nullable=true)
      */
     private $vrAuxilioTransporte;
@@ -939,6 +944,22 @@ class RhuConfiguracion
     public function setCodigoConceptoAnticipoFk($codigoConceptoAnticipoFk): void
     {
         $this->codigoConceptoAnticipoFk = $codigoConceptoAnticipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoPrimaFk()
+    {
+        return $this->codigoConceptoPrimaFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoPrimaFk
+     */
+    public function setCodigoConceptoPrimaFk($codigoConceptoPrimaFk): void
+    {
+        $this->codigoConceptoPrimaFk = $codigoConceptoPrimaFk;
     }
 
 

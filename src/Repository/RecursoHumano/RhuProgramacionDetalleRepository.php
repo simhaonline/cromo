@@ -77,6 +77,7 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.fechaDesdeContrato')
             ->addSelect('pd.fechaHastaContrato')
             ->addSelect('pd.vrSalario')
+            ->addSelect('pd.vrSalarioPrima')
             ->addSelect('pd.vrNeto')
             ->addSelect('pd.vrAnticipo')
             ->addSelect('pd.horasDiurnas')
@@ -93,6 +94,8 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.horasRecargoFestivoDiurno')
             ->addSelect('pd.horasRecargoFestivoNocturno')
             ->addSelect('pd.codigoEmpleadoFk')
+            ->addSelect('pd.dias')
+            ->addSelect('pd.diasAusentismo')
             ->leftJoin('pd.empleadoRel','e')
             ->where("pd.codigoProgramacionFk = {$id}")->getQuery()->execute();
     }

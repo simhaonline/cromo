@@ -235,6 +235,21 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         return $ibp;
     }
 
+    public function ibpConceptos($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT SUM(pd.vrIngresoBasePrestacion) as ibp FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p JOIN pd.conceptoRel pc "
+            . "WHERE pc.comision = 1 AND p.estadoAprobado = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesdeContrato >= '" . $fechaDesde . "' AND p.fechaDesdeContrato <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $ibp = $arrayResultado[0]['ibp'];
+        if ($ibp == null) {
+            $ibp = 0;
+        }
+        return $ibp;
+    }
+
     public function recargosNocturnosFecha($fechaDesde, $fechaHasta, $codigoContrato)
     {
         $em = $this->getEntityManager();

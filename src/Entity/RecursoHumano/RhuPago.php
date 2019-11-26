@@ -214,6 +214,11 @@ class RhuPago
     private $usuario;
 
     /**
+     * @ORM\Column(name="codigo_tiempo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoTiempoFk;
+
+    /**
      * @ORM\Column(name="codigo_soporte_contrato_fk", type="integer", nullable=true)
      */
     private $codigoSoporteContratoFk = null;
@@ -279,15 +284,21 @@ class RhuPago
     protected $liquidacionRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="pagoRel" )
-     */
-    protected $pagosDetallesPagoRel;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenBanco", inversedBy="pagosBancoRel")
      * @ORM\JoinColumn(name="codigo_banco_fk",referencedColumnName="codigo_banco_pk")
      */
     protected $bancoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuTiempo", inversedBy="pagosTiempoRel")
+     * @ORM\JoinColumn(name="codigo_tiempo_fk",referencedColumnName="codigo_tiempo_pk")
+     */
+    protected $tiempoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="pagoRel" )
+     */
+    protected $pagosDetallesPagoRel;
 
     /**
      * @return array
@@ -1135,6 +1146,38 @@ class RhuPago
     public function setBancoRel($bancoRel): void
     {
         $this->bancoRel = $bancoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTiempoFk()
+    {
+        return $this->codigoTiempoFk;
+    }
+
+    /**
+     * @param mixed $codigoTiempoFk
+     */
+    public function setCodigoTiempoFk($codigoTiempoFk): void
+    {
+        $this->codigoTiempoFk = $codigoTiempoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTiempoRel()
+    {
+        return $this->tiempoRel;
+    }
+
+    /**
+     * @param mixed $tiempoRel
+     */
+    public function setTiempoRel($tiempoRel): void
+    {
+        $this->tiempoRel = $tiempoRel;
     }
 
 

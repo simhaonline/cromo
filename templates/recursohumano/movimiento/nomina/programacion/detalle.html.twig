@@ -83,7 +83,14 @@
                             <th>DESDE</th>
                             <th>HASTA</th>
                             <th>SALARIO</th>
-                            <th title="Valor anticipo">ANT</th>
+                            {% if arProgramacion.codigoPagoTipoFk == 'PRI' %}
+                                <th>SAL_PRI</th>
+                                <th title="Ausentismos">AU</th>
+                            {% endif %}
+                            {% if arProgramacion.codigoPagoTipoFk == 'PRI' %}
+                                <th title="Valor anticipo">ANT</th>
+                            {% endif %}
+                            <th>DIAS</th>
                             <th title="Horas diurnas">D</th>
                             <th title="Horas descanso">DS</th>
                             <th title="Horas nocturnas">N</th>
@@ -114,7 +121,14 @@
                                 <td>{{ arProgramacionDetalle.fechaDesdeContrato | date('Y-m-d') }}</td>
                                 <td>{{ arProgramacionDetalle.fechaHastaContrato | date('Y-m-d') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.vrSalario | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arProgramacionDetalle.vrAnticipo | number_format(0, '.', ',') }}</td>
+                                {% if arProgramacion.codigoPagoTipoFk == 'PRI' %}
+                                    <td style="text-align: right">{{ arProgramacionDetalle.vrSalarioPrima | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ arProgramacionDetalle.diasAusentismo | number_format(0, '.', ',') }}</td>
+                                {% endif %}
+                                {% if arProgramacion.codigoPagoTipoFk == 'PRI' %}
+                                    <td style="text-align: right">{{ arProgramacionDetalle.vrAnticipo | number_format(0, '.', ',') }}</td>
+                                {% endif %}
+                                <td style="text-align: right">{{ arProgramacionDetalle.dias | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasDiurnas | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasDescanso | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasNocturnas | number_format(0, '.', ',') }}</td>

@@ -51,6 +51,11 @@ class RhuTiempo
     protected $contratosTiempoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="tiempoRel")
+     */
+    protected $pagosTiempoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTiempoPk()
@@ -161,4 +166,23 @@ class RhuTiempo
     {
         $this->orden = $orden;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosTiempoRel()
+    {
+        return $this->pagosTiempoRel;
+    }
+
+    /**
+     * @param mixed $pagosTiempoRel
+     */
+    public function setPagosTiempoRel($pagosTiempoRel): void
+    {
+        $this->pagosTiempoRel = $pagosTiempoRel;
+    }
+
+
+
 }

@@ -63,9 +63,19 @@ class RhuProgramacionDetalle
     private $diasIncapacidad = 0;
 
     /**
+     * @ORM\Column(name="dias_ausentismo", type="integer", nullable=true, options={"default": 0})
+     */
+    private $diasAusentismo = 0;
+
+    /**
      * @ORM\Column(name="vr_salario", type="float")
      */
     private $vrSalario = 0;
+
+    /**
+     * @ORM\Column(name="vr_salario_prima", type="float")
+     */
+    private $vrSalarioPrima = 0;
 
     /**
      * @ORM\Column(name="vr_neto", type="float", nullable=true)
@@ -900,6 +910,38 @@ class RhuProgramacionDetalle
     public function setVrAnticipo($vrAnticipo): void
     {
         $this->vrAnticipo = $vrAnticipo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSalarioPrima()
+    {
+        return $this->vrSalarioPrima;
+    }
+
+    /**
+     * @param mixed $vrSalarioPrima
+     */
+    public function setVrSalarioPrima($vrSalarioPrima): void
+    {
+        $this->vrSalarioPrima = $vrSalarioPrima;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasAusentismo()
+    {
+        return $this->diasAusentismo;
+    }
+
+    /**
+     * @param mixed $diasAusentismo
+     */
+    public function setDiasAusentismo($diasAusentismo): void
+    {
+        $this->diasAusentismo = $diasAusentismo;
     }
 
 

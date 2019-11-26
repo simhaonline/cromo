@@ -22,8 +22,6 @@
             <td class="td-in-well">{{ arContrato.fechaHasta | date('Y-m-d') }}</td>
             <td class="titulo">GRUPO PAGO:</td>
             <td class="td-in-well">{{ arContrato.grupoRel.nombre|default('SIN GRUPO PAGO') }}</td>
-            <td class="titulo">SALARIO</td>
-            <td class="td-in-well numero">{{ arContrato.vrSalario |  number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">CLASIFICACIÓN RIESGO:</td>

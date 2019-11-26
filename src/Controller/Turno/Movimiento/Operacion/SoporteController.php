@@ -285,18 +285,20 @@ class SoporteController extends ControllerListenerGeneral
             $arrColumnas = ['COD', 'NIT', 'EMPLEADO', 'CT',
                 'D', 'DT', 'NOV','IND', 'ING','RET', 'INC', 'LIC', 'LNR', 'AUS', 'VAC',
                 'H', 'DS', 'HD', 'HN','HFD', 'HFN','HED','HEN','HEFD','HEFN','RN','RFD','RFN','R',
-                'DSP',
-                'SALARIO', 'DEV_PAC', 'VR_SALARIO','TTE', 'A_DP', 'A1', 'TOTAL'];
+                'DSP','SALARIO', 'DEV_PAC', 'VR_SALARIO','TTE', 'A_DP', 'A1',
+                'HD_R','D_R', 'N_R','FD_R','FN_R','EFN_R','R_R','RN_R','TOTAL'];
 
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
-                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
                 $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
                 $j++;
             }
             $j = 2;
             foreach ($arSoportes as $soporte) {
                 $total = $soporte['vrHoras'] + $soporte['vrAuxilioTransporte'] + $soporte['vrAdicionalDevengadoPactado'] + $soporte['vrAdicional1'];
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
                 $hoja->setCellValue('A' . $j, $soporte['codigoEmpleadoFk']);
                 $hoja->setCellValue('B' . $j, $soporte['numeroIdentificacion']);
                 $hoja->setCellValue('C' . $j, $soporte['empleado']);
@@ -333,7 +335,15 @@ class SoporteController extends ControllerListenerGeneral
                 $hoja->setCellValue('AH' . $j, $soporte['vrAuxilioTransporte']);
                 $hoja->setCellValue('AI' . $j, $soporte['vrAdicionalDevengadoPactado']);
                 $hoja->setCellValue('AJ' . $j, $soporte['vrAdicional1']);
-                $hoja->setCellValue('AK' . $j, $total);
+                $hoja->setCellValue('AK' . $j, $soporte['horasDescansoReales']);
+                $hoja->setCellValue('AL' . $j, $soporte['horasDiurnasReales']);
+                $hoja->setCellValue('AM' . $j, $soporte['horasNocturnasReales']);
+                $hoja->setCellValue('AN' . $j, $soporte['horasFestivasDiurnasReales']);
+                $hoja->setCellValue('AO' . $j, $soporte['horasFestivasNocturnasReales']);
+                $hoja->setCellValue('AP' . $j, $soporte['horasExtrasFestivasNocturnasReales']);
+                $hoja->setCellValue('AQ' . $j, $soporte['horasRecargoReales']);
+                $hoja->setCellValue('AR' . $j, $soporte['horasRecargoNocturnoReales']);
+                $hoja->setCellValue('AS' . $j, $total);
 
                 $j++;
             }

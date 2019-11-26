@@ -580,7 +580,8 @@ class MigracionController extends Controller
                     codigo_ciudad_contrato_fk,
                     codigo_ciudad_labora_fk,
                     codigo_centro_trabajo_fk,
-                    auxilio_transporte
+                    auxilio_transporte,
+                    turno_fijo_ordinario
                   FROM rhu_contrato 
                   left join rhu_contrato_tipo on rhu_contrato.codigo_contrato_tipo_fk = rhu_contrato_tipo.codigo_contrato_tipo_pk
                   left join rhu_contrato_clase on rhu_contrato_clase.codigo_contrato_clase_pk=rhu_contrato.codigo_contrato_clase_fk
@@ -629,6 +630,7 @@ class MigracionController extends Controller
                 $arContrato->setSubtipoCotizanteRel($em->getReference(RhuSubtipoCotizante::class, $row['codigo_subtipo_cotizante_fk']));
                 $arContrato->setSalarioIntegral($row['salario_integral']);
                 $arContrato->setAuxilioTransporte($row['auxilio_transporte']);
+                $arContrato->setTurnoFijo($row['turno_fijo_ordinario']);
                 $arContrato->setCiudadLaboraRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_labora_fk']));
                 $arContrato->setCiudadContratoRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_contrato_fk']));
                 $arEntidadSalud = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_salud_externo']]);

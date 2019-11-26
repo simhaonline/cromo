@@ -49,7 +49,6 @@ final class General
             $arrColumnas = array_keys($arrDatos[0]);
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $sheet->getColumnDimension($i)->setAutoSize(true);
-                $sheet->getStyle(1)->getFont()->setBold(true);
                 $sheet->getStyle(1)->getFont()->setName('Arial')->setSize(9);
                 $sheet->getStyle(1)->getFont()->setBold(true);
                 $campo = strpos($arrColumnas[$j], 'Pk') !== false ? 'ID' : $arrColumnas[$j];

@@ -82,6 +82,18 @@ class CarIngresoDetalle
     private $detalle;
 
     /**
+     * @ORM\Column(name="codigo_centro_costo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCentroCostoFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCentroCosto", inversedBy="ingresosDetallesCentroCostoRel")
+     * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
+     */
+    protected $centroCostoRel;
+
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarIngreso" , inversedBy="ingresoDetallesIngresoRel")
      * @ORM\JoinColumn(name="codigo_ingreso_fk" , referencedColumnName="codigo_ingreso_pk")
      */
@@ -110,6 +122,22 @@ class CarIngresoDetalle
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
     protected $clienteRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -317,6 +345,38 @@ class CarIngresoDetalle
     public function setDetalle($detalle): void
     {
         $this->detalle = $detalle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCentroCostoFk()
+    {
+        return $this->codigoCentroCostoFk;
+    }
+
+    /**
+     * @param mixed $codigoCentroCostoFk
+     */
+    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
+    {
+        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCentroCostoRel()
+    {
+        return $this->centroCostoRel;
+    }
+
+    /**
+     * @param mixed $centroCostoRel
+     */
+    public function setCentroCostoRel($centroCostoRel): void
+    {
+        $this->centroCostoRel = $centroCostoRel;
     }
 
     /**

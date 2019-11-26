@@ -4,6 +4,7 @@ namespace App\Repository\Cartera;
 
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarIngresoDetalle;
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\General\GenImpuesto;
 use App\Utilidades\Mensajes;
@@ -35,6 +36,7 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
             ->addSelect('id.naturaleza')
             ->addSelect('id.detalle')
             ->addSelect('id.codigoImpuestoRetencionFk')
+            ->addSelect('id.codigoCentroCostoFk')
             ->leftJoin('id.clienteRel', 'c')
             ->where("id.codigoIngresoFk = '{$codigoIngreso}'");
         return $queryBuilder;
@@ -70,6 +72,7 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
         $arrCliente = $arrControles['arrCliente'];
         $arrRetencion = $arrControles['cboImpuestoRetencion'];
         $arrDetalle = $arrControles['arrDetalle'];
+        $arrCentroCostos = $arrControles['arrCentroCosto'];
         $arIngresosDetalle = $em->getRepository(CarIngresoDetalle::class)->findBy(['codigoIngresoFk' => $id]);
         foreach ($arIngresosDetalle as $arIngresoDetalle) {
             $intCodigo = $arIngresoDetalle->getCodigoIngresoDetallePk();
@@ -97,6 +100,16 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
                 }
             } else {
                 $arIngresoDetalle->setClienteRel(null);
+            }
+            if ($arrCentroCostos[$intCodigo]){
+                $arCentroCostos = $em->getRepository(FinCentroCosto ::class)->find($arrCentroCostos[$intCodigo]);
+                if ($arCentroCostos) {
+                    $arIngresoDetalle->setCentroCostoRel($arCentroCostos);
+                } else {
+                    $arIngresoDetalle->setCentroCostoRel(null);
+                }
+            }else{
+                $arIngresoDetalle->setCentroCostoRel(null);
             }
             if($codigoRetencion) {
                 if($codigoRetencion != "R00") {

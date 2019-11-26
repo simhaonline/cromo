@@ -95,6 +95,11 @@ class FinCentroCosto
     protected $movimientosDetallesCentroCostoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngresoDetalle", mappedBy="centroCostoRel")
+     */
+    protected $ingresosDetallesCentroCostoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCentroCostoPk()

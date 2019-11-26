@@ -188,9 +188,21 @@ class IngresoController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->All();
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository(CarIngresoDetalle::class)->actualizar($arrControles, $id);
-                $em->getRepository(CarIngreso::class)->liquidar($id);
-                $em->getRepository(CarIngreso::class)->autorizar($arIngreso);
+                $ExigenCentroCosto = "";
+                foreach ($arrControles['arrCuenta'] as $codigoCuenta) {
+                    $arCuenta=$em->getRepository(FinCuenta::class)->find($codigoCuenta);
+                    if ($arCuenta->getExigeCentroCosto() == true){
+                        $ExigenCentroCosto.= "{$codigoCuenta}";
+                        break;
+                    }
+                }
+                if ($ExigenCentroCosto != ""){
+                    Mensajes::info("Las cuanta: {$ExigenCentroCosto} exigen centro de costo");
+                }else{
+                    $em->getRepository(CarIngresoDetalle::class)->actualizar($arrControles, $id);
+                    $em->getRepository(CarIngreso::class)->liquidar($id);
+                    $em->getRepository(CarIngreso::class)->autorizar($arIngreso);
+                }
                 return $this->redirect($this->generateUrl('cartera_movimiento_ingreso_ingreso_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {

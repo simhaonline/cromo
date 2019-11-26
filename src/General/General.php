@@ -50,6 +50,8 @@ final class General
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $sheet->getColumnDimension($i)->setAutoSize(true);
                 $sheet->getStyle(1)->getFont()->setBold(true);
+                $sheet->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $sheet->getStyle(1)->getFont()->setBold(true);
                 $campo = strpos($arrColumnas[$j], 'Pk') !== false ? 'ID' : $arrColumnas[$j];
                 $sheet->setCellValue($i . '1', strtoupper($campo));
                 $j++;
@@ -63,7 +65,7 @@ final class General
                     if ($dato instanceof \DateTime) {
                         $dato = $dato->format('Y-m-d');
                     }
-                    $spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setBold(false);
+                    $sheet->getStyle($i)->getFont()->setName('Arial')->setSize(9);
                     $sheet->setCellValue($i . $j, $dato);
                     $i++;
                 }

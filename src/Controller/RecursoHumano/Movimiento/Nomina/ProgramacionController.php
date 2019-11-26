@@ -94,7 +94,6 @@ class ProgramacionController extends AbstractController
                 $raw['filtros'] = $this->getFiltros($form);
                 $arProgramaciones = $em->getRepository(RhuProgramacion::class)->lista($raw);
                 $this->exportarExcelPersonalizado($arProgramaciones);
-//                General::get()->setExportar($em->getRepository(RhuProgramacion::class)->lista($raw), "Programaciones");
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -538,7 +537,7 @@ class ProgramacionController extends AbstractController
             ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
             ->setKeywords("office 2007 openxml php")
             ->setCategory("Test result file");
-        $objPHPExcel->getDefaultStyle()->getFont()->setName('Arial')->setSize(10);
+        $objPHPExcel->getDefaultStyle()->getFont()->setName('Arial')->setSize(9);
         $objPHPExcel->getActiveSheet()->getStyle('1')->getFont()->setBold(true);
 
         // Pago
@@ -650,13 +649,13 @@ class ProgramacionController extends AbstractController
 
         $objPHPExcel->setActiveSheetIndex(1);
         $objPHPExcel->getDefaultStyle()->getFont()->setName('Arial')->setSize(10);
-        $objPHPExcel->getActiveSheet(2)->getStyle('1')->getFont()->setBold(true);
+        $objPHPExcel->getActiveSheet(2)->getStyle('A1:L1')->getFont()->setBold(true);
         for ($col = 'A'; $col !== 'F'; $col++) {
             $objPHPExcel->getActiveSheet(2)->getColumnDimension($col)->setAutoSize(true);
         }
         for ($col = 'H'; $col !== 'I'; $col++) {
             $objPHPExcel->getActiveSheet(2)->getStyle($col)->getAlignment()->setHorizontal('left');
-            $objPHPExcel->getActiveSheet(2)->getStyle($col)->getNumberFormat()->setFormatCode('#,##0');
+            $objPHPExcel->getActiveSheet(2)->getStyle($col)->getNumberFormat()->setFormatCode('###0');
         }
 
         $i = 2;
@@ -806,12 +805,14 @@ class ProgramacionController extends AbstractController
             $arrColumnas = ['ID', 'TIPO', 'GRUPO', 'DESDE', 'HASTA', 'DIAS', 'EMPLEADOS', 'NETO'];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
-                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
                 $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
                 $j++;
             }
             $j = 2;
             foreach ($arProgramaciones as $arProgramacion) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
                 $hoja->setCellValue('A' . $j, $arProgramacion['codigoProgramacionPk']);
                 $hoja->setCellValue('B' . $j, $arProgramacion['tipo']);
                 $hoja->setCellValue('C' . $j, $arProgramacion['grupo']);
@@ -828,7 +829,8 @@ class ProgramacionController extends AbstractController
             $arrColumnas = ['COD EMPLEADO', 'IDENTIFICACION', 'NOMBRE', 'CONTRATO', 'FECHA DESDE', 'VIGENTE', 'BANCO', 'CUENTA', 'SALARIO', 'DEVENGADO', 'DEDUCCIONES', 'NETO', 'GRUPO'];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
-                $hoja->getStyle(1)->getFont()->setBold(true);;
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
                 $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
                 $j++;
             }
@@ -836,14 +838,14 @@ class ProgramacionController extends AbstractController
             foreach ($arProgramaciones as $arProgramacion) {
                 $arPagos = $em->getRepository(RhuPago::class)->findBy(array('codigoProgramacionFk' => $arProgramacion['codigoProgramacionPk']));
                 foreach ($arPagos as $arPago) {
-
+                    $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
                     $hoja->setCellValue('A' . $j, $arPago->getCodigoEmpleadoFk());
                     $hoja->setCellValue('B' . $j, $arPago->getEmpleadoRel()->getNumeroIdentificacion());
                     $hoja->setCellValue('C' . $j, $arPago->getEmpleadoRel()->getNombreCorto());
                     $hoja->setCellValue('D' . $j, $arPago->getCodigoContratoFk());
                     $hoja->setCellValue('E' . $j, $arPago->getContratoRel()->getFechaDesde()->format('Y-m-d'));
                     $hoja->setCellValue('F' . $j, $arPago->getContratoRel()->getEstadoTerminado() == 1 ? "NO" : "SI");
-                    $hoja->setCellValue('G' . $j, $arPago->getBancoRel() ? $arPago->getBnacoRel()->getNombre() : '');
+                    $hoja->setCellValue('G' . $j, $arPago->getBancoRel() ? $arPago->getBancoRel()->getNombre() : '');
                     $hoja->setCellValue('H' . $j, $arPago->getCuenta());
                     $hoja->setCellValue('I' . $j, $arPago->getContratoRel()->getVrSalario());
                     $hoja->setCellValue('J' . $j, $arPago->getVrDevengado());

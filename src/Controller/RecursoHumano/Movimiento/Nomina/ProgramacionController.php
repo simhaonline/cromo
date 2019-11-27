@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuPago;
@@ -284,14 +285,17 @@ class ProgramacionController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('btnActualizar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar'])
             ->add('BtnActualizarHoras', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar horas'])
-            ->add('BtnActualizarHorasSoporteContrato', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar horas soporte contrato'])
+            ->add('BtnActualizarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar adicionales'])
+            ->add('BtnInactivarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Inactivar adicional'])
+            ->add('BtnEliminarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Eliminar adicional'])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(RhuProgramacionDetalle::class)->actualizar($arProgramacionDetalle, $this->getUser()->getUsername());
             }
-            if ($form->get('BtnActualizarHoras')->isClicked()){
+
+            if ($form->get('BtnActualizarHoras')->isClicked()) {
                 $arrControles = $request->request->All();
                 if ($arrControles['TxtDiasTransporte'] != "") {
                     $arProgramacionDetalle->setDiasTransporte($arrControles['TxtDiasTransporte']);
@@ -339,77 +343,47 @@ class ProgramacionController extends AbstractController
                 $em->flush();
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle_resumen', array('id' => $arProgramacionDetalle->getCodigoProgramacionDetallePK())));
             }
-            if($form->get('BtnActualizarHorasSoporteContrato')->isClicked() ){
-//                if ($arProgramacionDetalle->getCodigoSoporteContratoFk()) {
-//                    $codigoSoporteContrato = $arProgramacionDetalle->getCodigoSoporteContratoFk();
-//                    $arSoporteContrato = $em->getRepository(TurSoporteContrato::class)->find($codigoSoporteContrato);
-//                    if ($arSoporteContrato) {
-//                        set_time_limit(0);
-//                        ini_set("memory_limit", -1);
-//                        $arSoporteContrato->setHorasDescansoReales(0);
-//                        $arSoporteContrato->setHorasDiurnasReales(0);
-//                        $arSoporteContrato->setHorasNocturnasReales(0);
-//                        $arSoporteContrato->setHorasFestivasDiurnasReales(0);
-//                        $arSoporteContrato->setHorasFestivasNocturnasReales(0);
-//                        $arSoporteContrato->setHorasExtrasOrdinariasDiurnasReales(0);
-//                        $arSoporteContrato->setHorasExtrasOrdinariasNocturnasReales(0);
-//                        $arSoporteContrato->setHorasExtrasFestivasDiurnasReales(0);
-//                        $arSoporteContrato->setHorasExtrasFestivasNocturnasReales(0);
-//                        $strSql = "DELETE FROM tur_soporte_hora WHERE codigo_soporte_contrato_fk = " . $codigoSoporteContrato;
-////                        $em->getConnection()->executeQuery($strSql);
-//
-//                        $arSoporte = $arSoporteContrato->getSoporteRel();
-//                        $dateFechaDesde = $arSoporteContrato->getFechaDesde();
-//                        $dateFechaHasta = $arSoporteContrato->getFechaHasta();
-//                        $intDiaInicial = $dateFechaDesde->format('j');
-//                        $intDiaFinal = $dateFechaHasta->format('j');
-//                        $arFestivos = $em->getRepository(TurFestivo::class)->festivos($dateFechaDesde->format('Y-m-') . '01', $dateFechaHasta->format('Y-m-t'));
-//                        $arTurConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
-//                        $em->getRepository(TurSoporteContrato::class)->generar($arSoporte, $arFestivos, $arTurConfiguracion);
-//                        $em->flush();
-//                        $em->getRepository(TurSoporteContrato::class)->resumenSoportePago($dateFechaDesde, $dateFechaHasta, $arSoporte->getCodigoSoportePk());
-//                        $em->getRepository(TurSoporteContrato::class)->compensar($arSoportePago->getCodigoSoportePagoPk(), $arSoporte->getCodigoSoportePagoPeriodoPk());
-//
-//                        if (!$arSoporte->getHorasRecargoAgrupadas()) {
-//                            $em->getRepository('BrasaTurnoBundle:TurSoportePagoPeriodo')->desagregarHoras($arSoportePago->getCodigoSoportePagoPk(), null);
-//                        }
-//                        $em->flush();
-//                        $arSoportePago = $em->getRepository('BrasaTurnoBundle:TurSoportePago')->find($codigoSoporteContrato);
-//                        $arProgramacionDetalle->setDiasTransporte($arSoportePago->getDiasTransporte());
-//                        $arProgramacionDetalle->setHorasDescanso($arSoportePago->getHorasDescanso());
-//                        $arProgramacionDetalle->setHorasDiurnas($arSoportePago->getHorasDiurnas());
-//                        $arProgramacionDetalle->setHorasNocturnas($arSoportePago->getHorasNocturnas());
-//                        $arProgramacionDetalle->setHorasFestivasDiurnas($arSoportePago->getHorasFestivasDiurnas());
-//                        $arProgramacionDetalle->setHorasFestivasNocturnas($arSoportePago->getHorasFestivasNocturnas());
-//                        $arProgramacionDetalle->setHorasExtrasOrdinariasDiurnas($arSoportePago->getHorasExtrasOrdinariasDiurnas());
-//                        $arProgramacionDetalle->setHorasExtrasOrdinariasNocturnas($arSoportePago->getHorasExtrasOrdinariasNocturnas());
-//                        $arProgramacionDetalle->setHorasExtrasFestivasDiurnas($arSoportePago->getHorasExtrasFestivasDiurnas());
-//                        $arProgramacionDetalle->setHorasExtrasFestivasNocturnas($arSoportePago->getHorasExtrasFestivasNocturnas());
-//                        $arProgramacionDetalle->setHorasRecargoFestivoDiurno($arSoportePago->getHorasRecargoFestivoDiurno());
-//                        $arProgramacionDetalle->setHorasRecargoFestivoNocturno($arSoportePago->getHorasRecargoFestivoNocturno());
-//                        $arProgramacionDetalle->setHorasRecargo($arSoportePago->getHorasRecargo());
-//                        $arProgramacionDetalle->setCodigoCompensacionTipoFk($arSoportePago->getCodigoCompensacionTipoFk());
-//                        $arProgramacionDetalle->setCodigoSalarioFijoFk($arSoportePago->getCodigoSalarioFijoFk());
-//                        if ($arProgramacionDetalle->getAjusteDevengado()) {
-//                            if ($arSoportePago->getVrAjusteDevengadoPactado() > 0) {
-//                                $arProgramacionDetalle->setVrAjusteDevengado($arSoportePago->getVrAjusteDevengadoPactado());
-//                            }
-//                        }
-//                        if ($arSoportePago->getVrAjusteCompensacion() > 0) {
-//                            $arProgramacionDetalle->setVrAjusteDevengado($arSoportePago->getVrAjusteCompensacion());
-//                        }
-//                        if ($arSoportePago->getVrRecargoCompensacion() > 0) {
-//                            $arProgramacionDetalle->setVrAjusteRecargo($arSoportePago->getVrRecargoCompensacion());
-//                        }
-//                        if ($arSoportePago->getVrComplementarioCompensacion() > 0) {
-//                            $arProgramacionDetalle->setVrAjusteComplementario($arSoportePago->getVrComplementarioCompensacion());
-//                        }
-//                        $em->persist($arProgramacionDetalle);
-//                        $em->flush();
-//                    }
-//                }
-//                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle_resumen', array('id' => $arProgramacionDetalle->getCodigoProgramacionDetallePK())));
+
+            if ($form->get('BtnActualizarAdicional')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionarValor');
+                if ($arrSeleccionados) {
+                    $arrControles = $request->request->All();
+                    foreach ($arrSeleccionados as $codigoAdicional) {
+                        if ($arrControles['TxtValor' . $codigoAdicional] != "") {
+                            $valor = $arrControles['TxtValor' . $codigoAdicional];
+                            $arAdicional = $em->getRepository(RhuAdicional::class)->find($codigoAdicional);
+                            $arAdicional->setVrValor($valor);
+                            $em->persist($arAdicional);
+                        }
+                    }
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle_resumen', array('id' => $id)));
+                }
             }
+
+            if ($form->get('BtnInactivarAdicional')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionarValor');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados as $codigoAdicional) {
+                        $arAdicional = $em->getRepository(RhuAdicional::class)->find($codigoAdicional);
+                        if ($arAdicional->getEstadoInactivo() == 1) {
+                            $arAdicional->setEstadoInactivo(0);
+                        } else {
+                            $arAdicional->setEstadoInactivo(1);
+                        }
+                        $em->persist($arAdicional);
+                    }
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle_resumen', array('id' => $id)));
+                }
+            }
+
+            if ($form->get('BtnEliminarAdicional')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionarValor');
+                $em->getRepository(RhuAdicional::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle_resumen', array('id' => $id)));
+            }
+
         }
 
         if (!$arProgramacionDetalle->getProgramacionRel()->getEstadoAutorizado()) {
@@ -424,11 +398,17 @@ class ProgramacionController extends AbstractController
         }
         $arProgramaciones = $em->getRepository(TurProgramacionRespaldo::class)->findBy(['codigoSoporteContratoFk' => $arProgramacionDetalle->getCodigoSoporteContratoFk()]);
 
+        $arAdicionales = $em->getRepository(RhuAdicional::class)->programacionPagoGeneral(
+            $arProgramacionDetalle->getCodigoEmpleadoFk(),
+            $arProgramacionDetalle->getFechaDesde()->format('Y-m-d'),
+            $arProgramacionDetalle->getFechaHasta()->format('Y-m-d'));
+
         return $this->render('recursohumano/movimiento/nomina/programacion/resumen.html.twig', [
             'arProgramacionDetalle' => $arProgramacionDetalle,
             'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles,
             'arProgramaciones' => $arProgramaciones,
+            'arAdicionales'=>$arAdicionales,
             'form' => $form->createView()
         ]);
     }

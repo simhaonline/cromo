@@ -1224,6 +1224,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arCuentaPagar->setVrSaldoOriginal($arPago->getVrNeto());
         $arCuentaPagar->setVrSaldo($arPago->getVrNeto());
         $arCuentaPagar->setVrSaldoOperado($arPago->getVrNeto() * $arCuentaPagarTipo->getOperacion());
+        $arCuentaPagar->setOperacion(1);
         $arCuentaPagar->setEstadoAutorizado(1);
         $arCuentaPagar->setEstadoAprobado(1);
         $em->persist($arCuentaPagar);

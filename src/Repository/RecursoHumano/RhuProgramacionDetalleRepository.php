@@ -71,8 +71,18 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->where("pd.codigoProgramacionDetallePk = {$id}")->getQuery()->execute()[0];
     }
 
-    public function lista($id){
-        return $this->_em->createQueryBuilder()->from(RhuProgramacionDetalle::class,'pd')
+    public function lista($raw,$id){
+
+        $filtros = $raw['filtros'] ?? null;
+        $identificacion = null;
+        $estadoMarcado = null;
+        $pagosNegativos = null;
+        if ($filtros) {
+            $identificacion = $filtros['identificacion'] ?? null;
+            $estadoMarcado = $filtros['estadoMarcado'] ?? null;
+            $pagosNegativos = $filtros['pagosNegativos'] ?? null;
+        }
+        $queryBuilder= $this->_em->createQueryBuilder()->from(RhuProgramacionDetalle::class,'pd')
             ->select('pd.codigoProgramacionDetallePk')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('e.nombreCorto')
@@ -99,8 +109,31 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.codigoEmpleadoFk')
             ->addSelect('pd.dias')
             ->addSelect('pd.diasAusentismo')
+            ->addSelect('pd.marca')
             ->leftJoin('pd.empleadoRel','e')
-            ->where("pd.codigoProgramacionFk = {$id}")->getQuery()->execute();
+            ->where("pd.codigoProgramacionFk = {$id}");
+        if ($identificacion) {
+            $queryBuilder->andWhere("e.numeroIdentificacion = '{$identificacion}'");
+        }
+        switch ($estadoMarcado) {
+            case '0':
+                $queryBuilder->andWhere("pd.marca = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("pd.marca = 1");
+                break;
+        }
+
+        switch ($pagosNegativos) {
+            case '0':
+                $queryBuilder->andWhere("pd.vrNeto < 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("pd.vrNeto > 0");
+                break;
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function listaEliminarTodo($id){

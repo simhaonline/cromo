@@ -218,6 +218,11 @@ class RhuProgramacionDetalle
     private $codigoSoporteContratoFk = null;
 
     /**
+     * @ORM\Column(name="marca", type="boolean", nullable=true)
+     */
+    private $marca = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuProgramacion", inversedBy="programacionesDetallesProgramacionRel")
      * @ORM\JoinColumn(name="codigo_programacion_fk", referencedColumnName="codigo_programacion_pk")
      */
@@ -239,6 +244,22 @@ class RhuProgramacionDetalle
      * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="programacionDetalleRel")
      */
     protected $pagosProgramacionDetalleRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -355,6 +376,54 @@ class RhuProgramacionDetalle
     /**
      * @return mixed
      */
+    public function getDiasLicencia()
+    {
+        return $this->diasLicencia;
+    }
+
+    /**
+     * @param mixed $diasLicencia
+     */
+    public function setDiasLicencia($diasLicencia): void
+    {
+        $this->diasLicencia = $diasLicencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasIncapacidad()
+    {
+        return $this->diasIncapacidad;
+    }
+
+    /**
+     * @param mixed $diasIncapacidad
+     */
+    public function setDiasIncapacidad($diasIncapacidad): void
+    {
+        $this->diasIncapacidad = $diasIncapacidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiasAusentismo()
+    {
+        return $this->diasAusentismo;
+    }
+
+    /**
+     * @param mixed $diasAusentismo
+     */
+    public function setDiasAusentismo($diasAusentismo): void
+    {
+        $this->diasAusentismo = $diasAusentismo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrSalario()
     {
         return $this->vrSalario;
@@ -366,6 +435,22 @@ class RhuProgramacionDetalle
     public function setVrSalario($vrSalario): void
     {
         $this->vrSalario = $vrSalario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSalarioPrima()
+    {
+        return $this->vrSalarioPrima;
+    }
+
+    /**
+     * @param mixed $vrSalarioPrima
+     */
+    public function setVrSalarioPrima($vrSalarioPrima): void
+    {
+        $this->vrSalarioPrima = $vrSalarioPrima;
     }
 
     /**
@@ -414,6 +499,22 @@ class RhuProgramacionDetalle
     public function setVrHora($vrHora): void
     {
         $this->vrHora = $vrHora;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAnticipo()
+    {
+        return $this->vrAnticipo;
+    }
+
+    /**
+     * @param mixed $vrAnticipo
+     */
+    public function setVrAnticipo($vrAnticipo): void
+    {
+        $this->vrAnticipo = $vrAnticipo;
     }
 
     /**
@@ -494,6 +595,22 @@ class RhuProgramacionDetalle
     public function setHorasDiurnas($horasDiurnas): void
     {
         $this->horasDiurnas = $horasDiurnas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasDescanso()
+    {
+        return $this->horasDescanso;
+    }
+
+    /**
+     * @param mixed $horasDescanso
+     */
+    public function setHorasDescanso($horasDescanso): void
+    {
+        $this->horasDescanso = $horasDescanso;
     }
 
     /**
@@ -771,6 +888,38 @@ class RhuProgramacionDetalle
     /**
      * @return mixed
      */
+    public function getCodigoSoporteContratoFk()
+    {
+        return $this->codigoSoporteContratoFk;
+    }
+
+    /**
+     * @param mixed $codigoSoporteContratoFk
+     */
+    public function setCodigoSoporteContratoFk($codigoSoporteContratoFk): void
+    {
+        $this->codigoSoporteContratoFk = $codigoSoporteContratoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMarca()
+    {
+        return $this->marca;
+    }
+
+    /**
+     * @param mixed $marca
+     */
+    public function setMarca($marca): void
+    {
+        $this->marca = $marca;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getProgramacionRel()
     {
         return $this->programacionRel;
@@ -831,119 +980,4 @@ class RhuProgramacionDetalle
     {
         $this->pagosProgramacionDetalleRel = $pagosProgramacionDetalleRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getHorasDescanso()
-    {
-        return $this->horasDescanso;
-    }
-
-    /**
-     * @param mixed $horasDescanso
-     */
-    public function setHorasDescanso($horasDescanso): void
-    {
-        $this->horasDescanso = $horasDescanso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDiasLicencia()
-    {
-        return $this->diasLicencia;
-    }
-
-    /**
-     * @param mixed $diasLicencia
-     */
-    public function setDiasLicencia($diasLicencia): void
-    {
-        $this->diasLicencia = $diasLicencia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDiasIncapacidad()
-    {
-        return $this->diasIncapacidad;
-    }
-
-    /**
-     * @param mixed $diasIncapacidad
-     */
-    public function setDiasIncapacidad($diasIncapacidad): void
-    {
-        $this->diasIncapacidad = $diasIncapacidad;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoSoporteContratoFk()
-    {
-        return $this->codigoSoporteContratoFk;
-    }
-
-    /**
-     * @param mixed $codigoSoporteContratoFk
-     */
-    public function setCodigoSoporteContratoFk($codigoSoporteContratoFk): void
-    {
-        $this->codigoSoporteContratoFk = $codigoSoporteContratoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrAnticipo()
-    {
-        return $this->vrAnticipo;
-    }
-
-    /**
-     * @param mixed $vrAnticipo
-     */
-    public function setVrAnticipo($vrAnticipo): void
-    {
-        $this->vrAnticipo = $vrAnticipo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrSalarioPrima()
-    {
-        return $this->vrSalarioPrima;
-    }
-
-    /**
-     * @param mixed $vrSalarioPrima
-     */
-    public function setVrSalarioPrima($vrSalarioPrima): void
-    {
-        $this->vrSalarioPrima = $vrSalarioPrima;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDiasAusentismo()
-    {
-        return $this->diasAusentismo;
-    }
-
-    /**
-     * @param mixed $diasAusentismo
-     */
-    public function setDiasAusentismo($diasAusentismo): void
-    {
-        $this->diasAusentismo = $diasAusentismo;
-    }
-
-
-
 }

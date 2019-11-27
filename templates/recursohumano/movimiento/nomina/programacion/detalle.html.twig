@@ -71,6 +71,26 @@
     <div class="tab-content">
         <div class="tab-pane active" id="detalles">
             <div id="detalles" style="width: 100%"><br>
+                <div class="row">
+                    <div class="form-group form-group-sm">
+                        <label for="form_TxtIdentificacion" class="col-sm-1 control-label">Documento:</label>
+                        <div class="col-sm-4 input-group-xs">
+                            {{ form_widget(form.identificacion, { 'attr': {'class': 'form-control input-xs', 'style':'height:25px'} }) }}
+                        </div>
+                        <label for="form_estadoMarcado" class="col-sm-1 control-label">Marcado:</label>
+                        <div class="col-sm-1 input-group-xs">
+                            {{ form_widget(form.estadoMarcado, { 'attr': {'class': 'input-xs', 'style':'height:25px'} }) }}
+                        </div>
+                        <label for="form_estadoMarcado" class="col-sm-1 control-label">Negativos:</label>
+                        <div class="col-sm-1 input-group-xs">
+                            {{ form_widget(form.pagosNegativos, { 'attr': {'class': 'input-xs', 'style':'height:25px'} }) }}
+                        </div>
+                        <div class="col-sm-1">
+                            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-xs', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+                <br>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover tabla-datos">
                         <thead>
@@ -112,7 +132,7 @@
                         </thead>
                         <tbody>
                         {% for arProgramacionDetalle in arProgramacionDetalles %}
-                            <tr>
+                            <tr {% if arProgramacionDetalle.marca == 1 %} class="success" {% endif %}>
                                 <td>{{ arProgramacionDetalle.codigoProgramacionDetallePk }}</td>
                                 <td>{{ arProgramacionDetalle.codigoEmpleadoFk }}</td>
                                 <td>{{ arProgramacionDetalle.numeroIdentificacion }}</td>

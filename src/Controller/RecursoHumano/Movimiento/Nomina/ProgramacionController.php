@@ -197,7 +197,14 @@ class ProgramacionController extends AbstractController
         $form->add('btnImprimirResumen', SubmitType::class, $arrBtnImprimirResumen);
         $form->add('btnExcelDetalle', SubmitType::class, $arrBtnExcelDetalle);
         $form->add('btnExcelPagoDetalles', SubmitType::class, $arrBtnExcelPagoDetalles);
+        $form->add('identificacion', TextType::class,array('required' => false));
+        $form->add('estadoMarcado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false]);
+        $form->add('pagosNegativos', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false]);
+        $form->add('btnFiltrar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Filtrar']);
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnCargarContratos')->isClicked()) {
@@ -261,8 +268,12 @@ class ProgramacionController extends AbstractController
             if ($form->get('btnExcelPagoDetalles')->isClicked()) {
                 $this->generarExcelDetalle($arProgramacion->getCodigoProgramacionPk());
             }
+
+            if ($form->get('btnFiltrar')->isClicked()){
+                $raw['filtros'] = $this->getFiltrosDetalle($form);
+            }
         }
-        $arProgramacionDetalles = $paginator->paginate($em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk()), $request->query->get('page', 1), 1000);
+        $arProgramacionDetalles = $paginator->paginate($em->getRepository(RhuProgramacionDetalle::class)->lista($raw, $arProgramacion->getCodigoProgramacionPk()), $request->query->get('page', 1), 1000);
         return $this->render('recursohumano/movimiento/nomina/programacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arProgramacion' => $arProgramacion,
@@ -284,6 +295,7 @@ class ProgramacionController extends AbstractController
         $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnActualizar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar'])
+            ->add('btnMarcar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Marcar'])
             ->add('BtnActualizarHoras', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar horas'])
             ->add('BtnActualizarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar adicionales'])
             ->add('BtnInactivarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Inactivar adicional'])
@@ -293,6 +305,13 @@ class ProgramacionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(RhuProgramacionDetalle::class)->actualizar($arProgramacionDetalle, $this->getUser()->getUsername());
+            }
+
+            if ($form->get('btnMarcar')->isClicked()){
+                $arProgramacionDetalle->setMarca(1);
+                $em->persist($arProgramacionDetalle);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
 
             if ($form->get('BtnActualizarHoras')->isClicked()) {
@@ -750,14 +769,18 @@ class ProgramacionController extends AbstractController
 
     public function getFiltros($form)
     {
+        dd($form->getData());
         $filtro = [
-            'codigoProgramacion' => $form->get('codigoProgramacionPk')->getData(),
+            'codigoProgramacion' => $form->get('codigoProgramacionPk'),
             'nombre' => $form->get('nombre')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'identificacion' => $form->get('identificacion')->getData(),
+            'estadoMarcado' => $form->get('estadoMarcado')->getData(),
+            'pagosNegativos' => $form->get('pagosNegativos')->getData(),
         ];
 
         $arPagoTipo = $form->get('codigoPagoTipoFk')->getData();
@@ -767,6 +790,18 @@ class ProgramacionController extends AbstractController
         } else {
             $filtro['pagoTipo'] = $arPagoTipo;
         }
+
+        return $filtro;
+
+    }
+
+    public function getFiltrosDetalle($form)
+    {
+        $filtro = [
+                'identificacion' => $form->get('identificacion')->getData(),
+            'estadoMarcado' => $form->get('estadoMarcado')->getData(),
+            'pagosNegativos' => $form->get('pagosNegativos')->getData(),
+        ];
 
         return $filtro;
 

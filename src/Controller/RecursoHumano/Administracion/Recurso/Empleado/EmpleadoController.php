@@ -65,7 +65,7 @@ class EmpleadoController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(RhuEmpleado::class)->listaProvicional($raw)->getQuery()->execute(), "Empleados");
+                General::get()->setExportar($em->getRepository(RhuEmpleado::class)->listaProvicional($raw), "Empleados");
             }
             if ($form->get('btnEliminar')->isClicked()) {
             }

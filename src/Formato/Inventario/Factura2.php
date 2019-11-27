@@ -281,8 +281,8 @@ class Factura2 extends \FPDF
         $this->Text(124, 258, utf8_decode($arConfiguracion->getDireccion()));
         $this->Text(126, 262, utf8_decode($arConfiguracion->getTelefono() .' E-mail: contacto@invivo.com.co'));
         $this->Text(134, 266, utf8_decode('ORIGINAL: EMISOR - COPIA: CLIENTE'));
-        $this->Image('../public/img/empresa/iso9001.jpg', 40, 245, 12, 18);
-        $this->Image('../public/img/empresa/iqnet.jpg', 55, 245, 20, 18);
+//        $this->Image('../public/img/empresa/iso9001.jpg', 40, 245, 12, 18);
+//        $this->Image('../public/img/empresa/iqnet.jpg', 55, 245, 20, 18);
         $this->SetFont('Arial', '', 6.5);
         $this->Text(188, 275, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }

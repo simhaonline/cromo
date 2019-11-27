@@ -252,8 +252,8 @@ class Remision2 extends \FPDF
         $this->Text(30, 238, utf8_decode('_________________________________'));
         $this->Text(119, 238, utf8_decode('FECHA:_________________________________'));
         //Bloque logos
-        $this->Image('../public/img/empresa/iso9001.jpg', 140, 245, 12, 18);
-        $this->Image('../public/img/empresa/iqnet.jpg', 155, 245, 20, 18);
+//        $this->Image('../public/img/empresa/iso9001.jpg', 140, 245, 12, 18);
+//        $this->Image('../public/img/empresa/iqnet.jpg', 155, 245, 20, 18);
 
         $this->SetFont('Arial', '', 8);
         $this->Text(170, 290, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');

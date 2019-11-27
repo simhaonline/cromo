@@ -29,27 +29,14 @@ class FacturaElectronica
             if($arrReturn) {
                 $arRespuesta = new GenRespuestaFacturaElectronica();
                 $arRespuesta->setFecha(new \DateTime('now'));
-                $arRespuesta->setTipoDocumento($arrReturn['tipoDocumento']);
-                if(!is_array($arrReturn['prefijo'])) {
-                    $arRespuesta->setPrefijo($arrReturn['prefijo']);
-                }
-                $arRespuesta->setConsecutivo($arrReturn['consecutivo']);
-                if(isset($arrReturn['cufe'])) {
-                    $arRespuesta->setCufe($arrReturn['cufe']);
-                }
-                if(isset($arrReturn['codigoQr'])) {
-                    $arRespuesta->setCodigoQR($arrReturn['codigoQr']);
-                }
-                if(isset($arrReturn['fechaExpedicion'])) {
-                    $arRespuesta->setFechaExpedicion(date_create($arrReturn['fechaExpedicion']));
-                }
-                if(isset($arrReturn['fechaRespuesta'])) {
-                    $arRespuesta->setFechaRespuesta(date_create($arrReturn['fechaRespuesta']));
-                }
-                $arRespuesta->setEstadoProceso($arrReturn['estadoProceso']);
-                $arRespuesta->setDescripcionProceso($arrReturn['descripcionProceso']);
+                $arRespuesta->setCodigoModeloFk('InvMovimiento');
+                $arRespuesta->setCodigoDocumento($arrFactura['doc_codigo']);
                 if(isset($arrReturn['listaMensajesProceso'])) {
-                    $arRespuesta->setListaMensajesProceso(json_encode($arrReturn['listaMensajesProceso']));
+                    $arrDato = [];
+                    foreach ($arrReturn['listaMensajesProceso'] as $arrMensaje) {
+                        $arrDato[] = $arrMensaje['descripcionMensaje'];
+                    }
+                    $arRespuesta->setErrorReason(json_encode($arrDato));
                 }
                 $em->persist($arRespuesta);
                 $em->flush();
@@ -58,6 +45,8 @@ class FacturaElectronica
             echo $e->getMessage();
         }
 
+        $respuesta['estado'] = "ER";
+        return $respuesta;
     }
 
     private function generarXmlDispapeles($arrFactura) {
@@ -173,7 +162,7 @@ class FacturaElectronica
         <pago>
           <!--  <codigoMonedaCambio>?</codigoMonedaCambio>
            <fechaTasaCambio>?</fechaTasaCambio>-->
-           <fechavencimiento>2019-09-28</fechavencimiento> 
+           <fechavencimiento>{$arrFactura['doc_fecha_vence']}</fechavencimiento> 
            <moneda>COP</moneda>
            <pagoanticipado>0</pagoanticipado>
            <periododepagoa>2</periododepagoa>
@@ -307,7 +296,9 @@ class FacturaElectronica
                 $arRespuesta->setCodigoModeloFk('InvMovimiento');
                 $arRespuesta->setCodigoDocumento($arrFactura['doc_codigo']);
                 $arRespuesta->setStatusCode($resp['statusCode']);
-                $arRespuesta->setErrorMessage($resp['errorMessage']);
+                if(isset($resp['errorMessage'])) {
+                    $arRespuesta->setErrorMessage($resp['errorMessage']);
+                }
                 if(isset($resp['errorReason'])) {
                     if(is_array($resp['errorReason'])) {
                         $arRespuesta->setErrorReason(json_encode($resp['errorReason']));
@@ -325,7 +316,8 @@ class FacturaElectronica
 
     private function generarXmlCadena($arrFactura) {
         $em = $this->em;
-        $cufe = $arrFactura['doc_numero'].$arrFactura['doc_fecha'].$arrFactura['doc_hora'].$arrFactura['doc_subtotal'].'01'.$arrFactura['doc_iva'].'04'.$arrFactura['doc_inc'].'03'.$arrFactura['doc_ica'].$arrFactura['doc_total'].$arrFactura['dat_nitFacturador'].$arrFactura['ad_numeroIdentificacion'].$arrFactura['dat_claveTecnicaCadena'].$arrFactura['dat_tipoAmbiente'];
+        $numero = $arrFactura['res_prefijo'] . $arrFactura['doc_numero'];
+        $cufe = $numero.$arrFactura['doc_fecha'].$arrFactura['doc_hora'].$arrFactura['doc_subtotal'].'01'.$arrFactura['doc_iva'].'04'.$arrFactura['doc_inc'].'03'.$arrFactura['doc_ica'].$arrFactura['doc_total'].$arrFactura['dat_nitFacturador'].$arrFactura['ad_numeroIdentificacion'].$arrFactura['dat_claveTecnicaCadena'].$arrFactura['dat_tipoAmbiente'];
         $cufeHash = hash('sha384', $cufe);
         $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <Invoice xmlns:ds='http://www.w3.org/2000/09/xmldsig#' xmlns='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2' xmlns:cac='urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2' xmlns:cbc='urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2' xmlns:ext='urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2' xmlns:sts='dian:gov:co:facturaelectronica:Structures-2-1' xmlns:xades='http://uri.etsi.org/01903/v1.3.2#' xmlns:xades141='http://uri.etsi.org/01903/v1.4.1#' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'>
@@ -351,7 +343,7 @@ class FacturaElectronica
 	</ext:UBLExtensions>	
 	<cbc:CustomizationID>05</cbc:CustomizationID>
 	<cbc:ProfileExecutionID>2</cbc:ProfileExecutionID>
-	<cbc:ID>{$arrFactura['doc_numero']}</cbc:ID>
+	<cbc:ID>{$numero}</cbc:ID>
 	<cbc:UUID schemeID='2' schemeName='CUFE-SHA384'>{$cufeHash}</cbc:UUID>
 	<cbc:IssueDate>{$arrFactura['doc_fecha']}</cbc:IssueDate>
 	<cbc:IssueTime>{$arrFactura['doc_hora']}</cbc:IssueTime>

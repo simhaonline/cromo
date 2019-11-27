@@ -1666,6 +1666,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 'doc_codigo' => $arFactura->getCodigoMovimientoPk(),
                                 'doc_numero' => $arFactura->getNumero(),
                                 'doc_fecha' => $arFactura->getFecha()->format('Y-m-d'),
+                                'doc_fecha_vence' => $arFactura->getFechaVence()->format('Y-m-d'),
                                 'doc_hora' => '12:00:00-05:00',
                                 'doc_subtotal' => number_format($arFactura->getVrSubtotal(), 2, '.', ''),
                                 'doc_iva' => number_format($arFactura->getVrIva(), 2, '.', ''),
@@ -1690,8 +1691,10 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 'ad_telefono' => $arCliente->getTelefono(),
                                 'ad_codigoCIUU' => $arCliente->getCodigoCIUU(),
                             ];
+                            $arrFactura['doc_numero'] = 2;
+
                             $facturaElectronica = new FacturaElectronica($em);
-                            //$facturaElectronica->enviarDispapeles($arrFactura);
+                            //$procesoFacturaElectronica = $facturaElectronica->enviarDispapeles($arrFactura);
                             $procesoFacturaElectronica = $facturaElectronica->enviarCadena($arrFactura);
                             if($procesoFacturaElectronica['estado'] == 'CN') {
                                 break;

@@ -79,7 +79,7 @@
                 <td class="estado">{{ arMovimiento.estadoAnulado?'SI':'NO' }}</td>
                 <td>
                 {% if arMovimiento.procesoFacturaElectronica == 'ER' %}
-                    <a href="javascript:abrirVentana3('{{ path('general_utilidad_facturaelectronica_respuesta_ver',{'entidad': 'InvMovimiento', 'codigo': arMovimiento.codigoMovimientoPk }) }}','Respuesta',600,900)">{{ arMovimiento.procesoFacturaElectronica }}</a>
+                    <a href="javascript:abrirVentana3('{{ path('general_utilidad_facturaelectronica_respuesta_ver',{'entidad': 'InvMovimiento', 'codigo': arMovimiento.codigoMovimientoPk }) }}','Respuesta',800,1200)">{{ arMovimiento.procesoFacturaElectronica }}</a>
                 {% else %}
                     {{ arMovimiento.procesoFacturaElectronica }}
                 {% endif %}

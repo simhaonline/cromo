@@ -235,7 +235,6 @@ class IngresoController extends BaseController
             if ($form->get('btnAdicionar')->isClicked()) {
                 $em->getRepository(CarIngresoDetalle::class)->actualizar($arrControles, $id);
                 $em->getRepository(CarIngreso::class)->liquidar($id);
-                $em->getRepository(CarIngreso::class)->autorizar($arIngreso);
                 $arIngresoDetalle = new CarIngresoDetalle();
                 $arIngresoDetalle->setIngresoRel($arIngreso);
                 $arIngresoDetalle->setClienteRel($arIngreso->getClienteRel());

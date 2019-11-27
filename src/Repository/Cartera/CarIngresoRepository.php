@@ -206,7 +206,17 @@ class CarIngresoRepository extends ServiceEntityRepository
                                 break;
                             }
                         }
-                        if (!$arIngresoDetalle->getCodigoCuentaFk()) {
+                        if ($arIngresoDetalle->getCodigoCuentaFk()) {
+                            /** @var $arCuenta FinCuenta 7168*/
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arIngresoDetalle->getCodigoCuentaFk());
+                            if ($arCuenta){
+                                if ($arCuenta->getExigeCentroCosto() && $arIngresoDetalle->getCodigoCentroCostoFk() == null){
+                                    Mensajes::error('En detalle ' . $arIngresoDetalle->getCodigoIngresoDetallePk() . " la cuenta exige centro de costos y no tiene");
+                                    $error = true;
+                                    break;
+                                }
+                            }
+                        }else{
                             Mensajes::error('En detalle ' . $arIngresoDetalle->getCodigoIngresoDetallePk() . " no tiene asignada una cuenta");
                             $error = true;
                             break;

@@ -45,6 +45,20 @@ class FacturaElectronicaController extends AbstractController
                 $session->set('filtroFecha', $form->get('filtrarFecha')->getData());
             }
             if ($form->get('btnEnviar')->isClicked()) {
+                /*$xml = new \XMLWriter();
+                $xml->openMemory();
+                $xml->setIndent(true);
+                $xml->setIndentString('	');
+                $xml->startDocument('1.0', 'UTF-8');
+
+                $xml->startElement("Invoice");
+                $xml->writeAttribute('xmlns:ds', 'http://www.w3.org/2000/09/xmldsig#');
+                $xml->writeAttribute('Municipio', 'Puerto de Sagunto');
+                $xml->writeAttribute('Nombre', 'Maestro Tarrazona');
+                $xml->endElement();
+
+                $content = $xml->outputMemory();*/
+
                 $arr = $request->request->get('ChkSeleccionar');
                 if($arr) {
                     $this->getDoctrine()->getRepository(InvMovimiento::class)->facturaElectronica($arr);

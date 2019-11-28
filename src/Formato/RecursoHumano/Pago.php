@@ -188,21 +188,21 @@ class Pago extends \FPDF
         $arPago = self::$em->getRepository(RhuPago::class)->find(self::$codigoPago);
         $dateFecha = (new \DateTime('now'));
         $arrDiaSemana = FuncionesController::diasMes($dateFecha, self::$em->getRepository(TurFestivo::class)->festivos($dateFecha->format('Y-m-') . '01', $dateFecha->format('Y-m-t')));
-        $arPagoDetalles = self::$em->getRepository(RhuPagoDetalle::class)->findBy(['codigoPagoFk' => self::$codigoPago]);
+        $arPagoDetalles = self::$em->getRepository(RhuPagoDetalle::class)->lista(self::$codigoPago);
         $arProgramacionRespaldos = self::$em->getRepository(TurProgramacionRespaldo::class)->findOneBy(['codigoSoporteContratoFk' => $arPago->getCodigoSoporteContratoFk()]);
 
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         /** @var  $arPagoDetalle RhuPagoDetalle */
         foreach ($arPagoDetalles as $arPagoDetalle) {
-            $pdf->Cell(15, 4, $arPagoDetalle->getCodigoPagoDetallePk(), 1, 0, 'L');
-            $pdf->Cell(80, 4, utf8_decode($arPagoDetalle->getConceptoRel()->getNombre()), 1, 0, 'L');
-            $pdf->Cell(12, 4, $arPagoDetalle->getHoras(), 1, 0, 'R');
-            $pdf->Cell(10, 4, $arPagoDetalle->getDias(), 1, 0, 'R');
-            $pdf->Cell(25, 4, number_format($arPagoDetalle->getVrHora(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(6, 4, $arPagoDetalle->getPorcentaje(), 1, 0, 'R');
-            $pdf->Cell(21, 4, number_format($arPagoDetalle->getVrDevengado(), 0, '.', ','), 1, 0, 'R');
-            $pdf->Cell(21, 4, number_format($arPagoDetalle->getVrDeduccion(), 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(15, 4, $arPagoDetalle['codigoConceptoFk'], 1, 0, 'L');
+            $pdf->Cell(80, 4, utf8_decode($arPagoDetalle['nombre']), 1, 0, 'L');
+            $pdf->Cell(12, 4, $arPagoDetalle['horas'], 1, 0, 'R');
+            $pdf->Cell(10, 4, $arPagoDetalle['dias'], 1, 0, 'R');
+            $pdf->Cell(25, 4, number_format($arPagoDetalle['vrHora'], 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(6, 4, $arPagoDetalle['porcentaje'], 1, 0, 'R');
+            $pdf->Cell(21, 4, number_format($arPagoDetalle['vrDevengado'], 0, '.', ','), 1, 0, 'R');
+            $pdf->Cell(21, 4, number_format($arPagoDetalle['vrDeduccion'], 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }

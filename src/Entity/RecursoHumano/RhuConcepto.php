@@ -235,6 +235,11 @@ class RhuConcepto
     protected $puestoAdicionalConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuFacturaDetalle", mappedBy="conceptoRel")
+     */
+    protected $facturasDetallesConceptoRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -328,6 +333,22 @@ class RhuConcepto
     public function setGeneraIngresoBaseCotizacion($generaIngresoBaseCotizacion): void
     {
         $this->generaIngresoBaseCotizacion = $generaIngresoBaseCotizacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraIngresoBasePrestacionVacacion()
+    {
+        return $this->generaIngresoBasePrestacionVacacion;
+    }
+
+    /**
+     * @param mixed $generaIngresoBasePrestacionVacacion
+     */
+    public function setGeneraIngresoBasePrestacionVacacion($generaIngresoBasePrestacionVacacion): void
+    {
+        $this->generaIngresoBasePrestacionVacacion = $generaIngresoBasePrestacionVacacion;
     }
 
     /**
@@ -509,6 +530,38 @@ class RhuConcepto
     /**
      * @return mixed
      */
+    public function getCredito()
+    {
+        return $this->credito;
+    }
+
+    /**
+     * @param mixed $credito
+     */
+    public function setCredito($credito): void
+    {
+        $this->credito = $credito;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmbargo()
+    {
+        return $this->embargo;
+    }
+
+    /**
+     * @param mixed $embargo
+     */
+    public function setEmbargo($embargo): void
+    {
+        $this->embargo = $embargo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getNumeroDian()
     {
         return $this->numeroDian;
@@ -552,6 +605,22 @@ class RhuConcepto
     public function setFondoSolidaridadPensional($fondoSolidaridadPensional): void
     {
         $this->fondoSolidaridadPensional = $fondoSolidaridadPensional;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeVacaciones()
+    {
+        return $this->porcentajeVacaciones;
+    }
+
+    /**
+     * @param mixed $porcentajeVacaciones
+     */
+    public function setPorcentajeVacaciones($porcentajeVacaciones): void
+    {
+        $this->porcentajeVacaciones = $porcentajeVacaciones;
     }
 
     /**
@@ -701,6 +770,22 @@ class RhuConcepto
     /**
      * @return mixed
      */
+    public function getConfiguracionConceptoVacacionRel()
+    {
+        return $this->configuracionConceptoVacacionRel;
+    }
+
+    /**
+     * @param mixed $configuracionConceptoVacacionRel
+     */
+    public function setConfiguracionConceptoVacacionRel($configuracionConceptoVacacionRel): void
+    {
+        $this->configuracionConceptoVacacionRel = $configuracionConceptoVacacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getConfiguracionConceptoFondoSolidaridadRel()
     {
         return $this->configuracionConceptoFondoSolidaridadRel;
@@ -845,86 +930,6 @@ class RhuConcepto
     /**
      * @return mixed
      */
-    public function getGeneraIngresoBasePrestacionVacacion()
-    {
-        return $this->generaIngresoBasePrestacionVacacion;
-    }
-
-    /**
-     * @param mixed $generaIngresoBasePrestacionVacacion
-     */
-    public function setGeneraIngresoBasePrestacionVacacion($generaIngresoBasePrestacionVacacion): void
-    {
-        $this->generaIngresoBasePrestacionVacacion = $generaIngresoBasePrestacionVacacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConfiguracionConceptoVacacionRel()
-    {
-        return $this->configuracionConceptoVacacionRel;
-    }
-
-    /**
-     * @param mixed $configuracionConceptoVacacionRel
-     */
-    public function setConfiguracionConceptoVacacionRel($configuracionConceptoVacacionRel): void
-    {
-        $this->configuracionConceptoVacacionRel = $configuracionConceptoVacacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCredito()
-    {
-        return $this->credito;
-    }
-
-    /**
-     * @param mixed $credito
-     */
-    public function setCredito($credito): void
-    {
-        $this->credito = $credito;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEmbargo()
-    {
-        return $this->embargo;
-    }
-
-    /**
-     * @param mixed $embargo
-     */
-    public function setEmbargo($embargo): void
-    {
-        $this->embargo = $embargo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPorcentajeVacaciones()
-    {
-        return $this->porcentajeVacaciones;
-    }
-
-    /**
-     * @param mixed $porcentajeVacaciones
-     */
-    public function setPorcentajeVacaciones($porcentajeVacaciones): void
-    {
-        $this->porcentajeVacaciones = $porcentajeVacaciones;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getPuestoAdicionalConceptoRel()
     {
         return $this->puestoAdicionalConceptoRel;
@@ -937,6 +942,23 @@ class RhuConcepto
     {
         $this->puestoAdicionalConceptoRel = $puestoAdicionalConceptoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesConceptoRel()
+    {
+        return $this->facturasDetallesConceptoRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesConceptoRel
+     */
+    public function setFacturasDetallesConceptoRel($facturasDetallesConceptoRel): void
+    {
+        $this->facturasDetallesConceptoRel = $facturasDetallesConceptoRel;
+    }
+
 
 
 

@@ -62,11 +62,13 @@ class PuestoType  extends AbstractType
             ])
             ->add('salarioRel',EntityType::class,[
                 'class' => TurSalario::class,
+                'required' => false,
                 'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('s')
                         ->orderBy('s.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
+                'placeholder' => ''
             ])
 
             ->add('nombre', TextType::class)

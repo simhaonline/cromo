@@ -456,7 +456,7 @@ class MovimientoController extends AbstractController
                 ];
             }
             if ($form->get('btnGuardar')->isClicked()) {
-                $arrItems = $request->request->get('itemCantidad');
+                $arrItems = $request->query->get('itemCantidad');
                 if (count($arrItems) > 0) {
                     foreach ($arrItems as $codigoItem => $cantidad) {
                         $arItem = $em->getRepository(InvItem::class)->find($codigoItem);

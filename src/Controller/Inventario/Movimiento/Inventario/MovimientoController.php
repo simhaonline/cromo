@@ -435,12 +435,14 @@ class MovimientoController extends AbstractController
             ->add('txtReferenciaItem', TextType::class, ['label' => 'Referencia: ', 'required' => false])
             ->add('itemConExistencia', CheckboxType::class, array('label' => ' ', 'required' => false))
             ->add('itemConDisponibilidad', CheckboxType::class, array('label' => ' ', 'required' => false))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 1000))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $raw = [
-            'limiteRegistros' => null
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
         ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {

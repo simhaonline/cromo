@@ -210,6 +210,17 @@ class TesMovimientoRepository extends ServiceEntityRepository
                             }
 
                         }
+                        if ($arMovimientoDetalle->getCodigoCuentaFk()) {
+                            /** @var $arCuenta FinCuenta 7168 */
+                            $arCuenta = $em->getRepository(FinCuenta::class)->find($arMovimientoDetalle->getCodigoCuentaFk());
+                            if ($arCuenta) {
+                                if ($arCuenta->getExigeCentroCosto() && $arMovimientoDetalle->getCodigoCentroCostoFk() == null) {
+                                    Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoIngresoDetallePk() . " la cuenta exige centro de costos y no tiene");
+                                    $error = true;
+                                    break;
+                                }
+                            }
+                        }
                     }
                     if ($error == false) {
                         $arMovimiento->setEstadoAutorizado(1);

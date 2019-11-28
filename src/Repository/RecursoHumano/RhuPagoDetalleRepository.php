@@ -26,6 +26,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
                 ->leftJoin('pd.conceptoRel', 'c')
                 ->select('pd.codigoPagoDetallePk')
                 ->addSelect('pd.codigoConceptoFk')
+                ->addSelect('ABS(pd.codigoConceptoFk) AS HIDDEN concepto')
                 ->addSelect('c.nombre')
                 ->addSelect('pd.detalle')
                 ->addSelect('pd.porcentaje')
@@ -40,7 +41,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
                 ->addSelect('pd.vrIngresoBasePrestacion')
                 ->addSelect('pd.vrIngresoBaseCotizacion')
                 ->where("pd.codigoPagoFk = {$codigoPago}")
-                ->orderBy("pd.codigoConceptoFk", "ASC");
+                ->orderBy('concepto');
         } else {
             $query = null;
         }

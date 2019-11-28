@@ -89,7 +89,12 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 col-sm-offset-6 control-label">Adicional prestacional:</label>
+                    <label class="col-sm-2 control-label">Cliente:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.clienteRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                        {{ form_errors(form.clienteRel) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Adicional prestacional:</label>
                     <div class="col-sm-4">
                         {{ form_widget(form.vrAdicionalPrestacional, { 'attr': {'class': 'form-control'} }) }}
                         {{ form_errors(form.vrAdicionalPrestacional) }}

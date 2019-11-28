@@ -280,7 +280,7 @@ class SoporteController extends ControllerListenerGeneral
         if ($arSoportes) {
             $libro = new Spreadsheet();
             $hoja = $libro->getActiveSheet();
-            $hoja->setTitle('guias');
+            $hoja->setTitle('soporte');
             $j = 0;
             $arrColumnas = ['COD', 'NIT', 'EMPLEADO', 'CT',
                 'D', 'DT', 'NOV','IND', 'ING','RET', 'INC', 'LIC', 'LNR', 'AUS', 'VAC',

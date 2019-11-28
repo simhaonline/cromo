@@ -36,6 +36,7 @@
                 <th>DISTRIBUCIÓN</th>
                 <th title="Carga contratos">CC</th>
                 <th title="Carga soportes">CS</th>
+                <th title="Genera pedido">PED</th>
                 <th></th>
                 <th></th>
                 <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
@@ -49,6 +50,7 @@
                 <td>{{ arGrupo.codigoDistribucionFk }}</td>
                 <td>{{ arGrupo.cargarContrato ? "SI": "NO" }}</td>
                 <td>{{ arGrupo.cargarSoporte ? "SI": "NO" }}</td>
+                <td>{{ arGrupo.generaPedido ? "SI": "NO" }}</td>
                 <td class="text-center">
                     <a href="{{ path('recursohumano_administracion_general_grupo_nuevo',{'id': arGrupo.codigoGrupoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

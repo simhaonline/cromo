@@ -283,6 +283,11 @@ class RhuContrato
     private $turnoFijo = false;
 
     /**
+     * @ORM\Column(name="codigo_cliente_fk", type="integer", nullable=true)
+     */
+    private $codigoClienteFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuSalarioTipo", inversedBy="contratosSalarioTipoRel")
      * @ORM\JoinColumn(name="codigo_salario_tipo_fk", referencedColumnName="codigo_salario_tipo_pk")
      */
@@ -431,6 +436,12 @@ class RhuContrato
      * @ORM\JoinColumn(name="codigo_distribucion_fk",referencedColumnName="codigo_distribucion_pk")
      */
     protected $distribucionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCliente", inversedBy="contratosClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    protected $clienteRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuProgramacionDetalle", mappedBy="contratoRel")
@@ -2051,6 +2062,38 @@ class RhuContrato
     public function setProgramacionesContratoRel($programacionesContratoRel): void
     {
         $this->programacionesContratoRel = $programacionesContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoClienteFk()
+    {
+        return $this->codigoClienteFk;
+    }
+
+    /**
+     * @param mixed $codigoClienteFk
+     */
+    public function setCodigoClienteFk($codigoClienteFk): void
+    {
+        $this->codigoClienteFk = $codigoClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
     }
 
 

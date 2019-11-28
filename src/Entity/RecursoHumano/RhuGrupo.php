@@ -48,6 +48,11 @@ class RhuGrupo
     private $cargarSoporte = false;
 
     /**
+     * @ORM\Column(name="genera_pedido", type="boolean",options={"default" : false}, nullable=true)
+     */
+    private $generaPedido = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuDistribucion", inversedBy="gruposDistribucionRel")
      * @ORM\JoinColumn(name="codigo_distribucion_fk",referencedColumnName="codigo_distribucion_pk")
      */
@@ -104,22 +109,6 @@ class RhuGrupo
     protected $licenciasGrupoRel;
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoGrupoPk()
@@ -149,6 +138,102 @@ class RhuGrupo
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescansoDistribucion()
+    {
+        return $this->descansoDistribucion;
+    }
+
+    /**
+     * @param mixed $descansoDistribucion
+     */
+    public function setDescansoDistribucion($descansoDistribucion): void
+    {
+        $this->descansoDistribucion = $descansoDistribucion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDistribucionFk()
+    {
+        return $this->codigoDistribucionFk;
+    }
+
+    /**
+     * @param mixed $codigoDistribucionFk
+     */
+    public function setCodigoDistribucionFk($codigoDistribucionFk): void
+    {
+        $this->codigoDistribucionFk = $codigoDistribucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargarContrato()
+    {
+        return $this->cargarContrato;
+    }
+
+    /**
+     * @param mixed $cargarContrato
+     */
+    public function setCargarContrato($cargarContrato): void
+    {
+        $this->cargarContrato = $cargarContrato;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargarSoporte()
+    {
+        return $this->cargarSoporte;
+    }
+
+    /**
+     * @param mixed $cargarSoporte
+     */
+    public function setCargarSoporte($cargarSoporte): void
+    {
+        $this->cargarSoporte = $cargarSoporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeneraPedido()
+    {
+        return $this->generaPedido;
+    }
+
+    /**
+     * @param mixed $generaPedido
+     */
+    public function setGeneraPedido($generaPedido): void
+    {
+        $this->generaPedido = $generaPedido;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDistribucionRel()
+    {
+        return $this->distribucionRel;
+    }
+
+    /**
+     * @param mixed $distribucionRel
+     */
+    public function setDistribucionRel($distribucionRel): void
+    {
+        $this->distribucionRel = $distribucionRel;
     }
 
     /**
@@ -298,38 +383,6 @@ class RhuGrupo
     /**
      * @return mixed
      */
-    public function getCargarContrato()
-    {
-        return $this->cargarContrato;
-    }
-
-    /**
-     * @param mixed $cargarContrato
-     */
-    public function setCargarContrato($cargarContrato): void
-    {
-        $this->cargarContrato = $cargarContrato;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCargarSoporte()
-    {
-        return $this->cargarSoporte;
-    }
-
-    /**
-     * @param mixed $cargarSoporte
-     */
-    public function setCargarSoporte($cargarSoporte): void
-    {
-        $this->cargarSoporte = $cargarSoporte;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getLicenciasGrupoRel()
     {
         return $this->licenciasGrupoRel;
@@ -341,54 +394,6 @@ class RhuGrupo
     public function setLicenciasGrupoRel($licenciasGrupoRel): void
     {
         $this->licenciasGrupoRel = $licenciasGrupoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoDistribucionFk()
-    {
-        return $this->codigoDistribucionFk;
-    }
-
-    /**
-     * @param mixed $codigoDistribucionFk
-     */
-    public function setCodigoDistribucionFk($codigoDistribucionFk): void
-    {
-        $this->codigoDistribucionFk = $codigoDistribucionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDistribucionRel()
-    {
-        return $this->distribucionRel;
-    }
-
-    /**
-     * @param mixed $distribucionRel
-     */
-    public function setDistribucionRel($distribucionRel): void
-    {
-        $this->distribucionRel = $distribucionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescansoDistribucion()
-    {
-        return $this->descansoDistribucion;
-    }
-
-    /**
-     * @param mixed $descansoDistribucion
-     */
-    public function setDescansoDistribucion($descansoDistribucion): void
-    {
-        $this->descansoDistribucion = $descansoDistribucion;
     }
 
 

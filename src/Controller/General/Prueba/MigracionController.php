@@ -2837,12 +2837,12 @@ class MigracionController extends Controller
         $datos = $conn->query('SELECT username, nombre_corto,numero_identificacion, cargo, is_active,roles,email,notificaciones_pendientes FROM users');
         foreach ($datos as $row) {
             $arUsuario = new Usuario();
-            $arUsuario->setUsername($row['username']);
+            $arUsuario->setUsername(utf8_decode($row['username']));
             $arUsuario->setNombreCorto(utf8_decode($row['nombre_corto']));
-            $arUsuario->setNumeroIdentificacion($row['numero_identificacion']);
-            $arUsuario->setCargo($row['cargo']);
-            $arUsuario->setPassword(password_hash($row['username'], PASSWORD_BCRYPT));
-            $arUsuario->setEmail($row['email']);
+            $arUsuario->setNumeroIdentificacion(utf8_decode($row['numero_identificacion']));
+            $arUsuario->setCargo(utf8_decode($row['cargo']));
+            $arUsuario->setPassword(utf8_decode(password_hash($row['username'], PASSWORD_BCRYPT)));
+            $arUsuario->setEmail(utf8_decode($row['email']));
             $arUsuario->setIsActive($row['is_active']);
             $arUsuario->setRol($row['roles']);
             $arUsuario->setNotificacionesPendientes($row['notificaciones_pendientes']);

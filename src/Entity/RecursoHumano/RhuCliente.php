@@ -162,35 +162,9 @@ class RhuCliente
     protected $facturasClienteRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="clienteRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuContrato", mappedBy="clienteRel")
      */
     protected $contratosClienteRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleadoServicio", mappedBy="clienteRel")
-     */
-    protected $costosEmpleadosServiciosClienteRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoServicio", mappedBy="clienteRel")
-     */
-    protected $costosServiciosClienteRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -238,6 +212,22 @@ class RhuCliente
     public function setCodigoCiudadFk($codigoCiudadFk): void
     {
         $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAsesorFk()
+    {
+        return $this->codigoAsesorFk;
+    }
+
+    /**
+     * @param mixed $codigoAsesorFk
+     */
+    public function setCodigoAsesorFk($codigoAsesorFk): void
+    {
+        $this->codigoAsesorFk = $codigoAsesorFk;
     }
 
     /**
@@ -467,6 +457,38 @@ class RhuCliente
     /**
      * @return mixed
      */
+    public function getRetencionFuente()
+    {
+        return $this->retencionFuente;
+    }
+
+    /**
+     * @param mixed $retencionFuente
+     */
+    public function setRetencionFuente($retencionFuente): void
+    {
+        $this->retencionFuente = $retencionFuente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetencionFuenteSinBase()
+    {
+        return $this->retencionFuenteSinBase;
+    }
+
+    /**
+     * @param mixed $retencionFuenteSinBase
+     */
+    public function setRetencionFuenteSinBase($retencionFuenteSinBase): void
+    {
+        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoFormaPagoFk()
     {
         return $this->codigoFormaPagoFk;
@@ -478,6 +500,22 @@ class RhuCliente
     public function setCodigoFormaPagoFk($codigoFormaPagoFk): void
     {
         $this->codigoFormaPagoFk = $codigoFormaPagoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstrato()
+    {
+        return $this->estrato;
+    }
+
+    /**
+     * @param mixed $estrato
+     */
+    public function setEstrato($estrato): void
+    {
+        $this->estrato = $estrato;
     }
 
     /**
@@ -547,33 +585,17 @@ class RhuCliente
     /**
      * @return mixed
      */
-    public function getPedidosClienteRel()
+    public function getAsesorRel()
     {
-        return $this->pedidosClienteRel;
+        return $this->asesorRel;
     }
 
     /**
-     * @param mixed $pedidosClienteRel
+     * @param mixed $asesorRel
      */
-    public function setPedidosClienteRel($pedidosClienteRel): void
+    public function setAsesorRel($asesorRel): void
     {
-        $this->pedidosClienteRel = $pedidosClienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContratosClienteRel()
-    {
-        return $this->contratosClienteRel;
-    }
-
-    /**
-     * @param mixed $contratosClienteRel
-     */
-    public function setContratosClienteRel($contratosClienteRel): void
-    {
-        $this->contratosClienteRel = $contratosClienteRel;
+        $this->asesorRel = $asesorRel;
     }
 
     /**
@@ -592,101 +614,6 @@ class RhuCliente
         $this->facturasClienteRel = $facturasClienteRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRetencionFuente()
-    {
-        return $this->retencionFuente;
-    }
-
-    /**
-     * @param mixed $retencionFuente
-     */
-    public function setRetencionFuente($retencionFuente): void
-    {
-        $this->retencionFuente = $retencionFuente;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionFuenteSinBase()
-    {
-        return $this->retencionFuenteSinBase;
-    }
-
-    /**
-     * @param mixed $retencionFuenteSinBase
-     */
-    public function setRetencionFuenteSinBase($retencionFuenteSinBase): void
-    {
-        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstrato()
-    {
-        return $this->estrato;
-    }
-
-    /**
-     * @param mixed $estrato
-     */
-    public function setEstrato($estrato): void
-    {
-        $this->estrato = $estrato;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCostosEmpleadosServiciosClienteRel()
-    {
-        return $this->costosEmpleadosServiciosClienteRel;
-    }
-
-    /**
-     * @param mixed $costosEmpleadosServiciosClienteRel
-     */
-    public function setCostosEmpleadosServiciosClienteRel($costosEmpleadosServiciosClienteRel): void
-    {
-        $this->costosEmpleadosServiciosClienteRel = $costosEmpleadosServiciosClienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCostosServiciosClienteRel()
-    {
-        return $this->costosServiciosClienteRel;
-    }
-
-    /**
-     * @param mixed $costosServiciosClienteRel
-     */
-    public function setCostosServiciosClienteRel($costosServiciosClienteRel): void
-    {
-        $this->costosServiciosClienteRel = $costosServiciosClienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAsesorRel()
-    {
-        return $this->asesorRel;
-    }
-
-    /**
-     * @param mixed $asesorRel
-     */
-    public function setAsesorRel($asesorRel): void
-    {
-        $this->asesorRel = $asesorRel;
-    }
 
 
 

@@ -32,6 +32,7 @@ class GrupoType extends AbstractType
             ])
             ->add('cargarContrato', CheckboxType::class, ['required' => false])
             ->add('cargarSoporte', CheckboxType::class, ['required' => false])
+            ->add('generaPedido', CheckboxType::class, ['required' => false])
             ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
         ;
     }

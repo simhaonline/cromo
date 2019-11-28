@@ -7,6 +7,7 @@ use App\Entity\General\GenCiudad;
 use App\Entity\RecursoHumano\RhuCargo;
 use App\Entity\RecursoHumano\RhuCentroTrabajo;
 use App\Entity\RecursoHumano\RhuClasificacionRiesgo;
+use App\Entity\RecursoHumano\RhuCliente;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuContratoTipo;
 use App\Entity\RecursoHumano\RhuCostoClase;
@@ -230,6 +231,15 @@ class ContratoType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'required' => false
+            ])
+            ->add('clienteRel', EntityType::class, [
+                'class' => RhuCliente::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombreCorto', 'ASC');
+                },
+                'choice_label' => 'nombreCorto',
+                'required' => true
             ])
             ->add('fechaDesde', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
             ->add('fechaHasta', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])

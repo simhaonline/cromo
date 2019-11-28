@@ -108,7 +108,7 @@ final class Estandares
 
         try {
             if(self::getLogo(BaseDatos::getEm()) ){
-                $pdf->Image(self::getLogo(BaseDatos::getEm())['imagen'], 12, 13, 40, 25,self::getLogo(BaseDatos::getEm())['extension']);
+                $pdf->Image(self::getLogo(BaseDatos::getEm())['imagen'], 12, 10, 40, 25,self::getLogo(BaseDatos::getEm())['extension']);
             }
         } catch (\Exception $exception) {
         }

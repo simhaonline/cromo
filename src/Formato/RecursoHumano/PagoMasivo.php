@@ -6,6 +6,7 @@ use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Utilidades\Estandares;
 use Doctrine\ORM\EntityManager;
 
 class PagoMasivo extends \FPDF
@@ -60,29 +61,13 @@ class PagoMasivo extends \FPDF
     public function Header()
     {
         $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
-        $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Arial', 'B', 10);
-        //Logo
-        $this->SetXY(53, 3);
-//        $this->Image('imagenes/logos/logo.jpg', 12, 5, 28, 17);
-        //INFORMACIÓN EMPRESA
-        $this->Cell(150, 7, "COMPROBANTE PAGO NOMINA", 0, 0, 'C', 1); //$this->Cell(150, 7, utf8_decode("COMPROBANTE PAGO ". $arPago->getPagoTipoRel()->getNombre().""), 0, 0, 'C', 1);
-        $this->SetXY(53, 11);
-        $this->SetFont('Arial', 'B', 9);
-        $this->Cell(20, 4, "EMPRESA:", 0, 0, 'L', 1);
-        $this->Cell(100, 4, $arConfiguracion->getNombre() . "NIT:" . $arConfiguracion->getNit() . " - " . $arConfiguracion->getDigitoVerificacion(), 0, 0, 'L', 0);
-        $this->SetXY(53, 15);
-        $this->Cell(20, 4, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
-        $this->Cell(100, 4, $arConfiguracion->getDireccion(), 0, 0, 'L', 0);
-        $this->SetXY(53, 19);
-        $this->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
-        $this->Cell(100, 4, $arConfiguracion->getTelefono(), 0, 0, 'L', 0);
+        Estandares::generarEncabezado($this, 'COMPROBANTE DE PAGO DE NOMINA', self::$em);
         $this->EncabezadoDetalles();
     }
 
     public function EncabezadoDetalles()
     {
-        $this->SetXY(10, 53);
+        $this->SetXY(10, 63.90);
         $header = array('COD', 'CONCEPTO', 'HORAS', 'DIAS', 'VR.HORA', '%', 'DEVENGADO', 'DEDUCCION');
         $this->SetFillColor(200, 200, 200);
         $this->SetTextColor(0);
@@ -121,9 +106,8 @@ class PagoMasivo extends \FPDF
         $numeroPagos = count($arPagos);
         $contador = 1;
         foreach ($arPagos as $arPago) {
-            $y = 25;
             //FILA 1
-            $intY = 29;
+            $intY = 40;
             $pdf->SetXY(10, $intY);
             $pdf->SetFont('Arial', 'B', 7);
             $pdf->Cell(25, 4, "NUMERO:", 1, 0, 'L', 1);
@@ -228,20 +212,18 @@ class PagoMasivo extends \FPDF
             $totalExtras = 0;
             $totalCompensado = 0;
             $totalHorasCompensado = 0;
-            $dql = self::$em->getRepository(RhuPagoDetalle::class)->listaDql($arPago->getCodigoPagoPk());
-            $query = self::$em->createQuery($dql);
-            $arPagoDetalles = $query->getResult();
+            $arPagoDetalles = self::$em->getRepository(RhuPagoDetalle::class)->lista($arPago->getCodigoPagoPk());
             /** @var  $arPagoDetalle RhuPagoDetalle */
             foreach ($arPagoDetalles as $arPagoDetalle) {
-                $pdf->Cell(15, 4, $arPagoDetalle->getCodigoPagoDetallePk(), 1, 0, 'L');
-                $pdf->Cell(80, 4, utf8_decode($arPagoDetalle->getConceptoRel()->getNombre()), 1, 0, 'L');
-                $pdf->Cell(12, 4, $arPagoDetalle->getHoras(), 1, 0, 'R');
-                $pdf->Cell(10, 4, $arPagoDetalle->getDias(), 1, 0, 'R');
-                $pdf->Cell(25, 4, number_format($arPagoDetalle->getVrHora(), 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(6, 4, $arPagoDetalle->getPorcentaje(), 1, 0, 'R');
-                $pdf->Cell(21, 4, number_format($arPagoDetalle->getVrDevengado(), 0, '.', ','), 1, 0, 'R');
-                $pdf->Cell(21, 4, number_format($arPagoDetalle->getVrDeduccion(), 0, '.', ','), 1, 0, 'R');
-                $pdf->Ln(4);
+                $pdf->Cell(15, 4, $arPagoDetalle['codigoConceptoFk'], 1, 0, 'L');
+                $pdf->Cell(80, 4, utf8_decode($arPagoDetalle['nombre']), 1, 0, 'L');
+                $pdf->Cell(12, 4, $arPagoDetalle['horas'], 1, 0, 'R');
+                $pdf->Cell(10, 4, $arPagoDetalle['dias'], 1, 0, 'R');
+                $pdf->Cell(25, 4, number_format($arPagoDetalle['vrHora'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(6, 4, $arPagoDetalle['porcentaje'], 1, 0, 'R');
+                $pdf->Cell(21, 4, number_format($arPagoDetalle['vrDevengado'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(21, 4, number_format($arPagoDetalle['vrDeduccion'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 15);
             }
 

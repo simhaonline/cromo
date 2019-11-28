@@ -14,7 +14,8 @@
         {% if arLiquidacion.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arLiquidacion.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arLiquidacion.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
-        {% if arLiquidacion.estadoContabilizado == true %}<span class="label label-success">Contabilizado</span>{% endif %}
+        {% if arLiquidacion.estadoContabilizado == true %}<span
+                class="label label-success">Contabilizado</span>{% endif %}
     </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
@@ -45,10 +46,11 @@
             <td class="titulo"></td>
             <td class="numero"></td>
             <td class="titulo">IBP CESANTIAS:</td>
-            <td class="numero">$ {{ arLiquidacion.vrIngresoBasePrestacionCesantias | number_format(0, '.', ',') }}</td>
-            {#                        <a href="javascript:abrirVentana3('{{ path('brs_rhu_movimiento_liquidacion_detalle_cesantia',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle vacacion',600,1300)">#}
-            {#                            $ {{ arLiquidacion.vrIngresoBasePrestacionCesantias | number_format(0, '.', ',') }}#}
-            {#                        </a>#}
+            <td class="numero">
+                <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_cesantias',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle cesantias',600,1300)">
+                    $ {{ arLiquidacion.vrIngresoBasePrestacionCesantias | number_format(0, '.', ',') }}
+                </a>
+            </td>
             <td class="titulo"></td>
             <td class="numero"></td>
         </tr>

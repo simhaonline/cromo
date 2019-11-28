@@ -1825,4 +1825,50 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
         }
         return $respuesta;
     }
+
+    public function detalleCesantias($codigoLiquidacion)
+    {
+        $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoLiquidacion);
+        if ($arConfiguracion->getLiquidarCesantiaAnioAnterior()) {
+            // validacion y liquidacion de cesantias año anterior
+            if ($arLiquidacion->getOmitirCesantiasAnterior() == false) { // validacion y liquidacion de cesantias año anterior
+                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 'NOM', 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoAprobado' => 0));
+                if ($arPago) {
+                    $arProgramacionPagoDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($arPago->getCodigoProgramacionPagoDetalleFk());
+                    return $arProgramacionPagoDetalle;
+                } else {
+                    return null;
+                }
+            }
+
+//            // validacion y liquidacion de intereses cesantias año anterior
+//            if ($arLiquidacion->getOmitirInteresCesantiasAnterior() == false) {
+//                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 6, 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoPagadoBanco' => 0));
+//                return $arPago;
+//            }
+        }
+
+        $dateFechaDesde = $arLiquidacion->getContratoRel()->getFechaUltimoPagoCesantias();
+        $dateFechaHasta = $arLiquidacion->getContratoRel()->getFechaHasta();
+        if ($dateFechaHasta >= $dateFechaDesde) {
+
+            //Liquidar con salario y suplementario
+            if ($arConfiguracion->getLiquidarPrestacionesSalarioSuplementario()) {
+                $arrSuplementario = $em->getRepository(RhuPagoDetalle::class)->listaibpSuplementario($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+                // $suplementacioAdicional = $em->getRepository("BrasaRecursoHumanoBundle:RhuLiquidacionAdicionales")->ibpSuplementario($arLiquidacion);
+                return $arrSuplementario;
+            }
+
+            if ($arLiquidacion->getVrSalarioCesantiasPropuesto() > 0) {
+                return null;
+            }
+            $ibpCesantias = $em->getRepository(RhuPagoDetalle::class)->listaIbp($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+            return $ibpCesantias;
+        } else {
+            return null;
+        }
+
+    }
 }

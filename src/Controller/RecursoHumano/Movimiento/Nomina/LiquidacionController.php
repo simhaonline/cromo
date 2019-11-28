@@ -302,6 +302,19 @@ class LiquidacionController extends AbstractController
             'form' => $form->createView()));
     }
 
+    /**
+     * @Route("/recursohumano/movimiento/nomina/liquidacion/detalle/cesantias/{codigoLiquidacion}", name="recursohumano_movimiento_nomina_liquidacion_detalle_cesantias")
+     */
+    public function detallePagosCesantias(Request $request, $codigoLiquidacion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arDetalleCesantia = $em->getRepository(RhuLiquidacion::class)->detalleCesantias($codigoLiquidacion);
+        return $this->render('recursohumano/movimiento/nomina/liquidacion/detalleCesantias.html.twig', array(
+            'arDetalleCesantia' => $arDetalleCesantia
+        ));
+
+    }
+
     public function getFiltros($form)
     {
         $filtro = [

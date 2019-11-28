@@ -1,0 +1,48 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block title %}Detalle cesantia{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="tab-content">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-condensed tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>NUMERO</th>
+                            <th>DESDE</th>
+                            <th>HASTA</th>
+                            <th>CONCEPTO</th>
+                            <th>VALOR</th>
+                            <th>PORCENTAJE</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% set total = 0 %}
+                        {% for arDetalleCesantia in arDetalleCesantia %}
+
+                            <tr>
+                                <td>{{ arDetalleCesantia['numero'] }}</td>
+                                <td>{{ arDetalleCesantia['fechaDesde'] |date("Y/m/d") }}</td>
+                                <td>{{ arDetalleCesantia['fechaHasta'] |date("Y/m/d") }}</td>
+                                <td>{{ arDetalleCesantia['concepto'] }}</td>
+                                <td>{{ arDetalleCesantia['vrIngresoPrestacion'] | number_format(0,',','.') }}</td>
+                                <td>{{ arDetalleCesantia['porcentaje'] }}</td>
+                            </tr>
+                            {% set total =total+ arDetalleCesantia['vrIngresoPrestacion'] %}
+                        {% endfor %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Total</td>
+                            <td>{{ total | number_format(0,',','.') }}</td>
+                            <td></td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br/><br/>
+    </section>
+{% endblock %}

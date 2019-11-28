@@ -34,12 +34,18 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect('cr.nombre')
             ->addSelect('c.codigoEmpleadoFk')
             ->addSelect('c.estadoTerminado')
+            ->addSelect('ca.nombre as caja')
+            ->addSelect('sa.nombre as salud')
+            ->addSelect('pa.nombre as pension')
             ->leftJoin('c.contratoTipoRel', 'ct')
             ->leftJoin('c.clasificacionRiesgoRel', 'cr')
             ->leftJoin('c.tiempoRel', 't')
             ->leftJoin('c.grupoRel', 'gp')
             ->leftJoin('c.cargoRel', 'cg')
             ->leftJoin('c.empleadoRel', 'e')
+            ->leftJoin('c.entidadCajaRel', 'ca')
+            ->leftJoin('c.entidadSaludRel', 'sa')
+            ->leftJoin('c.entidadPensionRel', 'pa')
             ->andWhere('c.codigoContratoPk <> 0')
         ->orderBy('c.codigoContratoPk', 'ASC');
         if ($session->get('filtroRhuNombreEmpleado') != '') {

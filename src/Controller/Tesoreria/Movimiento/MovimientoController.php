@@ -221,24 +221,9 @@ class MovimientoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->All();
             if ($form->get('btnAutorizar')->isClicked()) {
-                /**
-                 * @var $arCuenta FinCuenta
-                 */
-                $ExigenCentroCosto = "";
-                foreach ($arrControles['arrCuenta'] as $codigoCuenta){
-                    $arCuenta=$em->getRepository(FinCuenta::class)->find($codigoCuenta);
-                    if ($arCuenta->getExigeCentroCosto() == true){
-                        $ExigenCentroCosto.= "{$codigoCuenta}";
-                        break;
-                    }
-                }
-                if ($ExigenCentroCosto != ""){
-                    Mensajes::info("Las cuanta: {$ExigenCentroCosto} exigen centro de costo");
-                } else{
                     $em->getRepository(TesMovimientoDetalle::class)->actualizar($arrControles, $id);
                     $em->getRepository(TesMovimiento::class)->liquidar($id);
                     $em->getRepository(TesMovimiento::class)->autorizar($arMovimiento);
-                }
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
 
             }

@@ -55,7 +55,7 @@
                 <td style="text-align: right">{{ arRecogida.pesoVolumen }}</td>
                 <td style="text-align: right"><input class="input-grid" type="text" name="txtFecha{{ arRecogida.codigoRecogidaPk }}" value="{{ "now"|date("Y/m/d") }}" size="20" style="text-align: right; width:80px" onclick="this.select()"/></td>
                 <td style="text-align: right"><input class="input-grid" type="text" name="txtHora{{ arRecogida.codigoRecogidaPk }}"  value="{{ "now"|date("H:i") }}" size="10" style="text-align: right; width:40px" onclick="this.select()"/></td>
-                <td style="text-align: center"><input type="checkbox" name="chkSeleccionar[]" value="{{ arRecogida.codigoRecogidaPk }}" /></td>
+                <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecogida.codigoRecogidaPk }}" /></td>
             </tr>
         {% endfor %}
         </tbody>

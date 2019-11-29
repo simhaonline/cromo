@@ -22,6 +22,12 @@
                 </ul>
             </div>
     </div>
+    <div style="float:right">
+        {% if arProgramacion.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arProgramacion.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arProgramacion.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arProgramacion.estadoContabilizado == true %}<span class="label label-success">Contabilizado</span>{% endif %}
+    </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>

@@ -163,7 +163,7 @@ class RhuVacacion
     private $mesesPeriodo = 0;
 
     /**
-     * @ORM\Column(name="comentarios", type="string", length=200, nullable=true)
+     * @ORM\Column(name="comentarios", type="string", length=2000, nullable=true)
      */
     private $comentarios;
 
@@ -324,6 +324,22 @@ class RhuVacacion
      * @ORM\OneToMany(targetEntity="RhuVacacionCambio", mappedBy="vacacionRel")
      */
     protected $vacacionesCambiosVacacionRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -1284,7 +1300,6 @@ class RhuVacacion
     {
         $this->vacacionesCambiosVacacionRel = $vacacionesCambiosVacacionRel;
     }
-
 
 
 }

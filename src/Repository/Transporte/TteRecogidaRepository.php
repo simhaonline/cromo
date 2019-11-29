@@ -347,7 +347,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
             ->where('r.codigoDespachoRecogidaFk = ' . $codigoRecogidaDespacho)
             ->andWhere('r.estadoRecogido = 0');
 
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
 
 //        $em = $this->getEntityManager();
 //        $query = $em->createQuery(
@@ -366,7 +366,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
     public function listaDescarga($codigoRecogidaDespacho): array
     {
         $em = $this->getEntityManager();
-        $query = $em->createQuery(
+        $queryBuilder = $em->createQuery(
             'SELECT r.codigoRecogidaPk, r.fechaRegistro, r.fecha, c.nombreCorto AS clienteNombreCorto, co.nombre AS ciudad, 
         r.estadoProgramado, r.estadoRecogido, r.unidades, r.pesoReal, r.pesoVolumen
         FROM App\Entity\Transporte\TteRecogida r 
@@ -375,7 +375,7 @@ class TteRecogidaRepository extends ServiceEntityRepository
         WHERE r.codigoDespachoRecogidaFk = :codigoDespachoRecogida AND r.estadoRecogido = 1 AND r.estadoDescargado = 0'
         )->setParameter('codigoDespachoRecogida', $codigoRecogidaDespacho);
 
-        return $query->execute();
+        return $queryBuilder->getResult();
 
     }
 

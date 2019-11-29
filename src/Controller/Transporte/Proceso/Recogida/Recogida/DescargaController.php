@@ -31,7 +31,7 @@ class DescargaController extends Controller
                 $query = $this->getDoctrine()->getRepository(TteRecogida::class)->listaDescarga($codigoDespachoRecogida);
             }
             if ($form->get('btnDescarga')->isClicked()) {
-                $arrRecogidas = $request->request->get('chkSeleccionar');
+                $arrRecogidas = $request->request->get('ChkSeleccionar');
                 $arrControles = $request->request->All();
                 $respuesta = $this->getDoctrine()->getRepository(TteRecogida::class)->descarga($arrRecogidas, $arrControles);
                 $codigoDespachoRecogida = $form->get('codigoDespachoRecogida')->getData();

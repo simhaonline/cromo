@@ -31,7 +31,7 @@ class RecogeController extends Controller
                 $query = $this->getDoctrine()->getRepository(TteRecogida::class)->listaRecoge($codigoDespachoRecogida);
             }
             if ($form->get('btnRecogida')->isClicked()) {
-                $arrRecogidas = $request->request->get('chkSeleccionar');
+                $arrRecogidas = $request->request->get('ChkSeleccionar');
                 $arrControles = $request->request->All();
                 $respuesta = $this->getDoctrine()->getRepository(TteRecogida::class)->recoge($arrRecogidas, $arrControles);
                 $codigoDespachoRecogida = $form->get('codigoDespachoFk')->getData();

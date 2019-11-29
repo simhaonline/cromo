@@ -769,7 +769,6 @@ class ProgramacionController extends AbstractController
 
     public function getFiltros($form)
     {
-        dd($form->getData());
         $filtro = [
             'codigoProgramacion' => $form->get('codigoProgramacionPk'),
             'nombre' => $form->get('nombre')->getData(),

@@ -6,6 +6,7 @@ use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
+use App\Entity\Turno\TurProgramacionRespaldo;
 use App\Utilidades\Estandares;
 use Doctrine\ORM\EntityManager;
 
@@ -34,7 +35,7 @@ class PagoMasivo extends \FPDF
     public static $codigoZonaPuesto;
     public static $codigoGrupoPago;
 
-    public function Generar($em, $codigoProgramacionPago = "", $porFecha = false, $fechaDesde = "", $fechaHasta = "",  $pagoTipo = "", $codigoGrupoPago = "")
+    public function Generar($em, $codigoProgramacionPago = "", $porFecha = false, $fechaDesde = "", $fechaHasta = "", $pagoTipo = "", $codigoGrupoPago = "")
     {
         ob_clean();
         set_time_limit(0);
@@ -100,7 +101,7 @@ class PagoMasivo extends \FPDF
         $pdf->SetFont('Arial', '', 7);
         $pdf->SetFillColor(200, 200, 200);
         $arConfiguracion = self::$em->getRepository(RhuConfiguracion::class)->find(1);
-        $dql = self::$em->getRepository(RhuPago::class)->listaImpresionDql(self::$codigoProgramacionPago,  self::$porFecha, self::$fechaDesde, self::$fechaHasta, self::$codigoPagoTipo, self::$codigoGrupoPago);
+        $dql = self::$em->getRepository(RhuPago::class)->listaImpresionDql(self::$codigoProgramacionPago, self::$porFecha, self::$fechaDesde, self::$fechaHasta, self::$codigoPagoTipo, self::$codigoGrupoPago);
         $query = self::$em->createQuery($dql);
         $arPagos = $query->getResult();
         $numeroPagos = count($arPagos);
@@ -154,9 +155,9 @@ class PagoMasivo extends \FPDF
             $pdf->Cell(25, 4, "CARGO:", 1, 0, 'L', 1);
             $pdf->SetFont('Arial', '', 7);
             $pdf->SetFillColor(272, 272, 272);
-            if (is_null($arPago->getContratoRel()->getCargoRel())){
+            if (is_null($arPago->getContratoRel()->getCargoRel())) {
                 $pdf->Cell(50, 4, utf8_decode(""), 1, 0, 'L', 1);
-            }else{
+            } else {
                 $pdf->Cell(50, 4, utf8_decode($arPago->getContratoRel()->getCargoRel()->getNombre()), 1, 0, 'L', 1);
 
             }
@@ -213,6 +214,7 @@ class PagoMasivo extends \FPDF
             $totalCompensado = 0;
             $totalHorasCompensado = 0;
             $arPagoDetalles = self::$em->getRepository(RhuPagoDetalle::class)->lista($arPago->getCodigoPagoPk());
+            $arProgramacionRespaldos = self::$em->getRepository(TurProgramacionRespaldo::class)->findOneBy(['codigoSoporteContratoFk' => $arPago->getCodigoSoporteContratoFk()]);
             /** @var  $arPagoDetalle RhuPagoDetalle */
             foreach ($arPagoDetalles as $arPagoDetalle) {
                 $pdf->Cell(15, 4, $arPagoDetalle['codigoConceptoFk'], 1, 0, 'L');
@@ -226,52 +228,63 @@ class PagoMasivo extends \FPDF
                 $pdf->Ln();
                 $pdf->SetAutoPageBreak(true, 15);
             }
+            $pdf->Ln(5);
 
-            //TOTALES
-//            $pdf->Ln(2);
-//            $boolSoportePago = false;
-//            if ($arPago->getCodigoSoportePagoFk() && $arPago->getCentroCostoRel()->getImprimirProgramacionFormato()) {
-//                $desde = $arPago->getFechaDesde()->format('j');
-//                $hasta = $arPago->getFechaHasta()->format('j');
-//                if ($hasta == 30) {
-//                    $hasta = 31;
-//                }
-//
-//                $arSoportePago = self::$em->getRepository('BrasaTurnoBundle:TurSoportePago')->find($arPago->getCodigoSoportePagoFk());
-//                if ($arSoportePago) {
-//                    $boolSoportePago = true;
-//                    $header = array('D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15', 'D16', 'D17', 'D18', 'D19', 'D20', 'D21', 'D22', 'D23', 'D24', 'D25', 'D26', 'D27', 'D28', 'D29', 'D30', 'D31');
-//                    $pdf->SetFillColor(200, 200, 200);
-//                    $pdf->SetTextColor(0);
-//                    $pdf->SetDrawColor(0, 0, 0);
-//                    $pdf->SetLineWidth(.2);
-//                    $pdf->SetFont('', 'B', 6.8);
-//
-//                    //creamos la cabecera de la tabla.
-//                    $w = array(6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2);
-//                    for ($i = $desde; $i <= $hasta; $i++) {
-//                        $pdf->Cell(6.2, 4, "D" . $i, 1, 0, 'L', 1);
-//                    }
-//                    $pdf->Ln();
-//                    $arSoportePagoProgramaciones = new \Brasa\TurnoBundle\Entity\TurSoportePagoProgramacion();
-//                    $arSoportePagoProgramaciones = self::$em->getRepository('BrasaTurnoBundle:TurSoportePagoProgramacion')->findBy(array('codigoSoportePagoFk' => $arPago->getCodigoSoportePagoFk()));
-//                    foreach ($arSoportePagoProgramaciones as $arSoportePagoProgramacion) {
-//                        $detalle = $this->convertirArray($arSoportePagoProgramacion);
-//                        $pdf->SetFont('Arial', '', 5);
-//                        for ($j = $desde; $j <= $hasta; $j++) {
-//                            $pdf->Cell(6.2, 4, $detalle[$j], 1, 0, 'L');
-//                        }
-//                        $pdf->Ln();
-//                        $pdf->SetAutoPageBreak(true, 15);
-//                    }
-//                }
-//            } else {
-////                $pdf->Ln(8);
-//                $boolSoportePago = false;
-//            }
-//            if ($boolSoportePago) {
-//                $pdf->Ln(5);
-//            }
+            $boolSoportePago = false;
+            $desde = $arPago->getFechaDesde()->format('j');
+            $hasta = $arPago->getFechaHasta()->format('j');
+            if ($hasta == 30) {
+                $hasta = 31;
+            }
+            if ($arProgramacionRespaldos) {
+                $boolSoportePago = true;
+                $header = array('D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15', 'D16', 'D17', 'D18', 'D19', 'D20', 'D21', 'D22', 'D23', 'D24', 'D25', 'D26', 'D27', 'D28', 'D29', 'D30', 'D31');
+                $pdf->SetFillColor(200, 200, 200);
+                $pdf->SetTextColor(0);
+                $pdf->SetDrawColor(0, 0, 0);
+                $pdf->SetLineWidth(.2);
+                $pdf->SetFont('', 'B', 6.8);
+
+                //creamos la cabecera de la tabla.
+                $w = array(6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2, 6.2);
+                for ($i = $desde; $i <= $hasta; $i++) {
+                    $pdf->Cell(6.2, 4, "D" . $i, 1, 0, 'L', 1);
+                }
+                $pdf->Ln(4);
+
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia1(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia2(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia3(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia4(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia5(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia6(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia7(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia8(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia9(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia10(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia11(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia12(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia13(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia14(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia15(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia16(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia17(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia18(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia19(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia20(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia21(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia22(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia23(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia24(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia25(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia26(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia27(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia28(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia29(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia30(), 1, 0, 'L');
+                $pdf->Cell(6.2, 4, $arProgramacionRespaldos->getDia31(), 1, 0, 'L');
+                $pdf->Ln();
+            }
             $pdf->Ln(4);
             $pdf->Cell(140, 4, "", 0, 0, 'R');
             $pdf->SetFont('Arial', 'B', 7);
@@ -299,14 +312,16 @@ class PagoMasivo extends \FPDF
         $pdf->SetFont('Arial', 'B', 7);
     }
 
-    public function Footer()
+    public
+    function Footer()
     {
 
-        //$this->SetFont('Arial','', 8);  
+        //$this->SetFont('Arial','', 8);
         //$this->Text(185, 140, utf8_decode('Página ') . $this->PageNo() . ' de {nb}');
     }
 
-    private function convertirArray($arSoportePagoProgramacion)
+    private
+    function convertirArray($arSoportePagoProgramacion)
     {
         $arrProgramacionDetalle = array();
         if ($arSoportePagoProgramacion) {

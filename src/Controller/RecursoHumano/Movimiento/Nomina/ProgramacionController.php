@@ -770,16 +770,13 @@ class ProgramacionController extends AbstractController
     public function getFiltros($form)
     {
         $filtro = [
-            'codigoProgramacion' => $form->get('codigoProgramacionPk'),
+            'codigoProgramacion' => $form->get('codigoProgramacionPk')->getData(),
             'nombre' => $form->get('nombre')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
-            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
-            'identificacion' => $form->get('identificacion')->getData(),
-            'estadoMarcado' => $form->get('estadoMarcado')->getData(),
-            'pagosNegativos' => $form->get('pagosNegativos')->getData(),
+            'estadoAnulado' => $form->get('estadoAnulado')->getData()
         ];
 
         $arPagoTipo = $form->get('codigoPagoTipoFk')->getData();
@@ -789,7 +786,6 @@ class ProgramacionController extends AbstractController
         } else {
             $filtro['pagoTipo'] = $arPagoTipo;
         }
-
         return $filtro;
 
     }

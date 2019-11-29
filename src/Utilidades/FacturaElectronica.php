@@ -319,216 +319,319 @@ class FacturaElectronica
         $numero = $arrFactura['res_prefijo'] . $arrFactura['doc_numero'];
         $cufe = $numero.$arrFactura['doc_fecha'].$arrFactura['doc_hora'].$arrFactura['doc_subtotal'].'01'.$arrFactura['doc_iva'].'04'.$arrFactura['doc_inc'].'03'.$arrFactura['doc_ica'].$arrFactura['doc_total'].$arrFactura['dat_nitFacturador'].$arrFactura['ad_numeroIdentificacion'].$arrFactura['dat_claveTecnicaCadena'].$arrFactura['dat_tipoAmbiente'];
         $cufeHash = hash('sha384', $cufe);
-        $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<Invoice xmlns:ds='http://www.w3.org/2000/09/xmldsig#' xmlns='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2' xmlns:cac='urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2' xmlns:cbc='urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2' xmlns:ext='urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2' xmlns:sts='dian:gov:co:facturaelectronica:Structures-2-1' xmlns:xades='http://uri.etsi.org/01903/v1.3.2#' xmlns:xades141='http://uri.etsi.org/01903/v1.4.1#' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'>
-	<ext:UBLExtensions>
-		<ext:UBLExtension>
-            <ext:ExtensionContent>
-                <sts:DianExtensions>
-					<sts:InvoiceControl>
-						<sts:InvoiceAuthorization>{$arrFactura['res_numero']}</sts:InvoiceAuthorization>
-						<sts:AuthorizationPeriod>
-							<cbc:StartDate>{$arrFactura['res_fechaDesde']}</cbc:StartDate>
-							<cbc:EndDate>{$arrFactura['res_fechaHasta']}</cbc:EndDate>
-						</sts:AuthorizationPeriod>
-						<sts:AuthorizedInvoices>
-							<sts:Prefix>{$arrFactura['res_prefijo']}</sts:Prefix>
-							<sts:From>{$arrFactura['res_desde']}</sts:From>
-							<sts:To>{$arrFactura['res_hasta']}</sts:To>
-						</sts:AuthorizedInvoices>
-                   </sts:InvoiceControl>
-				</sts:DianExtensions>
-          </ext:ExtensionContent>
-        </ext:UBLExtension>
-	</ext:UBLExtensions>	
-	<cbc:CustomizationID>05</cbc:CustomizationID>
-	<cbc:ProfileExecutionID>2</cbc:ProfileExecutionID>
-	<cbc:ID>{$numero}</cbc:ID>
-	<cbc:UUID schemeID='2' schemeName='CUFE-SHA384'>{$cufeHash}</cbc:UUID>
-	<cbc:IssueDate>{$arrFactura['doc_fecha']}</cbc:IssueDate>
-	<cbc:IssueTime>{$arrFactura['doc_hora']}</cbc:IssueTime>
-	<cbc:InvoiceTypeCode>01</cbc:InvoiceTypeCode>
-	<cbc:Note>$cufe</cbc:Note>
-	<cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>
-	<cbc:LineCountNumeric>1</cbc:LineCountNumeric>
-	<cac:AccountingSupplierParty>
-		<cbc:AdditionalAccountID>{$arrFactura['em_tipoPersona']}</cbc:AdditionalAccountID>
-		<cac:Party>
-			<cac:PartyName>
-				<cbc:Name>{$arrFactura['em_nombreCompleto']}</cbc:Name>
-			</cac:PartyName>
-			<cac:PhysicalLocation>
-				<cac:Address>
-					<cbc:ID>05380</cbc:ID>
-					<cbc:CityName>LA ESTRELLA</cbc:CityName>
-					<cbc:PostalZone>055460</cbc:PostalZone>
-					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
-					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
-					<cac:AddressLine>
-						<cbc:Line>Cra. 50 #97a Sur-180 a 97a Sur-394</cbc:Line>
-					</cac:AddressLine>
-					<cac:Country>
-						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
-						<cbc:Name languageID=\"es\">Colombia</cbc:Name>
-					</cac:Country>
-				</cac:Address>
-			</cac:PhysicalLocation>
-			<cac:PartyTaxScheme>
-				<cbc:RegistrationName>{$arrFactura['em_nombreCompleto']}</cbc:RegistrationName>
-				<cbc:CompanyID schemeID='{$arrFactura['em_digitoVerificacion']}' schemeName='31' schemeAgencyID='195' schemeAgencyName='CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)'>{$arrFactura['em_numeroIdentificacion']}</cbc:CompanyID>
-				<cbc:TaxLevelCode listName=\"05\">O-99</cbc:TaxLevelCode>
-				<cac:RegistrationAddress>
-					<cbc:ID>05380</cbc:ID>
-					<cbc:CityName>LA ESTRELLA</cbc:CityName>
-					<cbc:PostalZone>055468</cbc:PostalZone>
-					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
-					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
-					<cac:AddressLine>
-						<cbc:Line>Cra. 50 #97a Sur-180 a 97a Sur-394</cbc:Line>
-					</cac:AddressLine>
-					<cac:Country>
-						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
-						<cbc:Name languageID=\"es\">Colombia</cbc:Name>
-					</cac:Country>
-				</cac:RegistrationAddress>
-				<cac:TaxScheme>
-					<cbc:ID>01</cbc:ID>
-					<cbc:Name>IVA</cbc:Name>
-				</cac:TaxScheme>
-			</cac:PartyTaxScheme>
-			<cac:PartyLegalEntity>
-				<cbc:RegistrationName>{$arrFactura['em_nombreCompleto']}</cbc:RegistrationName>
-				<cbc:CompanyID schemeID='0' schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName='CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)'>{$arrFactura['em_numeroIdentificacion']}</cbc:CompanyID>
-				<cac:CorporateRegistrationScheme>
-					<cbc:ID>{$arrFactura['res_prefijo']}</cbc:ID>
-					<cbc:Name>{$arrFactura['em_matriculaMercantil']}</cbc:Name>
-				</cac:CorporateRegistrationScheme>
-			</cac:PartyLegalEntity>
-			<cac:Contact>
-				<cbc:ElectronicMail>leandro.ocampo@cadena.com.co</cbc:ElectronicMail>
-			</cac:Contact>
-		</cac:Party>
-	</cac:AccountingSupplierParty>
-	<cac:AccountingCustomerParty>
-		<cbc:AdditionalAccountID>{$arrFactura['ad_tipoPersona']}</cbc:AdditionalAccountID>
-		<cac:Party>
-			<cac:PartyName>
-				<cbc:Name>{$arrFactura['ad_nombreCompleto']}</cbc:Name>
-			</cac:PartyName>
-			<cac:PhysicalLocation>
-				<cac:Address>
-					<cbc:ID>66001</cbc:ID>
-					<cbc:CityName>PEREIRA</cbc:CityName>
-					<cbc:PostalZone>{$arrFactura['ad_codigoPostal']}</cbc:PostalZone>					
-					<cbc:CountrySubentity>Risaralda</cbc:CountrySubentity>
-					<cbc:CountrySubentityCode>66</cbc:CountrySubentityCode>
-					<cac:AddressLine>
-						<cbc:Line>CR 9 A N0 99 - 07 OF 802</cbc:Line>
-					</cac:AddressLine>
-					<cac:Country>
-						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
-						<cbc:Name languageID=\"es\">Colombia</cbc:Name>
-					</cac:Country>
-				</cac:Address>
-			</cac:PhysicalLocation>
-			<cac:PartyTaxScheme>
-				<cbc:RegistrationName>{$arrFactura['ad_nombreCompleto']}</cbc:RegistrationName>
-				<cbc:CompanyID schemeID='3' schemeName='31' schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">{$arrFactura['ad_numeroIdentificacion']}</cbc:CompanyID>
-				<cbc:TaxLevelCode listName=\"05\">O-99</cbc:TaxLevelCode>
-				<cac:RegistrationAddress>
-					<cbc:ID>66001</cbc:ID>
-					<cbc:CityName>PEREIRA</cbc:CityName>
-					<cbc:PostalZone>{$arrFactura['ad_codigoPostal']}</cbc:PostalZone>
-					<cbc:CountrySubentity>Risaralda</cbc:CountrySubentity>
-					<cbc:CountrySubentityCode>66</cbc:CountrySubentityCode>
-					<cac:AddressLine>
-						<cbc:Line>CR 9 A N0 99 - 07 OF 802</cbc:Line>
-					</cac:AddressLine>
-					<cac:Country>
-						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
-						<cbc:Name languageID=\"es\">Colombia</cbc:Name>
-					</cac:Country>
-				</cac:RegistrationAddress>
-				<cac:TaxScheme>
-					<cbc:ID>01</cbc:ID>
-					<cbc:Name>IVA</cbc:Name>
-				</cac:TaxScheme>
-			</cac:PartyTaxScheme>
-			<cac:PartyLegalEntity>
-				<cbc:RegistrationName>{$arrFactura['ad_nombreCompleto']}</cbc:RegistrationName>
-				<cbc:CompanyID schemeID=\"3\" schemeName=\"31\" schemeAgencyID=\"195\" schemeAgencyName=\"CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)\">{$arrFactura['ad_numeroIdentificacion']}</cbc:CompanyID>
-				<cac:CorporateRegistrationScheme>
-					<cbc:Name>1485596</cbc:Name>
-				</cac:CorporateRegistrationScheme>
-			</cac:PartyLegalEntity>
-			<cac:Contact>
-				<cbc:ElectronicMail>leandro.sys89@gmail.com</cbc:ElectronicMail>
-			</cac:Contact>
-		</cac:Party>
-	</cac:AccountingCustomerParty>
-	<cac:PaymentMeans>
-		<cbc:ID>1</cbc:ID>
-		<cbc:PaymentMeansCode>10</cbc:PaymentMeansCode>
-		<cbc:PaymentID>Efectivo</cbc:PaymentID>
-	</cac:PaymentMeans>
-	<cac:TaxTotal>
-		<cbc:TaxAmount currencyID=\"COP\">0.00</cbc:TaxAmount>
-		<cac:TaxSubtotal>
-			<cbc:TaxableAmount currencyID=\"COP\">0.00</cbc:TaxableAmount>
-			<cbc:TaxAmount currencyID=\"COP\">0.00</cbc:TaxAmount>
-			<cac:TaxCategory>
-				<cbc:Percent>0.00</cbc:Percent>
-				<cac:TaxScheme>
-					<cbc:ID>01</cbc:ID>
-					<cbc:Name>IVA</cbc:Name>
-				</cac:TaxScheme>
-			</cac:TaxCategory>
-		</cac:TaxSubtotal>
-	</cac:TaxTotal>
-	<cac:LegalMonetaryTotal>
-		<cbc:LineExtensionAmount currencyID=\"COP\">{$arrFactura['doc_subtotal']}</cbc:LineExtensionAmount>
-		<cbc:TaxExclusiveAmount currencyID=\"COP\">0.00</cbc:TaxExclusiveAmount>
-		<cbc:TaxInclusiveAmount currencyID=\"COP\">{$arrFactura['doc_total']}</cbc:TaxInclusiveAmount>
-		<cbc:PayableAmount currencyID=\"COP\">{$arrFactura['doc_total']}</cbc:PayableAmount>
-	</cac:LegalMonetaryTotal>
-	<cac:InvoiceLine>
-		<cbc:ID>1</cbc:ID>
-		<cbc:InvoicedQuantity>1.00</cbc:InvoicedQuantity>
-		<cbc:LineExtensionAmount currencyID=\"COP\">{$arrFactura['doc_subtotal']}</cbc:LineExtensionAmount>
-		<cac:TaxTotal>
-			<cbc:TaxAmount currencyID=\"COP\">0.00</cbc:TaxAmount>			
-			<cac:TaxSubtotal>
-				<cbc:TaxableAmount currencyID=\"COP\">0.00</cbc:TaxableAmount>
-				<cbc:TaxAmount currencyID=\"COP\">0.00</cbc:TaxAmount>
-				<cac:TaxCategory>
-					<cbc:Percent>0.00</cbc:Percent>
-					<cac:TaxScheme>
-						<cbc:ID>01</cbc:ID>
-						<cbc:Name>IVA</cbc:Name>
-					</cac:TaxScheme>
-				</cac:TaxCategory>
-			</cac:TaxSubtotal>
-		</cac:TaxTotal>
-		<cac:Item>
-			<cbc:Description>Transporte</cbc:Description>
-			<cac:StandardItemIdentification>
-				<cbc:ID schemeID=\"999\">03222314-7</cbc:ID>
-			</cac:StandardItemIdentification>
-		</cac:Item>
-		<cac:Price>
-			<cbc:PriceAmount currencyID=\"COP\">{$arrFactura['doc_subtotal']}</cbc:PriceAmount>
-			<cbc:BaseQuantity unitCode=\"EA\">1.00</cbc:BaseQuantity>
-		</cac:Price>
-	</cac:InvoiceLine>
-	<DATA>
-		<UBL21>true</UBL21>
-		<Partnership>
-			<ID>901192048</ID>
-			<TechKey>fc8eac422eba16e22ffd8c6f94b3f40a6e38162c</TechKey>
-			<SetTestID>82e4944b-1134-4e25-9e9e-4fdd115e70ef</SetTestID>
-		</Partnership>
-	</DATA>
-</Invoice>";
+        $xml = new \XMLWriter();
+        $xml->openMemory();
+        $xml->setIndent(true);
+        $xml->setIndentString('	');
+        $xml->startDocument('1.0', 'UTF-8');
+        $xml->startElement("Invoice");
+            $xml->writeAttribute('xmlns:ds', 'http://www.w3.org/2000/09/xmldsig#');
+            $xml->writeAttribute('xmlns', 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2');
+            $xml->writeAttribute('xmlns:cac', 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2');
+            $xml->writeAttribute('xmlns:cbc', 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2');
+            $xml->writeAttribute('xmlns:ext', 'urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2');
+            $xml->writeAttribute('xmlns:sts', 'dian:gov:co:facturaelectronica:Structures-2-1');
+            $xml->writeAttribute('xmlns:xades', 'http://uri.etsi.org/01903/v1.3.2#');
+            $xml->writeAttribute('xmlns:xades141', 'http://uri.etsi.org/01903/v1.4.1#');
+            $xml->writeAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+            $xml->writeAttribute('xsi:schemaLocation', 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2');
+            $xml->startElement('ext:UBLExtensions');
+                $xml->startElement('ext:UBLExtension');
+                    $xml->startElement('ext:ExtensionContent');
+                        $xml->startElement('sts:DianExtensions');
+                            $xml->startElement('sts:InvoiceControl');
+                                $xml->writeElement('sts:InvoiceAuthorization','18760000001');
+                                $xml->startElement('sts:AuthorizationPeriod');
+                                    $xml->writeElement('cbc:StartDate', '2019-01-19');
+                                    $xml->writeElement('cbc:EndDate', '2030-01-19');
+                                $xml->endElement();
+                                $xml->startElement('sts:AuthorizedInvoices');
+                                    $xml->writeElement('sts:Prefix', 'SETT');
+                                    $xml->writeElement('sts:From', '1');
+                                    $xml->writeElement('sts:To', '5000000');
+                                $xml->endElement();
+                            $xml->endElement();
+                        $xml->endElement();
+                    $xml->endElement();
+                $xml->endElement();
+            $xml->endElement();
+            $xml->writeElement('cbc:CustomizationID', '05');
+            $xml->writeElement('cbc:ProfileExecutionID', '2');
+            $xml->writeElement('cbc:ID', 'SETT2');
+            $xml->startElement('cbc:UUID');
+            $xml->writeAttribute('schemeID', '2');
+            $xml->writeAttribute('schemeName', 'CUFE-SHA384');
+            $xml->text('dd1c65f8a489e96fc9ea83da3db9b4350a23ee989dab83c8c87812d759f8f42139a0c835cee4165799ecb8b34a44f2f6');
+            $xml->endElement();
+            $xml->writeElement('cbc:IssueDate', '2019-08-13');
+            $xml->writeElement('cbc:IssueTime', '12:00:00-05:00');
+            $xml->writeElement('cbc:InvoiceTypeCode', '01');
+            $xml->writeElement('cbc:Note', 'SETT22019-08-1312:00:00-05:0060000.00010.00040.00030.0060000.0090119204843990379fc8eac422eba16e22ffd8c6f94b3f40a6e38162c2');
+            $xml->writeElement('cbc:DocumentCurrencyCode', 'COP');
+            $xml->writeElement('cbc:LineCountNumeric', '1');
+            $xml->startElement('cac:AccountingSupplierParty');
+                $xml->writeElement('cbc:AdditionalAccountID', '1');
+                $xml->startElement('cac:Party');
+                    $xml->startElement('cac:PartyName');
+                        $xml->writeElement('cbc:Name', 'SEMANTICA DIGITAL SAS');
+                    $xml->endElement();
+                    $xml->startElement('cac:PhysicalLocation');
+                        $xml->startElement('cac:Address');
+                            $xml->writeElement('cbc:ID', '05380');
+                            $xml->writeElement('cbc:CityName', 'LA ESTRELLA');
+                            $xml->writeElement('cbc:PostalZone', '055460');
+                            $xml->writeElement('cbc:CountrySubentity', 'Antioquia');
+                            $xml->writeElement('cbc:CountrySubentityCode', '05');
+                            $xml->startElement('cac:AddressLine');
+                                $xml->writeElement('cbc:Line', 'Cra. 50 #97a Sur-180 a 97a Sur-394');
+                            $xml->endElement();
+                            $xml->startElement('cac:Country');
+                                $xml->writeElement('cbc:IdentificationCode', 'CO');
+                                $xml->startElement('cbc:Name');
+                                $xml->writeAttribute('languageID', 'es');
+                                $xml->text('Colombia');
+                            $xml->endElement();
+                        $xml->endElement();
+                    $xml->endElement();
+                $xml->endElement();
+                $xml->startElement('cac:PartyTaxScheme');
+                    $xml->writeElement('cbc:RegistrationName', 'SEMANTICA DIGITAL SAS');
+                    $xml->startElement('cbc:CompanyID');
+                        $xml->writeAttribute('schemeID', '4');
+                        $xml->writeAttribute('schemeName', '31');
+                        $xml->writeAttribute('schemeAgencyID', '195');
+                        $xml->writeAttribute('schemeAgencyName', 'CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)');
+                        $xml->text('901192048');
+                    $xml->endElement();
+                    $xml->startElement('cbc:TaxLevelCode');
+                        $xml->writeAttribute('listName', '05');
+                        $xml->text('O-99');
+                    $xml->endElement();
+                    $xml->startElement('cac:RegistrationAddress');
+                        $xml->writeElement('cbc:ID', '05380');
+                        $xml->writeElement('cbc:CityName', 'LA ESTRELLA');
+                        $xml->writeElement('cbc:PostalZone', '055468');
+                        $xml->writeElement('cbc:CountrySubentity', 'Antioquia');
+                        $xml->writeElement('cbc:CountrySubentityCode', '05');
+                        $xml->startElement('cac:AddressLine');
+                            $xml->writeElement('cbc:Line', 'Cra. 50 #97a Sur-180 a 97a Sur-394');
+                        $xml->endElement();
+                        $xml->startElement('cac:Country');
+                            $xml->writeElement('cbc:IdentificationCode', 'CO');
+                            $xml->startElement('cbc:Name');
+                            $xml->writeAttribute('languageID', 'es');
+                            $xml->text('Colombia');
+                        $xml->endElement();
+                    $xml->endElement();
+                $xml->endElement();
+                $xml->startElement('cac:TaxScheme');
+                    $xml->writeElement('cbc:ID', '01');
+                    $xml->writeElement('cbc:Name', 'IVA');
+                $xml->endElement();
+            $xml->endElement();
+            $xml->startElement('cac:PartyLegalEntity');
+                $xml->writeElement('cbc:RegistrationName', 'SEMANTICA DIGITAL SAS');
+                $xml->startElement('cbc:CompanyID');
+                    $xml->writeAttribute('schemeID','0');
+                    $xml->writeAttribute('schemeName','31');
+                    $xml->writeAttribute('schemeAgencyID','195');
+                    $xml->writeAttribute('schemeAgencyName','CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)');
+                    $xml->text('901192048');
+                $xml->endElement();
+                $xml->startElement('cac:CorporateRegistrationScheme');
+                    $xml->writeElement('cbc:ID', 'SETT');
+                    $xml->writeElement('cbc:Name', '21-619976-12');
+                $xml->endElement();
+            $xml->endElement();
+            $xml->startElement('cac:Contact');
+                $xml->writeElement('cbc:ElectronicMail', 'leandro.ocampo@cadena.com.co');
+            $xml->endElement();
+            $xml->endElement();
+            $xml->endElement();
+            $xml->startElement('cac:AccountingCustomerParty');
+                $xml->writeElement('cbc:AdditionalAccountID', '1');
+                $xml->startElement('cac:Party');
+                    $xml->startElement('cac:PartyName');
+                        $xml->writeElement('cbc:Name', 'SANCHEZ CARDONA');
+                    $xml->endElement();
+                    $xml->startElement('cac:PhysicalLocation');
+                        $xml->startElement('cac:Address');
+                            $xml->writeElement('cbc:ID', '66001');
+                            $xml->writeElement('cbc:CityName', 'PEREIRA');
+                            $xml->writeElement('cbc:PostalZone', '050030');
+                            $xml->writeElement('cbc:CountrySubentity', 'Risaralda');
+                            $xml->writeElement('cbc:CountrySubentityCode', '66');
+                            $xml->startElement('cac:AddressLine');
+                                $xml->writeElement('cbc:Line', 'CR 9 A N0 99 - 07 OF 802');
+                            $xml->endElement();
+                            $xml->startElement('cac:Country');
+                                $xml->writeElement('cbc:IdentificationCode', 'CO');
+                                $xml->startElement('cbc:Name');
+                                    $xml->writeAttribute('languageID', 'es');
+                                    $xml->text('Colombia');
+                                $xml->endElement();
+                            $xml->endElement();
+                        $xml->endElement();
+                    $xml->endElement();
+                    $xml->startElement('cac:PartyTaxScheme');
+                        $xml->writeElement('cbc:RegistrationName', 'SANCHEZ CARDONA');
+                        $xml->startElement('cbc:CompanyID');
+                            $xml->writeAttribute('schemeID', '3');
+                            $xml->writeAttribute('schemeName', '31');
+                            $xml->writeAttribute('schemeAgencyID', '195');
+                            $xml->writeAttribute('schemeAgencyName', 'CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)');
+                            $xml->text('43990379');
+                        $xml->endElement();
+                        $xml->startElement('cbc:TaxLevelCode');
+                            $xml->writeAttribute('listName', '05');
+                            $xml->text('O-99');
+                        $xml->endElement();
+                        $xml->startElement('cac:RegistrationAddress');
+                            $xml->writeElement('cbc:ID', '66001');
+                            $xml->writeElement('cbc:CityName', 'PEREIRA');
+                            $xml->writeElement('cbc:PostalZone', '050030');
+                            $xml->writeElement('cbc:CountrySubentity', 'Risaralda');
+                            $xml->writeElement('cbc:CountrySubentityCode', '66');
+                            $xml->startElement('cac:AddressLine');
+                                $xml->writeElement('cbc:Line', 'CR 9 A N0 99 - 07 OF 802');
+                            $xml->endElement();
+                            $xml->startElement('cac:Country');
+                                $xml->writeElement('cbc:IdentificationCode', 'CO');
+                                $xml->startElement('cbc:Name');
+                                    $xml->writeAttribute('languageID', 'es');
+                                    $xml->text('Colombia');
+                                $xml->endElement();
+                            $xml->endElement();
+                        $xml->endElement();
+                        $xml->startElement('cac:TaxScheme');
+                            $xml->writeElement('cbc:ID', '01');
+                            $xml->writeElement('cbc:Name', 'IVA');
+                        $xml->endElement();
+                    $xml->endElement();
+                $xml->startElement('cac:PartyLegalEntity');
+                    $xml->writeElement('cbc:RegistrationName', 'SANCHEZ CARDONA');
+                    $xml->startElement('cbc:CompanyID');
+                        $xml->writeAttribute('schemeID', '3');
+                        $xml->writeAttribute('schemeName', '31');
+                        $xml->writeAttribute('schemeAgencyID', '195');
+                        $xml->writeAttribute('schemeAgencyName', 'CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)');
+                        $xml->text('43990379');
+                    $xml->endElement();
+                    $xml->startElement('cac:CorporateRegistrationScheme');
+                        $xml->writeElement('cbc:Name', '1485596');
+                    $xml->endElement();
+                $xml->endElement();
+                $xml->startElement('cac:Contact');
+                    $xml->writeElement('cbc:ElectronicMail', 'leandro.sys89@gmail.com');
+                $xml->endElement();
+            $xml->endElement();
+            $xml->endElement();
+            $xml->startElement('cac:PaymentMeans');
+                $xml->writeElement('cbc:ID', '1');
+                $xml->writeElement('cbc:PaymentMeansCode', '10');
+                $xml->writeElement('cbc:PaymentID', 'Efectivo');
+            $xml->endElement();
+            $xml->startElement('cac:TaxTotal');
+                $xml->startElement('cbc:TaxAmount');
+                    $xml->writeAttribute('currencyID', 'COP');
+                    $xml->text('0.00');
+                $xml->endElement();
+                $xml->startElement('cac:TaxSubtotal');
+                    $xml->startElement('cbc:TaxableAmount');
+                        $xml->writeAttribute('currencyID', 'COP');
+                        $xml->text('0.00');
+                    $xml->endElement();
+                    $xml->startElement('cbc:TaxAmount');
+                        $xml->writeAttribute('currencyID', 'COP');
+                        $xml->text('0.00');
+                    $xml->endElement();
+                    $xml->startElement('cac:TaxCategory');
+                        $xml->writeElement('cbc:Percent', '0.00');
+                        $xml->startElement('cac:TaxScheme');
+                            $xml->writeElement('cbc:ID', '01');
+                            $xml->writeElement('cbc:Name', 'IVA');
+                        $xml->endElement();
+                    $xml->endElement();
+                $xml->endElement();
+            $xml->endElement();
+            $xml->startElement('cac:LegalMonetaryTotal');
+                $xml->startElement('cbc:LineExtensionAmount');
+                    $xml->writeAttribute('currencyID', 'COP');
+                    $xml->text('60000.00');
+                $xml->endElement();
+                $xml->startElement('cbc:TaxExclusiveAmount');
+                    $xml->writeAttribute('currencyID', 'COP');
+                    $xml->text('0.00');
+                $xml->endElement();
+                $xml->startElement('cbc:TaxInclusiveAmount');
+                    $xml->writeAttribute('currencyID', 'COP');
+                    $xml->text('60000.00');
+                $xml->endElement();
+                $xml->startElement('cbc:PayableAmount');
+                    $xml->writeAttribute('currencyID', 'COP');
+                    $xml->text('60000.00');
+                $xml->endElement();
+            $xml->endElement();
+            $xml->startElement('cac:InvoiceLine');
+                $xml->writeElement('cbc:ID', '1');
+                $xml->writeElement('cbc:InvoicedQuantity', '1.00');
+                $xml->startElement('cbc:LineExtensionAmount');
+                    $xml->writeAttribute('currencyID', 'COP');
+                    $xml->text('60000.00');
+                $xml->endElement();
+                $xml->startElement('cac:TaxTotal');
+                    $xml->startElement('cbc:TaxAmount');
+                        $xml->writeAttribute('currencyID','COP');
+                        $xml->text('0.00');
+                    $xml->endElement();
+                    $xml->startElement('cac:TaxSubtotal');
+                        $xml->startElement('cbc:TaxableAmount');
+                            $xml->writeAttribute('currencyID', 'COP');
+                            $xml->text('0.00');
+                        $xml->endElement();
+                        $xml->startElement('cbc:TaxAmount');
+                            $xml->writeAttribute('currencyID', 'COP');
+                            $xml->text('0.00');
+                        $xml->endElement();
+                        $xml->startElement('cac:TaxCategory');
+                            $xml->writeElement('cbc:Percent', '0.00');
+                            $xml->startElement('cac:TaxScheme');
+                                $xml->writeElement('cbc:ID', '01');
+                                $xml->writeElement('cbc:Name', 'IVA');
+                            $xml->endElement();
+                        $xml->endElement();
+                    $xml->endElement();
+                $xml->endElement();
+                $xml->startElement('cac:Item');
+                    $xml->writeElement('cbc:Description', 'Transporte');
+                    $xml->startElement('cac:StandardItemIdentification');
+                        $xml->startElement('cbc:ID');
+                            $xml->writeAttribute('schemeID', '999');
+                            $xml->text('03222314-7');
+                        $xml->endElement();
+                    $xml->endElement();
+                $xml->endElement();
+                $xml->startElement('cac:Price');
+                    $xml->startElement('cbc:PriceAmount');
+                        $xml->writeAttribute('currencyID', 'COP');
+                        $xml->text('60000.00');
+                    $xml->endElement();
+                    $xml->startElement('cbc:BaseQuantity');
+                        $xml->writeAttribute('unitCode', 'EA');
+                        $xml->text('1.00');
+                    $xml->endElement();
+                $xml->endElement();
+            $xml->endElement();
+            $xml->startElement('DATA');
+                $xml->writeElement('UBL21', 'true');
+                $xml->startElement('Partnership');
+                    $xml->writeElement('ID', '901192048');
+                    $xml->writeElement('TechKey', 'fc8eac422eba16e22ffd8c6f94b3f40a6e38162c');
+                    $xml->writeElement('SetTestID', '82e4944b-1134-4e25-9e9e-4fdd115e70ef');
+                $xml->endElement();
+            $xml->endElement();
+        $xml->endElement();
+        $content = $xml->outputMemory();
         return $xml;
     }
 }

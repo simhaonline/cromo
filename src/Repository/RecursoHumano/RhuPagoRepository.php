@@ -1183,13 +1183,13 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->leftJoin('p.contratoRel', 'c')
             ->where('p.codigoPagoPk <> 0');
         if ($codigoPagoTipo != "") {
-            $qb->andWhere("p.codigoPagoTipoFk = {$codigoPagoTipo}");
+            $qb->andWhere("p.codigoPagoTipoFk = '{$codigoPagoTipo}'");
         }
         if ($codigoGrupo != "") {
-            $qb->andWhere(" c.codigoGrupoFk = {$codigoGrupo}");
+            $qb->andWhere(" c.codigoGrupoFk = '{$codigoGrupo}'");
         }
         if ($codigoProgramacionPago != "") {
-            $qb->andWhere("p.codigoProgramacionFk = {$codigoProgramacionPago}");
+            $qb->andWhere("p.codigoProgramacionFk = '{$codigoProgramacionPago}'");
         }
         if ($porFecha == true) {
             if ($fechaDesde != "" && $fechaHasta != "") {

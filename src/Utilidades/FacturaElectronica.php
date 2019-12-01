@@ -632,6 +632,6 @@ class FacturaElectronica
             $xml->endElement();
         $xml->endElement();
         $content = $xml->outputMemory();
-        return $xml;
+        return $content;
     }
 }

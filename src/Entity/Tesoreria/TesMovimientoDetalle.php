@@ -52,6 +52,11 @@ class TesMovimientoDetalle
     private $vrPago = 0;
 
     /**
+     * @ORM\Column(name="vr_base", type="float", nullable=true, options={"default":0})
+     */
+    private $vrBase = 0;
+
+    /**
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
      */
     private $usuario;
@@ -419,6 +424,22 @@ class TesMovimientoDetalle
     public function setCentroCostoRel($centroCostoRel): void
     {
         $this->centroCostoRel = $centroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrBase()
+    {
+        return $this->vrBase;
+    }
+
+    /**
+     * @param mixed $vrBase
+     */
+    public function setVrBase($vrBase): void
+    {
+        $this->vrBase = $vrBase;
     }
 
 

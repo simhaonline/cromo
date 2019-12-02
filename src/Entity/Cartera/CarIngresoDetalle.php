@@ -57,6 +57,11 @@ class CarIngresoDetalle
     private $vrRetencion = 0;
 
     /**
+     * @ORM\Column(name="vr_base", type="float", nullable=true, options={"default":0})
+     */
+    private $vrBase = 0;
+
+    /**
      * @ORM\Column(name="vr_pago", type="float", nullable=true)
      */
     private $vrPago = 0;
@@ -457,6 +462,22 @@ class CarIngresoDetalle
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrBase()
+    {
+        return $this->vrBase;
+    }
+
+    /**
+     * @param mixed $vrBase
+     */
+    public function setVrBase($vrBase): void
+    {
+        $this->vrBase = $vrBase;
     }
 
 

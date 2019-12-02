@@ -8,12 +8,12 @@ use App\Utilidades\Mensajes;
 use App\Entity\Inventario\InvOrden;
 use App\Entity\Inventario\InvOrdenDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class InvOrdenDetalleRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, InvOrdenDetalle::class);
     }

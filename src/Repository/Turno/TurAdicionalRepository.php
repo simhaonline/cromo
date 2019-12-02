@@ -9,12 +9,12 @@ use App\Entity\Turno\TurAdicional;
 use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurPuestoAdicional;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class TurAdicionalRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TurAdicional::class);
     }

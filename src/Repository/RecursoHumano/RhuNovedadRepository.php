@@ -5,7 +5,7 @@ namespace App\Repository\RecursoHumano;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuNovedad;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuNovedadRepository extends ServiceEntityRepository
@@ -18,7 +18,7 @@ class RhuNovedadRepository extends ServiceEntityRepository
         return 'recursohumano_movimiento_credito_credito_';
     }
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, RhuNovedad::class);
     }

@@ -5,11 +5,11 @@ namespace App\Repository\General;
 
 use App\Entity\General\GenComentarioModelo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 class GenComentarioModeloRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, GenComentarioModelo::class);
     }

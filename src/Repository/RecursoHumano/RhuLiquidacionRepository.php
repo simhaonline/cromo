@@ -31,7 +31,7 @@ use App\Entity\RecursoHumano\RhuReclamo;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuLiquidacionRepository extends ServiceEntityRepository
@@ -45,7 +45,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
         return 'recursohumano_movimiento_reclamo_reclamo_';
     }
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, RhuLiquidacion::class);
     }

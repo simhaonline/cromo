@@ -7,12 +7,12 @@ use App\Entity\General\GenFacturaDetalle;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Transporte\TteFactura;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class GenFacturaRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, GenFactura::class);
     }

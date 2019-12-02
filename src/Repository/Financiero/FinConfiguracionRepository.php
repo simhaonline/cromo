@@ -5,12 +5,12 @@ namespace App\Repository\Financiero;
 use App\Entity\Financiero\FinConfiguracion;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 class FinConfiguracionRepository extends ServiceEntityRepository
 {
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, FinConfiguracion::class);
     }

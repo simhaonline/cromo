@@ -10,12 +10,12 @@ use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 class FinAsientoRepository extends ServiceEntityRepository
 {
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, FinAsiento::class);
     }

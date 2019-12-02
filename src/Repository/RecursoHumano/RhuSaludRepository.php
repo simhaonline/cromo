@@ -8,11 +8,11 @@ use App\Entity\RecursoHumano\RhuSalud;
 use Brasa\RecursoHumanoBundle\Entity\RhuContratoTipo;
 use Brasa\RecursoHumanoBundle\Entity\RhuTiempo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 class RhuSaludRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, RhuSalud::class);
     }

@@ -8,11 +8,11 @@ use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurProgramacionInconsistencia;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 class   TurProgramacionInconsistenciaRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TurProgramacionInconsistencia::class);
     }

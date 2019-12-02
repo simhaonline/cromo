@@ -5,13 +5,13 @@ namespace App\Repository\Financiero;
 use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinCuenta;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class FinCentroCostoRepository extends ServiceEntityRepository
 {
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, FinCentroCosto::class);
     }

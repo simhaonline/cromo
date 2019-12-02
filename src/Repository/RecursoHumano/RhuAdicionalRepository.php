@@ -6,13 +6,13 @@ use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\Turno\TurPedido;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuAdicionalRepository extends ServiceEntityRepository
 {
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, RhuAdicional::class);
     }

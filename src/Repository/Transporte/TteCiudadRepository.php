@@ -6,7 +6,7 @@ use App\Entity\Transporte\TteCiudad;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteCiudadRepository extends ServiceEntityRepository
@@ -44,7 +44,7 @@ class TteCiudadRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
     
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TteCiudad::class);
     }

@@ -7,12 +7,12 @@ use App\Entity\General\GenResolucionFactura;
 use App\Entity\General\GenRespuestaFacturaElectronica;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class GenRespuestaFacturaElectronicaRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, GenRespuestaFacturaElectronica::class);
     }

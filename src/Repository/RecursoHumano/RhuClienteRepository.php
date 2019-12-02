@@ -6,12 +6,12 @@ namespace App\Repository\RecursoHumano;
 use App\Entity\Financiero\FinTercero;
 use App\Entity\RecursoHumano\RhuCliente;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class RhuClienteRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, RhuCliente::class);
     }

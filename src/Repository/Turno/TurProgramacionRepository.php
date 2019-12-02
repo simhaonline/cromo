@@ -22,7 +22,7 @@ use App\Entity\Turno\TurPrototipo;
 use App\Entity\Turno\TurTurno;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class TurProgramacionRepository extends ServiceEntityRepository
@@ -33,7 +33,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
     private $horasDiurnasP = 0;
     private $horasNocturnasP = 0;
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TurProgramacion::class);
     }

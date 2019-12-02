@@ -5,7 +5,7 @@ namespace App\Repository\Seguridad;
 use App\Entity\Seguridad\SegUsuarioModelo;
 use App\Entity\Seguridad\SegUsuarioProceso;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @method SegUsuarioModelo|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class SegUsuarioProcesoRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, SegUsuarioProceso::class);
     }

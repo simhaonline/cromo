@@ -7,13 +7,13 @@ use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvPedidoTipo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Mensajes;
 
 class InvPedidoRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, InvPedido::class);
     }

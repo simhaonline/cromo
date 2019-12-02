@@ -4,11 +4,11 @@ namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvImportacionCostoConcepto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 class InvImportacionCostoConceptoRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, InvImportacionCostoConcepto::class);
     }

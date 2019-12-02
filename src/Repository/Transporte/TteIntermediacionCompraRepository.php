@@ -22,12 +22,12 @@ use App\Entity\Transporte\TteIntermediacionDetalle;
 use App\Entity\Transporte\TteIntermediacionCompra;
 use App\Entity\Transporte\TteIntermediacionVenta;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class TteIntermediacionCompraRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TteIntermediacionCompra::class);
     }

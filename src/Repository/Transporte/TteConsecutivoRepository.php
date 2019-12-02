@@ -6,11 +6,11 @@ namespace App\Repository\Transporte;
 use App\Controller\Transporte\Buscar\ConductorController;
 use App\Entity\Transporte\TteConsecutivo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 class TteConsecutivoRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TteConsecutivo::class);
     }

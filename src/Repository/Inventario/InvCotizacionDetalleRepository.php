@@ -4,14 +4,14 @@ namespace App\Repository\Inventario;
 
 use App\Entity\Inventario\InvCotizacionDetalle;
 use App\Utilidades\Mensajes;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 class InvCotizacionDetalleRepository extends ServiceEntityRepository
 {
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, InvCotizacionDetalle::class);
     }

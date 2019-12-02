@@ -39,7 +39,7 @@ use App\Entity\Transporte\TteServicio;
 use App\Entity\Transporte\TteZona;
 use App\Entity\Turno\TurDistribucion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Mensajes;
 use Doctrine\DBAL\LockMode;
@@ -47,7 +47,7 @@ use Doctrine\ORM\OptimisticLockException;
 
 class TteInformeTiempoRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TteInformeTiempo::class);
     }

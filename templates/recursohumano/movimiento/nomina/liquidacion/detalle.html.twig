@@ -130,11 +130,11 @@
             <td class="titulo"></td>
             <td class="numero"></td>
             <td class="titulo">IBP PRIMAS:</td>
-            <td class="numero">$ {{ arLiquidacion.vrIngresoBasePrestacionPrimas | number_format(0, '.', ',') }}</td>
-            {#                        <a href="javascript:abrirVentana3('{{ path('brs_rhu_movimiento_liquidacion_detalle_prima',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle vacacion',600,1300)">#}
-            {#                            $ {{ arLiquidacion.vrIngresoBasePrestacionPrimas | number_format(0, '.', ',') }}#}
-            {#                        </a>#}
-
+            <td class="numero">
+                <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_primas',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle prima',600,1300)">
+                    $ {{ arLiquidacion.vrIngresoBasePrestacionPrimas | number_format(0, '.', ',') }}
+                </a>
+            </td>
             <td class="titulo"></td>
             <td class="numero"></td>
         </tr>
@@ -166,10 +166,11 @@
             <td class="titulo"></td>
             <td class="numero"></td>
             <td class="titulo">SALARIO VACACIONES:</td>
-            <td class="numero">$ {{ arLiquidacion.vrSalarioVacaciones | number_format(0, '.', ',') }}</td>
-            {#                        <a href="javascript:abrirVentana3('{{ path('brs_rhu_movimiento_liquidacion_detalle_vacacion',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle vacacion',600,1300)">#}
-            {#                            $ {{ arLiquidacion.vrSalarioVacaciones | number_format(0, '.', ',') }}#}
-            {#                        </a>#}
+            <td class="numero">
+                <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_vacaciones',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle vacacion',600,1300)">
+                    $ {{ arLiquidacion.vrSalarioVacaciones | number_format(0, '.', ',') }}
+                </a>
+            </td>
             <td class="titulo"></td>
             <td class="numero"></td>
         </tr>

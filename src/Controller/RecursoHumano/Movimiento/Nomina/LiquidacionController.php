@@ -315,6 +315,30 @@ class LiquidacionController extends AbstractController
 
     }
 
+    /**
+     * @Route("/recursohumano/movimiento/nomina/liquidacion/detalle/primas/{codigoLiquidacion}", name="recursohumano_movimiento_nomina_liquidacion_detalle_primas")
+     */
+    public function detallePrimas(Request $request, $codigoLiquidacion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arDetallePrimas = $em->getRepository(RhuLiquidacion::class)->detallePrimas($codigoLiquidacion);
+        return $this->render('recursohumano/movimiento/nomina/liquidacion/detallePrimas.html.twig', array(
+            'arDetallePrimas' => $arDetallePrimas
+        ));
+    }
+
+    /**
+     * @Route("/recursohumano/movimiento/nomina/liquidacion/detalle/vacaciones/{codigoLiquidacion}", name="recursohumano_movimiento_nomina_liquidacion_detalle_vacaciones")
+     */
+    public function detalleVacaciones(Request $request, $codigoLiquidacion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arDetalleVacaciones= $em->getRepository(RhuLiquidacion::class)->detalleVacacion($codigoLiquidacion);
+        return $this->render('recursohumano/movimiento/nomina/liquidacion/detalleVacaciones.html.twig', array(
+            'arDetalleVacaciones' => $arDetalleVacaciones
+        ));
+    }
+
     public function getFiltros($form)
     {
         $filtro = [

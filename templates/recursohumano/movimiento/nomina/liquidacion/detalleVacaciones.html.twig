@@ -1,0 +1,46 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block title %}Detalle vacaciones{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="tab-content">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-condensed tabla-datos">
+                        <thead>
+                            <th>numero</th>
+                            <th>Fecha desde</th>
+                            <th>Fecha hasta</th>
+                            <th>Nombre</th>
+                            <th>valor</th>
+                            <th>porcentaje</th>
+                        </thead>
+                        <tbody>
+                        {% set total = 0 %}
+                        {% for arDetalleVacacion in arDetalleVacaciones %}
+
+                            <tr>
+                                <td>{{ arDetalleVacacion['numero'] }}</td>
+                                <td>{{ arDetalleVacacion['fechaDesde'] |date("Y/m/d") }}</td>
+                                <td>{{ arDetalleVacacion['fechaHasta'] |date("Y/m/d") }}</td>
+                                <td>{{ arDetalleVacacion['concepto'] }}</td>
+                                <td>{{ arDetalleVacacion['vrIngresoPrestacion'] | number_format(0,',','.') }}</td>
+                                <td>{{ arDetalleVacacion['porcentaje'] }}</td>
+                            </tr>
+                            {% set total =total+ arDetalleVacacion['vrIngresoPrestacion']*arDetalleVacacion['porcentaje']  %}
+                        {% endfor %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Total</td>
+                            <td>{{ total | number_format(0,',','.') }}</td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br/><br/>
+    </section>
+{% endblock %}

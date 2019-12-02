@@ -1871,4 +1871,123 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
         }
 
     }
+
+    public function detallePrimas($codigoLiquidacion)
+    {
+        $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoLiquidacion);
+        $arContrato = $em->getRepository(RhuContrato::class)->find($arLiquidacion->getCodigoContratoFk());
+        $dateFechaDesde = $arLiquidacion->getContratoRel()->getFechaUltimoPagoPrimas();
+        $dateFechaHasta = $arLiquidacion->getContratoRel()->getFechaHasta();
+
+        if ($dateFechaDesde <= $dateFechaHasta) {
+
+            //Liquidar con salario y suplementario
+            if ($arConfiguracion->getLiquidarPrestacionesSalarioSuplementario()) {
+                $arrSuplementario = $em->getRepository(RhuPagoDetalle::class)->listaibpSuplementario($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+                return $arrSuplementario;
+            }
+            $arrIbpPrimas = $em->getRepository(RhuPagoDetalle::class)->listaIbp($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+            return $arrIbpPrimas;
+        } else {
+            return null;
+        }
+    }
+
+
+    public function detalleVacacion($codigoLiquidacion)
+    {
+        //Liquidar vacaciones
+        $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoLiquidacion);
+        $arContrato = $em->getRepository(RhuContrato::class)->find($arLiquidacion->getCodigoContratoFk());
+
+        if ($arLiquidacion->getContratoRel()->getFechaUltimoPagoVacaciones() <= $arLiquidacion->getFechaHasta()) {
+            if ($arLiquidacion->getLiquidarVacaciones() == 1) {
+                $dateFechaDesde = $arLiquidacion->getContratoRel()->getFechaUltimoPagoVacaciones();
+                $dateFechaHasta = $arLiquidacion->getContratoRel()->getFechaHasta();
+
+                //LIQUIDAR SALARIO VACACIONES, CON SALARIO, RECARGOS Y PRESTACIONES.
+                if ($arConfiguracion->getLiquidarVacacionesSalarioRecargoPrestacion()) {
+//                    $prestacional = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoDetalle')->adicionalPrestacional("", $arLiquidacion->getContratoRel()->getCodigoContratoPk());
+//                    $prestacional = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoDetalle')->findBy(array('adicional' => 1, 'prestacional' => 1, 'pagoRel.codigoContratoFk' => $arLiquidacion->getContratoRel()->getCodigoContratoPk()));
+//                    $licencias = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoDetalle')->valorLicenciaPago("", $arLiquidacion->getContratoRel()->getCodigoContratoPk());
+//                    $incapacidades = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoDetalle')->valorIncapacidadPago("", $arLiquidacion->getContratoRel()->getCodigoContratoPk());
+//                    $salario = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoDetalle')->valorSalarioPago("", $arLiquidacion->getContratoRel()->getCodigoContratoPk());
+//                    $salarioVacaciones = $salario + $licencias + $incapacidades + $prestacional + $recargosNocturnos;
+//                    $salarioVacaciones = ($salarioVacaciones / $intDiasVacaciones) * 30;
+                }
+
+                // sabatino
+//                if ($arContrato->getCodigoTipoTiempoFk() == 3) {
+//                    $arrIbpSalario = $em->getRepository(RhuPago::class)->listaIbpSalario($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+//                    return $arrIbpSalario;
+//                }
+
+                // suplementario
+//                if ($arConfiguracion->getLiquidarVacacionesPromedioUltimoAnio()) {
+//                    $fechaActual = date_create($dateFechaHasta->format('Y-m-d'));
+//                    $fechaInicio = date_create($dateFechaHasta->format('Y-m-d'));
+//                    date_add($fechaInicio, date_interval_create_from_date_string('-364 days'));
+//                    if ($fechaInicio < $dateFechaDesde) {
+//                        $fechaInicio = $dateFechaDesde;
+//                    }
+//                    $intDias = $fechaInicio->diff($fechaActual);
+//                    $intDias = $intDias->format('%a') - 1;
+//
+//                    //Fecha ultimo anio
+//                    $fechaHastaUltimoAnio = date_create($arLiquidacion->getFechaHasta()->format('Y-m-d'));
+//                    $fechaDesdeUltimoAnio = date_create($fechaActual->format('Y-m-d'));
+//                    date_add($fechaDesdeUltimoAnio, date_interval_create_from_date_string('-365 days'));
+//                    if ($fechaDesdeUltimoAnio < $arLiquidacion->getContratoRel()->getFechaDesde()) {
+//                        $fechaDesdeUltimoAnio = $arLiquidacion->getContratoRel()->getFechaDesde();
+//                    }
+//
+////                    $diasPeriodoSuplementario = $objFunciones->diasPrestaciones($fechaDesdeUltimoAnio, $fechaHastaUltimoAnio);
+//////                    if ($diasPeriodoSuplementario > 360) {
+//////                        $diasPeriodoSuplementario--;
+//////                    }
+//                    if ($arConfiguracion->getLiquidarPrestacionesSalarioSuplementario()) {
+//                        $arrSuplementario = $em->getRepository(RhuPagoDetalle::class)->listaIbpSuplementarioVacaciones($fechaDesdeUltimoAnio->format('Y-m-d'), $fechaHastaUltimoAnio->format('Y-m-d'), $arLiquidacion->getContratoRel()->getCodigoContratoPk());
+//                        return $arrSuplementario;
+//                    }
+//                }
+
+                //Recargos nocturnos sobre el porcentaje de vacaciones que tiene el concepto
+                if ($arConfiguracion->getVacacionesLiquidarRecargoNocturnoPorcentajeConcepto()) {
+                    if ($arConfiguracion->getVacacionesRecargoNocturnoUltimoAnio()) {
+                        //$fechaHastaVacaciones = "";
+                        // se valida si la fecha del ultimo pago es superior a la fecha fin del contrato,
+                        // ya que la fecha hastaPago de los pagos queda con la fecha hasta de la programacion de pago
+                        // y se necesita que incluya el ultimo pago para el calculo del recargo nocturno
+                        if ($arLiquidacion->getContratoRel()->getFechaUltimoPago() > $dateFechaHasta) {
+                            $fechaHastaVacaciones = $arLiquidacion->getContratoRel()->getFechaUltimoPago()->format('Y-m-d');
+                        } else {
+                            $fechaHastaVacaciones = $arLiquidacion->getFechaHasta()->format('Y-m-d');
+                        }
+                        $fechaHastaUltimoAnio = date_create($fechaHastaVacaciones);
+                        $fechaDesdeUltimoAnio = date_create($arLiquidacion->getFechaHasta()->format('Y-m-d'));
+                        date_add($fechaDesdeUltimoAnio, date_interval_create_from_date_string('-365 days'));
+                        if ($fechaDesdeUltimoAnio < $arLiquidacion->getFechaDesde()) {
+                            $fechaDesdeUltimoAnio = $arLiquidacion->getFechaDesde();
+                        }
+                        $arrRecargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->listaRecargosNocturnosIbp($fechaDesdeUltimoAnio->format('Y-m-d'), $fechaHastaUltimoAnio->format('Y-m-d'), $arContrato->getCodigoContratoPk());
+                        return $arrRecargosNocturnos;
+                    } else {
+                        $arrRecargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->listaRecargosNocturnosIbp($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
+                        return $arrRecargosNocturnos;
+                    }
+                }
+
+                if ($arLiquidacion->getVrSalarioVacacionPropuesto() > 0) {
+                    return null;
+                }
+            }
+            return null;
+        } else {
+            return null;
+        }
+    }
 }

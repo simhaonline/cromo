@@ -679,4 +679,49 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         }
         return $ibp;
     }
+
+    public function listaibpSuplementario($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT p.numero as numero, pd.vrSuplementario as vrIngresoPrestacion,p.fechaDesdePago as fechaDesde, 100 as porcentaje, pc.nombre as concepto,
+         p.fechaHastaPago as fechaHasta FROM  App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p pd.pagoConceptoRel pc "
+            . "WHERE p.estadoPagado = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesdePago >= '" . $fechaDesde . "' AND p.fechaDesdePago <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $suplementario = $arrayResultado;
+        return $suplementario;
+    }
+
+    public function listaIbpSuplementarioVacaciones($fechaDesde, $fechaHasta, $codigoContrato, $aplicaPorcentajeVacacionSuplementario = 0)
+    {
+        $em = $this->getEntityManager();
+        $dql = $em->createQueryBuilder()->from("App\Entity\RecursoHumano\RhuPagoDetalle", "pd")
+            ->join("pd.pagoRel", "p")
+            ->join("pd.pagoConceptoRel", "pc")
+            ->select("p.numero as numero")
+            ->addSelect("pd.vrPagoOperado as vrIngresoPrestacion")
+            ->addSelect("(pc.porcentajeVacaciones / 100) as porcentaje")
+            ->addSelect("p.fechaDesdePago as fechaDesde")
+            ->addSelect("p.fechaHastaPago as fechaHasta")
+            ->addSelect("pc.nombre as concepto")
+            ->where("pc.vacacionSuplementario = 1")
+            ->andWhere("p.estadoPagado = 1")
+            ->andWhere("p.codigoContratoFk = {$codigoContrato}")
+            ->andWhere("p.fechaDesdePago >= '{$fechaDesde}'")
+            ->andWhere("p.fechaHastaPago <= '{$fechaHasta}'");
+//        $dql = "SELECT (p.numero as numero, pd.vrPagoOperado as vrIngresoPrestacion, (pc.porcentajeVacaciones / 100) as porcentaje,
+//        p.fechaDesdePago as fechaDesde, p.fechaHastaPago as fechaHasta, pc.nombre as concepto ) FROM BrasaRecursoHumanoBundle:RhuPagoDetalle pd JOIN pd.pagoRel p JOIN pd.pagoConceptoRel pc "
+//            . "WHERE pc.vacacionSuplementario = 1 AND p.estadoPagado = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+//            . "AND p.fechaDesdePago >= '" . $fechaDesde . "' AND p.fechaDesdePago <= '" . $fechaHasta . "'";
+        if ($aplicaPorcentajeVacacionSuplementario == 1) {//Se validan los conceptos que aplican para las vacaciones de disfrute.
+//            $dql .= " AND pc.aplicaPorcentajeVacacionSuplementario = 1";
+            $dql->andWhere("pc.aplicaPorcentajeVacacionSuplementario = 1");
+        }
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $suplementario = $arrayResultado;
+        return $suplementario;
+    }
+
 }

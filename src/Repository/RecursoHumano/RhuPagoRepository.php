@@ -2047,4 +2047,20 @@ class RhuPagoRepository extends ServiceEntityRepository
 
     }
 
+    public function listaIbpSalario($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT (p.numero as numero, p.vrSalario as vrIngresoPrestacion, 100 as porcentaje,
+        p.fechaDesdePago as fechaDesde, p.fechaHastaPago as fechaHasta, vacio as concepto ) FROM App\Entity\RecursoHumano\RhuPago p "
+            . "WHERE p.estadoPagado = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
+            . "AND p.fechaDesdePago >= '" . $fechaDesde . "' AND p.fechaDesdePago <= '" . $fechaHasta . "'";
+        $query = $em->createQuery($dql);
+        $arrayResultado = $query->getResult();
+        $ibp = $arrayResultado[0]['ibp'];
+        if ($ibp == null) {
+            $ibp = 0;
+        }
+        return $ibp;
+    }
+
 }

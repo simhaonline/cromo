@@ -72,6 +72,7 @@
                             <th title="Naturaleza">N</th>
                             <th>RET</th>
                             <th>RET</th>
+                            <th>BASE</th>
                             <th>PAGO</th>
                             <th>DET</th>
                             <th title="Centro de costo">C_C</th>
@@ -122,6 +123,7 @@
                                             {% endfor %}
                                         </select></td>
                                     <td style="text-align: right">{{ arIngresoDetalle.vrRetencion | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ arIngresoDetalle.vrBase | number_format(0, '.', ',') }}</td>
                                     <td style="text-align: center">
                                         <input class="input-valor" type="text"
                                                name="TxtVrPago{{ arIngresoDetalle.codigoIngresoDetallePk }}"
@@ -151,6 +153,7 @@
                                     <td>{{ arIngresoDetalle.naturaleza }}</td>
                                     <td>{{ arIngresoDetalle.codigoImpuestoRetencionFk }}</td>
                                     <td style="text-align: right">{{ arIngresoDetalle.vrRetencion | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ arIngresoDetalle.vrBase | number_format(0, '.', ',') }}</td>
                                     <td style="text-align: right">{{ arIngresoDetalle.vrPago | number_format(0, '.', ',') }}</td>
                                     <td>{{ arIngresoDetalle.detalle }}</td>
                                     <td>{{ arIngresoDetalle.codigoCentroCostoFk }}</td>

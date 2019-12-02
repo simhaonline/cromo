@@ -171,6 +171,7 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
             ->select('id.codigoIngresoDetallePk')
             ->addSelect('id.vrPago')
             ->addSelect('id.vrRetencion')
+            ->addSelect('id.vrBase')
             ->addSelect('id.numero')
             ->addSelect('id.codigoCuentaFk')
             ->addSelect('id.naturaleza')

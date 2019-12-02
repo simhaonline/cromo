@@ -377,6 +377,7 @@ class CarIngresoRepository extends ServiceEntityRepository
                                             } else {
                                                 $arRegistro->setVrCredito($arIngresoDetalle['vrPago']);
                                             }
+                                            $arRegistro->setVrBase($arIngresoDetalle['vrBase']);
                                             $arRegistro->setNaturaleza($arIngresoDetalle['naturaleza']);
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('CarIngreso');
@@ -402,6 +403,7 @@ class CarIngresoRepository extends ServiceEntityRepository
                                                         $arRegistro->setFecha($fecha);
                                                         $arRegistro->setFechaVence($fecha);
                                                         $arRegistro->setVrDebito($arIngresoDetalle['vrRetencion']);
+                                                        $arRegistro->setVrBase($arIngresoDetalle['vrBase']);
                                                         $arRegistro->setNaturaleza("D");
                                                         $arRegistro->setDescripcion("Retencion");
                                                         $arRegistro->setCodigoModeloFk('CarIngreso');

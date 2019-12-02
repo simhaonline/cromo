@@ -7,6 +7,7 @@ use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarIngreso;
 use App\Entity\Cartera\CarIngresoDetalle;
 use App\Entity\Cartera\CarIngresoTipo;
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
@@ -382,6 +383,9 @@ class CarIngresoRepository extends ServiceEntityRepository
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('CarIngreso');
                                             $arRegistro->setCodigoDocumento($arIngreso['codigoIngresoPk']);
+                                            if($arIngresoDetalle['codigoCentroCostoFk']) {
+                                                $arRegistro->setCentroCostoRel($em->getReference(FinCentroCosto::class, $arIngresoDetalle['codigoCentroCostoFk']));
+                                            }
                                             $em->persist($arRegistro);
 
                                             if ($arIngresoDetalle['codigoImpuestoRetencionFk'] != "R00") {
@@ -408,6 +412,9 @@ class CarIngresoRepository extends ServiceEntityRepository
                                                         $arRegistro->setDescripcion("Retencion");
                                                         $arRegistro->setCodigoModeloFk('CarIngreso');
                                                         $arRegistro->setCodigoDocumento($arIngreso['codigoIngresoPk']);
+                                                        if($arIngresoDetalle['codigoCentroCostoFk']) {
+                                                            $arRegistro->setCentroCostoRel($em->getReference(FinCentroCosto::class, $arIngresoDetalle['codigoCentroCostoFk']));
+                                                        }
                                                         $em->persist($arRegistro);
                                                     } else {
                                                         $error = "La cuenta no existe" . $descripcion;

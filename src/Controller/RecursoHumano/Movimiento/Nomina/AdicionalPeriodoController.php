@@ -7,8 +7,10 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuAdicionalPeriodo;
+use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\AdicionalPeriodoType;
@@ -18,6 +20,7 @@ use App\Utilidades\Mensajes;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -190,6 +193,151 @@ class AdicionalPeriodoController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("recursohumano/movimiento/nomina/adicionalperiodo/importar/{codigoPeriodo}", name="recursohumano_movimiento_nomina_adicionalperiodo_importar")
+     */
+    public function importarMasivos(Request $request, $codigoPeriodo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+            ->add('attachment', FileType::class)
+            ->add('BtnCargar', SubmitType::class, array('label' => 'Cargar'))
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->get('BtnCargar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $fechaActual = new \DateTime('now');
+                $valoresErroneos = [];
+                $arrCarga = [];
+                $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
+
+                if ($codigoPeriodo != 0 && $codigoPeriodo != "") {
+                    $arAdicionalPeriodo = $em->getRepository(RhuAdicionalPeriodo::class)->find($codigoPeriodo);
+                }
+                $form['attachment']->getData()->move($arConfiguracion->getRutaTemporal(), "archivo.xls");
+                $ruta = $arConfiguracion->getRutaTemporal() . "archivo.xls";
+                $objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($ruta);
+                foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+                    $worksheetTitle = $worksheet->getTitle();
+                    $highestRow = $worksheet->getHighestRow(); // e.g. 10
+                    $highestColumn = $worksheet->getHighestColumn(); // e.g 'F'
+                    $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+                    $nrColumns = ord($highestColumn) - 64;
+                    for ($row = 2; $row <= $highestRow; ++$row) {
+                        $cell = $worksheet->getCellByColumnAndRow(1, $row);
+                        $concepto = $cell->getValue();
+                        $cell = $worksheet->getCellByColumnAndRow(2, $row);
+                        $identificacion = $cell->getValue();
+                        $cell = $worksheet->getCellByColumnAndRow(3, $row);
+                        $valor = $cell->getValue();
+                        $cell = $worksheet->getCellByColumnAndRow(4, $row);
+                        $detalle = $cell->getValue();
+
+                        if (!is_numeric($valor)) {
+                            $valoresErroneos[] = "- Fila {$row}: '{$valor}'";
+                        }
+                        if (!is_numeric($concepto)) {
+                            $valoresErroneos[] = "- Fila {$row}: '{$concepto}'";
+                        }
+                        $arrCarga[] = array(
+                            'concepto' => $concepto,
+                            'identificacion' => $identificacion,
+                            'valor' => $valor,
+                            'detalle' => $detalle);
+                    }
+                }
+                # $error = "";
+                $cedulasNoEncontradas = [];
+                $conceptosNoEncontrados = [];
+                $sobrepasanLimiteAdicionalPago = [];
+                $empleadosSinContratos = [];
+                $error = false;
+                $mensaje = "";
+                if (empty($valoresErroneos)) {
+                    foreach ($arrCarga as $carga) {
+
+                        if ($carga['concepto'] != null && $carga['identificacion'] != null && $carga['valor'] != null) {
+                            if ($carga['concepto']) {
+                                $arConcepto = $em->getRepository(RhuConcepto::class)->find($carga['concepto']);
+                            }
+                            if ($carga['identificacion']) {
+                                $arEmpleado = $em->getRepository(RhuEmpleado::class)->findOneBy(array('numeroIdentificacion' => $carga['identificacion']));
+                            }
+                            if ($arEmpleado) {
+                                $codigoContrato = $arEmpleado->getCodigoContratoFk();
+                                if ($codigoContrato == null || $codigoContrato == "") {
+                                    $codigoContrato = $arEmpleado->getCodigoContratoUltimoFk();
+                                }
+                                $arContrato = $em->getRepository(RhuContrato::class)->findOneBy(array('codigoContratoPk' => $codigoContrato));
+
+                                if ($arContrato == null) {
+                                    $empleadosSinContratos[] = $carga['identificacion'];
+                                } else {
+                                    $arCentroCosto = $arContrato->getCentroCostoRel();
+                                }
+                                if ($arConcepto) {
+                                    $arAdicional = new RhuAdicional;
+                                    $arAdicional->setConceptoRel($arConcepto);
+                                    $arAdicional->setEmpleadoRel($arEmpleado);
+                                    $arAdicional->setContratoRel($arEmpleado->getContratoRel());
+                                    $arAdicional->setVrValor($carga['valor']);
+                                    $arAdicional->setDetalle($carga['detalle']);
+                                    $arAdicional->setFecha($fechaActual);
+                                    if ($codigoPeriodo != 0 && $codigoPeriodo != "") {
+                                        $arAdicional->setPermanente(0);
+                                        $arAdicional->setAdicionalPeriodoRel($arAdicionalPeriodo);
+                                    }else{
+                                        $arAdicional->setPermanente(1);
+
+                                    }
+                                    $arAdicional->setAplicaNomina(1);
+                                    $em->persist($arAdicional);
+                                } else {
+                                    $conceptosNoEncontrados[] = $carga['concepto'];
+                                }
+                            } else {
+                                $cedulasNoEncontradas[] = $carga['identificacion'];
+                            }
+                        }
+                    }
+                }
+                else {
+                    $error = true;
+                    $mensaje .= ($mensaje != "" ? "<hr>" : "") . "Lo siguientes valores contienen errores: <br>" . implode('<br>', $valoresErroneos);
+                    $mensaje .= "<br>Es probable que haya usado formulas.";
+                }
+                if (!empty($cedulasNoEncontradas)) {
+                    $error = true;
+                    $mensaje .= "Los siguientes numeros de identificación no se encuentran registrados: <br>" . implode(', ', $cedulasNoEncontradas);
+                }
+                if (!empty($empleadosSinContratos)) {
+                    $error = true;
+                    $mensaje .= "Los siguientes numeros de identificación no tienen contratos registrados: <br>" . implode(', ', $empleadosSinContratos);
+                }
+                if (!empty($conceptosNoEncontrados)) {
+                    $error = true;
+                    $mensaje .= ($mensaje != "" ? "<hr>" : "") . "Lo siguientes conceptos no se encuentran registrados: <br>" . implode(', ', $conceptosNoEncontrados);
+                }
+                if (!empty($sobrepasanLimiteAdicionalPago)) {
+                    $error = true;
+                    $mensaje .= "Los siguientes numeros de identificación sobrepasan el limite de adicional al pago: <br>" . implode(', ', $sobrepasanLimiteAdicionalPago);
+                }
+                if ($error) {
+                    Mensajes::error($mensaje);
+                }
+                else {
+                    $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }
+            }
+        }
+        return $this->render('recursohumano/movimiento/nomina/adicional/importar.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
     public function getFiltros($form)
     {
         $filtro = [

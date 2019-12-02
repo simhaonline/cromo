@@ -189,19 +189,7 @@ class Liquidacion extends \FPDF
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-        $pdf->Cell(97.5, 5, $arLiquidacion->getCodigoGrupoFk(), 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('arial', 'B', 7);
-        $pdf->Cell(32.5, 5, utf8_decode(""), 1, 0, 'L', 1);
-        $pdf->SetFillColor(253, 254, 254);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('');
-        $pdf->Cell(32.5, 5, "", 1, 0, 'L', 1);
-        $pdf->SetFillColor(253, 254, 254);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('');
-        $pdf->Cell(32.5, 5, "", 0, '.', ',', 1, 0, 'R', 1);
+        $pdf->Cell(162.5, 5, $arLiquidacion->getCodigoGrupoFk(), 1, 0, 'L', 1);
         $pdf->Ln();
         //linea 8
         $pdf->SetFillColor(170, 170, 170);
@@ -211,22 +199,7 @@ class Liquidacion extends \FPDF
         $pdf->SetFillColor(253, 254, 254);
         $pdf->SetTextColor(0);
         $pdf->SetFont('');
-        $pdf->Cell(97.5, 5, "", 1, 0, 'L', 1);
-        $pdf->SetFillColor(170, 170, 170);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('arial', 'B', 7);
-        $pdf->Cell(32.5, 5, utf8_decode(""), 1, 0, 'L', 1);
-        $pdf->SetFillColor(253, 254, 254);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('');
-        $pdf->Cell(32.5, 5, "", 1, 0, 'L', 1);
-        $pdf->SetFillColor(253, 254, 254);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('');
-        $pdf->Cell(32.5, 5, "", 0, '.', ',', 1, 0, 'R', 1);
-        $pdf->Ln();
-
-
+        $pdf->Cell(162.5, 5, $arLiquidacion->getMotivoTerminacionRel()->getMotivo()  , 1, 0, 'L', 1);
         $posicionY = 150;
         $posicionX = 5;
         //BLOQUE TOTALES

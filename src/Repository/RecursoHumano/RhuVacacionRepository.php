@@ -1281,4 +1281,64 @@ class RhuVacacionRepository extends ServiceEntityRepository
         return true;
     }
 
+    public function detallePromedio($codigoVacacion)
+    {
+
+        $em = $this->getEntityManager();
+        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arVacacion = $em->getRepository(RhuVacacion::class)->find($codigoVacacion);
+        $arContrato = $arVacacion->getContratoRel();
+
+        $fechaDesdePeriodo = $arContrato->getFechaUltimoPagoVacaciones();
+        if ($fechaDesdePeriodo == null) {
+            $fechaDesdePeriodo = $arContrato->getFechaDesde();
+        }
+        $intDias = ($arVacacion->getDiasDisfrutados() + $arVacacion->getDiasPagados()) * 24;
+        $fechaHastaPeriodo = $em->getRepository(RhuLiquidacion::class)->diasPrestacionesHasta($intDias + 1, $fechaDesdePeriodo);
+
+//        // sabatino
+//        if ($arContrato->getCodigoTiempoFk() == 3) {
+//            $arrIbpSalario = $em->getRepository(RhuPago::class)->listaIbpSalario($arContrato->getFechaUltimoPagoVacaciones()->format('Y-m-d'), $arContrato->getFechaHasta()->format('Y-m-d'), $arVacacion->getCodigoContratoFk());
+//            return $arrIbpSalario;
+//        }
+
+//        // suplementario
+//        if ($arConfiguracion->getLiquidarVacacionesPromedioUltimoAnio()) {
+//            //Fecha ultimo anio
+//            $fechaHastaUltimoAnio = date_create($arVacacion->getFechaDesdeDisfrute()->format('Y-m-d'));
+//            $fechaDesdeUltimoAnio = date_create($arVacacion->getFechaDesdeDisfrute()->format('Y-m-d'));
+//            date_add($fechaDesdeUltimoAnio, date_interval_create_from_date_string('-365 days'));
+//            if ($fechaDesdeUltimoAnio < $arVacacion->getFechaDesdePeriodo()) {
+//                $fechaDesdeUltimoAnio = $arVacacion->getFechaDesdePeriodo();
+//            }
+//            $diasPeriodoSuplementario = $objFunciones->diasPrestaciones($fechaDesdeUltimoAnio, $fechaHastaUltimoAnio);
+//            if ($diasPeriodoSuplementario > 360) {
+//                $diasPeriodoSuplementario--;
+//            }
+//            if ($arConfiguracion->getLiquidarPrestacionesSalarioSuplementario()) {
+//                $arrSuplementario = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoDetalle')->listaIbpSuplementarioVacaciones($fechaDesdeUltimoAnio->format('Y-m-d'), $fechaHastaUltimoAnio->format('Y-m-d'), $arContrato->getCodigoContratoPk());
+//                //  $suplementarioAdicionalVacacion = $em->getRepository("BrasaRecursoHumanoBundle:RhuLiquidacionAdicionales")->ibpSuplementarioVacaciones($arLiquidacion);
+//                return $arrSuplementario;
+//            }
+//        }
+
+//        Recargos nocturnos sobre el porcentaje de vacaciones que tiene el concepto
+        if ($arConfiguracion->getVacacionesLiquidarRecargoNocturnoPorcentajeConcepto()) {
+            if ($arConfiguracion->getVacacionesRecargoNocturnoUltimoAnio()) {
+                $fechaHastaUltimoAnio = date_create($arContrato->getFechaUltimoPago()->format('Y-m-d'));
+                $fechaDesdeUltimoAnio = date_create($arContrato->getFechaUltimoPago()->format('Y-m-d'));
+                date_add($fechaDesdeUltimoAnio, date_interval_create_from_date_string('-365 days'));
+                if ($fechaDesdeUltimoAnio < $arVacacion->getFechaDesdePeriodo()) {
+                    $fechaDesdeUltimoAnio = $arVacacion->getFechaDesdePeriodo();
+                }
+                $arrRecargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->listaRecargosNocturnosIbp($fechaDesdeUltimoAnio->format('Y-m-d'), $fechaHastaUltimoAnio->format('Y-m-d'), $arContrato->getCodigoContratoPk());
+                return $arrRecargosNocturnos;
+            } else {
+                $arrRecargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->listaRecargosNocturnosIbp($fechaDesdePeriodo->format('Y-m-d'), $fechaHastaPeriodo->format('Y-m-d'), $arContrato->getCodigoContratoPk());
+                return $arrRecargosNocturnos;
+            }
+        }
+
+    }
+
 }

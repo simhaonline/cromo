@@ -221,6 +221,27 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
 
     }
 
+    public function listaRecargosNocturnosIbp($fechaDesde, $fechaHasta, $codigoContrato)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQueryBuilder()
+            ->select("p.numero as numero,pd.vrIngresoBasePrestacion as vrIngresoPrestacion,  (pc.porcentajeVacaciones / 100) as porcentaje,
+             p.fechaDesde, p.fechaHasta, pc.nombre as concepto")
+            ->from(RhuPagoDetalle::class, 'pd')
+            ->join('pd.pagoRel', 'p')
+            ->join('pd.conceptoRel', 'pc')
+            ->where("pc.recargoNocturno = 1")
+            ->andWhere("p.codigoContratoFk = {$codigoContrato}")
+            ->andWhere("p.fechaDesde >= '{$fechaDesde}'")
+            ->andWhere("p.fechaHasta <= '{$fechaHasta}'");
+
+
+        $arrayResultado = $query->getQuery()->getResult();
+        $recargosNocturnos = $arrayResultado;
+        return $recargosNocturnos;
+
+    }
+
     public function ibp($fechaDesde, $fechaHasta, $codigoContrato)
     {
         $em = $this->getEntityManager();

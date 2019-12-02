@@ -449,10 +449,10 @@ class VacacionController extends AbstractController
                 if ($boolIncapacidad) {
                     //$arUltimaVacacionDisfrute = $em->getRepository(RhuVacacionCambio::class)->validarUltimaVacacion($codigoVacacion);
                     //if ($arUltimaVacacionDisfrute) {
-                        $arVacacion->setFechaDesdeDisfrute($arVacacionesCambio->getFechaDesdeDisfrute());
-                        $arVacacion->setFechaHastaDisfrute($arVacacionesCambio->getFechaHastaDisfrute());
-                        $arVacacion->setFechaInicioLabor($arVacacionesCambio->getFechaInicioLabor());
-                        $em->persist($arVacacion);
+                    $arVacacion->setFechaDesdeDisfrute($arVacacionesCambio->getFechaDesdeDisfrute());
+                    $arVacacion->setFechaHastaDisfrute($arVacacionesCambio->getFechaHastaDisfrute());
+                    $arVacacion->setFechaInicioLabor($arVacacionesCambio->getFechaInicioLabor());
+                    $em->persist($arVacacion);
                     //}
                     $arVacacionesCambio = $form->getData();
                     $em->persist($arVacacionesCambio);
@@ -467,6 +467,19 @@ class VacacionController extends AbstractController
             'form' => $form->createView(),
             'arVacacion' => $arVacacion
         ]);
+    }
+
+    /**
+     * @Route("/recursohumano/movimiento/nomina/vacacion/detalle/promedio/{codigoVacacion}", name="recursohumano_movimiento_nomina_vacacion_detalle_promedio")
+     */
+    public function detallePromedio(Request $request, $codigoVacacion)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $arDetallePromedio = $em->getRepository(RhuVacacion::class)->detallePromedio($codigoVacacion);
+        return $this->render('recursohumano/movimiento/nomina/vacacion/detallePromedio.html.twig', array(
+            'arDetallePromedio' => $arDetallePromedio
+        ));
     }
 
     public function getFiltros($form)

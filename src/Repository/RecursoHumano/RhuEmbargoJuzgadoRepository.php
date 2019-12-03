@@ -17,21 +17,53 @@ class RhuEmbargoJuzgadoRepository extends ServiceEntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function lista(){
-        $session = new Session();
+    public function lista($raw){
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoEmbargoJuzgado = null;
+        $nombre = null;
+        if ($filtros) {
+            $codigoEmbargoJuzgado = $filtros['codigoEmbargoJuzgado'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
+
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmbargoJuzgado::class,'ej')
             ->select('ej.codigoEmbargoJuzgadoPk')
             ->addSelect('ej.nombre')
             ->addSelect('ej.cuenta')
             ->addSelect('ej.oficina')
             ->where('ej.codigoEmbargoJuzgadoPk IS NOT NULL');
-        if($session->get('filtroRhuJuzgadoNombre')){
-            $queryBuilder->andWhere("ej.nombre LIKE '%{$session->get('filtroRhuJuzgadoNombre')}%' ");
+
+
+        if($codigoEmbargoJuzgado){
+            $queryBuilder->andWhere("ej.codigoEmbargoJuzgadoPk LIKE '%{$codigoEmbargoJuzgado}%' ");
         }
-        if($session->get('filtroRhuJuzgadoCodigo')){
-            $queryBuilder->andWhere("ej.codigoEmbargoJuzgadoPk LIKE '%{$session->get('filtroRhuJuzgadoCodigo')}%' ");
+        if($nombre){
+            $queryBuilder->andWhere("ej.nombre LIKE '%{$nombre}%' ");
         }
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('ej.codigoEmbargoJuzgadoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function eliminar($arrDetallesSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrDetallesSeleccionados) {
+            if (count($arrDetallesSeleccionados)) {
+                foreach ($arrDetallesSeleccionados as $codigo) {
+                    $ar = $em->getRepository(RhuEmbargoJuzgado::class)->find($codigo);
+                    if ($ar) {
+                        $em->remove($ar);
+                    }
+                }
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                }
+            }
+        }
     }
 
     public function camposPredeterminados(){

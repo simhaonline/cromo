@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label class=" col-sm-1 control-label">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoEmbargoJuzgado) }}
+                        </div>
+                        <label class=" col-sm-1 control-label">Nombre:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.nombre) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th titile="Codigo del registro">ID</th>
+            <th titile="Nombre del registro">NOMBRE</th>
+            <th titile="Oficina">OFICINA</th>
+            <th titile="Cuenta">CUENTA</th>
+            <th></th>
+            <th></th>
+            <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for juzgado in arJuzgados %}
+            <tr>
+                <td>{{ juzgado.codigoEmbargoJuzgadoPk }}</td>
+                <td>{{ juzgado.nombre }}</td>
+                <td>{{ juzgado.oficina }}</td>
+                <td>{{ juzgado.oficina }}</td>
+                <td class="text-center">
+                    <a href="{{ path('recursohumano_administracion_nomina_embargojuzgado_nuevo',{'id': juzgado.codigoEmbargoJuzgadoPk }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
+                <td class="text-center">
+                    <a href="{{ path('recursohumano_administracion_nomina_embargojuzgado_detalle',{'id' : juzgado.codigoEmbargoJuzgadoPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ juzgado.codigoEmbargoJuzgadoPk }}"/>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arJuzgados.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arJuzgados) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_administracion_nomina_embargojuzgado_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    <br/><br/>
+    {{ form_end(form) }}
+{% endblock %}

@@ -314,6 +314,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
      */
     public function lista($raw)
     {
+        $em = $this->getEntityManager();
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
 
@@ -341,7 +342,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
             $estadoContabilizado = $filtros['estadoContabilizado'] ?? null;
         }
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuVacacion::class, 'v')
+        $queryBuilder = $em->createQueryBuilder()->from(RhuVacacion::class, 'v')
             ->select('v.codigoVacacionPk')
             ->addselect('v.fecha')
             ->addSelect('v.numero')
@@ -414,6 +415,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("v.estadoContabilizado = 1");
                 break;
         }
+        $queryBuilder->orderBy('v.estadoAprobado', 'ASC');
         $queryBuilder->addOrderBy('v.codigoVacacionPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
@@ -554,28 +556,19 @@ class RhuVacacionRepository extends ServiceEntityRepository
 
         //Recargos nocturnos
         $recargosNocturnos = 0;
-        if ($arConfiguracion->getVacacionesRecargoNocturnoUltimoAnio()) {
-            $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnos($fechaDesdeUltimoAnio->format('Y-m-d'), $fechaHastaUltimoAnio->format('Y-m-d'), $arContrato->getCodigoContratoPk());
-        } else {
-            $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnos($fechaDesdePeriodo->format('Y-m-d'), $fechaHastaPeriodo->format('Y-m-d'), $arContrato->getCodigoContratoPk());
+
+        //Ayuda: recargos nocturnos desde el ultimo pagado
+        //Ultimo año hasta la ultima fecha de pago nomina
+        if($arVacacion->getCodigoLiquidacionRecargosFk() == 'RN001') {
+            $fechaHastaUltimoAnio = date_create($arContrato->getFechaUltimoPago()->format('Y-m-d'));
+            $fechaDesdeUltimoAnio = date_create($arContrato->getFechaUltimoPago()->format('Y-m-d'));
+            date_add($fechaDesdeUltimoAnio, date_interval_create_from_date_string('-365 days'));
+            $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($fechaDesdeUltimoAnio->format('Y-m-d'), $fechaHastaUltimoAnio->format('Y-m-d'), $arContrato->getCodigoContratoPk());
         }
-
-        //Recargos nocturnos sobre el porcentaje de vacaciones que tiene el concepto
-        if ($arConfiguracion->getVacacionesLiquidarRecargoNocturnoPorcentajeConcepto()) {
-            if ($arConfiguracion->getVacacionesRecargoNocturnoUltimoAnio()) {
-                //Fecha ultimo anio
-                $fechaHastaUltimoAnio = date_create($arContrato->getFechaUltimoPago()->format('Y-m-d'));
-                $fechaDesdeUltimoAnio = date_create($arContrato->getFechaUltimoPago()->format('Y-m-d'));
-                date_add($fechaDesdeUltimoAnio, date_interval_create_from_date_string('-365 days'));
-                if ($fechaDesdeUltimoAnio < $arVacacion->getFechaDesdePeriodo()) {
-                    $fechaDesdeUltimoAnio = $arVacacion->getFechaDesdePeriodo();
-                }
-
-                $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($fechaDesdeUltimoAnio->format('Y-m-d'), $fechaHastaUltimoAnio->format('Y-m-d'), $arContrato->getCodigoContratoPk());
-
-            } else {
-                $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($fechaDesdePeriodo->format('Y-m-d'), $fechaHastaPeriodo->format('Y-m-d'), $arContrato->getCodigoContratoPk());
-            }
+        //Ayuda: recargos nocturnos del periodo que se esta liquidando
+        //Periodo
+        if($arVacacion->getCodigoLiquidacionRecargosFk() == 'RN002') {
+            $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($fechaDesdePeriodo->format('Y-m-d'), $fechaHastaPeriodo->format('Y-m-d'), $arContrato->getCodigoContratoPk());
         }
 
         $recargosNocturnos = round($recargosNocturnos);

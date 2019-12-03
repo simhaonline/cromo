@@ -282,6 +282,11 @@ class RhuVacacion
     private $vrIbcPromedio = 0;
 
     /**
+     * @ORM\Column(name="codigo_liquidacion_recargos_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoLiquidacionRecargosFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuVacacionTipo", inversedBy="vacacionesVacacionTipoRel")
      * @ORM\JoinColumn(name="codigo_vacacion_tipo_fk", referencedColumnName="codigo_vacacion_tipo_pk")
      */
@@ -1300,6 +1305,23 @@ class RhuVacacion
     {
         $this->vacacionesCambiosVacacionRel = $vacacionesCambiosVacacionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoLiquidacionRecargosFk()
+    {
+        return $this->codigoLiquidacionRecargosFk;
+    }
+
+    /**
+     * @param mixed $codigoLiquidacionRecargosFk
+     */
+    public function setCodigoLiquidacionRecargosFk($codigoLiquidacionRecargosFk): void
+    {
+        $this->codigoLiquidacionRecargosFk = $codigoLiquidacionRecargosFk;
+    }
+
 
 
 }

@@ -190,21 +190,6 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
 
     }
 
-    public function recargosNocturnos($fechaDesde, $fechaHasta, $codigoContrato)
-    {
-        $em = $this->getEntityManager();
-        $dql = "SELECT SUM(pd.vrIngresoBaseCotizacion) as recagosNocturnos FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p JOIN pd.conceptoRel pc "
-            . "WHERE pc.recargoNocturno = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
-            . "AND p.fechaDesdeContrato >= '" . $fechaDesde . "' AND p.fechaDesdeContrato <= '" . $fechaHasta . "'";
-        $query = $em->createQuery($dql);
-        $arrayResultado = $query->getResult();
-        $recargosNocturnos = $arrayResultado[0]['recagosNocturnos'];
-        if ($recargosNocturnos == null) {
-            $recargosNocturnos = 0;
-        }
-        return $recargosNocturnos;
-    }
-
     public function recargosNocturnosIbp($fechaDesde, $fechaHasta, $codigoContrato)
     {
         $em = $this->getEntityManager();

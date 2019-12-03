@@ -8,6 +8,7 @@ use App\Entity\RecursoHumano\RhuVacacionTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -20,6 +21,12 @@ class VacacionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('codigoLiquidacionRecargosFk', ChoiceType::class, [
+                'choices' => array(
+                    'PERIODO' => 'RN002', 'ULTIMO AÑO HASTA LA ULTIMA FECHA DE PAGO' => 'RN001', 'SIN RECARGOS' => 'RN00',
+                ),
+                'required'    => true,
+            ])
             ->add('vacacionTipoRel',EntityType::class,[
                 'class' => RhuVacacionTipo::class,
                 'query_builder' => function (EntityRepository $er) {

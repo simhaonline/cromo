@@ -68,6 +68,18 @@
         </div>
     </div>
     <div class="panel panel-default">
+        <div class="panel-heading">Liquidacion</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="vacacion_vrSalarioPromedioPropuesto" class="control-label col-sm-2">Tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoLiquidacionRecargosFk) }}
+                    <i class="fa fa-info-circle" title="La opcion periodo toma los recargos nocturnos del periodo que se esta liquidando y la opcion ultimo año toma los recargos nocturnos desde el ultimo pagado" style="float: right;color: gray; padding-top: 9px;padding-right: 16px; position: absolute;right: 0px;">&nbsp;</i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
         <div class="panel-heading">Información propuestos</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">

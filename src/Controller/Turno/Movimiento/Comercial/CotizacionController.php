@@ -257,7 +257,7 @@ class CotizacionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 if($id == 0) {
-                    $arCotizacionDetalle->setPorcentajeIva($arCotizacionDetalle->getConceptoRel()->getPorcentajeIva());
+                    $arCotizacionDetalle->setPorcentajeIva(19);
                     $arCotizacionDetalle->setPorcentajeBaseIva(100);
                 }
                 $em->persist($arCotizacionDetalle);

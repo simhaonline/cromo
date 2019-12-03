@@ -130,6 +130,11 @@ class FinCuenta
     protected $movimientosDetallesCuentaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarMovimientoDetalle", mappedBy="cuentaRel")
+     */
+    protected $carMovimientosDetallesCuentaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaPk()
@@ -431,6 +436,22 @@ class FinCuenta
     public function setMovimientosDetallesCuentaRel($movimientosDetallesCuentaRel): void
     {
         $this->movimientosDetallesCuentaRel = $movimientosDetallesCuentaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCarMovimientosDetallesCuentaRel()
+    {
+        return $this->carMovimientosDetallesCuentaRel;
+    }
+
+    /**
+     * @param mixed $carMovimientosDetallesCuentaRel
+     */
+    public function setCarMovimientosDetallesCuentaRel($carMovimientosDetallesCuentaRel): void
+    {
+        $this->carMovimientosDetallesCuentaRel = $carMovimientosDetallesCuentaRel;
     }
 
 

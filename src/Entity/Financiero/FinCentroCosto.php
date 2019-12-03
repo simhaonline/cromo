@@ -100,6 +100,11 @@ class FinCentroCosto
     protected $ingresosDetallesCentroCostoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarMovimientoDetalle", mappedBy="centroCostoRel")
+     */
+    protected $carMovimientosDetallesCentroCostoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCentroCostoPk()
@@ -289,6 +294,38 @@ class FinCentroCosto
     public function setMovimientosDetallesCentroCostoRel($movimientosDetallesCentroCostoRel): void
     {
         $this->movimientosDetallesCentroCostoRel = $movimientosDetallesCentroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIngresosDetallesCentroCostoRel()
+    {
+        return $this->ingresosDetallesCentroCostoRel;
+    }
+
+    /**
+     * @param mixed $ingresosDetallesCentroCostoRel
+     */
+    public function setIngresosDetallesCentroCostoRel($ingresosDetallesCentroCostoRel): void
+    {
+        $this->ingresosDetallesCentroCostoRel = $ingresosDetallesCentroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCarMovimientosDetallesCentroCostoRel()
+    {
+        return $this->carMovimientosDetallesCentroCostoRel;
+    }
+
+    /**
+     * @param mixed $carMovimientosDetallesCentroCostoRel
+     */
+    public function setCarMovimientosDetallesCentroCostoRel($carMovimientosDetallesCentroCostoRel): void
+    {
+        $this->carMovimientosDetallesCentroCostoRel = $carMovimientosDetallesCentroCostoRel;
     }
 
 

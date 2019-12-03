@@ -155,6 +155,16 @@ class CarCliente
     protected $ingresosDetallesClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarMovimiento", mappedBy="clienteRel")
+     */
+    protected $movimientosClienteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarMovimientoDetalle", mappedBy="clienteRel")
+     */
+    protected $movimientosDetallesClienteRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -600,6 +610,38 @@ class CarCliente
     public function setIngresosDetallesClienteRel($ingresosDetallesClienteRel): void
     {
         $this->ingresosDetallesClienteRel = $ingresosDetallesClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosClienteRel()
+    {
+        return $this->movimientosClienteRel;
+    }
+
+    /**
+     * @param mixed $movimientosClienteRel
+     */
+    public function setMovimientosClienteRel($movimientosClienteRel): void
+    {
+        $this->movimientosClienteRel = $movimientosClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDetallesClienteRel()
+    {
+        return $this->movimientosDetallesClienteRel;
+    }
+
+    /**
+     * @param mixed $movimientosDetallesClienteRel
+     */
+    public function setMovimientosDetallesClienteRel($movimientosDetallesClienteRel): void
+    {
+        $this->movimientosDetallesClienteRel = $movimientosDetallesClienteRel;
     }
 
 

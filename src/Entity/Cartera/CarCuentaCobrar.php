@@ -225,6 +225,11 @@ class CarCuentaCobrar
     protected $ingresosDetallesCuentaCobrarRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarMovimientoDetalle", mappedBy="cuentaCobrarRel")
+     */
+    protected $movimientosDetallesCuentaCobrarRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCuentaCobrarPk()
@@ -878,6 +883,22 @@ class CarCuentaCobrar
     public function setIngresosDetallesCuentaCobrarRel($ingresosDetallesCuentaCobrarRel): void
     {
         $this->ingresosDetallesCuentaCobrarRel = $ingresosDetallesCuentaCobrarRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosDetallesCuentaCobrarRel()
+    {
+        return $this->movimientosDetallesCuentaCobrarRel;
+    }
+
+    /**
+     * @param mixed $movimientosDetallesCuentaCobrarRel
+     */
+    public function setMovimientosDetallesCuentaCobrarRel($movimientosDetallesCuentaCobrarRel): void
+    {
+        $this->movimientosDetallesCuentaCobrarRel = $movimientosDetallesCuentaCobrarRel;
     }
 
 

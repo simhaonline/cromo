@@ -9,44 +9,31 @@
             </header>
             <div>
                 <div class="widget-body">
+                    {% include 'estructura/buscarEmpleadoRecursohumano.html.twig' %}
                     <div class="form-group form-group-sm">
-                        <label for="form_txtCodigoEmpleado" class="col-sm-offset-1 col-sm-1 control-label">Empleado:</label>
-                        <div class="col-sm-10">
-                            <div class="row">
-                                <div class="col-lg-2">
-                                    <div class="input-group">
-                                        {{ form_widget(form.txtEmpleado) }}
-                                    </div>
-                                </div>
-                                <div class="col-lg-10">
-                                    <div class="input-group">
-                                        <input id="form_txtNombreCorto" class="form-control" readonly>
-                                        <span class="input-group-btn">
-                                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado', { 'campoCodigo': 'form_txtEmpleado', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEMpleado', 600, 900)">Buscar</a>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                        <label class=" col-sm-1 control-label">Contrato:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoContratoFk) }}
                         </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label class=" col-sm-2 control-label">Fecha desde:</label>
-                        <div class="col-sm-4">
-                           {{ form_widget(form.fechaDesde) }}
+                        <label class=" col-sm-1 control-label">Tipo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.pagoTipo) }}
                         </div>
-                        <label class=" col-sm-2 control-label">Concepto:</label>
-                        <div class="col-sm-4">
+                        <label class=" col-sm-1 control-label">Concepto:</label>
+                        <div class="col-sm-2">
                             {{ form_widget(form.concepto) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class=" col-sm-2 control-label">Fecha desde:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.fechaHasta) }}
+                        <label class=" col-sm-1 control-label">Fecha desde:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.fechaDesde) }}
                         </div>
-                        <label class=" col-sm-2 control-label">Tipo:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.pagoTipo) }}
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class=" col-sm-1 control-label">Fecha desde:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.fechaHasta) }}
                         </div>
                     </div>
                 </div>
@@ -67,6 +54,7 @@
             <th>COD</th>
             <th>IDENTIFICACION</th>
             <th>EMPLEADO</th>
+            <th>CONTRATO</th>
             <th>GRUPO</th>
             <th>COD</th>
             <th>CONCEPTO</th>
@@ -90,6 +78,7 @@
                 <td>{{ arPagoDetalle.pagoCodigoEmpleadoFk }}</td>
                 <td>{{ arPagoDetalle.empleadoNumeroIdentificacion }}</td>
                 <td>{{ arPagoDetalle.empleadoNombreCorto }}</td>
+                <td>{{ arPagoDetalle.codigoContratoFk }}</td>
                 <td>{{ arPagoDetalle.grupoNombre }}</td>
                 <td>{{ arPagoDetalle.codigoConceptoFk }}</td>
                 <td>{{ arPagoDetalle.conceptoNombre }}</td>

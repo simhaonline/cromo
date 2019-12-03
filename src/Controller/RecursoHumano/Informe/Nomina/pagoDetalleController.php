@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class pagoDetalleController extends  Controller
+class pagoDetalleController extends Controller
 {
 
     /**
@@ -41,9 +41,10 @@ class pagoDetalleController extends  Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
-            ->add('txtEmpleado', TextType::class, ['required' => false])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuInformePagoDetalleFechaDesde') ? date_create($session->get('filtroRhuInformePagoDetalleFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuInformePagoDetalleFechaHasta') ? date_create($session->get('filtroRhuInformePagoDetalleFechaHasta')): null])
+            ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
+            ->add('codigoContratoFk', TextType::class, ['required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuInformePagoDetalleFechaDesde') ? date_create($session->get('filtroRhuInformePagoDetalleFechaDesde')) : null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuInformePagoDetalleFechaHasta') ? date_create($session->get('filtroRhuInformePagoDetalleFechaHasta')) : null])
             ->add('concepto', EntityType::class, array(
                 'class' => RhuConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -55,7 +56,7 @@ class pagoDetalleController extends  Controller
                 'empty_data' => "",
                 'placeholder' => "TODOS",
                 'attr' => ['class' => 'form-control to-select-2'],
-                'data' => $session->get('arSeguridadUsuarioProcesofiltroModulo')||""
+                'data' => $session->get('arSeguridadUsuarioProcesofiltroModulo') || ""
             ))
             ->add('pagoTipo', EntityType::class, array(
                 'class' => RhuPagoTipo::class,
@@ -68,31 +69,32 @@ class pagoDetalleController extends  Controller
                 'empty_data' => "",
                 'placeholder' => "TODOS",
                 'attr' => ['class' => 'form-control to-select-2'],
-                'data' => $session->get('arSeguridadUsuarioProcesofiltroModulo')||""
+                'data' => $session->get('arSeguridadUsuarioProcesofiltroModulo') || ""
             ))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add( 'btnExcel', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
-            ->add( 'btnExcelEmpleado', SubmitType::class, ['label'=>'Excel empleado', 'attr'=>['class'=> 'btn btn-sm btn-default']])
-            ->add( 'btnExcelConcepto', SubmitType::class, ['label'=>'Excel concepto', 'attr'=>['class'=> 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcelEmpleado', SubmitType::class, ['label' => 'Excel empleado', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcelConcepto', SubmitType::class, ['label' => 'Excel concepto', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked() || $form->get('btnExcelEmpleado')->isClicked() || $form->get('btnExcelConcepto')->isClicked()) {
                 $arConcepto = $form->get('concepto')->getData();
-                if($arConcepto) {
+                if ($arConcepto) {
                     $session->set('filtroRhuInformePagoDetalleConcepto', $arConcepto->getCodigoConceptoPk());
                 } else {
                     $session->set('filtroRhuInformePagoDetalleConcepto', null);
                 }
                 $arPagoTipo = $form->get('pagoTipo')->getData();
-                if($arPagoTipo) {
+                if ($arPagoTipo) {
                     $session->set('filtroRhuInformePagoDetalleTipo', $arPagoTipo->getCodigoPagoTipoPk());
                 } else {
                     $session->set('filtroRhuInformePagoDetalleTipo', null);
                 }
-                $session->set('filtroRhuInformePagoDetalleCodigoEmpleado',  $form->get('txtEmpleado')->getData());
-                $session->set('filtroRhuInformePagoDetalleFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-                $session->set('filtroRhuInformePagoDetalleFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+                $session->set('filtroRhuInformePagoDetalleCodigoEmpleado', $form->get('codigoEmpleadoFk')->getData());
+                $session->set('filtroRhuInformePagoDetalleCodigoContrato', $form->get('codigoContratoFk')->getData());
+                $session->set('filtroRhuInformePagoDetalleFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
+                $session->set('filtroRhuInformePagoDetalleFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->informe()->getQuery()->getResult();
@@ -111,7 +113,7 @@ class pagoDetalleController extends  Controller
             'arPagoDetalles' => $arPagoDetalles,
             'form' => $form->createView()
         ]);
-	}
+    }
 
     public function exportarExcelPersonalizado($arPagoDetalles)
     {

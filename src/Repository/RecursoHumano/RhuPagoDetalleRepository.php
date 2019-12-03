@@ -141,6 +141,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.codigoPagoDetallePk')
             ->addSelect('pt.nombre as pagoTipoNombre')
             ->addSelect('p.numero as pagoNumero')
+            ->addSelect('p.codigoContratoFk')
             ->addSelect('p.codigoEmpleadoFk as pagoCodigoEmpleadoFk')
             ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
             ->addSelect('e.nombreCorto as empleadoNombreCorto')
@@ -174,6 +175,9 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         }
         if ($session->get('filtroRhuInformePagoDetalleCodigoEmpleado') != null) {
             $queryBuilder->andWhere("p.codigoEmpleadoFk = {$session->get('filtroRhuInformePagoDetalleCodigoEmpleado')}");
+        }
+        if ($session->get('filtroRhuInformePagoDetalleCodigoContrato') != null) {
+            $queryBuilder->andWhere("p.codigoContratoFk = {$session->get('filtroRhuInformePagoDetalleCodigoContrato')}");
         }
         if ($session->get('filtroRhuInformePagoDetalleFechaDesde') != null) {
             $queryBuilder->andWhere("p.fechaDesde >= '{$session->get('filtroRhuInformePagoDetalleFechaDesde')} 00:00:00'");

@@ -115,7 +115,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->addSelect('sc.mes')
             ->addSelect('sc.codigoEmpleadoFk')
             ->addSelect('sc.codigoContratoFk')
-            ->addSelect('c.vrSalario')
+            ->addSelect('c.vrSalarioPago')
             ->addSelect('c.fechaDesde as contratoFechaDesde')
             ->addSelect('c.fechaHasta as contratoFechaHasta')
             ->addSelect('c.factorHorasDia')

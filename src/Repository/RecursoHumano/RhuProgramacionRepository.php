@@ -694,7 +694,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
             $arSoportesContratos = $em->getRepository(TurSoporteContrato::class)->cargarNomina($codigoSoporte);
             foreach ($arSoportesContratos as $arSoporteContrato) {
                 /** @var $arSoporteContrato TurSoporteContrato */
-                $salario = $arSoporteContrato['vrSalario'];
+                $salario = $arSoporteContrato['vrSalarioPago'];
                 /*if ($arSoportePago->getVrSalarioCompensacion() > 0) {
                     $salario = $arSoportePago->getVrSalarioCompensacion();
                 }*/

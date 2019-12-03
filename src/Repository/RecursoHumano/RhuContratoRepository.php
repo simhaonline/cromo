@@ -147,7 +147,7 @@ class RhuContratoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(RhuContrato::class, "c")
             ->select("c.codigoContratoPk")
-            ->addSelect('c.vrSalario')
+            ->addSelect('c.vrSalarioPago')
             ->addSelect('c.vrDevengadoPactado')
             ->addSelect('c.estadoTerminado')
             ->addSelect('c.fechaDesde')

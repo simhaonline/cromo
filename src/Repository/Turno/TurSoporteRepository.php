@@ -176,7 +176,7 @@ class TurSoporteRepository extends ServiceEntityRepository
                         if($arContrato['codigoDistribucionFk']) {
                             $arSoporteContrato->setDistribucionRel($em->getReference(RhuDistribucion::class, $arContrato['codigoDistribucionFk']));
                         }
-                        $arSoporteContrato->setVrSalario($arContrato['vrSalario']);
+                        $arSoporteContrato->setVrSalario($arContrato['vrSalarioPago']);
                         $arSoporteContrato->setVrDevengadoPactado($arContrato['vrDevengadoPactado']);
                         if($arContrato['auxilioTransporte']) {
                             $arSoporteContrato->setAuxilioTransporte($arContrato['auxilioTransporte']);

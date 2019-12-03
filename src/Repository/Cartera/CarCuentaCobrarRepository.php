@@ -7,6 +7,7 @@ use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCompromisoDetalle;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarIngresoDetalle;
+use App\Entity\Cartera\CarMovimientoDetalle;
 use App\Entity\Cartera\CarNotaCreditoDetalle;
 use App\Entity\Cartera\CarNotaDebitoDetalle;
 use App\Entity\Cartera\CarReciboDetalle;
@@ -641,6 +642,18 @@ class CarCuentaCobrarRepository extends ServiceEntityRepository
             $queryBuilder = $em->createQueryBuilder()->from(CarIngresoDetalle::class, 'id')
                 ->Select("SUM(id.vrPago) as vrPago")
                 ->leftJoin('id.ingresoRel', 'i')
+                ->where("id.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
+                ->andWhere('i.estadoAutorizado = 1');
+            $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+            if ($arrResultado) {
+                if ($arrResultado['vrPago']) {
+                    $abonos += $arrResultado['vrPago'];
+                }
+            }
+
+            $queryBuilder = $em->createQueryBuilder()->from(CarMovimientoDetalle::class, 'id')
+                ->Select("SUM(id.vrPago) as vrPago")
+                ->leftJoin('id.movimientoRel', 'i')
                 ->where("id.codigoCuentaCobrarFk = " . $arCuentaCobrar['codigoCuentaCobrarPk'])
                 ->andWhere('i.estadoAutorizado = 1');
             $arrResultado = $queryBuilder->getQuery()->getSingleResult();

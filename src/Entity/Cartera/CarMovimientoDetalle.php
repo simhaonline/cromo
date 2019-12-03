@@ -79,7 +79,7 @@ class CarMovimientoDetalle
     /**
      * @ORM\Column(name="naturaleza", type="string", length=1, nullable=true)
      */
-    private $naturaleza = 0;
+    private $naturaleza;
 
     /**
      * @ORM\Column(name="detalle", type="string", length=800, nullable=true)
@@ -321,22 +321,6 @@ class CarMovimientoDetalle
     }
 
     /**
-     * @return int
-     */
-    public function getNaturaleza(): int
-    {
-        return $this->naturaleza;
-    }
-
-    /**
-     * @param int $naturaleza
-     */
-    public function setNaturaleza(int $naturaleza): void
-    {
-        $this->naturaleza = $naturaleza;
-    }
-
-    /**
      * @return mixed
      */
     public function getDetalle()
@@ -462,6 +446,22 @@ class CarMovimientoDetalle
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNaturaleza()
+    {
+        return $this->naturaleza;
+    }
+
+    /**
+     * @param mixed $naturaleza
+     */
+    public function setNaturaleza($naturaleza): void
+    {
+        $this->naturaleza = $naturaleza;
     }
 
 

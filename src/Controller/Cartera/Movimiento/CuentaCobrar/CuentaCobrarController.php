@@ -10,6 +10,7 @@ use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarIngresoDetalle;
+use App\Entity\Cartera\CarMovimientoDetalle;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Form\Type\Cartera\CuentaCobrarEditarType;
 use App\Form\Type\Cartera\CuentaCobrarType;
@@ -189,11 +190,13 @@ class CuentaCobrarController extends AbstractController
         $arReciboDetalles = $em->getRepository(CarReciboDetalle::class)->detalleReferencia($id);
         $arAplicaciones = $em->getRepository(CarAplicacion::class)->referencia($id);
         $arIngresoDetalles = $em->getRepository(CarIngresoDetalle::class)->referencia($id);
+        $arMovimientoDetalles = $em->getRepository(CarMovimientoDetalle::class)->referencia($id);
         return $this->render('cartera/movimiento/cuentacobrar/cuentacobrar/referencia.html.twig', [
             'arCuentaCobrar' => $arCuentaCobrar,
             'arReciboDetalles' => $arReciboDetalles,
             'arAplicaciones' => $arAplicaciones,
-            'arIngresoDetalles' => $arIngresoDetalles
+            'arIngresoDetalles' => $arIngresoDetalles,
+            'arMovimientoDetalles' => $arMovimientoDetalles
         ]);
     }
 

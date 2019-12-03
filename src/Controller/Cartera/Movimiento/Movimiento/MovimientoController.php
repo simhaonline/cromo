@@ -185,12 +185,12 @@ class MovimientoController extends BaseController
                 $em->getRepository(CarMovimientoDetalle::class)->actualizar($arrControles, $id);
                 $em->getRepository(CarMovimiento::class)->liquidar($id);
                 $em->getRepository(CarMovimiento::class)->autorizar($arMovimiento);
-                return $this->redirect($this->generateUrl('cartera_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('cartera_movimiento_documento_movimiento_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 if ($arMovimiento->getEstadoAutorizado() == 1 && $arMovimiento->getEstadoAprobado() == 0) {
                     $em->getRepository(CarMovimiento::class)->desAutorizar($arMovimiento);
-                    return $this->redirect($this->generateUrl('cartera_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
+                    return $this->redirect($this->generateUrl('cartera_movimiento_documento_movimiento_detalle', ['id' => $id]));
                 } else {
                     Mensajes::error("El movimiento debe estar autorizado y no puede estar aprobado");
                 }
@@ -212,7 +212,7 @@ class MovimientoController extends BaseController
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(CarMovimientoDetalle::class)->actualizar($arrControles, $id);
                 $em->getRepository(CarMovimiento::class)->liquidar($id);
-                return $this->redirect($this->generateUrl('cartera_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
+                return $this->redirect($this->generateUrl('cartera_movimiento_documento_movimiento_detalle', ['id' => $id]));
             }
             if ($form->get('btnAdicionar')->isClicked()) {
                 $em->getRepository(CarMovimientoDetalle::class)->actualizar($arrControles, $id);
@@ -254,7 +254,7 @@ class MovimientoController extends BaseController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
-     * @Route("/cartera/movimiento/movimiento/documento/detalle/nuevo/{id}", name="cartera_movimiento_documento_movimiento_detalle_nuevo")
+     * @Route("/cartera/movimiento/documento/movimiento/detalle/nuevo/{id}", name="cartera_movimiento_documento_movimiento_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, PaginatorInterface $paginator, $id)
     {
@@ -325,7 +325,7 @@ class MovimientoController extends BaseController
             }
         }
         $arCuentasCobrar = $paginator->paginate($em->getRepository(CarCuentaCobrar::class)->cuentasCobrarDetalleNuevo($arMovimiento->getCodigoClienteFk()), $request->query->getInt('page', 1), 500);
-        return $this->render('cartera/movimiento/movimiento/movimiento/detalleNuevo.html.twig', [
+        return $this->render('cartera/movimiento/documento/movimiento/detalleNuevo.html.twig', [
             'arCuentasCobrar' => $arCuentasCobrar,
             'form' => $form->createView()
         ]);

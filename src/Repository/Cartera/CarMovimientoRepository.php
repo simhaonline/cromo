@@ -320,7 +320,7 @@ class CarMovimientoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarMovimiento::class, 'i')
             ->select('i.codigoMovimientoPk')
             ->addSelect('i.numero')
-            ->addSelect('i.fechaPago')
+            ->addSelect('i.fecha')
             ->addSelect('i.vrTotalNeto')
             ->addSelect('i.estadoAprobado')
             ->addSelect('i.estadoContabilizado')
@@ -347,7 +347,7 @@ class CarMovimientoRepository extends ServiceEntityRepository
                         if ($arMovimiento['codigoComprobanteFk']) {
                             $arComprobante = $em->getRepository(FinComprobante::class)->find($arMovimiento['codigoComprobanteFk']);
                             if ($arComprobante) {
-                                $fecha = $arMovimiento['fechaPago'];
+                                $fecha = $arMovimiento['fecha'];
                                 $arCliente = $em->getRepository(CarCliente::class)->terceroFinanciero($arMovimiento['codigoClienteFk']);
                                 $arMovimientoDetalles = $em->getRepository(CarMovimientoDetalle::class)->listaContabilizar($codigo);
                                 foreach ($arMovimientoDetalles as $arMovimientoDetalle) {

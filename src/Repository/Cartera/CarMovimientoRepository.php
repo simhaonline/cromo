@@ -29,6 +29,7 @@ class CarMovimientoRepository extends ServiceEntityRepository
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
+        $clase = $raw['codigoMovimientoClase'] ?? null;
 
         $codigoCliente = null;
         $numero = null;
@@ -58,7 +59,6 @@ class CarMovimientoRepository extends ServiceEntityRepository
             ->addSelect('i.numero')
             ->addSelect('it.nombre as movimientoTipo')
             ->addSelect('i.fecha')
-            ->addSelect('i.fechaPago')
             ->addSelect('cl.numeroIdentificacion')
             ->addSelect('cl.nombreCorto as cliente')
             ->addSelect('cu.nombre as cuenta')
@@ -69,7 +69,8 @@ class CarMovimientoRepository extends ServiceEntityRepository
             ->addSelect('i.estadoContabilizado')
             ->leftJoin('i.movimientoTipoRel', 'it')
             ->leftJoin('i.clienteRel', 'cl')
-            ->leftJoin('i.cuentaRel', 'cu');
+            ->leftJoin('i.cuentaRel', 'cu')
+            ->where("i.codigoMovimientoClaseFk = '{$clase}'");
         if ($codigoMovimiento) {
             $queryBuilder->andWhere("i.codigoMovimientoPk = '{$codigoMovimiento}'");
         }

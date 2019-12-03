@@ -44,6 +44,17 @@ class CarMovimientoTipo
     private $codigoComprobanteFk = null;
 
     /**
+     * @ORM\Column(name="codigo_movimiento_clase_fk" , type="string" , length=10, nullable=true)
+     */
+    private $codigoMovimientoClaseFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarMovimientoClase" , inversedBy="movimientosTiposMovimientoClaseRel")
+     * @ORM\JoinColumn(name="codigo_movimiento_clase_fk" , referencedColumnName="codigo_movimiento_clase_pk")
+     */
+    private $movimientoClaseRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarMovimiento" ,mappedBy="movimientoTipoRel")
      */
     private $movimientosMovimientoTipoRel;
@@ -142,6 +153,38 @@ class CarMovimientoTipo
     public function setMovimientosMovimientoTipoRel($movimientosMovimientoTipoRel): void
     {
         $this->movimientosMovimientoTipoRel = $movimientosMovimientoTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoMovimientoClaseFk()
+    {
+        return $this->codigoMovimientoClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoMovimientoClaseFk
+     */
+    public function setCodigoMovimientoClaseFk($codigoMovimientoClaseFk): void
+    {
+        $this->codigoMovimientoClaseFk = $codigoMovimientoClaseFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientoClaseRel()
+    {
+        return $this->movimientoClaseRel;
+    }
+
+    /**
+     * @param mixed $movimientoClaseRel
+     */
+    public function setMovimientoClaseRel($movimientoClaseRel): void
+    {
+        $this->movimientoClaseRel = $movimientoClaseRel;
     }
     
 

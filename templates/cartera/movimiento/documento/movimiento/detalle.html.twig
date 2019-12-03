@@ -1,0 +1,206 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ notificar()|raw }}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('cartera_movimiento_documento_movimiento_lista', {'clase': arMovimiento.codigoMovimientoClaseFk }) }}">Volver</a>&nbsp;&nbsp;
+        </div>
+    </div>
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            {% include 'estructura/botonera.html.twig' %}
+        </div>
+    </div>
+    <div style="float:right">
+        {% if arMovimiento.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arMovimiento.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arMovimiento.estadoContabilizado == true %}<span class="label label-success">Contabilizado</span>{% endif %}
+        {% if arMovimiento.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+    </div>
+    <br/><br/>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arMovimiento.codigoMovimientoPk }}</td>
+            <td class="titulo">CLIENTE:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arMovimiento.clienteRel.nombreCorto }}</td>
+            <td class="titulo">BRUTO:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrTotalBruto |number_format(2, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NUMERO:</td>
+            <td class="td-in-well">{{ arMovimiento.numero }}</td>
+            <td class="titulo">USUARIO:</td>
+            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="titulo">RETENCION:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrRetencion |number_format(2, '.', ',') }}</td>
+
+        </tr>
+        <tr>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arMovimiento.fecha | date('Y-m-d') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">NETO:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrTotalNeto |number_format(2, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIO:</td>
+            <td class="td-in-well" colspan="6">{{ arMovimiento.comentarios }}</td>
+        </tr>
+    </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>COD</th>
+                            <th>TIPO</th>
+                            <th>DOC</th>
+                            <th>COD</th>
+                            <th>TERCERO</th>
+                            <th>CTA</th>
+                            <th title="Naturaleza">N</th>
+                            <th>RET</th>
+                            <th>RET</th>
+                            <th>BASE</th>
+                            <th>PAGO</th>
+                            <th>DET</th>
+                            <th title="Centro de costo">C_C</th>
+                            <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
+                                       OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arMovimientoDetalle in arMovimientoDetalles %}
+                            <tr>
+                                <td>{{ arMovimientoDetalle.codigoMovimientoDetallePk }}</td>
+                                <td>
+                                    {% if arMovimientoDetalle.codigoCuentaCobrarFk != "" %}
+                                        <a href="javascript:abrirVentana3('{{ path('cartera_movimiento_cuentacobrar_cuentacobrar_referencia',{'id': arMovimientoDetalle.codigoCuentaCobrarFk }) }}','referencia',600,900)">{{ arMovimientoDetalle.codigoCuentaCobrarFk }}</a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ arMovimientoDetalle.codigoCuentaCobrarTipoFk }}</td>
+                                <td>{{ arMovimientoDetalle.numero }}</td>
+                                {% if arMovimiento.estadoAutorizado == false %}
+                                    <td>
+                                        <input type="text"
+                                               name="arrCliente[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrCliente[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.codigoClienteFk }}"
+                                               style="text-align: left; width:60px" size="20">
+                                        <a href="javascript:abrirVentana3('{{ path('cartera_buscar_movimiento_cliente',{'campoCodigo' : 'arrCliente['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarTercero',600,900)"
+                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
+                                    <td>{{ arMovimientoDetalle.clienteNombreCorto }}</td>
+                                    <td>
+                                        <input type="text"
+                                               name="arrCuenta[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrCuenta[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.codigoCuentaFk }}"
+                                               style="text-align: left; width:120px" size="20">
+                                        <a href="javascript:abrirVentana3('{{ path('financiero_buscar_cuenta_asiento',{'campoCodigo' : 'arrCuenta['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarCuenta',600,900)"
+                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
+                                    <td style="text-align: left">
+                                        <select name="cboNaturaleza{{ arMovimientoDetalle.codigoMovimientoDetallePk }}">
+                                            <option value="D" {% if arMovimientoDetalle.naturaleza == "D" %} selected {% endif %}>D</option>
+                                            <option value="C" {% if arMovimientoDetalle.naturaleza == "C" %} selected {% endif %}>C</option>
+                                        </select></td>
+                                    <td style="text-align: left">
+                                        <select name="cboImpuestoRetencion[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]">
+                                            {% for arImpuestoRetencion in arImpuestosRetencion %}
+                                                <option value="{{ arImpuestoRetencion.codigoImpuestoPk }}" {% if arMovimientoDetalle.codigoImpuestoRetencionFk == arImpuestoRetencion.codigoImpuestoPk %} selected {% endif %}>{{ arImpuestoRetencion.nombre }}</option>
+                                            {% endfor %}
+                                        </select></td>
+                                    <td style="text-align: right">{{ arMovimientoDetalle.vrRetencion | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ arMovimientoDetalle.vrBase | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: center">
+                                        <input class="input-valor" type="text"
+                                               name="TxtVrPago{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"
+                                               value="{{ arMovimientoDetalle.vrPago }}"
+                                               style="text-align: right; width:90px" size="10"/>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <input type="text"
+                                               name="arrDetalle[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrDetalle[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.detalle }}"
+                                               style="text-align: left; width:120px" size="10">
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               name="arrCentroCosto[{{ arMovimientoDetalle.codigoMovimientoDetallePk}}]"
+                                               id="arrCentroCosto[{{arMovimientoDetalle.codigoMovimientoDetallePk}}]"
+                                               value="{{  arMovimientoDetalle.codigoCentroCostoFk }}"
+                                               style="text-align: left; width:120px" size="20">
+                                        <a href="javascript:abrirVentana3('{{ path('financiero_buscar_centrocosto_asiento',{'campoCodigo' : 'arrCentroCosto['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarCentroCosto',600,900)"
+                                           class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
+                                {% else %}
+                                    <td>{{ arMovimientoDetalle.codigoClienteFk }}</td>
+                                    <td>{{ arMovimientoDetalle.clienteNombreCorto }}</td>
+                                    <td>{{ arMovimientoDetalle.codigoCuentaFk }}</td>
+                                    <td>{{ arMovimientoDetalle.naturaleza }}</td>
+                                    <td>{{ arMovimientoDetalle.codigoImpuestoRetencionFk }}</td>
+                                    <td style="text-align: right">{{ arMovimientoDetalle.vrRetencion | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ arMovimientoDetalle.vrBase | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ arMovimientoDetalle.vrPago | number_format(0, '.', ',') }}</td>
+                                    <td>{{ arMovimientoDetalle.detalle }}</td>
+                                    <td>{{ arMovimientoDetalle.codigoCentroCostoFk }}</td>
+                                {% endif %}
+                                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
+                                                                       value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {#<div class="separador-1"></div>#}
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {% if arMovimiento.estadoAutorizado == true %}
+                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                                   value="Nuevo"/>
+                        {% else %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('cartera_movimiento_documento_movimiento_detalle_nuevo', {'id' : arMovimiento.codigoMovimientoPk }) }}', 'movimiento detalle', 600, 1200)">Nuevo</a>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnAdicionar) }}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnActualizar) }}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnDuplicar) }}
+                        {{ form_widget(form.btnEliminar) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group" style="float: left">
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">Registros <span
+                        class="badge">{{ arMovimientoDetalles.getTotalItemCount }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group btn-xs">
+        {{ knp_pagination_render(arMovimientoDetalles) }}
+    </div>
+    <br /> <br />
+    {{ form_end(form) }}
+{% endblock %}
+

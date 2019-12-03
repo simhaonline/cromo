@@ -1,0 +1,178 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+             data-widget-fullscreenbutton="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>Lista</h2>
+            </header>
+            <div>
+                <div class="widget-body no-padding">
+                    <div class="panel-body">
+                        <div class="form-group form-group-sm">
+                            <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                            <div class="col-sm-11">
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <div class="input-group">
+                                            {{ form_widget(form.codigoClienteFk) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-10">
+                                        <div class="input-group">
+                                            <input id="form_txtNombreCorto" class="form-control" readonly>
+                                            <span class="input-group-btn">
+                                        <a class="btn btn-default btn-sm"
+                                           href="javascript:abrirVentana3('{{ path('cartera_buscar_cliente', { 'campoCodigo': 'form_codigoClienteFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="" class="control-label col-sm-1">Numero</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.numero) }}
+                            </div>
+                            <label for="" class="control-label col-sm-1">Codigo</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.codigoMovimientoPk) }}
+                            </div>
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-1">Autorizado:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.estadoAutorizado) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="" class="control-label col-sm-1">Desde</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.fechaPagoDesde) }}
+                            </div>
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-1">Aprobado:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.estadoAprobado) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="" class="control-label col-sm-1">Hasta</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.fechaPagoHasta) }}
+                            </div>
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-1">Anulado:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.estadoAnulado) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="" class="control-label col-sm-1">Tipo</label>
+                            <div class="col-sm-5">
+                                {{ form_widget(form.codigoMovimientoTipoFk) }}
+                            </div>
+                            <label for="" class="control-label col-sm-3"></label>
+                            <label for="" class="control-label col-sm-1">Contabilizado:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.estadoContabilizado) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+            <tr>
+                <th title="Codigo del registro">ID</th>
+                <th title="Consecutivo de aprobación">NUMERO</th>
+                <th title="Tipo movimiento">TIPO</th>
+                <th title="Fecha">FECHA</th>
+                <th title="Numero de identificacion del tercero">IDENTIFICACION</th>
+                <th title="Nombre del tercero">NOMBRE</th>
+                <th title="Nombre de la cuenta">CUENTA</th>
+                <th title="Pago que realizo el cliente">PAGO</th>
+                <th title="Autorizado">AUT</th>
+                <th title="Aprobado">APR</th>
+                <th title="Anulado">ANU</th>
+                <th title="Contabilizado">CON</th>
+                <th></th>
+                <th></th>
+                <th><input type="checkbox" name="ChkSeleccionarTodosDetalle" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for arMovimiento in arMovimientos %}
+            <tr>
+                <td>{{ arMovimiento.codigoMovimientoPk  }}</td>
+                <td>{{ arMovimiento.numero  }}</td>
+                <td>{{ arMovimiento.movimientoTipo  }}</td>
+                <td>{{ arMovimiento.fecha | date('Y-m-d') }}</td>
+                <td>{{ arMovimiento.numeroIdentificacion  }}</td>
+                <td>{{ arMovimiento.cliente  }}</td>
+                <td>{{ arMovimiento.cuenta  }}</td>
+                <td class="numero">{{ arMovimiento.vrTotalNeto | number_format(0, '.', ',') }}</td>
+                <td>{{ arMovimiento.estadoAutorizado ? "SI":"NO" }}</td>
+                <td>{{ arMovimiento.estadoAprobado ? "SI":"NO"}}</td>
+                <td>{{ arMovimiento.estadoAnulado ? "SI":"NO"}}</td>
+                <td>{{ arMovimiento.estadoContabilizado ? "SI":"NO"}}</td>
+                {% if arMovimiento.estadoAutorizado %}
+                    <td></td>
+                {% else %}
+                    <td class="text-center">
+                        <a href="{{ path('cartera_movimiento_documento_movimiento_nuevo',{'id':  arMovimiento.codigoMovimientoPk, 'clase': clase  }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
+                <td class="text-center">
+                    <a
+                            href="{{ path('cartera_movimiento_documento_movimiento_detalle',{'id' :  arMovimiento.codigoMovimientoPk  }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arMovimiento.codigoMovimientoPk }}" /></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">
+            <span class="badge">{{ arMovimientos.getTotalItemCount }}</span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arMovimientos) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnContabilizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('cartera_movimiento_documento_movimiento_nuevo', {'id': 0, 'clase': clase}) }}">Nuevo</a>
+    </div>
+    {{ form_end(form) }}
+
+    <br /><br /><br />
+{% endblock %}

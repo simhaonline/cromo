@@ -27,6 +27,11 @@ class CarMovimiento
     private $codigoMovimientoTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_movimiento_clase_fk" , type="string" , length=10, nullable=true)
+     */
+    private $codigoMovimientoClaseFk;
+
+    /**
      * @ORM\Column(name="codigo_cliente_fk" , type="integer")
      */
     private $codigoClienteFk;
@@ -98,6 +103,12 @@ class CarMovimiento
     private $clienteRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarMovimientoClase" , inversedBy="movimientosMovimientoClaseRel")
+     * @ORM\JoinColumn(name="codigo_movimiento_clase_fk" , referencedColumnName="codigo_movimiento_clase_pk")
+     */
+    private $movimientoClaseRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarMovimientoTipo" , inversedBy="movimientosMovimientoTipoRel")
      * @ORM\JoinColumn(name="codigo_movimiento_tipo_fk" , referencedColumnName="codigo_movimiento_tipo_pk")
      */
@@ -144,6 +155,22 @@ class CarMovimiento
     public function setCodigoMovimientoTipoFk($codigoMovimientoTipoFk): void
     {
         $this->codigoMovimientoTipoFk = $codigoMovimientoTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoMovimientoClaseFk()
+    {
+        return $this->codigoMovimientoClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoMovimientoClaseFk
+     */
+    public function setCodigoMovimientoClaseFk($codigoMovimientoClaseFk): void
+    {
+        $this->codigoMovimientoClaseFk = $codigoMovimientoClaseFk;
     }
 
     /**
@@ -277,7 +304,7 @@ class CarMovimiento
     /**
      * @return bool
      */
-    public function isEstadoAutorizado(): bool
+    public function getEstadoAutorizado(): bool
     {
         return $this->estadoAutorizado;
     }
@@ -293,7 +320,7 @@ class CarMovimiento
     /**
      * @return bool
      */
-    public function isEstadoAprobado(): bool
+    public function getEstadoAprobado(): bool
     {
         return $this->estadoAprobado;
     }
@@ -309,7 +336,7 @@ class CarMovimiento
     /**
      * @return bool
      */
-    public function isEstadoAnulado(): bool
+    public function getEstadoAnulado(): bool
     {
         return $this->estadoAnulado;
     }
@@ -325,7 +352,7 @@ class CarMovimiento
     /**
      * @return bool
      */
-    public function isEstadoContabilizado(): bool
+    public function getEstadoContabilizado(): bool
     {
         return $this->estadoContabilizado;
     }
@@ -368,6 +395,22 @@ class CarMovimiento
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientoClaseRel()
+    {
+        return $this->movimientoClaseRel;
+    }
+
+    /**
+     * @param mixed $movimientoClaseRel
+     */
+    public function setMovimientoClaseRel($movimientoClaseRel): void
+    {
+        $this->movimientoClaseRel = $movimientoClaseRel;
     }
 
     /**
@@ -417,7 +460,6 @@ class CarMovimiento
     {
         $this->movimientoDetallesMovimientoRel = $movimientoDetallesMovimientoRel;
     }
-
 
 
 }

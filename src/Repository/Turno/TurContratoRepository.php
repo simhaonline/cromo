@@ -418,7 +418,8 @@ class TurContratoRepository extends ServiceEntityRepository
             ->leftJoin('c.contratoTipoRel', 'ct')
             ->leftJoin('c.clienteRel', 'cli')
             ->leftJoin('c.sectorRel', 'sec')
-            ->where("c.fechaGeneracion < '{$fecha}'");
+            ->where("c.fechaGeneracion < '{$fecha}'")
+            ->where('c.estadoCerrado = 0');
         $arContratos = $queryBuilder->getQuery()->getResult();
         return $arContratos;
 

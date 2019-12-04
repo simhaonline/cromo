@@ -87,8 +87,9 @@
                             <th>CTA_C</th>
                             <th title="Naturaleza">N</th>
                             <th style="width: 12%;">PAGO</th>
-                            <th>DET</th>
+                            <th style="width: 12%;">BASE</th>
                             <th>C_C</th>
+                            <th>DET</th>
                             {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
                                 <th>CUENTA</th>
                                 <th>BANCO</th>
@@ -155,20 +156,26 @@
                                                style="text-align: right; width:90px" size="10"/>
                                     </td>
                                     <td style="text-align: center">
-                                        <input type="text"
-                                               name="arrDetalle[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                               id="arrDetalle[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
-                                               value="{{ arMovimientoDetalle.detalle }}"
-                                               style="text-align: left; width:120px" size="10">
+                                        <input class="input-valor" type="text"
+                                               name="TxtVrBase{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"
+                                               value="{{ arMovimientoDetalle.vrBase }}"
+                                               style="text-align: right; width:90px" size="10"/>
                                     </td>
                                     <td>
                                         <input type="text"
                                                name="arrCentroCosto[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                id="arrCentroCosto[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                value="{{ arMovimientoDetalle.codigoCentroCostoFk }}"
-                                               style="text-align: left; width:120px" size="20">
+                                               style="text-align: left; width:50px" size="20">
                                         <a href="javascript:abrirVentana3('{{ path('financiero_buscar_centrocosto_asiento',{'campoCodigo' : 'arrCentroCosto['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarCentroCosto',600,900)"
                                            class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <input type="text"
+                                               name="arrDetalle[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrDetalle[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.detalle }}"
+                                               style="text-align: left; width:120px" size="10">
                                     </td>
                                 {% else %}
                                     {% if arMovimiento.codigoMovimientoClaseFk == 'CP' %}
@@ -180,8 +187,9 @@
                                     <td>{{ arMovimientoDetalle.codigoCuentaFk }}</td>
                                     <td>{{ arMovimientoDetalle.naturaleza }}</td>
                                     <td style="text-align: right">{{ arMovimientoDetalle.vrPago | number_format(0, '.', ',') }}</td>
-                                    <td>{{ arMovimientoDetalle.detalle }}</td>
+                                    <td style="text-align: right">{{ arMovimientoDetalle.vrBase | number_format(0, '.', ',') }}</td>
                                     <td>{{ arMovimientoDetalle.codigoCentroCostoFk }}</td>
+                                    <td>{{ arMovimientoDetalle.detalle }}</td>
                                 {% endif %}
                                 {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
                                     <td>{{ arMovimientoDetalle.cuenta }}</td>

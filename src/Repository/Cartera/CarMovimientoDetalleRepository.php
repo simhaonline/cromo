@@ -78,6 +78,7 @@ class CarMovimientoDetalleRepository extends ServiceEntityRepository
         foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
             $intCodigo = $arMovimientoDetalle->getCodigoMovimientoDetallePk();
             $valorPago = isset($arrControles['TxtVrPago' . $intCodigo]) && $arrControles['TxtVrPago' . $intCodigo] != '' ? $arrControles['TxtVrPago' . $intCodigo] : 0;
+            $base = isset($arrControles['TxtVrBase' . $intCodigo]) && $arrControles['TxtVrBase' . $intCodigo] != '' ? $arrControles['TxtVrBase' . $intCodigo] : 0;
             $codigoNaturaleza = isset($arrControles['cboNaturaleza' . $intCodigo]) && $arrControles['cboNaturaleza' . $intCodigo] != '' ? $arrControles['cboNaturaleza' . $intCodigo] : null;
             $codigoRetencion = $arrRetencion[$intCodigo];
             $detalle = $arrDetalle[$intCodigo];
@@ -118,10 +119,11 @@ class CarMovimientoDetalleRepository extends ServiceEntityRepository
                     $arImpuesto = $em->getRepository(GenImpuesto::class)->find($codigoRetencion);
                     if($valorPago >= $arImpuesto->getBase()) {
                         $retencion = round($valorPago * $arImpuesto->getPorcentaje() / 100);
+                        $base = $valorPago;
                     }
                 }
             }
-
+            $arMovimientoDetalle->setVrBase($base);
             $arMovimientoDetalle->setVrPago($valorPago);
             $arMovimientoDetalle->setVrRetencion($retencion);
             $arMovimientoDetalle->setNaturaleza($codigoNaturaleza);

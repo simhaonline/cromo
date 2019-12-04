@@ -32,6 +32,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('t.numeroIdentificacion')
             ->addSelect('cp.vrSaldo')
             ->addSelect('md.vrPago')
+            ->addSelect('md.vrBase')
             ->addSelect('cp.cuenta')
             ->addSelect('md.codigoCuentaFk')
             ->addSelect('md.codigoTerceroFk')
@@ -90,6 +91,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
         foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
             $intCodigo = $arMovimientoDetalle->getCodigoMovimientoDetallePk();
             $valorPago = isset($arrControles['TxtVrPago' . $intCodigo]) && $arrControles['TxtVrPago' . $intCodigo] != '' ? $arrControles['TxtVrPago' . $intCodigo] : 0;
+            $valorBase = isset($arrControles['TxtVrBase' . $intCodigo]) && $arrControles['TxtVrBase' . $intCodigo] != '' ? $arrControles['TxtVrBase' . $intCodigo] : 0;
             $codigoNaturaleza = isset($arrControles['cboNaturaleza' . $intCodigo]) && $arrControles['cboNaturaleza' . $intCodigo] != '' ? $arrControles['cboNaturaleza' . $intCodigo] : null;
             $detalle = $arrDetalle[$intCodigo];
             if ($arrCuenta[$intCodigo]) {
@@ -122,6 +124,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             } else {
                 $arMovimientoDetalle->setCentroCostoRel(null);
             }
+            $arMovimientoDetalle->setVrBase($valorBase);
             $arMovimientoDetalle->setVrPago($valorPago);
             $arMovimientoDetalle->setNaturaleza($codigoNaturaleza);
             $arMovimientoDetalle->setDetalle($detalle);

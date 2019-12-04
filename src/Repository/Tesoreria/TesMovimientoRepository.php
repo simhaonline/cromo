@@ -219,6 +219,21 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                     $error = true;
                                     break;
                                 }
+                                if($arCuenta->getExigeBase() && $arMovimientoDetalle->getVrBase() <= 0) {
+                                    Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " exige base no tiene");
+                                    $error = true;
+                                    break;
+                                }
+                                if($arCuenta->getExigeDocumentoReferencia() && $arMovimientoDetalle->getCodigoCuentaCobrarFk() == null) {
+                                    Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " exige documento referencia y no lo tiene");
+                                    $error = true;
+                                    break;
+                                }
+                                if(!$arCuenta->getPermiteMovimiento()) {
+                                    Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " la cuenta no permite movimiento");
+                                    $error = true;
+                                    break;
+                                }
                             }
                         }
                     }

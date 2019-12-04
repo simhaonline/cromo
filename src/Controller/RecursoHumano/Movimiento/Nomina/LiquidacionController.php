@@ -12,6 +12,7 @@ use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
 use App\Entity\RecursoHumano\RhuPago;
+use App\Form\Type\RecursoHumano\LiquidacionParametrosType;
 use App\Form\Type\RecursoHumano\LiquidacionType;
 use App\Form\Type\RecursoHumano\PagoType;
 use App\Formato\RecursoHumano\Liquidacion;
@@ -333,10 +334,35 @@ class LiquidacionController extends AbstractController
     public function detalleVacaciones(Request $request, $codigoLiquidacion)
     {
         $em = $this->getDoctrine()->getManager();
-        $arDetalleVacaciones= $em->getRepository(RhuLiquidacion::class)->detalleVacacion($codigoLiquidacion);
+        $arDetalleVacaciones = $em->getRepository(RhuLiquidacion::class)->detalleVacacion($codigoLiquidacion);
         return $this->render('recursohumano/movimiento/nomina/liquidacion/detalleVacaciones.html.twig', array(
             'arDetalleVacaciones' => $arDetalleVacaciones
         ));
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("recursohumano/movimiento/nomina/liquidacion/detalle/parametros/{codigoLiquidacion}", name="recursohumano_movimiento_nomina_liquidacion_detalle_parametros")
+     */
+    public function parametros(Request $request, $codigoLiquidacion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoLiquidacion);
+        $form = $this->createForm(LiquidacionParametrosType::class, $arLiquidacion);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $em->persist($arLiquidacion);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('recursohumano/movimiento/nomina/liquidacion/parametros.html.twig', [
+            '$arLiquidacion' => $arLiquidacion,
+            'form' => $form->createView()
+        ]);
     }
 
     public function getFiltros($form)

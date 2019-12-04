@@ -9,6 +9,12 @@
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
         </div>
+        {% if arLiquidacion.estadoAutorizado == false %}
+            <div class="btn-group">
+                <a class="btn btn-sm btn-default abrir-modal"
+                   href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_parametros',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk }) }}','parametross',600,900)">Parámetros</a>
+            </div>
+        {% endif %}
     </div>
     <div style="float:right">
         {% if arLiquidacion.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}

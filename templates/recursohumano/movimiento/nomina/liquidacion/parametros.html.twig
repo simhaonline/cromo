@@ -1,0 +1,46 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Parámetros iniciales
+        </div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Salario cesantias propuesto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrSalarioCesantiasPropuesto) }}
+                </div>
+                <label class="col-sm-2 control-label">Dias ausentimos cesantias propuesto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.diasAusentismoPropuestoCesantias) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Salario vacaciones propuesto</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrSalarioVacacionPropuesto) }}
+                </div>
+                <label class="col-sm-2 control-label">Dias ausentimos vacaciones propuesto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.diasAusentismoPropuestoVacaciones) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Salario prima propuesto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrSalarioPrimaPropuesto) }}
+                </div>
+                <label class="col-sm-2 control-label">Dias ausentimos prima propuesto:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.diasAusentismoPropuestoPrimas) }}
+                </div>
+            </div>
+            <br/>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-sm btn-primary'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock content %}

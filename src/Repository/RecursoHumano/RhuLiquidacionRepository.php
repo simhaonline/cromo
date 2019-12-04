@@ -662,14 +662,9 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             $douCesantias = round($douCesantias);
                             $floPorcentajeIntereses = (($intDiasCesantias * 12) / 360) / 100;
                             $douInteresesCesantias = $douCesantias * $floPorcentajeIntereses;
-                            if ($arLiquidacion->getVrSalarioCesantiasPropuesto() > 0 && $arConfiguracion->getLiquidarInteresCesantiaPropuesto()) {
-                                $douInteresesCesantias = $salarioPromedioCesantias * $floPorcentajeIntereses;
-                            }
                             $douInteresesCesantias = round($douInteresesCesantias);
-                            if ($arLiquidacion->getVrInteresesPropuesto()) {
-                                if ($arLiquidacion->getVrInteresesPropuesto() > 0) {
-                                    $douInteresesCesantias = $arLiquidacion->getVrInteresesPropuesto();
-                                }
+                            if ($arLiquidacion->getVrInteresesPropuesto() > 0) {
+                                $douInteresesCesantias = $arLiquidacion->getVrInteresesPropuesto();
                             }
                             $arLiquidacion->setFechaUltimoPagoCesantias($dateFechaDesde);
                             $arLiquidacion->setDiasCesantias($intDiasCesantias);

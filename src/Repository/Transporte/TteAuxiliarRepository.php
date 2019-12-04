@@ -32,17 +32,20 @@ class TteAuxiliarRepository extends ServiceEntityRepository
         $codigoAxuiliar = null;
         $numeroIdentificacion = null;
         $nombre = null;
+        $estadoInactivo = null;
 
         if ($filtros) {
             $codigoAxuiliar = $filtros['codigoAxuiliar'] ?? null;
             $numeroIdentificacion = $filtros['numeroIdentificacion'] ?? null;
             $nombre = $filtros['nombre'] ?? null;
+            $estadoInactivo = $filtros['estadoInactivo'] ?? null;
         }
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteAuxiliar::class, 'aux')
             ->select('aux.codigoAuxiliarPk')
             ->addSelect('aux.nombreCorto')
             ->addSelect('aux.numeroIdentificacion')
+            ->addSelect('aux.estadoInactivo')
             ->where('aux.codigoAuxiliarPk <> 0');
 
         if ($numeroIdentificacion) {
@@ -54,6 +57,15 @@ class TteAuxiliarRepository extends ServiceEntityRepository
         if ($nombre) {
             $queryBuilder->andWhere("aux.nombreCorto LIKE '%{$nombre}%'");
         };
+
+        switch ($estadoInactivo) {
+            case '0':
+                $queryBuilder->andWhere("aux.estadoInactivo = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("aux.estadoInactivo = 1");
+                break;
+        }
         $queryBuilder->addOrderBy('aux.codigoAuxiliarPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();

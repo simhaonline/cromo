@@ -35,6 +35,12 @@ class TteAuxiliar
     private $nombreCorto;
 
     /**
+     * @ORM\Column(name="estado_inactivo", type="boolean", nullable=true, options={"default":false})
+     */
+    private $estadoInactivo = false;
+
+
+    /**
      * @ORM\OneToMany(targetEntity="TteDespachoRecogidaAuxiliar", mappedBy="auxiliarRel")
      */
     protected $despachosRecogidasAuxiliaresAuxiliarRel;
@@ -138,6 +144,22 @@ class TteAuxiliar
     public function setDespachoAuxiliarRel($despachoAuxiliarRel): void
     {
         $this->despachoAuxiliarRel = $despachoAuxiliarRel;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEstadoInactivo(): bool
+    {
+        return $this->estadoInactivo;
+    }
+
+    /**
+     * @param bool $estadoInactivo
+     */
+    public function setEstadoInactivo(bool $estadoInactivo): void
+    {
+        $this->estadoInactivo = $estadoInactivo;
     }
 
 

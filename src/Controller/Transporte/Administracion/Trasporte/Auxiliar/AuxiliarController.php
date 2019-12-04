@@ -9,6 +9,7 @@ use App\Form\Type\Transporte\AuxiliarType;
 use App\General\General;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +27,7 @@ class AuxiliarController extends AbstractController
             ->add('codigoAxuiliar', TextType::class, array('required' => false))
             ->add('numeroIdentificacion', TextType::class, array('required' => false))
             ->add('nombre', TextType::class, array('required' => false))
+            ->add('estadoInactivo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -107,6 +109,7 @@ class AuxiliarController extends AbstractController
             'codigoAxuiliar' => $form->get('codigoAxuiliar')->getData(),
             'numeroIdentificacion' => $form->get('numeroIdentificacion')->getData(),
             'nombre' => $form->get('nombre')->getData(),
+            'estadoInactivo' => $form->get('estadoInactivo')->getData(),
         ];
 
         return $filtro;

@@ -4,6 +4,7 @@ namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteAuxiliar;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -17,6 +18,7 @@ class AuxiliarType extends AbstractType
         $builder
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('nombreCorto',TextType::class,['required' => true,'label' => 'Nombre completo:'])
+            ->add('estadoInactivo',CheckboxType::class,['required' => false,'label' => 'Estado inactivo'])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

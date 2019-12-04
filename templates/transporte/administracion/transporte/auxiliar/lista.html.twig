@@ -22,6 +22,10 @@
                         <div class="col-sm-2">
                             {{ form_widget(form.nombre) }}
                         </div>
+                        <label class="col-sm-1 control-label">Inactivo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.estadoInactivo) }}
+                        </div>
                     </div>
                     <div class="form-group form-group-sm">
                         <div class="col-sm-offset-2 col-sm-10">
@@ -38,6 +42,7 @@
             <th title="Codigo">ID</th>
             <th title="Identificacion">IDENTIFICACIÓN</th>
             <th title="Nombre">NOMBRE</th>
+            <th title="inactivo">INA</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
@@ -51,6 +56,7 @@
                 <td>{{ arAuxiliar.codigoAuxiliarPk }}</td>
                 <td>{{ arAuxiliar.numeroIdentificacion }}</td>
                 <td>{{ arAuxiliar.nombreCorto }}</td>
+                <td>{{ arAuxiliar.estadoInactivo ? "SI":"NO" }}</td>
                 <td class="text-center">
                     <a href="{{ path('transporte_administracion_comercial_cliente_nuevo',{'id': arAuxiliar.codigoAuxiliarPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

@@ -9,8 +9,24 @@
                     <td class="td-in-well">{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
                     <td class="titulo">NUMERO DOCUMENTO:</td>
                     <td class="td-in-well" style="text-transform: uppercase;">{{ arCuentaPagar.numeroDocumento }}</td>
+                    <td class="titulo">SALDO(O):</td>
+                    <td align="right">{{ arCuentaPagar.vrSaldoOriginal | number_format(0, '.', ',') }}</td>
+                </tr>
+                <tr>
+                    <td class="titulo"></td>
+                    <td class="td-in-well"></td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well" style="text-transform: uppercase;"></td>
                     <td class="titulo">ABONO:</td>
                     <td align="right">{{ arCuentaPagar.vrAbono | number_format(0, '.', ',') }}</td>
+                </tr>
+                <tr>
+                    <td class="titulo"></td>
+                    <td class="td-in-well"></td>
+                    <td class="titulo"></td>
+                    <td class="td-in-well" style="text-transform: uppercase;"></td>
+                    <td class="titulo">SALDO:</td>
+                    <td align="right">{{ arCuentaPagar.vrSaldo | number_format(0, '.', ',') }}</td>
                 </tr>
             </table>
         </div>

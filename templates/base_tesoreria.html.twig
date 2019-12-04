@@ -18,9 +18,12 @@
                 <li>
                     <a href="#">Documento <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'CP'}) }}">Compra</a></li>
-                        <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'NC'}) }}">Nota credito</a></li>
-                        <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'EG'}) }}">Egreso</a></li>
+                        <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'CP'}) }}">Compra</a>
+                        </li>
+                        <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'NC'}) }}">Nota
+                                credito</a></li>
+                        <li><a href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase':'EG'}) }}">Egreso</a>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -63,6 +66,13 @@
                         <li><a href="{{ path('tesoreria_proceso_general_unificarcliente_lista') }}">Unificar cliente</a>
                         </li>
                     </ul>
+                <li>
+                    <a href="#">Cuenta pagar <span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('tesoreria_proceso_cuentapagar_corregirsaldos_lista') }}">Regenerar saldos</a>
+                        </li>
+                    </ul>
+                </li>
                 </li>
             </ul>
             <!-- /.nav-second-level -->

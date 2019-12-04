@@ -2,7 +2,12 @@
 
 namespace App\Repository\Tesoreria;
 
+use App\Entity\Cartera\CarAplicacion;
+use App\Entity\Cartera\CarCuentaCobrar;
+use App\Entity\Cartera\CarMovimientoDetalle;
+use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Tesoreria\TesCuentaPagar;
+use App\Entity\Tesoreria\TesMovimientoDetalle;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -482,6 +487,41 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         } else {
             return true;
         }
+    }
+
+    public function corregirSaldos()
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TesCuentaPagar::class, 'cp')
+            ->select('cp.codigoCuentaPagarPk')
+            ->addSelect('cp.vrSaldoOriginal')
+            ->addSelect('cp.operacion');
+        //->where('cc.codigoCuentaCobrarPk=531');
+        $arCuentasPagar = $queryBuilder->getQuery()->getResult();
+        foreach ($arCuentasPagar as $arCuentaPagar) {
+            $abonos = 0;
+            $queryBuilder = $em->createQueryBuilder()->from(TesMovimientoDetalle::class, 'md')
+                ->Select("SUM(md.vrPago) as vrPago")
+                ->leftJoin('md.movimientoRel', 'i')
+                ->where("md.codigoCuentaPagarFk = " . $arCuentaPagar['codigoCuentaPagarPk'])
+                ->andWhere('i.estadoAutorizado = 1');
+            $arrResultado = $queryBuilder->getQuery()->getSingleResult();
+            if ($arrResultado) {
+                if ($arrResultado['vrPago']) {
+                    $abonos += $arrResultado['vrPago'];
+                }
+            }
+
+            $saldo = $arCuentaPagar['vrSaldoOriginal'] - $abonos;
+            $saldoOperado = $saldo * $arCuentaPagar['operacion'];
+            $arCuentaPagarAct = $em->getRepository(TesCuentaPagar::class)->find($arCuentaPagar['codigoCuentaPagarPk']);
+            $arCuentaPagarAct->setVrSaldo($saldo);
+            $arCuentaPagarAct->setVrSaldoOperado($saldoOperado);
+            $arCuentaPagarAct->setVrAbono($abonos);
+            $em->persist($arCuentaPagarAct);
+        }
+        $em->flush();
+        return true;
     }
 
 }

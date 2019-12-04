@@ -108,7 +108,9 @@
         <tbody>
         {% for arCuentaPagar in arCuentasPagar %}
             <tr>
-                <td>{{ arCuentaPagar.codigoCuentaPagarPk }}</td>
+                <td>
+                    <a href="javascript:abrirVentana3('{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_referencia',{'id': arCuentaPagar.codigoCuentaPagarPk }) }}','referencia',600,900)">{{ arCuentaPagar.codigoCuentaPagarPk }}</a>
+                </td>
                 <td>{{ arCuentaPagar.numeroDocumento }}</td>
                 <td>{{ arCuentaPagar.numeroReferencia }}</td>
                 <td>{{ arCuentaPagar.tipo }}</td>

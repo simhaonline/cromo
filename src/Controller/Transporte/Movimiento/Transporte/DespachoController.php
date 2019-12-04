@@ -502,10 +502,11 @@ class DespachoController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar'])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
-            ->add('txtAuxiliar', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoAuxiliar')])
-            ->add('txtIdentificacionAuxiliar', TextType::class, ['required' => false, 'data' => $session->get('filtroTteDespachoAuxiliarIdentificacion')])
+            ->add('txtAuxiliar', TextType::class, ['required' => false])
+            ->add('txtIdentificacionAuxiliar', TextType::class, ['required' => false])
             ->getForm();
         $form->handleRequest($request);
+        $raw=[];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -522,11 +523,13 @@ class DespachoController extends AbstractController
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroTteDespachoAuxiliar', $form->get('txtAuxiliar')->getData());
-                $session->set('filtroTteDespachoAuxiliarIdentificacion', $form->get('txtIdentificacionAuxiliar')->getData());
+                $raw['filtros']=[
+                    'nombre' =>  $form->get('txtAuxiliar')->getData(),
+                    'numeroIdentificacion' =>  $form->get('txtIdentificacionAuxiliar')->getData(),
+                ];
             }
         }
-        $arAuxiliares = $paginator->paginate($em->getRepository(TteAuxiliar::class)->lista(), $request->query->getInt('page', 1), 300);
+        $arAuxiliares = $paginator->paginate($em->getRepository(TteAuxiliar::class)->lista($raw), $request->query->getInt('page', 1), 300);
         return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarAuxiliar.html.twig', ['arAuxiliares' => $arAuxiliares, 'form' => $form->createView()]);
     }
 

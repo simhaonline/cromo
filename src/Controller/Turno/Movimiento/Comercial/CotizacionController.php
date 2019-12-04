@@ -19,7 +19,9 @@ use App\Form\Type\Turno\CotizacionDetalleType;
 use App\Form\Type\Turno\CotizacionType;
 use App\Form\Type\Turno\PedidoType;
 use App\Form\Type\Turno\PedidoDetalleType;
+use App\Formato\Turno\Cotizacion;
 use App\Formato\Inventario\Pedido;
+use App\Formato\RecursoHumano\Programacion;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -208,6 +210,10 @@ class CotizacionController extends AbstractController
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TurCotizacionDetalle::class)->actualizarDetalles($arrControles, $form, $arCotizacion);
+            }
+            if ($form->get('btnImprimir')->isClicked()){
+                $objFormato = new Cotizacion();
+                $objFormato->Generar($em, $id);
             }
             return $this->redirect($this->generateUrl('turno_movimiento_comercial_cotizacion_detalle', ['id' => $id]));
         }

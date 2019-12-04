@@ -27,15 +27,4 @@ class AuxiliarType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoAuxiliarPk",                       "tipo":"pk",        "ayuda":"Codigo",                      "titulo":"ID"},
-            {"campo":"numeroIdentificacion",                    "tipo":"texto",     "ayuda":"Identificacion",                           "titulo":"IDENTIFICACION"},
-            {"campo":"nombreCorto",                             "tipo":"texto",     "ayuda":"Nombre",                                   "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-
-    }
-
 }

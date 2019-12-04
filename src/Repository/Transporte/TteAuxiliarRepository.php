@@ -24,20 +24,58 @@ class TteAuxiliarRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function lista()
+    public function lista($raw)
     {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoAxuiliar = null;
+        $numeroIdentificacion = null;
+        $nombre = null;
+
+        if ($filtros) {
+            $codigoAxuiliar = $filtros['codigoAxuiliar'] ?? null;
+            $numeroIdentificacion = $filtros['numeroIdentificacion'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteAuxiliar::class, 'aux')
             ->select('aux.codigoAuxiliarPk')
             ->addSelect('aux.nombreCorto')
             ->addSelect('aux.numeroIdentificacion')
             ->where('aux.codigoAuxiliarPk <> 0');
-        if ($session->get('filtroTteDespachoAuxiliarIdentificacion')) {
-            $queryBuilder->andWhere("aux.numeroIdentificacion = '" . $session->get('filtroTteDespachoAuxiliarIdentificacion') . "'");
+
+        if ($numeroIdentificacion) {
+            $queryBuilder->andWhere("aux.numeroIdentificacion = {$numeroIdentificacion}");
         }
-        if ($session->get('filtroTteDespachoAuxiliar') != "") {
-            $queryBuilder->andWhere("aux.nombreCorto LIKE '%" . $session->get('filtroTteDespachoAuxiliar') . "%'");
+        if ($codigoAxuiliar) {
+            $queryBuilder->andWhere("aux.codigoAuxiliarPk = {$codigoAxuiliar}");
+        }
+        if ($nombre) {
+            $queryBuilder->andWhere("aux.nombreCorto LIKE '%{$nombre}%'");
         };
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('aux.codigoAuxiliarPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function eliminar($arrDetallesSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrDetallesSeleccionados) {
+            if (count($arrDetallesSeleccionados)) {
+                foreach ($arrDetallesSeleccionados as $codigo) {
+                    $ar = $em->getRepository(TteAuxiliar::class)->find($codigo);
+                    if ($ar) {
+                        $em->remove($ar);
+                    }
+                }
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                }
+            }
+        }
     }
 }

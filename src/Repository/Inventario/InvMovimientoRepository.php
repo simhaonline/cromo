@@ -1691,6 +1691,19 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 'ad_telefono' => $arCliente->getTelefono(),
                                 'ad_codigoCIUU' => $arCliente->getCodigoCIUU(),
                             ];
+                            $arrItem = [];
+                            $cantidadItemes = 0;
+                            $arFacturaDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arFactura->getCodigoMovimientoPk()]);
+                            foreach ($arFacturaDetalles as $arFacturaDetalle) {
+                                $cantidadItemes++;
+                                $arrItem[] = [
+                                    "item_id" => $cantidadItemes,
+                                    "item_subtotal" => number_format($arFacturaDetalle->getVrSubtotal(), 2, '.', '')
+                                ];
+
+                            }
+                            $arrFactura['doc_itemes'] = $arrItem;
+                            $arrFactura['doc_cantidad_item'] = $cantidadItemes;
                             $arrFactura['doc_numero'] = 2;
 
                             $facturaElectronica = new FacturaElectronica($em);

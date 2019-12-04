@@ -63,7 +63,7 @@ class AuxiliarController extends AbstractController
     }
 
     /**
-     * @Route("/transporte/administracion/comercial/cliente/nuevo/{id}", name="transporte_administracion_comercial_cliente_nuevo")
+     * @Route("/transporte/administracion/comercial/auxiliar/nuevo/{id}", name="transporte_administracion_comercial_auxiliar_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -92,7 +92,7 @@ class AuxiliarController extends AbstractController
     }
 
     /**
-     * @Route("/transporte/administracion/comercial/cliente/detalle/{id}", name="transporte_administracion_comercial_cliente_detalle")
+     * @Route("/transporte/administracion/comercial/auxiliar/detalle/{id}", name="transporte_administracion_comercial_auxiliar_detalle")
      */
     public function detalle(Request $request, $id)
     {

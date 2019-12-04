@@ -3,6 +3,7 @@
 namespace App\Form\Type\Transporte;
 
 use App\Entity\Transporte\TteDespachoTipo;
+use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteCiudad;
 use Symfony\Component\Form\AbstractType;
@@ -26,6 +27,15 @@ class DespachoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('operacionRel', EntityType::class, array(
+                'class' => TteOperacion::class,
+                'required' => true,
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre'
+            ))
             ->add('despachoTipoRel', EntityType::class, array(
                 'class' => TteDespachoTipo::class,
                 'required' => true,

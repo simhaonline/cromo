@@ -160,6 +160,7 @@ class DespachoController extends AbstractController
             $arDespacho->setUsuario($this->getUser()->getUsername());
             $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
             $arDespacho->setCodigoDespachoClaseFk($clase);
+            $arDespacho->setOperacionRel($this->getUser()->getOperacionRel());
         }
         $form = $this->createForm(DespachoType::class, $arDespacho);
         $form->handleRequest($request);

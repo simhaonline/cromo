@@ -529,7 +529,7 @@ class DespachoController extends AbstractController
                 ];
             }
         }
-        $arAuxiliares = $paginator->paginate($em->getRepository(TteAuxiliar::class)->lista($raw), $request->query->getInt('page', 1), 300);
+        $arAuxiliares = $paginator->paginate($em->getRepository(TteAuxiliar::class)->listaParaDespacho($raw), $request->query->getInt('page', 1), 300);
         return $this->render('transporte/movimiento/transporte/despacho/detalleAdicionarAuxiliar.html.twig', ['arAuxiliares' => $arAuxiliares, 'form' => $form->createView()]);
     }
 

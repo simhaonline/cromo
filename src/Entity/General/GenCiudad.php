@@ -169,6 +169,11 @@ class GenCiudad
     protected $crmContactoCiuidadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TtePoseedor", mappedBy="ciudadRel")
+     */
+    protected $ttePoseedorCiuidadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -646,6 +651,38 @@ class GenCiudad
     public function setCrmContactoCiuidadRel($crmContactoCiuidadRel): void
     {
         $this->crmContactoCiuidadRel = $crmContactoCiuidadRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTtePoseedorCiuidadRel()
+    {
+        return $this->ttePoseedorCiuidadRel;
+    }
+
+    /**
+     * @param mixed $ttePoseedorCiuidadRel
+     */
+    public function setTtePoseedorCiuidadRel($ttePoseedorCiuidadRel): void
+    {
+        $this->ttePoseedorCiuidadRel = $ttePoseedorCiuidadRel;
     }
 
 

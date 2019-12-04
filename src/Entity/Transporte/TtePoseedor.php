@@ -70,7 +70,7 @@ class TtePoseedor
     private $direccion;
 
     /**
-     * @ORM\Column(name="codigo_ciudad_fk", type="string", length=20, nullable=true)
+     * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
      */
     private $codigoCiudadFk;
 
@@ -104,7 +104,7 @@ class TtePoseedor
     private $retencionIndustriaComercio = true;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TteCiudad", inversedBy="poseedoresCiudadRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="ttePoseedorCiuidadRel")
      * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
      */
     private $ciudadRel;
@@ -144,6 +144,22 @@ class TtePoseedor
      * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TteDespachoRecogida", mappedBy="poseedorRel")
      */
     protected $despachosRecogidasPoseedorRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -191,6 +207,22 @@ class TtePoseedor
     public function setNumeroIdentificacion($numeroIdentificacion): void
     {
         $this->numeroIdentificacion = $numeroIdentificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDigitoVerificacion()
+    {
+        return $this->digitoVerificacion;
+    }
+
+    /**
+     * @param mixed $digitoVerificacion
+     */
+    public function setDigitoVerificacion($digitoVerificacion): void
+    {
+        $this->digitoVerificacion = $digitoVerificacion;
     }
 
     /**
@@ -340,6 +372,54 @@ class TtePoseedor
     /**
      * @return mixed
      */
+    public function getCorreo()
+    {
+        return $this->correo;
+    }
+
+    /**
+     * @param mixed $correo
+     */
+    public function setCorreo($correo): void
+    {
+        $this->correo = $correo;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRetencionFuente(): bool
+    {
+        return $this->retencionFuente;
+    }
+
+    /**
+     * @param bool $retencionFuente
+     */
+    public function setRetencionFuente(bool $retencionFuente): void
+    {
+        $this->retencionFuente = $retencionFuente;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRetencionIndustriaComercio(): bool
+    {
+        return $this->retencionIndustriaComercio;
+    }
+
+    /**
+     * @param bool $retencionIndustriaComercio
+     */
+    public function setRetencionIndustriaComercio(bool $retencionIndustriaComercio): void
+    {
+        $this->retencionIndustriaComercio = $retencionIndustriaComercio;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCiudadRel()
     {
         return $this->ciudadRel;
@@ -404,38 +484,6 @@ class TtePoseedor
     /**
      * @return mixed
      */
-    public function getDigitoVerificacion()
-    {
-        return $this->digitoVerificacion;
-    }
-
-    /**
-     * @param mixed $digitoVerificacion
-     */
-    public function setDigitoVerificacion($digitoVerificacion): void
-    {
-        $this->digitoVerificacion = $digitoVerificacion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCorreo()
-    {
-        return $this->correo;
-    }
-
-    /**
-     * @param mixed $correo
-     */
-    public function setCorreo($correo): void
-    {
-        $this->correo = $correo;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getIntermediacionesComprasPoseedorRel()
     {
         return $this->intermediacionesComprasPoseedorRel;
@@ -447,22 +495,6 @@ class TtePoseedor
     public function setIntermediacionesComprasPoseedorRel($intermediacionesComprasPoseedorRel): void
     {
         $this->intermediacionesComprasPoseedorRel = $intermediacionesComprasPoseedorRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDespachosPoseedorRel()
-    {
-        return $this->despachosPoseedorRel;
-    }
-
-    /**
-     * @param mixed $despachosPoseedorRel
-     */
-    public function setDespachosPoseedorRel($despachosPoseedorRel): void
-    {
-        $this->despachosPoseedorRel = $despachosPoseedorRel;
     }
 
     /**
@@ -484,6 +516,22 @@ class TtePoseedor
     /**
      * @return mixed
      */
+    public function getDespachosPoseedorRel()
+    {
+        return $this->despachosPoseedorRel;
+    }
+
+    /**
+     * @param mixed $despachosPoseedorRel
+     */
+    public function setDespachosPoseedorRel($despachosPoseedorRel): void
+    {
+        $this->despachosPoseedorRel = $despachosPoseedorRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDespachosRecogidasPoseedorRel()
     {
         return $this->despachosRecogidasPoseedorRel;
@@ -495,38 +543,6 @@ class TtePoseedor
     public function setDespachosRecogidasPoseedorRel($despachosRecogidasPoseedorRel): void
     {
         $this->despachosRecogidasPoseedorRel = $despachosRecogidasPoseedorRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionFuente()
-    {
-        return $this->retencionFuente;
-    }
-
-    /**
-     * @param mixed $retencionFuente
-     */
-    public function setRetencionFuente($retencionFuente): void
-    {
-        $this->retencionFuente = $retencionFuente;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionIndustriaComercio()
-    {
-        return $this->retencionIndustriaComercio;
-    }
-
-    /**
-     * @param mixed $retencionIndustriaComercio
-     */
-    public function setRetencionIndustriaComercio($retencionIndustriaComercio): void
-    {
-        $this->retencionIndustriaComercio = $retencionIndustriaComercio;
     }
 
 

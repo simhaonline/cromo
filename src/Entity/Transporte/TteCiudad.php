@@ -205,11 +205,6 @@ class TteCiudad
     protected $conductoresCiudadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transporte\TtePoseedor", mappedBy="ciudadRel")
-     */
-    protected $poseedoresCiudadRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="TteDestinatario", mappedBy="ciudadRel")
      */
     protected $ciudadRel;

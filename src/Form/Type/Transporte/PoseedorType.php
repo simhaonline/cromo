@@ -30,7 +30,7 @@ class PoseedorType extends AbstractType
             ])
             ->add('ciudadRel',EntityType::class,[
                 'required' => true,
-                'class' => 'App\Entity\Transporte\TteCiudad',
+                'class' => 'App\Entity\General\GenCiudad',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.nombre', 'ASC');

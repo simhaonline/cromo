@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <section class="content">
+        {{ form_start(formCertificado, { 'attr': {'class': 'form-horizontal'} }) }}
+        <div id="content sortable-grid ui-sortable">
+            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-list"></i> </span>
+                    <h2>Certificado de ingresos y retenciones</h2>
+                </header>
+                <div>
+                    <div class="widget-body">
+                        <h6>Información general</h6>
+                        <div class="form-group form-group-sm">
+                            <label for="txtCodigoConductor" class="col-sm-2 control-label">Empleado:</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <div class="input-group">
+                                            {{ form_widget(formCertificado.codigoEmpleado) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-10">
+                                        <div class="input-group">
+                                            <input id="form_txtNombreCorto" class="form-control" readonly>
+                                            <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado',
+                                                   { 'campoCodigo': 'form_codigoEmpleado', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEmpleado', 600, 900)">Buscar</a>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="form_fechaExpedicion" class="col-sm-2 control-label">Año certificación:</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(formCertificado.fechaCertificado, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="form_fechaExpedicion" class="col-sm-2 control-label">Fecha expedición:</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(formCertificado.fechaExpedicion, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="form_lugarExpedicion" class="col-sm-2 control-label">Lugar expedición:</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(formCertificado.LugarExpedicion, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Concepto a los aportes</h6>
+                        <div class="form-group form-group-sm">
+                            <label for="form_sfp" class="col-sm-2 control-label">Aportes Voluntarios (AFC):</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(formCertificado.afc, { 'attr': {'placeholder': 'valor de AFC'} }) }}
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Certifico que:</h6>
+                        <div class="form-group form-group-sm">
+                            <label for="form_sfp" class="col-sm-2 control-label">1.</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(formCertificado.certifico1, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="form_sfp" class="col-sm-2 control-label">2.</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(formCertificado.certifico2, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="form_sfp" class="col-sm-2 control-label">3.</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(formCertificado.certifico3, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="form_sfp" class="col-sm-2 control-label">4.</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(formCertificado.certifico4, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="form_sfp" class="col-sm-2 control-label">5.</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(formCertificado.certifico5, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label for="form_sfp" class="col-sm-2 control-label">6.</label>
+                            <div class="col-sm-10">
+                                {{ form_widget(formCertificado.certifico6, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                {{ form_widget(formCertificado.BtnGenerar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ form_end(formCertificado) }}
+        <br/><br/>
+    </section>
+{% endblock %}

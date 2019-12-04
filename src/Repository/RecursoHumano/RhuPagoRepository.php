@@ -2063,4 +2063,52 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $ibp;
     }
 
+    public function devuelveCostosFechaCertificadoIngreso($codigoEmpleado, $fechaDesde, $fechaHasta, $numeroDian, $codigoContrato = "", $boolCesantiaInteresCausado = false)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQueryBuilder()->from(RhuPagoDetalle::class, "pd")->select("SUM(pd.vrPagoOperado) AS vrPago")
+            ->join("pd.pagoRel", "p")
+            ->join("pd.conceptoRel", "pc")
+            ->where("pc.numeroDian = {$numeroDian}");
+        if ($boolCesantiaInteresCausado) {
+            $query->andWhere("p.fechaPago >= '{$fechaDesde}'")
+                ->andWhere("p.fechaPago <= '{$fechaHasta}'");
+        } else {
+            $query->andWhere("p.fechaDesde >= '{$fechaDesde}'")
+                ->andWhere("p.fechaDesde <= '{$fechaHasta}'");
+        }
+        if ($codigoContrato == "") {
+            $query->andWhere("p.codigoEmpleadoFk = {$codigoEmpleado}");
+        } else {
+            $query->andWhere("p.codigoContratoFk = {$codigoContrato}");
+        }
+        $arrayResultado = $query->getQuery()->getResult();
+        $vrPago = 0;
+        if ($arrayResultado) {
+            $vrPago = $arrayResultado[0]['vrPago'];
+        }
+        return $vrPago;
+    }
+
+    public function devuelveAportesFechaCertificadoIngreso($codigoEmpleado, $fechaDesde, $fechaHasta, $numeroDian, $codigoContrato = "")
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQueryBuilder()->from(RhuPagoDetalle::class, "pd")->select("SUM(pd.vrPagoOperado * -1) AS vrPago")
+            ->join("pd.pagoRel", "p")
+            ->join("pd.conceptoRel", "pc")
+            ->where("pc.numeroDian = {$numeroDian}")
+            ->andWhere("p.fechaDesde >= '{$fechaDesde}'")
+            ->andWhere("p.fechaDesde <= '{$fechaHasta}'");
+        if ($codigoContrato == "") {
+            $query->andWhere("p.codigoEmpleadoFk = {$codigoEmpleado}");
+        } else {
+            $query->andWhere("p.codigoContratoFk = {$codigoContrato}");
+        }
+        $arrayResultado = $query->getQuery()->getResult();
+        $vrPago = $arrayResultado[0]['vrPago'];
+        if ($vrPago == null) {
+            $vrPago = 0;
+        }
+        return $vrPago;
+    }
 }

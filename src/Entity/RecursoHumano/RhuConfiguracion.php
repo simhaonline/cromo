@@ -74,11 +74,6 @@ class RhuConfiguracion
     private $auxilioTransporteNoPrestacional = false;
 
     /**
-     * @ORM\Column(name="descontar_ausentismos_de_licencias" , type="boolean" ,nullable=true)
-     */
-    private $descontarAusentismosDeLicencias = false;
-
-    /**
      * @ORM\Column(name="vacaciones_base_descuento_ley_ibc_mes_anterior", type="boolean", nullable=true)
      */
     private $vacacionesBaseDescuentoLeyIbcMesAnterior = false;
@@ -336,22 +331,6 @@ class RhuConfiguracion
     public function setAuxilioTransporteNoPrestacional($auxilioTransporteNoPrestacional): void
     {
         $this->auxilioTransporteNoPrestacional = $auxilioTransporteNoPrestacional;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescontarAusentismosDeLicencias()
-    {
-        return $this->descontarAusentismosDeLicencias;
-    }
-
-    /**
-     * @param mixed $descontarAusentismosDeLicencias
-     */
-    public function setDescontarAusentismosDeLicencias($descontarAusentismosDeLicencias): void
-    {
-        $this->descontarAusentismosDeLicencias = $descontarAusentismosDeLicencias;
     }
 
     /**

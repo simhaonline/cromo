@@ -568,11 +568,9 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             $ibpCesantias = $em->getRepository(RhuPagoDetalle::class)->ibp($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
                             $ibpCesantias += $ibpCesantiasInicial + $douIBPAdicional;
                             $ibpCesantias = round($ibpCesantias);
-                            if ($arConfiguracion->getDescontarAusentismosDeLicencias()) {
-                                $intDiasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
-                            } else {
-                                $intDiasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
-                            }
+
+                            $intDiasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+
 
 //                            // validacion para descontar todos los ausentimos durante la vigencia del contrato
 //                            if ($arConfiguracion->getDescontarTotalAusentismosContratoTerminadoEnLiquidacion()) {

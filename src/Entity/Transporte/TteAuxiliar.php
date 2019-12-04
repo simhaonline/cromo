@@ -149,7 +149,7 @@ class TteAuxiliar
     /**
      * @return bool
      */
-    public function isEstadoInactivo(): bool
+    public function getEstadoInactivo(): bool
     {
         return $this->estadoInactivo;
     }

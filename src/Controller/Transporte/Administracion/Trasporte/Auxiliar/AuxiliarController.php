@@ -82,7 +82,7 @@ class AuxiliarController extends AbstractController
                 $arAuxiliar = $form->getData();
                 $em->persist($arAuxiliar);
                 $em->flush();
-                return $this->redirect($this->generateUrl('transporte_administracion_comercial_cliente_detalle', array('id' => $arAuxiliar->getCodigoAuxiliarPK())));
+                return $this->redirect($this->generateUrl('transporte_administracion_comercial_auxiliar_detalle', array('id' => $arAuxiliar->getCodigoAuxiliarPK())));
             }
         }
         return $this->render('transporte/administracion/transporte/auxiliar/nuevo.html.twig', [

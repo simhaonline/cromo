@@ -58,11 +58,11 @@
                 <td>{{ arAuxiliar.nombreCorto }}</td>
                 <td>{{ arAuxiliar.estadoInactivo ? "SI":"NO" }}</td>
                 <td class="text-center">
-                    <a href="{{ path('transporte_administracion_comercial_cliente_nuevo',{'id': arAuxiliar.codigoAuxiliarPk }) }}"><i
+                    <a href="{{ path('transporte_administracion_comercial_auxiliar_nuevo',{'id': arAuxiliar.codigoAuxiliarPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td class="text-center">
-                    <a href="{{ path('transporte_administracion_comercial_cliente_detalle',{'id' : arAuxiliar.codigoAuxiliarPk }) }}">
+                    <a href="{{ path('transporte_administracion_comercial_auxiliar_detalle',{'id' : arAuxiliar.codigoAuxiliarPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
@@ -94,7 +94,7 @@
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('transporte_administracion_comercial_cliente_nuevo', {'id': 0}) }}">Nuevo</a>
+           href="{{ path('transporte_administracion_comercial_auxiliar_nuevo', {'id': 0}) }}">Nuevo</a>
     </div>
     {{ form_end(form) }}
     <br/><br/><br/>

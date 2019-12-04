@@ -157,6 +157,7 @@ class TteGuiaRepository extends ServiceEntityRepository
             ->addSelect('tg.estadoDigitalizado')
             ->addSelect('tg.comentario')
             ->addSelect('tg.usuario')
+            ->addSelect('tg.usuarioEntrega')
             ->addSelect('ase.nombre')
             ->leftJoin('tg.ciudadOrigenRel', 'co')
             ->leftJoin('tg.clienteRel', 'c')

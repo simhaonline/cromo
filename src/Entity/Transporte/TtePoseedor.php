@@ -388,7 +388,7 @@ class TtePoseedor
     /**
      * @return bool
      */
-    public function isRetencionFuente(): bool
+    public function getRetencionFuente(): bool
     {
         return $this->retencionFuente;
     }
@@ -404,7 +404,7 @@ class TtePoseedor
     /**
      * @return bool
      */
-    public function isRetencionIndustriaComercio(): bool
+    public function getRetencionIndustriaComercio(): bool
     {
         return $this->retencionIndustriaComercio;
     }

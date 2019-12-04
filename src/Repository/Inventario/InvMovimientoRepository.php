@@ -1698,13 +1698,15 @@ class InvMovimientoRepository extends ServiceEntityRepository
                                 $cantidadItemes++;
                                 $arrItem[] = [
                                     "item_id" => $cantidadItemes,
-                                    "item_subtotal" => number_format($arFacturaDetalle->getVrSubtotal(), 2, '.', '')
+                                    "item_subtotal" => number_format($arFacturaDetalle->getVrSubtotal(), 2, '.', ''),
+                                    "item_iva" => number_format($arFacturaDetalle->getVrIva(), 2, '.', ''),
+                                    "item_porcentaje_iva" => number_format($arFacturaDetalle->getPorcentajeIva(), 2, '.', '')
                                 ];
 
                             }
                             $arrFactura['doc_itemes'] = $arrItem;
                             $arrFactura['doc_cantidad_item'] = $cantidadItemes;
-                            $arrFactura['doc_numero'] = 4;
+                            $arrFactura['doc_numero'] = 5;
 
                             $facturaElectronica = new FacturaElectronica($em);
                             //$procesoFacturaElectronica = $facturaElectronica->enviarDispapeles($arrFactura);

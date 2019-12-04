@@ -10,22 +10,21 @@
             <div>
                 <div class="widget-body">
                     <div class="form-group form-group-sm">
-                        <label for="" class="control-label col-sm-1">Numero:</label>
-                        <div class="col-sm-2">
-                            {{ form_widget(form.numero) }}
-                        </div>
                         <label for="" class="control-label col-sm-1">Codigo:</label>
                         <div class="col-sm-2">
                             {{ form_widget(form.codigoCotizacionPk) }}
                         </div>
-                        <label for="" class="control-label col-sm-1">Tipo:</label>
-                        <div class="col-sm-5">
+                        <label for="" class="control-label col-sm-1">Numero:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.numero) }}
+                        </div>
+                        <label for="" class="control-label col-sm-1  col-sm-offset-3">Tipo:</label>
+                        <div class="col-sm-2">
                             {{ form_widget(form.codigoCotizacionTipoFk) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label for="" class="control-label col-sm-9"></label>
-                        <label for="" class="control-label col-sm-1">Autorizado:</label>
+                        <label for="" class="control-label col-sm-1 col-sm-offset-9">Autorizado:</label>
                         <div class="col-sm-2">
                             {{ form_widget((form.estadoAutorizado)) }}
                         </div>

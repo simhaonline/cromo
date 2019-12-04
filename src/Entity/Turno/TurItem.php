@@ -71,6 +71,11 @@ class TurItem
      */
     protected $facturasDetallesItemRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCotizacionDetalle", mappedBy="itemRel")
+     */
+    protected $CotizacionesDetallesItemRel;
+
 
     /**
      * @return mixed
@@ -246,6 +251,22 @@ class TurItem
     public function setCodigoCuentaVentaFk($codigoCuentaVentaFk): void
     {
         $this->codigoCuentaVentaFk = $codigoCuentaVentaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCotizacionesDetallesItemRel()
+    {
+        return $this->CotizacionesDetallesItemRel;
+    }
+
+    /**
+     * @param mixed $CotizacionesDetallesItemRel
+     */
+    public function setCotizacionesDetallesItemRel($CotizacionesDetallesItemRel): void
+    {
+        $this->CotizacionesDetallesItemRel = $CotizacionesDetallesItemRel;
     }
 
 

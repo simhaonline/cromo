@@ -24,7 +24,6 @@
                     <div class="col-sm-4">
                         {{ form_widget(form.puestoRel) }}
                         {{ form_errors(form.puestoRel) }}
-
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
@@ -96,13 +95,13 @@
                 </div>
 
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label"></label>
+                    <label class="col-sm-2 control-label">Item</label>
                     <div class="col-sm-4">
-
+                        {{ form_widget(form.itemRel, { 'attr': {'class': 'form-control'} }) }}
+                        {{ form_errors(form.itemRel) }}
                     </div>
-                    <label class="col-sm-8 control-label"></label>
-                    <div class="col-sm-4">
-                        <div class="col-sm-4">{{ form_widget(form.compuesto) }}</div>
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <div class="col-sm-">{{ form_widget(form.compuesto) }}</div>
                     </div>
                 </div>
             </div>

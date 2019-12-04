@@ -44,6 +44,11 @@ class TurCotizacionDetalle
     private $codigoPuestoFk;
 
     /**
+     * @ORM\Column(name="codigo_item_fk", type="integer", nullable=true)
+     */
+    private $codigoItemFk;
+
+    /**
      * @ORM\Column(name="periodo", type="string", length=1, nullable=true)
      */
     private $periodo;
@@ -280,6 +285,12 @@ class TurCotizacionDetalle
      * @ORM\JoinColumn(name="codigo_puesto_fk", referencedColumnName="codigo_puesto_pk")
      */
     protected $puestoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurItem", inversedBy="CotizacionesDetallesItemRel")
+     * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
+     */
+    protected $itemRel;
 
     /**
      * @return array
@@ -1111,6 +1122,38 @@ class TurCotizacionDetalle
     public function setDiaHasta($diaHasta): void
     {
         $this->diaHasta = $diaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoItemFk()
+    {
+        return $this->codigoItemFk;
+    }
+
+    /**
+     * @param mixed $codigoItemFk
+     */
+    public function setCodigoItemFk($codigoItemFk): void
+    {
+        $this->codigoItemFk = $codigoItemFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemRel()
+    {
+        return $this->itemRel;
+    }
+
+    /**
+     * @param mixed $itemRel
+     */
+    public function setItemRel($itemRel): void
+    {
+        $this->itemRel = $itemRel;
     }
 
 

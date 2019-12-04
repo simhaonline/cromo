@@ -68,7 +68,6 @@ class CotizacionController extends AbstractController
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -257,8 +256,8 @@ class CotizacionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 if($id == 0) {
-                    $arCotizacionDetalle->setPorcentajeIva(19);
-                    $arCotizacionDetalle->setPorcentajeBaseIva(100);
+                    $arCotizacionDetalle->setPorcentajeIva($arCotizacionDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentaje());
+                    $arCotizacionDetalle->setPorcentajeBaseIva($arCotizacionDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentajeBase());
                 }
                 $em->persist($arCotizacionDetalle);
                 $em->flush();
@@ -271,7 +270,6 @@ class CotizacionController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
 
     public function getFiltros($form)
     {

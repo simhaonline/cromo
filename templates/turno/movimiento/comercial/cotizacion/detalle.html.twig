@@ -80,8 +80,8 @@
                             <td>{{ arCotizacionDetalle.horasProgramadas }}</td>
                             <td>{{ arCotizacionDetalle.horasDiurnasProgramadas }}</td>
                             <td>{{ arCotizacionDetalle.horasNocturnasProgramadas }}</td>
-                            <td class="numero">{{ arCotizacionDetalle.vrSalarioBase }}</td>
-                            <td class="numero">{{ arCotizacionDetalle.vrPrecioMinimo }}</td>
+                            <td class="numero">{{ arCotizacionDetalle.vrSalarioBase |  number_format(0, '.', ',') }}</td>
+                            <td class="numero">{{ arCotizacionDetalle.vrPrecioMinimo |  number_format(0, '.', ',') }}</td>
                             {% if arCotizacion.estadoAutorizado == 0 %}
                                 <td style="text-align: center;"><input type="number"
                                                                        name="arrPrecioAjustado[{{ arCotizacionDetalle.codigoCotizacionDetallePk }}]"
@@ -94,11 +94,11 @@
                                                                        style="text-align: right; width:60px"
                                                                        size="10"></td>
                             {% else %}
-                                <td class="numero">{{ arCotizacionDetalle.vrPrecioAjustado | number_format }}</td>
+                                <td class="numero">{{ arCotizacionDetalle.vrPrecioAjustado |  number_format(0, '.', ',') }}</td>
                                 <td>{{ arCotizacionDetalle.porcentajeIva }}</td>
                             {% endif %}
-                            <td class="numero">{{ arCotizacionDetalle.vrIva }}</td>
-                            <td class="numero">{{ arCotizacionDetalle.vrSubtotal }}</td>
+                            <td class="numero">{{ arCotizacionDetalle.vrIva |  number_format(0, '.', ',') }}</td>
+                            <td class="numero">{{ arCotizacionDetalle.vrSubtotal |  number_format(0, '.', ',') }}</td>
                             <td><input type="checkbox" name="ChkSeleccionar[]"
                                        value="{{ arCotizacionDetalle.codigoCotizacionDetallePk }}"/></td>
                             </tr>
@@ -113,7 +113,7 @@
                                    value="Nuevo"/>
                         {% else %}
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('turno_movimiento_comercial_cotizacion_detalle_nuevo', {'codigoCotizacion':arCotizacion.codigoCotizacionPk,'id': 0  }) }}', 'CotizacionAdicionarDetalle', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_comercial_cotizacion_detalle_nuevo', {'codigoCotizacion':arCotizacion.codigoCotizacionPk,'id': 0  }) }}', 'CotizacionAdicionarDetalle', 600, 1200)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">

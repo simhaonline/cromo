@@ -4,6 +4,7 @@ namespace App\Form\Type\Turno;
 
 use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurCotizacionDetalle;
+use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurModalidad;
 use App\Entity\Turno\TurPedidoDetalle;
 use Symfony\Component\Form\AbstractType;
@@ -34,6 +35,17 @@ class CotizacionDetalleType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'nombre:'
             ])
+            ->add('itemRel', EntityType::class, [
+                'required' => true,
+                'class' => TurItem::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->orderBy('i.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'nombre:',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
             ->add('modalidadRel', EntityType::class, [
                 'required' => true,
                 'class' => TurModalidad::class,
@@ -45,7 +57,7 @@ class CotizacionDetalleType extends AbstractType
                 'label' => 'nombre:'
             ])
             ->add('puestoRel', EntityType::class, [
-                'required' => true,
+                'required' => false,
                 'class' => 'App\Entity\Turno\TurPuesto',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('p')

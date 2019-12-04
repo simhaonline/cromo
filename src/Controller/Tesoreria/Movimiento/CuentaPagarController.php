@@ -116,29 +116,39 @@ class CuentaPagarController extends AbstractController
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($id);
+        $arCuentaPagar = new TesCuentaPagar();
         if ($id != 0) {
-            $form = $this->createForm(CuentaPagarType::class, $arCuentaPagar);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                if ($form->get('guardar')->isClicked()) {
-                    $txtCodigoTercero = $request->request->get('txtCodigoTercero');
-                    if ($txtCodigoTercero != '') {
-                        $arTercero = $em->getRepository(TesTercero::class)->find($txtCodigoTercero);
-                        if ($arTercero) {
-                            $arCuentaPagar->setTerceroRel($arTercero);
-                            $em->persist($arCuentaPagar);
-                            $em->flush();
-                            return $this->redirect($this->generateUrl('tesoreria_movimiento_cuentapagar_cuentapagar_detalle', ['id' => $arCuentaPagar->getCodigoCuentaPagarPk()]));
-                        }
+            $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->find($id);
+        }
+        $form = $this->createForm(CuentaPagarType::class, $arCuentaPagar);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $txtCodigoTercero = $request->request->get('txtCodigoTercero');
+                if ($txtCodigoTercero != '') {
+                    $arTercero = $em->getRepository(TesTercero::class)->find($txtCodigoTercero);
+                    if ($arTercero) {
+                        $objFunciones = new FuncionesController();
+                        $arCuentaPagar->setTerceroRel($arTercero);
+                        $arCuentaPagar->setModulo("tes");
+                        $arCuentaPagar->setModelo("TesCuentaPagar");
+                        $arCuentaPagar->setFechaVence($objFunciones->sumarDiasFechaNumero($arCuentaPagar->getPlazo(), $arCuentaPagar->getFecha()));
+                        $arCuentaPagar->setOperacion($arCuentaPagar->getCuentaPagarTipoRel()->getOperacion());
+                        $arCuentaPagar->setVrSaldoOperado($arCuentaPagar->getVrTotal() * $arCuentaPagar->getOperacion());
+                        $arCuentaPagar->setEstadoAutorizado(1);
+                        $arCuentaPagar->setEstadoAprobado(1);
+                        $arCuentaPagar->setVrSaldo($arCuentaPagar->getVrTotal());
+                        $em->persist($arCuentaPagar);
+                        $em->flush();
+                        return $this->redirect($this->generateUrl('tesoreria_movimiento_cuentapagar_cuentapagar_detalle', ['id' => $arCuentaPagar->getCodigoCuentaPagarPk()]));
                     }
                 }
             }
-            return $this->render('tesoreria/movimiento/cuentapagar/cuentapagar/editarTercero.html.twig', [
-                'arCuentaPagar' => $arCuentaPagar,
-                'form' => $form->createView()
-            ]);
         }
+        return $this->render('tesoreria/movimiento/cuentapagar/cuentapagar/editarTercero.html.twig', [
+            'arCuentaPagar' => $arCuentaPagar,
+            'form' => $form->createView()
+        ]);
     }
 
     /**

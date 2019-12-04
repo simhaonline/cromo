@@ -16,5 +16,58 @@
             <td class="titulo">TERCERO:</td>
             <td class="td-in-well">{{ arCuentaPagar.terceroRel.nombreCorto | default ('') }}</td>
         </tr>
+        <tr>
+            <td class="titulo">TIPO:</td>
+            <td class="td-in-well">{{ arCuentaPagar.cuentaPagarTipoRel.nombre }}</td>
+            <td class="titulo">BANCO:</td>
+            <td class="td-in-well">{{ arCuentaPagar.bancoRel.nombre }}</td>
+            <td class="titulo">CUENTA:</td>
+            <td class="td-in-well">{{ arCuentaPagar.cuenta }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">NÚMERO DOCUMENTO:</td>
+            <td class="td-in-well">{{ arCuentaPagar.numeroDocumento }}</td>
+            <td class="titulo">MODULO:</td>
+            <td class="td-in-well">{{ arCuentaPagar.modulo }}</td>
+            <td class="titulo"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arCuentaPagar.fecha | date('Y-m-d') }}</td>
+            <td class="titulo">FECHA <VENCE></VENCE>:</td>
+            <td class="td-in-well">{{ arCuentaPagar.fechaVence | date('Y-m-d') }}</td>
+            <td class="titulo">PLAZO:</td>
+            <td class="td-in-well">{{ arCuentaPagar.plazo }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">VALOR SUBTOTAL:</td>
+            <td class="td-in-well">{{ arCuentaPagar.vrSubtotal | number_format(0, '.', ',') }}</td>
+            <td class="titulo">VALOR IVA:</td>
+            <td class="td-in-well">{{ arCuentaPagar.vrIva | number_format(0, '.', ',') }}</td>
+            <td class="titulo">VALOR TOTAL:</td>
+            <td class="td-in-well">{{ arCuentaPagar.vrTotal | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">VALOR ABANO:</td>
+            <td class="td-in-well">{{ arCuentaPagar.vrAbono | number_format(0, '.', ',') }}</td>
+            <td class="titulo">VALOR SALDO ORIGINAL:</td>
+            <td class="td-in-well">{{ arCuentaPagar.vrSaldoOriginal | number_format(0, '.', ',') }}</td>
+            <td class="titulo">VALOR SALDO:</td>
+            <td class="td-in-well">{{ arCuentaPagar.vrSaldo | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">VALOR OPERADO:</td>
+            <td class="td-in-well">{{ arCuentaPagar.vrSaldoOperado | number_format(0, '.', ',') }}</td>
+            <td class="titulo"> RETENCION  FUENTE:</td>
+            <td class="td-in-well">{{ arCuentaPagar.vrRetencionFuente | number_format(0, '.', ',') }}</td>
+            <td class="titulo"> RETENCION IVA:</td>
+            <td class="td-in-well">{{ arCuentaPagar.vrRetencionIva | number_format(0, '.', ',') }}</td>
+              
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIO:</td>
+            <td class="td-in-well" colspan="5">{{ arCuentaPagar.comentario }}</td>
+        </tr>
     </table>
 {% endblock %}

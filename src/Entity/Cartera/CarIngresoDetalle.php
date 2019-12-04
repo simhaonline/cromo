@@ -92,59 +92,6 @@ class CarIngresoDetalle
     private $codigoCentroCostoFk;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCentroCosto", inversedBy="ingresosDetallesCentroCostoRel")
-     * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
-     */
-    protected $centroCostoRel;
-
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarIngreso" , inversedBy="ingresoDetallesIngresoRel")
-     * @ORM\JoinColumn(name="codigo_ingreso_fk" , referencedColumnName="codigo_ingreso_pk")
-     */
-    private $ingresoRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrar" , inversedBy="ingresosDetallesCuentaCobrarRel")
-     * @ORM\JoinColumn(name="codigo_cuenta_cobrar_fk", referencedColumnName="codigo_cuenta_cobrar_pk")
-     */
-    private $cuentaCobrarRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCuentaCobrarTipo", inversedBy="ingresosDetallesCuentaCobrarTipoRel")
-     * @ORM\JoinColumn(name="codigo_cuenta_cobrar_tipo_fk", referencedColumnName="codigo_cuenta_cobrar_tipo_pk")
-     */
-    protected $cuentaCobrarTipoRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCuenta", inversedBy="ingresosDetallesCuentaRel")
-     * @ORM\JoinColumn(name="codigo_cuenta_fk", referencedColumnName="codigo_cuenta_pk")
-     */
-    protected $cuentaRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCliente", inversedBy="ingresosDetallesClienteRel")
-     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
-     */
-    protected $clienteRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoIngresoDetallePk()
@@ -257,33 +204,49 @@ class CarIngresoDetalle
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getVrRetencion()
+    public function getVrRetencion(): int
     {
         return $this->vrRetencion;
     }
 
     /**
-     * @param mixed $vrRetencion
+     * @param int $vrRetencion
      */
-    public function setVrRetencion($vrRetencion): void
+    public function setVrRetencion(int $vrRetencion): void
     {
         $this->vrRetencion = $vrRetencion;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getVrPago()
+    public function getVrBase(): int
+    {
+        return $this->vrBase;
+    }
+
+    /**
+     * @param int $vrBase
+     */
+    public function setVrBase(int $vrBase): void
+    {
+        $this->vrBase = $vrBase;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVrPago(): int
     {
         return $this->vrPago;
     }
 
     /**
-     * @param mixed $vrPago
+     * @param int $vrPago
      */
-    public function setVrPago($vrPago): void
+    public function setVrPago(int $vrPago): void
     {
         $this->vrPago = $vrPago;
     }
@@ -321,17 +284,17 @@ class CarIngresoDetalle
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getNaturaleza()
+    public function getNaturaleza(): int
     {
         return $this->naturaleza;
     }
 
     /**
-     * @param mixed $naturaleza
+     * @param int $naturaleza
      */
-    public function setNaturaleza($naturaleza): void
+    public function setNaturaleza(int $naturaleza): void
     {
         $this->naturaleza = $naturaleza;
     }
@@ -367,119 +330,6 @@ class CarIngresoDetalle
     {
         $this->codigoCentroCostoFk = $codigoCentroCostoFk;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCentroCostoRel()
-    {
-        return $this->centroCostoRel;
-    }
-
-    /**
-     * @param mixed $centroCostoRel
-     */
-    public function setCentroCostoRel($centroCostoRel): void
-    {
-        $this->centroCostoRel = $centroCostoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIngresoRel()
-    {
-        return $this->ingresoRel;
-    }
-
-    /**
-     * @param mixed $ingresoRel
-     */
-    public function setIngresoRel($ingresoRel): void
-    {
-        $this->ingresoRel = $ingresoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuentaCobrarRel()
-    {
-        return $this->cuentaCobrarRel;
-    }
-
-    /**
-     * @param mixed $cuentaCobrarRel
-     */
-    public function setCuentaCobrarRel($cuentaCobrarRel): void
-    {
-        $this->cuentaCobrarRel = $cuentaCobrarRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuentaCobrarTipoRel()
-    {
-        return $this->cuentaCobrarTipoRel;
-    }
-
-    /**
-     * @param mixed $cuentaCobrarTipoRel
-     */
-    public function setCuentaCobrarTipoRel($cuentaCobrarTipoRel): void
-    {
-        $this->cuentaCobrarTipoRel = $cuentaCobrarTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuentaRel()
-    {
-        return $this->cuentaRel;
-    }
-
-    /**
-     * @param mixed $cuentaRel
-     */
-    public function setCuentaRel($cuentaRel): void
-    {
-        $this->cuentaRel = $cuentaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClienteRel()
-    {
-        return $this->clienteRel;
-    }
-
-    /**
-     * @param mixed $clienteRel
-     */
-    public function setClienteRel($clienteRel): void
-    {
-        $this->clienteRel = $clienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrBase()
-    {
-        return $this->vrBase;
-    }
-
-    /**
-     * @param mixed $vrBase
-     */
-    public function setVrBase($vrBase): void
-    {
-        $this->vrBase = $vrBase;
-    }
-
 
 
 }

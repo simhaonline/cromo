@@ -102,29 +102,6 @@ class CarIngreso
     private $usuario;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarCliente" , inversedBy="ingresosClienteRel")
-     * @ORM\JoinColumn(name="codigo_cliente_fk" , referencedColumnName="codigo_cliente_pk")
-     */
-    private $clienteRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cartera\CarIngresoTipo" , inversedBy="ingresosIngresoTipoRel")
-     * @ORM\JoinColumn(name="codigo_ingreso_tipo_fk" , referencedColumnName="codigo_ingreso_tipo_pk")
-     */
-    private $ingresoTipoRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCuenta" , inversedBy="ingresosCuentaRel")
-     * @ORM\JoinColumn(name="codigo_cuenta_fk" , referencedColumnName="codigo_cuenta_pk")
-     */
-    private $cuentaRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngresoDetalle", mappedBy="ingresoRel")
-     */
-    private $ingresoDetallesIngresoRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoIngresoPk()
@@ -221,17 +198,17 @@ class CarIngreso
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getNumero()
+    public function getNumero(): int
     {
         return $this->numero;
     }
 
     /**
-     * @param mixed $numero
+     * @param int $numero
      */
-    public function setNumero($numero): void
+    public function setNumero(int $numero): void
     {
         $this->numero = $numero;
     }
@@ -253,195 +230,131 @@ class CarIngreso
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getVrTotalNeto()
-    {
-        return $this->vrTotalNeto;
-    }
-
-    /**
-     * @param mixed $vrTotalNeto
-     */
-    public function setVrTotalNeto($vrTotalNeto): void
-    {
-        $this->vrTotalNeto = $vrTotalNeto;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAutorizado()
-    {
-        return $this->estadoAutorizado;
-    }
-
-    /**
-     * @param mixed $estadoAutorizado
-     */
-    public function setEstadoAutorizado($estadoAutorizado): void
-    {
-        $this->estadoAutorizado = $estadoAutorizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAprobado()
-    {
-        return $this->estadoAprobado;
-    }
-
-    /**
-     * @param mixed $estadoAprobado
-     */
-    public function setEstadoAprobado($estadoAprobado): void
-    {
-        $this->estadoAprobado = $estadoAprobado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoAnulado()
-    {
-        return $this->estadoAnulado;
-    }
-
-    /**
-     * @param mixed $estadoAnulado
-     */
-    public function setEstadoAnulado($estadoAnulado): void
-    {
-        $this->estadoAnulado = $estadoAnulado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoContabilizado()
-    {
-        return $this->estadoContabilizado;
-    }
-
-    /**
-     * @param mixed $estadoContabilizado
-     */
-    public function setEstadoContabilizado($estadoContabilizado): void
-    {
-        $this->estadoContabilizado = $estadoContabilizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstadoImpreso()
-    {
-        return $this->estadoImpreso;
-    }
-
-    /**
-     * @param mixed $estadoImpreso
-     */
-    public function setEstadoImpreso($estadoImpreso): void
-    {
-        $this->estadoImpreso = $estadoImpreso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClienteRel()
-    {
-        return $this->clienteRel;
-    }
-
-    /**
-     * @param mixed $clienteRel
-     */
-    public function setClienteRel($clienteRel): void
-    {
-        $this->clienteRel = $clienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIngresoTipoRel()
-    {
-        return $this->ingresoTipoRel;
-    }
-
-    /**
-     * @param mixed $ingresoTipoRel
-     */
-    public function setIngresoTipoRel($ingresoTipoRel): void
-    {
-        $this->ingresoTipoRel = $ingresoTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCuentaRel()
-    {
-        return $this->cuentaRel;
-    }
-
-    /**
-     * @param mixed $cuentaRel
-     */
-    public function setCuentaRel($cuentaRel): void
-    {
-        $this->cuentaRel = $cuentaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIngresoDetallesIngresoRel()
-    {
-        return $this->ingresoDetallesIngresoRel;
-    }
-
-    /**
-     * @param mixed $ingresoDetallesIngresoRel
-     */
-    public function setIngresoDetallesIngresoRel($ingresoDetallesIngresoRel): void
-    {
-        $this->ingresoDetallesIngresoRel = $ingresoDetallesIngresoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrRetencion()
-    {
-        return $this->vrRetencion;
-    }
-
-    /**
-     * @param mixed $vrRetencion
-     */
-    public function setVrRetencion($vrRetencion): void
-    {
-        $this->vrRetencion = $vrRetencion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrTotalBruto()
+    public function getVrTotalBruto(): int
     {
         return $this->vrTotalBruto;
     }
 
     /**
-     * @param mixed $vrTotalBruto
+     * @param int $vrTotalBruto
      */
-    public function setVrTotalBruto($vrTotalBruto): void
+    public function setVrTotalBruto(int $vrTotalBruto): void
     {
         $this->vrTotalBruto = $vrTotalBruto;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVrRetencion(): int
+    {
+        return $this->vrRetencion;
+    }
+
+    /**
+     * @param int $vrRetencion
+     */
+    public function setVrRetencion(int $vrRetencion): void
+    {
+        $this->vrRetencion = $vrRetencion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVrTotalNeto(): int
+    {
+        return $this->vrTotalNeto;
+    }
+
+    /**
+     * @param int $vrTotalNeto
+     */
+    public function setVrTotalNeto(int $vrTotalNeto): void
+    {
+        $this->vrTotalNeto = $vrTotalNeto;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEstadoAutorizado(): bool
+    {
+        return $this->estadoAutorizado;
+    }
+
+    /**
+     * @param bool $estadoAutorizado
+     */
+    public function setEstadoAutorizado(bool $estadoAutorizado): void
+    {
+        $this->estadoAutorizado = $estadoAutorizado;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEstadoAprobado(): bool
+    {
+        return $this->estadoAprobado;
+    }
+
+    /**
+     * @param bool $estadoAprobado
+     */
+    public function setEstadoAprobado(bool $estadoAprobado): void
+    {
+        $this->estadoAprobado = $estadoAprobado;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEstadoAnulado(): bool
+    {
+        return $this->estadoAnulado;
+    }
+
+    /**
+     * @param bool $estadoAnulado
+     */
+    public function setEstadoAnulado(bool $estadoAnulado): void
+    {
+        $this->estadoAnulado = $estadoAnulado;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEstadoContabilizado(): bool
+    {
+        return $this->estadoContabilizado;
+    }
+
+    /**
+     * @param bool $estadoContabilizado
+     */
+    public function setEstadoContabilizado(bool $estadoContabilizado): void
+    {
+        $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEstadoImpreso(): bool
+    {
+        return $this->estadoImpreso;
+    }
+
+    /**
+     * @param bool $estadoImpreso
+     */
+    public function setEstadoImpreso(bool $estadoImpreso): void
+    {
+        $this->estadoImpreso = $estadoImpreso;
     }
 
     /**

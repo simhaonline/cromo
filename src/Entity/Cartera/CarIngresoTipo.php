@@ -44,11 +44,6 @@ class CarIngresoTipo
     private $codigoComprobanteFk = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngreso" ,mappedBy="ingresoTipoRel")
-     */
-    private $ingresosIngresoTipoRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoIngresoTipoPk()
@@ -81,23 +76,39 @@ class CarIngresoTipo
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getConsecutivo()
+    public function getConsecutivo(): int
     {
         return $this->consecutivo;
     }
 
     /**
-     * @param mixed $consecutivo
+     * @param int $consecutivo
      */
-    public function setConsecutivo($consecutivo): void
+    public function setConsecutivo(int $consecutivo): void
     {
         $this->consecutivo = $consecutivo;
     }
 
     /**
-     * @return mixed
+     * @return int
+     */
+    public function getOrden(): int
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param int $orden
+     */
+    public function setOrden(int $orden): void
+    {
+        $this->orden = $orden;
+    }
+
+    /**
+     * @return null
      */
     public function getCodigoComprobanteFk()
     {
@@ -105,45 +116,12 @@ class CarIngresoTipo
     }
 
     /**
-     * @param mixed $codigoComprobanteFk
+     * @param null $codigoComprobanteFk
      */
     public function setCodigoComprobanteFk($codigoComprobanteFk): void
     {
         $this->codigoComprobanteFk = $codigoComprobanteFk;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getIngresosIngresoTipoRel()
-    {
-        return $this->ingresosIngresoTipoRel;
-    }
-
-    /**
-     * @param mixed $ingresosIngresoTipoRel
-     */
-    public function setIngresosIngresoTipoRel($ingresosIngresoTipoRel): void
-    {
-        $this->ingresosIngresoTipoRel = $ingresosIngresoTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrden()
-    {
-        return $this->orden;
-    }
-
-    /**
-     * @param mixed $orden
-     */
-    public function setOrden($orden): void
-    {
-        $this->orden = $orden;
-    }
-    
 
 
 }

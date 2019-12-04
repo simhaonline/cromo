@@ -775,11 +775,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                         }
 
                         $diasAusentismo = 0;
-                        if ($arConfiguracion->getDescontarAusentismosDeLicencias()) {
-                            $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
-                        } else {
-                            $diasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
-                        }
+                        $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
 
 
                         // validacion para descontar todos los ausentimos durante la vigencia del contrato
@@ -913,12 +909,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                                 $salarioVacaciones = $arContrato->getVrSalario();
                             }
                         }
-
-                        if ($arConfiguracion->getDescontarAusentismosDeLicencias()) {
-                            $intDiasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
-                        } else {
-                            $intDiasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
-                        }
+                        $intDiasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
 
 
                         // validacion para descontar todos los ausentimos durante la vigencia del contrato

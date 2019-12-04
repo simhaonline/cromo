@@ -1652,6 +1652,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         /** @var $arCliente InvTercero */
                         $arCliente = $arFactura->getTerceroRel();
                         if($arResolucionFactura) {
+                            $baseIvaTotal = 0;
                             $arrFactura = [
                                 'dat_nitFacturador' => $arrConfiguracion['nit'],
                                 'dat_claveTecnica' => $arrConfiguracion['feToken'],
@@ -1696,17 +1697,23 @@ class InvMovimientoRepository extends ServiceEntityRepository
                             $arFacturaDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arFactura->getCodigoMovimientoPk()]);
                             foreach ($arFacturaDetalles as $arFacturaDetalle) {
                                 $cantidadItemes++;
+                                $baseIva = 0;
+                                if($arFacturaDetalle->getVrIva() > 0) {
+                                    $baseIva = $arFacturaDetalle->getVrSubtotal();
+                                }
                                 $arrItem[] = [
                                     "item_id" => $cantidadItemes,
                                     "item_subtotal" => number_format($arFacturaDetalle->getVrSubtotal(), 2, '.', ''),
+                                    "item_base_iva" => number_format($baseIva, 2, '.', ''),
                                     "item_iva" => number_format($arFacturaDetalle->getVrIva(), 2, '.', ''),
                                     "item_porcentaje_iva" => number_format($arFacturaDetalle->getPorcentajeIva(), 2, '.', '')
                                 ];
-
+                                $baseIvaTotal += $baseIva;
                             }
                             $arrFactura['doc_itemes'] = $arrItem;
                             $arrFactura['doc_cantidad_item'] = $cantidadItemes;
-                            $arrFactura['doc_numero'] = 5;
+                            $arrFactura['doc_base_iva'] = $baseIvaTotal;
+                            $arrFactura['doc_numero'] = 7;
 
                             $facturaElectronica = new FacturaElectronica($em);
                             //$procesoFacturaElectronica = $facturaElectronica->enviarDispapeles($arrFactura);

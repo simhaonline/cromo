@@ -2019,27 +2019,32 @@ class TteGuiaRepository extends ServiceEntityRepository
      * @return array
      * @throws \Doctrine\ORM\ORMException
      */
-    public function apiDesembarco($codigoGuia, $arOperacion)
+    public function apiDesembarco($codigoGuia, $arOperacion, $usuario)
     {
         $em = $this->getEntityManager();
         $arGuia = $em->getRepository(TteGuia::class)->find($codigoGuia);
         if ($arGuia) {
             if ($arGuia->getEstadoDespachado() == 1) {
                 if ($arGuia->getEstadoEntregado() == 0) {
-                    $arDesembarco = new TteDesembarco();
+
                     $arGuia->setFechaDespacho(null);
                     $arGuia->setFechaCumplido(null);
                     $arGuia->setFechaEntrega(null);
                     $arGuia->setFechaSoporte(null);
+                    $arGuia->setFechaDesembarco(new \DateTime('now'));
                     $arGuia->setEstadoDespachado(0);
                     $arGuia->setEstadoEmbarcado(0);
                     $arGuia->setEstadoEntregado(0);
                     $arGuia->setEstadoSoporte(0);
                     $arGuia->setOperacionCargoRel($arOperacion);
+                    $arGuia->setCodigoDespachoFk(null);
+                    $arDesembarco = new TteDesembarco();
                     $arDesembarco->setDespachoRel($arGuia->getDespachoRel());
                     $arDesembarco->setGuiaRel($arGuia);
+                    $arDesembarco->setOperacionOrigenRel($arGuia->getOperacionCargoRel());
+                    $arDesembarco->setOperacionDestinoRel($arOperacion);
                     $arDesembarco->setFecha(new \DateTime('now'));
-                    $arGuia->setCodigoDespachoFk(null);
+                    $arDesembarco->setUsuario($usuario);
                     $em->persist($arGuia);
                     $em->persist($arDesembarco);
                     $em->flush();

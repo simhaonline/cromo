@@ -206,8 +206,9 @@ class ApiGuiaController extends FOSRestController
     public function desembarco(Request $request)
     {
         $arOperacion = $this->getUser()->getOperacionRel();
+        $usuario = $this->getUser()->getUsername();
         $arrPost = json_decode($request->request->get("arrParametros"), true);
-        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDesembarco($arrPost['codigoGuia'], $arOperacion);
+        return $this->getDoctrine()->getManager()->getRepository(TteGuia::class)->apiDesembarco($arrPost['codigoGuia'], $arOperacion, $usuario);
     }
 
     /**

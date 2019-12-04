@@ -539,7 +539,7 @@ class FacturaElectronica
                 $xml->startElement('cac:TaxSubtotal');
                     $xml->startElement('cbc:TaxableAmount');
                         $xml->writeAttribute('currencyID', 'COP');
-                        $xml->text($arrFactura['doc_subtotal']);
+                        $xml->text($arrFactura['doc_base_iva']);
                     $xml->endElement();
                     $xml->startElement('cbc:TaxAmount');
                         $xml->writeAttribute('currencyID', 'COP');
@@ -561,7 +561,7 @@ class FacturaElectronica
                 $xml->endElement();
                 $xml->startElement('cbc:TaxExclusiveAmount');
                     $xml->writeAttribute('currencyID', 'COP');
-                    $xml->text($arrFactura['doc_subtotal']);
+                    $xml->text($arrFactura['doc_base_iva']);
                 $xml->endElement();
                 $xml->startElement('cbc:TaxInclusiveAmount');
                     $xml->writeAttribute('currencyID', 'COP');
@@ -588,7 +588,7 @@ class FacturaElectronica
                         $xml->startElement('cac:TaxSubtotal');
                             $xml->startElement('cbc:TaxableAmount');
                                 $xml->writeAttribute('currencyID', 'COP');
-                                $xml->text($item['item_subtotal']);
+                                $xml->text($item['item_base_iva']);
                             $xml->endElement();
                             $xml->startElement('cbc:TaxAmount');
                                 $xml->writeAttribute('currencyID', 'COP');

@@ -1704,7 +1704,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                             }
                             $arrFactura['doc_itemes'] = $arrItem;
                             $arrFactura['doc_cantidad_item'] = $cantidadItemes;
-                            $arrFactura['doc_numero'] = 2;
+                            $arrFactura['doc_numero'] = 4;
 
                             $facturaElectronica = new FacturaElectronica($em);
                             //$procesoFacturaElectronica = $facturaElectronica->enviarDispapeles($arrFactura);

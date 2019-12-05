@@ -265,7 +265,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                             $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1));
                             if ($arLiquidacion) {
                                 $ibcVacaciones = $arLiquidacion->getVrVacacion();
-                                $arAporteSoporte->setVrVacacion($ibcVacaciones);
+                                $arAporteSoporte->setVrVacaciones($ibcVacaciones);
                             }
                         }
                         if ($novedadIngreso == "X") {
@@ -388,7 +388,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1, 'estadoAnulado' => 0));
                         if ($arLiquidacion) {
                             $ibcVacacionesLiquidacion = $arLiquidacion->getVrVacacion();
-                            $arAporteSoporte->setVrVacacion($ibcVacacionesLiquidacion);
+                            $arAporteSoporte->setVrVacaciones($ibcVacacionesLiquidacion);
                             $arAporteSoporte->setTarifaCaja(4);
                         }
                     }
@@ -526,7 +526,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1, 'estadoAnulado' => 0));
                         if ($arLiquidacion) {
                             $ibcVacacionesLiquidacion = $arLiquidacion->getVrVacacion();
-                            $arAporteSoporte->setVrVacacion($ibcVacacionesLiquidacion);
+                            $arAporteSoporte->setVrVacaciones($ibcVacacionesLiquidacion);
                             $arAporteSoporte->setTarifaCaja(4);
                         }
                     }

@@ -352,4 +352,42 @@ class RhuContratoRepository extends ServiceEntityRepository
         //
         return $xsub;
     }
+
+    public function informeContratoFechaIngreso($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+
+
+        if ($filtros) {
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuContrato::class, 'c')
+            ->select("c.codigoContratoPk")
+            ->addSelect("c.fecha")
+            ->addSelect("c.fechaDesde")
+            ->addSelect("c.fechaHasta")
+            ->addSelect("ct.nombre as tipo")
+            ->addSelect("car.nombre as cargo")
+            ->addSelect("e.nombreCorto as nombreEmpleado")
+            ->addSelect("e.numeroIdentificacion as numeroIdentificacion")
+            ->addSelect("gp.nombre as centroCosto")
+            ->leftJoin("c.empleadoRel", "e")
+            ->leftJoin("c.contratoTipoRel", "ct")
+            ->leftJoin("c.cargoRel", "car")
+            ->leftJoin("c.centroCostoRel", "gp");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("c.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("c.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        $queryBuilder->addOrderBy('c.codigoContratoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

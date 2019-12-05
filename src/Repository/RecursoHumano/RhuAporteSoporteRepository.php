@@ -262,7 +262,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                         $arAporteSoporte->setRetiro($novedadRetiro);
                         if ($novedadRetiro == 'X') {
                             $arAporteSoporte->setFechaRetiro($arContrato->getFechaHasta());
-                            $arLiquidacion = $em->getRepository('BrasaRecursoHumanoBundle:RhuLiquidacion')->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1));
+                            $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1));
                             if ($arLiquidacion) {
                                 $ibcVacaciones = $arLiquidacion->getVrVacaciones();
                                 $arAporteSoporte->setVrVacaciones($ibcVacaciones);
@@ -523,7 +523,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                     $arAporteSoporte->setRetiro($novedadRetiro);
                     if ($novedadRetiro == 'X') {
                         $arAporteSoporte->setFechaRetiro($arContrato->getFechaHasta());
-                        $arLiquidacion = $em->getRepository('BrasaRecursoHumanoBundle:RhuLiquidacion')->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1, 'estadoAnulado' => 0));
+                        $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1, 'estadoAnulado' => 0));
                         if ($arLiquidacion) {
                             $ibcVacacionesLiquidacion = $arLiquidacion->getVrVacaciones();
                             $arAporteSoporte->setVrVacaciones($ibcVacacionesLiquidacion);

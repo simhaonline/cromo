@@ -69,7 +69,7 @@ class PagoMasivo extends \FPDF
     public function EncabezadoDetalles()
     {
         $this->SetXY(10, 63.90);
-        $header = array('COD', 'CONCEPTO', 'HORAS', 'DIAS', 'VR.HORA', '%', 'DEVENGADO', 'DEDUCCION');
+        $header = array('COD', 'CONCEPTO', 'HORAS', 'DIAS', '%', 'DEVENGADO', 'DEDUCCION');
         $this->SetFillColor(200, 200, 200);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -77,7 +77,7 @@ class PagoMasivo extends \FPDF
         $this->SetFont('', 'B', 7);
 
         //Creamos la cabecera de la tabla.
-        $w = array(15, 80, 12, 10, 25, 6, 21, 21);
+        $w = array(15, 105, 12, 10, 6, 21, 21);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1) {
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -178,10 +178,10 @@ class PagoMasivo extends \FPDF
             $pdf->SetXY(10, $intY + 12);
             $pdf->SetFont('Arial', 'B', 7);
             $pdf->SetFillColor(200, 200, 200);
-            $pdf->Cell(25, 4, "", 1, 0, 'L', 1);
+            $pdf->Cell(25, 4, "CENTRO COSTO", 1, 0, 'L', 1);
             $pdf->SetFont('Arial', '', 7);
             $pdf->SetFillColor(272, 272, 272);
-            $pdf->Cell(50, 4, '', 1, 0, 'L', 1);
+            $pdf->Cell(50, 4, $arPago->getContratoRel()->getCentroCosto, 1, 0, 'L', 1);
             $pdf->SetFont('Arial', 'B', 7);
             $pdf->SetFillColor(200, 200, 200);
             $pdf->Cell(30, 4, "HASTA:", 1, 0, 'L', 1);
@@ -218,10 +218,10 @@ class PagoMasivo extends \FPDF
             /** @var  $arPagoDetalle RhuPagoDetalle */
             foreach ($arPagoDetalles as $arPagoDetalle) {
                 $pdf->Cell(15, 4, $arPagoDetalle['codigoConceptoFk'], 1, 0, 'L');
-                $pdf->Cell(80, 4, utf8_decode($arPagoDetalle['nombre']), 1, 0, 'L');
+                $pdf->Cell(105, 4, utf8_decode($arPagoDetalle['nombre']), 1, 0, 'L');
                 $pdf->Cell(12, 4, $arPagoDetalle['horas'], 1, 0, 'R');
                 $pdf->Cell(10, 4, $arPagoDetalle['dias'], 1, 0, 'R');
-                $pdf->Cell(25, 4, number_format($arPagoDetalle['vrHora'], 0, '.', ','), 1, 0, 'R');
+//                $pdf->Cell(25, 4, number_format($arPagoDetalle['vrHora'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(6, 4, $arPagoDetalle['porcentaje'], 1, 0, 'R');
                 $pdf->Cell(21, 4, number_format($arPagoDetalle['vrDevengado'], 0, '.', ','), 1, 0, 'R');
                 $pdf->Cell(21, 4, number_format($arPagoDetalle['vrDeduccion'], 0, '.', ','), 1, 0, 'R');

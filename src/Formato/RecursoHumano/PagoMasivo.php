@@ -178,10 +178,10 @@ class PagoMasivo extends \FPDF
             $pdf->SetXY(10, $intY + 12);
             $pdf->SetFont('Arial', 'B', 7);
             $pdf->SetFillColor(200, 200, 200);
-            $pdf->Cell(25, 4, "CENTRO COSTO", 1, 0, 'L', 1);
+            $pdf->Cell(25, 4, "GRUPO", 1, 0, 'L', 1);
             $pdf->SetFont('Arial', '', 7);
             $pdf->SetFillColor(272, 272, 272);
-            $pdf->Cell(50, 4, $arPago->getContratoRel()->getCentroCosto, 1, 0, 'L', 1);
+            $pdf->Cell(50, 4, $arPago->getContratoRel()->getGrupoRel()->getNombre(), 1, 0, 'L', 1);
             $pdf->SetFont('Arial', 'B', 7);
             $pdf->SetFillColor(200, 200, 200);
             $pdf->Cell(30, 4, "HASTA:", 1, 0, 'L', 1);

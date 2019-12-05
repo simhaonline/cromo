@@ -230,16 +230,20 @@ class InvMovimiento
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenAsesor", inversedBy="movimientosAsesorRel")
      * @ORM\JoinColumn(name="codigo_asesor_fk", referencedColumnName="codigo_asesor_pk")
-
      */
     protected $asesorRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="InvFacturaTipo", inversedBy="movimientosFacturaTipoRel")
      * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
-
      */
     protected $facturaTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenResolucionFactura", inversedBy="movimientosResolucionFacturaRel")
+     * @ORM\JoinColumn(name="codigo_resolucion_factura_fk", referencedColumnName="codigo_resolucion_factura_pk")
+     */
+    protected $resolucionFacturaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="movimientoRel")
@@ -970,6 +974,22 @@ class InvMovimiento
     public function setProcesoFacturaElectronica($procesoFacturaElectronica): void
     {
         $this->procesoFacturaElectronica = $procesoFacturaElectronica;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResolucionFacturaRel()
+    {
+        return $this->resolucionFacturaRel;
+    }
+
+    /**
+     * @param mixed $resolucionFacturaRel
+     */
+    public function setResolucionFacturaRel($resolucionFacturaRel): void
+    {
+        $this->resolucionFacturaRel = $resolucionFacturaRel;
     }
 
 

@@ -63,7 +63,10 @@ class GenResolucionFactura
      */
     private $llaveTecnica;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimiento", mappedBy="resolucionFacturaRel")
+     */
+    protected $movimientosResolucionFacturaRel;
 
     /**
      * @return mixed
@@ -207,6 +210,22 @@ class GenResolucionFactura
     public function setLlaveTecnica($llaveTecnica): void
     {
         $this->llaveTecnica = $llaveTecnica;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosResolucionFacturaRel()
+    {
+        return $this->movimientosResolucionFacturaRel;
+    }
+
+    /**
+     * @param mixed $movimientosResolucionFacturaRel
+     */
+    public function setMovimientosResolucionFacturaRel($movimientosResolucionFacturaRel): void
+    {
+        $this->movimientosResolucionFacturaRel = $movimientosResolucionFacturaRel;
     }
 
 

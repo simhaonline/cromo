@@ -38,6 +38,11 @@ class GenDepartamento
     private $codigoDane;
 
     /**
+     * @ORM\Column(name="codigo_dane_mascara", type="string", length=5)
+     */
+    private $codigoDaneMascara;
+
+    /**
      * @ORM\OneToMany(targetEntity="GenCiudad", mappedBy="departamentoRel")
      */
     protected $ciudadesRel;
@@ -142,6 +147,22 @@ class GenDepartamento
     public function setPaisRel($paisRel): void
     {
         $this->paisRel = $paisRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDaneMascara()
+    {
+        return $this->codigoDaneMascara;
+    }
+
+    /**
+     * @param mixed $codigoDaneMascara
+     */
+    public function setCodigoDaneMascara($codigoDaneMascara): void
+    {
+        $this->codigoDaneMascara = $codigoDaneMascara;
     }
 
 

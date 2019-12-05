@@ -377,13 +377,13 @@ class FacturaElectronica
                     $xml->endElement();
                     $xml->startElement('cac:PhysicalLocation');
                         $xml->startElement('cac:Address');
-                            $xml->writeElement('cbc:ID', '05380');
-                            $xml->writeElement('cbc:CityName', 'LA ESTRELLA');
-                            $xml->writeElement('cbc:PostalZone', '055460');
-                            $xml->writeElement('cbc:CountrySubentity', 'Antioquia');
-                            $xml->writeElement('cbc:CountrySubentityCode', '05');
+                            $xml->writeElement('cbc:ID', $arrFactura['em_codigoCiudad']);
+                            $xml->writeElement('cbc:CityName', $arrFactura['em_nombreCiudad']);
+                            $xml->writeElement('cbc:PostalZone', $arrFactura['em_codigoPostal']);
+                            $xml->writeElement('cbc:CountrySubentity', $arrFactura['em_nombreDepartamento']);
+                            $xml->writeElement('cbc:CountrySubentityCode', $arrFactura['em_codigoDepartamento']);
                             $xml->startElement('cac:AddressLine');
-                                $xml->writeElement('cbc:Line', 'Cra. 50 #97a Sur-180 a 97a Sur-394');
+                                $xml->writeElement('cbc:Line', $arrFactura['em_direccion']);
                             $xml->endElement();
                             $xml->startElement('cac:Country');
                                 $xml->writeElement('cbc:IdentificationCode', 'CO');
@@ -408,13 +408,13 @@ class FacturaElectronica
                         $xml->text('O-99');
                     $xml->endElement();
                     $xml->startElement('cac:RegistrationAddress');
-                        $xml->writeElement('cbc:ID', '05380');
-                        $xml->writeElement('cbc:CityName', 'LA ESTRELLA');
-                        $xml->writeElement('cbc:PostalZone', '055468');
-                        $xml->writeElement('cbc:CountrySubentity', 'Antioquia');
-                        $xml->writeElement('cbc:CountrySubentityCode', '05');
+                        $xml->writeElement('cbc:ID', $arrFactura['em_codigoCiudad']);
+                        $xml->writeElement('cbc:CityName', $arrFactura['em_nombreCiudad']);
+                        $xml->writeElement('cbc:PostalZone', $arrFactura['em_codigoPostal']);
+                        $xml->writeElement('cbc:CountrySubentity', $arrFactura['em_nombreDepartamento']);
+                        $xml->writeElement('cbc:CountrySubentityCode', $arrFactura['em_codigoDepartamento']);
                         $xml->startElement('cac:AddressLine');
-                            $xml->writeElement('cbc:Line', 'Cra. 50 #97a Sur-180 a 97a Sur-394');
+                            $xml->writeElement('cbc:Line', $arrFactura['em_direccion']);
                         $xml->endElement();
                         $xml->startElement('cac:Country');
                             $xml->writeElement('cbc:IdentificationCode', 'CO');
@@ -444,7 +444,7 @@ class FacturaElectronica
                 $xml->endElement();
             $xml->endElement();
             $xml->startElement('cac:Contact');
-                $xml->writeElement('cbc:ElectronicMail', 'investigacion@semantica.com.co');
+                $xml->writeElement('cbc:ElectronicMail', $arrFactura['em_correo']);
             $xml->endElement();
             $xml->endElement();
             $xml->endElement();
@@ -456,13 +456,13 @@ class FacturaElectronica
                     $xml->endElement();
                     $xml->startElement('cac:PhysicalLocation');
                         $xml->startElement('cac:Address');
-                            $xml->writeElement('cbc:ID', '66001');
-                            $xml->writeElement('cbc:CityName', 'PEREIRA');
+                            $xml->writeElement('cbc:ID', $arrFactura['ad_codigoCiudad']);
+                            $xml->writeElement('cbc:CityName', $arrFactura['ad_nombreCiudad']);
                             $xml->writeElement('cbc:PostalZone', $arrFactura['ad_codigoPostal']);
-                            $xml->writeElement('cbc:CountrySubentity', 'Risaralda');
-                            $xml->writeElement('cbc:CountrySubentityCode', '66');
+                            $xml->writeElement('cbc:CountrySubentity', $arrFactura['ad_nombreDepartamento']);
+                            $xml->writeElement('cbc:CountrySubentityCode', $arrFactura['ad_codigoDepartamento']);
                             $xml->startElement('cac:AddressLine');
-                                $xml->writeElement('cbc:Line', 'CR 9 A N0 99 - 07 OF 802');
+                                $xml->writeElement('cbc:Line', $arrFactura['ad_direccion']);
                             $xml->endElement();
                             $xml->startElement('cac:Country');
                                 $xml->writeElement('cbc:IdentificationCode', 'CO');
@@ -480,20 +480,20 @@ class FacturaElectronica
                             $xml->writeAttribute('schemeName', '31');
                             $xml->writeAttribute('schemeAgencyID', '195');
                             $xml->writeAttribute('schemeAgencyName', 'CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)');
-                            $xml->text('43990379');
+                            $xml->text($arrFactura['ad_numeroIdentificacion']);
                         $xml->endElement();
                         $xml->startElement('cbc:TaxLevelCode');
                             $xml->writeAttribute('listName', '05');
                             $xml->text('O-99');
                         $xml->endElement();
                         $xml->startElement('cac:RegistrationAddress');
-                            $xml->writeElement('cbc:ID', '66001');
-                            $xml->writeElement('cbc:CityName', 'PEREIRA');
+                            $xml->writeElement('cbc:ID', $arrFactura['ad_codigoCiudad']);
+                            $xml->writeElement('cbc:CityName', $arrFactura['ad_nombreCiudad']);
                             $xml->writeElement('cbc:PostalZone', $arrFactura['ad_codigoPostal']);
-                            $xml->writeElement('cbc:CountrySubentity', 'Risaralda');
-                            $xml->writeElement('cbc:CountrySubentityCode', '66');
+                            $xml->writeElement('cbc:CountrySubentity', $arrFactura['ad_nombreDepartamento']);
+                            $xml->writeElement('cbc:CountrySubentityCode', $arrFactura['ad_codigoDepartamento']);
                             $xml->startElement('cac:AddressLine');
-                                $xml->writeElement('cbc:Line', 'CR 9 A N0 99 - 07 OF 802');
+                                $xml->writeElement('cbc:Line', $arrFactura['ad_direccion']);
                             $xml->endElement();
                             $xml->startElement('cac:Country');
                                 $xml->writeElement('cbc:IdentificationCode', 'CO');
@@ -515,14 +515,14 @@ class FacturaElectronica
                         $xml->writeAttribute('schemeName', '31');
                         $xml->writeAttribute('schemeAgencyID', '195');
                         $xml->writeAttribute('schemeAgencyName', 'CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)');
-                        $xml->text('43990379');
+                        $xml->text($arrFactura['ad_numeroIdentificacion']);
                     $xml->endElement();
                     $xml->startElement('cac:CorporateRegistrationScheme');
                         $xml->writeElement('cbc:Name', '1485596');
                     $xml->endElement();
                 $xml->endElement();
                 $xml->startElement('cac:Contact');
-                    $xml->writeElement('cbc:ElectronicMail', 'leandro.sys89@gmail.com');
+                    $xml->writeElement('cbc:ElectronicMail', $arrFactura['ad_correo']);
                 $xml->endElement();
             $xml->endElement();
             $xml->endElement();
@@ -604,77 +604,26 @@ class FacturaElectronica
                         $xml->endElement();
                     $xml->endElement();
                     $xml->startElement('cac:Item');
-                        $xml->writeElement('cbc:Description', 'Transporte');
+                        $xml->writeElement('cbc:Description', $item['item_nombre']);
                         $xml->startElement('cac:StandardItemIdentification');
                             $xml->startElement('cbc:ID');
                                 $xml->writeAttribute('schemeID', '999');
-                                $xml->text('03222314-7');
+                                $xml->text($item['item_codigo']);
                             $xml->endElement();
                         $xml->endElement();
                     $xml->endElement();
                     $xml->startElement('cac:Price');
                         $xml->startElement('cbc:PriceAmount');
                             $xml->writeAttribute('currencyID', 'COP');
-                            $xml->text($item['item_subtotal']);
+                            $xml->text($item['item_precio']);
                         $xml->endElement();
                         $xml->startElement('cbc:BaseQuantity');
                             $xml->writeAttribute('unitCode', 'EA');
-                            $xml->text('1.00');
+                            $xml->text($item['item_cantidad']);
                         $xml->endElement();
                     $xml->endElement();
                 $xml->endElement();
             }
-//            $xml->startElement('cac:InvoiceLine');
-//                $xml->writeElement('cbc:ID', '1');
-//                $xml->writeElement('cbc:InvoicedQuantity', '1.00');
-//                $xml->startElement('cbc:LineExtensionAmount');
-//                    $xml->writeAttribute('currencyID', 'COP');
-//                    $xml->text('60000.00');
-//                $xml->endElement();
-//                $xml->startElement('cac:TaxTotal');
-//                    $xml->startElement('cbc:TaxAmount');
-//                        $xml->writeAttribute('currencyID','COP');
-//                        $xml->text('0.00');
-//                    $xml->endElement();
-//                    $xml->startElement('cac:TaxSubtotal');
-//                        $xml->startElement('cbc:TaxableAmount');
-//                            $xml->writeAttribute('currencyID', 'COP');
-//                            $xml->text('0.00');
-//                        $xml->endElement();
-//                        $xml->startElement('cbc:TaxAmount');
-//                            $xml->writeAttribute('currencyID', 'COP');
-//                            $xml->text('0.00');
-//                        $xml->endElement();
-//                        $xml->startElement('cac:TaxCategory');
-//                            $xml->writeElement('cbc:Percent', '0.00');
-//                            $xml->startElement('cac:TaxScheme');
-//                                $xml->writeElement('cbc:ID', '01');
-//                                $xml->writeElement('cbc:Name', 'IVA');
-//                            $xml->endElement();
-//                        $xml->endElement();
-//                    $xml->endElement();
-//                $xml->endElement();
-//                $xml->startElement('cac:Item');
-//                    $xml->writeElement('cbc:Description', 'Transporte');
-//                    $xml->startElement('cac:StandardItemIdentification');
-//                        $xml->startElement('cbc:ID');
-//                            $xml->writeAttribute('schemeID', '999');
-//                            $xml->text('03222314-7');
-//                        $xml->endElement();
-//                    $xml->endElement();
-//                $xml->endElement();
-//                $xml->startElement('cac:Price');
-//                    $xml->startElement('cbc:PriceAmount');
-//                        $xml->writeAttribute('currencyID', 'COP');
-//                        $xml->text('60000.00');
-//                    $xml->endElement();
-//                    $xml->startElement('cbc:BaseQuantity');
-//                        $xml->writeAttribute('unitCode', 'EA');
-//                        $xml->text('1.00');
-//                    $xml->endElement();
-//                $xml->endElement();
-//            $xml->endElement();
-
             $xml->startElement('DATA');
                 $xml->writeElement('UBL21', 'true');
                 $xml->startElement('Partnership');
@@ -686,5 +635,19 @@ class FacturaElectronica
         $xml->endElement();
         $content = $xml->outputMemory();
         return $content;
+    }
+
+    public function validarDatos($arrFactura) {
+        $arrRespuesta = ['estado' => 'error', 'mensaje' => null];
+        if($arrFactura['ad_digitoVerificacion']) {
+            if($arrFactura['ad_tipoPersona']) {
+                $arrRespuesta = ['estado' => 'ok', 'mensaje' => null];
+            } else {
+                $arrRespuesta = ['estado' => 'error', 'mensaje' => 'El adquiriente no tiene tipo de persona'];
+            }
+        } else {
+            $arrRespuesta = ['estado' => 'error', 'mensaje' => 'El adquiriente no tiene digito de verificacion'];
+        }
+        return $arrRespuesta;
     }
 }

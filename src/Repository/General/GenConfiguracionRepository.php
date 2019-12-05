@@ -100,9 +100,17 @@ class GenConfiguracionRepository extends ServiceEntityRepository
             ->select('c.nit')
             ->addSelect('c.digitoVerificacion')
             ->addSelect('c.nombre')
+            ->addSelect('c.correo')
+            ->addSelect('c.direccion')
             ->addSelect('c.feToken')
             ->addSelect('c.codigoTipoPersonaFk')
             ->addSelect('c.matriculaMercantil')
+            ->addSelect('ciu.nombre as ciudadNombre')
+            ->addSelect('ciu.codigoDaneCompleto as ciudadCodigoDaneCompleto')
+            ->addSelect('dep.nombre as departamentoNombre')
+            ->addSelect('dep.codigoDaneMascara as departamentoCodigoDaneMascara')
+            ->leftJoin('c.ciudadRel', 'ciu')
+            ->leftJoin('ciu.departamentoRel', 'dep')
             ->where('c.codigoConfiguracionPk = 1');
 
         return $queryBuilder->getQuery()->getSingleResult();

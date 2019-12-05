@@ -35,7 +35,6 @@ class CuentaPagarType extends AbstractType
                 'class' => TesCuentaPagarTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('cp')
-                        ->where('cp.saldoInicial = 1')
                         ->orderBy('cp.codigoCuentaPagarTipoPk', 'ASC');
                 },
                 'required' => false,

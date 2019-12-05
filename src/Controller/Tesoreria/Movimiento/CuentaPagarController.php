@@ -137,6 +137,7 @@ class CuentaPagarController extends AbstractController
                         $arCuentaPagar->setVrSaldoOperado($arCuentaPagar->getVrTotal() * $arCuentaPagar->getOperacion());
                         $arCuentaPagar->setEstadoAutorizado(1);
                         $arCuentaPagar->setEstadoAprobado(1);
+                        $arCuentaPagar->setSaldoInicial(1);
                         $arCuentaPagar->setVrSaldo($arCuentaPagar->getVrTotal());
                         $em->persist($arCuentaPagar);
                         $em->flush();

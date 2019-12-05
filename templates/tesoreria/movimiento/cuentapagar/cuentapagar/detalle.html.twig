@@ -18,17 +18,17 @@
         </tr>
         <tr>
             <td class="titulo">TIPO:</td>
-            <td class="td-in-well">{{ arCuentaPagar.cuentaPagarTipoRel.nombre }}</td>
+            <td class="td-in-well">{{ arCuentaPagar.cuentaPagarTipoRel.nombre | default ('') }}</td>
             <td class="titulo">BANCO:</td>
-            <td class="td-in-well">{{ arCuentaPagar.bancoRel.nombre }}</td>
+            <td class="td-in-well">{{ arCuentaPagar.bancoRel.nombre | default ('') }}</td>
             <td class="titulo">CUENTA:</td>
-            <td class="td-in-well">{{ arCuentaPagar.cuenta }}</td>
+            <td class="td-in-well">{{ arCuentaPagar.cuenta | default ('') }}</td>
         </tr>
         <tr>
             <td class="titulo">NÚMERO DOCUMENTO:</td>
-            <td class="td-in-well">{{ arCuentaPagar.numeroDocumento }}</td>
+            <td class="td-in-well">{{ arCuentaPagar.numeroDocumento | default ('') }}</td>
             <td class="titulo">MODULO:</td>
-            <td class="td-in-well">{{ arCuentaPagar.modulo }}</td>
+            <td class="td-in-well">{{ arCuentaPagar.modulo | default ('') }}</td>
             <td class="titulo"></td>
             <td></td>
         </tr>
@@ -38,7 +38,7 @@
             <td class="titulo">FECHA <VENCE></VENCE>:</td>
             <td class="td-in-well">{{ arCuentaPagar.fechaVence | date('Y-m-d') }}</td>
             <td class="titulo">PLAZO:</td>
-            <td class="td-in-well">{{ arCuentaPagar.plazo }}</td>
+            <td class="td-in-well">{{ arCuentaPagar.plazo | default ('') }}</td>
         </tr>
         <tr>
             <td class="titulo">VALOR SUBTOTAL:</td>

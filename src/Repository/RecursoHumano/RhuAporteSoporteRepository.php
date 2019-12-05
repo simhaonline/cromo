@@ -264,8 +264,8 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                             $arAporteSoporte->setFechaRetiro($arContrato->getFechaHasta());
                             $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1));
                             if ($arLiquidacion) {
-                                $ibcVacaciones = $arLiquidacion->getVrVacaciones();
-                                $arAporteSoporte->setVrVacaciones($ibcVacaciones);
+                                $ibcVacaciones = $arLiquidacion->getVrVacacion();
+                                $arAporteSoporte->setVrVacacion($ibcVacaciones);
                             }
                         }
                         if ($novedadIngreso == "X") {
@@ -387,8 +387,8 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                         $arAporteSoporte->setFechaRetiro($arContrato->getFechaHasta());
                         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1, 'estadoAnulado' => 0));
                         if ($arLiquidacion) {
-                            $ibcVacacionesLiquidacion = $arLiquidacion->getVrVacaciones();
-                            $arAporteSoporte->setVrVacaciones($ibcVacacionesLiquidacion);
+                            $ibcVacacionesLiquidacion = $arLiquidacion->getVrVacacion();
+                            $arAporteSoporte->setVrVacacion($ibcVacacionesLiquidacion);
                             $arAporteSoporte->setTarifaCaja(4);
                         }
                     }
@@ -525,8 +525,8 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                         $arAporteSoporte->setFechaRetiro($arContrato->getFechaHasta());
                         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1, 'estadoAnulado' => 0));
                         if ($arLiquidacion) {
-                            $ibcVacacionesLiquidacion = $arLiquidacion->getVrVacaciones();
-                            $arAporteSoporte->setVrVacaciones($ibcVacacionesLiquidacion);
+                            $ibcVacacionesLiquidacion = $arLiquidacion->getVrVacacion();
+                            $arAporteSoporte->setVrVacacion($ibcVacacionesLiquidacion);
                             $arAporteSoporte->setTarifaCaja(4);
                         }
                     }

@@ -58,6 +58,15 @@
                 style="text-align: right;">{{ arMovimiento.vrTotalNeto |number_format(2, '.', ',') }}</td>
         </tr>
         <tr>
+            <td class="titulo">TIPO:</td>
+            <td class="td-in-well">{{ arMovimiento.movimientoTipoRel.nombre }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"
+                style="text-align: right;"></td>
+        </tr>
+        <tr>
             <td class="titulo">COMENTARIO:</td>
             <td class="td-in-well" colspan="6">{{ arMovimiento.comentarios }}</td>
         </tr>

@@ -224,7 +224,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                     $error = true;
                                     break;
                                 }
-                                if($arCuenta->getExigeDocumentoReferencia() && $arMovimientoDetalle->getCodigoCuentaCobrarFk() == null) {
+                                if($arCuenta->getExigeDocumentoReferencia() && $arMovimientoDetalle->getCodigoCuentaPagarFk() == null) {
                                     Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " exige documento referencia y no lo tiene");
                                     $error = true;
                                     break;

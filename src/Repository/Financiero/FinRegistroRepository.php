@@ -239,7 +239,7 @@ class FinRegistroRepository extends ServiceEntityRepository
         $dql = "UPDATE App\Entity\Financiero\FinRegistro r set r.estadoIntercambio = 1 
                       WHERE r.estadoIntercambio = 0";
         if ($session->get('filtroFinComprobante') != '') {
-            $dql .= " AND r.codigoComprobanteFk = {$session->get('filtroFinComprobante')}";
+            $dql .= " AND r.codigoComprobanteFk = '{$session->get('filtroFinComprobante')}'";
         }
         if ($session->get('filtroFinRegistroFiltroFecha') == true) {
             if ($session->get('filtroFinRegistroFechaDesde') != null) {

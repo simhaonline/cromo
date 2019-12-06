@@ -288,6 +288,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                 $this->generarCuentaPagar($arMovimiento);
             }
             $em->flush();
+            $em->getRepository(TesMovimiento::class)->contabilizar(['codigoMovimientoPk' => $arMovimiento->getCodigoMovimientoPk()]);
         }
     }
 

@@ -287,6 +287,7 @@ class CarMovimientoRepository extends ServiceEntityRepository
             $arMovimiento->setEstadoAprobado(1);
             $this->getEntityManager()->persist($arMovimiento);
             $this->getEntityManager()->flush();
+            $em->getRepository(CarMovimiento::class)->contabilizar(['codigoMovimientoPk' => $arMovimiento->getCodigoMovimientoPk()]);
         }
     }
 

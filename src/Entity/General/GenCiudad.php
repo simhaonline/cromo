@@ -48,6 +48,11 @@ class GenCiudad
     private $codigoDaneCompleto;
 
     /**
+     * @ORM\Column(name="codigo_dane_division", type="string", length=15, nullable=true)
+     */
+    private $codigoDaneDivision;
+
+    /**
      * @ORM\ManyToOne(targetEntity="GenDepartamento", inversedBy="ciudadesRel")
      * @ORM\JoinColumn(name="codigo_departamento_fk", referencedColumnName="codigo_departamento_pk")
      */
@@ -725,6 +730,22 @@ class GenCiudad
     public function setCodigoDaneCompleto($codigoDaneCompleto): void
     {
         $this->codigoDaneCompleto = $codigoDaneCompleto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDaneDivision()
+    {
+        return $this->codigoDaneDivision;
+    }
+
+    /**
+     * @param mixed $codigoDaneDivision
+     */
+    public function setCodigoDaneDivision($codigoDaneDivision): void
+    {
+        $this->codigoDaneDivision = $codigoDaneDivision;
     }
 
 

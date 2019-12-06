@@ -607,11 +607,11 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                 $arAporteSoporte->setRetiro($novedadRetiro);
                 if ($novedadRetiro == 'X') {
                     $arAporteSoporte->setFechaRetiro($arAporteContrato['fechaHasta']);
-                    /*$arLiquidacion = $em->getRepository('BrasaRecursoHumanoBundle:RhuLiquidacion')->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1, 'estadoAnulado' => 0));
+                    $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAutorizado' => 1, 'estadoAnulado' => 0));
                     if ($arLiquidacion) {
-                        $ibcVacacionesLiquidacion = $arLiquidacion->getVrVacaciones();
+                        $ibcVacacionesLiquidacion = $arLiquidacion->getVrVacacion();
                         $arAporteSoporte->setVrVacaciones($ibcVacacionesLiquidacion);
-                    }*/
+                    }
                 }
                 if ($novedadIngreso == "X") {
                     $arAporteSoporte->setFechaIngreso($arAporteContrato['fechaDesde']);

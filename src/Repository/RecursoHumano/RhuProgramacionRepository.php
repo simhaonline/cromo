@@ -243,9 +243,9 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $ibpPrimas += $ibpPrimasInicial;
                 $salarioPromedioPrimas = 0;
                 if ($arContrato->getCodigoSalarioTipoFk() == 'VAR') {
-                    /*
+
                     if ($intDiasSalarioPromedio > 0) {
-                        if ($arContrato->getAuxilioTransporte() && $arProgramacion->getAplicarTransporte()) {
+                        if ($arContrato->getAuxilioTransporte()) {
                             $salarioMinimoVariable = $salarioMinimo + $auxilioTransporte;
                         } else {
                             $salarioMinimoVariable = $salarioMinimo;
@@ -261,25 +261,25 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                                 $salarioPromedioPrimas = ($ibpPrimas / $intDiasSalarioPromedio) * 30;
                             }
                         }
-                        //Configuracion especifica para grtemporales
-                        if ($arConfiguracion->getAuxilioTransporteNoPrestacional()) {
-                            if ($arConfiguracion->getLiquidarAuxilioTransportePrima()) {
-                                if ($arContrato->getAuxilioTransporte() == 1) {
-                                    $salarioPromedioPrimas += $auxilioTransporte;
-                                }
-                            }
-                        }
+//                        //Configuracion especifica para grtemporales
+//                        if ($arConfiguracion->getAuxilioTransporteNoPrestacional()) {
+//                            if ($arConfiguracion->getLiquidarAuxilioTransportePrima()) {
+//                                if ($arContrato->getAuxilioTransporte() == 1) {
+//                                    $salarioPromedioPrimas += $auxilioTransporte;
+//                                }
+//                            }
+//                        }
                         if ($salarioPromedioPrimas < $salarioMinimoVariable) {
                             $salarioPromedioPrimas = $salarioMinimoVariable;
                         }
                     } else {
-                        if ($arContrato->getAuxilioTransporte() == 1 && $arProgramacion->getAplicarTransporte()) {
+                        if ($arContrato->getAuxilioTransporte() == 1) {
                             $salarioPromedioPrimas = $douSalario + $auxilioTransporte;
                         } else {
                             $salarioPromedioPrimas = $douSalario;
                         }
                     }
-                    */
+
                 } else {
                     //Comisiones
                     $ibpConceptos = $em->getRepository(RhuPagoDetalle::class)->ibpConceptos($dateFechaDesde->format('Y-m-d'), $dateFechaHastaPago->format('Y-m-d'), $arContrato->getCodigoContratoPk());

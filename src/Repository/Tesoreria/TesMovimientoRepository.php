@@ -330,6 +330,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesMovimiento::class, 'm')
             ->select('m.codigoMovimientoPk')
             ->addSelect('m.numero')
+            ->addSelect('m.numeroDocumento')
             ->addSelect('m.fecha')
             ->addSelect('m.vrTotalNeto')
             ->addSelect('m.estadoAprobado')
@@ -440,6 +441,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
 
                                 //Cuenta por pagar
                                 if ($arMovimiento['codigoMovimientoClaseFk'] == 'CP') {
+
                                     $cuenta = $arMovimiento['codigoCuentaFk'];
                                     if ($cuenta) {
                                         $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
@@ -452,6 +454,9 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                         $arRegistro->setCuentaRel($arCuenta);
                                         $arRegistro->setComprobanteRel($arComprobante);
                                         $arRegistro->setNumero($arMovimiento['numero']);
+                                        if($arCuenta->getExigeDocumentoReferencia()) {
+                                            $arRegistro->setNumeroReferencia($arMovimiento['numeroDocumento']);
+                                        }
                                         $arRegistro->setFecha($fecha);
                                         $arRegistro->setVrCredito($arMovimiento['vrTotalNeto']);
                                         $arRegistro->setNaturaleza('C');

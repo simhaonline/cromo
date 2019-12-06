@@ -1878,8 +1878,8 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($arGuia) {
             if ($arGuia->getCortesia() == 0 && $arGuia->getFactura() == 0 && $arGuia->getEstadoAnulado() == 0) {
                 if ($arGuia->getCodigoFacturaFk() == null) {
-                    $arGuia->setVrFlete(0);
-                    $arGuia->setVrManejo(0);
+                    //$arGuia->setVrFlete(0);
+                    //$arGuia->setVrManejo(0);
                     $arGuia->setCortesia(1);
                     $em->persist($arGuia);
                     $em->flush();
@@ -3198,8 +3198,8 @@ class TteGuiaRepository extends ServiceEntityRepository
                 $arGuia = new TteGuia();
                 $numeroFactura = null;
                 if ($arGuiaTipo->getCortesia()) {
-                    $flete = 0;
-                    $manejo = 0;
+                    //$flete = 0;
+                    //$manejo = 0;
                     $arGuia->setCortesia(1);
                 }
                 if ($arGuiaTipo->getFactura()) {

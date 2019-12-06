@@ -495,7 +495,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                     // fin validacion
                     $diasLicencia += $diasLicenciaIndividualReportar;
                     $arAporteSoporte->setLicencia(1);
-                    $arAporteSoporte->setTarifaPension(16);
+                    $arAporteSoporte->setTarifaPension(12);
 
                     if ($arLicencia->getLicenciaTipoRel()->getRemunerada()) {
                         $arAporteSoporte->setLicenciaRemunerada(1);

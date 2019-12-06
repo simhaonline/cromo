@@ -76,7 +76,7 @@ class AporteController extends AbstractController
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $this->get("UtilidadesModelo")->eliminar(RhuAporte::class, $arrSeleccionados);
+                $em->getRepository(RhuAporte::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
             }
             if ($form->get('btnContabilizar')->isClicked()) {

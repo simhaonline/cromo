@@ -519,6 +519,7 @@ class TurSoporteRepository extends ServiceEntityRepository
         foreach ($arContratos as $arContrato) {
             $arSoporteContrato = $em->getRepository(TurSoporteContrato::class)->findOneBy(array('codigoSoporteFk' => $arSoporte->getCodigoSoportePk(), 'codigoContratoFk' => $arContrato['codigoContratoPk']));
             if (!$arSoporteContrato) {
+
                 $arrInconsistencias[] = [
                     'codigoReferencia' => $arContrato['codigoEmpleadoFk'],
                     'referencia' => $arContrato['numeroIdentificacion'],

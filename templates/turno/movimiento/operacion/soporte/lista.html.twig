@@ -74,8 +74,10 @@
                 <td>{{ arSoporte.estadoAnulado ? "SI":"NO" }}</td>
                 <td>{{ arSoporte.cargadoNomina ? "SI":"NO" }}</td>
                 <td class="text-center">
+                    {% if arSoporte.estadoAutorizado == 0 %}
                     <a href="{{ path('turno_movimiento_operacion_soporte_nuevo',{'id': arSoporte.codigoSoportePk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    {% endif %}
                 </td>
                 <td class="text-center">
                     <a

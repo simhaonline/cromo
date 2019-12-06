@@ -168,12 +168,15 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
         $queryBuilder
             ->select('ed.codigoMovimientoDetallePk')
             ->addSelect('ed.vrPago')
+            ->addSelect('ed.vrBase')
             ->addSelect('cp.numeroDocumento')
             ->addSelect('ed.codigoCuentaFk')
             ->addSelect('ed.codigoTerceroFk')
+            ->addSelect('ed.codigoCentroCostoFk')
             ->addSelect('ed.naturaleza')
             ->addSelect('ed.detalle')
             ->addSelect('ed.codigoMovimientoFk')
+            ->addSelect('ed.numero')
             ->leftJoin('ed.cuentaPagarRel', 'cp')
             ->where('ed.codigoMovimientoFk = ' . $codigoMovimiento);
         $queryBuilder->orderBy('ed.codigoMovimientoDetallePk', 'ASC');

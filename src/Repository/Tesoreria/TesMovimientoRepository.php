@@ -3,6 +3,7 @@
 namespace App\Repository\Tesoreria;
 
 
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
@@ -380,7 +381,12 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arMovimiento['numero']);
-                                            $arRegistro->setNumeroReferencia($arMovimientoDetalle['numeroDocumento']);
+                                            if($arMovimiento['codigoMovimientoClaseFk'] == 'CP') {
+                                                $arRegistro->setNumeroReferencia($arMovimientoDetalle['numero']);
+                                            } else {
+                                                $arRegistro->setNumeroReferencia($arMovimientoDetalle['numeroDocumento']);
+                                            }
+
                                             $arRegistro->setFecha($fecha);
                                             $arRegistro->setFechaVence($fecha);
                                             if ($arMovimientoDetalle['naturaleza'] == 'D') {
@@ -388,10 +394,14 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                             } else {
                                                 $arRegistro->setVrCredito($arMovimientoDetalle['vrPago']);
                                             }
+                                            $arRegistro->setVrBase($arMovimientoDetalle['vrBase']);
                                             $arRegistro->setNaturaleza($arMovimientoDetalle['naturaleza']);
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('TesMovimiento');
                                             $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                            if($arMovimientoDetalle['codigoCentroCostoFk']) {
+                                                $arRegistro->setCentroCostoRel($em->getReference(FinCentroCosto::class, $arMovimientoDetalle['codigoCentroCostoFk']));
+                                            }
                                             $em->persist($arRegistro);
                                         } else {
                                             $error = "La cuenta " . $cuenta . " no existe movimiento " . $arMovimiento['numero'];

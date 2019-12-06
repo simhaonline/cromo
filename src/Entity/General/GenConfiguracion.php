@@ -128,7 +128,7 @@ class GenConfiguracion
     private $codigoEmpresa = 0;
 
     /**
-     * @ORM\Column(name="correo", type="string", length=50, nullable=true)
+     * @ORM\Column(name="correo", type="string", length=200, nullable=true)
      */
     private $correo;
 

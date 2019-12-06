@@ -98,14 +98,12 @@ class EmpleadoProgramarController extends Controller
                 if(is_array($arrSeleccionados)) {
                     foreach ($arrSeleccionados as $codigo) {
                         $fechaActual = new \DateTime('now');
-                        $mesActual =$fechaActual->format('m');
-                        $anioActual =$fechaActual->format('Y');
                         $arContrato = $em->getRepository(RhuContrato::class)->find($codigo);
                         $arTurProgramacion = new TurProgramacion();
                         $arTurProgramacion->setPedidoRel($arPedidoDetalle->getPedidoRel());
                         $arTurProgramacion->setPedidoDetalleRel($arPedidoDetalle);
-                        $arTurProgramacion->setAnio($anioActual);
-                        $arTurProgramacion->setMes($mesActual);
+                        $arTurProgramacion->setAnio($arPedidoDetalle->getAnio());
+                        $arTurProgramacion->setMes($arPedidoDetalle->getMes());
                         $arTurProgramacion->setContratoRel($arContrato);
                         $arTurProgramacion->setEmpleadoRel($arContrato->getEmpleadoRel());
                         $arTurProgramacion->setPuestoRel($arPedidoDetalle->getPuestoRel());

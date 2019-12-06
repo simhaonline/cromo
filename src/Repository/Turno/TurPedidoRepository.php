@@ -466,7 +466,7 @@ class TurPedidoRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("p.estadoAnulado  = '{$session->get('filtroTurPedidoProgramacionEstadoAnulado')}'");
         }
 
-
+        $queryBuilder->addOrderBy('p.codigoPedidoPk', 'DESC');
         return $queryBuilder;
     }
 

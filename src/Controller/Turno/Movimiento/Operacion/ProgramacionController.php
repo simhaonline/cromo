@@ -58,6 +58,12 @@ class ProgramacionController extends ControllerListenerGeneral
         $session = new Session();
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
+        $fechaActual = new \DateTime('now');
+        $intUltimoDia  = date("d", (mktime(0, 0, 0, $fechaActual->format('m') + 1, 1, $fechaActual->format('Y')) - 1));
+        $primerDiaDelMes = $fechaActual->format('Y/m/') . "01";
+        $ultimoDiaDelMes = $fechaActual->format('Y/m/') . $intUltimoDia;
+        $session->set('filtroTurPedidoProgramacionFechaDesde',$primerDiaDelMes);
+        $session->set('filtroTurPedidoProgramacionFechaHasta',$ultimoDiaDelMes);
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('codigoClienteFk', TextType::class, array('required' => false))

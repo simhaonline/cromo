@@ -11,6 +11,7 @@ use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuContratoMotivo;
+use App\Entity\RecursoHumano\RhuContratoTipo;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuGrupo;
@@ -66,6 +67,7 @@ class ContratoController extends AbstractController
             ->add('txtNumeroIdentificacion', NumberType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroRhuNumeroIdentificacionEmpleado')])
             ->add('chkEstadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroRhuContratoEstadoTerminado'), 'required' => false])
             ->add('cboGrupo', EntityType::class, $em->getRepository(RhuGrupo::class)->llenarCombo())
+            ->add('cboContratoTipo', EntityType::class, $em->getRepository(RhuContratoTipo::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -80,6 +82,12 @@ class ContratoController extends AbstractController
                 $session->set('filtroRhuGrupo', $arGrupo->getCodigoGrupoPk());
             } else {
                 $session->set('filtroRhuGrupo', null);
+            }
+            $arGrupo = $form->get('cboContratoTipo')->getData();
+            if ($arGrupo) {
+                $session->set('filtroRhuContratoTipo', $arGrupo->getCodigoContratoTipoPk());
+            } else {
+                $session->set('filtroRhuContratoTipo', null);
             }
         }
         if ($form->get('btnExcel')->isClicked()) {
@@ -171,6 +179,7 @@ class ContratoController extends AbstractController
         }
         return $this->render('recursohumano/administracion/recurso/contrato/detalle.html.twig', [
             'arContrato' => $arContrato,
+            'clase' => array('clase' => 'RhuContrato', 'codigo' => $id),
             'form' => $form->createView()
         ]);
     }

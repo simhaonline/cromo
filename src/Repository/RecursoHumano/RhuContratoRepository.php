@@ -60,6 +60,9 @@ class RhuContratoRepository extends ServiceEntityRepository
         if ($session->get('filtroRhuGrupo')) {
             $queryBuilder->andWhere("c.codigoGrupoFk = '" . $session->get('filtroRhuGrupo') . "'");
         }
+        if ($session->get('filtroRhuContratoTipo')) {
+            $queryBuilder->andWhere("c.codigoContratoTipoFk = '" . $session->get('filtroRhuContratoTipo') . "'");
+        }
         switch ($session->get('filtroRhuContratoEstadoTerminado')) {
             case '0':
                 $queryBuilder->andWhere("c.estadoTerminado = 0");

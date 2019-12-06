@@ -6,6 +6,7 @@
             <a class="btn btn-default btn-sm" href="{{ path('recursohumano_administracion_recurso_contrato_lista') }}">Volver</a>&nbsp;&nbsp;
         </div>
         <div class="btn-group">
+            {% include 'estructura/botoneraAdministracion.html.twig' %}
             <a class="btn btn-sm btn-default abrir-modal"
                href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Parámetros
                 iniciales</a>

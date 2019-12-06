@@ -70,7 +70,7 @@ class TtePoseedorRepository extends ServiceEntityRepository
         p.telefono,
         p.movil,
         p.direccion, 
-        c.codigoInterface AS codigoCiudad,
+        c.codigoDaneDivision AS codigoCiudad,
         i.codigoInterface AS tipoIdentificacion
         FROM App\Entity\Transporte\TtePoseedor p
         LEFT JOIN p.identificacionRel i         

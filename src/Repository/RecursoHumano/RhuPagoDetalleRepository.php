@@ -160,6 +160,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.codigoCreditoFk')
             ->addSelect('c.pension')
             ->addSelect('c.salud')
+            ->addSelect('c.porcentajeVacaciones')
             ->leftJoin('pd.conceptoRel', 'c')
             ->leftJoin('pd.pagoRel', 'p')
             ->leftJoin('p.empleadoRel', 'e')

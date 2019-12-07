@@ -125,7 +125,7 @@ class pagoDetalleController extends Controller
             $hoja = $libro->getActiveSheet();
             $hoja->setTitle('PagoDetalle');
             $j = 0;
-            $arrColumnas = ['ID', 'TIPO', 'NUMERO', 'COD', 'NI', 'EMPLEADO', 'GRUPO', 'COD', 'CONCEPTO', 'DESDE', 'HASTA', 'VR_PAGO', 'VR_PAGO_O', 'H', 'D', '%', 'IBC', 'IBP', 'CRE', 'PEN', 'SAL'];
+            $arrColumnas = ['ID', 'TIPO', 'NUMERO', 'COD', 'NI', 'EMPLEADO', 'GRUPO', 'COD', 'CONCEPTO', 'DESDE', 'HASTA', 'VR_PAGO', 'VR_PAGO_O', 'H', 'D', '%', 'IBC', 'IBP', 'CRE', 'PEN', 'SAL', 'PV'];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
                 $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
@@ -157,6 +157,7 @@ class pagoDetalleController extends Controller
                 $hoja->setCellValue('S' . $j, $arPagoDetalle['codigoCreditoFk']);
                 $hoja->setCellValue('T' . $j, FuncionesController::boolTexto($arPagoDetalle['pension']));
                 $hoja->setCellValue('U' . $j, FuncionesController::boolTexto($arPagoDetalle['salud']));
+                $hoja->setCellValue('V' . $j, $arPagoDetalle['porcentajeVacaciones']);
                 $j++;
             }
 

@@ -78,6 +78,7 @@ class FormatoPagoMasivoController extends Controller
             ->add('fechaDesde', DateType::class, array('format' => 'yyyyMMdd', 'data' => $dateFechaDesde))
             ->add('fechaHasta', DateType::class, array('format' => 'yyyyMMdd', 'data' => $dateFechaHasta))
             ->add('porFecha', CheckboxType::class, array('required' => false, 'data' => true))
+            ->add('mostrarProgramacion', CheckboxType::class, array('required' => false, 'data' => false, 'label'=>'Mostrar programación'))
             ->add('btnGenerar', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-default btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -98,7 +99,7 @@ class FormatoPagoMasivoController extends Controller
                 $fechaDesde = $form->get('fechaDesde')->getData();
                 $fechaHasta = $form->get('fechaHasta')->getData();
                 $objFormatoPago = new PagoMasivo();
-                $objFormatoPago->Generar($em, $form->get('codigoProgramacion')->getData(), $form->get('porFecha')->getData(), $fechaDesde->format('Y-m-d'), $fechaHasta->format('Y-m-d'), $codigoPagoTipo, $codigoGrupo);
+                $objFormatoPago->Generar($em, $form->get('codigoProgramacion')->getData(), $form->get('porFecha')->getData(), $fechaDesde->format('Y-m-d'), $fechaHasta->format('Y-m-d'), $codigoPagoTipo, $codigoGrupo, $form->get('mostrarProgramacion')->getData());
             }
         }
         return $this->render('recursohumano/utilidad/pago/pagomasivo.html.twig', [

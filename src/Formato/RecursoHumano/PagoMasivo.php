@@ -34,8 +34,9 @@ class PagoMasivo extends \FPDF
     public static $codigoClienteTurno;
     public static $codigoZonaPuesto;
     public static $codigoGrupoPago;
+    public static $mostrarProgramacion;
 
-    public function Generar($em, $codigoProgramacionPago = "", $porFecha = false, $fechaDesde = "", $fechaHasta = "", $pagoTipo = "", $codigoGrupoPago = "")
+    public function Generar($em, $codigoProgramacionPago = "", $porFecha = false, $fechaDesde = "", $fechaHasta = "", $pagoTipo = "", $codigoGrupoPago = "", $mostrarProgramacion=false)
     {
         ob_clean();
         set_time_limit(0);
@@ -48,6 +49,7 @@ class PagoMasivo extends \FPDF
         self::$fechaHasta = $fechaHasta;
         self::$codigoPagoTipo = $pagoTipo;
         self::$codigoGrupoPago = $codigoGrupoPago;
+        self::$mostrarProgramacion = $mostrarProgramacion;
 
         //$pdf = new FormatoPagoMasivo('P', 'mm', array(215, 147));
         $pdf = new PagoMasivo('P', 'mm', 'letter');
@@ -236,7 +238,7 @@ class PagoMasivo extends \FPDF
             if ($hasta == 30) {
                 $hasta = 31;
             }
-            if ($arProgramacionRespaldos) {
+            if ($arProgramacionRespaldos && self::$mostrarProgramacion == true) {
                 $boolSoportePago = true;
                 $header = array('D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15', 'D16', 'D17', 'D18', 'D19', 'D20', 'D21', 'D22', 'D23', 'D24', 'D25', 'D26', 'D27', 'D28', 'D29', 'D30', 'D31');
                 $pdf->SetFillColor(200, 200, 200);

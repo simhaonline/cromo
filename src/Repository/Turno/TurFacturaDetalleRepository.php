@@ -138,10 +138,10 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('f.fecha')
             ->addSelect('i.nombre')
             ->addSelect('c.nombreCorto')
+            ->addSelect('p.nombre AS puesto')
             ->addSelect('ci.nombre as ciudad')
             ->addSelect('fd.cantidad')
             ->addSelect('fd.porcentajeIva')
-            ->addSelect('p.nombre AS puesto')
             ->addSelect('fd.vrIva')
             ->addSelect('fd.vrPrecio')
             ->addSelect('fd.vrSubtotal')
@@ -173,7 +173,7 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
         if ($session->get('filtroTurInformeComercialFacturaDetalleCiudad') != null) {
             $queryBuilder->andWhere("c.codigoCiudadFk = {$session->get('filtroTurInformeComercialFacturaDetalleCiudad')}");
         }
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function retencionFacturaContabilizar($codigo)

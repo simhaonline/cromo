@@ -10,8 +10,8 @@
                 <div>
                     <div class="widget-body">
                         <div class="form-group form-group-sm">
-                            <label for="txtCodigoConductor" class="col-sm-offset-1 col-sm-1 control-label">Cliente:</label>
-                            <div class="col-sm-10">
+                            <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                            <div class="col-sm-11">
                                 <div class="row">
                                     <div class="col-lg-2">
                                         <div class="input-group">
@@ -30,33 +30,33 @@
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
-                            <label  class="col-sm-2 control-label">Número</label>
-                            <div class="col-sm-4">
+                            <label  class="col-sm-1 control-label">Número</label>
+                            <div class="col-sm-2">
                                 {{ form_widget(form.numero) }}
                             </div>
-                            <label  class="col-sm-2 control-label">Ciudad</label>
-                            <div class="col-sm-4">
+                            <label  class="col-sm-1 control-label">Ciudad</label>
+                            <div class="col-sm-2">
                                 {{ form_widget(form.ciudad) }}
                             </div>
-                        </div>
-                        <div class="form-group form-group-sm">
-                            <label class=" col-sm-2 control-label">Fecha desde:</label>
-                            <div class="col-sm-4">
-                                {{ form_widget(form.fechaDesde) }}
-                            </div>
-                            <label class=" col-sm-2 control-label">Autorizado:</label>
-                            <div class="col-sm-4">
+                            <label class="col-sm-1 col-sm-offset-3 control-label">Autorizado:</label>
+                            <div class="col-sm-2">
                                 {{ form_widget(form.autorizado) }}
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
-                            <label class=" col-sm-2 control-label">Fecha hasta:</label>
-                            <div class="col-sm-4">
-                                {{ form_widget(form.fechaHasta) }}
+                            <label class=" col-sm-1 control-label">Fecha desde:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.fechaDesde) }}
                             </div>
-                            <label class=" col-sm-2 control-label">Anulado:</label>
-                            <div class="col-sm-4">
+                            <label class=" col-sm-2 col-sm-offset-5 control-label">Anulado:</label>
+                            <div class="col-sm-2">
                                 {{ form_widget(form.anulado) }}
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class=" col-sm-1 control-label">Fecha hasta:</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.fechaHasta) }}
                             </div>
                         </div>
                     </div>
@@ -76,13 +76,13 @@
                 <th>FECHA</th>
                 <th>NOMBRE</th>
                 <th>CLIENTE</th>
+                <th>PUESTO</th>
                 <th>CIUDAD</th>
                 <th>CANTIDAD</th>
                 <th>% IVA</th>
                 <th>IVA</th>
                 <th>PRECIO</th>
                 <th>SUBTOTAL</th>
-                <th>NETO</th>
                 <th>TOTAL</th>
                 <th title="RETENCIÓN FUENTE">R.T.</th>
             </tr>
@@ -95,13 +95,14 @@
                 <td>{{ arFacturaDetalle.fecha | date('Y-m-d') }}</td>
                 <td>{{ arFacturaDetalle.nombre}}</td>
                 <td>{{ arFacturaDetalle.nombreCorto}}</td>
+                <td>{{ arFacturaDetalle.puesto}}</td>
                 <td>{{ arFacturaDetalle.ciudad}}</td>
                 <td>{{ arFacturaDetalle.cantidad}}</td>
                 <td>{{ arFacturaDetalle.porcentajeIva}}</td>
                 <td class="numero">{{ arFacturaDetalle.vrIva | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arFacturaDetalle.vrPrecio | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arFacturaDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arFacturaDetalle.vrNeto | number_format(0, '.', ',') }}</td>
+
                 <td class="numero">{{ arFacturaDetalle.vrTotal | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arFacturaDetalle.vrRetencionFuente | number_format(0, '.', ',') }}</td>
             </tr>

@@ -3,14 +3,15 @@
 
 namespace App\Controller\Turno\Informe\Comercial;
 
-
 use App\Entity\General\GenCiudad;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurFacturaDetalle;
 use App\General\General;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -21,17 +22,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FacturaDetalle extends  Controller
+class FacturaDetalle extends  AbstractController
 {
     /**
      * @Route("/turno/informe/comercial/facturaDetalle/lista", name="turno_informe_comercial_facturaDetalle_lista")
      */
 
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class,['required' => false])
             ->add('numero', IntegerType::class, ['required' => false,'data' => $session->get('filtroGenFacturaNumero')])

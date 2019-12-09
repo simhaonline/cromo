@@ -489,16 +489,16 @@ class TurPedidoRepository extends ServiceEntityRepository
             $numero =$filtros['numero']?? null;
             $codigoPedidoPk =$filtros['codigoPedidoPk']?? null;
             $codigoPedidoTipoFk =$filtros['codigoPedidoTipoFk']?? null;
-            $fechaDesde = $filtros['$fechaDesde']??null;
-            $fechaHasta = $filtros['$fechaHasta']??null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
             $estadoAutorizado = $filtros['estadoAutorizado']??null;
             $estadoAprobado = $filtros['estadoAprobado']??null;
             $estadoAnulado = $filtros['estadoAnulado']??null;
         }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedido::class, 'p')
             ->select('p.codigoPedidoPk')
-            ->addSelect('p.numero')
             ->addSelect('p.fecha')
+            ->addSelect('p.numero')
             ->addSelect('p.horas')
             ->addSelect('p.horasDiurnas')
             ->addSelect('p.horasNocturnas')

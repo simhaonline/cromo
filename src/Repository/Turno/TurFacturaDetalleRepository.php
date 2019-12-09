@@ -62,14 +62,14 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
                 $arFacturaDetalle->setCantidad($arrCantidad[$codigoFacturaDetalle]);
                 $arFacturaDetalle->setVrPrecio($arrPrecio[$codigoFacturaDetalle]);
                 $codigoImpuestoIva = $arrImpuestoIva[$codigoFacturaDetalle];
-                if($arFacturaDetalle->getCodigoImpuestoIvaFk()) {
+                if ($arFacturaDetalle->getCodigoImpuestoIvaFk()) {
                     $arImpuestoIva = $em->getRepository(GenImpuesto::class)->find($codigoImpuestoIva);
                     $arFacturaDetalle->setPorcentajeIva($arImpuestoIva->getPorcentaje());
                     $arFacturaDetalle->setPorcentajeBaseIva($arImpuestoIva->getPorcentajeBase());
                 }
                 $arFacturaDetalle->setCodigoImpuestoIvaFk($codigoImpuestoIva);
                 $codigoImpuestoRetencion = $arrImpuestoRetencion[$codigoFacturaDetalle];
-                if($arFacturaDetalle->getCodigoImpuestoRetencionFk() != $codigoImpuestoRetencion) {
+                if ($arFacturaDetalle->getCodigoImpuestoRetencionFk() != $codigoImpuestoRetencion) {
                     $arImpuestoRetencion = $em->getRepository(GenImpuesto::class)->find($codigoImpuestoRetencion);
 //                    $arFacturaDetalle->setPorcentajeRetencion($arImpuestoRetencion->getPorcentaje());
                 }
@@ -141,16 +141,19 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('ci.nombre as ciudad')
             ->addSelect('fd.cantidad')
             ->addSelect('fd.porcentajeIva')
+            ->addSelect('p.nombre AS puesto')
             ->addSelect('fd.vrIva')
             ->addSelect('fd.vrPrecio')
             ->addSelect('fd.vrSubtotal')
-            ->addSelect('fd.vrNeto')
             ->addSelect('fd.vrTotal')
             ->addSelect('fd.vrRetencionFuente')
             ->leftJoin('fd.facturaRel', 'f')
             ->leftJoin('fd.itemRel', 'i')
             ->leftJoin('f.clienteRel', 'c')
-            ->leftJoin('c.ciudadRel', 'ci');
+            ->leftJoin('c.ciudadRel', 'ci')
+            ->leftJoin('fd.puestoRel', 'p')
+            ->where('f.estadoAnulado = 0')
+            ->addOrderBy('fd.codigoFacturaDetallePk', 'DESC');
         if ($session->get('filtroTurInformeComercialFacturaDetalleClienteCodigo') != null) {
             $queryBuilder->andWhere("f.codigoClienteFk = {$session->get('filtroTurInformeComercialFacturaDetalleClienteCodigo')}");
         }

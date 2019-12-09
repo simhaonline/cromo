@@ -35,13 +35,16 @@ class JuzgadoController extends Controller
             ->add('btnFiltrar', SubmitType::class, ['label'  => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
+        $raw=[];
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('BtnFiltrar')->isClicked()) {
-                $session->set('filtroRhuJuzgadoCodigo',$form->get('txtNombre')->getData());
-                $session->set('filtroRhuJuzgadoNombre',$form->get('txtCodigo')->getData());
+            if($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros']=[
+                     'nombre' => $form->get('txtNombre')->getData(),
+                    'codigoEmbargoJuzgado' => $form->get('txtCodigo')->getData()
+                ];
             }
         }
-        $arJuzgados = $paginator->paginate($em->getRepository(RhuEmbargoJuzgado::class)->lista(), $request->query->get('page', 1), 20);
+        $arJuzgados = $paginator->paginate($em->getRepository(RhuEmbargoJuzgado::class)->lista($raw), $request->query->get('page', 1), 20);
         return $this->render('recursohumano/buscar/juzgado.html.twig', array(
             'arJuzgados' => $arJuzgados,
             'campoCodigo' => $campoCodigo,

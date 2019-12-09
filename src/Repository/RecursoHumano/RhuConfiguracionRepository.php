@@ -30,6 +30,7 @@ class RhuConfiguracionRepository extends ServiceEntityRepository
             ->addSelect('c.provisionPorcentajeInteres')
             ->addSelect('c.provisionPorcentajePrima')
             ->addSelect('c.provisionPorcentajeVacacion')
+            ->addSelect('c.primasDiasAdicionalesSalario')
             ->where('c.codigoConfiguracionPk = 1');
         return $queryBuilder->getQuery()->getSingleResult();
     }

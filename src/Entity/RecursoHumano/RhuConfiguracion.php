@@ -189,6 +189,11 @@ class RhuConfiguracion
     private $concatenarOfinaCuentaBbva = false;
 
     /**
+     * @ORM\Column(name="primas_dias_adicionales_salario", type="boolean", nullable=true)
+     */
+    private $primasDiasAdicionalesSalario = false;
+
+    /**
      * @ORM\Column(name="codigo_entidad_riesgos_profesionales_fk", type="integer", nullable=true)
      */
     private $codigoEntidadRiesgosProfesionalesFk;
@@ -941,6 +946,19 @@ class RhuConfiguracion
         $this->codigoConceptoPrimaFk = $codigoConceptoPrimaFk;
     }
 
+    /**
+     * @return bool
+     */
+    public function getPrimasDiasAdicionalesSalario(): bool
+    {
+        return $this->primasDiasAdicionalesSalario;
+    }
 
-
+    /**
+     * @param bool $primasDiasAdicionalesSalario
+     */
+    public function setPrimasDiasAdicionalesSalario(bool $primasDiasAdicionalesSalario): void
+    {
+        $this->primasDiasAdicionalesSalario = $primasDiasAdicionalesSalario;
+    }
 }

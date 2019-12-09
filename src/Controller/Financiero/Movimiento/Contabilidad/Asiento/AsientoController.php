@@ -253,13 +253,16 @@ class AsientoController extends ControllerListenerGeneral
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
+        $raw=[];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroFinBuscarCuentaCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroFinBuscarCuentaNombre', $form->get('txtNombre')->getData());
+                $raw['filtros']=[
+                    'codigoCuenta' =>  $form->get('txtCodigo')->getData(),
+                    'nombre' => $form->get('txtNombre')->getData()
+                ];
             }
         }
-        $arCuentas = $paginator->paginate($em->getRepository(FinCuenta::class)->lista(), $request->query->get('page', 1), 20);
+        $arCuentas = $paginator->paginate($em->getRepository(FinCuenta::class)->lista($raw), $request->query->get('page', 1), 20);
         return $this->render('financiero/movimiento/contabilidad/asiento/buscarCuenta.html.twig', array(
             'arCuentas' => $arCuentas,
             'campoCodigo' => $campoCodigo,

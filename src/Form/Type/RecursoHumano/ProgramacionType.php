@@ -8,6 +8,7 @@ use App\Entity\RecursoHumano\RhuProgramacion;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -46,6 +47,8 @@ class ProgramacionType extends AbstractType
             ->add('fechaHastaPeriodo', DateType::class, ['required' => true, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date',]])
             ->add('nombre', TextType::class, ['required' => false,'attr' => ['placeholder' => 'Opcional']])
             ->add('mensajePago', TextareaType::class, ['required' => false])
+            ->add('aplicarTransporte', CheckboxType::class, array('required' => false, 'data'=>true))
+
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

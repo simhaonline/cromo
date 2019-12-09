@@ -44,6 +44,9 @@
                     <cite style="font-size: 10px;">- Fecha hasta donde va realmente el periodo, por ejemplo cuando el mes tiene 31 dias</cite>
                     {{ form_errors(form.fechaHastaPeriodo) }}
                 </div>
+                <div class="col-sm-4 col-sm-offset-2">
+                    {{ form_widget(form.aplicarTransporte) }}
+                </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_nombre" class="control-label col-sm-2">Mensaje pago:</label>

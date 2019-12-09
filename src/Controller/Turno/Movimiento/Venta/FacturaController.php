@@ -71,6 +71,7 @@ class FacturaController extends AbstractController
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
@@ -87,6 +88,10 @@ class FacturaController extends AbstractController
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
                 General::get()->setExportar($em->getRepository(TurFactura::class)->lista($raw), "Factura");
+            }
+            if ($form->get('btnContabilizar')->isClicked()) {
+                $arr = $request->query->get('ChkSeleccionar');
+                $respuesta = $this->getDoctrine()->getRepository(TurFactura::class)->contabilizar($arr);
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

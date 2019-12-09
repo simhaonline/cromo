@@ -1,76 +1,77 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-<div id="content sortable-grid ui-sortable">
-    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
-        <header role="heading" class="ui-sortable-handle">
-            <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
-            <h2>Filtro</h2>
-        </header>
-        <div class="widget-body">
-            <div class="form-group form-group-sm">
-                <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
-                <div class="col-sm-11">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <div class="input-group">
-                                {{ form_widget(form.codigoClienteFk) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header role="heading" class="ui-sortable-handle">
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div class="widget-body">
+                <div class="form-group form-group-sm">
+                    <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                    <div class="col-sm-11">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="input-group">
+                                    {{ form_widget(form.codigoClienteFk) }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-10">
-                            <div class="input-group">
-                                <input id="form_txtNombreCorto" class="form-control" readonly>
-                                <span class="input-group-btn">
+                            <div class="col-lg-10">
+                                <div class="input-group">
+                                    <input id="form_txtNombreCorto" class="form-control" readonly>
+                                    <span class="input-group-btn">
                                             <a class="btn btn-default btn-sm"
                                                href="javascript:abrirVentana3('{{ path('turno_buscar_cliente',
                                                    { 'campoCodigo': 'form_codigoClienteFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                         </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="" class="control-label col-sm-1">Numero:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.numero) }}
+                <div class="form-group form-group-sm">
+                    <label for="" class="control-label col-sm-1">Numero:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.numero) }}
+                    </div>
+                    <label for="" class="control-label col-sm-1">Codigo:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.codigoFacturaPk) }}
+                    </div>
+                    <label for="" class="control-label col-sm-1">Tipo:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.codigoFacturaTipoFk) }}
+                    </div>
+                    <label for="" class="control-label col-sm-1">Autorizado:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget((form.estadoAutorizado)) }}
+                    </div>
                 </div>
-                <label for="" class="control-label col-sm-1">Codigo:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.codigoFacturaPk) }}
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Desde:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.fechaDesde) }}
+                    </div>
+                    <label for="" class="control-label  col-sm-offset-6 col-sm-1">Aprobado:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget((form.estadoAprobado)) }}
+                    </div>
                 </div>
-                <label for="" class="control-label col-sm-1">Tipo:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.codigoFacturaTipoFk) }}
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label">Hasta:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.fechaHasta) }}
+                    </div>
+                    <label for="" class="control-label  col-sm-offset-6 col-sm-1">Anulado:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget((form.estadoAnulado)) }}
+                    </div>
                 </div>
-                <label for="" class="control-label col-sm-1">Autorizado:</label>
-                <div class="col-sm-2">
-                    {{ form_widget((form.estadoAutorizado)) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Desde:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.fechaDesde) }}
-                </div>
-                <label for="" class="control-label  col-sm-offset-6 col-sm-1">Aprobado:</label>
-                <div class="col-sm-2">
-                    {{ form_widget((form.estadoAprobado)) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label class="col-sm-1 control-label">Hasta:</label>
-                <div class="col-sm-2">
-                    {{ form_widget(form.fechaHasta) }}
-                </div>
-                <label for="" class="control-label  col-sm-offset-6 col-sm-1">Anulado:</label>
-                <div class="col-sm-2">
-                    {{ form_widget((form.estadoAnulado)) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <div class="col-sm-offset-2 col-sm-10">
-                    {{ form_widget(form.btnFiltro, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.btnFiltro, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,13 +84,14 @@
             <th title="Fecha"> FECHA</th>
             <th title="Nombre del cliente"> NOMBRE</th>
             <th title="Subtotal"> SUBTOTAL</th>
-            <th title="Iva"> IVA</th>
-            <th title="Neto"> NETO</th>
-            <th title="Total"> TOTAL</th>
-            <th title="Usuario"> USU</th>
-            <th title="Autorizado"> AUT</th>
-            <th title="Aprobado"> APR</th>
-            <th title="Anulado"> ANU</th>
+            <th title="Iva">IVA</th>
+            <th title="Neto">NETO</th>
+            <th title="Total">TOTAL</th>
+            <th title="Usuario">USU</th>
+            <th title="Autorizado">AUT</th>
+            <th title="Aprobado">APR</th>
+            <th title="Anulado">ANU</th>
+            <th title="Contabilizado">CON</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
@@ -112,6 +114,7 @@
                 <td>{{ arFactura.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arFactura.estadoAprobado ? "SI":"NO" }}</td>
                 <td>{{ arFactura.estadoAnulado ? "SI":"NO" }}</td>
+                <td>{{ arFactura.estadoContabilizado ? "SI":"NO" }}</td>
                 {% if arFactura.estadoAutorizado == 0 %}
                     <td class="text-center">
                         <a href="{{ path('turno_movimiento_venta_factura_nuevo',{'id':  arFactura.codigoFacturaPk }) }}"><i
@@ -149,14 +152,15 @@
         {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnContabilizar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
         {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
            href="{{ path('turno_movimiento_venta_factura_nuevo', {'id': 0}) }}">Nuevo</a>
     </div>
+    <br/><br/>
     {{ form_end(form) }}
-
-    <br/><br/><br/>
-    {% endblock %}
-
+{% endblock %}

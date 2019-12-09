@@ -74,6 +74,7 @@ class TurFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.estadoAutorizado')
             ->addSelect('f.estadoAprobado')
             ->addSelect('f.estadoAnulado')
+            ->addSelect('f.estadoContabilizado')
             ->leftJoin('f.clienteRel', 'c');
 
         if ($codigoFacturaPk) {

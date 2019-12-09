@@ -281,13 +281,16 @@ class AsientoController extends ControllerListenerGeneral
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
+        $raw=[];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroFinBuscarCentroCostoCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroFinBuscarCentroCostoNombre', $form->get('txtNombre')->getData());
+                $raw['filtros']=[
+                    $codigoCentroCosto =  $form->get('txtCodigo')->getData(),
+                    $nombre =$form->get('txtNombre')->getData()
+                ];
             }
         }
-        $arCentrosCostos = $paginator->paginate($em->getRepository(FinCentroCosto::class)->lista(), $request->query->get('page', 1), 20);
+        $arCentrosCostos = $paginator->paginate($em->getRepository(FinCentroCosto::class)->lista($raw), $request->query->get('page', 1), 20);
         return $this->render('financiero/movimiento/contabilidad/asiento/buscarCentroCosto.html.twig', array(
             'arCentrosCostos' => $arCentrosCostos,
             'campoCodigo' => $campoCodigo,

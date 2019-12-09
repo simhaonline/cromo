@@ -13,6 +13,9 @@ use App\Entity\Cartera\CarMovimiento;
 use App\Entity\Cartera\CarMovimientoDetalle;
 use App\Entity\General\GenImpuesto;
 use App\Form\Type\Cartera\MovimientoType;
+use App\Formato\Cartera\Ingreso;
+use App\Formato\Cartera\Movimiento;
+use App\Formato\Cartera\Recibo;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -199,9 +202,8 @@ class MovimientoController extends BaseController
                 $em->getRepository(CarMovimiento::class)->aprobar($arMovimiento);
             }
             if ($form->get('btnImprimir')->isClicked()) {
-                //$formato = new Movimiento();
-                //$formato->Generar($em, $id);
-
+                $formato = new Movimiento();
+                $formato->Generar($em, $id);
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $respuesta = $em->getRepository(CarMovimiento::class)->anular($arMovimiento);

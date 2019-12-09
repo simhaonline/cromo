@@ -112,6 +112,11 @@ class RhuProgramacion
     private $estadoIntercambio = false;
 
     /**
+     * @ORM\Column(name="aplicar_transporte", type="boolean", nullable=true)
+     */
+    private $aplicarTransporte = true;
+
+    /**
      * @ORM\Column(name="mensaje_pago", type="text", nullable=true)
      */
     private $mensajePago;
@@ -546,6 +551,38 @@ class RhuProgramacion
     public function setPagosProgramacionRel($pagosProgramacionRel): void
     {
         $this->pagosProgramacionRel = $pagosProgramacionRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAplicarTransporte(): bool
+    {
+        return $this->aplicarTransporte;
+    }
+
+    /**
+     * @param bool $aplicarTransporte
+     */
+    public function setAplicarTransporte(bool $aplicarTransporte): void
+    {
+        $this->aplicarTransporte = $aplicarTransporte;
     }
 
 

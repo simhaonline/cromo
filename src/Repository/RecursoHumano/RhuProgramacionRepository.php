@@ -245,7 +245,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 if ($arContrato->getCodigoSalarioTipoFk() == 'VAR') {
 
                     if ($intDiasSalarioPromedio > 0) {
-                        if ($arContrato->getAuxilioTransporte()) {
+                        if ($arContrato->getAuxilioTransporte() && $arProgramacion->getAplicarTransporte()) {
                             $salarioMinimoVariable = $salarioMinimo + $auxilioTransporte;
                         } else {
                             $salarioMinimoVariable = $salarioMinimo;
@@ -253,7 +253,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         $salarioPromedioPrimas = ($ibpPrimas / $intDiasSalarioPromedio) * 30;
                         if ($intDiasSalarioPromedio < $intDiasPrimaLiquidar) {
                             $diferencia = $intDiasPrimaLiquidar - $intDiasSalarioPromedio;
-                            if ($arConfiguracion->getPrimasDiasAdicionalesSalario()) {
+                            if ($arConfiguracion['primasDiasAdicionalesSalario'] ==  true) {
                                 $valorDia = $douSalario / 30;
                                 $ibpSalarioAdicional = $valorDia * $diferencia;
                                 $ibpPrimas += ($ibpSalarioAdicional);

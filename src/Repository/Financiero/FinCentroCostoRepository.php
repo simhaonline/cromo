@@ -16,28 +16,58 @@ class FinCentroCostoRepository extends ServiceEntityRepository
         parent::__construct($registry, FinCentroCosto::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoCentroCosto = null;
+        $nombre = null;
+        $estadoInactivo = null;
+        if ($filtros) {
+            $codigoCentroCosto = $filtros['codigoCentroCosto'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+            $estadoInactivo = $filtros['estadoInactivo'] ?? null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinCentroCosto::class, 'cc')
             ->select('cc.codigoCentroCostoPk')
-            ->addSelect('cc.nombre');
-        if ($session->get('filtroFinBuscarCentroCostoCodigo') != '') {
-            $queryBuilder->andWhere("cc.codigoCentroCostoPk LIKE '{$session->get('filtroFinBuscarCentroCostoCodigo')}%'");
+            ->addSelect('cc.nombre')
+            ->addSelect('cc.estadoInactivo');
+        if ($codigoCentroCosto) {
+            $queryBuilder->andWhere("cc.codigoCentroCostoPk LIKE '%{$codigoCentroCosto}%'");
         }
-        if ($session->get('filtroFinBuscarCentroCostoNombre') != '') {
-            $queryBuilder->andWhere("cc.nombre LIKE '%{$session->get('filtroFinBuscarCentroCostoNombre')}%'");
+        if ($nombre) {
+            $queryBuilder->andWhere("cc.nombre LIKE '%{$nombre}%'");
         }
-        return $queryBuilder;
+        switch ($estadoInactivo) {
+            case '0':
+                $queryBuilder->andWhere("cc.estadoInactivo = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cc.estadoInactivo = 1");
+                break;
+        }
+        $queryBuilder->addOrderBy('cc.codigoCentroCostoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
-    public function camposPredeterminados()
+    public function eliminar($arrDetallesSeleccionados)
     {
-        $queryBuilder = $this->_em->createQueryBuilder()->from(FinCentroCosto::class, 'cc')
-            ->select('cc.codigoCentroCostoPk as ID')
-            ->addSelect('cc.nombre')
-            ->addSelect('cc.estadoInactivo as Estado_inactivo')
-            ->where('cc.codigoCentroCostoPk IS NOT NULL');
-        return $queryBuilder->getQuery()->execute();
+        $em = $this->getEntityManager();
+        if ($arrDetallesSeleccionados) {
+            if (count($arrDetallesSeleccionados)) {
+                foreach ($arrDetallesSeleccionados as $codigo) {
+                    $ar = $em->getRepository(FinCentroCosto::class)->find($codigo);
+                    if ($ar) {
+                        $em->remove($ar);
+                    }
+                }
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                }
+            }
+        }
     }
 }

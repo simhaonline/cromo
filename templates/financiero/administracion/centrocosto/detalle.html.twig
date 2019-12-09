@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('financiero_administracion_centrocosto_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div><br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody><tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arCentroCosto.codigoCentroCostoPk }}</td>
+            <td class="titulo">INGRESO:</td>
+            <td class="td-in-well">{{ arCentroCosto.nombre }}</td>
+            <td class="titulo">INGRESO:</td>
+            <td class="td-in-well">{{ arCentroCosto.estadoInactivo ? "SI" : "NO" }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Repository\Financiero;
 
 use App\Entity\Financiero\FinCuenta;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -15,20 +16,37 @@ class FinCuentaRepository extends ServiceEntityRepository
         parent::__construct($registry, FinCuenta::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoCuenta = null;
+        $nombre = null;
+        if ($filtros) {
+            $codigoCuenta = $filtros['codigoCuenta'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinCuenta::class, 'c')
             ->select('c.codigoCuentaPk')
             ->addSelect('c.nombre')
-            ->where('c.codigoCuentaPk IS NOT NULL');
-        if ($session->get('filtroFinBuscarCuentaCodigo') != '') {
-            $queryBuilder->andWhere("c.codigoCuentaPk LIKE '{$session->get('filtroFinBuscarCuentaCodigo')}%'");
+            ->addSelect('c.clase')
+            ->addSelect('c.grupo')
+            ->addSelect('c.cuenta')
+            ->addSelect('c.subcuenta')
+            ->addSelect('c.exigeTercero')
+            ->addSelect('c.exigeCentroCosto')
+            ->addSelect('c.exigeBase')
+            ->addSelect('c.permiteMovimiento');
+        if ($codigoCuenta) {
+            $queryBuilder->andWhere("c.codigoCuentaPk LIKE '%{$codigoCuenta}%'");
         }
-        if ($session->get('filtroFinBuscarCuentaNombre') != '') {
-            $queryBuilder->andWhere("c.nombre LIKE '%{$session->get('filtroFinBuscarCuentaNombre')}%'");
+        if ($nombre) {
+            $queryBuilder->andWhere("c.nombre LIKE '%{$nombre}%'");
         }
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('c.codigoCuentaPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function camposPredeterminados()
@@ -70,6 +88,26 @@ class FinCuentaRepository extends ServiceEntityRepository
         }
         $em->flush();
         return true;
+    }
+
+    public function eliminar($arrDetallesSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrDetallesSeleccionados) {
+            if (count($arrDetallesSeleccionados)) {
+                foreach ($arrDetallesSeleccionados as $codigo) {
+                    $ar = $em->getRepository(FinCuenta::class)->find($codigo);
+                    if ($ar) {
+                        $em->remove($ar);
+                    }
+                }
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                }
+            }
+        }
     }
 
 }

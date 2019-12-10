@@ -5,20 +5,27 @@
         <div class="panel-heading">Informacion general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">nombre:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Nombre:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <label for="form_fechaVence" class="col-sm-2 control-label">fecha:</label>
+                <label for="form_fechaVence" class="col-sm-2 control-label">Fecha:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.fecha) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">version:</label>
+                <label for="form_recogidaTipoRel" class="col-sm-2 control-label">Versión:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.version, { 'attr': {'class': 'form-control'} }) }}
                 </div>
+
+                <label for="form_fechaVence" class="col-sm-2 control-label">Fecha actualización:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaActualizacion) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_fechaVence" class="col-sm-2 control-label">Código:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigo) }}

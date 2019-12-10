@@ -42,6 +42,11 @@ class GenFormato
     private $fecha;
 
     /**
+     * @ORM\Column(name="fecha_actualizacion", type="datetime", nullable=true)
+     */
+    private $fechaActualizacion;
+
+    /**
      * @ORM\Column(name="nombre_firma", type="string", length=50, nullable=true)
      */
     private $nombreFirma;
@@ -165,6 +170,22 @@ class GenFormato
     public function setFecha($fecha): void
     {
         $this->fecha = $fecha;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaActualizacion()
+    {
+        return $this->fechaActualizacion;
+    }
+
+    /**
+     * @param mixed $fechaActualizacion
+     */
+    public function setFechaActualizacion($fechaActualizacion): void
+    {
+        $this->fechaActualizacion = $fechaActualizacion;
     }
 
     /**

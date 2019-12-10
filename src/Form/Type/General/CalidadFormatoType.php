@@ -18,7 +18,8 @@ class CalidadFormatoType extends AbstractType
     {
         $builder
             ->add('nombre',TextType::class,['label' => 'Nombre:','required' => true])
-            ->add('fecha', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)))
+            ->add('fecha', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date')))
+            ->add('fechaActualizacion', DateType::class,array('widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date')))
             ->add('version',TextType::class,['label' => 'Version:','required' => true])
             ->add('codigo',TextType::class,['label' => 'Version:','required' => true])
             ->add('contenido',TextareaType::class,['label' => 'Contenido:','required' => true, 'attr'=>['rows'=>'30']])

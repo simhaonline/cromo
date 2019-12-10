@@ -4,12 +4,15 @@ namespace  App\Controller\Estructura;
 
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;;
+
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
-class ControllerListener extends Controller{
+class ControllerListener extends AbstractController{
 
     private $user;
     private $routeActual;
@@ -30,7 +33,7 @@ class ControllerListener extends Controller{
     }
 
 
-    public function getPermissionFunction(FilterControllerEvent $event){
+    public function getPermissionFunction(ControllerEvent $event){
         $em=$this->em;
         $url=$this->routeActual;
         $this->routeActual=$event->getRequest()->get('_route');

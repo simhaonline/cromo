@@ -52,6 +52,11 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="form_comentarios" class="col-sm-2 control-label">Fecha vence:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaVence, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.fechaVence) }}
+                </div>
             </div>
             <div class="form-group">
                 <label for="form_comentarios" class="col-sm-2 control-label">Comentarios:</label>

@@ -123,6 +123,7 @@ class CotizacionController extends AbstractController
             $arCotizacion->setVrSalarioBase($arrConfiguracion['vrSalarioMinimo']);
             $arCotizacion->setUsuario($this->getUser()->getUserName());
             $arCotizacion->setEstrato(6);
+            $arCotizacion->setFechaVence(new \DateTime('now'));
         }
         $form = $this->createForm(CotizacionType::class, $arCotizacion);
         $form->handleRequest($request);

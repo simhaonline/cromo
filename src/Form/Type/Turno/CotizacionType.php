@@ -41,6 +41,7 @@ class CotizacionType extends AbstractType
                 'label' => 'Tipo pedido:'
             ])
             ->add('estrato', NumberType::class, array('required' => false))
+            ->add('fechaVence', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('vrSalarioBase', NumberType::class)
             ->add('comentario', TextareaType::class, array('required' => false))
             ->add('guardar', SubmitType::class);

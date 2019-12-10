@@ -143,9 +143,9 @@ class ContratoType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
                         ->where('r.eps = 1')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.nombreCorto', 'ASC');
                 },
-                'choice_label' => 'nombre',
+                'choice_label' => 'nombreCorto',
                 'required' => true
             ])
             ->add('entidadPensionRel', EntityType::class, [
@@ -153,9 +153,9 @@ class ContratoType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
                         ->where('r.pen = 1')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.nombreCorto', 'ASC');
                 },
-                'choice_label' => 'nombre',
+                'choice_label' => 'nombreCorto',
                 'required' => true
             ])
             ->add('entidadCesantiaRel', EntityType::class, [
@@ -163,9 +163,9 @@ class ContratoType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
                         ->where('r.ces = 1')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.nombreCorto', 'ASC');
                 },
-                'choice_label' => 'nombre',
+                'choice_label' => 'nombreCorto',
                 'required' => true
             ])
             ->add('entidadCajaRel', EntityType::class, [
@@ -173,9 +173,9 @@ class ContratoType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
                         ->where('r.ccf = 1')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.nombreCorto', 'ASC');
                 },
-                'choice_label' => 'nombre',
+                'choice_label' => 'nombreCorto',
                 'required' => true
             ])
             ->add('ciudadContratoRel', EntityType::class, [

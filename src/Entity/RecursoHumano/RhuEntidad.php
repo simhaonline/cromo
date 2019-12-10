@@ -29,6 +29,11 @@ class RhuEntidad
     private $nombre;
 
     /**
+     * @ORM\Column(name="nombre_corto", type="string", length=120, nullable=true)
+     */
+    private $nombreCorto;
+
+    /**
      * @ORM\Column(name="nit", type="string", length=10, nullable=true)
      *   @Assert\Length(
      *     max = 10,
@@ -750,6 +755,22 @@ class RhuEntidad
     public function setAportesContratosEntidadRiesgosRel($aportesContratosEntidadRiesgosRel): void
     {
         $this->aportesContratosEntidadRiesgosRel = $aportesContratosEntidadRiesgosRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreCorto()
+    {
+        return $this->nombreCorto;
+    }
+
+    /**
+     * @param mixed $nombreCorto
+     */
+    public function setNombreCorto($nombreCorto): void
+    {
+        $this->nombreCorto = $nombreCorto;
     }
 
 

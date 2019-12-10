@@ -102,12 +102,12 @@ class Cotizacion extends \FPDF
         $this->SetFont('Arial','B',8);
         $this->Cell(30, 4, "EMAIL:" , 1, 0, 'L', 1);
         $this->SetFont('Arial','',8);
-        $this->Cell(65, 4, utf8_decode($arCotizacion->getClienteRel()->getCorreo()), 1, 0, 'L', 1);
+        $this->Cell(160, 4, utf8_decode($arCotizacion->getClienteRel()->getCorreo()), 1, 0, 'L', 1);
         $this->SetFont('Arial','B',8);
-        $this->Cell(30, 4, '' , 1, 0, 'L', 1);
+        $this->ln();
+        $this->Cell(30, 4, 'Comentario' , 1, 0, 'L', 1);
         $this->SetFont('Arial','',7);
-        $this->Cell(65, 4, '', 1, 0, 'L', 1);
-
+        $this->Cell(160, 4, utf8_decode($arCotizacion->getComentario()), 1, 0, 'L', 1);
         $this->EncabezadoDetalles();
 
     }
@@ -140,6 +140,7 @@ class Cotizacion extends \FPDF
         $arCotizacionDetalles = self::$em->getRepository(TurCotizacionDetalle::class)->findBy(array('codigoCotizacionFk' => self::$codigoCotizacion));
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
+        $vrTotal= 0;
         foreach ($arCotizacionDetalles as $arCotizacionDetalle) {
             $pdf->Cell(30, 4, substr($arCotizacionDetalle->getConceptoRel()->getNombre(), 0,15), 1, 0, 'L');
             $pdf->Cell(20, 4, substr($arCotizacionDetalle->getModalidadRel()->getNombre(),0, 10), 1, 0, 'L');
@@ -190,10 +191,19 @@ class Cotizacion extends \FPDF
             $pdf->Cell(8, 4, $arCotizacionDetalle->getHoras(), 1, 0, 'R');
             $pdf->Cell(8, 4, $arCotizacionDetalle->getHorasDiurnas(), 1, 0, 'R');
             $pdf->Cell(8, 4, $arCotizacionDetalle->getHorasNocturnas(), 1, 0, 'R');
+            $vrTotal += $arCotizacionDetalle->getVrTotalDetalle();
             $pdf->Cell(15, 4, number_format($arCotizacionDetalle->getVrTotalDetalle(), 0, '.', ','), 1, 0, 'R');
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);
         }
+        //TOTALES
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Ln(5);
+        $pdf->SetX(129);
+        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->Cell(35, 4, "TOTAL:", 1, 0, 'R', true);
+        $pdf->Cell(25, 4, number_format($vrTotal, 0, '.', ','), 1, 0, 'R');
+        $pdf->Ln(8);
     }
 
     public function Footer() {

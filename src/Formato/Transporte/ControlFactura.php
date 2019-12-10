@@ -42,7 +42,7 @@ class ControlFactura extends \FPDF
         $this->SetDrawColor(0, 0, 0);
         $this->SetFont('Arial', 'B', 8);
         $this->SetXY(10, 40);
-        $this->Cell(185, 4, 'CIU 4423 transporte de carga por carretera', 1, 0, 'L', 1);
+        $this->Cell(185, 4, 'CIU 4923 transporte de carga por carretera', 1, 0, 'L', 1);
         $this->SetXY(10, 44);
         $this->Cell(185, 4, 'Numero de identificacion de las maquinas registradoras o computadores que emiten documento equivalente o factura IP 190.85.62.78', 1, 0, 'L', 1);
 
@@ -129,7 +129,7 @@ class ControlFactura extends \FPDF
             $pdf->Cell(15, 4, $registro, 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arFactura['codigoFacturaPk'], 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arFactura['numero'], 'LRB', 0, 'L');
-            $pdf->Cell(20, 4, utf8_decode($arFactura['nombre']), 'LRB', 0, 'L');
+            $pdf->Cell(20, 4,  substr(utf8_decode($arFactura['nombre']),0, 11) , 'LRB', 0, 'L');
             $pdf->Cell(15, 4, $arFactura['fecha']->format('Y-m-d'), 'LRB', 0, 'L');
             $pdf->Cell(60, 4, utf8_decode($arFactura['nombreCorto']), 'LRB', 0, 'L');
             $pdf->Cell(15, 4, number_format($arFactura['vrFlete']), 'LRB', 0, 'R');

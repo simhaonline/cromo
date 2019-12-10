@@ -10,6 +10,8 @@ use App\Entity\General\GenIdentificacion;
 use App\Entity\General\GenPais;
 use App\Entity\General\GenSexo;
 use App\Entity\RecursoHumano\RhuAdicional;
+use App\Entity\RecursoHumano\RhuAporte;
+use App\Entity\RecursoHumano\RhuAporteDetalle;
 use App\Entity\RecursoHumano\RhuCargo;
 use App\Entity\RecursoHumano\RhuCargoSupervigilancia;
 use App\Entity\RecursoHumano\RhuClasificacionRiesgo;
@@ -42,6 +44,7 @@ use App\Entity\RecursoHumano\RhuPension;
 use App\Entity\RecursoHumano\RhuRh;
 use App\Entity\RecursoHumano\RhuSalud;
 use App\Entity\RecursoHumano\RhuSubtipoCotizante;
+use App\Entity\RecursoHumano\RhuSucursal;
 use App\Entity\RecursoHumano\RhuTiempo;
 use App\Entity\RecursoHumano\RhuTipoCotizante;
 use App\Entity\RecursoHumano\RhuVacacion;
@@ -84,10 +87,10 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('servidor', TextType::class, ['required' => false, 'data' => '192.168.2.199', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracis', 'attr' => ['class' => 'form-control']])
-            ->add('usuario', TextType::class, ['required' => false, 'data' => 'consulta', 'attr' => ['class' => 'form-control']])
-            ->add('clave', TextType::class, ['required' => false, 'data' => 'SoporteErp2018@', 'attr' => ['class' => 'form-control']])
+            ->add('servidor', TextType::class, ['required' => false, 'data' => '165.22.222.162', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdinsepsasv1', 'attr' => ['class' => 'form-control']])
+            ->add('usuario', TextType::class, ['required' => false, 'data' => 'administrador', 'attr' => ['class' => 'form-control']])
+            ->add('clave', TextType::class, ['required' => false, 'data' => 'LyVpb2cHX0', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -98,7 +101,7 @@ class MigracionController extends Controller
             $username = $form->get('usuario')->getData();
             $password = $form->get('clave')->getData();
 
-            if($servername && $database && $username && $password) {
+            if ($servername && $database && $username && $password) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
                 $conn = mysqli_connect($servername, $username, $password, $database);
@@ -152,11 +155,17 @@ class MigracionController extends Controller
                         case 'rhu_liquidacion':
                             $this->rhuLiquidacion($conn);
                             break;
-                        case 'rhu_pago':
+                        case 'rhu_':
                             $this->rhuPago($conn);
                             break;
                         case 'rhu_pago_detalle':
                             $this->rhuPagoDetalle($conn);
+                            break;
+                        case 'rhu_aporte':
+                            $this->rhuAporte($conn);
+                            break;
+                        case 'rhu_aporte_detalle':
+                            $this->rhuAporteDetalle($conn);
                             break;
                         case 'rhu_incapacidad':
                             $this->rhuIncapacidad($conn);
@@ -209,30 +218,32 @@ class MigracionController extends Controller
             }
         }
         $arrProcesos = [
-            ['clase' => 'rhu_empleado',         'registros' => $this->contarRegistros('RhuEmpleado','RecursoHumano', 'codigoEmpleadoPk')],
-            ['clase' => 'rhu_contrato',         'registros' => $this->contarRegistros('RhuContrato','RecursoHumano', 'codigoContratoPk')],
-            ['clase' => 'rhu_adicional',        'registros' => $this->contarRegistros('RhuAdicional','RecursoHumano', 'codigoAdicionalPk')],
-            ['clase' => 'rhu_embargo',          'registros' => $this->contarRegistros('RhuEmbargo','RecursoHumano', 'codigoEmbargoPk')],
-            ['clase' => 'rhu_credito',          'registros' => $this->contarRegistros('RhuCredito','RecursoHumano', 'codigoCreditoPk')],
-            ['clase' => 'rhu_credito_pago',     'registros' => $this->contarRegistros('RhuCreditoPago','RecursoHumano', 'codigoCreditoPagoPk')],
-            ['clase' => 'rhu_vacacion',         'registros' => $this->contarRegistros('RhuVacacion','RecursoHumano', 'codigoVacacionPk')],
-            ['clase' => 'rhu_liquidacion',      'registros' => $this->contarRegistros('RhuLiquidacion','RecursoHumano', 'codigoLiquidacionPk')],
-            ['clase' => 'rhu_pago',             'registros' => $this->contarRegistros('RhuPago','RecursoHumano', 'codigoPagoPk')],
-            ['clase' => 'rhu_pago_detalle',     'registros' => $this->contarRegistros('RhuPagoDetalle','RecursoHumano', 'codigoPagoDetallePk')],
-            ['clase' => 'rhu_incapacidad',      'registros' => $this->contarRegistros('RhuIncapacidad','RecursoHumano', 'codigoIncapacidadPk')],
-            ['clase' => 'rhu_licencia',         'registros' => $this->contarRegistros('RhuLicencia','RecursoHumano', 'codigoLicenciaPk')],
-            ['clase' => 'tur_cliente',          'registros' => $this->contarRegistros('TurCliente','Turno', 'codigoClientePk')],
-            ['clase' => 'tur_puesto',           'registros' => $this->contarRegistros('TurPuesto','Turno', 'codigoPuestoPk')],
-            ['clase' => 'tur_contrato',         'registros' => $this->contarRegistros('TurContrato','Turno', 'codigoContratoPk')],
-            ['clase' => 'tur_contrato_detalle', 'registros' => $this->contarRegistros('TurContratoDetalle','Turno', 'codigoContratoDetallePk')],
-            ['clase' => 'tur_contrato_detalle_compuesto',   'registros' => $this->contarRegistros('TurContratoDetalleCompuesto','Turno', 'codigoContratoDetalleCompuestoPk')],
-            ['clase' => 'tur_pedido',           'registros' => $this->contarRegistros('TurPedido','Turno', 'codigoPedidoPk')],
-            ['clase' => 'tur_pedido_detalle',   'registros' => $this->contarRegistros('TurPedidoDetalle','Turno', 'codigoPedidoDetallePk')],
-            ['clase' => 'tur_pedido_detalle_compuesto',   'registros' => $this->contarRegistros('TurPedidoDetalleCompuesto','Turno', 'codigoPedidoDetalleCompuestoPk')],
-            ['clase' => 'tur_factura',          'registros' => $this->contarRegistros('TurFactura','Turno', 'codigoFacturaPk')],
-            ['clase' => 'tur_factura_detalle',  'registros' => $this->contarRegistros('TurFacturaDetalle','Turno', 'codigoFacturaDetallePk')],
-            ['clase' => 'tur_programacion',     'registros' => $this->contarRegistros('TurProgramacion','Turno', 'codigoProgramacionPk')],
-            ['clase' => 'usuarios',              'registros' => $this->contarRegistros('Usuario','Seguridad', 'username')]
+            ['clase' => 'rhu_empleado', 'registros' => $this->contarRegistros('RhuEmpleado', 'RecursoHumano', 'codigoEmpleadoPk')],
+            ['clase' => 'rhu_contrato', 'registros' => $this->contarRegistros('RhuContrato', 'RecursoHumano', 'codigoContratoPk')],
+            ['clase' => 'rhu_adicional', 'registros' => $this->contarRegistros('RhuAdicional', 'RecursoHumano', 'codigoAdicionalPk')],
+            ['clase' => 'rhu_embargo', 'registros' => $this->contarRegistros('RhuEmbargo', 'RecursoHumano', 'codigoEmbargoPk')],
+            ['clase' => 'rhu_credito', 'registros' => $this->contarRegistros('RhuCredito', 'RecursoHumano', 'codigoCreditoPk')],
+            ['clase' => 'rhu_credito_pago', 'registros' => $this->contarRegistros('RhuCreditoPago', 'RecursoHumano', 'codigoCreditoPagoPk')],
+            ['clase' => 'rhu_vacacion', 'registros' => $this->contarRegistros('RhuVacacion', 'RecursoHumano', 'codigoVacacionPk')],
+            ['clase' => 'rhu_liquidacion', 'registros' => $this->contarRegistros('RhuLiquidacion', 'RecursoHumano', 'codigoLiquidacionPk')],
+            ['clase' => 'rhu_aporte', 'registros' => $this->contarRegistros('RhuAporte', 'RecursoHumano', 'codigoAportePk')],
+            ['clase' => 'rhu_aporte_detalle', 'registros' => $this->contarRegistros('RhuAporteDetalle', 'RecursoHumano', 'codigoAporteDetallePk')],
+            ['clase' => 'rhu_pago', 'registros' => $this->contarRegistros('RhuPago', 'RecursoHumano', 'codigoPagoPk')],
+            ['clase' => 'rhu_pago_detalle', 'registros' => $this->contarRegistros('RhuPagoDetalle', 'RecursoHumano', 'codigoPagoDetallePk')],
+            ['clase' => 'rhu_incapacidad', 'registros' => $this->contarRegistros('RhuIncapacidad', 'RecursoHumano', 'codigoIncapacidadPk')],
+            ['clase' => 'rhu_licencia', 'registros' => $this->contarRegistros('RhuLicencia', 'RecursoHumano', 'codigoLicenciaPk')],
+            ['clase' => 'tur_cliente', 'registros' => $this->contarRegistros('TurCliente', 'Turno', 'codigoClientePk')],
+            ['clase' => 'tur_puesto', 'registros' => $this->contarRegistros('TurPuesto', 'Turno', 'codigoPuestoPk')],
+            ['clase' => 'tur_contrato', 'registros' => $this->contarRegistros('TurContrato', 'Turno', 'codigoContratoPk')],
+            ['clase' => 'tur_contrato_detalle', 'registros' => $this->contarRegistros('TurContratoDetalle', 'Turno', 'codigoContratoDetallePk')],
+            ['clase' => 'tur_contrato_detalle_compuesto', 'registros' => $this->contarRegistros('TurContratoDetalleCompuesto', 'Turno', 'codigoContratoDetalleCompuestoPk')],
+            ['clase' => 'tur_pedido', 'registros' => $this->contarRegistros('TurPedido', 'Turno', 'codigoPedidoPk')],
+            ['clase' => 'tur_pedido_detalle', 'registros' => $this->contarRegistros('TurPedidoDetalle', 'Turno', 'codigoPedidoDetallePk')],
+            ['clase' => 'tur_pedido_detalle_compuesto', 'registros' => $this->contarRegistros('TurPedidoDetalleCompuesto', 'Turno', 'codigoPedidoDetalleCompuestoPk')],
+            ['clase' => 'tur_factura', 'registros' => $this->contarRegistros('TurFactura', 'Turno', 'codigoFacturaPk')],
+            ['clase' => 'tur_factura_detalle', 'registros' => $this->contarRegistros('TurFacturaDetalle', 'Turno', 'codigoFacturaDetallePk')],
+            ['clase' => 'tur_programacion', 'registros' => $this->contarRegistros('TurProgramacion', 'Turno', 'codigoProgramacionPk')],
+            ['clase' => 'usuarios', 'registros' => $this->contarRegistros('Usuario', 'Seguridad', 'username')]
         ];
         return $this->render('general/migracion/migracion.html.twig', [
             'arrProcesos' => $arrProcesos,
@@ -651,7 +662,6 @@ class MigracionController extends Controller
             $datos->free();
             ob_clean();
         }
-
 
 
     }
@@ -1232,7 +1242,7 @@ class MigracionController extends Controller
             $arLiquidacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
             $arLiquidacion->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
             $arLiquidacion->setLiquidacionTipoRel($em->getReference(RhuLiquidacionTipo::class, 'GEN'));
-            if($row['codigo_contrato_motivo_externo']) {
+            if ($row['codigo_contrato_motivo_externo']) {
                 $arLiquidacion->setMotivoTerminacionRel($em->getReference(RhuContratoMotivo::class, $row['codigo_contrato_motivo_externo']));
             }
             $arLiquidacion->setFecha(date_create($row['fecha']));
@@ -1314,6 +1324,326 @@ class MigracionController extends Controller
         $em->flush();
 
 
+    }
+
+    private function rhuAporte($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_pago_pk FROM rhu_pago ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                codigo_periodo_detalle_pk,
+                codigo_sucursal_fk,
+                rhu_sso_periodo.fecha_desde AS fecha_desde,
+		        rhu_sso_periodo.fecha_hasta AS fecha_hasta,
+		        rhu_sso_periodo.anio AS anio,
+		        rhu_sso_periodo.mes AS mes,
+		        rhu_sso_periodo.anio_pago AS anio_salud,
+		        rhu_sso_periodo.mes_pago AS mes_salud,
+                numero_registros,
+                numero_empleados,
+                total_cotizacion,
+                total_ingreso_base_cotizacion_caja
+                 FROM rhu_sso_periodo_detalle  
+                 LEFT JOIN rhu_sso_periodo ON rhu_sso_periodo_detalle.codigo_periodo_fk = rhu_sso_periodo.codigo_periodo_pk 
+                 ORDER BY codigo_periodo_detalle_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arAporte = new RhuAporte();
+                $arAporte->setCodigoAportePk($row['codigo_periodo_detalle_pk']);
+                $arAporte->setSucursalRel($em->getReference(RhuSucursal::class, $row['codigo_sucursal_fk']));
+                $arAporte->setNumero($row['numero_registros']);
+                $arAporte->setAnio($row['anio']);
+                $arAporte->setMes($row['mes']);
+                $arAporte->setAnioSalud($row['anio_salud']);
+                $arAporte->setMesSalud($row['mes_salud']);
+                $arAporte->setFechaDesde(date_create($row['fecha_desde']));
+                $arAporte->setFechaHasta(date_create($row['fecha_hasta']));
+                $arAporte->setFormaPresentacion('S');
+                $arAporte->setCantidadEmpleados($row['numero_empleados']);
+                $arAporte->setVrTotal($row['total_cotizacion']);
+                $arAporte->setVrIngresoBaseCotizacion($row['total_ingreso_base_cotizacion_caja']);
+                $arAporte->setEstadoAutorizado(1);
+                $arAporte->setEstadoAprobado(1);
+                $arAporte->setEstadoAnulado(0);
+                $arAporte->setEstadoContabilizado(0);
+                $em->persist($arAporte);
+                $metadata = $em->getClassMetaData(get_class($arAporte));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+    }
+
+    private function rhuAporteDetalle($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_aporte_pk FROM rhu_sso_aporte ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                codigo_aporte_pk,
+                codigo_periodo_detalle_fk,
+                codigo_sucursal_fk,
+                codigo_empleado_fk,
+                codigo_contrato_fk,
+                rhu_entidad_salud.codigo_interface as codigo_entidad_salud_externo,
+                rhu_entidad_pension.codigo_interface as codigo_entidad_pension_externo,
+                rhu_entidad_caja.codigo_interface as codigo_entidad_caja_externo,
+                anio,
+                mes,
+                fecha_desde,
+                fecha_hasta,
+                tipo_registro,
+                secuencia,
+                tipo_documento,
+                tipo_cotizante,
+                subtipo_cotizante,
+                extranjero_no_obligado_cotizar_pension,
+                colombiano_residente_exterior,
+                codigo_departamento_ubicacion_laboral,
+                codigo_municipio_ubicacion_laboral,
+                primer_nombre,
+                segundo_nombre,
+                primer_apellido,
+                segundo_apellido,
+                ingreso,
+                retiro,
+                traslado_desde_otra_eps,
+                traslado_a_otra_eps,
+                traslado_desde_otra_pension,
+                traslado_a_otra_pension,
+                variacion_permanente_salario,
+                correcciones,
+                variacion_transitoria_salario,
+                suspension_temporal_contrato_licencia_servicios,
+                dias_licencia,
+                incapacidad_general,    
+                dias_incapacidad_general,
+                licencia_maternidad,
+                dias_licencia_maternidad,
+                vacaciones,
+                dias_vacaciones,
+                aporte_voluntario,
+                variacion_centros_trabajo,
+                incapacidad_accidente_trabajo_enfermedad_profesional,
+                codigo_entidad_pension_pertenece,
+                codigo_entidad_pension_traslada,
+                codigo_entidad_salud_pertenece,
+                codigo_entidad_salud_traslada,
+                codigo_entidad_caja_pertenece,
+                dias_cotizados_pension,
+                dias_cotizados_salud,
+                dias_cotizados_riesgos_profesionales,
+                dias_cotizados_caja_compensacion,
+                salario_basico,
+                salario_mes_anterior,
+                vr_vacaciones,
+                salario_integral,
+                suplementario,
+                vr_ingreso_base_cotizacion,
+                ibc_pension,
+                ibc_salud,
+                ibc_riesgos_profesionales,
+                ibc_caja,
+                tarifa_pension,
+                tarifa_salud,
+                tarifa_riesgos,
+                tarifa_caja,
+                tarifa_sena,
+                tarifa_icbf,
+                cotizacion_pension,
+                cotizacion_salud,
+                cotizacion_riesgos,
+                cotizacion_caja,
+                cotizacion_sena,
+                cotizacion_icbf,
+                aporte_voluntario_fondo_pensiones_obligatorias,
+                cotizacion_voluntario_fondo_pensiones_obligatorias,
+                total_cotizacion_fondos,
+                aportes_fondo_solidaridad_pensional_solidaridad,
+                aportes_fondo_solidaridad_pensional_subsistencia,
+                valor_upc_adicional,
+                numero_autorizacion_incapacidad_enfermedad_general,
+                valor_incapacidad_enfermedad_general,
+                numero_autorizacion_licencia_maternidad_paternidad,
+                valor_incapacidad_licencia_maternidad_paternidad,
+                centro_trabajo_codigo_ct,
+                tarifa_aporte_esap,
+                valor_aporte_esap,
+                tarifa_aporte_men,
+                valor_aporte_men,
+                tipo_documento_responsable_upc,
+                numero_identificacion_responsable_upc_adicional,
+                cotizante_exonerado_pago_aporte_parafiscales_salud,
+                codigo_administradora_riesgos_laborales,
+                clase_riesgo_afiliado,
+                total_cotizacion,
+                indicador_tarifa_especial_pensiones,
+                fecha_ingreso,
+                fecha_retiro,
+                fecha_inicio_vsp,
+                fecha_inicio_sln,
+                fecha_fin_sln,
+                fecha_inicio_ige,
+                fecha_fin_ige,
+                fecha_inicio_lma,
+                fecha_fin_lma,
+                fecha_inicio_vac_lr,
+                fecha_fin_vac_lr,
+                fecha_inicio_vct,
+                fecha_fin_vct,
+                fecha_inicio_irl,
+                fecha_fin_irl,
+                ibc_otros_parafiscales_diferentes_ccf,
+                numero_horas_laboradas
+                  FROM rhu_sso_aporte
+                  left join rhu_entidad_salud on rhu_entidad_salud.codigo_entidad_salud_pk=rhu_sso_aporte.codigo_entidad_salud_fk
+                  left join rhu_entidad_pension on rhu_entidad_pension.codigo_entidad_pension_pk=rhu_sso_aporte.codigo_entidad_pension_fk
+                  left join rhu_entidad_caja on rhu_entidad_caja.codigo_entidad_caja_pk=rhu_sso_aporte.codigo_entidad_caja_fk  
+                 ORDER BY codigo_aporte_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arAporteDetalle = new RhuAporteDetalle();
+                $arAporteDetalle->setCodigoAporteDetallePk($row['codigo_aporte_pk']);
+                $arAporteDetalle->setAporteRel($em->getReference(RhuAporte::class, $row['codigo_periodo_detalle_fk']));
+                $arAporteDetalle->setSucursalRel($em->getReference(RhuSucursal::class, $row['codigo_sucursal_fk']));
+                $arAporteDetalle->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
+                $arAporteDetalle->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+                $arEntidadSalud = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_salud_externo']]);
+                $arAporteDetalle->setEntidadSaludRel($arEntidadSalud);
+                $arEntidadPension = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_pension_externo']]);
+                $arAporteDetalle->setEntidadPensionRel($arEntidadPension);
+                $arEntidadCaja = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_caja_externo']]);
+                $arAporteDetalle->setEntidadCajaRel($arEntidadCaja);
+                $arAporteDetalle->setAnio($row['anio']);
+                $arAporteDetalle->setMes($row['mes']);
+                $arAporteDetalle->setFechaDesde(date_create($row['fecha_desde']));
+                $arAporteDetalle->setFechaHasta(date_create($row['fecha_hasta']));
+                $arAporteDetalle->setTipoRegistro($row['tipo_registro']);
+                $arAporteDetalle->setSecuencia($row['secuencia']);
+                $arAporteDetalle->setTipoDocumento($row['tipo_documento']);
+                $arAporteDetalle->setTipoCotizante($row['tipo_cotizante']);
+                $arAporteDetalle->setSubtipoCotizante($row['subtipo_cotizante']);
+                $arAporteDetalle->setExtranjeroNoObligadoCotizarPension($row['extranjero_no_obligado_cotizar_pension']);
+                $arAporteDetalle->setColombianoResidenteExterior($row['colombiano_residente_exterior']);
+                $arAporteDetalle->setCodigoDepartamentoUbicacionlaboral($row['codigo_departamento_ubicacion_laboral']);
+                $arAporteDetalle->setCodigoMunicipioUbicacionlaboral($row['codigo_municipio_ubicacion_laboral']);
+                $arAporteDetalle->setPrimerNombre(utf8_encode($row['primer_nombre']));
+                $arAporteDetalle->setSegundoNombre(utf8_encode($row['segundo_nombre']));
+                $arAporteDetalle->setPrimerApellido(utf8_encode($row['primer_apellido']));
+                $arAporteDetalle->setSegundoApellido(utf8_encode($row['segundo_apellido']));
+                $arAporteDetalle->setIngreso($row['ingreso']);
+                $arAporteDetalle->setRetiro($row['retiro']);
+                $arAporteDetalle->setTrasladoDesdeOtraEps($row['traslado_desde_otra_eps']);
+                $arAporteDetalle->setTrasladoAOtraEps($row['traslado_a_otra_eps']);
+                $arAporteDetalle->setTrasladoDesdeOtraPension($row['traslado_desde_otra_pension']);
+                $arAporteDetalle->setTrasladoAOtraPension($row['traslado_a_otra_pension']);
+                $arAporteDetalle->setVariacionPermanenteSalario($row['variacion_permanente_salario']);
+                $arAporteDetalle->setCorrecciones($row['correcciones']);
+                $arAporteDetalle->setVariacionTransitoriaSalario($row['variacion_transitoria_salario']);
+                $arAporteDetalle->setSuspensionTemporalContratoLicenciaServicios($row['suspension_temporal_contrato_licencia_servicios']);
+                $arAporteDetalle->setDiasLicencia($row['dias_licencia']);
+                $arAporteDetalle->setIncapacidadGeneral($row['incapacidad_general']);
+                $arAporteDetalle->setDiasIncapacidadGeneral($row['dias_incapacidad_general']);
+                $arAporteDetalle->setLicenciaMaternidad($row['licencia_maternidad']);
+                $arAporteDetalle->setDiasLicenciaMaternidad($row['dias_licencia_maternidad']);
+                $arAporteDetalle->setVacaciones($row['vacaciones']);
+                $arAporteDetalle->setDiasVacaciones($row['dias_vacaciones']);
+                $arAporteDetalle->setAporteVoluntario($row['aporte_voluntario']);
+                $arAporteDetalle->setVariacionCentrosTrabajo($row['variacion_centros_trabajo']);
+                $arAporteDetalle->setIncapacidadAccidenteTrabajoEnfermedadProfesional($row['incapacidad_accidente_trabajo_enfermedad_profesional']);
+                $arAporteDetalle->setCodigoEntidadPensionPertenece($row['codigo_entidad_pension_pertenece']);
+                $arAporteDetalle->setCodigoEntidadPensionTraslada($row['codigo_entidad_pension_traslada']);
+                $arAporteDetalle->setCodigoEntidadSaludPertenece($row['codigo_entidad_salud_pertenece']);
+                $arAporteDetalle->setCodigoEntidadSaludTraslada($row['codigo_entidad_salud_traslada']);
+                $arAporteDetalle->setCodigoEntidadCajaPertenece($row['codigo_entidad_caja_pertenece']);
+                $arAporteDetalle->setDiasCotizadosPension($row['dias_cotizados_pension']);
+                $arAporteDetalle->setDiasCotizadosSalud($row['dias_cotizados_salud']);
+                $arAporteDetalle->setDiasCotizadosRiesgosProfesionales($row['dias_cotizados_riesgos_profesionales']);
+                $arAporteDetalle->setDiasCotizadosCajaCompensacion($row['dias_cotizados_caja_compensacion']);
+                $arAporteDetalle->setSalarioBasico($row['salario_basico']);
+                $arAporteDetalle->setSalarioMesAnterior($row['salario_mes_anterior']);
+                $arAporteDetalle->setVrVacaciones($row['vr_vacaciones']);
+                $arAporteDetalle->setSalarioIntegral($row['salario_integral']);
+                $arAporteDetalle->setSuplementario($row['suplementario']);
+                $arAporteDetalle->setVrIngresoBaseCotizacion($row['vr_ingreso_base_cotizacion']);
+                $arAporteDetalle->setIbcPension($row['ibc_pension']);
+                $arAporteDetalle->setIbcSalud($row['ibc_salud']);
+                $arAporteDetalle->setIbcRiesgosProfesionales($row['ibc_riesgos_profesionales']);
+                $arAporteDetalle->setIbcCaja($row['ibc_caja']);
+                $arAporteDetalle->setTarifaPension($row['tarifa_pension']);
+                $arAporteDetalle->setTarifaSalud($row['tarifa_salud']);
+                $arAporteDetalle->setTarifaRiesgos($row['tarifa_riesgos']);
+                $arAporteDetalle->setTarifaCaja($row['tarifa_caja']);
+                $arAporteDetalle->setTarifaSena($row['tarifa_sena']);
+                $arAporteDetalle->setTarifaIcbf($row['tarifa_icbf']);
+                $arAporteDetalle->setCotizacionPension($row['cotizacion_pension']);
+                $arAporteDetalle->setCotizacionSalud($row['cotizacion_salud']);
+                $arAporteDetalle->setCotizacionRiesgos($row['cotizacion_riesgos']);
+                $arAporteDetalle->setCotizacionCaja($row['cotizacion_caja']);
+                $arAporteDetalle->setCotizacionSena($row['cotizacion_sena']);
+                $arAporteDetalle->setCotizacionIcbf($row['cotizacion_icbf']);
+                $arAporteDetalle->setAporteVoluntarioFondoPensionesObligatorias($row['aporte_voluntario_fondo_pensiones_obligatorias']);
+                $arAporteDetalle->setCotizacionVoluntarioFondoPensionesObligatorias($row['cotizacion_voluntario_fondo_pensiones_obligatorias']);
+                $arAporteDetalle->setTotalCotizacionFondos($row['total_cotizacion_fondos']);
+                $arAporteDetalle->setAportesFondoSolidaridadPensionalSolidaridad($row['aportes_fondo_solidaridad_pensional_solidaridad']);
+                $arAporteDetalle->setAportesFondoSolidaridadPensionalSubsistencia($row['aportes_fondo_solidaridad_pensional_subsistencia']);
+                $arAporteDetalle->setValorUpcAdicional($row['valor_upc_adicional']);
+                $arAporteDetalle->setNumeroAutorizacionIncapacidadEnfermedadGeneral($row['numero_autorizacion_incapacidad_enfermedad_general']);
+                $arAporteDetalle->setValorIncapacidadEnfermedadGeneral($row['valor_incapacidad_enfermedad_general']);
+                $arAporteDetalle->setNumeroAutorizacionLicenciaMaternidadPaternidad($row['numero_autorizacion_licencia_maternidad_paternidad']);
+                $arAporteDetalle->setValorIncapacidadLicenciaMaternidadPaternidad($row['valor_incapacidad_licencia_maternidad_paternidad']);
+                $arAporteDetalle->setCentroTrabajoCodigoCt($row['centro_trabajo_codigo_ct']);
+                $arAporteDetalle->setCodigoCargoFk(null);
+                $arAporteDetalle->setTarifaAportesESAP($row['tarifa_aporte_esap']);
+                $arAporteDetalle->setValorAportesESAP($row['valor_aporte_esap']);
+                $arAporteDetalle->setTarifaAportesMEN($row['tarifa_aporte_men']);
+                $arAporteDetalle->setValorAportesMEN($row['valor_aporte_men']);
+                $arAporteDetalle->setTipoDocumentoResponsableUPC($row['tipo_documento_responsable_upc']);
+                $arAporteDetalle->setNumeroIdentificacionResponsableUPCAdicional($row['numero_identificacion_responsable_upc_adicional']);
+                $arAporteDetalle->setCotizanteExoneradoPagoAporteParafiscalesSalud($row['cotizante_exonerado_pago_aporte_parafiscales_salud']);
+                $arAporteDetalle->setCodigoAdministradoraRiesgosLaborales($row['codigo_administradora_riesgos_laborales']);
+                $arAporteDetalle->setClaseRiesgoAfiliado($row['clase_riesgo_afiliado']);
+                $arAporteDetalle->setTotalCotizacion($row['total_cotizacion_fondos']);
+                $arAporteDetalle->setIndicadorTarifaEspecialPensiones($row['indicador_tarifa_especial_pensiones']);
+                $arAporteDetalle->setFechaIngreso($row['fecha_ingreso']);
+                $arAporteDetalle->setFechaRetiro($row['fecha_retiro']);
+                $arAporteDetalle->setFechaInicioVsp($row['fecha_inicio_vsp']);
+                $arAporteDetalle->setFechaInicioSln($row['fecha_inicio_sln']);
+                $arAporteDetalle->setFechaFinSln($row['fecha_fin_sln']);
+                $arAporteDetalle->setFechaInicioIge($row['fecha_inicio_ige']);
+                $arAporteDetalle->setFechaFinIge($row['fecha_fin_ige']);
+                $arAporteDetalle->setFechaInicioLma($row['fecha_inicio_lma']);
+                $arAporteDetalle->setFechaFinLma($row['fecha_fin_lma']);
+                $arAporteDetalle->setFechaInicioVacLr($row['fecha_inicio_vac_lr']);
+                $arAporteDetalle->setFechaFinVacLr($row['fecha_fin_vac_lr']);
+                $arAporteDetalle->setFechaInicioVct($row['fecha_inicio_vct']);
+                $arAporteDetalle->setFechaFinVct($row['fecha_fin_vct']);
+                $arAporteDetalle->setFechaInicioIrl($row['fecha_inicio_irl']);
+                $arAporteDetalle->setFechaFinIrl($row['fecha_fin_irl']);
+                $arAporteDetalle->setFechaInicioIrl($row['fecha_inicio_irl']);
+                $arAporteDetalle->setIbcOtrosParafiscalesDiferentesCcf($row['ibc_otros_parafiscales_diferentes_ccf']);
+                $arAporteDetalle->setNumeroHorasLaboradas($row['numero_horas_laboradas']);
+                $em->persist($arAporteDetalle);
+                $metadata = $em->getClassMetaData(get_class($arAporteDetalle));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
     }
 
     private function rhuPago($conn)
@@ -1552,7 +1882,7 @@ class MigracionController extends Controller
                 $arIncapacidad = new RhuIncapacidad();
                 $arIncapacidad->setCodigoIncapacidadPk($row['codigo_incapacidad_pk']);
                 $arIncapacidad->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
-                if($row['codigo_contrato_fk']) {
+                if ($row['codigo_contrato_fk']) {
                     $arIncapacidad->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
                 }
                 $arIncapacidad->getNumero($row['numero']);
@@ -1561,7 +1891,7 @@ class MigracionController extends Controller
                 $arIncapacidad->setFechaDesde(date_create($row['fecha_desde']));
                 $arIncapacidad->setFechaHasta(date_create($row['fecha_hasta']));
 
-                if($row['codigo_centro_costo_fk']) {
+                if ($row['codigo_centro_costo_fk']) {
                     $arIncapacidad->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
                 }
                 if ($row['codigo_incapacidad_tipo_fk']) {
@@ -1599,12 +1929,12 @@ class MigracionController extends Controller
                 } else {
                     $arIncapacidad->setFechaHastaEmpresa(date_create($row['fecha_hasta_empresa']));
                 }
-                if($row['fecha_desde_entidad'] == null) {
+                if ($row['fecha_desde_entidad'] == null) {
                     $arIncapacidad->setFechaDesdeEntidad(null);
                 } else {
                     $arIncapacidad->setFechaDesdeEntidad(date_create($row['fecha_desde_entidad']));
                 }
-                if($row['fecha_hasta_entidad'] == null) {
+                if ($row['fecha_hasta_entidad'] == null) {
                     $arIncapacidad->setFechaHastaEntidad(null);
                 } else {
                     $arIncapacidad->setFechaHastaEntidad(date_create($row['fecha_hasta_entidad']));
@@ -2747,10 +3077,10 @@ class MigracionController extends Controller
                 if ($row['codigo_recurso_fk']) {
                     $arProgramacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_recurso_fk']));
                 }
-                if($row['codigo_pedido_detalle_fk']) {
+                if ($row['codigo_pedido_detalle_fk']) {
                     $arProgramacion->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
                 }
-                if($row['codigo_puesto_fk']) {
+                if ($row['codigo_puesto_fk']) {
                     $arProgramacion->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
                 }
                 $arProgramacion->setAnio($row['anio']);
@@ -2804,7 +3134,8 @@ class MigracionController extends Controller
 
     }
 
-    private function finCuenta($conn){
+    private function finCuenta($conn)
+    {
         $em = $this->getDoctrine()->getManager();
         $datos = $conn->query('SELECT codigo_cuenta_pk, nombre_cuenta, codigo_cuenta_padre_fk, permite_movimientos, exige_centro_costos, exige_base, exige_nit, porcentaje_retencion FROM ctb_cuenta');
         foreach ($datos as $row) {
@@ -2830,7 +3161,8 @@ class MigracionController extends Controller
         }
     }
 
-    private function usuarios ($conn){
+    private function usuarios($conn)
+    {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
@@ -2859,7 +3191,8 @@ class MigracionController extends Controller
         }
     }
 
-    private function contarRegistros($entidad, $modulo, $key) {
+    private function contarRegistros($entidad, $modulo, $key)
+    {
         $em = $this->getDoctrine()->getManager();
         $repoArticles = $em->getRepository("App\\Entity\\{$modulo}\\{$entidad}");
         $totalArticles = $repoArticles->createQueryBuilder('e')
@@ -2870,3 +3203,4 @@ class MigracionController extends Controller
     }
 
 }
+

@@ -59,31 +59,24 @@ class ContactoController extends ControllerListenerGeneral
     }
 
     /**
-     * @Route("/crm/administracion/comercial/contacto/nuevo/{id}/{codigoCliente}", name="crm_administracion_comercial_contacto_nuevo")
+     * @Route("/crm/administracion/comercial/contacto/nuevo/{id}", name="crm_administracion_comercial_contacto_nuevo")
      */
-    public function nuevo(Request $request, $id, $codigoCliente)
+    public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arContacto = new CrmContacto();
         if ($id != 0) {
             $arContacto = $em->getRepository(CrmContacto::class)->find($id);
-            if (!$arContacto) {
-                return $this->redirect($this->generateUrl('crm_administracion_comercial_cliente_lista'));
-            }
         }
         $form = $this->createForm(ContactoType::class, $arContacto);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arCliente = $em->getRepository(CrmCliente::class)->find($codigoCliente);
-                if ($arCliente){
                     $arContacto = $form->getData();
-                    $arContacto->setClienteRel($arCliente);
                     $em->persist($arContacto);
                     $em->flush();
-                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    return $this->redirect($this->generateUrl('crm_administracion_comercial_contacto_detalle', array('id' => $arContacto->getCodigoContactoPk())));
 
-                }
             }
         }
         return $this->render('crm/administracion/comercial/contacto/nuevo.html.twig', [
@@ -93,7 +86,7 @@ class ContactoController extends ControllerListenerGeneral
     }
     
     /**
-     * @Route("/crm/administracion/comercial/contacto/nuevo/{id}", name="crm_administracion_comercial_contacto_detalle")
+     * @Route("/crm/administracion/comercial/contacto/detalle/{id}", name="crm_administracion_comercial_contacto_detalle")
      */
     public function detalle(Request $request, $id)
     {

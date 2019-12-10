@@ -10,6 +10,7 @@ use App\Entity\Crm\CrmContacto;
 use App\Entity\Crm\CrmNegocio;
 use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Crm\ClienteType;
+use App\Form\Type\Crm\ContactoType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -120,6 +121,42 @@ class ClienteController extends ControllerListenerGeneral
             'arContactos'=>$arContactos
         ]);
 	}
+
+
+    /**
+     * @Route("/crm/administracion/comercial/cliente/contacto/nuevo/{id}/{codigoCliente}", name="crm_administracion_comercial_cliente_detalle_nuevo")
+     */
+    public function detalleNuevo(Request $request, $id, $codigoCliente)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arContacto = new CrmContacto();
+        if ($id != 0) {
+            $arContacto = $em->getRepository(CrmContacto::class)->find($id);
+            if (!$arContacto) {
+                return $this->redirect($this->generateUrl('crm_administracion_comercial_cliente_lista'));
+            }
+        }
+        $form = $this->createForm(ContactoType::class, $arContacto);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arCliente = $em->getRepository(CrmCliente::class)->find($codigoCliente);
+                if ($arCliente){
+                    $arContacto = $form->getData();
+                    $arContacto->setClienteRel($arCliente);
+                    $em->persist($arContacto);
+                    $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+
+                }
+            }
+        }
+        return $this->render('crm/administracion/comercial/cliente/detalleNuevo.html.twig', [
+            'form' => $form->createView(),
+            'arContacto' => $arContacto
+        ]);
+    }
+
     /**
      * @Route("/crm/bus/cliente/{campoCodigo}/{campoNombre}", name="crm_cliente")
      */

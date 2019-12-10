@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_sin_menu.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="panel panel-default">
@@ -64,8 +64,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm"
-           href="{{ path('crm_administracion_comercial_contacto_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

@@ -100,6 +100,10 @@
                 {{ form_widget(form.btnEliminar,  { 'attr': {'class': 'btn btn-danger'}}) }}
             </div>
         </div>
+        <div class="btn-group" style="float: right; margin-right: 5px !important;">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('crm_administracion_comercial_contacto_nuevo', {'id': 0}) }}">Nuevo</a>
+        </div>
     </div>
     <!-- Fin Botones Menu Items -->
     {{ form_rest(form) }}

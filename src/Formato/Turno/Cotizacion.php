@@ -114,7 +114,7 @@ class Cotizacion extends \FPDF
 
     public function EncabezadoDetalles() {
         $this->Ln(14);
-        $header = array('COD', 'SERVICIO', 'MODALIDAD', 'PER', 'DESDE', 'HASTA', 'CANT', 'LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO', 'FE', 'H', 'H.D', 'H.N', 'VALOR');
+        $header = array('SERVICIO', 'MODALIDAD', 'PER', 'DESDE', 'HASTA', 'CANT', 'LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO', 'FE', 'H', 'H.D', 'H.N', 'VALOR');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
@@ -122,7 +122,7 @@ class Cotizacion extends \FPDF
         $this->SetFont('', 'B', 7);
 //
         //creamos la cabecera de la tabla.
-        $w = array(10, 30, 20, 10, 15, 15, 10, 5, 5, 5, 5, 5, 5, 5, 5, 8, 8, 8, 15);
+        $w = array(30, 20, 10, 15, 15, 10, 5, 5, 5, 5, 5, 5, 5, 5, 8, 8, 8, 15);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -141,9 +141,8 @@ class Cotizacion extends \FPDF
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         foreach ($arCotizacionDetalles as $arCotizacionDetalle) {
-            $pdf->Cell(10, 4, $arCotizacionDetalle->getCodigoCotizacionDetallePk(), 1, 0, 'L');
             $pdf->Cell(30, 4, substr($arCotizacionDetalle->getConceptoRel()->getNombre(), 0,15), 1, 0, 'L');
-            $pdf->Cell(20, 4, substr($arCotizacionDetalle->getConceptoRel()->getNombre(),0, 10), 1, 0, 'L');
+            $pdf->Cell(20, 4, substr($arCotizacionDetalle->getModalidadRel()->getNombre(),0, 10), 1, 0, 'L');
             $pdf->Cell(10, 4, $arCotizacionDetalle->getPeriodo(), 1, 0, 'L');
             $pdf->Cell(15, 4, $arCotizacionDetalle->getFechaDesde()->format('Y/m/d'), 1, 0, 'L');
             $pdf->Cell(15, 4, $arCotizacionDetalle->getFechaHasta()->format('Y/m/d'), 1, 0, 'L');

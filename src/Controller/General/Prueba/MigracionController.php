@@ -87,10 +87,10 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('servidor', TextType::class, ['required' => false, 'data' => '165.22.222.162', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdinsepsasv1', 'attr' => ['class' => 'form-control']])
-            ->add('usuario', TextType::class, ['required' => false, 'data' => 'administrador', 'attr' => ['class' => 'form-control']])
-            ->add('clave', TextType::class, ['required' => false, 'data' => 'LyVpb2cHX0', 'attr' => ['class' => 'form-control']])
+            ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bd1tegv1', 'attr' => ['class' => 'form-control']])
+            ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
+            ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -155,7 +155,7 @@ class MigracionController extends Controller
                         case 'rhu_liquidacion':
                             $this->rhuLiquidacion($conn);
                             break;
-                        case 'rhu_':
+                        case 'rhu_pago':
                             $this->rhuPago($conn);
                             break;
                         case 'rhu_pago_detalle':
@@ -882,7 +882,7 @@ class MigracionController extends Controller
             $arEmbargo->setPorcentajeExcedaSalarioMinimo($row['porcentajeExcedaSalarioMinimo']);
             $arEmbargo->setPorcentajeSalarioMinimo($row['porcentaje_salario_minimo']);
             $arEmbargo->setCuenta($row['cuenta']);
-            $arEmbargo->setTipoCuenta($row['tipo_cuenta']);
+            $arEmbargo->setTipoCuenta(utf8_encode($row['tipo_cuenta']));
             $arEmbargo->setNumeroExpediente($row['numero_expediente']);
             $arEmbargo->setNumeroProceso($row['numero_proceso']);
             $arEmbargo->setOficio($row['oficio']);

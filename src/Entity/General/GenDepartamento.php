@@ -38,7 +38,7 @@ class GenDepartamento
     private $codigoDane;
 
     /**
-     * @ORM\Column(name="codigo_dane_mascara", type="string", length=5)
+     * @ORM\Column(name="codigo_dane_mascara", type="string", length=5, nullable=true)
      */
     private $codigoDaneMascara;
 

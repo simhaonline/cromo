@@ -2332,13 +2332,17 @@ class MigracionController extends Controller
             foreach ($datos as $row) {
                 $arPuesto = new TurPuesto();
                 $arPuesto->setCodigoPuestoPk($row['codigo_puesto_pk']);
-                $arPuesto->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+                if($row['codigo_cliente_fk']) {
+                    $arPuesto->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+                }
                 $arPuesto->setNombre(utf8_encode($row['nombre']));
                 $arPuesto->setDireccion(utf8_encode($row['direccion']));
                 $arPuesto->setTelefono(utf8_encode($row['telefono']));
                 $arPuesto->setCelular(utf8_encode($row['celular']));
                 $arPuesto->setContacto(utf8_encode($row['contacto']));
-                $arPuesto->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+                if($row['codigo_ciudad_fk']) {
+                    $arPuesto->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+                }
                 $em->persist($arPuesto);
                 $metadata = $em->getClassMetaData(get_class($arPuesto));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);

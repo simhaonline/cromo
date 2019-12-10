@@ -64,10 +64,15 @@
                 <td>{{ arAporte.estadoAprobado ? 'SI':'NO' }}</td>
                 <td>{{ arAporte.estadoAnulado ? 'SI':'NO' }}</td>
                 <td>{{ arAporte.estadoContabilizado ? 'SI':'NO' }}</td>
-                <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_nuevo',{'id': arAporte.codigoAportePk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arAporte.estadoAutorizado  %}
+                    <td></td>
+                {% else %}
+                    <td style="text-align: center;">
+                        <a href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_nuevo',{'id': arAporte.codigoAportePk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
+
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_detalle',{'id' : arAporte.codigoAportePk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

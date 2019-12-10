@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
-class ControllerListener extends AbstractController{
+class ControllerListener extends Controller{
 
     private $user;
     private $routeActual;
@@ -33,7 +33,7 @@ class ControllerListener extends AbstractController{
     }
 
 
-    public function getPermissionFunction(ControllerEvent $event){
+    public function getPermissionFunction(FilterControllerEvent $event){
         $em=$this->em;
         $url=$this->routeActual;
         $this->routeActual=$event->getRequest()->get('_route');

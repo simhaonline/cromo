@@ -95,7 +95,7 @@
                                 <td>{{ arContacto.ciudadRel.nombre }}</td>
                                 <td style="text-align: center;">
                                     <a
-                                       href="javascript:abrirVentana3('{{ path('crm_administracion_comercial_contacto_nuevo', { 'id':  arContacto.codigoContactoPk, 'codigoCliente': arCliente.codigoClientePk  }) }}', 'nuevoContacto', 600, 900)">
+                                       href="javascript:abrirVentana3('{{ path('crm_administracion_comercial_cliente_detalle_nuevo', { 'id':  arContacto.codigoContactoPk, 'codigoCliente': arCliente.codigoClientePk  }) }}', 'nuevoContacto', 600, 900)">
                                         <i class="fa fa-edit" style="color: black;font-size: large;"></i>
                                     </a>
                                 </td>
@@ -113,7 +113,7 @@
                     </div>
                     <div class="btn-group">
                         <a class="btn btn-default btn-sm"
-                           href="javascript:abrirVentana3('{{ path('crm_administracion_comercial_contacto_nuevo', { 'id': 0, 'codigoCliente': arCliente.codigoClientePk  }) }}', 'nuevoContacto', 600, 900)">Nuevo</a>
+                           href="javascript:abrirVentana3('{{ path('crm_administracion_comercial_cliente_detalle_nuevo', { 'id': 0, 'codigoCliente': arCliente.codigoClientePk  }) }}', 'nuevoContacto', 600, 900)">Nuevo</a>
                     </div>
                 </div>
             </div>

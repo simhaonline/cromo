@@ -824,6 +824,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $em->persist($arPagoDetalle);
 
             $devengadoPrestacional = $douPrima;
+            $devengado = $douPrima;
 
             //Adicionales
             $arAdicionales = $em->getRepository(RhuAdicional::class)->programacionPago($arProgramacionDetalle->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getCodigoPagoTipoFk(), $arProgramacion->getFechaDesde()->format('Y/m/d'), $arProgramacion->getFechaHasta()->format('Y/m/d'));

@@ -6,6 +6,7 @@ namespace App\Controller\Turno\Administracion\Operacion;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\TurnoType;
+use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +50,11 @@ class TurnoController extends ControllerListenerGeneral
                 $this->get("UtilidadesModelo")->eliminar(TurTurno::class, $arrSeleccionados);
 				return $this->redirect($this->generateUrl('turno_administracion_operacion_turno_lista'));
 			}
+            if ($form->get('btnExcel')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                General::get()->setExportar($em->getRepository(TurTurno::class)->lista(), "Turnos");
+            }
         }
         $arTurnos = $paginator->paginate($em->getRepository(TurTurno::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('turno/administracion/operacion/turno/lista.html.twig', [

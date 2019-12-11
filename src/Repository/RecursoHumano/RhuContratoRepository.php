@@ -17,7 +17,8 @@ class RhuContratoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuContrato::class);
     }
 
-    public function lista(){
+    public function lista()
+    {
         $session = new Session();
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select('c.codigoContratoPk')
@@ -47,7 +48,7 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->leftJoin('c.entidadSaludRel', 'sa')
             ->leftJoin('c.entidadPensionRel', 'pa')
             ->andWhere('c.codigoContratoPk <> 0')
-        ->orderBy('c.codigoContratoPk', 'ASC');
+            ->orderBy('c.codigoContratoPk', 'ASC');
         if ($session->get('filtroRhuNombreEmpleado') != '') {
             $queryBuilder->andWhere("e.nombreCorto LIKE '%{$session->get('filtroRhuNombreEmpleado')}%' ");
         }
@@ -71,6 +72,14 @@ class RhuContratoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("c.estadoTerminado = 1");
                 break;
         }
+
+        if ($session->get('filtroRhuContratoFechaDesde')) {
+            $queryBuilder->andWhere("c.fechaDesde >= '" . $session->get('filtroRhuContratoFechaDesde') . " 00:00:00'");
+        }
+        if ($session->get('filtroRhuContratoFechaHasta')) {
+            $queryBuilder->andWhere("c.fechaHasta <= '" . $session->get('filtroRhuContratoFechaHasta') . " 23:59:59'");
+        }
+
         return $queryBuilder->getQuery()->execute();
     }
 
@@ -176,7 +185,7 @@ class RhuContratoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select('c');
-             return $queryBuilder;
+        return $queryBuilder;
     }
 
     public function ContratoIntercambio($codigoEmpleado)

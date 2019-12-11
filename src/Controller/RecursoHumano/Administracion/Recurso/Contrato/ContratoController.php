@@ -66,6 +66,8 @@ class ContratoController extends AbstractController
             ->add('txtNombreEmpleado', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroRhuNombreEmpleado')])
             ->add('txtNumeroIdentificacion', NumberType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroRhuNumeroIdentificacionEmpleado')])
             ->add('chkEstadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroRhuContratoEstadoTerminado'), 'required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('cboGrupo', EntityType::class, $em->getRepository(RhuGrupo::class)->llenarCombo())
             ->add('cboContratoTipo', EntityType::class, $em->getRepository(RhuContratoTipo::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
@@ -77,6 +79,8 @@ class ContratoController extends AbstractController
             $session->set('filtroRhuCodigoContrato', $form->get('txtCodigoContrato')->getData());
             $session->set('chkEstadoTerminado', $form->get('txtNombreEmpleado')->getData());
             $session->set('filtroRhuNumeroIdentificacionEmpleado', $form->get('txtNumeroIdentificacion')->getData());
+            $session->set('filtroRhuContratoFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
+            $session->set('filtroRhuContratoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
             $arGrupo = $form->get('cboGrupo')->getData();
             if ($arGrupo) {
                 $session->set('filtroRhuGrupo', $arGrupo->getCodigoGrupoPk());

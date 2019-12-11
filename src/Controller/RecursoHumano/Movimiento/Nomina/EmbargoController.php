@@ -76,7 +76,7 @@ class EmbargoController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(RhuEmbargo::class)->lista($raw)->getQuery()->getResult(), "Embargos");
+                General::get()->setExportar($em->getRepository(RhuEmbargo::class)->lista($raw), "Embargos");
             }
         }
         $arEmbargos = $paginator->paginate($em->getRepository(RhuEmbargo::class)->lista($raw), $request->query->getInt('page', 1), 30);

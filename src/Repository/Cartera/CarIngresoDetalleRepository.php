@@ -213,7 +213,7 @@ class CarIngresoDetalleRepository extends ServiceEntityRepository
             ->addSelect('id.codigoIngresoFk')
             ->addSelect('i.numero')
             ->leftJoin('id.ingresoRel', 'i')
-            ->where('id.codigoCuentaCobrarFk = ' . $codigoCuentaCobrar);
+            ->where("id.codigoCuentaCobrarFk = {$codigoCuentaCobrar}");
         return $queryBuilder->getQuery()->getResult();
     }
 

@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('cartera_administracion_general_cliente_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+            <tr>
+                <td class="titulo">ID:</td>
+                <td class="td-in-well">{{ arCliente.codigoClientePk }}</td>
+                <td class="titulo">TIPO IDENTIFICACION:</td>
+                <td class="td-in-well">{{ arCliente.identificacionRel.nombre }}</td>
+                <td class="titulo">NUMERO IDENTIFICACION:</td>
+                <td class="td-in-well">{{ arCliente.numeroIdentificacion }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">NOMBRE:</td>
+                <td class="td-in-well">{{ arCliente.nombreCorto }}</td>
+                <td class="titulo">FORMA DE PAGO:</td>
+                <td class="td-in-well">{{ arCliente.formaPagoRel.nombre }}</td>
+                <td class="titulo">PLAZO DE PAGO:</td>
+                <td class="td-in-well">{{ arCliente.plazoPago }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">DIRECCION:</td>
+                <td class="td-in-well">{{ arCliente.direccion }}</td>
+                <td class="titulo">CIUDAD:</td>
+                <td class="td-in-well">{{ arCliente.ciudadRel.nombre }}</td>
+                <td class="titulo">TELEFONO:</td>
+                <td class="td-in-well">{{ arCliente.telefono }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">CELULAR:</td>
+                <td class="td-in-well">{{ arCliente.celular }}</td>
+                <td class="titulo">FAX:</td>
+                <td class="td-in-well">{{ arCliente.fax }}</td>
+                <td class="titulo">CORREO:</td>
+                <td class="td-in-well">{{ arCliente.correo }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">CONTACTO:</td>
+                <td class="td-in-well">{{ arCliente.contacto }}</td>
+                <td class="titulo">CONTACTO TELEFONO:</td>
+                <td class="td-in-well">{{ arCliente.contactoTelefono }}</td>
+                <td class="titulo"></td>
+                <td class="td-in-well"></td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

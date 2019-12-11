@@ -29,26 +29,42 @@ class CarClienteRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCliente = null;
+        $identificacion = null;
+        $nombre = null;
+        $identificacion = null;
+
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $identificacion = $filtros['identificacion'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+            $identificacion = $filtros['identificacion'] ?? null;
+        }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCliente::class, 'cc')
             ->select('cc.codigoClientePk')
             ->addSelect('cc.nombreCorto')
             ->addSelect('cc.numeroIdentificacion')
             ->where('cc.codigoClientePk <> 0')
             ->orderBy('cc.codigoClientePk', 'DESC');
-        if ($session->get('filtroCarNombreCliente') != '') {
-            $queryBuilder->andWhere("cc.nombreCorto LIKE '%{$session->get('filtroCarNombreCliente')}%' ");
+
+        if ($nombre) {
+            $queryBuilder->andWhere("cc.nombreCorto LIKE '%{$nombre}%' ");
         }
-        if ($session->get('filtroCarNitCliente') != '') {
-            $queryBuilder->andWhere("cc.numeroIdentificacion LIKE '%{$session->get('filtroCarNitCliente')}%' ");
+        if ($identificacion) {
+            $queryBuilder->andWhere("cc.numeroIdentificacion LIKE '%{$identificacion}%' ");
         }
-        if ($session->get('filtroCarCodigoCliente') != '') {
-            $queryBuilder->andWhere("cc.codigoClientePk LIKE '%{$session->get('filtroCarCodigoCliente')}%' ");
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("cc.codigoClientePk LIKE '%{$codigoCliente}%' ");
         }
 
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('cc.codigoClientePk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function eliminar($arrSeleccionados)

@@ -68,13 +68,4 @@ class ClienteType extends AbstractType {
         return 'App_cartera';
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoClientePk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
-            {"campo":"nombreCorto",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-    }
-
 }

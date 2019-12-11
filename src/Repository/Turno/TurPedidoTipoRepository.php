@@ -19,11 +19,12 @@ class TurPedidoTipoRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoTipo::class, 'pt')
-            ->select('pt');
+            ->select('pt.codigoPedidoTipoPk')
+            ->addSelect('pt.nombre');
         if ($session->get('filtroTurnoPedidoTipoNombre') != '') {
             $queryBuilder->andWhere("pt.nombre LIKE '%{$session->get('filtroTurnoPedidoTipoNombre')}%' ");
         }
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
 }

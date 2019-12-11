@@ -7,6 +7,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\turno\turnoCliente;
 use App\Entity\Turno\TurPedidoTipo;
 use App\Form\Type\Turno\PedidoTipoType;
+use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,6 +48,11 @@ class PedidoTipoController extends ControllerListenerGeneral
                 $arClienterSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(TurPedidoTipo::class, $arClienterSeleccionados);
                 return $this->redirect($this->generateUrl('turno_administracion_comercial_pedidotipo_lista'));
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                General::get()->setExportar($em->getRepository(TurPedidoTipo::class)->lista(), "Pedido tipos");
             }
         }
         $arPedidoTipos = $paginator->paginate($em->getRepository(TurPedidoTipo::class)->lista(), $request->query->getInt('page', 1),20);

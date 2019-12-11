@@ -191,8 +191,8 @@ abstract class BaseController extends Controller
                 , $campos);
             for ($i = 'A'; $j <= sizeof($arrCampos) - 1; $i++) {
                 $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
-                $spreadsheet->getStyle(1)->getFont()->setName('Arial')->setSize(9);
-                $spreadsheet->getStyle(1)->getFont()->setBold(true);
+                $spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setName('Arial')->setSize(9);
+                $spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setBold(true);
                 $sheet->setCellValue($i . '1', strtoupper($arrCampos[$j]));
                 $j++;
             }
@@ -207,7 +207,7 @@ abstract class BaseController extends Controller
                     } elseif (is_bool($dato)) {
                         $dato = $dato ? 'SI' : 'NO';
                     }
-                    $spreadsheet->getStyle($i)->getFont()->setName('Arial')->setSize(9);
+                    $spreadsheet->getActiveSheet()->getStyle($i)->getFont()->setBold(false);
                     $spreadsheet->getActiveSheet()->getColumnDimension($i)->setAutoSize(true);
                     $sheet->setCellValue($i . $j, $dato);
                     $i++;

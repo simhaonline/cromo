@@ -55,7 +55,7 @@ class ClienteController extends ControllerListenerGeneral
         $datos = $this->getDatosLista(true);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
+                General::get()->setExportar($em->getRepository(TurCliente::class)->lista(), "Clientes");
             }
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arData = $request->request->get('ChkSeleccionar');

@@ -12,10 +12,12 @@ use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurPuestoAdicional;
 use App\Form\Type\Turno\PuestoAdicionalType;
 use App\Form\Type\Turno\PuestoType;
+use App\General\General;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,10 +38,21 @@ class PuestoController extends AbstractController
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
+            ->add('codigoClienteFk', TextType::class, array('required' => false))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']))
             ->getForm();
         $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTurPuestoCodigoCliente', $form->get('codigoClienteFk')->getData());
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                General::get()->setExportar($em->getRepository(TurPuesto::class)->lista(), "Puestos");
+            }
+        }
         $arPuestos = $paginator->paginate($em->getRepository(TurPuesto::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('turno/administracion/comercial/puesto/lista.html.twig', [
             'arPuestos' => $arPuestos,

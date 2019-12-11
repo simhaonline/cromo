@@ -64,7 +64,11 @@ class TurPuestoRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("cl.nombreCorto like '%{$session->get('filtroTurPuestoNombreCliente')}%'");
         }
 
-        return $queryBuilder;
+        if ($session->get('filtroTurPuestoCodigoCliente') !=null){
+            $queryBuilder->andWhere("cl.codigoClientePk = '{$session->get('filtroTurPuestoCodigoCliente')}'");
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
 }

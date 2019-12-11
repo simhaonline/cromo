@@ -296,10 +296,10 @@ class ProgramacionController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('btnActualizar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar'])
             ->add('btnMarcar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Marcar'])
-            ->add('BtnActualizarHoras', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar horas'])
-            ->add('BtnActualizarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar adicionales'])
-            ->add('BtnInactivarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Inactivar adicional'])
-            ->add('BtnEliminarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Eliminar adicional'])
+            ->add('BtnActualizarHoras', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar'])
+            ->add('BtnActualizarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar'])
+            ->add('BtnInactivarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Inactivar'])
+            ->add('BtnEliminarAdicional', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Eliminar'])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

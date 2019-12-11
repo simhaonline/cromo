@@ -197,7 +197,16 @@ class RhuAdicionalRepository extends ServiceEntityRepository
     public function programacionPagoGeneral($codigoEmpleado = "", $fechaDesde, $fechaHasta)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAdicional::class, 'a')
-            ->select('a')
+            ->select('a.codigoAdicionalPk')
+            ->addSelect('a.fecha')
+            ->addSelect('a.codigoConceptoFk')
+            ->addSelect('a.detalle')
+            ->addSelect('a.vrValor')
+            ->addSelect('a.aplicaDiaLaborado')
+            ->addSelect('a.permanente')
+            ->addSelect('a.estadoInactivo')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->leftJoin('a.conceptoRel', 'c')
             ->Where("a.codigoEmpleadoFk = '{$codigoEmpleado}'")
             ->andWhere("a.fecha >= '{$fechaDesde} 00:00:00'")
             ->andWhere("a.fecha <= '{$fechaHasta} 23:59:59'");

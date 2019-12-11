@@ -103,8 +103,12 @@
         </tr>
         </tbody>
     </table>
+    <div class="btn-group" style="float: right">
+        {{ form_widget(form.btnMarcar) }}
+        {{ form_widget(form.btnActualizar) }}
+    </div>
     <br>
-    <h3>Programacion pago</h3>
+    <h3>Programacion</h3>
     <table class="table table-striped table-bordered table-condensed tabla-datos">
         <thead>
         <tr>
@@ -238,6 +242,7 @@
         <thead>
             <tr>
                 <th>FECHA</th>
+                <th>COD</th>
                 <th>CONCEPTO</th>
                 <th>DETALLE</th>
                 <th>VALOR</th>
@@ -255,6 +260,7 @@
                        value="{{ arAdicional.codigoAdicionalPk }}">
                 <td>{{ arAdicional.fecha | date('Y-m-d') }}</td>
                 <td>{{ arAdicional.codigoConceptoFk }}</td>
+                <td>{{ arAdicional.conceptoNombre }}</td>
                 <td>{{ arAdicional.detalle }}</td>
                 {% if arProgramacionDetalle.programacionRel.estadoPagado == 0 %}
                     <td style="text-align: right"><input class="input-grid" type="text"
@@ -284,10 +290,7 @@
         </div>
     </div>
     <br><br>
-    <div class="btn-group" style="float: right">
-        {{ form_widget(form.btnMarcar) }}
-        {{ form_widget(form.btnActualizar) }}
-    </div>
+
     {{ form_end(form) }}
 {% endblock %}
 {% block javascriptsPersonales %}

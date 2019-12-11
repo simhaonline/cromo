@@ -8,6 +8,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Entity\Turno\TurSecuencia;
 use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\TurnoType;
+use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -51,6 +52,11 @@ class SecuenciaController  extends ControllerListenerGeneral
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(TurSecuencia::class, $arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_administracion_operacion_secuencia_lista'));
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                General::get()->setExportar($em->getRepository(TurSecuencia::class)->lista(), "Secuencia");
             }
         }
         $arSecuencias = $paginator->paginate($em->getRepository(TurSecuencia::class)->lista(), $request->query->getInt('page', 1), 30);

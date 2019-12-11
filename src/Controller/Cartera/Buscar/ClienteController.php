@@ -30,7 +30,7 @@ class ClienteController extends AbstractController
         $form->handleRequest($request);
         $raw =[];
         if ($form->get('btnFiltrar')->isClicked()) {
-            $raw['filtro']= [
+            $raw['filtros']= [
                 'codigoCliente' => $form->get('txtCodigo')->getData(),
                 'nombre' =>  $form->get('txtNombre')->getData(),
                 'identificacion' => $form->get('txtNit')->getData(),
@@ -62,7 +62,7 @@ class ClienteController extends AbstractController
         $raw=[];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $raw['filtro']= [
+                $raw['filtros']= [
                     'codigoCliente' => $form->get('txtCodigo')->getData(),
                     'nombre' =>  $form->get('txtNombre')->getData(),
                 ];

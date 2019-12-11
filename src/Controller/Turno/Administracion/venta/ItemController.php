@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller\Turno\Administracion\Comercial;
+namespace App\Controller\Turno\Administracion\venta;
 
 
 use App\Controller\BaseController;
@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ItemController extends  AbstractController
 {
     /**
-     * @Route("/turno/administracion/comercial/item/lista", name="turno_administracion_comercial_item_lista")
+     * @Route("/turno/administracion/venta/item/lista", name="turno_administracion_venta_item_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator )
     {
@@ -46,7 +46,7 @@ class ItemController extends  AbstractController
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TurItem::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('turno_administracion_comercial_item_lista'));
+                return $this->redirect($this->generateUrl('turno_administracion_venta_item_lista'));
             }
             if ($form->get('btnExcel')->isClicked()) {
                 set_time_limit(0);
@@ -65,7 +65,7 @@ class ItemController extends  AbstractController
     }
 
     /**
-     * @Route("/turno/administracion/comercial/item/nuevo/{id}", name="turno_administracion_comercial_item_nuevo")
+     * @Route("/turno/administracion/comercial/item/nuevo/{id}", name="turno_administracion_venta_item_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -84,9 +84,9 @@ class ItemController extends  AbstractController
                 $arItem = $form->getData();
                 $em->persist($arItem);
                 $em->flush();
-                return $this->redirect($this->generateUrl('turno_administracion_comercial_item_detalle', array('id' => $arItem->getCodigoItemPk())));
+                return $this->redirect($this->generateUrl('turno_administracion_venta_item_detalle', array('id' => $arItem->getCodigoItemPk())));
             } else {
-                return $this->redirect($this->generateUrl('turno_administracion_comercial_item_lista'));
+                return $this->redirect($this->generateUrl('turno_administracion_venta_item_lista'));
             }
         }
         return $this->render('turno/administracion/comercial/item/nuevo.html.twig', [
@@ -97,7 +97,7 @@ class ItemController extends  AbstractController
 
 
     /**
-     * @Route("/turno/administracion/comercial/item/detalle/{id}", name="turno_administracion_comercial_item_detalle")
+     * @Route("/turno/administracion/comercial/item/detalle/{id}", name="turno_administracion_venta_item_detalle")
      */
     public function detalle(Request $request, $id)
     {
@@ -106,7 +106,7 @@ class ItemController extends  AbstractController
         $form = $this->createFormBuilder()->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->redirect($this->generateUrl('turno_administracion_comercial_item_detalle', ['id' => $id]));
+            return $this->redirect($this->generateUrl('turno_administracion_venta_item_detalle', ['id' => $id]));
         }
         return $this->render('turno/administracion/comercial/item/detalle.html.twig', [
             'form' => $form->createView(),

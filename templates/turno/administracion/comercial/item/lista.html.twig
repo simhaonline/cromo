@@ -48,11 +48,11 @@
                 <td>{{ arItem.codigoImpuestoIvaVentaFk  }}</td>
                 <td>{{ arItem.codigoImpuestoRetencionFk  }}</td>
                 <td class="text-center">
-                    <a href="{{ path('turno_administracion_comercial_item_nuevo',{'id': arItem.codigoItemPk  }) }}"><i
+                    <a href="{{ path('turno_administracion_venta_item_nuevo',{'id': arItem.codigoItemPk  }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td class="text-center">
-                    <a href="{{ path('turno_administracion_comercial_item_detalle',{'id' : arItem.codigoItemPk  }) }}">
+                    <a href="{{ path('turno_administracion_venta_item_detalle',{'id' : arItem.codigoItemPk  }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
@@ -85,15 +85,8 @@
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('turno_administracion_comercial_item_nuevo', {'id': 0}) }}">Nuevo</a>
+           href="{{ path('turno_administracion_venta_item_nuevo', {'id': 0}) }}">Nuevo</a>
     </div>
     {{ form_end(form) }}
     <br/><br/><br/>
-    {#    {% include (modulo~'/'~funcion~'/'~grupo~'/'~entidad~'/filtro.html.twig') %}#}
-    {#    <div class="table-responsive" style="padding:0px;">#}
-    {#        {{ form_start(formBotonera) }}#}
-    {#        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}#}
-    {#        {% include ('estructura/movimiento/botoneraGeneral.html.twig') %}#}
-    {#        {{ form_end(formBotonera) }}#}
-    {#    </div>#}
 {% endblock %}

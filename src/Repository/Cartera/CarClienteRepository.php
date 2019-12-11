@@ -41,7 +41,6 @@ class CarClienteRepository extends ServiceEntityRepository
 
         if ($filtros) {
             $codigoCliente = $filtros['codigoCliente'] ?? null;
-            $identificacion = $filtros['identificacion'] ?? null;
             $nombre = $filtros['nombre'] ?? null;
             $identificacion = $filtros['identificacion'] ?? null;
         }

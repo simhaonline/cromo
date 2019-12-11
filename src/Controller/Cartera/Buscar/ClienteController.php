@@ -28,12 +28,15 @@ class ClienteController extends AbstractController
             ->add('btnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))
             ->getForm();
         $form->handleRequest($request);
+        $raw =[];
         if ($form->get('btnFiltrar')->isClicked()) {
-            $session->set('filtroCarNombreCliente', $form->get('txtNombre')->getData());
-            $session->set('filtroCarNitCliente', $form->get('txtNit')->getData());
-            $session->set('filtroCarCodigoCliente', $form->get('txtCodigo')->getData());
+            $raw['filtro']= [
+                'codigoCliente' => $form->get('txtCodigo')->getData(),
+                'nombre' =>  $form->get('txtNombre')->getData(),
+                'identificacion' => $form->get('txtNit')->getData(),
+            ];
         }
-        $arClientes = $paginator->paginate($em->getRepository(CarCliente::class)->lista(), $request->query->getInt('page', 1),20);
+        $arClientes = $paginator->paginate($em->getRepository(CarCliente::class)->lista($raw), $request->query->getInt('page', 1),20);
         return $this->render('cartera/buscar/cliente.html.twig', array(
             'arClientes' => $arClientes,
             'campoCodigo' => $campoCodigo,
@@ -56,13 +59,16 @@ class ClienteController extends AbstractController
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
             ->getForm();
         $form->handleRequest($request);
+        $raw=[];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroCarCodigoCliente', $form->get('txtCodigo')->getData());
-                $session->set('filtroCarNombreCliente', $form->get('txtNombre')->getData());
+                $raw['filtro']= [
+                    'codigoCliente' => $form->get('txtCodigo')->getData(),
+                    'nombre' =>  $form->get('txtNombre')->getData(),
+                ];
             }
         }
-        $arClientes = $paginator->paginate($em->getRepository(CarCliente::class)->lista(), $request->query->get('page', 1), 20);
+        $arClientes = $paginator->paginate($em->getRepository(CarCliente::class)->lista($raw), $request->query->get('page', 1), 20);
         return $this->render('cartera/buscar/buscarClienteMovimiento.html.twig', array(
             'arClientes' => $arClientes,
             'campoCodigo' => $campoCodigo,

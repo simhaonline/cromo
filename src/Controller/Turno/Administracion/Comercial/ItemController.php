@@ -9,6 +9,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\Turno\TurItem;
 use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\Form\Type\Turno\ItemType;
+use App\General\General;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -46,6 +47,12 @@ class ItemController extends  AbstractController
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TurItem::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_administracion_comercial_item_lista'));
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(TurItem::class)->lista($raw), "Items");
             }
         }
 

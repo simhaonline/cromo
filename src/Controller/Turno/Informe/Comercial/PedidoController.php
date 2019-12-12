@@ -80,7 +80,7 @@ class PedidoController extends  Controller
     }
 
     /**
-     * @Route("/turno/informe/comercial/pedidosSinAprobar/lista", name="turno_informe_comercial_pedidoSinAprobar_lista")
+     * @Route("/turno/informe/comercial/pedidos/sinAprobar/lista", name="turno_informe_comercial_pedidoSinAprobar_lista")
      */
     public function SinAprobar(Request $request)
     {

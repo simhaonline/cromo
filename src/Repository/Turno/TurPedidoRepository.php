@@ -577,7 +577,30 @@ class TurPedidoRepository extends ServiceEntityRepository
     public function listaSinAprobar(){
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedido::class, 'p')
-            ->select('p')
+            ->select('p.codigoPedidoPk')
+            ->addSelect('p.numero')
+            ->addSelect('p.fecha')
+            ->addSelect('p.horas')
+            ->addSelect('p.horasDiurnas')
+            ->addSelect('p.horasNocturnas')
+            ->addSelect('p.estadoAutorizado')
+            ->addSelect('p.estadoAprobado')
+            ->addSelect('p.estadoAnulado')
+            ->addSelect('p.usuario')
+            ->addSelect('p.vrTotal')
+            ->addSelect('p.vrTotalPrecioAjustado')
+            ->addSelect('p.vrTotalPrecioMinimo')
+            ->addSelect('p.vrSubtotal')
+            ->addSelect('p.vrIva')
+            ->addSelect('p.vrSalarioBase')
+            ->addSelect('p.estadoContabilizado')
+            ->addSelect('p.comentario')
+            ->addSelect('pt.nombre as pedidoTipoNombre')
+            ->addSelect('c.nombreCorto as clienteNombreCorto')
+            ->addSelect('s.nombre as sectorNombre')
+            ->leftJoin('p.pedidoTipoRel', 'pt')
+            ->leftJoin('p.clienteRel', 'c')
+            ->leftJoin('p.sectorRel', 's')
            ->where('p.estadoAprobado = 0');
         if($session->get('filtroTurInformeComercialPedidoSinAprobarClienteCodigo') != ''){
             $queryBuilder->andWhere("p.codigoClienteFk  = '{$session->get('filtroTurInformeComercialPedidoSinAprobarClienteCodigo')}'");

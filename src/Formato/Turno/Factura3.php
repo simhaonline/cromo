@@ -319,6 +319,13 @@ class Factura3 extends \FPDF
 //        $this->Image('imagenes/logos/logo.jpg', 20, 8, 30, 25);
 //        $this->Image('imagenes/logos/veritas.jpg', 165, 11, 17, 22);
 //        $this->Image('imagenes/logos/iso.jpg', 185, 11, 24, 24);
+        try {
+            $logo = $em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
+            if ($logo) {
+                $this->Image("data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen())), 15, 8, 50, 24, $logo->getExtension());
+            }
+        } catch (\Exception $exception) {
+        }
 //        //INFORMACIÓN EMPRESA
         $this->SetXY(50, 5);
         $this->Cell(120, 4, utf8_decode($arConfiguracion->getNombre()), 0, 0, 'C', 0);

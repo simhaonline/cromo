@@ -5,6 +5,7 @@ namespace App\Controller\Turno\Informe\Juridico;
 
 
 use App\Entity\Turno\TurContrato;
+use App\General\General;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -28,6 +29,7 @@ class contratoController extends  Controller
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurInformeContratoFechaDesde') ? date_create($session->get('filtroTurInformeContratoFechaDesde')): null])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurInformeContratoFechaHasta') ? date_create($session->get('filtroTurInformeContratoFechaHasta')): null])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -35,6 +37,11 @@ class contratoController extends  Controller
                 $session->set('filtroTurInformeContratoCodigoCliente',  $form->get('txtEmpleado')->getData());
                 $session->set('filtroTurInformeContratoFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
                 $session->set('filtroTurInformeContratoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                General::get()->setExportar($em->getRepository(TurContrato::class)->informe(), "Contratos");
             }
         }
         $arContratos = $paginator->paginate($em->getRepository(TurContrato::class)->informe(), $request->query->getInt('page', 1), 30);

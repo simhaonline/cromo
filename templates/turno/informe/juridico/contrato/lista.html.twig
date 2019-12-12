@@ -61,7 +61,6 @@
             <th>APR</th>
             <th>ANU</th>
             <th>CER</th>
-            <th>SECTOR</th>
             <th>CANT</th>
             <th>ESTRATO</th>
             <th>HORAS</th>
@@ -84,14 +83,13 @@
         {% for arContrato in arContratos %}
             <tr>
                 <td>{{ arContrato.codigoContratoPk }}</td>
-                <td>{{ arContrato.clienteRel.nombreCorto }}</td>
-                <td>{{ arContrato.contratoTipoRel.nombre | default('') }}</td>
+                <td>{{ arContrato.nombreCorto }}</td>
+                <td>{{ arContrato.nombre | default('') }}</td>
                 <td>{{ arContrato.fechaGeneracion | date('Y-m-d') }}</td>
                 <td>{{ arContrato.estadoAutorizado?"SI":"NO" }}</td>
                 <td>{{ arContrato.estadoAprobado?"SI":"NO" }}</td>
                 <td>{{ arContrato.estadoAnulado?"SI":"NO" }}</td>
                 <td>{{ arContrato.estadoCerrado?"SI":"NO" }}</td>
-                <td>{{ arContrato.sectorRel.nombre | default('') }}</td>
                 <td>{{ arContrato.cantidad }}</td>
                 <td>{{ arContrato.estrato }}</td>
                 <td>{{ arContrato.horas }}</td>
@@ -120,6 +118,9 @@
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arContratos) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
     </div>
     <br /><br />
     {{ form_end(form) }}

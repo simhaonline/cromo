@@ -611,7 +611,33 @@ class TurContratoRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContrato::class, 'c')
-            ->select('c');
+            ->select('c.codigoContratoPk')
+            ->addSelect('cl.nombreCorto')
+            ->addSelect('ct.nombre')
+            ->addSelect('c.fechaGeneracion')
+            ->addSelect('c.estadoAutorizado')
+            ->addSelect('c.estadoAprobado')
+            ->addSelect('c.estadoAnulado')
+            ->addSelect('c.estadoCerrado')
+            ->addSelect('c.cantidad')
+            ->addSelect('c.estrato')
+            ->addSelect('c.horas')
+            ->addSelect('c.horasDiurnas')
+            ->addSelect('c.horasNocturnas')
+            ->addSelect('c.vrTotalCosto')
+            ->addSelect('c.vrTotalContrato')
+            ->addSelect('c.vrTotalPrecioAjustado')
+            ->addSelect('c.vrTotalPrecioMinimo')
+            ->addSelect('c.vrSubtotal')
+            ->addSelect('c.vrIva')
+            ->addSelect('c.vrBaseAiu')
+            ->addSelect('c.vrSalarioBase')
+            ->addSelect('c.vrTotal')
+            ->addSelect('c.vrTotalServicio')
+            ->addSelect('c.usuario')
+            ->leftJoin('c.clienteRel', 'cl')
+            ->leftJoin('c.contratoTipoRel', 'ct');
+
         if ($session->get('filtroTurInformeContratoCodigoCliente') != '') {
             $queryBuilder->andWhere("c.codigoClienteFk  = '{$session->get('filtroTurInformeContratoCodigoCliente')}'");
         }
@@ -621,7 +647,7 @@ class TurContratoRepository extends ServiceEntityRepository
         if ($session->get('filtroTurInformeContratoFechaHasta') != null) {
             $queryBuilder->andWhere("c.fechaGeneracion <= '{$session->get('filtroTurInformeContratoFechaHasta')} 23:59:59'");
         }
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function festivo($arFestivos, $dateFecha)

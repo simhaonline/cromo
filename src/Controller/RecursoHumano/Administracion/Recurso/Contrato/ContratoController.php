@@ -77,7 +77,8 @@ class ContratoController extends AbstractController
         if ($form->get('btnFiltrar')->isClicked()) {
             $session->set('filtroRhuContratoEstadoTerminado', $form->get('chkEstadoTerminado')->getData());
             $session->set('filtroRhuCodigoContrato', $form->get('txtCodigoContrato')->getData());
-            $session->set('chkEstadoTerminado', $form->get('txtNombreEmpleado')->getData());
+            $session->set('filtroRhuNombreEmpleado', $form->get('txtNombreEmpleado')->getData());
+            $session->set('chkEstadoTerminado', $form->get('chkEstadoTerminado')->getData());
             $session->set('filtroRhuNumeroIdentificacionEmpleado', $form->get('txtNumeroIdentificacion')->getData());
             $session->set('filtroRhuContratoFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
             $session->set('filtroRhuContratoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);

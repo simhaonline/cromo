@@ -41,6 +41,8 @@ class Factura3 extends \FPDF
 
         $this->GenerarEncabezadoFactura(self::$em);
         $arFactura = self::$em->getRepository(TurFactura::class)->find(self::$codigoFactura);
+        $this->Image('../public/img/recursos/vigilancia/mintransporte.png', 15, 15, 62, 15);
+        $this->Image('../public/img/recursos/vigilancia/supertransporte.jpeg', 15, 32, 62, 15);
         $this->SetXY(15, 38);
         $this->SetFont('Arial', 'B', 15);
         $this->Cell(50, 4, "FACTURA DE VENTA", 0, 0, 'L', 0);
@@ -295,14 +297,13 @@ class Factura3 extends \FPDF
         $this->Cell(63, 6, 'FIRMA DEL EMISOR', 1, 0, 'L');
         $this->SetXY(15, 228);
         $this->SetFont('Arial', 'B', 7.7);
-//        $this->MultiCell(191, 3.6, utf8_decode($arConfiguracion->getInformacionLegalFactura()), 1, 'L');
+        $this->MultiCell(191, 3.6, utf8_decode($arFactura->getFacturaTipoRel()->getInformacionLegalFactura()), 1, 'L');
         $this->SetXY(15, 246);
         $this->SetFont('Arial', 'B', 8);
-//        $this->MultiCell(191, 3.9, utf8_decode($arConfiguracion->getInformacionPagoFactura()), 1, 'C');
+        $this->MultiCell(191, 3.9, utf8_decode($arFactura->getFacturaTipoRel()->getInformacionPagoFactura()), 1, 'C');
         $this->SetXY(15, 261.5);
         $this->SetFont('Arial', '', 8);
-        $this->MultiCell(191, 3.5, utf8_decode('Autorizo a la entidad 1 TEG SEGURIDAD LTDA o a quien represente la calidad de acreedor, a reportar, procesar, solicitar o divulgar a cualquier entidad que maneje o administre base de 
-        datos la información referente a mi comportamiento comercial.'), 1, 'L');
+        $this->MultiCell(191, 3.5, utf8_decode('Autorizo a la entidad 1 TEG SEGURIDAD LTDA o a quien represente la calidad de acreedor, a reportar, procesar, solicitar o divulgar a cualquier entidad que maneje o administre base de datos la información referente a mi comportamiento comercial.'), 1, 'L');
 
         //Número de página
         $this->Text(188, 273, 'Pagina ' . $this->PageNo() . ' de {nb}');
@@ -341,7 +342,7 @@ class Factura3 extends \FPDF
         $this->SetFont('Arial', '', 8);
         $this->Cell(120, 4, "IVA REGIMEN COMUN", 0, 0, 'C', 0);
         $this->SetXY(50, 30);
-//        $this->Cell(120, 4, utf8_decode($arConfiguracionTurno->getInformacionResolucionDianFactura()), 0, 0, 'C', 0);
+        $this->Cell(120, 4, utf8_decode($arFactura->getFacturaTipoRel()->getInformacionResolucionDianFactura()), 0, 0, 'C', 0);
         $this->SetXY(50, 33);
         $this->Cell(120, 4, "__________________________________________________________________________________________________________________________", 0, 0, 'C', 0);
     }

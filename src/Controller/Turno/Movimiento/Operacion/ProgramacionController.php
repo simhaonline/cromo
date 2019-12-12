@@ -107,7 +107,7 @@ class ProgramacionController extends ControllerListenerGeneral
             }
 
         }
-        $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->lista(), $request->query->getInt('page', 1), 30);
+        $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->lista(), $request->query->getInt('page', 1), 100);
         return $this->render('turno/movimiento/operacion/programacion/lista.html.twig', [
             'arPedidos' => $arPedidos,
             'form' => $form->createView()

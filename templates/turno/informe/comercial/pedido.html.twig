@@ -22,7 +22,7 @@
                                     <div class="input-group">
                                         <input id="form_txtNombreCorto" class="form-control" readonly>
                                         <span class="input-group-btn">
-                                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('turno_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('turno_buscar_cliente', { 'campoCodigo': 'form_txtCodigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                         </span>
                                     </div>
                                 </div>
@@ -58,20 +58,15 @@
             <th>CLIENTE</th>
             <th>NÚMERO</th>
             <th>FECHA</th>
-            <th title="FECHA GENERACIÓN">F. G</th>
             <th title="PEDIDO TIPO">TIPO</th>
-            <th>SECTOR</th>
             <th>HORAS</th>
            <th title="HORAS DIURNAS">HD</th>
            <th title="HORAS NOCTURNAS">HN</th>
            <th title="VALOR TOTAL PRECIO AJUSTADO">P. AJUS</th>
            <th title="VALOR TOTAL PRECIO MINIMO">P. MIN</th>
-           <th title="VALOR TOTAL SERVICIO">T. SER</th>
            <th title="VALOR SUBTOTAL">SUBTOTAL</th>
             <th title="IVA">IVA</th>
-            <th title="BASE AIU">BASE AIU</th>
             <th title="TOTAL">TOTAL</th>
-            <th title="TOTAL COSTO">COSTO</th>
             <th title="SALARIO BASE">BASE</th>
             <th title="USUARIO">USUARIO</th>
             <th title="ESTADO AUTORIZADO">AUT</th>
@@ -87,23 +82,18 @@
         {% for arPedido in arPedidos %}
             <tr>
                 <td>{{ arPedido.codigoPedidoPk }}</td>
-                <td>{{ arPedido.clienteRel.nombrecorto }}</td>
+                <td>{{ arPedido.clienteNombreCorto }}</td>
                 <td>{{ arPedido.numero }}</td>
                 <td>{{ arPedido.fecha | date('Y-m-d') }}</td>
-                <td>{{ arPedido.fechaGeneracion | date('Y-m-d') }}</td>
-                <td>{{ arPedido.pedidoTipoRel.nombre }}</td>
-                <td>{{ arPedido.codigoSectorFk }}</td>
+                <td>{{ arPedido.pedidoTipoNombre }}</td>
                 <td>{{ arPedido.horas}}</td>
                 <td>{{ arPedido.horasDiurnas}}</td>
                 <td>{{ arPedido.horasNocturnas}}</td>
                 <td class="numero">{{ arPedido.vrTotalPrecioAjustado | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arPedido.vrTotalPrecioMinimo| number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arPedido.vrTotalServicio| number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arPedido.vrSubtotal| number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arPedido.vrIva| number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arPedido.vrBaseAiu| number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arPedido.vrTotal| number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arPedido.vrTotalCosto| number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arPedido.vrSalarioBase| number_format(0, '.', ',')}}</td>
                 <td>{{ arPedido.usuario}}</td>
                 <td>{{ arPedido.estadoAutorizado? "SI":"NO" }}</td>

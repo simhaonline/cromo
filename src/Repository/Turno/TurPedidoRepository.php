@@ -419,8 +419,15 @@ class TurPedidoRepository extends ServiceEntityRepository
             ->addSelect('p.estadoAutorizado')
             ->addSelect('p.estadoAprobado')
             ->addSelect('p.estadoAnulado')
-            ->addSelect('p.vrTotal')
             ->addSelect('p.usuario')
+            ->addSelect('p.vrTotal')
+            ->addSelect('p.vrTotalPrecioAjustado')
+            ->addSelect('p.vrTotalPrecioMinimo')
+            ->addSelect('p.vrSubtotal')
+            ->addSelect('p.vrIva')
+            ->addSelect('p.vrSalarioBase')
+            ->addSelect('p.estadoContabilizado')
+            ->addSelect('p.comentario')
             ->addSelect('pt.nombre as pedidoTipoNombre')
             ->addSelect('c.nombreCorto as clienteNombreCorto')
             ->addSelect('s.nombre as sectorNombre')
@@ -467,7 +474,7 @@ class TurPedidoRepository extends ServiceEntityRepository
         }
 
         $queryBuilder->addOrderBy('p.codigoPedidoPk', 'DESC');
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function listaPedido($raw)

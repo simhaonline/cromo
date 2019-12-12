@@ -45,6 +45,11 @@ class PedidoController extends  Controller
                 $session->set('filtroTurInformeComercialPedidoClienteCodigoFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
                 $session->set('filtroTurInformeComercialPedidoClienteCodigoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
             }
+            if ($form->get('btnExcel')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                General::get()->setExportar($em->getRepository(TurPedido::class)->lista(), "Pedidos");
+            }
         }
         $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->lista(), $request->query->getInt('page', 1), 30);
         return $this->render('turno/informe/comercial/pedido.html.twig', [

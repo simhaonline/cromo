@@ -54,6 +54,8 @@ class TteClienteRepository extends ServiceEntityRepository
             ->addSelect('c.guiaPagoDestino as DES')
             ->addSelect('c.guiaPagoCortesia as COR')
             ->addSelect('c.guiaPagoRecogida as REC')
+            ->addSelect('c.estadoInactivo')
+            ->addSelect('c.correo')
             ->leftJoin('c.asesorRel', 'a')
             ->leftJoin('c.ciudadRel', 'ciu')
             ->leftJoin('c.condicionRel', 'con')

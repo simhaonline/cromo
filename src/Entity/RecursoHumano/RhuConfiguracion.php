@@ -949,7 +949,7 @@ class RhuConfiguracion
     /**
      * @return bool
      */
-    public function getPrimasDiasAdicionalesSalario(): bool
+    public function getPrimasDiasAdicionalesSalario()
     {
         return $this->primasDiasAdicionalesSalario;
     }

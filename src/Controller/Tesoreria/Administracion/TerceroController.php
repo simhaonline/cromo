@@ -110,61 +110,11 @@ class TerceroController extends AbstractController
      */
     public function detalle(Request $request, $id)
     {
-//        $em = $this->getDoctrine()->getManager();
-//        $arCotizacion = $em->getRepository(ComProveedor::class)->find($id);
-//        $paginator = $this->get('knp_paginator');
-//        $form = Estandares::botonera($arCotizacion->getEstadoAutorizado(), $arCotizacion->getEstadoAprobado(), $arCotizacion->getEstadoAnulado());
-//        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
-//        $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-//        if ($arCotizacion->getEstadoAutorizado()) {
-//            $arrBtnEliminar['disabled'] = true;
-//            $arrBtnActualizar['disabled'] = true;
-//        }
-//        $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
-//            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $arrIva = $request->request->get('arrIva');
-//            $arrValor = $request->request->get('arrValor');
-//            $arrCantidad = $request->request->get('arrCantidad');
-//            $arrDescuento = $request->request->get('arrDescuento');
-//            if ($form->get('btnAutorizar')->isClicked()) {
-//                $em->getRepository(ComProveedor::class)->autorizar($arCotizacion);
-//            }
-//            if ($form->get('btnDesautorizar')->isClicked()) {
-//                $em->getRepository(ComProveedor::class)->desautorizar($arCotizacion);
-//            }
-//            if ($form->get('btnAprobar')->isClicked()) {
-//                $em->getRepository(ComProveedor::class)->aprobar($arCotizacion);
-//            }
-//            if ($form->get('btnImprimir')->isClicked()) {
-//                $objFormatoCotizacion = new ComProveedor();
-//                $objFormatoCotizacion->Generar($em, $id);
-//            }
-//            if ($form->get('btnAnular')->isClicked()) {
-//                $respuesta = $em->getRepository(ComProveedor::class)->anular($arCotizacion);
-//                if (count($respuesta) > 0) {
-//                    foreach ($respuesta as $error) {
-//                        Mensajes::error($error);
-//                    }
-//                }
-//            }
-//            if ($form->get('btnActualizar')->isClicked()) {
-//                $em->getRepository(ComProveedor::class)->actualizar($arCotizacion, $arrValor, $arrCantidad, $arrIva, $arrDescuento);
-//                return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_detalle', ['id' => $id]));
-//            }
-//            if ($form->get('btnEliminar')->isClicked()) {
-//                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(ComProveedor::class)->eliminar($arCotizacion, $arrDetallesSeleccionados);
-//            }
-//            return $this->redirect($this->generateUrl('inventario_movimiento_comercial_cotizacion_detalle', ['id' => $id]));
-//        }
-//        $arCotizacionDetalles = $paginator->paginate($em->getRepository(ComProveedor::class)->lista($arCotizacion->getCodigoCotizacionPk()), $request->query->getInt('page', 1), 30);
-//        return $this->render('inventario/movimiento/comercial/cotizacion/detalle.html.twig', [
-//            'arCotizacionDetalles' => $arCotizacionDetalles,
-//            'arCotizacion' => $arCotizacion,
-//            'form' => $form->createView()
-//        ]);
+        $em = $this->getDoctrine()->getManager();
+        $arTercero = $em->getRepository($this->clase)->find($id);
+        return $this->render('tesoreria/administracion/tercero/detalle.html.twig', [
+            'arTercero' => $arTercero,
+        ]);
     }
 
     public function getFiltros($form)

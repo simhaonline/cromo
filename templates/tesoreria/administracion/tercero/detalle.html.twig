@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('tesoreria_administracion_tercero_tercero_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+            <tr>
+                <td class="titulo">ID:</td>
+                <td class="td-in-well">{{ arTercero.codigoTerceroPk }}</td>
+                <td class="titulo">TIPO IDENTIFICACIÓN:</td>
+                <td class="td-in-well">{{ arTercero.codigoIdentificacionFk }}</td>
+                <td class="titulo">DIGITO DE VERIFICACIÓN:</td>
+                <td class="td-in-well">{{ arTercero.digitoVerificacion }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">CIUDAD:</td>
+                <td class="td-in-well">{{ arTercero.ciudadRel.nombre | default("") }}</td>
+                <td class="titulo">CUENTA:</td>
+                <td class="td-in-well">{{ arTercero.identificacionRel.nombre | default("") }}</td>
+                <td class="titulo">NOMBRE:</td>
+                <td class="td-in-well">{{ arTercero.nombreCorto }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">DIRECCIÓN:</td>
+                <td class="td-in-well">{{ arTercero.direccion }}</td>
+                <td class="titulo">TELEFONO:</td>
+                <td class="td-in-well">{{ arTercero.telefono }}</td>
+                <td class="titulo">CELULAR:</td>
+                <td class="td-in-well">{{ arTercero.celular }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">FAX:</td>
+                <td class="td-in-well">{{ arTercero.fax }}</td>
+
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

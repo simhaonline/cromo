@@ -572,7 +572,7 @@ class RhuProgramacion
     /**
      * @return bool
      */
-    public function getAplicarTransporte(): bool
+    public function getAplicarTransporte()
     {
         return $this->aplicarTransporte;
     }

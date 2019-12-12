@@ -273,7 +273,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                             $salarioPromedioPrimas = $salarioMinimoVariable;
                         }
                     } else {
-                        if ($arContrato->getAuxilioTransporte() == 1) {
+                        if ($arProgramacion->getAplicarTransporte() && $arContrato->getAuxilioTransporte() == true) {
                             $salarioPromedioPrimas = $douSalario + $auxilioTransporte;
                         } else {
                             $salarioPromedioPrimas = $douSalario;
@@ -287,7 +287,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     if ($intDiasSalarioPromedio > 0) {
                         $otrosConceptos = ($ibpConceptos / $intDiasSalarioPromedio) * 30;
                     }
-                    if ($arContrato->getAuxilioTransporte()) {
+                    if ($arProgramacion->getAplicarTransporte()) {
                         $salarioPromedioPrimas = $douSalario + $auxilioTransporte + $otrosConceptos;
                     } else {
                         $salarioPromedioPrimas = $douSalario + $otrosConceptos;

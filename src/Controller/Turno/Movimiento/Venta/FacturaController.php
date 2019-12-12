@@ -15,6 +15,8 @@ use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Form\Type\Turno\FacturaType;
 use App\Formato\Turno\Factura1;
+use App\Formato\Turno\Factura2;
+use App\Formato\Turno\Factura3;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -218,9 +220,22 @@ class FacturaController extends AbstractController
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $arConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
-                if ($arConfiguracion->getCodigoFormatoFactura() == 1) {
-                    $formatoFactura = new Factura1();
-                    $formatoFactura->Generar($em, $id, $arFactura->getNumero(), $this->getUser());
+                switch ($arConfiguracion->getCodigoFormatoFactura()){
+                    case 1:
+                        $formatoFactura = new Factura1();
+                        $formatoFactura->Generar($em, $id, $arFactura->getNumero(), $this->getUser());
+                        break;
+                    case 2:
+                        $formatoFactura = new Factura2();
+                        $formatoFactura->Generar($em, $id);
+                        break;
+                    case 3:
+                        $formatoFactura = new Factura3();
+                        $formatoFactura->Generar($em, $id);
+                        break;
+                    default:
+                        Mensajes::error("SIN FORMATO DE FACTURA");
+                        break;
                 }
             }
         }

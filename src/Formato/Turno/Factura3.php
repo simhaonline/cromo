@@ -41,8 +41,8 @@ class Factura3 extends \FPDF
 
         $this->GenerarEncabezadoFactura(self::$em);
         $arFactura = self::$em->getRepository(TurFactura::class)->find(self::$codigoFactura);
-        $this->Image('../public/img/recursos/vigilancia/mintransporte.png', 15, 15, 62, 15);
-        $this->Image('../public/img/recursos/vigilancia/supertransporte.jpeg', 15, 32, 62, 15);
+        $this->Image('../public/img/recursos/vigilancia/burea.png', 165, 12, 20, 15);
+        $this->Image('../public/img/recursos/vigilancia/certificacion.png', 185, 12, 20, 15);
         $this->SetXY(15, 38);
         $this->SetFont('Arial', 'B', 15);
         $this->Cell(50, 4, "FACTURA DE VENTA", 0, 0, 'L', 0);
@@ -323,7 +323,7 @@ class Factura3 extends \FPDF
         try {
             $logo = $em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
             if ($logo) {
-                $this->Image("data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen())), 15, 8, 50, 24, $logo->getExtension());
+                $this->Image("data:image/'{$logo->getExtension()}';base64," . base64_encode(stream_get_contents($logo->getImagen())), 15, 8, 30, 24, $logo->getExtension());
             }
         } catch (\Exception $exception) {
         }

@@ -1,10 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
                href="{{ path('tesoreria_movimiento_cuentapagar_cuentapagar_lista') }}">Volver</a> &nbsp;&nbsp;
         </div>
+    </div>
+    <div class="btn-group">
+        {% include 'estructura/botonera.html.twig' %}
+    </div>
+    <div class="btn-group">
+        {{ form_widget(form.btnVerificar) }}
     </div>
     <br><br>
     <table width="100%" class="table table-condensed table-bordered tabla-datos">
@@ -70,4 +77,5 @@
             <td class="td-in-well" colspan="5">{{ arCuentaPagar.comentario }}</td>
         </tr>
     </table>
+    {{ form_end(form) }}
 {% endblock %}

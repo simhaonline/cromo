@@ -175,6 +175,9 @@ class CuentaPagarController extends AbstractController
             if ($form->get('btnVerificar')->isClicked()) {
                 $em->getRepository(TesCuentaPagar::class)->verificar($arCuentaPagar);
             }
+            if ($form->get('btnAnular')->isClicked()) {
+                $em->getRepository(TesCuentaPagar::class)->anular($arCuentaPagar);
+            }
             return $this->redirect($this->generateUrl('tesoreria_movimiento_cuentapagar_cuentapagar_detalle', ['id' => $id]));
         }
 

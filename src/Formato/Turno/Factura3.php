@@ -22,7 +22,7 @@ class Factura3 extends \FPDF
         self::$em = $em;
         self::$codigoFactura = $codigoFactura;
         $arFactura = $em->getRepository(TurFactura::class)->find($codigoFactura);
-        $valor = round($arFactura->getVrTotal());
+        $valor = round($arFactura->getVrNeto());
         $strLetras = FuncionesController::devolverNumeroLetras($valor);
         self::$strLetras = $strLetras;
         ob_clean();

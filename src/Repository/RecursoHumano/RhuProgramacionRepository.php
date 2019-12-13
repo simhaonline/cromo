@@ -236,7 +236,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $intDiasSalarioPromedio = FuncionesController::diasPrestaciones($dateFechaDesde, $dateFechaHastaPago);
                 $diasAusentismo = 0;
                 if ($arConfiguracion['diasAusentismoPrimas']) {
-                    $diasAusentismo = $em->getRepository(RhuLicencia::class)->periodo($dateFechaDesde, $dateFechaHasta, $arContrato->getCodigoEmpleadoFk());
+                    $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
                     $intDiasSalarioPromedio -= $diasAusentismo;
                 }
                 //$ibpPrimasInicial = $arContrato->getIbpPrimasInicial();

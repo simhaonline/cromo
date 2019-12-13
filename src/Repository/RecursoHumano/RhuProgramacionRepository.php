@@ -340,14 +340,9 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         }
                     }
                 }*/
-                $diasAusentismo = 0;
-                /*if ($arConfiguracion->getDiasAusentismoPrimas()) {
-                    $diasAusentismo = $em->getRepository('BrasaRecursoHumanoBundle:RhuPago')->diasAusentismo($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
-                }*/
-                //Validar si existe la configuración de primas de movimientos y sumar los dias solo de tipo ausentismo.
-                /*if ($arConfiguracion->getDiasAusentismoPrimasMovimiento()) {
-                    $diasAusentismo = $em->getRepository('BrasaRecursoHumanoBundle:RhuLicencia')->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
-                }*/
+
+                $diasAusentismo = $em->getRepository(RhuLicencia::class)->periodo($dateFechaDesde, $dateFechaHasta, $arContrato->getCodigoEmpleadoFk());
+
                 $salarioPromedioPrimas = round($salarioPromedioPrimas);
                 $arProgramacionDetalle = new RhuProgramacionDetalle();
                 $arProgramacionDetalle->setProgramacionRel($arProgramacion);

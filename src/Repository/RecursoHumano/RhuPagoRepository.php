@@ -803,11 +803,10 @@ class RhuPagoRepository extends ServiceEntityRepository
             //Prima
             $dias = $arProgramacionDetalle->getDias();
 
-            /*if ($arConfiguracion->getDiasAusentismoPrimas()) {
-                $dias = $arProgramacionDetalle->getDias() - $arProgramacionDetalle->getDiasAusentismo();
-                if ($arProgramacionDetalle->getDiasAusentismoPropuesto() > 0) {
-                    $dias = $arProgramacionDetalle->getDias() - $arProgramacionDetalle->getDiasAusentismoPropuesto();
-                }
+
+            $dias = $arProgramacionDetalle->getDias() - $arProgramacionDetalle->getDiasAusentismo();
+            /*if ($arProgramacionDetalle->getDiasAusentismoPropuesto() > 0) {
+                $dias = $arProgramacionDetalle->getDias() - $arProgramacionDetalle->getDiasAusentismoPropuesto();
             }*/
 
             $salarioPrima = $arProgramacionDetalle->getVrSalarioPrima();

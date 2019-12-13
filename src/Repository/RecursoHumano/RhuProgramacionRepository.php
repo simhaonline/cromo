@@ -232,18 +232,19 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $dateFechaHasta = $arProgramacion->getFechaHasta();
                 $dateFechaHastaPago = $arContrato->getFechaUltimoPago();
                 $douSalario = $arContrato->getVrSalarioPago();
-
-                $intDiasPrima = 0;
-                $intDiasPrima = FuncionesController::diasPrestaciones($dateFechaDesde, $dateFechaHasta);
+                $intDiasPrimaLiquidar = FuncionesController::diasPrestaciones($dateFechaDesde, $dateFechaHasta);
                 $intDiasSalarioPromedio = FuncionesController::diasPrestaciones($dateFechaDesde, $dateFechaHastaPago);
-                $intDiasPrimaLiquidar = $intDiasPrima;
+                $diasAusentismo = 0;
+                if ($arConfiguracion['diasAusentismoPrimas']) {
+                    $diasAusentismo = $em->getRepository(RhuLicencia::class)->periodo($dateFechaDesde, $dateFechaHasta, $arContrato->getCodigoEmpleadoFk());
+                    $intDiasSalarioPromedio -= $diasAusentismo;
+                }
                 //$ibpPrimasInicial = $arContrato->getIbpPrimasInicial();
                 $ibpPrimasInicial = 0;
                 $ibpPrimas = $em->getRepository(RhuPagoDetalle::class)->ibp($dateFechaDesde->format('Y-m-d'), $dateFechaHastaPago->format('Y-m-d'), $arContrato->getCodigoContratoPk());
                 $ibpPrimas += $ibpPrimasInicial;
                 $salarioPromedioPrimas = 0;
                 if ($arContrato->getCodigoSalarioTipoFk() == 'VAR') {
-
                     if ($intDiasSalarioPromedio > 0) {
                         if ($arContrato->getAuxilioTransporte() && $arProgramacion->getAplicarTransporte()) {
                             $salarioMinimoVariable = $salarioMinimo + $auxilioTransporte;
@@ -341,7 +342,6 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     }
                 }*/
 
-                $diasAusentismo = $em->getRepository(RhuLicencia::class)->periodo($dateFechaDesde, $dateFechaHasta, $arContrato->getCodigoEmpleadoFk());
 
                 $salarioPromedioPrimas = round($salarioPromedioPrimas);
                 $arProgramacionDetalle = new RhuProgramacionDetalle();

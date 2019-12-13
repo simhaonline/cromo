@@ -194,6 +194,11 @@ class RhuConfiguracion
     private $primasDiasAdicionalesSalario = false;
 
     /**
+     * @ORM\Column(name="dias_ausentismo_primas", type="boolean", nullable=true)
+     */
+    private $diaAusentismoPrimas = false;
+
+    /**
      * @ORM\Column(name="codigo_entidad_riesgos_profesionales_fk", type="integer", nullable=true)
      */
     private $codigoEntidadRiesgosProfesionalesFk;
@@ -961,4 +966,23 @@ class RhuConfiguracion
     {
         $this->primasDiasAdicionalesSalario = $primasDiasAdicionalesSalario;
     }
+
+    /**
+     * @return bool
+     */
+    public function isDiaAusentismoPrimas(): bool
+    {
+        return $this->diaAusentismoPrimas;
+    }
+
+    /**
+     * @param bool $diaAusentismoPrimas
+     */
+    public function setDiaAusentismoPrimas(bool $diaAusentismoPrimas): void
+    {
+        $this->diaAusentismoPrimas = $diaAusentismoPrimas;
+    }
+
+
+
 }

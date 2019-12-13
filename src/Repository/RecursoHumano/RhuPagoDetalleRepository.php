@@ -281,7 +281,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             }
         }
 
-        $dql = "SELECT SUM(pd.vrIngresoBaseCotizacionAdicional) as recagosNocturnos FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p JOIN pd.conceptoRel pc "
+        $dql = "SELECT SUM(pd.vrIngresoBaseCotizacion) as recagosNocturnos FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p JOIN pd.conceptoRel pc "
             . "WHERE pc.recargoNocturno = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
             . "AND p.fechaDesde >= '" . $fechaDesde->format('Y/m/d') . "' AND p.fechaDesde <= '" . $fechaHasta->format('Y/m/d') . "'";
         $query = $em->createQuery($dql);

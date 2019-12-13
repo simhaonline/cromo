@@ -201,8 +201,8 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->join('pd.conceptoRel', 'pc')
             ->where("pc.recargoNocturno = 1")
             ->andWhere("p.codigoContratoFk = {$codigoContrato}")
-            ->andWhere("p.fechaDesde >= '{$fechaDesde}'")
-            ->andWhere("p.fechaHasta <= '{$fechaHasta}'");
+            ->andWhere("p.fechaDesdeContrato >= '{$fechaDesde}'")
+            ->andWhere("p.fechaHastaContrato <= '{$fechaHasta}'");
 
 
         $arrayResultado = $query->getQuery()->getResult();

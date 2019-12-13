@@ -67,6 +67,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->addSelect('pt.nombre as pagoTipo')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('e.nombreCorto AS empleado')
+            ->addSelect('g.nombre AS grupo')
             ->addSelect('p.fechaDesde')
             ->addSelect('p.fechaHasta')
             ->addSelect('p.vrSalarioContrato')
@@ -85,7 +86,8 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->addSelect('p.estadoAnulado')
             ->addSelect('p.estadoContabilizado')
             ->leftJoin('p.pagoTipoRel', 'pt')
-            ->leftJoin('p.empleadoRel', 'e');
+            ->leftJoin('p.empleadoRel', 'e')
+        ->leftJoin('p.grupoRel', 'g');
         if ($codigoPago) {
             $queryBuilder->andWhere("p.codigoPagoPk = '{$codigoPago}'");
         }

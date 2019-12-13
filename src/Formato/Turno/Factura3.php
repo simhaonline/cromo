@@ -70,7 +70,7 @@ class Factura3 extends \FPDF
         $this->Cell(25, 5, $arFactura->getFechaVence()->format('Y-m-d'), 0, 0, 'C', 1);
         $this->SetXY(15, 53);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(25, 5,  utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
+        $this->Cell(25, 5, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->Cell(115, 5, utf8_decode($arFactura->getClienteRel()->getDireccion()), 0, 0, 'L', 1);
         $this->SetXY(156, 53);
@@ -145,10 +145,14 @@ class Factura3 extends \FPDF
         foreach ($arFacturaDetalles as $arFacturaDetalle) {
             $pdf->SetX(15);
             $modalidad = "";
-//                    if($arFacturaDetalle->getCodigoModalidadServicioFk()) {
-//                        $modalidad = "-" . utf8_decode($arFacturaDetalle->getModalidadServicioRel()->getNombre());
-//                    }
-            $pdf->Cell(139, 4, substr(utf8_decode($arFacturaDetalle->getItemRel()->getNombre()) . $modalidad, 0, 61), 0, 0, 'L');
+            $detalle = "";
+            if ($arFacturaDetalle->getPedidoDetalleRel()) {
+                $modalidad = "-" . utf8_decode($arFacturaDetalle->getPedidoDetalleRel()->getModalidadRel()->getNombre());
+            }
+            if ($arFacturaDetalle->getDetalle()) {
+                $detalle = "-" . utf8_decode($arFacturaDetalle->getDetalle());
+            }
+            $pdf->Cell(139, 4, substr(utf8_decode($arFacturaDetalle->getItemRel()->getNombre()) . $modalidad .$detalle, 0, 80), 0, 0, 'L');
             $pdf->Cell(8, 4, number_format($arFacturaDetalle->getCantidad(), 1, '.', ','), 0, 0, 'C');
             $pdf->SetFont('Arial', '', 8);
             $pdf->Cell(22, 4, number_format($arFacturaDetalle->getVrPrecio(), 0, '.', ','), 0, 0, 'R');
@@ -275,7 +279,7 @@ class Factura3 extends \FPDF
         $this->Cell(22, 6, 'SUBTOTAL', 1, 0, 'L');
         $this->Cell(22, 6, number_format($arFactura->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
         $this->SetXY(15, 198);
-        $this->Cell(147, 12, '', 1, 0, 'L');
+        $this->Cell(147, 12, $arFactura->getComentarios(), 1, 0, 'L');
         $this->Cell(22, 6, 'IVA', 1, 0, 'L');
         $this->Cell(22, 6, number_format($arFactura->getVrIva(), 0, '.', ','), 1, 0, 'R');
         $this->SetXY(162, 204);

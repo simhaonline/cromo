@@ -237,7 +237,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $dql = "SELECT SUM(pd.vrIngresoBasePrestacion) as ibp FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p "
             . "WHERE p.estadoAprobado = 1 AND p.codigoContratoFk = " . $codigoContrato . " "
-            . "AND p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "'";
+            . "AND p.fechaDesdeContrato >= '" . $fechaDesde . "' AND p.fechaDesdeContrato <= '" . $fechaHasta . "'";
         $query = $em->createQuery($dql);
         $arrayResultado = $query->getResult();
         $ibp = $arrayResultado[0]['ibp'];

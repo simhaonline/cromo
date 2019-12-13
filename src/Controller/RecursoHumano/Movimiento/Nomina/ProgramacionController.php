@@ -470,6 +470,7 @@ class ProgramacionController extends AbstractController
             ->add('btnActualizar', SubmitType::class, array('label' => 'Actualizar'))
             ->getForm();
         $form->handleRequest($request);
+        $raw=[];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnActualizar')->isClicked()) {
                 $arrHoras = $request->request->all();
@@ -477,7 +478,7 @@ class ProgramacionController extends AbstractController
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
-        $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->lista($arProgramacion->getCodigoProgramacionPk());
+        $arProgramacionDetalles = $em->getRepository(RhuProgramacionDetalle::class)->lista($raw, $arProgramacion->getCodigoProgramacionPk());
         return $this->render('recursohumano/movimiento/nomina/programacion/extras.html.twig', [
             'arProgramacionDetalles' => $arProgramacionDetalles,
             'form' => $form->createView()
@@ -793,7 +794,7 @@ class ProgramacionController extends AbstractController
     public function getFiltrosDetalle($form)
     {
         $filtro = [
-                'identificacion' => $form->get('identificacion')->getData(),
+            'identificacion' => $form->get('identificacion')->getData(),
             'estadoMarcado' => $form->get('estadoMarcado')->getData(),
             'pagosNegativos' => $form->get('pagosNegativos')->getData(),
         ];

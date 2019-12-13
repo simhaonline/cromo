@@ -272,7 +272,7 @@ class Factura3 extends \FPDF
         $this->SetXY(15, 192);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(40, 6, 'OBSERVACIONES:', 1, 0, 'L');
-        $this->Cell(35, 6, 'RETE FTE SUGERIDA:', 1, 0, 'L');
+        $this->Cell(35, 6, 'RETE FUENTE:', 1, 0, 'L');
         $this->Cell(22, 6, number_format($arFactura->getVrRetencionFuente(), 0, '.', ','), 1, 0, 'R');
         $this->Cell(28, 6, 'BASE GRAVABLE:', 1, 0, 'L');
         $this->Cell(22, 6, number_format($arFactura->getVrBaseAIU(), 0, '.', ','), 1, 0, 'R');
@@ -288,7 +288,7 @@ class Factura3 extends \FPDF
         $this->SetXY(15, 210);
         $this->Cell(147, 6, substr(strtoupper(self::$strLetras), 0, 96), 1, 0, 'L', 1);
         $this->Cell(22, 6, '', 1, 0, 'L', 1);
-        $this->Cell(22, 6, number_format($arFactura->getVrTotal(), 0, '.', ','), 1, 0, 'R', 1);
+        $this->Cell(22, 6, number_format($arFactura->getVrNeto(), 0, '.', ','), 1, 0, 'R', 1);
         $this->SetXY(15, 216);
         $this->Cell(64, 6, 'RECIBIDO POR', 1, 0, 'L');
         $this->Cell(64, 6, 'ACEPTADO POR', 1, 0, 'L');

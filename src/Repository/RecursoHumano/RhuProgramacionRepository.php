@@ -207,8 +207,6 @@ class RhuProgramacionRepository extends ServiceEntityRepository
         }
 
         if($arProgramacion->getCodigoPagoTipoFk() == 'PRI') {
-
-
             $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
             $salarioMinimo = $arConfiguracion['vrSalarioMinimo'];
             $auxilioTransporte = $arConfiguracion['vrAuxilioTransporte'];

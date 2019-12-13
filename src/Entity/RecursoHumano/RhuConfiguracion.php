@@ -196,7 +196,7 @@ class RhuConfiguracion
     /**
      * @ORM\Column(name="dias_ausentismo_primas", type="boolean", nullable=true)
      */
-    private $diaAusentismoPrimas = false;
+    private $diasAusentismoPrimas = false;
 
     /**
      * @ORM\Column(name="codigo_entidad_riesgos_profesionales_fk", type="integer", nullable=true)
@@ -970,19 +970,18 @@ class RhuConfiguracion
     /**
      * @return bool
      */
-    public function isDiaAusentismoPrimas(): bool
+    public function isDiasAusentismoPrimas(): bool
     {
-        return $this->diaAusentismoPrimas;
+        return $this->diasAusentismoPrimas;
     }
 
     /**
-     * @param bool $diaAusentismoPrimas
+     * @param bool $diasAusentismoPrimas
      */
-    public function setDiaAusentismoPrimas(bool $diaAusentismoPrimas): void
+    public function setDiasAusentismoPrimas(bool $diasAusentismoPrimas): void
     {
-        $this->diaAusentismoPrimas = $diaAusentismoPrimas;
+        $this->diasAusentismoPrimas = $diasAusentismoPrimas;
     }
-
 
 
 }

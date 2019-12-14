@@ -125,7 +125,7 @@ class pagoDetalleController extends Controller
             $hoja = $libro->getActiveSheet();
             $hoja->setTitle('PagoDetalle');
             $j = 0;
-            $arrColumnas = ['ID', 'TIPO', 'NUMERO', 'COD', 'NI', 'EMPLEADO', 'GRUPO', 'COD', 'CONCEPTO', 'DESDE', 'HASTA', 'VR_PAGO', 'VR_PAGO_O', 'H', 'D', '%', 'IBC', 'IBP', 'CRE', 'PEN', 'SAL', 'PV'];
+            $arrColumnas = ['ID', 'TIPO', 'NUMERO', 'COD', 'NI', 'EMPLEADO', 'GRUPO', 'COD', 'CONCEPTO', 'DESDE', 'HASTA', 'VR_PAGO', 'DEVENGADO', 'DEDUCCION', 'H', 'D', '%', 'IBC', 'IBP', 'CRE', 'PEN', 'SAL', 'PV'];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
                 $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
@@ -135,6 +135,14 @@ class pagoDetalleController extends Controller
             }
             $j = 2;
             foreach ($arPagoDetalles as $arPagoDetalle) {
+                $devengado = 0;
+                $deduccion = 0;
+                if($arPagoDetalle['operacion'] == -1){
+                    $deduccion = $arPagoDetalle['vrPago'];
+                }
+                if($arPagoDetalle['operacion'] == 1){
+                    $devengado = $arPagoDetalle['vrPago'];
+                }
                 $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
                 $hoja->setCellValue('A' . $j, $arPagoDetalle['codigoPagoDetallePk']);
                 $hoja->setCellValue('B' . $j, $arPagoDetalle['pagoTipoNombre']);
@@ -147,17 +155,18 @@ class pagoDetalleController extends Controller
                 $hoja->setCellValue('I' . $j, $arPagoDetalle['conceptoNombre']);
                 $hoja->setCellValue('J' . $j, $arPagoDetalle['pagoFechaDesde']->format('Y-m-d'));
                 $hoja->setCellValue('K' . $j, $arPagoDetalle['pagoFechaHasta']->format('Y-m-d'));
-                $hoja->setCellValue('L' . $j, $arPagoDetalle['vrPago']);
-                $hoja->setCellValue('M' . $j, $arPagoDetalle['vrPagoOperado']);
-                $hoja->setCellValue('N' . $j, $arPagoDetalle['horas']);
-                $hoja->setCellValue('O' . $j, $arPagoDetalle['dias']);
-                $hoja->setCellValue('P' . $j, $arPagoDetalle['porcentaje']);
-                $hoja->setCellValue('Q' . $j, $arPagoDetalle['vrIngresoBaseCotizacion']);
-                $hoja->setCellValue('R' . $j, $arPagoDetalle['vrIngresoBasePrestacion']);
-                $hoja->setCellValue('S' . $j, $arPagoDetalle['codigoCreditoFk']);
-                $hoja->setCellValue('T' . $j, FuncionesController::boolTexto($arPagoDetalle['pension']));
-                $hoja->setCellValue('U' . $j, FuncionesController::boolTexto($arPagoDetalle['salud']));
-                $hoja->setCellValue('V' . $j, $arPagoDetalle['porcentajeVacaciones']);
+                $hoja->setCellValue('L' . $j, $arPagoDetalle['vrPagoOperado']);
+                $hoja->setCellValue('M' . $j, $devengado);
+                $hoja->setCellValue('N' . $j, $deduccion);
+                $hoja->setCellValue('O' . $j, $arPagoDetalle['horas']);
+                $hoja->setCellValue('P' . $j, $arPagoDetalle['dias']);
+                $hoja->setCellValue('Q' . $j, $arPagoDetalle['porcentaje']);
+                $hoja->setCellValue('R' . $j, $arPagoDetalle['vrIngresoBaseCotizacion']);
+                $hoja->setCellValue('S' . $j, $arPagoDetalle['vrIngresoBasePrestacion']);
+                $hoja->setCellValue('T' . $j, $arPagoDetalle['codigoCreditoFk']);
+                $hoja->setCellValue('U' . $j, FuncionesController::boolTexto($arPagoDetalle['pension']));
+                $hoja->setCellValue('V' . $j, FuncionesController::boolTexto($arPagoDetalle['salud']));
+                $hoja->setCellValue('W' . $j, $arPagoDetalle['porcentajeVacaciones']);
                 $j++;
             }
 

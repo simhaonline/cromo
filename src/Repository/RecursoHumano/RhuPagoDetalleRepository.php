@@ -153,6 +153,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.vrPagoOperado')
             ->addSelect('pd.vrPago')
             ->addSelect('pd.horas')
+            ->addSelect('pd.operacion')
             ->addSelect('pd.dias')
             ->addSelect('pd.porcentaje')
             ->addSelect('pd.vrIngresoBaseCotizacion')

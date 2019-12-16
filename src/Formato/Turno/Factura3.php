@@ -272,10 +272,10 @@ class Factura3 extends \FPDF
         $this->SetXY(15, 192);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(40, 6, 'OBSERVACIONES:', 1, 0, 'L');
-        $this->Cell(35, 6, 'RETE FUENTE:', 1, 0, 'L');
-        $this->Cell(22, 6, number_format($arFactura->getVrRetencionFuente(), 0, '.', ','), 1, 0, 'R');
-        $this->Cell(28, 6, 'BASE GRAVABLE:', 1, 0, 'L');
+        $this->Cell(35, 6, 'BASE GRAVABLE:', 1, 0, 'L');
         $this->Cell(22, 6, number_format($arFactura->getVrBaseAIU(), 0, '.', ','), 1, 0, 'R');
+        $this->Cell(28, 6, 'RTE FUENTE:', 1, 0, 'L');
+        $this->Cell(22, 6, number_format($arFactura->getVrRetencionFuente(), 0, '.', ','), 1, 0, 'R');
         $this->Cell(22, 6, 'SUBTOTAL', 1, 0, 'L');
         $this->Cell(22, 6, number_format($arFactura->getVrSubtotal(), 0, '.', ','), 1, 0, 'R');
         $this->SetXY(15, 198);

@@ -497,7 +497,8 @@ class MigracionController extends Controller
                 calzado, /*aparece con el nombre de talla_calzado en cromo*/
                 estatura,
                 peso, 
-                pagado_entidad_salud
+                pagado_entidad_salud,
+                digito_verificacion
                 /*codigo_cargo_fk*/ FROM rhu_empleado 
                 ORDER BY codigo_empleado_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
@@ -535,6 +536,7 @@ class MigracionController extends Controller
                 $arEmpleado->setEstatura($row['estatura']);
                 $arEmpleado->setPeso($row['peso']);
                 $arEmpleado->setPagadoEntidad($row['pagado_entidad_salud']);
+                $arEmpleado->setDigitoVerificacion($row['digito_verificacion']);
                 $em->persist($arEmpleado);
                 $metadata = $em->getClassMetaData(get_class($arEmpleado));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);

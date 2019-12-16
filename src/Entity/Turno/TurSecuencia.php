@@ -239,6 +239,11 @@ class TurSecuencia
     private $dias = 0;
 
     /**
+     * @ORM\Column(name="homologar", type="boolean", options={"default":false})
+     */
+    private $homologar = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurPrototipo", mappedBy="secuenciaRel")
      */
     protected $prototiposSecuenciaRel;
@@ -961,6 +966,22 @@ class TurSecuencia
     public function setPrototiposSecuenciaRel($prototiposSecuenciaRel): void
     {
         $this->prototiposSecuenciaRel = $prototiposSecuenciaRel;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHomologar(): bool
+    {
+        return $this->homologar;
+    }
+
+    /**
+     * @param bool $homologar
+     */
+    public function setHomologar(bool $homologar): void
+    {
+        $this->homologar = $homologar;
     }
 
 

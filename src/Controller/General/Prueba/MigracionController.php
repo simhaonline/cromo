@@ -2263,6 +2263,7 @@ class MigracionController extends Controller
             $arSecuencia->setDomingoFestivo($row['domingo_festivo']);
             $arSecuencia->setHoras($row['horas']);
             $arSecuencia->setDias($row['dias']);
+            $arSecuencia->setHomologar($row['homologar']);
             $em->persist($arSecuencia);
             $metadata = $em->getClassMetaData(get_class($arSecuencia));
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -2331,7 +2332,10 @@ class MigracionController extends Controller
                 telefono,
                 celular,
                 contacto,
-                codigo_ciudad_fk
+                codigo_ciudad_fk,
+                codigo_centro_costo_contabilidad_fk,
+                latitud,
+                longitud
                  FROM tur_puesto 
                  ORDER BY codigo_puesto_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
@@ -2339,6 +2343,9 @@ class MigracionController extends Controller
                 $arPuesto->setCodigoPuestoPk($row['codigo_puesto_pk']);
                 if($row['codigo_cliente_fk']) {
                     $arPuesto->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+                }
+                if($row['codigo_centro_costo_contabilidad_fk']) {
+                    $arPuesto->setCentroCostoRel($em->getReference(TurCliente::class, $row['codigo_centro_costo_contabilidad_fk']));
                 }
                 $arPuesto->setNombre(utf8_encode($row['nombre']));
                 $arPuesto->setDireccion(utf8_encode($row['direccion']));
@@ -2348,6 +2355,8 @@ class MigracionController extends Controller
                 if($row['codigo_ciudad_fk']) {
                     $arPuesto->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
                 }
+                $arPuesto->setLatitud($row['latitud']);
+                $arPuesto->setLongitud($row['longitud']);
                 $em->persist($arPuesto);
                 $metadata = $em->getClassMetaData(get_class($arPuesto));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);

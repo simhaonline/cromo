@@ -67,9 +67,24 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function pendienteProgramar()
+    public function pendienteProgramar($raw)
     {
-        $session = new Session();
+
+        $filtros = $raw['filtros'] ?? null;
+        $codigoCliente = null;
+        $codigoPedidoDetalle = null;
+        $codigoPuesto = null;
+        $anio = null;
+        $mes = null;
+
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $codigoPedidoDetalle = $filtros['codigoPedidoDetalle'] ?? null;
+            $codigoPuesto = $filtros['codigoPuesto'] ?? null;
+            $anio = $filtros['anio'] ?? null;
+            $mes = $filtros['mes'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd');
         $queryBuilder
             ->select('pd.codigoPedidoDetallePk')
@@ -111,6 +126,22 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('pd.puestoRel', 'pu')
             ->where('pd.estadoProgramado = 0')
         ->orderBy('p.codigoPedidoPk', 'DESC');
+
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("cl.codigoClientePk = '{$codigoCliente}'");
+        }
+        if ($codigoPedidoDetalle) {
+            $queryBuilder->andWhere("pd.codigoPedidoDetallePk = '{$codigoPedidoDetalle}'");
+        }
+        if ($codigoPuesto) {
+            $queryBuilder->andWhere("pd.codigoPuestoFk = '{$codigoPuesto}'");
+        }
+        if ($mes) {
+            $queryBuilder->andWhere("pd.mes = '{$mes}'");
+        }
+        if ($anio) {
+            $queryBuilder->andWhere("pd.mes = '{$anio}'");
+        }
 
         return $queryBuilder->getQuery()->getResult();
     }

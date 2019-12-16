@@ -25,6 +25,8 @@ use App\Formato\Inventario\Pedido;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -34,23 +36,33 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ProgramacionController extends Controller
+class ProgramacionController extends AbstractController
 {
 
     /**
      * @Route("turno/utilidad/operacion/programacion", name="turno_utilidad_operacion_programacion")
      */
-    public function detalle(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $paginator = $this->get('knp_paginator');
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
+            ->add('codigoCliente', TextType::class, array('required' => false))
+            ->add('codigoPedidoDetalle', TextType::class, array('required' => false))
+            ->add('codigoPuesto', TextType::class, array('required' => false))
+            ->add('anio', TextType::class, array('required' => false))
+            ->add('mes', TextType::class, array('required' => false))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion'));
+        $raw = [];
+        if ($form->isSubmitted() ) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+
+                $raw['filtros'] = $this->getFiltros($form);
+            }
         }
-        $arPedidoDetalles = $em->getRepository(TurPedidoDetalle::class)->pendienteProgramar();
+        $arPedidoDetalles = $em->getRepository(TurPedidoDetalle::class)->pendienteProgramar($raw);
         return $this->render('turno/utilidad/operacion/programacion/lista.html.twig', [
             'arPedidoDetalles' => $arPedidoDetalles,
             'form' => $form->createView()
@@ -165,5 +177,17 @@ class ProgramacionController extends Controller
         }
 
         return $strDia;
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoCliente' => $form->get('codigoCliente')->getData(),
+            'codigoPedidoDetalle' => $form->get('codigoPedidoDetalle')->getData(),
+            'codigoPuesto' => $form->get('codigoPuesto')->getData(),
+            'mes' => $form->get('mes')->getData(),
+            'anio' => $form->get('anio')->getData(),
+        ];
+        return $filtro;
     }
 }

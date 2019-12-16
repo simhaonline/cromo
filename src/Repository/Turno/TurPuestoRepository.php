@@ -29,6 +29,8 @@ class TurPuestoRepository extends ServiceEntityRepository
             ->addSelect('p.comunicacion')
             ->addSelect('c.nombre as ciudadNombre')
             ->addSelect('p.codigoCentroCostoFk')
+            ->addSelect('p.estadoInactivo')
+            ->addSelect('p.contacto')
             ->addSelect('s.nombre as salario')
             ->leftJoin('p.programadorRel', 'pro')
             ->leftJoin('p.ciudadRel', 'c')

@@ -7,6 +7,7 @@
                href="{{ path('turno_administracion_comercial_puesto_lista') }}">Volver</a>&nbsp;&nbsp;
         </div>
     </div>
+    <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo"><b>CODIGO PUESTO:</b></td>
@@ -33,12 +34,17 @@
             <td class="td-in-well" style="text-transform: uppercase;">{{ arPuesto.celular }}</td>
         </tr>
         <tr>
-            <td class="titulo"><b>UBICACIÓN GPS:</b></td>
-            <td class="td-in-well">{{ arPuesto.ubicacionGps }}</td>
+            <td class="titulo"><b>LATITUD:</b></td>
+            <td class="td-in-well">{{ arPuesto.latitud }}</td>
+            <td class="titulo"><b>LONGITUD:</b></td>
+            <td class="td-in-well">{{ arPuesto.longitud }}</td>
+        </tr>
+        <tr>
             <td class="titulo"><b>ESTADO INACTIVO: </b></td>
             <td class="td-in-well">{{ arPuesto.estadoInactivo ?"INACTIVO": "ACTIVO" }}</td>
+            <td></td>
+            <td></td>
         </tr>
-        <br/><br/>
     </table>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#puestos" data-toggle="tab">Puestos</a></li>

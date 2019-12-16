@@ -101,9 +101,14 @@ class TurPuesto
     private $codigoCentroCostoFk;
 
     /**
-     * @ORM\Column(name="ubicacion_gps", type="string", length=100, nullable=true)
+     * @ORM\Column(name="latitud", type="float", nullable=true, options={"default":0})
      */
-    private $ubicacionGps;
+    private $latitud = 0;
+
+    /**
+     * @ORM\Column(name="longitud", type="float", nullable=true, options={"default":0})
+     */
+    private $longitud = 0;
 
     /**
      * @ORM\Column(name="estado_inactivo", type="boolean", nullable=true, options={"default":false})
@@ -400,23 +405,39 @@ class TurPuesto
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getUbicacionGps()
+    public function getLatitud(): int
     {
-        return $this->ubicacionGps;
+        return $this->latitud;
     }
 
     /**
-     * @param mixed $ubicacionGps
+     * @param int $latitud
      */
-    public function setUbicacionGps($ubicacionGps): void
+    public function setLatitud(int $latitud): void
     {
-        $this->ubicacionGps = $ubicacionGps;
+        $this->latitud = $latitud;
     }
 
     /**
-     * @return mixed
+     * @return int
+     */
+    public function getLongitud(): int
+    {
+        return $this->longitud;
+    }
+
+    /**
+     * @param int $longitud
+     */
+    public function setLongitud(int $longitud): void
+    {
+        $this->longitud = $longitud;
+    }
+
+    /**
+     * @return bool
      */
     public function getEstadoInactivo()
     {
@@ -424,11 +445,27 @@ class TurPuesto
     }
 
     /**
-     * @param mixed $estadoInactivo
+     * @param bool $estadoInactivo
      */
-    public function setEstadoInactivo($estadoInactivo): void
+    public function setEstadoInactivo(bool $estadoInactivo): void
     {
         $this->estadoInactivo = $estadoInactivo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSalarioFk()
+    {
+        return $this->codigoSalarioFk;
+    }
+
+    /**
+     * @param mixed $codigoSalarioFk
+     */
+    public function setCodigoSalarioFk($codigoSalarioFk): void
+    {
+        $this->codigoSalarioFk = $codigoSalarioFk;
     }
 
     /**
@@ -514,6 +551,22 @@ class TurPuesto
     /**
      * @return mixed
      */
+    public function getSalarioRel()
+    {
+        return $this->salarioRel;
+    }
+
+    /**
+     * @param mixed $salarioRel
+     */
+    public function setSalarioRel($salarioRel): void
+    {
+        $this->salarioRel = $salarioRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPedidosDetallesPuestoRel()
     {
         return $this->pedidosDetallesPuestoRel;
@@ -525,6 +578,22 @@ class TurPuesto
     public function setPedidosDetallesPuestoRel($pedidosDetallesPuestoRel): void
     {
         $this->pedidosDetallesPuestoRel = $pedidosDetallesPuestoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesPuestoRel()
+    {
+        return $this->facturasDetallesPuestoRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesPuestoRel
+     */
+    public function setFacturasDetallesPuestoRel($facturasDetallesPuestoRel): void
+    {
+        $this->facturasDetallesPuestoRel = $facturasDetallesPuestoRel;
     }
 
     /**
@@ -594,38 +663,6 @@ class TurPuesto
     /**
      * @return mixed
      */
-    public function getCodigoSalarioFk()
-    {
-        return $this->codigoSalarioFk;
-    }
-
-    /**
-     * @param mixed $codigoSalarioFk
-     */
-    public function setCodigoSalarioFk($codigoSalarioFk): void
-    {
-        $this->codigoSalarioFk = $codigoSalarioFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSalarioRel()
-    {
-        return $this->salarioRel;
-    }
-
-    /**
-     * @param mixed $salarioRel
-     */
-    public function setSalarioRel($salarioRel): void
-    {
-        $this->salarioRel = $salarioRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getSoportesHorasPuestoRel()
     {
         return $this->soportesHorasPuestoRel;
@@ -642,20 +679,18 @@ class TurPuesto
     /**
      * @return mixed
      */
-    public function getFacturasDetallesPuestoRel()
+    public function getPuestosAdicionalesPuestoRel()
     {
-        return $this->facturasDetallesPuestoRel;
+        return $this->puestosAdicionalesPuestoRel;
     }
 
     /**
-     * @param mixed $facturasDetallesPuestoRel
+     * @param mixed $puestosAdicionalesPuestoRel
      */
-    public function setFacturasDetallesPuestoRel($facturasDetallesPuestoRel): void
+    public function setPuestosAdicionalesPuestoRel($puestosAdicionalesPuestoRel): void
     {
-        $this->facturasDetallesPuestoRel = $facturasDetallesPuestoRel;
+        $this->puestosAdicionalesPuestoRel = $puestosAdicionalesPuestoRel;
     }
-
-
 
 }
 

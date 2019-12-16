@@ -16,6 +16,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -72,12 +73,14 @@ class PuestoType  extends AbstractType
             ])
 
             ->add('nombre', TextType::class)
+            ->add('longitud', NumberType::class)
+            ->add('latitud', NumberType::class)
+            ->add('nombre', TextType::class)
             ->add('direccion', TextType::class, ['required' => false])
             ->add('telefono', TextType::class, ['required' => false])
             ->add('celular', TextType::class, ['required' => false])
             ->add('comunicacion', TextType::class, ['required' => false])
             ->add('comentario', TextareaType::class, ['required' => false])
-            ->add('ubicacionGps', TextType::class, ['required' => false])
             ->add('estadoInactivo', CheckboxType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

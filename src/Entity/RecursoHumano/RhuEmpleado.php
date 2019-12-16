@@ -58,6 +58,11 @@ class RhuEmpleado
     private $numeroIdentificacion;
 
     /**
+     * @ORM\Column(name="digito_verificacion", type="string", length=1, nullable=true)
+     */
+    private $digitoVerificacion;
+
+    /**
      * @ORM\Column(name="discapacidad", type="boolean", nullable=false,options={"default":false})
      */
     private $discapacidad = false;
@@ -635,6 +640,22 @@ class RhuEmpleado
     public function setNumeroIdentificacion($numeroIdentificacion): void
     {
         $this->numeroIdentificacion = $numeroIdentificacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDigitoVerificacion()
+    {
+        return $this->digitoVerificacion;
+    }
+
+    /**
+     * @param mixed $digitoVerificacion
+     */
+    public function setDigitoVerificacion($digitoVerificacion): void
+    {
+        $this->digitoVerificacion = $digitoVerificacion;
     }
 
     /**
@@ -1917,6 +1938,37 @@ class RhuEmpleado
         $this->adicionalesTurnoEmpleadoRel = $adicionalesTurnoEmpleadoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTurNovedadesEmpleadoRel()
+    {
+        return $this->turNovedadesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $turNovedadesEmpleadoRel
+     */
+    public function setTurNovedadesEmpleadoRel($turNovedadesEmpleadoRel): void
+    {
+        $this->turNovedadesEmpleadoRel = $turNovedadesEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNovedadesEmpeladoReemplazoRel()
+    {
+        return $this->novedadesEmpeladoReemplazoRel;
+    }
+
+    /**
+     * @param mixed $novedadesEmpeladoReemplazoRel
+     */
+    public function setNovedadesEmpeladoReemplazoRel($novedadesEmpeladoReemplazoRel): void
+    {
+        $this->novedadesEmpeladoReemplazoRel = $novedadesEmpeladoReemplazoRel;
+    }
 
 
 }

@@ -106,6 +106,7 @@ class EmpleadoType extends AbstractType
                 'label' => 'Rh:'
             ])
             ->add('numeroIdentificacion', NumberType::class, ['required' => true, 'label' => 'numero identificacion:'])
+            ->add('digitoVerificacion', NumberType::class, ['required' => true])
             ->add('nombre1', TextType::class, ['required' => true, 'label' => 'Primer nombre:'])
             ->add('nombre2', TextType::class, ['required' => false, 'label' => 'Segundo nombre:'])
             ->add('apellido1', TextType::class, ['required' => true, 'label' => 'Primer apellido:'])

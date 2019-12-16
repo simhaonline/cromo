@@ -18,34 +18,34 @@
         <tr>
             <td class="titulo">IDENTIFICACIÓN:</td>
             <td class="td-in-well">{{ arEmpleado.numeroIdentificacion }}</td>
+            <td class="titulo">DIGITO DE VERIFICACIÓN:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arEmpleado.digitoVerificacion | default('')  }}</td>
             <td class="titulo">NOMBRE:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arEmpleado.nombreCorto }}</td>
-            <td class="titulo">TELÉFONO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arEmpleado.telefono }}</td>
         </tr>
         <tr>
             <td class="titulo">ESTADO CIVIL:</td>
             <td class="td-in-well">{{ arEmpleado.estadoCivilRel.nombre | default('') }}</td>
             <td class="titulo">SEXO:</td>
             <td class="td-in-well">{% if arEmpleado.codigoSexoFk == "M" %} MASCULINO {% else %} FEMENINO{% endif %}</td>
-            <td class="titulo">RH:</td>
-            <td class="td-in-well">{{ arEmpleado.rhRel.tipo | default('') }}</td>
+            <td class="titulo">TELÉFONO:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arEmpleado.telefono }}</td>
         </tr>
         <tr>
             <td class="titulo">CABEZA DE HOGAR:</td>
             <td class="td-in-well">{{ validarBooleano(arEmpleado.cabezaHogar) }}</td>
             <td class="titulo">DISCAPACIDAD:</td>
             <td class="td-in-well">{{ validarBooleano(arEmpleado.discapacidad) }}</td>
-            <td class="titulo">CARRO:</td>
-            <td class="td-in-well">{{ validarBooleano(arEmpleado.carro) }}</td>
+            <td class="titulo">RH:</td>
+            <td class="td-in-well">{{ arEmpleado.rhRel.tipo | default('') }}</td>
         </tr>
         <tr>
             <td class="titulo">MOTO:</td>
             <td class="td-in-well">{{ validarBooleano(arEmpleado.moto) }}</td>
             <td class="titulo">PADRE DE FAMILIA:</td>
             <td class="td-in-well">{{ validarBooleano(arEmpleado.padreFamilia) }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">CARRO:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.carro) }}</td>
         </tr>
         <tr>
             <td class="titulo">TALLA CAMISA:</td>

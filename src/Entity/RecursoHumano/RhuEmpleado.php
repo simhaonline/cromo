@@ -500,6 +500,16 @@ class RhuEmpleado
     protected $costosEmpleadosServiciosEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurNovedad", mappedBy="empleadoRel")
+     */
+    protected $turNovedadesEmpleadoRel; //ya existia la relacion de novedad
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurNovedad", mappedBy="empleadoReemplazoRel")
+     */
+    protected $novedadesEmpeladoReemplazoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()

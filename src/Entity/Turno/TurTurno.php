@@ -163,6 +163,11 @@ class TurTurno
     protected $soportesHorasTurnoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurNovedadTipo", mappedBy="turnoRel")
+     */
+    protected $novedadesTiposTurnoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoTurnoPk()
@@ -562,7 +567,21 @@ class TurTurno
         $this->incapacidadNoLegalizada = $incapacidadNoLegalizada;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getNovedadesTiposTurnoRel()
+    {
+        return $this->novedadesTiposTurnoRel;
+    }
 
+    /**
+     * @param mixed $novedadesTiposTurnoRel
+     */
+    public function setNovedadesTiposTurnoRel($novedadesTiposTurnoRel): void
+    {
+        $this->novedadesTiposTurnoRel = $novedadesTiposTurnoRel;
+    }
 
 }
 

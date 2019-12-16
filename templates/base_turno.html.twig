@@ -53,6 +53,14 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="#">Novedad <span class="fa arrow"></span></a>
+                    <ul>
+                        <li>
+                            <a href="{{ path('turno_movimiento_novedad_lista') }}">Novedad</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </li>
         <li>
@@ -93,6 +101,13 @@
                         <li><a href="{{ path('turno_administracion_concepto_concepto_lista') }}">Concepto deservicio</a>
                         </li>
                         <li><a href="{{ path('turno_administracion_operacion_salario_lista') }}">Salario</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Novedad<span class="fa arrow"></span></a>
+                    <ul>
+                        <li><a href="{{ path('administracion_lista',{'modulo':'turno','entidad':'novedadTipo'}) }}">Tipo novedad</a></li>
+
                     </ul>
                 </li>
             </ul>

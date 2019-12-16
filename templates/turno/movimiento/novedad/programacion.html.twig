@@ -1,0 +1,69 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block title %}Ver resumen puesto - Soga App{% endblock %}
+{% block content %}
+    <section class="content-header">
+        <h1>
+            Programaciones novedad
+            <small>Programaciones: ver programacion</small>
+        </h1>
+    </section>
+    <section class="content">
+        <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+            <thead>
+            <tr>
+                <th colspan="3">EMPLEADO</th>
+                {% for i in range(1,31) %}
+                    <th>{{ i }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for arProgramacion in arProgramaciones %}
+                {% set intCodigoCliente = '' %}
+                {% if intCodigoCliente != arProgramacion.codigoClienteFk %}
+                    <tr>
+                        <td colspan="36">{{ arProgramacion.cliente }}</td>
+                    </tr>
+                    {% set intCodigoCliente =  arProgramacion.codigoClienteFk %}
+                {% endif %}
+                <tr>
+                    <td>{{ arProgramacion.dia1 }}</td>
+                    <td>{{ arProgramacion.dia2 }}</td>
+                    <td>{{ arProgramacion.dia3 }}</td>
+                    <td>{{ arProgramacion.dia4 }}</td>
+                    <td>{{ arProgramacion.dia5 }}</td>
+                    <td>{{ arProgramacion.dia6 }}</td>
+                    <td>{{ arProgramacion.dia7 }}</td>
+                    <td>{{ arProgramacion.dia8 }}</td>
+                    <td>{{ arProgramacion.dia9 }}</td>
+                    <td>{{ arProgramacion.dia10 }}</td>
+                    <td>{{ arProgramacion.dia11 }}</td>
+                    <td>{{ arProgramacion.dia12 }}</td>
+                    <td>{{ arProgramacion.dia13 }}</td>
+                    <td>{{ arProgramacion.dia14 }}</td>
+                    <td>{{ arProgramacion.dia15 }}</td>
+                    <td>{{ arProgramacion.dia16 }}</td>
+                    <td>{{ arProgramacion.dia17 }}</td>
+                    <td>{{ arProgramacion.dia18 }}</td>
+                    <td>{{ arProgramacion.dia19 }}</td>
+                    <td>{{ arProgramacion.dia20 }}</td>
+                    <td>{{ arProgramacion.dia21 }}</td>
+                    <td>{{ arProgramacion.dia22 }}</td>
+                    <td>{{ arProgramacion.dia23 }}</td>
+                    <td>{{ arProgramacion.dia24 }}</td>
+                    <td>{{ arProgramacion.dia25 }}</td>
+                    <td>{{ arProgramacion.dia26 }}</td>
+                    <td>{{ arProgramacion.dia27 }}</td>
+                    <td>{{ arProgramacion.dia28 }}</td>
+                    <td>{{ arProgramacion.dia29 }}</td>
+                    <td>{{ arProgramacion.dia30 }}</td>
+                    <td>{{ arProgramacion.dia31 }}</td>
+                    <td>{{ arProgramacion.horasDiurnas }}</td>
+                    <td>{{ arProgramacion.horasNocturnas }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br/><br/>
+    </section>
+{% endblock %}

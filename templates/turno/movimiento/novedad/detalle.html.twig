@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_movimiento_novedad_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <div class="btn-group">
+        {% include 'estructura/botonera.html.twig' %}
+    </div>
+    <div style="float:right">
+        {% if arNovedad.estadoAutorizado == 1 %}<span
+                class="label label-default">Autorizado</span>{% endif %}
+        {% if arNovedad.estadoAprobado == 1 %}<span
+                class="label label-default">Aprobado</span>{% endif %}
+        {% if arNovedad.estadoAnulado == 1 %}<span
+                class="label label-default">Anulado</span>{% endif %}
+    </div>
+    <br/><br/>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arNovedad.codigoNovedadPk }}</td>
+            <td class="titulo">FECHA:</td>
+            <td class="td-in-well">{{ arNovedad.fecha| date('Y-m-d')  }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA DESDE:</td>
+            <td class="td-in-well">{{ arNovedad.fechaDesde| date('Y-m-d') }}</td>
+            <td class="titulo">FECHA HASTA:</td>
+            <td class="td-in-well">{{ arNovedad.fechaHasta | date('Y-m-d')  }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">USUARIO:</td>
+            <td class="td-in-well">{{ arNovedad.usuario }}</td>
+            <td class="titulo">ORIGEN:</td>
+            <td class="td-in-well">{{ arNovedad.origen }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">EMPLEADO:</td>
+            <td class="td-in-well">{{ arNovedad.empleadoRel.nombreCorto }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">EMPLEADO REMPLEAZO:</td>
+            <td class="td-in-well">{{ arNovedad.empleadoReemplazoRel.nombreCorto }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIOS:</td>
+            <td class="td-in-well" COLSPAN="3">{{ arNovedad.comentarios }}</td>
+        </tr>
+        </tbody>
+    </table>
+    {{ form_end(form) }}
+
+{% endblock %}

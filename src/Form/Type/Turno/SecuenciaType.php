@@ -6,6 +6,7 @@ namespace App\Form\Type\Turno;
 
 use App\Entity\Turno\TurSecuencia;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -20,6 +21,7 @@ class SecuenciaType extends   AbstractType
         $builder
             ->add('codigoSecuenciaPk', TextType::class, ['required' => true])
             ->add('nombre', TextType::class, ['required' => false])
+            ->add('homologar', CheckboxType::class, array('required' => false))
             ->add('dia1', TextType::class, ['required' => false])
             ->add('dia2', TextType::class, ['required' => false])
             ->add('dia3', TextType::class, ['required' => false])
@@ -62,9 +64,7 @@ class SecuenciaType extends   AbstractType
             ->add('domingo', TextType::class, ['required' => false])
             ->add('festivo', TextType::class, ['required' => false])
             ->add('domingoFestivo', TextType::class, ['required' => false])
-            ->add('horas', IntegerType::class, ['required' => false])
             ->add('dias', IntegerType::class, ['required' => false])
-
             ->add('guardar', SubmitType::class, array('label' => 'Guardar',))
         ->getForm();
     }

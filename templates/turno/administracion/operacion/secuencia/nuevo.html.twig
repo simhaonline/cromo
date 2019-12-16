@@ -1,111 +1,148 @@
 {% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered table-hover tabla-datos">
-            <thead>
-                <tr>
-                    <th title="CÓDIGO">Cód.</th>
-                    <th title="NOMBRE">Nom.</th>
-                    <th title="HORAS">Hor.</th>
-                    <th title="DÍAS">Días.</th>
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                    <th>5</th>
-                    <th>6</th>
-                    <th>7</th>
-                    <th>8</th>
-                    <th>9</th>
-                    <th>10</th>
-                    <th>11</th>
-                    <th>12</th>
-                    <th>13</th>
-                    <th>14</th>
-                    <th>15</th>
-                    <th>16</th>
-                    <th>17</th>
-                    <th>18</th>
-                    <th>19</th>
-                    <th>20</th>
-                    <th>21</th>
-                    <th>22</th>
-                    <th>23</th>
-                    <th>24</th>
-                    <th>25</th>
-                    <th>26</th>
-                    <th>27</th>
-                    <th>28</th>
-                    <th>29</th>
-                    <th>30</th>
-                    <th>31</th>
-                    <th title="LUNES">Lun</th>
-                    <th title="MARTES">Mar</th>
-                    <th title="MIERCOLES">Mier</th>
-                    <th title="JUEVES">Jue</th>
-                    <th title="VIERNES">Vie</th>
-                    <th title="SÁBADO">Sáb</th>
-                    <th title="DOMINGO">Dom</th>
-                    <th title="FESTIVO">Fes</th>
-                    <th title="DOMINGO FESTIVO">Dom. fes.</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ form_widget(form.codigoSecuenciaPk,{ 'attr': {'style':'width:55px'} }) }}</td>
-                    <td>{{ form_widget(form.nombre, { 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.horas ,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dias,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia1,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia2,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia3,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia4,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia5,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia6,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia7,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia8,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia9,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia10,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia11,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia12,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia13,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia14,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia15,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia16,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia17,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia18,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia19,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia20,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia21,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia22,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia23,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia24,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia25,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia26,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia27,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia28,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia29,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia30,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.dia31,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.lunes,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.martes,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.miercoles,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.jueves,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.viernes,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.sabado,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.domingo,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.festivo,{ 'attr': {'style':'width:55px'} })  }}</td>
-                    <td>{{ form_widget(form.domingoFestivo,{ 'attr': {'style':'width:55px'} })  }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Codigo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoSecuenciaPk,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.codigoSecuenciaPk) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Nombre</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.nombre) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Dias</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.dias,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.dias) }}</div>
+                </div>
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.homologar) }}
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover tabla-datos" id="limpiarCssInput">
+                    <thead>
+                    <tr>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>6</th>
+                        <th>7</th>
+                        <th>8</th>
+                        <th>9</th>
+                        <th>10</th>
+                        <th>11</th>
+                        <th>12</th>
+                        <th>13</th>
+                        <th>14</th>
+                        <th>15</th>
+                        <th>16</th>
+                        <th>17</th>
+                        <th>18</th>
+                        <th>19</th>
+                        <th>20</th>
+                        <th>21</th>
+                        <th>22</th>
+                        <th>23</th>
+                        <th>24</th>
+                        <th>25</th>
+                        <th>26</th>
+                        <th>27</th>
+                        <th>28</th>
+                        <th>29</th>
+                        <th>40</th>
+                        <th>31</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ form_widget(form.dia1,{ 'attr': {'style':'width:40px', 'size':"10" } }) }}</td>
+                        <td>{{ form_widget(form.dia2,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia3,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia4,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia5,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia6,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia7,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia8,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia9,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia10,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia11,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia12,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia13,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia14,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia15,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia16,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia17,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia18,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia19,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia20,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia21,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia22,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia23,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia24,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia25,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia26,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia27,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia28,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia29,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia30,{ 'attr': {'style':'width:40px'} }) }}</td>
+                        <td>{{ form_widget(form.dia31,{ 'attr': {'style':'width:40px'} }) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover tabla-datos" id="limpiarCssInput">
+                    <thead>
+                        <th title="LUNES">Lun</th>
+                        <th title="MARTES">Mar</th>
+                        <th title="MIERCOLES">Mier</th>
+                        <th title="JUEVES">Jue</th>
+                        <th title="VIERNES">Vie</th>
+                        <th title="SÁBADO">Sáb</th>
+                        <th title="DOMINGO">Dom</th>
+                        <th title="FESTIVO">Fes</th>
+                        <th title="DOMINGO FESTIVO">Dom. fes.</th>
+                    </thead>
+                    <tbody>
+                        <td>{{ form_widget(form.lunes) }}</td>
+                        <td>{{ form_widget(form.martes) }}</td>
+                        <td>{{ form_widget(form.miercoles) }}</td>
+                        <td>{{ form_widget(form.jueves) }}</td>
+                        <td>{{ form_widget(form.viernes) }}</td>
+                        <td>{{ form_widget(form.sabado) }}</td>
+                        <td>{{ form_widget(form.domingo) }}</td>
+                        <td>{{ form_widget(form.festivo) }}</td>
+                        <td>{{ form_widget(form.domingoFestivo) }}</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
     <div class="modal-footer">
         <a class="btn btn-default btn-sm"
            href="{{ path('turno_administracion_operacion_secuencia_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}
-
+{% endblock %}
+{% block javascriptsPersonales %}
+    <script>
+        const tabla = document.getElementById('limpiarCssInput');
+        const inputs = tabla.querySelectorAll('input');
+        for (i = 0; i <= inputs.length; i++) {
+            inputs[i].classList.remove('form-control');
+        }
+    </script>
 {% endblock %}

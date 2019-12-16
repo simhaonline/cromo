@@ -1329,7 +1329,7 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
             ->orderBy("p.codigoEmpleadoFk");
         if ($codigoGrupo) {//Validacion cuando se filtre por grupo de pago en el soporte de pago
             $queryBuilder->leftJoin( "e.contratoRel", 'c');
-            $queryBuilder->andWhere("c.CodigoGrupoFk ={$codigoGrupo}");
+            $queryBuilder->andWhere("c.codigoGrupoFk ={$codigoGrupo}");
         }
         if ($codigoClienteFk) {
             $queryBuilder->andWhere("p.codigoClienteFk ={$codigoClienteFk}");

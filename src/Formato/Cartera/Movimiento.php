@@ -87,10 +87,10 @@ class Movimiento extends \FPDF
         $this->Cell(66, 6, $arMovimiento->getClienteRel()->getDireccion(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "FECHA PAGO:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "TOTAL NETO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, $arMovimiento->getFecha()->format('Y-m-d'), 1, 0, 'L', 1);
+        $this->Cell(65, 6, number_format($arMovimiento->getVrTotalNeto()), 1, 0, 'L', 1);
         //linea 4
         $this->SetXY(10, 58);
         $this->SetFillColor(200, 200, 200);
@@ -101,10 +101,10 @@ class Movimiento extends \FPDF
         $this->Cell(66, 6, $arMovimiento->getClienteRel()->getTelefono(), 1, 0, 'L', 1);
         $this->SetFont('Arial', 'B', 8);
         $this->SetFillColor(200, 200, 200);
-        $this->Cell(30, 6, "TOTAL NETO:", 1, 0, 'L', 1);
+        $this->Cell(30, 6, "", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 8);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(65, 6, number_format($arMovimiento->getVrTotalNeto()), 1, 0, 'R', 1);
+        $this->Cell(65, 6, "", 1, 0, 'R', 1);
 
         //linea 7
         $this->SetXY(10, 64);

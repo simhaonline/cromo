@@ -140,7 +140,7 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("pd.mes = '{$mes}'");
         }
         if ($anio) {
-            $queryBuilder->andWhere("pd.mes = '{$anio}'");
+            $queryBuilder->andWhere("pd.anio = '{$anio}'");
         }
 
         return $queryBuilder->getQuery()->getResult();

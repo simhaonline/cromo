@@ -61,7 +61,6 @@ class ProgramacionController extends AbstractController
         $raw = [];
         if ($form->isSubmitted() ) {
             if ($form->get('btnFiltrar')->isClicked()) {
-
                 $raw['filtros'] = $this->getFiltros($form);
             }
         }

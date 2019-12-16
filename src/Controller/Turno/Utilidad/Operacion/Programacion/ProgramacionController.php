@@ -45,12 +45,15 @@ class ProgramacionController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
+        $fechaActual = new \DateTime('now');
+        $strAnio = $fechaActual->format('Y');
+        $strMes = $fechaActual->format('m');
         $form = $this->createFormBuilder()
             ->add('codigoCliente', TextType::class, array('required' => false))
             ->add('codigoPedidoDetalle', TextType::class, array('required' => false))
             ->add('codigoPuesto', TextType::class, array('required' => false))
-            ->add('anio', TextType::class, array('required' => false))
-            ->add('mes', TextType::class, array('required' => false))
+            ->add('anio', TextType::class, array('required' => false, 'data'=>$strAnio))
+            ->add('mes', TextType::class, array('required' => false, 'data'=>$strMes))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->setMethod('GET')
             ->getForm();

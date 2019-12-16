@@ -186,6 +186,14 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         if($session->get('filtroTurPedidoDetalleIdentificacion')){
             $queryBuilder->andWhere("e.numeroIdentificacion = '{$session->get('filtroTurPedidoDetalleIdentificacion')}' ");
         }
+        switch ($session->get('filtroTurPedidoDetalleEmpleadoContratado')) {
+            case '0':
+                $queryBuilder->andWhere("e.estadoContrato = 1");
+                break;
+            case '1':
+                $queryBuilder->andWhere("e.estadoContrato = 0");
+                break;
+        }
         return $queryBuilder;
     }
 

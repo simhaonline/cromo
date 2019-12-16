@@ -283,7 +283,6 @@ class CarMovimientoRepository extends ServiceEntityRepository
                 $arMovimientoTipo->setConsecutivo($arMovimientoTipo->getConsecutivo() + 1);
                 $em->persist($arMovimientoTipo);
             }
-            $arMovimiento->setFecha(new \DateTime('now'));
             $arMovimiento->setEstadoAprobado(1);
             $this->getEntityManager()->persist($arMovimiento);
             $this->getEntityManager()->flush();

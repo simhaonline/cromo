@@ -31,6 +31,12 @@ class TurPrototipoRepository extends ServiceEntityRepository
                 ->addSelect('e.nombreCorto as empleadoNombreCorto')
                 ->addSelect('p.fechaInicioSecuencia')
                 ->addSelect('p.inicioSecuencia')
+                ->addSelect('p.posicion')
+                ->addSelect('p.turnoA')
+                ->addSelect('p.turnoB')
+                ->addSelect('p.turnoC')
+                ->addSelect('p.turnoD')
+                ->addSelect('p.turnoE')
                 ->addSelect('p.codigoSecuenciaFk')
                 ->leftJoin('p.empleadoRel', 'e')
                 ->where("p.codigoContratoDetalleFk = {$codigoContratoDetalle}");

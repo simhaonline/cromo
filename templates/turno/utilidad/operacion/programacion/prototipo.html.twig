@@ -11,6 +11,12 @@
             <th>SEC</th>
             <th>F_INI</th>
             <th>INI</th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th>
+            <th>POS</th>
             <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
         </thead>
@@ -33,11 +39,55 @@
                            value="{{ arPrototipo.fechaInicioSecuencia|date('Y-m-d') }}"
                            maxlength="5"/>
                 </td>
-                <td class="col-sm-1 celda-valor-numerico">
-                    <input class="text-center" type="number"
+                <td>
+                    <input class="text-center" type="text"
                            name="arrInicioSecuencia[{{ arPrototipo.codigoPrototipoPk }}]"
                            value="{{ arPrototipo.inicioSecuencia|default(1) }}"
-                           maxlength="5"/>
+                           maxlength="2"
+                           style="text-align: left; width:40px;"/>
+                </td>
+                <td>
+                    <input class="text-center" type="text"
+                           name="arrA[{{ arPrototipo.codigoPrototipoPk }}]"
+                           value="{{ arPrototipo.turnoA }}"
+                           maxlength="2"
+                           style="text-align: left; width:40px;"
+                           size="20"/>
+                <td>
+                    <input class="text-center" type="text"
+                           name="arrB[{{ arPrototipo.codigoPrototipoPk }}]"
+                           value="{{ arPrototipo.turnoB }}"
+                           maxlength="2"
+                           style="text-align: left; width:40px;"
+                           size="20"/>
+                <td>
+                    <input class="text-center" type="text"
+                           name="arrC[{{ arPrototipo.codigoPrototipoPk }}]"
+                           value="{{ arPrototipo.turnoC }}"
+                           maxlength="2"
+                           style="text-align: left; width:40px;"
+                           size="20"/>
+                <td>
+                    <input class="text-center" type="text"
+                           name="arrD[{{ arPrototipo.codigoPrototipoPk }}]"
+                           value="{{ arPrototipo.turnoD }}"
+                           maxlength="2"
+                           style="text-align: left; width:40px;"
+                           size="20"/>
+                <td>
+                    <input class="text-center" type="text"
+                           name="arrE[{{ arPrototipo.codigoPrototipoPk }}]"
+                           value="{{ arPrototipo.turnoE }}"
+                           maxlength="2"
+                           style="text-align: left; width:40px;"
+                           size="20"/>
+                <td>
+                    <input class="text-center" type="text"
+                           name="arrPosicion[{{ arPrototipo.codigoPrototipoPk }}]"
+                           value="{{ arPrototipo.posicion|default(1) }}"
+                           maxlength="2"
+                           style="text-align: left; width:40px;"
+                           size="20"/>
                 </td>
                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPrototipo.codigoPrototipoPk }}"/></td>
             </tr>

@@ -64,7 +64,7 @@ class TesMovimientoDetalle
     /**
      * @ORM\Column(name="naturaleza", type="string", length=1, nullable=true)
      */
-    private $naturaleza = 0;
+    private $naturaleza;
 
     /**
      * @ORM\Column(name="codigo_banco_fk", type="string", length=10, nullable=true)

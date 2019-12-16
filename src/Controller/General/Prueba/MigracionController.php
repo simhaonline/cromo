@@ -65,6 +65,7 @@ use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurPedidoDetalleCompuesto;
 use App\Entity\Turno\TurPedidoTipo;
 use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurPrototipo;
 use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurSector;
 use App\Entity\Turno\TurSecuencia;
@@ -87,10 +88,10 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bd1tegv1', 'attr' => ['class' => 'form-control']])
-            ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
-            ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
+            ->add('servidor', TextType::class, ['required' => false, 'data' => '192.168.2.199', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracis', 'attr' => ['class' => 'form-control']])
+            ->add('usuario', TextType::class, ['required' => false, 'data' => 'consulta', 'attr' => ['class' => 'form-control']])
+            ->add('clave', TextType::class, ['required' => false, 'data' => 'SoporteErp2018@', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -207,6 +208,9 @@ class MigracionController extends Controller
                         case 'tur_programacion':
                             $this->turProgramacion($conn);
                             break;
+                        case 'tur_prototipo':
+                            $this->turPrototipo($conn);
+                            break;
                         case 'usuarios':
                             $this->usuarios($conn);
                             break;
@@ -243,6 +247,7 @@ class MigracionController extends Controller
             ['clase' => 'tur_factura', 'registros' => $this->contarRegistros('TurFactura', 'Turno', 'codigoFacturaPk')],
             ['clase' => 'tur_factura_detalle', 'registros' => $this->contarRegistros('TurFacturaDetalle', 'Turno', 'codigoFacturaDetallePk')],
             ['clase' => 'tur_programacion', 'registros' => $this->contarRegistros('TurProgramacion', 'Turno', 'codigoProgramacionPk')],
+            ['clase' => 'tur_prototipo', 'registros' => $this->contarRegistros('TurPrototipo', 'Turno', 'codigoPrototipoPk')],
             ['clase' => 'usuarios', 'registros' => $this->contarRegistros('Usuario', 'Seguridad', 'username')]
         ];
         return $this->render('general/migracion/migracion.html.twig', [
@@ -3026,7 +3031,7 @@ class MigracionController extends Controller
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
         $rango = 5000;
-        $arr = $conn->query("SELECT codigo_pago_detalle_pk FROM rhu_pago_detalle ");
+        $arr = $conn->query("SELECT codigo_programacion_detalle_pk FROM tur_programacion_detalle ");
         $registros = $arr->num_rows;
         $totalPaginas = $registros / $rango;
         for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
@@ -3076,59 +3081,61 @@ class MigracionController extends Controller
                     adicional
                  FROM tur_programacion_detalle  ORDER BY codigo_programacion_detalle_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
-                $arProgramacion = new TurProgramacion();
-                $arProgramacion->setCodigoProgramacionPk($row['codigo_programacion_detalle_pk']);
-                if ($row['codigo_recurso_fk']) {
-                    $arProgramacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_recurso_fk']));
+                if($row['codigo_recurso_fk']) {
+                    $arProgramacion = new TurProgramacion();
+                    $arProgramacion->setCodigoProgramacionPk($row['codigo_programacion_detalle_pk']);
+                    if ($row['codigo_recurso_fk']) {
+                        $arProgramacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_recurso_fk']));
+                    }
+                    if ($row['codigo_pedido_detalle_fk']) {
+                        $arProgramacion->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
+                    }
+                    if ($row['codigo_puesto_fk']) {
+                        $arProgramacion->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
+                    }
+                    $arProgramacion->setAnio($row['anio']);
+                    $arProgramacion->setMes($row['mes']);
+                    $arProgramacion->setDia1($row['dia_1']);
+                    $arProgramacion->setDia2($row['dia_2']);
+                    $arProgramacion->setDia3($row['dia_3']);
+                    $arProgramacion->setDia4($row['dia_4']);
+                    $arProgramacion->setDia5($row['dia_5']);
+                    $arProgramacion->setDia6($row['dia_6']);
+                    $arProgramacion->setDia7($row['dia_7']);
+                    $arProgramacion->setDia8($row['dia_8']);
+                    $arProgramacion->setDia9($row['dia_9']);
+                    $arProgramacion->setDia10($row['dia_10']);
+                    $arProgramacion->setDia11($row['dia_11']);
+                    $arProgramacion->setDia12($row['dia_12']);
+                    $arProgramacion->setDia13($row['dia_13']);
+                    $arProgramacion->setDia14($row['dia_14']);
+                    $arProgramacion->setDia15($row['dia_15']);
+                    $arProgramacion->setDia16($row['dia_16']);
+                    $arProgramacion->setDia17($row['dia_17']);
+                    $arProgramacion->setDia18($row['dia_18']);
+                    $arProgramacion->setDia19($row['dia_19']);
+                    $arProgramacion->setDia20($row['dia_20']);
+                    $arProgramacion->setDia21($row['dia_21']);
+                    $arProgramacion->setDia22($row['dia_22']);
+                    $arProgramacion->setDia23($row['dia_23']);
+                    $arProgramacion->setDia24($row['dia_24']);
+                    $arProgramacion->setDia25($row['dia_25']);
+                    $arProgramacion->setDia26($row['dia_26']);
+                    $arProgramacion->setDia27($row['dia_27']);
+                    $arProgramacion->setDia28($row['dia_28']);
+                    $arProgramacion->setDia29($row['dia_29']);
+                    $arProgramacion->setDia30($row['dia_30']);
+                    $arProgramacion->setDia31($row['dia_31']);
+                    $arProgramacion->setHoras($row['horas']);
+                    $arProgramacion->setHorasDiurnas($row['horas_diurnas']);
+                    $arProgramacion->setHorasNocturnas($row['horas_nocturnas']);
+                    $arProgramacion->setComplementario($row['complementario']);
+                    $arProgramacion->setAdicional($row['adicional']);
+                    $em->persist($arProgramacion);
+                    $metadata = $em->getClassMetaData(get_class($arProgramacion));
+                    $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                    $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
                 }
-                if ($row['codigo_pedido_detalle_fk']) {
-                    $arProgramacion->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
-                }
-                if ($row['codigo_puesto_fk']) {
-                    $arProgramacion->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
-                }
-                $arProgramacion->setAnio($row['anio']);
-                $arProgramacion->setMes($row['mes']);
-                $arProgramacion->setDia1($row['dia_1']);
-                $arProgramacion->setDia2($row['dia_2']);
-                $arProgramacion->setDia3($row['dia_3']);
-                $arProgramacion->setDia4($row['dia_4']);
-                $arProgramacion->setDia5($row['dia_5']);
-                $arProgramacion->setDia6($row['dia_6']);
-                $arProgramacion->setDia7($row['dia_7']);
-                $arProgramacion->setDia8($row['dia_8']);
-                $arProgramacion->setDia9($row['dia_9']);
-                $arProgramacion->setDia10($row['dia_10']);
-                $arProgramacion->setDia11($row['dia_11']);
-                $arProgramacion->setDia12($row['dia_12']);
-                $arProgramacion->setDia13($row['dia_13']);
-                $arProgramacion->setDia14($row['dia_14']);
-                $arProgramacion->setDia15($row['dia_15']);
-                $arProgramacion->setDia16($row['dia_16']);
-                $arProgramacion->setDia17($row['dia_17']);
-                $arProgramacion->setDia18($row['dia_18']);
-                $arProgramacion->setDia19($row['dia_19']);
-                $arProgramacion->setDia20($row['dia_20']);
-                $arProgramacion->setDia21($row['dia_21']);
-                $arProgramacion->setDia22($row['dia_22']);
-                $arProgramacion->setDia23($row['dia_23']);
-                $arProgramacion->setDia24($row['dia_24']);
-                $arProgramacion->setDia25($row['dia_25']);
-                $arProgramacion->setDia26($row['dia_26']);
-                $arProgramacion->setDia27($row['dia_27']);
-                $arProgramacion->setDia28($row['dia_28']);
-                $arProgramacion->setDia29($row['dia_29']);
-                $arProgramacion->setDia30($row['dia_30']);
-                $arProgramacion->setDia31($row['dia_31']);
-                $arProgramacion->setHoras($row['horas']);
-                $arProgramacion->setHorasDiurnas($row['horas_diurnas']);
-                $arProgramacion->setHorasNocturnas($row['horas_nocturnas']);
-                $arProgramacion->setComplementario($row['complementario']);
-                $arProgramacion->setAdicional($row['adicional']);
-                $em->persist($arProgramacion);
-                $metadata = $em->getClassMetaData(get_class($arProgramacion));
-                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }
             $em->flush();
             $em->clear();
@@ -3144,107 +3151,50 @@ class MigracionController extends Controller
         ini_set("memory_limit", -1);
         $em = $this->getDoctrine()->getManager();
         $rango = 5000;
-        $arr = $conn->query("SELECT codigo_pago_detalle_pk FROM rhu_pago_detalle ");
+        $arr = $conn->query("SELECT codigo_servicio_detalle_recurso_pk FROM tur_servicio_detalle_recurso ");
         $registros = $arr->num_rows;
         $totalPaginas = $registros / $rango;
         for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
             $lote = $pagina * $rango;
             $datos = $conn->query("SELECT
-                    codigo_programacion_detalle_pk,
+                    codigo_servicio_detalle_recurso_pk,
+                    codigo_servicio_detalle_fk,
                     codigo_recurso_fk,
-                    codigo_puesto_fk,
-                    codigo_pedido_detalle_fk,
-                    anio,
-                    mes,
-                    dia_1,
-                    dia_2,
-                    dia_3,
-                    dia_4,
-                    dia_5,
-                    dia_6,
-                    dia_7,
-                    dia_8,
-                    dia_9,
-                    dia_10,
-                    dia_11,
-                    dia_12,
-                    dia_13,
-                    dia_14,
-                    dia_15,
-                    dia_16,
-                    dia_17,
-                    dia_18,
-                    dia_19,
-                    dia_20,
-                    dia_21,
-                    dia_22,
-                    dia_23,
-                    dia_24,
-                    dia_25,
-                    dia_26,
-                    dia_27,
-                    dia_28,
-                    dia_29,
-                    dia_30,
-                    dia_31,
-                    horas,
-                    horas_diurnas,
-                    horas_nocturnas,
-                    complementario,
-                    adicional
-                 FROM tur_programacion_detalle  ORDER BY codigo_programacion_detalle_pk limit {$lote},{$rango}");
+                    posicion,
+                    codigo_secuencia_fk,
+                    fecha_inicio_secuencia,
+                    inicio_secuencia,
+                    turno_a,
+                    turno_b,
+                    turno_c,
+                    turno_d,
+                    turno_e,
+                    complementario
+                 FROM tur_servicio_detalle_recurso  ORDER BY codigo_servicio_detalle_recurso_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
-                $arProgramacion = new TurProgramacion();
-                $arProgramacion->setCodigoProgramacionPk($row['codigo_programacion_detalle_pk']);
-                if ($row['codigo_recurso_fk']) {
-                    $arProgramacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_recurso_fk']));
+                $arPrototipo = new TurPrototipo();
+                $arPrototipo->setCodigoPrototipoPk($row['codigo_servicio_detalle_recurso_pk']);
+                if($row['codigo_servicio_detalle_fk']) {
+                    $arPrototipo->setContratoDetalleRel($em->getReference(TurContratoDetalle::class, $row['codigo_servicio_detalle_fk']));
                 }
-                if ($row['codigo_pedido_detalle_fk']) {
-                    $arProgramacion->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
+                if($row['codigo_recurso_fk']) {
+                    $arPrototipo->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_recurso_fk']));
                 }
-                if ($row['codigo_puesto_fk']) {
-                    $arProgramacion->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
+                if($row['codigo_secuencia_fk']) {
+                    $arPrototipo->setSecuenciaRel($em->getReference(TurSecuencia::class, $row['codigo_secuencia_fk']));
                 }
-                $arProgramacion->setAnio($row['anio']);
-                $arProgramacion->setMes($row['mes']);
-                $arProgramacion->setDia1($row['dia_1']);
-                $arProgramacion->setDia2($row['dia_2']);
-                $arProgramacion->setDia3($row['dia_3']);
-                $arProgramacion->setDia4($row['dia_4']);
-                $arProgramacion->setDia5($row['dia_5']);
-                $arProgramacion->setDia6($row['dia_6']);
-                $arProgramacion->setDia7($row['dia_7']);
-                $arProgramacion->setDia8($row['dia_8']);
-                $arProgramacion->setDia9($row['dia_9']);
-                $arProgramacion->setDia10($row['dia_10']);
-                $arProgramacion->setDia11($row['dia_11']);
-                $arProgramacion->setDia12($row['dia_12']);
-                $arProgramacion->setDia13($row['dia_13']);
-                $arProgramacion->setDia14($row['dia_14']);
-                $arProgramacion->setDia15($row['dia_15']);
-                $arProgramacion->setDia16($row['dia_16']);
-                $arProgramacion->setDia17($row['dia_17']);
-                $arProgramacion->setDia18($row['dia_18']);
-                $arProgramacion->setDia19($row['dia_19']);
-                $arProgramacion->setDia20($row['dia_20']);
-                $arProgramacion->setDia21($row['dia_21']);
-                $arProgramacion->setDia22($row['dia_22']);
-                $arProgramacion->setDia23($row['dia_23']);
-                $arProgramacion->setDia24($row['dia_24']);
-                $arProgramacion->setDia25($row['dia_25']);
-                $arProgramacion->setDia26($row['dia_26']);
-                $arProgramacion->setDia27($row['dia_27']);
-                $arProgramacion->setDia28($row['dia_28']);
-                $arProgramacion->setDia29($row['dia_29']);
-                $arProgramacion->setDia30($row['dia_30']);
-                $arProgramacion->setDia31($row['dia_31']);
-                $arProgramacion->setHoras($row['horas']);
-                $arProgramacion->setHorasDiurnas($row['horas_diurnas']);
-                $arProgramacion->setHorasNocturnas($row['horas_nocturnas']);
-                $arProgramacion->setComplementario($row['complementario']);
-                $arProgramacion->setAdicional($row['adicional']);
-                $em->persist($arProgramacion);
-                $metadata = $em->getClassMetaData(get_class($arProgramacion));
+                if($row['fecha_inicio_secuencia']) {
+                    $arPrototipo->setFechaInicioSecuencia( date_create($row['fecha_inicio_secuencia']));
+                }
+                $arPrototipo->setPosicion($row['posicion']);
+                $arPrototipo->setInicioSecuencia($row['inicio_secuencia']);
+                $arPrototipo->setTurnoA($row['turno_a']);
+                $arPrototipo->setTurnoB($row['turno_b']);
+                $arPrototipo->setTurnoC($row['turno_c']);
+                $arPrototipo->setTurnoD($row['turno_d']);
+                $arPrototipo->setTurnoE($row['turno_e']);
+                $em->persist($arPrototipo);
+                $metadata = $em->getClassMetaData(get_class($arPrototipo));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }

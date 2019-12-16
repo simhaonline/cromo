@@ -15,6 +15,7 @@ class TesMovimientoClase extends Fixture
             $arMovimientoClase = new \App\Entity\Tesoreria\TesMovimientoClase();
             $arMovimientoClase->setCodigoMovimientoClasePk('EG');
             $arMovimientoClase->setNombre('EGRESO');
+            $arMovimientoClase->setNaturaleza('D');
             $manager->persist($arMovimientoClase);
         }
         $arMovimientoClase = $manager->getRepository(\App\Entity\Tesoreria\TesMovimientoClase::class)->find('CP');
@@ -22,6 +23,7 @@ class TesMovimientoClase extends Fixture
             $arMovimientoClase = new \App\Entity\Tesoreria\TesMovimientoClase();
             $arMovimientoClase->setCodigoMovimientoClasePk('CP');
             $arMovimientoClase->setNombre('COMPRA');
+            $arMovimientoClase->setNaturaleza('D');
             $manager->persist($arMovimientoClase);
         }
         $arMovimientoClase = $manager->getRepository(\App\Entity\Tesoreria\TesMovimientoClase::class)->find('NC');
@@ -29,6 +31,7 @@ class TesMovimientoClase extends Fixture
             $arMovimientoClase = new \App\Entity\Tesoreria\TesMovimientoClase();
             $arMovimientoClase->setCodigoMovimientoClasePk('NC');
             $arMovimientoClase->setNombre('NOTA CREDITO');
+            $arMovimientoClase->setNaturaleza('C');
             $manager->persist($arMovimientoClase);
         }
         $manager->flush();

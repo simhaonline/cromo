@@ -29,6 +29,11 @@ class TesMovimientoClase
     private $nombre;
 
     /**
+     * @ORM\Column(name="naturaleza", type="string", length=1, nullable=true)
+     */
+    private $naturaleza;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimiento" ,mappedBy="movimientoClaseRel")
      */
     private $movimientosMovimientoClaseRel;
@@ -100,6 +105,22 @@ class TesMovimientoClase
     public function setMovimientosTiposMovimientoClaseRel($movimientosTiposMovimientoClaseRel): void
     {
         $this->movimientosTiposMovimientoClaseRel = $movimientosTiposMovimientoClaseRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNaturaleza()
+    {
+        return $this->naturaleza;
+    }
+
+    /**
+     * @param mixed $naturaleza
+     */
+    public function setNaturaleza($naturaleza): void
+    {
+        $this->naturaleza = $naturaleza;
     }
 
 

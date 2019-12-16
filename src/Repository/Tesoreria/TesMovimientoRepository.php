@@ -9,6 +9,7 @@ use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesMovimiento;
+use App\Entity\Tesoreria\TesMovimientoClase;
 use App\Entity\Tesoreria\TesMovimientoDetalle;
 use App\Entity\Tesoreria\TesMovimientoTipo;
 use App\Entity\Tesoreria\TesTercero;
@@ -133,6 +134,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
         $debito = 0;
         $credito = 0;
         $arMovimiento = $em->getRepository(TesMovimiento::class)->find($id);
+        $arDocumento = $em->getRepository(TesMovimientoClase::class)->find($arMovimiento->getCodigoMovimientoClaseFk());
         $arMovimientosDetalle = $em->getRepository(TesMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $id));
         foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
             if ($arMovimientoDetalle->getNaturaleza() == 'D') {
@@ -141,7 +143,13 @@ class TesMovimientoRepository extends ServiceEntityRepository
                 $credito += $arMovimientoDetalle->getVrPago();
             }
         }
-        $totalNeto = $debito - $credito;
+        $totalNeto = 0;
+        if($arDocumento->getNaturaleza() == 'D') {
+            $totalNeto = $debito - $credito;
+        }
+        if($arDocumento->getNaturaleza() == 'C') {
+            $totalNeto = $credito - $debito;
+        }
         $arMovimiento->setVrTotalNeto($totalNeto);
         $em->persist($arMovimiento);
         $em->flush();
@@ -461,6 +469,36 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                         $arRegistro->setVrCredito($arMovimiento['vrTotalNeto']);
                                         $arRegistro->setNaturaleza('C');
                                         $arRegistro->setDescripcion("Compra");
+                                        $arRegistro->setCodigoModeloFk('TesMovimiento');
+                                        $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
+                                        $em->persist($arRegistro);
+                                    } else {
+                                        $error = "El tipo no tiene configurada la cuenta contable " . $arMovimiento['numero'];
+                                        break;
+                                    }
+                                }
+
+                                //Cuenta por pagar
+                                if ($arMovimiento['codigoMovimientoClaseFk'] == 'NC') {
+                                    $cuenta = $arMovimiento['codigoCuentaFk'];
+                                    if ($cuenta) {
+                                        $arCuenta = $em->getRepository(FinCuenta::class)->find($cuenta);
+                                        if (!$arCuenta) {
+                                            $error = "No se encuentra la cuenta  " . $cuenta;
+                                            break;
+                                        }
+                                        $arRegistro = new FinRegistro();
+                                        $arRegistro->setTerceroRel($arTercero);
+                                        $arRegistro->setCuentaRel($arCuenta);
+                                        $arRegistro->setComprobanteRel($arComprobante);
+                                        $arRegistro->setNumero($arMovimiento['numero']);
+                                        if($arCuenta->getExigeDocumentoReferencia()) {
+                                            $arRegistro->setNumeroReferencia($arMovimiento['numeroDocumento']);
+                                        }
+                                        $arRegistro->setFecha($fecha);
+                                        $arRegistro->setVrDebito($arMovimiento['vrTotalNeto']);
+                                        $arRegistro->setNaturaleza('D');
+                                        $arRegistro->setDescripcion("Nota credito");
                                         $arRegistro->setCodigoModeloFk('TesMovimiento');
                                         $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
                                         $em->persist($arRegistro);

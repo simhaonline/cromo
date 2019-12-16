@@ -3,6 +3,7 @@
 namespace App\Entity\Turno;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Turno\TurPrototipoRepository")
@@ -45,6 +46,61 @@ class TurPrototipo
      * @ORM\Column(name="inicio_secuencia", type="integer", nullable=true)
      */
     protected $inicioSecuencia;
+
+    /**
+     * @ORM\Column(name="posicion", type="integer")
+     */
+    private $posicion = 0;
+
+    /**
+     *
+     * @ORM\Column(name="turno_a", type="string", length=5, nullable=true)
+     * @Assert\Length(
+     *     max=5,
+     *     maxMessage="El comentario no puede contener mas de 5 caracteres"
+     * )
+     */
+    protected $turnoA;
+
+    /**
+     *
+     * @ORM\Column(name="turno_b", type="string", length=5, nullable=true)
+     * @Assert\Length(
+     *     max=5,
+     *     maxMessage="El comentario no puede contener mas de 5 caracteres"
+     * )
+     */
+    protected $turnoB;
+
+    /**
+     *
+     * @ORM\Column(name="turno_c", type="string", length=5, nullable=true)
+     * @Assert\Length(
+     *     max=5,
+     *     maxMessage="El comentario no puede contener mas de 5 caracteres"
+     * )
+     */
+    protected $turnoC;
+
+    /**
+     *
+     * @ORM\Column(name="turno_d", type="string", length=5, nullable=true)
+     * @Assert\Length(
+     *     max=5,
+     *     maxMessage="El comentario no puede contener mas de 5 caracteres"
+     * )
+     */
+    protected $turnoD;
+
+    /**
+     *
+     * @ORM\Column(name="turno_e", type="string", length=5, nullable=true)
+     * @Assert\Length(
+     *     max=5,
+     *     maxMessage="El comentario no puede contener mas de 5 caracteres"
+     * )
+     */
+    protected $turnoE;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurContratoDetalle", inversedBy="prototiposContratoDetalleRel")
@@ -206,6 +262,102 @@ class TurPrototipo
     public function setSecuenciaRel($secuenciaRel): void
     {
         $this->secuenciaRel = $secuenciaRel;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosicion(): int
+    {
+        return $this->posicion;
+    }
+
+    /**
+     * @param int $posicion
+     */
+    public function setPosicion(int $posicion): void
+    {
+        $this->posicion = $posicion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurnoA()
+    {
+        return $this->turnoA;
+    }
+
+    /**
+     * @param mixed $turnoA
+     */
+    public function setTurnoA($turnoA): void
+    {
+        $this->turnoA = $turnoA;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurnoB()
+    {
+        return $this->turnoB;
+    }
+
+    /**
+     * @param mixed $turnoB
+     */
+    public function setTurnoB($turnoB): void
+    {
+        $this->turnoB = $turnoB;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurnoC()
+    {
+        return $this->turnoC;
+    }
+
+    /**
+     * @param mixed $turnoC
+     */
+    public function setTurnoC($turnoC): void
+    {
+        $this->turnoC = $turnoC;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurnoD()
+    {
+        return $this->turnoD;
+    }
+
+    /**
+     * @param mixed $turnoD
+     */
+    public function setTurnoD($turnoD): void
+    {
+        $this->turnoD = $turnoD;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurnoE()
+    {
+        return $this->turnoE;
+    }
+
+    /**
+     * @param mixed $turnoE
+     */
+    public function setTurnoE($turnoE): void
+    {
+        $this->turnoE = $turnoE;
     }
 
 
